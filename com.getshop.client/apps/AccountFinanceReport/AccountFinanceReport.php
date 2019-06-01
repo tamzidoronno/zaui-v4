@@ -214,6 +214,10 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
         $this->getApi()->getOrderManager()->closeBankAccount($this->getEnd());
     }
     
+    public function transferAllDays() {
+        $this->getApi()->getGetShopAccountingManager()->transferAllDaysThatCanBeTransferred();
+    }
+    
     public function downloadReport() {
         $this->includefile("pdfreport");
     }

@@ -60,6 +60,9 @@ public interface IPosManager {
     public ZReport getZReport(String zReportId, String cashPointId);
     
     @Editor
+    public SalesPosResult getSalesReport(SalesReportFilter filter);
+    
+    @Editor
     public FilteredData getZReportsUnfinalized(FilterOptions filterOptions);
     
     @Editor

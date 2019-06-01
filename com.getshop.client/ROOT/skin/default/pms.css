@@ -36,7 +36,6 @@ box-shadow: 0px 0px 1px 0px rgba(0,0,0,1);
     color: #3a99d7;
 }
 .gss_settings_content { border: solid 1px #bbb; margin-bottom: 20px; padding: 10px; background-color:#fff;}
-.ellipsis {white-space: nowrap; overflow: hidden;text-overflow: ellipsis; } 
 
 .gss_settings_header .gss_settings_header_title {
     font-size: 16px;

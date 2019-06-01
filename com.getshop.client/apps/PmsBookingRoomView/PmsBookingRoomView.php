@@ -33,6 +33,34 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         return $b->incrementOrderId > $a->incrementOrderId;
     }
     
+    public function getContentOnConfirmationTemplateMessage() {
+        $msg = $this->getApi()->getPmsNotificationManager()->getMessage($this->getSelectedMultilevelDomainName(), $_POST['data']['id']);
+        echo json_encode($msg);
+    }
+    
+    public function loadConfirmationPreview() {
+        $msg = $this->getApi()->getPmsNotificationManager()->getMessage($this->getSelectedMultilevelDomainName(), $_POST['data']['msgid']);
+        $msg->content = $_POST['data']['content'];
+        $msg->title = $_POST['data']['title'];
+        $bookingid = $this->getPmsBooking()->id;
+        $roomid = $this->getPmsRoom()->pmsBookingRoomId;
+        $formatted = $this->getApi()->getPmsNotificationManager()->doFormationOnMessage($this->getSelectedMultilevelDomainName(), $msg, $bookingid, $roomid);
+        echo "<div style='text-align:center; font-size: 30px;border-bottom: solid 1px; padding-bottom: 10px; margin-bottom: 10px;'><b>" . $formatted->title . "</b></div>";
+        echo nl2br($formatted->content);
+    }
+    
+    public function sendConfirmation() {
+        $msg = $this->getApi()->getPmsNotificationManager()->getMessage($this->getSelectedMultilevelDomainName(), $_POST['data']['msgid']);
+        $msg->content = $_POST['data']['content'];
+        $msg->title = $_POST['data']['title'];
+        $bookingid = $this->getPmsBooking()->id;
+        $roomid = $this->getPmsRoom()->pmsBookingRoomId;
+        $formatted = $this->getApi()->getPmsNotificationManager()->doFormationOnMessage($this->getSelectedMultilevelDomainName(), $msg, $bookingid, $roomid);
+        $email = $_POST['data']['email'];
+        $this->getApi()->getPmsNotificationManager()->sendEmail($this->getSelectedMultilevelDomainName(), $formatted, $email, $bookingid, null);
+    }
+
+    
     public static function sortSummaryRowByDate($a, $b) {
         $aDate = strtotime($a->date);
         $bDate = strtotime($b->date);
@@ -2279,5 +2307,6 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $this->printConnectedConferenceEventToGuest($guestInvolved);
         $this->clearCache();
     }
+
 }
 ?>

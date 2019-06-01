@@ -128,7 +128,8 @@ public class LockGroup extends DataCommon {
                 if (lock != null) {
                     UserSlot slot = lock.getUserSlot(subSlot.slotId);
                     
-                    if (slot.needToBeRemoved || slot.toBeAdded || slot.toBeRemoved || slot.duplicate) {
+                    boolean isGetShopLockBoxServer = (server instanceof GetShopLockBoxServer);
+                    if (slot.needToBeRemoved || slot.toBeAdded || slot.toBeRemoved || (slot.duplicate && !isGetShopLockBoxServer) ) {
                         masterUserSlot.slotsNotOk.add(slot);
                         masterUserSlot.allCodesAdded = false;
                         masterUserSlot.connectedToLockId = lock.id;

@@ -1,0 +1,19 @@
+.gsarea[area="header"] .Menu .entry { width: 80px; }
+
+@media print {
+    .gsarea[area="header"] { display:none !important; }
+    header nav, footer {
+        display: none;
+        color:#fff;
+    }
+    @page { margin: 0; }
+    @page :left { margin: 0.5cm; }
+    @page :right { margin: 0.8cm; }
+    .pagebreak {
+        clear: both;
+        page-break-after: always;
+    }
+   div,td,tr,table,span {
+        page-break-inside: avoid;
+    }
+}

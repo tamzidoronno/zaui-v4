@@ -526,6 +526,12 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         ArrayList<AccessGroupUserAccess> data = new ArrayList(users.values());
         return pageIt(data, options);
     }
+    
+    @Override
+    public List<AccessGroupUserAccess> getAllAccessUsersFlat() {
+        ArrayList<AccessGroupUserAccess> data = new ArrayList(users.values());
+        return data;
+    }
 
     @Override
     public AccessGroupUserAccess getAccess(String userId) {
@@ -951,6 +957,15 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
             if (lock != null) {
                 addTransactionEntranceDoor(server.getId(), lock.id, code);
             }
+        }
+    }
+
+    @Override
+    public void deleteLock(String serverId, String lockId) {
+        LockServer server = getLockServer(serverId);
+        if (server != null) {
+            server.deleteLock(lockId);
+            server.save();
         }
     }
 

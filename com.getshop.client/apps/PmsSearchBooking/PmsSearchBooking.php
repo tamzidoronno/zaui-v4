@@ -182,7 +182,6 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
             $filter->pmsRoomIds = $pmsRooms;
             $filter->avoidOrderCreation = true;
             $this->getApi()->getPmsInvoiceManager()->createOrder($this->getSelectedMultilevelDomainName(), $bookingId, $filter);
-            $uniqueSegmentIds[] = $this->getApi()->getPmsBookingProcess()->getBooking($this->getSelectedMultilevelDomainName(), $bookingId)->segmentId;
         }
         
         if (count($uniqueSegmentIds) > 1) {

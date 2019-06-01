@@ -80,6 +80,10 @@ class ApacLocks extends \MarketingApplication implements \Application {
         return $cunt;
     }
     
+    public function deleteLock() {
+        $this->getApi()->getGetShopLockSystemManager()->deleteLock($_POST['data']['serverid'], $_POST['data']['lockid']);    
+    }
+    
     public function formatStatus($lock) {
         $ret = "";
         

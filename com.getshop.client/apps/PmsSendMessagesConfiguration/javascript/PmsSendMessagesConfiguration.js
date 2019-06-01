@@ -12,8 +12,32 @@ app.PmsSendMessagesConfiguration = {
         $(document).on('click', '.PmsSendMessagesConfiguration .updatemessage', app.PmsSendMessagesConfiguration.doUpdateMessage);
         $(document).on('click', '.PmsSendMessagesConfiguration .fa-trash-o', app.PmsSendMessagesConfiguration.removeMessage);
         $(document).on('change', '.PmsSendMessagesConfiguration select[name="typeofmessage"]', app.PmsSendMessagesConfiguration.updateRoomSpecificCodes);
+        $(document).on('change', '.PmsSendMessagesConfiguration .filterbykeytype', app.PmsSendMessagesConfiguration.filterByKey);
         $(document).on('click', "input[name='deliverytype']", app.PmsSendMessagesConfiguration.updateBySelection);
     },
+    filterByKey : function() {
+        var key = $(this).val();
+        app.PmsSendMessagesConfiguration.filterBySpecifiedKey(key);
+    },
+    
+    filterBySpecifiedKey : function(key) {
+        $('.messageboxnew').show();
+        if(!key) {
+            return;
+        }
+        if(history.pushState) {
+            history.pushState(null, null, '#filter='+key);
+        } else {
+            location.hash = '#filter='+key;
+        }
+
+        $('.messageboxnew').each(function() {
+            if($(this).attr('key') !== key) {
+                $(this).hide();
+            }
+        });
+    },
+    
     removeMessage : function() {
         var btn = $(this);
         var msgid = btn.attr('msgid');
@@ -43,6 +67,7 @@ app.PmsSendMessagesConfiguration = {
             "content" : $('textarea[name="msgcontent"]').val(),
             "type" : $("input[name='deliverytype']:checked").val(),
             "key" : $("select[name='typeofmessage']").val(),
+            "ismanual" : $("input[name='ismanual']").is(':checked'),
         };
         var languages = [];
         $('.languageselectionbox').each(function() {

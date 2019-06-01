@@ -75,7 +75,7 @@ if(sizeof($entries) == 0) {
     
     
     echo "<div>";
-    echo "<span class='itemname' onclick='$(\".loadcalendar\").toggle();'><i class='fa fa-calendar'></i> ";
+    echo "<span class='itemname'> ";
     echo $from . " - " . $end;
     echo "</span>";
    
@@ -145,7 +145,14 @@ if(sizeof($entries) == 0) {
 </div>
 
 <script>
-    $('.calendarenddate').datepicker({ dateFormat: "dd.mm.yy",firstDay: 1});
-    $('.calendarstartdate').datepicker({ dateFormat: "dd.mm.yy",firstDay: 1});
+    getshop_loadDatePicker($('.calendarenddate'), {
+        dependant : $('.calendarstartdate'),
+        jump : -1
+    });
+    
+    getshop_loadDatePicker($('.calendarstartdate'), {
+        dependant : $('.calendarenddate'),
+        jump : 1
+    });
     $('.conferencetimelines').css('width','<?php echo ($numberoffields * 26)+260; ?>px');
 </script>

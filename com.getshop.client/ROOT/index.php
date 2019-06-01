@@ -313,6 +313,8 @@ if(!$factory->getApi()->getPageManager()->hasAccessToModule($module)) {
                     echo "<a class='gs_ignorenavigate' href='pms.php'><div class='gs_framework_module $moduleActiveClass'>$icon PMS</div></a>";
                 } elseif (strtolower($module->name) == "apac") {
                     echo "<a class='gs_ignorenavigate' href='apac.php'><div class='gs_framework_module $moduleActiveClass'>$icon APAC</div></a>";
+                } elseif (strtolower($module->id) == "pmsconference") {
+                    echo "<a class='gs_ignorenavigate' href='/pmsconference.php'><div class='gs_framework_module $moduleActiveClass'><i class='fa fa-group'></i>Conference</div></a>";
                 } elseif (strtolower($module->name) == "invoicing") {
                     echo "<a class='gs_ignorenavigate' href='invoicing.php'><div class='gs_framework_module $moduleActiveClass'>$icon Invoicing</div></a>";
                 } elseif (strtolower($module->name) == "settings") {

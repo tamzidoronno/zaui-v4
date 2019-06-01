@@ -11,8 +11,23 @@ app.PmsConference = {
         $(document).on('click','.PmsConference .extendedtextinput', app.PmsConference.showExtendedTextOverlay);
         $(document).on('click','.PmsConference .updateextendedtext', app.PmsConference.updateExtendedText);
         $(document).on('click','.PmsConference .downloadreport', app.PmsConference.downloadReport);
+        $(document).on('click','.PmsConference .removeEntry', app.PmsConference.removeEventEntry);
         $(document).on('keyup','.PmsConference .updatevententryrow', app.PmsConference.updateEventEntryRow);
         $(document).on('change','.PmsConference .choosemonthdropdown', app.PmsConference.changeTimePeriode);
+    },
+    removeEventEntry : function() {
+        var btn = $(this);
+        var confirmed = confirm("Are you sure you want to delete this entry? It can not be restored");
+        if(!confirmed) {
+            return;
+        }
+        var id = $(this).attr('entryid');
+        var event = thundashop.Ajax.createEvent('','deleteEntry',$(this), {
+            "id" : id
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            btn.closest('.evententryrow').remove();
+        });
     },
     downloadReport : function(res) {
         var type = $(this).attr('type');

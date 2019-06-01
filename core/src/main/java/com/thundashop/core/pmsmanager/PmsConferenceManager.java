@@ -130,6 +130,9 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
         HashMap<String, PmsConferenceEventEntry> eventlog = new HashMap(conferenceEventEntries);
         
         for(PmsConferenceEventEntry evntlog : eventlog.values()) {
+            if(!evntlog.pmsEventId.equals(id)) {
+                continue;
+            }
             deleteEventEntry(evntlog.id);
         }
     }
@@ -166,6 +169,9 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
         List<PmsConferenceEventEntry> result = new ArrayList();
         for(PmsConferenceEventEntry entry : conferenceEventEntries.values()) {
             if(entry.pmsEventId.equals(eventId)) {
+                if(entry.from == null) {
+                    entry.from = new Date();
+                }
                 result.add(entry);
             }
         }
@@ -239,6 +245,18 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
                 }
             }
         }
+        
+       
+        if(!filter.itemIds.isEmpty()) {
+            List<PmsConferenceEvent> allEvents = new ArrayList();
+            for(PmsConferenceEvent event : result) {
+                if(filter.itemIds.contains(event.pmsConferenceItemId)) {
+                    allEvents.add(event);
+                }
+            }
+            result = allEvents;
+        }
+        
         
         return result;
     }
@@ -325,10 +343,22 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
         List<PmsConferenceEventEntry> result = new ArrayList();
         for(PmsConferenceEventEntry entry : conferenceEventEntries.values()) {
             if(entry.inTime(filter)) {
-                result.add(entry);
                 PmsConferenceEvent event = getConferenceEvent(entry.pmsEventId);
-                entry.conferenceItem = getItem(event.pmsConferenceItemId).name;
-                entry.meetingTitle = getConference(event.pmsConferenceId).meetingTitle;
+                
+                if(!filter.itemIds.isEmpty() && !filter.itemIds.contains(event.pmsConferenceItemId)) {
+                    continue;
+                }
+                
+                if(event != null) {
+                    PmsConferenceItem item = getItem(event.pmsConferenceItemId);
+                    if(item != null) {
+                        entry.conferenceItem = item.name;
+                    }
+                    PmsConference confernece = getConference(event.pmsConferenceId);
+                    if(confernece != null) { entry.meetingTitle = confernece.meetingTitle; }
+                    if(confernece != null) { entry.conferenceId = confernece.id; }
+                }
+                result.add(entry);
             }
         }
         result.sort(Comparator.comparing(a -> a.from));

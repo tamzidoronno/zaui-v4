@@ -14,6 +14,7 @@ class SalesPointSelectPayment extends \MarketingApplication implements \Applicat
         $this->includefile("selectpayment");
     }
 
+    
     /**
      * 
      * @return \ApplicationBase[]

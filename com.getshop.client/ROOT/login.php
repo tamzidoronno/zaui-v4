@@ -171,6 +171,8 @@ if (isset($_POST['pincoderequest']) && $_POST['username'] && $_POST['password'])
                                 echo "<a class='gs_ignorenavigate' href='/pos.php' style='text-decoration:none;'>";
                                 echo "<div style='background-color:#fff; border: solid 1px #bbb;margin: auto; width: 200px; padding: 10px;margin-bottom: 5px; cursor:pointer;'><span class='" . $module->fontAwesome . "'></span>Salespoint</div>";
                                 echo "</a>";
+                            } elseif (strtolower($module->id) == "pmsconference") {
+                                echo "<a class='gs_ignorenavigate' href='/pmsconference.php'><div class='gs_framework_module $moduleActiveClass'><i class='fa fa-group'></i><br/> Conference</div></a>";
                             } elseif(strtolower($module->name) == "apac") {
                                 echo "<a class='gs_ignorenavigate' href='/apac.php' style='text-decoration:none;'>";
                                 echo "<div style='background-color:#fff; border: solid 1px #bbb;margin: auto; width: 200px; padding: 10px;margin-bottom: 5px; cursor:pointer;'><span class='" . $module->fontAwesome . "'></span>APAC</div>";

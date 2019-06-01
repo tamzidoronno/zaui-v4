@@ -1,0 +1,44 @@
+<?php
+/* @var $this \ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7\SalesPointReports */
+$start = $this->getStart();
+$end = $this->getEnd();
+$filename = "Salesport report " . $start . " - " . $end;
+?>
+
+<div style="margin: auto; max-width: 1500px;">
+    <div class="reportheader">Sales numbers</div>
+    <div gstype="form" method="loadReport">
+        <input class="gsniceinput1" gsname="startdate" value="<?php echo $start; ?>" style="width:90px;">
+        <input class="gsniceinput1" gsname="enddate" value="<?php echo $end; ?>" style="width:90px;">
+        <span class="shop_button" gstype="submit">Load report</span>
+    </div>
+    <br>
+    <div class="reportarea">
+        <span class="shop_button" gs_downloadExcelReport='generateExcelReport' style='float:right;' gs_fileName='<?php echo $filename; ?>'>Download report to excel</span>
+        <?php
+        
+        $matrix = $this->createSalesPosReportMatrix();
+        
+        echo "<table width='100%'>";
+        echo "<tr>";
+        echo "<th align='left'>Product</th>";
+        echo "<th align='left'>Count</th>";
+        echo "<th align='left'>Ex taxes</th>";
+        echo "<th align='left'>Avg. price</th>";
+        echo "<th align='left'>Taxes</th>";
+        echo "</tr>";
+        foreach($matrix as $row) {
+            echo "<tr>";
+            foreach($row as $cell) { echo "<td> " . $cell . "</td>"; }
+            echo "</tr>";
+        }
+        ?>
+    </div>
+    
+</div>
+
+<script>
+    getshop_loadDatePicker($("[gsname='startdate']"));
+    getshop_loadDatePicker($("[gsname='enddate']"));
+</script>
+

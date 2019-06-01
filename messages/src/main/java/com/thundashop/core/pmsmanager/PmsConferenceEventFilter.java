@@ -5,7 +5,9 @@
  */
 package com.thundashop.core.pmsmanager;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -16,4 +18,5 @@ public class PmsConferenceEventFilter {
     public Date start;
     public Date end;
     public String keyword;
+    public List<String> itemIds = new ArrayList();
 }

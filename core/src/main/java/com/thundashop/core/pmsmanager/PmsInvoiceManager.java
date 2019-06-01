@@ -497,12 +497,18 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             if(order.status == Order.Status.PAYMENT_COMPLETED) {
                 continue;
             }
-            payedfor = false;
+            return false;
         } 
+        
+        if(!booking.isRecentlyCompleted() && booking.getRoom(pmsRoomId).totalCost == 0.0) {
+            return true;
+        }
        
         if(!hasOrders && (pmsManager.getConfigurationSecure().getMarkBookingsWithNoOrderAsUnpaid())) {
             payedfor = false;
         }
+        
+        
         
         return payedfor;
     }
@@ -1886,7 +1892,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         return res;
     }
-
 
     public String createOrder(String bookingId, NewOrderFilter filter) {
         PmsBooking booking = pmsManager.getBooking(bookingId);

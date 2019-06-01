@@ -7,8 +7,16 @@ app.AccountFinanceReport = {
         $(document).on('change', '.AccountFinanceReport .timeperiode[gsname="year"]', app.AccountFinanceReport.changePeriodeOptions);
         $(document).on('click', '.AccountFinanceReport .leftmenu .taboperation', app.AccountFinanceReport.changeMenu);
         $(document).on('click', '.AccountFinanceReport .totalcolforaccount', app.AccountFinanceReport.showSummaryRow);
+        $(document).on('click', '.AccountFinanceReport .transferalldays', app.AccountFinanceReport.transferAllDays);
     },
-    
+    transferredToAccounting : function() {
+        
+    },
+    transferAllDays : function() {
+        $('.transferring').show();
+        var event = thundashop.Ajax.createEvent('','transferAllDays',$(this), {});
+        thundashop.Ajax.post(event);
+    },
     showSummaryRow: function() {
         var menu = $(this).find('.summarymenu');
         var wasVisible = menu.is(':visible');

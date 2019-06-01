@@ -1,0 +1,47 @@
+<?php
+$conferenceitems = $this->indexList($this->getApi()->getPmsConferenceManager()->getAllItem("-1"));
+$itemsFilter = $this->getItemsFilterArray();
+$loggedOnUser = $this->getApi()->getUserManager()->getLoggedOnUser();
+?>
+
+<div class='printheader' style="text-align: center;">
+    Printed <?php echo date("d.m.Y H:i", time()); ?> by <?php echo $loggedOnUser->fullName; ?> for by events date : <?php echo $this->getCurrentStart() . " 00:00" . " - " . $this->getCurrentEnd() . " 23:59"; ?>
+    <?php
+    if(sizeof($itemsFilter) > 0) {
+        $names = array();
+        foreach($itemsFilter as $itemId) {
+            $names[] = $conferenceitems[$itemId]->name;
+        }
+        echo "<div>Filter: <b>" . join(",", $names) . "</b></div>";
+    }
+    ?>
+</div>
+
+
+<div gstype='form' method='updateDateRange' class="reportfilter">
+    <input class='gsniceinput1 startdate' value='<?php echo $this->getCurrentStart(); ?>' style='width:80px;' gsname='start'>
+    <input class='gsniceinput1 enddate' value='<?php echo $this->getCurrentEnd(); ?>' style='width:80px;' gsname='end'>
+    <span class='shop_button' gstype='submit'>Load report</span>
+    <span class='shop_button' onclick='$(".itemsfilter").slideDown()' style='float:right'>Filter by items</span>
+    <span class='shop_button' style='float:right;margin-right:10px;' onclick="window.print();return false;" >Print</span>
+    <div class='itemsfilter'>
+    <?php
+    foreach($conferenceitems as $item) {
+        $checked = in_array($item->id, $itemsFilter) ? "CHECKED" : "";
+        echo "<span style='width: 150px;display:inline-block;' class='ellipsis'><input type='checkbox' gsname='itemsfilter_".$item->id."' $checked></input> ".  $item->name . "</span>";
+    }
+    ?>
+    </div>
+    <?php
+    if(sizeof($itemsFilter) > 0) {
+        $names = array();
+        foreach($itemsFilter as $itemId) {
+            $names[] = $conferenceitems[$itemId]->name;
+        }
+        echo "<div style='padding: 10px;'><i class='fa fa-trash-o' style='cursor:pointer;' gsclick='deleteItemsFilter'></i> Filtered by: <b>" . join(",", $names) . "</b></div>";
+    }
+    ?>
+</div>
+
+
+<div class='headerspacer'></div>

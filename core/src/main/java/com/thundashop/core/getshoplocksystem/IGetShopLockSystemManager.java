@@ -129,6 +129,9 @@ public interface IGetShopLockSystemManager {
     
     @Administrator
     public FilteredData getAllAccessUsers(FilterOptions options);
+
+    @Administrator
+    public List<AccessGroupUserAccess> getAllAccessUsersFlat();
     
     @Administrator
     public AccessGroupUserAccess getAccess(String userId);
@@ -184,4 +187,7 @@ public interface IGetShopLockSystemManager {
     
     @Administrator
     public void closeLock(String lockId);
+    
+    @Administrator
+    public void deleteLock(String serverId, String lockId);
 }

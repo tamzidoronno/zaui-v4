@@ -72,4 +72,6 @@ public interface LockServer {
     public String getAccessToken();
     
     public boolean hasAccessLogFeature();
+
+    public void deleteLock(String lockId);
 }

@@ -2,65 +2,64 @@
 <?php
 /* @var $this ns_02b94bcd_39b9_41aa_b40c_348a27ca5d9d\PmsConference */
 
-$loggedOnUser = $this->getApi()->getUserManager()->getLoggedOnUser();
-$start = $this->convertToJavaDate(strtotime($_GET['start'] . " 00:00"));
-$end = $this->convertToJavaDate(strtotime($_GET['end'] . " 23:59"));
+$start = $this->convertToJavaDate(strtotime($this->getCurrentStart() . " 00:00"));
+$end = $this->convertToJavaDate(strtotime($this->getCurrentEnd() . " 23:59"));
+$itemsFilter = $this->getItemsFilterArray();
 
 $filter = new core_pmsmanager_PmsConferenceEventFilter();
 $filter->start = $start;
 $filter->end = $end;
+$filter->itemIds = $itemsFilter;
 
 $events = $this->getApi()->getPmsConferenceManager()->getEventEntriesByFilter($filter);
 $currentDate = "";
 ?>
 
-<div class='header'>
-    Printed <?php echo date("d.m.Y H:i", time()); ?> by <?php echo $loggedOnUser->fullName; ?> for by events date : <?php echo $_GET['start'] . " 00:00" . " - " . $_GET['end'] . " 23:59"; ?>
+<div class='eventreportarea'>
+    <?php
+    $this->includefile("reportheader");
+
+    echo "<table width='100%' class='texttable' cellspacing='0' cellpadding='0'>";
+
+    echo "<tr>";
+    echo "<th valign='top' align='left'>From</th>";
+    echo "<th valign='top' align='left'>To</th>";
+    echo "<th valign='top' align='left'>Text</th>";
+    echo "<th valign='top' align='left'>Extended text</th>";
+    echo "<th valign='top' align='left'>Count</th>";
+    echo "<th valign='top' align='left'>Room</th>";
+    echo "<th valign='top' align='left'>Conference</th>";
+    echo "</tr>";
+
+    foreach($events as $eventEntry) {
+        $date = date("d.m.Y", strtotime($eventEntry->from));
+        if($date != $currentDate) {
+            $currentDate = $date;
+            echo "<tr><td colspan='20' class='dateheader'>$date</td></tr>";
+        }
+
+        echo "<tr>";
+        $from = "";
+        if($eventEntry->from) { $from = date("H:i", strtotime($eventEntry->from)); }
+        $to = "";
+        if($eventEntry->to) { $to = date("H:i", strtotime($eventEntry->to)); }
+        $text = $eventEntry->text;
+        $count = $eventEntry->count;
+
+        echo "<td valign='top'>$from</td>";
+        echo "<td valign='top'>$to</td>";
+        echo "<td valign='top'>".$eventEntry->text."</td>";
+        echo "<td valign='top'>" . nl2br($eventEntry->extendedText) . "</td>";
+        echo "<td valign='top'>$count</td>";
+        echo "<td valign='top' class='openevent' eventid='".$eventEntry->pmsEventId."'>".$eventEntry->conferenceItem."</td>";
+        echo "<td valign='top' class='openconference' conferenceid='".$eventEntry->conferenceId."'>".$eventEntry->meetingTitle."</td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+    ?>
 </div>
 
-<?php
-
-echo "<table width='100%' class='texttable' cellspacing='0' cellpadding='0'>";
-
-echo "<tr>";
-echo "<th valign='top' align='left'>From</th>";
-echo "<th valign='top' align='left'>To</th>";
-echo "<th valign='top' align='left'>Text</th>";
-echo "<th valign='top' align='left'>Extended text</th>";
-echo "<th valign='top' align='left'>Count</th>";
-echo "<th valign='top' align='left'>Room</th>";
-echo "<th valign='top' align='left'>Conference</th>";
-echo "</tr>";
-
-foreach($events as $eventEntry) {
-    $date = date("d.m.Y", strtotime($eventEntry->from));
-    if($date != $currentDate) {
-        $currentDate = $date;
-        echo "<tr><td colspan='20' class='dateheader'>$date</td></tr>";
-    }
-    
-    echo "<tr>";
-    $from = "";
-    if($eventEntry->from) { $from = date("H:i", strtotime($eventEntry->from)); }
-    $to = "";
-    if($eventEntry->to) { $to = date("H:i", strtotime($eventEntry->to)); }
-    $text = $eventEntry->text;
-    $count = $eventEntry->count;
-    
-    echo "<td valign='top'>$from</td>";
-    echo "<td valign='top'>$to</td>";
-    echo "<td valign='top'>".$eventEntry->text."</td>";
-    echo "<td valign='top'>" . nl2br($eventEntry->extendedText) . "</td>";
-    echo "<td valign='top'>$count</td>";
-    echo "<td valign='top'>".$eventEntry->conferenceItem."</td>";
-    echo "<td valign='top'>".$eventEntry->meetingTitle."</td>";
-    echo "</tr>";
-}
-echo "</table>";
-?>
-
-<style>
-    .dateheader { border: solid 1px #bbb; text-align: center; font-weight: bold; background-color:#efefef; }
-    .header { text-align: center; border-bottom: solid 2px; padding-bottom: 10px; margin-bottom: 10px;}
-    .texttable tr td { border-bottom: solid 1px; padding: 10px; }
-</style>
+<script>
+    getshop_loadDatePicker($('.startdate'), { dependant : $('.enddate'), jump : 7 });    
+    getshop_loadDatePicker($('.enddate'), { dependant : $('.startdate'), jump : -7 });
+</script>

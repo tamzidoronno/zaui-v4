@@ -66,6 +66,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     private HashMap<String, WubookAvailabilityRestrictions> restrictions = new HashMap();
     private Date availabilityHasBeenChanged = null;
     private Date availabilityLastUpdated = null;
+    private Date lastUpdateLongTime = null;
     SavedLastAvailibilityUpdate lastAvailability = new SavedLastAvailibilityUpdate();
     
     private WubookLog log = new WubookLog();
@@ -130,7 +131,19 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     }
     
     public boolean updateAvailability() throws Exception {
-        return updateAvailabilityInternal(370);
+        int numberOfDays = 370;
+        if(lastUpdateLongTime == null) {
+            numberOfDays = 720;
+            lastUpdateLongTime = new Date();
+        } else {
+            long diff = System.currentTimeMillis() - lastUpdateLongTime.getTime();
+            if(diff > (60*1000*60*24)) {
+                numberOfDays = 720;
+                lastUpdateLongTime = new Date();
+            }
+        }
+        
+        return updateAvailabilityInternal(numberOfDays);
     }
     
     @Override

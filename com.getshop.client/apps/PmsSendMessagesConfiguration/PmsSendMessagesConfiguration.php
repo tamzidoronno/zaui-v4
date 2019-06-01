@@ -90,6 +90,7 @@ class PmsSendMessagesConfiguration extends \WebshopApplication implements \Appli
         $msg->languages = $_POST['data']['languages'];
         $msg->prefixes = $_POST['data']['prefixes'];
         $msg->roomTypes = $_POST['data']['roomtypes'];
+        $msg->isManual = $_POST['data']['ismanual'] == "true";
         
         $this->getApi()->getPmsNotificationManager()->saveMessage($this->getSelectedMultilevelDomainName(), $msg);
     }

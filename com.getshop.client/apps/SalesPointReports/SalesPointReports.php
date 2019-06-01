@@ -14,6 +14,16 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
         return "SalesPointReports";
     }
 
+    public function showSalesReport() {
+        $_SESSION['ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7_activetab'] = "salesreport";
+        $this->includefile("salesreport");
+    }
+    
+    public function loadReport() {
+        $_SESSION['ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7_start'] = $_POST['data']['startdate'];
+        $_SESSION['ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7_end'] = $_POST['data']['enddate'];
+    }
+    
     public function render() {
         if ($this->preRender()) {
             return;
@@ -28,6 +38,8 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
                 $this->showReportList(true);
             } else if ($tab == "masterreport") {
                 $this->includefile("masterreport");
+            } else if ($tab == "salesreport") {
+                $this->includefile("salesreport");
             } else {
                 $this->includefile("xreport");
             }
@@ -227,6 +239,92 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
             $total += $item->count;
         }
         return $total;
+    }
+    public function generateExcelReport() {
+        $header = array();
+        $header[] = "Product";
+        $header[] = "Count";
+        $header[] = "Ex taxes";
+        $header[] = "Avg price";
+        $header[] = "Taxes";
+        
+        $matrix = $this->createSalesPosReportMatrix();
+        
+        array_unshift($matrix, $header);
+        
+//        $newMatrix = array();
+//        $newMatrix[] = $header;
+//        foreach($matrix as $row) {
+//            $newMatrix[] = $row;
+//        }
+        
+        echo json_encode($matrix);
+    }
+
+    public function getStart() {
+        if(isset($_SESSION['ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7_start'])) {
+            return $_SESSION['ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7_start'];
+        }
+        return date("d.m.Y", time()-(86400*7));
+    }
+
+    public function getEnd() {
+        if(isset($_SESSION['ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7_end'])) {
+            return $_SESSION['ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7_end'];
+        }
+        return date("d.m.Y", time());
+    }
+
+    public function createSalesPosReportMatrix() {
+        
+        $matrix = array();
+        $allProducts = $this->getApi()->getProductManager()->getAllProductsLight();
+        $sorter = array();
+        foreach($allProducts as $prod) {
+            $sorter[$prod->id] = $prod->name;
+        }
+
+        $filter = new \core_pos_SalesReportFilter();
+        $filter->start = $this->convertToJavaDate(strtotime($this->getStart()));
+        $filter->end = $this->convertToJavaDate(strtotime($this->getEnd()));
+        $result = $this->getApi()->getPosManager()->getSalesReport($filter);
+        $totalCounter = 0;
+        $totalValue = 0;
+        $totalTaxes = 0;
+        foreach($result->entries as $entry) {
+            foreach($sorter as $prodId => $productName) {
+                $prodCounter = (array)$entry->productCounter;
+                $prodValue = (array)$entry->productValue;
+                $prodTaxes = (array)$entry->productTaxes;
+                if(!array_key_exists($prodId, $prodCounter)) {
+                    continue;
+                }
+                $counter = $prodCounter[$prodId];
+                $value = $prodValue[$prodId];
+                $taxes = $prodTaxes[$prodId];
+                $row = array();
+                $row[] .= $productName;
+                $row[] .= $counter;
+                $row[] .= round($value, 2);
+                $row[] .= round($value/$counter, 2);
+                $row[] .= round($taxes, 2);
+                $matrix[] = $row;
+                $totalCounter += $counter;
+                $totalValue += $value;
+                $totalTaxes += $taxes;
+            }
+            
+            $sum = array();
+            $sum[] = "Total";
+            $sum[] = $totalCounter;
+            $sum[] = round($totalValue,2);
+            $sum[] = round($totalValue/$totalCounter,2);
+            $sum[] = round($totalTaxes,2);
+            $matrix[] = $sum;
+        }
+        
+        return $matrix;
+
     }
 
 }

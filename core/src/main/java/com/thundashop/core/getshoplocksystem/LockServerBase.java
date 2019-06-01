@@ -162,7 +162,9 @@ public abstract class LockServerBase extends DataCommon {
         }
         
         startUpdatingOfLocks();
-        getShopLockSystemManager.clearCache(this);
+        if (getShopLockSystemManager != null) {
+            getShopLockSystemManager.clearCache(this);
+        }
     }
     
     public void setDetails(String hostname, String userName, String password, String givenName, String token) {

@@ -64,6 +64,10 @@ class ModulePage {
             return $this->getTopMenuInvoicing();
         }
         
+        if ($this->module == "pmsconference") {
+            return $this->getTopMenuConference();
+        }
+        
         if ($this->module == "settings") {
             return $this->getSettingsMenu();
         }
@@ -349,7 +353,6 @@ class ModulePage {
         $menu->entries[] = new ModulePageMenuItem("Cleaning", "e03b19de-d1bf-4d1c-ac40-8c100ef53366", "gsicon-gs-cleaning");
         $menu->entries[] = new ModulePageMenuItem("CRM", "4f66aad0-08a0-466c-9b4c-71337c1e00b7", "gsicon-users");
         $menu->entries[] = new ModulePageMenuItem("Checklist", "checklist", "gsicon-list");
-        $menu->entries[] = new ModulePageMenuItem("Conference", "conference", "fa-group");
         $menu->entries[] = new ModulePageMenuItem("Settings", "messages", "gsicon-gs-gears");
         $menu->entries[] = new ModulePageMenuItem("Support", "getshopsupport", "fa-support");
         return $menu;
@@ -427,6 +430,14 @@ class ModulePage {
 
     public function renderBottom() {
         $this->getMenu()->renderNumPad();
+    }
+
+    public function getTopMenuConference() {
+        $menu = new \ModulePageMenu("pmsconference");
+        $menu->entries[] = new ModulePageMenuItem("Conference", "home", "gsicon-gs-dashboard");
+        $menu->entries[] = new ModulePageMenuItem("Event report", "eventreport", "fa-pie-chart");
+        $menu->entries[] = new ModulePageMenuItem("Report", "report", "fa-line-chart");
+        return $menu;
     }
 
 }

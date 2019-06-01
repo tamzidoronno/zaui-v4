@@ -29,7 +29,7 @@ class ApacAccessList extends \MarketingApplication implements \Application {
         return \GetShopModuleTable::formatDate($userAccess->rowCreatedDate);
     }
     
-    public function GetShopLockSystemManager_getAllAccessUsers() {
+    public function GetShopLockSystemManager_getAllAccessUsersFlat() {
         $view = new \ns_0cf90108_6e9f_49fd_abfe_7541d1526ba2\ApacAccessView();
         $view->setUserId($_POST['data']['id']);
         $view->renderApplication(true, $this);
@@ -50,12 +50,11 @@ class ApacAccessList extends \MarketingApplication implements \Application {
         );
         
         $args = array();
-        $args[] = $options;
                 
-        $table = new \GetShopModuleTable($this, 'GetShopLockSystemManager', 'getAllAccessUsers', $args, $attributes);
-        $table->avoidAutoExpanding();
+        $table = new \GetShopModuleTable($this, 'GetShopLockSystemManager', 'getAllAccessUsersFlat', $args, $attributes);
+        $table->sortByColumn("groupid");
         $table->loadContentInOverlay = true;
-        $table->renderPagedTable();
+        $table->render();
     }
 
     public function loadAllAccessGroups() {

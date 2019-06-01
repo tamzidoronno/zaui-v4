@@ -154,6 +154,7 @@ if($this->listGroupRooms()) {
             <div class="menuentry <? echo $this->isTabActive('orders'); ?>" needAllSaved='true' clearTabContent="true" tab='orderstab'><i class="fa fa-dollar"></i> <span><? echo $this->__f("Payments"); ?></span></div>
             <div style='display:none;' class="menuentry <? echo $this->isTabActive('log'); ?>" clearTabContent="true" tab='log'><i class="fa fa-history"></i> <span><? echo $this->__f("Log"); ?></span></div>
             <div class="menuentry <? echo $this->isTabActive('pga'); ?>" tab='pga'><i class="fa fa-ticket"></i> <span><? echo $this->__f("PGA"); ?></span></div>
+            <div class="menuentry sendconfirmationmenuentry <? echo $this->isTabActive('confirmation'); ?>" tab='confirmation' style='display:none;'><i class="fa fa-ticket"></i> <span><? echo $this->__f("Confirmation"); ?></span></div>
         </div>
 
         <div class="workarea">
@@ -194,6 +195,10 @@ if($this->listGroupRooms()) {
             
             <div class="guestinformation <? echo $this->isTabActive('pga'); ?>" tab='pga'>
                 <?php $this->printArea("pga"); ?>
+            </div>
+            
+            <div class="guestinformation <? echo $this->isTabActive('confirmation'); ?>" tab='confirmation'>
+                <?php $this->printArea("confirmation"); ?>
             </div>
 
             <div class="guestinformation <? echo $this->isTabActive('log'); ?>" tab='log'>

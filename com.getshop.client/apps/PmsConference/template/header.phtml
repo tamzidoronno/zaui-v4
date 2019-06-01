@@ -9,14 +9,29 @@ $start = date("d.m.Y");
 $end = date("d.m.Y", time()+86400);
 ?>
 <div class='header'>
+    <span gstype='form' method='updateDateRange' class="reportfilter" style='float:left;'>
+        <input class='gsniceinput1 startdate' value='<?php echo $this->getCurrentStart(); ?>' style='width:80px;' gsname='start'>
+        <input class='gsniceinput1 enddate' value='<?php echo $this->getCurrentEnd(); ?>' style='width:80px;' gsname='end'>
+        <span class='shop_button' gstype='submit'>Load report</span>
+    </span>    
+    
     <span style='position:relative'>
+        <span class='shop_button' gsclick="loadConferences" gs_callback='app.PmsConference.allConferencesLoaded' synchron='true'>List all conferences</span>
+        <div class='conferencelist'></div>
+    </span>
+    
+    <div class="listreportsarea">
+        <div style='text-align: right; margin-bottom: 5px; '>
+            <span style='float:left;'>Reports</span>
+            <i class='fa fa-close' onclick='$(".listreportsarea").slideUp();' style='cursor:pointer;'></i>
+        </div>
         <input type='text' class='gsniceinput1 startdate' style='width:90px' value='<?php echo $start; ?>'>
         <input type='text' class='gsniceinput1 enddate' style='width:90px' value='<?php echo $end; ?>'>
         <span class='shop_button  downloadreport' type='event'>Download event report</span>
         <span class='shop_button  downloadreport' type='all'>Download report</span>
-        <span class='shop_button' gsclick="loadConferences" gs_callback='app.PmsConference.allConferencesLoaded' synchron='true'>List all conferences</span>
-        <div class='conferencelist'></div>
-    </span>
+    </div>
+
+    
     <span class='shop_button' onclick='$(".addconferencepanel").toggle();'>Create a new conference</span>
 <?php
 /* @var $this \ns_02b94bcd_39b9_41aa_b40c_348a27ca5d9d\PmsConference */
@@ -45,6 +60,6 @@ if($subitem) {
 </div>
 
 <script>
-    $('.startdate').datepicker({ dateFormat: "dd.mm.yy",firstDay: 1});
-    $('.enddate').datepicker({ dateFormat: "dd.mm.yy",firstDay: 1});
+    getshop_loadDatePicker($('.startdate'), { dependant : $('.enddate'), jump : 1 });    
+    getshop_loadDatePicker($('.enddate'), { dependant : $('.startdate'), jump : -1 });
 </script>

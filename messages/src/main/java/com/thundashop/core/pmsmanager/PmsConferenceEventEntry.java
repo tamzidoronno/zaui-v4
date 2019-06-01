@@ -26,10 +26,21 @@ public class PmsConferenceEventEntry extends DataCommon {
     
     @Transient
     public String conferenceItem = "";
+    
+    @Transient
+    public String conferenceId = "";
 
     boolean inTime(PmsConferenceEventFilter filter) {
-        if(filter.start.before(from) && filter.end.after(from)) {
-            return true;
+        try {
+            if(from == null) {
+                return false;
+            }
+            if(filter.start.before(from) && filter.end.after(from)) {
+                return true;
+            }
+            return false;
+        }catch(Exception e) {
+            e.printStackTrace();
         }
         return false;
     }

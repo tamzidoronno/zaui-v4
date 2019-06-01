@@ -5,7 +5,7 @@
 .PmsSendMessagesConfiguration .messagebox .body textarea { width: 100%; height: 150px; box-sizing: border-box; }
 .PmsSendMessagesConfiguration .messagebox .footer { text-align: right; padding-bottom: 5px; }
 .PmsSendMessagesConfiguration .emailtemplate { width: 100%;box-sizing: border-box;height: 400px; }
-.PmsSendMessagesConfiguration .messageboxnew { border: solid 1px #bbb; border-radius: 5px;background-color:#efefef;  }
+.PmsSendMessagesConfiguration .messageboxnew { border: solid 1px #bbb; border-radius: 5px;background-color:#efefef; margin-bottom: 20px; }
 .PmsSendMessagesConfiguration .messageboxnew .title { padding: 10px; }
 .PmsSendMessagesConfiguration .messageboxnew .footer { padding: 10px; position:relative; }
 .PmsSendMessagesConfiguration .messageboxnew .footer .fa-trash-o { position:absolute; right: 10px; font-size: 20px; color:#000; cursor:pointer; }

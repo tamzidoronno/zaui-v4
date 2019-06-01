@@ -121,7 +121,6 @@ class ModulePageMenu {
     }
 
     public function printChangedMenues($user, $printPageMenuInModulesMenu) {
-        
         $factory = IocContainer::getFactorySingelton();
         $modules = $factory->getApi()->getPageManager()->getModules();
         echo "<div class='gs_framework_modules'>";
@@ -144,6 +143,8 @@ class ModulePageMenu {
                     echo "<a class='gs_ignorenavigate' href='pms.php'><div class='gs_framework_module $moduleActiveClass'>$icon<br>PMS</div></a>";
                 } elseif ($module->name == "Salespoint") {
                     echo "<a class='gs_ignorenavigate' href='pos.php'><div class='gs_framework_module $moduleActiveClass'>$icon<br/>SalesPoint</div></a>";
+                } elseif (strtolower($module->id) == "pmsconference") {
+                    echo "<a class='gs_ignorenavigate' href='/pmsconference.php'><div class='gs_framework_module $moduleActiveClass'><i class='fa fa-group'></i><br/>Conference</div></a>";
                 } elseif ($module->name == "Comfort") {
                     echo "<a class='gs_ignorenavigate' href='/comfort.php'><div class='gs_framework_module $moduleActiveClass'><i class='fa fa-sun-o'></i><br/>Comfort</div></a>";
                 } elseif (strtolower($module->name) == "apac") {
@@ -240,7 +241,9 @@ class ModulePageMenu {
 
     public function printHorizantalMenu($user) {
         $menuEntries = $this->getEntries();
-        $useraccess = (array)$user->pmsPageAccess;
+        if ($this->moduleName == "pms") {
+            $useraccess = (array)$user->pmsPageAccess;
+        }
         
         if ($this->moduleName == "salespoint") {
             $useraccess = (array)$user->salesPointPageAccess;

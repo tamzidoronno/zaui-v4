@@ -389,5 +389,11 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
         }
     }
 
+    @Override
+    public PmsSegment getSegmentForRoom(String roomId) {
+        PmsBooking booking = pmsManager.getBookingFromRoom(roomId);
+        return getSegmentForBooking(booking.id);
+    }
+
 
 }

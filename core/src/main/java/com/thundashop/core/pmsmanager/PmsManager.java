@@ -9906,7 +9906,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsRoomPaymentSummary getSummary(String pmsBookingId, String pmsBookingRoomId) {
-        PmsBooking booking = getBooking(pmsBookingId);
+        PmsBooking booking = bookings.get(pmsBookingId);
         
         if (booking == null) {
             return null;
@@ -9927,6 +9927,34 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         return summary;
 
+    }
+    
+    @Override
+    public List<PmsRoomPaymentSummary> getSummaryForAllRooms(String pmsBookingId) {
+        PmsBooking booking = bookings.get(pmsBookingId);
+        
+        if (booking == null) {
+            return null;
+        }
+        
+        List<String> orderIds = getExtraOrderIds(booking.id);
+        orderIds.addAll(booking.orderIds);
+        
+        
+        List<Order> orders = orderIds
+            .stream()
+            .map(id -> orderManager.getOrder(id))
+            .collect(Collectors.toList());
+
+        List<PmsRoomPaymentSummary> summaryList = new ArrayList();
+        
+        for (PmsBookingRooms room : booking.rooms) {
+            PmsBookingPaymentDiffer differ = new PmsBookingPaymentDiffer(orders, booking, room, this);
+            PmsRoomPaymentSummary summary = differ.getSummary();
+            summaryList.add(summary);
+        }
+        
+        return summaryList;
     }
     
     private Integer getDaysUntilStart(PmsBooking book) {

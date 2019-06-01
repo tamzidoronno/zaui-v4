@@ -92,3 +92,41 @@
     margin-bottom: 50px;
     margin-top: 50px;
 }
+
+.PmsGroupBookingHeader .amount {
+    width: 100px;
+    text-align: right;
+}
+
+.PmsGroupBookingHeader .col.name{
+    width: 300px;
+}
+
+.PmsGroupBookingHeader .col.room {
+    width: 100px;
+}
+
+.PmsGroupBookingHeader .col.date {
+    width: 150px;
+}
+
+.PmsGroupBookingHeader .col.nights {
+    width: 50px;
+}
+
+.PmsGroupBookingHeader .header.row {
+    font-size: 0px;
+}
+
+.PmsGroupBookingHeader .header.row .col {
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.PmsGroupBookingHeader div.row:nth-child(odd) {
+    background-color: #FFF;
+}
+
+.PmsGroupBookingHeader .row.deleted {
+    color: red;
+}

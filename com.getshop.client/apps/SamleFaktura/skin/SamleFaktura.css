@@ -24,7 +24,7 @@
 .SamleFaktura .row .col2 { width: 100px; }
 .SamleFaktura .row .col3 { width: 130px; }
 .SamleFaktura .row .col4 { width: calc(100% - 430px); }
-.SamleFaktura .row .col5 { width: 100px; text-align: right;}
+.SamleFaktura .row .col5 { width: 50px; text-align: right;}
 
 .SamleFaktura .selectUser {
     border: solid 1px #DDD;

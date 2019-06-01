@@ -83,5 +83,20 @@ class SamleFaktura extends \PaymentApplication implements \Application {
     public function getColor() {
         return "darkgreen";
     }
+
+    /**
+     * 
+     * @param \core_ordermanager_data_Order $order
+     */
+    public function getSegment($order) {
+        foreach ($order->cart->items as $item) {
+            if ($item->product && $item->product->externalReferenceId) {
+                return $this->getApi()->getPmsCoverageAndIncomeReportManager()->getSegmentForRoom($this->getSelectedMultilevelDomainName(), $item->product->externalReferenceId);
+            }
+        }
+        
+        return "";
+    }
+
 }
 ?>

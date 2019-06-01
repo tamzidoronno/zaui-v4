@@ -20,6 +20,7 @@ if (!$total) {
 <div gstype='form' method='showSelectUser'>
 <?
 foreach ($groupedOrders as $userId => $orders) {
+    $totalForUser = 0;
     $user = $this->getApi()->getUserManager()->getUserById($userId);
     $total = 0;
     foreach ($orders as $order) {
@@ -33,6 +34,7 @@ foreach ($groupedOrders as $userId => $orders) {
     ?>
     <div class='groupedbyuser'>
         <div class='userinfo'>
+            <input type='checkbox' class='checkall' style='float: left;'/>
             <?
             echo $user->fullName;
             ?>
@@ -58,7 +60,7 @@ foreach ($groupedOrders as $userId => $orders) {
             <div class='row'>
                 <div class='col col1'>
                     <a href='/invoicing.php?page=orderviewpage&orderid=<? echo $order->id; ?>'><i class="gs_shop_small_icon fa fa-dollar" title='Open invoice in invoice module'></i></a>
-                    <input type='checkbox' gsname='orderid_<? echo $order->id; ?>' value='<? echo $order->id; ?>'/>
+                    <input class='checkboxtoselect' type='checkbox' gsname='orderid_<? echo $order->id; ?>' value='<? echo $order->id; ?>'/>
                 </div>
                 <div class='col col2'><? echo $incremental; ?></div>
                 <div class='col col3'><? echo $date; ?></div>
@@ -66,11 +68,11 @@ foreach ($groupedOrders as $userId => $orders) {
                     <?
                     foreach ($order->cart->items as $item) {
                         $metadata = $item->product && $item->product->metaData ? "( " .$item->product->metaData." )" : "";
-                        echo "<div style='display: inline-block; width: 49%;'>".$item->count . " x " . $item->product->name." $metadata</div>";
+                        echo "<div style='display: inline-block; width: calc(100% - 200px)'>".$item->count . " x " . $item->product->name." $metadata</div>";
                         
                         
                         if ($item->startDate && $item->endDate) {
-                            echo "<div style='display: inline-block; width: 49%;'>".date("d/m-Y", strtotime($item->startDate))." -".date("d/m-Y", strtotime($item->endDate))."</div>";
+                            echo "<div style='display: inline-block; width: 200px;'>".date("d/m-Y", strtotime($item->startDate))." -".date("d/m-Y", strtotime($item->endDate))."</div>";
                         }
                         
                     }
@@ -78,12 +80,17 @@ foreach ($groupedOrders as $userId => $orders) {
                 
                 </div>
                 <div class='col col5'><? echo $total; ?></div>
+                <div class='col col6'><? echo " / ". $this->getSegment($order)->name; ?></div>
             </div>
             <?
+            $totalForUser += $total;
         }
+        
+        echo "<h2>&nbsp;&nbsp;&nbsp;Total: ".$totalForUser."</h2>";
     ?>
     </div>
     <?
+    
 }
 ?>
     

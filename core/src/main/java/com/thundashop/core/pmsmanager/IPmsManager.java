@@ -633,5 +633,7 @@ public interface IPmsManager {
     
     @Administrator
     public void toggleAutoCreateOrders(String bookingId, String roomId);
-    
+
+    @Administrator
+    public List<PmsRoomPaymentSummary> getSummaryForAllRooms(String pmsBookingId);
 }

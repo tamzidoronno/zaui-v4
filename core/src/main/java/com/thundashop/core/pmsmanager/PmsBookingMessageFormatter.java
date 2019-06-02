@@ -386,7 +386,7 @@ class PmsBookingMessageFormatter {
         if(lang != null && lang.equalsIgnoreCase("en")) { lang = "en_en"; }
         if(lang != null && lang.equalsIgnoreCase("no")) { lang = "nb_NO"; }
         
-        for (PmsBookingRooms room : booking.rooms) {
+        for (PmsBookingRooms room : booking.getActiveRooms()) {
             BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
             
             for(PmsBookingAddonItem item : room.addons) {
@@ -442,7 +442,7 @@ class PmsBookingMessageFormatter {
         
         SimpleDateFormat slf = new SimpleDateFormat("dd.MM.YY");
         
-        for (PmsBookingRooms room : booking.rooms) {
+        for (PmsBookingRooms room : booking.getActiveRooms()) {
             BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
             
             list +=  type.name + " ( " + slf.format(room.date.start) + " - " + slf.format(room.date.end) + " )"+ "\n";

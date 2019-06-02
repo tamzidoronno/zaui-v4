@@ -145,7 +145,6 @@ public abstract class AccountingSystemBase extends ManagerBase {
     }
     
     public List<String> createNextOrderFile(Date endDate, String subType, List<Order> orders) {
-        clearLog();
         
         orders.removeIf(order -> order.triedTransferredToAccountingSystem);
         

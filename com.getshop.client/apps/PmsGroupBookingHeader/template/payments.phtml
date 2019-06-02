@@ -1,18 +1,142 @@
-
 <?php
 /* @var $this ns_cbcf3e53_c035_43c2_a1ca_c267b4a8180f\PmsGroupBookingHeader */
 $booking = $this->getCurrentBooking();
-if(sizeof($booking->orderIds) > 0) {
-    $ids = array();
-    foreach($booking->rooms as $r) {
-        $ids[] = $r->pmsBookingRoomId;
+$summaries = $this->getApi()->getPmsManager()->getSummaryForAllRooms($this->getSelectedMultilevelDomainName(), $booking->id);
+
+$distinctTypes = array();
+
+foreach ($summaries as $summary) {
+    foreach ($summary->rows as $row) {
+        foreach ($row->createdOrdersForByPaymentMethods as $ordertype => $value) {
+            $distinctTypes[] = $ordertype;
+        }    
     }
-    $orderlist = new \ns_9a6ea395_8dc9_4f27_99c5_87ccc6b5793d\EcommerceOrderList();
-    $orderlist->setOrderIds($this->getCurrentBooking()->orderIds);
-    $orderlist->setExternalReferenceIds($ids);
-    $orderlist->setPaymentLinkCallBack("app.PmsGroupBookingHeader.refreshPayments");
-    $orderlist->renderApplication(true, $this);
-} else {
-    echo "<h1>No orders created yet, create one by pressing start payment process for all rooms.</h1>";
 }
+
+$distinctTypes = array_unique($distinctTypes);
+
 ?>
+    <div class="header row">
+        <div class="col room">Room</div>
+        <div class="col name">Name</div>
+        <div class="col date">Checkin</div>
+        <div class="col date">Checkout</div>
+        <div class="col nights">Nights</div>
+        <div class="col amount">Total</div>
+        <?
+        foreach ($distinctTypes as $type) {
+            $name = explode("\\", $type);
+            echo "<div class='col amount'>".$name[1]."</div>";
+            $totalInOrders += $totalByOrderType[$type];
+        }
+        ?>
+        <div class="col amount">Billed</div>
+        <div class="col amount">Diff +/-</div>
+        <div class="col">Segment</div>
+    </div>
+<?
+
+$totalSum = array();
+
+foreach ($booking->rooms as $room) {
+    
+    $summary = $this->getSummary($summaries, $room);
+    
+    $totalUnpaid = 0;
+    $totalForRoom = 0;
+
+    $distinctDates = array();
+    $needToCreateOrdersFor = 0;
+    
+    $totalByOrderType = array();
+    
+    foreach ($summary->rows as $row) {
+        $priceInOrders = $row->createdOrdersFor * $row->countFromOrders;
+
+        $priceInBooking = $row->priceInBooking * $row->countFromBooking;
+        $missingInOrders = ($row->priceInBooking * $row->countFromBooking) - ($row->createdOrdersFor * $row->countFromOrders);
+
+        $totalUnpaid += ($priceInBooking - $priceInOrders);
+        $needToCreateOrdersFor += $missingInOrders;
+        $totalForRoom += $priceInBooking;
+        
+        foreach ($row->createdOrdersForByPaymentMethods as $ordertype => $value) {
+            if (!isset($totalByOrderType[$ordertype])) {
+                $totalByOrderType[$ordertype] = 0;
+            }
+
+            $totalByOrderType[$ordertype] = $totalByOrderType[$ordertype] + $value;
+        }
+        
+        if (!in_array($row->date, $distinctDates)) {
+            $distinctDates[] = $row->date;
+        }
+    }
+    
+    $deletedClass = $room->deleted ? "deleted" : "";
+    echo "<div class='row $deletedClass'>";
+        echo "<div class='col room'>";
+            if ($room->bookingItemId != null) {
+                echo $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $room->bookingItemId)->bookingItemName;
+            } else {
+                echo "N/A";
+            }
+        echo "</div>";
+
+        echo "<div class='col name'>";
+            echo $room->guests[0]->name;
+        echo "</div>";
+        
+        $numberOfNights = $room->deleted ? 0 : $this->countNumberOfDays($room);
+        
+        $totalSum['numberOfNights'] += $numberOfNights;
+        
+        echo "<div class='col date'>".date('d.m.Y H:i', strtotime($room->date->start))."</div>";
+        echo "<div class='col date'>".date('d.m.Y H:i', strtotime($room->date->end))."</div>";
+        echo "<div class='col nights'>".$numberOfNights."</div>";
+        
+        echo "<div class='col totalforroom amount'>";
+            echo $totalForRoom;
+            $totalSum['totalForRoom'] += $totalForRoom;
+        echo "</div>";
+        
+        $totalInOrders = 0;
+        foreach ($distinctTypes as $type) {
+            $forMethod = isset($totalByOrderType[$type]) ? $totalByOrderType[$type] : 0;
+            echo "<div class='col amount'>".$forMethod."</div>";
+            $totalInOrders += $totalByOrderType[$type];
+            $totalSum[$type] += $forMethod;
+        }
+        
+        if (!$missingInOrders) {
+            $missingInOrders = 0;
+        }
+        
+        echo "<div class='col amount'>$totalInOrders</div>";
+        echo "<div class='col amount'>$missingInOrders</div>";
+        
+        $totalSum['missing'] += $missingInOrders;
+        $totalSum['totalInOrders'] += $totalInOrders;
+    echo "</div>";
+    
+}
+
+?>
+
+<div class="header row">
+    <div class="col room"></div>
+    <div class="col name">Total</div>
+    <div class="col date"></div>
+    <div class="col date"></div>
+    <div class="col nights"><? echo $totalSum['numberOfNights']; ?></div>
+    <div class="col amount"><? echo $totalSum['totalForRoom']; ?></div>
+    
+    <?
+    foreach ($distinctTypes as $type) {
+        echo "<div class='col amount'>".$totalSum[$type]."</div>";
+    }
+    ?>
+    
+    <div class="col amount"><? echo $totalSum['totalInOrders']; ?></div>
+    <div class="col amount"><? echo $totalSum['missing']; ?></div>
+</div>

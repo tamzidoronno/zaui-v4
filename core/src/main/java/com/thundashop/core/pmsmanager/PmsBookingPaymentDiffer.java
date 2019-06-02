@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
  */
 public class PmsBookingPaymentDiffer {
     private final List<Order> orders;
+    private final Map<String, Order> ordersMap = new HashMap();
     private final PmsBooking booking;
     private final PmsBookingRooms room;
     private final PmsManager pmsManager;
@@ -34,6 +36,10 @@ public class PmsBookingPaymentDiffer {
         this.room = room;
         this.pmsManager = pmsManager;
         this.sdf = new SimpleDateFormat("dd-MM-yyyy");
+        this.orders.stream()
+                .forEach(o -> {
+                    ordersMap.put(o.id, o);
+                });
 
         setProductIdsForRoom();
     }
@@ -84,6 +90,7 @@ public class PmsBookingPaymentDiffer {
                 row.actuallyPaidAmount = getAvaragePrice(date, key, paidAddonsGroupedByDay) * getCount(date, key, paidAddonsGroupedByDay);
                 
                 row.createdOrdersFor = getAvaragePrice(date, key, orderAddonsGroupedByDay);
+                row.createdOrdersForByPaymentMethods = getAvaragePriceByPaymentType(date, key, orderAddonsGroupedByDay);
                 retList.add(row);
             }
         }
@@ -196,13 +203,25 @@ public class PmsBookingPaymentDiffer {
     private void calculateAmountInOrders(PmsRoomPaymentSummaryRow row) {
         double sum = 0;
         
+        HashMap<String, Double> createdOrdersForByPaymentMethods = new HashMap();
+        
         for (String orderId : row.cartItemIds.keySet()) {
+            Order order = ordersMap.get(orderId);
+            
             for (String cartItemId : row.cartItemIds.get(orderId)) {
                 CartItem cartItem = getCartItem(orderId, cartItemId);
-                sum += getAmountForDate(cartItem, row.date);
-            }
+                double iSum = getAmountForDate(cartItem, row.date);
+                sum += iSum;
+                
+                if (createdOrdersForByPaymentMethods.get(order.payment.paymentType) == null) {
+                    createdOrdersForByPaymentMethods.put(order.payment.paymentType, 0D);
+                }
+                
+                createdOrdersForByPaymentMethods.put(order.payment.paymentType, createdOrdersForByPaymentMethods.get(order.payment.paymentType) + iSum);
+            }            
         }
         
+        row.createdOrdersForByPaymentMethods = createdOrdersForByPaymentMethods;
         row.createdOrdersFor = sum;
     }
 
@@ -365,6 +384,40 @@ public class PmsBookingPaymentDiffer {
         
         return (sum/count);
     }
+    
+    private HashMap<String, Double> getAvaragePriceByPaymentType(String date, String key, Map<String, List<PmsBookingAddonItem>> roomAddonsGroupedByDay) {
+        if (roomAddonsGroupedByDay.get(date) == null)
+            return null;
+        
+        List<PmsBookingAddonItem> items = roomAddonsGroupedByDay.get(date).stream()
+                .filter(addon -> addon.getKey().equals(key))
+                .collect(Collectors.toList());
+        
+        Map<String, List<PmsBookingAddonItem>> groupedItems = new HashMap();
+        
+        for(PmsBookingAddonItem addon : items) {
+            Order order = getOrder(addon);
+            if (groupedItems.get(order.payment.paymentType) == null) {
+                groupedItems.put(order.payment.paymentType, new ArrayList());
+            }
+            
+            groupedItems.get(order.payment.paymentType).add(addon);
+        }
+        
+        HashMap<String, Double> retMap = new HashMap();
+        
+        for (String paymentType : groupedItems.keySet()) {
+            double sum = groupedItems.get(paymentType).stream().mapToDouble(item -> item.price * item.count).sum();
+            double count = groupedItems.get(paymentType).stream().mapToInt(item -> item.count).sum();
+
+            if (sum != 0) {
+                retMap.put(paymentType, (sum/count));
+            }
+        }
+        
+        return retMap;
+        
+    }
 
     private int getCount(String date, String key, Map<String, List<PmsBookingAddonItem>> roomAddonsGroupedByDay) {
         if (roomAddonsGroupedByDay.get(date) == null)
@@ -441,5 +494,24 @@ public class PmsBookingPaymentDiffer {
 
     private void invertNegativeCountToCreateOrdersFor(PmsRoomPaymentSummary summary) {
 
+    }
+
+    private Order getOrder(PmsBookingAddonItem pmsBookingAddonItem) {
+        for (Order order : orders) {
+            for (CartItem item : order.getCartItems()) {
+                if (!item.isPmsAddons()) {
+                    continue;
+                }
+                
+                if (item.itemsAdded.stream()
+                        .map(o -> o.addonId)
+                        .collect(Collectors.toList())
+                        .contains(pmsBookingAddonItem.addonId)) {
+                    return order;
+                }
+            }
+        }
+        
+        return null;
     }
 }

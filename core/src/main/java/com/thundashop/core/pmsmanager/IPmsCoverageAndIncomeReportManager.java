@@ -38,4 +38,7 @@ public interface IPmsCoverageAndIncomeReportManager {
     
     @Administrator
     public void recalculateSegments(String segmentId);
+    
+    @Administrator
+    public PmsSegment getSegmentForRoom(String roomId);
 }

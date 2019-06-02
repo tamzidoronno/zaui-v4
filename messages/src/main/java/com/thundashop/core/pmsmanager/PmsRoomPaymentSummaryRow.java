@@ -26,6 +26,8 @@ public class PmsRoomPaymentSummaryRow implements Serializable {
     public List<String> productIds = new ArrayList();
     
     /**
+     * Key = orderid
+     * 
      * All cartitem ids accosicated to this date and type room or booking
      */
     public HashMap<String, List<String>> cartItemIds = new HashMap();
@@ -85,6 +87,11 @@ public class PmsRoomPaymentSummaryRow implements Serializable {
      * What product id should be used when creating the next order.
      */
     public String createOrderOnProductId = "";
+    
+    /**
+     * field createdOrdersFor based on payment type.
+     */
+    HashMap<String, Double> createdOrdersForByPaymentMethods;
 
     public Date getDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");

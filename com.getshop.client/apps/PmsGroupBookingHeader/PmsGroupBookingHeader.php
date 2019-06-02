@@ -430,5 +430,24 @@ class PmsGroupBookingHeader extends \MarketingApplication implements \Applicatio
         $this->defaultPrefix = $this->getFactory()->getStoreConfiguration()->defaultPrefix;
         return $this->defaultPrefix;
     }
+
+    public function getSummary($summaries, $room) {
+        foreach ($summaries as $summary) {
+            if ($summary->pmsBookingRoomId == $room->pmsBookingRoomId) {
+                return $summary;
+            }
+        }
+        
+        return null;
+    }
+
+    public function countNumberOfDays($room) {
+        $i = 0;
+        foreach ($room->priceMatrix as $date => $value) {
+            $i++;
+        }
+        return $i;
+    }
+
 }
 ?>

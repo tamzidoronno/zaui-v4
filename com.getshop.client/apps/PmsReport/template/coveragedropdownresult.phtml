@@ -22,6 +22,8 @@
         if(date("d.m.Y", strtotime($entry->date)) == date("d.m.Y", strtotime($_POST['data']['rowdate']))) {
             foreach($entry->roomsIncluded as $roomIncluded) {
                 $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $roomIncluded);
+                $segment = $this->getApi()->getPmsCoverageAndIncomeReportManager()->getSegment($this->getSelectedMultilevelDomainName(), $booking->segmentId);
+                
                 $rooms = array();
                 if($booking) {
                     $rooms = (array)$booking->rooms;
@@ -104,6 +106,9 @@
                         if($room->bookingItemId) {
                             $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $room->bookingItemId);
                             echo $item->bookingItemName;
+                            if ($segment) {
+                                echo " / ".$segment->name;
+                            }
                         } else {
                             echo "floating";
                         }

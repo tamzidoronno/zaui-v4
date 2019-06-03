@@ -108,7 +108,14 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
         
         amount = amount + cashWithdrawal.intValue();
         app.openCom(ip, verifoneListener);
-        app.performTransaction(PayPoint.TRANS_CARD_PURCHASE, amount, amount);
+        
+        if (amount < 0) {
+            amount = amount * -1;
+            app.performTransaction(PayPoint.TRANS_RETURN_GOODS, amount, amount);
+        } else {
+            app.performTransaction(PayPoint.TRANS_CARD_PURCHASE, amount, amount);
+        }
+        
     }
 
     public void getPayPointEvent(PayPointEvent event) {

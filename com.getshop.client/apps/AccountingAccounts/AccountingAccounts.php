@@ -36,5 +36,9 @@ class AccountingAccounts extends \SystemApplication implements \Application {
             }
         }
     }
+    
+    public function deleteAccount() {
+        $this->getApi()->getProductManager()->deleteAccountingAccount($_POST['data']['accountid']);
+    }
 }
 ?>

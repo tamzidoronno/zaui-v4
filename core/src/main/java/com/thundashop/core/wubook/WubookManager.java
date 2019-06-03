@@ -950,6 +950,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             }
             newbooking.latestwubookreservationid = booking.reservationCode;
             newbooking.countryCode = booking.countryCode;
+            
+            newbooking.isBookingComVirtual = booking.isBookingComVirtual;
+            newbooking.isExpediaCollect = booking.isExpediaCollect;
+            newbooking.isPrePaid = booking.isPrePaid;
+            
             if(booking.customerNotes != null && !booking.customerNotes.isEmpty()) {
                 PmsBookingComment comment = new PmsBookingComment();
                 comment.userId = "";

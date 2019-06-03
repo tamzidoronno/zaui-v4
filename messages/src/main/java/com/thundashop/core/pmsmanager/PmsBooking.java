@@ -111,6 +111,14 @@ public class PmsBooking extends DataCommon {
     public String segmentId = "";
     public boolean payLater = false;
     
+    /**
+     * If collected by the gived OTA this will be set to true.
+     * Normally this is virtual credit cards.
+     */
+    public boolean isExpediaCollect = false;
+    public boolean isBookingComVirtual = false;
+    public boolean isPrePaid = false;
+    
     public Double getTotalPrice() {
         return totalPrice;
     }

@@ -44,7 +44,7 @@ public abstract class AProductManager extends ManagerBase {
     public ProductConfiguration productConfiguration = new ProductConfiguration();
     public HashMap<Integer, TaxGroup> taxGroups = new HashMap();
     
-    private HashMap<Integer, AccountingDetail> accountingAccountDetails = new HashMap();
+    HashMap<Integer, AccountingDetail> accountingAccountDetails = new HashMap();
     
     
     @Autowired

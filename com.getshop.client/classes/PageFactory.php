@@ -783,18 +783,21 @@ class PageFactory {
         $page = new \ModulePage("home", "pmsconference");
         $row = $page->createRow();
         $row->ignoreTopRow = true;
+        $page->addExtraApplications('b5e9370e-121f-414d-bda2-74df44010c3b');
         $row->addColumn("02b94bcd-39b9-41aa-b40c-348a27ca5d9d", "c2bc0427-6182-45d4-b61d-78f192d2b1d5");
         $this->pages['home'] = $page;
         
         $page = new \ModulePage("eventreport", "pmsconference");
         $row = $page->createRow();
         $row->ignoreTopRow = true;
+        $page->addExtraApplications('b5e9370e-121f-414d-bda2-74df44010c3b');
         $row->addColumn("02b94bcd-39b9-41aa-b40c-348a27ca5d9d", "c2bc0427-6182-45d4-b61d-78f192d2b1d5");
         $this->pages['eventreport'] = $page;
         
         $page = new \ModulePage("report", "pmsconference");
         $row = $page->createRow();
         $row->ignoreTopRow = true;
+        $page->addExtraApplications('b5e9370e-121f-414d-bda2-74df44010c3b');
         $row->addColumn("02b94bcd-39b9-41aa-b40c-348a27ca5d9d", "c2bc0427-6182-45d4-b61d-78f192d2b1d5");
         $this->pages['report'] = $page;
         

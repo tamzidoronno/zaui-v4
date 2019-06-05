@@ -271,4 +271,7 @@ public interface IProductManager {
     
     @Editor
     public List<AccountingDetail> getAccountingAccounts();
+    
+    @Administrator
+    public void deleteAccountingAccount(int accountNumber);
 }

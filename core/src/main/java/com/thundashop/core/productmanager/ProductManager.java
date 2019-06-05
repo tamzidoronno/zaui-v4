@@ -561,5 +561,29 @@ public class ProductManager extends AProductManager implements IProductManager {
         return "8060";
     }
 
+    @Override
+    public void deleteAccountingAccount(int accountNumber) {
+        AccountingDetail detail = accountingAccountDetails.get(accountNumber);
+        
+        if (detail != null) {
+            boolean isInUse = products.values()
+                    .stream()
+                    .filter(o -> {
+                        return o.accountingConfig.stream()
+                                .filter(i -> i.accountingNumber.equals(""+accountNumber))
+                                .count() > 0;
+                    })
+                    .count() > 0;
+            
+            if (isInUse) {
+                logPrint("Cant delete the account as it is in use for a one or more products");
+                return;
+            }
+            
+            accountingAccountDetails.remove(accountNumber);
+            deleteObject(detail);
+        }
+    }
+
     
 }

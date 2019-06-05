@@ -3,6 +3,7 @@
 $accounts = $this->getApi()->getProductManager()->getAccountingAccounts();
 ?>
 <div class="distinctAccounts" gstype="form" method="saveAccountingDescription">
+    
     <h2><? echo $this->__f("Accounts"); ?></h2>
     <?
     
@@ -22,7 +23,7 @@ $accounts = $this->getApi()->getProductManager()->getAccountingAccounts();
         $subaccountvalue = $account->subaccountvalue;
         
         echo "<div class='row_description'>";
-            echo "<div class='col accountingid'>$accountName</div>";
+            echo "<div class='col accountingid'> <i class='gs_shop_small_icon fa fa-trash' gs_confirm='Are you sure?' gsclick='deleteAccount' accountid='$accountName'></i> $accountName</div>";
             echo "<div class='col accountindesc'><input gsname='description_$accountName' class='gsniceinput1' value='$accountDescription'></div>";
             echo "<div class='col taxcode'><input gsname='taxcode_$accountName' class='gsniceinput1' value='$accountTaxGroup'></div>";
             echo "<div class='col subaccountid'><input gsname='subaccountid_$accountName' class='gsniceinput1' value='$subaccountid'></div>";

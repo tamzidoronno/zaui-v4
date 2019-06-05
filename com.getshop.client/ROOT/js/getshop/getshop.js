@@ -609,10 +609,8 @@ thundashop.Ajax = {
         return true;
     },
     post: function(data, callback, extraArg, dontUpdate, dontShowLoaderBox, xtra) {
-        
         $('.gserrorfield').hide();
         $('.gserrorinput').removeClass('gserrorinput');
-        
         
         if (!$('.gsoverlay3').is(':visible')) {
             if($('.gsoverlay2 .gsoverlayinner').is(':visible') && (typeof(callback) === "undefined" || callback === undefined || callback === null)) {

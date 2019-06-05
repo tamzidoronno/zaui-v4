@@ -77,6 +77,11 @@ class UserAccountSettings extends \WebshopApplication implements \Application {
             return "<i class='fa fa-check'></i>";
         }
     }
+    public function formatpmsconference($user) {
+        if(in_array("pmsconference", $user->hasAccessToModules)) {
+            return "<i class='fa fa-check'></i>";
+        }
+    }
     public function formatticket($user) {
         if(in_array("ticket", $user->hasAccessToModules)) {
             return "<i class='fa fa-check'></i>";

@@ -43,6 +43,10 @@ class PmsAddAddonsList extends \WebshopApplication implements \Application {
                 $addon->count = $_POST['data']['count_'.$index];
                 $addon->date = $this->convertToJavaDate(strtotime($_POST['data']['date_'.$index]));
                 $addon->price = $_POST['data']['price_'.$index];
+                if(stristr($addon->price, "%")) {
+                    $addon->percentagePrice = str_replace("%","", $addon->price);
+                    $addon->price = 0;
+                }
                 $addon->name = $_POST['data']['name'];
                 $addon->productId = $addonToUse->productId;
                 $addon->noRefundable = $addonToUse->noRefundable;
@@ -150,6 +154,7 @@ class PmsAddAddonsList extends \WebshopApplication implements \Application {
             if($_POST['data']['isperguest'] == "true") {
                 $object->count = $room->numberOfGuests;
             }
+            $object->percentagePrice = $addonItem->percentagePrice;
             $object->price = $addonItem->price;
             $result[$date] = $object;
         }

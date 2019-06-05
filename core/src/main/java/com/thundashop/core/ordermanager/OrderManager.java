@@ -2880,6 +2880,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         List<DayIncome> dayIncomes = all.stream()
                 .flatMap(o -> o.incomes.stream())
                 .filter(r -> {
+                    
+                    if(r.dayEntries.isEmpty()) {
+                        return false;
+                    }
+                    
                     long iStart = r.start.getTime();
                     long iEnd = r.end.getTime();
                     

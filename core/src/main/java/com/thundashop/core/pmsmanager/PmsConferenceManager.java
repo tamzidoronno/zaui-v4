@@ -371,6 +371,9 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
 
     private boolean canAddEvent(PmsConferenceEvent event) {
         for(PmsConferenceEvent evt : conferenceEvents.values()) {
+            if(evt != null && evt.id != null && event != null && event.id != null && evt.id.equals(event.id)) {
+                continue;
+            }
             if(evt.betweenTime(event.from, event.to) && event.pmsConferenceItemId.equals(evt.pmsConferenceItemId)) {
                 return false;
             }

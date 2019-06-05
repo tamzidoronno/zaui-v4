@@ -209,9 +209,7 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
 //        
         $functionToUse = "getSimpleRooms";
         $data = $this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedMultilevelDomainName(), $filter);
-        
         if ($this->isGroupBookingView()) {
-            
             $attributes = array(
                 array('id', 'gs_hidden', 'pmsRoomId'),
                 array('check', '<input type="checkbox" class="toggleallrooms">', null, 'formatCheck'),            
@@ -282,7 +280,10 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         }
         echo "<div style='text-align:center;padding: 10px;'>Row count: $rowCount, Guest count: $guests, nights: $nightscount</div>";
         
+        $filter = $this->getSelectedFilter();
+        
         echo "<script>";
+        if($filter && $filter->filterType == "checkout") { echo "$('.tablefilterinput').focus();"; }
         echo "$('.tablefilterinput').val(localStorage.getItem('filterKeyword'));";
         echo "app.PmsSearchBooking.filterRows();";
         echo "app.PmsSearchBooking.printAddedToCheckout();";
@@ -364,7 +365,11 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
             $filter->bookingId = $_SESSION['PmsSearchBooking_loadBooking'];
             $this->setCurrentFilter($filter);
         }
-        
+        if(isset($_SESSION['PmsSearchBooking_bookingId']) && $_SESSION['PmsSearchBooking_bookingId']) {
+            $filter->bookingId = $_SESSION['PmsSearchBooking_bookingId'];
+            $this->setCurrentFilter($filter);
+        } 
+
         return $filter;
     }
 

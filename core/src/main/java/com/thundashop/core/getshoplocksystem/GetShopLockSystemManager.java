@@ -270,6 +270,16 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
     }
 
     @Override
+    public List<LockGroup> getAllGroupsUnfinalized() {
+        List<LockGroup> retGroups = new ArrayList(this.groups.values());
+        Collections.sort(retGroups, (LockGroup group1, LockGroup group2) -> {
+            return group1.name.compareToIgnoreCase(group2.name);
+        });
+        return retGroups;
+        
+    }
+
+    @Override
     public List<LockGroup> getAllGroups() {
         List<LockGroup> retGroups = new ArrayList(getFinalizedGroups().values());
         Collections.sort(retGroups, (LockGroup group1, LockGroup group2) -> {

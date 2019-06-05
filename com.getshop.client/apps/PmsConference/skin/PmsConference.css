@@ -1,4 +1,11 @@
 .PmsConference .conferencesystem { font-size: 14px;}
+.PmsConference .warningnotabletoadd {     border: solid 1px;
+    padding: 10px;
+    text-align: center;
+    background-color: red;
+    color: #fff;
+    font-size: 32px;
+}
 .PmsConference .dayentryheader { display: inline-block;height: 20px; width: 46px; padding:2px;text-align: center; border: solid 1px #efefef; background-color:#fff;}
 .PmsConference .dayentrymonthheader { display: inline-block;height: 20px; width: 22px; padding:2px;text-align: center;}
 .PmsConference .conferencetimelines { border-bottom: solid 1px #efefef;display:inline-block; }
@@ -12,7 +19,7 @@
 .PmsConference .itemname .fa-edit { display:none; }
 .PmsConference .itemname:hover .fa-edit { display:inline-block; }
 .PmsConference .conferencesystem { max-width: 1600px; margin: auto; overflow: auto; height: 2000px; }
-.PmsConference .conferenceoverview { border: solid 1px #bbb; background-color:#fff; padding: 10px; width: 800px; display:inline-block; display:none; position:absolute; top: 150px;}
+.PmsConference .conferenceoverview { border: solid 1px #bbb; background-color:#fff; padding: 10px; width: 800px; display:inline-block; display:none; position:absolute; top: 150px;z-index:3;}
 .PmsConference .addconferencepanel { border: solid 1px #bbb; display:inline-block; background-color:#fff; position:absolute; padding: 10px; display:none; right:0px; }
 .PmsConference .GetShopQuickUser .booked_for,
 .PmsConference .edit_user_btn { display:none; }

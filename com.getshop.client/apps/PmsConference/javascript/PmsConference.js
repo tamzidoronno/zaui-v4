@@ -61,6 +61,14 @@ app.PmsConference = {
             area.html(res);
         });
     },
+    addEvent : function(res) {
+        if(res) {
+            $('.addeventfailed').html(res);
+        } else {
+            window.location.reload();
+        }
+    },
+    
     loadQuickAddToConference : function(e) {
         var box = $('.PmsConference .addeventbox');
         box.show();
@@ -124,7 +132,9 @@ app.PmsConference = {
         var row = $(this).closest('.eventrow');
         var data = thundashop.framework.createGsArgs(row);
         var event = thundashop.Ajax.createEvent('','updateEventRow',$('.PmsConference'),data);
-        thundashop.Ajax.postWithCallBack(event, function() {});
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.failedtoupdateevent').html(res);
+        });
     },
     updateSpecifiedEventRow : function(row) {
         var data = thundashop.framework.createGsArgs(row);

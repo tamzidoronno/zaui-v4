@@ -16,7 +16,15 @@ app.PmsSearchBox = {
         $(document).on('click','.PmsSearchBox .addonstofilter',app.PmsSearchBox.updateOtherFilterCounter);
         $(document).on('click','.PmsSearchBox .clearfilter',app.PmsSearchBox.clearFilter);
         $(document).on('mouseover','.PmsSearchBox .displaydailydatepicker',app.PmsSearchBox.displayDailyRangePicker);
+        $(document).on('mouseout','.PmsSearchBox .displaydailydatepicker',app.PmsSearchBox.rangePickerOut);
         $(document).on('click','.PmsSearchBox [daytype]',app.PmsSearchBox.changeSelection);
+        $(document).on('click',app.PmsSearchBox.hideRangePicker);
+    },
+    hideRangePicker : function() {
+        $('.dailydaterangepicker').hide();
+    },
+    rangePickerOut : function() {
+        app.PmsSearchBox.disableHover = false;
     },
     changeSelection : function() {
         var date = $(this).attr('daytype');
@@ -25,8 +33,9 @@ app.PmsSearchBox = {
             "date" : date,
             "type" : type
         });
-        app.PmsSearchBox.disableHover = true;
-        $('.dailydaterangepicker').hide();
+        if($('.dailydaterangepicker').is(':visible')) {
+            app.PmsSearchBox.disableHover = true;
+        }
         thundashop.Ajax.post(event, function(res) {
             $('.tablefilterinput').focus();
         });

@@ -121,7 +121,7 @@ app.PmsSearchBooking = {
     },
     toggleAllRooms : function() {
         if($(this).is(':checked')) {
-            $('.groupedactioncheckbox').attr('checked','checked');
+            $('.groupedactioncheckbox').prop('checked',true);
             $('.manipulateroomoptions .shop_button').removeClass('disabled');
             $('.groupedactioncheckbox').each(function() {
                 var roomid = $(this).attr('roomid');

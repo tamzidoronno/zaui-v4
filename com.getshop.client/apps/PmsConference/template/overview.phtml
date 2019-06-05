@@ -42,7 +42,8 @@ if(sizeof($entries) == 0) {
             }
             ?>
         </select>
-        <span class='shop_button' style='width:100%;box-sizing: border-box;margin-top:5px;' gstype='submit'>Create event</span>
+        <span class='shop_button' style='width:100%;box-sizing: border-box;margin-top:5px;' gstype='submit' gs_callback='app.PmsConference.addEvent'>Create event</span>
+        <div class='addeventfailed'></div>
     </div>
     <?php
     echo "<div class='conferencetimelines'>";
@@ -104,7 +105,7 @@ if(sizeof($entries) == 0) {
             
             if($view == "month") {
                 for($i = $fromTime; $i <= $toTime; $i = $i +(60*60*24)) {
-                    $from = date("h:i", $i); $to = date("h:i", $i +(60*60*24));
+                    $from = date("H:i", $i); $to = date("H:i", $i +(60*60*24));
                     $day = date("d.m.Y", $i);
                     $hasEventId = $this->hasEventOnTime($i,$i +(60*60*24), $eventsByItem, $entryids);
                     $hasEvent = $hasEventId['state'] ? "hasactivevent".$hasEventId['state']." openconference" : "";
@@ -117,7 +118,7 @@ if(sizeof($entries) == 0) {
                 }
             } else {
                 for($i = $fromTime; $i < $toTime; $i = $i +(60*30)) {
-                    $from = date("h:i", $i); $to = date("h:i", $i+(60*30));
+                    $from = date("H:i", $i); $to = date("H:i", $i+(60*30));
                     $day = date("d.m.Y", $i);
                     $hasEventId = $this->hasEventOnTime($i,$i +(60*30), $eventsByItem, $entryids);
                     $hasEvent = $hasEventId['state'] ? "hasactivevent".$hasEventId['state']." openconference" : "";

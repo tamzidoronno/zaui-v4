@@ -93,8 +93,10 @@ class PmsConference extends \WebshopApplication implements \Application {
         $event->pmsConferenceItemId = $_POST['data']['itemid'];
         $event->from = $this->convertToJavaDate(strtotime($_POST['data']['date'] . " " . $_POST['data']['starttime']));
         $event->to = $this->convertToJavaDate(strtotime($_POST['data']['date'] . " " . $_POST['data']['endtime']));
-        $this->getApi()->getPmsConferenceManager()->saveConferenceEvent($event);
-
+        $added = $this->getApi()->getPmsConferenceManager()->saveConferenceEvent($event);
+        if(!$added) {
+            echo "<div class='warningnotabletoadd'>The event you tried to add is not possible to add</div>";
+        }
     }
     
     public function render() {
@@ -211,7 +213,10 @@ class PmsConference extends \WebshopApplication implements \Application {
         $event->from = $this->convertToJavaDate(strtotime($_POST['data']['date']." ".$_POST['data']['startime']));
         $event->to = $this->convertToJavaDate(strtotime($_POST['data']['date'] . " " . $_POST['data']['endtime']));
         $event->status = $_POST['data']['status'];
-        $this->getApi()->getPmsConferenceManager()->saveConferenceEvent($event);
+        $saved = $this->getApi()->getPmsConferenceManager()->saveConferenceEvent($event);
+        if(!$saved) {
+            echo "<div class='warningnotabletoadd'>It is not possible to do this update!</div>";
+        }
     }
     
     public function updateMemo() {

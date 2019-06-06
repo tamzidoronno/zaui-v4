@@ -507,8 +507,17 @@ public class Order extends DataCommon implements Comparable<Order> {
         if (cleaned)
             return false;
         
+        List<CartItem> removeItems = new ArrayList();
         for (CartItem cartItem : cart.getItems()) {
+            if(cartItem.getProduct() == null) {
+                removeItems.add(cartItem);
+                continue;
+            }
             cartItem.getProduct().validateTranslationMatrix();
+        }
+        
+        for(CartItem item : removeItems) {
+            cart.removeItem(item.getCartItemId());
         }
         
         cleaned = true;

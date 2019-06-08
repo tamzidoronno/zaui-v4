@@ -47,6 +47,7 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
         useNewEngine.add("32f280c2-ae25-4263-8529-624df2f01dec"); // Jegtvolden
         useNewEngine.add("7f2c47a4-7ec9-41e2-a070-1e9e8fcf4e38"); // F2 harstad
         useNewEngine.add("9dda21a8-0a72-4a8c-b827-6ba0f2e6abc0"); // Kongsvinger budget hotel
+        useNewEngine.add("75e5a890-1465-4a4a-a90a-f1b59415d841"); // Akers Have
     }
 
     @Override

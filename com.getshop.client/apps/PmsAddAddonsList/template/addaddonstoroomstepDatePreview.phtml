@@ -7,7 +7,7 @@ $selectedRoom = $app->getSelectedRoom();
 $start = strtotime($selectedRoom->date->start);
 $end = strtotime($selectedRoom->date->end);
 $dates = $this->getDatesToAdd($start, $end, $selectedRoom);
-print_r($dates);
+
 echo "<div style='font-weight:bold;'>";
 echo "<span style='width:125px;display:inline-block;padding-left:20px;'>Date</span>";
 echo "<span style='width:55px;display:inline-block;'>Count</span>";

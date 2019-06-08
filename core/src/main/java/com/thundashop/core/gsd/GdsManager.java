@@ -219,13 +219,19 @@ public class GdsManager extends ManagerBase implements IGdsManager {
                 .stream()
                 .filter(q -> q.userId.equals(userId))
                 .findFirst()
-                .orElse(createQueueForUser(userId));
+                .orElse(null);
+        
+        if (queue == null) {
+            queue = createQueueForUser(userId);
+        }
+        
         return queue;
     }
 
     private UserMessageQueue createQueueForUser(String userId) {
         UserMessageQueue queue = new UserMessageQueue();
         queue.userId = userId;
+        queue.id = UUID.randomUUID().toString();
         userMessageQueue.put(queue.id, queue);
         return queue;
     }

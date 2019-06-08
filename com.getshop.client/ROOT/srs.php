@@ -9,10 +9,6 @@ if(!$factory->getApi()->getUserManager()->isLoggedIn()) {
     header('location:/login.php?redirectto=/pms.php');
     exit(0);
 }
-if(isset($_GET['page']) && $_GET['page'] == "groupbooking" && isset($_GET['bookingId'])) {
-    $_SESSION['PmsSearchBooking_bookingId'] = $_GET['bookingId'];
-}
-
 $_SESSION['firstloadpage'] = true;
 
 ?>

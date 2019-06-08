@@ -7,6 +7,7 @@ $selectedRoom = $app->getSelectedRoom();
 $start = strtotime($selectedRoom->date->start);
 $end = strtotime($selectedRoom->date->end);
 $dates = $this->getDatesToAdd($start, $end, $selectedRoom);
+print_r($dates);
 echo "<div style='font-weight:bold;'>";
 echo "<span style='width:125px;display:inline-block;padding-left:20px;'>Date</span>";
 echo "<span style='width:55px;display:inline-block;'>Count</span>";
@@ -19,7 +20,11 @@ foreach($dates as $date => $obj) {
     echo "<input type='checkbox' checked class='toggleifshouldbeadded' gsname='rowindex_$idx'>";
     echo "<input type='txt' class='gsniceinput1' value='".date("d.m.Y", $date)."' style='width:100px;' gsname='date_$idx'>";
     echo "<input type='txt' class='gsniceinput1' value='".$obj->count."' style='width:40px;' gsname='count_$idx'>";
-    echo "<input type='txt' class='gsniceinput1' value='".$obj->price."' style='width:50px;' gsname='price_$idx'>";
+    if($obj->percentagePrice) {
+        echo "<input type='txt' class='gsniceinput1' value='".$obj->percentagePrice."%' style='width:50px;' gsname='price_$idx' disabled>";
+    } else {
+        echo "<input type='txt' class='gsniceinput1' value='".$obj->price."' style='width:50px;' gsname='price_$idx'>";
+    }
     echo "</div>";
     $idx++;
 }

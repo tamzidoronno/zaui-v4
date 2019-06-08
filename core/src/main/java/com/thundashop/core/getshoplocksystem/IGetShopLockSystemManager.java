@@ -84,6 +84,8 @@ public interface IGetShopLockSystemManager {
     @Administrator
     public List<LockGroup> getAllGroups();
     
+    @Administrator  
+    public List<LockGroup> getAllGroupsUnfinalized();    
     
     @Administrator
     public String getNameOfGroup(String groupId);

@@ -117,9 +117,13 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
     }
 
     @Override
-    public void saveConferenceEvent(PmsConferenceEvent event) {
+    public boolean saveConferenceEvent(PmsConferenceEvent event) {
+        if(!canAddEvent(event)) {
+            return false;
+        }
         saveObject(event);
         conferenceEvents.put(event.id, event);
+        return true;
     }
 
     @Override
@@ -363,6 +367,18 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
         }
         result.sort(Comparator.comparing(a -> a.from));
         return result;
+    }
+
+    private boolean canAddEvent(PmsConferenceEvent event) {
+        for(PmsConferenceEvent evt : conferenceEvents.values()) {
+            if(evt != null && evt.id != null && event != null && event.id != null && evt.id.equals(event.id)) {
+                continue;
+            }
+            if(evt.betweenTime(event.from, event.to) && event.pmsConferenceItemId.equals(evt.pmsConferenceItemId)) {
+                return false;
+            }
+        }
+        return true;
     }
     
 }

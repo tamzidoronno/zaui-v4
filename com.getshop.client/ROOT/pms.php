@@ -24,6 +24,8 @@ if(!$factory->getApi()->getUserManager()->isLoggedIn()) {
 }
 if(isset($_GET['page']) && $_GET['page'] == "groupbooking" && isset($_GET['bookingId'])) {
     $_SESSION['PmsSearchBooking_bookingId'] = $_GET['bookingId'];
+} else {
+    unset($_SESSION['PmsSearchBooking_bookingId']);
 }
 if(isset($_GET['page']) && $_GET['page'] == "a90a9031-b67d-4d98-b034-f8c201a8f496" && isset($_GET['loadBooking'])) {
     $_SESSION['PmsSearchBooking_loadBooking'] = $_GET['loadBooking'];

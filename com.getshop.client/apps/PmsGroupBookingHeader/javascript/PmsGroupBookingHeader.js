@@ -105,9 +105,19 @@ app.PmsGroupBookingHeader = {
             }
         });
         
+        var type = $(this).attr('type');
+        var count = 0;
+        if(type === "updateGuestCount") {
+            count = parseInt(prompt("Number of guest", ""));
+            if(!count) {
+                return;
+            }
+        }
+        
         var event = thundashop.Ajax.createEvent('','doRoomsBookedAction', $(this), {
-            "type" : $(this).attr('type'),
-            "rooms" : rooms
+            "type" : type,
+            "rooms" : rooms,
+            "count" : count
         });
         
         thundashop.Ajax.post(event);

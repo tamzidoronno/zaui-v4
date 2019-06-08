@@ -1,4 +1,5 @@
 app.PmsSearchBox = {
+    disableHover : null,
     init : function() {
         $(document).on('click','.PmsSearchBox .advancesearchtoggle',app.PmsSearchBox.toggleAdvanceSearch);
         $(document).on('click','.PmsSearchBox .otherselectiontoggle',app.PmsSearchBox.otherToggle);
@@ -14,29 +15,42 @@ app.PmsSearchBox = {
         $(document).on('click','.PmsSearchBox .applyfilterbutton',app.PmsSearchBox.applyFilter);
         $(document).on('click','.PmsSearchBox .addonstofilter',app.PmsSearchBox.updateOtherFilterCounter);
         $(document).on('click','.PmsSearchBox .clearfilter',app.PmsSearchBox.clearFilter);
-        $(document).on('click','.PmsSearchBox .displaydailydatepicker',app.PmsSearchBox.displayDailyRangePicker);
-        $(document).on('click','.PmsSearchBox .dailydaterangepicker [daytype]',app.PmsSearchBox.changeSelection);
+        $(document).on('mouseover','.PmsSearchBox .displaydailydatepicker',app.PmsSearchBox.displayDailyRangePicker);
+        $(document).on('mouseout','.PmsSearchBox .displaydailydatepicker',app.PmsSearchBox.rangePickerOut);
+        $(document).on('click','.PmsSearchBox [daytype]',app.PmsSearchBox.changeSelection);
+        $(document).on('click',app.PmsSearchBox.hideRangePicker);
+    },
+    hideRangePicker : function() {
+        $('.dailydaterangepicker').hide();
+    },
+    rangePickerOut : function() {
+        app.PmsSearchBox.disableHover = false;
     },
     changeSelection : function() {
         var date = $(this).attr('daytype');
-        var type = $(this).closest('.dailydaterangepicker').attr('type');
-        thundashop.Ajax.simplePost($(this), "quickfilterselection", {
+        var type = $('.dailydaterangepicker').attr('type');
+        var event = thundashop.Ajax.createEvent('', "quickfilterselection",$(this), {
             "date" : date,
             "type" : type
         });
-        
+        if($('.dailydaterangepicker').is(':visible')) {
+            app.PmsSearchBox.disableHover = true;
+        }
+        thundashop.Ajax.post(event, function(res) {
+            $('.tablefilterinput').focus();
+        });
     },
     displayDailyRangePicker : function() {
+        if(app.PmsSearchBox.disableHover) {
+            app.PmsSearchBox.disableHover = false;
+            return;
+        }
         var view = $('.PmsSearchBox .dailydaterangepicker');
         view.find('.header').hide();
         var type = $(this).attr('type');
         view.attr('type', type);
         view.find('[type="'+type+'"]').show(); 
-        if(view.is(':visible')) {
-            view.slideUp();
-        } else {
-            view.slideDown();
-        }
+        view.show();
     },
     clearFilter : function() {
         thundashop.Ajax.simplePost($(this),"clearFilter", {});

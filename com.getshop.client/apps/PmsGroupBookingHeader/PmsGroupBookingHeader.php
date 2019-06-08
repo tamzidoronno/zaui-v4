@@ -301,6 +301,8 @@ class PmsGroupBookingHeader extends \MarketingApplication implements \Applicatio
             }
         } else if($action == "split") {
             $this->getApi()->getPmsManager()->splitBooking($this->getSelectedMultilevelDomainName(), $_POST['data']['rooms']);
+        } else if($action == "updateGuestCount") {
+            $this->updateGuestCount($booking);
         } else if($action == "singlepayments" || $action == "singlepaymentsnosend") {
             $this->getApi()->getPmsInvoiceManager()->removeOrderLinesOnOrdersForBooking($this->getSelectedMultilevelDomainName(), $bookingId, $_POST['data']['rooms']);
             foreach($_POST['data']['rooms'] as $roomid) {
@@ -447,6 +449,16 @@ class PmsGroupBookingHeader extends \MarketingApplication implements \Applicatio
             $i++;
         }
         return $i;
+    }
+
+    public function updateGuestCount($booking) {
+        $count = $_POST['data']['count'];
+        foreach($booking->rooms as $room) {
+            if(in_array($room->pmsBookingRoomId, $_POST['data']['rooms'])) {
+                $room->numberOfGuests = $count;
+            }
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
     }
 
 }

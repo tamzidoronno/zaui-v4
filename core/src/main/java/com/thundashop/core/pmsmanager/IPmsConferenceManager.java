@@ -37,7 +37,7 @@ public interface IPmsConferenceManager {
     public void deleteConference(String conferenceId);
     
     @Administrator
-    public void saveConferenceEvent(PmsConferenceEvent event);
+    public boolean saveConferenceEvent(PmsConferenceEvent event);
     @Administrator
     public void deleteConferenceEvent(String id);
     @Administrator

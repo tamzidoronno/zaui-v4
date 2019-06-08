@@ -139,7 +139,7 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
                     printFeedBack("Terminal not ready for trans\n");
                 }
             }
-                break;
+            break;
         case PayPointEvent.RESULT_EVENT:
                 PayPointResultEvent resultEvent = (PayPointResultEvent)event;
                 String resultText = "Result:        " + 

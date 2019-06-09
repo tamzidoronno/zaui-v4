@@ -611,12 +611,14 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     public function forceAccessRegardlessOfPayment() {
         $this->setData();
         $booking = $this->getPmsBooking();
+        $selectedRoom = null;
         foreach($booking->rooms as $room) {
             if($room->pmsBookingRoomId == $this->getSelectedRoom()->pmsBookingRoomId) {
-                $room->forceAccess = true;
+                $selectedRoom = $room;
             }
         }
-        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+        
+        $this->getApi()->getPmsManager()->toggleAutoCreateOrders($this->getSelectedMultilevelDomainName(), $booking->id, $selectedRoom->pmsBookingRoomId);
         $this->setData();
         $this->includefile("accesscode");
         die();
@@ -625,10 +627,15 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     public function ungrantPayment() {
         $this->setData();
         $booking = $this->getPmsBooking();
+        $selectedRoom = null;
         foreach($booking->rooms as $room) {
             if($room->pmsBookingRoomId == $this->getSelectedRoom()->pmsBookingRoomId) {
                 $room->forceAccess = false;
+                $selectedRoom = $room;
             }
+        }
+        if ($selectedRoom != null && $selectedRoom->createOrdersOnZReport) {
+            $this->getApi()->getPmsManager()->toggleAutoCreateOrders($this->getSelectedMultilevelDomainName(), $booking->id, $selectedRoom->pmsBookingRoomId);
         }
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
         $this->setData();
@@ -1105,16 +1112,23 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $this->setData();
         $booking = $this->getPmsBooking();
         $room = $this->getSelectedRoom();
+        
         foreach($booking->rooms as $r) {
             if($r->pmsBookingRoomId == $room->pmsBookingRoomId) {
                 $r->blocked = true;
             }
         }
+        
         $itemId = $room->pmsBookingRoomId;
         $bookingId = $booking->id;
         $logText = "Blocking room";
         $this->getApi()->getPmsManager()->logEntry($this->getSelectedMultilevelDomainName(), $logText, $bookingId, $itemId);
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+        
+        if ($room != null && $room->createOrdersOnZReport) {
+            $this->getApi()->getPmsManager()->toggleAutoCreateOrders($this->getSelectedMultilevelDomainName(), $booking->id, $room->pmsBookingRoomId);
+        }
+        
         $this->setData();
         $this->includefile("accesscode");
         die();
@@ -1124,13 +1138,21 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $this->setData();
         $booking = $this->getPmsBooking();
         $room = $this->getSelectedRoom();
+        
         foreach($booking->rooms as $room) {
             if($room->pmsBookingRoomId == $room->pmsBookingRoomId) {
                 $room->blocked = false;
             }
         }
+        
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+        
+        if ($room != null && !$room->createOrdersOnZReport) {
+            $this->getApi()->getPmsManager()->toggleAutoCreateOrders($this->getSelectedMultilevelDomainName(), $booking->id, $room->pmsBookingRoomId);
+        }
+        
         $this->setData();
+        
         $this->includefile("accesscode");
         die();
     }

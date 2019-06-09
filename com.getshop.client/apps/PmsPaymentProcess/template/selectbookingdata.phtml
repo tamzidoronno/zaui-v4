@@ -13,13 +13,54 @@ $uniqueSegmentIds = array_unique($uniqueSegmentIds);
 ?>
 <br/>
 <br/>
-    <div class='shop_button toggledatefilter' style='position: absolute;right: 60px;'>
-        <i class='fa fa-calendar-plus-o'></i> <? echo $this->__f("Apply filter by dates"); ?>
-    </div> 
+
+    
 <div class='header' style='position: relative; height: 43px;'>
     <? 
     echo $this->__f("Step 3 - Select orderlines");
     ?>
+</div>
+
+<div style='background-color: #EFEFEF; padding: 10px;'>
+    <b><? echo $this->__f("Quick selection").":"; ?></b>
+    <br/>
+    <div class='shop_button toggledatefilter' >
+        <i class='fa fa-calendar-plus-o'></i> <? echo $this->__f("Apply filter by dates"); ?>
+    </div> 
+    
+    <div class='shop_button toggleaccomodation toggleselector' >
+        <i class='fa fa-bed'></i> <? echo $this->__f("Accommodation"); ?>
+    </div> 
+    
+    <div class='shop_button toggleaddoninc toggleselector' >
+        <i class='fa fa-plus'></i> <? echo $this->__f("Addons (included)"); ?>
+    </div>
+    
+    <div class='shop_button toggleaddonsex toggleselector' >
+        <i class='fa fa-plus'></i> <? echo $this->__f("Addons (not included)"); ?>
+    </div>
+    
+    <div class='shop_button showcalc' >
+        <i class='fa fa-percent'></i> <? echo $this->__f("Calculate price"); ?>
+    </div>
+    
+</div>
+
+<div class='percentfilter' style='text-align: center; border: solid 1px #DDD; display: none;' gstype='form' method='applyDateFilter' >
+    
+    <div style='background-color: #ffffa2; padding: 5px; '>
+        <?
+        echo $this->__f("You can change both the percent and the total amount to calculate new prices for the selected rows");
+        ?>
+    </div>
+    
+    <div>
+        <span style='text-align: center; width: 122px; display: inline-block'>Percent</span>
+        <i class='fa fa-arrows-h'></i> 
+        <span style='text-align: center; width: 122px; display: inline-block'>Total amount</span>
+    </div>
+    
+    <input class='gsniceinput1 percentcalculator' style='text-align: center; width: 100px; display: inline-block' value="100"/> <i class='fa fa-arrows-h'></i> <input class='gsniceinput1 totalval totalvalcalculator' style='text-align: center; width: 100px;'/>
 </div>
 
 <div class='datefilter' style='text-align: center; border: solid 1px #DDD; display: <? echo $visibilityDate; ?>' gstype='form' method='applyDateFilter' >
@@ -70,23 +111,30 @@ if (count($uniqueSegmentIds) > 1) {
                         echo "<div class='col' style='margin-left: 10px;'><div class='totalforroom'></div></div>";
                         echo "<div class='col' style='margin-left: 10px;'><i style='position: absolute; right: 10px; top: 5px; font-size: 25px;' class='fa fa-angle-down'></i></div>";
                     echo "</div>";
-                    $summary = $this->getApi()->getPmsManager()->getSummary($this->getSelectedMultilevelDomainName(), $booking->id, $room->pmsBookingRoomId);
+                    $summary = $this->getApi()->getPmsManager()->getSummaryWithoutAccrued($this->getSelectedMultilevelDomainName(), $booking->id, $room->pmsBookingRoomId);
                     usort($summary->rows, array("ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView", "sortSummaryRowByDate"));
                     $anyFound = false;
                     echo "<div style='display: none;' class='detaileditemlines'>";
                         foreach ($summary->rows as $row) {
                             if ($row->count == 0 || $this->removeDueToFilter($row, $fstartDate, $fendDate)) {
                                 continue;
-                            }
-
+                            } 
+                            
                             $anyFound = true;
                             $product = $this->getApi()->getProductManager()->getProduct($row->createOrderOnProductId);
+                            $accomodation = $row->isAccomocation ? "accomocation" : "";
+                            $included = $row->includedInRoomPrice ? "included" : "not_included";
+                            if ($accomodation) {
+                                $included = "";
+                            }
                             ?>
-                            <div class='row cartitemline' date='<? echo $row->date; ?>' createorderonproductid="<? echo $row->createOrderOnProductId; ?>" isaccomocation="<? echo $row->isAccomocation; ?>" includedinroomprice="<? echo $row->includedInRoomPrice; ?>">
-                                <div class='col date'><? echo $row->date; ?></div>
-                                <div class='col count'><input class='gsniceinput1 item_count' value='<? echo $row->count; ?>'/></div>
-                                <div class='col price'><input class='gsniceinput1 item_price' value='<? echo round($row->priceToCreateOrders,2); ?>'/></div>
-                                <div class='col productname'><? echo $product->name; ?></div>
+                            <div class='row cartitemline <? echo $accomodation." ".$included; ?>' date='<? echo $row->date; ?>' createorderonproductid="<? echo $row->createOrderOnProductId; ?>" isaccomocation="<? echo $row->isAccomocation; ?>" includedinroomprice="<? echo $row->includedInRoomPrice; ?>">
+                                <div class='col' style='margin-right: 10px; width: 20px; padding-top: 5px;'><input class='row_checkbox' style='font-size: 20px; height: 20px; width: 20px;' type='checkbox' checked='true'/></div>
+                                <div class='col date' style='vertical-align: top;'><? echo $row->date; ?></div>
+                                <div class='col count' style='vertical-align: top;'><input class='gsniceinput1 item_count' orgcount='<? echo $row->count; ?>' value='<? echo $row->count; ?>'/> x </div>
+                                <div class='col price' style='vertical-align: top;'><input class='gsniceinput1 item_price' orgvalue='<? echo round($row->priceToCreateOrders,2); ?>' value='<? echo round($row->priceToCreateOrders,2); ?>'/></div>
+                                <div class='col productname' style='vertical-align: top;'><? echo $product->name; 
+                                ?></div>
                             </div>
                             <?
                         }
@@ -115,6 +163,10 @@ if (count($uniqueSegmentIds) > 1) {
                     ?>
                 </div>
                 <div class="col totalval">
+                    -
+                </div>
+                / Original total for selected rows:
+                <div class="col totalvalforselect">
                     -
                 </div>
             </div>

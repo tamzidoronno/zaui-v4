@@ -9909,6 +9909,32 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
 
     @Override
+    public PmsRoomPaymentSummary getSummaryWithoutAccrued(String pmsBookingId, String pmsBookingRoomId) {
+        PmsBooking booking = bookings.get(pmsBookingId);
+        
+        if (booking == null) {
+            return null;
+        }
+        
+        PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
+        
+        List<String> orderIds = getExtraOrderIds(booking.id);
+        orderIds.addAll(booking.orderIds);
+        
+        List<Order> orders = orderIds
+            .stream()
+            .map(id -> orderManager.getOrder(id))
+            .filter(o -> o != null)
+            .filter(o -> !o.isAccruedPayment())
+            .collect(Collectors.toList());
+
+        PmsBookingPaymentDiffer differ = new PmsBookingPaymentDiffer(orders, booking, room, this);
+        PmsRoomPaymentSummary summary = differ.getSummary();
+        
+        return summary;
+    }
+    
+    @Override
     public PmsRoomPaymentSummary getSummary(String pmsBookingId, String pmsBookingRoomId) {
         PmsBooking booking = bookings.get(pmsBookingId);
         
@@ -10051,6 +10077,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public String createOrderFromCheckout(List<PmsOrderCreateRow> rows, String paymentMethodId, String userId) {
+        
         PmsInvoiceManagerNew invoiceManager = new PmsInvoiceManagerNew(orderManager, cartManager, productManager, this);
         Order order = invoiceManager.createOrder(rows, paymentMethodId, userId);
         
@@ -10061,6 +10088,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     booking.orderIds.add(order.id);
                     saveBooking(booking);
                 }
+                
+                if (!paymentMethodId.equals("60f2f24e-ad41-4054-ba65-3a8a02ce0190")) {
+                    removeAccrudePayments(booking, o.roomId);
+                }
+                
             });
         
         return order.id;
@@ -10156,13 +10188,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void removeAccrudePayments(PmsBooking booking, String pmsBookingRoomId) {
-        List<Order> accrudeOrdres = getAllOrderIds(booking.id)
+        List<String> accrudeOrdres = getAllOrderIds(booking.id)
                     .stream()
                     .map(id -> orderManager.getOrderSecure(id))
                     .filter(o -> o.isAccruedPayment())
+                    .map(o -> o.id)
                     .collect(Collectors.toList());
         
-        for (Order order : accrudeOrdres) {
+        accrudeOrdres = orderManager.filterOrdersIsCredittedAndPaidFor(accrudeOrdres);
+        
+        for (String orderId : accrudeOrdres) {
+            Order order = orderManager.getOrderSecure(orderId);
             boolean orderHasOrderLinesNotConnectedToBooking = order.getCartItems().stream()
                     .filter(o -> !o.getProduct().externalReferenceId.equals(pmsBookingRoomId))
                     .count() > 0;

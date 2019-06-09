@@ -626,6 +626,9 @@ public interface IPmsManager {
     public PmsRoomPaymentSummary getSummary(String pmsBookingId, String pmsBookingRoomId);
     
     @Administrator
+    public PmsRoomPaymentSummary getSummaryWithoutAccrued(String pmsBookingId, String pmsBookingRoomId);
+    
+    @Administrator
     public String createOrderFromCheckout(List<PmsOrderCreateRow> row, String paymentMethodId, String userId);
     
     @Administrator

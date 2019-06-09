@@ -1015,13 +1015,11 @@ public class PosManager extends ManagerBase implements IPosManager {
         
         PmsManager pmsManager = scope.getNamedSessionBean("default", PmsManager.class);
         
-        long startTiming = System.currentTimeMillis();
-        
         List<PmsBookingRooms> roomsNeedToCreateOrdersFor = pmsManager.getAllBookingsFlat()
                 .stream()
                 .flatMap(o -> o.rooms.stream())
                 .filter(o -> o.createOrdersOnZReport)
-                .filter(o -> o.date.within(start, end))
+                .filter(o -> o.date.start.before(end) || o.date.start.equals(end) )
                 .collect(Collectors.toList());
         
         roomsNeedToCreateOrdersFor.stream().forEach(o -> createOrder(o));

@@ -3739,7 +3739,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
      * @return 
      */
     public List<Order> getMainInvoices(String id) { 
-        Order order = getOrder(id);
+        Order order = getOrderSecure(id);
         
         if (order == null) {
             return null;

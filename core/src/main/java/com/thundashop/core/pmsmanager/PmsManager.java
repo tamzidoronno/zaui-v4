@@ -9740,7 +9740,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
      */
     @Override
     public List<String> getExtraOrderIds(String pmsBookingId) {
-        PmsBooking booking = getBookingInternal(pmsBookingId, false);
+        PmsBooking booking = getBookingUnsecure(pmsBookingId);
         
         if(booking == null) {
             return new ArrayList();
@@ -9923,7 +9923,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         List<Order> orders = orderIds
             .stream()
-            .map(id -> orderManager.getOrder(id))
+            .map(id -> orderManager.getOrderSecure(id))
             .filter(o -> o != null)
             .filter(o -> !o.isAccruedPayment())
             .collect(Collectors.toList());
@@ -9949,14 +9949,20 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         List<Order> orders = orderIds
             .stream()
-            .map(id -> orderManager.getOrder(id))
+            .map(id -> orderManager.getOrderSecure(id))
             .collect(Collectors.toList());
 
         PmsBookingPaymentDiffer differ = new PmsBookingPaymentDiffer(orders, booking, room, this);
         PmsRoomPaymentSummary summary = differ.getSummary();
         
         return summary;
+    }
 
+    @Override
+    public List<Class> getOneTimExecutors() {
+        List<Class> retList = new ArrayList();
+        retList.add(OneTimeCalculateUnsettledAmountForRooms.class);
+        return retList;
     }
     
     @Override
@@ -10271,5 +10277,27 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 .collect(Collectors.toList());
         
         return relatedBookings;
+    }
+
+    @Override
+    public void saveObject(DataCommon data) throws ErrorException {
+        if (data instanceof PmsBooking) {
+            calculateUnsettledAmountForRooms((PmsBooking)data);
+        }
+        
+        super.saveObject(data); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void calculateUnsettledAmountForRooms(PmsBooking pmsBooking) {
+        if (pmsBooking == null || pmsBooking.rooms == null)
+            return;
+        
+        for (PmsBookingRooms room : pmsBooking.rooms) {
+            PmsRoomPaymentSummary summary = getSummaryWithoutAccrued(pmsBooking.id, room.pmsBookingRoomId);
+            room.unsettledAmount = summary.getCheckoutRows()
+                    .stream()
+                    .mapToDouble(o -> o.count * o.price)
+                    .sum();
+        }
     }
 }

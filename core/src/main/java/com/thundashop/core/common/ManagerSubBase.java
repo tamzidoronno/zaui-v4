@@ -8,6 +8,9 @@ package com.thundashop.core.common;
 import com.getshop.scope.GetShopSchedulerBase;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.getshop.scope.GetShopSessionScope;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import static com.thundashop.core.common.GetShopLogHandler.logPrintStatic;
@@ -15,6 +18,7 @@ import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.DatabaseRemote;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.getshopaccounting.DayIncomeReport;
 import com.thundashop.core.ordermanager.data.VirtualOrder;
 import com.thundashop.core.pagemanager.GetShopModules;
 import com.thundashop.core.storemanager.data.Store;
@@ -25,7 +29,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -184,10 +190,28 @@ public class ManagerSubBase {
         }
         
         this.ready = true;
-        if (GetShopLogHandler.isDeveloper) {
-                System.out.println("Started manager: " + this.getClass().getSimpleName() + " in " + (System.currentTimeMillis()-start) + "ms");
+        
+        for (Class oneTimeExectors : getOneTimExecutors()) {
+            
+            try {
+                OneTimeExecutor v = (OneTimeExecutor) oneTimeExectors.getConstructor(ManagerSubBase.class).newInstance(this);
+                
+                if (hasBeenExecuted(oneTimeExectors) && !v.forceExecute() ) {
+                    continue;
+                }
+                v.run();
+                retgisterExecuted(oneTimeExectors);
+            } catch (Exception ex) {
+                java.util.logging.Logger.getLogger(ManagerSubBase.class.getName()).log(Level.SEVERE, null, ex);
             }
+            
+            
         }
+        
+        if (GetShopLogHandler.isDeveloper) {
+            System.out.println("Started manager: " + this.getClass().getSimpleName() + " in " + (System.currentTimeMillis()-start) + "ms");
+        }
+    }
 
     private boolean isDatabaseMethodInUse() throws SecurityException {
         boolean dataFromDatabaseOverridden = false;
@@ -251,6 +275,16 @@ public class ManagerSubBase {
     public void dataFromDatabase(DataRetreived data) {
     }
 
+    /**
+     * This function should only be used when the saveObject is overridden
+     * and there is a special reason to bypass it.
+     * 
+     * @param data 
+     */
+    public void saveObjectDirect(DataCommon data) {
+        saveObject(data);
+    }
+    
     public void saveObject(DataCommon data) throws ErrorException {
         if (modules.shouldStoreRemote(getCurrentGetShopModule())) {
             if (data.getClass().getAnnotation(GetShopRemoteObject.class) != null) {
@@ -536,5 +570,39 @@ public class ManagerSubBase {
      */
     public void postProcessMessage(Method executeMethod, Object[] argObjects) {}
 
+    /**
+     * Override this function in order to start one time executors.
+     * 
+     * @return 
+     */
+    public List<Class> getOneTimExecutors() {
+        return new ArrayList();
+    }
+
+    private boolean hasBeenExecuted(Class oneTimeExectors) {
+        DBCollection collection = getDBCollection();
+        BasicDBObject query = new BasicDBObject();
+        query.put("_id", "one_time_executor_"+oneTimeExectors.getCanonicalName());
     
+        return collection.find(query).size() != 0;
+    }
+
+    private DBCollection getDBCollection() {
+        DB db = database.getMongo().getDB(getClass().getSimpleName());
+        String collectionName = storeId;
+        if (this instanceof GetShopSessionBeanNamed) {
+            collectionName = collectionName + "_" + ((GetShopSessionBeanNamed)this).getSessionBasedName();
+        }
+        DBCollection collection = db.getCollection("col_"+collectionName);
+        return collection;
+    }
+
+    private void retgisterExecuted(Class oneTimeExectors) {
+        DBCollection collection = getDBCollection();
+    
+        BasicDBObject query = new BasicDBObject();
+        query.put("_id", "one_time_executor_"+oneTimeExectors.getCanonicalName());
+    
+        collection.save(query);
+    }
 }

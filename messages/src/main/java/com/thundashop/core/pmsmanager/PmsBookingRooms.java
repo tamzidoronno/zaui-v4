@@ -125,6 +125,12 @@ public class PmsBookingRooms implements Serializable {
     public boolean loggedDeletedCode = false;
     public String language = "";
     public String countryCode = "";
+    
+    /**
+     * The current unsettled amount ( Excluded accrued payments)
+     * Note: This value is calculated when the bookings are being saved.
+     */
+    public Double unsettledAmount = null;
 
     public boolean isOverBooking() {
         if(isAddedToBookingEngine()) {

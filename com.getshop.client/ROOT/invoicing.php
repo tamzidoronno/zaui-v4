@@ -1,6 +1,24 @@
 <?
 include '../loader.php';
 $pageFactory = new \PageFactory("invoicing");
+
+// PmsPaymentProcess - Needs to be active on all pages.
+$pageFactory->addExtraApplicationsNoneInstance('af54ced1-4e2d-444f-b733-897c1542b5a8');    
+
+// OnlinePaymethod Application, a subapplication for all payments apps
+$pageFactory->addExtraApplicationsNoneInstance('d96f955a-0c21-4b1c-97dc-295008ae6e5a');    
+$pageFactory->addExtraApplicationsNoneInstance('486009b1-3748-4ab6-aa1b-95a4d5e2d228');    
+
+// PMS VIEW
+$pageFactory->addExtraApplicationsNoneInstance('f8cc5247-85bf-4504-b4f3-b39937bd9955');    
+$pageFactory->addExtraApplicationsNoneInstance('b5e9370e-121f-414d-bda2-74df44010c3b');
+$pageFactory->addExtraApplicationsNoneInstance('28886d7d-91d6-409a-a455-9351a426bed5');
+$pageFactory->addExtraApplicationsNoneInstance('b72ec093-caa2-4bd8-9f32-e826e335894e');
+$pageFactory->addExtraApplicationsNoneInstance('9a6ea395-8dc9-4f27-99c5-87ccc6b5793d');
+$pageFactory->addExtraApplicationsNoneInstance('961efe75-e13b-4c9a-a0ce-8d3906b4bd73');    
+$pageFactory->addExtraApplicationsNoneInstance('2e51d163-8ed2-4c9a-a420-02c47b1f7d67');
+$pageFactory->addExtraApplicationsNoneInstance('bce90759-5488-442b-b46c-a6585f353cfe');
+
 $page = $pageFactory->getPage(@$_GET['page']);
 $showingModal = isset($_SESSION['gs_currently_showing_modal']) ? "active" : "";
 

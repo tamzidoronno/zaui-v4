@@ -10298,6 +10298,35 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     .stream()
                     .mapToDouble(o -> o.count * o.price)
                     .sum();
+            
+            summary = getSummary(pmsBooking.id, room.pmsBookingRoomId);
+            room.unsettledAmountIncAccrued = summary.getCheckoutRows()
+                    .stream()
+                    .mapToDouble(o -> o.count * o.price)
+                    .sum();
         }
+    }
+
+    @Override
+    public List<UnsettledRoomQuery> getAllRoomsWithUnsettledAmount(Date start, Date end) {
+        Map<PmsBooking, List<PmsBookingRooms>> res = getAllBookingsFlat()
+                .stream()
+                .flatMap(o -> o.rooms.stream())
+                .filter(o -> o.hasUnsettledAmount())
+                .filter(o -> o.date.end.before(end) && o.date.start.after(start))
+                .collect(Collectors.groupingBy(o -> {
+                    return getBookingFromRoom(o.pmsBookingRoomId);
+                }));
+        
+        List<UnsettledRoomQuery> retList = new ArrayList();
+        
+        for (PmsBooking booking : res.keySet()) {
+            UnsettledRoomQuery roomQuery = new UnsettledRoomQuery();
+            roomQuery.booking = booking;
+            roomQuery.roomsWithUnsettledAmount = res.get(booking);
+            retList.add(roomQuery);
+        }
+        
+        return retList;
     }
 }

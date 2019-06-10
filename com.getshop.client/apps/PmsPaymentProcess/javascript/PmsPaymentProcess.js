@@ -191,6 +191,10 @@ app.PmsPaymentProcess = {
         if (app && app.PmsBookingRoomView) {
             app.PmsBookingRoomView.refresh();
         }
+        
+        if (app && app.PmsInvoicing) {
+            app.PmsInvoicing.refresh();
+        }
     },
     
     setRoomsSelected: function() {

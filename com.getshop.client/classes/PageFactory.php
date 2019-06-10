@@ -699,6 +699,23 @@ class PageFactory {
         $row->addColumn("6c5268a0-26ea-4905-8f23-79f5410912a8", "dd11ceff-c204-41c7-8d14-bf3cbff7245b");
         $this->pages['incomes'] = $page;
         
+        $page = new \ModulePage("pms", "invoicing");
+        $row = $page->createRow();
+        $row->ignoreTopRow = true;
+        $row->addColumn("6f51a352-a5ee-45ca-a8e2-e187ad1c02a5", "dd11cegf-c204-41c7-8c14-b13cbff7245b");
+        $this->pages['pms'] = $page;
+        
+        $page = new \ModulePage("booking_room_view", "invoicing");
+        $page->setLeftMenu(\ModulePageMenu::getPmsLeftMenu());
+        $page->createRow()->addColumn("f8cc5247-85bf-4504-b4f3-b39937bd9955", "0a7bd783-97d7-4e4f-a092-4023d94e4f02");
+        $this->pages['booking_room_view'] = $page;   
+        
+        $page = new \ModulePage("invoicing", "invoicing");
+        $row = $page->createRow();
+        $row->ignoreTopRow = true;
+        $row->addColumn("cbe3bb0f-e54d-4896-8c70-e08a0d6e55ba", "9d534e1b-d856-4a81-97d8-970d4d79a226");
+        $this->pages['invoicing'] = $page;
+        
         $this->createOrderViewPage('invoicing');
         $this->createProductsPage("invoicing");
     }
@@ -765,6 +782,7 @@ class PageFactory {
         $row->ignoreTopRow = true;
         $row->addColumn('339af689-1617-4d67-ade9-ca26cf55bf44', "40357190-7764-42d1-1436-72d34928a718");
         $this->pages['invoicing'] = $page;
+        
         
         $page = new \ModulePage("iotdevices", "getshop");
         $row = $page->createRow();

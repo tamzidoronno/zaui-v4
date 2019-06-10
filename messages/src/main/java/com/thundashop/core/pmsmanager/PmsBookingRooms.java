@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 import org.mongodb.morphia.annotations.Transient;
 
 public class PmsBookingRooms implements Serializable {
@@ -131,6 +132,14 @@ public class PmsBookingRooms implements Serializable {
      * Note: This value is calculated when the bookings are being saved.
      */
     public Double unsettledAmount = null;
+    
+    
+    /**
+     * The current unsettled amount ( Excluded accrued payments)
+     * Note: This value is calculated when the bookings are being saved.
+     */
+    public Double unsettledAmountIncAccrued = null;
+    
 
     public boolean isOverBooking() {
         if(isAddedToBookingEngine()) {
@@ -1012,5 +1021,13 @@ public class PmsBookingRooms implements Serializable {
     boolean isRecentlyCreated() {
         long diff = new Date().getTime() - roomCreatedDate.getTime();
         return diff < 60000;
+    }
+
+    public boolean hasUnsettledAmount() {
+        return unsettledAmount > 0.01 || unsettledAmount < -0.01;
+    }
+    
+    public boolean hasUnsettledAmountIncAccrued() {
+        return unsettledAmountIncAccrued > 0.01 || unsettledAmountIncAccrued < -0.01;
     }
 }

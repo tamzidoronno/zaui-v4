@@ -9918,6 +9918,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
         
+        if (room == null) {
+            return new PmsRoomPaymentSummary();
+        }
+        
         List<String> orderIds = getExtraOrderIds(booking.id);
         orderIds.addAll(booking.orderIds);
         
@@ -9943,6 +9947,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
+        
+        if (room == null) {
+            return new PmsRoomPaymentSummary();
+        }
         
         List<String> orderIds = getExtraOrderIds(booking.id);
         orderIds.addAll(booking.orderIds);

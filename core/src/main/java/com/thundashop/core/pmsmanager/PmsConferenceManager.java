@@ -15,6 +15,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -46,6 +47,8 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
             if(dataCommon instanceof PmsConferenceEvent) { conferenceEvents.put(dataCommon.id, (PmsConferenceEvent) dataCommon); }
             if(dataCommon instanceof PmsConferenceEventEntry) { conferenceEventEntries.put(dataCommon.id, (PmsConferenceEventEntry) dataCommon); }
         }
+        
+        deleteEventsWithNoConference();
     }
     
     @Override
@@ -118,6 +121,11 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
 
     @Override
     public boolean saveConferenceEvent(PmsConferenceEvent event) {
+        
+        if (event.pmsConferenceId == null || event.pmsConferenceId.isEmpty()) {
+            return false;
+        }
+        
         if(!canAddEvent(event)) {
             return false;
         }
@@ -379,6 +387,19 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
             }
         }
         return true;
+    }
+
+    private void deleteEventsWithNoConference() {
+        List<PmsConferenceEvent> toDelete = conferenceEvents.values()
+                .stream()
+                .filter(o -> o.pmsConferenceId == null || o.pmsConferenceId.isEmpty())
+                .collect(Collectors.toList());
+        
+        for (PmsConferenceEvent event : toDelete) {
+            conferenceEvents.remove(event.id);
+            deleteObject(event);
+            logPrint("Deleted event with no conference");
+        }
     }
     
 }

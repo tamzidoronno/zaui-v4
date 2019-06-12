@@ -1024,10 +1024,16 @@ public class PmsBookingRooms implements Serializable {
     }
 
     public boolean hasUnsettledAmount() {
+        if (unsettledAmount == null)
+            return false;
+        
         return unsettledAmount > 0.01 || unsettledAmount < -0.01;
     }
     
     public boolean hasUnsettledAmountIncAccrued() {
+        if (unsettledAmountIncAccrued == null)
+            return false;
+        
         return unsettledAmountIncAccrued > 0.01 || unsettledAmountIncAccrued < -0.01;
     }
 }

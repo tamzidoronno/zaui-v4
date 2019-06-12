@@ -10233,6 +10233,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void checkIfSegmentIsClosed(PmsBooking booking) {
+        User curUser = getSession().currentUser;
+        if(curUser != null && curUser.emailAddress != null) {
+            if(curUser.emailAddress.endsWith("@getshop.com")) {
+                System.out.println("getshop user changing segment");
+                if(!bookingHasOrdersOnMultipleBookings(booking)) {
+                    return;
+                }
+            }
+            
+        }
         PmsBooking oldBooking = bookings.get(booking.id);
         if(oldBooking != null) {
             // We dont care if the segment is the same as old
@@ -10336,5 +10346,20 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         return retList;
+    }
+
+    private boolean bookingHasOrdersOnMultipleBookings(PmsBooking booking) {
+        boolean hasOrdersOnMultipleBookings = false;
+        for(String orderId : booking.orderIds) {
+            for(PmsBooking book : bookings.values()) {
+                if(book.id.equals(booking.id)) {
+                    continue;
+                }
+                if(book.orderIds != null && book.orderIds.contains(orderId)) {
+                    hasOrdersOnMultipleBookings = true;
+                }
+            }
+        }
+        return hasOrdersOnMultipleBookings;
     }
 }

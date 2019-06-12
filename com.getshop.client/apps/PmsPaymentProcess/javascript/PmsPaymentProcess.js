@@ -4,8 +4,114 @@ app.PmsPaymentProcess = {
         $(document).on('click', '.PmsPaymentProcess .createorder', this.createOrder);
         $(document).on('change', '.PmsPaymentProcess .item_count', this.updateTotalValue);
         $(document).on('change', '.PmsPaymentProcess .item_price', this.updateTotalValue);  
+        $(document).on('change', '.PmsPaymentProcess .row_checkbox', this.updateTotalValue);  
         $(document).on('click', '.PmsPaymentProcess .toggleshowdetailedroomview', this.toggleShowDetailedItemLines);  
         $(document).on('click', '.PmsPaymentProcess .toggledatefilter', this.togleDateFilter);  
+        $(document).on('click', '.PmsPaymentProcess .toggleselector', this.toggleSelector);  
+        $(document).on('click', '.PmsPaymentProcess .showcalc', this.toggleCalc);  
+        $(document).on('keyup', '.PmsPaymentProcess .percentcalculator', this.recalcByPercent);  
+        $(document).on('change', '.PmsPaymentProcess .totalvalcalculator', this.recalcByTotalVal);  
+    },
+    
+    toggleCalc: function() {
+        var filter = $(this).closest('.app').find('.percentfilter');
+        if ($(filter).is(':visible')) {
+            $(filter).slideUp();
+        } else {
+            $(filter).slideDown();
+        }
+    },
+    
+    recalcByPercent: function() {
+        var lines = $(this).closest('.app').find('.cartitemline');
+        var factor = $(this).val() / 100;
+        
+        $(lines).each(function() {
+            var active = $(this).find('.row_checkbox').prop('checked');
+            
+            if (!active) {
+                return;
+            }
+        
+            var itemLine = $(this).find('.item_price');
+            var orgPrice = itemLine.attr('orgvalue');
+            var newPrice = orgPrice * factor;
+            newPrice = Math.round(newPrice * 100) / 100;
+            itemLine.val(newPrice);
+        });
+        
+        app.PmsPaymentProcess.updateTotalValue();
+    },
+    
+    recalcByTotalVal: function() {
+        var lines = $(this).closest('.app').find('.cartitemline');
+        var newTotal = $(this).val();
+        var total = 0;
+        var toCorrectOn = null;
+        
+        $(lines).each(function() {
+            var active = $(this).find('.row_checkbox').prop('checked');
+            
+            if (!active) {
+                return;
+            }
+            
+            if (toCorrectOn == null)
+                toCorrectOn = this;
+        
+            var itemLine = $(this).find('.item_price');
+            var orgPrice = itemLine.attr('orgvalue');
+            var newPrice = orgPrice * $(this).find('.item_count').val();
+            total += newPrice;
+        });
+        
+        if (total != 0) {
+            var percent = (newTotal / total) * 100;
+            $(this).closest('.app').find('.percentcalculator').val(percent);
+            $('.PmsPaymentProcess .percentcalculator').trigger('keyup');
+        }
+        
+        
+        
+        var corrections = parseFloat(newTotal) - parseFloat($(this).val());
+        var toCorrectOn = $(toCorrectOn).find('.item_price');
+        var newCorrectedValue = parseFloat(toCorrectOn.val()) + parseFloat(corrections);
+        newCorrectedValue = Math.round(newCorrectedValue * 100) / 100;
+        toCorrectOn.val(newCorrectedValue);
+        console.log(corrections, toCorrectOn, newCorrectedValue);
+        app.PmsPaymentProcess.updateTotalValue();
+    },
+    
+    toggleSelector: function() {
+        if ($(this).hasClass('active')) {
+            $(this).removeClass('active');
+        } else {
+            $(this).addClass('active');
+        }
+        
+        var activeButtons = $(this).closest('.app').find('.shop_button.active');
+        
+        if (activeButtons.length == 0) {
+            $('.cartitemline').find('.row_checkbox').prop('checked', true);
+            $('.PmsPaymentProcess .detaileditemlines').slideUp();
+        } else {
+            $('.cartitemline').find('.row_checkbox').prop('checked', false);
+            $(activeButtons).each(function() {
+                if ($(this).hasClass('toggleaccomodation')) {
+                    $('.cartitemline.accomocation').find('.row_checkbox').prop('checked', true);
+                }
+                if ($(this).hasClass('toggleaddoninc')) {
+                    $('.cartitemline.included').find('.row_checkbox').prop('checked', true);
+                }
+                if ($(this).hasClass('toggleaddonsex')) {
+                    $('.cartitemline.not_included').find('.row_checkbox').prop('checked', true);
+                }
+            });
+            
+            $('.PmsPaymentProcess .detaileditemlines').slideDown();
+        }
+        
+        app.PmsPaymentProcess.updateTotalValue();
     },
     
     refresh: function() {
@@ -40,30 +146,54 @@ app.PmsPaymentProcess = {
     updateTotalValue: function() {
         $('.PmsPaymentProcess .cart_room_summary').each(function() {
             var overallTotal = 0;
+            var org_overallTotal = 0;
             
             $(this).find('.room').each(function() {
                 var totalForRoom = 0;
+                var org_totalForRoom = 0;
                 $(this).find('.row.cartitemline').each(function() {
+                    var active = $(this).find('.row_checkbox').is(':checked');
+                    if (!active)
+                        return;
+                    
                     var price = $(this).find('.item_price').val();
                     var count = $(this).find('.item_count').val();    
+                   
+                    var org_price = $(this).find('.item_price').attr('orgvalue');
+                    var org_count = $(this).find('.item_count').attr('orgcount');    
 
                     if (price && count) {
                         overallTotal += (price * count);
                         totalForRoom += (price * count);
                     }
+                    
+                    if (org_price && org_count) {
+                        org_overallTotal += (org_price * org_count);
+                        org_totalForRoom += (org_price * org_count);
+                    }
                 });
-                
+            
+                totalForRoom = Math.round(totalForRoom * 100) / 100;
                 $(this).find('.totalforroom').html(totalForRoom);
+                $('.PmsPaymentProcess').find('input.totalval').val(totalForRoom);
             });
             
             
+            overallTotal = Math.round(overallTotal * 100) / 100;
+            org_overallTotal = Math.round(org_overallTotal * 100) / 100;
+            
             $(this).find('.totalval').html(overallTotal);
+            $(this).find('.totalvalforselect').html(org_overallTotal);
         });
     },
     
     overlayClosed: function() {
         if (app && app.PmsBookingRoomView) {
             app.PmsBookingRoomView.refresh();
+        }
+        
+        if (app && app.PmsInvoicing) {
+            app.PmsInvoicing.refresh();
         }
     },
     
@@ -97,6 +227,11 @@ app.PmsPaymentProcess = {
             var items = [];
             
             $(this).find('.cartitemline').each(function() {
+                var active = $(this).find('.row_checkbox').is(':checked');
+                
+                if (!active) {
+                    return;
+                }
                 
                 var item = {
                     createOrderOnProductId : $(this).attr('createorderonproductid'),

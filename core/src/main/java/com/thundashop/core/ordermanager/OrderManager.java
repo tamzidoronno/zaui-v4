@@ -2048,6 +2048,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         details.webAddress = settings.getSetting("webAddress");
         details.type = settings.getSetting("type");
         details.currency = settings.getSetting("currency");
+        details.iban = settings.getSetting("iban");
+        details.swift = settings.getSetting("swift");
 
         return details;
     }
@@ -3739,7 +3741,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
      * @return 
      */
     public List<Order> getMainInvoices(String id) { 
-        Order order = getOrder(id);
+        Order order = getOrderSecure(id);
         
         if (order == null) {
             return null;

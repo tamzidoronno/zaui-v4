@@ -403,6 +403,8 @@ class ModulePage {
         $menu->entries[] = new ModulePageMenuItem("All", "allinvoices", "gsicon-receipt");
         $menu->entries[] = new ModulePageMenuItem("Incomes", "incomes", "fa-dollar");
         $menu->entries[] = new ModulePageMenuItem("Products", "products", "gsicon-basket");
+        $menu->entries[] = new ModulePageMenuItem("PMS", "pms", "gsicon-bed");
+        $menu->entries[] = new ModulePageMenuItem("G-Invoicing", "invoicing", "gsicon-gs-reports");
         return $menu;
     }
 

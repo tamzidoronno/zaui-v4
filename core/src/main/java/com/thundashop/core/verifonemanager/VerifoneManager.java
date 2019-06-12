@@ -75,17 +75,7 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
         Double total = orderManager.getTotalAmount(order) * 100;
         Integer amount = total.intValue();
         
-        VerifonePaymentApp app = null;
-        if(!activePaymentApps.containsKey(terminalId)) {
-            app = new VerifonePaymentApp();
-            if (verifoneListener == null) {
-                createListener();
-            }
-
-            activePaymentApps.put(terminalId, app);
-        } else {
-            app = activePaymentApps.get(terminalId);
-        }
+        VerifonePaymentApp app = getPayPoint(terminalId);
         
         List<Application> activePaymentMethods = storeApplicationPool.getActivatedPaymentApplications();
         Application selectedApp = null;
@@ -116,6 +106,21 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
             app.performTransaction(PayPoint.TRANS_CARD_PURCHASE, amount, amount);
         }
         
+    }
+
+    private VerifonePaymentApp getPayPoint(String terminalId) {
+        VerifonePaymentApp app = null;
+        if(!activePaymentApps.containsKey(terminalId)) {
+            app = new VerifonePaymentApp();
+            if (verifoneListener == null) {
+                createListener();
+            }
+            
+            activePaymentApps.put(terminalId, app);
+        } else {
+            app = activePaymentApps.get(terminalId);
+        }
+        return app;
     }
 
     public void getPayPointEvent(PayPointEvent event) {
@@ -266,6 +271,18 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
 
     public void removeOrderToPay() {
         orderToPay = null;
+    }
+
+    @Override
+    public void doZreport(String terminalId) {
+        VerifonePaymentApp paypoint = getPayPoint(terminalId);
+        paypoint.performAdmin(PayPoint.ADM_Z_REPORT, true);
+    }
+
+    @Override
+    public void doXreport(String terminalId) {
+        VerifonePaymentApp paypoint = getPayPoint(terminalId);
+        paypoint.performAdmin(PayPoint.ADM_X_REPORT, true);
     }
 
 }

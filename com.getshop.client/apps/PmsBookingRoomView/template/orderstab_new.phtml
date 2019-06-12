@@ -5,6 +5,7 @@ $pmsBooking = $this->getPmsBooking();
 $extraOrders = $this->getApi()->getPmsManager()->getExtraOrderIds($this->getSelectedMultilevelDomainName(), $pmsBooking->id);
 
 $summary = $this->getApi()->getPmsManager()->getSummary($this->getSelectedMultilevelDomainName(), $pmsBooking->id, $room->pmsBookingRoomId);
+$summaryWithoutAccrued = $this->getApi()->getPmsManager()->getSummaryWithoutAccrued($this->getSelectedMultilevelDomainName(), $pmsBooking->id, $room->pmsBookingRoomId);
 
 $orderMissing = 0;
 $paymentMissing = 0;
@@ -45,7 +46,7 @@ $totalForRoom = 0;
 $distinctDates = array();
 $needToCreateOrdersFor = 0;
 
-foreach ($summary->rows as $row) {
+foreach ($summaryWithoutAccrued->rows as $row) {
     $priceInOrders = $row->createdOrdersFor * $row->countFromOrders;
     
     $priceInBooking = $row->priceInBooking * $row->countFromBooking;
@@ -63,7 +64,7 @@ foreach ($summary->rows as $row) {
 $missingInOrders = round($missingInOrders, 2);
 $needToCreateOrdersFor = round($needToCreateOrdersFor, 2);
 $totalForRoom = round($totalForRoom, 2);
-
+$payAfterStay = $room->createOrdersOnZReport && !($needToCreateOrdersFor <= 1 && $needToCreateOrdersFor >= -1);
 ?>
 
 <div class='insideheader'>SUMMARY <? echo $room->guests[0]->name; ?></div>
@@ -71,17 +72,17 @@ $totalForRoom = round($totalForRoom, 2);
     <? 
     echo "<div style='color: #8ac136; padding: 5px; padding-left: 10px; '><i class='fa fa-info-circle'></i> ".$this->__f("The total amount for this room is")." ".$totalForRoom."</div>";
     
-    if ($needToCreateOrdersFor && !$room->createOrdersOnZReport) {
+    if ($needToCreateOrdersFor && !$payAfterStay) {
         echo "<div style='color: #f96a38; padding: 5px; padding-left: 10px; '><i class='fa fa-warning'></i> ".$this->__f("You need to create a payment of total")." ".$needToCreateOrdersFor."</div>";
     }
     
-    if ($orders && $unpaidOrders && !$room->createOrdersOnZReport) {
+    if ($orders && $unpaidOrders && !$payAfterStay) {
         echo "<div style='color: #f96a38; padding: 5px; padding-left: 10px; '><i class='fa fa-warning'></i> ".$this->__f("Note, you have unpaid orders... Please make sure that all orders are paid.")."</div>";
     }
     
-    if ($room->createOrdersOnZReport) {
+    if ($payAfterStay) {
         echo "<div style='border: solid 1px red; padding: 20px; color: red; margin-top: 20px;'>";
-            echo "<i class='fa fa-warning'></i> ".$this->__f("This room has not yet been paid as pay after stay has been activated, deactivate it to finalize the payments.");
+            echo "<i class='fa fa-warning'></i> ".$this->__f("This room has not yet been paid as pay after stay has been activated.");
         echo "</div>";
     }
     ?>

@@ -32,4 +32,10 @@ public interface IVerifoneManager {
     
     @Editor
     public String getCurrentPaymentOrderId();
+    
+    @Editor
+    public void doZreport(String terminalId);
+    
+    @Editor
+    public void doXreport(String terminalId);
 }

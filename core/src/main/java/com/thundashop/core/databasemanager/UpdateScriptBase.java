@@ -111,7 +111,7 @@ public abstract class UpdateScriptBase implements ApplicationContextAware {
         Session session = getSession(store);
         GetShopSessionScope scope = appContext.getBean(GetShopSessionScope.class);
         scope.setStoreId(store.id, multilevelName, session);
-        ManagerBase base = (ManagerBase)appContext.getBean(managerClass);
+        ManagerSubBase base = (ManagerSubBase)appContext.getBean(managerClass);
         base.setSession(session);
         return (V)base;
     }

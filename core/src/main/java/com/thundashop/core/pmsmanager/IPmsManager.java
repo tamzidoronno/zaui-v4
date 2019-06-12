@@ -595,6 +595,9 @@ public interface IPmsManager {
     @Administrator
     public List<PmsBooking> getBookingsWithUnsettledAmountBetween(Date start, Date end);
     
+    @Administrator
+    public List<UnsettledRoomQuery> getAllRoomsWithUnsettledAmount(Date start, Date end);
+    
     /**
      * If the autoassigned routines has failed for some reason, this will reset the status
      * and let the system retry to autoassigned the failed rooms.
@@ -624,6 +627,9 @@ public interface IPmsManager {
     
     @Administrator
     public PmsRoomPaymentSummary getSummary(String pmsBookingId, String pmsBookingRoomId);
+    
+    @Administrator
+    public PmsRoomPaymentSummary getSummaryWithoutAccrued(String pmsBookingId, String pmsBookingRoomId);
     
     @Administrator
     public String createOrderFromCheckout(List<PmsOrderCreateRow> row, String paymentMethodId, String userId);

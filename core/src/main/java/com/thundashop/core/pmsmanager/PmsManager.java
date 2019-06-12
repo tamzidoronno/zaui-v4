@@ -9740,7 +9740,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
      */
     @Override
     public List<String> getExtraOrderIds(String pmsBookingId) {
-        PmsBooking booking = getBookingInternal(pmsBookingId, false);
+        PmsBooking booking = getBookingUnsecure(pmsBookingId);
         
         if(booking == null) {
             return new ArrayList();
@@ -9909,6 +9909,36 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
 
     @Override
+    public PmsRoomPaymentSummary getSummaryWithoutAccrued(String pmsBookingId, String pmsBookingRoomId) {
+        PmsBooking booking = bookings.get(pmsBookingId);
+        
+        if (booking == null) {
+            return null;
+        }
+        
+        PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
+        
+        if (room == null) {
+            return new PmsRoomPaymentSummary();
+        }
+        
+        List<String> orderIds = getExtraOrderIds(booking.id);
+        orderIds.addAll(booking.orderIds);
+        
+        List<Order> orders = orderIds
+            .stream()
+            .map(id -> orderManager.getOrderSecure(id))
+            .filter(o -> o != null)
+            .filter(o -> !o.isAccruedPayment())
+            .collect(Collectors.toList());
+
+        PmsBookingPaymentDiffer differ = new PmsBookingPaymentDiffer(orders, booking, room, this);
+        PmsRoomPaymentSummary summary = differ.getSummary();
+        
+        return summary;
+    }
+    
+    @Override
     public PmsRoomPaymentSummary getSummary(String pmsBookingId, String pmsBookingRoomId) {
         PmsBooking booking = bookings.get(pmsBookingId);
         
@@ -9918,19 +9948,29 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
         
+        if (room == null) {
+            return new PmsRoomPaymentSummary();
+        }
+        
         List<String> orderIds = getExtraOrderIds(booking.id);
         orderIds.addAll(booking.orderIds);
         
         List<Order> orders = orderIds
             .stream()
-            .map(id -> orderManager.getOrder(id))
+            .map(id -> orderManager.getOrderSecure(id))
             .collect(Collectors.toList());
 
         PmsBookingPaymentDiffer differ = new PmsBookingPaymentDiffer(orders, booking, room, this);
         PmsRoomPaymentSummary summary = differ.getSummary();
         
         return summary;
+    }
 
+    @Override
+    public List<Class> getOneTimExecutors() {
+        List<Class> retList = new ArrayList();
+        retList.add(OneTimeCalculateUnsettledAmountForRooms.class);
+        return retList;
     }
     
     @Override
@@ -10051,6 +10091,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public String createOrderFromCheckout(List<PmsOrderCreateRow> rows, String paymentMethodId, String userId) {
+        
         PmsInvoiceManagerNew invoiceManager = new PmsInvoiceManagerNew(orderManager, cartManager, productManager, this);
         Order order = invoiceManager.createOrder(rows, paymentMethodId, userId);
         
@@ -10061,6 +10102,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     booking.orderIds.add(order.id);
                     saveBooking(booking);
                 }
+                
+                if (!paymentMethodId.equals("60f2f24e-ad41-4054-ba65-3a8a02ce0190")) {
+                    removeAccrudePayments(booking, o.roomId);
+                }
+                
             });
         
         return order.id;
@@ -10156,13 +10202,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void removeAccrudePayments(PmsBooking booking, String pmsBookingRoomId) {
-        List<Order> accrudeOrdres = getAllOrderIds(booking.id)
+        List<String> accrudeOrdres = getAllOrderIds(booking.id)
                     .stream()
                     .map(id -> orderManager.getOrderSecure(id))
                     .filter(o -> o.isAccruedPayment())
+                    .map(o -> o.id)
                     .collect(Collectors.toList());
         
-        for (Order order : accrudeOrdres) {
+        accrudeOrdres = orderManager.filterOrdersIsCredittedAndPaidFor(accrudeOrdres);
+        
+        for (String orderId : accrudeOrdres) {
+            Order order = orderManager.getOrderSecure(orderId);
             boolean orderHasOrderLinesNotConnectedToBooking = order.getCartItems().stream()
                     .filter(o -> !o.getProduct().externalReferenceId.equals(pmsBookingRoomId))
                     .count() > 0;
@@ -10235,5 +10285,56 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 .collect(Collectors.toList());
         
         return relatedBookings;
+    }
+
+    @Override
+    public void saveObject(DataCommon data) throws ErrorException {
+        if (data instanceof PmsBooking) {
+            calculateUnsettledAmountForRooms((PmsBooking)data);
+        }
+        
+        super.saveObject(data); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public void calculateUnsettledAmountForRooms(PmsBooking pmsBooking) {
+        if (pmsBooking == null || pmsBooking.rooms == null)
+            return;
+        
+        for (PmsBookingRooms room : pmsBooking.rooms) {
+            PmsRoomPaymentSummary summary = getSummaryWithoutAccrued(pmsBooking.id, room.pmsBookingRoomId);
+            room.unsettledAmount = summary.getCheckoutRows()
+                    .stream()
+                    .mapToDouble(o -> o.count * o.price)
+                    .sum();
+            
+            summary = getSummary(pmsBooking.id, room.pmsBookingRoomId);
+            room.unsettledAmountIncAccrued = summary.getCheckoutRows()
+                    .stream()
+                    .mapToDouble(o -> o.count * o.price)
+                    .sum();
+        }
+    }
+
+    @Override
+    public List<UnsettledRoomQuery> getAllRoomsWithUnsettledAmount(Date start, Date end) {
+        Map<PmsBooking, List<PmsBookingRooms>> res = getAllBookingsFlat()
+                .stream()
+                .flatMap(o -> o.rooms.stream())
+                .filter(o -> o.hasUnsettledAmount())
+                .filter(o -> o.date.end.before(end) && o.date.start.after(start))
+                .collect(Collectors.groupingBy(o -> {
+                    return getBookingFromRoom(o.pmsBookingRoomId);
+                }));
+        
+        List<UnsettledRoomQuery> retList = new ArrayList();
+        
+        for (PmsBooking booking : res.keySet()) {
+            UnsettledRoomQuery roomQuery = new UnsettledRoomQuery();
+            roomQuery.booking = booking;
+            roomQuery.roomsWithUnsettledAmount = res.get(booking);
+            retList.add(roomQuery);
+        }
+        
+        return retList;
     }
 }

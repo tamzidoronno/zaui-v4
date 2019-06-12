@@ -55,6 +55,7 @@ public class PmsBookingPaymentDiffer {
         setPriceToUseForOrders(summary);
         removeNullRows(summary);
         invertNegativeCountToCreateOrdersFor(summary);
+        correctZeroCountOffset(summary);
         return summary;
     }
 
@@ -337,6 +338,7 @@ public class PmsBookingPaymentDiffer {
         List<PmsBookingAddonItem> allItems = new ArrayList();
         allItems.addAll(roomsAddon);
         Map<String, List<PmsBookingAddonItem>> res = allItems.stream()
+                .filter(o -> !o.price.equals(0D))
                 .collect(Collectors.groupingBy(PmsBookingAddonItem::getStringDate));
         
         return res;
@@ -427,7 +429,8 @@ public class PmsBookingPaymentDiffer {
                 .filter(addon -> addon.getKey().equals(key))
                 .collect(Collectors.toList());
         
-        return items.stream().mapToInt(item -> item.count).sum();
+        return items.stream()
+                .mapToInt(item -> item.count).sum();
     }
 
     private void calculateRoomCount(PmsRoomPaymentSummary summary) {
@@ -513,5 +516,33 @@ public class PmsBookingPaymentDiffer {
         }
         
         return null;
+    }
+
+    private void correctZeroCountOffset(PmsRoomPaymentSummary summary) {
+        summary.rows.stream()
+                .forEach(o -> {
+                    double createdOrdersFor = o.priceInBooking - o.createdOrdersFor;
+                    boolean isNull = createdOrdersFor > -0.001 && createdOrdersFor < 0.001;
+                    if (o.count == 0 && !isNull) {
+                        o.count = o.countFromBooking;
+                        o.priceToCreateOrders = createdOrdersFor;
+                    }
+                    
+                    if (o.count < 0 && o.priceToCreateOrders < 0) {
+                        o.count *= -1;
+                        o.priceToCreateOrders *= -1;
+                    }
+                    
+                    if (o.count < 0 && o.priceToCreateOrders > 0) {
+                        o.count *= -1;
+                        o.priceToCreateOrders *= -1;
+                    }
+                    
+                    
+                    if (o.priceToCreateOrders == 0) {
+                        o.count = 0;
+                    }
+                    
+                });
     }
 }

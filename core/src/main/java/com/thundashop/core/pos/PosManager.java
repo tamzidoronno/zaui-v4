@@ -876,7 +876,7 @@ public class PosManager extends ManagerBase implements IPosManager {
                 .stream()
                 .flatMap(o -> o.rooms.stream())
                 .filter(o -> o.date.within(start, end))
-                .filter(o -> hasUnsettledAmount(o, pmsBookingMultilevelName))
+                .filter(o -> o.unsettledAmount > 0.0001 || o.unsettledAmount < -0.0001)
                 .collect(Collectors.toList());
         
         canClose.roomsWithProblems = roomsInPeriode.stream()
@@ -954,16 +954,6 @@ public class PosManager extends ManagerBase implements IPosManager {
         return false;
     }
 
-    private boolean hasUnsettledAmount(PmsBookingRooms pmsSelectedRoom, String pmsBookingMultilevelName) {
-        PmsInvoiceManager invoiceManager = scope.getNamedSessionBean(pmsBookingMultilevelName, PmsInvoiceManager.class);
-        
-        double totalOnRoom = pmsSelectedRoom.totalCost;
-        double totalOrdersRoom = invoiceManager.getTotalOnOrdersForRoom(pmsSelectedRoom.pmsBookingRoomId, true);
-        double diff = totalOnRoom - totalOrdersRoom;
-        
-        return diff > 0.0001 || diff < -0.0001;
-    }
-
     @Override
     public void changeListView(String viewId, String listId, boolean showAsGroupButton) {
         PosView view = getView(viewId);
@@ -1015,17 +1005,15 @@ public class PosManager extends ManagerBase implements IPosManager {
         
         PmsManager pmsManager = scope.getNamedSessionBean("default", PmsManager.class);
         
-        long startTiming = System.currentTimeMillis();
-        
         List<PmsBookingRooms> roomsNeedToCreateOrdersFor = pmsManager.getAllBookingsFlat()
                 .stream()
                 .flatMap(o -> o.rooms.stream())
                 .filter(o -> o.createOrdersOnZReport)
-                .filter(o -> o.date.within(start, end))
+                .filter(o -> o.hasUnsettledAmountIncAccrued())
+                .filter(o -> o.date.start.before(end) || o.date.start.equals(end) )
                 .collect(Collectors.toList());
         
         roomsNeedToCreateOrdersFor.stream().forEach(o -> createOrder(o));
-        
     }
 
     private void createOrder(PmsBookingRooms room) {

@@ -183,3 +183,11 @@
 .PmsPaymentProcess .receipt_template.fullsize .receipt_template_inner {
     zoom: 95%;
 }
+
+.PmsPaymentProcess .toggledatefilter {
+    z-index: 1;
+}
+
+.PmsPaymentProcess .shop_button.active {
+    background-color: green;
+}

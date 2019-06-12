@@ -1,0 +1,118 @@
+<?
+/* @var $this \ns_6f51a352_a5ee_45ca_a8e2_e187ad1c02a5\PmsInvoicing */
+$start = $this->convertToJavaDate(strtotime('1.1.2010'));
+$end = $this->convertToJavaDate(strtotime('now'));
+$res = $this->getApi()->getPmsManager()->getAllRoomsWithUnsettledAmount($this->getSelectedMultilevelDomainName(), $start, $end);
+
+
+$groupedByUserId = array();
+foreach ($res as $unsettledBooking) {
+    $groupedByUserId[$unsettledBooking->booking->userId][] = $unsettledBooking;
+}
+?>
+<div class='toprow'>
+    <?
+    echo "<h1>".$this->__f("Create invoices from your bookings that has not been charged yet.")."</h1>";
+    ?> 
+    <div style='font-size: 16px; width: 500px; display: inline-block;'>
+        <? 
+        echo $this->__f("Below you see a list of all bookings that has unsettled amount and where the room has ended. Select the rooms you wish you start a payment process for and then click start payment"); 
+        ?>
+    </div>
+    <br/>
+    <br/>
+    <div class='shop_button startpaymentprocess'><? echo $this->__f("Start payment"); ?></div>
+</div>
+<div class='content'>
+    <?
+    foreach ($groupedByUserId as $userId => $unsettledBookings) {
+        $user = $this->getApi()->getUserManager()->getUserById($userId);
+        ?>
+        <div class='usercollection'>
+            <div class='header'>
+                <input type='checkbox' class='headercheckbox'/>
+                <? echo $user->fullName; ?>
+            </div>
+            <?
+            foreach ($unsettledBookings as $unsettledBooking) {
+            ?>
+                <div class='rooms'>
+                    <?
+                    $totalForUser = 0;
+                    foreach ($unsettledBooking->roomsWithUnsettledAmount as $room) {
+                        ?>
+                        <div class='row'>
+                            <div class='col col1'><input type='checkbox' class='roomcheckbox' value='<? echo $room->pmsBookingRoomId; ?>'/></div>
+                            <div class='col col2'>
+                                <? echo $this->__f("GC").": ".count($room->guests); ?>
+                            </div>
+                            <div class='col col3'>
+                                <? 
+                                if (!count($room->guests)) {
+                                    echo "<div class='noguests'>".$this->__f("No guests")."</div>";
+                                } else {
+                                    $i = 0;
+                                    foreach ($room->guests as $guest) {
+                                    $i++;
+                                    ?>
+                                        <div><? echo "<div class='guestinfo'><i class='fa fa-user'></i> ". $guest->name. " </div><div class='guestinfo'><i class='fa fa-envelope'></i> ".$guest->email. "</div><div class='guestinfo'><i class='fa fa-phone'></i> " . $guest->phone."</div>"; ?></div>
+                                    <? } 
+                                }
+                                ?>
+                            </div>
+
+                            <div class='col col4'>
+                                <?
+                                echo date('d.m.Y', strtotime($room->date->start));
+                                echo " - ";
+                                echo date('d.m.Y', strtotime($room->date->end));
+                                ?>
+                            </div>
+
+                            <div class='col col5'>
+                                <?
+                                $bookingItem = $room->bookingItemId ? $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $room->bookingItemId) : null;
+                                echo $this->__f("Room").": "; 
+                                echo $bookingItem ? $bookingItem->bookingItemName : "Floating";
+                                ?>
+                            </div>
+
+                            <div class='col col6'>
+                                <div class="gs_shop_small_icon fa fa-bed" gs_show_modal="booking_room_view" bookingid="<? echo $unsettledBooking->booking->id; ?>" roomid="<? echo $room->pmsBookingRoomId; ?>"></div>
+                            </div>
+
+                            <div class='col col7'>
+                                <? 
+                                echo $room->unsettledAmount;
+                                $totalForUser += $room->unsettledAmount;
+                                ?>
+                            </div>
+                        </div>
+                        <?
+                    }
+                ?>
+                </div>
+                <?
+            }
+            ?>
+
+            <div class='totalrow'>
+                <?
+                echo $this->__f("Total").": ".$totalForUser;
+                ?>
+
+            </div>
+        </div>
+
+
+        <?
+    }
+
+    ?>
+
+
+</div>
+
+<script>
+    app.PmsInvoicing.scrollHeader();
+</script>

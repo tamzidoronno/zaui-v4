@@ -31,7 +31,9 @@ public class PmsBookingPaymentDiffer {
     private final SimpleDateFormat sdf;
 
     public PmsBookingPaymentDiffer(List<Order> orders, PmsBooking booking, PmsBookingRooms room, PmsManager pmsManager) {
-        this.orders = orders;
+        this.orders = orders.stream()
+                .filter(o -> o != null)
+                .collect(Collectors.toList());
         this.booking = booking;
         this.room = room;
         this.pmsManager = pmsManager;

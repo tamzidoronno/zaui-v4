@@ -29,6 +29,7 @@ import com.thundashop.core.getshopaccounting.DayIncome;
 import com.thundashop.core.getshopaccounting.DayIncomeFilter;
 import com.thundashop.core.getshopaccounting.DayIncomeReport;
 import com.thundashop.core.getshopaccounting.DayIncomeTransferToAaccountingInformation;
+import com.thundashop.core.getshopaccounting.DiffReport;
 import com.thundashop.core.getshopaccounting.DoublePostAccountingTransfer;
 import com.thundashop.core.getshopaccounting.OrderDailyBreaker;
 import com.thundashop.core.getshopaccounting.OrderUnsettledAmountForAccount;
@@ -84,6 +85,7 @@ import com.thundashop.core.usermanager.data.UserCard;
 import com.thundashop.core.verifonemanager.VerifoneFeedback;
 import com.thundashop.core.webmanager.WebManager;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -2835,8 +2837,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     private List<DayIncome> getDayIncomesInternal(DayIncomeFilter filter) {
-        List<DayIncome> dayIncomes = getDayIncomesFromDatabase(filter.start, filter.end);
-        dayIncomes.stream().forEach(o -> o.isFinal = true);
+        List<DayIncome> dayIncomes = new ArrayList();
+        
+        if (!filter.ignoreFromDatabase) {
+            dayIncomes = getDayIncomesFromDatabase(filter.start, filter.end);
+            dayIncomes.stream().forEach(o -> o.isFinal = true);
+        }
         
         OrderDailyBreaker breaker = new OrderDailyBreaker(getAllOrders(), filter, paymentManager, productManager, getOrderManagerSettings().whatHourOfDayStartADay, getAllFreePosts());
         breaker.breakOrders();
@@ -2846,9 +2852,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         List<DayIncome> newlyBrokenIncome = breaker.getDayIncomes();
+        List<DayIncome> fromDatabase = new ArrayList(dayIncomes);
         
         newlyBrokenIncome.removeIf(income -> {
-            return isInArray(income, dayIncomes);
+            return isInArray(income, fromDatabase);
         });
         
         newlyBrokenIncome.addAll(dayIncomes);
@@ -2874,11 +2881,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         BasicDBObject query = new BasicDBObject();
         query.put("className", DayIncomeReport.class.getCanonicalName());
         
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
+
         List<DayIncomeReport> all = database.query("OrderManager", storeId, query).stream()
                 .map(o -> (DayIncomeReport)o)
                 .filter(r -> r.deleted == null)
                 .collect(Collectors.toList());
-       
+        
         List<DayIncome> dayIncomes = all.stream()
                 .flatMap(o -> o.incomes.stream())
                 .filter(r -> {
@@ -4297,8 +4306,39 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                     o.closed = false;
                     saveObject(o);
                 });
-            
-
     }
 
+    @Override
+    public List<DiffReport> getDiffReport(Date start, Date end, boolean incTaxes) {
+        List<DayIncome> lockedReport = getDayIncomes(start, end);
+        List<DayIncome> currentReport = getCurrentDayIncomes(start, end);
+        
+        DiffReportCreator creator = new DiffReportCreator();
+        return creator.createReport(lockedReport, currentReport, incTaxes);
+    }
+
+    private List<DayIncome> getCurrentDayIncomes(Date start, Date end) {
+        DayIncomeFilter filter = new DayIncomeFilter();
+        filter.start = start;
+        filter.end = end;
+        filter.ignoreConfig = false;
+        filter.ignoreFromDatabase = true;
+        List<DayIncome> currentReport = getDayIncomesInternal(filter);
+        return currentReport;
+    }
+
+    @Override
+    public void forceChangeOverrideAccountingDate(String password, String orderId, Date overrideDate) {
+        
+        if (password == null || !password.equals("omfg_fml_9adufs9q342h5lkadsfaksdfh243asdfjhasdfhaskdfhj234")) {
+            return;
+        }
+        
+        Order order = getOrder(orderId);
+        if (order == null)
+            return;
+        
+        order.overrideAccountingDate = overrideDate;
+        saveObjectDirect(order);
+    }
 }

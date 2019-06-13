@@ -14,6 +14,7 @@ import com.thundashop.core.common.Internal;
 import com.thundashop.core.getshopaccounting.AccountingBalance;
 import com.thundashop.core.getshopaccounting.DayEntry;
 import com.thundashop.core.getshopaccounting.DayIncome;
+import com.thundashop.core.getshopaccounting.DiffReport;
 import com.thundashop.core.getshopaccounting.DoublePostAccountingTransfer;
 import com.thundashop.core.ordermanager.data.CartItemDates;
 import com.thundashop.core.ordermanager.data.ClosedOrderPeriode;
@@ -512,4 +513,10 @@ public interface IOrderManager {
     
     @Editor
     public AccountingFreePost getAccountFreePost(String id);
+    
+    @Administrator
+    public List<DiffReport> getDiffReport(Date start, Date end, boolean incTaxes);
+    
+    @Administrator
+    public void forceChangeOverrideAccountingDate(String password, String orderId, Date overrideDate);
 }

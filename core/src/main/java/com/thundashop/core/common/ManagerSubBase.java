@@ -282,7 +282,7 @@ public class ManagerSubBase {
      * @param data 
      */
     public void saveObjectDirect(DataCommon data) {
-        saveObject(data);
+        internalSave(data);
     }
     
     public void saveObject(DataCommon data) throws ErrorException {
@@ -294,6 +294,10 @@ public class ManagerSubBase {
             }
         }
         
+        internalSave(data);
+    }
+
+    private void internalSave(DataCommon data) throws ErrorException {
         data.storeId = storeId;
         data.lastModified = new Date();
         

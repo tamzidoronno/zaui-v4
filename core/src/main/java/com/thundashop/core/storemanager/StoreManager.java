@@ -94,7 +94,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
      */
     @Override
     public boolean isPikStore() {
-        return getMyStore().isPikStore();
+        return getStore().isPikStore();
     }
     
     @Override

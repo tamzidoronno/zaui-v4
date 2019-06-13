@@ -9964,6 +9964,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<Order> orders = orderIds
             .stream()
             .map(id -> orderManager.getOrderSecure(id))
+            .filter(o -> o != null)
             .collect(Collectors.toList());
 
         PmsBookingPaymentDiffer differ = new PmsBookingPaymentDiffer(orders, booking, room, this);

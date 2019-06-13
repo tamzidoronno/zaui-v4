@@ -132,7 +132,9 @@ public class PmsBookingPaymentDiffer {
         row.isAccomocation = true;
         row.countFromBooking = 1;
         row.countFromOrders = 1;
-        row.createOrderOnProductId = pmsManager.bookingEngine.getBookingItemType(room.bookingItemTypeId).productId;
+        if (pmsManager.bookingEngine.getBookingItemType(room.bookingItemTypeId) != null) {
+            row.createOrderOnProductId = pmsManager.bookingEngine.getBookingItemType(room.bookingItemTypeId).productId;
+        }
         return row;
     }
 

@@ -922,7 +922,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             booking.endDate = booking.getEndDate();
         }
 
-        booking.isAddedToEventList = pmsEventManager.isChecked(booking.id);
+        if (save) {
+            booking.isAddedToEventList = pmsEventManager.isChecked(booking.id);
+        }
 
         booking.makeUniqueIds();
         

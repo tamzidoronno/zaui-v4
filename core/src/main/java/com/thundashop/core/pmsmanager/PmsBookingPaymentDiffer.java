@@ -31,7 +31,9 @@ public class PmsBookingPaymentDiffer {
     private final SimpleDateFormat sdf;
 
     public PmsBookingPaymentDiffer(List<Order> orders, PmsBooking booking, PmsBookingRooms room, PmsManager pmsManager) {
-        this.orders = orders;
+        this.orders = orders.stream()
+                .filter(o -> o != null)
+                .collect(Collectors.toList());
         this.booking = booking;
         this.room = room;
         this.pmsManager = pmsManager;
@@ -132,7 +134,9 @@ public class PmsBookingPaymentDiffer {
         row.isAccomocation = true;
         row.countFromBooking = 1;
         row.countFromOrders = 1;
-        row.createOrderOnProductId = pmsManager.bookingEngine.getBookingItemType(room.bookingItemTypeId).productId;
+        if (pmsManager.bookingEngine.getBookingItemType(room.bookingItemTypeId) != null) {
+            row.createOrderOnProductId = pmsManager.bookingEngine.getBookingItemType(room.bookingItemTypeId).productId;
+        }
         return row;
     }
 

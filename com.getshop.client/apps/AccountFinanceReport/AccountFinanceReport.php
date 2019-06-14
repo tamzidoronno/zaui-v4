@@ -25,6 +25,11 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
     public function render() {
         $this->fetchConfigs();
         
+        if (isset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_account_diff_report'])) {
+            $this->includefile("diffreport");
+            return;
+        }
+        
         if (isset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_detailed_product_view'])) {
             $this->includefile("productsummary");
             return;
@@ -414,5 +419,14 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
         $this->getApi()->getOrderManager()->deleteFreePost($_POST['data']['freepostid']);
         $this->cancelOrderView();
     }
+    
+    public function showDiffReport() {
+        $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_account_diff_report'] = true;
+    }
+    
+    public function cancelDiffReport() {
+        unset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_account_diff_report']);
+    }
+
 }
 ?>

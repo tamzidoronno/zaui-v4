@@ -783,7 +783,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return false;
     }
 
-    public PmsBooking finalize(PmsBooking booking) {
+    public PmsBooking finalizeInternal(PmsBooking booking, boolean save) {
         if (booking == null) {
             return null;
         }
@@ -803,7 +803,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             nowCal.add(Calendar.HOUR_OF_DAY, -1);
         }
         
-        if (booking.secretBookingId == null || booking.secretBookingId.isEmpty()) {
+        if ((booking.secretBookingId == null || booking.secretBookingId.isEmpty()) && save)  {
             booking.secretBookingId = UUID.randomUUID().toString();
             saveObject(booking);
         }
@@ -815,7 +815,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 hardDeleteBooking(booking, "finalize");
                 return null;
             }
-            if(hardDelete) { 
+            if(hardDelete && save) { 
                 booking.avoidAutoDelete = true; 
                 saveObject(booking);
             }
@@ -908,7 +908,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
 
-        if (needSaving) {
+        if (needSaving && save) {
             saveBooking(booking);
         }
 
@@ -922,11 +922,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             booking.endDate = booking.getEndDate();
         }
 
-        booking.isAddedToEventList = pmsEventManager.isChecked(booking.id);
+        if (save) {
+            booking.isAddedToEventList = pmsEventManager.isChecked(booking.id);
+        }
 
         booking.makeUniqueIds();
         
         return booking;
+    }
+    
+    public PmsBooking finalize(PmsBooking booking) {
+        return finalizeInternal(booking, true);
     }
 
     private Integer getAutoIncrementBookingId() {
@@ -9740,7 +9746,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
      */
     @Override
     public List<String> getExtraOrderIds(String pmsBookingId) {
-        PmsBooking booking = getBookingUnsecure(pmsBookingId);
+        PmsBooking booking = bookings.get(pmsBookingId);
+        
+        finalizeInternal(booking, false);
         
         if(booking == null) {
             return new ArrayList();
@@ -9958,6 +9966,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<Order> orders = orderIds
             .stream()
             .map(id -> orderManager.getOrderSecure(id))
+            .filter(o -> o != null)
             .collect(Collectors.toList());
 
         PmsBookingPaymentDiffer differ = new PmsBookingPaymentDiffer(orders, booking, room, this);
@@ -10299,7 +10308,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void saveObject(DataCommon data) throws ErrorException {
-        if (data instanceof PmsBooking) {
+        if (data instanceof PmsBooking && data.id != null && !data.id.isEmpty()) {
             calculateUnsettledAmountForRooms((PmsBooking)data);
         }
         
@@ -10312,16 +10321,24 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         for (PmsBookingRooms room : pmsBooking.rooms) {
             PmsRoomPaymentSummary summary = getSummaryWithoutAccrued(pmsBooking.id, room.pmsBookingRoomId);
-            room.unsettledAmount = summary.getCheckoutRows()
-                    .stream()
-                    .mapToDouble(o -> o.count * o.price)
-                    .sum();
+            if (summary == null) {
+                room.unsettledAmount = 0D;
+            } else {
+                room.unsettledAmount = summary.getCheckoutRows()
+                        .stream()
+                        .mapToDouble(o -> o.count * o.price)
+                        .sum();
+            }
             
             summary = getSummary(pmsBooking.id, room.pmsBookingRoomId);
-            room.unsettledAmountIncAccrued = summary.getCheckoutRows()
-                    .stream()
-                    .mapToDouble(o -> o.count * o.price)
-                    .sum();
+            if (summary == null) {
+                room.unsettledAmountIncAccrued = 0D;
+            } else {
+                room.unsettledAmountIncAccrued = summary.getCheckoutRows()
+                        .stream()
+                        .mapToDouble(o -> o.count * o.price)
+                        .sum();
+            }
         }
     }
 

@@ -120,6 +120,14 @@ echo "</script>";
 
         <div gstype='submit' class='shop_button showresultbutton'><? echo $this->__f("Show"); ?></div>
         <div class="shop_button showresultbutton" gstype='downloadpdf' filename='report.pdf' method="downloadReport"> <? echo $this->__f("Download report"); ?></div>
+        <?
+        if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isGetShopUser()) {
+            ?>
+            <div class="shop_button showresultbutton" gsclick='showDiffReport'> <? echo $this->__f("Diff report"); ?></div>
+            <?
+        }
+        ?>
+        <div class="shop_button showresultbutton" gstype='downloadpdf' filename='report.pdf' method="downloadReport"> <? echo $this->__f("Download report"); ?></div>
         
         <?php if($isSuportingDirectTransfer) { ?>
             <div class="shop_button transferalldays showresultbutton"> <? echo $this->__f("Transfer all days not transferred yet"); ?></div>

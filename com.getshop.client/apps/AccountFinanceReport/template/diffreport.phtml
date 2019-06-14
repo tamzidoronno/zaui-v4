@@ -1,0 +1,161 @@
+<?
+/* @var $this \ns_e6570c0a_8240_4971_be34_2e67f0253fd3\AccountFinanceReport */
+$diffreport = $this->getApi()->getOrderManager()->getDiffReport($this->getStart(), $this->getEnd(), $this->isShowingIncTaxes());
+
+function asdfasdfasdf_date_sort($a, $b) {
+    return strtotime($a) - strtotime($b);
+}
+
+$allAccounts = array();
+
+foreach ($diffreport as $orderReport) {
+    foreach ($orderReport->currentReportDayIncomes as $date => $dayEntries) {
+        foreach ($dayEntries as $entry) {
+            $allAccounts[] = $entry->accountingNumber;
+        }
+    }
+    
+    foreach ($orderReport->lockedReportDayIncomes as $date => $dayEntries) {
+       
+        foreach ($dayEntries as $entry) {
+            $allAccounts[] = $entry->accountingNumber;
+        }
+    }
+}
+
+if (!$this->isShowingIncTaxes()) {
+    foreach ($this->getApi()->getProductManager()->getTaxes() as $tax) {
+        if ($tax->accountingTaxAccount) {
+            $allAccounts[] = $tax->accountingTaxAccount;
+        }
+    }
+}
+
+$allAccounts = array_unique($allAccounts);
+sort($allAccounts);
+
+$totalDiffAll = array();
+$ordersEffectedIncome = array();
+
+foreach ($allAccounts as $account) {
+    $totalDiffAll[$account] = 0;
+}
+
+$ordersAffectedAccount = array();
+
+foreach ($diffreport as $orderReport) {
+    $allDates = array();
+    
+    foreach ($orderReport->currentReportDayIncomes as $date => $dayEntries) {
+        $allDates[] = $date;
+    }
+    
+    foreach ($orderReport->lockedReportDayIncomes as $date => $dayEntries) {
+        $allDates[] = $date;
+    }
+    
+    $allDates = array_unique($allDates);
+
+    usort($allDates, 'asdfasdfasdf_date_sort');
+    
+    $order = $this->getApi()->getOrderManager()->getOrder($orderReport->orderId);
+    echo "<h2 style='margin-left: 40px; '>".$order->incrementOrderId." - ".$order->id."</h2>";
+    
+    if ($order->id == "82c0ba76-8e97-479e-8a50-078436e6adfd") {
+        echo "<pre>";
+        print_r($orderReport);
+        echo "</pre>";
+    }
+    
+    echo "<div style='background-color: #EFEFEF;'>";
+        echo "<div class='col' style='width: 200px;'></div>";
+        foreach ($allAccounts as $account) {
+            echo "<div class='col'>$account</div>";
+        }        
+    echo "</div>";
+    
+    $accountDiff = array();
+    foreach ($allAccounts as $account) {
+        $accountDiff[$account] = 0;
+    }
+    
+    foreach ($allDates as $date) {
+        $dayEntriesCurrent = $orderReport->currentReportDayIncomes->{$date};
+        $dayEntriesLocked = $orderReport->lockedReportDayIncomes->{$date};
+        $groupedByAccountNumberCurrent = $this->groupOnAccounting($dayEntriesCurrent);
+        $groupedByAccountNumberLocked = $this->groupOnAccounting($dayEntriesLocked);
+        
+        echo "<div style='border-top: solid 1px #DDD;'>";
+            echo "<div class='col' style='width: 200px;'> $date - Current</div>";
+            foreach ($allAccounts as $account) {
+                $val = $groupedByAccountNumberCurrent[$account] ? round($groupedByAccountNumberCurrent[$account],2) : "-";
+                echo "<div class='col'>$val</div>";
+                $accountDiff[$account] += $groupedByAccountNumberCurrent[$account];
+                $totalDiffAll[$account] += $groupedByAccountNumberCurrent[$account];
+                if ($val != "-") {
+                    $ordersAffectedAccount[$account][] = $order->id;
+                }
+            }
+        echo "</div>";
+        
+        echo "<div>";
+            echo "<div class='col' style='width: 200px;'> $date - Locked</div>";
+            foreach ($allAccounts as $account) {
+                $val = $groupedByAccountNumberLocked[$account] ? round($groupedByAccountNumberLocked[$account],2) : "-";
+                echo "<div class='col'>$val</div>";
+                $accountDiff[$account] -= $groupedByAccountNumberLocked[$account];
+                $totalDiffAll[$account] -= $groupedByAccountNumberLocked[$account];
+            }
+        echo "</div>";
+    }
+    
+    echo "<div style='border-top: solid 1px #DDD;'>";
+        echo "<div class='col' style='width: 200px;'>Diff (+ = more on current)</div>";
+        foreach ($allAccounts as $account) {
+            echo "<div class='col'>";
+            echo $accountDiff[$account] ? round($accountDiff[$account],2) : "";
+            echo "</div>";
+        }
+    echo "</div>";
+    
+}
+
+echo "<div style='margin: 50px;'>";
+    echo "<h2> Total diff for month </h2>";
+
+    echo "<div style='background-color: #EFEFEF;'>";
+        echo "<div class='col' style='width: 200px;'></div>";
+        foreach ($allAccounts as $account) {
+            echo "<div class='col'>$account</div>";
+        }        
+    echo "</div>";
+
+
+    echo "<div style='border-top: solid 1px #DDD;'>";
+        echo "<div class='col' style='width: 200px;'>Diff (+ = more on current)</div>";
+        foreach ($allAccounts as $account) {
+            echo "<div class='col'>";
+            echo $totalDiffAll[$account] ? round($totalDiffAll[$account],2) : "-";
+            echo "</div>";
+        }
+    echo "</div>";
+echo "</div>";
+
+
+foreach ($ordersAffectedAccount as $account => $orderIds) {
+    $orderIds = array_unique($orderIds);
+    
+    echo "<div style='margin: 10px;'>";
+        echo "<b> Order ids that effected account ".$account.", ".count($orderIds)."</b>";
+        echo "<br/>";
+        echo "{\"";
+        foreach ($orderIds as $id) {
+            echo $id."\",\"";
+        }
+        echo "\"}";
+    echo "</div>";
+}
+
+?>
+
+<div class="shop_button showresultbutton" gsclick='cancelDiffReport'> <? echo $this->__f("Cancel"); ?></div>

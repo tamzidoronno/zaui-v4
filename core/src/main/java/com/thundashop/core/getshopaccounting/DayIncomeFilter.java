@@ -21,4 +21,5 @@ public class DayIncomeFilter {
     public boolean onlyPaymentTransactionWhereDoubledPosting = false;
     public boolean doublePostingRecords = false;
     public boolean includePaymentTransaction = false;
+    public boolean ignoreFromDatabase = false;
 }

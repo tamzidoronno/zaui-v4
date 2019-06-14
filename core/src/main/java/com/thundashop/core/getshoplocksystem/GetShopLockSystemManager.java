@@ -410,7 +410,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         slot.takenInUseManagerName = managerName;
         slot.takenInUseTextReference = textReference;
         saveObject(group);
-        
+        clearCache(null);
         return slot.code;
     }
     
@@ -752,6 +752,10 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
             
             if (!group.isConnectedToLock(serverId, lockId)) {
                 continue;
+            }
+            
+            for(MasterUserSlot tmp : group.getGroupLockCodes().values()) {
+                System.out.println(tmp.code.pinCode);
             }
             
             List<MasterUserSlot> add = group.getGroupLockCodes().values()

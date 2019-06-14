@@ -29,6 +29,7 @@ public class PmsBooking extends DataCommon {
     public List<String> bookingEngineAddons = new ArrayList();
     public RegistrationRules registrationData = new RegistrationRules();
     public String language = "";
+    public String browserLanguage = "";
     public String userId = "";
     public String bookedByUserId = "";
     public Integer state = 0;
@@ -87,6 +88,8 @@ public class PmsBooking extends DataCommon {
     public boolean agreedToTermsAndConditions = false;
     
     public boolean segmentClosed = false;
+    
+    public BrowserVersion browserUsed;
     
     /**
      * First startdate of all rooms

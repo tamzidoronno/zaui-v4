@@ -132,7 +132,15 @@ $channelNames = $formater->getChannels();
 <div class='col_box_width_2 second'>
     <div class="row">
         <div class="col col1"><? echo $this->__f("Date created"); ?></div>
-        <div class="col col2"><div class='ellipsis'><b><? echo date("d.m.Y H:i", strtotime($pmsBooking->rowCreatedDate)); ?> by 
+        
+        <?php
+        $browser = "";
+        if($pmsBooking->browserUsed) {
+            $browser = "Booked by browser : " . $pmsBooking->browserUsed->name . ", version: " . $pmsBooking->browserUsed->version;
+        }
+        ?>
+        
+        <div class="col col2" title="<?php echo $browser; ?>"><div class='ellipsis'><b><? echo date("d.m.Y H:i", strtotime($pmsBooking->rowCreatedDate)); ?> by 
             <?php if($pmsBooking->bookedByUserId) { 
 
                 if($pmsBooking->bookedByUserId == "gs_system_scheduler_user") {

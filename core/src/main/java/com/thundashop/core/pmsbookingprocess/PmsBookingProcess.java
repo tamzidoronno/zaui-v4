@@ -127,6 +127,9 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 booking.couponCode = arg.discountCode;
             }
         }
+        
+        booking.browserUsed = arg.browser;
+        
         try {
             pmsManager.setBooking(booking);
         }catch(Exception e) {

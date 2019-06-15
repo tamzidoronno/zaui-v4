@@ -71,7 +71,15 @@
                 
                 <?php
                 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+                
+                
+                $list = array();
                 foreach($config->closedOfPeriode as $row) {
+                    $list[strtotime($row->firstEvent->start) . strtotime($row->firstEvent->end)] = $row;
+                }
+                krsort($list);
+                
+                foreach($list as $row) {
                     $old = "";
                     if(strtotime($row->firstEvent->end) < time()) {
                         $old = "oldrestriction";

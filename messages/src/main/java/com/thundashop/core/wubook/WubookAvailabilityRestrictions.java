@@ -8,4 +8,8 @@ public class WubookAvailabilityRestrictions extends DataCommon {
     public Date start;
     public Date end;
     public List<String> types;
+
+    public Date getStartDate() {
+        return start;
+    }
 }

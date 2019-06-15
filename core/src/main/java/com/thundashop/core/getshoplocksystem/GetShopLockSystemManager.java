@@ -395,12 +395,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
             throw new ErrorException(1042);
         }
         
-        MasterUserSlot slot = group.getGroupLockCodes().values()
-                .stream()
-                .filter(s -> s.takenInUseDate == null)
-                .filter(s -> s.allCodesAdded)
-                .findAny()
-                .orElse(null);
+        MasterUserSlot slot = getFirstUnusedCodeFromSlot(group);
         
         if (slot == null)
             return null;
@@ -412,6 +407,16 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         saveObject(group);
         clearCache(null);
         return slot.code;
+    }
+
+    private MasterUserSlot getFirstUnusedCodeFromSlot(LockGroup group) {
+        MasterUserSlot slot = group.getGroupLockCodes().values()
+                .stream()
+                .filter(s -> s.takenInUseDate == null)
+                .filter(s -> s.allCodesAdded)
+                .findAny()
+                .orElse(null);
+        return slot;
     }
     
     public LockCode getCodeAndMarkAsInUse(String groupId, String reference, String managerName, String textReference, String pinCode) {
@@ -445,14 +450,30 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
     @Override
     public void renewCodeForSlot(String groupId, int slotId) {
         LockGroup group = getGroup(groupId);
-        group.renewCodeForSlot(slotId, getCodeSizeInternal(groupId));
         
-        lockServers.values().stream().forEach(server -> {
-            server.syncGroupSlot(group, slotId);
-        });
+        MasterUserSlot slot = getFirstUnusedCodeFromSlot(group);
+        if (slot == null) {
+            MasterUserSlot slotInUse = group.getGroupLockCodes().get(slotId);
+            if (slotInUse.takenInUseDate != null) {
+                slotInUse.takenInUseDate = null;
+                slotInUse.takenInUseReference = "";
+                slotInUse.takenInUseManagerName = "";
+                slotInUse.takenInUseTextReference = "";
+                saveObject(group);
+                
+            }
+        } else {
+
+            group.renewCodeForSlot(slotId, getCodeSizeInternal(groupId));
+
+            lockServers.values().stream().forEach(server -> {
+                server.syncGroupSlot(group, slotId);
+            });
+
+            saveObject(group);
+        }
         
-        saveObject(group);
-        
+        clearCache(null);
     }
     
     @Override

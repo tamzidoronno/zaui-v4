@@ -43,7 +43,7 @@ foreach($items as $item) {
 }
 
 
-$closedtext = $this->checkIfClosedPeriodes();
+$closedtext = $this->checkIfClosedPeriodes($start,$end);
 $closedRoom = "";
 if($closedtext) {
     echo "<div>";

@@ -1392,7 +1392,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     }
 
     @Override
-    public GuestAddonsSummary changeGuestCountForRoom(String roomId, int guestCount) {
+    public void quickChangeGuestCountForRoom(String roomId, int guestCount) {
         PmsBooking booking = pmsManager.getCurrentBooking();
         
         PmsBookingRooms room = booking.getRoom(roomId);
@@ -1405,7 +1405,11 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         }catch(Exception e) {
             logPrintException(e);
         }
-        
+    }
+    
+    @Override
+    public GuestAddonsSummary changeGuestCountForRoom(String roomId, int guestCount) {
+        quickChangeGuestCountForRoom(roomId, guestCount);
         return generateSummary();
     }
 

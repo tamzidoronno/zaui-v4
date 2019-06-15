@@ -36,7 +36,11 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
     public function registerRoomsFromAvailabilityCheck() {
         $types = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
         foreach($types as $type) {
-            $this->addToReadyList($type->id, $_POST['data'][$type->id], $_POST['data']['start'], $_POST['data']['end']);
+            $guestCount = 0;
+            if(isset($_POST['data'][$type->id.'_guestcounter'])) {
+                $guestCount = $_POST['data'][$type->id.'_guestcounter'];
+            }
+            $this->addToReadyList($type->id, $_POST['data'][$type->id], $_POST['data']['start'], $_POST['data']['end'], $guestCount);
         }
         $this->printRoomsAddedToReadyList();
         
@@ -89,6 +93,12 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         $this->getApi()->getPmsManager()->setBookingByAdmin($this->getSelectedMultilevelDomainName(), $booking, false);
     }
     
+    public function deleteRoom() {
+        $roomId = $_POST['data']['roomid'];
+        $this->getApi()->getPmsBookingProcess()->removeRoom($this->getSelectedMultilevelDomainName(), $roomId);
+        $this->printRoomsAddedToReadyList();
+    }
+    
     public function setSource() {
         $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
         $booking->channel = $_POST['data']['source'];
@@ -96,7 +106,13 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
     }
     
     public function selectbooking() {
+        $curbooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
         $this->getApi()->getPmsManager()->setCurrentBooking($this->getSelectedMultilevelDomainName(), $_POST['data']['bookingid']);
+
+        foreach($curbooking->rooms as $room) {
+            $roomId = $this->getApi()->getPmsBookingProcess()->addBookingItemType($this->getSelectedMultilevelDomainName(), $_POST['data']['bookingid'], $room->bookingItemTypeId, $room->date->start, $room->date->end, null);
+            $this->getApi()->getPmsBookingProcess()->quickChangeGuestCountForRoom($this->getSelectedMultilevelDomainName(), $roomId, $room->numberOfGuests);
+        }
     }
     
     public function addTypesToBooking() {
@@ -125,6 +141,13 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         echo "<script>";
 //        echo "app.PmsNewBooking20.setLastPage();";
         echo "</script>";
+    }
+    
+    public function incraseDecreaseCount() {
+        $roomId = $_POST['data']['roomid'];
+        $guestCount = $_POST['data']['guestCount'];
+        $this->getApi()->getPmsBookingProcess()->quickChangeGuestCountForRoom($this->getSelectedMultilevelDomainName(), $roomId, $guestCount);
+        $this->printRoomsAddedToReadyList();
     }
     
     public function updateprice() {
@@ -213,8 +236,7 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
      */
     public function saveUser($user) {
         $this->getApi()->getUserManager()->saveUser($user);
-        
-        $booking = $this->getApi()->getPmsManager()->startBooking($this->getSelectedMultilevelDomainName());
+        $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
         $booking->userId = $_POST['data']['userid'];
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedMultilevelDomainName(), $booking);
     }
@@ -227,7 +249,7 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
     }
     
     public function selectUser() {
-        $booking = $this->getApi()->getPmsManager()->startBooking($this->getSelectedMultilevelDomainName());
+        $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
         $booking->userId = $_POST['data']['userid'];
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedMultilevelDomainName(), $booking);
     }
@@ -384,10 +406,9 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
     }
 
     public function quickReserveBookingList() {
-        $booking = $this->getApi()->getPmsManager()->startBooking($this->getSelectedMultilevelDomainName());
+        $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
         $booking->userId = "quickreservation";
         $this->getApi()->getPmsManager()->setBookingByAdmin($this->getSelectedMultilevelDomainName(), $booking, true);
-        $this->addReadyToAddListToBooking();
         $this->completeBooking();
     }
     
@@ -408,29 +429,27 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         
     }
     
-    public function addToReadyList($type, $count, $start, $end) {
+    public function addToReadyList($type, $count, $start, $end, $guestCount) {
         if($count == 0) {
             return;
         }
-        if(!isset($_SESSION['pmsnewbooking20_readylist'])) {
-            $_SESSION['pmsnewbooking20_readylist'] = array();
+        $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+        $bookingId = $booking->id;
+        $start = $this->convertToJavaDate((int)$start);
+        $end = $this->convertToJavaDate((int)$end);
+        for($i = 0; $i < $count; $i++) {
+            $guestInfoFromRoom = array();
+            $roomId = $this->getApi()->getPmsBookingProcess()->addBookingItemType($this->getSelectedMultilevelDomainName(), $bookingId, $type, $start, $end, null);
+            $this->getApi()->getPmsBookingProcess()->quickChangeGuestCountForRoom($this->getSelectedMultilevelDomainName(), $roomId, $guestCount);
         }
-
-        $time = $start . "_" . $end;
-        
-        $counter = 0;
-        if(!isset($_SESSION['pmsnewbooking20_readylist'][$time])) {
-            $_SESSION['pmsnewbooking20_readylist'][$time] = array();
-        }
-        if(isset($_SESSION['pmsnewbooking20_readylist'][$time][$type])) {
-            $counter = $_SESSION['pmsnewbooking20_readylist'][$time][$type];
-        }
-        $counter += $count;
-        $_SESSION['pmsnewbooking20_readylist'][$time][$type] = $counter;
+    }
+    
+    public function resetBooking() {
+        $this->clearRoomList();
     }
     
     public function clearRoomList() {
-        unset($_SESSION['pmsnewbooking20_readylist']);
+        $this->getApi()->getPmsManager()->startBooking($this->getSelectedMultilevelDomainName());
     }
     
     public function searchForEvent() {
@@ -448,16 +467,7 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
     }
 
     public function addReadyToAddListToBooking() {
-        $list = $this->getReadyToAddList();
-        foreach($list as $time => $typesToAdd) {
-            $timePart = explode("_", $time);
-            $start = $this->convertToJavaDate($timePart[0]);
-            $end = $this->convertToJavaDate($timePart[1]);
-            foreach($typesToAdd as $typeId => $count) {
-                $this->addTypeToBooking($start, $end, $count, $typeId);
-            }
-        }
-        $this->clearRoomList();
+        
     }
 
     public function addTypeToBooking($start, $end, $count, $typeId) {
@@ -526,6 +536,40 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         }
         if(sizeof($guestInvolved->pmsConferenceEventIds) > 0) { echo sizeof($guestInvolved->pmsConferenceEventIds); }
         $this->getApi()->getPmsManager()->setBookingByAdmin($this->getSelectedMultilevelDomainName(), $booking, true);
+    }
+
+    public function checkIfClosedPeriodes($start, $end) {
+        $closedtext = "";
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        $selectedStartMillis = strtotime($start);
+        $selectedEndMillis = strtotime($end);
+
+        foreach($config->closedOfPeriode as $row) {
+            $startTime = strtotime($row->firstEvent->start);
+            $endTime = strtotime($row->firstEvent->end);
+
+            $found = false;
+            if($selectedStartMillis <= $startTime && $startTime <= $selectedEndMillis) {
+                //Start is in timerange
+                $found = true;
+            }
+            if($selectedStartMillis <= $endTime && $endTime <= $selectedEndMillis) {
+                //End is in timerange
+                $found = true;
+            }
+            if($selectedStartMillis >= $startTime && $endTime >= $selectedEndMillis) {
+                //End is in timerange
+                $found = true;
+            }
+
+            if($found) {
+                $closedtext .= "<div style='padding-left:5px;'>";
+                $closedtext .= date("d.m.Y", strtotime($row->firstEvent->start)) . " - ";
+                $closedtext .= date("d.m.Y", strtotime($row->firstEvent->end));
+                $closedtext .= "</div>";
+            }
+        }
+        return $closedtext;
     }
 
 }

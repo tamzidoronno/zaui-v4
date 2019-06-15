@@ -43,6 +43,7 @@ public interface IPmsBookingProcess {
     public void addTestMessagesToQueue(String message);
     public List<BookingProcessRoomStatus> getBooking(String pmsBookingId);
     public void setBookingItemToCurrentBooking(String roomId, String itemId);
+    public void quickChangeGuestCountForRoom(String roomId, int guestCount);
     @Administrator
     public String addBookingItemType(String bookingId, String type, Date start, Date end, String guestInfoFromRoom);
 }

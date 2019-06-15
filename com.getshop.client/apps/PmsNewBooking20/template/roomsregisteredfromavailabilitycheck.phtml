@@ -2,8 +2,9 @@
 $items = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
 $items = $this->indexList($items);
 /* @var $this ns_bf644a39_c932_4e3b_a6c7_f6fd16baa34d\PmsNewBooking20 */
-$list = $this->getReadyToAddList();
-if(!$list) {
+
+$booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+if(sizeof($booking->rooms) == 0) {
     echo "No room selected yet.";
     return;
 }
@@ -13,37 +14,45 @@ $totalrooms = 0;
 
 <div class='selectedroomsrow'>
     <span class='selectedroomname'><b>Room type</b></span>
-    <span class='selectedroomcount'><b>Rooms</b></span>
+    <span class='selectedroomcount'><b>Guests</b></span>
     <span class='selectedroomstartdate'><b>Check-in</b></span>
     <span class='selectedroomenddate'><b>Check-out</b></span>
+    <span class='selectedroomcost'><b>Price</b></span>
 </div>
 
 <?php
-foreach($list as $time => $rooms) {
-    $timepart = explode("_", $time);
-    foreach($list[$time] as $typeid => $count) {
-        ?>
-        <div class='selectedroomsrow'>
-            <i class='fa fa-trash-o removeroomfrombooking'
-               gsclick='removefromreadyroomlist'
-               synchron='true'
-               gs_callback='app.PmsNewBooking20.removedEntryFromReadyList'
-               time='<?php echo $time; ?>' 
-               typeid='<?php echo $typeid; ?>'></i> 
-            <span class='selectedroomname'><?php echo $items[$typeid]->name; ?></span>
-            <span class='selectedroomcount'><?php echo $count; ?></span>
-            <span class='selectedroomstartdate'><?php echo date("d.m.Y", $timepart[0]); ?></span>
-            <span class='selectedroomenddate'><?php echo  date("d.m.Y", $timepart[1]); ?></span>
-        </div>
-        <?php
-        $totalrooms += $count;
-    }
+$totalrooms = 0;
+$totalPrice = 0;
+$totalguests = 0;
+foreach($booking->rooms as $room) {
+    ?>
+    <div class='selectedroomsrow'>
+    <?php
+    $item = $items[$room->bookingItemTypeId];
+    echo "<span class='selectedroomname'>";
+    echo "<i class='fa fa-trash-o' gstype='clicksubmit' method='deleteRoom' style='cursor:pointer;' gsname='roomid' gsvalue='".$room->pmsBookingRoomId."' gstoarea='.roomsreadytobeadded'></i> ";
+    echo $item->name . "</span>";
+    echo "<span class='selectedroomcount'><i class='fa fa-minus-circle increasedecreasecount' increase='".($room->numberOfGuests-1)."' roomid='".$room->pmsBookingRoomId."' style='cursor:pointer;'></i> ";
+    echo $room->numberOfGuests;
+    echo " <i class='fa fa-plus-circle increasedecreasecount' increase='".($room->numberOfGuests+1)."' roomid='".$room->pmsBookingRoomId."' style='cursor:pointer;'></i></span> ";
+    echo "<span class='selectedroomstartdate'>" . date("d.m.Y", strtotime($room->date->start)) . "</span>";
+    echo "<span class='selectedroomenddate'>" . date("d.m.Y", strtotime($room->date->end)) . "</span>";
+    echo "<span class='selectedroomcost'>" . $room->totalCost . "</span>";
+    $totalrooms++;
+    $totalguests += $room->numberOfGuests;
+    $totalPrice += $room->totalCost;
+    ?>
+    </div>
+    <?php
 }
 ?>
 <div class='selectedroomsummary'>
-    Total rooms <?php echo $totalrooms; ?>
+    Rooms <?php echo $totalrooms . ", " . $totalguests; ?> guests.
     <span class='removeallrooms' gsclick='clearRoomList' synchron='true' gs_callback='app.PmsNewBooking20.roomListCleared'>clear roomlist</span>
+    <span style="float:right; font-size: 20px;"><b>Total <?php echo $totalPrice; ?></b></span>
 </div>
+<br>
+<br>
 <div style='text-align: center;margin-bottom: 3px;'>
     <span class='shop_button proceedwithreservation quickreservation'
           gsclick='quickReserveBookingList' 
@@ -54,14 +63,15 @@ foreach($list as $time => $rooms) {
     <span class='shop_button proceedwithreservation navigatetonext existingbooking' goto="addtoexisting">Existing<br>booking</span>
 </div>
 <style>
+    .selectedroomcost { float:right;}
     .removeroomfrombooking { cursor:pointer; }
     .proceedwithreservation { width: 20%;height: 50px;line-height: 20px;padding-top: 10px; }
     .proceedwithreservation:hover { font-weight: bold; }
     .removeallrooms { color: blue; cursor:pointer; }
     .selectedroomsrow { padding: 5px; }
     .selectedroomsummary { padding: 10px; }
-    .roomsreadytobeadded { max-width: 500px; background-color:#fff; text-align: left; margin: auto; margin-top: 50px; }
-    .selectedroomname { display:inline-block; width: 200px; }
+    .roomsreadytobeadded { max-width: 800px; background-color:#fff; text-align: left; margin: auto; margin-top: 50px; }
+    .selectedroomname { display:inline-block; width: 500px; }
     .selectedroomcount { display:inline-block; width: 60px; text-align: center; }
     .selectedroomstartdate { display:inline-block; width: 90px; }
     .selectedroomenddate { display:inline-block; width: 90px; }

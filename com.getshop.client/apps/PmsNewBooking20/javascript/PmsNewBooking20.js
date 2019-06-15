@@ -22,6 +22,8 @@ app.PmsNewBooking20 = {
         $(document).on('click','.PmsNewBooking20 .attachguesttoevent', app.PmsNewBooking20.attachGuestToConference);
         $(document).on('change','.PmsNewBooking20 .addcouponcode', app.PmsNewBooking20.addCouponCode);
         $(document).on('change','.PmsNewBooking20 .addsource', app.PmsNewBooking20.addSource);
+        $(document).on('click','.PmsNewBooking20 .increasedecreasecount', app.PmsNewBooking20.incraseDecreaseCounter);
+        $(document).on('click','.PmsNewBooking20 .resetBooking', app.PmsNewBooking20.resetBooking);
     },
     addCouponCode : function() {
         var event = thundashop.Ajax.createEvent('','setCouponCode',$(this), {
@@ -30,6 +32,16 @@ app.PmsNewBooking20 = {
         
         thundashop.Ajax.postWithCallBack(event, function(res) {
             app.PmsNewBooking20.reloadAddedRoomsList();
+        });
+    },
+    incraseDecreaseCounter : function () {
+        var data = {
+            "roomid" : $(this).attr('roomid'),
+            "guestCount" : $(this).attr('increase')
+        }
+        var event = thundashop.Ajax.createEvent('','incraseDecreaseCount',$(this), data);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.roomsreadytobeadded').html(res);
         });
     },
     addSource : function() {
@@ -280,7 +292,14 @@ app.PmsNewBooking20 = {
         });
     },
     
+    resetBooking : function() {
+        var event = thundashop.Ajax.createEvent('','resetBooking',$('.PmsNewBooking20'),{});
+        thundashop.Ajax.postWithCallBack(event, function(res){});
+    },
     doGoToStep : function(goto) {
+        if(goto === "checkavailability") {
+            $('.roomsreadytobeadded').html('');
+        }
         localStorage.setItem("newbookinglastpage", goto);
         $('.PmsNewBooking20 .newbookingprocess').hide();
         $('.PmsNewBooking20 .newbookingprocess[for="'+goto+'"]').fadeIn();

@@ -15,6 +15,8 @@ $items = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType(
 $total = 0;
 $items = $this->getApi()->getPmsManager()->getAllRoomTypes($this->getSelectedMultilevelDomainName(), $start, $end);
 $current = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+
+$closedtext = $this->checkIfClosedPeriodes($start,$end);
 ?>
 <div class='datetitle'><i class='fa fa-clock-o'></i> <?php echo date("d.m.Y H:i", strtotime($start)) . " - " . date("d.m.Y H:i", strtotime($end)); ?></div>
 <div class='avilabilityarea' gstype='form' method='registerRoomsFromAvailabilityCheck' synchron='true' gstoarea='.roomsreadytobeadded'>
@@ -27,6 +29,17 @@ $current = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelecte
         ?>
         <div class='searchbookingrow'>
             <span class='itemtypename ellipsis secondarytextcolor'><?php echo $item->type->name; ?></span>
+            <span class='numberofguests secondarytextcolor'>
+                <?php if($item->numberOfGuests > 0) { ?>
+                    <select class="gsniceselect1 guestcounter" gsname="<?php echo $item->type->id; ?>_guestcounter">
+                        <?php
+                        for($i = 1; $i <= $item->numberOfGuests; $i++) {
+                            echo "<option value='$i'>$i</option>";
+                        }
+                        ?>
+                    </select>
+                <?php } ?>
+            </span>
             <span class='numberavailable secondarytextcolor'><?php echo $count; ?></span>
             <span class='price secondarytextcolor'><?php echo $item->price; ?></span>
             <span class='selection counterrow'>
@@ -40,22 +53,40 @@ $current = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelecte
     ?>
     <div class='searchbookingrow' style='font-weight: bold;'>
         <span class='itemtypename'>Total</span>
+        <span class='numberavailable secondarytextcolor'></span>
         <span class='numberavailable'><?php echo $total; ?></span>
             <span class='price secondarytextcolor'></span>
         <span class='selection'><span class='selectallbutton'>select all</span>
         </span>
     </div>
+    
+    <?php
+    echo "<script>$('.selectavailablerooms').show();</script>";
+    if($closedtext) {
+        echo "<div>";
+        echo "<div class='warnclosedroom'>";
+        echo "<h2>We have closed rooms in this time periode.</h2>";
+        echo $closedtext;
+        echo "<span class='shop_button' onclick='$(\".warnclosedroom\").hide();$(\".selectavailablerooms\").show();'>Yes, I understand that we are closed in this periode.</span>";
+        echo "</div>";
+        echo "</div>";
+        echo "<script>$('.selectavailablerooms').hide();</script>";
+    }
+    ?>
+    
     <div><span class='shop_button selectavailablerooms' gstype='submit' onclick="$(window).scrollTop(10000);">Select room(s)</span></div>
 </div>
+
 <style>
     .avilabilityarea .fa { cursor:pointer; }
-    .selectavailablerooms {max-width: 480px; width: 100%;box-sizing: border-box; margin-bottom: 5px;}
+    .selectavailablerooms {max-width: 100%; width: 100%;box-sizing: border-box; margin-bottom: 5px;}
     .selectallbutton { color: #8cd8f6; cursor:pointer; font-weight: normal; }
-    .avilabilityarea { border-bottom: solid 0px;background-color:#fff; max-width: 510px; display:inline-block; margin:auto;}
+    .avilabilityarea { border-bottom: solid 0px;background-color:#fff; max-width: 810px; display:inline-block; margin:auto;}
     .searchbookingrow { border-bottom: solid 1px #e9ebed; padding-left: 20px; margin:auto; text-align: left; font-size: 18px; padding-bottom: 5px; margin-bottom: 5px; }
     .selection .fa { font-size: 18px; }
-    .itemtypename { width: 260px; display:inline-block; }
+    .itemtypename { width: 460px; display:inline-block; }
     .numberavailable { width: 45px; display:inline-block; text-align: center;}
+    .numberofguests { width: 45px; display:inline-block; text-align: center;}
     .price { width: 65px; display:inline-block; }
     .datetitle { font-size: 14px; margin-bottom: 10px; text-align: left;padding-left: 20px; font-weight: bold; margin-top: 5px; margin-bottom: 20px;}
     .datetitle .fa-clock-o { color:#8cd8f6;}

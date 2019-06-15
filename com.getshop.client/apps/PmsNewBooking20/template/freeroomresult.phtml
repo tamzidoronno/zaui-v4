@@ -43,36 +43,7 @@ foreach($items as $item) {
 }
 
 
-$closedtext = "";
-$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
-$selectedStartMillis = strtotime($start);
-$selectedEndMillis = strtotime($end);
-
-foreach($config->closedOfPeriode as $row) {
-    $startTime = strtotime($row->firstEvent->start);
-    $endTime = strtotime($row->firstEvent->end);
-    
-    $found = false;
-    if($selectedStartMillis <= $startTime && $startTime <= $selectedEndMillis) {
-        //Start is in timerange
-        $found = true;
-    }
-    if($selectedStartMillis <= $endTime && $endTime <= $selectedEndMillis) {
-        //End is in timerange
-        $found = true;
-    }
-    if($selectedStartMillis >= $startTime && $endTime >= $selectedEndMillis) {
-        //End is in timerange
-        $found = true;
-    }
-    
-    if($found) {
-        $closedtext .= "<div style='padding-left:5px;'>";
-        $closedtext .= date("d.m.Y", strtotime($row->firstEvent->start)) . " - ";
-        $closedtext .= date("d.m.Y", strtotime($row->firstEvent->end));
-        $closedtext .= "</div>";
-    }
-}
+$closedtext = $this->checkIfClosedPeriodes();
 $closedRoom = "";
 if($closedtext) {
     echo "<div>";

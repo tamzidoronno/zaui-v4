@@ -419,6 +419,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 room.priceWithoutDiscount = room.priceWithoutDiscount / ((100 + product.taxGroupObject.taxRate) / 100);
             }
 
+            roomToAdd.numberOfGuests = type.size;
             roomToAdd.price = room.price;
             roomToAdd.priceWithoutDiscount = room.priceWithoutDiscount;
             result.add(roomToAdd);
@@ -2987,6 +2988,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     void autoAssignItem(PmsBookingRooms room) {
+        if(room.pmsBookingRoomId.equals("98b0a6f3-7af2-485b-974b-ae310473c173")) {
+            System.out.println("");
+        }
         room.triedToAutoAssign = true;
         
         try {
@@ -3009,7 +3013,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
             if (items.isEmpty()) {
                 if (!warnedAboutAutoassigning) {
-                    messageManager.sendErrorNotificationToEmail("pal@getshop.com","Failed to autoassign room, its critical since someone will not recieve the code for the room now, roomid : " + room.pmsBookingRoomId, null);
+                    messageManager.sendErrorNotificationToEmail("pal@getshop.com","Failed to autoassign room, no available items for room : " + room.pmsBookingRoomId, null);
                     warnedAboutAutoassigning = true;
                 }
                 logPrint("....");
@@ -3023,7 +3027,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     try {
                         bookingEngine.changeBookingItemOnBooking(room.bookingId, item.id);
                     } catch (Exception e) {
-                        if (warnedAbout.contains("Itemchangedfailed_" + room.pmsBookingRoomId)) {
+                        if (!warnedAbout.contains("Itemchangedfailed_" + room.pmsBookingRoomId)) {
                             messageManager.sendErrorNotification("Booking failure for room: " + room.pmsBookingRoomId + ", rooms where not reserved in booking engine. address: " + storeManager.getMyStore().webAddress, null);
                             warnedAbout.add("Itemchangedfailed_" + room.pmsBookingRoomId);
                         }
@@ -9827,13 +9831,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     public void deleteRoom(PmsBookingRooms remove) {
         PmsBooking booking = getBookingFromRoom(remove.pmsBookingRoomId);
+        remove.delete();
         if(booking.nonrefundable || remove.nonrefundable) {
             return;
         }
-        remove.delete();
         List<String> roomIds = new ArrayList();
         roomIds.add(remove.pmsBookingRoomId);
-        
         pmsInvoiceManager.removeOrderLinesOnOrdersForBooking(booking.id, roomIds);
     }
 
@@ -10048,15 +10051,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         if(guests.isEmpty()) {
             User user = userManager.getUserById(userId);
-            PmsGuests g = new PmsGuests();
-            g.email = user.emailAddress;
-            g.name = user.fullName;
-            g.phone = user.cellPhone;
-            g.prefix = user.prefix;
-            
-            PmsGuestOption opt = new PmsGuestOption();
-            opt.guest = g;
-            guests.add(opt);
+            if(user!= null) {
+                PmsGuests g = new PmsGuests();
+                g.email = user.emailAddress;
+                g.name = user.fullName;
+                g.phone = user.cellPhone;
+                g.prefix = user.prefix;
+
+                PmsGuestOption opt = new PmsGuestOption();
+                opt.guest = g;
+                guests.add(opt);
+            }
         }
         
         return guests;
@@ -10245,7 +10250,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         User curUser = getSession().currentUser;
         if(curUser != null && curUser.emailAddress != null) {
             if(curUser.emailAddress.endsWith("@getshop.com")) {
-                System.out.println("getshop user changing segment");
                 if(!bookingHasOrdersOnMultipleBookings(booking)) {
                     return;
                 }
@@ -10378,5 +10382,34 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return hasOrdersOnMultipleBookings;
+    }
+
+    @Override
+    public PmsActivityLines getActivitiesEntries(Date start, Date end) {
+        PmsActivityLines result = new PmsActivityLines();
+        
+        //Fetch closed periodes.
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(start);
+        PmsActivityLine line = new PmsActivityLine();
+        while(true) {
+            Date tmpStart = cal.getTime();
+            cal.add(Calendar.DAY_OF_YEAR, 1);
+            Date tmpEnd = cal.getTime();
+            String offset = cal.get(Calendar.DAY_OF_YEAR) + "-" + cal.get(Calendar.YEAR);
+            if(closedForPeriode(tmpStart, tmpEnd)) {
+                PmsActivityEntry entry = new PmsActivityEntry();
+                entry.date = offset;
+                entry.days = 1;
+                entry.dayOffset = 1;
+                line.entry.put(offset, entry);
+            }
+            if(tmpEnd.after(end)) {
+                break;
+            }
+        }
+        result.lines.put("closed", line);
+        
+        return result;
     }
 }

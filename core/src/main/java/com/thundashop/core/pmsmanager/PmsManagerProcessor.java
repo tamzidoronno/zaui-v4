@@ -381,11 +381,11 @@ public class PmsManagerProcessor {
         List<PmsBookingRooms> roomsToAssing = new ArrayList();
         for (PmsBooking booking : bookings) {
             for (PmsBookingRooms room : booking.getActiveRooms()) {
-                if (!room.isStartingToday() && !room.isStarted()) {
+                if (!room.isStartingToday() && !room.isStarted() || room.isEnded()) {
                     continue;
                 }
                 if (room.isEnded() || room.triedToAutoAssign) {
-                    continue;
+//                    continue;
                 }
                 if (room.bookingItemId == null || room.bookingItemId.isEmpty()) {
                     roomsToAssing.add(room);
@@ -403,7 +403,7 @@ public class PmsManagerProcessor {
         
         for(PmsBookingRooms room : roomsToAssing) {
             if(room.recentlyChangedBookingItem()) {
-                continue;
+//                continue;
             }
             PmsBooking booking = manager.getBookingFromRoomSecure(room.pmsBookingRoomId);
             manager.autoAssignItem(room);

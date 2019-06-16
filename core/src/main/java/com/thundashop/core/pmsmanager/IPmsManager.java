@@ -428,6 +428,9 @@ public interface IPmsManager {
     
     @Administrator
     public void setBookingByAdmin(PmsBooking booking, boolean keepRoomPrices) throws Exception;
+    
+    @Administrator
+    public PmsActivityLines getActivitiesEntries(Date start, Date end);
 
     public void freezeSubscription(String pmsBookingRoomId, Date freezeUntil);
     

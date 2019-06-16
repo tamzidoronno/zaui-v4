@@ -2988,9 +2988,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     void autoAssignItem(PmsBookingRooms room) {
-        if(room.pmsBookingRoomId.equals("98b0a6f3-7af2-485b-974b-ae310473c173")) {
-            System.out.println("");
-        }
         room.triedToAutoAssign = true;
         
         try {
@@ -3012,7 +3009,22 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
 
             if (items.isEmpty()) {
-                if (!warnedAboutAutoassigning) {
+                List<BookingItem> aotheritems = bookingEngine.getAllAvailbleItemsWithBookingConsidered(room.date.start, room.date.end, room.bookingId);
+                boolean found = false;
+                for(BookingItem itm : aotheritems) {
+                    if(itm.bookingItemTypeId.equals(room.bookingItemTypeId)) {
+                        try {
+                            bookingEngine.changeBookingItemOnBooking(room.bookingId, itm.id);
+                            found = true;
+                        } catch (Exception e) {
+                            if (!warnedAbout.contains("Itemchangedfailed_" + room.pmsBookingRoomId)) {
+                                messageManager.sendErrorNotification("Booking failure for room inner check : " + room.pmsBookingRoomId + ", rooms where not reserved in booking engine. address: " + storeManager.getMyStore().webAddress, null);
+                                warnedAbout.add("Itemchangedfailed_" + room.pmsBookingRoomId);
+                            }
+                        }
+                    }
+                }
+                if (!warnedAboutAutoassigning && !found) {
                     messageManager.sendErrorNotificationToEmail("pal@getshop.com","Failed to autoassign room, no available items for room : " + room.pmsBookingRoomId, null);
                     warnedAboutAutoassigning = true;
                 }
@@ -3722,7 +3734,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
 
                 if (!hasBeenWarned && (booking.channel != null && !booking.channel.isEmpty())) {
-                    messageManager.sendErrorNotification("Failed to add room, since its full, this should not happend and happends when people are able to complete a booking where its fully booked, " + text + "<br><bR><br>booking dump:<br>" + dumpBooking(booking, false), null);
+//                    messageManager.sendErrorNotification("Failed to add room, since its full, this should not happend and happends when people are able to complete a booking where its fully booked, " + text + "<br><bR><br>booking dump:<br>" + dumpBooking(booking, false), null);
                 }
             }
             gsTiming("removed when full maybe");

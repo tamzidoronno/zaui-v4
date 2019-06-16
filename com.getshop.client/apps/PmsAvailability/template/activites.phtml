@@ -1,0 +1,58 @@
+<?php
+/* @var $this ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability */
+$activities = array();
+$activities['closed'] = "Closed off";
+$activities['overbooking'] = "Overbooking";
+$activities['otherevents'] = "Other events";
+$numberOfLines = sizeof($activities);
+$start = $this->convertToJavaDate($this->getStartDate());
+$end = $this->convertToJavaDate($this->getEndDate());
+$lines = $this->getApi()->getPmsManager()->getActivitiesEntries($this->getSelectedMultilevelDomainName(), $start, $end);
+?>
+<div class="type_line">
+    <div class="timeline_item_name">
+        <div class="category_name">Activities</div>
+        <?php
+        foreach($activities as $activity => $name) {
+            echo '<div class="item_name">'.$name.'</div>';
+        }
+        ?>
+    </div>
+
+    <div class="timeline" style='width: calc(100% - 205px);' typeid="">
+        <?php
+        $i = 0;
+        foreach($activities as $activity => $name) {
+            $odd = $i % 2 ? "odd" : "even";
+            echo "<div class='timeline_row $odd'>";
+            $time = $this->getStartDate();
+            while(true) { 
+                $colName = $colDate = date("D", $time) . "<br>" . date("d.m", $time);
+                $isWeekend = (date('N', $time) >= 6) ? "weekend" : "";
+                ?>
+                <div class=" col col_width col_data nodata col_outer first_in_row last_in_row" style="width: 170px;">
+                    <?php
+                    if($i == 0) {
+                        ?>
+                        <div class="header col_width <?php echo $isWeekend; ?>"><?php echo $colName; ?></div>
+                        <?php
+                    }
+                    $hasBooking = "";
+                    $entry = $this->hasEventEntries($time, $lines, $activity);
+                    if($entry) { $hasBooking = "normal contains_booking"; }
+                    $offset = date("z-Y", $time);
+                    ?>
+                   <div bookingid="" roomid="" class="<?php echo $hasBooking; ?> timeline_col1 col col_width col_data first_in_row last_in_row"><?php echo $offset; ?></div>
+                </div>
+                <?php
+               if($time > $this->getEndDate()) {
+                   break;
+               }
+               $time += 86400;
+            }
+            $i++;
+           echo "</div>";
+        }
+        ?>
+    </div>
+</div>

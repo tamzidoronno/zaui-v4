@@ -71,7 +71,7 @@ foreach ($types as $type) {
                     
                     foreach ($itemTimeLines as $time => $data) {
                         $header = "";
-                        $colDate = date("D d.m.y", $time/1000);
+                        $colDate = date("D", $time/1000) . "<br>" . date("d.m", $time/1000);
                         $colDate2 = date("m/d/y", $time/1000);
                         $colTime = $time;
                         $isWeekend = (date('N', $time/1000) >= 6) ? "weekend" : "";
@@ -79,7 +79,7 @@ foreach ($types as $type) {
                         if ($j == 0) {
                             $typeIds = $allInOne ? $cats : array($type->id);
                             $bookingCount = $this->getBookingCount($timelines, $time, $typeIds);
-                            $header = "<div class='header col_width $isWeekend'>$colDate <br/> <span title='Number of rooms in use this day'>($bookingCount)</span></div>";
+                            $header = "<div class='header col_width $isWeekend'>$colDate  <span title='Number of rooms in use this day'>($bookingCount)</span></div>";
                         }
                         
                         $nextBookingIds = $this->getNextBookingIds($itemTimeLines, $time);

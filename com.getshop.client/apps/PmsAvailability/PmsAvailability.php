@@ -78,6 +78,7 @@ class PmsAvailability extends \MarketingApplication implements \Application {
         } else {
             $this->includefile("waitinglist");
             $this->includefile("filter");
+//            $this->includefile("activites");
             $this->includefile("timelines");
         }
     }
@@ -422,7 +423,6 @@ class PmsAvailability extends \MarketingApplication implements \Application {
                 
                 if ($itime == $time && $date->state == "normal") {
                     $count += $date->count;
-                    print_r($date);
                 }
             }
         }
@@ -451,6 +451,18 @@ class PmsAvailability extends \MarketingApplication implements \Application {
             $app->setEndDate(date("d.m.Y", strtotime($booking->endDate)));
             $_SESSION['PMS_AVIAILABILITY_BOOKING_IDS_FILTER'] = array($_GET['groupview']);
         }
+    }
+
+    public function hasEventEntries($time, $lines, $type) {
+        $offset = date("z-Y", $time);
+        if(isset($lines->lines->{$type})) {
+            $entries = $lines->lines->{$type};
+            if(isset($entries->entry->{$offset})) {
+                return $entries->entry->{$offset};
+            }
+            return "";
+        }
+        return "";
     }
 
 }

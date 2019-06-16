@@ -674,7 +674,9 @@ public class PmsManagerProcessor {
 
     private void checkForIncosistentBookings() {
         List<Booking> allBookings = manager.bookingEngine.getAllBookings();
-        List<String> allBookingIds = new ArrayList();
+        List<String> allBookingIdsInPmsManager = new ArrayList();
+        List<String> allBookingIdsInBookingEngine = new ArrayList();
+        List<PmsBookingRooms> allRoomsInPmsManager = new ArrayList();
         for(PmsBooking booking : manager.getBookingMap().values()) {
             if(booking.isDeleted) {
                 continue;
@@ -682,7 +684,8 @@ public class PmsManagerProcessor {
             if(booking.getActiveRooms() != null) {
                 for(PmsBookingRooms room : booking.getActiveRooms()) {
                     if(room.bookingId != null) {
-                        allBookingIds.add(room.bookingId);
+                        allBookingIdsInPmsManager.add(room.bookingId);
+                        allRoomsInPmsManager.add(room);
                     }
                 }
             }
@@ -692,9 +695,17 @@ public class PmsManagerProcessor {
             if(test.source != null && !test.source.isEmpty()) {
                 continue;
             }
-            if(!allBookingIds.contains(test.id)) {
+            allBookingIdsInBookingEngine.add(test.id);
+            if(!allBookingIdsInPmsManager.contains(test.id)) {
                 manager.messageManager.sendErrorNotification(test.id + "where found in the booking engine but not in the pms manager, the booking engine and the pms manager is out of sync: " + test.startDate + " - " + test.endDate + ", created: " + test.rowCreatedDate, null);
                 manager.bookingEngine.deleteBooking(test.id);
+            }
+        }
+        
+        for(PmsBookingRooms room : allRoomsInPmsManager) {
+            if(!allBookingIdsInBookingEngine.contains(room.bookingId)) {
+                manager.messageManager.sendErrorNotification(room.pmsBookingRoomId + ", booking id: " + room.bookingId + " where found in the pms manager but not in the booking engine, the booking engine and the pms manager is out of!", null);
+                manager.deleteRoom(room);
             }
         }
     }

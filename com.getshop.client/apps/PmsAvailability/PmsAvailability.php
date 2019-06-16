@@ -9,11 +9,29 @@ class PmsAvailability extends \MarketingApplication implements \Application {
     private $currentBooking = null;
     private $currentBookingFromEngine = null;
     private $currentPmsRoom = null;
+    private $activityPrinted = array();
 
     public function getDescription() {
         
     }
     
+    public function loadEventData() {
+        $this->includefile("eventseditarea");
+    }
+
+    
+    public function updateevent() {
+        $event = $this->getApi()->getPmsEventManager()->getEvent($this->getSelectedMultilevelDomainName(), $_POST['data']['id']);
+        $event->title = $_POST['data']['title'];
+        $event->start = $this->convertToJavaDate(strtotime($_POST['data']['startdate']));
+        $event->end = $this->convertToJavaDate(strtotime($_POST['data']['enddate']));
+        $this->getApi()->getPmsEventManager()->saveEvent($this->getSelectedMultilevelDomainName(), $event);
+    }
+    
+    public function deleteevent() {
+        $this->getApi()->getPmsEventManager()->deleteEvent($this->getSelectedMultilevelDomainName(), $_POST['data']['eventid']);
+    }
+
     public function setCategoryFilter($list) {
         $_SESSION['pmsavailbility_categories'] = json_encode($list);
     }
@@ -78,7 +96,7 @@ class PmsAvailability extends \MarketingApplication implements \Application {
         } else {
             $this->includefile("waitinglist");
             $this->includefile("filter");
-//            $this->includefile("activites");
+            $this->includefile("activites");
             $this->includefile("timelines");
         }
     }
@@ -454,7 +472,7 @@ class PmsAvailability extends \MarketingApplication implements \Application {
     }
 
     public function hasEventEntries($time, $lines, $type) {
-        $offset = date("z-Y", $time);
+        $offset = (date('z', $time) + 1) . "-" . date("Y", $time);
         if(isset($lines->lines->{$type})) {
             $entries = $lines->lines->{$type};
             if(isset($entries->entry->{$offset})) {
@@ -463,6 +481,14 @@ class PmsAvailability extends \MarketingApplication implements \Application {
             return "";
         }
         return "";
+    }
+
+    public function printedNameOnActivity($id) {
+        if(isset($this->activityPrinted[$id])) {
+            return true;
+        }
+        $this->activityPrinted[$id] = true;
+        return false;
     }
 
 }

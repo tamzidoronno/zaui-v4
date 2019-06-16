@@ -1,19 +1,29 @@
+<span class='eventeditarea'></span>
 <?php
 /* @var $this ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability */
 $activities = array();
 $activities['closed'] = "Closed off";
-$activities['overbooking'] = "Overbooking";
-$activities['otherevents'] = "Other events";
-$numberOfLines = sizeof($activities);
+$activities['overbooking'] = "Waiting list / overbook";
 $start = $this->convertToJavaDate($this->getStartDate());
 $end = $this->convertToJavaDate($this->getEndDate());
 $lines = $this->getApi()->getPmsManager()->getActivitiesEntries($this->getSelectedMultilevelDomainName(), $start, $end);
+foreach($lines->lines as $key => $l) {
+    $activities[$key] = $key;
+}
+ksort($activities);
+$numberOfLines = sizeof($activities);
 ?>
 <div class="type_line">
     <div class="timeline_item_name">
         <div class="category_name">Activities</div>
         <?php
         foreach($activities as $activity => $name) {
+            if(stristr($activity, "conference")) { $name = "Conference"; }
+            if(stristr($activity, "otherevents")) { $name = "Other events"; }
+            if(stristr($activity, "blocked")) { $name = "Closed off"; }
+            if(stristr($activity, "overbooking")) { $name = "Overbooking / waiting list"; }
+            if(stristr($activity, "closed")) { $name = "Closed off"; }
+
             echo '<div class="item_name">'.$name.'</div>';
         }
         ?>
@@ -39,10 +49,37 @@ $lines = $this->getApi()->getPmsManager()->getActivitiesEntries($this->getSelect
                     }
                     $hasBooking = "";
                     $entry = $this->hasEventEntries($time, $lines, $activity);
-                    if($entry) { $hasBooking = "normal contains_booking"; }
-                    $offset = date("z-Y", $time);
+                    $bookingId = "";
+                    if($entry) { 
+                        $bookingId = "bookingid='".$entry->activityId."'";
+                        $hasBooking = "normal contains_booking"; 
+                    }
+                                        
+                    $displayWaitinglist = "";
+                    if($activity == "closed" || $activity == "overbooking") {
+                        $displayWaitinglist = "displaywatinglist";
+                    }
+                    $offset = (date('z', $time) + 1) . "-" . date("Y", $time);
+                    
+                    $typecategory = "";
+                    $sourceId = "";
+                    if($entry) {
+                        if(stristr($activity, "conference")) { $typecategory = "conference"; }
+                        if(stristr($activity, "otherevents")) { $typecategory = "otherevents"; }
+                        if(stristr($activity, "blocked")) { $typecategory = "blocked"; }
+                        if(stristr($activity, "overbooking")) { $typecategory = "overbooking"; }
+                        if(stristr($activity, "closed")) { $typecategory = "closedoffhotel"; }
+                        $sourceId = "sourceid='".$entry->sourceId."'";
+                    }
                     ?>
-                   <div bookingid="" roomid="" class="<?php echo $hasBooking; ?> timeline_col1 col col_width col_data first_in_row last_in_row"><?php echo $offset; ?></div>
+                   <div <?php echo $bookingId; ?> roomid="" class="<?php echo $hasBooking . " " . $typecategory; ?> timeline_col1 col col_width col_data first_in_row last_in_row <?php echo $displayWaitinglist; ?>" <?php echo $sourceId; ?>>
+                        <div class="bookername" numberofblocks="1" style="margin-right: 0px;">
+                            <?php if($entry && !$this->printedNameOnActivity($entry->activityId)) { ?>
+                            <span class="fullname" style="display: inline;" title="<?php echo $entry->title; ?>"><?php echo $entry->title; ?></span>
+                            <span class="acronyme" style="display: none;"></span>
+                            <?php } ?>
+                        </div>
+                   </div>
                 </div>
                 <?php
                if($time > $this->getEndDate()) {

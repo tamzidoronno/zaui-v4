@@ -11,7 +11,15 @@ class PmsAvailabilityDateSelector extends \MarketingApplication implements \Appl
     public function getName() {
         return "PmsAvailabilityDateSelector";
     }
-
+    
+    public function addevent() {
+        $event = new \core_pmseventmanager_PmsEvent();
+        $event->title = $_POST['data']['title'];
+        $event->start = $this->convertToJavaDate(strtotime($_POST['data']['startdate']));
+        $event->end = $this->convertToJavaDate(strtotime($_POST['data']['endate']));
+        $this->getApi()->getPmsEventManager()->saveEvent($this->getSelectedMultilevelDomainName(), $event);
+    }
+    
     public function render() {
         if($_SERVER['PHP_SELF'] == "/json.php" || isset($_SESSION['firstloadpage'])) {
             $app = new \ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability();

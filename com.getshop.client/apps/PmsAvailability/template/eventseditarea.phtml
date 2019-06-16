@@ -1,0 +1,24 @@
+<?php
+/* @var $this ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability */
+$event = $this->getApi()->getPmsEventManager()->getEvent($this->getSelectedMultilevelDomainName(), $_POST['data']['id']);
+
+?>
+<div class='editevent' gstype='form' method='updateevent'>
+<div style='text-align: right;margin-bottom: 20px;'>
+    <i class='fa fa-close' onclick='$(".eventeditarea").hide()' style='cursor:pointer;'></i>
+</div>
+    <input class='gsniceinput1' gsname='startdate' value='<?php echo date("d.m.Y", strtotime($event->start)); ?>' style='width:80px;'>
+    <input class='gsniceinput1' gsname='enddate' value='<?php echo date("d.m.Y", strtotime($event->end)); ?>' style='width:80px;'>
+    <input class='gsniceinput1' gsname='title'  value='<?php echo $event->title; ?>'>
+    <input type='hidden' gsname='id' value='<?php echo $event->id; ?>'>
+    <span class='shop_button'  gstype='submit'>Save</span>
+    
+    <br><br>
+    <span class='shop_button' gsclick="deleteevent" eventid='<?php echo $event->id; ?>' gs_confirm="Are you sure">Delete this event</span>
+    
+</div>
+
+<script>
+    getshop_loadDatePicker($('[gsname="startdate"]'), { dependant : $('[gsname="endate"]'), jump : 1 });    
+    getshop_loadDatePicker($('[gsname="enddate"]'), { dependant : $('[gsname="startdate"]'), jump : -1 });
+</script>

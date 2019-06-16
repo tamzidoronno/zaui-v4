@@ -5,6 +5,19 @@ $types = $app->getTypes();
 $cats = $app->getCategoryFilter();
 ?>
 
+<span class="shop_button" style="float:left;" onclick="$('.PmsAvailabilityDateSelector .addeventform').show();">Add event</span>
+<span class="addeventform" gstype='form' method="addevent">
+    <input class="gsniceinput1" gsname="startdate" placeholder="start" style="width:80px;">
+    <input class="gsniceinput1" gsname="endate" placeholder="end" style="width:80px;">
+    <input class="gsniceinput1" gsname="title" placeholder="title">
+    <span class="shop_button" gstype="submit">Add event</span>
+</span>
+    
+<script>
+    getshop_loadDatePicker($('[gsname="startdate"]'), { dependant : $('[gsname="endate"]'), jump : 1 });    
+    getshop_loadDatePicker($('[gsname="endate"]'), { dependant : $('[gsname="startdate"]'), jump : -1 });
+</script>
+
 <div class="gs_headerbox">
     <div>
         <?

@@ -9,8 +9,23 @@ app.PmsAvailability = {
         $(document).on('mouseenter', '.PmsAvailability .contains_booking', this.mouseOver);
         $(document).on('mouseleave', '.PmsAvailability .contains_booking', this.mouseOut);
         $(document).on('click', '.PmsAvailability .markRoomClean', this.markRoomClean);
+        $(document).on('click', '.PmsAvailability .displaywatinglist', this.showWaitinglistList);
+        $(document).on('click', '.PmsAvailability .otherevents', this.loadEvent);
 //        $(document).on('click', '.PmsAvailability .contains_booking', this.showMenuBox);
-        
+    },
+    
+    loadEvent : function() {
+        var sourceid = $(this).attr('sourceid');
+        var event = thundashop.Ajax.createEvent('','loadEventData', $(this), {
+            "id" : sourceid
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.eventeditarea').html(res);
+            $('.eventeditarea').show();
+        });
+    },
+    showWaitinglistList : function() {
+        $('.PmsAvailability .pmsavailabilitywaitinglist').slideDown();
     },
     markRoomClean : function() {
         var confirmed = confirm("Are you sure you want to mark this room as cleaned?");

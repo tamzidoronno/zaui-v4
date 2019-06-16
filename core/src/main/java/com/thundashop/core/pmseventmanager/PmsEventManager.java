@@ -27,6 +27,7 @@ import org.springframework.stereotype.Component;
 @GetShopSession
 public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEventManager {
     HashMap<String, PmsBookingEventEntry> entries = new HashMap();
+    HashMap<String, PmsEvent> eventEntries = new HashMap();
 
     @Autowired
     PmsManager pmsManager;
@@ -44,6 +45,10 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
             if (dataCommon instanceof PmsBookingEventEntry) {
                 PmsBookingEventEntry entry = (PmsBookingEventEntry) dataCommon;
                 entries.put(entry.id, entry);
+            }
+            if (dataCommon instanceof PmsEvent) {
+                PmsEvent entry = (PmsEvent) dataCommon;
+                eventEntries.put(entry.id, entry);
             }
         }
     }
@@ -324,6 +329,29 @@ public class PmsEventManager extends GetShopSessionBeanNamed implements IPmsEven
         }
 
         return entry;
+    }
+
+    @Override
+    public void saveEvent(PmsEvent event) {
+        saveObject(event);
+        eventEntries.put(event.id, event);
+    }
+
+    @Override
+    public void deleteEvent(String id) {
+        PmsEvent object = getEvent(id);
+        deleteObject(object);
+        eventEntries.remove(id);
+    }
+
+    @Override
+    public List<PmsEvent> getEvents(PmsEvent filter) {
+        return new ArrayList(eventEntries.values());
+    }
+
+    @Override
+    public PmsEvent getEvent(String id) {
+        return eventEntries.get(id);
     }
     
 }

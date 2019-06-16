@@ -40,6 +40,11 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
     HashMap<String, PmsConferenceEvent> conferenceEvents = new HashMap();
     HashMap<String, PmsConferenceEventEntry> conferenceEventEntries = new HashMap();
 
+    
+    public List<PmsConferenceEventEntry> getAllEventEntries() {
+        return new ArrayList(conferenceEventEntries.values());
+    }
+    
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataCommon : data.data) {
             if(dataCommon instanceof PmsConferenceItem) { items.put(dataCommon.id, (PmsConferenceItem) dataCommon); }

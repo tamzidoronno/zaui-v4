@@ -7,9 +7,21 @@
     width: 200px;
 }
 
+.PmsAvailability .pmsavailabilitywaitinglist { 
+    display:none;
+    position: absolute;
+    background-color: #fff;
+    z-index: 3;
+    border: solid 1px;
+    margin: 20px;
+    padding: 20px;
+}
 .PmsAvailability .waitinglist { cursor:pointer; }
 .PmsAvailability .gsdayevent { cursor:pointer; }
 .PmsAvailability .weekend { color: red !important; }
+.PmsAvailability .closedoffhotel { background-color: blue !important; }
+.PmsAvailability .overbooking { background-color: brown !important; }
+.PmsAvailability .conference { background-color: purple !important; }
 
 .PmsAvailability .availabilitylabel { font-size: 16px; margin-right: 15px; margin-bottom: 5px; display:inline-block;}
 
@@ -62,6 +74,7 @@
     box-sizing: border-box;
     position: relative;
 }
+.PmsAvailability .editevent { position:absolute; background-color:#fff; padding: 10px; border: solid 1px; z-index: 3; }
 
 .PmsAvailability .category_name {
     border-bottom: solid 2px;

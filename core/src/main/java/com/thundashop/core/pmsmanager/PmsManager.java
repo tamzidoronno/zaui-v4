@@ -57,6 +57,7 @@ import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.OrderShipmentLogEntry;
 import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.pga.PgaManager;
+import com.thundashop.core.pmseventmanager.PmsEvent;
 import com.thundashop.core.pmseventmanager.PmsEventManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
@@ -183,6 +184,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Autowired
     PmsEventManager pmsEventManager;
+
+    @Autowired
+    PmsConferenceManager pmsConferenceManager;
 
     @Autowired
     GetShop getShop;
@@ -10404,28 +10408,171 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public PmsActivityLines getActivitiesEntries(Date start, Date end) {
         PmsActivityLines result = new PmsActivityLines();
         
+        PmsActivityLine line = createTimeLineForClosedPeriods(start, end);
+        result.lines.put("closed", line);
+        
+        PmsActivityLine overbookingLine = createTimeLineForOverBookings(start, end);
+        result.lines.put("overbooking", overbookingLine);
+        
+        HashMap<String, PmsActivityLine> activites = createTimeLinesForActivities(start, end);
+        for(String key : activites.keySet()) {
+            PmsActivityLine l = activites.get(key);
+            if(l.entry.isEmpty()) {
+                continue;
+            }
+            result.lines.put(key, activites.get(key));
+        }
+            
+        activites = createTimeLinesForConferences(start, end);
+        for(String key : activites.keySet()) {
+            PmsActivityLine l = activites.get(key);
+            if(l.entry.isEmpty()) {
+                continue;
+            }
+            result.lines.put(key, activites.get(key));
+        }
+            
+        return result;
+    }
+
+    private PmsActivityLine createTimeLineForOverBookings(Date start, Date end) {
+        //Overbookings
+        HashMap<String, Integer> overBookings = new HashMap();
+        for(PmsBooking booking : bookings.values()) {
+            for(PmsBookingRooms r : booking.rooms) {
+                if(r.date.end.before(start)) { continue; }
+                if(r.date.start.after(end)) { continue; }
+                if(r.addedToWaitingList || r.isOverBooking()) {
+                    List<PmsActivityEntry> activityEntries = createActivityEntries(r.date.start, r.date.end, "Overbooking", "");
+                    for(PmsActivityEntry entry : activityEntries) {
+                        Integer counter = 0;
+                        if(overBookings.containsKey(entry.date)) {
+                            counter = overBookings.get(entry.date);
+                        }
+                        counter++;
+                        overBookings.put(entry.date, counter);
+                    }
+                }
+            }
+        }
+        PmsActivityLine overbookingLine = new PmsActivityLine();
+        for(String key : overBookings.keySet()) {
+            PmsActivityEntry overbookingresult = new PmsActivityEntry();
+            overbookingresult.title = overBookings.get(key) + "";
+            overbookingresult.date = key;
+            overbookingresult.dayOffset = 1;
+            overbookingresult.days = 1;
+            overbookingresult.activityId = UUID.randomUUID().toString();
+            overbookingLine.entry.put(key, overbookingresult);
+        }
+        return overbookingLine;
+    }
+
+    private PmsActivityLine createTimeLineForClosedPeriods(Date start, Date end) {
         //Fetch closed periodes.
         Calendar cal = Calendar.getInstance();
         cal.setTime(start);
+        cal.set(Calendar.HOUR_OF_DAY, 22);
         PmsActivityLine line = new PmsActivityLine();
         while(true) {
             Date tmpStart = cal.getTime();
+            String offset = cal.get(Calendar.DAY_OF_YEAR) + "-" + cal.get(Calendar.YEAR);
             cal.add(Calendar.DAY_OF_YEAR, 1);
             Date tmpEnd = cal.getTime();
-            String offset = cal.get(Calendar.DAY_OF_YEAR) + "-" + cal.get(Calendar.YEAR);
             if(closedForPeriode(tmpStart, tmpEnd)) {
                 PmsActivityEntry entry = new PmsActivityEntry();
                 entry.date = offset;
                 entry.days = 1;
                 entry.dayOffset = 1;
+                entry.title = "closed";
+                entry.activityId = UUID.randomUUID().toString();
                 line.entry.put(offset, entry);
             }
             if(tmpEnd.after(end)) {
                 break;
             }
         }
-        result.lines.put("closed", line);
+        return line;
+    }
+
+    private List<PmsActivityEntry> createActivityEntries(Date start, Date end, String title, String sourceId) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(start);
+        List<PmsActivityEntry> entries = new ArrayList();
+        int i = 1;
+        String activityId = UUID.randomUUID().toString();
+        while(true) {
+            PmsActivityEntry entry = new PmsActivityEntry();
+            String offset = cal.get(Calendar.DAY_OF_YEAR) + "-" + cal.get(Calendar.YEAR);
+            entry.dayOffset = i;
+            entry.title = title;
+            entry.date = offset;
+            entry.activityId = activityId;
+            entry.sourceId = sourceId;
+            entries.add(entry);
+            cal.add(Calendar.DAY_OF_YEAR, 1);
+            if(cal.getTime().after(end)) {
+                break;
+            }
+            i++;
+        }
         
+        for(PmsActivityEntry entry : entries) {
+            entry.days = entries.size();
+        }
+        return entries;
+    }
+
+    private HashMap<String, PmsActivityLine> createTimeLinesForActivities(Date start, Date end) {
+        //Overbookings
+        HashMap<String, PmsActivityLine> result = new HashMap();
+        
+        for(int i = 0; i < 20; i++) {
+            PmsActivityLine line = new PmsActivityLine();
+            result.put("otherevents" + i, line);
+        }
+        List<PmsEvent> events = pmsEventManager.getEvents(null);
+        for(PmsEvent event : events) {
+            if(event.end.before(start)) { continue; }
+            if(event.start.after(end)) { continue; }
+            List<PmsActivityEntry> activityEntries = createActivityEntries(event.start, event.end, event.title, event.id);
+            for(int i = 0; i < 20; i++) {
+                PmsActivityLine trytoaddtoline = result.get("otherevents" + i);
+                if(trytoaddtoline.canAdd(activityEntries)) {
+                    trytoaddtoline.addActivities(activityEntries);
+                    break;
+                }
+            }
+        }
         return result;
     }
+
+    private HashMap<String, PmsActivityLine> createTimeLinesForConferences(Date start, Date end) {
+
+        HashMap<String, PmsActivityLine> result = new HashMap();
+        
+        for(int i = 0; i < 20; i++) {
+            PmsActivityLine line = new PmsActivityLine();
+            result.put("conference" + i, line);
+        }
+        PmsConferenceEventFilter filter = new PmsConferenceEventFilter();
+        filter.start = start;
+        filter.end = end;
+        
+        List<PmsConferenceEventEntry> events = pmsConferenceManager.getEventEntriesByFilter(filter);
+        for(PmsConferenceEventEntry event : events) {
+            if(event.to == null || event.to.before(start)) { continue; }
+            if(event.from == null || event.from.after(end)) { continue; }
+            List<PmsActivityEntry> activityEntries = createActivityEntries(event.from, event.to, event.meetingTitle, event.conferenceId);
+            for(int i = 0; i < 20; i++) {
+                PmsActivityLine trytoaddtoline = result.get("conference" + i);
+                if(trytoaddtoline.canAdd(activityEntries)) {
+                    trytoaddtoline.addActivities(activityEntries);
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
 }

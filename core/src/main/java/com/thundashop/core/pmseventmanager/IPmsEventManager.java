@@ -20,6 +20,15 @@ public interface IPmsEventManager {
     
     public boolean isChecked(String pmsBookingId);
     
+    @Administrator
+    public void saveEvent(PmsEvent event);
+    @Administrator
+    public void deleteEvent(String id);
+    @Administrator
+    public PmsEvent getEvent(String id);
+    @Administrator
+    public List<PmsEvent> getEvents(PmsEvent filter);
+    
     public void saveEntry(PmsBookingEventEntry entry, String day);
     @Administrator
     public void deleteEntry(String entryId, String day);

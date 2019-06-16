@@ -14,4 +14,7 @@ public class PmsActivityEntry {
     public String title = "";
     public int days = 0;
     public int dayOffset = 0;
+    public String activityId = "";
+    //Room id, event id, conference id, etc.
+    public String sourceId = "";
 }

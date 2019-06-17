@@ -11,6 +11,15 @@ if(sessionStorage.getItem('getshop_domain')) {
 var leftInterval;
 var getshop_handledevent = false;
 
+//Fix for internet explorer.
+if (!String.prototype.startsWith) {
+  String.prototype.startsWith = function(searchString, position) {
+    position = position || 0;
+    return this.indexOf(searchString, position) === position;
+  };
+}
+
+
 function load_getBookingTranslations() {
     lang = sessionStorage.getItem("getshop_language");
     var def = $.Deferred();

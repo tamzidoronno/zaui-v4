@@ -49,6 +49,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import org.joda.time.Days;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -103,12 +104,31 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     
     @Override
     public StartBookingResult startBooking(StartBooking arg) {
-
         
+        if(arg.start == null || arg.end == null) {
+            return new StartBookingResult();
+        }
+        long timediff = arg.end.getTime() - arg.start.getTime();
+        timediff = timediff / (86400*1000);
+        if(timediff > 1825 || timediff < 0) {
+            return new StartBookingResult();
+        }
+        
+        Date now = storeManager.getMyStore().getCurrentTimeInTimeZone();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(now);
+        cal.add(Calendar.HOUR_OF_DAY, -4);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        Date toCheck = cal.getTime();
+        if(toCheck.after(arg.start)) {
+            return new StartBookingResult();
+        }
+    
         Gson gson = new Gson();
         logPrint(gson.toJson(arg));
         if(arg.getGuests() < arg.rooms) {
-            return null;
+            return new StartBookingResult();
         }
         PmsBooking booking = pmsManager.startBooking();
         if(arg.language != null && !arg.language.isEmpty()) {
@@ -161,6 +181,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             isAdministrator = true;
         }
         
+        pmsInvoiceManager.startCacheCoverage();
         for(BookingItemType type : types) {
             if(!type.visibleForBooking && !isAdministrator) {
                 continue;

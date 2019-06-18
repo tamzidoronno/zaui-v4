@@ -1,8 +1,18 @@
 <?php
 /* @var $this CheckBookingPage */
-$bookings = $this->getApi()->getPmsBookingProcess()->getBooking($this->getBookingEngineName(), $_GET['bookingid']);
+$bookingid = $_GET['bookingid'];
+if(!$bookingid) {
+    $bookingid = $_POST['bookingid'];
+}
+$bookings = $this->getApi()->getPmsBookingProcess()->getBooking($this->getBookingEngineName(), $bookingid);
 $phone = $this->getApi()->getStoreManager()->getMyStore()->configuration->phoneNumber;
 $cleanText = "Your room is clean and ready to be used, a code for your room has been sent to you by email and sms, if you have not recieved a code, please call us at {phone}";
+$codePrinted = 0;
+$supportPrintCode = $this->getApi()->getPmsBookingProcess()->hasPrintCodeSupportOnTerminal($this->getBookingEngineName());
+if(isset($_POST['printcode'])) {
+    $printed = $this->getApi()->getPmsBookingProcess()->printCodeOnTerminal($this->getBookingEngineName(), $_POST['roomid'], $_POST['reference'], $this->getTerminalId());
+    $codePrinted = $printed ? 2 : 1;
+}
 ?>
 <div class="heading">
     <?php
@@ -14,7 +24,7 @@ $cleanText = "Your room is clean and ready to be used, a code for your room has 
         
         $i = 0;
         foreach ($bookings as $room) {
-            $cleanText = $room->roomIsClean ? $this->__f($cleanText) : $this->__f("Your room is not yet cleaned, you will receive code by sms and email as soon as it is ready");
+            $cleanText = $room->roomIsClean ? $this->__f($cleanText) : $this->__f("You are a bit early, we will send you a sms and email as soon as the room is ready");
             $cleanText = str_replace("{phone}", $phone, $cleanText);
             $cleaningClass = $room->roomIsClean ? 'green' : "";
             
@@ -36,18 +46,29 @@ $cleanText = "Your room is clean and ready to be used, a code for your room has 
                     <span class="icon-broom"></span>
                     <div class="desc"><?php echo $cleanText; ?></div>
                 </div>
-
-                <div class="infobox <?php echo $timeClass; ?>">
-                    <span class="icon-clock"></span>
-                    <div class="desc"><?php echo $timeText; ?></div>
-                </div>
-
-                <div class="infobox <?php echo $paidClass; ?>">
-                    <span class="icon-bag-dollar"></span>
-                    <div class="desc"><?php echo $paidText; ?></div>
-                </div>
-
                 <?php
+                
+                if($room->roomIsClean && $supportPrintCode) {
+                    ?>
+                    <div style='text-align:center; margin: 30px;'>
+                        <?php
+                        if($codePrinted == 1) {
+                            echo "<bR>";
+                            echo "<bR>";
+                            echo $this->__f("Failed to print code, please try again with a different phone number.");
+                            echo "<bR>";
+                            echo "<bR>";
+                        }
+                        ?>
+                        <div type="text" tabindex="0" numpad="true" class="gstextfield reference" id="search_field">
+                            <div class="inner"></div>
+                        </div>
+                        <input type="hidden" id="bookingid" value="<?php echo $bookingid; ?>">
+                        <input type="hidden" id="roomid" value="<?php echo $room->roomId; ?>">
+                        <div class='button reprintcode'><?php echo $this->__f("Print code"); ?></div>
+                    </div>
+                    <?php
+                }
             echo "</div>";
         }
     ?>   

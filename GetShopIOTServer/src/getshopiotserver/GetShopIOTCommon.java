@@ -103,6 +103,10 @@ public class GetShopIOTCommon extends Thread {
         }
     }
     
+    public SetupMessage getSetupMessage() {
+        return setupMessage;
+    }
+    
     
     
 }

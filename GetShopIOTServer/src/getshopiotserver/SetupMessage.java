@@ -12,4 +12,7 @@ package getshopiotserver;
 public class SetupMessage {
     String token = "";
     String address = "";
+    public String printerType = ""; //customk80
+    public String paymentterminal = ""; //verifone,ingenico
+    public String type = ""; //kiosk-herman,pos
 }

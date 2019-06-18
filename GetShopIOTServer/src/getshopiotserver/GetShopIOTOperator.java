@@ -14,6 +14,7 @@ import getshopiotserver.processors.ProcessPaymentMessage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -42,13 +43,13 @@ public class GetShopIOTOperator extends GetShopIOTCommon {
     
     public void run() {
         logPrint("Ready to recieve instructions from " +getAddress() +  ", with token: " + getToken());
+        setStartupConfigs();
         while(true) {
             doLongPull();
         }
     }
     
     private void doLongPull() {
-        setStartupConfigs();
         
         Gson gson = new Gson();
         try {
@@ -103,7 +104,7 @@ public class GetShopIOTOperator extends GetShopIOTCommon {
         Gson gson = new Gson();
         SetupMessage msg = gson.fromJson(result, SetupMessage.class);
         this.setConfiguration(msg);
-        
+        writeConfig(msg);
         return (!getAddress().isEmpty() && !getToken().isEmpty());
     }
 
@@ -173,6 +174,15 @@ public class GetShopIOTOperator extends GetShopIOTCommon {
 
     private void setStartupConfigs() {
         sendConfig("supportDirectPrint", "true");
+        SetupMessage msg = getSetupMessage();
+        Field[] fields = msg.getClass().getDeclaredFields();
+        for(Field f : fields) {
+            try {
+                sendConfig(f.getName(), f.get(msg).toString());
+            }catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
     
     private String readFromPullService() throws MalformedURLException, IOException {

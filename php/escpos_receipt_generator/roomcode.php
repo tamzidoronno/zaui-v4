@@ -15,10 +15,11 @@ use Mike42\Escpos\Printer;
 use Mike42\Escpos\EscposImage;
 use Mike42\Escpos\PrintConnectors\FilePrintConnector;
 
-// // Just a hack during installation, please rewrite to send printertype.
-// Just a hack during installation, please rewrite to send printertype.
 $storeId = $argv[2];
-$printerType = $storeId == "ac8bff70-a8b9-4fa1-8281-a12e24866bdb" ? "customK80" : "firstone";
+$printerType = "firstone";
+if (isset($argv[3])) {
+    $printerType = $argv[3];
+}
 
 $leftPad = "";
 if ($printerType == "customK80") {

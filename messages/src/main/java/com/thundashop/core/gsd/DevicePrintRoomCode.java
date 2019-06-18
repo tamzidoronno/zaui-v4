@@ -14,4 +14,5 @@ import java.io.Serializable;
 public class DevicePrintRoomCode extends GetShopDeviceMessage implements Serializable {
     public String code;
     public String roomName;
+    public String printerType = "";
 }

@@ -32,7 +32,7 @@ public class PrinterMessageGenerator {
         this.storeId = storeId;
     }
     
-    public DirectPrintMessage generateEscPos(GetShopDeviceMessage msg) {
+    public DirectPrintMessage generateEscPos(GetShopDeviceMessage msg, String printerType) {
         String type = getType(msg);
         
         if (type == null) {
@@ -42,7 +42,7 @@ public class PrinterMessageGenerator {
         DirectPrintMessage direct = new DirectPrintMessage();
         
         writeContentToTmpFile(msg);
-        executePhpGenerator(type);
+        executePhpGenerator(type, printerType);
         direct.content = getContent();
         deleteTempFiles();
         
@@ -102,11 +102,11 @@ public class PrinterMessageGenerator {
         }
     }
 
-    private void executePhpGenerator(String type) {
+    private void executePhpGenerator(String type, String printerType) {
         try {
             String line;
             StringBuilder output = new StringBuilder();
-            Process p = Runtime.getRuntime().exec("php /source/getshop/3.0.0/php/escpos_receipt_generator/" + type + ".php " + tmpContentFile + " " + storeId);
+            Process p = Runtime.getRuntime().exec("php /source/getshop/3.0.0/php/escpos_receipt_generator/" + type + ".php " + tmpContentFile + " " + storeId + " " + printerType);
             BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
             while ((line = input.readLine()) != null) {
                 output.append(line);

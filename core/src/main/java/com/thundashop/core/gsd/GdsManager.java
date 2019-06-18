@@ -113,7 +113,13 @@ public class GdsManager extends ManagerBase implements IGdsManager {
         PrinterMessageGenerator generator = new PrinterMessageGenerator(storeId);
         
         if (generator.isPrintMessage(message) && deviceSupportDirectPrint(deviceId)) {
-            messageToUse = generator.generateEscPos(message);
+            String printerType = "";
+            
+            if (devices.get(deviceId) != null && devices.get(deviceId).extraConfigs!= null ) {
+                printerType = devices.get(deviceId).extraConfigs.get("printerType");
+            }
+            
+            messageToUse = generator.generateEscPos(message, printerType);
         }
         
         DeviceMessageQueue queue = getQueue(deviceId);

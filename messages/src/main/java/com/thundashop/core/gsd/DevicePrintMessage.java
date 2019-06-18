@@ -24,4 +24,5 @@ public class DevicePrintMessage extends GetShopDeviceMessage implements Serializ
     public AccountingDetails accountDetails;
     public String paymentMethod;
     public Date paymentDate;
+    public String printerType = "";
 }

@@ -9,6 +9,10 @@
 
 $jsonData = file_get_contents('/tmp/'.$argv[1].'.txt');
 $storeId = $argv[2];
+$printerType = "firstone";
+if (isset($argv[3])) {
+    $printerType = $argv[3];
+}
 
 $printMessage = json_decode($jsonData);
 require __DIR__ . '/vendor/autoload.php';
@@ -19,11 +23,7 @@ use Mike42\Escpos\PrintConnectors\FilePrintConnector;
 
 $padLeft = "";
 
-// // Just a hack during installation, please rewrite to send printertype.
-// Just a hack during installation, please rewrite to send printertype.
-$printerType = $storeId == "ac8bff70-a8b9-4fa1-8281-a12e24866bdb" ? "customK80" : "firstone";
-
-if ($printerType == "customK80") {
+if (strtolower($printerType) == "customk80") {
     $padLeft = "  ";
     item::$leftColSize = 38;
 }

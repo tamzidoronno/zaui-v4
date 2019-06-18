@@ -17,4 +17,5 @@ public class BookingProcessRoomStatus {
     public boolean checkinDateOk = false;
     public boolean roomIsClean = false;
     public boolean paymentCompleted = false;    
+    public String roomId = "";
 }

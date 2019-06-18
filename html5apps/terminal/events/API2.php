@@ -101,6 +101,19 @@ class APIAccountingManager {
 
 	/**
 	* For handling connection to accounting systems.<br>
+	* @return void 
+	*/
+
+	public function forceTransferFiles() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "forceTransferFiles";
+	     $gs_data_input2939299822982["interfaceName"] = "core.accountingmanager.IAccountingManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* For handling connection to accounting systems.<br>
 	* @return core_accountingmanager_AccountingTransferConfig 
 	*/
 
@@ -144,9 +157,10 @@ class APIAccountingManager {
 	* @return core_accountingmanager_SavedOrderFile[] 
 	*/
 
-	public function getAllFiles() {
+	public function getAllFiles($showAllFiles) {
 	     $gs_data_input2939299822982 = array();
 	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["showAllFiles"] = json_encode($this->transport->object_unset_nulls($showAllFiles));
 	     $gs_data_input2939299822982["method"] = "getAllFiles";
 	     $gs_data_input2939299822982["interfaceName"] = "core.accountingmanager.IAccountingManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
@@ -527,6 +541,29 @@ class APIApacManager {
 	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
 	     $gs_data_input2939299822982["method"] = "sendSms";
 	     $gs_data_input2939299822982["interfaceName"] = "core.apacmanager.IApacManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+}
+class APIBackupManager {
+
+	var $transport;
+	
+	function APIBackupManager($transport) {
+		$this->transport = $transport;
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function createBackup() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "createBackup";
+	     $gs_data_input2939299822982["interfaceName"] = "core.backupmanager.IBackupManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
 
@@ -1045,6 +1082,22 @@ class APIBookingEngine {
 	     $gs_data_input2939299822982['args']["end"] = json_encode($this->transport->object_unset_nulls($end));
 	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
 	     $gs_data_input2939299822982["method"] = "changeDatesOnBooking";
+	     $gs_data_input2939299822982["interfaceName"] = "core.bookingengine.IBookingEngine";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Booking engine management system.<br>
+	* @return void 
+	*/
+
+	public function changeDepartmentOnType($gs_multilevel_name, $bookingItemTypeId, $departmentId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["bookingItemTypeId"] = json_encode($this->transport->object_unset_nulls($bookingItemTypeId));
+	     $gs_data_input2939299822982['args']["departmentId"] = json_encode($this->transport->object_unset_nulls($departmentId));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "changeDepartmentOnType";
 	     $gs_data_input2939299822982["interfaceName"] = "core.bookingengine.IBookingEngine";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
@@ -3656,6 +3709,20 @@ class APICartManager {
 	/**
 	* Need to attach a reference number manually to the cart?
 	* @throws ErrorException
+	* @return boolean 
+	*/
+
+	public function isCartConflictingWithClosedPeriode() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "isCartConflictingWithClosedPeriode";
+	     $gs_data_input2939299822982["interfaceName"] = "core.cartmanager.ICartManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Need to attach a reference number manually to the cart?
+	* @throws ErrorException
 	* @return void 
 	*/
 
@@ -3965,6 +4032,173 @@ class APICertegoManager {
 	}
 
 }
+class APIChecklistManager {
+
+	var $transport;
+	
+	function APIChecklistManager($transport) {
+		$this->transport = $transport;
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_checklist_CheckListError[] 
+	*/
+
+	public function getErrors($gs_multilevel_name, $from, $to) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["from"] = json_encode($this->transport->object_unset_nulls($from));
+	     $gs_data_input2939299822982['args']["to"] = json_encode($this->transport->object_unset_nulls($to));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "getErrors";
+	     $gs_data_input2939299822982["interfaceName"] = "core.checklist.IChecklistManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+}
+class APIComfortManager {
+
+	var $transport;
+	
+	function APIComfortManager($transport) {
+		$this->transport = $transport;
+	}
+
+	/**
+	*
+	* @author pal
+	* @return void 
+	*/
+
+	public function createState($name) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["name"] = json_encode($this->transport->object_unset_nulls($name));
+	     $gs_data_input2939299822982["method"] = "createState";
+	     $gs_data_input2939299822982["interfaceName"] = "core.comfortmanager.IComfortManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author pal
+	* @return void 
+	*/
+
+	public function deleteState($stateId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["stateId"] = json_encode($this->transport->object_unset_nulls($stateId));
+	     $gs_data_input2939299822982["method"] = "deleteState";
+	     $gs_data_input2939299822982["interfaceName"] = "core.comfortmanager.IComfortManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author pal
+	* @return core_comfortmanager_ComfortLog[] 
+	*/
+
+	public function getAllLogEntries() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "getAllLogEntries";
+	     $gs_data_input2939299822982["interfaceName"] = "core.comfortmanager.IComfortManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author pal
+	* @return core_comfortmanager_ComfortState[] 
+	*/
+
+	public function getAllStates() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "getAllStates";
+	     $gs_data_input2939299822982["interfaceName"] = "core.comfortmanager.IComfortManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author pal
+	* @return core_comfortmanager_ComfortRoom 
+	*/
+
+	public function getComfortRoom($bookingItemId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["bookingItemId"] = json_encode($this->transport->object_unset_nulls($bookingItemId));
+	     $gs_data_input2939299822982["method"] = "getComfortRoom";
+	     $gs_data_input2939299822982["interfaceName"] = "core.comfortmanager.IComfortManager";
+	     return $this->transport->cast(new core_comfortmanager_ComfortRoom(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author pal
+	* @return core_comfortmanager_ComfortState 
+	*/
+
+	public function getState($stateId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["stateId"] = json_encode($this->transport->object_unset_nulls($stateId));
+	     $gs_data_input2939299822982["method"] = "getState";
+	     $gs_data_input2939299822982["interfaceName"] = "core.comfortmanager.IComfortManager";
+	     return $this->transport->cast(new core_comfortmanager_ComfortState(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author pal
+	* @return void 
+	*/
+
+	public function saveComfortRoom($room) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["room"] = json_encode($this->transport->object_unset_nulls($room));
+	     $gs_data_input2939299822982["method"] = "saveComfortRoom";
+	     $gs_data_input2939299822982["interfaceName"] = "core.comfortmanager.IComfortManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author pal
+	* @return void 
+	*/
+
+	public function saveState($state) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["state"] = json_encode($this->transport->object_unset_nulls($state));
+	     $gs_data_input2939299822982["method"] = "saveState";
+	     $gs_data_input2939299822982["interfaceName"] = "core.comfortmanager.IComfortManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author pal
+	* @return void 
+	*/
+
+	public function test() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "test";
+	     $gs_data_input2939299822982["interfaceName"] = "core.comfortmanager.IComfortManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+}
 class APIContentManager {
 
 	var $transport;
@@ -4113,6 +4347,89 @@ class APIDBBackupManager {
 	}
 
 }
+class APIDepartmentManager {
+
+	var $transport;
+	
+	function APIDepartmentManager($transport) {
+		$this->transport = $transport;
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function createDepartment($departmentName) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["departmentName"] = json_encode($this->transport->object_unset_nulls($departmentName));
+	     $gs_data_input2939299822982["method"] = "createDepartment";
+	     $gs_data_input2939299822982["interfaceName"] = "core.department.IDepartmentManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function deleteDepartment($departmentId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["departmentId"] = json_encode($this->transport->object_unset_nulls($departmentId));
+	     $gs_data_input2939299822982["method"] = "deleteDepartment";
+	     $gs_data_input2939299822982["interfaceName"] = "core.department.IDepartmentManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_department_Department[] 
+	*/
+
+	public function getAllDepartments() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "getAllDepartments";
+	     $gs_data_input2939299822982["interfaceName"] = "core.department.IDepartmentManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_department_Department 
+	*/
+
+	public function getDepartment($departmentId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["departmentId"] = json_encode($this->transport->object_unset_nulls($departmentId));
+	     $gs_data_input2939299822982["method"] = "getDepartment";
+	     $gs_data_input2939299822982["interfaceName"] = "core.department.IDepartmentManager";
+	     return $this->transport->cast(new core_department_Department(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function saveDepartment($department) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["department"] = json_encode($this->transport->object_unset_nulls($department));
+	     $gs_data_input2939299822982["method"] = "saveDepartment";
+	     $gs_data_input2939299822982["interfaceName"] = "core.department.IDepartmentManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+}
 class APIDibsManager {
 
 	var $transport;
@@ -4123,7 +4440,7 @@ class APIDibsManager {
 
 	/**
 	* Dibs management.
-	* @return void 
+	* @return boolean 
 	*/
 
 	public function checkForOrdersToCapture() {
@@ -4131,6 +4448,88 @@ class APIDibsManager {
 	     $gs_data_input2939299822982['args'] = array();
 	     $gs_data_input2939299822982["method"] = "checkForOrdersToCapture";
 	     $gs_data_input2939299822982["interfaceName"] = "core.dibs.IDibsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+}
+class APIDirectorManager {
+
+	var $transport;
+	
+	function APIDirectorManager($transport) {
+		$this->transport = $transport;
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_ordermanager_data_Order[] 
+	*/
+
+	public function createOrders() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "createOrders";
+	     $gs_data_input2939299822982["interfaceName"] = "core.director.IDirectorManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_ordermanager_data_Order[] 
+	*/
+
+	public function createVirtualOrders() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "createVirtualOrders";
+	     $gs_data_input2939299822982["interfaceName"] = "core.director.IDirectorManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return public class Date 
+	*/
+
+	public function getCreatedDate($password) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
+	     $gs_data_input2939299822982["method"] = "getCreatedDate";
+	     $gs_data_input2939299822982["interfaceName"] = "core.director.IDirectorManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_director_DailyUsage 
+	*/
+
+	public function getDailyUsage($password, $date) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
+	     $gs_data_input2939299822982['args']["date"] = json_encode($this->transport->object_unset_nulls($date));
+	     $gs_data_input2939299822982["method"] = "getDailyUsage";
+	     $gs_data_input2939299822982["interfaceName"] = "core.director.IDirectorManager";
+	     return $this->transport->cast(new core_director_DailyUsage(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function syncFromOld() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "syncFromOld";
+	     $gs_data_input2939299822982["interfaceName"] = "core.director.IDirectorManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
 
@@ -4399,6 +4798,30 @@ class APIDoorManager {
 	}
 
 }
+class APIEhfXmlGenerator {
+
+	var $transport;
+	
+	function APIEhfXmlGenerator($transport) {
+		$this->transport = $transport;
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return String 
+	*/
+
+	public function generateXml($orderId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
+	     $gs_data_input2939299822982["method"] = "generateXml";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IEhfXmlGenerator";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+}
 class APIEpayManager {
 
 	var $transport;
@@ -4409,7 +4832,7 @@ class APIEpayManager {
 
 	/**
 	* Bambora payment management.
-	* @return void 
+	* @return boolean 
 	*/
 
 	public function checkForOrdersToCapture() {
@@ -6051,6 +6474,47 @@ class APIExcelManager {
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
 
+	/**
+	* Excel management.
+	* @return String 
+	*/
+
+	public function getPreparedExcelSheet() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "getPreparedExcelSheet";
+	     $gs_data_input2939299822982["interfaceName"] = "core.excelmanager.IExcelManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Excel management.
+	* @return void 
+	*/
+
+	public function prepareExcelSheet($name, $array) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["name"] = json_encode($this->transport->object_unset_nulls($name));
+	     $gs_data_input2939299822982['args']["array"] = json_encode($this->transport->object_unset_nulls($array));
+	     $gs_data_input2939299822982["method"] = "prepareExcelSheet";
+	     $gs_data_input2939299822982["interfaceName"] = "core.excelmanager.IExcelManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Excel management.
+	* @return void 
+	*/
+
+	public function startExcelSheet() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "startExcelSheet";
+	     $gs_data_input2939299822982["interfaceName"] = "core.excelmanager.IExcelManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
 }
 class APIFileManager {
 
@@ -6314,12 +6778,219 @@ class APIGalleryManager {
 	}
 
 }
+class APIGdsManager {
+
+	var $transport;
+	
+	function APIGdsManager($transport) {
+		$this->transport = $transport;
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function deleteDevice($deviceId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["deviceId"] = json_encode($this->transport->object_unset_nulls($deviceId));
+	     $gs_data_input2939299822982["method"] = "deleteDevice";
+	     $gs_data_input2939299822982["interfaceName"] = "core.gsd.IGdsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_gsd_IotDeviceInformation[] 
+	*/
+
+	public function getAllNewIotDevices() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "getAllNewIotDevices";
+	     $gs_data_input2939299822982["interfaceName"] = "core.gsd.IGdsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_gsd_GetShopDeviceUnit[] 
+	*/
+
+	public function getAllUnits($filter) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["filter"] = json_encode($this->transport->object_unset_nulls($filter));
+	     $gs_data_input2939299822982["method"] = "getAllUnits";
+	     $gs_data_input2939299822982["interfaceName"] = "core.gsd.IGdsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_gsd_GetShopDevice[] 
+	*/
+
+	public function getDevices() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "getDevices";
+	     $gs_data_input2939299822982["interfaceName"] = "core.gsd.IGdsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_gsd_IotDeviceInformation 
+	*/
+
+	public function getIotDeviceInformation($information) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["information"] = json_encode($this->transport->object_unset_nulls($information));
+	     $gs_data_input2939299822982["method"] = "getIotDeviceInformation";
+	     $gs_data_input2939299822982["interfaceName"] = "core.gsd.IGdsManager";
+	     return $this->transport->cast(new core_gsd_IotDeviceInformation(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return public abstract interface java_io_Serializable[] 
+	*/
+
+	public function getMessageForUser() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "getMessageForUser";
+	     $gs_data_input2939299822982["interfaceName"] = "core.gsd.IGdsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_gsd_GetShopDeviceMessage[] 
+	*/
+
+	public function getMessages($tokenId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["tokenId"] = json_encode($this->transport->object_unset_nulls($tokenId));
+	     $gs_data_input2939299822982["method"] = "getMessages";
+	     $gs_data_input2939299822982["interfaceName"] = "core.gsd.IGdsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_gsd_DeviceMessageQueue[] 
+	*/
+
+	public function getQueues() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "getQueues";
+	     $gs_data_input2939299822982["interfaceName"] = "core.gsd.IGdsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function saveDevice($device) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["device"] = json_encode($this->transport->object_unset_nulls($device));
+	     $gs_data_input2939299822982["method"] = "saveDevice";
+	     $gs_data_input2939299822982["interfaceName"] = "core.gsd.IGdsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function sendMessageToDevice($deviceId, $message) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["deviceId"] = json_encode($this->transport->object_unset_nulls($deviceId));
+	     $gs_data_input2939299822982['args']["message"] = json_encode($this->transport->object_unset_nulls($message));
+	     $gs_data_input2939299822982["method"] = "sendMessageToDevice";
+	     $gs_data_input2939299822982["interfaceName"] = "core.gsd.IGdsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function setGdsConfig($tokenId, $key, $config) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["tokenId"] = json_encode($this->transport->object_unset_nulls($tokenId));
+	     $gs_data_input2939299822982['args']["key"] = json_encode($this->transport->object_unset_nulls($key));
+	     $gs_data_input2939299822982['args']["config"] = json_encode($this->transport->object_unset_nulls($config));
+	     $gs_data_input2939299822982["method"] = "setGdsConfig";
+	     $gs_data_input2939299822982["interfaceName"] = "core.gsd.IGdsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function updateIotDevice($device) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["device"] = json_encode($this->transport->object_unset_nulls($device));
+	     $gs_data_input2939299822982["method"] = "updateIotDevice";
+	     $gs_data_input2939299822982["interfaceName"] = "core.gsd.IGdsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+}
 class APIGetShop {
 
 	var $transport;
 	
 	function APIGetShop($transport) {
 		$this->transport = $transport;
+	}
+
+	/**
+	* Get partner data for this user.
+	* @throws ErrorException
+	* @return void 
+	*/
+
+	public function addLeadHistory($leadId, $comment, $start, $end, $userId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["leadId"] = json_encode($this->transport->object_unset_nulls($leadId));
+	     $gs_data_input2939299822982['args']["comment"] = json_encode($this->transport->object_unset_nulls($comment));
+	     $gs_data_input2939299822982['args']["start"] = json_encode($this->transport->object_unset_nulls($start));
+	     $gs_data_input2939299822982['args']["end"] = json_encode($this->transport->object_unset_nulls($end));
+	     $gs_data_input2939299822982['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+	     $gs_data_input2939299822982["method"] = "addLeadHistory";
+	     $gs_data_input2939299822982["interfaceName"] = "core.getshop.IGetShop";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
 
 	/**
@@ -6356,6 +7027,51 @@ class APIGetShop {
 	     $gs_data_input2939299822982["method"] = "addUserToPartner";
 	     $gs_data_input2939299822982["interfaceName"] = "core.getshop.IGetShop";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Create a new webpage
+	* @return boolean 
+	*/
+
+	public function canInvoiceOverEhf($vatNumber) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["vatNumber"] = json_encode($this->transport->object_unset_nulls($vatNumber));
+	     $gs_data_input2939299822982["method"] = "canInvoiceOverEhf";
+	     $gs_data_input2939299822982["interfaceName"] = "core.getshop.IGetShop";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Get partner data for this user.
+	* @throws ErrorException
+	* @return void 
+	*/
+
+	public function changeLeadState($leadId, $state) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["leadId"] = json_encode($this->transport->object_unset_nulls($leadId));
+	     $gs_data_input2939299822982['args']["state"] = json_encode($this->transport->object_unset_nulls($state));
+	     $gs_data_input2939299822982["method"] = "changeLeadState";
+	     $gs_data_input2939299822982["interfaceName"] = "core.getshop.IGetShop";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Get partner data for this user.
+	* @throws ErrorException
+	* @return core_getshop_data_Lead 
+	*/
+
+	public function createLead($name) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["name"] = json_encode($this->transport->object_unset_nulls($name));
+	     $gs_data_input2939299822982["method"] = "createLead";
+	     $gs_data_input2939299822982["interfaceName"] = "core.getshop.IGetShop";
+	     return $this->transport->cast(new core_getshop_data_Lead(), $this->transport->sendMessage($gs_data_input2939299822982));
 	}
 
 	/**
@@ -6448,6 +7164,35 @@ class APIGetShop {
 	}
 
 	/**
+	* Get partner data for this user.
+	* @throws ErrorException
+	* @return core_getshop_data_Lead 
+	*/
+
+	public function getLead($leadId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["leadId"] = json_encode($this->transport->object_unset_nulls($leadId));
+	     $gs_data_input2939299822982["method"] = "getLead";
+	     $gs_data_input2939299822982["interfaceName"] = "core.getshop.IGetShop";
+	     return $this->transport->cast(new core_getshop_data_Lead(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	* Get partner data for this user.
+	* @throws ErrorException
+	* @return core_getshop_data_Lead[] 
+	*/
+
+	public function getLeads() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "getLeads";
+	     $gs_data_input2939299822982["interfaceName"] = "core.getshop.IGetShop";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
 	*
 	* @param code
 	* @return core_getshop_data_DibsAutoCollectData[] 
@@ -6497,6 +7242,49 @@ class APIGetShop {
 	* @return void 
 	*/
 
+	public function loadEhfCompanies() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "loadEhfCompanies";
+	     $gs_data_input2939299822982["interfaceName"] = "core.getshop.IGetShop";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Get partner data for this user.
+	* @throws ErrorException
+	* @return void 
+	*/
+
+	public function markLeadHistoryCompleted($leadHistoryId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["leadHistoryId"] = json_encode($this->transport->object_unset_nulls($leadHistoryId));
+	     $gs_data_input2939299822982["method"] = "markLeadHistoryCompleted";
+	     $gs_data_input2939299822982["interfaceName"] = "core.getshop.IGetShop";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Get partner data for this user.
+	* @throws ErrorException
+	* @return void 
+	*/
+
+	public function saveLead($lead) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["lead"] = json_encode($this->transport->object_unset_nulls($lead));
+	     $gs_data_input2939299822982["method"] = "saveLead";
+	     $gs_data_input2939299822982["interfaceName"] = "core.getshop.IGetShop";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Create a new webpage
+	* @return void 
+	*/
+
 	public function saveSmsCallback($smsResponses) {
 	     $gs_data_input2939299822982 = array();
 	     $gs_data_input2939299822982['args'] = array();
@@ -6506,7 +7294,7 @@ class APIGetShop {
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
 
-	/**
+	/**Current leads
 	*
 	* @param ids
 	* @throws ErrorException
@@ -6585,6 +7373,20 @@ class APIGetShopAccountingManager {
 	     $gs_data_input2939299822982['args'] = array();
 	     $gs_data_input2939299822982['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
 	     $gs_data_input2939299822982["method"] = "canOrderBeTransferredDirect";
+	     $gs_data_input2939299822982["interfaceName"] = "core.getshopaccounting.IGetShopAccountingManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return String 
+	*/
+
+	public function createBankTransferFile() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "createBankTransferFile";
 	     $gs_data_input2939299822982["interfaceName"] = "core.getshopaccounting.IGetShopAccountingManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
@@ -6767,6 +7569,51 @@ class APIGetShopAccountingManager {
 	/**
 	*
 	* @author ktonder
+	* @return String[] 
+	*/
+
+	public function getTransferData($start, $end, $doublePostingFileId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["start"] = json_encode($this->transport->object_unset_nulls($start));
+	     $gs_data_input2939299822982['args']["end"] = json_encode($this->transport->object_unset_nulls($end));
+	     $gs_data_input2939299822982['args']["doublePostingFileId"] = json_encode($this->transport->object_unset_nulls($doublePostingFileId));
+	     $gs_data_input2939299822982["method"] = "getTransferData";
+	     $gs_data_input2939299822982["interfaceName"] = "core.getshopaccounting.IGetShopAccountingManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return boolean 
+	*/
+
+	public function isCurrentSelectedAccountingSystemPrimitive() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "isCurrentSelectedAccountingSystemPrimitive";
+	     $gs_data_input2939299822982["interfaceName"] = "core.getshopaccounting.IGetShopAccountingManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return boolean 
+	*/
+
+	public function isCurrentSelectedSupportingDirectTransfer() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "isCurrentSelectedSupportingDirectTransfer";
+	     $gs_data_input2939299822982["interfaceName"] = "core.getshopaccounting.IGetShopAccountingManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
 	* @return void 
 	*/
 
@@ -6807,6 +7654,36 @@ class APIGetShopAccountingManager {
 	     $gs_data_input2939299822982['args'] = array();
 	     $gs_data_input2939299822982['args']["systemType"] = json_encode($this->transport->object_unset_nulls($systemType));
 	     $gs_data_input2939299822982["method"] = "setSystemTypeOther";
+	     $gs_data_input2939299822982["interfaceName"] = "core.getshopaccounting.IGetShopAccountingManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function transferAllDaysThatCanBeTransferred() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "transferAllDaysThatCanBeTransferred";
+	     $gs_data_input2939299822982["interfaceName"] = "core.getshopaccounting.IGetShopAccountingManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function transferData($start, $end) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["start"] = json_encode($this->transport->object_unset_nulls($start));
+	     $gs_data_input2939299822982['args']["end"] = json_encode($this->transport->object_unset_nulls($end));
+	     $gs_data_input2939299822982["method"] = "transferData";
 	     $gs_data_input2939299822982["interfaceName"] = "core.getshopaccounting.IGetShopAccountingManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
@@ -7366,6 +8243,34 @@ class APIGetShopLockSystemManager {
 	/***** End group code stuff ***** @return void 
 	*/
 
+	public function addTransactionEntranceDoor($serverId, $lockId, $code) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["serverId"] = json_encode($this->transport->object_unset_nulls($serverId));
+	     $gs_data_input2939299822982['args']["lockId"] = json_encode($this->transport->object_unset_nulls($lockId));
+	     $gs_data_input2939299822982['args']["code"] = json_encode($this->transport->object_unset_nulls($code));
+	     $gs_data_input2939299822982["method"] = "addTransactionEntranceDoor";
+	     $gs_data_input2939299822982["interfaceName"] = "core.getshoplocksystem.IGetShopLockSystemManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/***** End group code stuff ***** @return void 
+	*/
+
+	public function addTransactionEntranceDoorByToken($tokenId, $lockIncrementalId, $code) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["tokenId"] = json_encode($this->transport->object_unset_nulls($tokenId));
+	     $gs_data_input2939299822982['args']["lockIncrementalId"] = json_encode($this->transport->object_unset_nulls($lockIncrementalId));
+	     $gs_data_input2939299822982['args']["code"] = json_encode($this->transport->object_unset_nulls($code));
+	     $gs_data_input2939299822982["method"] = "addTransactionEntranceDoorByToken";
+	     $gs_data_input2939299822982["interfaceName"] = "core.getshoplocksystem.IGetShopLockSystemManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/***** End group code stuff ***** @return void 
+	*/
+
 	public function addTransactionHistory($tokenId, $lockId, $timeStamp, $userSlot) {
 	     $gs_data_input2939299822982 = array();
 	     $gs_data_input2939299822982['args'] = array();
@@ -7374,6 +8279,17 @@ class APIGetShopLockSystemManager {
 	     $gs_data_input2939299822982['args']["timeStamp"] = json_encode($this->transport->object_unset_nulls($timeStamp));
 	     $gs_data_input2939299822982['args']["userSlot"] = json_encode($this->transport->object_unset_nulls($userSlot));
 	     $gs_data_input2939299822982["method"] = "addTransactionHistory";
+	     $gs_data_input2939299822982["interfaceName"] = "core.getshoplocksystem.IGetShopLockSystemManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/***** End group code stuff ***** @return boolean 
+	*/
+
+	public function canShowAccessLog() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "canShowAccessLog";
 	     $gs_data_input2939299822982["interfaceName"] = "core.getshoplocksystem.IGetShopLockSystemManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
@@ -7408,17 +8324,30 @@ class APIGetShopLockSystemManager {
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
 
+	/***** End group code stuff ***** @return void 
+	*/
+
+	public function closeLock($lockId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["lockId"] = json_encode($this->transport->object_unset_nulls($lockId));
+	     $gs_data_input2939299822982["method"] = "closeLock";
+	     $gs_data_input2939299822982["interfaceName"] = "core.getshoplocksystem.IGetShopLockSystemManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
 	/**
 	*
 	* @author ktonder
 	* @return core_getshoplocksystem_LockGroup 
 	*/
 
-	public function createNewLockGroup($name, $maxUsersInGroup) {
+	public function createNewLockGroup($name, $maxUsersInGroup, $codeSize) {
 	     $gs_data_input2939299822982 = array();
 	     $gs_data_input2939299822982['args'] = array();
 	     $gs_data_input2939299822982['args']["name"] = json_encode($this->transport->object_unset_nulls($name));
 	     $gs_data_input2939299822982['args']["maxUsersInGroup"] = json_encode($this->transport->object_unset_nulls($maxUsersInGroup));
+	     $gs_data_input2939299822982['args']["codeSize"] = json_encode($this->transport->object_unset_nulls($codeSize));
 	     $gs_data_input2939299822982["method"] = "createNewLockGroup";
 	     $gs_data_input2939299822982["interfaceName"] = "core.getshoplocksystem.IGetShopLockSystemManager";
 	     return $this->transport->cast(new core_getshoplocksystem_LockGroup(), $this->transport->sendMessage($gs_data_input2939299822982));
@@ -7474,6 +8403,19 @@ class APIGetShopLockSystemManager {
 	     $gs_data_input2939299822982['args'] = array();
 	     $gs_data_input2939299822982['args']["groupId"] = json_encode($this->transport->object_unset_nulls($groupId));
 	     $gs_data_input2939299822982["method"] = "deleteGroup";
+	     $gs_data_input2939299822982["interfaceName"] = "core.getshoplocksystem.IGetShopLockSystemManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/***** End group code stuff ***** @return void 
+	*/
+
+	public function deleteLock($serverId, $lockId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["serverId"] = json_encode($this->transport->object_unset_nulls($serverId));
+	     $gs_data_input2939299822982['args']["lockId"] = json_encode($this->transport->object_unset_nulls($lockId));
+	     $gs_data_input2939299822982["method"] = "deleteLock";
 	     $gs_data_input2939299822982["interfaceName"] = "core.getshoplocksystem.IGetShopLockSystemManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
@@ -7539,6 +8481,20 @@ class APIGetShopLockSystemManager {
 	/***** End group code stuff ***** @return core_common_FilteredData 
 	*/
 
+	public function getAccessLog($serverId, $lockId, $filterOptions) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["serverId"] = json_encode($this->transport->object_unset_nulls($serverId));
+	     $gs_data_input2939299822982['args']["lockId"] = json_encode($this->transport->object_unset_nulls($lockId));
+	     $gs_data_input2939299822982['args']["filterOptions"] = json_encode($this->transport->object_unset_nulls($filterOptions));
+	     $gs_data_input2939299822982["method"] = "getAccessLog";
+	     $gs_data_input2939299822982["interfaceName"] = "core.getshoplocksystem.IGetShopLockSystemManager";
+	     return $this->transport->cast(new core_common_FilteredData(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/***** End group code stuff ***** @return core_common_FilteredData 
+	*/
+
 	public function getAllAccessUsers($options) {
 	     $gs_data_input2939299822982 = array();
 	     $gs_data_input2939299822982['args'] = array();
@@ -7546,6 +8502,17 @@ class APIGetShopLockSystemManager {
 	     $gs_data_input2939299822982["method"] = "getAllAccessUsers";
 	     $gs_data_input2939299822982["interfaceName"] = "core.getshoplocksystem.IGetShopLockSystemManager";
 	     return $this->transport->cast(new core_common_FilteredData(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/***** End group code stuff ***** @return core_getshoplocksystem_AccessGroupUserAccess[] 
+	*/
+
+	public function getAllAccessUsersFlat() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "getAllAccessUsersFlat";
+	     $gs_data_input2939299822982["interfaceName"] = "core.getshoplocksystem.IGetShopLockSystemManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
 
 	/**
@@ -7564,6 +8531,22 @@ class APIGetShopLockSystemManager {
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
 
+	/**
+	*
+	*
+	* @param groupId
+	* @param lockIds Key = serverId, and value is a list of lockids for the server.
+	* @return core_getshoplocksystem_LockGroup[] 
+	*/
+
+	public function getAllGroupsUnfinalized() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "getAllGroupsUnfinalized";
+	     $gs_data_input2939299822982["interfaceName"] = "core.getshoplocksystem.IGetShopLockSystemManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
 	/***** End group code stuff ***** @return int 
 	*/
 
@@ -7571,6 +8554,18 @@ class APIGetShopLockSystemManager {
 	     $gs_data_input2939299822982 = array();
 	     $gs_data_input2939299822982['args'] = array();
 	     $gs_data_input2939299822982["method"] = "getCodeSize";
+	     $gs_data_input2939299822982["interfaceName"] = "core.getshoplocksystem.IGetShopLockSystemManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/***** End group code stuff ***** @return public abstract interface Map<K,V> 
+	*/
+
+	public function getCodesByToken($tokenId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["tokenId"] = json_encode($this->transport->object_unset_nulls($tokenId));
+	     $gs_data_input2939299822982["method"] = "getCodesByToken";
 	     $gs_data_input2939299822982["interfaceName"] = "core.getshoplocksystem.IGetShopLockSystemManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
@@ -7758,6 +8753,32 @@ class APIGetShopLockSystemManager {
 	     $gs_data_input2939299822982['args']["lockId"] = json_encode($this->transport->object_unset_nulls($lockId));
 	     $gs_data_input2939299822982['args']["slotId"] = json_encode($this->transport->object_unset_nulls($slotId));
 	     $gs_data_input2939299822982["method"] = "markCodeForResending";
+	     $gs_data_input2939299822982["interfaceName"] = "core.getshoplocksystem.IGetShopLockSystemManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/***** End group code stuff ***** @return void 
+	*/
+
+	public function openLock($lockId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["lockId"] = json_encode($this->transport->object_unset_nulls($lockId));
+	     $gs_data_input2939299822982["method"] = "openLock";
+	     $gs_data_input2939299822982["interfaceName"] = "core.getshoplocksystem.IGetShopLockSystemManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function pingServers() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "pingServers";
 	     $gs_data_input2939299822982["interfaceName"] = "core.getshoplocksystem.IGetShopLockSystemManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
@@ -8033,6 +9054,277 @@ class APIGetShopLockSystemManager {
 	}
 
 }
+class APIGiftCardManager {
+
+	var $transport;
+	
+	function APIGiftCardManager($transport) {
+		$this->transport = $transport;
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_giftcard_GiftCard[] 
+	*/
+
+	public function getAllCards() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "getAllCards";
+	     $gs_data_input2939299822982["interfaceName"] = "core.giftcard.IGiftCardManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_giftcard_GiftCard 
+	*/
+
+	public function getGiftCard($giftCardCode) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["giftCardCode"] = json_encode($this->transport->object_unset_nulls($giftCardCode));
+	     $gs_data_input2939299822982["method"] = "getGiftCard";
+	     $gs_data_input2939299822982["interfaceName"] = "core.giftcard.IGiftCardManager";
+	     return $this->transport->cast(new core_giftcard_GiftCard(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+}
+class APIGmailApiManager {
+
+	var $transport;
+	
+	function APIGmailApiManager($transport) {
+		$this->transport = $transport;
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function assignMessageToUser($messageId, $userId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["messageId"] = json_encode($this->transport->object_unset_nulls($messageId));
+	     $gs_data_input2939299822982['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+	     $gs_data_input2939299822982["method"] = "assignMessageToUser";
+	     $gs_data_input2939299822982["interfaceName"] = "core.googleapi.IGmailApiManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function changeTypeOnMessage($messageId, $type) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["messageId"] = json_encode($this->transport->object_unset_nulls($messageId));
+	     $gs_data_input2939299822982['args']["type"] = json_encode($this->transport->object_unset_nulls($type));
+	     $gs_data_input2939299822982["method"] = "changeTypeOnMessage";
+	     $gs_data_input2939299822982["interfaceName"] = "core.googleapi.IGmailApiManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Will create an emaploye with the name and email address
+	* and rescan for changes.
+	*
+	* @param companyId
+	* @return void 
+	*/
+
+	public function connectMessageToCompany($msgId, $companyId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["msgId"] = json_encode($this->transport->object_unset_nulls($msgId));
+	     $gs_data_input2939299822982['args']["companyId"] = json_encode($this->transport->object_unset_nulls($companyId));
+	     $gs_data_input2939299822982["method"] = "connectMessageToCompany";
+	     $gs_data_input2939299822982["interfaceName"] = "core.googleapi.IGmailApiManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function fetchAllMessages() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "fetchAllMessages";
+	     $gs_data_input2939299822982["interfaceName"] = "core.googleapi.IGmailApiManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_googleapi_GmailMessageLight[] 
+	*/
+
+	public function getAllUnassignedMessages() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "getAllUnassignedMessages";
+	     $gs_data_input2939299822982["interfaceName"] = "core.googleapi.IGmailApiManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_googleapi_GmailMessageLight[] 
+	*/
+
+	public function getEmails($filter) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["filter"] = json_encode($this->transport->object_unset_nulls($filter));
+	     $gs_data_input2939299822982["method"] = "getEmails";
+	     $gs_data_input2939299822982["interfaceName"] = "core.googleapi.IGmailApiManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_googleapi_GmailMessageLight[] 
+	*/
+
+	public function getLightMessages($companyId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["companyId"] = json_encode($this->transport->object_unset_nulls($companyId));
+	     $gs_data_input2939299822982["method"] = "getLightMessages";
+	     $gs_data_input2939299822982["interfaceName"] = "core.googleapi.IGmailApiManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Will create an emaploye with the name and email address
+	* and rescan for changes.
+	*
+	* @param companyId
+	* @return core_googleapi_GmailMessageLight 
+	*/
+
+	public function getMessageLight($msgId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["msgId"] = json_encode($this->transport->object_unset_nulls($msgId));
+	     $gs_data_input2939299822982["method"] = "getMessageLight";
+	     $gs_data_input2939299822982["interfaceName"] = "core.googleapi.IGmailApiManager";
+	     return $this->transport->cast(new core_googleapi_GmailMessageLight(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	* Will create an emaploye with the name and email address
+	* and rescan for changes.
+	*
+	* @param companyId
+	* @return core_googleapi_GmailMessagePart[] 
+	*/
+
+	public function getMessageParts($id) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
+	     $gs_data_input2939299822982["method"] = "getMessageParts";
+	     $gs_data_input2939299822982["interfaceName"] = "core.googleapi.IGmailApiManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_googleapi_GmailMessageLight[] 
+	*/
+
+	public function getMyUnsolvedMessages() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "getMyUnsolvedMessages";
+	     $gs_data_input2939299822982["interfaceName"] = "core.googleapi.IGmailApiManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Will create an emaploye with the name and email address
+	* and rescan for changes.
+	*
+	* @param companyId
+	* @return void 
+	*/
+
+	public function markAsArchived($msgId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["msgId"] = json_encode($this->transport->object_unset_nulls($msgId));
+	     $gs_data_input2939299822982["method"] = "markAsArchived";
+	     $gs_data_input2939299822982["interfaceName"] = "core.googleapi.IGmailApiManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function reScanCompanyConnection() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "reScanCompanyConnection";
+	     $gs_data_input2939299822982["interfaceName"] = "core.googleapi.IGmailApiManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Will create an emaploye with the name and email address
+	* and rescan for changes.
+	*
+	* @param companyId
+	* @return void 
+	*/
+
+	public function replyEmail($msgId, $content) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["msgId"] = json_encode($this->transport->object_unset_nulls($msgId));
+	     $gs_data_input2939299822982['args']["content"] = json_encode($this->transport->object_unset_nulls($content));
+	     $gs_data_input2939299822982["method"] = "replyEmail";
+	     $gs_data_input2939299822982["interfaceName"] = "core.googleapi.IGmailApiManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Will create an emaploye with the name and email address
+	* and rescan for changes.
+	*
+	* @param companyId
+	* @return void 
+	*/
+
+	public function updateTimeSpentOnMessage($msgId, $timeSpent, $completed) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["msgId"] = json_encode($this->transport->object_unset_nulls($msgId));
+	     $gs_data_input2939299822982['args']["timeSpent"] = json_encode($this->transport->object_unset_nulls($timeSpent));
+	     $gs_data_input2939299822982['args']["completed"] = json_encode($this->transport->object_unset_nulls($completed));
+	     $gs_data_input2939299822982["method"] = "updateTimeSpentOnMessage";
+	     $gs_data_input2939299822982["interfaceName"] = "core.googleapi.IGmailApiManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+}
 class APIImageManager {
 
 	var $transport;
@@ -8233,6 +9525,22 @@ class APIInvoiceManager {
 	     $gs_data_input2939299822982['args'] = array();
 	     $gs_data_input2939299822982['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
 	     $gs_data_input2939299822982["method"] = "getBase64EncodedInvoice";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pdf.IInvoiceManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function sendReceiptToCashRegisterPoint($deviceId, $orderId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["deviceId"] = json_encode($this->transport->object_unset_nulls($deviceId));
+	     $gs_data_input2939299822982['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
+	     $gs_data_input2939299822982["method"] = "sendReceiptToCashRegisterPoint";
 	     $gs_data_input2939299822982["interfaceName"] = "core.pdf.IInvoiceManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
@@ -10044,31 +11352,57 @@ class APIOAuthManager {
 	/**
 	*
 	* @author boggi
-	* @return String 
+	* @return core_oauthmanager_OAuthSession 
 	*/
 
-	public function getStateRedirect($state) {
+	public function getCurrentOAuthSession($oauthSessionId) {
 	     $gs_data_input2939299822982 = array();
 	     $gs_data_input2939299822982['args'] = array();
-	     $gs_data_input2939299822982['args']["state"] = json_encode($this->transport->object_unset_nulls($state));
-	     $gs_data_input2939299822982["method"] = "getStateRedirect";
+	     $gs_data_input2939299822982['args']["oauthSessionId"] = json_encode($this->transport->object_unset_nulls($oauthSessionId));
+	     $gs_data_input2939299822982["method"] = "getCurrentOAuthSession";
 	     $gs_data_input2939299822982["interfaceName"] = "core.oauthmanager.IOAuthManager";
-	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	     return $this->transport->cast(new core_oauthmanager_OAuthSession(), $this->transport->sendMessage($gs_data_input2939299822982));
 	}
 
 	/**
 	*
 	* @author boggi
+	* @return core_oauthmanager_OAuthSession 
+	*/
+
+	public function startNewOAuthSession($authAddress, $clientId, $scope, $clientSecretId, $tokenAddress) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["authAddress"] = json_encode($this->transport->object_unset_nulls($authAddress));
+	     $gs_data_input2939299822982['args']["clientId"] = json_encode($this->transport->object_unset_nulls($clientId));
+	     $gs_data_input2939299822982['args']["scope"] = json_encode($this->transport->object_unset_nulls($scope));
+	     $gs_data_input2939299822982['args']["clientSecretId"] = json_encode($this->transport->object_unset_nulls($clientSecretId));
+	     $gs_data_input2939299822982['args']["tokenAddress"] = json_encode($this->transport->object_unset_nulls($tokenAddress));
+	     $gs_data_input2939299822982["method"] = "startNewOAuthSession";
+	     $gs_data_input2939299822982["interfaceName"] = "core.oauthmanager.IOAuthManager";
+	     return $this->transport->cast(new core_oauthmanager_OAuthSession(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+}
+class APIOcrManager {
+
+	var $transport;
+	
+	function APIOcrManager($transport) {
+		$this->transport = $transport;
+	}
+
+	/**
+	* The ordermanager handles all orders created by this store.<br>
+	* An order is usually created after the order has been added to the cart.<br>
 	* @return void 
 	*/
 
-	public function handleCallback($code, $state) {
+	public function scanOcrFiles() {
 	     $gs_data_input2939299822982 = array();
 	     $gs_data_input2939299822982['args'] = array();
-	     $gs_data_input2939299822982['args']["code"] = json_encode($this->transport->object_unset_nulls($code));
-	     $gs_data_input2939299822982['args']["state"] = json_encode($this->transport->object_unset_nulls($state));
-	     $gs_data_input2939299822982["method"] = "handleCallback";
-	     $gs_data_input2939299822982["interfaceName"] = "core.oauthmanager.IOAuthManager";
+	     $gs_data_input2939299822982["method"] = "scanOcrFiles";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ocr.IOcrManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
 
@@ -10099,6 +11433,30 @@ class APIOrderManager {
 	}
 
 	/**
+	* This function is not in use anywhere so it can be deleted at any time.
+	*
+	* just a function that fixes a problem that we had by resetting orders
+	* that has not been fully completed.
+	*
+	* @param password
+	* @return void 
+	*/
+
+	public function addOrderTransaction($orderId, $amount, $comment, $paymentDate, $amountInLocalCurrency, $agio) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
+	     $gs_data_input2939299822982['args']["amount"] = json_encode($this->transport->object_unset_nulls($amount));
+	     $gs_data_input2939299822982['args']["comment"] = json_encode($this->transport->object_unset_nulls($comment));
+	     $gs_data_input2939299822982['args']["paymentDate"] = json_encode($this->transport->object_unset_nulls($paymentDate));
+	     $gs_data_input2939299822982['args']["amountInLocalCurrency"] = json_encode($this->transport->object_unset_nulls($amountInLocalCurrency));
+	     $gs_data_input2939299822982['args']["agio"] = json_encode($this->transport->object_unset_nulls($agio));
+	     $gs_data_input2939299822982["method"] = "addOrderTransaction";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
 	* Fetch all orders for a user.
 	* @param userId
 	* @throws ErrorException
@@ -10112,6 +11470,43 @@ class APIOrderManager {
 	     $gs_data_input2939299822982['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
 	     $gs_data_input2939299822982['args']["count"] = json_encode($this->transport->object_unset_nulls($count));
 	     $gs_data_input2939299822982["method"] = "addProductToOrder";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* This will create a order for a given userId.
+	* To avoid fraud, shipment address and etc will only be
+	* able to set to the already registered user in the database.
+	*
+	* @param userId
+	* @return void 
+	*/
+
+	public function cancelPaymentProcess($tokenId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["tokenId"] = json_encode($this->transport->object_unset_nulls($tokenId));
+	     $gs_data_input2939299822982["method"] = "cancelPaymentProcess";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* This function is not in use anywhere so it can be deleted at any time.
+	*
+	* just a function that fixes a problem that we had by resetting orders
+	* that has not been fully completed.
+	*
+	* @param password
+	* @return void 
+	*/
+
+	public function changeAutoClosePeriodesOnZRepport($autoClose) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["autoClose"] = json_encode($this->transport->object_unset_nulls($autoClose));
+	     $gs_data_input2939299822982["method"] = "changeAutoClosePeriodesOnZRepport";
 	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
@@ -10146,6 +11541,46 @@ class APIOrderManager {
 	     $gs_data_input2939299822982['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
 	     $gs_data_input2939299822982['args']["paymentTypeId"] = json_encode($this->transport->object_unset_nulls($paymentTypeId));
 	     $gs_data_input2939299822982["method"] = "changeOrderType";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* This function is not in use anywhere so it can be deleted at any time.
+	*
+	* just a function that fixes a problem that we had by resetting orders
+	* that has not been fully completed.
+	*
+	* @param password
+	* @return void 
+	*/
+
+	public function changeProductOnCartItem($orderId, $cartItemId, $productId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
+	     $gs_data_input2939299822982['args']["cartItemId"] = json_encode($this->transport->object_unset_nulls($cartItemId));
+	     $gs_data_input2939299822982['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
+	     $gs_data_input2939299822982["method"] = "changeProductOnCartItem";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* This will create a order for a given userId.
+	* To avoid fraud, shipment address and etc will only be
+	* able to set to the already registered user in the database.
+	*
+	* @param userId
+	* @return void 
+	*/
+
+	public function chargeOrder($order, $tokenId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["order"] = json_encode($this->transport->object_unset_nulls($order));
+	     $gs_data_input2939299822982['args']["tokenId"] = json_encode($this->transport->object_unset_nulls($tokenId));
+	     $gs_data_input2939299822982["method"] = "chargeOrder";
 	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
@@ -10195,6 +11630,117 @@ class APIOrderManager {
 	     $gs_data_input2939299822982['args'] = array();
 	     $gs_data_input2939299822982['args']["internalPassword"] = json_encode($this->transport->object_unset_nulls($internalPassword));
 	     $gs_data_input2939299822982["method"] = "checkForOrdersToCapture";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* This function is not in use anywhere so it can be deleted at any time.
+	*
+	* just a function that fixes a problem that we had by resetting orders
+	* that has not been fully completed.
+	*
+	* @param password
+	* @return void 
+	*/
+
+	public function checkGroupInvoicing($password) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
+	     $gs_data_input2939299822982["method"] = "checkGroupInvoicing";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* This will create a order for a given userId.
+	* To avoid fraud, shipment address and etc will only be
+	* able to set to the already registered user in the database.
+	*
+	* @param userId
+	* @return void 
+	*/
+
+	public function clearMessages() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "clearMessages";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* This function is not in use anywhere so it can be deleted at any time.
+	*
+	* just a function that fixes a problem that we had by resetting orders
+	* that has not been fully completed.
+	*
+	* @param password
+	* @return void 
+	*/
+
+	public function closeBankAccount($endDate) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["endDate"] = json_encode($this->transport->object_unset_nulls($endDate));
+	     $gs_data_input2939299822982["method"] = "closeBankAccount";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Returns the total amount of sales for a given year. If you year is left blank you
+	* will get the total amount for all years.
+	*
+	* @param year
+	* @return void 
+	*/
+
+	public function closeOrder($orderId, $reason) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
+	     $gs_data_input2939299822982['args']["reason"] = json_encode($this->transport->object_unset_nulls($reason));
+	     $gs_data_input2939299822982["method"] = "closeOrder";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Returns the total amount of sales for a given year. If you year is left blank you
+	* will get the total amount for all years.
+	*
+	* @param year
+	* @return void 
+	*/
+
+	public function closeTransactionPeriode($closeDate) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["closeDate"] = json_encode($this->transport->object_unset_nulls($closeDate));
+	     $gs_data_input2939299822982["method"] = "closeTransactionPeriode";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* This function is not in use anywhere so it can be deleted at any time.
+	*
+	* just a function that fixes a problem that we had by resetting orders
+	* that has not been fully completed.
+	*
+	* @param password
+	* @return void 
+	*/
+
+	public function createNewDoubleTransferFile($paymentId, $from, $to) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["paymentId"] = json_encode($this->transport->object_unset_nulls($paymentId));
+	     $gs_data_input2939299822982['args']["from"] = json_encode($this->transport->object_unset_nulls($from));
+	     $gs_data_input2939299822982['args']["to"] = json_encode($this->transport->object_unset_nulls($to));
+	     $gs_data_input2939299822982["method"] = "createNewDoubleTransferFile";
 	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
@@ -10301,6 +11847,23 @@ class APIOrderManager {
 	}
 
 	/**
+	* Will filter out all the orderids that has a correcsponding
+	* paid creditnote.
+	*
+	* @param orderIds
+	* @return void 
+	*/
+
+	public function deleteFreePost($id) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
+	     $gs_data_input2939299822982["method"] = "deleteFreePost";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
 	* Returns the total amount of sales for a given year. If you year is left blank you
 	* will get the total amount for all years.
 	*
@@ -10313,6 +11876,42 @@ class APIOrderManager {
 	     $gs_data_input2939299822982['args'] = array();
 	     $gs_data_input2939299822982['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
 	     $gs_data_input2939299822982["method"] = "deleteOrder";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Will filter out all the orderids that has a correcsponding
+	* paid creditnote.
+	*
+	* @param orderIds
+	* @return String[] 
+	*/
+
+	public function filterOrdersIsCredittedAndPaidFor($orderIds) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["orderIds"] = json_encode($this->transport->object_unset_nulls($orderIds));
+	     $gs_data_input2939299822982["method"] = "filterOrdersIsCredittedAndPaidFor";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Will filter out all the orderids that has a correcsponding
+	* paid creditnote.
+	*
+	* @param orderIds
+	* @return void 
+	*/
+
+	public function forceChangeOverrideAccountingDate($password, $orderId, $overrideDate) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
+	     $gs_data_input2939299822982['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
+	     $gs_data_input2939299822982['args']["overrideDate"] = json_encode($this->transport->object_unset_nulls($overrideDate));
+	     $gs_data_input2939299822982["method"] = "forceChangeOverrideAccountingDate";
 	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
@@ -10332,6 +11931,80 @@ class APIOrderManager {
 	     $gs_data_input2939299822982['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
 	     $gs_data_input2939299822982['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
 	     $gs_data_input2939299822982["method"] = "forceDeleteOrder";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* This will create a order for a given userId.
+	* To avoid fraud, shipment address and etc will only be
+	* able to set to the already registered user in the database.
+	*
+	* @param userId
+	* @return void 
+	*/
+
+	public function forceSetNewPaymentDate($orderId, $date, $password) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
+	     $gs_data_input2939299822982['args']["date"] = json_encode($this->transport->object_unset_nulls($date));
+	     $gs_data_input2939299822982['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
+	     $gs_data_input2939299822982["method"] = "forceSetNewPaymentDate";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Will filter out all the orderids that has a correcsponding
+	* paid creditnote.
+	*
+	* @param orderIds
+	* @return core_ordermanager_data_AccountingFreePost 
+	*/
+
+	public function getAccountFreePost($id) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
+	     $gs_data_input2939299822982["method"] = "getAccountFreePost";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->cast(new core_ordermanager_data_AccountingFreePost(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	* Will filter out all the orderids that has a correcsponding
+	* paid creditnote.
+	*
+	* @param orderIds
+	* @return core_pdf_data_AccountingDetails 
+	*/
+
+	public function getAccountingDetails() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "getAccountingDetails";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->cast(new core_pdf_data_AccountingDetails(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	* This function is not in use anywhere so it can be deleted at any time.
+	*
+	* just a function that fixes a problem that we had by resetting orders
+	* that has not been fully completed.
+	*
+	* @param password
+	* @return core_getshopaccounting_DoublePostAccountingTransfer[] 
+	*/
+
+	public function getAllDoublePostTransferFiles($paymentId, $from, $to) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["paymentId"] = json_encode($this->transport->object_unset_nulls($paymentId));
+	     $gs_data_input2939299822982['args']["from"] = json_encode($this->transport->object_unset_nulls($from));
+	     $gs_data_input2939299822982['args']["to"] = json_encode($this->transport->object_unset_nulls($to));
+	     $gs_data_input2939299822982["method"] = "getAllDoublePostTransferFiles";
 	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
@@ -10369,6 +12042,26 @@ class APIOrderManager {
 	}
 
 	/**
+	* This function is not in use anywhere so it can be deleted at any time.
+	*
+	* just a function that fixes a problem that we had by resetting orders
+	* that has not been fully completed.
+	*
+	* @param password
+	* @return core_ordermanager_data_OrderTransactionDTO[] 
+	*/
+
+	public function getAllTransactionsForInvoices($start, $end) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["start"] = json_encode($this->transport->object_unset_nulls($start));
+	     $gs_data_input2939299822982['args']["end"] = json_encode($this->transport->object_unset_nulls($end));
+	     $gs_data_input2939299822982["method"] = "getAllTransactionsForInvoices";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
 	* Returns the total amount of sales for a given year. If you year is left blank you
 	* will get the total amount for all years.
 	*
@@ -10397,6 +12090,199 @@ class APIOrderManager {
 	     $gs_data_input2939299822982 = array();
 	     $gs_data_input2939299822982['args'] = array();
 	     $gs_data_input2939299822982["method"] = "getAllUnpaidInvoices";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Will filter out all the orderids that has a correcsponding
+	* paid creditnote.
+	*
+	* @param orderIds
+	* @return core_getshopaccounting_AccountingBalance 
+	*/
+
+	public function getBalance($date, $paymentId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["date"] = json_encode($this->transport->object_unset_nulls($date));
+	     $gs_data_input2939299822982['args']["paymentId"] = json_encode($this->transport->object_unset_nulls($paymentId));
+	     $gs_data_input2939299822982["method"] = "getBalance";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->cast(new core_getshopaccounting_AccountingBalance(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	* Returns the total amount of sales for a given year. If you year is left blank you
+	* will get the total amount for all years.
+	*
+	* @param year
+	* @return core_ordermanager_data_OrderTransaction[] 
+	*/
+
+	public function getBankOrderTransactions() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "getBankOrderTransactions";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* This will create a order for a given userId.
+	* To avoid fraud, shipment address and etc will only be
+	* able to set to the already registered user in the database.
+	*
+	* @param userId
+	* @return String 
+	*/
+
+	public function getCurrentPaymentOrderId() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "getCurrentPaymentOrderId";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Returns the total amount of sales for a given year. If you year is left blank you
+	* will get the total amount for all years.
+	*
+	* @param year
+	* @return core_getshopaccounting_DayEntry[] 
+	*/
+
+	public function getDayEntriesForOrder($orderId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
+	     $gs_data_input2939299822982["method"] = "getDayEntriesForOrder";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Returns the total amount of sales for a given year. If you year is left blank you
+	* will get the total amount for all years.
+	*
+	* @param year
+	* @return core_getshopaccounting_DayIncome[] 
+	*/
+
+	public function getDayIncomes($start, $end) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["start"] = json_encode($this->transport->object_unset_nulls($start));
+	     $gs_data_input2939299822982['args']["end"] = json_encode($this->transport->object_unset_nulls($end));
+	     $gs_data_input2939299822982["method"] = "getDayIncomes";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Returns the total amount of sales for a given year. If you year is left blank you
+	* will get the total amount for all years.
+	*
+	* @param year
+	* @return core_getshopaccounting_DayIncome[] 
+	*/
+
+	public function getDayIncomesWithMetaData($start, $end) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["start"] = json_encode($this->transport->object_unset_nulls($start));
+	     $gs_data_input2939299822982['args']["end"] = json_encode($this->transport->object_unset_nulls($end));
+	     $gs_data_input2939299822982["method"] = "getDayIncomesWithMetaData";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Will filter out all the orderids that has a correcsponding
+	* paid creditnote.
+	*
+	* @param orderIds
+	* @return core_getshopaccounting_DiffReport[] 
+	*/
+
+	public function getDiffReport($start, $end, $incTaxes) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["start"] = json_encode($this->transport->object_unset_nulls($start));
+	     $gs_data_input2939299822982['args']["end"] = json_encode($this->transport->object_unset_nulls($end));
+	     $gs_data_input2939299822982['args']["incTaxes"] = json_encode($this->transport->object_unset_nulls($incTaxes));
+	     $gs_data_input2939299822982["method"] = "getDiffReport";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* This function is not in use anywhere so it can be deleted at any time.
+	*
+	* just a function that fixes a problem that we had by resetting orders
+	* that has not been fully completed.
+	*
+	* @param password
+	* @return core_getshopaccounting_DoublePostAccountingTransfer 
+	*/
+
+	public function getDoublePostAccountingTransfer($id) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
+	     $gs_data_input2939299822982["method"] = "getDoublePostAccountingTransfer";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->cast(new core_getshopaccounting_DoublePostAccountingTransfer(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	* Will filter out all the orderids that has a correcsponding
+	* paid creditnote.
+	*
+	* @param orderIds
+	* @return core_getshopaccounting_DayIncome[] 
+	*/
+
+	public function getDoublePostingDayIncomes($paymentId, $start, $end) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["paymentId"] = json_encode($this->transport->object_unset_nulls($paymentId));
+	     $gs_data_input2939299822982['args']["start"] = json_encode($this->transport->object_unset_nulls($start));
+	     $gs_data_input2939299822982['args']["end"] = json_encode($this->transport->object_unset_nulls($end));
+	     $gs_data_input2939299822982["method"] = "getDoublePostingDayIncomes";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Returns the total amount of sales for a given year. If you year is left blank you
+	* will get the total amount for all years.
+	*
+	* @param year
+	* @return String 
+	*/
+
+	public function getEhfXml($orderId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
+	     $gs_data_input2939299822982["method"] = "getEhfXml";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* @param id
+	* @throws ErrorException
+	* @return Long 
+	*/
+
+	public function getIncrementalOrderIdByOrderId($orderId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
+	     $gs_data_input2939299822982["method"] = "getIncrementalOrderIdByOrderId";
 	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
@@ -10513,6 +12399,40 @@ class APIOrderManager {
 	     $gs_data_input2939299822982["method"] = "getOrderByincrementOrderIdAndPassword";
 	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
 	     return $this->transport->cast(new core_ordermanager_data_Order(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	* Fetch a single order based on its id.
+	* @param orderId
+	* @throws ErrorException
+	* @return core_ordermanager_data_OrderLight 
+	*/
+
+	public function getOrderLight($orderId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
+	     $gs_data_input2939299822982["method"] = "getOrderLight";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->cast(new core_ordermanager_data_OrderLight(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	* This function is not in use anywhere so it can be deleted at any time.
+	*
+	* just a function that fixes a problem that we had by resetting orders
+	* that has not been fully completed.
+	*
+	* @param password
+	* @return core_ordermanager_data_OrderManagerSettings 
+	*/
+
+	public function getOrderManagerSettings() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "getOrderManagerSettings";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->cast(new core_ordermanager_data_OrderManagerSettings(), $this->transport->sendMessage($gs_data_input2939299822982));
 	}
 
 	/**
@@ -10675,6 +12595,46 @@ class APIOrderManager {
 	}
 
 	/**
+	* This function is not in use anywhere so it can be deleted at any time.
+	*
+	* just a function that fixes a problem that we had by resetting orders
+	* that has not been fully completed.
+	*
+	* @param password
+	* @return core_getshopaccounting_OrderUnsettledAmountForAccount[] 
+	*/
+
+	public function getOrdersUnsettledAmount($accountNumber, $date, $paymentId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["accountNumber"] = json_encode($this->transport->object_unset_nulls($accountNumber));
+	     $gs_data_input2939299822982['args']["date"] = json_encode($this->transport->object_unset_nulls($date));
+	     $gs_data_input2939299822982['args']["paymentId"] = json_encode($this->transport->object_unset_nulls($paymentId));
+	     $gs_data_input2939299822982["method"] = "getOrdersUnsettledAmount";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* This function is not in use anywhere so it can be deleted at any time.
+	*
+	* just a function that fixes a problem that we had by resetting orders
+	* that has not been fully completed.
+	*
+	* @param password
+	* @return core_ordermanager_data_Order[] 
+	*/
+
+	public function getOverdueInvoices($filterData) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["filterData"] = json_encode($this->transport->object_unset_nulls($filterData));
+	     $gs_data_input2939299822982["method"] = "getOverdueInvoices";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
 	* Returns how many pages there is for this store with the given pagesize
 	* @return int 
 	*/
@@ -10702,6 +12662,47 @@ class APIOrderManager {
 	     $gs_data_input2939299822982 = array();
 	     $gs_data_input2939299822982['args'] = array();
 	     $gs_data_input2939299822982["method"] = "getPaymentMethodsThatHasOrders";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* This function is not in use anywhere so it can be deleted at any time.
+	*
+	* just a function that fixes a problem that we had by resetting orders
+	* that has not been fully completed.
+	*
+	* @param password
+	* @return core_getshopaccounting_DayIncome[] 
+	*/
+
+	public function getPaymentRecords($paymentId, $from, $to) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["paymentId"] = json_encode($this->transport->object_unset_nulls($paymentId));
+	     $gs_data_input2939299822982['args']["from"] = json_encode($this->transport->object_unset_nulls($from));
+	     $gs_data_input2939299822982['args']["to"] = json_encode($this->transport->object_unset_nulls($to));
+	     $gs_data_input2939299822982["method"] = "getPaymentRecords";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* This function is not in use anywhere so it can be deleted at any time.
+	*
+	* just a function that fixes a problem that we had by resetting orders
+	* that has not been fully completed.
+	*
+	* @param password
+	* @return core_ordermanager_data_PmiResult[] 
+	*/
+
+	public function getPmiResult($start, $end) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["start"] = json_encode($this->transport->object_unset_nulls($start));
+	     $gs_data_input2939299822982['args']["end"] = json_encode($this->transport->object_unset_nulls($end));
+	     $gs_data_input2939299822982["method"] = "getPmiResult";
 	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
@@ -10793,6 +12794,40 @@ class APIOrderManager {
 	}
 
 	/**
+	* Returns the total amount of sales for a given year. If you year is left blank you
+	* will get the total amount for all years.
+	*
+	* @param year
+	* @return public abstract class com_thundashop_core_ordermanager_data_PaymentTerminalInformation 
+	*/
+
+	public function getTerminalInformation($orderId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
+	     $gs_data_input2939299822982["method"] = "getTerminalInformation";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->cast(new core_ordermanager_data_PaymentTerminalInformation(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	* This will create a order for a given userId.
+	* To avoid fraud, shipment address and etc will only be
+	* able to set to the already registered user in the database.
+	*
+	* @param userId
+	* @return String[] 
+	*/
+
+	public function getTerminalMessages() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "getTerminalMessages";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
 	* Calculate the total amount to pay for the order.
 	*
 	* @param order
@@ -10842,6 +12877,61 @@ class APIOrderManager {
 	}
 
 	/**
+	* Will filter out all the orderids that has a correcsponding
+	* paid creditnote.
+	*
+	* @param orderIds
+	* @return Double 
+	*/
+
+	public function getTotalForOrderInLocalCurrencyById($orderId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
+	     $gs_data_input2939299822982["method"] = "getTotalForOrderInLocalCurrencyById";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* This function is not in use anywhere so it can be deleted at any time.
+	*
+	* just a function that fixes a problem that we had by resetting orders
+	* that has not been fully completed.
+	*
+	* @param password
+	* @return Double 
+	*/
+
+	public function getTotalOutstandingInvoices($filterData) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["filterData"] = json_encode($this->transport->object_unset_nulls($filterData));
+	     $gs_data_input2939299822982["method"] = "getTotalOutstandingInvoices";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* This function is not in use anywhere so it can be deleted at any time.
+	*
+	* just a function that fixes a problem that we had by resetting orders
+	* that has not been fully completed.
+	*
+	* @param password
+	* @return Double 
+	*/
+
+	public function getTotalOutstandingInvoicesOverdue($filterData) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["filterData"] = json_encode($this->transport->object_unset_nulls($filterData));
+	     $gs_data_input2939299822982["method"] = "getTotalOutstandingInvoicesOverdue";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
 	* Returns the total amount of sales for a given year. If you year is left blank you
 	* will get the total amount for all years.
 	*
@@ -10878,6 +12968,88 @@ class APIOrderManager {
 	     $gs_data_input2939299822982["method"] = "getUserPrefferedPaymentMethod";
 	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
 	     return $this->transport->cast(new core_ordermanager_data_Payment(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	* Got a reference number for the order, fetch it from here.
+	* @param referenceId
+	* @throws ErrorException
+	* @return boolean 
+	*/
+
+	public function hasNoOrders() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "hasNoOrders";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Returns the total amount of sales for a given year. If you year is left blank you
+	* will get the total amount for all years.
+	*
+	* @param year
+	* @return boolean 
+	*/
+
+	public function isBankAccountClosed($date) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["date"] = json_encode($this->transport->object_unset_nulls($date));
+	     $gs_data_input2939299822982["method"] = "isBankAccountClosed";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Returns the total amount of sales for a given year. If you year is left blank you
+	* will get the total amount for all years.
+	*
+	* @param year
+	* @return String[] 
+	*/
+
+	public function isConfiguredForEhf() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "isConfiguredForEhf";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Returns the total amount of sales for a given year. If you year is left blank you
+	* will get the total amount for all years.
+	*
+	* @param year
+	* @return boolean 
+	*/
+
+	public function isLocked($date) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["date"] = json_encode($this->transport->object_unset_nulls($date));
+	     $gs_data_input2939299822982["method"] = "isLocked";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* This will create a order for a given userId.
+	* To avoid fraud, shipment address and etc will only be
+	* able to set to the already registered user in the database.
+	*
+	* @param userId
+	* @return Boolean 
+	*/
+
+	public function isPaymentInProgress() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "isPaymentInProgress";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
 
 	/**
@@ -10955,6 +13127,23 @@ class APIOrderManager {
 	* will get the total amount for all years.
 	*
 	* @param year
+	* @return void 
+	*/
+
+	public function markOrderAsBillabe($orderId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
+	     $gs_data_input2939299822982["method"] = "markOrderAsBillabe";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Returns the total amount of sales for a given year. If you year is left blank you
+	* will get the total amount for all years.
+	*
+	* @param year
 	* @return core_ordermanager_data_Order 
 	*/
 
@@ -10968,6 +13157,25 @@ class APIOrderManager {
 	     $gs_data_input2939299822982["method"] = "mergeAndCreateNewOrder";
 	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
 	     return $this->transport->cast(new core_ordermanager_data_Order(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	* This function is not in use anywhere so it can be deleted at any time.
+	*
+	* just a function that fixes a problem that we had by resetting orders
+	* that has not been fully completed.
+	*
+	* @param password
+	* @return boolean 
+	*/
+
+	public function orderIsCredittedAndPaidFor($orderId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
+	     $gs_data_input2939299822982["method"] = "orderIsCredittedAndPaidFor";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
 
 	/**
@@ -10988,6 +13196,44 @@ class APIOrderManager {
 	}
 
 	/**
+	* This will create a order for a given userId.
+	* To avoid fraud, shipment address and etc will only be
+	* able to set to the already registered user in the database.
+	*
+	* @param userId
+	* @return void 
+	*/
+
+	public function paymentResponse($tokenId, $response) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["tokenId"] = json_encode($this->transport->object_unset_nulls($tokenId));
+	     $gs_data_input2939299822982['args']["response"] = json_encode($this->transport->object_unset_nulls($response));
+	     $gs_data_input2939299822982["method"] = "paymentResponse";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* This will create a order for a given userId.
+	* To avoid fraud, shipment address and etc will only be
+	* able to set to the already registered user in the database.
+	*
+	* @param userId
+	* @return void 
+	*/
+
+	public function paymentText($tokenId, $text) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["tokenId"] = json_encode($this->transport->object_unset_nulls($tokenId));
+	     $gs_data_input2939299822982['args']["text"] = json_encode($this->transport->object_unset_nulls($text));
+	     $gs_data_input2939299822982["method"] = "paymentText";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
 	* Returns the total amount of sales for a given year. If you year is left blank you
 	* will get the total amount for all years.
 	*
@@ -11003,6 +13249,77 @@ class APIOrderManager {
 	     $gs_data_input2939299822982["method"] = "printInvoice";
 	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* This will create a order for a given userId.
+	* To avoid fraud, shipment address and etc will only be
+	* able to set to the already registered user in the database.
+	*
+	* @param userId
+	* @return void 
+	*/
+
+	public function readdTaxGroupToNullItems($password) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
+	     $gs_data_input2939299822982["method"] = "readdTaxGroupToNullItems";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Returns the total amount of sales for a given year. If you year is left blank you
+	* will get the total amount for all years.
+	*
+	* @param year
+	* @return void 
+	*/
+
+	public function registerSentEhf($orderId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
+	     $gs_data_input2939299822982["method"] = "registerSentEhf";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Returns the total amount of sales for a given year. If you year is left blank you
+	* will get the total amount for all years.
+	*
+	* @param year
+	* @return void 
+	*/
+
+	public function resetLastMonthClose($password, $start, $end) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
+	     $gs_data_input2939299822982['args']["start"] = json_encode($this->transport->object_unset_nulls($start));
+	     $gs_data_input2939299822982['args']["end"] = json_encode($this->transport->object_unset_nulls($end));
+	     $gs_data_input2939299822982["method"] = "resetLastMonthClose";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Will filter out all the orderids that has a correcsponding
+	* paid creditnote.
+	*
+	* @param orderIds
+	* @return core_ordermanager_data_AccountingFreePost 
+	*/
+
+	public function saveFreePost($freePost) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["freePost"] = json_encode($this->transport->object_unset_nulls($freePost));
+	     $gs_data_input2939299822982["method"] = "saveFreePost";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->cast(new core_ordermanager_data_AccountingFreePost(), $this->transport->sendMessage($gs_data_input2939299822982));
 	}
 
 	/**
@@ -11094,6 +13411,26 @@ class APIOrderManager {
 	}
 
 	/**
+	* This function is not in use anywhere so it can be deleted at any time.
+	*
+	* just a function that fixes a problem that we had by resetting orders
+	* that has not been fully completed.
+	*
+	* @param password
+	* @return void 
+	*/
+
+	public function setNewStartIncrementalOrderId($incrementalOrderId, $password) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["incrementalOrderId"] = json_encode($this->transport->object_unset_nulls($incrementalOrderId));
+	     $gs_data_input2939299822982['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
+	     $gs_data_input2939299822982["method"] = "setNewStartIncrementalOrderId";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
 	* If everything is ok, the price is the same as the order and the currency, then update the status.
 	* @param password A predefined password needed to update the status.
 	* @param orderId The id of the order to update
@@ -11129,6 +13466,26 @@ class APIOrderManager {
 	     $gs_data_input2939299822982['args'] = array();
 	     $gs_data_input2939299822982['args']["internalPassword"] = json_encode($this->transport->object_unset_nulls($internalPassword));
 	     $gs_data_input2939299822982["method"] = "startCheckForOrdersToCapture";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* This function is not in use anywhere so it can be deleted at any time.
+	*
+	* just a function that fixes a problem that we had by resetting orders
+	* that has not been fully completed.
+	*
+	* @param password
+	* @return void 
+	*/
+
+	public function updateCartItemOnOrder($orderId, $cartItem) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
+	     $gs_data_input2939299822982['args']["cartItem"] = json_encode($this->transport->object_unset_nulls($cartItem));
+	     $gs_data_input2939299822982["method"] = "updateCartItemOnOrder";
 	     $gs_data_input2939299822982["interfaceName"] = "core.ordermanager.IOrderManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
@@ -11779,6 +14136,22 @@ class APIPageManager {
 	* Remove all content on all page areas for this page.
 	* @param pageId
 	* @throws ErrorException
+	* @return boolean 
+	*/
+
+	public function hasAccessToModule($moduleName) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["moduleName"] = json_encode($this->transport->object_unset_nulls($moduleName));
+	     $gs_data_input2939299822982["method"] = "hasAccessToModule";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pagemanager.IPageManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Remove all content on all page areas for this page.
+	* @param pageId
+	* @throws ErrorException
 	* @return void 
 	*/
 
@@ -12420,6 +14793,204 @@ class APIPaymentTerminalManager {
 	}
 
 }
+class APIPgaManager {
+
+	var $transport;
+	
+	function APIPgaManager($transport) {
+		$this->transport = $transport;
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_pga_PgaResult 
+	*/
+
+	public function buyExtraCleaning($gs_multilevel_name, $date) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["date"] = json_encode($this->transport->object_unset_nulls($date));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "buyExtraCleaning";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pga.IPgaManager";
+	     return $this->transport->cast(new core_pga_PgaResult(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_pga_PgaResult 
+	*/
+
+	public function buyLateCheckout($gs_multilevel_name) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "buyLateCheckout";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pga.IPgaManager";
+	     return $this->transport->cast(new core_pga_PgaResult(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_pga_PgaResult 
+	*/
+
+	public function changeCheckoutDate($gs_multilevel_name, $newDate) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["newDate"] = json_encode($this->transport->object_unset_nulls($newDate));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "changeCheckoutDate";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pga.IPgaManager";
+	     return $this->transport->cast(new core_pga_PgaResult(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return boolean 
+	*/
+
+	public function checkLogin($gs_multilevel_name, $token) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["token"] = json_encode($this->transport->object_unset_nulls($token));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "checkLogin";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pga.IPgaManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_pga_PgaRoom 
+	*/
+
+	public function getMyRoom($gs_multilevel_name) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "getMyRoom";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pga.IPgaManager";
+	     return $this->transport->cast(new core_pga_PgaRoom(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_pga_PgaSettings 
+	*/
+
+	public function getSettings($gs_multilevel_name) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "getSettings";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pga.IPgaManager";
+	     return $this->transport->cast(new core_pga_PgaSettings(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_cartmanager_data_Cart 
+	*/
+
+	public function getUnpaidCartItems($gs_multilevel_name) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "getUnpaidCartItems";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pga.IPgaManager";
+	     return $this->transport->cast(new core_cartmanager_data_Cart(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return boolean 
+	*/
+
+	public function isLoggedIn($gs_multilevel_name) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "isLoggedIn";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pga.IPgaManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return boolean 
+	*/
+
+	public function loginByItem($gs_multilevel_name, $bookingItemId, $pincode) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["bookingItemId"] = json_encode($this->transport->object_unset_nulls($bookingItemId));
+	     $gs_data_input2939299822982['args']["pincode"] = json_encode($this->transport->object_unset_nulls($pincode));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "loginByItem";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pga.IPgaManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function logout($gs_multilevel_name) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "logout";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pga.IPgaManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function saveSettings($gs_multilevel_name, $pgaSettings) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["pgaSettings"] = json_encode($this->transport->object_unset_nulls($pgaSettings));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "saveSettings";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pga.IPgaManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function sendPaymentLink($gs_multilevel_name, $email, $prefix, $phone) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["email"] = json_encode($this->transport->object_unset_nulls($email));
+	     $gs_data_input2939299822982['args']["prefix"] = json_encode($this->transport->object_unset_nulls($prefix));
+	     $gs_data_input2939299822982['args']["phone"] = json_encode($this->transport->object_unset_nulls($phone));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "sendPaymentLink";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pga.IPgaManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+}
 class APIPkkControlManager {
 
 	var $transport;
@@ -12509,6 +15080,25 @@ class APIPmsBookingProcess {
 	     $gs_data_input2939299822982["method"] = "addAddons";
 	     $gs_data_input2939299822982["interfaceName"] = "core.pmsbookingprocess.IPmsBookingProcess";
 	     return $this->transport->cast(new core_pmsbookingprocess_GuestAddonsSummary(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	* Booking process for property management system.<br>
+	* @return String 
+	*/
+
+	public function addBookingItemType($gs_multilevel_name, $bookingId, $type, $start, $end, $guestInfoFromRoom) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["bookingId"] = json_encode($this->transport->object_unset_nulls($bookingId));
+	     $gs_data_input2939299822982['args']["type"] = json_encode($this->transport->object_unset_nulls($type));
+	     $gs_data_input2939299822982['args']["start"] = json_encode($this->transport->object_unset_nulls($start));
+	     $gs_data_input2939299822982['args']["end"] = json_encode($this->transport->object_unset_nulls($end));
+	     $gs_data_input2939299822982['args']["guestInfoFromRoom"] = json_encode($this->transport->object_unset_nulls($guestInfoFromRoom));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "addBookingItemType";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsbookingprocess.IPmsBookingProcess";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
 
 	/**
@@ -12693,6 +15283,20 @@ class APIPmsBookingProcess {
 
 	/**
 	* Booking process for property management system.<br>
+	* @return boolean 
+	*/
+
+	public function hasPrintCodeSupportOnTerminal($gs_multilevel_name) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "hasPrintCodeSupportOnTerminal";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsbookingprocess.IPmsBookingProcess";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Booking process for property management system.<br>
 	* @return core_pmsbookingprocess_GuestAddonsSummary 
 	*/
 
@@ -12722,6 +15326,23 @@ class APIPmsBookingProcess {
 
 	/**
 	* Booking process for property management system.<br>
+	* @return boolean 
+	*/
+
+	public function printCodeOnTerminal($gs_multilevel_name, $roomId, $phoneNumber, $terminalId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["roomId"] = json_encode($this->transport->object_unset_nulls($roomId));
+	     $gs_data_input2939299822982['args']["phoneNumber"] = json_encode($this->transport->object_unset_nulls($phoneNumber));
+	     $gs_data_input2939299822982['args']["terminalId"] = json_encode($this->transport->object_unset_nulls($terminalId));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "printCodeOnTerminal";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsbookingprocess.IPmsBookingProcess";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Booking process for property management system.<br>
 	* @return void 
 	*/
 
@@ -12731,6 +15352,22 @@ class APIPmsBookingProcess {
 	     $gs_data_input2939299822982['args']["data"] = json_encode($this->transport->object_unset_nulls($data));
 	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
 	     $gs_data_input2939299822982["method"] = "printReciept";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsbookingprocess.IPmsBookingProcess";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Booking process for property management system.<br>
+	* @return void 
+	*/
+
+	public function quickChangeGuestCountForRoom($gs_multilevel_name, $roomId, $guestCount) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["roomId"] = json_encode($this->transport->object_unset_nulls($roomId));
+	     $gs_data_input2939299822982['args']["guestCount"] = json_encode($this->transport->object_unset_nulls($guestCount));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "quickChangeGuestCountForRoom";
 	     $gs_data_input2939299822982["interfaceName"] = "core.pmsbookingprocess.IPmsBookingProcess";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
@@ -12857,6 +15494,484 @@ class APIPmsBookingProcess {
 	}
 
 }
+class APIPmsConferenceManager {
+
+	var $transport;
+	
+	function APIPmsConferenceManager($transport) {
+		$this->transport = $transport;
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return void 
+	*/
+
+	public function addGuestToEvent($guestId, $eventId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["guestId"] = json_encode($this->transport->object_unset_nulls($guestId));
+	     $gs_data_input2939299822982['args']["eventId"] = json_encode($this->transport->object_unset_nulls($eventId));
+	     $gs_data_input2939299822982["method"] = "addGuestToEvent";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsConferenceManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return void 
+	*/
+
+	public function deleteConference($conferenceId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["conferenceId"] = json_encode($this->transport->object_unset_nulls($conferenceId));
+	     $gs_data_input2939299822982["method"] = "deleteConference";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsConferenceManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return void 
+	*/
+
+	public function deleteConferenceEvent($id) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
+	     $gs_data_input2939299822982["method"] = "deleteConferenceEvent";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsConferenceManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return void 
+	*/
+
+	public function deleteEventEntry($eventEntryId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["eventEntryId"] = json_encode($this->transport->object_unset_nulls($eventEntryId));
+	     $gs_data_input2939299822982["method"] = "deleteEventEntry";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsConferenceManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return void 
+	*/
+
+	public function deleteItem($itemId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["itemId"] = json_encode($this->transport->object_unset_nulls($itemId));
+	     $gs_data_input2939299822982["method"] = "deleteItem";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsConferenceManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return core_pmsmanager_PmsConference[] 
+	*/
+
+	public function getAllConferences($filter) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["filter"] = json_encode($this->transport->object_unset_nulls($filter));
+	     $gs_data_input2939299822982["method"] = "getAllConferences";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsConferenceManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return core_pmsmanager_PmsConferenceGuests[] 
+	*/
+
+	public function getAllGuestsForEvent($eventId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["eventId"] = json_encode($this->transport->object_unset_nulls($eventId));
+	     $gs_data_input2939299822982["method"] = "getAllGuestsForEvent";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsConferenceManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return core_pmsmanager_PmsConferenceItem[] 
+	*/
+
+	public function getAllItem($toItem) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["toItem"] = json_encode($this->transport->object_unset_nulls($toItem));
+	     $gs_data_input2939299822982["method"] = "getAllItem";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsConferenceManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return core_pmsmanager_PmsConference 
+	*/
+
+	public function getConference($conferenceId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["conferenceId"] = json_encode($this->transport->object_unset_nulls($conferenceId));
+	     $gs_data_input2939299822982["method"] = "getConference";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsConferenceManager";
+	     return $this->transport->cast(new core_pmsmanager_PmsConference(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return core_pmsmanager_PmsConferenceEvent 
+	*/
+
+	public function getConferenceEvent($eventId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["eventId"] = json_encode($this->transport->object_unset_nulls($eventId));
+	     $gs_data_input2939299822982["method"] = "getConferenceEvent";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsConferenceManager";
+	     return $this->transport->cast(new core_pmsmanager_PmsConferenceEvent(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return core_pmsmanager_PmsConferenceEvent[] 
+	*/
+
+	public function getConferenceEvents($confernceId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["confernceId"] = json_encode($this->transport->object_unset_nulls($confernceId));
+	     $gs_data_input2939299822982["method"] = "getConferenceEvents";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsConferenceManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return core_pmsmanager_PmsConferenceEvent[] 
+	*/
+
+	public function getConferenceEventsBetweenTime($start, $end) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["start"] = json_encode($this->transport->object_unset_nulls($start));
+	     $gs_data_input2939299822982['args']["end"] = json_encode($this->transport->object_unset_nulls($end));
+	     $gs_data_input2939299822982["method"] = "getConferenceEventsBetweenTime";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsConferenceManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return core_pmsmanager_PmsConferenceEvent[] 
+	*/
+
+	public function getConferenceEventsByFilter($filter) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["filter"] = json_encode($this->transport->object_unset_nulls($filter));
+	     $gs_data_input2939299822982["method"] = "getConferenceEventsByFilter";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsConferenceManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return core_pmsmanager_PmsConferenceEventEntry[] 
+	*/
+
+	public function getEventEntries($eventId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["eventId"] = json_encode($this->transport->object_unset_nulls($eventId));
+	     $gs_data_input2939299822982["method"] = "getEventEntries";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsConferenceManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return core_pmsmanager_PmsConferenceEventEntry[] 
+	*/
+
+	public function getEventEntriesByFilter($filter) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["filter"] = json_encode($this->transport->object_unset_nulls($filter));
+	     $gs_data_input2939299822982["method"] = "getEventEntriesByFilter";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsConferenceManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return core_pmsmanager_PmsConferenceEventEntry 
+	*/
+
+	public function getEventEntry($eventEntryId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["eventEntryId"] = json_encode($this->transport->object_unset_nulls($eventEntryId));
+	     $gs_data_input2939299822982["method"] = "getEventEntry";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsConferenceManager";
+	     return $this->transport->cast(new core_pmsmanager_PmsConferenceEventEntry(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return core_pmsmanager_PmsConferenceItem 
+	*/
+
+	public function getItem($id) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
+	     $gs_data_input2939299822982["method"] = "getItem";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsConferenceManager";
+	     return $this->transport->cast(new core_pmsmanager_PmsConferenceItem(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return void 
+	*/
+
+	public function removeGuestFromEvent($guestId, $eventId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["guestId"] = json_encode($this->transport->object_unset_nulls($guestId));
+	     $gs_data_input2939299822982['args']["eventId"] = json_encode($this->transport->object_unset_nulls($eventId));
+	     $gs_data_input2939299822982["method"] = "removeGuestFromEvent";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsConferenceManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return core_pmsmanager_PmsConference 
+	*/
+
+	public function saveConference($conference) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["conference"] = json_encode($this->transport->object_unset_nulls($conference));
+	     $gs_data_input2939299822982["method"] = "saveConference";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsConferenceManager";
+	     return $this->transport->cast(new core_pmsmanager_PmsConference(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return boolean 
+	*/
+
+	public function saveConferenceEvent($event) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["event"] = json_encode($this->transport->object_unset_nulls($event));
+	     $gs_data_input2939299822982["method"] = "saveConferenceEvent";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsConferenceManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return void 
+	*/
+
+	public function saveEventEntry($entry) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["entry"] = json_encode($this->transport->object_unset_nulls($entry));
+	     $gs_data_input2939299822982["method"] = "saveEventEntry";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsConferenceManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return core_pmsmanager_PmsConferenceItem 
+	*/
+
+	public function saveItem($item) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["item"] = json_encode($this->transport->object_unset_nulls($item));
+	     $gs_data_input2939299822982["method"] = "saveItem";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsConferenceManager";
+	     return $this->transport->cast(new core_pmsmanager_PmsConferenceItem(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+}
+class APIPmsCoverageAndIncomeReportManager {
+
+	var $transport;
+	
+	function APIPmsCoverageAndIncomeReportManager($transport) {
+		$this->transport = $transport;
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return void 
+	*/
+
+	public function deleteSegment($gs_multilevel_name, $segmentId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["segmentId"] = json_encode($this->transport->object_unset_nulls($segmentId));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "deleteSegment";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsCoverageAndIncomeReportManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return core_pmsmanager_PmsSegment 
+	*/
+
+	public function getSegment($gs_multilevel_name, $segmentId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["segmentId"] = json_encode($this->transport->object_unset_nulls($segmentId));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "getSegment";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsCoverageAndIncomeReportManager";
+	     return $this->transport->cast(new core_pmsmanager_PmsSegment(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return core_pmsmanager_PmsSegment 
+	*/
+
+	public function getSegmentForBooking($gs_multilevel_name, $bookingId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["bookingId"] = json_encode($this->transport->object_unset_nulls($bookingId));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "getSegmentForBooking";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsCoverageAndIncomeReportManager";
+	     return $this->transport->cast(new core_pmsmanager_PmsSegment(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return core_pmsmanager_PmsSegment 
+	*/
+
+	public function getSegmentForRoom($gs_multilevel_name, $roomId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["roomId"] = json_encode($this->transport->object_unset_nulls($roomId));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "getSegmentForRoom";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsCoverageAndIncomeReportManager";
+	     return $this->transport->cast(new core_pmsmanager_PmsSegment(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return core_pmsmanager_PmsSegment[] 
+	*/
+
+	public function getSegments($gs_multilevel_name) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "getSegments";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsCoverageAndIncomeReportManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return core_pmsmanager_IncomeReportResultData 
+	*/
+
+	public function getStatistics($gs_multilevel_name, $filter) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["filter"] = json_encode($this->transport->object_unset_nulls($filter));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "getStatistics";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsCoverageAndIncomeReportManager";
+	     return $this->transport->cast(new core_pmsmanager_IncomeReportResultData(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return void 
+	*/
+
+	public function recalculateSegments($gs_multilevel_name, $segmentId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["segmentId"] = json_encode($this->transport->object_unset_nulls($segmentId));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "recalculateSegments";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsCoverageAndIncomeReportManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return void 
+	*/
+
+	public function saveSegments($gs_multilevel_name, $segment) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["segment"] = json_encode($this->transport->object_unset_nulls($segment));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "saveSegments";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsCoverageAndIncomeReportManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+}
 class APIPmsEventManager {
 
 	var $transport;
@@ -12898,6 +16013,21 @@ class APIPmsEventManager {
 
 	/**
 	* Event calendar management.<br>
+	* @return void 
+	*/
+
+	public function deleteEvent($gs_multilevel_name, $id) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "deleteEvent";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmseventmanager.IPmsEventManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Event calendar management.<br>
 	* @return core_pmseventmanager_PmsBookingEventEntry 
 	*/
 
@@ -12926,6 +16056,21 @@ class APIPmsEventManager {
 	     $gs_data_input2939299822982["method"] = "getEntryShort";
 	     $gs_data_input2939299822982["interfaceName"] = "core.pmseventmanager.IPmsEventManager";
 	     return $this->transport->cast(new core_pmseventmanager_PmsBookingEventEntry(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	* Event calendar management.<br>
+	* @return core_pmseventmanager_PmsEvent 
+	*/
+
+	public function getEvent($gs_multilevel_name, $id) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "getEvent";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmseventmanager.IPmsEventManager";
+	     return $this->transport->cast(new core_pmseventmanager_PmsEvent(), $this->transport->sendMessage($gs_data_input2939299822982));
 	}
 
 	/**
@@ -12973,6 +16118,21 @@ class APIPmsEventManager {
 
 	/**
 	* Event calendar management.<br>
+	* @return core_pmseventmanager_PmsEvent[] 
+	*/
+
+	public function getEvents($gs_multilevel_name, $filter) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["filter"] = json_encode($this->transport->object_unset_nulls($filter));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "getEvents";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmseventmanager.IPmsEventManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Event calendar management.<br>
 	* @return boolean 
 	*/
 
@@ -13002,6 +16162,74 @@ class APIPmsEventManager {
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
 
+	/**
+	* Event calendar management.<br>
+	* @return void 
+	*/
+
+	public function saveEvent($gs_multilevel_name, $event) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["event"] = json_encode($this->transport->object_unset_nulls($event));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "saveEvent";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmseventmanager.IPmsEventManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+}
+class APIPmsGetShopOverView {
+
+	var $transport;
+	
+	function APIPmsGetShopOverView($transport) {
+		$this->transport = $transport;
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return core_pmsmanager_CustomerSetupObject 
+	*/
+
+	public function getCustomerObject($storeI) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["storeI"] = json_encode($this->transport->object_unset_nulls($storeI));
+	     $gs_data_input2939299822982["method"] = "getCustomerObject";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsGetShopOverView";
+	     return $this->transport->cast(new core_pmsmanager_CustomerSetupObject(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return core_pmsmanager_CustomerSetupObject[] 
+	*/
+
+	public function getCustomerToSetup() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "getCustomerToSetup";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsGetShopOverView";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return void 
+	*/
+
+	public function saveCustomerObject($object) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["object"] = json_encode($this->transport->object_unset_nulls($object));
+	     $gs_data_input2939299822982["method"] = "saveCustomerObject";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsGetShopOverView";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
 }
 class APIPmsInvoiceManager {
 
@@ -13009,6 +16237,22 @@ class APIPmsInvoiceManager {
 	
 	function APIPmsInvoiceManager($transport) {
 		$this->transport = $transport;
+	}
+
+	/**
+	* Pms invoice system.
+	* @return public class HashMap<K,V> 
+	*/
+
+	public function calculatePriceMatrix($gs_multilevel_name, $booking, $room) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["booking"] = json_encode($this->transport->object_unset_nulls($booking));
+	     $gs_data_input2939299822982['args']["room"] = json_encode($this->transport->object_unset_nulls($room));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "calculatePriceMatrix";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsInvoiceManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
 
 	/**
@@ -13032,13 +16276,14 @@ class APIPmsInvoiceManager {
 	* @return String[] 
 	*/
 
-	public function convertCartToOrders($gs_multilevel_name, $id, $address, $paymentId, $orderCreationType) {
+	public function convertCartToOrders($gs_multilevel_name, $id, $address, $paymentId, $orderCreationType, $overrideDate) {
 	     $gs_data_input2939299822982 = array();
 	     $gs_data_input2939299822982['args'] = array();
 	     $gs_data_input2939299822982['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
 	     $gs_data_input2939299822982['args']["address"] = json_encode($this->transport->object_unset_nulls($address));
 	     $gs_data_input2939299822982['args']["paymentId"] = json_encode($this->transport->object_unset_nulls($paymentId));
 	     $gs_data_input2939299822982['args']["orderCreationType"] = json_encode($this->transport->object_unset_nulls($orderCreationType));
+	     $gs_data_input2939299822982['args']["overrideDate"] = json_encode($this->transport->object_unset_nulls($overrideDate));
 	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
 	     $gs_data_input2939299822982["method"] = "convertCartToOrders";
 	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsInvoiceManager";
@@ -13142,6 +16387,21 @@ class APIPmsInvoiceManager {
 
 	/**
 	* Pms invoice system.
+	* @return void 
+	*/
+
+	public function deleteYieldPlan($gs_multilevel_name, $id) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "deleteYieldPlan";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsInvoiceManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Pms invoice system.
 	* @return core_ordermanager_data_Order[] 
 	*/
 
@@ -13167,6 +16427,50 @@ class APIPmsInvoiceManager {
 	     $gs_data_input2939299822982["method"] = "generateStatistics";
 	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsInvoiceManager";
 	     return $this->transport->cast(new core_pmsmanager_PmsOrderStatistics(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	* Pms invoice system.
+	* @return core_accountingmanager_AccountingSystemStatisticsResult 
+	*/
+
+	public function getAccountingStatistics($gs_multilevel_name, $filter) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["filter"] = json_encode($this->transport->object_unset_nulls($filter));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "getAccountingStatistics";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsInvoiceManager";
+	     return $this->transport->cast(new core_accountingmanager_AccountingSystemStatisticsResult(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	* Pms invoice system.
+	* @return core_pmsmanager_PmsAdvancePriceYield 
+	*/
+
+	public function getAdvancePriceYieldPlan($gs_multilevel_name, $id) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "getAdvancePriceYieldPlan";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsInvoiceManager";
+	     return $this->transport->cast(new core_pmsmanager_PmsAdvancePriceYield(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	* Pms invoice system.
+	* @return core_pmsmanager_PmsAdvancePriceYield[] 
+	*/
+
+	public function getAllAdvancePriceYields($gs_multilevel_name) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "getAllAdvancePriceYields";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsInvoiceManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
 
 	/**
@@ -13295,6 +16599,21 @@ class APIPmsInvoiceManager {
 	* @return Double 
 	*/
 
+	public function getTotalOrdersOnBooking($gs_multilevel_name, $bookingId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["bookingId"] = json_encode($this->transport->object_unset_nulls($bookingId));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "getTotalOrdersOnBooking";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsInvoiceManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Pms invoice system.
+	* @return Double 
+	*/
+
 	public function getTotalPaidOnRoomOrBooking($gs_multilevel_name, $pmsBookingRoomId) {
 	     $gs_data_input2939299822982 = array();
 	     $gs_data_input2939299822982['args'] = array();
@@ -13402,6 +16721,21 @@ class APIPmsInvoiceManager {
 	* @return void 
 	*/
 
+	public function saveAdvancePriceYield($gs_multilevel_name, $yieldPlan) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["yieldPlan"] = json_encode($this->transport->object_unset_nulls($yieldPlan));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "saveAdvancePriceYield";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsInvoiceManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Pms invoice system.
+	* @return void 
+	*/
+
 	public function saveDiscounts($gs_multilevel_name, $discounts) {
 	     $gs_data_input2939299822982 = array();
 	     $gs_data_input2939299822982['args'] = array();
@@ -13461,6 +16795,25 @@ class APIPmsInvoiceManager {
 
 	/**
 	* Pms invoice system.
+	* @return String 
+	*/
+
+	public function sendRecieptOrInvoiceWithMessage($gs_multilevel_name, $orderId, $email, $bookingId, $message, $subject) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
+	     $gs_data_input2939299822982['args']["email"] = json_encode($this->transport->object_unset_nulls($email));
+	     $gs_data_input2939299822982['args']["bookingId"] = json_encode($this->transport->object_unset_nulls($bookingId));
+	     $gs_data_input2939299822982['args']["message"] = json_encode($this->transport->object_unset_nulls($message));
+	     $gs_data_input2939299822982['args']["subject"] = json_encode($this->transport->object_unset_nulls($subject));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "sendRecieptOrInvoiceWithMessage";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsInvoiceManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Pms invoice system.
 	* @return boolean 
 	*/
 
@@ -13498,7 +16851,10 @@ class APIPmsManager {
 	}
 
 	/**
-	* Key = date / day
+	* Use -1 as count to make it depend on guest count addons (1 if not depends on guest count)
+	* @param productId
+	* @param pmsRoomId
+	* @param count
 	* @return void 
 	*/
 
@@ -13513,7 +16869,10 @@ class APIPmsManager {
 	}
 
 	/**
-	* Key = date / day
+	* Use -1 as count to make it depend on guest count addons (1 if not depends on guest count)
+	* @param productId
+	* @param pmsRoomId
+	* @param count
 	* @return void 
 	*/
 
@@ -13529,7 +16888,10 @@ class APIPmsManager {
 	}
 
 	/**
-	* Key = date / day
+	* Use -1 as count to make it depend on guest count addons (1 if not depends on guest count)
+	* @param productId
+	* @param pmsRoomId
+	* @param count
 	* @return void 
 	*/
 
@@ -13616,7 +16978,10 @@ class APIPmsManager {
 	}
 
 	/**
-	* Key = date / day
+	* Use -1 as count to make it depend on guest count addons (1 if not depends on guest count)
+	* @param productId
+	* @param pmsRoomId
+	* @param count
 	* @return void 
 	*/
 
@@ -13633,7 +16998,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return void 
 	*/
 
@@ -13643,6 +17010,21 @@ class APIPmsManager {
 	     $gs_data_input2939299822982['args']["data"] = json_encode($this->transport->object_unset_nulls($data));
 	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
 	     $gs_data_input2939299822982["method"] = "addRepeatingData";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Key = date / day
+	* @return String[] 
+	*/
+
+	public function addSuggestedUserToBooking($gs_multilevel_name, $userId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "addSuggestedUserToBooking";
 	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
@@ -13679,6 +17061,21 @@ class APIPmsManager {
 
 	/**
 	* Property management system.<br>
+	* @return void 
+	*/
+
+	public function cancelRoom($gs_multilevel_name, $roomId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["roomId"] = json_encode($this->transport->object_unset_nulls($roomId));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "cancelRoom";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Property management system.<br>
 	* @return core_pmsmanager_PmsBookingRooms 
 	*/
 
@@ -13696,7 +17093,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return void 
 	*/
 
@@ -13712,7 +17111,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return void 
 	*/
 
@@ -13726,7 +17127,10 @@ class APIPmsManager {
 	}
 
 	/**
-	* Key = date / day
+	* Use -1 as count to make it depend on guest count addons (1 if not depends on guest count)
+	* @param productId
+	* @param pmsRoomId
+	* @param count
 	* @return void 
 	*/
 
@@ -13740,7 +17144,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return void 
 	*/
 
@@ -13754,7 +17160,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return void 
 	*/
 
@@ -13798,7 +17206,26 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Use -1 as count to make it depend on guest count addons (1 if not depends on guest count)
+	* @param productId
+	* @param pmsRoomId
+	* @param count
+	* @return void 
+	*/
+
+	public function cleanupOrdersThatDoesNoLongerExists($gs_multilevel_name) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "cleanupOrdersThatDoesNoLongerExists";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return boolean 
 	*/
 
@@ -13831,7 +17258,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return core_pmsmanager_PmsBooking 
 	*/
 
@@ -13921,7 +17350,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return void 
 	*/
 
@@ -13964,6 +17395,27 @@ class APIPmsManager {
 	     $gs_data_input2939299822982['args']["filter"] = json_encode($this->transport->object_unset_nulls($filter));
 	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
 	     $gs_data_input2939299822982["method"] = "createOrder";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Returns true if there are anything in
+	* the order that related to the specified room id.
+	*
+	* @param pmsBookingRoomsId
+	* @param orderId
+	* @return String 
+	*/
+
+	public function createOrderFromCheckout($gs_multilevel_name, $row, $paymentMethodId, $userId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["row"] = json_encode($this->transport->object_unset_nulls($row));
+	     $gs_data_input2939299822982['args']["paymentMethodId"] = json_encode($this->transport->object_unset_nulls($paymentMethodId));
+	     $gs_data_input2939299822982['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "createOrderFromCheckout";
 	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
@@ -14059,7 +17511,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return void 
 	*/
 
@@ -14090,6 +17544,23 @@ class APIPmsManager {
 	}
 
 	/**
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
+	* @return void 
+	*/
+
+	public function doChargeCardFromAutoBooking($gs_multilevel_name, $bookingId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["bookingId"] = json_encode($this->transport->object_unset_nulls($bookingId));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "doChargeCardFromAutoBooking";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
 	* Property management system.<br>
 	* @return void 
 	*/
@@ -14101,6 +17572,26 @@ class APIPmsManager {
 	     $gs_data_input2939299822982['args']["bookingId"] = json_encode($this->transport->object_unset_nulls($bookingId));
 	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
 	     $gs_data_input2939299822982["method"] = "doNotification";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Returns true if there are anything in
+	* the order that related to the specified room id.
+	*
+	* @param pmsBookingRoomsId
+	* @param orderId
+	* @return boolean 
+	*/
+
+	public function doesOrderCorrolateToRoom($gs_multilevel_name, $pmsBookingRoomsId, $orderId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["pmsBookingRoomsId"] = json_encode($this->transport->object_unset_nulls($pmsBookingRoomsId));
+	     $gs_data_input2939299822982['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "doesOrderCorrolateToRoom";
 	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
@@ -14153,6 +17644,36 @@ class APIPmsManager {
 	}
 
 	/**
+	* Key = date / day
+	* @return core_pmsmanager_PmsGuestOption[] 
+	*/
+
+	public function findRelatedByUserId($gs_multilevel_name, $userId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "findRelatedByUserId";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Key = date / day
+	* @return core_pmsmanager_PmsGuestOption[] 
+	*/
+
+	public function findRelatedGuests($gs_multilevel_name, $guest) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["guest"] = json_encode($this->transport->object_unset_nulls($guest));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "findRelatedGuests";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
 	* Property management system.<br>
 	* @return void 
 	*/
@@ -14168,7 +17689,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return void 
 	*/
 
@@ -14194,6 +17717,25 @@ class APIPmsManager {
 	     $gs_data_input2939299822982['args']["roomId"] = json_encode($this->transport->object_unset_nulls($roomId));
 	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
 	     $gs_data_input2939299822982["method"] = "generateNewCodeForRoom";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Use -1 as count to make it depend on guest count addons (1 if not depends on guest count)
+	* @param productId
+	* @param pmsRoomId
+	* @param count
+	* @return void 
+	*/
+
+	public function generatePgaAccess($gs_multilevel_name, $pmsBookingId, $pmsBookingRoomId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["pmsBookingId"] = json_encode($this->transport->object_unset_nulls($pmsBookingId));
+	     $gs_data_input2939299822982['args']["pmsBookingRoomId"] = json_encode($this->transport->object_unset_nulls($pmsBookingRoomId));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "generatePgaAccess";
 	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
@@ -14228,6 +17770,24 @@ class APIPmsManager {
 	}
 
 	/**
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
+	* @return core_pmsmanager_PmsActivityLines 
+	*/
+
+	public function getActivitiesEntries($gs_multilevel_name, $start, $end) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["start"] = json_encode($this->transport->object_unset_nulls($start));
+	     $gs_data_input2939299822982['args']["end"] = json_encode($this->transport->object_unset_nulls($end));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "getActivitiesEntries";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
+	     return $this->transport->cast(new core_pmsmanager_PmsActivityLines(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
 	* Property management system.<br>
 	* @return core_pmsmanager_PmsAdditionalItemInformation 
 	*/
@@ -14243,7 +17803,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return core_pmsmanager_PmsAdditionalTypeInformation[] 
 	*/
 
@@ -14257,7 +17819,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return core_pmsmanager_PmsAdditionalTypeInformation 
 	*/
 
@@ -14286,7 +17850,10 @@ class APIPmsManager {
 	}
 
 	/**
-	* Key = date / day
+	* Use -1 as count to make it depend on guest count addons (1 if not depends on guest count)
+	* @param productId
+	* @param pmsRoomId
+	* @param count
 	* @return core_pmsmanager_PmsBookingAddonItem[] 
 	*/
 
@@ -14301,7 +17868,10 @@ class APIPmsManager {
 	}
 
 	/**
-	* Key = date / day
+	* Use -1 as count to make it depend on guest count addons (1 if not depends on guest count)
+	* @param productId
+	* @param pmsRoomId
+	* @param count
 	* @return core_pmsmanager_PmsBookingAddonItem[] 
 	*/
 
@@ -14316,7 +17886,10 @@ class APIPmsManager {
 	}
 
 	/**
-	* Key = date / day
+	* Use -1 as count to make it depend on guest count addons (1 if not depends on guest count)
+	* @param productId
+	* @param pmsRoomId
+	* @param count
 	* @return core_pmsmanager_PmsBookingAddonItem[] 
 	*/
 
@@ -14360,7 +17933,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return core_pmsmanager_PmsBooking[] 
 	*/
 
@@ -14374,7 +17949,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return core_pmsmanager_PmsBooking[] 
 	*/
 
@@ -14418,7 +17995,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return core_pmsmanager_PmsBookingRooms[] 
 	*/
 
@@ -14463,6 +18042,25 @@ class APIPmsManager {
 	}
 
 	/**
+	* Use -1 as count to make it depend on guest count addons (1 if not depends on guest count)
+	* @param productId
+	* @param pmsRoomId
+	* @param count
+	* @return core_pmsmanager_UnsettledRoomQuery[] 
+	*/
+
+	public function getAllRoomsWithUnsettledAmount($gs_multilevel_name, $start, $end) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["start"] = json_encode($this->transport->object_unset_nulls($start));
+	     $gs_data_input2939299822982['args']["end"] = json_encode($this->transport->object_unset_nulls($end));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "getAllRoomsWithUnsettledAmount";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
 	* Property management system.<br>
 	* @return core_pmsmanager_PmsCustomerRow[] 
 	*/
@@ -14478,7 +18076,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return Integer[] 
 	*/
 
@@ -14496,7 +18096,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return core_pmsmanager_PmsBooking 
 	*/
 
@@ -14511,7 +18113,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return core_pmsmanager_PmsBooking 
 	*/
 
@@ -14568,6 +18172,58 @@ class APIPmsManager {
 	     $gs_data_input2939299822982["method"] = "getBookingWithOrderId";
 	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
 	     return $this->transport->cast(new core_pmsmanager_PmsBooking(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	* If the autoassigned routines has failed for some reason, this will reset the status
+	* and let the system retry to autoassigned the failed rooms.
+	* @return core_pmsmanager_PmsBooking[] 
+	*/
+
+	public function getBookingsFromGroupInvoicing($gs_multilevel_name, $orderId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "getBookingsFromGroupInvoicing";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Use -1 as count to make it depend on guest count addons (1 if not depends on guest count)
+	* @param productId
+	* @param pmsRoomId
+	* @param count
+	* @return core_pmsmanager_PmsBooking[] 
+	*/
+
+	public function getBookingsWithUnsettledAmountBetween($gs_multilevel_name, $start, $end) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["start"] = json_encode($this->transport->object_unset_nulls($start));
+	     $gs_data_input2939299822982['args']["end"] = json_encode($this->transport->object_unset_nulls($end));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "getBookingsWithUnsettledAmountBetween";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Use -1 as count to make it depend on guest count addons (1 if not depends on guest count)
+	* @param productId
+	* @param pmsRoomId
+	* @param count
+	* @return core_pmsmanager_PmsWubookCCardData[] 
+	*/
+
+	public function getCardsToSave($gs_multilevel_name) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "getCardsToSave";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
 
 	/**
@@ -14645,7 +18301,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return core_pmsmanager_ConferenceData 
 	*/
 
@@ -14660,7 +18318,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return core_pmsmanager_PmsConfiguration 
 	*/
 
@@ -14693,6 +18353,23 @@ class APIPmsManager {
 	* @return String 
 	*/
 
+	public function getContractByLanguage($gs_multilevel_name, $language) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["language"] = json_encode($this->transport->object_unset_nulls($language));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "getContractByLanguage";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
+	* @return String 
+	*/
+
 	public function getCurrenctContract($gs_multilevel_name) {
 	     $gs_data_input2939299822982 = array();
 	     $gs_data_input2939299822982['args'] = array();
@@ -14703,7 +18380,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return core_pmsmanager_PmsBooking 
 	*/
 
@@ -14717,7 +18396,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return core_pmsmanager_PmsBookingDateRange 
 	*/
 
@@ -14795,7 +18476,25 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* If the autoassigned routines has failed for some reason, this will reset the status
+	* and let the system retry to autoassigned the failed rooms.
+	* @return String[] 
+	*/
+
+	public function getExtraOrderIds($gs_multilevel_name, $pmsBookingId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["pmsBookingId"] = json_encode($this->transport->object_unset_nulls($pmsBookingId));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "getExtraOrderIds";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return core_pmsmanager_ConferenceData[] 
 	*/
 
@@ -14856,7 +18555,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return core_pmsmanager_PmsLog[] 
 	*/
 
@@ -14901,7 +18602,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return Integer 
 	*/
 
@@ -14967,6 +18670,25 @@ class APIPmsManager {
 
 	/**
 	* Property management system.<br>
+	* @return Double 
+	*/
+
+	public function getPriceForRoomWhenBooking($gs_multilevel_name, $start, $end, $itemType) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["start"] = json_encode($this->transport->object_unset_nulls($start));
+	     $gs_data_input2939299822982['args']["end"] = json_encode($this->transport->object_unset_nulls($end));
+	     $gs_data_input2939299822982['args']["itemType"] = json_encode($this->transport->object_unset_nulls($itemType));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "getPriceForRoomWhenBooking";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return core_pmsmanager_PmsPricing 
 	*/
 
@@ -14999,7 +18721,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return core_pmsmanager_PmsBookingRooms 
 	*/
 
@@ -15107,7 +18831,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return core_pmsmanager_PmsRoomSimple[] 
 	*/
 
@@ -15122,7 +18848,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return core_pmsmanager_PmsRoomSimple[] 
 	*/
 
@@ -15152,6 +18880,65 @@ class APIPmsManager {
 	}
 
 	/**
+	* Returns true if there are anything in
+	* the order that related to the specified room id.
+	*
+	* @param pmsBookingRoomsId
+	* @param orderId
+	* @return core_pmsmanager_PmsRoomPaymentSummary 
+	*/
+
+	public function getSummary($gs_multilevel_name, $pmsBookingId, $pmsBookingRoomId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["pmsBookingId"] = json_encode($this->transport->object_unset_nulls($pmsBookingId));
+	     $gs_data_input2939299822982['args']["pmsBookingRoomId"] = json_encode($this->transport->object_unset_nulls($pmsBookingRoomId));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "getSummary";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
+	     return $this->transport->cast(new core_pmsmanager_PmsRoomPaymentSummary(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	* Returns true if there are anything in
+	* the order that related to the specified room id.
+	*
+	* @param pmsBookingRoomsId
+	* @param orderId
+	* @return core_pmsmanager_PmsRoomPaymentSummary[] 
+	*/
+
+	public function getSummaryForAllRooms($gs_multilevel_name, $pmsBookingId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["pmsBookingId"] = json_encode($this->transport->object_unset_nulls($pmsBookingId));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "getSummaryForAllRooms";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Returns true if there are anything in
+	* the order that related to the specified room id.
+	*
+	* @param pmsBookingRoomsId
+	* @param orderId
+	* @return core_pmsmanager_PmsRoomPaymentSummary 
+	*/
+
+	public function getSummaryWithoutAccrued($gs_multilevel_name, $pmsBookingId, $pmsBookingRoomId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["pmsBookingId"] = json_encode($this->transport->object_unset_nulls($pmsBookingId));
+	     $gs_data_input2939299822982['args']["pmsBookingRoomId"] = json_encode($this->transport->object_unset_nulls($pmsBookingRoomId));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "getSummaryWithoutAccrued";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
+	     return $this->transport->cast(new core_pmsmanager_PmsRoomPaymentSummary(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
 	* Property management system.<br>
 	* @return core_pmsmanager_PmsBookingRooms[] 
 	*/
@@ -15166,7 +18953,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return String[] 
 	*/
 
@@ -15194,7 +18983,10 @@ class APIPmsManager {
 	}
 
 	/**
-	* Key = date / day
+	* Use -1 as count to make it depend on guest count addons (1 if not depends on guest count)
+	* @param productId
+	* @param pmsRoomId
+	* @param count
 	* @return boolean 
 	*/
 
@@ -15208,7 +19000,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return void 
 	*/
 
@@ -15222,7 +19016,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return core_bookingengine_data_RegistrationRules 
 	*/
 
@@ -15327,7 +19123,27 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Use -1 as count to make it depend on guest count addons (1 if not depends on guest count)
+	* @param productId
+	* @param pmsRoomId
+	* @param count
+	* @return void 
+	*/
+
+	public function markIgnoreUnsettledAmount($gs_multilevel_name, $bookingId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["bookingId"] = json_encode($this->transport->object_unset_nulls($bookingId));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "markIgnoreUnsettledAmount";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return void 
 	*/
 
@@ -15336,6 +19152,25 @@ class APIPmsManager {
 	     $gs_data_input2939299822982['args'] = array();
 	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
 	     $gs_data_input2939299822982["method"] = "markKeyDeliveredForAllEndedRooms";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Use -1 as count to make it depend on guest count addons (1 if not depends on guest count)
+	* @param productId
+	* @param pmsRoomId
+	* @param count
+	* @return void 
+	*/
+
+	public function markOtaPaymentsAutomaticallyPaidOnCheckin($gs_multilevel_name, $start, $end) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["start"] = json_encode($this->transport->object_unset_nulls($start));
+	     $gs_data_input2939299822982['args']["end"] = json_encode($this->transport->object_unset_nulls($end));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "markOtaPaymentsAutomaticallyPaidOnCheckin";
 	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
@@ -15371,7 +19206,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return void 
 	*/
 
@@ -15386,7 +19223,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return void 
 	*/
 
@@ -15402,7 +19241,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return void 
 	*/
 
@@ -15416,7 +19257,10 @@ class APIPmsManager {
 	}
 
 	/**
-	* Key = date / day
+	* Use -1 as count to make it depend on guest count addons (1 if not depends on guest count)
+	* @param productId
+	* @param pmsRoomId
+	* @param count
 	* @return void 
 	*/
 
@@ -15431,7 +19275,10 @@ class APIPmsManager {
 	}
 
 	/**
-	* Key = date / day
+	* Use -1 as count to make it depend on guest count addons (1 if not depends on guest count)
+	* @param productId
+	* @param pmsRoomId
+	* @param count
 	* @return void 
 	*/
 
@@ -15446,7 +19293,28 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Use -1 as count to make it depend on guest count addons (1 if not depends on guest count)
+	* @param productId
+	* @param pmsRoomId
+	* @param count
+	* @return void 
+	*/
+
+	public function printCode($gs_multilevel_name, $gdsDeviceId, $pmsBookingRoomId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["gdsDeviceId"] = json_encode($this->transport->object_unset_nulls($gdsDeviceId));
+	     $gs_data_input2939299822982['args']["pmsBookingRoomId"] = json_encode($this->transport->object_unset_nulls($pmsBookingRoomId));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "printCode";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return void 
 	*/
 
@@ -15455,6 +19323,24 @@ class APIPmsManager {
 	     $gs_data_input2939299822982['args'] = array();
 	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
 	     $gs_data_input2939299822982["method"] = "processor";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Returns true if there are anything in
+	* the order that related to the specified room id.
+	*
+	* @param pmsBookingRoomsId
+	* @param orderId
+	* @return void 
+	*/
+
+	public function recheckOrdersAddedToBooking($gs_multilevel_name) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "recheckOrdersAddedToBooking";
 	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
@@ -15538,7 +19424,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return void 
 	*/
 
@@ -15563,6 +19451,25 @@ class APIPmsManager {
 	     $gs_data_input2939299822982['args']["pmsRoomId"] = json_encode($this->transport->object_unset_nulls($pmsRoomId));
 	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
 	     $gs_data_input2939299822982["method"] = "removeFromWaitingList";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Use -1 as count to make it depend on guest count addons (1 if not depends on guest count)
+	* @param productId
+	* @param pmsRoomId
+	* @param count
+	* @return void 
+	*/
+
+	public function removePgaAccess($gs_multilevel_name, $pmsBookingId, $pmsBookingRoomId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["pmsBookingId"] = json_encode($this->transport->object_unset_nulls($pmsBookingId));
+	     $gs_data_input2939299822982['args']["pmsBookingRoomId"] = json_encode($this->transport->object_unset_nulls($pmsBookingRoomId));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "removePgaAccess";
 	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
@@ -15601,6 +19508,36 @@ class APIPmsManager {
 	}
 
 	/**
+	* If the autoassigned routines has failed for some reason, this will reset the status
+	* and let the system retry to autoassigned the failed rooms.
+	* @return void 
+	*/
+
+	public function resetCheckingAutoAssignedStatus($gs_multilevel_name) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "resetCheckingAutoAssignedStatus";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* If the autoassigned routines has failed for some reason, this will reset the status
+	* and let the system retry to autoassigned the failed rooms.
+	* @return void 
+	*/
+
+	public function resetDeparmentsOnOrders($gs_multilevel_name) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "resetDeparmentsOnOrders";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
 	* Property management system.<br>
 	* @return void 
 	*/
@@ -15616,7 +19553,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return void 
 	*/
 
@@ -15646,7 +19585,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return void 
 	*/
 
@@ -15691,7 +19632,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return void 
 	*/
 
@@ -15807,7 +19750,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return void 
 	*/
 
@@ -15822,7 +19767,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return void 
 	*/
 
@@ -15911,7 +19858,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return void 
 	*/
 
@@ -15925,7 +19874,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return void 
 	*/
 
@@ -15935,6 +19886,24 @@ class APIPmsManager {
 	     $gs_data_input2939299822982['args']["addons"] = json_encode($this->transport->object_unset_nulls($addons));
 	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
 	     $gs_data_input2939299822982["method"] = "setBooking";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
+	* @return void 
+	*/
+
+	public function setBookingByAdmin($gs_multilevel_name, $booking, $keepRoomPrices) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["booking"] = json_encode($this->transport->object_unset_nulls($booking));
+	     $gs_data_input2939299822982['args']["keepRoomPrices"] = json_encode($this->transport->object_unset_nulls($keepRoomPrices));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "setBookingByAdmin";
 	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
@@ -15981,6 +19950,36 @@ class APIPmsManager {
 	* @return void 
 	*/
 
+	public function setCurrentBooking($gs_multilevel_name, $bookingId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["bookingId"] = json_encode($this->transport->object_unset_nulls($bookingId));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "setCurrentBooking";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Property management system.<br>
+	* @return void 
+	*/
+
+	public function setDefaultAddons($gs_multilevel_name, $bookingId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["bookingId"] = json_encode($this->transport->object_unset_nulls($bookingId));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "setDefaultAddons";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Property management system.<br>
+	* @return void 
+	*/
+
 	public function setGuestOnRoom($gs_multilevel_name, $guests, $bookingId, $roomId) {
 	     $gs_data_input2939299822982 = array();
 	     $gs_data_input2939299822982['args'] = array();
@@ -15995,6 +19994,25 @@ class APIPmsManager {
 
 	/**
 	* Property management system.<br>
+	* @return void 
+	*/
+
+	public function setGuestOnRoomWithoutModifyingAddons($gs_multilevel_name, $guests, $bookingId, $roomId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["guests"] = json_encode($this->transport->object_unset_nulls($guests));
+	     $gs_data_input2939299822982['args']["bookingId"] = json_encode($this->transport->object_unset_nulls($bookingId));
+	     $gs_data_input2939299822982['args']["roomId"] = json_encode($this->transport->object_unset_nulls($roomId));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "setGuestOnRoomWithoutModifyingAddons";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return void 
 	*/
 
@@ -16064,6 +20082,20 @@ class APIPmsManager {
 	* @return void 
 	*/
 
+	public function simpleCompleteCurrentBooking($gs_multilevel_name) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "simpleCompleteCurrentBooking";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Property management system.<br>
+	* @return void 
+	*/
+
 	public function splitBooking($gs_multilevel_name, $roomIds) {
 	     $gs_data_input2939299822982 = array();
 	     $gs_data_input2939299822982['args'] = array();
@@ -16076,6 +20108,24 @@ class APIPmsManager {
 
 	/**
 	* Property management system.<br>
+	* @return void 
+	*/
+
+	public function splitStay($gs_multilevel_name, $roomId, $splitDate) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["roomId"] = json_encode($this->transport->object_unset_nulls($roomId));
+	     $gs_data_input2939299822982['args']["splitDate"] = json_encode($this->transport->object_unset_nulls($splitDate));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "splitStay";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return core_pmsmanager_PmsBooking 
 	*/
 
@@ -16105,7 +20155,10 @@ class APIPmsManager {
 	}
 
 	/**
-	* Key = date / day
+	* Use -1 as count to make it depend on guest count addons (1 if not depends on guest count)
+	* @param productId
+	* @param pmsRoomId
+	* @param count
 	* @return void 
 	*/
 
@@ -16120,7 +20173,30 @@ class APIPmsManager {
 	}
 
 	/**
-	* Key = date / day
+	* Returns true if there are anything in
+	* the order that related to the specified room id.
+	*
+	* @param pmsBookingRoomsId
+	* @param orderId
+	* @return void 
+	*/
+
+	public function toggleAutoCreateOrders($gs_multilevel_name, $bookingId, $roomId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["bookingId"] = json_encode($this->transport->object_unset_nulls($bookingId));
+	     $gs_data_input2939299822982['args']["roomId"] = json_encode($this->transport->object_unset_nulls($roomId));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "toggleAutoCreateOrders";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Use -1 as count to make it depend on guest count addons (1 if not depends on guest count)
+	* @param productId
+	* @param pmsRoomId
+	* @param count
 	* @return void 
 	*/
 
@@ -16180,7 +20256,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return void 
 	*/
 
@@ -16190,6 +20268,21 @@ class APIPmsManager {
 	     $gs_data_input2939299822982['args']["bookingId"] = json_encode($this->transport->object_unset_nulls($bookingId));
 	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
 	     $gs_data_input2939299822982["method"] = "undeleteBooking";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Property management system.<br>
+	* @return void 
+	*/
+
+	public function undoCheckOut($gs_multilevel_name, $pmsBookingRoomId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["pmsBookingRoomId"] = json_encode($this->transport->object_unset_nulls($pmsBookingRoomId));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "undoCheckOut";
 	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
@@ -16256,7 +20349,10 @@ class APIPmsManager {
 	}
 
 	/**
-	* Key = date / day
+	* Use -1 as count to make it depend on guest count addons (1 if not depends on guest count)
+	* @param productId
+	* @param pmsRoomId
+	* @param count
 	* @return void 
 	*/
 
@@ -16289,7 +20385,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return core_pmsmanager_PmsBookingRooms[] 
 	*/
 
@@ -16305,7 +20403,9 @@ class APIPmsManager {
 	}
 
 	/**
-	* Property management system.<br>
+	* Whenever a card has been fetched using the automated process this function is called
+	* DO NOT CHANGE IT!
+	* @param bookingId
 	* @return Integer[] 
 	*/
 
@@ -16335,6 +20435,25 @@ class APIPmsManager {
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
 
+	/**
+	* Use -1 as count to make it depend on guest count addons (1 if not depends on guest count)
+	* @param productId
+	* @param pmsRoomId
+	* @param count
+	* @return void 
+	*/
+
+	public function wubookCreditCardIsInvalid($gs_multilevel_name, $bookingId, $reason) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["bookingId"] = json_encode($this->transport->object_unset_nulls($bookingId));
+	     $gs_data_input2939299822982['args']["reason"] = json_encode($this->transport->object_unset_nulls($reason));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "wubookCreditCardIsInvalid";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
 }
 class APIPmsManagerProcessor {
 
@@ -16355,6 +20474,169 @@ class APIPmsManagerProcessor {
 	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
 	     $gs_data_input2939299822982["method"] = "doProcessing";
 	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsManagerProcessor";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+}
+class APIPmsNotificationManager {
+
+	var $transport;
+	
+	function APIPmsNotificationManager($transport) {
+		$this->transport = $transport;
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return void 
+	*/
+
+	public function deleteMessage($gs_multilevel_name, $messageId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["messageId"] = json_encode($this->transport->object_unset_nulls($messageId));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "deleteMessage";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsNotificationManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return core_pmsmanager_PmsNotificationMessage 
+	*/
+
+	public function doFormationOnMessage($gs_multilevel_name, $msg, $bookingId, $pmsBookingRoomId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["msg"] = json_encode($this->transport->object_unset_nulls($msg));
+	     $gs_data_input2939299822982['args']["bookingId"] = json_encode($this->transport->object_unset_nulls($bookingId));
+	     $gs_data_input2939299822982['args']["pmsBookingRoomId"] = json_encode($this->transport->object_unset_nulls($pmsBookingRoomId));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "doFormationOnMessage";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsNotificationManager";
+	     return $this->transport->cast(new core_pmsmanager_PmsNotificationMessage(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return core_pmsmanager_PmsNotificationMessage[] 
+	*/
+
+	public function getAllMessages($gs_multilevel_name) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "getAllMessages";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsNotificationManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return String[] 
+	*/
+
+	public function getLanguagesForMessage($gs_multilevel_name, $key, $type) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["key"] = json_encode($this->transport->object_unset_nulls($key));
+	     $gs_data_input2939299822982['args']["type"] = json_encode($this->transport->object_unset_nulls($type));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "getLanguagesForMessage";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsNotificationManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return core_pmsmanager_PmsNotificationMessage 
+	*/
+
+	public function getMessage($gs_multilevel_name, $messageId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["messageId"] = json_encode($this->transport->object_unset_nulls($messageId));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "getMessage";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsNotificationManager";
+	     return $this->transport->cast(new core_pmsmanager_PmsNotificationMessage(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return String[] 
+	*/
+
+	public function getPrefixesForMessage($gs_multilevel_name, $key, $type) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["key"] = json_encode($this->transport->object_unset_nulls($key));
+	     $gs_data_input2939299822982['args']["type"] = json_encode($this->transport->object_unset_nulls($type));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "getPrefixesForMessage";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsNotificationManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return core_pmsmanager_PmsNotificationMessage 
+	*/
+
+	public function getSpecificMessage($gs_multilevel_name, $key, $booking, $room, $type, $prefix) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["key"] = json_encode($this->transport->object_unset_nulls($key));
+	     $gs_data_input2939299822982['args']["booking"] = json_encode($this->transport->object_unset_nulls($booking));
+	     $gs_data_input2939299822982['args']["room"] = json_encode($this->transport->object_unset_nulls($room));
+	     $gs_data_input2939299822982['args']["type"] = json_encode($this->transport->object_unset_nulls($type));
+	     $gs_data_input2939299822982['args']["prefix"] = json_encode($this->transport->object_unset_nulls($prefix));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "getSpecificMessage";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsNotificationManager";
+	     return $this->transport->cast(new core_pmsmanager_PmsNotificationMessage(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return void 
+	*/
+
+	public function saveMessage($gs_multilevel_name, $msg) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["msg"] = json_encode($this->transport->object_unset_nulls($msg));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "saveMessage";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsNotificationManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return void 
+	*/
+
+	public function sendEmail($gs_multilevel_name, $msg, $email, $bookingId, $roomId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["msg"] = json_encode($this->transport->object_unset_nulls($msg));
+	     $gs_data_input2939299822982['args']["email"] = json_encode($this->transport->object_unset_nulls($email));
+	     $gs_data_input2939299822982['args']["bookingId"] = json_encode($this->transport->object_unset_nulls($bookingId));
+	     $gs_data_input2939299822982['args']["roomId"] = json_encode($this->transport->object_unset_nulls($roomId));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "sendEmail";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsNotificationManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
 
@@ -16699,6 +20981,21 @@ class APIPmsReportManager {
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
 
+	/**
+	* Pms report manager.
+	* @return core_pmsmanager_PmsUserStats 
+	*/
+
+	public function getUserStatistics($gs_multilevel_name, $userId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "getUserStatistics";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pmsmanager.IPmsReportManager";
+	     return $this->transport->cast(new core_pmsmanager_PmsUserStats(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
 }
 class APIPmsSelfManagement {
 
@@ -16801,6 +21098,809 @@ class APIPmsWebBookingManager {
 	}
 
 }
+class APIPosManager {
+
+	var $transport;
+	
+	function APIPosManager($transport) {
+		$this->transport = $transport;
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function addCashWithDrawalToTab($tabId, $amount) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["tabId"] = json_encode($this->transport->object_unset_nulls($tabId));
+	     $gs_data_input2939299822982['args']["amount"] = json_encode($this->transport->object_unset_nulls($amount));
+	     $gs_data_input2939299822982["method"] = "addCashWithDrawalToTab";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function addGiftCardToTab($tabId, $value) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["tabId"] = json_encode($this->transport->object_unset_nulls($tabId));
+	     $gs_data_input2939299822982['args']["value"] = json_encode($this->transport->object_unset_nulls($value));
+	     $gs_data_input2939299822982["method"] = "addGiftCardToTab";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function addOrderIdToZReport($incrementalOrderId, $zReportId, $password) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["incrementalOrderId"] = json_encode($this->transport->object_unset_nulls($incrementalOrderId));
+	     $gs_data_input2939299822982['args']["zReportId"] = json_encode($this->transport->object_unset_nulls($zReportId));
+	     $gs_data_input2939299822982['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
+	     $gs_data_input2939299822982["method"] = "addOrderIdToZReport";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function addToTab($tabId, $cartItem) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["tabId"] = json_encode($this->transport->object_unset_nulls($tabId));
+	     $gs_data_input2939299822982['args']["cartItem"] = json_encode($this->transport->object_unset_nulls($cartItem));
+	     $gs_data_input2939299822982["method"] = "addToTab";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_pos_CanCloseZReport 
+	*/
+
+	public function canCreateZReport($pmsBookingMultilevelName, $cashPointId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["pmsBookingMultilevelName"] = json_encode($this->transport->object_unset_nulls($pmsBookingMultilevelName));
+	     $gs_data_input2939299822982['args']["cashPointId"] = json_encode($this->transport->object_unset_nulls($cashPointId));
+	     $gs_data_input2939299822982["method"] = "canCreateZReport";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->cast(new core_pos_CanCloseZReport(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function changeListView($viewId, $listId, $showAsGroupButton) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["viewId"] = json_encode($this->transport->object_unset_nulls($viewId));
+	     $gs_data_input2939299822982['args']["listId"] = json_encode($this->transport->object_unset_nulls($listId));
+	     $gs_data_input2939299822982['args']["showAsGroupButton"] = json_encode($this->transport->object_unset_nulls($showAsGroupButton));
+	     $gs_data_input2939299822982["method"] = "changeListView";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function changeTaxRate($tabId, $taxGroupNumber) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["tabId"] = json_encode($this->transport->object_unset_nulls($tabId));
+	     $gs_data_input2939299822982['args']["taxGroupNumber"] = json_encode($this->transport->object_unset_nulls($taxGroupNumber));
+	     $gs_data_input2939299822982["method"] = "changeTaxRate";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function completeTransaction($tabId, $orderId, $cashPointDeviceId, $kitchenDeviceId, $paymentMetaData) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["tabId"] = json_encode($this->transport->object_unset_nulls($tabId));
+	     $gs_data_input2939299822982['args']["orderId"] = json_encode($this->transport->object_unset_nulls($orderId));
+	     $gs_data_input2939299822982['args']["cashPointDeviceId"] = json_encode($this->transport->object_unset_nulls($cashPointDeviceId));
+	     $gs_data_input2939299822982['args']["kitchenDeviceId"] = json_encode($this->transport->object_unset_nulls($kitchenDeviceId));
+	     $gs_data_input2939299822982['args']["paymentMetaData"] = json_encode($this->transport->object_unset_nulls($paymentMetaData));
+	     $gs_data_input2939299822982["method"] = "completeTransaction";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function createCashPoint($name) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["name"] = json_encode($this->transport->object_unset_nulls($name));
+	     $gs_data_input2939299822982["method"] = "createCashPoint";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return String 
+	*/
+
+	public function createNewTab($referenceName) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["referenceName"] = json_encode($this->transport->object_unset_nulls($referenceName));
+	     $gs_data_input2939299822982["method"] = "createNewTab";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function createNewTable($tableName, $tableNumber) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["tableName"] = json_encode($this->transport->object_unset_nulls($tableName));
+	     $gs_data_input2939299822982['args']["tableNumber"] = json_encode($this->transport->object_unset_nulls($tableNumber));
+	     $gs_data_input2939299822982["method"] = "createNewTable";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function createNewView($viewName, $viewType) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["viewName"] = json_encode($this->transport->object_unset_nulls($viewName));
+	     $gs_data_input2939299822982['args']["viewType"] = json_encode($this->transport->object_unset_nulls($viewType));
+	     $gs_data_input2939299822982["method"] = "createNewView";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_ordermanager_data_Order 
+	*/
+
+	public function createOrder($cartItems, $paymentId, $tabId, $cashPointId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["cartItems"] = json_encode($this->transport->object_unset_nulls($cartItems));
+	     $gs_data_input2939299822982['args']["paymentId"] = json_encode($this->transport->object_unset_nulls($paymentId));
+	     $gs_data_input2939299822982['args']["tabId"] = json_encode($this->transport->object_unset_nulls($tabId));
+	     $gs_data_input2939299822982['args']["cashPointId"] = json_encode($this->transport->object_unset_nulls($cashPointId));
+	     $gs_data_input2939299822982["method"] = "createOrder";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->cast(new core_ordermanager_data_Order(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function createZReport($cashPointId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["cashPointId"] = json_encode($this->transport->object_unset_nulls($cashPointId));
+	     $gs_data_input2939299822982["method"] = "createZReport";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function deleteTab($tabId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["tabId"] = json_encode($this->transport->object_unset_nulls($tabId));
+	     $gs_data_input2939299822982["method"] = "deleteTab";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function deleteTable($tableId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["tableId"] = json_encode($this->transport->object_unset_nulls($tableId));
+	     $gs_data_input2939299822982["method"] = "deleteTable";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function deleteView($viewId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["viewId"] = json_encode($this->transport->object_unset_nulls($viewId));
+	     $gs_data_input2939299822982["method"] = "deleteView";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function deleteZReport($zreportId, $password) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["zreportId"] = json_encode($this->transport->object_unset_nulls($zreportId));
+	     $gs_data_input2939299822982['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
+	     $gs_data_input2939299822982["method"] = "deleteZReport";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_pos_PosTab[] 
+	*/
+
+	public function getAllTabs() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "getAllTabs";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_pos_CashPoint 
+	*/
+
+	public function getCashPoint($cashPointId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["cashPointId"] = json_encode($this->transport->object_unset_nulls($cashPointId));
+	     $gs_data_input2939299822982["method"] = "getCashPoint";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->cast(new core_pos_CashPoint(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_pos_CashPoint[] 
+	*/
+
+	public function getCashPoints() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "getCashPoints";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return String 
+	*/
+
+	public function getCurrentTabIdForTableId($tableId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["tableId"] = json_encode($this->transport->object_unset_nulls($tableId));
+	     $gs_data_input2939299822982["method"] = "getCurrentTabIdForTableId";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_pos_ZReport 
+	*/
+
+	public function getPrevZReport($cashPointId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["cashPointId"] = json_encode($this->transport->object_unset_nulls($cashPointId));
+	     $gs_data_input2939299822982["method"] = "getPrevZReport";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->cast(new core_pos_ZReport(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_productmanager_data_ProductList[] 
+	*/
+
+	public function getProductList($viewId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["viewId"] = json_encode($this->transport->object_unset_nulls($viewId));
+	     $gs_data_input2939299822982["method"] = "getProductList";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_pos_SalesPosResult 
+	*/
+
+	public function getSalesReport($filter) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["filter"] = json_encode($this->transport->object_unset_nulls($filter));
+	     $gs_data_input2939299822982["method"] = "getSalesReport";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->cast(new core_pos_SalesPosResult(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_pos_PosTab 
+	*/
+
+	public function getTab($tabId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["tabId"] = json_encode($this->transport->object_unset_nulls($tabId));
+	     $gs_data_input2939299822982["method"] = "getTab";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->cast(new core_pos_PosTab(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return int 
+	*/
+
+	public function getTabCount() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "getTabCount";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_pos_PosTable 
+	*/
+
+	public function getTable($viewId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["viewId"] = json_encode($this->transport->object_unset_nulls($viewId));
+	     $gs_data_input2939299822982["method"] = "getTable";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->cast(new core_pos_PosTable(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_pos_PosTable[] 
+	*/
+
+	public function getTables() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "getTables";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return Double 
+	*/
+
+	public function getTotal($tabId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["tabId"] = json_encode($this->transport->object_unset_nulls($tabId));
+	     $gs_data_input2939299822982["method"] = "getTotal";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return Double 
+	*/
+
+	public function getTotalForCurrentZReport($cashPointId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["cashPointId"] = json_encode($this->transport->object_unset_nulls($cashPointId));
+	     $gs_data_input2939299822982["method"] = "getTotalForCurrentZReport";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return Double 
+	*/
+
+	public function getTotalForItems($cartItems) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["cartItems"] = json_encode($this->transport->object_unset_nulls($cartItems));
+	     $gs_data_input2939299822982["method"] = "getTotalForItems";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return Double 
+	*/
+
+	public function getTotalForZreport($zReportId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["zReportId"] = json_encode($this->transport->object_unset_nulls($zReportId));
+	     $gs_data_input2939299822982["method"] = "getTotalForZreport";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_pos_PosView 
+	*/
+
+	public function getView($viewId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["viewId"] = json_encode($this->transport->object_unset_nulls($viewId));
+	     $gs_data_input2939299822982["method"] = "getView";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->cast(new core_pos_PosView(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_pos_PosView[] 
+	*/
+
+	public function getViews() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "getViews";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_pos_ZReport 
+	*/
+
+	public function getZReport($zReportId, $cashPointId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["zReportId"] = json_encode($this->transport->object_unset_nulls($zReportId));
+	     $gs_data_input2939299822982['args']["cashPointId"] = json_encode($this->transport->object_unset_nulls($cashPointId));
+	     $gs_data_input2939299822982["method"] = "getZReport";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->cast(new core_pos_ZReport(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_common_FilteredData 
+	*/
+
+	public function getZReportsUnfinalized($filterOptions) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["filterOptions"] = json_encode($this->transport->object_unset_nulls($filterOptions));
+	     $gs_data_input2939299822982["method"] = "getZReportsUnfinalized";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->cast(new core_common_FilteredData(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return boolean 
+	*/
+
+	public function hasTables() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "hasTables";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function moveList($viewId, $listId, $down) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["viewId"] = json_encode($this->transport->object_unset_nulls($viewId));
+	     $gs_data_input2939299822982['args']["listId"] = json_encode($this->transport->object_unset_nulls($listId));
+	     $gs_data_input2939299822982['args']["down"] = json_encode($this->transport->object_unset_nulls($down));
+	     $gs_data_input2939299822982["method"] = "moveList";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function printKitchen($tabId, $gdsDeviceId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["tabId"] = json_encode($this->transport->object_unset_nulls($tabId));
+	     $gs_data_input2939299822982['args']["gdsDeviceId"] = json_encode($this->transport->object_unset_nulls($gdsDeviceId));
+	     $gs_data_input2939299822982["method"] = "printKitchen";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function printOverview($tabId, $cashPointDeviceId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["tabId"] = json_encode($this->transport->object_unset_nulls($tabId));
+	     $gs_data_input2939299822982['args']["cashPointDeviceId"] = json_encode($this->transport->object_unset_nulls($cashPointDeviceId));
+	     $gs_data_input2939299822982["method"] = "printOverview";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function printRoomReceipt($gdsDeviceId, $roomName, $guestName, $items) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["gdsDeviceId"] = json_encode($this->transport->object_unset_nulls($gdsDeviceId));
+	     $gs_data_input2939299822982['args']["roomName"] = json_encode($this->transport->object_unset_nulls($roomName));
+	     $gs_data_input2939299822982['args']["guestName"] = json_encode($this->transport->object_unset_nulls($guestName));
+	     $gs_data_input2939299822982['args']["items"] = json_encode($this->transport->object_unset_nulls($items));
+	     $gs_data_input2939299822982["method"] = "printRoomReceipt";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function removeFromTab($cartItemId, $tabId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["cartItemId"] = json_encode($this->transport->object_unset_nulls($cartItemId));
+	     $gs_data_input2939299822982['args']["tabId"] = json_encode($this->transport->object_unset_nulls($tabId));
+	     $gs_data_input2939299822982["method"] = "removeFromTab";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function removeItemsFromTab($tabId, $cartItems) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["tabId"] = json_encode($this->transport->object_unset_nulls($tabId));
+	     $gs_data_input2939299822982['args']["cartItems"] = json_encode($this->transport->object_unset_nulls($cartItems));
+	     $gs_data_input2939299822982["method"] = "removeItemsFromTab";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function saveCashPoint($cashPoint) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["cashPoint"] = json_encode($this->transport->object_unset_nulls($cashPoint));
+	     $gs_data_input2939299822982["method"] = "saveCashPoint";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function saveTable($table) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["table"] = json_encode($this->transport->object_unset_nulls($table));
+	     $gs_data_input2939299822982["method"] = "saveTable";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function saveView($view) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["view"] = json_encode($this->transport->object_unset_nulls($view));
+	     $gs_data_input2939299822982["method"] = "saveView";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_cartmanager_data_CartItem 
+	*/
+
+	public function setDiscountToCartItem($tabId, $cartItemId, $newValue) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["tabId"] = json_encode($this->transport->object_unset_nulls($tabId));
+	     $gs_data_input2939299822982['args']["cartItemId"] = json_encode($this->transport->object_unset_nulls($cartItemId));
+	     $gs_data_input2939299822982['args']["newValue"] = json_encode($this->transport->object_unset_nulls($newValue));
+	     $gs_data_input2939299822982["method"] = "setDiscountToCartItem";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->cast(new core_cartmanager_data_CartItem(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_cartmanager_data_CartItem 
+	*/
+
+	public function setNewProductPrice($tabId, $cartItemId, $newValue) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["tabId"] = json_encode($this->transport->object_unset_nulls($tabId));
+	     $gs_data_input2939299822982['args']["cartItemId"] = json_encode($this->transport->object_unset_nulls($cartItemId));
+	     $gs_data_input2939299822982['args']["newValue"] = json_encode($this->transport->object_unset_nulls($newValue));
+	     $gs_data_input2939299822982["method"] = "setNewProductPrice";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->cast(new core_cartmanager_data_CartItem(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function setTabDiscount($tabId, $discount) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["tabId"] = json_encode($this->transport->object_unset_nulls($tabId));
+	     $gs_data_input2939299822982['args']["discount"] = json_encode($this->transport->object_unset_nulls($discount));
+	     $gs_data_input2939299822982["method"] = "setTabDiscount";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function setView($cashPointId, $viewId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["cashPointId"] = json_encode($this->transport->object_unset_nulls($cashPointId));
+	     $gs_data_input2939299822982['args']["viewId"] = json_encode($this->transport->object_unset_nulls($viewId));
+	     $gs_data_input2939299822982["method"] = "setView";
+	     $gs_data_input2939299822982["interfaceName"] = "core.pos.IPosManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+}
 class APIPrintManager {
 
 	var $transport;
@@ -16839,6 +21939,26 @@ class APIProductManager {
 	}
 
 	/**
+	* Returns a list of products for a given searchword,
+	* if blank all products will be returned.
+	*
+	* @param searchWord
+	* @param pageSize
+	* @param page
+	* @return void 
+	*/
+
+	public function addAdditionalTaxGroup($productId, $taxGroupId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
+	     $gs_data_input2939299822982['args']["taxGroupId"] = json_encode($this->transport->object_unset_nulls($taxGroupId));
+	     $gs_data_input2939299822982["method"] = "addAdditionalTaxGroup";
+	     $gs_data_input2939299822982["interfaceName"] = "core.productmanager.IProductManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
 	* You can use this function to change the stock quantity for a given product
 	*
 	* @param productId The id for the product to change.
@@ -16855,6 +21975,26 @@ class APIProductManager {
 	     $gs_data_input2939299822982["method"] = "changeStockQuantity";
 	     $gs_data_input2939299822982["interfaceName"] = "core.productmanager.IProductManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Returns a list of products for a given searchword,
+	* if blank all products will be returned.
+	*
+	* @param searchWord
+	* @param pageSize
+	* @param page
+	* @return core_productmanager_data_Product 
+	*/
+
+	public function changeTaxCode($product, $taxGroupId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["product"] = json_encode($this->transport->object_unset_nulls($product));
+	     $gs_data_input2939299822982['args']["taxGroupId"] = json_encode($this->transport->object_unset_nulls($taxGroupId));
+	     $gs_data_input2939299822982["method"] = "changeTaxCode";
+	     $gs_data_input2939299822982["interfaceName"] = "core.productmanager.IProductManager";
+	     return $this->transport->cast(new core_productmanager_data_Product(), $this->transport->sendMessage($gs_data_input2939299822982));
 	}
 
 	/**
@@ -16917,6 +22057,25 @@ class APIProductManager {
 	* @return void 
 	*/
 
+	public function deleteAccountingAccount($accountNumber) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["accountNumber"] = json_encode($this->transport->object_unset_nulls($accountNumber));
+	     $gs_data_input2939299822982["method"] = "deleteAccountingAccount";
+	     $gs_data_input2939299822982["interfaceName"] = "core.productmanager.IProductManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Returns a list of products for a given searchword,
+	* if blank all products will be returned.
+	*
+	* @param searchWord
+	* @param pageSize
+	* @param page
+	* @return void 
+	*/
+
 	public function deleteCategory($categoryId) {
 	     $gs_data_input2939299822982 = array();
 	     $gs_data_input2939299822982['args'] = array();
@@ -16940,6 +22099,62 @@ class APIProductManager {
 	     $gs_data_input2939299822982["method"] = "deleteProductList";
 	     $gs_data_input2939299822982["interfaceName"] = "core.productmanager.IProductManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Returns a list of products for a given searchword,
+	* if blank all products will be returned.
+	*
+	* @param searchWord
+	* @param pageSize
+	* @param page
+	* @return core_common_FilteredData 
+	*/
+
+	public function findProducts($filterOptions) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["filterOptions"] = json_encode($this->transport->object_unset_nulls($filterOptions));
+	     $gs_data_input2939299822982["method"] = "findProducts";
+	     $gs_data_input2939299822982["interfaceName"] = "core.productmanager.IProductManager";
+	     return $this->transport->cast(new core_common_FilteredData(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	* Returns a list of products for a given searchword,
+	* if blank all products will be returned.
+	*
+	* @param searchWord
+	* @param pageSize
+	* @param page
+	* @return core_productmanager_data_AccountingDetail[] 
+	*/
+
+	public function getAccountingAccounts() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "getAccountingAccounts";
+	     $gs_data_input2939299822982["interfaceName"] = "core.productmanager.IProductManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Returns a list of products for a given searchword,
+	* if blank all products will be returned.
+	*
+	* @param searchWord
+	* @param pageSize
+	* @param page
+	* @return core_productmanager_data_AccountingDetail 
+	*/
+
+	public function getAccountingDetail($accountNumber) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["accountNumber"] = json_encode($this->transport->object_unset_nulls($accountNumber));
+	     $gs_data_input2939299822982["method"] = "getAccountingDetail";
+	     $gs_data_input2939299822982["interfaceName"] = "core.productmanager.IProductManager";
+	     return $this->transport->cast(new core_productmanager_data_AccountingDetail(), $this->transport->sendMessage($gs_data_input2939299822982));
 	}
 
 	/**
@@ -17152,6 +22367,24 @@ class APIProductManager {
 	}
 
 	/**
+	* Fetch one single product by id
+	* If product does not exists, null is returned.
+	*
+	* @param id
+	* @throws ErrorException
+	* @return core_productmanager_data_ProductLight[] 
+	*/
+
+	public function getProductLight($ids) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["ids"] = json_encode($this->transport->object_unset_nulls($ids));
+	     $gs_data_input2939299822982["method"] = "getProductLight";
+	     $gs_data_input2939299822982["interfaceName"] = "core.productmanager.IProductManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
 	* Create a new product list.
 	*
 	* @param listName
@@ -17246,6 +22479,65 @@ class APIProductManager {
 	     $gs_data_input2939299822982['args'] = array();
 	     $gs_data_input2939299822982['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
 	     $gs_data_input2939299822982["method"] = "removeProduct";
+	     $gs_data_input2939299822982["interfaceName"] = "core.productmanager.IProductManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Returns a list of products for a given searchword,
+	* if blank all products will be returned.
+	*
+	* @param searchWord
+	* @param pageSize
+	* @param page
+	* @return void 
+	*/
+
+	public function removeTaxGroup($productId, $taxGroupId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
+	     $gs_data_input2939299822982['args']["taxGroupId"] = json_encode($this->transport->object_unset_nulls($taxGroupId));
+	     $gs_data_input2939299822982["method"] = "removeTaxGroup";
+	     $gs_data_input2939299822982["interfaceName"] = "core.productmanager.IProductManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Returns a list of products for a given searchword,
+	* if blank all products will be returned.
+	*
+	* @param searchWord
+	* @param pageSize
+	* @param page
+	* @return void 
+	*/
+
+	public function saveAccountingDetail($detail) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["detail"] = json_encode($this->transport->object_unset_nulls($detail));
+	     $gs_data_input2939299822982["method"] = "saveAccountingDetail";
+	     $gs_data_input2939299822982["interfaceName"] = "core.productmanager.IProductManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Returns a list of products for a given searchword,
+	* if blank all products will be returned.
+	*
+	* @param searchWord
+	* @param pageSize
+	* @param page
+	* @return void 
+	*/
+
+	public function saveAccountingInformation($productId, $infos) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["productId"] = json_encode($this->transport->object_unset_nulls($productId));
+	     $gs_data_input2939299822982['args']["infos"] = json_encode($this->transport->object_unset_nulls($infos));
+	     $gs_data_input2939299822982["method"] = "saveAccountingInformation";
 	     $gs_data_input2939299822982["interfaceName"] = "core.productmanager.IProductManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
@@ -18565,6 +23857,22 @@ class APIResturantManager {
 	     $gs_data_input2939299822982["method"] = "getTableReservation";
 	     $gs_data_input2939299822982["interfaceName"] = "core.resturantmanager.IResturantManager";
 	     return $this->transport->cast(new core_resturantmanager_TableReservation(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	* Returns all the sessions which the current table can change to,
+	* this means that the session that is currently active is hidden.
+	*
+	* @param tableId
+	* @return String[] 
+	*/
+
+	public function getTerminalMessages() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "getTerminalMessages";
+	     $gs_data_input2939299822982["interfaceName"] = "core.resturantmanager.IResturantManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
 
 	/**
@@ -20554,6 +25862,22 @@ class APIStoreApplicationInstancePool {
 	* @return core_common_ApplicationInstance 
 	*/
 
+	public function createNewInstanceWithId($applicationId, $instanceId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["applicationId"] = json_encode($this->transport->object_unset_nulls($applicationId));
+	     $gs_data_input2939299822982['args']["instanceId"] = json_encode($this->transport->object_unset_nulls($instanceId));
+	     $gs_data_input2939299822982["method"] = "createNewInstanceWithId";
+	     $gs_data_input2939299822982["interfaceName"] = "core.applications.IStoreApplicationInstancePool";
+	     return $this->transport->cast(new core_common_ApplicationInstance(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_common_ApplicationInstance 
+	*/
+
 	public function getApplicationInstance($applicationInstanceId) {
 	     $gs_data_input2939299822982 = array();
 	     $gs_data_input2939299822982['args'] = array();
@@ -20662,6 +25986,21 @@ class APIStoreApplicationPool {
 	     $gs_data_input2939299822982['args'] = array();
 	     $gs_data_input2939299822982['args']["applicationId"] = json_encode($this->transport->object_unset_nulls($applicationId));
 	     $gs_data_input2939299822982["method"] = "deactivateApplication";
+	     $gs_data_input2939299822982["interfaceName"] = "core.applications.IStoreApplicationPool";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Returns shipment applications.
+	*
+	* @return core_appmanager_data_Application[] 
+	*/
+
+	public function getActivatedApplications($systemType) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["systemType"] = json_encode($this->transport->object_unset_nulls($systemType));
+	     $gs_data_input2939299822982["method"] = "getActivatedApplications";
 	     $gs_data_input2939299822982["interfaceName"] = "core.applications.IStoreApplicationPool";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
@@ -20778,6 +26117,20 @@ class APIStoreApplicationPool {
 	     $gs_data_input2939299822982 = array();
 	     $gs_data_input2939299822982['args'] = array();
 	     $gs_data_input2939299822982["method"] = "getAvailableThemeApplications";
+	     $gs_data_input2939299822982["interfaceName"] = "core.applications.IStoreApplicationPool";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Returns shipment applications.
+	*
+	* @return String[] 
+	*/
+
+	public function getPaymentApplicationsIds() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "getPaymentApplicationsIds";
 	     $gs_data_input2939299822982["interfaceName"] = "core.applications.IStoreApplicationPool";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
@@ -21241,6 +26594,21 @@ class APIStoreManager {
 	}
 
 	/**
+	* Initializing this api. This will identify the webshop and will act as the root for everything in this api.
+	* @param initSessionId The session id to identify to this user.
+	* @throws ErrorException
+	* @return boolean 
+	*/
+
+	public function isPikStore() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "isPikStore";
+	     $gs_data_input2939299822982["interfaceName"] = "core.storemanager.IStoreManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
 	* On registration, generate a new id this store, which will become a part of the hostname.
 	* @throws ErrorException
 	* @return boolean 
@@ -21494,6 +26862,24 @@ class APIStoreManager {
 	}
 
 	/**
+	* Save whatever data you want to the store.
+	* @param key The key to save to
+	* @param value The value to save
+	* @param secure Secure? Need to be administrator to read it?
+	* @return void 
+	*/
+
+	public function toggleDeactivation($password, $deactivated) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
+	     $gs_data_input2939299822982['args']["deactivated"] = json_encode($this->transport->object_unset_nulls($deactivated));
+	     $gs_data_input2939299822982["method"] = "toggleDeactivation";
+	     $gs_data_input2939299822982["interfaceName"] = "core.storemanager.IStoreManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
 	* On registration, generate a new id this store, which will become a part of the hostname.
 	* @throws ErrorException
 	* @return void 
@@ -21505,6 +26891,73 @@ class APIStoreManager {
 	     $gs_data_input2939299822982['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
 	     $gs_data_input2939299822982["method"] = "toggleIgnoreBookingErrors";
 	     $gs_data_input2939299822982["interfaceName"] = "core.storemanager.IStoreManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+}
+class APIStoreOcrManager {
+
+	var $transport;
+	
+	function APIStoreOcrManager($transport) {
+		$this->transport = $transport;
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return void 
+	*/
+
+	public function checkForPayments() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "checkForPayments";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ocr.IStoreOcrManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return String 
+	*/
+
+	public function getAccountingId() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "getAccountingId";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ocr.IStoreOcrManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return core_ocr_OcrFileLines[] 
+	*/
+
+	public function getAllTransactions() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "getAllTransactions";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ocr.IStoreOcrManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author boggi
+	* @return void 
+	*/
+
+	public function setAccountId($id, $password) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["id"] = json_encode($this->transport->object_unset_nulls($id));
+	     $gs_data_input2939299822982['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
+	     $gs_data_input2939299822982["method"] = "setAccountId";
+	     $gs_data_input2939299822982["interfaceName"] = "core.ocr.IStoreOcrManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
 
@@ -21599,6 +27052,377 @@ class APIStripeManager {
 	     $gs_data_input2939299822982['args']["token"] = json_encode($this->transport->object_unset_nulls($token));
 	     $gs_data_input2939299822982["method"] = "createAndChargeCustomer";
 	     $gs_data_input2939299822982["interfaceName"] = "core.stripe.IStripeManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+}
+class APISupportManager {
+
+	var $transport;
+	
+	function APISupportManager($transport) {
+		$this->transport = $transport;
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function addToSupportCase($supportCaseId, $history) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["supportCaseId"] = json_encode($this->transport->object_unset_nulls($supportCaseId));
+	     $gs_data_input2939299822982['args']["history"] = json_encode($this->transport->object_unset_nulls($history));
+	     $gs_data_input2939299822982["method"] = "addToSupportCase";
+	     $gs_data_input2939299822982["interfaceName"] = "core.support.ISupportManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function assignCareTakerForCase($caseId, $userId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["caseId"] = json_encode($this->transport->object_unset_nulls($caseId));
+	     $gs_data_input2939299822982['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+	     $gs_data_input2939299822982["method"] = "assignCareTakerForCase";
+	     $gs_data_input2939299822982["interfaceName"] = "core.support.ISupportManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function changeModuleForCase($caseId, $moduleId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["caseId"] = json_encode($this->transport->object_unset_nulls($caseId));
+	     $gs_data_input2939299822982['args']["moduleId"] = json_encode($this->transport->object_unset_nulls($moduleId));
+	     $gs_data_input2939299822982["method"] = "changeModuleForCase";
+	     $gs_data_input2939299822982["interfaceName"] = "core.support.ISupportManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function changeStateForCase($caseId, $stateId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["caseId"] = json_encode($this->transport->object_unset_nulls($caseId));
+	     $gs_data_input2939299822982['args']["stateId"] = json_encode($this->transport->object_unset_nulls($stateId));
+	     $gs_data_input2939299822982["method"] = "changeStateForCase";
+	     $gs_data_input2939299822982["interfaceName"] = "core.support.ISupportManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function changeSupportCaseType($caseId, $type) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["caseId"] = json_encode($this->transport->object_unset_nulls($caseId));
+	     $gs_data_input2939299822982['args']["type"] = json_encode($this->transport->object_unset_nulls($type));
+	     $gs_data_input2939299822982["method"] = "changeSupportCaseType";
+	     $gs_data_input2939299822982["interfaceName"] = "core.support.ISupportManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function changeTitleOnCase($caseId, $title) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["caseId"] = json_encode($this->transport->object_unset_nulls($caseId));
+	     $gs_data_input2939299822982['args']["title"] = json_encode($this->transport->object_unset_nulls($title));
+	     $gs_data_input2939299822982["method"] = "changeTitleOnCase";
+	     $gs_data_input2939299822982["interfaceName"] = "core.support.ISupportManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_support_SupportCase 
+	*/
+
+	public function createSupportCase($supportCase) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["supportCase"] = json_encode($this->transport->object_unset_nulls($supportCase));
+	     $gs_data_input2939299822982["method"] = "createSupportCase";
+	     $gs_data_input2939299822982["interfaceName"] = "core.support.ISupportManager";
+	     return $this->transport->cast(new core_support_SupportCase(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_support_FeatureListEntry 
+	*/
+
+	public function getFeatureListEntry($entryId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["entryId"] = json_encode($this->transport->object_unset_nulls($entryId));
+	     $gs_data_input2939299822982["method"] = "getFeatureListEntry";
+	     $gs_data_input2939299822982["interfaceName"] = "core.support.ISupportManager";
+	     return $this->transport->cast(new core_support_FeatureListEntry(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_support_FeatureList 
+	*/
+
+	public function getFeatureThree($moduleId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["moduleId"] = json_encode($this->transport->object_unset_nulls($moduleId));
+	     $gs_data_input2939299822982["method"] = "getFeatureThree";
+	     $gs_data_input2939299822982["interfaceName"] = "core.support.ISupportManager";
+	     return $this->transport->cast(new core_support_FeatureList(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_support_ServerStatusList 
+	*/
+
+	public function getServerStatusList() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "getServerStatusList";
+	     $gs_data_input2939299822982["interfaceName"] = "core.support.ISupportManager";
+	     return $this->transport->cast(new core_support_ServerStatusList(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_support_SupportCase 
+	*/
+
+	public function getSupportCase($supportCaseId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["supportCaseId"] = json_encode($this->transport->object_unset_nulls($supportCaseId));
+	     $gs_data_input2939299822982["method"] = "getSupportCase";
+	     $gs_data_input2939299822982["interfaceName"] = "core.support.ISupportManager";
+	     return $this->transport->cast(new core_support_SupportCase(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_support_SupportCase[] 
+	*/
+
+	public function getSupportCases($filter) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["filter"] = json_encode($this->transport->object_unset_nulls($filter));
+	     $gs_data_input2939299822982["method"] = "getSupportCases";
+	     $gs_data_input2939299822982["interfaceName"] = "core.support.ISupportManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_support_SupportStatistics 
+	*/
+
+	public function getSupportStatistics() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "getSupportStatistics";
+	     $gs_data_input2939299822982["interfaceName"] = "core.support.ISupportManager";
+	     return $this->transport->cast(new core_support_SupportStatistics(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function helloWorld() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "helloWorld";
+	     $gs_data_input2939299822982["interfaceName"] = "core.support.ISupportManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function saveFeatureThree($moduleId, $list) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["moduleId"] = json_encode($this->transport->object_unset_nulls($moduleId));
+	     $gs_data_input2939299822982['args']["list"] = json_encode($this->transport->object_unset_nulls($list));
+	     $gs_data_input2939299822982["method"] = "saveFeatureThree";
+	     $gs_data_input2939299822982["interfaceName"] = "core.support.ISupportManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function updateFeatureListEntry($entryId, $text, $title, $language) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["entryId"] = json_encode($this->transport->object_unset_nulls($entryId));
+	     $gs_data_input2939299822982['args']["text"] = json_encode($this->transport->object_unset_nulls($text));
+	     $gs_data_input2939299822982['args']["title"] = json_encode($this->transport->object_unset_nulls($title));
+	     $gs_data_input2939299822982['args']["language"] = json_encode($this->transport->object_unset_nulls($language));
+	     $gs_data_input2939299822982["method"] = "updateFeatureListEntry";
+	     $gs_data_input2939299822982["interfaceName"] = "core.support.ISupportManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+}
+class APISystemManager {
+
+	var $transport;
+	
+	function APISystemManager($transport) {
+		$this->transport = $transport;
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_system_GetShopSystem 
+	*/
+
+	public function createSystem($systemName, $companyId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["systemName"] = json_encode($this->transport->object_unset_nulls($systemName));
+	     $gs_data_input2939299822982['args']["companyId"] = json_encode($this->transport->object_unset_nulls($companyId));
+	     $gs_data_input2939299822982["method"] = "createSystem";
+	     $gs_data_input2939299822982["interfaceName"] = "core.system.ISystemManager";
+	     return $this->transport->cast(new core_system_GetShopSystem(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function deleteSystem($systemId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["systemId"] = json_encode($this->transport->object_unset_nulls($systemId));
+	     $gs_data_input2939299822982["method"] = "deleteSystem";
+	     $gs_data_input2939299822982["interfaceName"] = "core.system.ISystemManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_director_DailyUsage[] 
+	*/
+
+	public function getDailyUsage($systemId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["systemId"] = json_encode($this->transport->object_unset_nulls($systemId));
+	     $gs_data_input2939299822982["method"] = "getDailyUsage";
+	     $gs_data_input2939299822982["interfaceName"] = "core.system.ISystemManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_system_GetShopSystem 
+	*/
+
+	public function getSystem($systemId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["systemId"] = json_encode($this->transport->object_unset_nulls($systemId));
+	     $gs_data_input2939299822982["method"] = "getSystem";
+	     $gs_data_input2939299822982["interfaceName"] = "core.system.ISystemManager";
+	     return $this->transport->cast(new core_system_GetShopSystem(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return core_system_GetShopSystem[] 
+	*/
+
+	public function getSystemsForCompany($companyId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["companyId"] = json_encode($this->transport->object_unset_nulls($companyId));
+	     $gs_data_input2939299822982["method"] = "getSystemsForCompany";
+	     $gs_data_input2939299822982["interfaceName"] = "core.system.ISystemManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function saveSystem($system) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["system"] = json_encode($this->transport->object_unset_nulls($system));
+	     $gs_data_input2939299822982["method"] = "saveSystem";
+	     $gs_data_input2939299822982["interfaceName"] = "core.system.ISystemManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	*
+	* @author ktonder
+	* @return void 
+	*/
+
+	public function syncSystem($systemId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["systemId"] = json_encode($this->transport->object_unset_nulls($systemId));
+	     $gs_data_input2939299822982["method"] = "syncSystem";
+	     $gs_data_input2939299822982["interfaceName"] = "core.system.ISystemManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
 
@@ -21970,6 +27794,24 @@ class APITrackAndTraceManager {
 	     $gs_data_input2939299822982 = array();
 	     $gs_data_input2939299822982['args'] = array();
 	     $gs_data_input2939299822982["method"] = "getAllRoutes";
+	     $gs_data_input2939299822982["interfaceName"] = "core.trackandtrace.ITrackAndTraceManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Returns a list of all the pooled destinations.
+	*
+	* @param routeId
+	* @param destinationId
+	* @return core_trackandtrace_ExportedCollectedData[] 
+	*/
+
+	public function getCompletedCollectionTasks($start, $end) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["start"] = json_encode($this->transport->object_unset_nulls($start));
+	     $gs_data_input2939299822982['args']["end"] = json_encode($this->transport->object_unset_nulls($end));
+	     $gs_data_input2939299822982["method"] = "getCompletedCollectionTasks";
 	     $gs_data_input2939299822982["interfaceName"] = "core.trackandtrace.ITrackAndTraceManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
@@ -22479,6 +28321,24 @@ class APITrackAndTraceManager {
 	     $gs_data_input2939299822982['args']["destId"] = json_encode($this->transport->object_unset_nulls($destId));
 	     $gs_data_input2939299822982['args']["routeId"] = json_encode($this->transport->object_unset_nulls($routeId));
 	     $gs_data_input2939299822982["method"] = "moveDestinationFromPoolToRoute";
+	     $gs_data_input2939299822982["interfaceName"] = "core.trackandtrace.ITrackAndTraceManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Returns a list of all the pooled destinations.
+	*
+	* @param routeId
+	* @param destinationId
+	* @return void 
+	*/
+
+	public function registerCollectionData($destinationId, $collectionTasks) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["destinationId"] = json_encode($this->transport->object_unset_nulls($destinationId));
+	     $gs_data_input2939299822982['args']["collectionTasks"] = json_encode($this->transport->object_unset_nulls($collectionTasks));
+	     $gs_data_input2939299822982["method"] = "registerCollectionData";
 	     $gs_data_input2939299822982["interfaceName"] = "core.trackandtrace.ITrackAndTraceManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
@@ -23038,6 +28898,24 @@ class APIUserManager {
 	* this function will return true.
 	*
 	* @throws ErrorException
+	* @return core_usermanager_data_User 
+	*/
+
+	public function changeUserByUsingPinCode($userId, $pinCode) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
+	     $gs_data_input2939299822982['args']["pinCode"] = json_encode($this->transport->object_unset_nulls($pinCode));
+	     $gs_data_input2939299822982["method"] = "changeUserByUsingPinCode";
+	     $gs_data_input2939299822982["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->cast(new core_usermanager_data_User(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	* If an administrator is impersonating a lower user,
+	* this function will return true.
+	*
+	* @throws ErrorException
 	* @return boolean 
 	*/
 
@@ -23067,6 +28945,22 @@ class APIUserManager {
 	     $gs_data_input2939299822982["method"] = "checkUserNameAndPassword";
 	     $gs_data_input2939299822982["interfaceName"] = "core.usermanager.IUserManager";
 	     return $this->transport->cast(new core_usermanager_data_User(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	* If an administrator is impersonating a lower user,
+	* this function will return true.
+	*
+	* @throws ErrorException
+	* @return void 
+	*/
+
+	public function clearTokenList() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "clearTokenList";
+	     $gs_data_input2939299822982["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
 
 	/**
@@ -23156,6 +29050,22 @@ class APIUserManager {
 	}
 
 	/**
+	* If an administrator is impersonating a lower user,
+	* this function will return true.
+	*
+	* @throws ErrorException
+	* @return String 
+	*/
+
+	public function createTokenAccess() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "createTokenAccess";
+	     $gs_data_input2939299822982["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
 	* Create a new user to your webshop.<br>
 	* This will fail if you are trying to create a user which is granted more access then you have yourself.<br>
 	* If no users has been created, then the user object will automatically be set as an administrator.<br>
@@ -23170,6 +29080,23 @@ class APIUserManager {
 	     $gs_data_input2939299822982['args'] = array();
 	     $gs_data_input2939299822982['args']["user"] = json_encode($this->transport->object_unset_nulls($user));
 	     $gs_data_input2939299822982["method"] = "createUser";
+	     $gs_data_input2939299822982["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->cast(new core_usermanager_data_User(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	* If an administrator is impersonating a lower user,
+	* this function will return true.
+	*
+	* @throws ErrorException
+	* @return core_usermanager_data_User 
+	*/
+
+	public function createUserAndCompany($company) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["company"] = json_encode($this->transport->object_unset_nulls($company));
+	     $gs_data_input2939299822982["method"] = "createUserAndCompany";
 	     $gs_data_input2939299822982["interfaceName"] = "core.usermanager.IUserManager";
 	     return $this->transport->cast(new core_usermanager_data_User(), $this->transport->sendMessage($gs_data_input2939299822982));
 	}
@@ -23612,6 +29539,23 @@ class APIUserManager {
 	}
 
 	/**
+	* Logon a given user.
+	* @param email The username to use when logging on, an also be the users email.
+	* @param password The password for this user in plain text.
+	* @throws ErrorException
+	* @return core_usermanager_data_User 
+	*/
+
+	public function getMainCompanyUser($companyId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["companyId"] = json_encode($this->transport->object_unset_nulls($companyId));
+	     $gs_data_input2939299822982["method"] = "getMainCompanyUser";
+	     $gs_data_input2939299822982["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->cast(new core_usermanager_data_User(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
 	* If an administrator is impersonating a lower user,
 	* this function will return true.
 	*
@@ -23640,6 +29584,22 @@ class APIUserManager {
 	     $gs_data_input2939299822982['args'] = array();
 	     $gs_data_input2939299822982['args']["userId"] = json_encode($this->transport->object_unset_nulls($userId));
 	     $gs_data_input2939299822982["method"] = "getSubUsers";
+	     $gs_data_input2939299822982["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* If an administrator is impersonating a lower user,
+	* this function will return true.
+	*
+	* @throws ErrorException
+	* @return core_usermanager_data_LoginToken[] 
+	*/
+
+	public function getTokenList() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "getTokenList";
 	     $gs_data_input2939299822982["interfaceName"] = "core.usermanager.IUserManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
@@ -23775,6 +29735,22 @@ class APIUserManager {
 	}
 
 	/**
+	* If an administrator is impersonating a lower user,
+	* this function will return true.
+	*
+	* @throws ErrorException
+	* @return core_usermanager_data_User[] 
+	*/
+
+	public function getUsersThatHasPinCode() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "getUsersThatHasPinCode";
+	     $gs_data_input2939299822982["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
 	* Switch the context of what user you are logged in as.
 	*
 	* @throws ErrorException
@@ -23871,6 +29847,24 @@ class APIUserManager {
 	}
 
 	/**
+	* Logon a given user.
+	* @param email The username to use when logging on, an also be the users email.
+	* @param password The password for this user in plain text.
+	* @throws ErrorException
+	* @return core_usermanager_data_User 
+	*/
+
+	public function logOnKeepLoggedOnAfterUpdate($username, $password) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["username"] = json_encode($this->transport->object_unset_nulls($username));
+	     $gs_data_input2939299822982['args']["password"] = json_encode($this->transport->object_unset_nulls($password));
+	     $gs_data_input2939299822982["method"] = "logOnKeepLoggedOnAfterUpdate";
+	     $gs_data_input2939299822982["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->cast(new core_usermanager_data_User(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
 	* If an administrator is impersonating a lower user,
 	* this function will return true.
 	*
@@ -23921,6 +29915,23 @@ class APIUserManager {
 	     $gs_data_input2939299822982['args'] = array();
 	     $gs_data_input2939299822982['args']["refCode"] = json_encode($this->transport->object_unset_nulls($refCode));
 	     $gs_data_input2939299822982["method"] = "logonUsingRefNumber";
+	     $gs_data_input2939299822982["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->cast(new core_usermanager_data_User(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	* If an administrator is impersonating a lower user,
+	* this function will return true.
+	*
+	* @throws ErrorException
+	* @return core_usermanager_data_User 
+	*/
+
+	public function logonUsingToken($token) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["token"] = json_encode($this->transport->object_unset_nulls($token));
+	     $gs_data_input2939299822982["method"] = "logonUsingToken";
 	     $gs_data_input2939299822982["interfaceName"] = "core.usermanager.IUserManager";
 	     return $this->transport->cast(new core_usermanager_data_User(), $this->transport->sendMessage($gs_data_input2939299822982));
 	}
@@ -24201,6 +30212,23 @@ class APIUserManager {
 	     $gs_data_input2939299822982["method"] = "saveGroup";
 	     $gs_data_input2939299822982["interfaceName"] = "core.usermanager.IUserManager";
 	     return $this->transport->cast(new core_usermanager_data_Group(), $this->transport->sendMessage($gs_data_input2939299822982));
+	}
+
+	/**
+	* If an administrator is impersonating a lower user,
+	* this function will return true.
+	*
+	* @throws ErrorException
+	* @return core_usermanager_data_Company 
+	*/
+
+	public function saveOrCreateCompanyAndUpdatePrimaryUser($company) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["company"] = json_encode($this->transport->object_unset_nulls($company));
+	     $gs_data_input2939299822982["method"] = "saveOrCreateCompanyAndUpdatePrimaryUser";
+	     $gs_data_input2939299822982["interfaceName"] = "core.usermanager.IUserManager";
+	     return $this->transport->cast(new core_usermanager_data_Company(), $this->transport->sendMessage($gs_data_input2939299822982));
 	}
 
 	/**
@@ -24653,6 +30681,86 @@ class APIVerifoneManager {
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
 
+	/**
+	* Handle payments trough verifone.
+	* @return void 
+	*/
+
+	public function clearMessages() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "clearMessages";
+	     $gs_data_input2939299822982["interfaceName"] = "core.verifonemanager.IVerifoneManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Handle payments trough verifone.
+	* @return void 
+	*/
+
+	public function doXreport($terminalId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["terminalId"] = json_encode($this->transport->object_unset_nulls($terminalId));
+	     $gs_data_input2939299822982["method"] = "doXreport";
+	     $gs_data_input2939299822982["interfaceName"] = "core.verifonemanager.IVerifoneManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Handle payments trough verifone.
+	* @return void 
+	*/
+
+	public function doZreport($terminalId) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["terminalId"] = json_encode($this->transport->object_unset_nulls($terminalId));
+	     $gs_data_input2939299822982["method"] = "doZreport";
+	     $gs_data_input2939299822982["interfaceName"] = "core.verifonemanager.IVerifoneManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Handle payments trough verifone.
+	* @return String 
+	*/
+
+	public function getCurrentPaymentOrderId() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "getCurrentPaymentOrderId";
+	     $gs_data_input2939299822982["interfaceName"] = "core.verifonemanager.IVerifoneManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Handle payments trough verifone.
+	* @return String[] 
+	*/
+
+	public function getTerminalMessages() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "getTerminalMessages";
+	     $gs_data_input2939299822982["interfaceName"] = "core.verifonemanager.IVerifoneManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Handle payments trough verifone.
+	* @return Boolean 
+	*/
+
+	public function isPaymentInProgress() {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982["method"] = "isPaymentInProgress";
+	     $gs_data_input2939299822982["interfaceName"] = "core.verifonemanager.IVerifoneManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
 }
 class APIVippsManager {
 
@@ -24827,6 +30935,20 @@ class APIWubookManager {
 	* @return void 
 	*/
 
+	public function activateWubookCallback($gs_multilevel_name) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "activateWubookCallback";
+	     $gs_data_input2939299822982["interfaceName"] = "core.wubook.IWubookManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Wubook management system.<br>
+	* @return void 
+	*/
+
 	public function addBooking($gs_multilevel_name, $rcode) {
 	     $gs_data_input2939299822982 = array();
 	     $gs_data_input2939299822982['args'] = array();
@@ -24986,6 +31108,21 @@ class APIWubookManager {
 
 	/**
 	* Wubook management system.<br>
+	* @return void 
+	*/
+
+	public function fetchBookingFromCallback($gs_multilevel_name, $rcode) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['args']["rcode"] = json_encode($this->transport->object_unset_nulls($rcode));
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "fetchBookingFromCallback";
+	     $gs_data_input2939299822982["interfaceName"] = "core.wubook.IWubookManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Wubook management system.<br>
 	* @return core_wubook_WubookBooking[] 
 	*/
 
@@ -25024,6 +31161,20 @@ class APIWubookManager {
 	     $gs_data_input2939299822982['args'] = array();
 	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
 	     $gs_data_input2939299822982["method"] = "getAllRestriction";
+	     $gs_data_input2939299822982["interfaceName"] = "core.wubook.IWubookManager";
+	     return $this->transport->sendMessage($gs_data_input2939299822982);
+	}
+
+	/**
+	* Wubook management system.<br>
+	* @return String 
+	*/
+
+	public function getCallbackUrl($gs_multilevel_name) {
+	     $gs_data_input2939299822982 = array();
+	     $gs_data_input2939299822982['args'] = array();
+	     $gs_data_input2939299822982['multiLevelName'] = json_encode($this->transport->object_unset_nulls($gs_multilevel_name));
+	     $gs_data_input2939299822982["method"] = "getCallbackUrl";
 	     $gs_data_input2939299822982["interfaceName"] = "core.wubook.IWubookManager";
 	     return $this->transport->sendMessage($gs_data_input2939299822982);
 	}
@@ -25300,6 +31451,12 @@ class GetShopApi {
            return new APIApacManager($this->transport);
       }
       /**
+      * @return BackupManager
+      */
+      public function getBackupManager() {
+           return new APIBackupManager($this->transport);
+      }
+      /**
       * @return BamboraManager
       */
       public function getBamboraManager() {
@@ -25372,6 +31529,18 @@ class GetShopApi {
            return new APICertegoManager($this->transport);
       }
       /**
+      * @return ChecklistManager
+      */
+      public function getChecklistManager() {
+           return new APIChecklistManager($this->transport);
+      }
+      /**
+      * @return ComfortManager
+      */
+      public function getComfortManager() {
+           return new APIComfortManager($this->transport);
+      }
+      /**
       * @return ContentManager
       */
       public function getContentManager() {
@@ -25384,16 +31553,34 @@ class GetShopApi {
            return new APIDBBackupManager($this->transport);
       }
       /**
+      * @return DepartmentManager
+      */
+      public function getDepartmentManager() {
+           return new APIDepartmentManager($this->transport);
+      }
+      /**
       * @return DibsManager
       */
       public function getDibsManager() {
            return new APIDibsManager($this->transport);
       }
       /**
+      * @return DirectorManager
+      */
+      public function getDirectorManager() {
+           return new APIDirectorManager($this->transport);
+      }
+      /**
       * @return DoorManager
       */
       public function getDoorManager() {
            return new APIDoorManager($this->transport);
+      }
+      /**
+      * @return EhfXmlGenerator
+      */
+      public function getEhfXmlGenerator() {
+           return new APIEhfXmlGenerator($this->transport);
       }
       /**
       * @return EpayManager
@@ -25438,6 +31625,12 @@ class GetShopApi {
            return new APIGalleryManager($this->transport);
       }
       /**
+      * @return GdsManager
+      */
+      public function getGdsManager() {
+           return new APIGdsManager($this->transport);
+      }
+      /**
       * @return GetShop
       */
       public function getGetShop() {
@@ -25466,6 +31659,18 @@ class GetShopApi {
       */
       public function getGetShopLockSystemManager() {
            return new APIGetShopLockSystemManager($this->transport);
+      }
+      /**
+      * @return GiftCardManager
+      */
+      public function getGiftCardManager() {
+           return new APIGiftCardManager($this->transport);
+      }
+      /**
+      * @return GmailApiManager
+      */
+      public function getGmailApiManager() {
+           return new APIGmailApiManager($this->transport);
       }
       /**
       * @return ImageManager
@@ -25546,6 +31751,12 @@ class GetShopApi {
            return new APIOAuthManager($this->transport);
       }
       /**
+      * @return OcrManager
+      */
+      public function getOcrManager() {
+           return new APIOcrManager($this->transport);
+      }
+      /**
       * @return OrderManager
       */
       public function getOrderManager() {
@@ -25570,6 +31781,12 @@ class GetShopApi {
            return new APIPaymentTerminalManager($this->transport);
       }
       /**
+      * @return PgaManager
+      */
+      public function getPgaManager() {
+           return new APIPgaManager($this->transport);
+      }
+      /**
       * @return PkkControlManager
       */
       public function getPkkControlManager() {
@@ -25582,10 +31799,28 @@ class GetShopApi {
            return new APIPmsBookingProcess($this->transport);
       }
       /**
+      * @return PmsConferenceManager
+      */
+      public function getPmsConferenceManager() {
+           return new APIPmsConferenceManager($this->transport);
+      }
+      /**
+      * @return PmsCoverageAndIncomeReportManager
+      */
+      public function getPmsCoverageAndIncomeReportManager() {
+           return new APIPmsCoverageAndIncomeReportManager($this->transport);
+      }
+      /**
       * @return PmsEventManager
       */
       public function getPmsEventManager() {
            return new APIPmsEventManager($this->transport);
+      }
+      /**
+      * @return PmsGetShopOverView
+      */
+      public function getPmsGetShopOverView() {
+           return new APIPmsGetShopOverView($this->transport);
       }
       /**
       * @return PmsInvoiceManager
@@ -25604,6 +31839,12 @@ class GetShopApi {
       */
       public function getPmsManagerProcessor() {
            return new APIPmsManagerProcessor($this->transport);
+      }
+      /**
+      * @return PmsNotificationManager
+      */
+      public function getPmsNotificationManager() {
+           return new APIPmsNotificationManager($this->transport);
       }
       /**
       * @return PmsPaymentTerminal
@@ -25628,6 +31869,12 @@ class GetShopApi {
       */
       public function getPmsWebBookingManager() {
            return new APIPmsWebBookingManager($this->transport);
+      }
+      /**
+      * @return PosManager
+      */
+      public function getPosManager() {
+           return new APIPosManager($this->transport);
       }
       /**
       * @return PrintManager
@@ -25726,6 +31973,12 @@ class GetShopApi {
            return new APIStoreManager($this->transport);
       }
       /**
+      * @return StoreOcrManager
+      */
+      public function getStoreOcrManager() {
+           return new APIStoreOcrManager($this->transport);
+      }
+      /**
       * @return StorePrintManager
       */
       public function getStorePrintManager() {
@@ -25736,6 +31989,18 @@ class GetShopApi {
       */
       public function getStripeManager() {
            return new APIStripeManager($this->transport);
+      }
+      /**
+      * @return SupportManager
+      */
+      public function getSupportManager() {
+           return new APISupportManager($this->transport);
+      }
+      /**
+      * @return SystemManager
+      */
+      public function getSystemManager() {
+           return new APISystemManager($this->transport);
       }
       /**
       * @return TicketManager

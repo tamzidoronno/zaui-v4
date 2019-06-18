@@ -120,6 +120,8 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         cal.add(Calendar.HOUR_OF_DAY, -4);
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
         Date toCheck = cal.getTime();
         if(toCheck.after(arg.start)) {
             return new StartBookingResult();
@@ -765,9 +767,12 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     @Override
     public void printReciept(BookingPrintRecieptData data) {
         logPrint("Starting printing service for " + data.terminalId + " - " + data.orderId);
-        pmsManager.processor();        
-        if (storeId.equals("ac8bff70-a8b9-4fa1-8281-a12e24866bdb")) {
-            printReceiptLomCampingTerminal(data.orderId);
+        pmsManager.processor();   
+        
+        String ipaddr = getIpadressOnTerminal(data.terminalId);
+        
+        if(ipaddr == null || ipaddr.isEmpty()) {
+            printRecieptIntegratatedTerminal(data.orderId, data.terminalId);
             return;
         }
         
@@ -1333,10 +1338,11 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     }
     
     public void chargeIntegratedTerminal(String orderId, String terminalId) {
+        Integer paymentTerminalId = getpaymentTerminalId(terminalId);
         isVerifone = false;
         testTerminalPaymentTerminal = true;
         Application app = applicationPool.getApplication("8edb700e-b486-47ac-a05f-c61967a734b1");
-        String tokenId = app.getSetting("token" + terminalId);
+        String tokenId = app.getSetting("token" + paymentTerminalId);
         orderManager.chargeOrder(orderId, tokenId); 
    }
 
@@ -1399,6 +1405,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                         status.roomIsClean = room.addedToArx;
                     }
                     status.paymentCompleted = pmsInvoiceManager.isRoomPaidFor(room.pmsBookingRoomId);
+                    status.roomId = room.pmsBookingRoomId;
                     retList.add(status);
                 });
         }
@@ -1528,11 +1535,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     }
 
     private void chargeOrder(String orderId, String terminalid) {
-        Application app = applicationPool.getApplication("6dfcf735-238f-44e1-9086-b2d9bb4fdff2");
-        String ipaddr = "";
-        if(app != null) {
-            ipaddr = app.getSetting("ipaddr" + terminalid);
-        }
+        String ipaddr = getIpadressOnTerminal(new Integer(terminalid));
         
         if(ipaddr != null && !ipaddr.isEmpty()) {
             chargeOrderWithVerifoneTerminal(orderId, terminalid);
@@ -1541,9 +1544,11 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         }
     }
 
-    private void printReceiptLomCampingTerminal(String orderId) {
-        String lomKioskGsdId = "e04469a5-eff3-46fc-9e9c-d567fd2f107f";
-        invoiceManager.sendReceiptToCashRegisterPoint(lomKioskGsdId, orderId);
+    private void printRecieptIntegratatedTerminal(String orderId, Integer terminalId) {
+
+        Application app = applicationPool.getApplication("8edb700e-b486-47ac-a05f-c61967a734b1");
+        String tokenId = app.getSetting("token" + terminalId);
+        invoiceManager.sendReceiptToCashRegisterPoint(tokenId, orderId);
         
         pmsManager.processor();
         Order order = orderManager.getOrderSecure(orderId);
@@ -1553,7 +1558,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 continue;
             }
             if(room.bookingItemId != null && !room.bookingItemId.isEmpty() && room.addedToArx) {
-                pmsManager.printCode(lomKioskGsdId, room.pmsBookingRoomId);
+                pmsManager.printCode(tokenId, room.pmsBookingRoomId);
             }
         }
     }
@@ -1562,5 +1567,61 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     public String addBookingItemType(String bookingId, String type, Date start, Date end, String guestInfoFromRoom) {
         return pmsManager.addBookingItemType(bookingId, type, start, end, guestInfoFromRoom, false);
         
+    }
+
+    @Override
+    public boolean hasPrintCodeSupportOnTerminal() {
+        if(storeId.equals("ccf3c29b-62d9-4099-ae85-c300f85492b4")) {
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean printCodeOnTerminal(String roomId, String phoneNumber, Integer terminalId) {
+        if(!hasPrintCodeSupportOnTerminal()) {
+            return false;
+        }
+        
+        PmsBooking booking = pmsManager.getBookingFromRoomSecure(roomId);
+        PmsBookingRooms room = booking.getRoom(roomId);
+        User usr = userManager.getUserById(booking.userId);
+        boolean foundnumber = false;
+        if(usr.cellPhone != null && usr.cellPhone.equals(phoneNumber)) {
+            foundnumber = true;
+        }
+        
+        for(PmsGuests r : room.guests) {
+            if(r.phone != null && r.phone.equals(phoneNumber)) {
+                foundnumber = true;
+            }
+        }
+        
+        if(foundnumber) {
+            Integer paymentTerminalId = getpaymentTerminalId(terminalId + "");
+            Application app = applicationPool.getApplication("8edb700e-b486-47ac-a05f-c61967a734b1");
+            String tokenId = app.getSetting("token" + paymentTerminalId);        
+            pmsManager.printCode(tokenId, roomId);
+        }
+        
+        return foundnumber;
+    }
+
+    private Integer getpaymentTerminalId(String terminalId) {
+        Application app = applicationPool.getApplication("6dfcf735-238f-44e1-9086-b2d9bb4fdff2");
+        Integer paymentTerminalId = 0;
+        if(app != null) { 
+            paymentTerminalId = new Integer(app.getSetting("terminalid" + terminalId)); 
+        }
+        return paymentTerminalId;
+    }
+
+    private String getIpadressOnTerminal(Integer terminalId) {
+        Application app = applicationPool.getApplication("6dfcf735-238f-44e1-9086-b2d9bb4fdff2");
+        String ipaddr = "";
+        if(app != null) {
+            ipaddr = app.getSetting("ipaddr" + terminalId);
+        }
+        return ipaddr;
     }
 }

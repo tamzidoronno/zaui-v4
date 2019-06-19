@@ -1,0 +1,141 @@
+.ConferenceView .workareaheader {
+    background-color: #dfff98;
+    font-size: 25px;
+    vertical-align: top;
+}
+
+.ConferenceView {
+    background-color: #eeeeee;
+}
+
+.ConferenceView .workareaheader .headertitle {
+    padding: 20px;
+}
+
+.ConferenceView .leftmenu {
+    width: 100px;
+    background-color: #23314e;
+    color: #FFF;
+    text-align: center;
+    min-height: calc(100% - 86px);
+    display: inline-block;
+    vertical-align: top;
+}
+
+.ConferenceView .leftmenu .entry {
+    border-top: solid 1px #222;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    cursor: pointer;
+    width: 100px;
+    text-align: center;
+    font-size: 11px;
+    min-height: 46px;
+}
+
+.ConferenceView .leftmenu .entry i {
+    display: block;
+    font-size: 25px;
+}
+
+
+.ConferenceView .workarea .workarea_inner {
+    margin: 20px;
+}
+
+.ConferenceView .workarea {
+    width: calc(100% - 105px);
+    box-sizing: border-box;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.ConferenceView .edit_details_directprint {
+    background-color: inherit !important;
+}
+
+.ConferenceView .workareaheader {
+    background-color: #dfff98;
+    font-size: 25px;   
+    vertical-align: top;
+}
+
+.ConferenceView .row {
+    padding-top: 5px;
+    border-bottom: solid 1px #DDD;
+    padding-bottom: 3px;
+}
+.ConferenceView .row .col {
+    display: inline-block;
+    vertical-align: top;
+    font-size: 16px;
+}
+
+.ConferenceView .row.header .col {font-weight: bold;}
+
+.ConferenceView .row .col.col5,
+.ConferenceView .row .col.col0 { margin-top: -3px; width: 50px; margin-left: 5px;}
+.ConferenceView .row .col.col1 { width: 150px; }
+.ConferenceView .row .col.col2 { width: 150px; }
+.ConferenceView .row .col.col3 { width: 250px; overflow: hidden; margin-right: 20px; text-overflow: ellipsis;}
+.ConferenceView .row .col.col4 { width: 150px; }
+
+.ConferenceView .row_to_hide {
+    width: 100%;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.ConferenceView .events {
+    display: inline-block;
+}
+
+.ConferenceView .eventview {
+    box-sizing: border-box;
+    width: calc(100% - 10px);
+    vertical-align: top;
+    display: none;
+}
+
+.ConferenceView .activity .col0 {padding-top: 15px; padding-left: 5px;}
+.ConferenceView .activity .col1 { width: 220px !important; }
+
+.ConferenceView .activity .col2,
+.ConferenceView .activity .col4,
+.ConferenceView .activity .col3 { width: 93px !important; margin-right: 0px !important}
+
+.ConferenceView .activity .col2  input ,
+.ConferenceView .activity .col4  input ,
+.ConferenceView .activity .col3 input { width: 50px; }
+.ConferenceView .activity textarea { 
+    min-width: 550px; 
+    height: 150px;
+    margin-bottom: 20px;
+    border: solid 1px #DDD;
+    padding: 10px;
+}
+
+.ConferenceView .head_text {
+    display: grid;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.ConferenceView .event_info input {
+    width: 377px;
+}
+
+.ConferenceView .event_info select {
+    width: 398px;
+}
+
+.ConferenceView .template {
+    display: none;
+}
+
+.ConferenceView .cartitem .name {
+    width: 300px;
+    
+    padding-right: 20px;
+}

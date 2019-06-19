@@ -24,6 +24,11 @@ class SalesPointTabPayment extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\Sale
             return;
         }
         
+        if (isset($_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_complete_conference'])) {
+            $this->includefile("conference");
+            return;
+        }
+        
         if (isset($_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_complete_payment'])) {
             
             if (isset($_SESSION['gs_error_message_payment'])) {
@@ -114,6 +119,8 @@ class SalesPointTabPayment extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\Sale
         
         if ($_POST['data']['payementId'] == "f86e7042-f511-4b9b-bf0d-5545525f42de") {
             $_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_complete_payonroom'] = json_encode($cartItems);
+        } elseif($_POST['data']['payementId'] == "conference") {
+            $_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_complete_conference'] = json_encode($cartItems);
         } else {
             $order = $this->getApi()->getPosManager()->createOrder($cartItems, $_POST['data']['payementId'], $tab->id, $cashPointId);
             $_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_complete_payment'] = $order->id;
@@ -155,6 +162,8 @@ class SalesPointTabPayment extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\Sale
         if (isset($_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_complete_payonroom'])) {
             unset($_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_complete_payonroom']);
         }
+        
+        unset($_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_complete_conference']);
         
         if ($this->fromDirect()) {
             $this->closeModal();
@@ -377,6 +386,7 @@ class SalesPointTabPayment extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\Sale
             'f1c8301d-9900-420a-ad71-98adb44d7475', 
             'f86e7042-f511-4b9b-bf0d-5545525f42de', 
             '7587fdcb-ff65-4362-867a-1684cbae6aef', 
+            'conference',
             'cbe3bb0f-e54d-4896-8c70-e08a0d6e55ba',
             'a263b749-abcd-4812-b052-e20eccb69aa5',
             '8650475d-ebc6-4dfb-86c3-eba4a8aba979');
@@ -395,5 +405,12 @@ class SalesPointTabPayment extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\Sale
         return $this->getModalVariable("fromdirect") == "true";
     }
 
+    public function addCurrentSelectionToConference() {
+        $pos = new \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPointNewSale();
+        $currentTab = $pos->getCurrentTab();
+        $this->getApi()->getPosManager()->moveContentFromOneTabToAnother($currentTab->id, $_POST['data']['tabid']);
+        $this->cancelCurrentOrder();
+        
+    }
 }
 ?>

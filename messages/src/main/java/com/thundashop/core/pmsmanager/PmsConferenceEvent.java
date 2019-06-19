@@ -22,6 +22,10 @@ public class PmsConferenceEvent extends DataCommon {
     public Date to = null;
     public String userId = "";
     public Integer status = 0;
+    
+    /**
+     * This is always the conference name.
+     */
     String title = "";
     
     public List<PmsGuests> additionalGuests = new ArrayList();

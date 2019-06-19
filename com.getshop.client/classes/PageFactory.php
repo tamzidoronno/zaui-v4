@@ -819,6 +819,27 @@ class PageFactory {
         $row->addColumn("02b94bcd-39b9-41aa-b40c-348a27ca5d9d", "c2bc0427-6182-45d4-b61d-78f192d2b1d5");
         $this->pages['report'] = $page;
         
+        $page = new \ModulePage("list", "pmsconference");
+        $row = $page->createRow();
+        $row->ignoreTopRow = true;
+        $page->addExtraApplications('b5e9370e-121f-414d-bda2-74df44010c3b');
+        $row->addColumn("d3e168b2-c10e-4750-a330-527d98906aa8", "c2bc0427-6182-45d2-b11d-78f192d2b1d5");
+        $this->pages['list'] = $page;
+        
+        $page = new \ModulePage("conference", "pmsconference");
+        $row = $page->createRow();
+        $row->ignoreTopRow = true;
+        $page->addExtraApplications('b5e9370e-121f-414d-bda2-74df44010c3b');
+        $row->addColumn("28befd67-e4ea-412b-a67a-23b1aa10781c", "32acx427-6182-45d2-b11d-78f192d2b1d1");
+        $this->pages['conference'] = $page;
+        
+        $page = new \ModulePage("new", "pmsconference");
+        $row = $page->createRow();
+        $row->ignoreTopRow = true;
+        $page->addExtraApplications('b5e9370e-121f-414d-bda2-74df44010c3b');
+        $row->addColumn("66e0c307-5a6d-4c16-8ed6-5204d63d5675", "z2a1x427-6182-45d2-b11d-18f152d2b1d1");
+        $this->pages['new'] = $page;
+        
     }
 
 }

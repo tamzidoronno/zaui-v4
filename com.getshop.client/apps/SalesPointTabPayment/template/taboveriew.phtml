@@ -2,6 +2,7 @@
 /* @var $this \ns_11234b3f_452e_42ce_ab52_88426fc48f8d\SalesPointTabPayment */
 $tab = $this->getCurrentTab();
 $paymentMethods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+$hasConferences = $this->getApi()->getPosManager()->hasConferences();
 
 if (!$tab || !count($tab->cartItems)) {
     echo "<script>$('.gsoverlay1').click();</script>";
@@ -53,6 +54,19 @@ $validPaymentMethods = $this->getValidPaymentMethodIds();
         ?>
         <div class='shop_button startpayment' paymentid='<? echo $paymentId; ?>'><i class='fa fa-money'></i> <? echo $name; ?></div>
         <?
+    }
+    
+    if ($hasConferences) {
+        $isConferenceTab = $this->getApi()->getPosManager()->isTabFromConference($tab->id);
+        if (!$isConferenceTab) {
+            ?>
+            <div class='shop_button startpayment' paymentid='conference'><i class='fa fa-money'></i> <? echo $this->__f("Conference"); ?></div>
+            <?
+        } else {
+            echo "<div style='padding: 20px;'>";
+            echo $this->__f("This is a tab for a conference, you can also pay conference tabs from PMS payment process");
+            echo "</div>";
+        }
     }
     ?>
 </div>

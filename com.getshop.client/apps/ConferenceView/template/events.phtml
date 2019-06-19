@@ -1,0 +1,60 @@
+<?
+/* @var $this \ns_28befd67_e4ea_412b_a67a_23b1aa10781c\ConferenceView */
+$conference = $this->getConference();
+$events = $this->getApi()->getPmsConferenceManager()->getConferenceEvents($conference->id);
+?>
+
+<div class='events row_to_hide'>
+    <h2><? echo $this->__f("Events for this conference"); ?></h2>
+    
+    <div class='event row header'>
+        <div class=''>
+            <div class='col col0 col_menu col_to_hide'>&nbsp;</div>
+            <div class='col col1 col_from col_to_hide'><? echo $this->__f("Date"); ?></div>
+            <div class='col col1 col_from col_to_hide'><? echo $this->__f("Start"); ?></div>
+            <div class='col col2 col_to col_to_hide'><? echo $this->__f("End"); ?></div>
+            <div class='col col3 col_title col_to_hide'><? echo $this->__f("Event name"); ?></div>
+            <div class='col col4 col_item col_to_hide'><? echo $this->__f("Location"); ?></div>
+        </div>
+    </div>
+
+    <?
+    foreach ($events as $event) {
+        $item = $this->getApi()->getPmsConferenceManager()->getItem($event->pmsConferenceItemId);
+        ?>
+        <div class='event row'>
+            <div class=''>
+                <div class='col col0 col_menu'><i eventid='<? echo $event->id; ?>' class='fa gs_shop_small_icon fa-trash deleteEvent' ></i></div>
+                <div class='col col1 col_from '><? echo date('d.m.Y', strtotime($event->from)); ?></div>
+                <div class='col col1 col_from '><? echo date('H:i', strtotime($event->from)); ?></div>
+                <div class='col col2 col_to '><? echo date('H:i', strtotime($event->to)); ?></div>
+                <div class='col col3 col_title '><? echo $event->name; ?></div>
+                <div class='col col4 col_item '><? echo $item ? $item->name : "N/A"; ?></div>
+            
+                <div class='col col5 col_menu_right'>
+                    <i class='gs_shop_small_icon fa fa-arrow-right openevent' eventid='<? echo $event->id; ?>'></i>
+                </div>
+            </div>
+        </div>
+        <?
+    }
+    ?>
+    
+    <br/>
+    <div class='shop_button addeventbutton'>
+        <i class='fa fa-plus'></i> <? echo $this->__f("Add a new event"); ?>
+    </div>
+</div>
+
+<div class='eventview'>
+    <div class='gs_shop_small_icon closeevent' style='font-size: 16px;'><i class='fa fa-arrow-left' ></i> Back to conference</div>
+    <div class='inner_data'>
+        
+    </div>
+</div>
+<br/>
+<br/>
+
+<div>
+    
+</div>

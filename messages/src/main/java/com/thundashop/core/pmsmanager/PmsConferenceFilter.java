@@ -10,5 +10,9 @@ package com.thundashop.core.pmsmanager;
  * @author boggi
  */
 public class PmsConferenceFilter {
-    
+    /**
+     * if this is set to true old events
+     * will not be returned
+     */
+    boolean onlyNoneExpiredEvents = false;
 }

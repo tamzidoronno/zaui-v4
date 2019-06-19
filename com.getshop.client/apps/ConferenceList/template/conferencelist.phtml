@@ -1,0 +1,64 @@
+<?
+/* @var $this \ns_d3e168b2_c10e_4750_a330_527d98906aa8\ConferenceList */
+$filter = new \core_pmsmanager_PmsConferenceFilter();
+$filter->onlyNoneExpiredEvents = true;
+
+$list = $this->getApi()->getPmsConferenceManager()->getAllConferences($filter);
+
+function asdfasdfasdf_date_sort($a, $b) {
+    return strtotime($a) - strtotime($b);
+}
+
+$groupedByDay = array();
+
+foreach ($list as $conference) {
+    $events = $this->getApi()->getPmsConferenceManager()->getConferenceEvents($conference->id);
+    foreach ($events as $event) {
+        $date = date('d.m.Y', strtotime($event->from));
+        $std = new stdClass();
+        $std->conf = $conference;
+        $std->event = $event;
+        $groupedByDay[$date][] = $std; 
+        break;
+    }
+}
+
+uksort($groupedByDay, 'asdfasdfasdf_date_sort');
+
+foreach ($groupedByDay as $date => $stds) {
+    if (time() - strtotime($date) >= 3 * 86400) {
+        continue;
+    }
+    ?>
+
+    <div class='row conferencerow'>
+        <div class='col conferencename'><? echo date('D - d.m.Y', strtotime($date)); ?></div><div class='col eventcount'><? echo count($stds); ?></div>
+        <div class='row events'>
+        <?
+        $i = 0;
+        foreach ($stds as $std) {
+            $i++;
+            $conference = $std->conf;
+            $event = $std->event;
+            
+            echo "<a href='/pmsconference.php?page=conference&confid=$conference->id'>";
+            $lastrow = $i == count($stds) ? "lastrow" : "";
+            ?>
+            <div class='row <? echo $lastrow; ?>'>
+                <div class='col eventname'>
+                    <? echo $conference->meetingTitle; ?>
+                </div>
+                <div class='col eventname'>
+                    <? echo $event->name; ?>
+                </div>
+
+            </div>
+            <?
+            echo "</a>";
+        }
+        ?>
+        </div>
+    </div>
+    <?  
+}
+?>

@@ -1,0 +1,31 @@
+<?
+/* @var $this \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPointNewSale */
+
+function ns_57db782b_5fe7_478f_956a_ab9eb3575855_sortByDate($a, $b) {
+    return strtotime($a->expiryDate) - strtotime($b->expiryDate);
+}
+
+$conferences = $this->getApi()->getPosManager()->getPosConferences();
+usort($conferences, 'ns_57db782b_5fe7_478f_956a_ab9eb3575855_sortByDate');
+
+?>
+<div class="conference row" style="font-weight: bold;">
+   <div class="col date"><? echo $this->__f("Last event day"); ?></div>
+   <div class="col name"><? echo $this->__f("Conference Name"); ?></div>
+   <div class="col button"></div>
+</div>
+<?
+foreach ($conferences as $conference) {
+     if (time() - strtotime($conference->expiryDate) >= 3 * 86400) {
+        continue;
+    }
+    ?>
+    <div class="conference row">
+        <div class="col date"><? echo date('d.m.Y', strtotime($conference->expiryDate)); ?></div>
+        <div class="col name"><? echo $conference->conferenceName; ?></div>
+        <div class="col button"><div class="shop_button" gs_callback='app.SalesPointNewSale.conferenceSelected' gsclick="activateTab" tabid="<? echo $conference->tabId; ?>"><? echo $this->__f("Select"); ?></div></div>
+    </div>
+    <?
+}
+
+?>

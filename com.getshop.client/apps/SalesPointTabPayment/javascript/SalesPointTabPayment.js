@@ -6,6 +6,20 @@ app.SalesPointTabPayment = {
         $(document).on('keyup', '.SalesPointTabPayment .giftcardcode', app.SalesPointTabPayment.checkGiftCardCode);
         $(document).on('click', '.SalesPointTabPayment .startpayment', app.SalesPointTabPayment.startPayment);
         $(document).on('click', '.SalesPointTabPayment .debugaction', app.SalesPointTabPayment.postDebugMessage);
+        $(document).on('keyup', '.SalesPointTabPayment .filterconferences', app.SalesPointTabPayment.filterConferences);
+    },
+    
+    filterConferences: function() {
+        var searchWord = $(this).val();
+        var rows = $('.SalesPointTabPayment .conference.row');
+        $(rows).each(function() {
+            console.log($(this).text());
+            if ($(this).text().toLowerCase().includes(searchWord.toLowerCase()) || !searchWord) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        })
     },
     
     checkGiftCardCode: function() {

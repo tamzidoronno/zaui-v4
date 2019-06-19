@@ -34,7 +34,8 @@ import com.thundashop.core.paymentmanager.StorePaymentConfig;
 import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsBookingRooms;
-import com.thundashop.core.pmsmanager.PmsInvoiceManager;
+import com.thundashop.core.pmsmanager.PmsConference;
+import com.thundashop.core.pmsmanager.PmsConferenceManager;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.pmsmanager.PmsOrderCreateRow;
 import com.thundashop.core.pmsmanager.PmsRoomPaymentSummary;
@@ -67,6 +68,7 @@ public class PosManager extends ManagerBase implements IPosManager {
     public HashMap<String, CashPoint> cashPoints = new HashMap();
     public HashMap<String, PosView> views = new HashMap();
     public HashMap<String, PosTable> tables = new HashMap();
+    public HashMap<String, PosConference> conferences = new HashMap();
     
     @Autowired
     private CartManager cartManager;
@@ -98,6 +100,9 @@ public class PosManager extends ManagerBase implements IPosManager {
     @Autowired
     private GetShopAccountingManager getShopAccountingManager;
     
+    @Autowired
+    private PmsConferenceManager pmsConferenceManager;
+    
     /**
      * Never access this variable directly! Always 
      * go trough the getSettings function!
@@ -119,6 +124,9 @@ public class PosManager extends ManagerBase implements IPosManager {
                     }
                     if (dataCommon instanceof PosView) {
                         views.put(dataCommon.id, (PosView)dataCommon);
+                    }
+                    if (dataCommon instanceof PosConference) {
+                        conferences.put(dataCommon.id, (PosConference)dataCommon);
                     }
                     if (dataCommon instanceof PosTable) {
                         tables.put(dataCommon.id, (PosTable)dataCommon);
@@ -147,15 +155,20 @@ public class PosManager extends ManagerBase implements IPosManager {
     
     @Override
     public String createNewTab(String referenceName) {
-        PosTab posTab = new PosTab();
-        posTab.createdByUserId = getSession().currentUser.id;
-        posTab.name = referenceName;
-        posTab.incrementalTabId = getNextTabId();
+        PosTab posTab = createTab(referenceName);
         
         saveObject(posTab);
         tabs.put(posTab.id, posTab);
         return posTab.id;
     }   
+
+    private PosTab createTab(String referenceName) {
+        PosTab posTab = new PosTab();
+        posTab.createdByUserId = getSession().currentUser.id;
+        posTab.name = referenceName;
+        posTab.incrementalTabId = getNextTabId();
+        return posTab;
+    }
 
     @Override
     public void deleteTab(String tabId) {
@@ -197,6 +210,13 @@ public class PosManager extends ManagerBase implements IPosManager {
 
     @Override
     public PosTab getTab(String tabId) {
+        if (isTabFromConference(tabId) && tabs.get(tabId) == null) {
+            PosTab tab = createTab(getPosConferenceByTabId(tabId).conferenceName);
+            tab.id = tabId;
+            saveObject(tab);
+            tabs.put(tab.id, tab);
+        }
+        
         if (tabs.get(tabId) == null) {
             return null;
         }
@@ -278,9 +298,9 @@ public class PosManager extends ManagerBase implements IPosManager {
         }
         
         order.cart.getItems().stream()
-                .forEach(cartItem -> {
-                    tab.removeCartItem(cartItem);
-                });
+            .forEach(cartItem -> {
+                tab.removeCartItem(cartItem);
+            });
         
         tab.cashWithDrawal = tab.cashWithDrawal - order.cashWithdrawal;
         
@@ -1134,5 +1154,132 @@ public class PosManager extends ManagerBase implements IPosManager {
         }
         
         return result;
+    }
+
+    @Override
+    public boolean hasConferences() {
+        return pmsConferenceManager.anyConferences();
+    }
+    
+    @Override
+    public List<PosConference> getPosConferences() {
+        syncConferences();
+        return new ArrayList(conferences.values());
+    }
+    
+    public void syncConferences() {
+        List<String> confIds = pmsConferenceManager.getConferencesIds();
+
+        List<PosConference> toDelete = conferences.values()
+                .stream()
+                .filter(o -> !confIds.contains(o.pmsConferenceId))
+                .collect(Collectors.toList());
+        
+        toDelete.stream().forEach(o -> {
+            deletePosConference(o);
+        });
+        
+        confIds.stream().forEach(confId -> {
+            PosConference conf = getPosConferenceByConfId(confId);
+            
+            if (conf == null ){
+                updatePosConference(confId);
+            }
+        });
+    }
+
+    private void deletePosConference(PosConference o) throws ErrorException {
+        if (!isTabEmpty(o.tabId)) {
+            return;
+        }
+        
+        deleteTab(o.tabId);
+        conferences.remove(o.id);
+        deleteObject(o);
+    }
+
+    private PosConference getPosConferenceByConfId(String confId) {
+        PosConference conf = conferences.values()
+                .stream()
+                .filter(o -> o.pmsConferenceId.equals(confId))
+                .findAny()
+                .orElse(null);
+        return conf;
+    }
+
+    private boolean isTabEmpty(String tabId) {
+        PosTab tab = tabs.get(tabId);
+        if (tab == null)
+            return true;
+        
+        return tab.cartItems.isEmpty();
+    }
+
+    public void updatePosConference(String confId) {
+        PosConference conf = getPosConferenceByConfId(confId);
+        if (conf == null) {
+            conf = new PosConference();
+        }
+        
+        PmsConference pmsConference = pmsConferenceManager.getConference(confId);
+        
+        if (pmsConference == null) {
+            deletePosConference(conf);
+            return;
+        }
+        
+        conf.conferenceName = pmsConference.meetingTitle;
+        conf.pmsConferenceId = confId;
+        conf.expiryDate = pmsConferenceManager.getExpiryDate(confId);
+        
+        if (conf.tabId == null || conf.tabId.isEmpty()) {
+            conf.tabId = createNewTab(pmsConference.meetingTitle);
+        }
+        
+        saveObject(conf);
+        conferences.put(conf.id, conf);
+    }
+    
+    @Override
+    public String canDeleteTab(String tabId) {
+        boolean isTabFromConference = isTabFromConference(tabId);
+        
+        if (isTabFromConference && !isTabEmpty(tabId)) {
+            return "This tab belongs to a conference and cant be deleted unless it has been cleared out.";
+        }
+        
+        return "";
+    }
+
+    @Override
+    public boolean isTabFromConference(String tabId) {
+        return getPosConferenceByTabId(tabId) != null;
+    }
+
+    private PosConference getPosConferenceByTabId(String tabId) {
+        return conferences.values()
+                .stream()
+                .filter(o -> o.tabId.equals(tabId))
+                .findAny()
+                .orElse(null);
+    }
+
+    @Override
+    public void moveContentFromOneTabToAnother(String fromTabId, String toTabId) {
+        if (fromTabId.equals(toTabId)) {
+            return;
+        }
+        
+        PosTab fromTab = getTab(fromTabId);
+        PosTab toTab = getTab(toTabId);
+        toTab.cartItems.addAll(fromTab.cartItems);
+        deleteTab(fromTabId);
+        
+        saveObject(toTab);
+    }
+
+    @Override
+    public PosConference getPosConference(String pmsConferenceId) {
+        return getPosConferenceByConfId(pmsConferenceId);
     }
 }

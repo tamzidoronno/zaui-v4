@@ -436,8 +436,10 @@ class ModulePage {
 
     public function getTopMenuConference() {
         $menu = new \ModulePageMenu("pmsconference");
+        $menu->entries[] = new ModulePageMenuItem("New", "new", "gsicon-gs-new");
         $menu->entries[] = new ModulePageMenuItem("Conference", "home", "gsicon-gs-dashboard");
         $menu->entries[] = new ModulePageMenuItem("Event report", "eventreport", "fa-pie-chart");
+        $menu->entries[] = new ModulePageMenuItem("List", "list", "fa-list");
         $menu->entries[] = new ModulePageMenuItem("Report", "report", "fa-line-chart");
         return $menu;
     }

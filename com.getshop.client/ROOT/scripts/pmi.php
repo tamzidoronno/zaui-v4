@@ -11,6 +11,9 @@ $segments = $factory->getApi()->getPmsCoverageAndIncomeReportManager()->getSegme
 $closeDate = strtotime($factory->getApi()->getOrderManager()->getOrderManagerSettings()->closedTilPeriode);
 $autoClose = strtotime($factory->getApi()->getOrderManager()->getOrderManagerSettings()->autoCloseFinancialDataWhenCreatingZReport);
 
+/**
+ * Revenue for rooms, segments etc.
+ */
 if($_GET['type'] == "roomrevenue") {
     $filter = new core_pmsmanager_PmsBookingFilter();
     $filter->startDate = $appBase->convertToJavaDate(strtotime($_GET['start'] . " 00:00"));
@@ -51,6 +54,10 @@ if($_GET['type'] == "roomrevenue") {
     
     echo json_encode($list);
 }
+
+/**
+ * Other revenue, salespoint etc.
+ */
 if($_GET['type'] == "allrevenue") {
     //Income report
     $startDate = $appBase->convertToJavaDate(strtotime($_GET['start'] . " 00:00"));
@@ -71,6 +78,10 @@ if($_GET['type'] == "allrevenue") {
     }
     echo json_encode($list);
 }
+
+/**
+ * Guests / rooms that are for the future.
+ */
 if($_GET['type'] == "reservations") {
     $filter = new core_pmsmanager_PmsBookingFilter();
     $filter->startDate = $appBase->convertToJavaDate(strtotime($_GET['start'] . " 00:00"));

@@ -152,3 +152,28 @@
     color: #FFF;
     box-sizing: border-box;
 }
+
+
+.SalesPointTabPayment .conference.row {
+    border-bottom:solid 1px #DDD;
+    padding-left: 20px;
+    padding-bottom: 10px;
+}
+
+.SalesPointTabPayment .conference.row .date {
+    width: 150px;
+    font-size: 18px;
+}
+
+.SalesPointTabPayment .conference.row .name {
+    width: calc(100% - 300px);
+    font-size: 18px;
+}
+
+.SalesPointTabPayment .conference.row .col {
+    display: inline-block;
+}
+
+.SalesPointTabPayment .conference.row.odd {
+    background-color: #EFEFEF;
+}

@@ -14,6 +14,8 @@ import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.gsd.GdsManager;
+import com.thundashop.core.gsd.GetShopDevice;
 import com.thundashop.core.gsd.RoomReceipt;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
@@ -94,6 +96,9 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     
     @Autowired
     WebManager webManager;
+    
+    @Autowired
+    GdsManager gdsManager;
     
     @Autowired
     private InvoiceManager invoiceManager;
@@ -1215,6 +1220,21 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             return null;
         }
         
+        List<PmsBooking> tmpList = new ArrayList();
+        for(PmsBooking b : bookings) {
+            boolean notEnded = false;
+            for(PmsBookingRooms r : b.getActiveRooms()) {
+                if(!r.isEnded()) {
+                    notEnded = true;
+                }
+            }
+            if(notEnded) {
+                tmpList.add(b);
+            }
+        }
+        bookings = tmpList;
+        
+        
         boolean allPaidFor = true;
         for(PmsBooking booking : bookings) {
             for(PmsBookingRooms r : booking.rooms) {
@@ -1545,11 +1565,8 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     }
 
     private void printRecieptIntegratatedTerminal(String orderId, Integer terminalId) {
-
-        Application app = applicationPool.getApplication("8edb700e-b486-47ac-a05f-c61967a734b1");
-        String tokenId = app.getSetting("token" + terminalId);
-        invoiceManager.sendReceiptToCashRegisterPoint(tokenId, orderId);
-        
+        String deviceId = getGsdDeviceId(terminalId);
+        invoiceManager.sendReceiptToCashRegisterPoint(deviceId, orderId);
         pmsManager.processor();
         Order order = orderManager.getOrderSecure(orderId);
         PmsBooking booking = pmsManager.getBookingWithOrderId(order.id);
@@ -1558,7 +1575,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 continue;
             }
             if(room.bookingItemId != null && !room.bookingItemId.isEmpty() && room.addedToArx) {
-                pmsManager.printCode(tokenId, room.pmsBookingRoomId);
+                pmsManager.printCode(deviceId, room.pmsBookingRoomId);
             }
         }
     }
@@ -1598,15 +1615,21 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         }
         
         if(foundnumber) {
-            Integer paymentTerminalId = getpaymentTerminalId(terminalId + "");
-            Application app = applicationPool.getApplication("8edb700e-b486-47ac-a05f-c61967a734b1");
-            String tokenId = app.getSetting("token" + paymentTerminalId);        
-            pmsManager.printCode(tokenId, roomId);
+            String deviceId = getGsdDeviceId(terminalId);
+            pmsManager.printCode(deviceId, roomId);
         }
         
         return foundnumber;
     }
 
+    private String getGsdDeviceId(Integer terminalId) {
+        Integer paymentTerminalId = getpaymentTerminalId(terminalId + "");
+        Application app = applicationPool.getApplication("8edb700e-b486-47ac-a05f-c61967a734b1");
+        String tokenId = app.getSetting("token" + paymentTerminalId); 
+        GetShopDevice device = gdsManager.getDeviceByToken(tokenId);
+        return device.id;
+    }
+    
     private Integer getpaymentTerminalId(String terminalId) {
         Application app = applicationPool.getApplication("6dfcf735-238f-44e1-9086-b2d9bb4fdff2");
         Integer paymentTerminalId = 0;

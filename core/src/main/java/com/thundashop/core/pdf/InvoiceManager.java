@@ -19,6 +19,7 @@ import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.giftcard.GiftCardManager;
 import com.thundashop.core.gsd.DevicePrintMessage;
 import com.thundashop.core.gsd.GdsManager;
+import com.thundashop.core.gsd.GetShopDevice;
 import com.thundashop.core.gsd.ItemLine;
 import com.thundashop.core.gsd.VatLine;
 import com.thundashop.core.messagemanager.MailFactory;
@@ -291,7 +292,10 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
         if (order == null) {
             return;
         }
-        
+        GetShopDevice device = gdsManager.getDeviceByToken(deviceId);
+        if(device != null) {
+            deviceId = device.id;
+        }
         sendOrderToGdsDevice(deviceId, order);
     }
 
@@ -341,6 +345,7 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
         
         printMsg.paymentDate = order.paymentDate;
 
+        
         gdsManager.sendMessageToDevice(deviceId, printMsg);
     }
     

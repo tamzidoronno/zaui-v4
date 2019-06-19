@@ -16,9 +16,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.text.Normalizer;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.lang3.StringUtils;
  
 /**
  *
@@ -80,7 +82,14 @@ public class PrinterMessageGenerator {
     private void writeContentToTmpFile(GetShopDeviceMessage msg) {
         Gson gson = new Gson();
         String text = gson.toJson(msg);
-        
+        text = StringUtils.stripAccents(text);
+        text = text.replace("Ø", "O");
+        text = text.replace("Æ", "AE");
+        text = text.replace("Å", "A");
+        text = text.replace("ø", "o");
+        text = text.replace("æ", "ae");
+        text = text.replace("å", "a");
+
         try (PrintStream out = new PrintStream(new FileOutputStream("/tmp/"+tmpContentFile+".txt"))) {
             out.print(text);
         } catch (FileNotFoundException ex) {

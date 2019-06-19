@@ -309,8 +309,11 @@ public class BookingEngineNew extends GetShopSessionBeanNamed implements IBookin
                 saveObject(booking);
             } else {
                 BookingItem bookingItem = items.get(booking.bookingItemId);
-                bookingItem.bookingIds.add(booking.id);
-                saveObject(bookingItem);
+                
+                if (bookingItem != null) {
+                    bookingItem.bookingIds.add(booking.id);
+                    saveObject(bookingItem);
+                }
             }
             
             this.bookings.put(booking.id, booking);

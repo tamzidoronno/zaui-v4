@@ -188,9 +188,17 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
     public function deleteCurrentTab() {
         $tab = $this->getCurrentTab();
         if ($tab) {
+            $errorMsg = $this->getApi()->getPosManager()->canDeleteTab($tab->id);
+            
+            if ($errorMsg) {
+                echo $errorMsg;
+                return;
+            }   
+            
             $this->getApi()->getPosManager()->deleteTab($tab->id);
             unset($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_tabid']);
         }
+        
         $this->reloadPosViewer();
     }
     
@@ -234,6 +242,8 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
             $this->includefile("reprint");
         } elseif ($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview'] == "tables") {
             $this->includefile("tables");
+        } elseif ($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview'] == "conferences") {
+            $this->includefile("conferences");
         } elseif ($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview'] == "changeuserview") {
             $this->includefile("changeuserview");
         } else {
@@ -387,5 +397,8 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
         $_SESSION['refreshposviewer']= 1;
     }
 
+    public function closeCurrentTab() {
+        unset($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_tabid']);
+    }
 }
 ?>

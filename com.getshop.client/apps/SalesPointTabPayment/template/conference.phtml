@@ -1,0 +1,51 @@
+<?
+/* @var $this \ns_11234b3f_452e_42ce_ab52_88426fc48f8d\SalesPointTabPayment */
+function ns_11234b3f_452e_42ce_ab52_88426fc48f8d_sortByDate($a, $b) {
+    return strtotime($a->expiryDate) - strtotime($b->expiryDate);
+}
+
+$conferences = $this->getApi()->getPosManager()->getPosConferences();
+usort($conferences, 'ns_11234b3f_452e_42ce_ab52_88426fc48f8d_sortByDate');
+?>
+<div style='margin: 20px;'>
+    
+    <input class='gsniceinput1 filterconferences' placeholder="<? echo $this->__f("Search"); ?>" /> <i class='fa fa-search'></i>
+</div>
+<div class="conference row" style="font-weight: bold;">
+   <div class="col date"><? echo $this->__f("Last event day"); ?></div>
+   <div class="col name"><? echo $this->__f("Conference Name"); ?></div>
+   <div class="col button"></div>
+</div>
+<?
+$i = 0;
+foreach ($conferences as $conference) {
+    if (time() - strtotime($conference->expiryDate) >= 3 * 86400) {
+        continue;
+    }
+    $i++;
+    $cls = $i % 2 ? "odd" : "even";
+    ?>
+    <div class="conference row <? echo $cls; ?>">
+        <div class="col date"><? echo date('d.m.Y', strtotime($conference->expiryDate)); ?></div>
+        <div class="col name"><? echo $conference->conferenceName; ?></div>
+        <div class="col button" style="margin-top: 10px;"><div class="shop_button" gsclick="addCurrentSelectionToConference" tabid="<? echo $conference->tabId; ?>"><? echo $this->__f("Add to tab"); ?></div></div>
+        <div >
+            <?
+            echo "<b>".$this->__f("Events")."</b>";
+            $events = $this->getApi()->getPmsConferenceManager()->getConferenceEvents($conference->pmsConferenceId);
+            foreach ($events as $event) {
+                ?>
+                <div style="padding-left: 10px;"><? echo date("d.m.Y", strtotime($event->from))." - ".$event->name; ?></div>
+                <?
+
+            }
+            ?>
+        </div>
+    </div>
+    <?
+}
+?>
+<div class="buttonarea" style="padding: 20px;">
+    <div class='shop_button' gsclick='cancelCurrentOrder'><? echo $this->__f("Cancel"); ?></div>
+</div>
+

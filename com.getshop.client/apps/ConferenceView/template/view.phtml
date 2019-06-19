@@ -1,0 +1,55 @@
+<?
+/* @var $this \ns_28befd67_e4ea_412b_a67a_23b1aa10781c\ConferenceView */
+$conference = $this->getConference();
+if (!$conference) {
+    echo "<div style='font-size: 20px; padding: 50px; text-align: center;'>";
+        echo $this->__f("This conference has been deleted");
+    echo "</div>";
+    return;
+}
+?>
+<div class='outarea' confid='<? echo $conference->id; ?>'>
+    <div class="workareaheader">
+        <div class="headertitle">
+            <?
+            echo $this->__f("Conference").": ".$conference->meetingTitle;
+            ?>
+        </div>
+    </div>
+
+    <div class="leftmenu">
+        <div class="menu">
+            <div class="entry taboperation" tab="customer" reprint="true">
+                <i class="fa fa-user"></i>
+                Customer<br/>details
+            </div>
+            <div class="entry taboperation" tab="events" reprint="true">
+                <i class="fa fa-list"></i>
+                Events
+            </div>
+<!--            <div class="entry taboperation" tab="receipts" reprint="true">
+                <i class="fa fa-bed"></i>
+                Guests
+            </div>
+            <div class="entry taboperation" tab="history" reprint="true">
+                <i class="fa fa-history"></i>
+                History
+            </div>-->
+            <div class="entry taboperation" tab="pos" reprint="true">
+                <i class="fa fa-dollar"></i>
+                POS<br/> Account
+            </div>
+            <div class="entry taboperation" gs_confirm="Are you sure you want to delete this conference?" gsclick="deleteConference" confid="<? echo $conference->id; ?>">
+                <i class="fa fa-trash"></i>
+                Delete<br/>
+                Conference
+            </div>
+        </div>
+    </div>
+
+    <div class="workarea">
+        <div class=" workarea_inner">
+            <? $this->renderWorkArea(); ?>
+        </div>
+    </div>
+</div>

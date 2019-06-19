@@ -178,5 +178,33 @@ foreach ($cartItems as $item) {
         </span>
         <?
     }
+   
+    if ($this->getApi()->getPosManager()->hasConferences()) {
+        $isConferenceTab = $this->getApi()->getPosManager()->isTabFromConference($tab->id);
+        if ($isConferenceTab) {
+            ?>
+            <br/>
+            <br/>
+            <center style='padding: 20px;'>
+                * Conference tabs can also be invoiced from PMS Payment Process
+                <br/>
+                <span class="gs_shop_small_icon outpaymentmethod" gsclick='closeCurrentTab'>
+                    <?
+                    echo $this->__f("Close tab");
+                    ?>            
+                </span>
+            </center>
+            <?
+        } else {
+            ?>
+            
+            <span class="gs_shop_small_icon outpaymentmethod" gs_show_modal="paymentmodal" paymentmethodid="conference" tabid='<? echo $tab->id; ?>'>
+            <?
+                echo $this->__f("Conference");
+            ?>            
+            </span>
+            <?
+        }
+    }
     ?>
 </div>

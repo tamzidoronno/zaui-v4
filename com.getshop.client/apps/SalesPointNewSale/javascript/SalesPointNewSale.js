@@ -141,7 +141,16 @@ app.SalesPointNewSale = {
         if (!res)
             return;
         
-        thundashop.Ajax.simplePost(this, "deleteCurrentTab", {});
+        var event = thundashop.Ajax.createEvent(null, "deleteCurrentTab", this, {});
+        event['synchron'] = true;
+        thundashop.Ajax.post(event, function(res) {
+            if (res) {
+                alert(res);
+                return;
+            }
+            
+            document.location = document.location;
+        });
     },
     
     tabChanged: function() {
@@ -313,6 +322,10 @@ app.SalesPointNewSale = {
         });
         
         $('.startpaymentbutton').attr('gs_show_modal', 'paymentmodal');
+    },
+    
+    conferenceSelected: function() {
+        $('[gsclick="activateView"][view="conferences"]').click();
     }
 }
 

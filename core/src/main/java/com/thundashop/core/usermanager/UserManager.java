@@ -2356,22 +2356,34 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     @Override
     public User createCompany(String vatNumber, String name) {
         List<Company> company = getCompaniesByVatNumber(vatNumber);
+        
         if(company != null && !company.isEmpty()) {
-            return null;
+            User user = getMainCompanyUser(company.get(0).id);
+            if (user == null) {
+                user = createUserForCompany(name, company.get(0));
+            }
+            
+            return user;
         }
         
-        User user = new User();
-        user.fullName = name;
-        user = createUser(user);
         
         Company comp = new Company();
         comp.name = name;
         comp.vatNumber = vatNumber;
         saveCompany(comp);
+        
+        User user = createUserForCompany(name, comp);
+        
+        return user;
+    }
+
+    private User createUserForCompany(String name, Company comp) throws ErrorException {
+        User user = new User();
+        user.fullName = name;
+        user = createUser(user);
         user.company.add(comp.id);
         saveUser(user);
         finalizeUser(user);
-        
         return user;
     }
 

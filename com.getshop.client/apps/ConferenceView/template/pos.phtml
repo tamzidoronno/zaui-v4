@@ -1,0 +1,23 @@
+<?
+/* @var $this \ns_28befd67_e4ea_412b_a67a_23b1aa10781c\ConferenceView */
+$conference = $this->getConference();
+$posConference = $this->getApi()->getPosManager()->getPosConference($conference->id);
+$tab = $this->getApi()->getPosManager()->getTab($posConference->tabId);
+?>
+<h1><? echo $this->__f("Products added to this conference"); ?></h1>
+<?
+
+$total = 0;
+foreach ($tab->cartItems as $cartItem) {
+    $total += ($cartItem->count * $cartItem->product->price);
+    ?>
+    <div class='cartitem row'>
+        <div class='col count'><? echo $cartItem->count; ?> x </div>
+        <div class='col name'><? echo $cartItem->product->name; ?></div>
+        <div class='col price'><? echo $cartItem->product->price; ?></div>
+    </div>
+    <?
+}
+?>
+
+<h2><? echo $this->__f("Total").": ".$total; ?></h2>

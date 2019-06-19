@@ -2,6 +2,7 @@ package com.thundashop.core.pmsmanager;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionScope;
+import com.ibm.icu.util.Calendar;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
@@ -233,7 +234,7 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
 
     @Override
     public List<PmsConference> getAllConferences(PmsConferenceFilter filter) {
-        ArrayList<PmsConference> result = new ArrayList(conferences.values());
+        ArrayList<PmsConference> result = getFilterResult(filter);
         result.sort(Comparator.comparing(a -> a.meetingTitle));
         return result;
     }
@@ -405,6 +406,48 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
             deleteObject(event);
             logPrint("Deleted event with no conference");
         }
+    }
+
+    private ArrayList<PmsConference> getFilterResult(PmsConferenceFilter filter) {
+        ArrayList<PmsConference> retList = new ArrayList(conferences.values());
+        
+        if (filter.onlyNoneExpiredEvents) {
+            retList.removeIf(o -> eventHasExpired(o));
+        }
+        
+        return retList;
+    }
+
+    private boolean eventHasExpired(PmsConference o) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.DAY_OF_MONTH, -3);
+        Date expireDate = cal.getTime();
+                
+        return getConferenceEvents(o.id)
+                .stream()
+                .filter(event -> event.to != null)
+                .filter(event -> event.to.after(expireDate))
+                .count() == 0;
+    }
+
+    public boolean anyConferences() {
+        return !conferences.isEmpty();
+    }
+
+    public List<String> getConferencesIds() {
+        return new ArrayList(conferences.keySet());
+    }
+
+    public Date getExpiryDate(String confId) {
+        Date date = new Date(0);
+        for (PmsConferenceEvent event : getConferenceEvents(confId)) {
+            if (event.to.after(date)) {
+                date = event.to;
+            }
+        }
+        
+        return date;
     }
     
 }

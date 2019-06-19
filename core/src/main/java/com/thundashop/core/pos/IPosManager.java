@@ -175,4 +175,22 @@ public interface IPosManager {
     
     @Editor
     public Double getTotalForZreport(String zReportId);
+    
+    @Editor
+    public boolean hasConferences();
+    
+    @Editor
+    public List<PosConference> getPosConferences();
+    
+    @Editor
+    public String canDeleteTab(String tabId);
+    
+    @Editor
+    public void moveContentFromOneTabToAnother(String from, String to);
+    
+    @Editor
+    public boolean isTabFromConference(String tabId);
+    
+    @Editor
+    public PosConference getPosConference(String pmsConferenceId);
 }

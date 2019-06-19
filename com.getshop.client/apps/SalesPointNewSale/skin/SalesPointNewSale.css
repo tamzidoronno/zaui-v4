@@ -184,6 +184,8 @@
 
 .SalesPointNewSale .tablistcontent {
     padding: 50px;
+    height: 500px;
+    overflow-y: scroll;
 }
 .SalesPointNewSale .tablist  {
     border-bottom: solid 1px #DDD;
@@ -552,6 +554,23 @@
 
 .SalesPointNewSale .orderrow .col.button {
     padding-top: 0px;
+}
+
+.SalesPointNewSale .conference.row {
+    border-bottom:solid 1px #DDD;
+    padding-left: 20px;
+}
+
+.SalesPointNewSale .conference.row .date {
+    width: 150px;
+}
+
+.SalesPointNewSale .conference.row .name {
+    width: calc(100% - 300px);
+}
+
+.SalesPointNewSale .conference.row .col {
+    display: inline-block;
 }
 
 @media (max-width: 1050px) {

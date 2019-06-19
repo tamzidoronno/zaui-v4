@@ -1,0 +1,15 @@
+<?php
+/* @var $this ns_66e0c307_5a6d_4c16_8ed6_5204d63d5675\ConferenceNew */
+
+?>
+
+<div style="margin: 50px;" gstype="form" method="createConference">
+    <h1><? echo $this->__f("Create a new event"); ?></h1>
+    <?
+    echo $this->__f("Name of conference"); 
+    ?>
+    <input class="gsniceinput1" gsname="name"/>
+    <br/>
+    <br/>
+    <div synchron="true" gs_callback='app.ConferenceNew.created' class="shop_button" gstype="submit"><? echo $this->__f("Create conference"); ?></div>
+</div>

@@ -1,0 +1,58 @@
+.ConferenceList .col {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.ConferenceList .row {
+    
+}
+
+.ConferenceList .row.events {
+    margin-left: 20px;
+}
+
+.ConferenceList .conferencename {
+    font-size: 16px;
+    background-color: #EFEFEF;
+    width: calc(100% - 100px);
+    padding: 10px;
+    border-bottom: solid 1px #000;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+
+.ConferenceList .eventcount {
+    background-color: #EFEFEF;
+    font-size: 16px;
+    padding: 10px;
+    width: 100px;
+    box-sizing: border-box;
+    text-align: center;
+    border-left: solid 1px #DDD;
+    border-bottom: solid 1px #000;
+}
+
+.ConferenceList .conferencerow {
+    padding-bottom: 20px;
+    background-color: #EFEFEF;
+    margin: 20px;   
+}
+
+.ConferenceList .events .row .col {
+    width: calc(100%/2 - 20px);
+}
+
+.ConferenceList .events .row {
+    border-bottom: solid 1px #DDD;
+    padding: 3px;
+}
+
+.ConferenceList .events .row.lastrow {
+    border-bottom: solid 0px;
+}
+
+
+.ConferenceList {
+    max-width: 600px;
+    margin: 0px auto;
+}

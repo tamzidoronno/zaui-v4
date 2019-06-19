@@ -1,0 +1,125 @@
+<?
+/* @var $this \ns_28befd67_e4ea_412b_a67a_23b1aa10781c\ConferenceView */
+$conference = $this->getConference();
+
+if ($_POST['data']['eventid']) {
+    $event = $this->getApi()->getPmsConferenceManager()->getConferenceEvent($_POST['data']['eventid']);
+} else {
+    $event = new \core_pmsmanager_PmsConferenceEvent();
+}
+
+$activities = $this->getApi()->getPmsConferenceManager()->getEventEntries($_POST['data']['eventid']);
+$items = $this->getApi()->getPmsConferenceManager()->getAllItem("-1");
+?>
+
+
+<h2>Event overview.</h2>
+<div class='event_info' eventid='<? echo $event->id; ?>'>
+    <div class='row'>
+        <div class='col col1'>
+            <?
+            echo $this->__f("Event name"); 
+            ?>
+        </div>
+        
+        <div class='col col2'>
+            <input gsname='title' class='gsniceinput1' value='<? echo $event->name; ?>'/>  
+        </div>
+    </div>
+    
+    <div class='row'>
+        <div class='col col1'>
+            <?
+            echo $this->__f("Location"); 
+            ?>
+        </div>
+        
+        <div class='col col2'>
+            <select gsname='pmsConferenceItemId' class='gsniceselect1'>
+                <?
+                foreach ($items as $item) {
+                    $selected = $item->id == $event->pmsConferenceItemId ? "selected='true'" : "";
+                    ?>
+                    <option <? echo $selected; ?> value='<? echo $item->id; ?>'><? echo $item->name; ?></option>
+                    <?
+                }
+                ?>
+            </select>
+        </div>
+    </div>
+    
+    <div class='row'>
+        <div class='col col1'>
+            <?
+            echo $this->__f("Date"); 
+            ?>
+        </div>
+        
+        <div class='col col2'>
+            <input gsname='date' class='gsniceinput1' value='<? echo $event->from ? date('d.m.Y',strtotime($event->from)) : date('d.m.Y',strtotime('today')); ?>'/>  
+        </div>
+    </div>
+    
+    <div class='row'>
+        <div class='col col1'>
+            <?
+            echo $this->__f("Start time"); 
+            ?>
+        </div>
+        
+        <div class='col col2'>
+            <input gsname='starttime' class='gsniceinput1' value='<? echo $event->from ? date('H:i',strtotime($event->from)) : "08:00"; ?>'/>  
+        </div>
+    </div>
+    
+    <div class='row'>
+        <div class='col col1'>
+            <?
+            echo $this->__f("End time"); 
+            ?>
+        </div>
+        
+        <div class='col col2'>
+            <input gsname='endtime' class='gsniceinput1' value='<? echo $event->to ? date('H:i',strtotime($event->to)) : "16:00"; ?>'/>  
+        </div>
+    </div>
+</div>
+
+    <div class='activity row template' activityid=''>
+        <div class='col col0 col_to_hide'><i class='fa fa-trash gs_shop_small_icon deleteactivity'></i></div>
+        <div class='col col1 ' gsname='text'><span class='head_text'><? echo $this->__f("Title"); ?></span><input class='gsniceinput1' value=''></div>
+        <div class='col col2 ' gsname='from'><span class='head_text'><? echo $this->__f("From"); ?><input class='gsniceinput1' value=''></div>
+        <div class='col col3 ' gsname='to'><span class='head_text'><? echo $this->__f("To"); ?><input class='gsniceinput1' value=''></div>
+        <div class='col col4 ' gsname='count'><span class='head_text'><? echo $this->__f("Guests"); ?><input class='gsniceinput1' value=''></div>
+        <br/>
+        <br/>
+        <b><? echo $this->__f("Extra description"); ?></b>
+        <br/>
+        <textarea gsname='extendedText'></textarea>
+    </div>
+    
+    <h2>Activities for this event.</h2>
+    <div class='activities'>
+        <?
+        foreach ($activities as $activity) {
+            ?>
+        <div class='activity row' activityid='<? echo $activity->id; ?>'>
+            <div class='col col0 col_to_hide'><i class='fa fa-trash gs_shop_small_icon deleteactivity'></i></div>
+            <div class='col col1 ' gsname='text'><span class='head_text'><? echo $this->__f("Title"); ?></span><input class='gsniceinput1' value='<? echo $activity->text; ?>'></div>
+            <div class='col col2 ' gsname='from'><span class='head_text'><? echo $this->__f("From"); ?><input class='gsniceinput1' value='<? echo date('H:i', strtotime($activity->from)); ?>'></div>
+            <div class='col col3 ' gsname='to'><span class='head_text'><? echo $this->__f("To"); ?><input class='gsniceinput1' value='<? echo $activity->to ? date('H:i', strtotime($activity->to)) : ""; ?>'></div>
+            <div class='col col4 ' gsname='count'><span class='head_text'><? echo $this->__f("Guests"); ?><input class='gsniceinput1' value='<? echo $activity->count; ?>'></div>
+            <br/>
+            <br/>
+            <b><? echo $this->__f("Extra description"); ?></b>
+            <br/>
+            <textarea gsname='extendedText'><? echo $activity->extendedText; ?></textarea>
+        </div>
+            <?
+        }
+        ?>
+    </div>
+
+
+<div class='shop_button addExtraActivity'><i class='fa fa-plus'></i> <? echo $this->__f("Add activity"); ?></div>
+<div class='shop_button saveEvent'><i class='fa fa-save'></i> <? echo $this->__f("Save event"); ?></div>

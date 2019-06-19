@@ -1,0 +1,24 @@
+<?
+/* @var $this \ns_28befd67_e4ea_412b_a67a_23b1aa10781c\ConferenceView */
+
+$conference = $this->getConference();
+
+$user = $this->getApi()->getUserManager()->getUserById($conference->forUser);
+?>
+<div class='' style='max-width: 500px;'>
+<?
+    $extraArgs = array();
+    $extraArgs['confid'] = $conference->id;
+
+    $quser = new \ns_b5e9370e_121f_414d_bda2_74df44010c3b\GetShopQuickUser();
+    $quser->setUser($user);
+    $quser->printEditDirect = true;
+    $quser->hideWarning = true;
+    $quser->avoidSaving = true;
+    $quser->disableChange = $order->closed;
+    $quser->setExtraArgs($extraArgs);
+    $quser->renderApplication(true, $this);
+
+?>
+
+</div>

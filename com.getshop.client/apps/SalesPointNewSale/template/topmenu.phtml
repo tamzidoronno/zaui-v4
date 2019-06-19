@@ -3,8 +3,10 @@
 $cashwithdrawalective = isset($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview']) && $_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview'] == "cashwithdrawal" ? "active" : "";
 $changeuserview = isset($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview']) && $_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview'] == "changeuserview" ? "active" : "";
 $tablesective = isset($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview']) && $_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview'] == "tables" ? "active" : "";
+$conferenceActive = isset($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview']) && $_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_activeview'] == "conferences" ? "active" : "";
 $views = $this->getApi()->getPosManager()->getViews();
 $hasTables = $this->getApi()->getPosManager()->hasTables();
+$hasConferences = $this->getApi()->getPosManager()->hasConferences();
 $tabActive = !$this->getCurrentTab() ? "cash_disabled gs_disabled" : "";
 ?>
 
@@ -74,13 +76,24 @@ $tabActive = !$this->getCurrentTab() ? "cash_disabled gs_disabled" : "";
     }
     ?>
     
+    <?
+    if ($hasConferences) {
+    ?>
+    <div class='entry <? echo $conferenceActive; ?>' gsclick='activateView' view='conferences'>
+        <i class='fa fa-users'></i>
+        Conferences
+    </div>  
+    <?
+    }
+    ?>
+    
     <div gs_precheck='app.SalesPointNewSale.checkIfDisabled' class='entry' gstype='numpad' numpadgsmethod='addGiftCart' gsnumpadtitle='Please enter gift card value'>
         <i class='fa fa-gift'></i>
         Sell giftcard
     </div>
     
     <div gs_precheck='app.SalesPointNewSale.checkIfDisabled' class='entry changeuserview <? echo $changeuserview; ?>' gsclick='activateView' view='changeuserview'>
-        <i class='fa fa-users'></i>
+        <i class='fa fa-arrows'></i>
         Change User
     </div>
     

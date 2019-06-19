@@ -1,6 +1,7 @@
 package com.thundashop.core.accountingmanager;
 
 import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.ForceAsync;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.pmsmanager.PmsOrderStatistics;
 import java.util.Date;
@@ -18,7 +19,9 @@ public interface IAccountingManager {
     public List<String> createUserFile(boolean newOnly) throws Exception;
     @Administrator
     public List<String> createCreditorFile(boolean newOnly) throws Exception;
+    
     @Administrator
+    @ForceAsync
     public List<SavedOrderFile> getAllFiles(boolean showAllFiles);
     @Administrator
     public List<SavedOrderFile> getAllFilesNotTransferredToAccounting();

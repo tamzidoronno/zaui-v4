@@ -52,8 +52,10 @@ public class TotpHandler {
         return null;
     }
     
-    private void loadUsers() {
-        users.clear();
+    private synchronized void loadUsers() {
+        if (!users.isEmpty()) {
+            return;
+        }
         
         database.getAll("UserManager", storeIdToCheckUsersAgainst).forEach(data -> {
             if (data instanceof User) {
@@ -72,6 +74,10 @@ public class TotpHandler {
         List<User> retUsers = new ArrayList();
 
         users.stream().forEach(user -> {
+            if (user == null) {
+                return;
+            }
+            
             User retUser = user.jsonClone();
             
             retUser.totpKey = UUID.randomUUID().toString();

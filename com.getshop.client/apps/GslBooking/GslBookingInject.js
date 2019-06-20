@@ -1085,7 +1085,8 @@ function getshop_gotopayment(e) {
                     if(typeof(getshop_successcallback) !== "undefined") {
                         getshop_successcallback(res);
                     } else {
-                        if(res.continuetopayment == 1) {
+                        var continueto = res.continuetopayment;
+                        if(continueto === 1 || res.continuetopayment === "1" || continueto.trim() === 1 || continueto.trim() === "1") {
                             window.location.href = getshop_endpoint + "/?page=cart&payorder=" + res.orderid;
                         } else {
                             window.location.href = getshop_endpoint + "/?page=payment_success";

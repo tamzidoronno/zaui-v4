@@ -273,7 +273,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
                         saveObject(saved);
                     }
                 }
-                if(i > 3 && !showAllFiles) {
+                if(i > 20 && !showAllFiles) {
                     break;
                 }
                 returnResult.add(saved);

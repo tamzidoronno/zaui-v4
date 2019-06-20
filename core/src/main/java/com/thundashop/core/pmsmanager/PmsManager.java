@@ -1271,7 +1271,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         Gson gson = new Gson();
         String copy = gson.toJson(getConfigurationSecure());
 
-        User loggedOn = getSession().currentUser;
+        User loggedOn = null; 
+        
+        if (getSession() != null) {
+            getSession().currentUser;
+        }
+        
         if (loggedOn != null && loggedOn.isAdministrator()) {
             return getConfigurationSecure();
         }

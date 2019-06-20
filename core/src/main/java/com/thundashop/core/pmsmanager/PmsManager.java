@@ -1274,7 +1274,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         User loggedOn = null; 
         
         if (getSession() != null) {
-            getSession().currentUser;
+            loggedOn = getSession().currentUser;
         }
         
         if (loggedOn != null && loggedOn.isAdministrator()) {

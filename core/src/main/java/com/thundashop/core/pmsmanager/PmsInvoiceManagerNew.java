@@ -129,7 +129,7 @@ public class PmsInvoiceManagerNew {
     }
 
     private void setMetaData(CartItem item, PmsOrderCreateRow roomData) {
-        PmsBooking booking = pmsManager.getBookingFromRoom(roomData.roomId);
+        PmsBooking booking = pmsManager.getBookingFromRoomSecure(roomData.roomId);
         PmsBookingRooms room = booking.getRoom(roomData.roomId);
         
         item.getProduct().additionalMetaData = "";
@@ -141,7 +141,7 @@ public class PmsInvoiceManagerNew {
     }
 
     private void setGuestName(CartItem item, PmsOrderCreateRow roomData) {
-        PmsBooking booking = pmsManager.getBookingFromRoom(roomData.roomId);
+        PmsBooking booking = pmsManager.getBookingFromRoomSecure(roomData.roomId);
         PmsBookingRooms room = booking.getRoom(roomData.roomId);
         
         item.getProduct().metaData = "";
@@ -153,7 +153,7 @@ public class PmsInvoiceManagerNew {
     }
 
     private void setDates(CartItem item, PmsOrderCreateRow roomData) {
-        PmsBooking booking = pmsManager.getBookingFromRoom(roomData.roomId);
+        PmsBooking booking = pmsManager.getBookingFromRoomSecure(roomData.roomId);
         PmsBookingRooms room = booking.getRoom(roomData.roomId);
         
         item.startDate = room.date.start;

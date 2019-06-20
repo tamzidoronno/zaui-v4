@@ -24,13 +24,32 @@ $ecomsettings = $this->getFactory()->getApplicationPool()->createInstace($ecom);
             if(method_exists($instance, "getName")) {
                 $name = $instance->getName();
             }
-
-            
             ?>
             <option value="<? echo $method->id; ?>" <? echo $selected; ?>><? echo $name; ?></option>
         <? } ?>
     </select>
     <span class='shop_button' gstype='submit'>Save default payment settings</span>
+</div>
+
+<div gstype='form' method='savePaymentLinkMethod' style="margin-top:5px;">
+    <select class="config gsniceselect1" gs_model='ecommercesettings' gsname='paymentLinkMethod' style='height: 36px;'>
+        <option value="">Select payment method</option>
+        <? foreach ($onlyPaymentMethods as $key => $method) { 
+            $selected = $ecomsettings->getConfigurationSetting("paymentLinkMethod") == $method->id ? "SELECTED" : "";
+            
+            $instance = $this->getFactory()->getApplicationPool()->createInstace($method);
+            if(!$instance->hasPaymentLink()) {
+                continue;
+            }
+            $name = $method->appName;
+            if(method_exists($instance, "getName")) {
+                $name = $instance->getName();
+            }
+            ?>
+            <option value="<? echo $method->id; ?>" <? echo $selected; ?>><? echo $name; ?></option>
+        <? } ?>
+    </select>
+    <span class='shop_button' gstype='submit'>Save payment method used for payment link</span>
 </div>
 
 <div style="clear:both;"></div>
@@ -40,6 +59,13 @@ foreach($apps as $app) {
     $instance = $this->getFactory()->getApplicationPool()->createInstace($app);
     if(method_exists($instance, "renderConfig")) {
         echo "<div class='paymentsetupconfig' appid='".$instance->applicationSettings->id."'>";
+        $value = $instance->getConfigurationSetting("hidefrombookingprocess");
+        $checked = $value == "true" ? "CHECKED" : "";
+        ?>
+        <div class='hidefrompaymentprocess'>
+            <input type='checkbox' appid='<?php echo $app->id; ?>' gsclick='toggleHideFromPaymentProcess' name='test' <?php echo $checked; ?>></input> Hide from payment process
+        </div>
+        <?php
         $instance->renderConfig();
         echo "</div>";
     }

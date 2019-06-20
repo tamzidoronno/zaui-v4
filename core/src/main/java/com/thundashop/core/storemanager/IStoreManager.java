@@ -223,4 +223,7 @@ public interface IStoreManager {
     
     @Administrator
     public void acceptSlave(String slaveStoreId);
+    
+    @Administrator
+    public boolean supportsCreateOrderOnDemand();
 }

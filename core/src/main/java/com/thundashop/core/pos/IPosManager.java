@@ -193,4 +193,6 @@ public interface IPosManager {
     
     @Editor
     public PosConference getPosConference(String pmsConferenceId);
+    
+    public String autoCreateOrderForBookingAndRoom(String roomBookingId, String paymentMethod);
 }

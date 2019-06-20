@@ -341,6 +341,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         createScheduler("pmsprocessor", "* * * * *", CheckPmsProcessing.class);
         createScheduler("pmsprocessor2", "5 * * * *", CheckPmsProcessingHourly.class);
         createScheduler("pmsprocessor3", "7,13,33,53 * * * *", CheckPmsFiveMin.class);
+        
+        tmpCheckForNanInRoomUnsettledAmount();
     }
 
     @Override
@@ -1271,7 +1273,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         Gson gson = new Gson();
         String copy = gson.toJson(getConfigurationSecure());
 
-        User loggedOn = getSession().currentUser;
+        User loggedOn = null; 
+        
+        if (getSession() != null) {
+            loggedOn = getSession().currentUser;
+        }
+        
         if (loggedOn != null && loggedOn.isAdministrator()) {
             return getConfigurationSecure();
         }
@@ -3205,6 +3212,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (booking == null) {
             return null;
         }
+        
         checkSecurity(booking);
         return booking;
     }
@@ -10586,6 +10594,20 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return result;
+    }
+
+    private void tmpCheckForNanInRoomUnsettledAmount() {
+        bookings.values()
+                .stream()
+                .forEach(b -> {
+                    if (b != null && b.rooms != null) {
+                        b.rooms.stream().forEach(r -> {
+                            if (r.unsettledAmountIncAccrued != null && r.unsettledAmountIncAccrued.isNaN()) {
+                                calculateUnsettledAmountForRooms(b);
+                            }
+                        });
+                    }       
+                });
     }
 
 }

@@ -385,7 +385,7 @@ public class PmsBookingPaymentDiffer {
         double sum = items.stream().mapToDouble(item -> item.price * item.count).sum();
         double count = items.stream().mapToInt(item -> item.count).sum();
         
-        if (sum == 0)
+        if (sum == 0 || count == 0)
             return 0;
         
         return (sum/count);

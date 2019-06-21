@@ -439,7 +439,7 @@ class PmsAvailability extends \MarketingApplication implements \Application {
                     continue;
                 }
                 
-                if ($itime == $time && $date->state == "normal") {
+                if ($itime == $time) {
                     $count += $date->count;
                 }
             }

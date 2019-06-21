@@ -17,7 +17,7 @@ $order = $this->getOrder();
         <i class='fa fa-trash'></i> 
         <? echo $this->__f("Delete order"); ?>
     </div>
-    <div class='order_action_button' onclick="window.open('/scripts/downloadInvoice.php?orderId=<? echo $order->id; ?>')" gs_callback='app.DefaultPaymentHandlingAction.markAsPaidCompleted' >
+    <div class='order_action_button' onclick="window.open('/scripts/downloadInvoice.php?orderId=<? echo $order->id; ?>&incrementalOrderId=<? echo $order->incrementOrderId; ?>')" gs_callback='app.DefaultPaymentHandlingAction.markAsPaidCompleted' >
         <i class='fa fa-download'></i> 
         <? echo $this->__f("Download preview"); ?>
     </div>

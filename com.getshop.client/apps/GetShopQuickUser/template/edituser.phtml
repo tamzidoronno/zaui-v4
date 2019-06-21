@@ -67,6 +67,7 @@ if ($user && $user->type > 10 || ($user && $user->id == "quickreservation")) {
         <div class='row'><div class='col col1'>Phone</div><div class='col col'><input class='gsniceinput1' type="txt" gsname="cellPhone" value="<?php echo $user->cellPhone; ?>" <?php echo $disabled; ?>></div></div>
         <div class='row'><div class='col col1'>Email</div><div class='col col'><input class='gsniceinput1' type="txt" gsname="emailAddress" value="<?php echo $user->emailAddress; ?>" <?php echo $disabled; ?>></div></div>
         <div class='row'><div class='col col1'>Address</div><div class='col col'><input class='gsniceinput1' type="txt" gsname="address.address" value="<?php echo $user->address ? $user->address->address : ""; ?>" <?php echo $disabled; ?>></div></div>
+        <div class='row'><div class='col col1'>Address2</div><div class='col col'><input class='gsniceinput1' type="txt" gsname="address.address2" value="<?php echo $user->address ? $user->address->address2 : ""; ?>" <?php echo $disabled; ?>></div></div>
         <div class='row'><div class='col col1'>Postcode</div><div class='col col'><input class='gsniceinput1' type="txt" gsname="address.postCode" value="<?php echo $user->address ? $user->address->postCode : ""; ?>" <?php echo $disabled; ?>></div></div>
         <div class='row'><div class='col col1'>C/O</div><div class='col col'><input class='gsniceinput1' type="txt" gsname="address.co" value="<?php echo $user->address ? $user->address->co : ""; ?>" <?php echo $disabled; ?>></div></div>
     </div>

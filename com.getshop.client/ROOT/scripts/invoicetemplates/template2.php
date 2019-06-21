@@ -56,9 +56,9 @@ $isInvoice = $order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200
         padding-top: 3px;
     }
     
-    .invoice_template .row .col.col1 { width: 150px; }
+    .invoice_template .row .col.col1 { width: 630px; box-sizing: border-box; padding-left: 80px; }
     .invoice_template .row .col.col2 { width: 150px; }
-    .invoice_template .row .col.col3 { width: 400px; }
+    .invoice_template .row .col.col3 { width: 100px; }
     
     .invoice_template .outerproductrow,
     .invoice_template .productrow {
@@ -145,22 +145,29 @@ $isInvoice = $order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200
         <div style='border-bottom: solid 1px #DDD; padding: 5px;  padding-left: 10px; text-transform: uppercase; color: #3b7fb1; font-size: 22px;'><? echo $translator->translate($text); ?></div>
 
         <div class='row'>
-            <div class='col col1'><? echo !$isInvoice ? $translator->translate("Order number") : $translator->translate("Invoice number"); ?></div>
-            <div class='col col2 bold'><? echo $order->incrementOrderId; ?></div>
-            <div class='col col3 bold'><? echo $order->cart->address->fullName; ?></div>
+            <div class='col col1 bold'><? echo $order->cart->address->fullName; ?>
+            <?php if($order->cart->address->co) { echo " C/O: " . $order->cart->address->co; } ?>
+            </div>
+            <div class='col col2'><? echo !$isInvoice ? $translator->translate("Order number") : $translator->translate("Invoice number"); ?></div>
+            <div class='col col3 bold'><? echo $order->incrementOrderId; ?></div>
         </div>
-
         <div class='row'>
-            <div class='col col1'><? echo !$isInvoice ? $translator->translate("Order date") : $translator->translate("Invoice date"); ?></div>
-            <div class='col col2'><? echo date('d.m.Y', strtotime($order->rowCreatedDate)); ?></div>
-            <div class='col col3'><? echo $order->cart->address->address; ?></div>
+            <div class='col col1'><? echo $order->cart->address->address; ?></div>
+            <div class='col col2'><? echo !$isInvoice ? $translator->translate("Order date") : $translator->translate("Invoice date"); ?></div>
+            <div class='col col3'><? echo date('d.m.Y', strtotime($order->rowCreatedDate)); ?></div>
         </div>
-
+        <?php if($order->cart->address->address2) { ?>
+                <div class='row'>
+                    <div class='col col1'><? echo $order->cart->address->address2; ?></div>
+                    <div class='col col2'></div>
+                    <div class='col col3'></div>
+                </div>
+        <? } ?>
         <? if ($order->status != 7) { ?>
             <div class='row'>
-                <div class='col col1'><? echo $translator->translate("Due date"); ?></div>
-                <div class='col col2 bold' style='color: red;'><? echo date('d.m.Y', strtotime($order->dueDate)); ?></div>
-                <div class='col col3'><? echo $order->cart->address->postCode." ".$order->cart->address->city; ?></div>
+                <div class='col col1'><? echo $order->cart->address->postCode." ".$order->cart->address->city; ?></div>
+                <div class='col col2'><? echo $translator->translate("Due date"); ?></div>
+                <div class='col col3 bold' style='color: red;'><? echo date('d.m.Y', strtotime($order->dueDate)); ?></div>
             </div>
         <?
         }

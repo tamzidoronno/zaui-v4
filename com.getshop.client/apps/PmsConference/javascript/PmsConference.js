@@ -1,5 +1,6 @@
 app.PmsConference = {
     currentInput : null,
+    disableAutoReload : false,
     
     init : function() {
         $(document).on('keyup','.PmsConference .updaterowkeyup', app.PmsConference.updateEventRow);
@@ -94,11 +95,11 @@ app.PmsConference = {
         view.html(res);
     },
     openEvent : function() {
+        app.PmsConference.disableAutoReload = true;
         var eventid = $(this).attr('eventid');
         var event = thundashop.Ajax.createEvent('','openEvent',$('.PmsConference'), { "eventid" : eventid});
         thundashop.Ajax.postWithCallBack(event, function(res) {
             $('.conferenceoverview').hide();
-            $('.eventoverview').show();
             $('.eventoverview').html(res);
         });
     },
@@ -113,6 +114,7 @@ app.PmsConference = {
     openConference : function() {
         var conferenceid = $(this).attr('conferenceid');
         app.PmsConference.openConferenceById(conferenceid);
+        app.PmsConference.disableAutoReload = true;
     },
     loadEditItem : function(res) {
         $('.edititembox').html(res);

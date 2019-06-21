@@ -38,14 +38,20 @@ $currentDate = "";
             echo "<tr><td colspan='20' class='dateheader'>$date</td></tr>";
         }
 
-        echo "<tr>";
         $from = "";
-        if($eventEntry->from) { $from = date("H:i", strtotime($eventEntry->from)); }
+        $gray = "";
+        if($eventEntry->from) {
+            $from = date("H:i", strtotime($eventEntry->from)); 
+            if(strtotime($eventEntry->from) < (time()+600)) {
+                $gray = "style='color:gray'";
+            }
+        }
         $to = "";
         if($eventEntry->to) { $to = date("H:i", strtotime($eventEntry->to)); }
         $text = $eventEntry->text;
         $count = $eventEntry->count;
 
+        echo "<tr $gray>";
         echo "<td valign='top'>$from</td>";
         echo "<td valign='top'>$to</td>";
         echo "<td valign='top'>".$eventEntry->text."</td>";
@@ -60,6 +66,12 @@ $currentDate = "";
 </div>
 
 <script>
-    getshop_loadDatePicker($('.startdate'), { dependant : $('.enddate'), jump : 7 });    
-    getshop_loadDatePicker($('.enddate'), { dependant : $('.startdate'), jump : -7 });
+    getshop_loadDatePicker($('.startdate'), { dependant : $('.enddate') });    
+    getshop_loadDatePicker($('.enddate'), { dependant : $('.startdate') });
+    setInterval(function() {
+        if(app.PmsConference.disableAutoReload) {
+            return;
+        }
+        document.location.reload();
+    }, "120000");
 </script>

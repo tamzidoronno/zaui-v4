@@ -3051,7 +3051,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         bookingEngine.changeBookingItemOnBooking(room.bookingId, item.id);
                     } catch (Exception e) {
                         if (!warnedAbout.contains("Itemchangedfailed_" + room.pmsBookingRoomId)) {
-                            messageManager.sendErrorNotification("Booking failure for room: " + room.pmsBookingRoomId + ", rooms where not reserved in booking engine. address: " + storeManager.getMyStore().webAddress, null);
+                            messageManager.sendErrorNotification("Booking failure for room: " + room.pmsBookingRoomId + ", rooms where not reserved in booking engine. address: " + storeManager.getMyStore().webAddress, e);
                             warnedAbout.add("Itemchangedfailed_" + room.pmsBookingRoomId);
                         }
                     }

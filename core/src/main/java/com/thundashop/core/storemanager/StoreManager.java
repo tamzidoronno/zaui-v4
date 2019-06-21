@@ -669,7 +669,8 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     @Override
     public boolean supportsCreateOrderOnDemand() {
         List<String> hasSupportForOnDemandOrders = new ArrayList();
-        hasSupportForOnDemandOrders.add("1ed4ab1f-c726-4364-bf04-8dcddb2fb2b1");
+        hasSupportForOnDemandOrders.add("1ed4ab1f-c726-4364-bf04-8dcddb2fb2b1"); //Bergstaden
+        hasSupportForOnDemandOrders.add("61216a03-827d-44a6-a7f1-8939402c51c1"); //Svanhild
         if(storeId != null) {
             return hasSupportForOnDemandOrders.contains(storeId);
         }

@@ -9636,11 +9636,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     }
                 }
                 if(!charged) {
-                    String email = storeManager.getMyStore().configuration.emailAdress;
-                    if (!configuration.sendAdminTo.isEmpty()) {
-                        email = configuration.sendAdminTo;
-                    }
-                    messageManager.sendErrorNotification("Failed to autocharge order" + ord.incrementOrderId + " We where not able to charge the card given by user", null);
+//                    String email = storeManager.getMyStore().configuration.emailAdress;
+//                    if (!configuration.sendAdminTo.isEmpty()) {
+//                        email = configuration.sendAdminTo;
+//                    }
+//                    messageManager.sendErrorNotification("Failed to autocharge order" + ord.incrementOrderId + " We where not able to charge the card given by user", null);
                 } else {
                     ord.payment.paymentType = "ns_3d02e22a_b0ae_4173_ab92_892a94b457ae\\StripePayments";
                     orderManager.saveOrderInternal(ord);

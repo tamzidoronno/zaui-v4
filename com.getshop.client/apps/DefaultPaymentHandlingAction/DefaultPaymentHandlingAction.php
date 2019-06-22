@@ -32,6 +32,47 @@ class DefaultPaymentHandlingAction extends \PaymentApplication implements \Appli
         $this->getApi()->getInvoiceManager()->sendReceiptToCashRegisterPoint($_POST['data']['deviceid'], $_POST['data']['orderid']);
     }
     
+    public function saveUser($user) {
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        $order->userId = $user->id;
+        $this->getApi()->getOrderManager()->saveOrder($order);
+        $this->order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+    }
+    
+    public function updateDueDate() {
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        $order->dueDays = $_POST['data']['days'];
+        $this->getApi()->getOrderManager()->saveOrder($order);
+        $this->order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+    }
+    
+    public function createNewUser() {
+        $user = new \core_usermanager_data_User();
+        $user->fullName = $_POST['data']['name'];
+        $createUser = $this->getApi()->getUserManager()->createUser($user);
+        return $createUser;
+    }
+    
+    public function createCompany() {
+        $name = $_POST['data']['companyname'];
+        $vat = $_POST['data']['vatnumber'];
+        $user = $this->getApi()->getUserManager()->createCompany($vat, $name);
+        
+        $order = $this->getOrder();
+        $order->userId = $user->id;
+        $order->cart->address = $user->address;
+        $order->cart->address->fullName = $user->fullName;
+        $this->getApi()->getOrderManager()->saveOrder($order);
+        return $user;
+    }
+    
+    public function changeUser($user) {
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        $order->userId = $user->id;
+        $this->getApi()->getOrderManager()->saveOrder($order);
+        $this->order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+    }
+    
     public function markOrderAsPaid() {
         $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
         $amount = $this->getApi()->getOrderManager()->getTotalAmount($order);
@@ -43,6 +84,18 @@ class DefaultPaymentHandlingAction extends \PaymentApplication implements \Appli
     
     public function cancelCurrentOrder() {
         $this->getApi()->getOrderManager()->deleteOrder($_POST['data']['orderid']);
+    }
+    
+    public function closeCurrentOrder() {
+        $this->getApi()->getOrderManager()->closeOrder($_POST['data']['orderid'], "Closed by administrator");
+        $this->order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+    }
+    
+    public function updateOrderNote() {
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        $order->invoiceNote = $_POST['data']['note'];
+        $this->getApi()->getOrderManager()->saveOrder($order);
+        $this->order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
     }
     
     public function changeMethod() {

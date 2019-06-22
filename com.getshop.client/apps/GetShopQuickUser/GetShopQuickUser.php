@@ -74,6 +74,7 @@ class GetShopQuickUser extends \SystemApplication implements \Application {
             $user->address = new \core_usermanager_data_Address();
         }
         $user->address->address = $_POST['data']['address.address'];
+        $user->address->address2 = $_POST['data']['address.address2'];
         $user->address->postCode = $_POST['data']['address.postCode'];
         $user->address->city = $_POST['data']['address.city'];
         $user->address->countrycode = $_POST['data']['countryCode'];

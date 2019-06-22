@@ -13,11 +13,13 @@
     text-overflow: ellipsis;
     margin: 5px;
 }
+.DefaultPaymentHandlingAction .edit_user_btn {
+    color:#4da6cb;
+}
 
 .DefaultPaymentHandlingAction .commonbox {
     display: inline-block;
     vertical-align: top;
-    margin-bottom: 20px;
     padding: 20px;
     margin-right: 20px;
     text-align: left;

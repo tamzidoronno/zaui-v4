@@ -12,6 +12,18 @@ $allInOne = false;
 if($sorting == "room") {
     $allInOne = true;
 }
+
+
+$typecounter = array();
+foreach($types as $type) {
+    foreach($items as $itm) {
+        if($itm->bookingItemTypeId == $type->id) {
+            if(!isset($typecounter[$itm->bookingItemTypeId])) { $typecounter[$itm->bookingItemTypeId] = 0; }
+            $typecounter[$itm->bookingItemTypeId]++;
+        }
+    }
+}
+
 $cats = $this->getCategoryFilter();
 foreach ($types as $type) {
     if(sizeof($cats) > 0 && !in_array($type->id, $cats) && !$allInOne) {
@@ -29,7 +41,6 @@ foreach ($types as $type) {
                 echo $type->name;
             }
             echo "</div>";
-            
             foreach ($items as $item) {
                 if ($item->bookingItemTypeId != $type->id && !$allInOne) {
                     continue;
@@ -49,7 +60,6 @@ foreach ($types as $type) {
             <?
             
             $count = array();
-            
             $j = 0;
             foreach ($items as $item) {
                 
@@ -79,7 +89,9 @@ foreach ($types as $type) {
                         if ($j == 0) {
                             $typeIds = $allInOne ? $cats : array($type->id);
                             $bookingCount = $this->getBookingCount($timelines, $time, $typeIds);
-                            $header = "<div class='header col_width $isWeekend'>$colDate  <span title='Number of rooms in use this day'>($bookingCount)</span></div>";
+                            $typeCount = $typecounter[$type->id];
+                            $leftOvers = $typeCount-$bookingCount;
+                            $header = "<div class='header col_width $isWeekend'>$colDate  <span title='Number of rooms in use this day'>($leftOvers/$typeCount)</span></div>";
                         }
                         
                         $nextBookingIds = $this->getNextBookingIds($itemTimeLines, $time);

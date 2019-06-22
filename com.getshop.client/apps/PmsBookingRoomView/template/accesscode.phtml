@@ -78,6 +78,20 @@ if ($room->code && $room->addedToArx) {
                 </div>
                
                 <div class="buttonarea">
+                    <div style='position: absolute;
+                            background-color: rgb(255, 255, 255);
+                            z-index: 2;
+                            display:none;
+                            padding: 10px;
+                            border: solid 1px #bbb;
+                            margin-top: 62px;
+                            margin-left: 10px;' class='resendcodeform' gstype='form' method='resendCodeForRoom'>
+                        <input type='text' class='gsniceinput1' style='width:30px;' value='<?php echo $prefix; ?>' gsname='prefix'>
+                        <input type='text' class='gsniceinput1' style='width:80px;' value='<?php echo $phone; ?>' gsname='phone'>
+                        <input type='text' class='gsniceinput1' style='width:200px;' value='<?php echo $email; ?>' gsname='email'>
+                        <span class='shop_button' gstype='submit' gs_callback="app.PmsBookingRoomView.accessCodeTabUpdated" synchron="true" >Resend code</span>
+                    </div>
+                    
                     <div class="buttonareaheader"><? echo $this->__f("What do you want me to do?"); ?></div>
                     <div class="shop_button" gsclick="blockAccessToRoom" gs_confirm='<? echo $blockSureMessage; ?>' synchron="true" gs_callback="app.PmsBookingRoomView.accessCodeTabUpdated"><? echo $this->__f("Block access"); ?></div>
                     <div class="shop_button" onclick='$(".resendcodeform").slideDown();'><? echo $this->__f("Resend code"); ?></div>
@@ -91,13 +105,6 @@ if ($room->code && $room->addedToArx) {
                         }
                     }
                     ?>
-                    
-                    <div style='margin-top:20px; display:none;' class='resendcodeform' gstype='form' method='resendCodeForRoom'>
-                        <input type='text' class='gsniceinput1' style='width:30px;' value='<?php echo $prefix; ?>' gsname='prefix'>
-                        <input type='text' class='gsniceinput1' style='width:80px;' value='<?php echo $phone; ?>' gsname='phone'>
-                        <input type='text' class='gsniceinput1' style='width:200px;' value='<?php echo $email; ?>' gsname='email'>
-                        <span class='shop_button' gstype='submit' gs_callback="app.PmsBookingRoomView.accessCodeTabUpdated" synchron="true" >Resend code</span>
-                    </div>
                     
                 </div>
 
@@ -195,7 +202,8 @@ if (!$isPaid && $isClean) {
               
                 <div class="buttonarea">
                     <div class="buttonareaheader"><? echo $this->__f("What do you want me to do?"); ?></div>
-                    <div class="shop_button" gsclick="forceAccessRegardlessOfPayment" synchron="true" gs_callback="app.PmsBookingRoomView.accessCodeTabUpdated"><? echo $this->__f("Force access regardless of payment"); ?></div>
+                    <div class="shop_button" gsclick="retrySendingCode" synchron="true" gs_callback="app.PmsBookingRoomView.accessCodeTabUpdated"><? echo $this->__f("Try again"); ?></div>
+                    <div class="shop_button" gsclick="forceAccessRegardlessOfPayment" synchron="true" gs_callback="app.PmsBookingRoomView.accessCodeTabUpdated" style='float:right'><? echo $this->__f("Force access regardless of payment"); ?></div>
                 </div>
 
             </div>
@@ -244,7 +252,6 @@ if (!$isPaid && !$isClean) {
                     <div class="shop_button" gsclick="markRoomCleanedwithoutlog"  synchron="true" gs_callback="app.PmsBookingRoomView.accessCodeTabUpdated"><? echo $this->__f("Mark room as clean (without logging to reports)"); ?></div>
                     <div class="shop_button" gsclick="forceAccessRegardlessOfPayment" synchron="true" gs_callback="app.PmsBookingRoomView.accessCodeTabUpdated"><? echo $this->__f("Force access regardless of payment"); ?></div>
                 </div>
-
             </div>
         </div>
     </div>

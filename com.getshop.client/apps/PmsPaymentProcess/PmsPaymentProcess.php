@@ -19,7 +19,7 @@ class PmsPaymentProcess extends \MarketingApplication implements \Application {
     public function sendPaymentLinkRequest() {
         $message = $_POST['data']['message'];
         $prefix = $_POST['data']['prefix'];
-        $phone = $_POST['data']['prefix'];
+        $phone = $_POST['data']['phone'];
         $email = $_POST['data']['email'];
         $bookingId = $_POST['data']['roomid'];
         $engine = $this->getSelectedMultilevelDomainName();

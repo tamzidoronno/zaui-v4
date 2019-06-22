@@ -2305,6 +2305,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsAdditionalItemInformation additional = getAdditionalInfo(itemId);
         additional.markCleanedWithoutLogging();
         saveAdditionalInfo(additional);
+        processor();
     }
 
     void markRoomAsDirty(String bookingItemId) {
@@ -3054,7 +3055,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         bookingEngine.changeBookingItemOnBooking(room.bookingId, item.id);
                     } catch (Exception e) {
                         if (!warnedAbout.contains("Itemchangedfailed_" + room.pmsBookingRoomId)) {
-                            messageManager.sendErrorNotification("Booking failure for room: " + room.pmsBookingRoomId + ", rooms where not reserved in booking engine. address: " + storeManager.getMyStore().webAddress, null);
+                            messageManager.sendErrorNotification("Booking failure for room: " + room.pmsBookingRoomId + ", rooms where not reserved in booking engine. address: " + storeManager.getMyStore().webAddress, e);
                             warnedAbout.add("Itemchangedfailed_" + room.pmsBookingRoomId);
                         }
                     }
@@ -9639,11 +9640,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     }
                 }
                 if(!charged) {
-                    String email = storeManager.getMyStore().configuration.emailAdress;
-                    if (!configuration.sendAdminTo.isEmpty()) {
-                        email = configuration.sendAdminTo;
-                    }
-                    messageManager.sendErrorNotification("Failed to autocharge order" + ord.incrementOrderId + " We where not able to charge the card given by user", null);
+//                    String email = storeManager.getMyStore().configuration.emailAdress;
+//                    if (!configuration.sendAdminTo.isEmpty()) {
+//                        email = configuration.sendAdminTo;
+//                    }
+//                    messageManager.sendErrorNotification("Failed to autocharge order" + ord.incrementOrderId + " We where not able to charge the card given by user", null);
                 } else {
                     ord.payment.paymentType = "ns_3d02e22a_b0ae_4173_ab92_892a94b457ae\\StripePayments";
                     orderManager.saveOrderInternal(ord);

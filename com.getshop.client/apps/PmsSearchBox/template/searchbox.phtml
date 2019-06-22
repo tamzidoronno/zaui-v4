@@ -143,6 +143,7 @@ if($filter->groupByBooking) {
 </span>
 
 <span gstype="form" method="search" class='simplesearch' style='position:relative;'>
+    <div title="<? echo $this->__f("Inhouse"); ?>" type='inhouse' daytype='today' class="top-row-icon displaydailydatepicker <? echo $filter && $filter->filterType == "inhouse" ? 'active' : ''; ?>"><i class="gsicon-bed"></i></div>
     <div title="<? echo $this->__f("Latest registered users"); ?>" type='registered' daytype='today' class="top-row-icon displaydailydatepicker <? echo $filter && $filter->filterType == "registered" ? 'active' : ''; ?>"><i class="gsicon-database-upload"></i></div>
     <div title="<? echo $this->__f("Users checkin today"); ?>" type='checkin' day="0" daytype='today' class="top-row-icon displaydailydatepicker <? echo $filter && $filter->filterType == "checkin" ? 'active' : ''; ?>"><i class="gsicon-enter"></i></div>
     <div title="<? echo $this->__f("Users checkout today"); ?>" type='checkout' day="0" daytype='today' class="top-row-icon displaydailydatepicker <? echo $filter && $filter->filterType == "checkout" ? 'active' : ''; ?>"><i class="gsicon-exit"></i></div>
@@ -165,6 +166,7 @@ if($filter->groupByBooking) {
         
     <span class='dailydaterangepicker'>
         <i class='fa fa-close' onclick='$(".dailydaterangepicker").slideUp()' style='float:right; cursor:pointer;'></i>
+        <div class='header' type='inhouse'>Inhouse</div>
         <div class='header' type='checkin'>Checking in</div>
         <div class='header' type='checkout'>Checking out</div>
         <div class='header' type='registered'>Registered</div>

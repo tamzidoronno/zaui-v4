@@ -3,9 +3,13 @@
 $error = $this->getCurrentError();
 $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedMultilevelDomainName(), $error->metaData->pmsbookingid);
 $room = null;
+$name = "";
 foreach ($booking->rooms as $iroom) {
     if ($iroom->pmsBookingRoomId == $error->metaData->pmsbookingroomid) {
         $room = $iroom;
+        $item = "";
+        $user =  $this->getApi()->getUserManager()->getUserById($booking->userId);
+        if($user) { $name = $user->fullName; }
     }
 }
 ?>
@@ -14,13 +18,16 @@ foreach ($booking->rooms as $iroom) {
     <? echo "Booking: ".$booking->incrementBookingId; ?>
 </div>
 <div class='col type'>
-    <? echo "Room has been set to have pay after stay."; ?>
+    <? echo "Room has been set to have pay after stay.<br>"; 
+    ?>
 </div>
 <div class='col orderId'>
-    
+<?php
+    echo date("d.m.Y", strtotime($room->date->start)) . " " . date("d.m.Y", strtotime($room->date->end));
+?>
 </div>
 <div class='col total'>
-    
+    <?php echo $name; ?>
 </div>
 <div class='col button'>
     <div class='gs_shop_small_icon' gs_show_modal='booking_room_view' bookingid="<? echo $booking->id; ?>" roomid="<? echo $room->pmsBookingRoomId; ?>"><? echo $this->__f("Open booking"); ?></div>

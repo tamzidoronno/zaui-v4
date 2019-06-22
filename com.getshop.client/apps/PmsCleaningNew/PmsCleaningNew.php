@@ -18,6 +18,35 @@ class PmsCleaningNew extends \WebshopApplication implements \Application {
     }
 
 
+    public function printCleaningTableStatistics($time) {
+        $startDate = $this->convertToJavaDate($time);
+        $endDate = $this->convertToJavaDate($time+(86400*30));
+        $overview = $this->getApi()->getPmsManager()->getSimpleCleaningOverview($this->getSelectedName(), $startDate, $endDate);
+        
+        
+        ?>
+    <table cellspacing="1" cellpadding="1">
+    <tr>
+        <th>Date</th>
+        <th>Stayovers</th>
+        <th>Checkout</th>
+        <th>Interval</th>
+        <th>Total</th>
+    </tr>
+    <?php
+    foreach($overview as $view) {
+        echo "<tr>";
+        echo "<td width='100%'>".date("d.m.Y", strtotime($view->date))."</td>";
+        echo "<td>".$view->stayOvers."</td>";
+        echo "<td>".$view->intervalCleaningCount."</td>";
+        echo "<td>".$view->intervalCleaningCount."</td>";
+        echo "<td>".($view->intervalCleaningCount + $view->checkoutCleaningCount)."</td>";
+        echo "</tr>";
+    }
+    ?>
+    </table>
+        <?php
+    }
 
     public function getSelectedName() {
         return $this->getSelectedMultilevelDomainName();

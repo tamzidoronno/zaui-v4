@@ -70,4 +70,7 @@ public interface IPmsConferenceManager {
     
     @Administrator
     public void addGuestToEvent(String guestId, String eventId);
+    
+    @Administrator
+    public List<PmsConference> searchConferences(String searchWord);
 }

@@ -14,5 +14,6 @@ import java.util.List;
  */
 public class PmsOrderCreateRow {
     public String roomId;
+    public String conferenceId;
     public List<PmsOrderCreateRowItemLine> items = new ArrayList();
 }

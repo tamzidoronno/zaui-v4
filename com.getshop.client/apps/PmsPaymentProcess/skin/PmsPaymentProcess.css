@@ -191,3 +191,27 @@
 .PmsPaymentProcess .shop_button.active {
     background-color: green;
 }
+
+.PmsPaymentProcess .search_tab_conference_result {
+    background-color: #EFEFEF;
+    padding: 20px;
+    margin-left: 20px;
+    display: none;
+}
+
+.PmsPaymentProcess .conferenceuserhint {
+    padding: 10px;
+    font-size: 16px;
+    color: red;
+    border-bottom: solid 1px #DDD;
+    min-height: 50px;
+    box-sizing: border-box;
+    padding-top: 10px;
+    position: relative;
+}
+
+.PmsPaymentProcess .conferenceuserhint .shop_button {
+    position: absolute; 
+    top: 5px;
+    right: 5px;
+}

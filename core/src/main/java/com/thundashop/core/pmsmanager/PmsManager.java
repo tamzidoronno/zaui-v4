@@ -59,6 +59,7 @@ import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.pga.PgaManager;
 import com.thundashop.core.pmseventmanager.PmsEvent;
 import com.thundashop.core.pmseventmanager.PmsEventManager;
+import com.thundashop.core.pos.PosManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.ratemanager.BookingComRateManagerManager;
@@ -221,6 +222,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Autowired
     private PmsNotificationManager pmsNotificationManager;
     
+    @Autowired
+    private PosManager posManager;
     
     @Autowired
     Database dataBase;
@@ -10134,12 +10137,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public String createOrderFromCheckout(List<PmsOrderCreateRow> rows, String paymentMethodId, String userId) {
         
-        PmsInvoiceManagerNew invoiceManager = new PmsInvoiceManagerNew(orderManager, cartManager, productManager, this);
+        PmsInvoiceManagerNew invoiceManager = new PmsInvoiceManagerNew(orderManager, cartManager, productManager, this, posManager);
         Order order = invoiceManager.createOrder(rows, paymentMethodId, userId);
         
         rows.stream()
             .forEach(o -> {
+                if (o.roomId == null || o.roomId.isEmpty()) {
+                    return;
+                }
+                
                 PmsBooking booking = getBookingFromRoom(o.roomId);
+    
                 if (!booking.orderIds.contains(order.id)) {
                     booking.orderIds.add(order.id);
                     saveBooking(booking);

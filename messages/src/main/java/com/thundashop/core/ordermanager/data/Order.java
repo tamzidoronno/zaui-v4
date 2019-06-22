@@ -104,6 +104,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public List<OrderTransaction> orderTransactions = new ArrayList();
     public String currency = "";
     public String language = "";
+    public List<String> conferenceIds = new ArrayList();
     
     /**
      * Key = productid, value is a list of taxgroups used 

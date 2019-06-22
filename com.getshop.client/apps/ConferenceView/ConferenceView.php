@@ -160,5 +160,13 @@ class ConferenceView extends \MarketingApplication implements \Application {
     public function saveUser($user) {
         $this->getApi()->getUserManager()->saveUser($user);
     }
+    
+    public function setConferenceTitle() {
+        $this->setData();
+        $conference = $this->getConference();
+        $conference->meetingTitle = $_POST['data']['meetingTitle'];
+        $this->getApi()->getPmsConferenceManager()->saveConference($conference);
+        $this->setData();
+    }
 }
 ?>

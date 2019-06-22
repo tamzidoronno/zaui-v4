@@ -66,6 +66,8 @@ import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.pdf.data.AccountingDetails;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsManager;
+import com.thundashop.core.pos.PosConference;
+import com.thundashop.core.pos.PosManager;
 import com.thundashop.core.printmanager.ReceiptGenerator;
 import com.thundashop.core.printmanager.PrintJob;
 import com.thundashop.core.printmanager.PrintManager;
@@ -196,6 +198,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Autowired
     private WebManager webManager;
     
+    @Autowired
+    private PosManager posManager;
+    
     private List<String> terminalMessages = new ArrayList();
     private Order orderToPay;
     private String tokenInUse;
@@ -277,7 +282,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             markAsPaid(credited.id, new Date(), credited.getTotalAmount());
         }
         
-        createNewSamleFakturaOrders(order);
+        revertOrderLinesToPreviouseState(order);
         
         List<String> credittedOrders = new ArrayList();
         credittedOrders.add(credited.id);
@@ -2424,7 +2429,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             addCreditNotesToBookings(order.createdBasedOnOrderIds);
         }
         
-        createNewSamleFakturaOrders(order);
+        revertOrderLinesToPreviouseState(order);
         
         if (order.isCreditNote) {
             orders.values()
@@ -2456,7 +2461,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
     }
 
-    private void createNewSamleFakturaOrders(Order order) {
+    private void revertOrderLinesToPreviouseState(Order order) {
         List<String> newOrders = new ArrayList();
         
         order.createdBasedOnOrderIds.stream()
@@ -2471,6 +2476,22 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 });
         
         addOrdersToBookings(newOrders);
+        
+        for (String conferenceId : order.conferenceIds) {
+            PosConference conference = posManager.getPosConference(conferenceId);
+            if (conference != null) {
+                order.getCartItems()
+                    .stream()
+                    .filter(o -> o.conferenceId.equals(conferenceId))
+                    .forEach(cartItem -> {
+                        try {
+                            posManager.addToTab(conference.tabId, (CartItem) cartItem.clone());
+                        } catch (CloneNotSupportedException ex) {
+                            java.util.logging.Logger.getLogger(OrderManager.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    });
+            }
+        }
     }
 
     public HashMap<String, List<CartItem>> groupItemsOnOrder(Cart cart) {

@@ -11,6 +11,49 @@ app.PmsPaymentProcess = {
         $(document).on('click', '.PmsPaymentProcess .showcalc', this.toggleCalc);  
         $(document).on('keyup', '.PmsPaymentProcess .percentcalculator', this.recalcByPercent);  
         $(document).on('change', '.PmsPaymentProcess .totalvalcalculator', this.recalcByTotalVal);  
+        $(document).on('change', '.PmsPaymentProcess .searchfortabs', this.searchForTabs);  
+        $(document).on('click', '.PmsPaymentProcess .add_pos_tab', this.addPosTab);  
+        $(document).on('click', '.PmsPaymentProcess .removeconference', this.removeConference);  
+    },
+    
+    removeConference: function() {
+        $(this).closest('.cart_room_summary').remove();
+    },
+    
+    addPosTab: function() {
+        var me = $(this);
+        var event = thundashop.Ajax.createEvent(null, "getPosTabContent", this, {
+            conferenceid : $(this).attr('conferenceid')
+        });
+        
+        event['synchron'] = true;
+        
+        thundashop.Ajax.post(event, function(res) {
+            var addedConferenceId = $("<div>"+res+"</div>").find('.room').attr('conferenceid');
+            
+            me.closest('.app').find('.postabs').append(res);
+            app.PmsPaymentProcess.updateTotalValue();
+            $('.conferenceuserhint[conferenceid="'+addedConferenceId+'"]').remove();
+        });
+        
+        $(me).closest('.app').find('.search_tab_conference_result').hide();
+    },
+    
+    searchForTabs: function() {
+        var searchWord = $(this).val();
+        var me = this;
+        
+        var event = thundashop.Ajax.createEvent(null, "searchForConferences", this, {
+            searchWord : searchWord
+        });
+        
+        event['synchron'] = true;
+        
+        $(me).closest('.app').find('.search_tab_conference_result').show();
+        
+        thundashop.Ajax.post(event, function(res) {
+            $(me).closest('.app').find('.search_tab_conference_result').html(res);
+        });
     },
     
     toggleCalc: function() {
@@ -224,6 +267,7 @@ app.PmsPaymentProcess = {
         
         $(app).find('.room').each(function() {
             var roomId = $(this).attr('roomid');
+            var conferenceId = $(this).attr('conferenceId');
             var items = [];
             
             $(this).find('.cartitemline').each(function() {
@@ -239,7 +283,8 @@ app.PmsPaymentProcess = {
                     includedInRoomPrice : $(this).attr('includedinroomprice') == "1" ? true : false,
                     count : $(this).find('.item_count').val(),
                     price : $(this).find('.item_price').val(),
-                    date : $(this).attr('date')
+                    date : $(this).attr('date'),
+                    cartItemId : $(this).attr('cartitemid')
                 }
                 
                 items.push(item);
@@ -247,6 +292,7 @@ app.PmsPaymentProcess = {
             
             var roomData = {
                 roomId : roomId,
+                conferenceId : conferenceId,
                 items: items
             }
             

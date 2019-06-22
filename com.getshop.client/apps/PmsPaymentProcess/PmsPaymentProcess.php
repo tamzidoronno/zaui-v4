@@ -242,6 +242,23 @@ class PmsPaymentProcess extends \MarketingApplication implements \Application {
         return $distinctUserIds;
     }
 
+    public function searchForConferences() {
+        $searchResult = $this->getApi()->getPmsConferenceManager()->searchConferences($_POST['data']['searchWord']);
+        
+        if (!count($searchResult)) {
+            echo $this->__f("No result found");
+        } else {
+            foreach ($searchResult as $result) {
+                echo "<div class='row' style='border-top: solid 1px #DDD; border-bottom: solid 1px #CCC;'>";
+                    echo "<div class='col' style='font-size: 16px; width: calc(100% - 143px);'>".$result->meetingTitle."</div>";
+                    echo "<div class='col'><div class='shop_button add_pos_tab' conferenceid='$result->id'>".$this->__f("Add to checkout")."</div></div>";
+                echo "</div>";
+            }
+        }
+    }
     
+    public function getPosTabContent() {
+        $this->includefile("postabcontent");
+    }
 }
-
+?>

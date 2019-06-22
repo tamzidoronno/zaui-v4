@@ -12,8 +12,9 @@ if (!$conference) {
     <div class="workareaheader">
         <div class="headertitle">
             <?
-            echo $this->__f("Conference").": ".$conference->meetingTitle;
+            echo $this->__f("Conference").": <span>".$conference->meetingTitle."</span>";
             ?>
+            <i class="fa gs_shop_small_icon fa-edit changetitle" title="<? echo $conference->meetingTitle; ?>"></i>
         </div>
     </div>
 

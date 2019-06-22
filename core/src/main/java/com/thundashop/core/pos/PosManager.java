@@ -35,6 +35,7 @@ import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.pmsmanager.PmsConference;
+import com.thundashop.core.pmsmanager.PmsConferenceFilter;
 import com.thundashop.core.pmsmanager.PmsConferenceManager;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.pmsmanager.PmsOrderCreateRow;
@@ -291,6 +292,10 @@ public class PosManager extends ManagerBase implements IPosManager {
             orderManager.markAsPaid(orderId, new Date(), orderManager.getTotalAmount(order) + order.cashWithdrawal);
         }
         
+        finishTabAndOrder(tabId, order, kitchenDeviceId, cashPointDeviceId);
+    }
+
+    public void finishTabAndOrder(String tabId, Order order, String kitchenDeviceId, String cashPointDeviceId) throws ErrorException {
         PosTab tab = getTab(tabId);
         
         if (tab != null && kitchenDeviceId != null && !kitchenDeviceId.isEmpty()) {
@@ -298,9 +303,9 @@ public class PosManager extends ManagerBase implements IPosManager {
         }
         
         order.cart.getItems().stream()
-            .forEach(cartItem -> {
-                tab.removeCartItem(cartItem);
-            });
+                .forEach(cartItem -> {
+                    tab.removeCartItem(cartItem);
+                });
         
         tab.cashWithDrawal = tab.cashWithDrawal - order.cashWithdrawal;
         
@@ -1281,5 +1286,21 @@ public class PosManager extends ManagerBase implements IPosManager {
     @Override
     public PosConference getPosConference(String pmsConferenceId) {
         return getPosConferenceByConfId(pmsConferenceId);
+    }
+
+    @Override
+    public List<PmsConference> getConferencesThatHasUnsettledAmount(List<String> userIds) {
+        PmsConferenceFilter filter = new PmsConferenceFilter();
+        filter.userIds = userIds;
+        
+        List<PmsConference> conferencesWithUserIds = pmsConferenceManager.getAllConferences(filter);
+        
+        // Remove conferences that does not have anything to pay.
+        conferencesWithUserIds.removeIf(o -> {
+            PosConference conf = getPosConference(o.id);
+            return getTab(conf.tabId).cartItems.isEmpty();
+        });
+        
+        return conferencesWithUserIds;
     }
 }

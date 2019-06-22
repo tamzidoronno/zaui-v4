@@ -361,7 +361,8 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     }
     
     public function shouldUseNewPaymentWindow() {
-        if ($this->getFactory()->getStore()->id == "1ed4ab1f-c726-4364-bf04-8dcddb2fb2b1") {
+        $hasNewOrderSupport = $this->getApi()->getStoreManager()->supportsCreateOrderOnDemand();
+        if ($hasNewOrderSupport) {
             return !isset($_SESSION['use_new_payment_view']) || $_SESSION['use_new_payment_view'];
         }
         

@@ -14,6 +14,15 @@ class PaymentSettingsSetup extends \WebshopApplication implements \Application {
         $this->getApi()->getStoreApplicationPool()->deactivateApplication($_POST['data']['id']);
     }
     
+    public function toggleHideFromPaymentProcess() {
+        $id = $_POST['data']['appid'];
+        $app = $this->getFactory()->getApplicationPool()->getApplicationSetting($id);
+        $instance = $this->getFactory()->getApplicationPool()->createInstace($app);
+        $value = $instance->getConfigurationSetting("hidefrombookingprocess");
+        $value = $value == "true" ? "false" : "true";
+        $instance->setConfigurationSetting("hidefrombookingprocess", $value);
+   }
+    
     public function activateApp() {
         $this->getApi()->getStoreApplicationPool()->activateApplication($_POST['data']['id']);
     }
@@ -22,6 +31,12 @@ class PaymentSettingsSetup extends \WebshopApplication implements \Application {
         $ecom = $this->getApi()->getStoreApplicationPool()->getApplication("9de54ce1-f7a0-4729-b128-b062dc70dcce");
         $ecomsettings = $this->getFactory()->getApplicationPool()->createInstace($ecom);
         $ecomsettings->setConfigurationSetting("defaultPaymentMethod", $_POST['data']['defualtmethod']);
+    }
+
+    public function savePaymentLinkMethod() {
+        $ecom = $this->getApi()->getStoreApplicationPool()->getApplication("9de54ce1-f7a0-4729-b128-b062dc70dcce");
+        $ecomsettings = $this->getFactory()->getApplicationPool()->createInstace($ecom);
+        $ecomsettings->setConfigurationSetting("paymentLinkMethod", $_POST['data']['paymentLinkMethod']);
     }
     
     public function render() {

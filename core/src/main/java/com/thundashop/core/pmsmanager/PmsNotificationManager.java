@@ -73,6 +73,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
     
     HashMap<String, PmsNotificationMessage> messages = new HashMap();
     private String orderIdToSend = null;
+    private String paymentRequestId = null;
     private String emailToSendTo = null;
     private String prefixToSendTo = null;
     private String phoneToSendTo = null;
@@ -381,7 +382,10 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
                 || key.startsWith("booking_unabletochargecard")
                 || key.startsWith("booking_paymentmissing")
                 || key.startsWith("order_")) {
-            if (orderIdToSend != null) {
+            if(paymentRequestId != null) {
+                String link = pmsInvoiceManager.getPaymentLinkConfig().webAdress + "/pr.php?id=" + paymentRequestId;
+                message = message.replace("{paymentlink}", "<a href='" + link + "'>" + link + "</a>");
+            } else if (orderIdToSend != null) {
                 message = message.replace("{orderid}", this.orderIdToSend);
                 Order order = orderManager.getOrderSecure(this.orderIdToSend);
                 String link = pmsInvoiceManager.getPaymentLinkConfig().webAdress + "/p.php?id=" + order.incrementOrderId;
@@ -465,6 +469,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         messageInUse = null;
         emailMessage = null;
         emailSubject = null;
+        paymentRequestId = null;
     }
 
     private List<String> sendEmail(String key, PmsBooking booking, PmsBookingRooms room, String type, String title, String content) {
@@ -597,6 +602,9 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
 
     void doNotification(String key, String bookingId) {
         PmsBooking booking = pmsManager.getBookingUnsecure(bookingId);
+        if(booking == null) {
+            booking = pmsManager.getBookingFromRoomSecure(bookingId);
+        }
         doNotification(key, booking, null);
     }
 
@@ -799,6 +807,10 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         logText += email;
         logText += "</div>";
         pmsManager.logEntry(logText, bookingId, null, roomId, msg.key + "_email");
+    }
+
+    void setPaymentRequestId(String prid) {
+        this.paymentRequestId = prid;
     }
 
 }

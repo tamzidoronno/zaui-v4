@@ -1,0 +1,173 @@
+<?php
+/* @var $this ns_af54ced1_4e2d_444f_b733_897c1542b5a8\PmsPaymentProcess */
+
+class ContactInformation {
+    var $name;
+    var $email;
+    var $phone;
+    var $id;
+    var $prefix;
+    var $roomId;
+}
+$paymentMethods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+
+$engine = $this->getSelectedMultilevelDomainName();
+$booking = $this->getSelectedBookings();
+if(sizeof($booking) > 1) {
+    echo "Automated payment requests can only be used on individual bookings";
+    return;
+}
+$booking = $booking[0];
+$msg = $this->getApi()->getPmsNotificationManager()->getSpecificMessage($engine, "booking_sendpaymentlink", $booking, null, "sms", null);
+?>
+<div class="header">
+<?php
+echo $this->__f("Send a payment request to the guest");
+foreach ($paymentMethods as $method) {
+    if ($method->id == "60f2f24e-ad41-4054-ba65-3a8a02ce0190") {
+        continue;
+    }
+    
+    $appInstance = $this->getFactory()->getApplicationPool()->createInstace($method);
+    $color = $appInstance->getColor();
+    $icon = $appInstance->getIcon();
+    if(!$appInstance->hasPaymentLink()) {
+        continue;
+    }
+    echo "<span style='float:right;'><span class='shop_button' goto='checkavailability' gsclick='selectPaymentMethod' method='".$method->id. "'>Advanced payment link using " . $appInstance->getName() . "</span></span>";
+}
+?>
+    
+    
+</div>
+<div class='paymentmethodsselection'>
+    <textarea style='width:100%; height: 100px; padding: 10px;' id='messagetosend'><?php echo $msg->content; ?></textarea>
+</div>
+<span class='shop_button' gsclick='reload'>Reload</span>
+<br><br>
+<?php
+$counter = 0;
+foreach($booking->rooms as $r) {
+    if($r->unsettledAmount > 0) {
+        $counter++;
+    }
+}
+
+$fields = array();
+$contacts = array();
+$booker = new stdClass();
+$booker->id = $booking->id;
+$booker->amount = $booking->unsettled;
+$booker->title = "Send request for booking";
+$booker->footerText = "";
+if($booking->unsettled > 0) {
+    $fields["booker"] = $booker;
+}
+
+$user = $this->getApi()->getUserManager()->getUserById($booking->userId);
+$contact = new ContactInformation();
+$contact->name = $user->fullName;
+$contact->phone = $user->cellPhone;
+$contact->prefix = $user->prefix;
+$contact->email = $user->emailAddress;
+$contact->id = $user->id;
+$contact->roomId = $booking->id;
+
+$contacts[] = $contact;
+if($counter > 1) {
+    $i = 0;
+    foreach($booking->rooms as $r) {
+        if($r->unsettledAmount > 0) {
+            continue;
+        }
+        $booker = new stdClass();
+        $booker->id = $r->pmsBookingRoomId;
+        $booker->amount = $r->unsettledAmount;
+        $booker->title = "Send request for room";
+        $roomType = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $r->bookingItemTypeId);
+        $name = $roomType->name;
+        $booker->footerText = date("d.m.Y H:i", strtotime($r->date->start)) . " - " . date("d.m.Y H:i", strtotime($r->date->end));
+        if(isset($r->bookingItemId)) {
+            $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $r->bookingItemId);
+            $name . "/" . $item->bookingItemName;
+        }
+        $booker->footerText = $name . " - " . $booker->footerText;
+
+        foreach($r->guests as $guest) {
+            $contact = new ContactInformation();
+            $contact->name = @$guest->name ? $guest->name : "";
+            $contact->phone = @$guest->phone ? $guest->phone : "";
+            $contact->prefix = @$guest->prefix ? $guest->prefix : "";
+            $contact->email = @$guest->email ? $guest->email : "";
+            $contact->id = @$guest->guestId;
+            $contact->roomId = $r->pmsBookingRoomId;
+            $contacts[] = $contact;
+        }
+
+        $fields["room" . $i] = $booker;
+        $i++;
+    }
+}
+
+echo "<input type='hidden' id='customersobject' value='" . json_encode($contacts) . "'>";
+
+
+if(sizeof($fields) == 0) {
+    echo "<div style='font-size:26;'>";
+    echo "Sorry, we can not send a payment request where there are no unsettled amounts.";
+    echo "</div>";
+    return;
+}
+
+foreach($fields as $key => $r) {
+    $amount = 0;
+    $title = "";
+    ?>
+    <div class='sendrequestbox'>
+        <span class='sendpaymentrequesttitle'><?php echo $r->title; ?></span>
+        <span class='sendpaymentrequesttotal'>total: <?php echo $r->amount; ?></span>
+        <div class='sendpaymentrequestsbody'>
+            <select class="gsniceselect1 sendtobookerdropdown" style='width:230px;'>
+                <?php
+                $selectedContact = null;
+                foreach($contacts as $c) {
+                    if(!$c->name) {
+                        continue;
+                    }
+                    if($selectedContact == null || $c->roomId == $r->id) {
+                        $selectedContact = $c;
+                    }
+                    $selected = $c->roomId == $r->id ? "SELECTED" : "";
+                    echo "<option value='" . $c->id . "' $selected>".$c->name."</option>";
+                }
+                ?>
+            </select>
+            <?php
+            
+            ?>
+            <input type='hidden' gsname='roomid' value='<?php echo $r->id; ?>'>
+            <input class='gsniceinput1' gsname='name' placeholder='Name' value='<?php echo $selectedContact->name; ?>' style='width:150px;'>&nbsp;&nbsp;&nbsp;
+            <input class='gsniceinput1' gsname='email' placeholder='email' value='<?php echo $selectedContact->email; ?>' style='width:230px;'>&nbsp;&nbsp;&nbsp;
+            <input class='gsniceinput1' gsname='prefix' placeholder='prefix' value='<?php echo $selectedContact->prefix; ?>' style='width:40px;'>
+            <input class='gsniceinput1' gsname='phone' placeholder='phone' value='<?php echo $selectedContact->phone; ?>'>
+        </div>
+        <div class='sendpaymentrequestsfooter'>
+            <?php echo $booker->footerText; ?>
+            <span class='shop_button sendrequestbutton'>Send payment request <i class='fa fa-arrow-right'></i></span>
+            <div class='sentmessage'>Message has been sent</div>
+        </div>
+        <div style='clear:both;margin-bottom: 20px;'></div>
+    </div>
+    <?php
+}
+
+?>
+
+<style>
+    .sentmessage { text-align: right; display:none;}
+    .sendpaymentrequesttitle { border: solid 1px #bbb; display:inline-block; padding: 3px; border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom: 0px; width:200px; }
+    .sendpaymentrequesttotal { border: solid 1px #bbb; display:inline-block; float:right; padding: 3px; border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom: 0px; }
+    .sendpaymentrequestsbody { border: solid 1px #bbb; padding: 20px; background-color:#efefef; }
+    .sendpaymentrequestsfooter { margin-bottom: 30px; border-top: solid 0px; height: 38px; border-top: 0px; font-size: 16px; padding-top: 4px; padding-left: 5px; font-weight: bold;}
+    .sendrequestbutton { padding-top: 2px; float:right; }
+</style>

@@ -4184,9 +4184,22 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
-    public void sendPaymentLinkWithText(String orderId, String bookingId, String email, String prefix, String phone, String message) {
-        pmsNotificationManager.setOrderIdToSend(orderId);
+    public void sendPaymentRequest(String bookingId, String email, String prefix, String phone, String message) {
+        pmsNotificationManager.setEmailToSendTo(email);
+        pmsNotificationManager.setPrefixToSendTo(prefix);
+        pmsNotificationManager.setPhoneToSendTo(phone);
+        pmsNotificationManager.setMessageToSend(message);
+        pmsNotificationManager.setPaymentRequestId(bookingId);
 
+        if(pmsNotificationManager.isActive()) {
+            pmsNotificationManager.doNotification("booking_sendpaymentlink", bookingId);
+            return;
+        }
+    }
+
+    
+    @Override
+    public void sendPaymentLinkWithText(String orderId, String bookingId, String email, String prefix, String phone, String message) {
         pmsNotificationManager.setOrderIdToSend(orderId);
         pmsNotificationManager.setEmailToSendTo(email);
         pmsNotificationManager.setPrefixToSendTo(prefix);
@@ -9823,7 +9836,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
      * @return 
      */
     public List<String> getAllOrderIds(String pmsBookingId) {
-        PmsBooking booking = getBooking(pmsBookingId);
+        PmsBooking booking = getBookingUnsecure(pmsBookingId);
         
         if (booking == null) {
             return new ArrayList();
@@ -10145,9 +10158,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 if (o.roomId == null || o.roomId.isEmpty()) {
                     return;
                 }
+       
+                PmsBooking booking = getBookingFromRoomSecure(o.roomId);
                 
-                PmsBooking booking = getBookingFromRoom(o.roomId);
-    
                 if (!booking.orderIds.contains(order.id)) {
                     booking.orderIds.add(order.id);
                     saveBooking(booking);

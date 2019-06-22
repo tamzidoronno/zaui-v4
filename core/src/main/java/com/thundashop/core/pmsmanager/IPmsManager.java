@@ -369,6 +369,9 @@ public interface IPmsManager {
     public void sendPaymentLinkWithText(String orderId, String bookingId, String email, String prefix, String phone, String message);
     
     @Administrator
+    public void sendPaymentRequest(String bookingId, String email, String prefix, String phone, String message);
+    
+    @Administrator
     public String getMessage(String bookingId, String key);
     
     @Administrator

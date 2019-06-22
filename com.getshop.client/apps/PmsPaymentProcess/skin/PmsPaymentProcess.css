@@ -5,7 +5,9 @@
 .PmsPaymentProcess .getshop_box_1 {
     margin: 10px !important;
 }
-
+.PmsPaymentProcess .hiddenfrompaymentprocess {
+    display:none;
+}
 .PmsPaymentProcess .sub_header {
     padding: 10px;
     text-transform: uppercase;

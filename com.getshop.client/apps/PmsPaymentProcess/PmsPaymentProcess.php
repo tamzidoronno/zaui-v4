@@ -12,6 +12,21 @@ class PmsPaymentProcess extends \MarketingApplication implements \Application {
         return "PmsPaymentProcess";
     }
     
+    public function reload() {
+        
+    }
+    
+    public function sendPaymentLinkRequest() {
+        $message = $_POST['data']['message'];
+        $prefix = $_POST['data']['prefix'];
+        $phone = $_POST['data']['prefix'];
+        $email = $_POST['data']['email'];
+        $bookingId = $_POST['data']['roomid'];
+        $engine = $this->getSelectedMultilevelDomainName();
+        $message = str_replace("{name}", $_POST['data']['name'], $message);
+        $msg = $this->getApi()->getPmsManager()->sendPaymentRequest($engine, $bookingId, $email, $prefix, $phone, $message);
+    }
+    
     public function render() {
         $this->setLoadState();
         
@@ -25,12 +40,18 @@ class PmsPaymentProcess extends \MarketingApplication implements \Application {
             $this->includefile("select_user");
         } elseif ($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_state'] == "select_rooms") {
             $this->includefile("select_rooms");
+        } elseif ($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_state'] == "onlinepaymentrequest") {
+            $this->includefile("onlinepaymentrequest");
         }
     }
     
     public function selectPaymentMethod() {
         $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_paymentmethod'] = $_POST['data']['method'];
         $this->goToSelectRooms();
+    }
+    
+    public function startOnlinePaymentRequest() {
+        $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_state'] = 'onlinepaymentrequest';
     }
 
     public function getNameOfSelectedPaymentMethod() {

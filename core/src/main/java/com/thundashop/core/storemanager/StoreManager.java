@@ -665,4 +665,14 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         store.deactivated = deactivated;
         storePool.saveStore(store);
     }
+
+    @Override
+    public boolean supportsCreateOrderOnDemand() {
+        List<String> hasSupportForOnDemandOrders = new ArrayList();
+        hasSupportForOnDemandOrders.add("1ed4ab1f-c726-4364-bf04-8dcddb2fb2b1");
+        if(storeId != null) {
+            return hasSupportForOnDemandOrders.contains(storeId);
+        }
+        return false;
+    }
 }

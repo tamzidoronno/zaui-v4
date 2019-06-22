@@ -1041,25 +1041,53 @@ public class PosManager extends ManagerBase implements IPosManager {
         roomsNeedToCreateOrdersFor.stream().forEach(o -> createOrder(o));
     }
 
-    private void createOrder(PmsBookingRooms room) {
+    @Override
+    public String autoCreateOrderForBookingAndRoom(String roomBookingId, String paymentMethod) {
         PmsManager pmsManager = scope.getNamedSessionBean("default", PmsManager.class);
-        PmsBooking booking = pmsManager.getBookingFromRoom(room.pmsBookingRoomId);
-        PmsRoomPaymentSummary summary = pmsManager.getSummary(booking.id, room.pmsBookingRoomId);
-        
-        if (summary.rows == null || summary.rows.isEmpty() || summary.getCheckoutRows().isEmpty()) {
-            return;
+        PmsBooking booking = pmsManager.getBookingUnsecure(roomBookingId);
+        boolean isroom = false;
+        if(booking == null) {
+            booking = pmsManager.getBookingFromRoomSecure(roomBookingId);
+            isroom = true;
         }
         
-        PmsOrderCreateRow createOrderForRoom = new PmsOrderCreateRow();
-        createOrderForRoom.roomId = room.pmsBookingRoomId;
-        createOrderForRoom.items = summary.getCheckoutRows();
+        List<String> orderIdsToRemove = new ArrayList();
+        for(String orderId : booking.orderIds) {
+            Order ord = orderManager.getOrderSecure(orderId);
+            if(ord.createdByPaymentLinkId != null && ord.createdByPaymentLinkId.equals(roomBookingId) && !ord.closed) {
+                orderIdsToRemove.add(orderId);
+            }
+        }
+        if(!orderIdsToRemove.isEmpty()) {
+            for(String orderId : orderIdsToRemove) {
+                orderManager.deleteOrder(orderId);
+            }
+            booking.orderIds.removeAll(orderIdsToRemove);
+            pmsManager.saveBooking(booking);
+        }
         
-        List<PmsOrderCreateRow> createOrder = new ArrayList();
-        createOrder.add(createOrderForRoom);
+        if(booking == null) {
+            return "";
+        }
+        String orderId = "";
+        if(isroom) {
+            PmsBookingRooms room = booking.getRoom(roomBookingId);
+            orderId = createOrderWithPaymentMethod(booking, room, paymentMethod);
+        } else {
+            orderId = createOrderWithPaymentMethod(booking, null, paymentMethod);
+        }
         
-        String userId = booking.userId != null && !booking.userId.isEmpty() ? booking.userId : getSession().currentUser.id;
+        Order ord = orderManager.getOrderSecure(orderId);
+        ord.createdByPaymentLinkId = roomBookingId;
+        orderManager.saveOrder(ord);
         
-        pmsManager.createOrderFromCheckout(createOrder, "60f2f24e-ad41-4054-ba65-3a8a02ce0190", userId);
+        return orderId;
+    }
+    
+    private String createOrder(PmsBookingRooms room) {
+        PmsManager pmsManager = scope.getNamedSessionBean("default", PmsManager.class);
+        PmsBooking booking = pmsManager.getBookingFromRoom(room.pmsBookingRoomId);
+        return createOrderWithPaymentMethod(booking, room, "60f2f24e-ad41-4054-ba65-3a8a02ce0190");
     }
     
     private boolean checkIfAccruedPaymentActivatedAndConfigured() {
@@ -1302,5 +1330,29 @@ public class PosManager extends ManagerBase implements IPosManager {
         });
         
         return conferencesWithUserIds;
+    }
+    
+    private String createOrderWithPaymentMethod(PmsBooking booking, PmsBookingRooms room, String roomId) {
+        PmsOrderCreateRow createOrderForRoom = new PmsOrderCreateRow();
+        PmsManager pmsManager = scope.getNamedSessionBean("default", PmsManager.class);
+        if(room == null) {
+            createOrderForRoom.items = new ArrayList();
+            for(PmsBookingRooms r : booking.getActiveRooms()) {
+                PmsRoomPaymentSummary summary = pmsManager.getSummary(booking.id, r.pmsBookingRoomId);
+                createOrderForRoom.roomId = r.pmsBookingRoomId;
+                createOrderForRoom.items.addAll(summary.getCheckoutRows());
+            }
+        } else {
+            PmsRoomPaymentSummary summary = pmsManager.getSummary(booking.id, room.pmsBookingRoomId);
+            createOrderForRoom.roomId = room.pmsBookingRoomId;
+            createOrderForRoom.items = summary.getCheckoutRows();
+        }
+        
+        List<PmsOrderCreateRow> createOrder = new ArrayList();
+        createOrder.add(createOrderForRoom);
+        
+        String userId = booking.userId != null && !booking.userId.isEmpty() ? booking.userId : getSession().currentUser.id;
+        
+        return pmsManager.createOrderFromCheckout(createOrder, roomId, userId);
     }
 }

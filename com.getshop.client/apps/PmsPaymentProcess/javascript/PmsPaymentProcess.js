@@ -54,8 +54,41 @@ app.PmsPaymentProcess = {
         thundashop.Ajax.post(event, function(res) {
             $(me).closest('.app').find('.search_tab_conference_result').html(res);
         });
+        
+        $(document).on('change', '.PmsPaymentProcess .sendtobookerdropdown', this.changeSendToRecipient);  
+        $(document).on('click', '.PmsPaymentProcess .sendrequestbutton', this.sendRequest);  
     },
     
+    sendRequest : function() {
+         var form = $(this).closest('.sendrequestbox');
+        var result = thundashop.framework.createGsArgs(form);
+        result.message = $('#messagetosend').val();
+        var event = thundashop.Ajax.createEvent('','sendPaymentLinkRequest',$(this), result);
+        var btn = $(this);
+        btn.append('<i class="fa fa-spinner fa-spin"></i>');
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            setTimeout(function() {
+                btn.fadeOut(function() {
+                    form.find('.sentmessage').show();
+                });
+            }, "500");
+        });
+    },
+    changeSendToRecipient : function() {
+        var id = $(this).val();
+        
+        var objects = $('#customersobject').val();
+        objects = JSON.parse(objects);
+        for(var k in objects) {
+            var obj = objects[k];
+            var body = $(this).closest('.sendpaymentrequestsbody');
+            if(obj.id === id) {
+                body.find("[gsname='email']").val(obj.email);
+                body.find("[gsname='prefix']").val(obj.prefix);
+                body.find("[gsname='phone']").val(obj.phone);
+            }
+        }
+    },
     toggleCalc: function() {
         var filter = $(this).closest('.app').find('.percentfilter');
         if ($(filter).is(':visible')) {

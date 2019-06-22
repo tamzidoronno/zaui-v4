@@ -43,6 +43,10 @@
     display: inline-block;
 }
 
+.PmsPaymentProcess .GetShopQuickUser .row .col {
+    display: block;
+}
+
 .PmsPaymentProcess .rooms .guests {
     padding-left: 25px;
     color: #555;

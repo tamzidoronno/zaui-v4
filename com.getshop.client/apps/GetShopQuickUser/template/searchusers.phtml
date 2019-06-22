@@ -23,7 +23,11 @@ foreach ($_POST['data'] as $key => $value) {
 }
 
 $users = $this->getApi()->getUserManager()->findUsers($searchvalue);
-
+$callback = 'gs_callback="app.GetShopQuickUser.userChanged"';
+$extraArgs = $this->getExtraArgs();
+if(isset($extraArgs['invokeJavascriptFunctionAfterActions'])) {
+    $callback = 'gs_callback="'.$extraArgs['invokeJavascriptFunctionAfterActions'].'"';
+}
 foreach ($users as $user) {
     ?>
     <div class="row usersearchrow">
@@ -36,7 +40,7 @@ foreach ($users as $user) {
            <div class="gs_shop_small_icon" 
                 <? echo $extra; ?>
                 gsclick="changeUser"
-                gs_callback="app.GetShopQuickUser.userChanged"
+                <?php echo $callback; ?>
                 synchron="true"
                 userid="<? echo $user->id; ?>"
                 >

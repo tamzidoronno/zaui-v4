@@ -18,8 +18,13 @@ $paymentApps = (array) $this->getApi()->getStoreApplicationPool()->getActivatedP
 if ($user && $user->type > 10 || ($user && $user->id == "quickreservation")) {
     $disabled = "DISABLED";
 }
+
+$invoke = $this->invokeJavascriptFunctionAfterActions;
+if(isset($extraArgs['invokeJavascriptFunctionAfterActions'])) {
+    $invoke = $extraArgs['invokeJavascriptFunctionAfterActions'];
+}
 ?>
-<div gstype="form" method="saveUser">
+<div gstype="form" method="saveUser" invokeJavascriptFunctionAfterActions='<? echo $invoke; ?>'>
     <?
     $xargs = $this->getExtraArgs();
     
@@ -164,7 +169,7 @@ if ($user && $user->type > 10 || ($user && $user->id == "quickreservation")) {
             echo $xtra['overridesavebutton'];
         } else {
             ?>
-            <div class="shop_button" gstype="submit">
+            <div class="shop_button updateuserbtn">
                 <i class="fa fa-save"></i> <? echo $name; ?>
             </div>
             <?php

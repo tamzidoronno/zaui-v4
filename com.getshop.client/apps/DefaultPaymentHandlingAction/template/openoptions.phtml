@@ -13,7 +13,7 @@ $order = $this->getOrder();
     <div class='order_action_button' gs_also='payment_date' orderid='<? echo $order->id; ?>' gsclick='markOrderAsPaid' gs_callback='app.DefaultPaymentHandlingAction.markAsPaidCompleted'><i class='fa fa-check'></i> <? echo $this->__f("Mark as paid"); ?>
     </div>
     
-    <div  synchron='true' gs_confirm="Are you sure?" class='order_action_button' orderid='<? echo $order->id; ?>' gsclick='cancelCurrentOrder' gs_callback='app.DefaultPaymentHandlingAction.markAsPaidCompleted' >
+    <div synchron='true' gs_confirm="Are you sure?" class='order_action_button' orderid='<? echo $order->id; ?>' gsclick='cancelCurrentOrder' gs_callback='app.DefaultPaymentHandlingAction.markAsPaidCompleted' >
         <i class='fa fa-trash'></i> 
         <? echo $this->__f("Delete order"); ?>
     </div>
@@ -25,6 +25,23 @@ $order = $this->getOrder();
         <i class='fa fa-chain-broken'></i> 
         <? echo $this->__f("Change payment type"); ?>
     </div>
+    <?php
+    if(!$order->closed) {
+        ?>
+        <div class='order_action_button updateOrderNote' orderid='<? echo $order->id; ?>' style='position: relative;' >
+            <i class='fa fa-plus-square-o'></i> 
+            <? echo $this->__f("Update order note"); ?>
+        </div>
+        <div class='order_action_button'
+             gs_confirm="Are you want to close this order? It can not be modified after." class='order_action_button' 
+             orderid='<? echo $order->id; ?>' gsclick='closeCurrentOrder' gs_callback='app.DefaultPaymentHandlingAction.refresh'
+             style='position: relative;' >
+            <i class='fa fa-lock'></i> 
+            <? echo $this->__f("Close order"); ?>
+        </div>
+        <?php
+    }
+    ?>
 </div>
 
 

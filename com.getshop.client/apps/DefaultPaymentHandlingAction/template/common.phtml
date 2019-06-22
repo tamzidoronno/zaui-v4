@@ -11,6 +11,7 @@ $id = str_replace("ns-", "", $id);
 $app = $this->getApi()->getStoreApplicationPool()->getApplication($id);
 $paymentApp = $this->getFactory()->getApplicationPool()->createInstace($app);
 $paymentApp->setCurrentOrder($order);
+$user = $this->getApi()->getUserManager()->getUserById($order->userId);
 
 echo "<div class='paymentmethodname'>";
     echo $this->__f("Payment type").": ".$paymentApp->getName();
@@ -48,8 +49,27 @@ if (!$order->isCreditNote && count($order->creditOrderId)) {
     } else {
     ?>
         <i class='fa fa-unlock' style='display: inline-block; width: 30px; text-align: center;'></i> <? echo $this->__f("Open for modification"); ?>
-    <?    
+    <?
     }
     ?>
-
+    <!--<div style='height:5px'></div>-->
+    <table cellspacing='0' cellpadding='0'>
+        <tr>
+            <td style='font-size:16px;' align='left'>
+                <i class='fa fa-user' style='display: inline-block; width: 30px; text-align: center;'></i>
+            </td>
+            <td style='font-size:16px;'>
+                <?
+                $extraArgs = array();
+                $extraArgs['userid'] = $user->id;
+                $extraArgs['orderid'] = $order->id;
+                $extraArgs['invokeJavascriptFunctionAfterActions'] = 'app.PmsPaymentProcess.refresh';
+                $quser = new \ns_b5e9370e_121f_414d_bda2_74df44010c3b\GetShopQuickUser();
+                $quser->setUser($user);
+                $quser->setExtraArgs($extraArgs);
+                $quser->renderApplication(true, $this);
+                ?>
+            </td>
+        </tr>
+    </table>
 </div>

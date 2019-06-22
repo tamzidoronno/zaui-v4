@@ -2,11 +2,32 @@ app.GetShopQuickUser = {
     init: function() {
         $(document).on('click', '.GetShopQuickUser .show_edit_user', this.toggleEditUser);
         $(document).on('click', '.GetShopQuickUser .show_change_user', this.toggleShowChangeUser);
+        $(document).on('click', '.GetShopQuickUser .updateuserbtn', this.editUserSaveButton);
         $(document).on('click', '.GetShopQuickUser .change_user_form [tab]', this.toggleTabClicked);
         $(document).on('click', '.GetShopQuickUser .searchbox .tab', this.changeTab);
         $(document).on('click','.GetShopQuickUser .searchbrregbutton', app.GetShopQuickUser.showBrregSearch);
         $(document).on('click','.GetShopQuickUser .brregsearchresultrow', app.GetShopQuickUser.selectBrregResult);
     },
+    editUserSaveButton : function() {
+        var form = $(this).closest("[gstype='form']");
+        var args = thundashop.framework.createGsArgs(form);
+        var method = form.attr('method');
+        var event = thundashop.Ajax.createEvent('',method,$(this), args);
+        var toInvoke = form.attr('invokeJavascriptFunctionAfterActions');
+        if(toInvoke) {
+            thundashop.Ajax.postWithCallBack(event, function(res) {
+                var callbackFunction = function(javascriptCallbackFunction) {
+                    var funtionBody = javascriptCallbackFunction + "();";
+                    var toExecute = new Function(funtionBody);
+                    toExecute();
+                }
+                callbackFunction(toInvoke);
+            });
+        } else {
+            thundashop.Ajax.post(event);
+        }
+    },
+    
     selectBrregResult : function() {
         var name = $(this).attr('name');
         var vatnumber = $(this).attr('vatnumber');
@@ -65,6 +86,7 @@ app.GetShopQuickUser = {
     },
     
     userChanged: function(result) {
+        debugger;
         app.GetShopQuickUser.updateFieldsAfterUserChangedOrCreated(result);
         app.GetShopQuickUser.closeChangeUser();
         $('.GetShopQuickUser .userNotSelected').removeClass('userNotSelected');
@@ -93,7 +115,6 @@ app.GetShopQuickUser = {
         app.GetShopQuickUser.closeChangeUser();
         $('.GetShopQuickUser .edit_details_of_user').slideDown();
         $('.GetShopQuickUser .userNotSelected').removeClass('userNotSelected');
-        
         if ($('.change_user_form').attr('invokeJavascriptFunctionAfterActions')) {
             var javascriptCallbackFunction = $('.change_user_form').attr('invokeJavascriptFunctionAfterActions');
             var callbackFunction = function(javascriptCallbackFunction) {

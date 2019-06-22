@@ -60,7 +60,7 @@ foreach ($groupedOrders as $userId => $orders) {
             <div class='row'>
                 <div class='col col1'>
                     <a href='/invoicing.php?page=orderviewpage&orderid=<? echo $order->id; ?>'><i class="gs_shop_small_icon fa fa-dollar" title='Open invoice in invoice module'></i></a>
-                    <input class='checkboxtoselect' type='checkbox' gsname='orderid_<? echo $order->id; ?>' value='<? echo $order->id; ?>'/>
+                    <input class='checkboxtoselect' type='checkbox' gsname='orderid_<? echo $order->id; ?>' value='<? echo $order->id; ?>'/><br>
                 </div>
                 <div class='col col2'><? echo $incremental; ?></div>
                 <div class='col col3'><? echo $date; ?></div>
@@ -74,9 +74,9 @@ foreach ($groupedOrders as $userId => $orders) {
                         if ($item->startDate && $item->endDate) {
                             echo "<div style='display: inline-block; width: 200px;'>".date("d/m-Y", strtotime($item->startDate))." -".date("d/m-Y", strtotime($item->endDate))."</div>";
                         }
-                        
                     }
                     ?>
+                    <?php echo @$order->invoiceNote ? "<b>Notat: " . $order->invoiceNote  . "</b>" : ""; ?>
                 
                 </div>
                 <div class='col col5'><? echo $total; ?></div>

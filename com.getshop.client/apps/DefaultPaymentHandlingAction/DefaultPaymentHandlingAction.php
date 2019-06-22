@@ -39,6 +39,13 @@ class DefaultPaymentHandlingAction extends \PaymentApplication implements \Appli
         $this->order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
     }
     
+    public function updateDueDate() {
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        $order->dueDays = $_POST['data']['days'];
+        $this->getApi()->getOrderManager()->saveOrder($order);
+        $this->order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+    }
+    
     public function createNewUser() {
         $user = new \core_usermanager_data_User();
         $user->fullName = $_POST['data']['name'];

@@ -2,12 +2,26 @@ app.DefaultPaymentHandlingAction = {
     init: function() {
         $(document).on('click', '.DefaultPaymentHandlingAction .showChangePaymentMenu', app.DefaultPaymentHandlingAction.showChangePaymentMenu);
         $(document).on('click', '.DefaultPaymentHandlingAction .updateOrderNote', app.DefaultPaymentHandlingAction.updateOrderNote);
+        $(document).on('click', '.DefaultPaymentHandlingAction .updateDueDate', app.DefaultPaymentHandlingAction.updateDueDate);
     },
     updateOrderNote : function() {
         var note = prompt("Note to set on order");
         var event = thundashop.Ajax.createEvent('','updateOrderNote',$(this), {
             "note" : note,
             "text" : $(this).val(),
+            "orderid" : $(this).attr('orderid')
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            app.PmsPaymentProcess.refresh();
+        });
+    },
+    updateDueDate : function() {
+        var days = prompt("Number of days");
+        if(!days) {
+            return;
+        }
+        var event = thundashop.Ajax.createEvent('','updateDueDate',$(this), { 
+            "days" : days,
             "orderid" : $(this).attr('orderid')
         });
         thundashop.Ajax.postWithCallBack(event, function(res) {

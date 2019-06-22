@@ -20,7 +20,11 @@ class PmsSearchBookingColumnFormatters {
         if($room->keyIsReturned) {
             $roomText .=  '<i class="fa fa-key" title="Key has been returned" style="color:green;"></i> ';
         }
-        $roomText .= $room->room;
+        if($room->hasBeenCleaned || $room->roomCleaned) {
+            $roomText .= "<i class='gsicon-gs-cleaning' style='color:blue' title='Room is clean'></i> " . $room->room;
+        } else {
+            $roomText .= "<i class='gsicon-gs-cleaning' title='Room is not cleaned'></i> " . $room->room;
+        }
         $roomText .= "<div class='secondary_text roominfosub'>".$room->roomType."</div>";
         return $roomText;
     }

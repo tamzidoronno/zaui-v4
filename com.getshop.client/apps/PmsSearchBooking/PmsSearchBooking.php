@@ -203,6 +203,7 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         <?php
         
         $filter = $this->getSelectedFilter();
+        $filter->includeCleaningInformation = true;
         $domainName = $this->getSelectedMultilevelDomainName();
         $args = array($domainName, $filter);
 //        

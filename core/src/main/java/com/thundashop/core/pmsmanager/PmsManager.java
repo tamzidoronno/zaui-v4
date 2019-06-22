@@ -2302,6 +2302,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsAdditionalItemInformation additional = getAdditionalInfo(itemId);
         additional.markCleanedWithoutLogging();
         saveAdditionalInfo(additional);
+        processor();
     }
 
     void markRoomAsDirty(String bookingItemId) {

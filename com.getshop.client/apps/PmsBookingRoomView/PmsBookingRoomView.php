@@ -22,6 +22,12 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         
     }
     
+    public function retrySendingCode() {
+        $this->getApi()->getPmsManager()->processor($this->getSelectedMultilevelDomainName());
+        $this->setData();
+        $this->includefile("accesscode");
+    }
+    
     public function changeChannel() {
         $booking = $this->getPmsBooking();
         $booking->channel = $_POST['data']['channel'];

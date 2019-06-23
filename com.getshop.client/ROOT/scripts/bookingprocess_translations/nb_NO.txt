@@ -6,6 +6,7 @@
     "rooms" : "Rom",
     "configureroom" : "Konfigurer rom",
     "back" : "Tilbake",
+    "commenttitle" : "Noen bemerkninger / kommentarer?",
     "room" : "Rom",
     "paymentexplanation" : "Sett inn kortet og følg instruksjonene under. Når betalingen er gjennomført får du en kode på sms og epost etter innsjekk innsjekk klokken {time}.",
     "nights" : "netter",

@@ -75,6 +75,9 @@ class PmsReport extends \MarketingApplication implements \Application {
         
         $selectedFilter = $this->getSelectedFilter();
         echo "<br><br>";
+        if(isset($_GET['groupview'])) {
+            $this->printGroupViewHeader();
+        }
         echo "<div class='reportview'>";
         if($selectedFilter->type == "cleaning_report") {
             $this->includefile("cleaning_report");
@@ -583,6 +586,9 @@ class PmsReport extends \MarketingApplication implements \Application {
         $filter->removeAddonsIncludedInRoomPrice = true;
         $filter->typeFilter = $typeFilter;
         $filter->segments = array();
+        if(isset($_GET['groupview'])) {
+            $filter = $this->setBookingInFilter($_GET['groupview'], $filter);
+        }
         if($selectedFilter->segment) {
             $filter->segments[] = $selectedFilter->segment;
         }
@@ -591,7 +597,7 @@ class PmsReport extends \MarketingApplication implements \Application {
             $filter->includeVirtual = true;
         }
         $filter->includeNonBookable = $selectedFilter->includeNonBookableRooms;
-        $filter->channel = $selectedFilter->channel;
+        $filter->channel = @$selectedFilter->channel;
         $filter->customers = array();
         if(isset($selectedFilter->customers)) {
             foreach($selectedFilter->customers as $id => $val) {
@@ -1005,6 +1011,31 @@ class PmsReport extends \MarketingApplication implements \Application {
                 echo "<div class='selectedcustomerrow'><span class='fa fa-trash-o removecodefromfilter' code='".$code."'></i> " . $code . "</div>";
             }
         }
+    }
+
+    public function setBookingInFilter($bookingId,$filter) {
+        $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedMultilevelDomainName(), $bookingId);
+        $start = null;
+        $end = null;
+        foreach($booking->rooms as $room) {
+            if($start == null || strtotime($start) > strtotime($room->date->start)) {
+                $start = $room->date->start;
+            }
+            if($end == null || strtotime($end) > strtotime($room->date->end)) {
+                $end = $room->date->end;
+            }
+        }
+        $filter->startDate = $this->convertToJavaDate(strtotime($start));
+        $filter->endDate = $this->convertToJavaDate(strtotime($end));
+        $filter->bookingId = $bookingId;
+        return $filter;
+    }
+
+    public function printGroupViewHeader() {
+        $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedMultilevelDomainName(), $_GET['groupview']);
+        $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
+        $filter = $this->getCoverageFilter();
+        echo "<h1 style='text-align:center;'>" . $user->fullName  . " (" . date("d.m.Y", strtotime($filter->startDate)) . " - " . date("d.m.Y", strtotime($filter->endDate)) . ")</h1>";
     }
 
 }

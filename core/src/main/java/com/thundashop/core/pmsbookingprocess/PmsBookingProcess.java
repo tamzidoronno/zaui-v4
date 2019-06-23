@@ -877,7 +877,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         
         BookingResult res = new BookingResult();
         res.success = 1;
-        if(res == null) {
+        if(booking == null) {
             res.success = 0;
         } else {
             res.bookingid = booking.id;

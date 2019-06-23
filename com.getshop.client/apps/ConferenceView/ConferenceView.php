@@ -49,6 +49,9 @@ class ConferenceView extends \MarketingApplication implements \Application {
             if ( $_SESSION['ns_28befd67_e4ea_412b_a67a_23b1aa10781c_conferenceid_current_tab'] == "pos") {
                 $this->includefile("pos");
             }
+            if ( $_SESSION['ns_28befd67_e4ea_412b_a67a_23b1aa10781c_conferenceid_current_tab'] == "history") {
+                $this->includefile("history");
+            }
         } else {
             $this->includefile("customer");
         }

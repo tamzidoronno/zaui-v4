@@ -6,6 +6,8 @@
 package com.thundashop.core.dbbackupmanager;
 
 import com.getshop.scope.GetShopSession;
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mongodb.BasicDBObject;
@@ -90,6 +92,10 @@ public class DBBackupManager extends ManagerBase implements IDBBackupManager {
             object2 = getObject(id2).oldObject;
         }
 
+        return diffObjects(object1, object2);
+    }
+
+    public String diffObjects(DataCommon object1, DataCommon object2) {
         String gson1 = getJson(object1);
         String gson2 = getJson(object2);
 
@@ -133,7 +139,9 @@ public class DBBackupManager extends ManagerBase implements IDBBackupManager {
     }
 
     private String getJson(DataCommon object1) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        Gson gson = new GsonBuilder()
+                .addSerializationExclusionStrategy(new GsonExcludeTransientFields())
+                .setPrettyPrinting().create();
         return gson.toJson(object1);
     }
 
@@ -170,10 +178,21 @@ public class DBBackupManager extends ManagerBase implements IDBBackupManager {
         String line = null;
         String lineToReturn = "";
 
-
-        while ( (line = br.readLine()) != null)
-            lineToReturn += line+"<br/>";
-
+        
+        while ( (line = br.readLine()) != null) {
+            if (!line.contains(":")) {
+                continue;
+            }
+            if (line.contains("className") 
+                    || line.contains("lastModifiedByUserId")  
+                    || line.contains("getshopModule") 
+                    || line.contains("deepFreeze") 
+                    || line.contains("translationStrings") 
+                    || line.contains("translationId")) {
+                continue;
+            }
+            lineToReturn += line+"\n";
+        }
 
         int exitVal = proc.waitFor();            
         return lineToReturn;

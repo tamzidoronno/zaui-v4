@@ -85,11 +85,16 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
     }
     
     public function formatCashPointName($row) {
-        return $this->getApi()->getPosManager()->getCashPoint($row->cashPointId)->cashPointName;
+        $point = $this->getApi()->getPosManager()->getCashPoint($row->cashPointId);
+        if(!$point) {
+            return "";
+        }
+        return $point->cashPointName;
     }
     
     public function formatDate($date) {
-        return date('d.m.Y H:i:s', strtotime($date));
+        $sortkey = strtotime($date);
+        return "<span getshop_sorting='$sortkey'>" . date('d.m.Y H:i:s', strtotime($date)) . "</span>";
     }
     
     public function downloadPdfZreport() {
@@ -106,7 +111,14 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
         
         $retString .= "<div class='gs_shop_small_icon' gsclick='selectZReport' zreportid='$row->id'>".$this->__f("show")."</div>";
         
-        $filename = date('d.m.Y h.i', strtotime($row))." - ".$this->getApi()->getPosManager()->getCashPoint($row->cashPointId)->cashPointName;
+        $point = $this->getApi()->getPosManager()->getCashPoint($row->cashPointId);
+        $filename = "unknown";
+        if($point) {
+            $filename = date('d.m.Y h.i', @strtotime($row))." - ".$point->cashPointName;
+        }
+        
+        
+        
         $retString .= "<div class='gs_shop_small_icon' gstype='downloadpdf' method='downloadPdfZreport' filename='$filename.pdf' zreportid='$row->id'><i class='fa fa-download'></i></div>";
         
         return $retString;
@@ -147,6 +159,13 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
         );
         
         $table = new \GetShopModuleTable($this, 'PosManager', 'getZReportsUnfinalized', $args, $attributes);
+        $sortingArray= array();
+        $sortingArray[] = "rowCreatedDate";
+        $sortingArray[] = "user";
+        $sortingArray[] = "totalAmount";
+        $sortingArray[] = "cashPointName";
+        
+        $table->setSorting($sortingArray);
         $table->renderPagedTable();
         if (!$fromRender) 
             die();

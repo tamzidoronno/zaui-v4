@@ -72,7 +72,7 @@ $bookingInfo = $this->startBooking();
         foreach ($room->images as $image) {
             ?>
             imageList.push({
-                src: '<?php echo "https://www.getshop.com/displayImage.php?id=".$image->fileId; ?>',
+                src: '<?php echo "https://system.getshop.com/displayImage.php?id=".$image->fileId; ?>',
                 w: 1024,
                 h: 680
             })
@@ -89,7 +89,7 @@ $bookingInfo = $this->startBooking();
             <div class="image" onclick='pga.page.showPhotoSwipe("<?php echo $room->id; ?>")'>
                 <?php
                 $defaultImage = $this->getDefaultImage($room->images);
-                echo "<img src='https://www.getshop.com/displayImage.php?id=$defaultImage->fileId&width=300'/>";
+                echo "<img src='https://system.getshop.com/displayImage.php?id=$defaultImage->fileId&width=300'/>";
                 ?>
             </div>
             <div class='description'>

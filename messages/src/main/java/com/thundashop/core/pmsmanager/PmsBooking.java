@@ -539,9 +539,6 @@ public class PmsBooking extends DataCommon {
         for(PmsBookingRooms room : rooms) {
             room.calculateTotalCost(priceType);
             total += room.totalCost;
-            if (room.unsettledAmountIncAccrued == null || room.unsettledAmountIncAccrued.isNaN() || room.unsettledAmountIncAccrued.isInfinite()) {
-                room.unsettledAmountIncAccrued = 0D;
-            }
         }
         
         totalPrice = total;

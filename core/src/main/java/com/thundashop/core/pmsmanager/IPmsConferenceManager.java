@@ -6,6 +6,7 @@
 package com.thundashop.core.pmsmanager;
 
 import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.ConferenceDiffLog;
 import com.thundashop.core.common.GetShopApi;
 import java.util.Date;
 import java.util.List;
@@ -70,4 +71,10 @@ public interface IPmsConferenceManager {
     
     @Administrator
     public void addGuestToEvent(String guestId, String eventId);
+    
+    @Administrator
+    public List<PmsConference> searchConferences(String searchWord);
+    
+    @Administrator
+    public List<ConferenceDiffLog> getDiffLog(String conferenceId);
 }

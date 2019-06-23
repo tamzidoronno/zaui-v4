@@ -12,6 +12,7 @@ import com.thundashop.core.common.FilterOptions;
 import com.thundashop.core.common.FilteredData;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.pmsmanager.PmsConference;
 import com.thundashop.core.productmanager.data.ProductList;
 import java.util.HashMap;
 import java.util.List;
@@ -193,6 +194,9 @@ public interface IPosManager {
     
     @Editor
     public PosConference getPosConference(String pmsConferenceId);
-    
+
+    @Editor
+    public List<PmsConference> getConferencesThatHasUnsettledAmount(List<String> userIds);
+
     public String autoCreateOrderForBookingAndRoom(String roomBookingId, String paymentMethod);
 }

@@ -5,6 +5,9 @@
  */
 package com.thundashop.core.pmsmanager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author boggi
@@ -14,5 +17,11 @@ public class PmsConferenceFilter {
      * if this is set to true old events
      * will not be returned
      */
-    boolean onlyNoneExpiredEvents = false;
+    public boolean onlyNoneExpiredEvents = false;
+    
+    /**
+     * Limit the result to onlye the userIds that are
+     * specified in this variable.
+     */
+    public List<String> userIds = new ArrayList();
 }

@@ -519,4 +519,7 @@ public interface IOrderManager {
     
     @Administrator
     public void forceChangeOverrideAccountingDate(String password, String orderId, Date overrideDate);
+    
+    @Administrator
+    public List<Order> getAutoCreatedOrdersForConference(String conferenceId);
 }

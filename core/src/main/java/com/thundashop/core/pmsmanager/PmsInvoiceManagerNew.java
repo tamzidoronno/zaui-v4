@@ -10,6 +10,9 @@ import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.pos.PosConference;
+import com.thundashop.core.pos.PosManager;
+import com.thundashop.core.pos.PosTab;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.data.Address;
@@ -35,21 +38,33 @@ public class PmsInvoiceManagerNew {
     private ProductManager productManager;
     private PmsManager pmsManager;
     private final SimpleDateFormat sdf;
+    private final PosManager posManager;
 
-    public PmsInvoiceManagerNew(OrderManager orderManager, CartManager cartManager, ProductManager productManager, PmsManager pmsManager) {
+    public PmsInvoiceManagerNew(OrderManager orderManager, CartManager cartManager, ProductManager productManager, PmsManager pmsManager, PosManager posManager) {
         this.orderManager = orderManager;
         this.cartManager = cartManager;
         this.productManager = productManager;
         this.pmsManager = pmsManager;
+        this.posManager = posManager;
         this.sdf = new SimpleDateFormat("dd-MM-yyyy");
     }
     
     public Order createOrder(List<PmsOrderCreateRow> rows, String paymentMethodId, String userId) {
         cartManager.clear();
         
+        Map<String, List<CartItem>> tabItemsAdded = new HashMap();
+        
         for (PmsOrderCreateRow roomData : rows) {
-            addAccomodationToCart(roomData);
-            addAddonsToCart(roomData);
+            if (roomData.roomId != null && !roomData.roomId.isEmpty()) {
+                addAccomodationToCart(roomData);
+                addAddonsToCart(roomData);    
+            }
+            
+            if (roomData.conferenceId != null && !roomData.conferenceId.isEmpty()) {
+                List<CartItem> itemsAdded = addConferenceCartItems(roomData);
+                tabItemsAdded.put(roomData.conferenceId, itemsAdded);
+            }
+            
         }
         
         if (cartManager.isCartConflictingWithClosedPeriode()) {
@@ -66,6 +81,8 @@ public class PmsInvoiceManagerNew {
         
         orderManager.saveOrder(order);
         orderManager.changeOrderType(order.id, paymentMethodId);
+        
+        finishTabs(tabItemsAdded, order);
         
         return order;
     }
@@ -198,5 +215,47 @@ public class PmsInvoiceManagerNew {
                 item.itemsAdded.add(addonItem);
             });
         }
+    }
+
+    private List<CartItem> addConferenceCartItems(PmsOrderCreateRow roomData) {
+        PosConference posConference = posManager.getPosConference(roomData.conferenceId);
+        PosTab tab = posManager.getTab(posConference.tabId);
+        
+        List<CartItem> itemsToAdd = roomData.items.stream()
+                .map(row -> {
+                    try {
+                        CartItem item = (CartItem) tab.getCartItem(row.cartItemId).clone();
+                        item.setProduct(item.getProduct().clone());
+                        item.setCount(row.count);
+                        item.getProduct().price = row.price;
+                        item.conferenceId = roomData.conferenceId;
+                        return item;
+                    } catch (CloneNotSupportedException ex) {
+                        Logger.getLogger(PmsInvoiceManagerNew.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    
+                    return null;
+                })
+                .filter(o -> o != null)
+                .collect(Collectors.toList());
+        
+        if (!itemsToAdd.isEmpty()) {
+            cartManager.getCart().addCartItems(itemsToAdd);
+        }
+        
+        return itemsToAdd;
+    }
+
+    private void finishTabs(Map<String, List<CartItem>> tabItemsAdded, Order order) {
+        for (String conferenceId : tabItemsAdded.keySet()) {
+            List<CartItem> cartItems = tabItemsAdded.get(conferenceId);
+            if (!cartItems.isEmpty()) {
+                PosConference posConference = posManager.getPosConference(conferenceId);
+                posManager.finishTabAndOrder(posConference.tabId, order, null, null);
+                order.conferenceIds.add(conferenceId);
+            }
+        }
+        
+        orderManager.saveObject(order);
     }
 }

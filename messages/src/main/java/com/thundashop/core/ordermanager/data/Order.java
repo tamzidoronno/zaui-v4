@@ -23,17 +23,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.mongodb.morphia.annotations.Transient;
 
 /**
@@ -104,6 +100,21 @@ public class Order extends DataCommon implements Comparable<Order> {
     public List<OrderTransaction> orderTransactions = new ArrayList();
     public String currency = "";
     public String language = "";
+    
+    /**
+     * When an order is created during the payment process 
+     * this will act as an refence for thouse orders. 
+     * Note: This should not be confused as the reference for the autocreated orders 
+     * that are creatd by the accrued payment method, for that see variable  
+     * publci String autoCreatedOrderForConferenceId
+     */
+    public List<String> conferenceIds = new ArrayList();
+    
+    
+    /**
+     * This holds a reference to what conference id the order is autocreated for.
+     */
+    public String autoCreatedOrderForConferenceId = "";
     
     /**
      * Key = productid, value is a list of taxgroups used 

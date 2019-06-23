@@ -1,0 +1,42 @@
+<?
+/* @var $this \ns_28befd67_e4ea_412b_a67a_23b1aa10781c\ConferenceView */
+$conference = $this->getConference();
+$logEntries = $this->getApi()->getPmsConferenceManager()->getDiffLog($conference->id);
+$users = array();
+
+echo "<h1>".$this->__f("Changes made to this conference")."</h2>";
+if (!count($logEntries)) {
+    echo $this->__f("No entries found");
+    return;
+}
+
+$i = 0;
+foreach ($logEntries as $entry) {
+    $i++;
+    $user = $users[$entry->doneByUser];
+    if (!$user) {
+        $users[$entry->doneByUser] = $this->getApi()->getUserManager()->getUserById($entry->doneByUser);
+        $user = $users[$entry->doneByUser];
+    }
+    $name = $user ? $user->fullName : "N/A";
+    $oddClass = $i % 2 ? "odd" : "even";
+    ?>
+
+    <div class="logentry <? echo $oddClass; ?>">
+        <div class="title"><? echo date('d.m.Y H:i', strtotime($entry->rowCreatedDate)); ?> - By: <? echo $name ?></div>
+        <? 
+            $text = nl2br($entry->diff);
+            $text = str_replace("\\n", "<br/>", $text);
+            $text = str_replace(">   \"", "<br/><b>New ", $text);
+            $text = str_replace("<   \"", "<b>Previouse ", $text);
+            $text = str_replace("---", "", $text);
+            $text = str_replace("\": \"", "</b><br/>", $text);
+            $text = str_replace("\": ", "</b><br/>", $text);
+            $text = str_replace("\",", "", $text);
+            echo $text;
+        
+        ?>
+    </div>
+    <?
+}
+?>

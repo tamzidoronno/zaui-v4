@@ -3,12 +3,17 @@ package com.thundashop.core.pmsmanager;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionScope;
 import com.ibm.icu.util.Calendar;
+import com.mongodb.BasicDBObject;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.ConferenceDiffLog;
+import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.dbbackupmanager.DBBackupManager;
+import com.thundashop.core.pos.PosManager;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.UserManager;
 import java.util.ArrayList;
@@ -33,8 +38,14 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
     @Autowired
     BookingEngine engine;
     
-   @Autowired
+    @Autowired
     private GetShopSessionScope getShopSpringScope; 
+   
+    @Autowired
+    private DBBackupManager backupManager;
+    
+    @Autowired
+    private PosManager posManager;
     
     HashMap<String, PmsConferenceItem> items = new HashMap();
     HashMap<String, PmsConference> conferences = new HashMap();
@@ -106,8 +117,10 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
 
     @Override
     public PmsConference saveConference(PmsConference conference) {
+        logDiff(conference.id, conference);
         saveObject(conference);
         conferences.put(conference.id, conference);
+        conferenceUpdated(conference);
         return conference;
     }
 
@@ -123,6 +136,8 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
                 deleteConferenceEvent(evnt.id);
             }
         }
+        
+        conferenceUpdated(conference);
     }
 
     @Override
@@ -135,8 +150,11 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
         if(!canAddEvent(event)) {
             return false;
         }
+        
+        logDiff(event.pmsConferenceId, event);
         saveObject(event);
         conferenceEvents.put(event.id, event);
+        conferenceUpdated(getConference(event.pmsConferenceId));
         return true;
     }
 
@@ -153,6 +171,8 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
             }
             deleteEventEntry(evntlog.id);
         }
+        
+        conferenceUpdated(getConference(conferenceevent.pmsConferenceId));
     }
 
     @Override
@@ -212,6 +232,7 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
 
     @Override
     public void saveEventEntry(PmsConferenceEventEntry entry) {
+        logDiff(entry.conferenceId, entry);
         saveObject(entry);
         conferenceEventEntries.put(entry.id, entry);
     }
@@ -415,6 +436,10 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
             retList.removeIf(o -> eventHasExpired(o));
         }
         
+        if (!filter.userIds.isEmpty()) {
+            retList.removeIf(o -> !filter.userIds.contains(o.forUser));
+        }
+        
         return retList;
     }
 
@@ -449,5 +474,50 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
         
         return date;
     }
-    
+
+    private void conferenceUpdated(PmsConference conference) {
+        if (conference != null) {
+            posManager.updatePosConference(conference.id);
+        }
+    }
+
+    @Override
+    public List<PmsConference> searchConferences(String searchWord) {
+        if (searchWord == null || searchWord.isEmpty())
+            return new ArrayList();
+        
+        return conferences.values()
+                .stream()
+                .filter(o -> o.meetingTitle.toLowerCase().contains(searchWord))
+                .collect(Collectors.toList());
+    }   
+
+    public void logDiff(String conferenceId, DataCommon data) throws ErrorException {
+        DataCommon oldObject = database.getObject(credentials, data.id);
+        String diff = backupManager.diffObjects(oldObject, data);
+
+        if (!diff.trim().isEmpty()) {
+            ConferenceDiffLog diffLog = new ConferenceDiffLog();
+            diffLog.diff = diff;
+            diffLog.doneByUser = getSession() != null && getSession().currentUser != null ? getSession().currentUser.id : "";
+            diffLog.forClassName = data.getClass().getCanonicalName();
+            diffLog.conferenceId = conferenceId;
+            saveObject(diffLog);
+        }
+    }
+
+    @Override
+    public List<ConferenceDiffLog> getDiffLog(String conferenceId) {
+        BasicDBObject query = new BasicDBObject();
+        query.put("conferenceId", conferenceId);
+        query.put("className", ConferenceDiffLog.class.getCanonicalName());
+        
+        return database.query(getClass().getSimpleName(), storeId, query)
+                .stream()
+                .map(o -> (ConferenceDiffLog)o)
+                .sorted((ConferenceDiffLog a, ConferenceDiffLog b) -> {
+                    return b.rowCreatedDate.compareTo(a.rowCreatedDate);
+                })
+                .collect(Collectors.toList());
+    }
 }

@@ -1,0 +1,39 @@
+<?
+/* @var $this ns_af54ced1_4e2d_444f_b733_897c1542b5a8\PmsPaymentProcess */
+$posConference = $this->getApi()->getPosManager()->getPosConference($_POST['data']['conferenceid']);
+$posTab = $this->getApi()->getPosManager()->getTab($posConference->tabId);
+?>
+
+<div class="cart_room_summary">
+    <div class="room" conferenceId="<? echo $_POST['data']['conferenceid']; ?>">
+        <div class="roominformation conferenceitemsrow row toggleshowdetailedroomview" style="position: relative;" >
+            <div class="col" style="margin-left: 10px; width: 200px;"><i class="fa fa-trash gs_shop_small_icon removeconference"></i></div>
+            <div class="col" style="margin-left: 5px; width: 100px;"><? echo date('d.m.Y', strtotime($posConference->expiryDate)); ?></div>
+            <div class="col" style="margin-left: 5px; width: 100px;"><? echo "(".$this->__f("Conference").")"; ?></div>
+            <div class="col" style="margin-left: 10px; width: calc(100% - 550px);"><? echo $posConference->conferenceName; ?></div>
+            <div class="col" style="margin-left: 10px;"><div class="totalforroom">0</div></div>
+            <div class="col" style="margin-left: 10px;"><i style="position: absolute; right: 10px; top: 5px; font-size: 25px;" class="fa fa-angle-down"></i></div>
+        </div>    
+        
+        <div class="detaileditemlines">                            
+            <?
+            foreach ($posTab->cartItems as $item) {
+                $priceToUse = $item->product->price;
+    
+                if ($item->overridePriceIncTaxes) {
+                    $priceToUse = $item->overridePriceIncTaxes;
+                }
+                ?>
+                <div class="row cartitemline conferenceitem" createorderonproductid="<? echo $item->product->id; ?>" tabid="<? echo $posTab->id; ?>" cartitemid="<? echo $item->cartItemId; ?>">
+                    <div class="col" style="margin-right: 10px; width: 20px; padding-top: 5px;"><input class="row_checkbox" style="font-size: 20px; height: 20px; width: 20px;" type="checkbox" checked="true"></div>
+                    <div class="col date" style="vertical-align: top;"><? echo date('d.m.Y', strtotime($item->addedDate)); ?></div>
+                    <div class="col count" style="vertical-align: top;"><input class="gsniceinput1 item_count" orgcount="<? echo $item->count; ?>" value="<? echo $item->count; ?>"> x </div>
+                    <div class="col price" style="vertical-align: top;"><input class="gsniceinput1 item_price" orgvalue="<? echo $item->product->price; ?>" value="<? echo $priceToUse; ?>"></div>
+                    <div class="col productname" style="vertical-align: top;"><? echo $item->product->name; ?> </div>
+                </div>
+                <?
+            }
+            ?>
+        </div>
+    </div>
+</div>

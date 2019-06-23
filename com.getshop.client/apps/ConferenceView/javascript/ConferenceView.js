@@ -8,11 +8,27 @@ app.ConferenceView = {
        $(document).on('click', '.ConferenceView .addExtraActivity', app.ConferenceView.addExtraActivity);
        $(document).on('click', '.ConferenceView .addeventbutton', app.ConferenceView.openEvent);
        $(document).on('click', '.ConferenceView .deleteEvent', app.ConferenceView.deleteEvent);
+       $(document).on('click', '.ConferenceView .changetitle', app.ConferenceView.changeTitle);
+    },
+    
+    changeTitle: function() {
+        var title = $(this).attr('title');
+        title = prompt("Please enter new name", title);
+        
+        if (!title)
+            return;
+        
+        $(this).closest('.headertitle').find('span').text(title);
+        thundashop.Ajax.simplePost(this, "setConferenceTitle", {
+            confid : $(this).closest('.outarea').attr('confid'),
+            meetingTitle: title
+        });
     },
     
     deleteEvent: function() {
         var me = this;
         var res = confirm("Are you sure you want to delete this?");
+        
         if (res) {
             thundashop.Ajax.simplePost(me, 'deleteEvent', {
                 confid : $(this).closest('.outarea').attr('confid'),

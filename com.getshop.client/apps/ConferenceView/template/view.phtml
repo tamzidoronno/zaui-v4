@@ -12,8 +12,9 @@ if (!$conference) {
     <div class="workareaheader">
         <div class="headertitle">
             <?
-            echo $this->__f("Conference").": ".$conference->meetingTitle;
+            echo $this->__f("Conference").": <span>".$conference->meetingTitle."</span>";
             ?>
+            <i class="fa gs_shop_small_icon fa-edit changetitle" title="<? echo $conference->meetingTitle; ?>"></i>
         </div>
     </div>
 
@@ -27,14 +28,10 @@ if (!$conference) {
                 <i class="fa fa-list"></i>
                 Events
             </div>
-<!--            <div class="entry taboperation" tab="receipts" reprint="true">
-                <i class="fa fa-bed"></i>
-                Guests
-            </div>
             <div class="entry taboperation" tab="history" reprint="true">
                 <i class="fa fa-history"></i>
                 History
-            </div>-->
+            </div>
             <div class="entry taboperation" tab="pos" reprint="true">
                 <i class="fa fa-dollar"></i>
                 POS<br/> Account

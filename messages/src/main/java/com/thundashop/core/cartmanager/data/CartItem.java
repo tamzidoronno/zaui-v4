@@ -65,6 +65,11 @@ public class CartItem implements Serializable, Cloneable {
     
     public Double overridePriceIncTaxes;
     
+    /**
+     * Indicates what conference this item was connected to previouse.
+     */
+    public String conferenceId = "";
+    
     public CartItem() {
     }
     
@@ -355,6 +360,12 @@ public class CartItem implements Serializable, Cloneable {
 
     public BigDecimal getTotalAmountRoundedWithTwoDecimals(int precision) {
         BigDecimal rounded = TwoDecimalRounder.roundTwoDecimals(getProduct().price, precision);
+        rounded = rounded.multiply(new BigDecimal(count));
+        return rounded;
+    }
+    
+    public BigDecimal getTotalAmountRoundedWithTwoDecimalsOverride(int precision) {
+        BigDecimal rounded = TwoDecimalRounder.roundTwoDecimals(overridePriceIncTaxes, precision);
         rounded = rounded.multiply(new BigDecimal(count));
         return rounded;
     }
@@ -736,4 +747,5 @@ public class CartItem implements Serializable, Cloneable {
             }
         }
     }
+
 }

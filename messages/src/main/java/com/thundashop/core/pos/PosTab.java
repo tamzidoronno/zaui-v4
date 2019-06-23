@@ -44,4 +44,11 @@ public class PosTab extends DataCommon {
     private void clearEmptyLines() {
         cartItems.removeIf(item -> item.getTotalAmount() == 0);
     }
+
+    public CartItem getCartItem(String cartItemId) {
+        return cartItems.stream()
+                .filter(o -> o.getCartItemId().equals(cartItemId))
+                .findAny()
+                .orElse(null);
+    }
 }

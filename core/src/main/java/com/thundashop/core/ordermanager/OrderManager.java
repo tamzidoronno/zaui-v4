@@ -66,12 +66,15 @@ import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.pdf.data.AccountingDetails;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsManager;
+import com.thundashop.core.pos.PosConference;
+import com.thundashop.core.pos.PosManager;
 import com.thundashop.core.printmanager.ReceiptGenerator;
 import com.thundashop.core.printmanager.PrintJob;
 import com.thundashop.core.printmanager.PrintManager;
 import com.thundashop.core.printmanager.Printer;
 import com.thundashop.core.printmanager.StorePrintManager;
 import com.thundashop.core.productmanager.ProductManager;
+import com.thundashop.core.productmanager.data.AccountingDetail;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import com.thundashop.core.storemanager.StoreManager;
@@ -196,6 +199,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Autowired
     private WebManager webManager;
     
+    @Autowired
+    private PosManager posManager;
+    
     private List<String> terminalMessages = new ArrayList();
     private Order orderToPay;
     private String tokenInUse;
@@ -277,7 +283,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             markAsPaid(credited.id, new Date(), credited.getTotalAmount());
         }
         
-        createNewSamleFakturaOrders(order);
+        revertOrderLinesToPreviouseState(order);
         
         List<String> credittedOrders = new ArrayList();
         credittedOrders.add(credited.id);
@@ -2424,7 +2430,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             addCreditNotesToBookings(order.createdBasedOnOrderIds);
         }
         
-        createNewSamleFakturaOrders(order);
+        revertOrderLinesToPreviouseState(order);
         
         if (order.isCreditNote) {
             orders.values()
@@ -2456,7 +2462,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
     }
 
-    private void createNewSamleFakturaOrders(Order order) {
+    private void revertOrderLinesToPreviouseState(Order order) {
         List<String> newOrders = new ArrayList();
         
         order.createdBasedOnOrderIds.stream()
@@ -2471,6 +2477,22 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 });
         
         addOrdersToBookings(newOrders);
+        
+        for (String conferenceId : order.conferenceIds) {
+            PosConference conference = posManager.getPosConference(conferenceId);
+            if (conference != null) {
+                order.getCartItems()
+                    .stream()
+                    .filter(o -> o.conferenceId.equals(conferenceId))
+                    .forEach(cartItem -> {
+                        try {
+                            posManager.addToTab(conference.tabId, (CartItem) cartItem.clone());
+                        } catch (CloneNotSupportedException ex) {
+                            java.util.logging.Logger.getLogger(OrderManager.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    });
+            }
+        }
     }
 
     public HashMap<String, List<CartItem>> groupItemsOnOrder(Cart cart) {
@@ -3594,15 +3616,28 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 Map<String, List<DayEntry>> groupedByProductId = itemsWithDepartment
                         .stream()
                         .filter(o -> o.orderId != null)
-                        .collect(Collectors.groupingBy(o -> getOrder(o.orderId).cart.getCartItem(o.cartItemId).getProductId()));
+                        .collect(Collectors.groupingBy(o -> o.accountingNumber));
 
-                for (String productId : groupedByProductId.keySet()) {
+                for (String accountingNumber : groupedByProductId.keySet()) {
+                    int accountingCodeInt = -1;
+                    
+                    try {
+                        accountingCodeInt = Integer.parseInt(accountingNumber);
+                    } catch (Exception ex) {
+                        // Ok.
+                    }
+                    
+                    AccountingDetail detail = null;
+                    if (accountingCodeInt > -1) {
+                        detail = productManager.getAccountingDetail(accountingCodeInt);
+                    }
+                    
                     PmiResult toAdd = new PmiResult();
                     toAdd.department = department != null ? department.code : "";
-                    toAdd.prodcutId = productId;
+                    toAdd.prodcutId = accountingNumber;
                     toAdd.propertyid = storeId;
-                    toAdd.productName = productManager.getProduct(productId).name;
-                    toAdd.revenue = groupedByProductId.get(productId).stream()
+                    toAdd.productName = detail != null ? accountingNumber + " " + detail.description : accountingNumber;
+                    toAdd.revenue = groupedByProductId.get(accountingNumber).stream()
                             .mapToDouble(o -> o.amountExTax.doubleValue() * -1)
                             .sum();
                     toAdd.transactiondate = dayIncome.start;
@@ -4340,5 +4375,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         order.overrideAccountingDate = overrideDate;
         saveObjectDirect(order);
+    }
+
+    @Override
+    public List<Order> getAutoCreatedOrdersForConference(String conferenceId) {
+        return orders.values()
+                .stream()
+                .filter(o -> o.autoCreatedOrderForConferenceId != null && o.autoCreatedOrderForConferenceId.contains(conferenceId))
+                .collect(Collectors.toList());
     }
 }

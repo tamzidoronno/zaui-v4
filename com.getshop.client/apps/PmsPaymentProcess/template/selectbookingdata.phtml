@@ -9,7 +9,7 @@ foreach ($bookings as $booking) {
     $uniqueSegmentIds[] = $booking->segmentId;
 }
 $uniqueSegmentIds = array_unique($uniqueSegmentIds);
-
+$hasConferences = $this->getApi()->getPosManager()->hasConferences();
 ?>
 <br/>
 <br/>
@@ -74,11 +74,14 @@ $uniqueSegmentIds = array_unique($uniqueSegmentIds);
 </script>
     
 <?
+$distinctUserIds = array();
+
 if (count($uniqueSegmentIds) > 1) {
     echo "<div style='font-size: 16px; padding-top: 30px; padding-bottom: 30px;'>".$this->__f("Not possible. Make sure that all rooms you have selected are on the same segment before continuing..")."</div>";
 } else {
 
     foreach ($bookings as $booking) {
+        $distinctUserIds[] = $booking->userId;
         $extrainforforbooking = "";
         if ($booking->userId) {
             $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
@@ -173,7 +176,43 @@ if (count($uniqueSegmentIds) > 1) {
         </div>
         <?
     }
+    
+    $distinctUserIds = array_unique($distinctUserIds);
 }
+
+if ($hasConferences) {
+    $conferencesToShow = $this->getApi()->getPosManager()->getConferencesThatHasUnsettledAmount($distinctUserIds);
+    ?>
+    <div class="addconferencedata">
+        <div class="sub_header"><? echo $this->__f("Add from conferences?"); ?></div>
+        <div class="postabs">
+            
+        </div>
+        
+        <?
+        if ($conferencesToShow) {
+            foreach ($conferencesToShow as $conference) {
+                ?>
+                <div class="conferenceuserhint" conferenceid="<? echo $conference->id; ?>">
+                    <i class="fa fa-warning"></i> <? echo $this->__f("This booking is connected to a conference").": ".$conference->meetingTitle; ?>
+                    <div class="shop_button add_pos_tab" conferenceid='<? echo $conference->id; ?>'><? echo $this->__f("Add tab"); ?></div>
+                </div>
+                <?
+            }
+        }
+        ?>
+        
+        <div style="margin: 20px;">
+            <? echo $this->__f("Search for conference"); ?>
+            <br/><input class="gsniceinput1 searchfortabs" /> <div style="font-size: 16px; vertical-align: bottom;height: 20px;padding-top: 10px;" class="gs_shop_small_icon"><i class="fa fa-search"></i></div>
+        </div>
+        <div class="search_tab_conference_result">
+            
+        </div>
+    </div>
+    <?
+}
+
 ?>
 
 <br/>

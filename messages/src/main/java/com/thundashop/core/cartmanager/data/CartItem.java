@@ -364,6 +364,12 @@ public class CartItem implements Serializable, Cloneable {
         return rounded;
     }
     
+    public BigDecimal getTotalAmountRoundedWithTwoDecimalsOverride(int precision) {
+        BigDecimal rounded = TwoDecimalRounder.roundTwoDecimals(overridePriceIncTaxes, precision);
+        rounded = rounded.multiply(new BigDecimal(count));
+        return rounded;
+    }
+    
     public double getTotalAmount() {
         return count * getProductPrice();
     }
@@ -741,4 +747,5 @@ public class CartItem implements Serializable, Cloneable {
             }
         }
     }
+
 }

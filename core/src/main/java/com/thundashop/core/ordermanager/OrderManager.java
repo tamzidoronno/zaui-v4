@@ -4362,4 +4362,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         order.overrideAccountingDate = overrideDate;
         saveObjectDirect(order);
     }
+
+    @Override
+    public List<Order> getAutoCreatedOrdersForConference(String conferenceId) {
+        return orders.values()
+                .stream()
+                .filter(o -> o.autoCreatedOrderForConferenceId != null && o.autoCreatedOrderForConferenceId.contains(conferenceId))
+                .collect(Collectors.toList());
+    }
 }

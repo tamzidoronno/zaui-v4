@@ -8,16 +8,60 @@ $tab = $this->getApi()->getPosManager()->getTab($posConference->tabId);
 <?
 
 $total = 0;
-foreach ($tab->cartItems as $cartItem) {
-    $total += ($cartItem->count * $cartItem->product->price);
-    ?>
-    <div class='cartitem row'>
-        <div class='col count'><? echo $cartItem->count; ?> x </div>
-        <div class='col name'><? echo $cartItem->product->name; ?></div>
-        <div class='col price'><? echo $cartItem->product->price; ?></div>
-    </div>
-    <?
+if ($tab->cartItems) {
+    foreach ($tab->cartItems as $cartItem) {
+        $total += ($cartItem->count * $cartItem->product->price);
+        $priceToUse = $cartItem->overridePriceIncTaxes ? $cartItem->overridePriceIncTaxes : $cartItem->product->price;
+        ?>
+        <div class='cartitem row'>
+            <div class='col count'><? echo $cartItem->count; ?> x </div>
+            <div class='col name'><? echo $cartItem->product->name; ?></div>
+            <div class='col price'><? echo $priceToUse; ?></div>
+        </div>
+        <?
+    }    
+} else {
+    echo $this->__f("There are no products added to this tab.");
 }
+
 ?>
 
 <h2><? echo $this->__f("Total").": ".$total; ?></h2>
+
+<div style="padding: 30px; background-color: #FFF;">
+    <div style="font-weight: bold; padding-bottom: 20px; font-size: 20px;"><? echo $this->__f("Autocreated orders for this tab"); ?></div>
+    <div>
+        <? echo $this->__f("In order to get daily accounting correct the system automatically creates orders for orderlines that has been added to a tab. They should be considered temporary and not as the final payment for the guests"); ?>
+    </div>
+    <br/>
+        
+    <?
+    $orders = $this->getApi()->getOrderManager()->getAutoCreatedOrdersForConference($conference->id);
+    ?>
+    <div class="row">
+        <div class="col col1"><? echo $this->__f("Orderid"); ?></div>
+        <div class="col col2"><? echo $this->__f("Amount"); ?></div>    
+    </div>
+    <?
+    $sum = 0;
+    foreach ($orders as $order) {
+        $amount = $this->getApi()->getOrderManager()->getTotalAmount($order);
+        $sum += $amount;
+        ?>
+    
+        <a href='/invoicing.php?page=orderviewpage&orderid=<? echo $order->id; ?>' target='_blank'>
+            <div class="row">
+                <div class="col col1"><? echo $order->incrementOrderId; ?></div>
+                <div class="col col2"><? echo $amount; ?></div>    
+            </div>
+        </a>
+        <?
+    }
+    ?>
+    
+    <div class="row">
+        <div class="col col1"><? echo $this->__f("Total"); ?></div>
+        <div class="col col2"><? echo $sum; ?></div>    
+    </div>
+</div>
+

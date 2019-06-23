@@ -46,6 +46,7 @@ import com.thundashop.core.productmanager.data.ProductList;
 import com.thundashop.core.productmanager.data.ProductPriceOverride;
 import com.thundashop.core.productmanager.data.ProductPriceOverrideType;
 import com.thundashop.core.productmanager.data.TaxGroup;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -351,6 +352,9 @@ public class PosManager extends ManagerBase implements IPosManager {
         
         report.orderIds = orderIds;
         
+        
+//        autoCreateOrdersForConferenceTabs("");
+        
         return report;
     }
     
@@ -387,6 +391,7 @@ public class PosManager extends ManagerBase implements IPosManager {
     @Override
     public void createZReport(String cashPointId) {
         autoCreateOrders(cashPointId);
+        autoCreateOrdersForConferenceTabs(cashPointId);
         
         ZReport report = getZReport("", cashPointId);
         report.createdByUserId = getSession().currentUser.id;
@@ -398,7 +403,10 @@ public class PosManager extends ManagerBase implements IPosManager {
         if (orderManager.getOrderManagerSettings().autoCloseFinancialDataWhenCreatingZReport && isMasterCashPoint(cashPointId)) {
             closeFinancialPeriode();
         }
+        
         getShopAccountingManager.transferAllDaysThatCanBeTransferred();
+        
+        
     }
     
     /**
@@ -874,7 +882,7 @@ public class PosManager extends ManagerBase implements IPosManager {
         
         canClose.uncompletedOrders = orderManager.getAllOrders()
                 .stream()
-                .filter(o -> !o.isNullOrder())
+                .filter(o -> !o.isNullOrder() && !o.isAccruedPayment())
                 .filter(o -> o.status != Order.Status.PAYMENT_COMPLETED)
                 .filter(o -> createdCashPoint(o, cashPointId))
                 .collect(Collectors.toList());
@@ -1039,6 +1047,8 @@ public class PosManager extends ManagerBase implements IPosManager {
                 .collect(Collectors.toList());
         
         roomsNeedToCreateOrdersFor.stream().forEach(o -> createOrder(o));
+        
+        
     }
 
     @Override
@@ -1354,5 +1364,95 @@ public class PosManager extends ManagerBase implements IPosManager {
         String userId = booking.userId != null && !booking.userId.isEmpty() ? booking.userId : getSession().currentUser.id;
         
         return pmsManager.createOrderFromCheckout(createOrder, roomId, userId);
+    }
+
+    private void autoCreateOrdersForConferenceTabs(String cashPointId) {
+        String accuredPayment = "60f2f24e-ad41-4054-ba65-3a8a02ce0190";
+        
+        boolean isActive = storeApplicationPool.isActivated(accuredPayment);
+        if (!isActive) {
+            return;
+        }
+        
+        conferences.values()
+                .stream()
+                .forEach(conference -> {
+                    List<Order> autoCreatedOrders = orderManager.getAutoCreatedOrdersForConference(conference.pmsConferenceId);
+                    List<CartItem> cartItemsInDifference = getDiff(autoCreatedOrders, getTab(conference.tabId));
+                    if (!cartItemsInDifference.isEmpty()) {
+                        Order order = createOrder(cartItemsInDifference, accuredPayment, null, cashPointId);
+                        order.autoCreatedOrderForConferenceId = conference.pmsConferenceId;
+                        orderManager.saveOrder(order);
+                    }
+                });
+    }
+
+    private List<CartItem> getDiff(List<Order> autoCreatedOrders, PosTab tab) {
+        List<CartItem> cartItemsFromOrders = autoCreatedOrders.stream()
+                .flatMap(o -> o.getCartItems().stream())
+                .collect(Collectors.toList());
+        
+        List<String> allProductIdsFromOrder = cartItemsFromOrders.stream()
+                .map(o -> o.getProductId())
+                .distinct()
+                .collect(Collectors.toList());
+        
+        List<String> allProductIdsFromTab = tab.cartItems
+                .stream()
+                .map(o -> o.getProductId())
+                .distinct()
+                .collect(Collectors.toList());
+        
+        List<String> allProductsIds = new ArrayList();
+        allProductsIds.addAll(allProductIdsFromOrder);
+        allProductsIds.addAll(allProductIdsFromTab);
+        allProductsIds = allProductsIds.stream().distinct().collect(Collectors.toList());
+        
+        List<CartItem> retList = new ArrayList();
+        
+        for (String productId : allProductsIds) {
+            int countInTab = getCountInCartItems(tab.cartItems, productId);
+            int countInOrders = getCountInCartItems(cartItemsFromOrders, productId);
+            
+            BigDecimal totalFromTab = getTotalInCartItems(tab.cartItems, productId);
+            BigDecimal totalFromOrder = getTotalInCartItems(cartItemsFromOrders, productId);
+            BigDecimal toCreateOrderFor = totalFromTab.subtract(totalFromOrder);
+            
+            int countToCreateFor = countInTab - countInOrders;
+            if (!toCreateOrderFor.equals(BigDecimal.ZERO)) {
+                if (countToCreateFor == 0) {
+                    countToCreateFor = 1;
+                }
+                
+                CartItem item = new CartItem();
+                item.setProduct(productManager.getProduct(productId).clone());
+                item.setCount(countToCreateFor);
+                item.getProduct().price = toCreateOrderFor.doubleValue() / (double)countToCreateFor;
+                
+                retList.add(item);
+            }
+        }
+        
+        return retList;
+    }
+
+    private BigDecimal getTotalInCartItems(List<CartItem> cartItemsFromOrders, String productId) {
+        return cartItemsFromOrders.stream()
+                .filter(o -> o.getProductId().equals(productId))
+                .map(o -> {
+                    if (o.overridePriceIncTaxes != null && o.overridePriceIncTaxes != 0D) {
+                        return o.getTotalAmountRoundedWithTwoDecimalsOverride(2);
+                    }
+                    
+                    return o.getTotalAmountRoundedWithTwoDecimals(2);
+                })
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    private int getCountInCartItems(List<CartItem> cartItems, String productId) {
+        return cartItems.stream()
+                .filter(o -> o.getProductId().equals(productId))
+                .mapToInt(o -> o.getCount())
+                .sum();
     }
 }

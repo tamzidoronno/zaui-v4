@@ -5569,6 +5569,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                gsTiming("Subsctracted coupons");
             }
             createUserForBooking(booking);
+
+            if(booking.registrationData != null && booking.registrationData.resultAdded != null && booking.registrationData.resultAdded.containsKey("comment")) {
+                PmsBookingComment comment = new PmsBookingComment();
+                comment.added = new Date();
+                comment.userId = booking.userId;
+                comment.comment = booking.registrationData.resultAdded.get("comment");
+                booking.comments.put(System.currentTimeMillis(), comment);
+            }
+
             addDefaultAddons(booking);
             
             checkIfBookedBySubAccount(booking);

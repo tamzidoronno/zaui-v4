@@ -50,7 +50,10 @@ if($numberOfRooms > 0) {
         $listGroupButton = " <a class='bookinghighlightcolor' style='cursor:pointer;' gsclick='toggleListGroupRooms' roomId='".$this->getSelectedRoom()->pmsBookingRoomId."'>list group</a>";
     }
    
-    echo "This room is part of a group of " . $numberOfRooms . " rooms, <a bookingid='".$pmsBooking->id."' style='cursor:pointer;' class='opengroup bookinghighlightcolor'>open group</a>, <a href='/pms.php?page=0da68de9-da08-4b60-9652-3ac456da2627&groupview=$pmsBooking->id' style='cursor:pointer;' class='opengroup bookinghighlightcolor'>open group in availability</a>, $listGroupButton";
+    echo "This room is part of a group of " . $numberOfRooms . " rooms, <a bookingid='".$pmsBooking->id."' style='cursor:pointer;' class='opengroup bookinghighlightcolor'>open group</a>, "
+            . "<a href='/pms.php?page=0da68de9-da08-4b60-9652-3ac456da2627&groupview=$pmsBooking->id' style='cursor:pointer;' class='opengroup bookinghighlightcolor'>open in availability</a>, "
+            . "<a href='/pms.php?page=afe687b7-219e-4396-9e7b-2848f5ed034d&groupview=$pmsBooking->id' style='cursor:pointer;' class='opengroup bookinghighlightcolor'>open in report</a>, "
+            . "$listGroupButton";
     
     echo "<span class='roomindication'>";
     echo "<b>";

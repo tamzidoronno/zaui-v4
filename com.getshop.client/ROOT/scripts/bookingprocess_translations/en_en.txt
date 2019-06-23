@@ -7,6 +7,7 @@
     "configureroom" : "Configure room",
     "back" : "Back",
     "room" : "Room",
+    "commenttitle" : "Any comments?",
     "nights" : "night(s)",
     "paylater" : "Pay later",
     "noroomselected" : "No room has been selected, please select one below",

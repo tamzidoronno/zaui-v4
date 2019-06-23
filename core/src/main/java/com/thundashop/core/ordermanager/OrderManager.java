@@ -74,6 +74,7 @@ import com.thundashop.core.printmanager.PrintManager;
 import com.thundashop.core.printmanager.Printer;
 import com.thundashop.core.printmanager.StorePrintManager;
 import com.thundashop.core.productmanager.ProductManager;
+import com.thundashop.core.productmanager.data.AccountingDetail;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import com.thundashop.core.storemanager.StoreManager;
@@ -3615,15 +3616,28 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 Map<String, List<DayEntry>> groupedByProductId = itemsWithDepartment
                         .stream()
                         .filter(o -> o.orderId != null)
-                        .collect(Collectors.groupingBy(o -> getOrder(o.orderId).cart.getCartItem(o.cartItemId).getProductId()));
+                        .collect(Collectors.groupingBy(o -> o.accountingNumber));
 
-                for (String productId : groupedByProductId.keySet()) {
+                for (String accountingNumber : groupedByProductId.keySet()) {
+                    int accountingCodeInt = -1;
+                    
+                    try {
+                        accountingCodeInt = Integer.parseInt(accountingNumber);
+                    } catch (Exception ex) {
+                        // Ok.
+                    }
+                    
+                    AccountingDetail detail = null;
+                    if (accountingCodeInt > -1) {
+                        detail = productManager.getAccountingDetail(accountingCodeInt);
+                    }
+                    
                     PmiResult toAdd = new PmiResult();
                     toAdd.department = department != null ? department.code : "";
-                    toAdd.prodcutId = productId;
+                    toAdd.prodcutId = accountingNumber;
                     toAdd.propertyid = storeId;
-                    toAdd.productName = productManager.getProduct(productId).name;
-                    toAdd.revenue = groupedByProductId.get(productId).stream()
+                    toAdd.productName = detail != null ? accountingNumber + " " + detail.description : accountingNumber;
+                    toAdd.revenue = groupedByProductId.get(accountingNumber).stream()
                             .mapToDouble(o -> o.amountExTax.doubleValue() * -1)
                             .sum();
                     toAdd.transactiondate = dayIncome.start;

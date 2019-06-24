@@ -28,7 +28,7 @@ if($fetched && $fetched != "null" && $fetched != "[]") {
     foreach($fetched as $f) {
         $ids[] = $f->incrementOrderId . " (" . $f->daysDue . " days overdue)";
     }
-    echo "Your system is in danger of being shut down due to unpaid invoices, please pay invoice: " . join(", ", $ids);
+    echo "Your system is in danger of being shut down due to unpaid invoices, please pay invoice: " . join(" <b>AND</b> ", $ids);
     echo "</div>";
 }
 ?>

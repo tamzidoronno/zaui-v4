@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.pmsmanager;
 
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
@@ -35,6 +36,7 @@ public class AdvancePriceYieldCalculator {
                 return calculcatePrice(coverage, price, start, yieldplan);
             }
         }
+        
         return price;
     }
 
@@ -50,9 +52,11 @@ public class AdvancePriceYieldCalculator {
         if(yieldplan.yeilds.containsKey(key)) {
             YieldEntry operation = yieldplan.yeilds.get(key);
             Double newprice = price * ((double)operation.yield/100.0);
-            return newprice;
+            double roundOff = Math.round(newprice);
+            return roundOff;
         }
-                
+
+        
         return price;
     }
 
@@ -83,5 +87,5 @@ public class AdvancePriceYieldCalculator {
         
         return coverage;
     }
-    
+
 }

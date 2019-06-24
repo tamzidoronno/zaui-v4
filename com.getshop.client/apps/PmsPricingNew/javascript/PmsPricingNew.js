@@ -14,6 +14,20 @@ app.PmsPricingNew = {
         $(document).on('click','.PmsPricingNew .displayEditPriceCode', app.PmsPricingNew.toggleShow);
         $(document).on('click','.PmsPricingNew .editadvanceyieldplan', app.PmsPricingNew.startEditPricePlan);
         $(document).on('click','.PmsPricingNew .toggleUpdateDiscountCode', app.PmsPricingNew.toggleUpdateDiscountCode);
+        $(document).on('click','.PmsPricingNew .updatepriceyield', app.PmsPricingNew.updatePriceYield);
+    },
+    updatePriceYield : function() {
+        var form = $(this).closest('[gstype="form"]');
+        form.find('.percentagesetup').each(function() {
+            var amount = $(this).val();
+            amount = parseInt(amount.replace("%",""));
+            $(this).val(amount + "%");
+        });
+        var method = form.attr('method');
+        var args = thundashop.framework.createGsArgs(form);
+        var event = thundashop.Ajax.createEvent('',method, $(this),args);
+        
+        thundashop.Ajax.post(event);
     },
     toggleUpdateDiscountCode : function() {
         var btn = $(this);

@@ -12,6 +12,13 @@ import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.director.DailyUsage;
 import com.thundashop.core.director.DirectorManager;
+import com.thundashop.core.ordermanager.OrderManager;
+import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.storemanager.StoreManager;
+import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.Company;
+import com.thundashop.core.usermanager.data.User;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -20,6 +27,9 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -32,6 +42,12 @@ public class SystemManager extends ManagerBase implements ISystemManager {
     public HashMap<String, GetShopSystem> systems = new HashMap();
     public HashMap<String, DailyUsage> usages = new HashMap();
 
+    @Autowired
+    UserManager userManager;
+    
+    @Autowired
+    OrderManager orderManager;
+    
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon o : data.data) {
@@ -67,6 +83,8 @@ public class SystemManager extends ManagerBase implements ISystemManager {
         return systems.get(systemId);
     }
 
+    
+    
     @Override
     public void saveSystem(GetShopSystem system) {
         saveObject(system);
@@ -154,5 +172,34 @@ public class SystemManager extends ManagerBase implements ISystemManager {
         usage.markAsInvoiced();
         saveObject(usage);
         usages.put(usage.id, usage);
+    }
+
+    @Override
+    public List<UnpaidInvoices> getUnpaidInvoicesForStore(String storeId) {
+        List<Order> orders = orderManager.getAllOrders();
+        List<UnpaidInvoices> result = new ArrayList();
+        for(GetShopSystem sys : systems.values()) {
+            if(sys.remoteStoreId.equals(storeId)) {
+                String companyId = sys.companyId;
+                User usr = userManager.getMainCompanyUser(companyId);
+                for(Order order : orders) {
+                    if(!order.userId.equals(usr.id)) {
+                        continue;
+                    }
+                    if(order.isFullyPaid()) {
+                       continue; 
+                    }
+                    UnpaidInvoices toAdd = new UnpaidInvoices();
+                    toAdd.amount = order.getTotalAmount();
+                    int days = Days.daysBetween(new LocalDate(order.getDueDate()), new LocalDate()).getDays();
+                    toAdd.daysDue = days;
+                    toAdd.incrementOrderId = order.incrementOrderId;
+                    if(toAdd.daysDue >= 5) {
+                        result.add(toAdd);
+                    }
+                }
+            }
+        }
+        return result;
     }
 }

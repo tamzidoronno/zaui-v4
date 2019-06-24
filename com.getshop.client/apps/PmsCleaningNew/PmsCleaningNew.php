@@ -82,6 +82,7 @@ class PmsCleaningNew extends \WebshopApplication implements \Application {
         $filter->filterType = "checkin";
         $filter->startDate = $this->convertToJavaDate($time);
         $filter->endDate = $this->convertToJavaDate($time+85499);
+        $filter->removeHiddenFromCleaning = true;
         $bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedName(), $filter);
         if(!$bookings) {
             $bookings = array();
@@ -99,9 +100,16 @@ class PmsCleaningNew extends \WebshopApplication implements \Application {
                 if($room->deleted) {
                     continue;
                 }
+                
+                $add = $this->getApi()->getPmsManager()->getAdditionalInfo($this->getSelectedMultilevelDomainName(), $room->bookingItemId);
+                if($add->hideFromCleaningProgram) {
+                    continue;
+                }
+                
                 $items = $this->getItems();
                 $room->booking = $booking;
                 @$rooms[$items[$room->bookingItemId]->bookingItemName] = $room;
+                
             }
         }
         

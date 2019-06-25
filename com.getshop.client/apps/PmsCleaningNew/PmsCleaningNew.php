@@ -38,7 +38,7 @@ class PmsCleaningNew extends \WebshopApplication implements \Application {
         echo "<tr>";
         echo "<td width='100%'>".date("d.m.Y", strtotime($view->date))."</td>";
         echo "<td>".$view->stayOvers."</td>";
-        echo "<td>".$view->intervalCleaningCount."</td>";
+        echo "<td>".$view->checkoutCleaningCount."</td>";
         echo "<td>".$view->intervalCleaningCount."</td>";
         echo "<td>".($view->intervalCleaningCount + $view->checkoutCleaningCount)."</td>";
         echo "</tr>";

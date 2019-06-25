@@ -1026,6 +1026,40 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
     }
 
+    @Override
+    public String getRedirectForBooking(String bookingId) {
+        PmsBooking booking = pmsManager.getBookingUnsecure(bookingId);
+        
+        //Pay later button has been pressed.
+        if(booking.payLater) { return "?page=payment_success"; }
+        
+        User usr = userManager.getUserById(booking.userId);
+        
+        //Booker is preferring this payment method.
+        if(usr.preferredPaymentType != null && usr.preferredPaymentType.equals("70ace3f0-3981-11e3-aa6e-0800200c9a66")) {
+            pmsManager.logEntry("Redirect to payment success due to preferred payment type invoice.", bookingId, null);
+            return "/?page=payment_success";
+        }
+        
+        //No orders has been created, needs to be a new version of the system where orders are not created.
+        if(booking.orderIds.isEmpty()) {
+            pmsManager.logEntry("Redirect to pr.php due to no orders.", bookingId, null);
+            return "/pr.php?id=" + bookingId;
+        }
+        
+        //Orders has been created, find an order and redirect to it.
+        for(String orderId : booking.orderIds) {
+            Order ord = orderManager.getOrderSecure(orderId);
+            if(!ord.isFullyPaid() && !ord.isInvoice()) {
+                pmsManager.logEntry("Redirect to payment since order is not paid, orderid:" + ord.incrementOrderId, bookingId, null);
+                return "/?page=cart&payorder=" + ord.id;
+            }
+        }
+        
+        messageManager.sendErrorNotification("Failed to redirect booking : " + bookingId, null);
+        return "";
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0; 

@@ -58,6 +58,7 @@ public class PowerOfficeGoPrimitiveAccounting extends AccountingSystemBase {
     public HashMap<String, String> getConfigOptions() {
         HashMap<String, String> ret = new HashMap();
         ret.put("password", "PowerOfficeGo Application Key");
+        ret.put("department", "PowerOfficeGo Department");
         return ret;
     }
 

@@ -570,6 +570,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             int daysBetween = (int)( (start.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
             if(daysBetween >= getConfigurationSecure().ignorePaymentWindowDaysAheadOfStay) {
                 booking.avoidAutoDelete = true;
+                booking.payLater = true;
             }
         }
         

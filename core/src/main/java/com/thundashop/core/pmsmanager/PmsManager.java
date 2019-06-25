@@ -10384,15 +10384,31 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private PmsActivityLine createTimeLineForClosedPeriods(Date start, Date end) {
         //Fetch closed periodes.
+        Date defaultStart = getConfigurationSecure().getDefaultStart(start);
+        Date defaulEnd = getConfigurationSecure().getDefaultEnd(start);
+        
+        Calendar defStart = Calendar.getInstance();defStart.setTime(defaultStart);
+        Calendar defEnd = Calendar.getInstance();defEnd.setTime(defaulEnd);
+        
         Calendar cal = Calendar.getInstance();
         cal.setTime(start);
         cal.set(Calendar.HOUR_OF_DAY, 22);
         PmsActivityLine line = new PmsActivityLine();
         while(true) {
+            cal.set(Calendar.HOUR_OF_DAY, defStart.get(Calendar.HOUR_OF_DAY));
+            cal.set(Calendar.MINUTE, defStart.get(Calendar.MINUTE));
+            cal.set(Calendar.SECOND, defStart.get(Calendar.SECOND));
             Date tmpStart = cal.getTime();
+            
             String offset = cal.get(Calendar.DAY_OF_YEAR) + "-" + cal.get(Calendar.YEAR);
+            cal.set(Calendar.HOUR_OF_DAY, defEnd.get(Calendar.HOUR_OF_DAY));
+            cal.set(Calendar.MINUTE, defEnd.get(Calendar.MINUTE));
+            cal.set(Calendar.SECOND, defEnd.get(Calendar.SECOND));
             cal.add(Calendar.DAY_OF_YEAR, 1);
             Date tmpEnd = cal.getTime();
+            if(tmpEnd.before(new Date())) {
+                continue;
+            }
             if(closedForPeriode(tmpStart, tmpEnd)) {
                 PmsActivityEntry entry = new PmsActivityEntry();
                 entry.date = offset;

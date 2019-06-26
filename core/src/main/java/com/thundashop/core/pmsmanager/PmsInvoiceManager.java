@@ -981,9 +981,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 }
                 
                 for(CartItem item : order.cart.getItemsUnfinalized()) {
-                    if(item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId)) {
-                        return true;
-                    }
+                    return true;
                 }
             }
         }

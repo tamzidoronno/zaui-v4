@@ -341,7 +341,7 @@ public class PosManager extends ManagerBase implements IPosManager {
         
         List<String> orderIds = orderManager.getOrdersByFilter(getOrderFilter())
                 .stream()
-                .filter(order -> order.paymentDate !=  null && order.paymentDate.after(prevZReportDate))
+                .filter(order -> (order.getMarkedPaidDate() !=  null && order.getMarkedPaidDate().after(prevZReportDate)))
                 .filter(order -> order.orderId != null && !order.orderId.isEmpty())
                 .filter(order -> order.isConnectedToCashPointId(cashPointId) || (isMasterCashPoint(cashPointId) && order.isConnectedToCashPointId("")))
                 .sorted((OrderResult o1, OrderResult o2) -> {

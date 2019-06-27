@@ -217,7 +217,7 @@ public class WilhelmsenHouse implements AccountingInterface {
         
         
         
-        BigDecimal total = order.getTotalAmountRoundedTwoDecimals(2);
+        BigDecimal total = order.getTotalAmountRoundedTwoDecimals(0);
         
         DecimalFormat df = new DecimalFormat("#.##");    
         User user = managers.userManager.getUserById(order.userId);
@@ -227,6 +227,11 @@ public class WilhelmsenHouse implements AccountingInterface {
         }
         
         String interimaccount = "1510";
+        
+        
+        if (order.payment != null && order.payment.paymentType.equals("ns_565ea7bd_c56b_41fe_b421_18f873c63a8f\\PayOnDelivery")) {
+            interimaccount = "1515"; // Vipps customer id.
+        }
         
         if(storePaymentConfig != null && storePaymentConfig.offsetAccountingId_accrude != null && !storePaymentConfig.offsetAccountingId_accrude.isEmpty()) {
             interimaccount = storePaymentConfig.offsetAccountingId_accrude;
@@ -298,7 +303,7 @@ public class WilhelmsenHouse implements AccountingInterface {
             subLine.put(5, "");
             subLine.put(6, product.getAccountingAccount());
             subLine.put(7, product.sku);
-            BigDecimal itemamount = item.getTotalAmountRoundedWithTwoDecimals(2);
+            BigDecimal itemamount = item.getTotalAmountRoundedWithTwoDecimals(0);
             itemamount = itemamount.multiply(new BigDecimal(-1));
             subLine.put(8, df.format(itemamount));
             subLine.put(9, "");
@@ -342,6 +347,9 @@ public class WilhelmsenHouse implements AccountingInterface {
         for(Order order : orders) {
             User user = userManager.getUserById(order.userId);
             if(user == null || user.customerId == null) {
+                continue;
+            }
+            if (order.payment != null && order.payment.paymentType.equals("ns_92bd796f_758e_4e03_bece_7d2dbfa40d7a\\ExpediaPayment")) {
                 continue;
             }
             
@@ -410,7 +418,7 @@ public class WilhelmsenHouse implements AccountingInterface {
             entries.put("Posting2", "");
             entries.put("XGL", "");
             entries.put("Currency", "NOK");
-            entries.put("Product", "");
+            entries.put("Product", product.getAccountingAccount());
             entries.put("XLG", "");
             entries.put("Text", createLineText(item, order));
             entries.put("Pricelist", "");
@@ -418,7 +426,13 @@ public class WilhelmsenHouse implements AccountingInterface {
             entries.put("Unit", "døgn");
             entries.put("Quantity", item.getCount() + "");
             entries.put("CostPrice", "");
-            entries.put("UnitPriceImp", item.getProduct().price + "");
+            
+            DecimalFormat df = new DecimalFormat("#.##");    
+            BigDecimal itemamount = item.getTotalAmountRoundedWithTwoDecimals(0);
+            itemamount = itemamount.multiply(new BigDecimal(-1));
+            String amount = df.format(itemamount);
+            
+            entries.put("UnitPriceImp", amount);
             entries.put("Discount", "");
             entries.put("DiscountAmount", "");
             entries.put("TaxRule", product.accountingSystemId + "");

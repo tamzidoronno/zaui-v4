@@ -42,10 +42,13 @@ ob_start();
 </div>
 <br>
 <div class='stepbox'>
-    <h1>Cleaning table</h1>
+    <h1>Cleaning table (<a href='?page=e03b19de-d1bf-4d1c-ac40-8c100ef53366&detailedcleanlingtable=show' style='color:blue;'>Display detailed cleaning table</a>)</h1>
     <?php
-//    $this->printCleaningTable($time);
-    $this->printCleaningTableStatistics($time);
+    if(isset($_GET['detailedcleanlingtable'])) {
+        $this->printCleaningTable($time);
+    } else {
+        $this->printCleaningTableStatistics($time);
+    }
     ?>
 </div>
 <br>

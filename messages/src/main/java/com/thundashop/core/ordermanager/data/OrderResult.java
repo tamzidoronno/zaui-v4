@@ -14,6 +14,7 @@ public class OrderResult {
    public Date orderDate;
    public Date dueDate;
    public Date paymentDate;
+   public Date markedPaidDate;
    public Date start;
    public Date end;
    public double amountExTaxes = 0;
@@ -39,6 +40,7 @@ public class OrderResult {
         amountIncTaxes = ord.getTotalAmount();
         dueDate = ord.getDueDate();
         closed = ord.closed;
+        markedPaidDate = ord.markedPaidDate;
         invoiceNote = ord.invoiceNote;
         shipmentLog = ord.shipmentLog;
         cashPointId = ord.getCashPointId();
@@ -53,5 +55,12 @@ public class OrderResult {
 
     public boolean isConnectedToCashPointId(String cashPointId) {
         return cashPointId.equals(this.cashPointId);
+    }
+
+    public Date getMarkedPaidDate() {
+        if(markedPaidDate != null) {
+            return markedPaidDate;
+        }
+        return paymentDate;
     }
 }

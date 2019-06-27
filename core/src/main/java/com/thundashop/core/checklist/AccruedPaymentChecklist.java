@@ -23,7 +23,7 @@ public class AccruedPaymentChecklist extends CheckProcessorBase implements Check
     @Override
     public CheckListError getError(PmsBooking booking) {
         for (PmsBookingRooms room : booking.rooms) {
-            if (room.createOrdersOnZReport && room.isEnded()) {
+            if (room.createOrdersOnZReport && room.isEnded() && (room.unsettledAmountIncAccrued == null || room.unsettledAmountIncAccrued != 0.0)) {
                 CheckListError error = new CheckListError();
                 error.filterType = getClass().getSimpleName();
                 error.description = "Room found and set to pay after stay, after checkout time has passed.";

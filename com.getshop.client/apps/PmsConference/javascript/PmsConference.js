@@ -98,6 +98,7 @@ app.PmsConference = {
         app.PmsConference.disableAutoReload = true;
         var eventid = $(this).attr('eventid');
         var event = thundashop.Ajax.createEvent('','openEvent',$('.PmsConference'), { "eventid" : eventid});
+        $('.eventoverview').show();
         thundashop.Ajax.postWithCallBack(event, function(res) {
             $('.conferenceoverview').hide();
             $('.eventoverview').html(res);

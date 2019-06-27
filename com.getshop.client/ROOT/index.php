@@ -133,6 +133,7 @@ if(!$factory->getApi()->getPageManager()->hasAccessToModule($module)) {
     echo "access denied to module";
     exit(0);
 }
+include('commonforallmodules.php');
 ?>
 
 <html xmlns:fb="http://ogp.me/ns/fb#" <? echo $openModalClass; ?>>

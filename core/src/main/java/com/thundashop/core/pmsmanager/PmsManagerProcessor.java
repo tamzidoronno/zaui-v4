@@ -32,7 +32,6 @@ public class PmsManagerProcessor {
     }
 
     public void doProcessing() {
-        manager.logPrint("starting processor");
         
         start = System.currentTimeMillis();
         clearCachedObject();

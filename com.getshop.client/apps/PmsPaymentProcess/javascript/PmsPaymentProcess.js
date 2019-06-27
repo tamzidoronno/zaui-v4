@@ -14,6 +14,8 @@ app.PmsPaymentProcess = {
         $(document).on('change', '.PmsPaymentProcess .searchfortabs', this.searchForTabs);  
         $(document).on('click', '.PmsPaymentProcess .add_pos_tab', this.addPosTab);  
         $(document).on('click', '.PmsPaymentProcess .removeconference', this.removeConference);  
+        $(document).on('change', '.PmsPaymentProcess .sendtobookerdropdown', this.changeSendToRecipient);  
+        $(document).on('click', '.PmsPaymentProcess .sendrequestbutton', this.sendRequest);  
     },
     
     removeConference: function() {
@@ -54,9 +56,6 @@ app.PmsPaymentProcess = {
         thundashop.Ajax.post(event, function(res) {
             $(me).closest('.app').find('.search_tab_conference_result').html(res);
         });
-        
-        $(document).on('change', '.PmsPaymentProcess .sendtobookerdropdown', this.changeSendToRecipient);  
-        $(document).on('click', '.PmsPaymentProcess .sendrequestbutton', this.sendRequest);  
     },
     
     sendRequest : function() {

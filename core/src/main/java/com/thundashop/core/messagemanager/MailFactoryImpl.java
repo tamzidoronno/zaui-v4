@@ -75,31 +75,31 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
         
         MailSettings settings = new MailSettings();
         if (confSettings != null) {
-            if (confSettings.get("hostname") != null) {
+            if (confSettings.get("hostname") != null && confSettings.get("hostname").value != null && !confSettings.get("hostname").value.isEmpty()) {
                 settings.hostname = confSettings.get("hostname").value;
             }
             
-            if (confSettings.get("port") != null) {
+            if (confSettings.get("port") != null && confSettings.get("port").value != null && !confSettings.get("port").value.isEmpty()) {
                 settings.port = Integer.valueOf(confSettings.get("port").value);
             }
             
-            if (confSettings.get("password") != null) {
+            if (confSettings.get("password") != null && confSettings.get("password").value != null && !confSettings.get("password").value.isEmpty()) {
                 settings.password = confSettings.get("password").value;
             }
             
-            if (confSettings.get("username") != null) {
+            if (confSettings.get("username") != null && confSettings.get("username").value != null && !confSettings.get("username").value.isEmpty()) {
                 settings.username = confSettings.get("username").value;
                 settings.sendMailFrom = confSettings.get("username").value;
             }
             
-            if (confSettings.get("sendMailFrom") != null) {
+            if (confSettings.get("sendMailFrom") != null && confSettings.get("sendMailFrom").value != null && !confSettings.get("sendMailFrom").value.isEmpty()) {
                 String sendfrom = confSettings.get("sendMailFrom").value;
                 if(sendfrom != null && !sendfrom.isEmpty()) {
                     settings.sendMailFrom = sendfrom;
                 }
             }
             
-            if (confSettings.get("enabletls") != null) {
+            if (confSettings.get("enabletls") != null && confSettings.get("enabletls").value != null && !confSettings.get("enabletls").value.isEmpty()) {
                 String enableTls = confSettings.get("enabletls").value;
                 if (enableTls != null && enableTls.equals("true")) {
                     settings.enableTls = true;

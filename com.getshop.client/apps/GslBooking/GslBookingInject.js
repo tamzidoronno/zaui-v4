@@ -1085,12 +1085,7 @@ function getshop_gotopayment(e) {
                     if(typeof(getshop_successcallback) !== "undefined") {
                         getshop_successcallback(res);
                     } else {
-                        var continueto = res.continuetopayment;
-                        if(continueto === 1 || res.continuetopayment === "1") {
-                            window.location.href = getshop_endpoint + "/?page=cart&payorder=" + res.orderid;
-                        } else {
-                            window.location.href = getshop_endpoint + "/?page=payment_success";
-                        }
+                        window.location.href = getshop_endpoint + "/scripts/redirectpayment.php?bookingid="+res.bookingid+"&engine="+getshop_domainname;
                     }
                 });
                 completing.fail(function(res) {

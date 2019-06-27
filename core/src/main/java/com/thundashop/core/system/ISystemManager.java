@@ -38,4 +38,7 @@ public interface ISystemManager {
     
     @Administrator
     public List<DailyUsage> getDailyUsage(String systemId);
+    
+    public List<UnpaidInvoices> getUnpaidInvoicesForStore(String storeId);
+    
 }

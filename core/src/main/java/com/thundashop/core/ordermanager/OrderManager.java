@@ -419,6 +419,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         order.paymentDate = date;
+        order.markedPaidDate = new Date();
         order.status = Order.Status.PAYMENT_COMPLETED;
         order.captured = true;
         
@@ -447,6 +448,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         try {
             Order cloned = (Order) order.clone();
             cloned.paymentDate = date;
+            cloned.markedPaidDate = new Date();
             cloned.status = Order.Status.PAYMENT_COMPLETED;
             validateOrder(cloned);
         } catch (CloneNotSupportedException ex) {

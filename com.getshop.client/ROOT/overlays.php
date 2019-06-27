@@ -1,3 +1,7 @@
+<?php
+include('commonforallmodules.php');
+?>
+
 <div id="messagebox" class="ok">
     <div class="inner">
         <div class="title"></div>

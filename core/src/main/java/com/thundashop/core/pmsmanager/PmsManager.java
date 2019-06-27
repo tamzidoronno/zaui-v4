@@ -27,7 +27,6 @@ import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.AddonsInclude;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.Coupon;
-import com.thundashop.core.comfortmanager.ComfortManager;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.DataCommon;
@@ -571,6 +570,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             int daysBetween = (int)( (start.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
             if(daysBetween >= getConfigurationSecure().ignorePaymentWindowDaysAheadOfStay) {
                 booking.avoidAutoDelete = true;
+                booking.payLater = true;
             }
         }
         
@@ -3923,10 +3923,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (filter.includeCleaningInformation) {
             for (PmsRoomSimple r : res) {
                 if (r.bookingItemId != null && !r.bookingItemId.isEmpty()) {
-                    if (getAdditionalInfo(r.bookingItemId).hideFromCleaningProgram) {
-                        remove.add(r);
-                    }
-
                     r.roomCleaned = isClean(r.bookingItemId);
                     r.hasBeenCleaned = (r.roomCleaned || isUsedToday(r.bookingItemId));
                 }
@@ -8531,127 +8527,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return cal.getTime();
     }
 
-    public void dumpRenaTrening() {
-        System.out.println("------------------");
-        PmsBookingFilter filter = new PmsBookingFilter();
-        filter.startDate = new Date();
-        filter.endDate = new Date();
-        filter.filterType = "active";
-        List<PmsBooking> allBookings = getAllBookings(filter);
-
-        //Etternavn,fornavn
-        for (PmsBooking booking : allBookings) {
-            for (PmsBookingRooms room : booking.getActiveRooms()) {
-                User user = userManager.getUserById(booking.userId);
-                if (user.fullName != null && user.fullName.contains(" ")) {
-                    String[] names = user.fullName.split(" ");
-                    System.out.print(names[1] + "\t" + names[0]);
-                } else {
-                    System.out.print(user.fullName + "\t");
-                }
-                BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
-
-                System.out.print("\t");
-                //Kommentar
-                System.out.print("\t");
-                //Senteravtale
-                System.out.print("\t");
-
-                //Meldem siden
-                SimpleDateFormat sm = new SimpleDateFormat("dd-MM-yyyy");
-                System.out.print(sm.format(room.date.start) + "\t");
-                
-                System.out.print(sm.format(room.date.end) + "\t");
-
-                //Binding
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(room.date.start);
-
-                if (type.name.equals("Abonnement uten binding")) {
-                    System.out.print("\t");
-                } else if (type.name.equals("Forsvarsabonnement med binding")) {
-                    cal.add(Calendar.MONTH, 12);
-                    System.out.print(sm.format(cal.getTime()) + "\t");
-                } else if (type.name.equals("Studentabonnement med binding 10")) {
-                    cal.add(Calendar.MONTH, 10);
-                    System.out.print(sm.format(cal.getTime()) + "\t");
-                } else if (type.name.equals("Studentabonnement med binding 6")) {
-                    cal.add(Calendar.MONTH, 6);
-                    System.out.print(sm.format(cal.getTime()) + "\t");
-                } else {
-                    System.out.print("\t");
-                }
-
-                //Adgangskort
-                System.out.print(room.code + "\t");
-
-                //Epost
-                System.out.print(user.emailAddress + "\t");
-
-                //Mobiltlf
-                System.out.print(user.cellPhone + "\t");
-
-                //Kjønn
-                System.out.print("\t");
-
-                //Fødselsdato
-                System.out.print(user.birthDay + "\t");
-
-                //Adresse
-                System.out.print(user.address.address + "\t");
-
-                //Postnr
-                System.out.print(user.address.postCode + "\t");
-
-                //poststed
-                System.out.print(user.address.city + "\t");
-
-                //senter
-                System.out.print("\t");
-
-                //aktiv/inaktiv
-                System.out.print("aktiv\t");
-
-                //medlemsksapstype
-                System.out.print(type.name + "\t");
-
-                //betalingskort
-                String cards = "";
-                for (UserCard card : user.savedCards) {
-                    cards += card.mask + ",";
-                }
-                if (cards.length() > 0) {
-                    cards = cards.substring(0, cards.length() - 1);
-                }
-                System.out.print(cards + "\t");
-
-                //dibs tickets
-                cards = "";
-                for (UserCard card : user.savedCards) {
-                    cards += card.card + ",";
-                }
-                if (cards.length() > 0) {
-                    cards = cards.substring(0, cards.length() - 1);
-                }
-                System.out.print(cards + "\t");
-                if(room.bookingItemId != null) {
-                    BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
-                    if(item != null) {
-                        System.out.print(item.bookingItemName);
-                    } else {
-                        System.out.print("");
-                    }
-                }
-                System.out.print("\t");
-                
-                System.out.print(cards + "\t");
-
-                System.out.println();
-            }
-        }
-
-    }
-
     private void addDefaultAddonsToRooms(List<PmsBookingRooms> allRooms) {
         HashMap<Integer, PmsBookingAddonItem> addons = getConfigurationSecure().addonConfiguration;
         for (PmsBookingRooms room : allRooms) {
@@ -10509,15 +10384,31 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private PmsActivityLine createTimeLineForClosedPeriods(Date start, Date end) {
         //Fetch closed periodes.
+        Date defaultStart = getConfigurationSecure().getDefaultStart(start);
+        Date defaulEnd = getConfigurationSecure().getDefaultEnd(start);
+        
+        Calendar defStart = Calendar.getInstance();defStart.setTime(defaultStart);
+        Calendar defEnd = Calendar.getInstance();defEnd.setTime(defaulEnd);
+        
         Calendar cal = Calendar.getInstance();
         cal.setTime(start);
         cal.set(Calendar.HOUR_OF_DAY, 22);
         PmsActivityLine line = new PmsActivityLine();
         while(true) {
+            cal.set(Calendar.HOUR_OF_DAY, defStart.get(Calendar.HOUR_OF_DAY));
+            cal.set(Calendar.MINUTE, defStart.get(Calendar.MINUTE));
+            cal.set(Calendar.SECOND, defStart.get(Calendar.SECOND));
             Date tmpStart = cal.getTime();
+            
             String offset = cal.get(Calendar.DAY_OF_YEAR) + "-" + cal.get(Calendar.YEAR);
+            cal.set(Calendar.HOUR_OF_DAY, defEnd.get(Calendar.HOUR_OF_DAY));
+            cal.set(Calendar.MINUTE, defEnd.get(Calendar.MINUTE));
+            cal.set(Calendar.SECOND, defEnd.get(Calendar.SECOND));
             cal.add(Calendar.DAY_OF_YEAR, 1);
             Date tmpEnd = cal.getTime();
+            if(tmpEnd.before(new Date())) {
+                continue;
+            }
             if(closedForPeriode(tmpStart, tmpEnd)) {
                 PmsActivityEntry entry = new PmsActivityEntry();
                 entry.date = offset;

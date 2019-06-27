@@ -3,23 +3,17 @@
  */
 package com.thundashop.core.pmsmanager;
 
-import com.thundashop.core.accountingmanager.AccountingSystemStatistics;
 import com.thundashop.core.accountingmanager.AccountingSystemStatisticsResult;
-import com.thundashop.core.accountingmanager.ProductStatiticsResult;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.Administrator;
-import com.thundashop.core.common.FilterOptions;
-import com.thundashop.core.common.FilteredData;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.usermanager.data.Address;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.TreeMap;
 
 /**
  * Pms invoice system.
@@ -139,4 +133,6 @@ public interface IPmsInvoiceManager {
     
     @Administrator
     public Double getTotalOrdersOnBooking(String bookingId);
+    
+    public String getRedirectForBooking(String bookingId);
 }

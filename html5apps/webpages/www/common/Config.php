@@ -12,5 +12,5 @@
  * @author ktonder
  */
 class Config {
-    public static $domain = "gkroen";
+    public static $domain = "nordlyshotell";
 }

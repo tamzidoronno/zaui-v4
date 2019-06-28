@@ -341,6 +341,14 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
     @Override
     public PmsSegment getSegmentForBooking(String bookingId) {
         PmsBooking booking = pmsManager.getBookingUnfinalized(bookingId);
+        
+        if (booking.segmentId != null && !booking.segmentId.isEmpty()) {
+            PmsSegment segment = getSegment(booking.segmentId);
+            if (segment != null) {
+                return segment;
+            }
+        }
+        
         for(PmsSegment segment : segments.values()) {
             if(segment.types.isEmpty()) {
                 continue;

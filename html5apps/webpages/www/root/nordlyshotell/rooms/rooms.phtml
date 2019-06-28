@@ -1,0 +1,90 @@
+<div class="contentrow row_width_degreed"> 
+    <div class="row_inner">
+        <div class="col col_1 col_size_2">
+            <img  onclick='showGallary("double")' src="nordlyshotell/images/dobbeltrom1.jpg" style="width: 100%; border-radius: 10px;"/>
+        </div>
+        <div class="col col_2 col_size_2">
+            <?php
+                ContentManager::render("row_2_room_1");
+            ?>
+        </div>
+    </div>
+</div>
+
+<div class="contentrow "> 
+    <div class="row_inner">
+        <div class="col col_1 col_size_2">
+            <img  onclick='showGallary("single")' src="nordlyshotell/images/enkeltrom.jpg" style="width: 100%; border-radius: 10px;"/>
+        </div>
+        <div class="col col_2 col_size_2">
+            <?php
+                ContentManager::render("row_3_room_1");
+            ?>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showGallary(t) {
+        var pswpElement = document.querySelectorAll('.pswp')[0];
+
+        // build items array
+        var items = [
+            {
+                src: 'nordlyshotell/images/dobbeltrom1.jpg',
+                w: 1200,
+                h: 900
+            },
+            {
+                src: 'nordlyshotell/images/dobbeltrom2.jpg',
+                w: 1200,
+                h: 900
+            },
+            {
+                src: 'nordlyshotell/images/dobbeltrom3.jpg',
+                w: 1200,
+                h: 900
+            },
+            {
+                src: 'nordlyshotell/images/dobbeltrom4.jpg',
+                w: 1200,
+                h: 900
+            },
+            {
+                src: 'nordlyshotell/images/dobbeltrom5.jpg',
+                w: 1200,
+                h: 900
+            }
+        ];
+
+        if (t == "single") {
+            var items = [
+            {
+                src: 'nordlyshotell/images/enkeltrom.jpg',
+                w: 900,
+                h: 1200
+            },
+            {
+                src: 'nordlyshotell/images/dobbeltrom4.jpg',
+                w: 1200,
+                h: 900
+            },
+            {
+                src: 'nordlyshotell/images/dobbeltrom5.jpg',
+                w: 1200,
+                h: 900
+            }
+        ];
+        }
+        // define options (if needed)
+        var options = {
+            // optionName: 'option value'
+            // for example:
+            index: 0 // start at first slide
+        };
+
+        // Initializes and opens PhotoSwipe
+        var gallery = new PhotoSwipe( pswpElement, PhotoSwipeUI_Default, items, options);
+        gallery.init();
+    }
+</script>

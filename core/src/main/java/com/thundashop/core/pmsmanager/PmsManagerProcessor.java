@@ -1,5 +1,6 @@
 package com.thundashop.core.pmsmanager;
 
+import com.google.common.base.Ascii;
 import com.ibm.icu.util.Calendar;
 import com.thundashop.core.arx.AccessCategory;
 import com.thundashop.core.arx.Card;
@@ -285,6 +286,8 @@ public class PmsManagerProcessor {
         if(manager.storeManager.getStoreId().equals("7f2c47a4-7ec9-41e2-a070-1e9e8fcf4e38")) {
             bookings = getBookingsNeedsToBeChecked(bookings);
         }
+        
+        manager.gsTiming("\t Before looping " + bookings.size() + " bookings");
         for (PmsBooking booking : bookings) {
             if(!booking.confirmed) {
                 continue;
@@ -373,6 +376,8 @@ public class PmsManagerProcessor {
                 manager.saveBooking(booking);
             }
         }
+        manager.gsTiming("\t After looping " + bookings.size() + " bookings");
+        
     }
 
     private void processAutoAssigning() {
@@ -384,7 +389,7 @@ public class PmsManagerProcessor {
                     continue;
                 }
                 if (room.isEnded() || room.triedToAutoAssign) {
-//                    continue;
+                    continue;
                 }
                 if (room.bookingItemId == null || room.bookingItemId.isEmpty()) {
                     roomsToAssing.add(room);

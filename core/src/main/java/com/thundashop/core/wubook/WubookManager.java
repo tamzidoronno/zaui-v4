@@ -155,8 +155,8 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     private boolean isWubookActive() { 
         if(pmsManager.getConfigurationSecure().wubookusername == null || pmsManager.getConfigurationSecure().wubookusername.isEmpty()) {
             return false;
-        }
-        return true;
+        } 
+       return true;
     }
     
     
@@ -1647,7 +1647,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 try {
                     count = pmsManager.getNumberOfAvailable(rdata.bookingEngineTypeId, start, end, false, false);
                 }catch(BookingEngineException e) {
-                    
+
                 }
                 int totalForType = bookingEngine.getBookingItemsByType(rdata.bookingEngineTypeId).size();
                 if(count > 0 && totalForType > 2) {

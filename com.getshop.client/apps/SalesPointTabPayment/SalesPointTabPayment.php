@@ -379,11 +379,12 @@ class SalesPointTabPayment extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\Sale
             $this->getApi()->getPmsBookingProcess()->addTestMessagesToQueue($this->getSelectedMultilevelDomainName(), "Please insert credit card");
         }
     }
-
+    
     public function getValidPaymentMethodIds() {
         $validOptions = array('565ea7bd-c56b-41fe-b421-18f873c63a8f', 
             '6dfcf735-238f-44e1-9086-b2d9bb4fdff2', 
             'f1c8301d-9900-420a-ad71-98adb44d7475', 
+            'e6cf029b-0b96-4cf8-9a88-8db2755c0062', 
             'f86e7042-f511-4b9b-bf0d-5545525f42de', 
             '7587fdcb-ff65-4362-867a-1684cbae6aef', 
             'conference',

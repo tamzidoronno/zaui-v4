@@ -27,7 +27,7 @@ if (!count($order->payment->transactionLog)) {
 } else {
     foreach ($order->payment->transactionLog as $time => $log) {
         echo "<div class='shipmentlogline'>";
-            echo "<div class='date'>".date('d.m.Y H:i', ($time/1000))."</div>";
+            echo "<div class='date'>".date('d.m.Y H:i:s', ($time/1000))."</div>";
             echo "<div class='to'>".$log."</div>";
         echo "</div>";
     }

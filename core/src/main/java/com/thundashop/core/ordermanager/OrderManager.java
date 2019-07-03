@@ -3175,6 +3175,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             throw new ErrorException(1053);
         }
         
+        if(order.isAlreadyPaidAndDifferentStatus(oldOrder)) {
+            messageManager.sendErrorNotification("Tried to revert an order with a different payment status, incid: " + order.incrementOrderId, null);
+            resetOrder(oldOrder, order);
+            throw new ErrorException(1063);
+        }
+        
         if (order.needToStopDueToIllegalChangeInAddons(oldOrder, closedDate) && !order.forcedOpen) {
             resetOrder(oldOrder, order);
             throw new ErrorException(1053);

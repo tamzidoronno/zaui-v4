@@ -1375,7 +1375,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     }
 
     public boolean isAlreadyPaidAndDifferentStatus(Order oldOrder) {
-        if(oldOrder.status != Status.PAYMENT_COMPLETED) {
+        if(oldOrder == null || (oldOrder.status != Status.PAYMENT_COMPLETED)) {
             return false;
         }
         if(oldOrder.status != status) {

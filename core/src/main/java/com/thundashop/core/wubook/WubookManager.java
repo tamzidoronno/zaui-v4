@@ -730,6 +730,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     }
 
     private String insertRoom(BookingItemType type) throws XmlRpcException, IOException, Exception {
+        if(type.size == 0) {
+            return "Invalid size for room: " + type.name;
+        }
         if(!connectToApi()) { return "Faield to connect to api"; }
         List<BookingItem> items = bookingEngine.getBookingItemsByType(type.id);
         WubookRoomData rdata = getWubookRoomData(type.id);
@@ -2102,7 +2105,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         if(type.size > 10) {
             return;
         }
-        System.out.println("Virtual rooms, number of guests: " + type.size + ";roomid: " + data.rid + ", data virtualroom ids:" + data.virtualWubookRoomIds);
+        System.out.println("Virtual rooms, number of guests: " + type.size + ";roomid: " + data.rid + ", data virtualroom ids:" + data.virtualWubookRoomIds + ", name: " + type.name);
         String[] virtualRooms = data.virtualWubookRoomIds.split(";");
         String virtualRoomIds = data.wubookroomid + "";
         for(int i = 2; i <= type.size; i++) {
@@ -2111,7 +2114,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 int roomId = -1;
                 if(virtualRooms.length >= i) {
                     roomId = new Integer(virtualRooms[i-1]);
-                    updateVirtualRoom(type,i,data, roomId);
+                    if(roomId == -1) {
+                        roomId = insertVirtualRoom(type, i, data);
+                    } else {
+                        updateVirtualRoom(type,i,data, roomId);
+                    }
                 } else {
                     roomId = insertVirtualRoom(type, i, data);
                 }

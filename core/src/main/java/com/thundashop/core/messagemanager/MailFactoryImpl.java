@@ -326,7 +326,7 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
             }
         }
         if(!delivered) {
-            logger.error(this, "Giving up sending email to -> message: " + from + " - " + to + " " + subject + content + "");
+            GetShopLogHandler.logPrintStatic("Giving up sending email to -> message: " + from + " - " + to + " " + subject + content + "", storeId);
             try {
                 message.setSubject("Failed on: " + subject);
             }catch(Exception e) {

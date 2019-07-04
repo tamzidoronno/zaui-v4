@@ -204,7 +204,6 @@ public class PmsOrderCleaner {
     }
 
     private void summarizePmsAddonItems(CartItem item1, CartItem item2) {
-        System.out.println("This is the last to do.");
     }
 
 }

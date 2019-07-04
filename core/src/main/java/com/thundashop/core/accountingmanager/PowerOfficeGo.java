@@ -334,7 +334,6 @@ public class PowerOfficeGo extends AccountingTransferOptions implements Accounti
             String param = URLEncoder.encode("(Code eq '"+code+"')", "ISO-8859-1");
             String addr = "http://api.poweroffice.net/customer?$filter="+param;
             String result = managers.webManager.htmlPostBasicAuth(addr, null, false, "ISO-8859-1", token, "Bearer", false, "GET");
-            System.out.println(result);
         }catch(Exception e) {
             e.printStackTrace();
         }

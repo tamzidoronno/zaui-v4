@@ -535,8 +535,8 @@ public class C3Manager extends ManagerBase implements IC3Manager {
             return "OUTSIDE_OF_OPEN_PERIODE";
         }
         
-        System.out.println("Current periode: " + project.currentProjectPeriode.from + " - " + project.currentProjectPeriode.to);
-        System.out.println(hour.from + " - " + hour.to);
+        logPrint("Current periode: " + project.currentProjectPeriode.from + " - " + project.currentProjectPeriode.to);
+        logPrint(hour.from + " - " + hour.to);
         
         
         if (!hour.completlyWithin(project.currentProjectPeriode.from, project.currentProjectPeriode.to)) {
@@ -751,7 +751,7 @@ public class C3Manager extends ManagerBase implements IC3Manager {
         }
         
         if (totalForPeriode > 0)
-            System.out.println(totalForPeriode);
+            logPrint(totalForPeriode);
         
         return Math.round(totalForPeriode);
     }

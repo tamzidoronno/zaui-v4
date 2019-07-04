@@ -31,7 +31,6 @@ public class FikenListAllContacts {
                 }, Collections.emptyMap());
         if (responseEntity.getStatusCode() == HttpStatus.OK) {
             for (FikenContact contact : responseEntity.getBody().getContent()) {
-                System.out.println(contact.getLink("self") + " | " + contact.getName());
             }
         }
         

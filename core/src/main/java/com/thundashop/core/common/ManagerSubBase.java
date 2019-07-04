@@ -209,7 +209,7 @@ public class ManagerSubBase {
         }
         
         if (GetShopLogHandler.isDeveloper) {
-            System.out.println("Started manager: " + this.getClass().getSimpleName() + " in " + (System.currentTimeMillis()-start) + "ms");
+            logPrint("Started manager: " + this.getClass().getSimpleName() + " in " + (System.currentTimeMillis()-start) + "ms");
         }
     }
 

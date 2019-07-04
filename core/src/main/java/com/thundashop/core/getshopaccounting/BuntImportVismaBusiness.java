@@ -114,7 +114,7 @@ public class BuntImportVismaBusiness extends AccountingSystemBase {
     }
 
     private List<VismaBunt> createImportLines(DayIncome income, int number) {
-        System.out.println("================ Day : " + income.start + " - " + income.end + " ============");
+        logPrint("================ Day : " + income.start + " - " + income.end + " ============");
         BigDecimal zeroCheck = new BigDecimal(BigInteger.ZERO);
 
         Map<String, List<DayEntry>> groupedIncomes = income.getGroupedByAccountExTaxes();
@@ -127,7 +127,7 @@ public class BuntImportVismaBusiness extends AccountingSystemBase {
 
             zeroCheck = zeroCheck.add(total);
             
-            System.out.println("To be transfered on account: " + accountingNumber + ", total: " + total);
+            logPrint("To be transfered on account: " + accountingNumber + ", total: " + total);
 
             SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
 
@@ -145,7 +145,7 @@ public class BuntImportVismaBusiness extends AccountingSystemBase {
             if(dayEntry.isActualIncome && !dayEntry.isOffsetRecord) {
                 AccountingDetail detail = productManager.getAccountingDetail(new Integer(accountingNumber));
                 if(detail == null) {
-                    System.out.println("nullpointer occurded when it should not.");
+                    logPrint("nullpointer occurded when it should not.");
                     addToLog("nullpointer occurded when it should not on account: " + accountingNumber);
                 }
                 taxCode = detail.taxgroup + "";
@@ -179,7 +179,7 @@ public class BuntImportVismaBusiness extends AccountingSystemBase {
             result.add(buntLine);
             j++;
         }
-        System.out.println("Zero check: " + zeroCheck);
+        logPrint("Zero check: " + zeroCheck);
         return result;
     }
     

@@ -72,7 +72,6 @@ public class UpdateTaxAccountingInformation extends UpdateScriptBase implements 
                 database.save(ProductManager.class, product);
             }
             
-            System.out.println("Done updating store, product: " + products.size() + " time used: " + (System.currentTimeMillis() - start));
         }
     }
 }

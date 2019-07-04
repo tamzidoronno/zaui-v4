@@ -421,7 +421,7 @@ public class PgaManager extends GetShopSessionBeanNamed implements IPgaManager {
 
     @Override
     public void sendPaymentLink(String email, String prefix, String phone) {
-        System.out.println("To implement: " + email + " " + prefix + " " + phone);
+        logPrint("To implement: " + email + " " + prefix + " " + phone);
         return;
     }
 

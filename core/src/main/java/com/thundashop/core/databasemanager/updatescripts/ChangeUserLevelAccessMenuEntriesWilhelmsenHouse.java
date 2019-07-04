@@ -61,7 +61,6 @@ public class ChangeUserLevelAccessMenuEntriesWilhelmsenHouse extends UpdateScrip
             return;
         
         for (Entry entry : entries) {
-            System.out.println(entry.id + " " + entry.name + " " + entry.userLevel);
             entry.userLevel = 0;
             listManager.updateEntry(entry);
             

@@ -393,7 +393,6 @@ class PmsStatisticsBuilder {
                 continue;
             }
             if(booking.startDate.before(date) && booking.endDate.after(date)) {
-                System.out.println(booking.source + " : " + date + " : " + booking.startDate + " - " + booking.endDate);
                 count++;
             }
         }

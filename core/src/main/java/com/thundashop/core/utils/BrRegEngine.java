@@ -121,7 +121,6 @@ public class BrRegEngine implements CompanySearchEngine {
     @Override
     public List<Company> search(String search) {
         String normalSearchResult = read(search, false);
-        System.out.println(normalSearchResult);
         List<Company> companies = getCompanies(normalSearchResult);
 
         if (companies.isEmpty()) {

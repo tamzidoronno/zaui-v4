@@ -719,9 +719,6 @@ public class PmsManagerProcessor {
         List<PmsBooking> all = getAllConfirmedNotDeleted(true);
         PmsConfiguration config = manager.getConfiguration();
         for(PmsBooking booking : all) {
-            if(booking.id.equals("46ebcf5a-5331-4d8c-b61c-a24097170c08")) {
-                System.out.println("ok");
-            }
             if(booking.sessionId != null && !booking.sessionId.isEmpty()) {
                 continue;
             }

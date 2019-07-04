@@ -382,7 +382,7 @@ public class GmailApiManager extends ManagerBase implements IGmailApiManager {
                     gmailMessagePart.text = (String) message.getContent();
                     retList.add(gmailMessagePart);
                 } else {
-                    System.out.println("Part not handled: " + contentType);
+                    logPrint("Part not handled: " + contentType);
                 }
 
             } catch (MessagingException ex) {
@@ -417,7 +417,7 @@ public class GmailApiManager extends ManagerBase implements IGmailApiManager {
                 } else if (part.getContentType().contains("text")) {
                     gmailMessagePart.text = (String) part.getContent();
                 } else {
-                    System.out.println("Type not handled: " + part.getContentType());
+                    logPrint("Type not handled: " + part.getContentType());
                 }
             }
 

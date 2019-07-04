@@ -622,9 +622,9 @@ public class BookingEngineNew extends GetShopSessionBeanNamed implements IBookin
                     String itemId = booking.prevAssignedBookingItemId;
                     try {
                         changeBookingItemOnBooking(bookingId, itemId);
-                        System.out.println("Success : " + bookingId + " , " + items.get(itemId).bookingItemName);
+                        logPrint("Success : " + bookingId + " , " + items.get(itemId).bookingItemName);
                     } catch (Exception ex) {
-                        System.out.println("Was not able to cleanup : " + bookingId + " , " + items.get(itemId).bookingItemName);
+                        logPrint("Was not able to cleanup : " + bookingId + " , " + items.get(itemId).bookingItemName);
                     }
                 });
     }
@@ -1010,7 +1010,7 @@ public class BookingEngineNew extends GetShopSessionBeanNamed implements IBookin
             if (!canUseItems.isEmpty()) {
                 changeBookingItemOnBooking(booking.id, canUseItems.get(0).id);
             } else {
-                System.out.println("Was not able to assign booking: " + booking.id + " when changing type");
+                logPrint("Was not able to assign booking: " + booking.id + " when changing type");
             }
             
         }
@@ -1046,7 +1046,7 @@ public class BookingEngineNew extends GetShopSessionBeanNamed implements IBookin
                     long time = System.currentTimeMillis();
                     List<BookingItem> found = getAvailbleItemsWithBookingConsidered(type.id, start, end, bookingid);
                     res.addAll(found);
-                    System.out.println("Used for type: " + type.name + " | " + (System.currentTimeMillis() - time));            
+                    logPrint("Used for type: " + type.name + " | " + (System.currentTimeMillis() - time));            
                 });
         
         return res;

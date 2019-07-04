@@ -84,7 +84,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
             GetShopLockCode code = dev.codes.get(i);
             String masterCode = masterCodes.codes.get(i);
             if(code == null) {
-                System.out.println("Null code?");
+                logPrint("Null code?");
             }
             if(!code.fetchCodeToAddToLock().equals(masterCode)) {
                 code.setCode(masterCode);
@@ -263,14 +263,14 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 TimeRepeater data = new TimeRepeater();
                 if(data.isInTimeRange(dev.openingHoursData, new Date())) {
                     if(dev.lockState.equals("unkown") || dev.lockState.equals("closed")) {
-                        System.out.println("Opening device:" + dev.id);
+                        logPrint("Opening device:" + dev.id);
                         autoOpenLock(dev);
                         dev.lockState = "open";
                         saveLock(dev);
                     }
                 } else {
                     if(dev.lockState.equals("unkown") || dev.lockState.equals("open")) {
-                        System.out.println("Closing device:" + dev.id);
+                        logPrint("Closing device:" + dev.id);
                         dev.lockState = "closed";
                         autoCloseLock(dev);
                         saveLock(dev);

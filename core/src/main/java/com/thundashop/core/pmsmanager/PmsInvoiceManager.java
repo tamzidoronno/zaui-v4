@@ -590,17 +590,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return price;
     }
 
-    private void doubleCheckStats(PmsOrderStatistics stats, List<Order> orders) {
-        for(Order order : orders) {
-            Double totalEx = orderManager.getTotalAmount(order);
-            Double totalInStats = stats.getTotalForOrder(order.id);
-            Double diff = totalEx - totalInStats;
-            if(diff < -1 || diff > 1) {
-//                System.out.println("Order failed calculated: " + order.incrementOrderId + " - " + diff);
-            }
-        }
-    }
-
     private List<Order> filterOrdersOnChannel(String channel, List<Order> orders) {
         List<PmsBooking> bookings = pmsManager.getAllBookings(null);
 
@@ -701,7 +690,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     continue;
                 }
                 if(userManager.getUserById(booking.userId) == null) {
-                    System.out.println("Cannot recalculate: " + booking.id);
+                    logPrint("Cannot recalculate: " + booking.id);
                     continue;
                 }
                 order.cart.clear();
@@ -1222,7 +1211,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         PmsOrderStatistics stats = new PmsOrderStatistics(roomProducts, userManager.getAllUsersMap());
         stats.createStatistics(ordersToUse, filter);
-        doubleCheckStats(stats,ordersToUse);
 
         return stats;
     }
@@ -3302,10 +3290,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             
             double newDiff = diff + orderManager.getTotalAmount(order);
             newDiff = Math.round(newDiff);
-            if(newDiff != 0.0) {
-//                System.out.println("Failed when creating virtual order : " + bookingId + " - " + newDiff);
-//                System.out.println(pmsManager.dumpBooking(booking));
-            }
         }
         
     }

@@ -94,7 +94,6 @@ public class QuestBackImporterTree {
             row.col5 = rowContent.get(4);
         }
         
-        System.out.println(row);
         return row;
     }
 

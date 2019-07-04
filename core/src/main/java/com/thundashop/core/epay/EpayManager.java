@@ -209,7 +209,6 @@ public class EpayManager extends ManagerBase implements IEpayManager {
     }
 
     public boolean payWithCard(Order order, UserCard card) {
-        System.out.println("Trying to pay with card: " + card.mask);
         return capture(card, order);
     }
     

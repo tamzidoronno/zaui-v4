@@ -72,7 +72,6 @@ public class CleanupDoubleCompanyProMeisterNorway extends UpdateScriptBase imple
 //                    
 //                    userManager.deleteCompany(comp.id);
 //                }
-//                System.out.println("Merge: " + companyId);
 //            }
 //        }
         // Your magic code goes here :D

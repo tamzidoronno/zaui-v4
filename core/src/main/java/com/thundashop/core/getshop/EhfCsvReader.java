@@ -23,7 +23,6 @@ public class EhfCsvReader {
         
         EhfCsvReader reader = new EhfCsvReader();
         List<EhfComplientCompany> companies = reader.getCompanies();
-        System.out.println("Found: " + companies.size());
     }
     
     private List<String[]> readCsv() throws Exception {

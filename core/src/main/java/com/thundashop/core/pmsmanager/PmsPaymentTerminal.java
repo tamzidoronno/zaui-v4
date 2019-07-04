@@ -202,7 +202,6 @@ public class PmsPaymentTerminal extends GetShopSessionBeanNamed implements IPmsP
             userManager.saveUser(user);
             return true;
         } else {
-            System.out.println("We need to complete this booking instead");
             if(company != null) {
                 booking.registrationData.resultAdded.put("choosetyperadio", "company");
                 booking.registrationData.resultAdded.put("company_name", company.name);
@@ -408,7 +407,6 @@ public class PmsPaymentTerminal extends GetShopSessionBeanNamed implements IPmsP
         job.printerId = "test";
         
         printManager.addPrintJob(job);
-        System.out.println(text);
     }
     
     private AccountingDetails getAccountingDetails() throws ErrorException {

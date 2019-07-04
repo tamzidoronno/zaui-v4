@@ -300,7 +300,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 PmsConfiguration toAdd = (PmsConfiguration) dataCommon;
                 toCheck.setTime(toAdd.rowCreatedDate);
                 if (toCheck.get(Calendar.YEAR) == 2017 && toCheck.get(Calendar.DAY_OF_YEAR) == 8) {
-                    System.out.println("delete this configuration, failure to add today: " + toAdd.rowCreatedDate + "(" + getName() + ")");
                     deleteObject(dataCommon);
                 } else if (configuration.rowCreatedDate == null || (configuration.rowCreatedDate.before(dataCommon.rowCreatedDate) || configuration.rowCreatedDate.equals(dataCommon.rowCreatedDate))) {
                     if (configuration.rowCreatedDate != null) {
@@ -5121,7 +5120,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         for (PmsBooking booking : bookings.values()) {
             test.add(booking.id);
-            System.out.println("Merging: " + booking.id);
             boolean found = false;
             for (PmsBooking booking1 : bookings.values()) {
                 if (test.contains(booking1.id)) {
@@ -5821,12 +5819,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<PmsBookingRooms> intervalCleanings = getRoomsNeedingIntervalCleaning(new Date());
 
         for (PmsAdditionalItemInformation room : allRooms) {
-            
-            if(room.itemId.equals("4544add4-13da-42cf-aa16-6455a3983092")) {
-                System.out.println("check");
-            }
-
-            
             RoomCleanedInformation info = new RoomCleanedInformation();
             info.roomId = room.itemId;
             info.hideFromCleaningProgram = room.hideFromCleaningProgram;
@@ -6883,18 +6875,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return false;
     }
 
-    private void test() {
-        for (PmsAdditionalItemInformation pinfo : addiotionalItemInfo.values()) {
-            if (pinfo.itemId.equals("c0a8454a-6ebf-4d82-88c6-e2dae164fbbf")) {
-                System.out.println("Cleaned: " + pinfo.isClean());
-                List<Date> dates = pinfo.getAllCleaningDates();
-                System.out.println("Last used: " + pinfo.getLastUsed());
-                for (Date d : dates) {
-                    System.out.println("Cleaning date : " + d);
-                }
-            }
-        }
-    }
 
     @Override
     public List<PmsRoomSimple> getRoomsToSwap(String roomId, String moveToType) {
@@ -7197,7 +7177,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public void freezeSubscription(String pmsBookingRoomId, Date freezeUntil) {
         PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
         PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
-        System.out.println("Want to freeze between: " + room.invoicedTo + " - " + freezeUntil);
         cartManager.clear();
         Product freezeProduct = productManager.getProduct("freezeSubscription");
         if (freezeProduct == null) {
@@ -7818,7 +7797,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
 
                 if (item != null && item.bookingItemAlias.equals(log.getShopDeviceId) && room.code.equals(log.code) && log.event == 2) {
-                    System.out.println("Marking as arrived: " + room.guests.get(0).name);
                     markGuestArrivedInternal(booking, room);
                 }
             }
@@ -8367,8 +8345,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void setNewStartDateAndAssignToRoom(String pmsRoomId, Date newStartDate, String bookingItemId) {
-
-        System.out.println("In date: " + newStartDate);
         PmsBooking pmsBooking = getBookingFromRoom(pmsRoomId);
         if (pmsBooking == null) {
             return;
@@ -8392,10 +8368,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         cal2.set(Calendar.SECOND, cal.get(Calendar.SECOND));
         cal2.set(Calendar.MILLISECOND, cal.get(Calendar.MILLISECOND));
         newStartDate = cal2.getTime();
-
-        System.out.println("Transformed date: " + newStartDate);
-
-        System.out.println(booking.startDate + " | " + booking.endDate);
 
         long newTime = newStartDate.getTime();
         long diff = booking.startDate.getTime() - newTime;
@@ -9510,7 +9482,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void doChargeCardFromAutoBooking(String bookingId) {
-        System.out.println("need to charge booking : "+ bookingId);
         PmsBooking booking = getBooking(bookingId);
         User usr = userManager.getUserById(booking.userId);
         for(String orderId : booking.orderIds) {

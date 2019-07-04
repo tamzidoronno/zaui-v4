@@ -618,12 +618,6 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
             return new ArrayList();
         }
         
-        test.questions.stream()
-                .map(o -> getQuestion(o))
-                .forEach(o -> {
-                    System.out.println(o.parentId);
-                });
-                
         List<QuestBackQuestion> returnResult = test.questions.stream()
                 .map(o -> getQuestion(o))
                 .map(question -> getQuestion(question.parentId))
@@ -853,7 +847,6 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
         Gson gson = new Gson();
         
         for (QuestBackQuestion question : topQuestions) {
-            System.out.println(StringUtils.unescapeHtml3(question.name));
             List<QuestBackQuestion> subQuestions = questions.values().stream()
                 .filter(q -> q.parentId != null && q.parentId.equals(question.id))
                 .collect(Collectors.toList());
@@ -871,18 +864,8 @@ public class QuestBackManager extends ManagerBase implements IQuestBackManager {
                 if (!instances.isEmpty()) {
                     String jsonEncodedAnswers = instances.get(0).getSetting("options");
                     String type = instances.get(0).getSetting("type");
-                    System.out.println(";"+StringUtils.unescapeHtml3(subQuestion.name)+";"+type+";"+page.id);
                     String headingText = instances.get(0).getSetting("headingtext");
-                    if (headingText != null && !headingText.isEmpty()) {
-                        System.out.println(";;;"+StringUtils.unescapeHtml3(headingText)+";heading");
-                    }
                     List<QuestBackOption> options = gson.fromJson(jsonEncodedAnswers, new TypeToken<ArrayList<QuestBackOption>>(){}.getType());
-                    if (options != null) {
-                        for (QuestBackOption option : options) {
-                            System.out.println(";;;"+StringUtils.unescapeHtml3(option.text)+";"+option.correctAnswer);
-                        }    
-                    }
-                    
                 }
             }
         }

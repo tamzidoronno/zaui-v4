@@ -216,9 +216,6 @@ public class AcculogixDataExporter {
             }
             
             exp.ORPieceCorrect = "NO";
-            if (exp.PODBarcodeID.equals("AC.20.17.2187408")) {
-                System.out.println("Found one");
-            }
         }
         
         return toAdd;

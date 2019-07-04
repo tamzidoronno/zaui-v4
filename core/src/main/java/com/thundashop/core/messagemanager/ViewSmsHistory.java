@@ -81,7 +81,6 @@ public class ViewSmsHistory {
         Date start = getDate(year, month,1);
         Date end = getDate(year, (month + 1),1);
         
-        System.out.println("Start: " + start + " to " + end);
         
         ViewSmsHistory hist = new ViewSmsHistory(month, year);
         

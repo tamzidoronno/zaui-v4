@@ -55,7 +55,6 @@ public class RateManagerPushBookingThread extends Thread {
                 while((responseLine = responseStream.readLine()) != null) {
                     responseBuffer.append(responseLine);
                 }
-                System.out.println(responseLine);
             }catch(IOException ex) {
                 BufferedReader responseStream = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
 
@@ -66,8 +65,6 @@ public class RateManagerPushBookingThread extends Thread {
                     responseBuffer.append(responseLine);
                 }
                 String res = responseBuffer.toString();
-                System.out.println(res);
-
                 throw ex;
             }        
         }catch(Exception ee) {

@@ -33,15 +33,8 @@ public class DiffReportCreator {
       
                 DayEntry equalEntry = isFoundAndEqual(currentReport, o);
                 if (equalEntry != null) {
-                    if (o.orderId != null && o.orderId.equals("82c0ba76-8e97-479e-8a50-078436e6adfd")) {
-                        System.out.println("Found 1");
-                    }
                     foundEntriesToRemoveLockedReport.add(o);
                     foundEntriesToRemoveCurrentReport.add(equalEntry);    
-                } else {
-                    if (o.orderId != null && o.orderId.equals("82c0ba76-8e97-479e-8a50-078436e6adfd")) {
-                        System.out.println("Not found 1");
-                    }
                 }
             }
             
@@ -78,9 +71,6 @@ public class DiffReportCreator {
             rep.orderId = orderId;
             rep.currentReportDayIncomes = getDayIncomesForOrder(currentReport, orderId);
             rep.lockedReportDayIncomes = getDayIncomesForOrder(lockedReport, orderId);
-            if (orderId.equals("82c0ba76-8e97-479e-8a50-078436e6adfd")) {
-                System.out.println("Found: ");
-            }
             retList.add(rep);
         });
         

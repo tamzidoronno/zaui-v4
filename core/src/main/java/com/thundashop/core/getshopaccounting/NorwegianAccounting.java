@@ -327,7 +327,6 @@ public class NorwegianAccounting extends AccountingSystemBase {
                         saveObject(iFile);
                     }
                 });
-                System.out.println("Move order here: " + order.incrementOrderId);
             }
         }
     }

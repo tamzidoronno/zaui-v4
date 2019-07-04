@@ -154,7 +154,6 @@ public class StorePool {
                 Object argument = useGson.fromJson(object.args.get(parameter), casttypes[i]);
                 executeArgs[i] = argument;
             } catch (Exception e) {
-                e.printStackTrace();
                 GetShopLogHandler.logPrintStatic("Cast type: " + casttypes[i], null);
                 GetShopLogHandler.logPrintStatic("From json param: " + object.args.get(parameter), null);
                 GetShopLogHandler.logPrintStatic("From json paramValue: " + object.args.get(parameter), null);

@@ -127,7 +127,7 @@ public class PowerOfficeGoPrimitiveAccounting extends AccountingSystemBase {
     }
 
     private List<PowerOfficeGoImportLine> createImportLines(DayIncome income, int number) {
-        System.out.println("================ Day : " + income.start + " - " + income.end + " ============");
+        logPrint("================ Day : " + income.start + " - " + income.end + " ============");
         BigDecimal zeroCheck = new BigDecimal(BigInteger.ZERO);
 
         Map<String, List<DayEntry>> groupedIncomes = income.getGroupedByAccountExTaxes();
@@ -139,7 +139,7 @@ public class PowerOfficeGoPrimitiveAccounting extends AccountingSystemBase {
 
             zeroCheck = zeroCheck.add(total);
             
-            System.out.println("To be transfered on account: " + accountingNumber + ", total: " + total);
+            logPrint("To be transfered on account: " + accountingNumber + ", total: " + total);
             PowerOfficeGoImportLine toAdd = new PowerOfficeGoImportLine();
             
             if (accountingNumber.length() == 4) {
@@ -158,7 +158,7 @@ public class PowerOfficeGoPrimitiveAccounting extends AccountingSystemBase {
             if(dayEntry.isActualIncome && !dayEntry.isOffsetRecord) {
                 AccountingDetail detail = productManager.getAccountingDetail(toAdd.accountNumber);
                 if(detail == null) {
-                    System.out.println("nullpointer occurded when it should not.");
+                    logPrint("nullpointer occurded when it should not.");
                     addToLog("nullpointer occurded when it should not on account: " + toAdd.accountNumber);
                 }
                 toAdd.vatCode = detail.taxgroup + "";

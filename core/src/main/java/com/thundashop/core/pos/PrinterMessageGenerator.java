@@ -121,7 +121,6 @@ public class PrinterMessageGenerator {
                 output.append(line);
             }
             input.close();
-            System.out.println(output.toString());
         } catch (Exception err) {
           err.printStackTrace();
         }

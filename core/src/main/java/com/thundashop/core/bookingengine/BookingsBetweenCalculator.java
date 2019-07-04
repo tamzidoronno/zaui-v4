@@ -118,11 +118,6 @@ public class BookingsBetweenCalculator {
     }
 
     private void printBestCombo() {
-//        if (bestCombo.size() > 0 )
-//            System.out.println(" ========== " + start + " -> " + end);
-//        for (Booking booking: bestCombo) {
-//            System.out.println(booking.getHumanReadableDates());
-//        }
     }
 
     public double getCoveragePercent() {

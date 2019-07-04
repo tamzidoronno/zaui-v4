@@ -2105,11 +2105,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         if(type.size > 10) {
             return;
         }
-        System.out.println("Virtual rooms, number of guests: " + type.size + ";roomid: " + data.rid + ", data virtualroom ids:" + data.virtualWubookRoomIds + ", name: " + type.name);
+        logPrint("Virtual rooms, number of guests: " + type.size + ";roomid: " + data.rid + ", data virtualroom ids:" + data.virtualWubookRoomIds + ", name: " + type.name);
         String[] virtualRooms = data.virtualWubookRoomIds.split(";");
         String virtualRoomIds = data.wubookroomid + "";
         for(int i = 2; i <= type.size; i++) {
-            System.out.println("Need to add virtual room for guest: " + i);
+            logPrint("Need to add virtual room for guest: " + i);
             try {
                 int roomId = -1;
                 if(virtualRooms.length >= i) {

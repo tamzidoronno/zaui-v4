@@ -127,6 +127,7 @@ public class StorePool {
 
         JsonObject2 object = null;
         
+        
         if(lastTimePrintedTimeStampToLog == null) {
             System.out.println("####################################################################################################################################");
             System.out.println("####################################################  " + new Date() + "  ################################################");
@@ -232,14 +233,18 @@ public class StorePool {
             Method method = getMethodToExecute(aClass, object.method, types, argumentValues);
             method = getCorrectMethod(method);
             
-            if ((aClass != null && method != null) && (method.getAnnotation(GetShopNotSynchronized.class) != null || method.getAnnotation(ForceAsync.class) != null)) {
-                if (method.getAnnotation(GetShopNotSynchronized.class) != null && aClass.getAnnotation(GetShopSession.class) != null) {
-                    throw new RuntimeException("@GetShopNotSynchronized can not be used on components that is scoped with @GetShopSession");
+            try {
+                if ((aClass != null && method != null) && (method.getAnnotation(GetShopNotSynchronized.class) != null || method.getAnnotation(ForceAsync.class) != null)) {
+                    if (method.getAnnotation(GetShopNotSynchronized.class) != null && aClass.getAnnotation(GetShopSession.class) != null) {
+                        throw new RuntimeException("@GetShopNotSynchronized can not be used on components that is scoped with @GetShopSession");
+                    }
+                    res = handler.executeMethod(object, types, argumentValues, false);
+                } else {
+                    res = handler.executeMethodSync(object, types, argumentValues);
                 }
-                
-                res = handler.executeMethod(object, types, argumentValues, false);
-            } else {
-                res = handler.executeMethodSync(object, types, argumentValues);
+            }catch(Exception x) {
+                GetShopLogHandler.logPrintStatic(x.getMessage(), handler.getStoreId());
+                throw x;
             }
         }
         

@@ -13,6 +13,7 @@ import com.thundashop.core.storemanager.data.Store;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,6 +26,7 @@ import java.util.UUID;
 public class StorePool {
     private HashMap<String, StoreHandler> storeHandlers = new HashMap();
     private com.thundashop.core.storemanager.StorePool storePool;
+    private Date lastTimePrintedTimeStampToLog = null;
     
     public StorePool() {
         if (AppContext.appContext != null) {
@@ -124,6 +126,21 @@ public class StorePool {
         message = message.replace("\"args\":[]", "\"args\":{}");
 
         JsonObject2 object = null;
+        
+        if(lastTimePrintedTimeStampToLog == null) {
+            System.out.println("####################################################################################################################################");
+            System.out.println("####################################################  " + new Date() + "  ################################################");
+            System.out.println("####################################################################################################################################");
+            lastTimePrintedTimeStampToLog = new Date();
+        } else {
+            long diff = System.currentTimeMillis() - lastTimePrintedTimeStampToLog.getTime();
+            if(diff > (1000*60*5)) {
+                System.out.println("####################################################################################################################################");
+                System.out.println("####################################################  " + new Date() + "  ################################################");
+                System.out.println("####################################################################################################################################");
+                lastTimePrintedTimeStampToLog = new Date();
+            }
+        }
         
         try {
             object = gson.fromJson(message, type);

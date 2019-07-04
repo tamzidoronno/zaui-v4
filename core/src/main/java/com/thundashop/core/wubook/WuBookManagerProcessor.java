@@ -16,9 +16,15 @@ public class WuBookManagerProcessor extends GetShopSchedulerBase {
         if(!getApi().getStoreManager().isProductMode()) {
             return;
         }
-
-        getApi().getWubookManager().fetchNewBookings(getMultiLevelName());
-        getApi().getWubookManager().updateShortAvailability(getMultiLevelName());
+        
+        String storeId = getApi().getStoreManager().getStoreId();
+        
+        try {
+            getApi().getWubookManager().fetchNewBookings(getMultiLevelName());
+            getApi().getWubookManager().updateShortAvailability(getMultiLevelName());
+        }catch(Exception e) {
+            GetShopLogHandler.logPrintStatic("Failed to handle wubook api call, " + e.getMessage(), storeId);
+        }
     }
     
 }

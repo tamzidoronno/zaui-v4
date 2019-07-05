@@ -775,10 +775,6 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
                 continue;
             }
             
-            for(MasterUserSlot tmp : group.getGroupLockCodes().values()) {
-                logPrint(tmp.code.pinCode);
-            }
-            
             List<MasterUserSlot> add = group.getGroupLockCodes().values()
                     .stream()
                     .filter(masterSlot -> masterSlot.takenInUseDate != null || group.isVirtual)

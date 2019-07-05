@@ -817,7 +817,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             saveObject(booking);
         }
 
-        if ((booking.sessionId != null && !booking.sessionId.isEmpty() && !booking.avoidAutoDelete) || (booking.isTerminalBooking() && !booking.isOld(60))) {
+        if (!booking.avoidAutoDelete && ((booking.sessionId != null && !booking.sessionId.isEmpty()) || (booking.isTerminalBooking() && !booking.isOld(60)))) {
             Date deletionDate = nowCal.getTime();
             boolean hardDelete = (booking.rowCreatedDate.before(deletionDate) && (booking.completedDate == null || booking.completedDate.before(deletionDate)));
             if (hardDelete && !booking.payedFor) {
@@ -2033,7 +2033,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private void hardDeleteBooking(PmsBooking booking, String source) {
         logPrint("Deleting, source: " + source + " id: " + booking.id);
-        bookings.remove(booking.id);
+        bookings.remove(booking.id); 
         booking.deletedBySource = source;
         
         

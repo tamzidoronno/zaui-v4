@@ -126,6 +126,9 @@ class Dibs extends \PaymentApplication implements \Application {
         
         if($useflexwin == "true") {
             $redirect_url = $protocol."://" . $_SERVER["HTTP_HOST"] . "/callback.php";
+            if($this->isTestMode()) {
+                $redirect_url = "http://bergstaden.3.0.local.getshop.com/callback.php";
+            }
             echo '<form method="post" id="dibsform" action="https://payment.architrade.com/paymentweb/start.action">
                 <input value="' . $merchid . '" name="merchant" type="hidden" />
                 <input value="' . $currency . '" name="currency" type="hidden" />

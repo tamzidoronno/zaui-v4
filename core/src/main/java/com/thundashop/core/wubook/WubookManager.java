@@ -900,7 +900,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                             newbooking.wubookModifiedResId.add(booking.reservationCode);
                             pmsManager.logEntry("Failed to update from channel manager, stay already started.", newbooking.id, null);
                             pmsManager.saveBooking(newbooking);
-                            messageManager.sendErrorNotification("Failed to update already started stay from channel manager.", null);
                             return "";
                         }
                         room.deletedByChannelManagerForModification = true;

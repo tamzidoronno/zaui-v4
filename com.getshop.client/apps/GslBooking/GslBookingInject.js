@@ -1085,7 +1085,7 @@ function getshop_gotopayment(e) {
                     if(typeof(getshop_successcallback) !== "undefined") {
                         getshop_successcallback(res);
                     } else {
-                        window.location.href = getshop_endpoint + "/scripts/redirectpayment.php?bookingid="+res.bookingid+"&engine="+getshop_domainname;
+                        window.location.href = getshop_endpoint + "/scripts/redirectpayment.php?bookingid="+getshop_bookingId+"&engine="+getshop_domainname;
                     }
                 });
                 completing.fail(function(res) {
@@ -1933,6 +1933,7 @@ function getshop_searchRooms(e) {
             if(btnText) {
                 btn.html(btnText);
             }
+            getshop_bookingId = res.bookingId;
             if(res.supportPayLaterButton) {
                 $('.paylater_button').show();
             } else {

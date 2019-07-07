@@ -234,6 +234,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         result.supportedPaymentMethods = checkForSupportedPaymentMethods(booking);
         result.prefilledContactUser = "";
         result.startYesterday = isMidleOfNight() && PmsBookingRooms.isSameDayStatic(arg.start, new Date());
+        result.bookingId = existing.id;
         
         if(booking.userId != null && !booking.userId.isEmpty()) {
             result.prefilledContactUser = userManager.getUserById(booking.userId).fullName;

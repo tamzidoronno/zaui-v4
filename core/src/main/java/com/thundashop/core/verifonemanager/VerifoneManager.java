@@ -3,6 +3,7 @@ package com.thundashop.core.verifonemanager;
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
+import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.ordermanager.OrderManager;
@@ -201,7 +202,15 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
                 logPrint("Found order to pay: " + orderToPay.id);
                 double paidAmount = orderToPay.getTotalAmount() + orderToPay.cashWithdrawal;
                 logPrint("Total amount to mark as paid: " + paidAmount);
-                orderManager.markAsPaid(orderToPay.id, new Date(), paidAmount);
+                try {
+                    try {
+                        orderManager.markAsPaid(orderToPay.id, new Date(), paidAmount);
+                    }catch(Exception a) {
+                        logPrint("Exception occured: " + a.getMessage());
+                    }
+                }catch(ErrorException b) {
+                    logPrint("Error exception occured: " + b.getMessage());
+                }
                 logPrint("Marked order " + orderToPay.incrementOrderId + " as completed with paid amount: " + paidAmount);
             } else {
                 logPrint("Warning! Order is null, cant mark as completed... Why is it null?");

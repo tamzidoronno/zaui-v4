@@ -207,6 +207,7 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
                         orderManager.markAsPaid(orderToPay.id, new Date(), paidAmount);
                     }catch(Exception a) {
                         logPrint("Exception occured: " + a.getMessage());
+                        logPrintException(a);
                     }
                 }catch(ErrorException b) {
                     logPrint("Error exception occured: " + b.getMessage());

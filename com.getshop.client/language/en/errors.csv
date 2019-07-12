@@ -165,6 +165,7 @@
 "1060","The Accrued Payment application is not activated, please activate it and configure it under accounting -> payments."
 "1061","Can not delete the freepost as it is closed"
 "1062","Cant create posts as the periode is closed."
+"1063","The order has already been marked as paid."
 
 "1000001","The name attribute is invalid"
 "1000002","The entry you are trying to fecth does not exists."

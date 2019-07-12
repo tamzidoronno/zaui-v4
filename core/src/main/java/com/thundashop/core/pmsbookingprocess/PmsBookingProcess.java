@@ -234,6 +234,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         result.supportedPaymentMethods = checkForSupportedPaymentMethods(booking);
         result.prefilledContactUser = "";
         result.startYesterday = isMidleOfNight() && PmsBookingRooms.isSameDayStatic(arg.start, new Date());
+        result.bookingId = existing.id;
         
         if(booking.userId != null && !booking.userId.isEmpty()) {
             result.prefilledContactUser = userManager.getUserById(booking.userId).fullName;
@@ -281,7 +282,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     }
     
     private void selectMostSuitableRooms(StartBookingResult result, StartBooking arg) {
-        System.out.println("Need to find: " + arg.rooms + " rooms for :" + arg.getGuests());
+        logPrint("Need to find: " + arg.rooms + " rooms for :" + arg.getGuests());
         
         List<PmsBookingProcessorCalculator> toUse = new ArrayList();
         
@@ -820,8 +821,8 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 webManager.htmlPostThreaded(url, text, false, "UTF-8");
             } else {
                 order.payment.transactionLog.put(System.currentTimeMillis(), "Print reciept (dev mode)");
-                System.out.println("Printing reciept to url: " + url);
-                System.out.println(text);
+                logPrint("Printing reciept to url: " + url);
+                logPrint(text);
             }
             orderManager.saveOrder(order);
         }catch(Exception e) {

@@ -388,12 +388,7 @@ public class ArxDoorManager implements IDoorManager {
         toPost += "</arxdata>\n";
         
         String hostName = ":5002/arx/import";
-//        System.out.println("Posting to :" + hostName);
-//        System.out.println(toPost);
-        
         String response = httpLoginRequest(hostName,toPost);
-//        System.out.println("Response:");
-//        System.out.println(response);
         return person;
     }
 

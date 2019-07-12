@@ -46,13 +46,13 @@ public class PmsBookingSimpleFilter {
         }
         if(result.size() > 200) {
             //This might cause slow systems.
-            System.out.println("max limit of 200 increased.");
+            this.manager.logPrint("max limit of 200 increased.");
         }
         
         this.manager.gsTiming("before sorting list");
         sortList(result, filter.sorting);
-        if(filter.groupByBooking) {
-            result = groupByBooking(result);
+        if(filter.groupByBooking) { 
+           result = groupByBooking(result);
         }
         return result;
     }

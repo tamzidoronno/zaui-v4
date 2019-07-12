@@ -723,8 +723,6 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     
     @Override
     public boolean isCaptain(String id) throws ErrorException {
-        System.out.println("Size: " + orderManager.getAllOrders().size() + " Session id: " + getSession().id + ", Manager: " + this);
-        
         User user = getUserById(id);
         if(user == null || user.fullName == null) {
             return false;
@@ -2022,21 +2020,6 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                 .orElse(null);
     }
 
-    private void printUsers() {
-        for (User user : getAllUsers()) {
-            finalizeUser(user);
-            System.out.println(
-                    csvsave(user.fullName)+";"
-                    +csvsave(user.emailAddress)+";"
-                    +csvsave(user.cellPhone)+";"
-                    +csvsave(user.getCompanyName())+";"
-                    +csvsave(user.getCompanyVatNumber())+";"
-                    +csvsave(user.getCompanyAddress())+";"
-                    +csvsave(user.getCompanyEmail())
-            );
-        }
-    }
-
     private String csvsave(String fullName) {
         if (fullName != null)
             fullName = fullName.replace(";", "");
@@ -2158,24 +2141,6 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         saveUser(user);
     }
 
-    private void doubleCheckUniqueCustomerIds() {
-        List<String> found = new ArrayList();
-        for(User usr : getAllUsers()) {
-            if(found.contains(usr.id)) {
-                continue;
-            }
-            if(usr.customerId != null) {
-                for(User usr2 : getAllUsers()) {
-                    if(usr2.customerId != null && usr2.customerId.equals(usr.customerId) && !usr2.id.equals(usr.id)) {
-                        System.out.println(usr.customerId + "\t " + usr.rowCreatedDate + "\t" + usr2.rowCreatedDate + "\t" + usr.fullName + "\t" + usr2.fullName);
-                        found.add(usr2.id);
-                        found.add(usr.id);
-                    }
-                }
-            }
-        }
-    }
-
     @Override
     public List<UserRole> getUserRoles() {
         return new ArrayList(roles.values());
@@ -2214,19 +2179,6 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             result.add(simple);
         }
         return result;
-    }
-
-    private void dumpSessions() {
-         ConcurrentHashMap<String, ThundashopSession> sessions = sessionFactory.getAllSessions();
-         if(sessions.size() > 100) {
-             for(String sessId : sessions.keySet()) {
-                 ThundashopSession sess = sessions.get(sessId);
-                 String userId = sess.getObject("user");
-                 User user = getUserById(userId);
-                 System.out.println(user.fullName + " : " + sess.getLastActive());
-             }
-         }
-        
     }
 
     public void addUserLoggedOnSecure(String userId) {

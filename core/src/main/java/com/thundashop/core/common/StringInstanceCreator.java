@@ -28,7 +28,6 @@ public class StringInstanceCreator implements JsonDeserializer<String> {
 
         String retString = jobject.getAsString();
         
-        System.out.println("type: " + type.getTypeName() + ": " + retString);
         return retString;
     }
     

@@ -44,13 +44,11 @@ public class UndeleteFailedDeletedBookings extends UpdateScriptBase implements U
         for(Store store : stores) {
             List<String> names = database.getMultilevelNames("PmsManager", store.id);
            for(String name : names) {
-               System.out.println("Name:" + name);
                 List<DataCommon> data = getAllDataForStoreAndManager("PmsManager_" + name, store);
                 for(DataCommon common : data) {
                     if(common instanceof PmsBooking) {
                         PmsBooking res = (PmsBooking)common;
                         if(res.deleted != null && res.deletedBySource != null && res.deletedBySource.equals("finalize") && (res.sessionId == null || res.sessionId.isEmpty())) {
-                            System.out.println("Deleted faulty: " + res.id + " : " + res.rowCreatedDate);
                             res.deleted = null;
                             database.save("PmsManager_" + name, "col_" + store.id, common);
                         }

@@ -272,7 +272,7 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
         PowerOfficeGoSalesOrder goOrder = new PowerOfficeGoSalesOrder();
         if(uniqueId == null) {
             if (user == null) {
-                System.out.println("Not found user: " + order.userId);
+                logPrint("Not found user: " + order.userId);
             }
             goOrder.customerCode = new Integer(user.accountingId);
         } else {
@@ -374,7 +374,7 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
             String param = URLEncoder.encode("(Code eq '"+code+"')", "ISO-8859-1");
             String addr = "http://api.poweroffice.net/customer?$filter="+param;
             String result = webManager.htmlPostBasicAuth(addr, null, false, "ISO-8859-1", token, "Bearer", false, "GET");
-            System.out.println(result);
+            logPrint(result);
         }catch(Exception e) {
             e.printStackTrace();
         }

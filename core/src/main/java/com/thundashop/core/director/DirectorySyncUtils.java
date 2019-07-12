@@ -82,7 +82,6 @@ public class DirectorySyncUtils {
                     system.webAddresses = guest.name;
                     system.serverVpnIpAddress = "10.0.4.33";
                     system.invoicedTo = room.invoicedTo;
-                    System.out.println(booking.invoiceNote);
                     system.numberOfMonthsToInvoice = booking.periodesToCreateOrderOn == null ? 1 : booking.periodesToCreateOrderOn;
                     
                     Store store = storePool.getStoreByWebaddress(system.webAddresses);

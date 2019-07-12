@@ -123,13 +123,6 @@ public class SmsHistoryManager extends GetShopSessionBeanNamed implements ISmsHi
             if(saveBooking) {
                 pmsManager.saveBooking(booking);
             }
-            
-            System.out.println("Stores not found");
-            for(String notfound : storesNotFound) {
-                System.out.println(notfound);
-            }
-            
-            
         }
         return new HashMap();
     }

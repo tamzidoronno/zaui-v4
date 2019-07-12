@@ -15,6 +15,7 @@ public class StartBookingResult {
     public boolean startYesterday = false;
     public List<String> supportedPaymentMethods = new ArrayList();
     String prefilledContactUser = "";
+    String bookingId = "";
 
     public List<RoomsSelected> getRoomsSelected() {
         List<RoomsSelected> res = new ArrayList();

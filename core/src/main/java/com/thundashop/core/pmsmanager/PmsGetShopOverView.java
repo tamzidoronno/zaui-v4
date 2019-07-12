@@ -312,7 +312,6 @@ public class PmsGetShopOverView extends ManagerBase implements IPmsGetShopOverVi
                         number++;
                     }
                 }
-                System.out.println("Found");
             }
         }
         return number;

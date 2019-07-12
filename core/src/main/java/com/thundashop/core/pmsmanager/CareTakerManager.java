@@ -60,7 +60,7 @@ public class CareTakerManager extends GetShopSessionBeanNamed implements ICareTa
                     continue;
                 }
                 boolean found = false;
-                System.out.println("This needs to be created");
+                logPrint("This needs to be created");
                 for(PmsCareTaker taker : careTakerJobs) {
                     if(taker.repeatingTaskId.equals(repeating.id) && taker.rowCreatedDate.equals(range.start)) {
                         found = true;

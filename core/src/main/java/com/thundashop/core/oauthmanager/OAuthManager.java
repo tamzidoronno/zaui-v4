@@ -96,7 +96,7 @@ public class OAuthManager extends ManagerBase implements IOAuthManager {
         
         expiredSessions.stream()
                 .forEach(session -> {
-                    System.out.println("Deleted: " + session.id);
+                    logPrint("Deleted: " + session.id);
                     oauthDatabase.hardDelete(session);
                 });
         

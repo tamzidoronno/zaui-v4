@@ -194,10 +194,6 @@ public class PmsOrderStatistics implements Serializable  {
                             Double itemTotalEx = item.getTotalEx();
                             Double diff = (extotal - itemTotalEx);
                             diff = (double)Math.round(diff*1000) / 1000;
-                            if(diff != 0.000) {
-                                System.out.println("Failed to summarize order: " + diff);
-                            }
-
                             addProductOrderPrice(item.getProduct().id, order.id, item.getPriceExForMinutes() * secondsInDay, entry.priceExOrders);
                             addProductOrderPrice(item.getProduct().id, order.id, item.getPriceIncForMinutes() * secondsInDay, entry.priceIncOrders);
                         }
@@ -317,9 +313,6 @@ public class PmsOrderStatistics implements Serializable  {
 
     private PmsOrderStatisticsEntry calculatePeriodisatedValues(Order order, CartItem item, Calendar cal) {
 
-        if(order.incrementOrderId == 114664) {
-            System.out.println(item.getProduct().name + "(new) : " + item.startDate + " - " + item.endDate + " : " + cal.getTime());
-        }
 
         PmsOrderStatisticsEntry entry = new PmsOrderStatisticsEntry();
         String date = PmsBookingRooms.convertOffsetToString(cal.getTime());

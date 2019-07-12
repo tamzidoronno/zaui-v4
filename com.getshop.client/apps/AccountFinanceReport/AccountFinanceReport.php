@@ -194,7 +194,9 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
         $strTime = $_POST['data']['year']."-".$_POST['data']['month']."-1";
         $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_all_start'] = date("1.m.Y 00:00:00", strtotime($strTime));
         $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_all_end'] = date("t.m.Y 23:59:59", strtotime($strTime));
-        $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_SHOW_INC_TAX'] = $_POST['data']['tax'];
+        if(isset($_POST['data']['tax'])) {
+            $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_SHOW_INC_TAX'] = $_POST['data']['tax'];
+        }
     }
 
     public function getEnd() {

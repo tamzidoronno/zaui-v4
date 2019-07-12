@@ -255,7 +255,7 @@ public abstract class AccountingSystemBase extends ManagerBase {
             try {
                 accountingId = new Integer(user.accountingId);
             }catch(Exception e) {
-                System.out.println("Number exception problem on user: " + user.fullName);
+                logPrint("Number exception problem on user: " + user.fullName);
             }
         }
         if(accountingId >= idToUse) {

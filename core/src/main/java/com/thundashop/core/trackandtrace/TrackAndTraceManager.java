@@ -601,7 +601,6 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             return 0;
         });
         
-        System.out.println("Time used : " + (System.currentTimeMillis()-time));
         return everything;
         
     }

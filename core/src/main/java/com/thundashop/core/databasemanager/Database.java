@@ -577,9 +577,6 @@ public class Database extends StoreComponent {
     private void logToFile(DataCommon data) {
         try {
             StackTraceElement[] trace = Thread.currentThread().getStackTrace();
-            if(data instanceof ZwaveLockServer) {
-                System.out.println("saving zwave server");
-            }
             HashMap<String, String> methods = new HashMap();
             String simpleClassName = data.className.substring(data.className.lastIndexOf('.') + 1);
 

@@ -325,8 +325,6 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
             counter++;
             currentCounter.put(value, counter);
         }
-        
-        System.out.println(type + " : " + field + " - " + value + "(" + res + ")");
     }
 
     private Integer calculateSquareMetres(BookingItemType type) {
@@ -449,12 +447,8 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
             double totalEx = orderManager.getTotalAmountExTaxes(order);
             double totalExInStats = stats.getTotalExForOrder(order.incrementOrderId);
             double diff = totalEx-totalExInStats;
-            if(diff > 1 || diff < -1) {
-                System.out.println("Missing in order: " + order.incrementOrderId + " : " + diff);
-            }
             totalMissing += diff;
         }
-        System.out.println("Total missing: " + totalMissing);
     }
 
     @Override

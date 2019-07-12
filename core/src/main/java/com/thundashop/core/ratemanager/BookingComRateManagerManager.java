@@ -168,7 +168,6 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
         for (int i = 0; i < days; i++) {
             Date start = startcal.getTime();
             endCal.add(Calendar.DAY_OF_YEAR, 1);
-            System.out.println(start + " : " + endCal.getTime());
             for(BookingItemType tmpType : bookingEngine.getBookingItemTypes()) {
                 
                 if(types != null && !types.contains(tmpType.id)) {
@@ -312,7 +311,6 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
             toPush += "</Envelope>";
             htmlPost("https://ratemanager.booking.com/api/htng_message", toPush);
         }catch(Exception e) {
-            System.out.println(toPush);
             e.printStackTrace();
         }
         if(pushInventory) {
@@ -377,19 +375,6 @@ public class BookingComRateManagerManager extends GetShopSessionBeanNamed implem
         return result;
     }
 
-    private void prettyPrint(String toPush) throws TransformerException {
-        Source xmlInput = new StreamSource(new StringReader(toPush));
-        StringWriter stringWriter = new StringWriter();
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        Transformer transformer = transformerFactory.newTransformer();
-        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-        transformer.transform(xmlInput, new StreamResult(stringWriter));
-
-        String pretty = stringWriter.toString();
-        pretty = pretty.replace("\r\n", "\n");
-        System.out.println(pretty);
-    }
 
     private String convertDateToApi(Date rowCreatedDate) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");

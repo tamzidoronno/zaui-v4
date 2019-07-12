@@ -106,32 +106,6 @@ public class GmailQuickStart {
         
         if (response.getResultSizeEstimate() == 0)
             return;
-        
-        System.out.println("Query: " + q);
-        for (Message msg : response.getMessages()) {
-            Message message = service.users().messages().get("me", msg.getId()).setFormat("metadata").execute();
-            System.out.println("=================");
-            List headers = (List) message.getPayload().get("headers");
-            for (Object i : headers) {
-                MessagePartHeader header = (MessagePartHeader)i;
-                if (header.getName().equals("Subject")) {
-                    System.out.println("Subject: " + header.getValue());
-                }
-                if (header.getName().equals("Delivered-To")) {
-                    System.out.println("Delivered-To: " + header.getValue());
-                }
-                if (header.getName().equals("From")) {
-                    System.out.println("From: " + header.getValue());
-                }
-                if (header.getName().equals("Content-Type")) {
-                    System.out.println("Content-Type: " + header.getValue());
-                }
-                if (header.getName().equals("Content-Transfer-Encoding")) {
-                    System.out.println("Content-Transfer-Encoding: " + header.getValue());
-                }
-            }
-            System.out.println(message.getId() + " " + message.getSnippet() + " : " + message.getRaw());
-        }
     }
 
     public static void main(String... args) throws IOException, GeneralSecurityException, InterruptedException {

@@ -177,7 +177,6 @@ public class BamboraManager extends ManagerBase implements IBamboraManager  {
         Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         String toPost = gson.toJson(data);
         try {
-            System.out.println(toPost);
             String res = webManager.htmlPostBasicAuth(endpoint, toPost, true, "ISO-8859-1", tokenToUse);
             BamboraResponse gsonResp = gson.fromJson(res, BamboraResponse.class);
             return gsonResp.url;

@@ -188,8 +188,6 @@ public class SendRegningManager extends ManagerBase implements ISendRegningManag
 
     
     private String pushMessage(String url, String data, String type) {
-        System.out.println("Pushing to : " + url + " type:" + type);
-        System.out.println(data);
         Application sendRegningApp = storeApplicationPool.getApplication("e8cc6f68-d194-4820-adab-6052377b678d");
         if (sendRegningApp == null) {
             return null;

@@ -6,6 +6,7 @@
 package com.thundashop.core.accountingmanager;
 
 import com.thundashop.core.cartmanager.data.CartItem;
+import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.data.User;
@@ -46,7 +47,7 @@ class AccountingTransferOptions {
             try {
                 accountingId = new Integer(user.accountingId);
             }catch(Exception e) {
-                System.out.println("Number exception problem on user: " + user.fullName);
+                GetShopLogHandler.logPrintStatic("Number exception problem on user: " + user.fullName, user.storeId);
             }
         }
         if(accountingId >= idToUse) {

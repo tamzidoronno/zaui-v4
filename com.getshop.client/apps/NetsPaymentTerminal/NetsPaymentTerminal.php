@@ -16,7 +16,7 @@ class NetsPaymentTerminal extends \PaymentApplication implements \Application {
         echo "thundashop.common.goToPageLink('?page=payment_success');";
         echo "</script>";
     }
-
+    
     public function getName() {
         return "Payment terminal";
     }

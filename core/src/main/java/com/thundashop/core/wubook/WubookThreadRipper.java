@@ -121,7 +121,6 @@ public class WubookThreadRipper extends Thread {
             params.addElement(lcode);
             params.addElement(reservationCodes);
             Vector marked = executeClient("mark_bookings", params);       
-            System.out.println("Marked");
         }
 
     }

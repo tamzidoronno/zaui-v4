@@ -86,7 +86,6 @@ public class DirectorManager extends ManagerBase implements IDirectorManager {
         for (Company company : userManager.getAllCompanies()) {
             systemManager.getSystemsForCompany(company.id).stream()
                 .forEach(system -> {
-                    System.out.println("Syncing system " + system.id + ", for company: " + company.name);
                     try {
                         systemManager.syncSystem(system.id);
                     } catch (Exception ex) {

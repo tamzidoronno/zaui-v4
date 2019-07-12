@@ -13,6 +13,7 @@ import com.thundashop.core.storemanager.data.Store;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,6 +26,7 @@ import java.util.UUID;
 public class StorePool {
     private HashMap<String, StoreHandler> storeHandlers = new HashMap();
     private com.thundashop.core.storemanager.StorePool storePool;
+    private Date lastTimePrintedTimeStampToLog = null;
     
     public StorePool() {
         if (AppContext.appContext != null) {
@@ -125,6 +127,22 @@ public class StorePool {
 
         JsonObject2 object = null;
         
+        
+        if(lastTimePrintedTimeStampToLog == null) {
+            System.out.println("####################################################################################################################################");
+            System.out.println("####################################################  " + new Date() + "  ################################################");
+            System.out.println("####################################################################################################################################");
+            lastTimePrintedTimeStampToLog = new Date();
+        } else {
+            long diff = System.currentTimeMillis() - lastTimePrintedTimeStampToLog.getTime();
+            if(diff > (1000*60*5)) {
+                System.out.println("####################################################################################################################################");
+                System.out.println("####################################################  " + new Date() + "  ################################################");
+                System.out.println("####################################################################################################################################");
+                lastTimePrintedTimeStampToLog = new Date();
+            }
+        }
+        
         try {
             object = gson.fromJson(message, type);
             object.addr = addr;
@@ -154,7 +172,6 @@ public class StorePool {
                 Object argument = useGson.fromJson(object.args.get(parameter), casttypes[i]);
                 executeArgs[i] = argument;
             } catch (Exception e) {
-                e.printStackTrace();
                 GetShopLogHandler.logPrintStatic("Cast type: " + casttypes[i], null);
                 GetShopLogHandler.logPrintStatic("From json param: " + object.args.get(parameter), null);
                 GetShopLogHandler.logPrintStatic("From json paramValue: " + object.args.get(parameter), null);
@@ -216,14 +233,23 @@ public class StorePool {
             Method method = getMethodToExecute(aClass, object.method, types, argumentValues);
             method = getCorrectMethod(method);
             
-            if ((aClass != null && method != null) && (method.getAnnotation(GetShopNotSynchronized.class) != null || method.getAnnotation(ForceAsync.class) != null)) {
-                if (method.getAnnotation(GetShopNotSynchronized.class) != null && aClass.getAnnotation(GetShopSession.class) != null) {
-                    throw new RuntimeException("@GetShopNotSynchronized can not be used on components that is scoped with @GetShopSession");
+            try {
+                try {
+                    if ((aClass != null && method != null) && (method.getAnnotation(GetShopNotSynchronized.class) != null || method.getAnnotation(ForceAsync.class) != null)) {
+                        if (method.getAnnotation(GetShopNotSynchronized.class) != null && aClass.getAnnotation(GetShopSession.class) != null) {
+                            throw new RuntimeException("@GetShopNotSynchronized can not be used on components that is scoped with @GetShopSession");
+                        }
+                        res = handler.executeMethod(object, types, argumentValues, false);
+                    } else {
+                        res = handler.executeMethodSync(object, types, argumentValues);
+                    }
+                }catch(Exception x) {
+                    GetShopLogHandler.logPrintStatic("Exception: " + x.getMessage(), handler.getStoreId());
+                    throw x;
                 }
-                
-                res = handler.executeMethod(object, types, argumentValues, false);
-            } else {
-                res = handler.executeMethodSync(object, types, argumentValues);
+            }catch(ErrorException x) {
+                GetShopLogHandler.logPrintStatic("Error exception: " + x.getMessage(), handler.getStoreId());
+                throw x;
             }
         }
         

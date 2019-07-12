@@ -192,7 +192,7 @@ public class TicketManager extends ManagerBase implements ITicketManager {
     
         Date lastDateOfPreviousMonth = aCalendar.getTime();
         
-        System.out.println(lastDateOfPreviousMonth);
+        logPrint(lastDateOfPreviousMonth);
     
         
         return lastDateOfPreviousMonth;

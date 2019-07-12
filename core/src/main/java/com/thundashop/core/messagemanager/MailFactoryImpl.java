@@ -317,8 +317,7 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
                 break;
             } catch (Exception ex) {
                 updateMailStatus("failed");
-                logger.error(this, "Was not able to send email on try: " + i + "( message: " + from + " - " + to + " " + subject + content + "");
-                ex.printStackTrace();
+                GetShopLogHandler.logPrintStatic("Was not able to send email on try: " + i + "( message: " + from + " - " + to + " " + subject + content + "", storeId);
             }
             try {
                 Thread.sleep(1000);
@@ -327,7 +326,7 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
             }
         }
         if(!delivered) {
-            logger.error(this, "Giving up sending email to -> message: " + from + " - " + to + " " + subject + content + "");
+            GetShopLogHandler.logPrintStatic("Giving up sending email to -> message: " + from + " - " + to + " " + subject + content + "", storeId);
             try {
                 message.setSubject("Failed on: " + subject);
             }catch(Exception e) {

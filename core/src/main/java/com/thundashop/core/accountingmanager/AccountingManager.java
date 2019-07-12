@@ -956,9 +956,6 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
         if(transfer instanceof AccountingTransferOptions) {
             AccountingTransferOptions toCheck = (AccountingTransferOptions)transfer;
             this.logEntries = toCheck.logEntries;
-            for(String text : toCheck.logEntries) {
-                System.out.println(text);
-            }
         }
 
         
@@ -1152,7 +1149,6 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
 //        cal2.set(Calendar.SECOND,59);
 //        Date createdUntil = cal2.getTime();
         
-        System.out.println("Created until:" + createdUntil);
        
         for(SavedOrderFile file : files.values()) {
             Date dateToCheck = file.rowCreatedDate;
@@ -1161,7 +1157,6 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
             }
 //            if(dateToCheck.before(createdFrom)) { continue;}
 //            if(dateToCheck.after(createdUntil)) { continue; }
-            System.out.println(dateToCheck);
             
             for(String orderId : file.orders) {
                 Order ord = orderManager.getOrderSecure(orderId);
@@ -1169,7 +1164,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
                     ord.transferredToAccountingSystem = false;
                     orderManager.saveOrder(ord);
                 } else {
-                    System.out.println("FAiled to find order: " + orderId);
+                    logPrint("FAiled to find order: " + orderId);
                 }
             }
             

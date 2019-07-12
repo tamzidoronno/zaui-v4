@@ -243,16 +243,6 @@ public class ScormManager extends ManagerBase implements IScormManager {
         
         return false;
         
-//        Scorm res = scorms.values().stream()
-//                .filter(o -> o.scormId.equals(scormPackage.id) && o.userId.equals(userId))
-//                .filter(o -> !o.isPartOfOtherGroupScormPackages(packages.values()))
-//                .findFirst()
-//                .orElse(null);
-//        
-//        System.out.println(res);
-//        
-//        return res != null;
-        
     }
 
     @Override

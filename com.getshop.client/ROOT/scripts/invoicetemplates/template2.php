@@ -2,6 +2,9 @@
 /* @var $order \core_ordermanager_data_Order */
 /* @var $accountingDetails \core_productmanager_data_AccountingDetail */
 include 'InvoiceTemplateTranslator.php';
+if(file_exists("../../../classes/CountryCodes.php")) {
+    include '../../../classes/CountryCodes.php';
+}
 
 function file_get_contents_utf8($fn) {
      $content = file_get_contents($fn);
@@ -174,9 +177,14 @@ $isInvoice = $order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200
         ?>
 
         <div class='row'>
-            <div class='col col1'><? echo $translator->translate("Currency"); ?></div>
-            <div class='col col2 bold' style='color: green;'><? echo $translator->getCurrencyDisplayText(); ?></div>
-            <div class='col col3'></div>
+            <div class='col col1'><? 
+            if(isset($order->cart->address->countrycode)) {
+                $ccodes = \CountryCodes::getCodes();
+                echo $ccodes[$order->cart->address->countrycode];
+            }
+            ?></div>
+            <div class='col col2 bold' style='color: green;'><? echo $translator->translate("Currency"); ?></div>
+            <div class='col col3'><? echo $translator->getCurrencyDisplayText(); ?></div>
         </div>
     </div>
 

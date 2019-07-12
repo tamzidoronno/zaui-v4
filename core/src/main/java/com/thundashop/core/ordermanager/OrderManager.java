@@ -1566,7 +1566,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 
                         
                 if(!frameworkConfig.productionMode) {
-                    System.out.println("Tried autopay with card: " + card.savedByVendor + " - " + card.mask);
+                    logPrint("Tried autopay with card: " + card.savedByVendor + " - " + card.mask);
                     continue;
                 }
 
@@ -1606,9 +1606,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     private boolean orderNeedAutoPay(Order order, int daysToTryAfterOrderHasStarted) {
-        if(order.id.equals("2c5a3e97-53e2-4ad1-9cc5-f399770716fb")) {
-            System.out.println("yes");
-        }
         if(order == null || order.cart == null) {
             return false;
         }
@@ -2387,7 +2384,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 int month = cal.get(Calendar.MONTH);
                 int day = cal.get(Calendar.DAY_OF_MONTH);
                 if(month == 2 && year == 2018 && day == 1) {
-                    System.out.println(ord.rowCreatedDate + " : " + ord.chargeAfterDate + " : " + day + "." + month+"."+year);
+                    logPrint(ord.rowCreatedDate + " : " + ord.chargeAfterDate + " : " + day + "." + month+"."+year);
                     cal.set(Calendar.MONTH, 1);
                     ord.chargeAfterDate = cal.getTime();
                     saveObject(ord);
@@ -2994,7 +2991,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 List<DataCommon> datas = database.query("OrderManager", storeId, query);
                 datas.stream().forEach(o -> {
                     resetFreePostsEntries(o);
-                    System.out.println("Deleted report");
+                    logPrint("Deleted report");
                     deleteObject(o);
                 });
             }
@@ -3175,6 +3172,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             throw new ErrorException(1053);
         }
         
+        if(order.isAlreadyPaidAndDifferentStatus(oldOrder)) {
+            messageManager.sendErrorNotification("Tried to revert an order with a different payment status, incid: " + order.incrementOrderId, null);
+            resetOrder(oldOrder, order);
+            throw new ErrorException(1063);
+        }
+        
         if (order.needToStopDueToIllegalChangeInAddons(oldOrder, closedDate) && !order.forcedOpen) {
             resetOrder(oldOrder, order);
             throw new ErrorException(1053);
@@ -3319,14 +3322,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
                 boolean orderExists = isThereOrderCreatedBasedOnOrder(orderId);
                 if (orderExists) {
-                    System.out.println("There are orders for the id: " + orderId + " but have multiple creditted orders? : orderid: " + getOrder(orderId).incrementOrderId);
+                    logPrint("There are orders for the id: " + orderId + " but have multiple creditted orders? : orderid: " + getOrder(orderId).incrementOrderId);
                     groupedOrders.get(orderId).stream()
                         .forEach(i -> {
-                            System.out.println("  - Creditnoteid: " + i.incrementOrderId);
+                            logPrint("  - Creditnoteid: " + i.incrementOrderId);
                         });
                 }
                 
-                System.out.println("Found a bit of a problem: " + groupedOrders.get(orderId).size());
+                logPrint("Found a bit of a problem: " + groupedOrders.get(orderId).size());
                 boolean first = false;
                 List<Order> retOrders = groupedOrders.get(orderId);
                 

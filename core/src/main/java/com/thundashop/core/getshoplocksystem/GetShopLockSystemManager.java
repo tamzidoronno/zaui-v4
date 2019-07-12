@@ -775,10 +775,6 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
                 continue;
             }
             
-            for(MasterUserSlot tmp : group.getGroupLockCodes().values()) {
-                System.out.println(tmp.code.pinCode);
-            }
-            
             List<MasterUserSlot> add = group.getGroupLockCodes().values()
                     .stream()
                     .filter(masterSlot -> masterSlot.takenInUseDate != null || group.isVirtual)
@@ -808,7 +804,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
                 int check = groupCodeSize;
 
                 if (lockGroup.code != null && (lockGroup.code.getCodeLength() != codeSize || lockGroup.code.getCodeLength() != check)) {
-                    System.out.println("A invalid code");
+                    logPrint("A invalid code");
                     renewCodeForSlot(group.id, lockGroup.slotId);
                 }
             });
@@ -919,7 +915,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
                 MasterUserSlot masterUserSlot = connectedToLockGroup.getGroupLockCodes().get(slotId);
                 for (UserSlot subSlot : masterUserSlot.subSlots) {
                     if (subSlot.slotId == history.userSlot && subSlot.connectedToLockId.equals(history.lockId)) {
-                        System.out.println("Got match on " + masterUserSlot.slotId + " | " + connectedToLockGroup.name);
+                        logPrint("Got match on " + masterUserSlot.slotId + " | " + connectedToLockGroup.name);
                         return getNameForLastUserWithAccessTo(connectedToLockGroup.id, slotId, history.accessTime);
                     }
                 }

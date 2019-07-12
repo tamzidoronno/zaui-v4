@@ -47,7 +47,7 @@ public class PrintManager extends ManagerBase implements IPrintManager {
     
     public synchronized void addPrintJob(PrintJob printJob) {
         if (!frameworkConfig.productionMode) {
-            System.out.println(printJob.content.replace("\\n", "\n"));
+            logPrint(printJob.content.replace("\\n", "\n"));
             return;
         }
         

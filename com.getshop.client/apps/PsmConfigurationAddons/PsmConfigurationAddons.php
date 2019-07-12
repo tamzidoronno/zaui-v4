@@ -35,10 +35,8 @@ class PsmConfigurationAddons extends \WebshopApplication implements \Application
         $bookings = $this->getApi()->getPmsManager()->getAllBookings($this->getSelectedMultilevelDomainName(), null);
         foreach($bookings as $booking) {
             foreach($booking->rooms as $room) {
-                if($this->hasAddon($productId, $room)) {
-                    $this->getApi()->getPmsManager()->addAddonsToBooking($this->getSelectedMultilevelDomainName(), $addonToAdd->addonType, $room->pmsBookingRoomId, true);
-                    $this->getApi()->getPmsManager()->addAddonsToBooking($this->getSelectedMultilevelDomainName(), $addonToAdd->addonType, $room->pmsBookingRoomId, false);
-                }
+                $this->getApi()->getPmsManager()->addAddonsToBooking($this->getSelectedMultilevelDomainName(), $addonToAdd->addonType, $room->pmsBookingRoomId, true);
+                $this->getApi()->getPmsManager()->addAddonsToBooking($this->getSelectedMultilevelDomainName(), $addonToAdd->addonType, $room->pmsBookingRoomId, false);
             }
         }
     }

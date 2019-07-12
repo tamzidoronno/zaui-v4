@@ -121,7 +121,6 @@ public class ESAReport {
             FileOutputStream out = new FileOutputStream(new File("/tmp/tmp_esa_report.xlsx"));
             workbook.write(out);
             out.close();
-            System.out.println("Excel written successfully..");
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();

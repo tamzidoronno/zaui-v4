@@ -47,12 +47,18 @@ foreach ($cartItems as $item) {
         $room = $item->product->additionalMetaData;
     }
     
+    $originalProduct = $this->getApi()->getProductManager()->getProduct($item->product->id);
     ?>
     <div class="cartitem open" style='<?php echo $displayStyle; ?>' cartitemid='<? echo $item->cartItemId; ?>'>
         
         <div class="col startdate"><input class="gsniceinput1 startdate" value="<? echo $start; ?>"  <?php echo $disabled; ?>/></div>
         <div class="col enddate"><input class="gsniceinput1 enddate" value="<? echo $end; ?>" <?php echo $disabled; ?>/></div>
-        <div class="col product_desc"><input class="gsniceinput1 product_desc" value="<? echo $product->name; ?>" <?php echo $disabled; ?>/></div>
+        <div class="col product_desc"><input class="gsniceinput1 product_desc" value="<? echo $product->name; 
+            if ($originalProduct && $originalProduct->name != $product->name) {
+                echo " ( Org. prod: ".$originalProduct->name." )";
+            }
+        ?>" <?php echo $disabled; ?>/>
+        </div>
         <div class="col additionalMetaData"><input class="gsniceinput1 additionalMetaData" value="<? echo $room; ?>" <?php echo $disabled; ?>/></div>
         <div class="col metaData"><input class="gsniceinput1 metaData" value="<? echo $item->product->metaData; ?>" <?php echo $disabled; ?>/></div>
         <div class="col count"><input class="gsniceinput1 count" value="<? echo $item->count; ?>" <?php echo $disabledCountAndPrice; ?> <?php echo $disabled; ?>/></div>

@@ -11,6 +11,8 @@ import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.socket.WebSocketServerImpl;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.data.SettingsRow;
+import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.User;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -38,6 +40,9 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
     
     @Autowired
     StoreApplicationPool storeApplicationPool;
+    
+    @Autowired
+    UserManager userManager;
     
     private Order orderToPay;
 
@@ -204,7 +209,24 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
                 logPrint("Total amount to mark as paid: " + paidAmount);
                 try {
                     try {
+                        boolean startedImpersonation = false;
+                        
+                        // Start impersonation
+                        if (getSession().currentUser == null) {
+                            User user = userManager.getInternalApiUser();
+                            userManager.startImpersonationUnsecure(user.id);
+                            getSession().currentUser = user;
+                            startedImpersonation = true;
+                        }
+                        
                         orderManager.markAsPaid(orderToPay.id, new Date(), paidAmount);
+                        
+                        // Stop impersonation
+                        if (startedImpersonation) {
+                            userManager.cancelImpersonating();
+                            getSession().currentUser = null;
+                        }
+                        
                     }catch(Exception a) {
                         logPrint("Exception occured: " + a.getMessage());
                         logPrintException(a);

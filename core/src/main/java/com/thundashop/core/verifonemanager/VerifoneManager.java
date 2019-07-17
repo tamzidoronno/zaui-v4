@@ -211,20 +211,31 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
                     try {
                         boolean startedImpersonation = false;
                         
-                        // Start impersonation
-                        if (getSession().currentUser == null) {
-                            User user = userManager.getInternalApiUser();
-                            userManager.startImpersonationUnsecure(user.id);
-                            getSession().currentUser = user;
-                            startedImpersonation = true;
+                        try {
+                            // Start impersonation
+                            if (getSession().currentUser == null) {
+                                User user = userManager.getInternalApiUser();
+                                userManager.startImpersonationUnsecure(user.id);
+                                getSession().currentUser = user;
+                                startedImpersonation = true;
+                            }
+                        } catch (Exception ex) {
+                            // This one should never happen, can be removed once securly made sure that it doesnt happen as its hard to test.
+                            ex.printStackTrace();
                         }
                         
                         orderManager.markAsPaid(orderToPay.id, new Date(), paidAmount);
                         
-                        // Stop impersonation
-                        if (startedImpersonation) {
-                            userManager.cancelImpersonating();
-                            getSession().currentUser = null;
+                        
+                        try {
+                            // Stop impersonation
+                            if (startedImpersonation) {
+                                userManager.cancelImpersonating();
+                                getSession().currentUser = null;
+                            }
+                        } catch (Exception ex) {
+                            // This one should never happen, can be removed once securly made sure that it doesnt happen as its hard to test.
+                            ex.printStackTrace();
                         }
                         
                     }catch(Exception a) {

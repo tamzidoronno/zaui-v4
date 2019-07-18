@@ -209,33 +209,12 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
                 logPrint("Total amount to mark as paid: " + paidAmount);
                 try {
                     try {
-                        boolean startedImpersonation = false;
-                        
-                        try {
-                            // Start impersonation
-                            if (getSession().currentUser == null) {
-                                User user = userManager.getInternalApiUser();
-                                userManager.startImpersonationUnsecure(user.id);
-                                getSession().currentUser = user;
-                                startedImpersonation = true;
-                            }
-                        } catch (Exception ex) {
-                            // This one should never happen, can be removed once securly made sure that it doesnt happen as its hard to test.
-                            ex.printStackTrace();
-                        }
+                        boolean startedImpersonation = startImpersonationOfSystemScheduler();
                         
                         orderManager.markAsPaid(orderToPay.id, new Date(), paidAmount);
                         
-                        
-                        try {
-                            // Stop impersonation
-                            if (startedImpersonation) {
-                                userManager.cancelImpersonating();
-                                getSession().currentUser = null;
-                            }
-                        } catch (Exception ex) {
-                            // This one should never happen, can be removed once securly made sure that it doesnt happen as its hard to test.
-                            ex.printStackTrace();
+                        if (startedImpersonation) {
+                            stopImpersonation();
                         }
                         
                     }catch(Exception a) {
@@ -258,6 +237,33 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
         }
         saveOrderSomeHow(orderToPay);
         orderToPay = null;
+    }
+
+    private void stopImpersonation() {
+        try {
+            userManager.cancelImpersonating();
+            getSession().currentUser = null;
+        } catch (Exception ex) {
+            // This one should never happen, can be removed once securly made sure that it doesnt happen as its hard to test.
+            ex.printStackTrace();
+        }
+    }
+
+    private boolean startImpersonationOfSystemScheduler() {
+        boolean startedImpersonation = false;
+        try {
+            // Start impersonation
+            if (getSession().currentUser == null) {
+                User user = userManager.getInternalApiUser();
+                userManager.startImpersonationUnsecure(user.id);
+                getSession().currentUser = user;
+                startedImpersonation = true;
+            }
+        } catch (Exception ex) {
+            // This one should never happen, can be removed once securly made sure that it doesnt happen as its hard to test.
+            ex.printStackTrace();
+        }
+        return startedImpersonation;
     }
     
     private void saveOrderSomeHow(Order orderToPay) {

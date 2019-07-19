@@ -51,6 +51,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -67,6 +68,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
+import org.apache.commons.lang3.SerializationUtils;
 import org.mongodb.morphia.Morphia;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -458,9 +460,9 @@ public class GetShop extends ManagerBase implements IGetShop {
         return newStoreId;
     }
 
-    public HashMap<Credentials, List<DataCommon>> copyData(String originalStoreId, String newAddress, StartData start, String newStoreId) throws UnknownHostException {
+    public HashMap<Credentials, List<byte[]>> copyData(String originalStoreId, String newAddress, StartData start, String newStoreId) throws UnknownHostException {
         
-        HashMap<Credentials, List<DataCommon>> dataCopied = new HashMap<Credentials, List<DataCommon>>();
+        HashMap<Credentials, List<byte[]>> dataCopied = new HashMap<Credentials, List<byte[]>>();
         
         Mongo m = new MongoClient("localhost", Database.mongoPort);
 
@@ -480,7 +482,7 @@ public class GetShop extends ManagerBase implements IGetShop {
             cred.password =  newStoreId;
             cred.storeid = newStoreId;
             
-            List<DataCommon> retData = new ArrayList();
+            List<byte[]> retData = new ArrayList();
             
             while (collections.hasNext()) {
                 DBObject data = collections.next();
@@ -513,11 +515,14 @@ public class GetShop extends ManagerBase implements IGetShop {
                     store.expiryDate = cal.getTime();
                     store.rowCreatedDate = new Date();
                     store.additionalDomainNames = new ArrayList();
-                    retData.add(store);
+                    byte[] toAdd = SerializationUtils.serialize(store);
+                    retData.add(toAdd);
                 } else {
-                    retData.add(dataCommon);
+                    byte[] toAdd = SerializationUtils.serialize(dataCommon);
+                    retData.add(toAdd);
                 }
             }
+            
             
             dataCopied.put(cred, retData);
         }
@@ -833,7 +838,7 @@ public class GetShop extends ManagerBase implements IGetShop {
         try {
             // 7d89917f-c2de-4108-a9d6-33ba78f62c16 = http://bookingtemplate.getshop.com
             String newStoreId = UUID.randomUUID().toString();
-            HashMap<Credentials, List<DataCommon>> copiedDataObjects = copyData("7d89917f-c2de-4108-a9d6-33ba78f62c16", newAddress, startData, newStoreId);
+            HashMap<Credentials, List<byte[]>> copiedDataObjects = copyData("7d89917f-c2de-4108-a9d6-33ba78f62c16", newAddress, startData, newStoreId);
 //            String newStoreId = copyStore("7d89917f-c2de-4108-a9d6-33ba78f62c16", newAddress, startData);
 
             if (startData.cluster == 0) {
@@ -841,7 +846,7 @@ public class GetShop extends ManagerBase implements IGetShop {
             } else {
                 
                 try {
-                    GetShopApi remoteApi = new GetShopApi(25554, "10.0."+startData.cluster+".33", UUID.randomUUID().toString(), newAddress);
+                    GetShopApi remoteApi = new GetShopApi(25554, "10.0."+startData.cluster+".33", UUID.randomUUID().toString(), "1gc"+startData.cluster+".getshop.com");
 //                    remoteApi.getGetShop().insertNewStore("02983ukjauhsfi8o723h4okiql23h4ro8a9sdhfiq234h90182744hgq2wirh128341234", newAddress, copiedDataObjects, newStoreId, startData);
                 } catch (Exception ex) {
                     Logger.getLogger(GetShop.class.getName()).log(Level.SEVERE, null, ex);
@@ -1026,7 +1031,7 @@ public class GetShop extends ManagerBase implements IGetShop {
     }
 
     @Override
-    public void insertNewStore(String password, String newAddress, HashMap<Credentials, List<DataCommon>> copiedDataObjects, String newStoreId, StartData startData) {
+    public void insertNewStore(String password, String newAddress, HashMap<Credentials, List<byte[]>> copiedDataObjects, String newStoreId, StartData startData) {
         if (!password.equals("02983ukjauhsfi8o723h4okiql23h4ro8a9sdhfiq234h90182744hgq2wirh128341234")) {
             return;
         }
@@ -1087,7 +1092,7 @@ public class GetShop extends ManagerBase implements IGetShop {
             start.start();
     }
 
-    private void saveAllStoreData(HashMap<Credentials, List<DataCommon>> copiedDataObjects, String newStoreId) {
+    private void saveAllStoreData(HashMap<Credentials, List<byte[]>> copiedDataObjects, String newStoreId) {
         for (Credentials cred : copiedDataObjects.keySet()) {
             if (cred.storeid == null || !cred.storeid.equals(newStoreId)) {
                 throw new ErrorException(26);
@@ -1095,7 +1100,8 @@ public class GetShop extends ManagerBase implements IGetShop {
         }
         
         for (Credentials cred : copiedDataObjects.keySet()) {
-            for (DataCommon data : copiedDataObjects.get(cred)) {
+            for (byte[] datas : copiedDataObjects.get(cred)) {
+                DataCommon data = SerializationUtils.deserialize(datas);
                 database.save(data, cred);
             }
         }

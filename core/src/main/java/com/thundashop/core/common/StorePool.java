@@ -390,6 +390,12 @@ public class StorePool {
             }
         }
         
+        if (object.interfaceName != null && object.interfaceName.equals("core.getshop.IGetShop")) {
+            if (object.method != null && object.method.equals("insertNewStore")) {
+                return true;
+            }
+        }
+        
         return false;
     }
 }

@@ -17,5 +17,5 @@ import java.util.List;
  */
 public class StoreData {
     public Credentials credentials;
-    public List<DataCommon> dbObjects = new ArrayList();
+    public List<String> dbObjects = new ArrayList();
 }

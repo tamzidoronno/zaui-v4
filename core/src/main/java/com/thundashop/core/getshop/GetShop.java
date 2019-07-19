@@ -472,6 +472,8 @@ public class GetShop extends ManagerBase implements IGetShop {
         
         Mongo m = new MongoClient("localhost", Database.mongoPort);
 
+        Gson gson = getGson();
+        
         for (String databaseName : m.getDatabaseNames()) {
             if (databaseName.equals("LoggerManager") || databaseName.equals("UserManager")) {
                 continue;
@@ -485,8 +487,8 @@ public class GetShop extends ManagerBase implements IGetShop {
 
             Credentials cred = new Credentials(null);
             cred.manangerName = databaseName;
-            cred.password =  newStoreId;
-            cred.storeid = newStoreId;
+            cred.password =  newStoreIdi;
+            cred.storeid = newStoreIdi;
             
             StoreData storeData = new StoreData();
             storeData.credentials = cred;
@@ -528,12 +530,11 @@ public class GetShop extends ManagerBase implements IGetShop {
                     store.expiryDate = cal.getTime();
                     store.rowCreatedDate = new Date();
                     store.additionalDomainNames = new ArrayList();
-                    storeData.dbObjects.add(store);
+                    storeData.dbObjects.add(gson.toJson(store));
                 } else {
-                    storeData.dbObjects.add(dataCommon);
+                    storeData.dbObjects.add(gson.toJson(dataCommon));
                 }
             }
-            
             
             dataCopied.add(storeData);
         }
@@ -857,8 +858,8 @@ public class GetShop extends ManagerBase implements IGetShop {
             } else {
                 
                 try {
-                    GetShopApi remoteApi = new GetShopApi(25554, "10.0."+startData.cluster+".33", UUID.randomUUID().toString(), "1gc"+startData.cluster+".getshop.com");
-//                    GetShopApi remoteApi = new GetShopApi(25554, "localhost", UUID.randomUUID().toString(), "no.3.0.local.getshop.com");
+//                    GetShopApi remoteApi = new GetShopApi(25554, "10.0."+startData.cluster+".33", UUID.randomUUID().toString(), "1gc"+startData.cluster+".getshop.com");
+                    GetShopApi remoteApi = new GetShopApi(25554, "localhost", UUID.randomUUID().toString(), "no.3.0.local.getshop.com");
                     remoteApi.getGetShop().insertNewStore("02983ukjauhsfi8o723h4okiql23h4ro8a9sdhfiq234h90182744hgq2wirh128341234", newAddress, copiedDataObjects, newStoreId, startData);
                 } catch (Exception ex) {
                     Logger.getLogger(GetShop.class.getName()).log(Level.SEVERE, null, ex);
@@ -1120,6 +1121,9 @@ public class GetShop extends ManagerBase implements IGetShop {
         
         for (StoreData storeData : storeDatas) {
             Credentials cred = storeData.credentials;
+            if (cred.manangerName.equals("StoreManager") && cred.storeid.equals("all"))
+                continue;
+            
             if (cred.storeid == null || !cred.storeid.equals(newStoreId)) {
                 throw new ErrorException(26);
             }
@@ -1132,19 +1136,28 @@ public class GetShop extends ManagerBase implements IGetShop {
         
         for (StoreData storeData : storeDatas) {
             Credentials cred = storeData.credentials;
-            List<DataCommon> dbCommons = storeData.dbObjects;
+            List<String> dbCommons = storeData.dbObjects;
                     
-            for (DataCommon data : dbCommons) {
-                if (data instanceof Store) {
-                    Store check = (Store)data;
-                    if (check.id == null || !check.id.equals(newStoreId)) {
-                        throw new ErrorException(26);
+            for (String dataJson : dbCommons) {
+                DataCommon lightData = gson.fromJson(dataJson, DataCommon.class);
+
+                try {
+                    Class res = Class.forName(lightData.className);
+                    DataCommon data = (DataCommon) gson.fromJson(dataJson, res);
+                    
+                    if (data instanceof Store) {
+                        if (data.id.equals(newStoreId)) {
+                            data.id = newStoreId;
+                        }
+                    } else {
+                        data.storeId = newStoreId;
                     }
-                } else {
-                    data.storeId = newStoreId;
+
+                    database.save(data, cred);
+                } catch (ClassNotFoundException ex) {
+                    logPrint("Failed to transfer data as there are missing classes, please check that the system is up to date with system.getshop.com");
                 }
                 
-                database.save(data, cred);
             }
         }
     }

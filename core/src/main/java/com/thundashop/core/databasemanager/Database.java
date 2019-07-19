@@ -498,6 +498,10 @@ public class Database extends StoreComponent {
 
         addDataCommonToDatabase(data, credentials);
     }
+    
+    public void saveDirect(DBObject dbObject, Credentials credentials) {
+        mongo.getDB(credentials.manangerName).getCollection(collectionPrefix + credentials.storeid).save(dbObject);
+    }
 
     private void logSavedMessge(DataCommon newObject, String database, String collection) {
         String userId = "";

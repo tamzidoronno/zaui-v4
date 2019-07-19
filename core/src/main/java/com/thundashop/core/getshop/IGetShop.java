@@ -1,5 +1,6 @@
 package com.thundashop.core.getshop;
 
+import com.mongodb.DBObject;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
@@ -114,7 +115,7 @@ public interface IGetShop {
     
     public String startStoreFromStore(StartData startData);
    
-    public void insertNewStore(String password, String newAddress, HashMap<Credentials,List<byte[]>> copiedDataObjects, String newStoreId, StartData startData);
+    public void insertNewStore(String password, String newAddress, HashMap<Credentials,List<DBObject>> copiedDataObjects, String newStoreId, StartData startData);
     
     @GetShopNotSynchronized
     public String getBase64EncodedPDFWebPage(String urlToPage);

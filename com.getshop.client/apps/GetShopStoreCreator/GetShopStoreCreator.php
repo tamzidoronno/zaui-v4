@@ -98,7 +98,7 @@ class GetShopStoreCreator extends \MarketingApplication implements \Application 
         $startData->currency = $_POST['data']['currency'];
         $startData->country = $_POST['data']['country'];
         $startData->timeZone = $_POST['data']['timezone'];
-        $startData->cluster = 6;
+        $startData->cluster = 0;
         $this->getApi()->getGetShop()->createNewStore($startData);
     }
     

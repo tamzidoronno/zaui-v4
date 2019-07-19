@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.pmsmanager;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,6 @@ import java.util.List;
  *
  * @author ktonder
  */
-public class GroupAddonSettings {
+public class GroupAddonSettings implements Serializable {
     public List<String> groupProductIds = new ArrayList();
 }

@@ -5,13 +5,14 @@
  */
 package com.thundashop.core.productmanager.data;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  *
  * @author ktonder
  */
-public class ProductAccountingInformation {
+public class ProductAccountingInformation implements Serializable {
     public String accountingNumber = "";
     public Integer taxGroupNumber;
     public String id = UUID.randomUUID().toString();

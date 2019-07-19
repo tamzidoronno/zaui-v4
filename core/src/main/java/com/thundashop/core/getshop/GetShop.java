@@ -847,7 +847,7 @@ public class GetShop extends ManagerBase implements IGetShop {
                 
                 try {
                     GetShopApi remoteApi = new GetShopApi(25554, "10.0."+startData.cluster+".33", UUID.randomUUID().toString(), "1gc"+startData.cluster+".getshop.com");
-//                    remoteApi.getGetShop().insertNewStore("02983ukjauhsfi8o723h4okiql23h4ro8a9sdhfiq234h90182744hgq2wirh128341234", newAddress, copiedDataObjects, newStoreId, startData);
+                    remoteApi.getGetShop().insertNewStore("02983ukjauhsfi8o723h4okiql23h4ro8a9sdhfiq234h90182744hgq2wirh128341234", newAddress, copiedDataObjects, newStoreId, startData);
                 } catch (Exception ex) {
                     Logger.getLogger(GetShop.class.getName()).log(Level.SEVERE, null, ex);
                 }

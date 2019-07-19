@@ -2,8 +2,10 @@ package com.thundashop.core.getshop;
 
 import com.braintreegateway.org.apache.commons.codec.binary.Base64;
 import com.getshop.javaapi.GetShopApi;
+import com.getshop.scope.GetShopSchedulerBase;
 import com.getshop.scope.GetShopSessionScope;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -12,10 +14,12 @@ import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 import com.thundashop.core.applications.StoreApplicationPool;
+import com.thundashop.core.common.AnnotationExclusionStrategy;
 import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FrameworkConfig;
+import com.thundashop.core.common.GetShopScheduler;
 import com.thundashop.core.common.JsonObject2;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.Setting;
@@ -38,6 +42,7 @@ import com.thundashop.core.mecamanager.MecaManager;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.pdf.InvoiceManager;
+import com.thundashop.core.socket.GsonUTCDateAdapter;
 import com.thundashop.core.start.Runner;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.StorePool;
@@ -461,9 +466,9 @@ public class GetShop extends ManagerBase implements IGetShop {
         return newStoreId;
     }
 
-    public HashMap<Credentials, List<BasicDBObject>> copyData(String originalStoreId, String newAddress, StartData start, String newStoreId) throws UnknownHostException {
+    public List<StoreData> copyData(String originalStoreId, String newAddress, StartData start, String newStoreId) throws UnknownHostException {
         
-        HashMap<Credentials, List<BasicDBObject>> dataCopied = new HashMap<Credentials, List<BasicDBObject>>();
+        List<StoreData> dataCopied = new ArrayList();
         
         Mongo m = new MongoClient("localhost", Database.mongoPort);
 
@@ -483,7 +488,9 @@ public class GetShop extends ManagerBase implements IGetShop {
             cred.password =  newStoreId;
             cred.storeid = newStoreId;
             
-            List<BasicDBObject> retData = new ArrayList();
+            StoreData storeData = new StoreData();
+            storeData.credentials = cred;
+            storeData.dbObjects = new ArrayList();
             
             while (collections.hasNext()) {
                 BasicDBObject data = (BasicDBObject)collections.next();
@@ -491,6 +498,11 @@ public class GetShop extends ManagerBase implements IGetShop {
                 morphia.map(DataCommon.class);
                 DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, data);
                 dataCommon.storeId = newStoreId;
+                
+                // Need to figure out a different way of creating the schedulers.
+                if (dataCommon instanceof GetShopScheduler) {
+                    continue;
+                }
                 
                 if (dataCommon instanceof Store) {
                     Store store = (Store)dataCommon;
@@ -516,15 +528,14 @@ public class GetShop extends ManagerBase implements IGetShop {
                     store.expiryDate = cal.getTime();
                     store.rowCreatedDate = new Date();
                     store.additionalDomainNames = new ArrayList();
-                    BasicDBObject toAdd = (BasicDBObject)morphia.toDBObject(store);
-                    retData.add(toAdd);
+                    storeData.dbObjects.add(store);
                 } else {
-                    retData.add(data);
+                    storeData.dbObjects.add(dataCommon);
                 }
             }
             
             
-            dataCopied.put(cred, retData);
+            dataCopied.add(storeData);
         }
         
         m.close();
@@ -838,7 +849,7 @@ public class GetShop extends ManagerBase implements IGetShop {
         try {
             // 7d89917f-c2de-4108-a9d6-33ba78f62c16 = http://bookingtemplate.getshop.com
             String newStoreId = UUID.randomUUID().toString();
-            HashMap<Credentials, List<BasicDBObject>> copiedDataObjects = copyData("7d89917f-c2de-4108-a9d6-33ba78f62c16", newAddress, startData, newStoreId);
+            List<StoreData> copiedDataObjects = copyData("7d89917f-c2de-4108-a9d6-33ba78f62c16", newAddress, startData, newStoreId);
 //            String newStoreId = copyStore("7d89917f-c2de-4108-a9d6-33ba78f62c16", newAddress, startData);
 
             if (startData.cluster == 0) {
@@ -846,7 +857,8 @@ public class GetShop extends ManagerBase implements IGetShop {
             } else {
                 
                 try {
-                    GetShopApi remoteApi = new GetShopApi(25554, "10.0."+startData.cluster+".33", UUID.randomUUID().toString(), "1gc"+startData.cluster+".getshop.com");
+//                    GetShopApi remoteApi = new GetShopApi(25554, "10.0."+startData.cluster+".33", UUID.randomUUID().toString(), "1gc"+startData.cluster+".getshop.com");
+                    GetShopApi remoteApi = new GetShopApi(25554, "localhost", UUID.randomUUID().toString(), "no.3.0.local.getshop.com");
                     remoteApi.getGetShop().insertNewStore("02983ukjauhsfi8o723h4okiql23h4ro8a9sdhfiq234h90182744hgq2wirh128341234", newAddress, copiedDataObjects, newStoreId, startData);
                 } catch (Exception ex) {
                     Logger.getLogger(GetShop.class.getName()).log(Level.SEVERE, null, ex);
@@ -1031,7 +1043,7 @@ public class GetShop extends ManagerBase implements IGetShop {
     }
 
     @Override
-    public void insertNewStore(String password, String newAddress, HashMap<Credentials, List<BasicDBObject>> copiedDataObjects, String newStoreId, StartData startData) {
+    public void insertNewStore(String password, String newAddress, List<StoreData> storeDatas, String newStoreId, StartData startData) {
         if (!password.equals("02983ukjauhsfi8o723h4okiql23h4ro8a9sdhfiq234h90182744hgq2wirh128341234")) {
             return;
         }
@@ -1041,7 +1053,7 @@ public class GetShop extends ManagerBase implements IGetShop {
             throw new RuntimeException("Store already exists");
         }
         
-        saveAllStoreData(copiedDataObjects, newStoreId);
+        saveAllStoreData(storeDatas, newStoreId);
         
         storePool.loadStore(newStoreId, newAddress);
             
@@ -1091,22 +1103,36 @@ public class GetShop extends ManagerBase implements IGetShop {
         InitializeStoreThreadWhenCreate start = new InitializeStoreThreadWhenCreate(newStoreId, "", user, mailFactory, startData, text);
         start.start();
     }
+    
+    private Gson getGson() {
+            
+        Gson gson = new GsonBuilder()
+                .serializeNulls()
+                .serializeSpecialFloatingPointValues()
+                .registerTypeAdapter(Date.class, new GsonUTCDateAdapter())
+                .disableInnerClassSerialization()
+                .create();
+                
+        return gson;
+    }
 
-    private void saveAllStoreData(HashMap<Credentials, List<BasicDBObject>> copiedDataObjects, String newStoreId) {
+    private void saveAllStoreData(List<StoreData> storeDatas, String newStoreId) {
         
-        for (Credentials cred : copiedDataObjects.keySet()) {
+        for (StoreData storeData : storeDatas) {
+            Credentials cred = storeData.credentials;
             if (cred.storeid == null || !cred.storeid.equals(newStoreId)) {
                 throw new ErrorException(26);
             }
         }
         
+        Gson gson = getGson();
+        
         Morphia morphia = new Morphia();
         morphia.map(DataCommon.class);
         
-        for (Credentials cred : copiedDataObjects.keySet()) {
-            List<DataCommon> dbCommons = copiedDataObjects.get(cred).stream()
-                    .map(data -> morphia.fromDBObject(DataCommon.class, data))
-                    .collect(Collectors.toList());
+        for (StoreData storeData : storeDatas) {
+            Credentials cred = storeData.credentials;
+            List<DataCommon> dbCommons = storeData.dbObjects;
                     
             for (DataCommon data : dbCommons) {
                 if (data instanceof Store) {

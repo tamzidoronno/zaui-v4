@@ -1,0 +1,116 @@
+<?
+/* @var $this ns_a5175115_187a_4721_90e5_4752fa52ca7a\SupportNew */
+$email = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->emailAddress;
+?>
+
+<div class='questionbox'>
+    <div class='inner'>
+        <i class='fa fa-close closebutton'></i>
+        
+        <div class='ticketcreated'>
+            <div class='ticketcreatedheader'>
+                <i class='fa fa-check'></i>
+                <?
+                echo $this->__f("Your ticket has been created");
+                ?>
+            </div>
+            <?
+            echo "<div class='ticketinfo'>".$this->__f("Ticket")."</div>";
+            ?>
+            <div class='ticketnumber'>
+                123456
+            </div>
+            
+            <div>
+                <? echo $this->__f("We will respond as soon as possible"); ?>
+            </div>
+        </div>
+        
+        <div class='askquestion'>
+            <div>
+                <? echo $this->__f("Changes/Updates to this issue will be notified to the following email address"); ?>
+                <br/>
+                <input class='gsniceinput1 emailtonotify' value='<? echo $email; ?>'/>
+            </div>
+            <?
+            echo $this->__f("Please specify urgency..");
+            ?>
+            <br/>
+            <div class='shop_button urgency' type='urgent'><? echo $this->__f("Normal"); ?></div>
+            <br/><div class='shop_button urgency' type='urgent'><? echo $this->__f("Urgent"); ?></div>         
+        </div>
+        
+    </div>
+</div>
+<div class="infomation">
+    <div class="title">
+        <?
+        echo $this->__f("Need help?");
+        ?>
+    </div>
+    <?
+    echo $this->__f("We are happy to help you solve problems you might encounter! Please fill out the form below and we will get back to you as soon as possible.");
+    ?>
+    <br/>
+    <br/> <?
+    echo $this->__f("If the systems are down you can reach us at the phone <b>+47 33 20 08 48</b>, this number should <b>ONLY</b> be used if the systems are unavailable. All other issues needs to be addressed trough the form below. Please make a note of this number where you can access it if the system is down.");
+    ?>
+</div>
+
+<div class="warningbox">
+    <i class="fa fa-warning"></i>
+    <?
+    echo $this->__f("Only register one support issue for each ticket!")
+    ?>
+</div>
+
+<div>
+    <span class='label'>
+        <? echo $this->__f("Subject"); ?>    
+    </span>
+    
+    <br/>
+    <input class="gsniceinput1 subject" />
+    <br/>
+    <br/>
+    
+    <span class='label'>
+        <? echo $this->__f("What can we help you with?"); ?>    
+    </span>
+    
+    <br/>
+    <textarea class="textarea content" id='editor'></textarea>
+    
+    <div class="shop_button sendbutton">
+        <? echo $this->__f("Send"); ?>
+    </div>
+</div>
+
+
+<style>
+.ck-editor__editable {
+    min-height: 500px;
+}
+</style>
+
+<script>
+    var myEditor;
+    
+    $(function() {
+        ClassicEditor.create( document.querySelector( '#editor' ), {
+             ckfinder: {
+                uploadUrl: '/getshopsupportfileuploader.php'
+            }
+        })
+        .then( editor => {
+            myEditor = editor;
+                console.log( editor );
+        })
+        .catch( error => {
+                console.error( error );
+        });
+    });
+    
+    $('.subject').focus();
+    
+</script>

@@ -28,7 +28,6 @@ $_SESSION['firstloadpage'] = true;
         <title>Support - GetShop</title>
         <link rel="stylesheet" href="/icomoon/style.css">
         <link rel="stylesheet" href="/skin/default/getshop.css">
-        <link rel="stylesheet" href="/skin/default/getshopsupport.css">
         <link rel="stylesheet" href="/skin/default/getshopmodules.css">
         <link rel="stylesheet" href="/skin/default/fontawesome/css/font-awesome.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />

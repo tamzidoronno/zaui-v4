@@ -25,8 +25,22 @@ public interface ITicketManager {
     @Editor
     public void updateEvent(String ticketId, TicketEvent event);
     
+    @Administrator
     public Ticket getTicket(String ticketId);
     
     @Administrator
     public void deleteTicket(String ticketId);
+    
+    @Administrator
+    public TicketLight createLightTicket(String title);
+    
+    @Administrator
+    public List<TicketLight> getTicketLights();
+    
+    public Ticket getTicketByToken(String storeId, String ticketToken);
+    
+    @Administrator
+    public List<TicketContent> getTicketContents(String ticketId);
+    
+    public void updateTicket(String ticketToken, TicketLight light);
 }

@@ -50,6 +50,11 @@ class CommunicationHelper {
         if ($this->connected) {
             return;
         }
+        
+        if ($this->port === false) {
+            return;
+        }
+        
         file_put_contents("/tmp/test.txt", "");
         $this->socket = @fsockopen($this->host, $this->port, $erstr, $errno, 220);
         if (!$this->socket) {

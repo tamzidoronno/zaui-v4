@@ -17,6 +17,10 @@ import java.util.List;
  */
 public class Ticket extends DataCommon {
     public List<TicketEvent> events = new ArrayList();
+    
+    /**
+     * The GetShop Customer ID
+     */
     public String userId;
     public TicketType type;
     public TicketState currentState = TicketState.CREATED;
@@ -25,6 +29,17 @@ public class Ticket extends DataCommon {
     public String externalId = "";
     
     public Date dateCompleted = null;
+   
+    /**
+     * Created by store and userid from the store.
+     */
+    public String belongsToStore = "";
+    public String createdByUserId = "";
+    
+    /** 
+     * This ID correspond to the TicketLight.systemGetShopComTicketId
+     */
+    public String ticketToken = "";
     
     /**
      * in minutes

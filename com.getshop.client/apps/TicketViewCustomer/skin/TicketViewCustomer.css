@@ -1,0 +1,25 @@
+.TicketViewCustomer .heading {
+    font-size: 20px;
+    padding: 20px;
+    background-color: #fff356;
+}
+
+.TicketViewCustomer .ticketarea {
+    display: inline-block;
+    width: calc(100% - 200px);
+    vertical-align: top;
+    box-sizing: border-box;
+    padding: 20px;
+}
+
+.TicketViewCustomer .ticketinfo {
+    display: inline-block;
+    width: 196px;
+    vertical-align: top;
+    height: calc(100% - 163px);
+    background-color: #EFEFEF;
+    box-sizing: border-box;
+    padding: 20px;
+    font-size: 16px;
+    
+}

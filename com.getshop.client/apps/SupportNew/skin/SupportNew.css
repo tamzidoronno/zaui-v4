@@ -1,0 +1,117 @@
+.SupportNew {
+    margin: 0 auto;
+    max-width: 1000px;
+    
+    padding: 50px;
+}
+
+.SupportNew .infomation {
+    font-size: 16px;
+    background-color: #fff356;
+    padding: 30px;
+    margin-bottom: 30px;
+}
+
+.SupportNew .infomation .title {
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.SupportNew .subject {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.SupportNew .content {
+    width: 100%;
+    box-sizing: border-box;
+    border: solid 1px #DDD;
+    min-height: 500px;
+}
+
+.SupportNew .sendbutton {
+    margin: 0px;
+    margin-top: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.SupportNew span.label {
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.SupportNew .questionbox {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 10;
+    overflow-y: scroll;
+    display: none;
+}
+
+.SupportNew .questionbox .inner {
+    background-color: #FFF;
+    width: 300px;
+    font-size: 16px;
+    padding: 30px;
+    margin: 0 auto;
+    margin-top: 30px;
+    border: solid 5px #ff3600;
+    position: relative;
+}
+
+.SupportNew .questionbox .inner .shop_button {
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 10px;
+}
+
+.SupportNew .questionbox .inner .gsniceinput1 {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 30px;
+    margin-top: 20px;
+}
+
+.SupportNew .questionbox .closebutton {
+    position: absolute;
+    right: -15px;
+    background-color: #FFF;
+    border: solid 2px #000;
+    border-radius: 100px;
+    top: -15px;
+    font-size: 20px;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+}
+
+.SupportNew .ticketcreatedheader {
+    font-weight: bold;
+    color: green;
+}
+
+.SupportNew .ticketcreated {
+    text-align: center;
+}
+
+.SupportNew .ticketnumber {
+    font-size: 30px;
+    text-align: center;
+    padding: 10px;
+}
+
+.SupportNew .warningbox {
+    background-color: red;
+    padding: 10px;
+    font-size: 18px;
+    color: #FFF;
+    text-align: center;
+    margin-bottom: 20px;
+}

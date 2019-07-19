@@ -28,6 +28,16 @@ class FactoryBase {
         return FactoryBase::$api;
     }
     
+    /**
+     * @return GetShopApi
+     */
+    public function getSystemGetShopApi() {
+        $address = $this->getApi()->getStoreManager()->isProductMode() ? "system.getshop.com" : "no.3.0.local.getshop.com";
+        $api2 = new \GetShopApi(false, false, "");
+        $api2->transport = new \CommunicationHelperDirectAjax($address);
+        return $api2;
+    }
+    
     private function createApi($sessionId) {
         $config = new ConfigReader();
         $port = $config->getConfig("port");

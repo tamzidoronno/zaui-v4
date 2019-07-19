@@ -4,6 +4,7 @@ import com.braintreegateway.org.apache.commons.codec.binary.Base64;
 import com.getshop.javaapi.GetShopApi;
 import com.getshop.scope.GetShopSessionScope;
 import com.google.gson.Gson;
+import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
@@ -460,9 +461,9 @@ public class GetShop extends ManagerBase implements IGetShop {
         return newStoreId;
     }
 
-    public HashMap<Credentials, List<DBObject>> copyData(String originalStoreId, String newAddress, StartData start, String newStoreId) throws UnknownHostException {
+    public HashMap<Credentials, List<BasicDBObject>> copyData(String originalStoreId, String newAddress, StartData start, String newStoreId) throws UnknownHostException {
         
-        HashMap<Credentials, List<DBObject>> dataCopied = new HashMap<Credentials, List<DBObject>>();
+        HashMap<Credentials, List<BasicDBObject>> dataCopied = new HashMap<Credentials, List<BasicDBObject>>();
         
         Mongo m = new MongoClient("localhost", Database.mongoPort);
 
@@ -482,10 +483,10 @@ public class GetShop extends ManagerBase implements IGetShop {
             cred.password =  newStoreId;
             cred.storeid = newStoreId;
             
-            List<DBObject> retData = new ArrayList();
+            List<BasicDBObject> retData = new ArrayList();
             
             while (collections.hasNext()) {
-                DBObject data = collections.next();
+                BasicDBObject data = (BasicDBObject)collections.next();
                 Morphia morphia = new Morphia();
                 morphia.map(DataCommon.class);
                 DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, data);
@@ -515,7 +516,7 @@ public class GetShop extends ManagerBase implements IGetShop {
                     store.expiryDate = cal.getTime();
                     store.rowCreatedDate = new Date();
                     store.additionalDomainNames = new ArrayList();
-                    DBObject toAdd = morphia.toDBObject(store);
+                    BasicDBObject toAdd = (BasicDBObject)morphia.toDBObject(store);
                     retData.add(toAdd);
                 } else {
                     retData.add(data);
@@ -837,7 +838,7 @@ public class GetShop extends ManagerBase implements IGetShop {
         try {
             // 7d89917f-c2de-4108-a9d6-33ba78f62c16 = http://bookingtemplate.getshop.com
             String newStoreId = UUID.randomUUID().toString();
-            HashMap<Credentials, List<DBObject>> copiedDataObjects = copyData("7d89917f-c2de-4108-a9d6-33ba78f62c16", newAddress, startData, newStoreId);
+            HashMap<Credentials, List<BasicDBObject>> copiedDataObjects = copyData("7d89917f-c2de-4108-a9d6-33ba78f62c16", newAddress, startData, newStoreId);
 //            String newStoreId = copyStore("7d89917f-c2de-4108-a9d6-33ba78f62c16", newAddress, startData);
 
             if (startData.cluster == 0) {
@@ -1030,7 +1031,7 @@ public class GetShop extends ManagerBase implements IGetShop {
     }
 
     @Override
-    public void insertNewStore(String password, String newAddress, HashMap<Credentials, List<DBObject>> copiedDataObjects, String newStoreId, StartData startData) {
+    public void insertNewStore(String password, String newAddress, HashMap<Credentials, List<BasicDBObject>> copiedDataObjects, String newStoreId, StartData startData) {
         if (!password.equals("02983ukjauhsfi8o723h4okiql23h4ro8a9sdhfiq234h90182744hgq2wirh128341234")) {
             return;
         }
@@ -1091,7 +1092,7 @@ public class GetShop extends ManagerBase implements IGetShop {
         start.start();
     }
 
-    private void saveAllStoreData(HashMap<Credentials, List<DBObject>> copiedDataObjects, String newStoreId) {
+    private void saveAllStoreData(HashMap<Credentials, List<BasicDBObject>> copiedDataObjects, String newStoreId) {
         
         for (Credentials cred : copiedDataObjects.keySet()) {
             if (cred.storeid == null || !cred.storeid.equals(newStoreId)) {

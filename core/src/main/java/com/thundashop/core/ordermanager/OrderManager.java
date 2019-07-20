@@ -769,6 +769,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public void saveOrder(Order order) throws ErrorException {
         validateOrder(order);
         saveOrderInternal(order);
+
+        try {
+            updateOrderChangedFromBooking(order.id);
+        } catch (GetShopBeanException ex) {
+            // Nothing to do, this happens when the order are removed by a named bean manager.
+            // In that case the manager should handle the order itself.
+        }      
     }
     
     public void markOrderForAutoSending(String orderId) {
@@ -1430,6 +1437,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             order.changePaymentType(app);
             saveObject(order);
         }
+        
+        try {
+            updateOrderChangedFromBooking(orderId);
+        } catch (GetShopBeanException ex) {
+            // Nothing to do, this happens when the order are removed by a named bean manager.
+            // In that case the manager should handle the order itself.
+        }          
     }
 
   
@@ -2446,14 +2460,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         saveObject(order);
         
         try {
-            removeOrderFromBooking(order.id);
+            updateOrderChangedFromBooking(order.id);
         } catch (GetShopBeanException ex) {
             // Nothing to do, this happens when the order are removed by a named bean manager.
             // In that case the manager should handle the order itself.
         }
     }
     
-    private void removeOrderFromBooking(String orderId) {
+    private void updateOrderChangedFromBooking(String orderId) {
         List<String> multiLevelNames = database.getMultilevelNames("PmsManager", storeId);
         for (String multilevelName : multiLevelNames) {
             PmsManager pmsManager = getShopSpringScope.getNamedSessionBean(multilevelName, PmsManager.class);
@@ -4388,5 +4402,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .stream()
                 .filter(o -> o.autoCreatedOrderForConferenceId != null && o.autoCreatedOrderForConferenceId.contains(conferenceId))
                 .collect(Collectors.toList());
+    }
+
+    public List<Order> getAllOrdersNotClosed() { 
+        List<Order> orderList = orders.values()
+                .stream()
+                .filter(o -> !o.closed)
+                .collect(Collectors.toList());
+        
+        return orderList;
     }
 }

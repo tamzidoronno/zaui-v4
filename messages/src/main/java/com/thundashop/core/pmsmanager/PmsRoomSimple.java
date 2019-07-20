@@ -62,6 +62,7 @@ public class PmsRoomSimple implements Serializable {
     public boolean hasUnchargedPrePaidOrders = false;
     public HashMap<Long, PmsBookingComment> bookingComments = new HashMap(); 
     double totalUnsettledAmount;
+    double totalUnpaidAmount;
     
     boolean earlycheckin = false;
     boolean latecheckout = false;

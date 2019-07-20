@@ -2025,6 +2025,11 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_showcredittedhistory'] = !$showCredittedHistory;
     }
 
+    public function toggleAllOrders() {
+        $showCredittedHistory = isset($_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_showallorders']) && $_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_showallorders'];
+        $_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_showallorders'] = !$showCredittedHistory;
+    }
+
     public function filterOrderIds($orderIds) {
         $showCredittedHistory = isset($_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_showcredittedhistory']) && $_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_showcredittedhistory'];
         

@@ -1051,6 +1051,34 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return "";
     }
 
+    @Override
+    public void toggleNewPaymentProcess() {
+        storeManager.toggleNewPaymentProcess();
+        List<PmsBooking> bookings = pmsManager.getAllBookings(null);
+        
+        for(PmsBooking booking : bookings) {
+            pmsManager.calculateUnsettledAmountForRooms(booking);
+        }
+        
+    }
+
+    @Override
+    public List<Order> getAllUnpaidOrdersForRoom(String pmsBookingRoomId) {
+        List<Order> result = new ArrayList();
+        PmsBooking booking = pmsManager.getBookingFromRoom(pmsBookingRoomId);
+        for(String orderId : booking.orderIds) {
+            Order ord = orderManager.getOrder(orderId);
+            if(ord.isAccruedPayment()) { continue; }
+            if(!ord.containsRoom(pmsBookingRoomId)) { continue; }
+            if(ord.isPaid()) { continue; }
+            if(ord.isInvoice()) { continue; }
+            result.add(ord);
+        }
+        
+        return result;
+    }
+
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0; 

@@ -8013,18 +8013,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return;
         }
         
-        if (!order.cart.getItems().isEmpty()) {
-            return;
-        }
-
         bookings.values()
                 .stream()
                 .filter(o -> o != null && o.orderIds != null && o.orderIds.contains(orderId))
                 .forEach(booking -> {
                     if (order.cart.getItems().isEmpty()) {
                         booking.orderIds.remove(orderId);
-                        saveObject(booking);
                     }
+                    saveObject(booking);
                 });
     }
 
@@ -9821,32 +9817,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsRoomPaymentSummary getSummaryWithoutAccrued(String pmsBookingId, String pmsBookingRoomId) {
-        PmsBooking booking = bookings.get(pmsBookingId);
-        
-        if (booking == null) {
-            return null;
-        }
-        
-        PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
-        
-        if (room == null) {
-            return new PmsRoomPaymentSummary();
-        }
-        
-        List<String> orderIds = getExtraOrderIds(booking.id);
-        orderIds.addAll(booking.orderIds);
-        
-        List<Order> orders = orderIds
-            .stream()
-            .map(id -> orderManager.getOrderSecure(id))
-            .filter(o -> o != null)
-            .filter(o -> !o.isAccruedPayment())
-            .collect(Collectors.toList());
-
-        PmsBookingPaymentDiffer differ = new PmsBookingPaymentDiffer(orders, booking, room, this);
-        PmsRoomPaymentSummary summary = differ.getSummary();
-        
-        return summary;
+        return getSummaryWithoutAccrued(pmsBookingId, pmsBookingRoomId, false);
     }
     
     @Override
@@ -10240,6 +10211,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         .sum();
             }
             
+            summary = getSummaryWithoutAccrued(pmsBooking.id, room.pmsBookingRoomId, true);
+            if (summary == null) {
+                room.unpaidAmount = 0D;
+            } else {
+                room.unpaidAmount = summary.getCheckoutRows().stream().mapToDouble(o -> o.count * o.price).sum();
+            }
+            
             summary = getSummary(pmsBooking.id, room.pmsBookingRoomId);
             if (summary == null) {
                 room.unsettledAmountIncAccrued = 0D;
@@ -10489,6 +10467,80 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         });
                     }       
                 });
+    }
+
+    private PmsRoomPaymentSummary getSummaryWithoutAccrued(String pmsBookingId, String pmsBookingRoomId, boolean unpaidOnly) {
+        PmsBooking booking = bookings.get(pmsBookingId);
+        
+        if (booking == null) {
+            return null;
+        }
+        
+        PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
+        
+        if (room == null) {
+            return new PmsRoomPaymentSummary();
+        }
+        
+        List<String> orderIds = getExtraOrderIds(booking.id);
+        orderIds.addAll(booking.orderIds);
+        
+        List<Order> orders  = new ArrayList();
+        if(unpaidOnly) {
+            orders = orderIds
+                .stream()
+                .map(id -> orderManager.getOrderSecure(id))
+                .filter(o -> o != null)
+                .filter(o -> !o.isAccruedPayment())
+                .filter(o -> (o.isPaid() || o.isInvoice()))
+                .collect(Collectors.toList());
+        } else {       
+            orders = orderIds
+                .stream()
+                .map(id -> orderManager.getOrderSecure(id))
+                .filter(o -> o != null)
+                .filter(o -> !o.isAccruedPayment())
+                .collect(Collectors.toList());
+        }
+        
+        PmsBookingPaymentDiffer differ = new PmsBookingPaymentDiffer(orders, booking, room, this);
+        PmsRoomPaymentSummary summary = differ.getSummary();
+        
+        return summary;
+    }
+    
+    
+    @Override
+    public List<PmsRoomSimple> getAllRoomsOnOrder(String orderId) {
+        Order order = orderManager.getOrder(orderId);
+        List<String> externalIds = new ArrayList();
+        for(CartItem item : order.getCartItems()) {
+            if(item != null && item.getProduct() != null && item.getProduct().externalReferenceId != null && !item.getProduct().externalReferenceId.isEmpty()) {
+                if(!externalIds.contains(item.getProduct().externalReferenceId)) {
+                    externalIds.add(item.getProduct().externalReferenceId);
+                }
+            }
+        }
+        List<PmsRoomSimple> result = new ArrayList();
+        
+        PmsBookingSimpleFilter filter = new PmsBookingSimpleFilter(this, pmsInvoiceManager);
+        for(String roomId : externalIds) {
+            PmsBooking booking = getBookingFromRoom(roomId);
+            if(booking != null) {
+                PmsBookingRooms room = booking.getRoom(roomId);
+                PmsRoomSimple toAdd = filter.convertRoom(room, booking);
+                toAdd.totalCost = 0.0;
+                for(CartItem item : order.cart.getItems()) {
+                    if(item.containsRoom(roomId)) {
+                        toAdd.totalCost += item.getTotalAmount();
+                        if(item.getStartingDate() != null) { toAdd.start = item.getStartingDate().getTime(); }
+                        if(item.getEndingDate() != null) { toAdd.end = item.getEndingDate().getTime(); }
+                    }
+                }
+                result.add(toAdd);
+            }
+        }
+        return result;
     }
 
 }

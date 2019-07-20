@@ -9,6 +9,10 @@ class AirBNBCollect extends \PaymentApplication implements \Application {
     public function getDescription() {
         return $this->__("Mark orders as airbnb collect payments.");
     }
+    
+    public function hiddenFromPaymentProcess() {
+        return true;
+    }
 
     public function getName() {
         return "AirBNBCollect";

@@ -16,6 +16,15 @@ class PmsPaymentProcess extends \MarketingApplication implements \Application {
         
     }
     
+    public function deleteOrCreditOrder() {
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        if($order->closed) {
+            $this->getApi()->getOrderManager()->creditOrder($order->id);
+        } else {
+            $this->getApi()->getOrderManager()->deleteOrder($order->id);
+        }
+    }
+    
     public function sendPaymentLinkRequest() {
         $message = $_POST['data']['message'];
         $prefix = $_POST['data']['prefix'];

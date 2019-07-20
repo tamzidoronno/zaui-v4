@@ -188,7 +188,7 @@ class PmsSearchBookingColumnFormatters {
     }
     
     public function formatPrice($room) {
-        $priceData = "<div><div class='price'>".round($room->price)."</div><div class='pricetagright'></div></div>";
+        $priceData = "<div><div class='price'>".round($room->price) ."</div><div class='pricetagright'></div></div>";
         return $priceData;
     }
     
@@ -215,8 +215,8 @@ class PmsSearchBookingColumnFormatters {
         } else {
             $priceData = "<div title='Total cost for this room'>" . round($room->totalCost) . "</div>";
         }
-        if($room->totalUnsettledAmount > 0.5) {
-            $priceData .= "<div class='unsettledamountwarning dontExpand' roomid='".$room->pmsRoomId."' title='Amount not created orders for yet'>".$room->totalUnsettledAmount."</div>";
+        if($room->totalUnsettledAmount > 0.5 || $room->totalUnpaidAmount > 0.5) {
+            $priceData .= "<span class='unsettledamountwarning dontExpand' roomid='".$room->pmsRoomId."' title='Amount not paid yet'>".$room->totalUnpaidAmount."</span>";
         }
         
         if($room->nonrefundable) {

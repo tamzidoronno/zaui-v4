@@ -37,6 +37,7 @@ import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.GrafanaFeederImpl;
 import com.thundashop.core.common.GrafanaManager;
 import com.thundashop.core.common.Session;
+import com.thundashop.core.common.Setting;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.GetShop;
@@ -649,6 +650,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public List<PmsBooking> getAllBookings(PmsBookingFilter filter) {
         gsTiming("start");
+        
+        checkIfNeedToUpgradePaymentProcess();
+        
         if (filter != null && filter.bookingId != null && !filter.bookingId.isEmpty()) {
             List<PmsBooking> res = new ArrayList();
             res.add(getBooking(filter.bookingId));
@@ -10541,6 +10545,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return result;
+    }
+
+    private void checkIfNeedToUpgradePaymentProcess() {
+        if(!getStore().newPaymentProcess && userManager.isLoggedIn() && userManager.getLoggedOnUser().isAdministrator()) {
+            Application ecommerceSettingsApplication = applicationPool.getApplication("9de54ce1-f7a0-4729-b128-b062dc70dcce");
+            String defaultPaymentApplicationId = ecommerceSettingsApplication.getSetting("defaultPaymentMethod");
+            
+            Setting inSetting = new Setting();
+            inSetting.name = "paymentLinkMethod";
+            inSetting.value = defaultPaymentApplicationId;
+            applicationPool.setSetting("9de54ce1-f7a0-4729-b128-b062dc70dcce", inSetting);
+            storeManager.toggleNewPaymentProcess();
+        }
     }
 
 }

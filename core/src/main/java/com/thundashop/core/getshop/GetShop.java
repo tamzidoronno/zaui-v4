@@ -835,7 +835,7 @@ public class GetShop extends ManagerBase implements IGetShop {
     }
 
     @Override
-    public void createNewStore(StartData startData) {
+    public String createNewStore(StartData startData) {
         int nextStoreId = storePool.incrementStoreCounter();
         
         String newAddress = nextStoreId + ".getshop.com";
@@ -871,7 +871,7 @@ public class GetShop extends ManagerBase implements IGetShop {
             throw ex;
         }
         
-        
+        return newAddress;
     }
 
     private Setting createStoreSetting(String key, StartData startData) {

@@ -128,7 +128,7 @@ public interface IGetShop {
     public void triggerPullRequest(String storeId);
     
     @GetShopNotSynchronized
-    public void createNewStore(StartData startData);
+    public String createNewStore(StartData startData);
     
     @Administrator
     public void toggleRemoteEditing();

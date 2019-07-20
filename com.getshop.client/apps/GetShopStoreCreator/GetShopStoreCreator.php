@@ -2,6 +2,8 @@
 namespace ns_6fc2b3f8_d6fa_4f70_9062_56179a701119;
 
 class GetShopStoreCreator extends \MarketingApplication implements \Application {
+    public $newStoreAddress = "";
+    
     public function getDescription() {
         
     }
@@ -14,6 +16,9 @@ class GetShopStoreCreator extends \MarketingApplication implements \Application 
         if (isset($_POST['event']) && $_POST['event'] == "create") {
             echo "<div class='thankyou'>";
             echo $this->getConfigurationSetting("thankyou");
+            echo "<br/>";
+            echo "<br/>";
+            echo "Address: ".$this->newStoreAddress;
             echo "</div>";
         } else {
             $this->includefile("create");
@@ -99,7 +104,7 @@ class GetShopStoreCreator extends \MarketingApplication implements \Application 
         $startData->country = $_POST['data']['country'];
         $startData->timeZone = $_POST['data']['timezone'];
         $startData->cluster = 6;
-        $this->getApi()->getGetShop()->createNewStore($startData);
+        $this->newStoreAddress = $this->getApi()->getGetShop()->createNewStore($startData);
     }
     
     public function saveSettings() {

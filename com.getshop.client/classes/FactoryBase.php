@@ -32,7 +32,7 @@ class FactoryBase {
      * @return GetShopApi
      */
     public function getSystemGetShopApi() {
-        $address = $this->getApi()->getStoreManager()->isProductMode() ? "system.getshop.com" : "no.3.0.local.getshop.com";
+        $address = $this->getApi()->getStoreManager()->isProductMode() ? "https://system.getshop.com" : "no.3.0.local.getshop.com";
         $api2 = new \GetShopApi(false, false, "");
         $api2->transport = new \CommunicationHelperDirectAjax($address);
         return $api2;

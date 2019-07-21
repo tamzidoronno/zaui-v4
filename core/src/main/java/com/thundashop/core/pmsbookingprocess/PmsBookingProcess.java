@@ -32,7 +32,9 @@ import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.pmsmanager.PmsConfiguration;
 import com.thundashop.core.pmsmanager.PmsGuests;
 import com.thundashop.core.pmsmanager.PmsInvoiceManager;
+import com.thundashop.core.pmsmanager.PmsInvoiceManagerNew;
 import com.thundashop.core.pmsmanager.PmsManager;
+import com.thundashop.core.pos.PosManager;
 import com.thundashop.core.printmanager.PrintJob;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.storemanager.StoreManager;
@@ -71,6 +73,9 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     
     @Autowired
     PmsInvoiceManager pmsInvoiceManager;
+    
+    @Autowired
+    PosManager posManager;
     
     @Autowired
     ProductManager productManager;
@@ -1162,7 +1167,15 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     @Override
     public BookingResult completeBookingForTerminal(CompleteBookingInput input) {
         PmsBooking booking = pmsManager.completeCurrentBooking();
+        
+        Application ecommerceSettingsApplication = applicationPool.getApplication("9de54ce1-f7a0-4729-b128-b062dc70dcce");
+        String defaultPaymentApplicationId = ecommerceSettingsApplication.getSetting("defaultPaymentMethod");
+        String orderId = posManager.createOrderWithPaymentMethod(booking, null, defaultPaymentApplicationId);
+        booking = pmsManager.getBookingUnsecure(booking.id);
         booking.channel = "terminal";
+        if(!booking.orderIds.contains(orderId)) {
+            booking.orderIds.add(orderId);
+        }
         
         User user = new User();
         user.fullName = booking.rooms.get(0).guests.get(0).name;
@@ -1180,9 +1193,9 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             res.success = 0;
         } else {
             res.bookingid = booking.id;
-            if(booking.orderIds.size() == 1) {
+            if(orderId != null) {
                 res.continuetopayment = 1;
-                res.orderid = booking.orderIds.get(0);
+                res.orderid = orderId;
             } else {
                 res.continuetopayment = 0;
             }
@@ -1190,10 +1203,10 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         
         
         
-        if(res.orderid != null && !res.orderid.isEmpty()) {
-            Order order = orderManager.getOrderSecure(res.orderid);
+        if(orderId != null && !orderId.isEmpty()) {
+            Order order = orderManager.getOrderSecure(orderId);
             res.amount = orderManager.getTotalAmount(order);
-            chargeOrder(res.orderid, input.terminalId + "");
+            chargeOrder(orderId, input.terminalId + "");
         }
         res.goToCompleted = !storeManager.isProductMode();
         

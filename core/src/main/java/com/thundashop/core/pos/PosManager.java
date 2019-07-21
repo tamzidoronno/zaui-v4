@@ -1352,7 +1352,7 @@ public class PosManager extends ManagerBase implements IPosManager {
         return conferencesWithUserIds;
     }
     
-    private String createOrderWithPaymentMethod(PmsBooking booking, PmsBookingRooms room, String roomId) {
+    public String createOrderWithPaymentMethod(PmsBooking booking, PmsBookingRooms room, String roomId) {
         PmsOrderCreateRow createOrderForRoom = new PmsOrderCreateRow();
         PmsManager pmsManager = scope.getNamedSessionBean(getEngineName(), PmsManager.class);
         if(room == null) {

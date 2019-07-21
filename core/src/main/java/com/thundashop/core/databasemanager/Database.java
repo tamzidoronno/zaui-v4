@@ -259,6 +259,7 @@ public class Database extends StoreComponent {
         obj.add(addBannedClass("com.thundashop.core.pmsmanager.PmsLog"));
         obj.add(addBannedClass("com.thundashop.core.wubook.WubookLog"));
         obj.add(addBannedClass("com.thundashop.core.common.ConferenceDiffLog"));
+        obj.add(addBannedClass("com.thundashop.core.ticket.TicketContent"));
         andQuery.put("$and", obj);
         
         return andQuery;
@@ -496,6 +497,10 @@ public class Database extends StoreComponent {
         }
 
         addDataCommonToDatabase(data, credentials);
+    }
+    
+    public void saveDirect(DBObject dbObject, Credentials credentials) {
+        mongo.getDB(credentials.manangerName).getCollection(collectionPrefix + credentials.storeid).save(dbObject);
     }
 
     private void logSavedMessge(DataCommon newObject, String database, String collection) {

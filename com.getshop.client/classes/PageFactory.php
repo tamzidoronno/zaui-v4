@@ -448,24 +448,19 @@ class PageFactory {
     }
     public function createGetShopSupportPages() {
         $page = new \ModulePage("home", "getshopsupport");
-        $row = $page->createRow();
-        $row->addColumn("84268253-6c1e-4859-86e3-66c7fb157ea1", "c4eb8022-f405-11e8-8eb2-f2801f1b9fd1");
+        $row = $page->createRow(true);
+        $row->addColumn("a5175115-187a-4721-90e5-4752fa52ca7a", "c4eb8022-f405-11e8-8eb2-f2801f1b9fd1");
         $this->pages['home'] = $page;
         
         $page = new \ModulePage("getshopdevcenter", "getshopsupport");
-        $row = $page->createRow();
-        $row->addColumn("84268253-6c1e-4859-86e3-66c7fb157ea1", "c4eb8022-f405-11e8-8eb2-f2801f1b9fd1");
+        $row = $page->createRow(true);
+        $row->addColumn("13c0bc5f-ce62-45c5-be76-90237d16de91", "c4eb8022-f405-11e8-8eb2-f2801f1b9fd1");
         $this->pages['getshopdevcenter'] = $page;   
         
-        $page = new \ModulePage("getshopbillinghistory", "getshopsupport");
-        $row = $page->createRow();
-        $row->addColumn("84268253-6c1e-4859-86e3-66c7fb157ea1", "c4eb8022-f405-11e8-8eb2-f2801f1b9fd1");
-        $this->pages['getshopbillinghistory'] = $page;   
-        
-        $page = new \ModulePage("getshopusermanual", "getshopsupport");
-        $row = $page->createRow();
-        $row->addColumn("84268253-6c1e-4859-86e3-66c7fb157ea1", "c4eb8022-f405-11e8-8eb2-f2801f1b9fd1");
-        $this->pages['getshopusermanual'] = $page;   
+        $page = new \ModulePage("ticketview", "getshopsupport");
+        $row = $page->createRow(true);
+        $row->addColumn("f5e525cc-f11e-4611-93bb-1afacd9aade5", "c4eb8022-f405-11e8-8eb2-f2801f1b9fd1");
+        $this->pages['ticketview'] = $page;   
     }
 
     public function createSalesPointPages() {

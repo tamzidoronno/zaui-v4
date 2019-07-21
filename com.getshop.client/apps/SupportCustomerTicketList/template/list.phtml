@@ -1,0 +1,46 @@
+<?
+/* @var $this \ns_13c0bc5f_ce62_45c5_be76_90237d16de91\SupportCustomerTicketList */
+$lightTickets = $this->getApi()->getTicketManager()->getTicketLights();
+
+$users = new \stdClass();
+if (!count($lightTickets)) {
+    ?>
+    <div class="ticketlist noresult">
+        <div><? echo $this->__f("You dont have any tickets yet."); ?></div>
+    </div>
+    <?
+}
+?>
+
+<div class="ticketlist">
+    <div class="row header">
+        <div class="date col col1"><? echo $this->__f("Ticket Id"); ?></div>
+        <div class="date col col1"><? echo $this->__f("Date"); ?></div>
+        <div class="title col col2"><? echo $this->__f("Title"); ?></div>
+        <div class="state col col3"><? echo $this->__f("Status"); ?></div>
+        <div class="name col col4"><? echo $this->__f("Created by"); ?></div>
+    </div>
+
+    <?
+    $i = 0;
+    foreach ($lightTickets as $lightTicket) {
+        $i++;
+        $odd = $i % 2 ? "odd" : "even";
+        if (!$users->{$lightTicket->userId}) {
+            $users->{$lightTicket->userId} = $this->getApi()->getUserManager()->getUserById($lightTicket->userId);
+        }
+        ?>
+    
+        <a href="/getshopsupport.php?page=ticketview&ticketToken=<? echo $lightTicket->ticketToken; ?>">
+            <div class="row <? echo $odd; ?>">
+                <div class="date col col1"><? echo $lightTicket->incrementalTicketId; ?></div>
+                <div class="date col col1"><? echo date('d.m.Y h:i', strtotime($lightTicket->rowCreatedDate)); ?></div>
+                <div class="title col col2"><? echo $lightTicket->title; ?></div>
+                <div class="state col col3"><? echo $lightTicket->state; ?></div>
+                <div class="name col col4"><? echo $users->{$lightTicket->userId}->fullName; ?></div>
+            </div>
+        </a>
+        <?
+    }
+    ?>
+</div>

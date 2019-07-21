@@ -157,10 +157,22 @@ class ModulePageMenu {
                     echo "<a class='gs_ignorenavigate' href='/?changeGetShopModule=$module->id&scopeid=$scopeId'><div class='gs_framework_module $moduleActiveClass'>$icon<br>$module->name</div></a>";
                 }
             }
+            
+            if ($printPageMenuInModulesMenu) {
+                $this->printSupportMenuIcon();
+            }
+                    
             echo "<a class='gs_ignorenavigate' href='/logout.php?goBackToHome=true'><div class='gs_framework_module'><i class='gsicon-user-lock'></i> <div>Sign out</div></div></a>";
         echo "</div>";
         $text = $printPageMenuInModulesMenu ? "Menu" : "Modules";
-        echo "<div class='gs_framework_module modulechangericoncontainer'><i class='fa gsicon-menu modulechangericon'></i> <div>$text</div></div>";
+        
+        echo "<div class='gs_framework_module modulechangericoncontainer'><i class='fa gsicon-menu modulechangericon'></i>";
+            echo "<div>$text</div>"; 
+        echo "</div>";
+        
+        if (!$printPageMenuInModulesMenu) {
+            $this->printSupportMenuIcon();
+        }
 
         
         
@@ -267,6 +279,19 @@ class ModulePageMenu {
                 </div>
             </div>
         <?
+    }
+
+    public function printSupportMenuIcon() {
+        if ($this->moduleName == "support")
+            return;
+        
+        $factory = IocContainer::getFactorySingelton();
+        
+        echo "<a href='/getshopsupport.php' target='_blank'>";
+            echo "<div class='gs_framework_module modulechangericoncontainer'><i class='fa fa-question'></i>";
+                echo "<div class='support'>".$factory->__f("I Need Help")."</div>";
+            echo "</div>";
+        echo "</a>";
     }
 
 }

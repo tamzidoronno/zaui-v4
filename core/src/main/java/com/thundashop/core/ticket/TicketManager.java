@@ -6,12 +6,15 @@
 package com.thundashop.core.ticket;
 
 import com.getshop.scope.GetShopSession;
+import com.mongodb.BasicDBObject;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -31,6 +34,7 @@ import org.springframework.stereotype.Component;
 public class TicketManager extends ManagerBase implements ITicketManager {
 
     public HashMap<String, Ticket> tickets = new HashMap();
+    public HashMap<String, TicketLight> lightTickets = new HashMap();
 
     @Autowired
     public UserManager userManager;
@@ -44,6 +48,9 @@ public class TicketManager extends ManagerBase implements ITicketManager {
             if (inData instanceof Ticket) {
                 tickets.put(inData.id, (Ticket) inData);
             }
+            if (inData instanceof TicketLight) {
+                lightTickets.put(inData.id, (TicketLight) inData);
+            }
         });
     }
 
@@ -51,6 +58,11 @@ public class TicketManager extends ManagerBase implements ITicketManager {
     public void saveTicket(Ticket ticket) {
         checkSecurity(ticket);
 
+        saveTicketDirect(ticket);
+        
+    }
+
+    public Ticket saveTicketDirect(Ticket ticket) throws ErrorException {
         if (ticket.id == null || ticket.id.isEmpty()) {
             ticket.incrementalId = getNextIncrementalId();
         }
@@ -58,6 +70,8 @@ public class TicketManager extends ManagerBase implements ITicketManager {
         ticket.setCompletedDate();
         saveObject(ticket);
         tickets.put(ticket.id, ticket);
+        
+        return ticket;
     }
 
     private void checkSecurity(Ticket ticket) throws ErrorException {
@@ -198,4 +212,72 @@ public class TicketManager extends ManagerBase implements ITicketManager {
         return lastDateOfPreviousMonth;
     }
 
+    @Override
+    public TicketLight createLightTicket(String title) {
+        SecureRandom random = new SecureRandom();
+        
+        TicketLight lightTicket = new TicketLight();
+        lightTicket.title = title;
+        lightTicket.userId = getSession().currentUser.id;
+        lightTicket.ticketToken = new BigInteger(130, random).toString(32);
+        
+        saveObject(lightTicket);
+        lightTickets.put(lightTicket.id, lightTicket);
+        return lightTicket;
+    }
+
+    public List<TicketLight> getTicketLights() {
+        ArrayList<TicketLight> retList = new ArrayList(lightTickets.values());
+        retList.sort((TicketLight a, TicketLight b) -> {
+            return b.rowCreatedDate.compareTo(a.rowCreatedDate);
+        });
+        return retList;
+    }
+
+    @Override
+    public void updateTicket(String ticketToken, TicketLight light) {
+        TicketLight existingLightToken = lightTickets.values()
+                .stream()
+                .filter(o -> o.ticketToken != null && !o.ticketToken.isEmpty() && o.ticketToken.equals(ticketToken))
+                .findFirst()
+                .orElse(null);
+                
+        
+        if (existingLightToken == null) {
+            return;
+        }
+        
+        light.id = existingLightToken.id;
+        saveObject(light);
+        lightTickets.put(light.id, light);
+    }
+
+    @Override
+    public Ticket getTicketByToken(String storeId, String ticketToken) {
+        return tickets.values()
+                .stream()
+                .filter(o -> o.belongsToStore != null && !o.belongsToStore.isEmpty() && o.belongsToStore.equals(storeId))
+                .filter(o -> o.ticketToken != null && !o.ticketToken.isEmpty() && o.ticketToken.equals(ticketToken))
+                .findAny()
+                .orElse(null);
+    }
+
+    void addTicketContent(String ticketId, TicketContent content) {
+        if (tickets.get(ticketId) != null) {
+            content.ticketId = ticketId;
+            saveObject(content);
+        }
+    }
+
+    @Override
+    public List<TicketContent> getTicketContents(String ticketId) {
+        BasicDBObject query = new BasicDBObject();
+        query.put("className", "com.thundashop.core.ticket.TicketContent");
+        query.put("ticketId", ticketId);
+        return database.query("TicketManager", storeId, query)
+                .stream()
+                .map( o -> (TicketContent)o)
+                .collect(Collectors.toList());
+    }
+    
 }

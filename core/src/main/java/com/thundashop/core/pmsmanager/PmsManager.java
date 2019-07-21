@@ -237,6 +237,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private List<String> warnedAboutNotAddedToBookingEngine = new ArrayList();
     private boolean convertedDiscountSystem = false;
     private String currentBookingId = "";
+    private boolean updatedAllBookings = false;
 
     @Autowired
     public void setOrderManager(OrderManager orderManager) {
@@ -10560,8 +10561,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             inSetting.name = "paymentLinkMethod";
             inSetting.value = defaultPaymentApplicationId;
             applicationPool.setSetting("9de54ce1-f7a0-4729-b128-b062dc70dcce", inSetting);
-            storeManager.toggleNewPaymentProcess();
+            pmsInvoiceManager.toggleNewPaymentProcess();
         }
+        
+        if(!getStore().newPaymentProcess && userManager.isLoggedIn() && userManager.getLoggedOnUser().isAdministrator()) {
+            if(!updatedAllBookings) {
+                pmsInvoiceManager.toggleNewPaymentProcess();
+                updatedAllBookings = true;
+            }
+        }
+        
     }
 
 }

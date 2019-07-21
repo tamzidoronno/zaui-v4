@@ -22,6 +22,14 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         
     }
     
+    public function sortGetShopTable() {
+        $_SESSION['lastsorttype'] = $_POST['data']['column'];
+        $_SESSION['lastsorttypeasc'] = "false";
+        if ($_POST['data']['sorting'] == "asc") {
+            $_SESSION['lastsorttypeasc'] = "true";
+        }
+    }
+    
     public function retrySendingCode() {
         $this->getApi()->getPmsManager()->processor($this->getSelectedMultilevelDomainName());
         $this->setData();

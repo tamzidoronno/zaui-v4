@@ -74,7 +74,6 @@ class GetShopModuleTable {
             $this->sortByColumn = $_SESSION['lastsorttype'];
             $this->sortingAscending = $_SESSION['lastsorttypeasc'] == "true";
         }
-        
         if (isset($_POST['event']) && $_POST['event'] == "sortGetShopTable") {
             $_SESSION['lastsorttype'] = $_POST['data']['column'];
             $this->sortByColumn = $_POST['data']['column'];
@@ -85,7 +84,7 @@ class GetShopModuleTable {
                 $_SESSION['lastsorttypeasc'] = "true";
             }
         }
-
+        
         $dataToPrint = $this->formatDataToPrint();
         $dataToPrint = $this->sortData($dataToPrint);
         
@@ -504,7 +503,9 @@ class GetShopModuleTable {
                 if (colheader.find('.fa-sort-desc').length > 0) {
                     sorting = "desc";
                 }
-                var event = thundashop.Ajax.createEvent('', 'sortGetShopTable', $(this), {
+                
+                var target = $(this).parents('.app').last();
+                var event = thundashop.Ajax.createEvent('', 'sortGetShopTable', target, {
                     "column": colheader.attr('index'),
                     "sorting": sorting
                 });

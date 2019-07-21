@@ -106,8 +106,6 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     @Autowired
     public Database database;
     
-    @Autowired
-    public GSAdmins gsAdmins;
     private User internalApiUser;
     private String internalApiUserPassword;
     
@@ -152,7 +150,6 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             }
         }
 
-        addGetShopAdmins();
         addCrmAdmins();
         degradeGetSuperShopAdmins();
 //        doubleCheckUniqueCustomerIds();
@@ -179,15 +176,6 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
     }
     
-    private void addGetShopAdmins() throws ErrorException {
-        if (getUserStoreCollection(storeId).getAllUsers().size() > 0) {
-            for (User user : gsAdmins.getAllAdmins()) {
-                user.storeId = storeId;
-                getUserStoreCollection(storeId).addUserDirect(user);
-            }
-        }
-    }
-
     public void addUserDeletedEventListener(UserDeletedEventListener listener) {
         this.userDeletedListeners.add(listener);
     }
@@ -292,7 +280,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if (password == null || password.isEmpty())
             throw new ErrorException(26);
         
-        if (this.isDoubleAuthenticationActivated() || gsAdmins.getGSAdmin(username) != null) {   
+        if (this.isDoubleAuthenticationActivated()) {   
             throw new ErrorException(13);
         }
         
@@ -309,7 +297,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if (password == null || password.isEmpty())
             throw new ErrorException(26);
         
-        if (this.isDoubleAuthenticationActivated() || gsAdmins.getGSAdmin(username) != null) {   
+        if (this.isDoubleAuthenticationActivated()) {   
             throw new ErrorException(13);
         }
         

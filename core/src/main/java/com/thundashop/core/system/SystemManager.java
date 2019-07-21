@@ -202,4 +202,22 @@ public class SystemManager extends ManagerBase implements ISystemManager {
         }
         return result;
     }
+    
+    public String getCustomerIdForStoreId(String storeId) {
+        GetShopSystem system = systems.values()
+                .stream()
+                .filter(o -> o.remoteStoreId != null && o.remoteStoreId.equals(storeId))
+                .distinct()
+                .findFirst()
+                .orElse(null);
+        
+        if (system != null) {
+            User user = userManager.getMainCompanyUser(system.companyId);
+            if (user != null)
+                return user.id;
+        }
+        
+        return "";
+    }
+        
 }

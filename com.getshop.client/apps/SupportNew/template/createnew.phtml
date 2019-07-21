@@ -1,6 +1,8 @@
 <?
 /* @var $this ns_a5175115_187a_4721_90e5_4752fa52ca7a\SupportNew */
 $email = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->emailAddress;
+$prefix = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->prefix;
+$phone = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->cellPhone;
 ?>
 
 <div class='questionbox'>
@@ -27,90 +29,88 @@ $email = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->emailAd
         </div>
         
         <div class='askquestion'>
+            <h2>Almost done...</h2>
             <div>
                 <? echo $this->__f("Changes/Updates to this issue will be notified to the following email address"); ?>
                 <br/>
+                <br/> Email
+                <br/>
                 <input class='gsniceinput1 emailtonotify' value='<? echo $email; ?>'/>
+                <br/> Phone
+                <br/>
+                <input class='gsniceinput1 phoneprefix' value='<? echo $prefix; ?>'/>
+                <input class='gsniceinput1 phonenumber' value='<? echo $phone; ?>'/>
             </div>
+            <br/>
             <?
             echo $this->__f("Please specify urgency..");
             ?>
             <br/>
-            <div class='shop_button urgency' type='urgent'><? echo $this->__f("Normal"); ?></div>
+            <div class='shop_button urgency' type='normal'><? echo $this->__f("Normal"); ?></div>
             <br/><div class='shop_button urgency' type='urgent'><? echo $this->__f("Urgent"); ?></div>         
         </div>
         
     </div>
 </div>
-<div class="infomation">
-    <div class="title">
+
+<div class='supportright'>
+    <div class="infomation">
+        <div class="title">
+            <?
+            echo $this->__f("Need help?");
+            ?>
+        </div>
         <?
-        echo $this->__f("Need help?");
+        echo $this->__f("If the systems are down you can reach us at the phone <b>+47 33 20 08 48</b>, this number should <b>ONLY</b> be used if the systems are unavailable. All other issues needs to be addressed trough the form below. Please make a note of this number where you can access it if the system is down.");
         ?>
     </div>
-    <?
-    echo $this->__f("We are happy to help you solve problems you might encounter! Please fill out the form below and we will get back to you as soon as possible.");
-    ?>
-    <br/>
-    <br/> <?
-    echo $this->__f("If the systems are down you can reach us at the phone <b>+47 33 20 08 48</b>, this number should <b>ONLY</b> be used if the systems are unavailable. All other issues needs to be addressed trough the form below. Please make a note of this number where you can access it if the system is down.");
-    ?>
-</div>
 
-<div class="warningbox">
-    <i class="fa fa-warning"></i>
-    <?
-    echo $this->__f("Only register one support issue for each ticket!")
-    ?>
-</div>
+    <div class="warningbox">
+        <i class="fa fa-warning"></i>
+        <?
+        echo $this->__f("Only register one support issue for each ticket!")
+        ?>
+    </div>
 
-<div>
-    <span class='label'>
-        <? echo $this->__f("Subject"); ?>    
-    </span>
-    
-    <br/>
-    <input class="gsniceinput1 subject" />
-    <br/>
-    <br/>
-    
-    <span class='label'>
-        <? echo $this->__f("What can we help you with?"); ?>    
-    </span>
-    
-    <br/>
-    <textarea class="textarea content" id='editor'></textarea>
-    
-    <div class="shop_button sendbutton">
-        <? echo $this->__f("Send"); ?>
+    <div>
+        <span class='label'>
+            <? echo $this->__f("Subject"); ?>    
+        </span>
+
+        <br/>
+        <input class="gsniceinput1 subject" />
+        <br/>
+        <br/>
+
+        <span class='label'>
+            <? echo $this->__f("What can we help you with?"); ?>    
+        </span>
+
+        <br/>
+        <textarea class="textarea content" id='editor'></textarea>
+
+        <div class="shop_button sendbutton">
+            <? echo $this->__f("Send"); ?>
+        </div>
+
+        <br/>
+        <br/>
+
     </div>
 </div>
 
-
-<style>
-.ck-editor__editable {
-    min-height: 500px;
-}
-</style>
+<div class='dropleft'>
+    <div id="dropzone" action="/file-upload"
+      class="dropzone gsdropzone"
+      id="my-awesome-dropzone"></div>
+</div>
 
 <script>
-    var myEditor;
-    
-    $(function() {
-        ClassicEditor.create( document.querySelector( '#editor' ), {
-             ckfinder: {
-                uploadUrl: '/getshopsupportfileuploader.php'
-            }
-        })
-        .then( editor => {
-            myEditor = editor;
-                console.log( editor );
-        })
-        .catch( error => {
-                console.error( error );
-        });
+    gsDropZone = new Dropzone("div#dropzone", { 
+        url: "/scripts/ticket_dropzone.php"
     });
     
-    $('.subject').focus();
-    
+    gsDropZone.on('sending', function(file, xhr, formData){
+        formData.append('uuid', file.upload.uuid);
+    });
 </script>

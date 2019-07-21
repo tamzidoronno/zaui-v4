@@ -20,4 +20,5 @@ public interface ICustomerTicketManager {
     
     public List<TicketContent> getTicketContents(String storeId, String ticketToken);
     public void addContent(String storeId, String secureTicketId, TicketContent content);
+    public void addAttachmentToTicket(String storeId, String ticketToken, String ticketAttachmentId);
 }

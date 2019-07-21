@@ -20,5 +20,9 @@ public class TicketLight extends DataCommon {
     public String ticketId = "";
     public String title = "";
     public String userId = "";
+    public String urgency = "";
     public Integer incrementalTicketId = 0;
+    public String replyToEmail = "";
+    public String replyToPrefix = "";
+    public String replyToPhone = "";
 }

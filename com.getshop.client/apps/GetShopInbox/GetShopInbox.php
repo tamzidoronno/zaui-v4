@@ -39,23 +39,14 @@ class GetShopInbox extends \MarketingApplication implements \Application {
     
     public function render() {
         echo "<div class='leftmenu'>";
-        $this->includefile("leftmenu");
+            $this->includefile("leftmenu");
         echo "</div>";
 
         echo "<div class='workarea'>";
-        $this->includefile("topmenu");
-        echo "<div class='emaillistarea'>";
-        echo "<h1>Todo</h1>";
-        $this->isCompletedEmails = false;
-        $this->includefile("emails");
-        echo "</div>";
-        if(!$this->isUnassignedView()) {
+//            $this->includefile("topmenu");
             echo "<div class='emaillistarea'>";
-            echo "<h1>Completed</h1>";
-            $this->isCompletedEmails = true;
-            $this->includefile("emails");
+                $this->includefile("ticketlist");
             echo "</div>";
-        }
         echo "</div>";
     }
 
@@ -186,6 +177,44 @@ class GetShopInbox extends \MarketingApplication implements \Application {
 
     public function isUnassignedView() {
         return isset($_SESSION['ns_f1706b4c_f779_4eb7_aec3_ee08f182e090_current_view']) && $_SESSION['ns_f1706b4c_f779_4eb7_aec3_ee08f182e090_current_view'] == "unassigned";
+    }
+
+    public function getTicketFilter() {
+        $filter = new \core_ticket_TicketFilter();
+        return $filter;
+    }
+
+    public function getTickets() {
+        $filter = new \core_ticket_TicketFilter();
+        
+        if ($this->getCurrentTab() == "unassigned") {
+            $filter->state = "CREATED";
+            $filter->type = "UNKOWN";
+            $filter->uassigned = true;
+        }
+        
+        if ($this->getCurrentTab() == "yourcases") {
+            $filter->assignedTo = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id;
+        }
+        
+        if ($this->getCurrentTab() == "billing") {
+            $filter->checkForBilling = true;
+            $filter->state = "COMPLETED";
+        }
+        
+        if ($this->getCurrentTab() == "backlog") {
+            $filter->type = "BACKLOG";
+        }
+        
+        return $this->getApi()->getTicketManager()->getAllTickets($filter);
+    }
+
+    public function getCurrentTab() {
+        if (!isset($_SESSION['ns_f1706b4c_f779_4eb7_aec3_ee08f182e090_current_view'])) {
+            return "yourcases";
+        }
+        
+        return $_SESSION['ns_f1706b4c_f779_4eb7_aec3_ee08f182e090_current_view'];
     }
 
 }

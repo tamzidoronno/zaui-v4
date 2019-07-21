@@ -17,7 +17,6 @@ if (!count($lightTickets)) {
         <div class="date col col1"><? echo $this->__f("Ticket Id"); ?></div>
         <div class="date col col1"><? echo $this->__f("Date"); ?></div>
         <div class="title col col2"><? echo $this->__f("Title"); ?></div>
-        <div class="state col col3"><? echo $this->__f("Status"); ?></div>
         <div class="name col col4"><? echo $this->__f("Created by"); ?></div>
     </div>
 
@@ -36,7 +35,6 @@ if (!count($lightTickets)) {
                 <div class="date col col1"><? echo $lightTicket->incrementalTicketId; ?></div>
                 <div class="date col col1"><? echo date('d.m.Y h:i', strtotime($lightTicket->rowCreatedDate)); ?></div>
                 <div class="title col col2"><? echo $lightTicket->title; ?></div>
-                <div class="state col col3"><? echo $lightTicket->state; ?></div>
                 <div class="name col col4"><? echo $users->{$lightTicket->userId}->fullName; ?></div>
             </div>
         </a>

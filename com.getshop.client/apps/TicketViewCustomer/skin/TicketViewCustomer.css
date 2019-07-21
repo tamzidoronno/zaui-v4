@@ -6,20 +6,73 @@
 
 .TicketViewCustomer .ticketarea {
     display: inline-block;
-    width: calc(100% - 200px);
+    width: calc(100% - 400px);
     vertical-align: top;
     box-sizing: border-box;
     padding: 20px;
 }
 
+.TicketViewCustomer .ticketarea.isgetshop {
+    width: calc(100% - 800px);
+}
+
+.TicketViewCustomer .ticketadmin,
 .TicketViewCustomer .ticketinfo {
     display: inline-block;
-    width: 196px;
+    width: 396px;
     vertical-align: top;
     height: calc(100% - 163px);
     background-color: #EFEFEF;
     box-sizing: border-box;
     padding: 20px;
+    font-size: 16px;   
+}
+
+.TicketViewCustomer .imageviewer {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    padding: 20px;
+    z-index: 1;
+    background-color: rgba(0,0,0,0.5);
+    display: none;
+    padding: 40px;
+    text-align: center;
+}
+
+.TicketViewCustomer .replyarea {
+    margin-top: 30px;
+    font-size: 18px;
+}
+
+.TicketViewCustomer .replycontent {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 17px;
+    padding: 20px;
+    margin-bottom: 20px;
+    height: 400px;
+}
+
+.TicketViewCustomer .contentbox .rowinfo {
+    color: grey;
+    font-size: 14px;
+    text-align: right;
+}
+.TicketViewCustomer .contentbox {
+    padding-bottom: 20px;
     font-size: 16px;
-    
+    padding: 20px;
+}
+
+.TicketViewCustomer .contentbox:nth-child(odd) {
+    background-color: #EFEFEF;
+}
+
+.TicketViewCustomer .compledissuebox {
+    font-size: 20px;
+    color: green;
+    padding-top: 30px;
 }

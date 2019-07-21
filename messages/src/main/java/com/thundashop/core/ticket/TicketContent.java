@@ -14,5 +14,6 @@ import com.thundashop.core.common.DataCommon;
 public class TicketContent extends DataCommon {
     public String content = "";
     public String ticketId = "";
-    public boolean addedByGetShop = false;
+    public boolean addedByGetShop = true;
+    public String addedByUserId = "";
 }

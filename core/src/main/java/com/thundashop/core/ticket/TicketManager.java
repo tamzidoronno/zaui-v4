@@ -7,6 +7,7 @@ package com.thundashop.core.ticket;
 
 import com.getshop.scope.GetShopSession;
 import com.mongodb.BasicDBObject;
+import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -23,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.stereotype.Component;
 
 /**
@@ -97,11 +99,27 @@ public class TicketManager extends ManagerBase implements ITicketManager {
         }
 
         if (filter.type != null) {
-            retList.removeIf(f -> f.type == null || !f.type.equals(filter.type));
+            if (filter.type.equals(TicketType.UNKOWN)) {
+                retList.removeIf(f -> f.type != null && !f.type.equals(filter.type));
+            } else {
+                retList.removeIf(f -> f.type == null || !f.type.equals(filter.type));
+            }
         }
 
         if (filter.state != null) {
             retList.removeIf(f -> f.currentState == null || !f.currentState.equals(filter.state));
+        }
+        
+        if (filter.uassigned) {
+            retList.removeIf(f -> f.assignedToUserId != null && !f.assignedToUserId.isEmpty());
+        }
+        
+        if (filter.assignedTo != null && !filter.assignedTo.isEmpty()) {
+            retList.removeIf(f -> f.assignedToUserId == null || !f.assignedToUserId.equals(filter.assignedTo));
+        }
+        
+        if (filter.checkForBilling) {
+            retList.removeIf(f -> f.hasBeenValidedForTimeUsage || f.incrementalId <= 359);
         }
 
         Collections.sort(retList, (Ticket t1, Ticket t2) -> {
@@ -253,6 +271,16 @@ public class TicketManager extends ManagerBase implements ITicketManager {
     }
 
     @Override
+    public String getTicketIdByToken(String ticketToken) {
+        return tickets.values()
+                .stream()
+                .filter(o -> o.ticketToken != null && !o.ticketToken.isEmpty() && o.ticketToken.equals(ticketToken))
+                .findAny()
+                .map(o -> o.id)
+                .orElse(null);
+    }
+    
+    @Override
     public Ticket getTicketByToken(String storeId, String ticketToken) {
         return tickets.values()
                 .stream()
@@ -262,10 +290,23 @@ public class TicketManager extends ManagerBase implements ITicketManager {
                 .orElse(null);
     }
 
-    void addTicketContent(String ticketId, TicketContent content) {
-        if (tickets.get(ticketId) != null) {
+    @Override
+    public void addTicketContent(String ticketId, TicketContent content) {
+        Ticket ticket = tickets.get(ticketId);
+        if (ticket != null) {
             content.ticketId = ticketId;
+            
+            if (content.addedByGetShop) {
+                content.addedByUserId = getSession().currentUser.id;
+            }
+            
             saveObject(content);
+            
+            if (content.addedByGetShop && ticket.replyToEmail != null && !ticket.replyToEmail.isEmpty()) {
+                messageManager.sendMail(ticket.replyToEmail, ticket.replyToEmail, "There has been added a new repsonse to your ticket: " + ticket.incrementalId , "Please log into your GetShop portal, go to your module and click on I Need Help, there you can see the ticketlist and find your ticket. ", "post@getshop.com", "GetShop");
+            } else {
+                messageManager.sendMail("support@getshop.com", "GetShop Support", "Customer has added a new content to the ticket: " + ticket.incrementalId, content.content, "post@getshop.com", "GetShop");
+            }
         }
     }
 
@@ -279,5 +320,72 @@ public class TicketManager extends ManagerBase implements ITicketManager {
                 .map( o -> (TicketContent)o)
                 .collect(Collectors.toList());
     }
-    
+
+    @Override
+    public void uploadAttachment(TicketAttachment attachment) {
+        if (attachment.id == null || attachment.id.isEmpty()) {
+            throw new ErrorException(26);
+        }
+        
+        saveObject(attachment);
+    }
+
+    @Override
+    public void addAttachmentToTicket(String ticketId, String ticketAttachmentId) {
+        Ticket ticket = tickets.get(ticketId);
+        if (ticket != null) {
+            ticket.attachmentIds.add(ticketAttachmentId);
+            saveObject(ticket);
+        }
+    }
+
+    @Override
+    public TicketAttachment getAttachment(String attachmentId) {
+        BasicDBObject query = new BasicDBObject();
+        query.put("className", "com.thundashop.core.ticket.TicketAttachment");
+        query.put("_id", attachmentId);
+       
+        return database.query("TicketManager", storeId, query)
+                .stream()
+                .map( o -> (TicketAttachment)o)
+                .findAny()
+                .orElse(null);
+    }
+
+    @Override
+    public void changeStateOfTicket(String ticketId, TicketState state) {
+        Ticket ticket = getTicket(ticketId);
+        if (ticket != null) {
+            TicketState oldState = ticket.currentState;
+            ticket.currentState = state;
+           
+            TicketEvent event = new TicketEvent();
+            event.eventType = TicketEventType.STATUS_CHANGED;
+            event.content = "Ticket changed status from " + oldState + " to " + ticket.currentState;
+            ticket.events.add(event);
+            saveObject(ticket);
+            
+            notifyEventChanged(ticket, event);
+        }
+    }
+
+    private void notifyEventChanged(Ticket ticket, TicketEvent event) {
+        // TODO..
+    }
+
+    @Override
+    public void assignTicketToUser(String ticketId, String userId) {
+        Ticket ticket = getTicket(ticketId);
+        if (ticket != null) {
+            ticket.assignedToUserId = userId;
+           
+            TicketEvent event = new TicketEvent();
+            event.eventType = TicketEventType.ASSIGNED_TO;
+            event.content = "Ticket has been assigned to a new GetShop Consultant";
+            ticket.events.add(event);
+            saveObject(ticket);
+            
+            notifyEventChanged(ticket, event);
+        }
+    }   
 }

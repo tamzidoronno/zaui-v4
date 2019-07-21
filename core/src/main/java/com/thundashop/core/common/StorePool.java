@@ -383,15 +383,15 @@ public class StorePool {
     }
 
     private boolean whiteLabeledForVirusScans(JsonObject2 object) {
-        
-        if (object.interfaceName != null && object.interfaceName.equals("core.ticket.ICustomerTicketManager")) {
-            if (object.method != null && object.method.equals("addContent")) {
-                return true;
-            }
-        }
+      
         
         if (object.interfaceName != null && object.interfaceName.equals("core.getshop.IGetShop")) {
             if (object.method != null && object.method.equals("insertNewStore")) {
+                return true;
+            }
+        }
+        if (object.interfaceName != null && object.interfaceName.equals("core.ticket.ITicketManager")) {
+            if (object.method != null && object.method.equals("uploadAttachment")) {
                 return true;
             }
         }

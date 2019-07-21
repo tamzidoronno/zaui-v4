@@ -5,14 +5,15 @@
  */
 package com.thundashop.core.ticket;
 
+import com.thundashop.core.common.DataCommon;
+
 /**
  *
  * @author ktonder
  */
-public enum TicketType {
-    BUG,
-    SUPPORT,
-    FEATURE,
-    BACKLOG,
-    UNKOWN
+public class TicketAttachment extends DataCommon {
+    public String name = "";
+    public String type = "";
+    public int size = 0;
+    public String base64Content = "";
 }

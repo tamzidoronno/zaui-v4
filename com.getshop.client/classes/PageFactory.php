@@ -784,6 +784,11 @@ class PageFactory {
         $row->ignoreTopRow = true;
         $row->addColumn('ca4162a4-b26b-4920-8d51-80b809546167', "c2189ee9-ae84-473a-8df5-32534f74d0bc");
         $this->pages['iotdevices'] = $page;
+        
+        $page = new \ModulePage("ticketview", "getshop");
+        $row = $page->createRow(true);
+        $row->addColumn("f5e525cc-f11e-4611-93bb-1afacd9aade5", "c4eb8022-f405-11e8-8eb2-f2801f1b9fd1");
+        $this->pages['ticketview'] = $page;   
     }
 
     public function addExtraApplicationsNoneInstance($id) {

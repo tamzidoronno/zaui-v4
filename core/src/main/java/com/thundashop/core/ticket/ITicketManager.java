@@ -17,6 +17,7 @@ import java.util.List;
  */
 @GetShopApi
 public interface ITicketManager {
+    @Administrator
     public void saveTicket(Ticket ticket);
     
     @Customer
@@ -43,4 +44,23 @@ public interface ITicketManager {
     public List<TicketContent> getTicketContents(String ticketId);
     
     public void updateTicket(String ticketToken, TicketLight light);
+
+    @Administrator
+    public void addAttachmentToTicket(String ticketId, String ticketAttachmentId);
+    
+    public void uploadAttachment(TicketAttachment attachment);
+    
+    public TicketAttachment getAttachment(String attachmentId);
+    
+    @Administrator
+    public String getTicketIdByToken(String ticketToken);
+    
+    @Administrator
+    public void addTicketContent(String ticketId, TicketContent content);
+    
+    @Administrator
+    public void changeStateOfTicket(String ticketId, TicketState state);
+    
+    @Administrator
+    public void assignTicketToUser(String ticketId, String userId);
 }

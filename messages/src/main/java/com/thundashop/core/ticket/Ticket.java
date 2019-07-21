@@ -30,6 +30,8 @@ public class Ticket extends DataCommon {
     
     public Date dateCompleted = null;
    
+    public String assignedToUserId = "";
+    
     /**
      * Created by store and userid from the store.
      */
@@ -37,7 +39,7 @@ public class Ticket extends DataCommon {
     public String createdByUserId = "";
     
     /** 
-     * This ID correspond to the TicketLight.systemGetShopComTicketId
+     * This ID correspond to the TicketLight.ticketToken
      */
     public String ticketToken = "";
     
@@ -46,10 +48,17 @@ public class Ticket extends DataCommon {
      */
     public Double timeSpent = 0D;
     public Double timeInvoice = 0D;
-    
+    public boolean hasBeenValidedForTimeUsage = false;
+            
     public boolean transferredToAccounting = false;
     public String productId = "";
 
+    public List<String> attachmentIds = new ArrayList();
+    public String urgency = "";
+    public String replyToPhone;
+    public String replyToPrefix;
+    public String replyToEmail;
+    
     public Date getAddonInvoiceDate() {
         if (!currentState.equals(TicketState.COMPLETED)) {
             return null;

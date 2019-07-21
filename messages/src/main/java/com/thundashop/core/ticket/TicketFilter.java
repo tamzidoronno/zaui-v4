@@ -13,4 +13,7 @@ public class TicketFilter {
     public String userId = "";
     public TicketState state;
     public TicketType type;
+    public String assignedTo = "";
+    public boolean checkForBilling = false;
+    public boolean uassigned = false;
 }

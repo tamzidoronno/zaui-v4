@@ -27,7 +27,7 @@
     width: 100%;
     box-sizing: border-box;
     border: solid 1px #DDD;
-    min-height: 500px;
+    min-height: 300px;
 }
 
 .SupportNew .sendbutton {
@@ -71,11 +71,16 @@
     margin-top: 10px;
 }
 
-.SupportNew .questionbox .inner .gsniceinput1 {
+.SupportNew .questionbox .inner .phoneprefix {
+    width: 50px;
+}
+.SupportNew .questionbox .inner .phonenumber {
+    width: 200px;
+}
+
+.SupportNew .questionbox .inner .emailtonotify {
     width: 100%;
     box-sizing: border-box;
-    margin-bottom: 30px;
-    margin-top: 20px;
 }
 
 .SupportNew .questionbox .closebutton {
@@ -114,4 +119,16 @@
     color: #FFF;
     text-align: center;
     margin-bottom: 20px;
+}
+
+.dropleft {
+    display: inline-block;
+    width: 200px;
+    vertical-align: top;
+}
+
+.supportright {
+    display: inline-block;
+    width: calc(100% - 210px);
+    vertical-align: top;
 }

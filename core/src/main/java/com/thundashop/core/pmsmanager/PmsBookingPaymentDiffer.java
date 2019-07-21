@@ -85,10 +85,14 @@ public class PmsBookingPaymentDiffer {
                 row.priceInBooking = getAvaragePrice(date, key, roomAddonsGroupedByDay);
                 row.includedInRoomPrice = key.contains(";isincluded;");
                 row.createOrderOnProductId = key.split(";")[0];
+                row.textOnOrder = getTextOnOrder(date, key, roomAddonsGroupedByDay);
                 
                 row.countFromBooking = getCount(date, key, roomAddonsGroupedByDay);
                 row.countFromOrders = getCount(date, key, orderAddonsGroupedByDay);
                 row.count = row.countFromBooking - row.countFromOrders;
+                if(key.split(";").length > 3) {
+                    row.addonId = key.split(";")[3];
+                }             
                 
                 row.actuallyPaidAmount = getAvaragePrice(date, key, paidAddonsGroupedByDay) * getCount(date, key, paidAddonsGroupedByDay);
                 
@@ -389,6 +393,20 @@ public class PmsBookingPaymentDiffer {
             return 0;
         
         return (sum/count);
+    }
+    
+    private String getTextOnOrder(String date, String key, Map<String, List<PmsBookingAddonItem>> roomAddonsGroupedByDay) {
+        if (roomAddonsGroupedByDay.get(date) == null)
+            return "";
+        
+        String text = "";
+        for(PmsBookingAddonItem tmpItm : roomAddonsGroupedByDay.get(date)) {
+            if(tmpItm.getKey().equals(key) && tmpItm.getName() != null && tmpItm.getName().length() > 0) {
+                text = tmpItm.getName();
+            }
+        }
+        
+        return text;
     }
     
     private HashMap<String, Double> getAvaragePriceByPaymentType(String date, String key, Map<String, List<PmsBookingAddonItem>> roomAddonsGroupedByDay) {

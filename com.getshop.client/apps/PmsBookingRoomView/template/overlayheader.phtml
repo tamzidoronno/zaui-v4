@@ -15,7 +15,25 @@ if(!$pmsBooking->confirmed) {
 ?>
 
 <div class='headerboxes'>
-
+<?php
+if($pmsBookingRoom->unpaidAmount > 0) {
+    echo "<div class='unpaidamountwarning'><i class='fa fa-warning'></i> For this room there is a total of " . $pmsBookingRoom->unpaidAmount ." which not yet has been paid";
+    echo "<div class='shop_button addselecteditemstocart' isgroup='yes' roomid='".$pmsBookingRoom->pmsBookingRoomId."' style='background-color: #86c330; color: #FFF; vertical-align: top;border-radius: 3px; border: solid 0px; float:right;'>Start payment process</div>";
+    echo "</div>";
+?>   
+    <style>
+        .unpaidamountwarning { 
+            border-bottom: solid 1px;
+            background-color: #6b5738;
+            padding: 10px;
+            color: #fff;
+            height: 35px;
+            font-size: 24px;
+        }
+    </style>
+<?php
+}
+?>
     <div class='collapsable_shadowbox first_collapsable_shadowbox' defaultclosed='false'>
         <div class='colheader'>
             Booking information

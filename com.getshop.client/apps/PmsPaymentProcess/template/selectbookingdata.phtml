@@ -104,6 +104,11 @@ if (count($uniqueSegmentIds) > 1) {
                 if (!$this->isSelectedRoom($room->pmsBookingRoomId)) {
                     continue;
                 }
+                $unpaidOrders = $this->getApi()->getPmsInvoiceManager()->getAllUnpaidOrdersForRoom($this->getSelectedMultilevelDomainName(), $room->pmsBookingRoomId);
+                $hasUnpaidOrders = (is_array($unpaidOrders) && sizeof($unpaidOrders) > 0);
+                if($hasUnpaidOrders) {
+                    $hasUnpaidOrders = "<i class='fa fa-warning' style='color:red;' title='You have unpaid orders'></i>";
+                }
 
                 echo "<div class='room' roomid='$room->pmsBookingRoomId'>";
                     echo "<div class='roominformation row toggleshowdetailedroomview' style='position: relative;'>";
@@ -111,13 +116,30 @@ if (count($uniqueSegmentIds) > 1) {
                         echo "<div class='col' style='margin-left: 5px; width: 100px;'>".$firstDate."</div>";
                         echo "<div class='col' style='margin-left: 5px; width: 100px;'>".$endDate."</div>";
                         echo "<div class='col' style='margin-left: 10px; width: calc(100% - 550px);'>".$firstGuestName."</div>";
-                        echo "<div class='col' style='margin-left: 10px;'><div class='totalforroom'></div></div>";
+                        echo "<div class='col' style='margin-left: 10px;'>$hasUnpaidOrders <span class='totalforroom'></span></div>";
                         echo "<div class='col' style='margin-left: 10px;'><i style='position: absolute; right: 10px; top: 5px; font-size: 25px;' class='fa fa-angle-down'></i></div>";
                     echo "</div>";
                     $summary = $this->getApi()->getPmsManager()->getSummaryWithoutAccrued($this->getSelectedMultilevelDomainName(), $booking->id, $room->pmsBookingRoomId);
                     usort($summary->rows, array("ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView", "sortSummaryRowByDate"));
                     $anyFound = false;
                     echo "<div style='display: none;' class='detaileditemlines'>";
+                        if($hasUnpaidOrders) {
+                            echo "<div style='background-color:#4d3838; color:#fff; padding: 20px;font-size: 16px;'>";
+                            echo "<div style='border-bottom: solid 1px; padding: 10px; margin-bottom: 10px;text-align:center;'><i class='fa fa-warning'></i> There is already started payments that needs to be handled if you want to charge the total amount for this room.</div>";
+                            foreach($unpaidOrders as $tmpOrd) {
+                                echo "<div>";
+                                echo "Order " . $tmpOrd->incrementOrderId . " with a total amount of ";
+                                echo $this->getApi()->getOrderManager()->getTotalAmount($tmpOrd);
+                                echo " - <span class='showOrderSummary' style='color:#4da6cb; cursor:pointer;' orderid='".$tmpOrd->id."'>open order</span>";
+                                if(!$tmpOrd->closed) {
+                                    echo " - <span gsclick='deleteOrCreditOrder' orderid='".$tmpOrd->id."' style='color:#4da6cb; cursor:pointer;' orderid='".$tmpOrd->id."'>delete order</span>";
+                                } else {
+                                    echo " - <span gsclick='deleteOrCreditOrder' orderid='".$tmpOrd->id."' style='color:#4da6cb; cursor:pointer;' orderid='".$tmpOrd->id."'>credit order</span>";
+                                }
+                                echo "</div>";
+                            }
+                            echo "</div>";
+                        }
                         foreach ($summary->rows as $row) {
                             if ($row->count == 0 || $this->removeDueToFilter($row, $fstartDate, $fendDate)) {
                                 continue;
@@ -130,14 +152,18 @@ if (count($uniqueSegmentIds) > 1) {
                             if ($accomodation) {
                                 $included = "";
                             }
+                            $name = $product->name;
+                            if($row->textOnOrder) { $name = $row->textOnOrder; }
                             ?>
                             <div class='row cartitemline <? echo $accomodation." ".$included; ?>' date='<? echo $row->date; ?>' createorderonproductid="<? echo $row->createOrderOnProductId; ?>" isaccomocation="<? echo $row->isAccomocation; ?>" includedinroomprice="<? echo $row->includedInRoomPrice; ?>">
                                 <div class='col' style='margin-right: 10px; width: 20px; padding-top: 5px;'><input class='row_checkbox' style='font-size: 20px; height: 20px; width: 20px;' type='checkbox' checked='true'/></div>
                                 <div class='col date' style='vertical-align: top;'><? echo $row->date; ?></div>
                                 <div class='col count' style='vertical-align: top;'><input class='gsniceinput1 item_count' orgcount='<? echo $row->count; ?>' value='<? echo $row->count; ?>'/> x </div>
                                 <div class='col price' style='vertical-align: top;'><input class='gsniceinput1 item_price' orgvalue='<? echo round($row->priceToCreateOrders,2); ?>' value='<? echo round($row->priceToCreateOrders,2); ?>'/></div>
-                                <div class='col productname' style='vertical-align: top;'><? echo $product->name; 
-                                ?></div>
+                                <div class='col productname' style='vertical-align: top;'>
+                                    <input class='gsniceinput1 textOnOrder' type='hidden' orgvalue='<? echo $name; ?>' value='<? echo $name; ?>'/>
+                                    <input class='gsniceinput1 addonId' type='hidden' orgvalue='<? echo $row->addonId; ?>' value='<? echo $row->addonId; ?>'/>
+                                </div>
                             </div>
                             <?
                         }

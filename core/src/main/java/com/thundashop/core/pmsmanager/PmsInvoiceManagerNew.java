@@ -181,16 +181,28 @@ public class PmsInvoiceManagerNew {
     private void addAddonsToCart(PmsOrderCreateRow roomData) {
         Map<String, List<PmsOrderCreateRowItemLine>> res = roomData.items.stream()
                 .filter(o -> !o.isAccomocation && !o.createOrderOnProductId.isEmpty())
-                .collect(Collectors.groupingBy(o -> o.createOrderOnProductId));
-
-        for (String productId : res.keySet()) {
-            List<PmsOrderCreateRowItemLine> days = res.get(productId);
+                .collect(Collectors.groupingBy(o -> o.getKey()));
+        
+        for (String rowKey : res.keySet()) {
+            String[] splitted = rowKey.split(";");
+            String productId = splitted[0];
+            String refId = "";
+            if(splitted.length > 1) {
+                refId = splitted[1];
+            }
+            String referenceId = refId;
+            
+            List<PmsOrderCreateRowItemLine> days = res.get(rowKey);
+            String orderText = getOrderText(days, rowKey);
             CartItem item = cartManager.addProductItem(productId, getCount(days));
             
             Product prod = item.getProduct();
             prod.price = getAveragePrice(days);
             prod.discountedPrice = prod.price;
             prod.externalReferenceId = roomData.roomId;
+            if(orderText != null && orderText.length() > 0) {
+                prod.name = orderText;
+            }
             
             item.setCount(getCount(days));
             
@@ -205,6 +217,9 @@ public class PmsInvoiceManagerNew {
                 addonItem.count = d.count;
                 addonItem.price = d.price;
                 addonItem.productId = item.getProduct().id;
+                addonItem.addonId = referenceId;
+                addonItem.isUniqueOnOrder = (referenceId != null && !referenceId.isEmpty());
+                addonItem.setName(prod.name);
                 
                 try {
                     addonItem.date = sdf.parse(d.date);
@@ -257,5 +272,14 @@ public class PmsInvoiceManagerNew {
         }
         
         orderManager.saveObject(order);
+    }
+
+    private String getOrderText(List<PmsOrderCreateRowItemLine> days, String rowKey) {
+        for(PmsOrderCreateRowItemLine l : days) {
+            if(l.getKey().equals(rowKey)) {
+                return l.textOnOrder;
+            }
+        }
+        return "";
     }
 }

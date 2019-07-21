@@ -73,6 +73,9 @@ public class PmsBookingAddonItem extends TranslationHandler implements Serializa
     public String addedBy;
     public List<PmsBookingAddonItemValidDateRange> validDates = new ArrayList();
     public boolean atEndOfStay;
+    public boolean isUniqueOnOrder = false;
+    public String referenceId = "";
+    
     
     Map<String, String> variations = new HashMap();
     String description;
@@ -155,6 +158,11 @@ public class PmsBookingAddonItem extends TranslationHandler implements Serializa
     public String getKey() {
         String key = productId;
         key += isIncludedInRoomPrice ? ";isincluded;" : ";notincluded;";
+        if(isUniqueOnOrder) {
+            key += ";"+addonId;
+        } else {
+            key += ";";
+        }
         return key;
     }
 }

@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.mongodb.morphia.annotations.Transient;
 
 /**
@@ -1382,6 +1383,10 @@ public class Order extends DataCommon implements Comparable<Order> {
             return true;
         }
         return false;
+    }
+
+    public boolean isPaid() {
+        return status == Order.Status.PAYMENT_COMPLETED;
     }
 
     public static class Status  {

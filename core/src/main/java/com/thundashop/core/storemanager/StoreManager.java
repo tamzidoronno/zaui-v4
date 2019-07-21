@@ -15,6 +15,7 @@ import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MailFactory;
+import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.pagemanager.GetShopModules;
 import com.thundashop.core.storemanager.data.KeyData;
 import com.thundashop.core.storemanager.data.ModuleHomePages;
@@ -43,6 +44,7 @@ import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import javax.annotation.PostConstruct;
+import org.opentravel.ota._2003._05.OrdersType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -70,6 +72,9 @@ public class StoreManager extends ManagerBase implements IStoreManager {
 //    
     @Autowired
     public GetShopSessionScope getShopScope;
+    
+    @Autowired
+    public OrderManager orderManager;
     
     private HashMap<String, KeyData> keyDataStore = new HashMap();
     
@@ -671,9 +676,17 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         List<String> hasSupportForOnDemandOrders = new ArrayList();
         hasSupportForOnDemandOrders.add("1ed4ab1f-c726-4364-bf04-8dcddb2fb2b1"); //Bergstaden
         hasSupportForOnDemandOrders.add("61216a03-827d-44a6-a7f1-8939402c51c1"); //Svanhild
-        if(storeId != null) {
-            return hasSupportForOnDemandOrders.contains(storeId);
+        if(storeId != null && hasSupportForOnDemandOrders.contains(storeId)) {
+            return true;
         }
-        return false;
+        
+        Store store = getMyStore();
+        return store.newPaymentProcess;
+    }
+
+    public void toggleNewPaymentProcess() {
+        Store store = getMyStore();
+        store.newPaymentProcess = true;
+        storePool.saveStore(store);
     }
 }

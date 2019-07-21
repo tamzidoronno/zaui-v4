@@ -34,7 +34,7 @@ unset($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_selected_userid'] );
         
         $value = $appInstance->getConfigurationSetting("hidefrombookingprocess");
         $hiddenFromPayment = "";
-        if($value == "true") {
+        if($value == "true" || $appInstance->hiddenFromPaymentProcess()) {
             $hiddenFromPayment = "hiddenfrompaymentprocess";
         }
 

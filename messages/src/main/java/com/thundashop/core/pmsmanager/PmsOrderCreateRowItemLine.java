@@ -5,6 +5,10 @@
  */
 package com.thundashop.core.pmsmanager;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collector;
+
 /**
  *
  * @author ktonder
@@ -16,9 +20,15 @@ public class PmsOrderCreateRowItemLine {
     public int count = 0;
     public double price = 0D;
     public String date = "";
+    String textOnOrder = "";
+    String addonId = "";
     
     /**
      * If this should be created based on a cartitem from a tab.
      */
     public String cartItemId = "";
+
+    public String getKey() {
+        return createOrderOnProductId + ";" + addonId;
+    }
 }

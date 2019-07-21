@@ -10,6 +10,10 @@ class PmsGlobalSettings extends \WebshopApplication implements \Application {
         return "PmsGlobalSettings";
     }
 
+    public function activateNewPaymentProcess() {
+        $this->getApi()->getPmsInvoiceManager()->toggleNewPaymentProcess($this->getSelectedMultilevelDomainName());
+    }
+    
     public function render() {
         $this->includefile("globalsettings");
     }

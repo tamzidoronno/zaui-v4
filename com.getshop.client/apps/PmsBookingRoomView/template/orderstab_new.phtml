@@ -7,6 +7,10 @@ $extraOrders = $this->getApi()->getPmsManager()->getExtraOrderIds($this->getSele
 $summary = $this->getApi()->getPmsManager()->getSummary($this->getSelectedMultilevelDomainName(), $pmsBooking->id, $room->pmsBookingRoomId);
 $summaryWithoutAccrued = $this->getApi()->getPmsManager()->getSummaryWithoutAccrued($this->getSelectedMultilevelDomainName(), $pmsBooking->id, $room->pmsBookingRoomId);
 
+$showCredittedHistory = isset($_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_showcredittedhistory']) && $_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_showcredittedhistory'];
+$showAllOrders = isset($_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_showallorders']) && $_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_showallorders'];
+
+
 $orderMissing = 0;
 $paymentMissing = 0;
 
@@ -19,7 +23,8 @@ if ($extraOrders) {
     $allOrderIds = array_merge($allOrderIds, $extraOrders);
 }
 
-$allOrderIds = $this->filterOrderIds($allOrderIds);
+if(!$showAllOrders)
+    $allOrderIds = $this->filterOrderIds($allOrderIds);
 
 $unpaidOrders = false;
 
@@ -27,7 +32,7 @@ foreach ($allOrderIds as $orderId) {
     
     $orderIsForRoom = $this->getApi()->getPmsManager()->doesOrderCorrolateToRoom($this->getSelectedMultilevelDomainName(),$room->pmsBookingRoomId, $orderId);
     
-    if(!$orderIsForRoom) {
+    if(!$orderIsForRoom && !$showAllOrders) {
         continue;
     }
     
@@ -71,15 +76,7 @@ $payAfterStay = $room->createOrdersOnZReport && !($needToCreateOrdersFor <= 1 &&
 <div style='font-size: 16px;'>
     <? 
     echo "<div style='color: #8ac136; padding: 5px; padding-left: 10px; '><i class='fa fa-info-circle'></i> ".$this->__f("The total amount for this room is")." ".$totalForRoom."</div>";
-    
-    if ($needToCreateOrdersFor && !$payAfterStay) {
-        echo "<div style='color: #f96a38; padding: 5px; padding-left: 10px; '><i class='fa fa-warning'></i> ".$this->__f("You need to create a payment of total")." ".$needToCreateOrdersFor."</div>";
-    }
-    
-    if ($orders && $unpaidOrders && !$payAfterStay) {
-        echo "<div style='color: #f96a38; padding: 5px; padding-left: 10px; '><i class='fa fa-warning'></i> ".$this->__f("Note, you have unpaid orders... Please make sure that all orders are paid.")."</div>";
-    }
-    
+        
     if ($payAfterStay) {
         echo "<div style='border: solid 1px red; padding: 20px; color: red; margin-top: 20px;'>";
             echo "<i class='fa fa-warning'></i> ".$this->__f("This room has not yet been paid as pay after stay has been activated.");
@@ -93,7 +90,9 @@ $payAfterStay = $room->createOrdersOnZReport && !($needToCreateOrdersFor <= 1 &&
 <div>
     <div class='insideheader'>
         <? echo $this->__f("Payments"); ?>
-        <div class="gs_shop_small_icon" style='font-size: 13px;' gsclick="toggleCreditHistory"><? echo $this->__f("Toggle credit history"); ?></div>
+        <div class="gs_shop_small_icon" style='font-size: 13px; margin-left: 3px;' onclick="$('.detailedorderoverviewsummary').toggle()"><? echo $this->__f("Toggle details"); ?></div>
+        <div class="gs_shop_small_icon" style='font-size: 13px; margin-left: 3px;' gsclick="toggleCreditHistory"><? echo $showCredittedHistory ? $this->__f("Hide credit history") : $this->__f("Show credit history"); ?></div> 
+        <div class="gs_shop_small_icon" style='font-size: 13px;' gsclick="toggleAllOrders"><? echo  $showAllOrders ? $this->__f("Hide all orders for group") : $this->__f("Show all orders for group") . " (" . sizeof($pmsBooking->orderIds) . ")"; ?></div> 
     </div>
     
    <?
@@ -171,14 +170,34 @@ $payAfterStay = $room->createOrdersOnZReport && !($needToCreateOrdersFor <= 1 &&
                             <a href='/pms.php?page=orderviewpage&orderid=<? echo $order->id; ?>' target='_blank'>
                                 <div class='entry' orderid="<? echo $order->id; ?>">
                                     <i class="fa fa-arrow-right"></i> <? echo $this->__f("Open"); ?>
-                                </div>
-                            </a>
                         </div>
+                            </a>
                     </div>
                 </div>
             </div>
+                <?php
+                if($showAllOrders) {
+                    $rooms = $this->getApi()->getPmsManager()->getAllRoomsOnOrder($this->getSelectedMultilevelDomainName(), $order->id);
+                    foreach($rooms as $room) {
+                        echo "<div class='row row_payment_status_line row_payment_status_line_expanded'>";
+                        echo "<div class='col col_date' style='padding-left: 20px;'> ".$room->room . "</div> ";
+                        echo "<div class='col col_productname'> ".$room->roomType."</div> ";
+                        echo "<div class='col col_value'> ".$room->totalCost."</div> ";
+                        echo "<div class='col col_value'> ".date("d.m.Y H:i", $room->start/1000)."</div> ";
+                        echo "<div class='col col_value'> ".date("d.m.Y H:i", $room->end/1000)."</div> ";
+                        $guestsNames = array();
+                        foreach($room->guest as $g) {
+                            if($g->name) {
+                                $guestsNames[] = $g->name;
+                            }
+                        }
+                        echo "<div class='col col_guestname'> ".join(",", $guestsNames)."</div>";
+                        echo "</div>";
+                    }
+                }
+                ?>
+            </div>
             <?
-        
         }
    }
     ?>
@@ -186,7 +205,7 @@ $payAfterStay = $room->createOrdersOnZReport && !($needToCreateOrdersFor <= 1 &&
 
 <br/>
 <br/>
-<div>
+<div style="display:none;" class="detailedorderoverviewsummary">
     <div class='insideheader'>Detailed order summary for <? echo $room->guests[0]->name; ?></div>
     
     <?
@@ -305,6 +324,10 @@ $payAfterStay = $room->createOrdersOnZReport && !($needToCreateOrdersFor <= 1 &&
 
 
 <div class="information" style="margin-bottom: 30px; border: solid 1px #DDD; padding: 10px; background-color: #feffc1; text-align: center">
-    This version is in early development phase, its just for preview but we will be doing lots of development on this during the upcoming days.
     <div class="gs_shop_small_icon" gsclick="switchToOldVersion">Go back to old version</div>
 </div>
+<style>
+    .row_payment_status_line_expanded  { border-top: 0px !important; padding:0px !important;}
+    .row_payment_status_line_expanded  .col_guestname { width: 120px; }
+    .row_payment_status_line_expanded .col { font-size: 10px !important; color:#251212; }
+</style>

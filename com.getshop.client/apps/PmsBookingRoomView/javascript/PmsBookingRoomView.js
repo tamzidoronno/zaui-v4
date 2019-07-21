@@ -53,6 +53,7 @@ app.PmsBookingRoomView = {
         $(document).on('change', '.PmsBookingRoomView .emailRecipient', this.changeEmailRecipent)
         $(document).on('change', '.PmsBookingRoomView .confirmationEmailTemplate', this.changeEmailTemplate)
         $(document).on('click', '.PmsBookingRoomView .showOrderSummary', this.showOrderSummary);
+        $(document).on('click', '.PmsPaymentProcess .showOrderSummary', this.showOrderSummary);
         $(document).on('click', '.PmsBookingRoomView .connectGuestToConference', this.showAddConferencePanel);
         $(document).on('click','.PmsBookingRoomView .attachguesttoevent', app.PmsBookingRoomView.attachGuestToConference);
         $(document).on('click','.PmsBookingRoomView .removeConferenceFromGuest', app.PmsBookingRoomView.removeGuestToConference);

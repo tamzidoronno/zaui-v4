@@ -42,6 +42,10 @@ class PaymentApplication extends ApplicationBase {
         return false;
     }
     
+    public function hiddenFromPaymentProcess() {
+        return false;
+    }
+    
     public function hasAttachment() {
         return false;
     }

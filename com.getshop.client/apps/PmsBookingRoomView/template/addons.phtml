@@ -81,10 +81,7 @@ if(sizeof($addons) > 0) {
         echo "<div class='row' productId='".$addon->productId."'>";
         echo "<div class='col col-1'><i class='fa fa-square-o toggleRemoveAddonCheckBox forGroup'></i></div>";
         
-        $name = $addon->name;
-        if(!$name) {
-            $name = $this->getApi()->getProductManager()->getProduct($addon->productId)->name;
-        }
+        $name = $this->getApi()->getProductManager()->getProduct($addon->productId)->name;
         
         echo "<div class='col col-2'>".$name."</div>";
         echo "<div class='col col-3'>".$addonsCount."</div>";
@@ -92,7 +89,7 @@ if(sizeof($addons) > 0) {
         echo "<div class='col col-4'></div>";
         echo "</div>";
         $productAddonPrinted[] = $addon->productId;
-        
+        $counter = 0;
         foreach($addons as $addonRow) {
             if($addon->productId != $addonRow->productId) {
                 continue;
@@ -109,11 +106,15 @@ if(sizeof($addons) > 0) {
             if($addonRow->isIncludedInRoomPrice) {
                 $checked = "CHECKED";
             }
-            echo "<input type='checkbox' gsname='includedinroomprice' $checked $disabledPricing>";
+                echo "<input type='checkbox' gsname='includedinroomprice' $checked $disabledPricing>";
             echo $percentagePrice;
             echo "</div>";
+            if($counter == 0 || $addonRow->isUniqueOnOrder) {
+                echo "<div class='col col-5'><input type='text' class='gsniceinput1' gsname='name' value='".$addonRow->name."' style='width:220px;'></div>";
+            }
             
             echo "</div>";
+            $counter++;
         }
      }
      echo "<div style='text-align:right; padding: 10px;'>";

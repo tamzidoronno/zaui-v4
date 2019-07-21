@@ -237,7 +237,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private List<String> warnedAboutNotAddedToBookingEngine = new ArrayList();
     private boolean convertedDiscountSystem = false;
     private String currentBookingId = "";
-    private boolean updatedAllBookings = false;
+//    private boolean updatedAllBookings = false;
 
     @Autowired
     public void setOrderManager(OrderManager orderManager) {
@@ -2088,12 +2088,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void processor() {
         
-        if(userManager.isLoggedIn() && userManager.getLoggedOnUser().isAdministrator()) {
-            if(!updatedAllBookings) {
-                pmsInvoiceManager.toggleNewPaymentProcess();
-                updatedAllBookings = true;
-            }
-        }
+//        if(userManager.isLoggedIn() && userManager.getLoggedOnUser().isAdministrator()) {
+//            if(!updatedAllBookings) {
+//                pmsInvoiceManager.toggleNewPaymentProcess();
+//                updatedAllBookings = true;
+//            }
+//        }
         
         PmsManagerProcessor processor = new PmsManagerProcessor(this);
         processor.doProcessing();

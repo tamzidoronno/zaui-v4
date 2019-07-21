@@ -152,14 +152,18 @@ if (count($uniqueSegmentIds) > 1) {
                             if ($accomodation) {
                                 $included = "";
                             }
+                            $name = $product->name;
+                            if($row->textOnOrder) { $name = $row->textOnOrder; }
                             ?>
                             <div class='row cartitemline <? echo $accomodation." ".$included; ?>' date='<? echo $row->date; ?>' createorderonproductid="<? echo $row->createOrderOnProductId; ?>" isaccomocation="<? echo $row->isAccomocation; ?>" includedinroomprice="<? echo $row->includedInRoomPrice; ?>">
                                 <div class='col' style='margin-right: 10px; width: 20px; padding-top: 5px;'><input class='row_checkbox' style='font-size: 20px; height: 20px; width: 20px;' type='checkbox' checked='true'/></div>
                                 <div class='col date' style='vertical-align: top;'><? echo $row->date; ?></div>
                                 <div class='col count' style='vertical-align: top;'><input class='gsniceinput1 item_count' orgcount='<? echo $row->count; ?>' value='<? echo $row->count; ?>'/> x </div>
                                 <div class='col price' style='vertical-align: top;'><input class='gsniceinput1 item_price' orgvalue='<? echo round($row->priceToCreateOrders,2); ?>' value='<? echo round($row->priceToCreateOrders,2); ?>'/></div>
-                                <div class='col productname' style='vertical-align: top;'><? echo $product->name; 
-                                ?></div>
+                                <div class='col productname' style='vertical-align: top;'>
+                                    <input class='gsniceinput1 textOnOrder' type='hidden' orgvalue='<? echo $name; ?>' value='<? echo $name; ?>'/>
+                                    <input class='gsniceinput1 addonId' type='hidden' orgvalue='<? echo $row->addonId; ?>' value='<? echo $row->addonId; ?>'/>
+                                </div>
                             </div>
                             <?
                         }

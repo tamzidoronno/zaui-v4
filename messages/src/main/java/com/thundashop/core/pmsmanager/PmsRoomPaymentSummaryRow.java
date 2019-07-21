@@ -89,6 +89,16 @@ public class PmsRoomPaymentSummaryRow implements Serializable {
     public String createOrderOnProductId = "";
     
     /**
+     * Override this with an order text if nessesary.
+     */
+    public String textOnOrder = "";
+    
+    /**
+     * Used to identify is the order is unique or not
+     */
+    public String addonId = "";
+    
+    /**
      * field createdOrdersFor based on payment type.
      */
     HashMap<String, Double> createdOrdersForByPaymentMethods;

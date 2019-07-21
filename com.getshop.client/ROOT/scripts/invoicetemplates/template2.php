@@ -180,7 +180,9 @@ $isInvoice = $order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200
             <div class='col col1'><? 
             if(isset($order->cart->address->countrycode)) {
                 $ccodes = \CountryCodes::getCodes();
-                echo $ccodes[$order->cart->address->countrycode];
+                if(isset($ccodes[$order->cart->address->countrycode])) {
+                    echo $ccodes[$order->cart->address->countrycode];
+                }
             }
             ?></div>
             <div class='col col2 bold' style='color: green;'><? echo $translator->translate("Currency"); ?></div>

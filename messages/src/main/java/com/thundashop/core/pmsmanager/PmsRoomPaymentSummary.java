@@ -36,6 +36,8 @@ public class PmsRoomPaymentSummary {
         ret.count = o.count;
         ret.price = o.priceToCreateOrders;
         ret.date = o.date;
+        ret.textOnOrder = o.textOnOrder;
+        ret.addonId = o.addonId;
         return ret;
     }
  

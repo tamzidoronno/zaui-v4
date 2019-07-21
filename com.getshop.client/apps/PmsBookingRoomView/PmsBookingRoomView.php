@@ -1200,6 +1200,10 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
                 $addon->price = $_POST['data'][$addon->addonId]['price'];
                 $addon->count = $_POST['data'][$addon->addonId]['count'];
                 $addon->date = $this->convertToJavaDate(strtotime($_POST['data'][$addon->addonId]['date']));
+                $addon->name = "";
+                if(isset($_POST['data'][$addon->addonId]['name'])) {
+                    $addon->name = $_POST['data'][$addon->addonId]['name'];
+                }
             }
         }
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);

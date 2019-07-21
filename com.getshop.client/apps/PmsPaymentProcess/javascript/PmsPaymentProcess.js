@@ -315,6 +315,8 @@ app.PmsPaymentProcess = {
                     includedInRoomPrice : $(this).attr('includedinroomprice') == "1" ? true : false,
                     count : $(this).find('.item_count').val(),
                     price : $(this).find('.item_price').val(),
+                    textOnOrder : $(this).find('.textOnOrder').val(),
+                    addonId : $(this).find('.addonId').val(),
                     date : $(this).attr('date'),
                     cartItemId : $(this).attr('cartitemid')
                 }

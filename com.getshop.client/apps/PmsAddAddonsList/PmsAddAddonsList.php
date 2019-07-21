@@ -52,6 +52,8 @@ class PmsAddAddonsList extends \WebshopApplication implements \Application {
                 $addon->noRefundable = $addonToUse->noRefundable;
                 $addon->addonId = $this->generate_uuid();
                 $addon->bookingicon = $addonToUse->bookingicon;
+                $addon->isUniqueOnOrder = $addonToUse->isUniqueOnOrder;
+                
                 if($_POST['data']['includedInRoomPrice'] == "true") {
                     $addon->isIncludedInRoomPrice = true;
                 }

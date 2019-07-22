@@ -3187,7 +3187,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         if(order.isAlreadyPaidAndDifferentStatus(oldOrder)) {
-            messageManager.sendErrorNotification("Tried to revert an order with a different payment status, incid: " + order.incrementOrderId, null);
+            logPrint("Tried to revert an order with a different payment status, incid: " + order.incrementOrderId);
             resetOrder(oldOrder, order);
             throw new ErrorException(1063);
         }

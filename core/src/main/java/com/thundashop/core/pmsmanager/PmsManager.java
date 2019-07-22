@@ -4199,6 +4199,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public void sendPaymentRequest(String bookingId, String email, String prefix, String phone, String message) {
         if(!message.contains("{paymentlink}")) {
             messageManager.sendErrorNotification("No payment link variables in message: " + message, null);
+            return;
         }
         
         pmsNotificationManager.setEmailToSendTo(email);

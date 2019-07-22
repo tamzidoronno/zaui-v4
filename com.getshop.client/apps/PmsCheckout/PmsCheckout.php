@@ -21,7 +21,10 @@ class PmsCheckout extends \WebshopApplication implements \Application {
 
     public function render() {
         echo "<div class='checkoutarea'>";
-        $this->includefile("checkout");
+//        $this->includefile("checkout");
+        echo "<div style='font-size: 30px; margin: 20px;'>";
+        echo "This version of the payment process is no longer supported, please use the new one, go to payments and click on the show new version button.";
+        echo "</div>";
         echo "</div>";
     }
 

@@ -10537,7 +10537,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 .map(id -> orderManager.getOrderSecure(id))
                 .filter(o -> o != null)
                 .filter(o -> !o.isAccruedPayment())
-                .filter(o -> (o.isPaid() || o.isInvoice()))
+                .filter(o -> (o.isPaid() || o.isInvoice() || o.isPrepaidByOTA()))
                 .collect(Collectors.toList());
         } else {       
             orders = orderIds

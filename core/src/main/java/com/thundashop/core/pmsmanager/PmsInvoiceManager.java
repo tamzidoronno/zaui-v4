@@ -1054,6 +1054,18 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         List<PmsBooking> bookings = pmsManager.getAllBookings(null);
         
         for(PmsBooking booking : bookings) {
+            if(booking.channel != null && booking.channel.startsWith("wubook_") && booking.paymentType != null) {
+                if(booking.orderIds.isEmpty()) {
+                    boolean update = false;
+                    if(booking.paymentType.equals("92bd796f-758e-4e03-bece-7d2dbfa40d7a")) { update = true; }
+                    if(booking.paymentType.equals("d79569c6-ff6a-4ab5-8820-add42ae71170")) { update = true; }
+                    if(booking.paymentType.equals("639164bc-37f2-11e6-ac61-9e71128cae77")) { update = true; }
+                    if(update) {
+                        autoCreateOrderForBookingAndRoom(booking.id, booking.paymentType);
+                    }
+                }
+            }
+            
             pmsManager.calculateUnsettledAmountForRooms(booking);
         }
         

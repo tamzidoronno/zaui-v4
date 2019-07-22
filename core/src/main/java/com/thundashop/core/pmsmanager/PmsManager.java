@@ -9474,6 +9474,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if(avoidChargeNow && daysUntilStart > 0) {
                 continue;
             }
+            pmsInvoiceManager.autoCreateOrderForBookingAndRoom(book.id, null);
             
             PmsWubookCCardData test = new PmsWubookCCardData();
             test.bookingId = book.id;

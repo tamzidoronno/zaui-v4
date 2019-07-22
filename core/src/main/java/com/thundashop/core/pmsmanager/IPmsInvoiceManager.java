@@ -142,5 +142,5 @@ public interface IPmsInvoiceManager {
     @Administrator
     public List<Order> getAllUnpaidOrdersForRoom(String pmsBookingRoomId);
     
-
+    public String autoCreateOrderForBookingAndRoom(String roomBookingId, String paymentMethod);
 }

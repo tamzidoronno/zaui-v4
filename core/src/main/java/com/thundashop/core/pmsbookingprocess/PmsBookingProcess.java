@@ -1250,6 +1250,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         
         boolean allPaidFor = true;
         for(PmsBooking booking : bookings) {
+            pmsInvoiceManager.autoCreateOrderForBookingAndRoom(booking.id, null);
             for(PmsBookingRooms r : booking.rooms) {
                 if(!pmsInvoiceManager.isRoomPaidFor(r.pmsBookingRoomId)) {
                     allPaidFor = false;

@@ -2088,35 +2088,35 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void processor() {
         
-//        if(userManager.isLoggedIn() && userManager.getLoggedOnUser().isAdministrator()) {
-//            if(!updatedAllBookings) {
-//                pmsInvoiceManager.toggleNewPaymentProcess();
-//                updatedAllBookings = true;
-//            }
-//        }
-
-
-        if(!updatedAllBookings) {
-            for(PmsBooking book : bookings.values()) {
-                try {
-                    if(book.channel != null && book.channel.startsWith("wubook_") && book.paymentType != null) {
-                        if(book.orderIds.isEmpty()) {
-                            boolean update = false;
-                            if(book.paymentType.equals("92bd796f-758e-4e03-bece-7d2dbfa40d7a")) { update = true; }
-                            if(book.paymentType.equals("d79569c6-ff6a-4ab5-8820-add42ae71170")) { update = true; }
-                            if(book.paymentType.equals("639164bc-37f2-11e6-ac61-9e71128cae77")) { update = true; }
-                            if(update) {
-                                pmsInvoiceManager.autoCreateOrderForBookingAndRoom(book.id, book.paymentType);
-                            }
-                        }
-                    }
-                }catch(Exception e) {
-                    logPrintException(e);
-                }
+        if(userManager.isLoggedIn() && userManager.getLoggedOnUser().isAdministrator()) {
+            if(!updatedAllBookings) {
+                pmsInvoiceManager.toggleNewPaymentProcess();
                 updatedAllBookings = true;
             }
         }
-        
+
+
+//        if(!updatedAllBookings) {
+//            for(PmsBooking book : bookings.values()) {
+//                try {
+//                    if(book.channel != null && book.channel.startsWith("wubook_") && book.paymentType != null) {
+//                        if(book.orderIds.isEmpty()) {
+//                            boolean update = false;
+//                            if(book.paymentType.equals("92bd796f-758e-4e03-bece-7d2dbfa40d7a")) { update = true; }
+//                            if(book.paymentType.equals("d79569c6-ff6a-4ab5-8820-add42ae71170")) { update = true; }
+//                            if(book.paymentType.equals("639164bc-37f2-11e6-ac61-9e71128cae77")) { update = true; }
+//                            if(update) {
+//                                pmsInvoiceManager.autoCreateOrderForBookingAndRoom(book.id, book.paymentType);
+//                            }
+//                        }
+//                    }
+//                }catch(Exception e) {
+//                    logPrintException(e);
+//                }
+//                updatedAllBookings = true;
+//            }
+//        }
+         
         PmsManagerProcessor processor = new PmsManagerProcessor(this);
         processor.doProcessing();
         getShopLockSystemManager.pingServers();

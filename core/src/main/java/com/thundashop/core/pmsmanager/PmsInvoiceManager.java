@@ -116,11 +116,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     @Override
     public String createOrderOnUnsettledAmount(String bookingId) {
-        NewOrderFilter filter = new NewOrderFilter();
-        PmsBooking booking = pmsManager.getBooking(bookingId);
-        filter.endInvoiceAt = booking.getEndDate();
-        filter.prepayment = true;
-        return createOrder(bookingId, filter);
+        return autoCreateOrderForBookingAndRoom(bookingId, null);
     }
 
     private List<CartItem> getLostItems(PmsBooking booking) {

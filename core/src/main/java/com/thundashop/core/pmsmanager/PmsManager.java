@@ -2088,12 +2088,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void processor() {
         
-        if(userManager.isLoggedIn() && userManager.getLoggedOnUser().isAdministrator()) {
-            if(!updatedAllBookings) {
-                pmsInvoiceManager.toggleNewPaymentProcess();
-                updatedAllBookings = true;
-            }
-        }
+//        if(userManager.isLoggedIn() && userManager.getLoggedOnUser().isAdministrator()) {
+//            if(!updatedAllBookings) {
+//                pmsInvoiceManager.toggleNewPaymentProcess();
+//                updatedAllBookings = true;
+//            }
+//        }
         
         PmsManagerProcessor processor = new PmsManagerProcessor(this);
         processor.doProcessing();

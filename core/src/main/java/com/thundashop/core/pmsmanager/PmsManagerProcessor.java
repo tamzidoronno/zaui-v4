@@ -51,8 +51,8 @@ public class PmsManagerProcessor {
         checkTimer("processAutoDeletion");
         try { processLockSystem(); }catch(Exception e) {manager.logPrintException(e); }
         checkTimer("processLockSystem");
-        try { sendPaymentLinkOnUnpaidBookings(); }catch(Exception e) { manager.logPrintException(e); }
-        checkTimer("sendPaymentLinkOnUnpaidBookings");
+//        try { sendPaymentLinkOnUnpaidBookings(); }catch(Exception e) { manager.logPrintException(e); }
+//        checkTimer("sendPaymentLinkOnUnpaidBookings");
         try { sendRecieptsOnCompletedPayments(); }catch(Exception e) { manager.logPrintException(e); }
         checkTimer("sendRecieptsOnCompletedPayments");
         try { autoMarkOrdersAsPaid(); }catch(Exception e) { manager.logPrintException(e); }
@@ -1033,47 +1033,15 @@ public class PmsManagerProcessor {
                 continue;
             }
             
-            for(String orderId : book.orderIds) {
-                Order order = manager.orderManager.getOrder(orderId);
-                if(order.avoidAutoSending) {
-                    continue;
-                }
-                if(order.status == Order.Status.PAYMENT_COMPLETED) {
-                   continue; 
-                }
-                if(order.payment != null && order.payment.paymentType != null && 
-                        (!order.payment.paymentType.toLowerCase().contains("dibs") &&
-                        !order.payment.paymentType.toLowerCase().contains("netaxept") &&
-                        !order.payment.paymentType.toLowerCase().contains("stripe") &&
-                        !order.payment.paymentType.toLowerCase().contains("epay"))) {
-                    continue;
-                }
-                
-                String key = "autosendmissingpayment_" + book.id;
-                if(order.attachedToRoom != null && !order.attachedToRoom.isEmpty()) {
-                    PmsBookingRooms room = book.getRoom(order.attachedToRoom);
-                    if(!room.date.start.before(cal.getTime())) {
-                        continue;
-                    }
-                    
-                    if(order.recieptEmail == null || order.recieptEmail.isEmpty()
-                            && room.guests != null && !room.guests.isEmpty()) {
-                        //Make sure it asks for the correct person to send email to.
-                        order.recieptEmail = room.guests.get(0).email;
-                        manager.orderManager.saveOrder(order);
-                    }
-                    
-                    key = key + "_" + order.id;
-                }
-                
-                if(book.notificationsSent.contains(key)) {
-                    continue;
-                }
-
-                manager.sendMissingPayment(orderId, book.id);
-                book.notificationsSent.add(key);
-                manager.saveBooking(book);
-            }
+            User usr = manager.userManager.getUserById(book.userId);
+            String bookingId = book.id;
+            String key = "autosendmissingpayment";
+            String message = manager.getMessage(bookingId, key);
+            manager.sendPaymentRequest(bookingId, usr.emailAddress, usr.prefix, usr.cellPhone, message);
+            
+            key = "autosendmissingpayment_" + book.id;
+            book.notificationsSent.add(key);
+            manager.saveBooking(book);
         }
     }
 

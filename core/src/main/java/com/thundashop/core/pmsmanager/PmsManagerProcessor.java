@@ -51,8 +51,8 @@ public class PmsManagerProcessor {
         checkTimer("processAutoDeletion");
         try { processLockSystem(); }catch(Exception e) {manager.logPrintException(e); }
         checkTimer("processLockSystem");
-//        try { sendPaymentLinkOnUnpaidBookings(); }catch(Exception e) { manager.logPrintException(e); }
-//        checkTimer("sendPaymentLinkOnUnpaidBookings");
+        try { sendPaymentLinkOnUnpaidBookings(); }catch(Exception e) { manager.logPrintException(e); }
+        checkTimer("sendPaymentLinkOnUnpaidBookings");
         try { sendRecieptsOnCompletedPayments(); }catch(Exception e) { manager.logPrintException(e); }
         checkTimer("sendRecieptsOnCompletedPayments");
         try { autoMarkOrdersAsPaid(); }catch(Exception e) { manager.logPrintException(e); }
@@ -1006,8 +1006,7 @@ public class PmsManagerProcessor {
             if(book.getActiveRooms().isEmpty()) {
                 continue;
             }
-            if(book.isSynxis()) {
-                //Gds don't send payment links.
+            if(!book.autosendPaymentLink()) {
                 continue;
             }
             
@@ -1033,13 +1032,16 @@ public class PmsManagerProcessor {
                 continue;
             }
             
+            String key = "autosendmissingpayment_" + book.id;
+            if(book.notificationsSent.contains(key)) {
+                continue;
+            }
+            
             User usr = manager.userManager.getUserById(book.userId);
             String bookingId = book.id;
-            String key = "autosendmissingpayment";
-            String message = manager.getMessage(bookingId, key);
+            String message = manager.getMessage(bookingId, "booking_paymentmissing");
             manager.sendPaymentRequest(bookingId, usr.emailAddress, usr.prefix, usr.cellPhone, message);
             
-            key = "autosendmissingpayment_" + book.id;
             book.notificationsSent.add(key);
             manager.saveBooking(book);
         }

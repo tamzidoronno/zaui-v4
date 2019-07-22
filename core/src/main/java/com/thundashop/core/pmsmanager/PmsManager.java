@@ -237,7 +237,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private List<String> warnedAboutNotAddedToBookingEngine = new ArrayList();
     private boolean convertedDiscountSystem = false;
     private String currentBookingId = "";
-//    private boolean updatedAllBookings = false;
+    private boolean updatedAllBookings = false;
 
     @Autowired
     public void setOrderManager(OrderManager orderManager) {
@@ -2088,12 +2088,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void processor() {
         
-//        if(userManager.isLoggedIn() && userManager.getLoggedOnUser().isAdministrator()) {
-//            if(!updatedAllBookings) {
-//                pmsInvoiceManager.toggleNewPaymentProcess();
-//                updatedAllBookings = true;
-//            }
-//        }
+        if(userManager.isLoggedIn() && userManager.getLoggedOnUser().isAdministrator()) {
+            if(!updatedAllBookings) {
+                pmsInvoiceManager.toggleNewPaymentProcess();
+                updatedAllBookings = true;
+            }
+        }
         
         PmsManagerProcessor processor = new PmsManagerProcessor(this);
         processor.doProcessing();
@@ -4197,6 +4197,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void sendPaymentRequest(String bookingId, String email, String prefix, String phone, String message) {
+        if(!message.contains("{paymentlink}")) {
+            messageManager.sendErrorNotification("No payment link variables in message: " + message, null);
+        }
+        
         pmsNotificationManager.setEmailToSendTo(email);
         pmsNotificationManager.setPrefixToSendTo(prefix);
         pmsNotificationManager.setPhoneToSendTo(phone);

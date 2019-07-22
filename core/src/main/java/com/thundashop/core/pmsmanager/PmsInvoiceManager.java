@@ -1048,7 +1048,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             logPrintException(e);
         }
         
-        messageManager.sendErrorNotification("Failed to redirect booking : " + bookingId, null);
+        logPrint("Failed to redirect booking : " + bookingId);
         return "";
     }
 

@@ -1059,6 +1059,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 if(newbooking.channel != null && newbooking.channel.equals("wubook_1")) {
                    if(pmsManager.getConfigurationSecure().useGetShopPricesOnExpedia) {
                        doNormalPricing = false;
+                        if(newbooking.paymentType != null && !newbooking.paymentType.isEmpty()) {
+                            pmsInvoiceManager.autoCreateOrderForBookingAndRoom(newbooking.id, newbooking.paymentType);
+                        }
                    }
                 }
             }

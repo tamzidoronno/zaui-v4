@@ -177,6 +177,7 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
             $bookingToSend = $this->getCurrentBooking();
             $this->currentBooking = $this->getApi()->getPmsManager()->completeCurrentBooking($this->getSelectedName());
             if($this->currentBooking) {
+                $orderId = $this->getApi()->getPmsInvoiceManager()->autoCreateOrderForBookingAndRoom($this->getSelectedName(), $this->currentBooking->id, null);
                 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedName());
                 $curBooking = $this->currentBooking;
                 $daysToIgnore = $config->ignorePaymentWindowDaysAheadOfStay;
@@ -201,7 +202,7 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
                  
                 echo "<script>";
                 if($config->payAfterBookingCompleted || $isPikStore) {
-                    if(!isset($curBooking->orderIds[0]) || $ignorePaymentWindow) {
+                    if(!$orderId || $ignorePaymentWindow) {
                         if(\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()) {
                             $nextPage = $this->getConfigurationSetting("nextPageId");
                             if(\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator() && $nextPage) {
@@ -217,7 +218,7 @@ class PmsBookingContactData extends \WebshopApplication implements \Application 
                             }
                         }
                     } else {
-                        echo 'thundashop.common.goToPageLink("?page=cart&payorder='.$curBooking->orderIds[0].'");';
+                        echo 'thundashop.common.goToPageLink("?page=cart&payorder='.$orderId.'");';
                     }
                 } else {
                     if($curBooking->confirmed) {

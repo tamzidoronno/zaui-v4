@@ -885,6 +885,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         res.success = 1;
         if(booking == null) {
             res.success = 0;
+            return res;
         } else {
             res.bookingid = booking.id;
             if(booking.orderIds.size() == 1) {
@@ -1168,9 +1169,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     public BookingResult completeBookingForTerminal(CompleteBookingInput input) {
         PmsBooking booking = pmsManager.completeCurrentBooking();
         
-        Application ecommerceSettingsApplication = applicationPool.getApplication("9de54ce1-f7a0-4729-b128-b062dc70dcce");
-        String defaultPaymentApplicationId = ecommerceSettingsApplication.getSetting("defaultPaymentMethod");
-        String orderId = posManager.createOrderWithPaymentMethod(booking, null, defaultPaymentApplicationId);
+        String orderId = pmsInvoiceManager.autoCreateOrderForBookingAndRoom(booking.id, null);
         booking = pmsManager.getBookingUnsecure(booking.id);
         booking.channel = "terminal";
         if(!booking.orderIds.contains(orderId)) {
@@ -1251,6 +1250,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         
         boolean allPaidFor = true;
         for(PmsBooking booking : bookings) {
+            pmsInvoiceManager.autoCreateOrderForBookingAndRoom(booking.id, null);
             for(PmsBookingRooms r : booking.rooms) {
                 if(!pmsInvoiceManager.isRoomPaidFor(r.pmsBookingRoomId)) {
                     allPaidFor = false;

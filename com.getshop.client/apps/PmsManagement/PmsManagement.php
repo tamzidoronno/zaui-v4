@@ -1034,6 +1034,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
         $this->getApi()->getPmsManager()->processor($this->getSelectedName());
         $this->getApi()->getPmsManager()->hourlyProcessor($this->getSelectedName());
         $this->getApi()->getPmsManager()->checkIfGuestHasArrived($this->getSelectedName());
+        $this->getApi()->getPmsInvoiceManager()->toggleNewPaymentProcess($this->getSelectedMultilevelDomainName());
     }
     
     public function updateRegistrationData() {

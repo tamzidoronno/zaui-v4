@@ -24,6 +24,7 @@ import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.OrderShipmentLogEntry;
 import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.VirtualOrder;
+import com.thundashop.core.pos.PosManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.sendregning.SendRegningManager;
@@ -115,11 +116,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     @Override
     public String createOrderOnUnsettledAmount(String bookingId) {
-        NewOrderFilter filter = new NewOrderFilter();
-        PmsBooking booking = pmsManager.getBooking(bookingId);
-        filter.endInvoiceAt = booking.getEndDate();
-        filter.prepayment = true;
-        return createOrder(bookingId, filter);
+        return autoCreateOrderForBookingAndRoom(bookingId, null);
     }
 
     private List<CartItem> getLostItems(PmsBooking booking) {
@@ -1047,7 +1044,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             logPrintException(e);
         }
         
-        messageManager.sendErrorNotification("Failed to redirect booking : " + bookingId, null);
+        logPrint("Failed to redirect booking : " + bookingId);
         return "";
     }
 
@@ -1057,6 +1054,18 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         List<PmsBooking> bookings = pmsManager.getAllBookings(null);
         
         for(PmsBooking booking : bookings) {
+            if(booking.channel != null && booking.channel.startsWith("wubook_") && booking.paymentType != null) {
+                if(booking.orderIds.isEmpty()) {
+                    boolean update = false;
+                    if(booking.paymentType.equals("92bd796f-758e-4e03-bece-7d2dbfa40d7a")) { update = true; }
+                    if(booking.paymentType.equals("d79569c6-ff6a-4ab5-8820-add42ae71170")) { update = true; }
+                    if(booking.paymentType.equals("639164bc-37f2-11e6-ac61-9e71128cae77")) { update = true; }
+                    if(update) {
+                        autoCreateOrderForBookingAndRoom(booking.id, booking.paymentType);
+                    }
+                }
+            }
+            
             pmsManager.calculateUnsettledAmountForRooms(booking);
         }
         
@@ -3435,5 +3444,76 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         toReturn.generateListOfOrdersNotTransferred(ordersToUse);
         
         return toReturn;
+    }
+    
+    
+    @Override
+    public String autoCreateOrderForBookingAndRoom(String roomBookingId, String paymentMethod) {
+        if(paymentMethod == null || paymentMethod.isEmpty()) {
+            Application ecommerceSettingsApplication = applicationPool.getApplication("9de54ce1-f7a0-4729-b128-b062dc70dcce");
+            paymentMethod = ecommerceSettingsApplication.getSetting("defaultPaymentMethod");
+        }
+
+        PmsBooking booking = pmsManager.getBookingUnsecure(roomBookingId);
+        boolean isroom = false;
+        if(booking == null) {
+            booking = pmsManager.getBookingFromRoomSecure(roomBookingId);
+            isroom = true;
+        }
+        
+        List<String> orderIdsToRemove = new ArrayList();
+        for(String orderId : booking.orderIds) {
+            Order ord = orderManager.getOrderSecure(orderId);
+            if(ord.createdByPaymentLinkId != null && ord.createdByPaymentLinkId.equals(roomBookingId) && !ord.closed) {
+                orderIdsToRemove.add(orderId);
+            }
+        }
+        if(!orderIdsToRemove.isEmpty()) {
+            for(String orderId : orderIdsToRemove) {
+                orderManager.deleteOrder(orderId);
+            }
+            booking.orderIds.removeAll(orderIdsToRemove);
+            pmsManager.saveBooking(booking);
+        }
+        
+        if(booking == null) {
+            return "";
+        }
+        String orderId = "";
+        if(isroom) {
+            PmsBookingRooms room = booking.getRoom(roomBookingId);
+            orderId = createOrderWithPaymentMethod(booking, room, paymentMethod);
+        } else {
+            orderId = createOrderWithPaymentMethod(booking, null, paymentMethod);
+        }
+        
+        Order ord = orderManager.getOrderSecure(orderId);
+        ord.createdByPaymentLinkId = roomBookingId;
+        orderManager.saveOrder(ord);
+        
+        return orderId;
+    }
+    
+    public String createOrderWithPaymentMethod(PmsBooking booking, PmsBookingRooms room, String roomId) {
+        PmsOrderCreateRow createOrderForRoom = new PmsOrderCreateRow();
+        if(room == null) {
+            createOrderForRoom.items = new ArrayList();
+            for(PmsBookingRooms r : booking.getActiveRooms()) {
+                PmsRoomPaymentSummary summary = pmsManager.getSummaryWithoutAccrued(booking.id, r.pmsBookingRoomId);
+                createOrderForRoom.roomId = r.pmsBookingRoomId;
+                createOrderForRoom.items.addAll(summary.getCheckoutRows());
+            }
+        } else {
+            PmsRoomPaymentSummary summary = pmsManager.getSummaryWithoutAccrued(booking.id, room.pmsBookingRoomId);
+            createOrderForRoom.roomId = room.pmsBookingRoomId;
+            createOrderForRoom.items = summary.getCheckoutRows();
+        }
+        
+        List<PmsOrderCreateRow> createOrder = new ArrayList();
+        createOrder.add(createOrderForRoom);
+        
+        String userId = booking.userId != null && !booking.userId.isEmpty() ? booking.userId : getSession().currentUser.id;
+        
+        return pmsManager.createOrderFromCheckout(createOrder, roomId, userId);
     }
 }

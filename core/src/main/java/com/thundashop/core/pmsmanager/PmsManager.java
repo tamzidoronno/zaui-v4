@@ -237,7 +237,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private List<String> warnedAboutNotAddedToBookingEngine = new ArrayList();
     private boolean convertedDiscountSystem = false;
     private String currentBookingId = "";
-//    private boolean updatedAllBookings = false;
+    private boolean updatedAllBookings = false;
 
     @Autowired
     public void setOrderManager(OrderManager orderManager) {
@@ -2094,7 +2094,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 //                updatedAllBookings = true;
 //            }
 //        }
-        
+
+         
         PmsManagerProcessor processor = new PmsManagerProcessor(this);
         processor.doProcessing();
         getShopLockSystemManager.pingServers();
@@ -4197,6 +4198,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void sendPaymentRequest(String bookingId, String email, String prefix, String phone, String message) {
+        if(!message.contains("{paymentlink}")) {
+            messageManager.sendErrorNotification("No payment link variables in message: " + message, null);
+            return;
+        }
+        
         pmsNotificationManager.setEmailToSendTo(email);
         pmsNotificationManager.setPrefixToSendTo(prefix);
         pmsNotificationManager.setPhoneToSendTo(phone);
@@ -9474,6 +9480,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if(avoidChargeNow && daysUntilStart > 0) {
                 continue;
             }
+            pmsInvoiceManager.autoCreateOrderForBookingAndRoom(book.id, null);
             
             PmsWubookCCardData test = new PmsWubookCCardData();
             test.bookingId = book.id;
@@ -10509,7 +10516,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 .map(id -> orderManager.getOrderSecure(id))
                 .filter(o -> o != null)
                 .filter(o -> !o.isAccruedPayment())
-                .filter(o -> (o.isPaid() || o.isInvoice()))
+                .filter(o -> (o.isPaid() || o.isInvoice() || o.isPrepaidByOTA()))
                 .collect(Collectors.toList());
         } else {       
             orders = orderIds

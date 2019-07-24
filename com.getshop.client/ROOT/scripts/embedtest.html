@@ -10,13 +10,16 @@
     gsisdevmode = true;
     $ = jQuery;
     jQuery(function ($) {
-        $.getScript("http://bergstaden.3.0.local.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
+        $.getScript("http://jarvsoberg.3.0.local.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
             $("#bookingprocess").getshopbooking(
                 {
-                    "endpoint": "http://bergstaden.3.0.local.getshop.com/",
-                    "jsendpoint": "http://bergstaden.3.0.local.getshop.com/",
+                    "endpoint": "http://jarvsoberg.3.0.local.getshop.com/",
+                    "jsendpoint": "http://jarvsoberg.3.0.local.getshop.com/",
                     "domain" : "default",
-                    "language" : "en" 
+                    "language" : "en",
+                    "success" : function(res) {
+                        console.log(res);
+                    }
                 }
             );
             

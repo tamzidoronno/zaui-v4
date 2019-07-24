@@ -27,7 +27,8 @@ class PaymentMethod1 extends \PaymentApplication implements \Application {
     }
     
     public function paymentCallback() {
-        $this->order = $this->getApi()->getOrderManager()->getOrderWithIdAndPassword($_GET['orderid'], "gfdsg9o3454835nbsfdg");
+        $orderId = $this->getApi()->getPmsInvoiceManager()->autoCreateOrderForBookingAndRoom("default", $_GET['orderid'], "7587fdcb-ff65-4362-867a-1684cbae6aef");
+        $this->order = $this->getApi()->getOrderManager()->getOrderWithIdAndPassword($orderId, "gfdsg9o3454835nbsfdg");
         if(!$this->order) {
             echo "Order where not found, are you sure you are using a correct order id?";
         } else {

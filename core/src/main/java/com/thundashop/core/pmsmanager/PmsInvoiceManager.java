@@ -3541,22 +3541,24 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
     
     public String createOrderWithPaymentMethod(PmsBooking booking, PmsBookingRooms room, String roomId) {
-        PmsOrderCreateRow createOrderForRoom = new PmsOrderCreateRow();
+        List<PmsOrderCreateRow> createOrder = new ArrayList();
+        
         if(room == null) {
-            createOrderForRoom.items = new ArrayList();
             for(PmsBookingRooms r : booking.getActiveRooms()) {
+                PmsOrderCreateRow createOrderForRoom = new PmsOrderCreateRow();
+                createOrderForRoom.items = new ArrayList();
                 PmsRoomPaymentSummary summary = pmsManager.getSummaryWithoutAccrued(booking.id, r.pmsBookingRoomId);
                 createOrderForRoom.roomId = r.pmsBookingRoomId;
                 createOrderForRoom.items.addAll(summary.getCheckoutRows());
+                createOrder.add(createOrderForRoom);
             }
         } else {
+            PmsOrderCreateRow createOrderForRoom = new PmsOrderCreateRow();
             PmsRoomPaymentSummary summary = pmsManager.getSummaryWithoutAccrued(booking.id, room.pmsBookingRoomId);
             createOrderForRoom.roomId = room.pmsBookingRoomId;
             createOrderForRoom.items = summary.getCheckoutRows();
+            createOrder.add(createOrderForRoom);
         }
-        
-        List<PmsOrderCreateRow> createOrder = new ArrayList();
-        createOrder.add(createOrderForRoom);
         
         String userId = booking.userId != null && !booking.userId.isEmpty() ? booking.userId : getSession().currentUser.id;
         

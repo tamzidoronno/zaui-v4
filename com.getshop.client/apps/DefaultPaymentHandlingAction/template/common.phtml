@@ -3,7 +3,6 @@
 $order = $this->getOrder();
 $cashpoints = $this->getApi()->getGdsManager()->getDevices();
 $canCreditOrder = !$order->isCreditNote && !count($order->creditOrderId);
-
 $idArr = explode("\\", $order->payment->paymentType);
 $id = $idArr[0];
 $id = str_replace("_", "-", $id);

@@ -3,6 +3,15 @@ app.DefaultPaymentHandlingAction = {
         $(document).on('click', '.DefaultPaymentHandlingAction .showChangePaymentMenu', app.DefaultPaymentHandlingAction.showChangePaymentMenu);
         $(document).on('click', '.DefaultPaymentHandlingAction .updateOrderNote', app.DefaultPaymentHandlingAction.updateOrderNote);
         $(document).on('click', '.DefaultPaymentHandlingAction .updateDueDate', app.DefaultPaymentHandlingAction.updateDueDate);
+        $(document).on('click', '.DefaultPaymentHandlingAction .sendReceiptWithMessage', app.DefaultPaymentHandlingAction.sendReceiptWithMessage);
+    },
+    sendReceiptWithMessage : function() {
+        var form = $('.sendReceiptWithMessageForm');
+        var data = thundashop.framework.createGsArgs(form);
+        var event = thundashop.Ajax.createEvent('','sendReceiptWithMessage', form, data);
+        thundashop.Ajax.post(event, function(res) {
+            app.DefaultPaymentHandlingAction.refresh(res);
+        });
     },
     updateOrderNote : function() {
         var note = prompt("Note to set on order");

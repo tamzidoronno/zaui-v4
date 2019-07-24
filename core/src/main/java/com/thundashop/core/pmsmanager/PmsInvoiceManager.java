@@ -715,6 +715,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         double total = 0;
         for(String orderId : getAllOrderIds(booking)) {
             Order order = orderManager.getOrderSecure(orderId);
+            if (order == null)
+                continue;
+            
             for(CartItem item : order.cart.getItems()) {
                 String external = item.getProduct().externalReferenceId;
                 if(external.equals(pmsRoomId)) {
@@ -1085,6 +1088,33 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         
         return result;
+    }
+
+    private boolean startImpersonationOfSystemScheduler() {
+        boolean startedImpersonation = false;
+        try {
+            // Start impersonation
+            if (getSession().currentUser == null) {
+                User user = userManager.getInternalApiUser();
+                userManager.startImpersonationUnsecure(user.id);
+                getSession().currentUser = user;
+                startedImpersonation = true;
+            }
+        } catch (Exception ex) {
+            // This one should never happen, can be removed once securly made sure that it doesnt happen as its hard to test.
+            ex.printStackTrace();
+        }
+        return startedImpersonation;
+    }
+
+    private void stopImpersonation() {
+        try {
+            userManager.cancelImpersonating();
+            getSession().currentUser = null;
+        } catch (Exception ex) {
+            // This one should never happen, can be removed once securly made sure that it doesnt happen as its hard to test.
+            ex.printStackTrace();
+        }
     }
 
 
@@ -3461,24 +3491,12 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             isroom = true;
         }
         
-        List<String> orderIdsToRemove = new ArrayList();
-        for(String orderId : booking.orderIds) {
-            Order ord = orderManager.getOrderSecure(orderId);
-            if(ord.createdByPaymentLinkId != null && ord.createdByPaymentLinkId.equals(roomBookingId) && !ord.closed) {
-                orderIdsToRemove.add(orderId);
-            }
-        }
-        if(!orderIdsToRemove.isEmpty()) {
-            for(String orderId : orderIdsToRemove) {
-                orderManager.deleteOrder(orderId);
-            }
-            booking.orderIds.removeAll(orderIdsToRemove);
-            pmsManager.saveBooking(booking);
-        }
-        
         if(booking == null) {
             return "";
         }
+        
+        deleteOrCreditExistingOrders(booking);
+        
         String orderId = "";
         if(isroom) {
             PmsBookingRooms room = booking.getRoom(roomBookingId);
@@ -3492,6 +3510,34 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         orderManager.saveOrder(ord);
         
         return orderId;
+    }
+
+    private void deleteOrCreditExistingOrders(PmsBooking booking) throws ErrorException {
+        boolean startedImpersonation = startImpersonationOfSystemScheduler();
+                        
+        List<String> orderIdsToRemove = new ArrayList();
+        List<String> checkOrdersIds = new ArrayList(booking.orderIds);
+        checkOrdersIds.stream()
+            .forEach(orderId -> {
+                Order ord = orderManager.getOrderSecure(orderId);
+                if (!ord.isFullyPaid()) {
+                    if (ord.closed) {
+                        orderManager.creditOrder(orderId);
+                    } else {
+                        orderManager.deleteOrder(orderId);
+                    }
+
+                    orderIdsToRemove.add(orderId);
+                }
+            });
+            
+        
+        booking.orderIds.removeAll(orderIdsToRemove);
+        pmsManager.saveBooking(booking);
+        
+        if (startedImpersonation) {
+            stopImpersonation();
+        }
     }
     
     public String createOrderWithPaymentMethod(PmsBooking booking, PmsBookingRooms room, String roomId) {

@@ -3522,12 +3522,14 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 Order ord = orderManager.getOrderSecure(orderId);
                 if (!ord.isFullyPaid()) {
                     if (ord.closed) {
-                        orderManager.creditOrder(orderId);
+                        Order creditOrder = orderManager.creditOrder(orderId);
+                        if (!booking.orderIds.contains(creditOrder.id)) {
+                            booking.orderIds.add(creditOrder.id);
+                        }
                     } else {
                         orderManager.deleteOrder(orderId);
+                        orderIdsToRemove.add(orderId);
                     }
-
-                    orderIdsToRemove.add(orderId);
                 }
             });
             

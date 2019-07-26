@@ -30,6 +30,14 @@ class GetShopDeviceList extends \MarketingApplication implements \Application {
         return "";
     }
     
+    public function updateGetshopDevice() {
+        $device = $this->getApi()->getGdsManager()->getDevice($_POST['data']['id']);
+        $device->name = $_POST['data']['name'];
+        $device->token = $_POST['data']['token'];
+        $device->ip = $_POST['data']['ip'];
+        $this->getApi()->getGdsManager()->saveDevice($device);
+    }
+    
     public function deleteDevice() {
         $this->getApi()->getGdsManager()->deleteDevice($_POST['data']['deviceid']);
     }

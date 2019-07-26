@@ -12,6 +12,7 @@ import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.UserQueueMessage;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.pos.PrinterMessageGenerator;
+import com.thundashop.core.storemanager.StoreManager;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -38,10 +40,14 @@ public class GdsManager extends ManagerBase implements IGdsManager {
     public ConcurrentHashMap<String, UserMessageQueue> userMessageQueue = new ConcurrentHashMap();
     public ConcurrentHashMap<String, IotDeviceInformation> iotDevices = new ConcurrentHashMap();
     
+    @Autowired
+    StoreManager storeManager;
+    
     @Override
     public void saveDevice(GetShopDevice device) {
         saveObject(device);
         devices.put(device.id, device);
+        storeManager.invalidateServerBackup(device.id);
     }
 
     @Override
@@ -314,5 +320,10 @@ public class GdsManager extends ManagerBase implements IGdsManager {
     @Override
     public void updateIotDevice(IotDeviceInformation device) {
         iotDevices.put(device.id, device);
+    }
+
+    @Override
+    public GetShopDevice getDevice(String deviceId) {
+        return devices.get(deviceId);
     }
 }

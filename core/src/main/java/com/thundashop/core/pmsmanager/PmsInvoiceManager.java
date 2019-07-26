@@ -1117,6 +1117,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
     }
 
+    public boolean doesOrderCorrolateToRoom(String pmsBookingRoomsId, Order order) {
+        return order.getCartItems().stream()
+                .filter(o -> o.containsRoom(pmsBookingRoomsId))
+                .count() > 0;
+    }
 
     class BookingOrderSummary {
         Integer count = 0;
@@ -3485,25 +3490,28 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
 
         PmsBooking booking = pmsManager.getBookingUnsecure(roomBookingId);
-        boolean isroom = false;
+        PmsBookingRooms room = null;
+        
         if(booking == null) {
             booking = pmsManager.getBookingFromRoomSecure(roomBookingId);
-            isroom = true;
+            
+            if(booking == null) {
+                return "";
+            }
+
+            room = booking.getRoom(roomBookingId);
         }
         
-        if(booking == null) {
-            return "";
+        Order alreadyCreatedOrder = orderManager.getOrderCreatedByPaymentLinkWithRoomId(roomBookingId);
+        
+        if (shouldUseAlreadyCreatedOrder(alreadyCreatedOrder, booking, room)) {
+            return alreadyCreatedOrder.id;
         }
         
-        deleteOrCreditExistingOrders(booking);
+        deleteOrCreditExistingOrders(booking, room);
         
-        String orderId = "";
-        if(isroom) {
-            PmsBookingRooms room = booking.getRoom(roomBookingId);
-            orderId = createOrderWithPaymentMethod(booking, room, paymentMethod);
-        } else {
-            orderId = createOrderWithPaymentMethod(booking, null, paymentMethod);
-        }
+        // If room = null then the order will be created for the booking, otherwise it will be created for the room itself.
+        String orderId = createOrderWithPaymentMethod(booking, room, paymentMethod);
         
         Order ord = orderManager.getOrderSecure(orderId);
         ord.createdByPaymentLinkId = roomBookingId;
@@ -3511,8 +3519,36 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         return orderId;
     }
+    
+    public boolean shouldUseAlreadyCreatedOrder(Order alreadyCreatedOrder, PmsBooking booking, PmsBookingRooms room) {
+        if (alreadyCreatedOrder == null) {
+            return false;
+        }
+        
+        // Never return orders that has been fully paid or payment completed, we dont need to recreate them.
+        if (alreadyCreatedOrder.isFullyPaid() || alreadyCreatedOrder.status == Order.Status.PAYMENT_COMPLETED) {
+            return false;
+        }
+        
+        // We need to recreate the order if the room has an unsettled amount.
+        if (room != null && room.hasUnsettledAmount()) {
+            return false;
+        }
+        
+        // If this order has been created for a booking,
+        // and there are a few unsettled amounts, then recreate the order.
+        if (room == null) {
+            for (PmsBookingRooms iroom : booking.rooms) {
+                if (iroom.hasUnsettledAmount()) {
+                    return false;
+                }
+            }
+        }
+        
+        return true;
+    }
 
-    private void deleteOrCreditExistingOrders(PmsBooking booking) throws ErrorException {
+    private void deleteOrCreditExistingOrders(PmsBooking booking, PmsBookingRooms room) throws ErrorException {
         boolean startedImpersonation = startImpersonationOfSystemScheduler();
                         
         List<String> orderIdsToRemove = new ArrayList();
@@ -3520,7 +3556,13 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         checkOrdersIds.stream()
             .forEach(orderId -> {
                 Order ord = orderManager.getOrderSecure(orderId);
+                
+                if (room != null && !doesOrderCorrolateToRoom(room.pmsBookingRoomId, ord)) {
+                    return;
+                }
+                
                 if (!ord.isFullyPaid() && ord.status != Order.Status.PAYMENT_COMPLETED) {
+                    
                     if (ord.closed) {
                         Order creditOrder = orderManager.creditOrder(orderId);
                         if (!booking.orderIds.contains(creditOrder.id)) {

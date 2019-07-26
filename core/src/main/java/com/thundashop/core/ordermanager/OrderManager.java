@@ -4423,4 +4423,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .findFirst()
                 .orElse(null);
     } 
+
+    @Override
+    public List<String> getAllOrdersForRoom(String pmsBookingRoomId) {
+        return orders.values()
+                .stream()
+                .filter(o -> o.containsRoom(pmsBookingRoomId))
+                .map(o -> o.id)
+                .collect(Collectors.toList());
+    }
 }

@@ -2354,5 +2354,8 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $this->clearCache();
     }
 
+    public function attachOrderToBooking() {
+        $this->getApi()->getPmsManager()->attachOrderToBooking($this->getSelectedMultilevelDomainName(), $_POST['data']['bookingid'], $_POST['data']['orderid']);
+    }
 }
 ?>

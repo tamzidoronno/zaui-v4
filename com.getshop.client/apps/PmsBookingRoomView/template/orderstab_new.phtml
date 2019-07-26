@@ -199,8 +199,48 @@ $payAfterStay = $room->createOrdersOnZReport && !($needToCreateOrdersFor <= 1 &&
             </div>
             <?
         }
-   }
+    }
+    
+    if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isGetShopUser()) {
+        $orderIds = $this->getApi()->getOrderManager()->getAllOrdersForRoom($room->pmsBookingRoomId);
+        $found = false;
+        foreach ($orderIds as $orderId) {
+            if (in_array($orderId, $pmsBooking->orderIds)) {
+                continue;
+            }
+            $found = true;
+        }
+        
+        if (!$found) {
+            return;
+        }
+        
+        echo "<div style='margin-top: 50px; border-top: solid 1px #DDD;'>";
+        echo "<h2> GetShop Admin View, orders that are connected to this room but not added to the booking.. </h2>";
+        
+
+        foreach ($orderIds as $orderId) {
+            if (in_array($orderId, $pmsBooking->orderIds)) {
+                continue;
+            }
+            
+            $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+            ?>
+    
+            <div>
+                <? echo $order->incrementOrderId; ?>
+                <a href="/pms.php?page=orderviewpage&orderid=<? echo $order->id; ?>" target="_blank">
+                    <div class="gs_shop_small_icon">Open</div>
+                </a>
+                <div gsclick='attachOrderToBooking' bookingid='<? echo $pmsBooking->id; ?>' orderid='<? echo $order->id; ?>' class="gs_shop_small_icon">Re-attach</div>
+            </div>
+            <?
+        }
+        
+        echo "</div>";
+    }
     ?>
+    
 </div>
 
 <br/>

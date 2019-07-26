@@ -25,14 +25,12 @@ $order = $this->getOrder();
         <i class='fa fa-chain-broken'></i> 
         <? echo $this->__f("Change payment type"); ?>
     </div>
+    <div class='order_action_button updateOrderNote' orderid='<? echo $order->id; ?>' style='position: relative;' >
+        <i class='fa fa-plus-square-o'></i> 
+        <? echo $this->__f("Update order note"); ?>
+    </div>
     <?php
     if(!$order->closed) {
-        ?>
-        <div class='order_action_button updateOrderNote' orderid='<? echo $order->id; ?>' style='position: relative;' >
-            <i class='fa fa-plus-square-o'></i> 
-            <? echo $this->__f("Update order note"); ?>
-        </div>
-        <?php
         if($order->payment && stristr($order->payment->paymentType, "invoice")) {
             ?>
             <div class='order_action_button updateDueDate' orderid='<? echo $order->id; ?>' style='position: relative;' >

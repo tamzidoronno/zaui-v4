@@ -651,4 +651,7 @@ public interface IPmsManager {
 
     @Administrator
     public List<PmsRoomPaymentSummary> getSummaryForAllRooms(String pmsBookingId);
+    
+    @Administrator
+    public void attachOrderToBooking(String bookingId, String orderId);
 }

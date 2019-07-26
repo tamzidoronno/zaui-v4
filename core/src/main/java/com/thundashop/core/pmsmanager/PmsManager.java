@@ -10582,4 +10582,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
     }
 
+    @Override
+    public void attachOrderToBooking(String bookingId, String orderId) {
+        PmsBooking booking = getBooking(bookingId);
+        
+        if (booking != null) {
+            addOrderToBooking(booking, orderId);
+        }
+        
+    }
+
 }

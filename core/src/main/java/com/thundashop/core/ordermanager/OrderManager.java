@@ -4412,4 +4412,24 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         return orderList;
     }
+    
+    public Order getOrderCreatedByPaymentLinkWithRoomId(String roomBookingId) {
+        return orders.values()
+                .stream()
+                .filter(o -> o.createdByPaymentLinkId != null && o.createdByPaymentLinkId.equals(roomBookingId))
+                .filter(o -> !o.isFullyPaid() || o.status != Order.Status.PAYMENT_COMPLETED)
+                .filter(o -> !o.isCreditNote)
+                .filter(o -> !o.isNullOrder())
+                .findFirst()
+                .orElse(null);
+    } 
+
+    @Override
+    public List<String> getAllOrdersForRoom(String pmsBookingRoomId) {
+        return orders.values()
+                .stream()
+                .filter(o -> o.containsRoom(pmsBookingRoomId))
+                .map(o -> o.id)
+                .collect(Collectors.toList());
+    }
 }

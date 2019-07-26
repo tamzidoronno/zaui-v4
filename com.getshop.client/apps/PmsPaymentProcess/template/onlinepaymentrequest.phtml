@@ -111,14 +111,6 @@ if($counter > 1) {
 
 echo "<input type='hidden' id='customersobject' value='" . json_encode($contacts) . "'>";
 
-
-if(sizeof($fields) == 0) {
-    echo "<div style='font-size:26;'>";
-    echo "Sorry, we can not send a payment request where there are no unsettled amounts.";
-    echo "</div>";
-    return;
-}
-
 foreach($fields as $key => $r) {
     $amount = 0;
     $title = "";

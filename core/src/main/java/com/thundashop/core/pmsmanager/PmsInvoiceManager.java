@@ -3520,7 +3520,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         checkOrdersIds.stream()
             .forEach(orderId -> {
                 Order ord = orderManager.getOrderSecure(orderId);
-                if (!ord.isFullyPaid()) {
+                if (!ord.isFullyPaid() && ord.status != Order.Status.PAYMENT_COMPLETED) {
                     if (ord.closed) {
                         Order creditOrder = orderManager.creditOrder(orderId);
                         if (!booking.orderIds.contains(creditOrder.id)) {

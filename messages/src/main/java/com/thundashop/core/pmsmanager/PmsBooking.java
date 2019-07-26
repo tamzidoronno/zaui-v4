@@ -767,6 +767,14 @@ public class PmsBooking extends DataCommon {
         return false;
     }
 
+    public double getUnpaidAmount() {
+        double amount = 0;
+        for(PmsBookingRooms r : getActiveRooms()) {
+            amount += r.unpaidAmount;
+        }
+        return amount;
+    }
+
     public static class PriceType {
         public static Integer daily = 1;
         public static Integer monthly = 2;

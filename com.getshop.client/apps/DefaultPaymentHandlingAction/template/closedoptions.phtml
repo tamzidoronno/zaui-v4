@@ -3,6 +3,7 @@
 $order = $this->getOrder();
 $cashpoints = $this->getApi()->getGdsManager()->getDevices();
 $canCreditOrder = !$order->isCreditNote && !count($order->creditOrderId);
+$roomid = $_SESSION['PmsBookingRoomView_current_pmsroom_id'];
 ?>
 <div class='commonbox'>
     
@@ -32,6 +33,26 @@ $canCreditOrder = !$order->isCreditNote && !count($order->creditOrderId);
             <? echo $this->__f("Credit order"); ?>
         </div>
     <?
+    }
+    
+    if($order->status == 7) {
+        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $roomid);
+        $msg = $this->getApi()->getPmsNotificationManager()->getSpecificMessage($this->getSelectedMultilevelDomainName(), "sendreciept", $booking, null, "email", null);
+        $user = $this->getApi()->getUserManager()->getUserById($order->userId);
+        ?>
+        <div class="sendReceiptWithMessageForm" style="position:absolute; width: 500px; border-radius:4px; background-color:#fff; border: solid 2px #bbb;display:none; right:0px;">
+            <input type="txt" gsname="email" class="gsniceinput1" value='<?php echo $user->emailAddress; ?>' style="width:100%; box-sizing: border-box;">
+            <input type="txt" gsname="subject" class="gsniceinput1" value='<?php echo $msg->title; ?>' style="width:100%; box-sizing: border-box;">
+            <input type="hidden" gsname="bookingid" value="<?php echo $booking->id; ?>">
+            <input type="hidden" gsname="orderid" value="<?php echo $order->id; ?>">
+            <textarea gsname="message" style="width:100%; height: 200px;"><?php echo $msg->content; ?></textarea>
+            <span class='shop_button sendReceiptWithMessage' style="width:100%; box-sizing: border-box;">Send</span>
+        </div>
+        <div class='order_action_button' onclick="$('.sendReceiptWithMessageForm').slideDown();">
+            <? echo $this->__f("Send reciept"); ?>
+            <i class='fa fa-arrow-right'></i>
+        </div>
+        <?
     }
     ?>
 

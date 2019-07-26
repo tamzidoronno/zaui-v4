@@ -329,9 +329,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             
             if (dataFromDatabase instanceof Order) {
                 Order order = (Order) dataFromDatabase;
-                if (order.cleanMe()) {
-                    saveObject(order);
-                }
+//                if (order.cleanMe()) {
+//                    saveObject(order);
+//                }
 
                 if(order.payment != null && order.payment.paymentType != null && order.payment.paymentType.equals("ns_d02f8b7a_7395_455d_b754_888d7d701db8//Dibs")) {
                     order.payment.paymentType = "ns_d02f8b7a_7395_455d_b754_888d7d701db8\\Dibs";

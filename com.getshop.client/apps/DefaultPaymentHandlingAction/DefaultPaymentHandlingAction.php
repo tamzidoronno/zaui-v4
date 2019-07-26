@@ -32,6 +32,17 @@ class DefaultPaymentHandlingAction extends \PaymentApplication implements \Appli
         $this->getApi()->getInvoiceManager()->sendReceiptToCashRegisterPoint($_POST['data']['deviceid'], $_POST['data']['orderid']);
     }
     
+    public function sendReceiptWithMessage() {
+        //public String sendRecieptOrInvoiceWithMessage(String orderId, String email, String bookingId, String message, String subject);
+        $bookingId = $_POST['data']['bookingid'];
+        $email = $_POST['data']['email'];
+        $msg = $_POST['data']['message'];
+        $subject = $_POST['data']['subject'];
+        $orderid = $_POST['data']['orderid'];
+        $this->order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        $this->getApi()->getPmsInvoiceManager()->sendRecieptOrInvoiceWithMessage($this->getSelectedMultilevelDomainName(), $orderid, $email, $bookingId, $msg, $subject);
+    }
+    
     public function saveUser($user) {
         $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
         $order->userId = $user->id;

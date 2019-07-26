@@ -883,20 +883,15 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         
         BookingResult res = new BookingResult();
         res.success = 1;
+        res.orderid = booking.id;
+        
         if(booking == null) {
             res.success = 0;
             return res;
-        } else {
-            res.bookingid = booking.id;
-            if(booking.orderIds.size() == 1) {
-                pmsManager.logEntry("Proceed to payment windows", booking.id, null);
-                res.continuetopayment = 1;
-                res.orderid = booking.orderIds.get(0);
-            } else {
-                pmsManager.logEntry("Do not proceed to payment windows", booking.id, null);
-                res.continuetopayment = 0;
-            }
         }
+        
+        booking.calculateTotalCost();
+        res.amount = booking.getUnpaidAmount();
         
         booking.channel = "website";
         booking.payLater = input.payLater;
@@ -912,12 +907,6 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             Application app = storeApplicationPool.getApplication(input.paymentMethod);
             order.payment.paymentType = app.getNameSpace();
         }
-        
-        if(res.orderid != null && !res.orderid.isEmpty()) {
-            Order order = orderManager.getOrderSecure(res.orderid);
-            res.amount = orderManager.getTotalAmount(order);
-        }
-
         
         for(PmsBookingRooms room : booking.rooms) {
             BookingResultRoom roomToReturn = new BookingResultRoom();

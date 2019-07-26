@@ -72,7 +72,11 @@ class ApacGateways extends \MarketingApplication implements \Application {
                 $_POST['data']['username'], 
                 $_POST['data']['password'], 
                 $_POST['data']['servername'],
-                $_POST['data']['token']);
+                $_POST['data']['token'],
+                $_POST['data']['wifiuser'],
+                $_POST['data']['wifipassword'],
+                $_POST['data']['comment']
+                );
     }
     
     public function createNewServer() {

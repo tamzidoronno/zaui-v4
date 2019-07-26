@@ -20,6 +20,7 @@ import com.thundashop.core.messagemanager.MailMessage;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.messagemanager.SmsMessage;
 import com.thundashop.core.pmsmanager.PingServerThread;
+import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.webmanager.WebManager;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,6 +56,9 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
     
     @Autowired
     GetShop getShop;
+    
+    @Autowired
+    StoreManager storeManager;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -171,6 +175,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         LockServer server = lockServers.get(serverId);
         if (server != null) {
             server.setDetails(hostname, username, password, givenName, token);
+            storeManager.invalidateServerBackup(serverId);
         }
     }
 
@@ -998,6 +1003,10 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
             server.deleteLock(lockId);
             server.save();
         }
+    }
+
+    public List<LockServer> getLockServersUnfinalized() {
+        return new ArrayList(lockServers.values());
     }
 
     

@@ -51,8 +51,7 @@ public class CustomerTicketManager extends ManagerBase implements ICustomerTicke
         ticket.replyToPhone = ticketLight.replyToPhone;
         
         ticket.userId = systemManager.getCustomerIdForStoreId(ticketLight.storeId);
-        
-        messageManager.sendMail("support@getshop.com", "GetShop Support", "New ticket created: " + ticket.incrementalId, "Empty", "post@getshop.com", "GetShop");
+
         return ticketManager.saveTicketDirect(ticket);
     }
 

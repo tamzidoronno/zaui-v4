@@ -274,7 +274,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
                 info.storeId = storeId;
                 String toSend = gson.toJson(info);
                 toSend = URLEncoder.encode(toSend, "UTF-8");
-                String result = webManager.htmlGet("http://192.168.100.150:8800/?setServer="+toSend);
+                String result = webManager.htmlGet("http://10.0.7.10:8800/?setServer="+toSend);
                 if(result.equals("added")) {
                     RemoteServerMetaData serverInfo = new RemoteServerMetaData();
                     serverInfo.serverId = info.id;

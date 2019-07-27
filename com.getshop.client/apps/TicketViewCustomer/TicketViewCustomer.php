@@ -75,7 +75,7 @@ class TicketViewCustomer extends \MarketingApplication implements \Application {
     public function setTimeInvoice() {
         $this->setGetVariables();
         $ticket = $this->getApi()->getTicketManager()->getTicket($_GET['ticketId']);
-        $ticket->timeSpent = $_POST['data']['gsvalue'];
+        $ticket->timeInvoice = $_POST['data']['gsvalue'];
         $this->getApi()->getTicketManager()->saveTicket($ticket);
     }
     

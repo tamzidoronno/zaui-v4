@@ -88,8 +88,9 @@ if ($systems) {
         echo "Already trasferred to order, values cant be changed";
     } else {
         ?>
-        <span style='display: inline-block; width: 150px;'>Minutes spent:</span> <input gschange='setTimeSpent' ticketid='<? echo $ticket->id; ?>' class='gsniceinput1' value='<? echo $ticket->timeSpent; ?>'/>
-        <br/><span style='display: inline-block; width: 150px;'>Minutes to invoice:</span> <input gschange='setTimeInvoice' class='gsniceinput1' ticketid='<? echo $ticket->id; ?>' value='<? echo $ticket->timeInvoice; ?>'/>
+        <span style='display: inline-block; width: 150px;'>Hours spent:</span> <input gschange='setTimeSpent' ticketid='<? echo $ticket->id; ?>' class='gsniceinput1' value='<? echo $ticket->timeSpent; ?>'/>
+        <br/><span style='display: inline-block; width: 150px;'>Hours to invoice:</span> <input gschange='setTimeInvoice' class='gsniceinput1' ticketid='<? echo $ticket->id; ?>' value='<? echo $ticket->timeInvoice; ?>'/>
+        <br/> NB! <br/>15 minutes = 0.25 hour. <br/> 30 minutes = 0.5 hour <br/> 45 minutes = 0.75 hour
 
         <?
         if (!$ticket->hasBeenValidedForTimeUsage) {

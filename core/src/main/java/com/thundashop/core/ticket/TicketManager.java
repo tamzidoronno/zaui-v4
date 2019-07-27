@@ -7,13 +7,18 @@ package com.thundashop.core.ticket;
 
 import com.getshop.scope.GetShopSession;
 import com.mongodb.BasicDBObject;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
+import com.thundashop.core.messagemanager.PushOver;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
+import com.thundashop.core.webmanager.WebManager;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -22,6 +27,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.FilterType;
@@ -37,13 +44,18 @@ public class TicketManager extends ManagerBase implements ITicketManager {
 
     public HashMap<String, Ticket> tickets = new HashMap();
     public HashMap<String, TicketLight> lightTickets = new HashMap();
+    public HashMap<String, TicketUserPushover> pushOverUsers = new HashMap();
 
     @Autowired
     public UserManager userManager;
 
     @Autowired
     public MessageManager messageManager;
+    
+    @Autowired
+    public PushOver pushOver;
 
+    
     @Override
     public void dataFromDatabase(DataRetreived data) {
         data.data.stream().forEach(inData -> {
@@ -52,6 +64,9 @@ public class TicketManager extends ManagerBase implements ITicketManager {
             }
             if (inData instanceof TicketLight) {
                 lightTickets.put(inData.id, (TicketLight) inData);
+            }
+            if (inData instanceof TicketUserPushover) {
+                pushOverUsers.put(inData.id, (TicketUserPushover) inData);
             }
         });
     }
@@ -111,7 +126,7 @@ public class TicketManager extends ManagerBase implements ITicketManager {
         }
         
         if (filter.uassigned) {
-            retList.removeIf(f -> f.assignedToUserId != null && !f.assignedToUserId.isEmpty());
+            retList.removeIf(f -> !f.isNotAssigned());
         }
         
         if (filter.assignedTo != null && !filter.assignedTo.isEmpty()) {
@@ -306,7 +321,15 @@ public class TicketManager extends ManagerBase implements ITicketManager {
                 messageManager.sendMail(ticket.replyToEmail, ticket.replyToEmail, "There has been added a new repsonse to your ticket: " + ticket.incrementalId , "Please log into your GetShop portal, go to your module and click on I Need Help, there you can see the ticketlist and find your ticket. ", "post@getshop.com", "GetShop");
             } else {
                 messageManager.sendMail("support@getshop.com", "GetShop Support", "Customer has added a new content to the ticket: " + ticket.incrementalId, content.content, "post@getshop.com", "GetShop");
+                String title = "New content added to ticket " + ticket.incrementalId + " ( State: " + ticket.urgency + " ) ";
+                String message = content.content;
+                getActivePushOverUserIds(ticketId).stream()
+                        .forEach(userId -> {
+                            pushOver.push(userId, title, message);
+                        });
             }
+            
+            
         }
     }
 
@@ -318,6 +341,9 @@ public class TicketManager extends ManagerBase implements ITicketManager {
         return database.query("TicketManager", storeId, query)
                 .stream()
                 .map( o -> (TicketContent)o)
+                .sorted((TicketContent c1, TicketContent c2) -> {
+                    return c1.rowCreatedDate.compareTo(c2.rowCreatedDate);
+                })
                 .collect(Collectors.toList());
     }
 
@@ -386,6 +412,153 @@ public class TicketManager extends ManagerBase implements ITicketManager {
             saveObject(ticket);
             
             notifyEventChanged(ticket, event);
+            
+            pushOver.push(userId, "Ticket " + ticket.incrementalId + " has been assigned to your ( State: " + ticket.urgency + " )", "Ticket assigned to you...");
         }
     }   
+
+    @Override
+    public List<TicketContent> getLastTicketContent(String userId) {
+        BasicDBObject query = new BasicDBObject();
+        query.put("className", "com.thundashop.core.ticket.TicketContent");
+        query.append("addedByUserId", new BasicDBObject("$ne", getSession().currentUser.id));
+        
+        if (userId != null && !userId.isEmpty()) {
+            List<String> ticketsAssignedTo = getTicketsAssignedTo(userId)
+                    .stream()
+                    .map(o -> o.id)
+                    .collect(Collectors.toList());
+            
+            query.append("ticketId", new BasicDBObject("$in", ticketsAssignedTo));
+        }
+        
+        DBCollection collection = database.getCollection("TicketManager", storeId);
+        DBCursor cur = collection
+                .find(query)
+                .sort(new BasicDBObject("rowCreatedDate", -1))
+                .limit(20);
+        
+        ArrayList<TicketContent> retList = new ArrayList();
+        
+        while (cur.hasNext()) {
+            DataCommon dataCommon = database.convert(cur.next());
+            retList.add((TicketContent)dataCommon);
+        }
+
+        
+        retList.stream().forEach(o -> finalize(o));
+        return retList;
+    }
+
+    private List<Ticket> getTicketsAssignedTo(String userId) {
+        return tickets.values()
+                .stream()
+                .filter(o -> o.assignedToUserId != null && o.assignedToUserId.equals(userId))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void markTicketAsRead(String ticketId) {
+        String userId = getSession().currentUser.id;
+        
+        Ticket ticket = getTicket(ticketId);
+        if (ticket != null) {
+            List<TicketContent> contents = getTicketContents(ticketId);
+            if (ticket.assignedToUserId != null && ticket.assignedToUserId.equals(userId)) {
+                contents.stream().forEach(o -> {
+                    o.isReadByAssignedTo = true;
+                });
+            }
+            
+            if (ticket.isNotAssigned()) {
+                contents.stream().forEach(o -> {
+                    o.isReadByInboxHandler = true;
+                });
+            }
+            
+            contents.stream().forEach(o -> {
+                saveObject(o);
+            });
+        }
+    }
+
+    private void finalize(TicketContent o) {
+        Ticket ticket = tickets.get(o.ticketId);
+        if (ticket != null) {
+            o.isAssignedToAGetShopAdmin = !ticket.isNotAssigned();
+            o.ticketNumber = ticket.incrementalId;
+            o.ticketTitle = ticket.title;
+        }
+    }
+
+    private List<String> getActivePushOverUserIds(String ticketId) {
+        boolean isWithinOfficeHours = isWithinOfficeHours();
+        Ticket ticket = tickets.get(ticketId);
+        
+        if (ticket == null)
+            return new ArrayList();
+        
+        boolean isUrgent = ticket.urgency != null && ticket.urgency.equals("urgent");
+        
+        List<String> retList = new ArrayList();
+        
+        for (TicketUserPushover pushOverSetting : pushOverUsers.values()) {
+            // Dont notify on normal tickets outside of office hours.
+            if (!isUrgent && !isWithinOfficeHours) {
+                continue;
+            }
+            
+            // Might be improved upon later, but for now all users outside of office hours receive a message if its marked as urgent.
+            if (isUrgent && !isWithinOfficeHours) {
+                retList.add(pushOverSetting.userId);
+                continue;
+            }
+            
+            // Receiving as its not assigned
+            if (pushOverSetting.receiveMessagesForUnassignedTickets && (ticket.isNotAssigned())) {
+                retList.add(pushOverSetting.userId);
+                continue;
+            }
+            
+            // Receive as its the user ticket.
+            if (ticket.assignedToUserId != null && ticket.assignedToUserId.equals(pushOverSetting.userId)) {
+                retList.add(pushOverSetting.userId);
+            }
+        }
+        
+        return retList;
+    }
+
+    @Override
+    public void savePushOverSettings(TicketUserPushover pushOver, String pushOverToken) {
+        TicketUserPushover oldObject = getPushOverSettings(pushOver.userId);
+        
+        userManager.addMetaData(pushOver.userId, "pushovertoken", pushOverToken);
+        
+        if (oldObject != null) {
+            pushOver.id = oldObject.id;
+        }
+        
+        saveObject(pushOver);
+        pushOverUsers.put(pushOver.id, pushOver);
+    }
+
+    @Override
+    public TicketUserPushover getPushOverSettings(String userId) {
+        return pushOverUsers.values()
+                .stream()
+                .filter(o -> o.userId.equals(userId))
+                .findAny()
+                .orElse( null);
+    }
+
+    private boolean isWithinOfficeHours() {
+        Calendar cal = Calendar.getInstance();
+        int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+        int hourOfDay = cal.get(Calendar.HOUR_OF_DAY);
+        
+        boolean isWeekDay = dayOfWeek >= Calendar.MONDAY && dayOfWeek <= Calendar.FRIDAY;
+        boolean isDuringOfficeHours = hourOfDay >= 7 && hourOfDay <= 16;
+        return isWeekDay && isDuringOfficeHours;
+    }
 }

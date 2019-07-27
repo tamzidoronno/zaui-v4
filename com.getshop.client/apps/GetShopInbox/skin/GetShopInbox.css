@@ -215,3 +215,30 @@
 .GetshopInbox .col.title { width: calc(100% - 1000px); }
 .GetshopInbox .col.state { width: 100px }
 .GetshopInbox .col.customer  { width: 300px; }
+
+.GetshopInbox .ticketlist {
+    display: inline-block;
+    width: calc(100% - 400px);
+    vertical-align: top;
+}
+
+.GetshopInbox .lastcontentmessages {
+    display: inline-block;
+    width: 390px;
+    vertical-align: top;
+    border-left: solid 1px #DDD;
+}
+
+.GetshopInbox .ticketcontent_right {
+    border-bottom: solid 1px #DDD;
+    padding: 10px;
+    font-size: 13px;
+}
+
+.GetshopInbox .ticketcontent_right.notread {
+    background-color: #f5ff82;
+}
+
+.GetshopInbox .ticketcontent_right.assignedToUser {
+    background-color: #16b018;
+}

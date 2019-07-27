@@ -45,7 +45,12 @@ class GetShopInbox extends \MarketingApplication implements \Application {
         echo "<div class='workarea'>";
 //            $this->includefile("topmenu");
             echo "<div class='emaillistarea'>";
-                $this->includefile("ticketlist");
+                if ($this->getCurrentTab() == "notifications") {
+                    $this->includefile("notifications");
+                } else {
+                    $this->includefile("ticketlist");
+                }
+                
             echo "</div>";
         echo "</div>";
     }
@@ -217,6 +222,20 @@ class GetShopInbox extends \MarketingApplication implements \Application {
         return $_SESSION['ns_f1706b4c_f779_4eb7_aec3_ee08f182e090_current_view'];
     }
 
+    public function getRightList() {
+        if ($this->getCurrentTab() == "yourcases") {
+            return $this->getApi()->getTicketManager()->getLastTicketContent(\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id);
+        }
+        
+        return $this->getApi()->getTicketManager()->getLastTicketContent("");
+    }
+
+    public function savePushOver() {
+        $obj = new \core_ticket_TicketUserPushover();
+        $obj->userId = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id;
+        $obj->receiveMessagesForUnassignedTickets = $_POST['data']['receiveMessagesForUnassignedTickets'];
+        $this->getApi()->getTicketManager()->savePushOverSettings($obj, $_POST['data']['pushovertoken']);
+    }
 }
 
 ?>

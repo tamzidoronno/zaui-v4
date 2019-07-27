@@ -462,8 +462,7 @@ public class Database extends StoreComponent {
     }
 
     public List<DataCommon> query(String manager, String storeId, DBObject query) {
-        DB db = mongo.getDB(manager);
-        DBCollection col = db.getCollection("col_" + storeId);
+        DBCollection col = getCollection(manager, storeId);
         DBCursor res = col.find(query);
         List<DataCommon> retObjecs = new ArrayList();
         while (res.hasNext()) {
@@ -473,6 +472,12 @@ public class Database extends StoreComponent {
         }
 
         return retObjecs;
+    }
+
+    public DBCollection getCollection(String manager, String storeId1) {
+        DB db = mongo.getDB(manager);
+        DBCollection col = db.getCollection("col_" + storeId1);
+        return col;
     }
 
     /**
@@ -615,6 +620,10 @@ public class Database extends StoreComponent {
         }catch(Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public DataCommon convert(DBObject next) {
+        return morphia.fromDBObject(DataCommon.class, next);
     }
 }
 

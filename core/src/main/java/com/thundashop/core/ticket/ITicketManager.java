@@ -63,4 +63,16 @@ public interface ITicketManager {
     
     @Administrator
     public void assignTicketToUser(String ticketId, String userId);
+    
+    @Administrator
+    public List<TicketContent> getLastTicketContent(String userId);
+    
+    @Administrator
+    public void markTicketAsRead(String ticketId);
+    
+    @Administrator
+    public void savePushOverSettings(TicketUserPushover pushOver, String pushOverToken);
+    
+    @Administrator
+    public TicketUserPushover getPushOverSettings(String userId);
 }

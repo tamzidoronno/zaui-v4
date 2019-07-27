@@ -914,6 +914,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                     sendErrorForReservation(booking.reservationCode, "Could not find deleted booking for a modification on reservation");
                     return "Did not find booking to delete.";
                 } else {
+                    pmsManager.logEntry("Deleted by channel manager", newbooking.id, null);
                     pmsManager.deleteBooking(newbooking.id);
                 }
                 

@@ -17,7 +17,7 @@ class GetShopPmsLockSetup extends \MarketingApplication implements \Application 
     public function saveGroupConnection() {
         $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedMultilevelDomainName());
         foreach ($items as $item) {
-            if (isset($_POST['data'][$item->id]) && $_POST['data'][$item->id]) {
+            if (isset($_POST['data'][$item->id])) {
                 $item->lockGroupId = $_POST['data'][$item->id];
                 $this->getApi()->getBookingEngine()->saveBookingItem($this->getSelectedMultilevelDomainName(), $item);
             }

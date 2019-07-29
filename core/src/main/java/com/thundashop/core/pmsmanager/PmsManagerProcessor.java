@@ -1252,8 +1252,16 @@ public class PmsManagerProcessor {
             }
             room.removeCode();    
             updated = true;
-        } else {        
-            LockCode nextUnusedCode = manager.getShopLockSystemManager.getNextUnusedCode(item.lockGroupId, room.pmsBookingRoomId, getClass().getSimpleName(), "Automatically assigned by PMS processor");
+        } else {
+            LockCode nextUnusedCode = null;
+            
+            try {
+                nextUnusedCode = manager.getShopLockSystemManager.getNextUnusedCode(item.lockGroupId, room.pmsBookingRoomId, getClass().getSimpleName(), "Automatically assigned by PMS processor");
+            } catch (Exception ex) {
+                manager.logPrintException(ex);
+                return false;
+            }
+            
             if (nextUnusedCode != null) {
                 room.code = ""+nextUnusedCode.pinCode;
                 room.addedToArx = true;

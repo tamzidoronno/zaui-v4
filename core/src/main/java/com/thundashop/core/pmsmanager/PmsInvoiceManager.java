@@ -741,7 +741,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     continue;
                 }
                 for(CartItem item : order.cart.getItemsUnfinalized()) {
-                    if(item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId)) {
+                    if(item != null && item.getProduct() != null && item.getProduct().externalReferenceId != null && item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId)) {
                         total -= item.getTotalAmount();
                     }
                 }
@@ -1196,6 +1196,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             return false;
         }
         for(CartItem item : order.cart.getItems()) {
+            if (item.getProduct() == null)
+                continue;
+            
             if(item.getProduct().externalReferenceId == null) {
                 continue;
             }

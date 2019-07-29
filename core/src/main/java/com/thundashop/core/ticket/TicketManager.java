@@ -16,6 +16,7 @@ import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.messagemanager.PushOver;
+import com.thundashop.core.system.SystemManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.webmanager.WebManager;
@@ -55,6 +56,8 @@ public class TicketManager extends ManagerBase implements ITicketManager {
     @Autowired
     public PushOver pushOver;
 
+    @Autowired
+    private SystemManager systemManager;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -560,5 +563,15 @@ public class TicketManager extends ManagerBase implements ITicketManager {
         boolean isWeekDay = dayOfWeek >= Calendar.MONDAY && dayOfWeek <= Calendar.FRIDAY;
         boolean isDuringOfficeHours = hourOfDay >= 7 && hourOfDay <= 16;
         return isWeekDay && isDuringOfficeHours;
+    }
+
+    @Override
+    public void reconnectTicket(String ticketId) {
+        Ticket ticket = getTicket(ticketId);
+        
+        if (ticket != null) {
+            ticket.userId = systemManager.getCustomerIdForStoreId(ticket.belongsToStore);
+            saveObject(ticket);
+        }
     }
 }

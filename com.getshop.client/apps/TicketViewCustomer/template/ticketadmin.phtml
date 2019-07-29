@@ -31,6 +31,13 @@ if ($systems) {
     <br/>Phone: <? echo $ticket->replyToPrefix." ".$ticket->replyToPhone; ?>
     
     <?
+    if (!$user) {
+        ?>
+        <br/>
+        <div class='gs_shop_small_icon' gsclick='reconnect' ticketid='<? echo $ticket->id; ?>'>Reconnect to customer</div>
+        <?  
+    }
+    
     if ($currentSystem) {
         echo "<br><br/> <b>Originated from system:</b><br/><a href='http://".$currentSystem->webAddresses."/totp.php' target='_blank'>".$currentSystem->webAddresses."</a>";
     }

@@ -100,5 +100,9 @@ class TicketViewCustomer extends \MarketingApplication implements \Application {
         }
     }
 
+    public function reconnect() {
+        $this->setGetVariables();
+        $this->getApi()->getTicketManager()->reconnectTicket($_GET['ticketId']);
+    }
 }
 ?>

@@ -75,4 +75,7 @@ public interface ITicketManager {
     
     @Administrator
     public TicketUserPushover getPushOverSettings(String userId);
+    
+    @Administrator
+    public void reconnectTicket(String ticketId);
 }

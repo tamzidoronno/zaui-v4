@@ -24,7 +24,6 @@ app.TicketViewCustomer = {
         });
         
         thundashop.Ajax.post(event, function(res) {
-            debugger;
             $('.TicketViewCustomer .ticketinfo').html($("<div>"+res.content+"</div>").find('.ticketinfo').html());
         }, null, true);
     },

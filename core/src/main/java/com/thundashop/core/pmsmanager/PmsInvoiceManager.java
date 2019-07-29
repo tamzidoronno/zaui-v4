@@ -3560,6 +3560,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             .forEach(orderId -> {
                 Order ord = orderManager.getOrderSecure(orderId);
                 
+                // We cant autodelete orders that are invoiced, this will cause a few problems if they are removed as they are not marked as paid but 
+                // has been received for processing by the customer.
+                if (ord.isInvoice())
+                    return;
+                
                 if (room != null && !doesOrderCorrolateToRoom(room.pmsBookingRoomId, ord)) {
                     return;
                 }

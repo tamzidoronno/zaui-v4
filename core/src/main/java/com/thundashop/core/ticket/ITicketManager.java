@@ -78,4 +78,7 @@ public interface ITicketManager {
     
     @Administrator
     public void reconnectTicket(String ticketId);
+    
+    @Administrator
+    public void changeType(String ticketId, TicketType type);
 }

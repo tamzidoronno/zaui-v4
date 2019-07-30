@@ -71,6 +71,17 @@
     background-color: #EFEFEF;
 }
 
+.TicketViewCustomer .contentbox.statusnotification {
+    background-color: #FFF;
+    paddint-top: 0px;
+    padding-bottom: 0px;
+    border: solid 1px #DDD;
+    
+    padding-top: 5px;
+    color: grey;
+}
+
+
 .TicketViewCustomer .compledissuebox {
     font-size: 20px;
     color: green;

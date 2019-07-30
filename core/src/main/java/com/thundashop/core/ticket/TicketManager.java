@@ -310,6 +310,10 @@ public class TicketManager extends ManagerBase implements ITicketManager {
 
     @Override
     public void addTicketContent(String ticketId, TicketContent content) {
+        addTicketContentInternal(ticketId, content, false);
+    }
+    
+    private void addTicketContentInternal(String ticketId, TicketContent content, boolean silent) {
         Ticket ticket = tickets.get(ticketId);
         if (ticket != null) {
             content.ticketId = ticketId;
@@ -319,6 +323,10 @@ public class TicketManager extends ManagerBase implements ITicketManager {
             }
             
             saveObject(content);
+            
+            if (silent) {
+                return;
+            }
             
             if (content.addedByGetShop && ticket.replyToEmail != null && !ticket.replyToEmail.isEmpty()) {
                 messageManager.sendMail(ticket.replyToEmail, ticket.replyToEmail, "There has been added a new repsonse to your ticket: " + ticket.incrementalId , "Please log into your GetShop portal, go to your module and click on I Need Help, there you can see the ticketlist and find your ticket. ", "post@getshop.com", "GetShop");
@@ -383,17 +391,18 @@ public class TicketManager extends ManagerBase implements ITicketManager {
 
     @Override
     public void changeStateOfTicket(String ticketId, TicketState state) {
-        Ticket ticket = getTicket(ticketId);
+        Ticket ticket = tickets.get(ticketId);
         if (ticket != null) {
             TicketState oldState = ticket.currentState;
             ticket.currentState = state;
            
             TicketEvent event = new TicketEvent();
             event.eventType = TicketEventType.STATUS_CHANGED;
-            event.content = "Ticket changed status from " + oldState + " to " + ticket.currentState;
+            event.content = "Ticket " + ticket.incrementalId + " changed status from " + oldState.toString().toLowerCase() + " to " + ticket.currentState.toString().toLowerCase();
             ticket.events.add(event);
             saveObject(ticket);
             
+            addNotificationContent(ticketId, "Ticket " + ticket.incrementalId + " changed status from " + oldState.toString().toLowerCase() +  " to " + ticket.currentState.toString().toLowerCase());
             notifyEventChanged(ticket, event);
         }
     }
@@ -416,6 +425,7 @@ public class TicketManager extends ManagerBase implements ITicketManager {
             
             notifyEventChanged(ticket, event);
             
+            addNotificationContent(ticketId, "Ticket has been assigned to a GetShop consultant.");
             pushOver.push(userId, "Ticket " + ticket.incrementalId + " has been assigned to your ( State: " + ticket.urgency + " )", "Ticket assigned to you...");
         }
     }   
@@ -572,6 +582,44 @@ public class TicketManager extends ManagerBase implements ITicketManager {
         if (ticket != null) {
             ticket.userId = systemManager.getCustomerIdForStoreId(ticket.belongsToStore);
             saveObject(ticket);
+        }
+    }
+
+    private void addNotificationContent(String ticketId, String textContent) {
+        TicketContent content = new TicketContent();
+        content.addedByGetShop = true;
+        content.content = textContent;
+        content.isReadByAssignedTo = true;
+        content.isReadByInboxHandler = true;
+        content.isStatusNotification = true;
+        
+        // This happens if the customer do modifications to nofications
+        if (getSession().currentUser == null) {
+            content.addedByGetShop = false;
+            content.isReadByAssignedTo = false;
+            content.isReadByInboxHandler = false;
+        }
+
+        addTicketContentInternal(ticketId, content, true);
+    }
+
+    public void reOpenTicket(String id) {
+        Ticket ticket = tickets.get(id);
+        if (ticket != null && !ticket.transferredToAccounting) {
+            changeStateOfTicket(ticket.id, TicketState.CREATED);
+        }
+    }
+
+    @Override
+    public void changeType(String ticketId, TicketType type) {
+        Ticket ticket = getTicket(ticketId);
+        if (ticket != null) {
+            TicketType oldType = ticket.type;
+            ticket.type = type;
+            saveObject(ticket);
+            String oldTypeS = oldType == null ? "none" : oldType.toString().toLowerCase();
+            String newTypeS = ticket.type == null ? "none" : ticket.type.toString().toLowerCase();
+            addNotificationContent(ticket.id, "Ticket type was changed from " + oldTypeS + " to " + newTypeS);
         }
     }
 }

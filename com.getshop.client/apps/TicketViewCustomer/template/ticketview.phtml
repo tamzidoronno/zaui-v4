@@ -50,8 +50,9 @@ if ($this->isGetShop()) {
 <div class="ticketarea <? echo $this->isGetShop() ? "isgetshop" : ""; ?>";>
     <?
     foreach ($contents as $content) {               
+        $statusClass = $content->isStatusNotification ? "statusnotification" : "";
         ?>
-        <div class='contentbox'>
+        <div class='contentbox <? echo $statusClass; ?>'>
             <? echo $content->content; ?>
             <div class='rowinfo'>
                 <? 
@@ -74,7 +75,7 @@ if ($this->isGetShop()) {
     ?>
         
     <?
-    if ($ticket->currentState != "COMPLETED" && $ticket->currentState != "CLOSED") {
+    if ($ticket->currentState == "CREATED") {
     ?>
     <div class='replyarea' gstype='form' method='replyTicket'>
         <input type='hidden' value='<? echo $ticket->ticketToken; ?>' gsname='ticketToken'/>
@@ -100,6 +101,19 @@ if ($this->isGetShop()) {
         <i class='fa fa-check'></i> This issue has been <? echo strtolower($ticket->currentState); ?>
     </div>
     <?
+        if (!$ticket->transferredToAccounting && !$this->isGetShop()) {
+            ?>
+            <div style='padding: 10px; font-size: 20px;'>
+                <br/> If you have more to add you can reopen the ticket. 
+                <br/>
+                <br/>
+                <div class='shop_button' gsclick='reOpenTicket' tickettoken='<? echo $ticket->ticketToken; ?>'>Reopen ticket</div>
+                <br/>
+                <br/>
+            </div>
+            
+            <?
+        }
     }
     ?>
         

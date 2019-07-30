@@ -45,6 +45,10 @@ class TicketViewCustomer extends \MarketingApplication implements \Application {
     public function setGetVariables() {
         $_GET['ticketToken'] = $_POST['data']['ticketToken'];
         
+        if (isset($_POST['data']['tickettoken'])) {
+            $_GET['ticketToken'] = $_POST['data']['tickettoken'];
+        }
+        
         if (isset($_POST['data']['ticketid'])) {
             $_GET['ticketId'] = $_POST['data']['ticketid'];
         }
@@ -81,9 +85,7 @@ class TicketViewCustomer extends \MarketingApplication implements \Application {
     
     public function changeType() {
         $this->setGetVariables();
-        $ticket = $this->getApi()->getTicketManager()->getTicket($_GET['ticketId']);
-        $ticket->type = $_POST['data']['gsvalue'];
-        $this->getApi()->getTicketManager()->saveTicket($ticket);
+        $this->getApi()->getTicketManager()->changeType($_GET['ticketId'], $_POST['data']['gsvalue']);
     }
     
     public function validationCompleted() {
@@ -103,6 +105,11 @@ class TicketViewCustomer extends \MarketingApplication implements \Application {
     public function reconnect() {
         $this->setGetVariables();
         $this->getApi()->getTicketManager()->reconnectTicket($_GET['ticketId']);
+    }
+    
+    public function reOpenTicket() {
+        $this->setGetVariables();
+        $this->getSystemGetShopApi()->getCustomerTicketManager()->reOpenTicket($this->getFactory()->getStore()->id, $_GET['ticketToken']);
     }
 }
 ?>

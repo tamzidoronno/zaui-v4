@@ -86,4 +86,12 @@ public class CustomerTicketManager extends ManagerBase implements ICustomerTicke
         }
     }
 
+    @Override
+    public void reOpenTicket(String storeId, String ticketToken) {
+        Ticket ticket = ticketManager.getTicketByToken(storeId, ticketToken);
+        if (ticket != null) {
+            ticketManager.reOpenTicket(ticket.id);
+        }
+    }
+
 }

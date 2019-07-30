@@ -1315,6 +1315,10 @@ public class Order extends DataCommon implements Comparable<Order> {
     }
 
     public boolean containsRoom(String pmsBookingRoomId) {
+        if (cart == null) {
+            return false;
+        }
+        
         for(CartItem item : cart.getItems()) {
             if(item == null) {
                 continue;

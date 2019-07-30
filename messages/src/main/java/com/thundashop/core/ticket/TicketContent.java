@@ -19,6 +19,7 @@ public class TicketContent extends DataCommon {
     public String addedByUserId = "";
     public boolean isReadByInboxHandler = false;
     public boolean isReadByAssignedTo = false;
+    public boolean isStatusNotification = false;
     
     @Transient
     public boolean isAssignedToAGetShopAdmin = false;

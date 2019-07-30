@@ -57,12 +57,14 @@ $fields = array();
 $contacts = array();
 $booker = new stdClass();
 $booker->id = $booking->id;
-$booker->amount = $booking->unsettled;
+foreach($booking->rooms as $r) {
+    $booker->amount += $r->unsettledAmount;
+}
+
 $booker->title = "Send request for booking";
 $booker->footerText = "";
-if($booking->unsettled > 0) {
-    $fields["booker"] = $booker;
-}
+
+$fields["booker"] = $booker;
 
 $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
 $contact = new ContactInformation();
@@ -145,7 +147,11 @@ foreach($fields as $key => $r) {
         </div>
         <div class='sendpaymentrequestsfooter'>
             <?php echo $booker->footerText; ?>
-            <span class='shop_button sendrequestbutton'>Send payment request <i class='fa fa-arrow-right'></i></span>
+            <?
+            $textForButton = $key == "booker" ? "the complete booking" : "for this room";
+            ?>
+            <span class='shop_button sendrequestbutton'>Send payment request <? echo $textForButton; ?> <i class='fa fa-arrow-right'></i></span>
+            <br/><a  style='color: blue' href='/pr.php?id=<? echo $r->id; ?>' target='_blank'>Open payment gateway <? echo $textForButton; ?></a>
             <div class='sentmessage'>Message has been sent</div>
         </div>
         <div style='clear:both;margin-bottom: 20px;'></div>

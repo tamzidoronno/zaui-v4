@@ -12,6 +12,7 @@ class TicketViewCustomer extends \MarketingApplication implements \Application {
 
     public function render() {
         $this->includefile("ticketview");
+        $this->markTicketAsReadByGetShopUser();
     }
     
     public function fileUploaded() {
@@ -74,7 +75,7 @@ class TicketViewCustomer extends \MarketingApplication implements \Application {
     public function setTimeInvoice() {
         $this->setGetVariables();
         $ticket = $this->getApi()->getTicketManager()->getTicket($_GET['ticketId']);
-        $ticket->timeSpent = $_POST['data']['gsvalue'];
+        $ticket->timeInvoice = $_POST['data']['gsvalue'];
         $this->getApi()->getTicketManager()->saveTicket($ticket);
     }
     
@@ -90,6 +91,18 @@ class TicketViewCustomer extends \MarketingApplication implements \Application {
         $ticket = $this->getApi()->getTicketManager()->getTicket($_GET['ticketId']);
         $ticket->hasBeenValidedForTimeUsage = true;
         $this->getApi()->getTicketManager()->saveTicket($ticket);
+    }
+
+    public function markTicketAsReadByGetShopUser() {
+        $this->setGetVariables();
+        if ($this->isGetShop()) {
+            $this->getApi()->getTicketManager()->markTicketAsRead($_GET['ticketId']);
+        }
+    }
+
+    public function reconnect() {
+        $this->setGetVariables();
+        $this->getApi()->getTicketManager()->reconnectTicket($_GET['ticketId']);
     }
 }
 ?>

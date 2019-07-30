@@ -741,7 +741,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     continue;
                 }
                 for(CartItem item : order.cart.getItemsUnfinalized()) {
-                    if(item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId)) {
+                    if(item != null && item.getProduct() != null && item.getProduct().externalReferenceId != null && item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId)) {
                         total -= item.getTotalAmount();
                     }
                 }
@@ -1196,6 +1196,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             return false;
         }
         for(CartItem item : order.cart.getItems()) {
+            if (item.getProduct() == null)
+                continue;
+            
             if(item.getProduct().externalReferenceId == null) {
                 continue;
             }
@@ -3556,6 +3559,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         checkOrdersIds.stream()
             .forEach(orderId -> {
                 Order ord = orderManager.getOrderSecure(orderId);
+                
+                // We cant autodelete orders that are invoiced, this will cause a few problems if they are removed as they are not marked as paid but 
+                // has been received for processing by the customer.
+                if (ord.isInvoice())
+                    return;
                 
                 if (room != null && !doesOrderCorrolateToRoom(room.pmsBookingRoomId, ord)) {
                     return;

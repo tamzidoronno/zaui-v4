@@ -6,6 +6,7 @@
 package com.thundashop.core.ticket;
 
 import com.thundashop.core.common.DataCommon;
+import org.mongodb.morphia.annotations.Transient;
 
 /**
  *
@@ -16,4 +17,15 @@ public class TicketContent extends DataCommon {
     public String ticketId = "";
     public boolean addedByGetShop = true;
     public String addedByUserId = "";
+    public boolean isReadByInboxHandler = false;
+    public boolean isReadByAssignedTo = false;
+    
+    @Transient
+    public boolean isAssignedToAGetShopAdmin = false;
+    
+    @Transient
+    public int ticketNumber;
+    
+    @Transient
+    public String ticketTitle;   
 }

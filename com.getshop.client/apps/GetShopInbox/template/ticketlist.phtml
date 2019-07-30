@@ -3,6 +3,8 @@
 
 $tickets = $this->getTickets(); 
 $cachedUsers = new stdClass();
+$rightList = $this->getRightList();
+
 
 $states = array("CREATED", "COMPLETED");
 $groupedByStates = array();
@@ -17,6 +19,9 @@ foreach ($states as $state) {
     }
 }
 
+?>
+<div class="ticketlist">
+<?
 foreach ($states as $state) {
     if (!$groupedByStates[$state]) {
         continue;
@@ -30,6 +35,10 @@ foreach ($states as $state) {
         if ($ticket->userId && !isset($cachedUsers->{$ticket->userId})) {
             $user = $this->getApi()->getUserManager()->getUserById($ticket->userId);
             $cachedUsers->{$ticket->userId} = $user;
+        }
+        
+        if (!$user && $cachedUsers->{$ticket->userId}) {
+            $user = $cachedUsers->{$ticket->userId};
         }
 
         $name = $user ? $user->fullName : "N/A";
@@ -53,4 +62,45 @@ foreach ($states as $state) {
     }
 }
 ?>
+
+</div>
+
+<div class="lastcontentmessages">
+    <?
+    foreach ($rightList as $ticketContent) {
+        $isReadClass = ""; 
+        
+        if ($this->getCurrentTab() == "unassigned" && !$ticketContent->isReadByInboxHandler) { 
+            $isReadClass = "notread";
+        }
+        
+        if ($this->getCurrentTab() == "yourcases" && !$ticketContent->isReadByAssignedTo) { 
+            $isReadClass = "notread";
+        }
+        
+        if ($this->getCurrentTab() == "unassigned" && $ticketContent->isAssignedToAGetShopAdmin) {
+            $isReadClass = "assignedToUser";
+            if ($ticketContent->isReadByAssignedTo) {
+                $readText = '<i class="fa fa-check"></i> Read';
+            } else {
+                $readText = '<i class="fa fa-close"></i> Not read';
+            }
+        }
+        
+        ?>
+        <a href="/getshop.php?page=ticketview&ticketId=<? echo $ticketContent->ticketId; ?>">
+            <div class="ticketcontent_right <? echo $isReadClass; ?>">
+                <div><? echo $ticketContent->content; ?></div>
+                <div><? echo date("d.m.y H:i", strtotime($ticket->rowCreatedDate)); ?></div>
+                <?
+                if ($isReadClass === "assignedToUser") {
+                    echo $readText;
+                }
+                ?>
+            </div>
+        </a>
+        <? 
+    }
+    ?>
+</div>
 

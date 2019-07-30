@@ -112,4 +112,8 @@ public class Ticket extends DataCommon {
             dateCompleted = new Date();
         }
     }
+
+    public boolean isNotAssigned() {
+        return assignedToUserId == null || assignedToUserId.isEmpty() || assignedToUserId.equals("Not assigned");
+    }
 }

@@ -4,14 +4,44 @@ $types = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType(
 $start = date("d.m.Y", time());
 $end = date("d.m.Y", strtotime(date("d.m.Y",time()) . " +1 day"));
 $booking = $this->getCurrentBooking();
+$bookingStart = "";
+$bookingEnd = "";
+
+foreach($booking->rooms as $r) {
+    if(!$bookingStart || strtotime($r->date->start) < $bookingStart) { $bookingStart = strtotime($r->date->start); }
+    if(!$bookingEnd || strtotime($r->date->end) > $bookingEnd) { $bookingEnd = strtotime($r->date->end); }
+}
 ?>
 
 <div class='manipulateroomoptions'>
     <span class='shop_button disabled' type='delete'><i class='fa fa-trash-o'></i> Delete selected rooms</span>
     <span class='shop_button disabled' type='split'><i class='fa fa-users'></i> Split into a new group</span>
     <span class='shop_button disabled' type='updateGuestCount'><i class='fa fa-plus-square-o'></i> Update guest count</span>
+    <span class='shop_button disabled updatePricePanelbtn' type='updatepricepanelbtn' avoidaction='true'><i class='fa fa-money'></i> Update prices</span>
     <i class='fa fa-caret-down'></i>
 </div>
+<div class="updatepricepanel" style='margin-bottom: 30px;'>
+    <div>
+        <h2>Update all prices for all selected rooms</h2>
+    </div>
+    <div>
+        <span style='width:100px; display:inline-block;'>From date</span>
+        <span style='width:100px; display:inline-block;'>To date</span>
+        <span style='width:154px; display:inline-block;'>Price type</span>
+        <span>Value</span>
+    </div>
+    <input type='txt' class='gsniceinput1' gsname='start' value='<?php echo date("d.m.Y", $bookingStart); ?>' style='width:80px'>
+    <input type='txt' class='gsniceinput1' gsname='end' value='<?php echo date("d.m.Y", $bookingEnd); ?>' style='width:80px'>
+    <select class="gsniceselect1 masseditpricestay" style='width:150px;' gsname='pricetype'>
+        <option value="dayprice">Daily price</option>
+        <option value="start_of_month">Monthly price beginning of month</option>
+        <option value="start_of_stay">Monthly price beginning of stay</option>
+        <option value="wholestay">Total cost for whole stay</option>
+    </select>
+    <input type='txt' class='gsniceinput1' gsname='value' value='100'  style='width:40px'>
+    <span class='shop_button setnewpricebutton'>Set new price</span>
+</div>
+
 <span class='shop_button' style='float:right;' onclick="$('.addroombox').toggle();">Add another room</span>
 
 
@@ -64,33 +94,6 @@ $roomView->renderApplication(true,$this);
 </style>
 
 <script>
-    $('[gsname="start"]').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true, 
-        onSelect: function(dateText) {
-            var curEnd = moment($('[gsname="end"]').val(), "DD.MM.YYYY");
-            var date = moment(dateText, "DD.MM.YYYY");
-            
-            var diff = curEnd.valueOf() - date.valueOf();
-            if(diff <= 0) {
-                date.add(1, 'days');
-                $('[gsname="end"]').val(date.format('DD.MM.YYYY')); 
-            }
-            
-            app.PmsGroupBookingHeader.checkIfCanAddRoom();
-        }
-    });
-    
-    $('[gsname="end"]').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true, 
-        onSelect: function(dateText) {
-            $('.PmsNewBooking [gsname="numberOfRooms"]').val(0);
-            var curStart = moment($('[gsname="start"]').val(), "DD.MM.YYYY");
-            var date = moment(dateText, "DD.MM.YYYY");
-            
-            var diff = date.valueOf() - curStart.valueOf();
-            if(diff <= 0) {
-                date.add(-1, 'days');
-                $('[gsname="start"]').val(date.format('DD.MM.YYYY')); 
-            }     
-            app.PmsGroupBookingHeader.checkIfCanAddRoom();
-        }
-    });
+    getshop_loadDatePicker($('[gsname="start"]'), { dependant : $('[gsname="end"]'), jump : 0 });    
+    getshop_loadDatePicker($('[gsname="end"]'), { dependant : $('[gsname="start"]'), jump : 0 });
 </script>

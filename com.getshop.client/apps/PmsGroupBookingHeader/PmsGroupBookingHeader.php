@@ -11,6 +11,114 @@ class PmsGroupBookingHeader extends \MarketingApplication implements \Applicatio
         
     }
     
+    public function updatePriceByDateRange() {
+        $booking = $this->getCurrentBooking();
+        $bookingId = $booking->id;        
+        $amount = $_POST['data']['value'];
+        
+        $start = strtotime($_POST['data']['start']);
+        $end = strtotime($_POST['data']['end']);
+        $daysToUpdate = array();
+        while(true) {
+            $daysToUpdate[] = date("d-m-Y", $start);
+            $start += 86400;
+            if($start > $end) {
+                break;
+            }
+        }
+        
+        foreach($booking->rooms as $room) {
+            if(!in_array($room->pmsBookingRoomId, $_POST['data']['rooms'])) {
+                continue;
+            }
+            switch($_POST['data']['pricetype']) {
+                case "dayprice":
+                    foreach($room->priceMatrix as $day => $val) {
+                        if(!in_array($day, $daysToUpdate)) { continue; }
+                        $room->priceMatrix->{$day} = $amount;
+                    }
+                    break;
+                case "wholestay":
+                    foreach($room->priceMatrix as $day => $val) {
+                        if(!in_array($day, $daysToUpdate)) { continue; }
+                        $days = sizeof($daysToUpdate)-1;
+                        $room->priceMatrix->{$day} = round(($amount / $days), 2);
+                    }
+                    break;
+                case "start_of_stay":
+                    $time = strtotime($room->date->start);
+                    while(true) {
+                        $start = $time;
+                        $end = strtotime("+1 month", $time);
+                        $time = strtotime("+1 month", $time);
+
+                        $datediff = $end - $start;
+                        $days = floor($datediff / (60 * 60 * 24));
+                        $avg = $amount / $days;
+
+                        foreach($room->priceMatrix as $day => $val) {
+                            if(!in_array($day, $daysToUpdate)) { continue; }
+                            $dayInTime = strtotime($day . " 23:59");
+                            if($dayInTime >= $start && $dayInTime < $end) {
+                                $room->priceMatrix->{$day} = round($avg,2);
+                            }
+                        }
+
+                        if($end > strtotime($room->date->end)) {
+                            break;
+                        }
+                    }
+                    break;
+                case "start_of_month":
+                    $time = strtotime($room->date->start);
+                    $time = strtotime(date("01.m.Y", $time));
+                    while(true) {
+                        $start = $time;
+                        $end = strtotime("+1 month", $time);
+                        $time = strtotime("+1 month", $time);
+
+                        $datediff = $end - $start;
+                        $days = floor($datediff / (60 * 60 * 24));
+                        $avg = $amount / $days;
+
+                        foreach($room->priceMatrix as $day => $val) {
+                            if(!in_array($day, $daysToUpdate)) { continue; }
+                            $dayInTime = strtotime($day . " 23:59");
+                            if($dayInTime >= $start && $dayInTime < $end) {
+                                $room->priceMatrix->{$day} = round($avg,2);
+                            }
+                        }
+
+                        if($end > strtotime($room->date->end)) {
+                            break;
+                        }
+                    }
+                    break;
+                case "whole_stay":
+                    $avg = $amount / sizeof($room->priceMatrix);
+                    foreach($room->priceMatrix as $key => $val) {
+                        if(!in_array($day, $daysToUpdate)) { continue; }
+                        $room->priceMatrix[$key] = $avg;
+                    }
+                    break;
+            }
+        }
+        
+        $logtext = "Date range price update done for date: " . 
+                $_POST['data']['start'] . " - " . $_POST['data']['end'] . 
+                " amount:" . $_POST['data']['value'] . 
+                " type: " . $_POST['data']['pricetype'];
+        
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+        $this->getApi()->getPmsManager()->logEntry($this->getSelectedMultilevelDomainName(), $logtext, $booking->id, null);
+        $this->currentBooking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedMultilevelDomainName(), $_SESSION['PmsSearchBooking_bookingId']);
+        
+        
+        $pmsrooms = new \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView();
+        $pmsrooms->clearCache();
+        
+    }
+    
     public function createNewUser(){
         $name = $_POST['data']['name'];
         $bookingId = $this->getCurrentBooking()->id;

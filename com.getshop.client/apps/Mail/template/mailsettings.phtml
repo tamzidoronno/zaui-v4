@@ -1,0 +1,83 @@
+<?php
+$app = $this->getApi()->getStoreApplicationPool()->getApplication("8ad8243c-b9c1-48d4-96d5-7382fa2e24cd");
+
+?>
+<div gstype='form' method='saveMailSettings'>
+    <h1>Mail settings</h1>
+    <h3>Default mail settings</h3>
+    <div class="row">
+        <div class="col col1">Senders name</div>
+        <div class="col col2">
+            <input type='txt' class='gsniceinput1' gsname='sendMailFromName' value="<? echo $app->settings->{'sendMailFromName'}->value; ?>">
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="spacer"></div>
+        <div class="col col1">Senders reply to</div>
+        <div class="col col2">
+            <input type='txt' class='gsniceinput1' gsname='replyTo' value="<? echo $app->settings->{'replyTo'}->value; ?>">
+        </div>
+    </div>
+
+    <h3>Fill in the fields below to use a different email server than GetShop standard email server</h3>
+    <div class="row">
+        <div class="spacer"></div>
+        <div class="col col1">Send mail from</div>
+        <div class="col col2">
+            <input type='txt' class='gsniceinput1' gsname='sendMailFrom' value="<? echo $app->settings->{'sendMailFrom'}->value; ?>">
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="spacer"></div>
+        <div class="col col1">Hostname</div>
+        <div class="col col2">
+            <input type='txt' class='gsniceinput1' gsname='hostname' value="<? echo $app->settings->{'hostname'}->value; ?>">
+        </div>
+    </div>
+    <div class="row">
+        <div class="spacer"></div>
+        <div class="col col1">Port</div>
+        <div class="col col2">
+            <input type='txt' class='gsniceinput1' gsname='port' value="<? echo $app->settings->{'port'}->value; ?>">
+        </div>
+    </div>
+    <div class="row">
+        <div class="spacer"></div>
+        <div class="col col1">Username</div>
+        <div class="col col2">
+            <input type='txt' class='gsniceinput1' gsname='username' value="<? echo $app->settings->{'username'}->value; ?>">
+        </div>
+    </div>
+    <div class="row">
+        <div class="spacer"></div>
+        <div class="col col1">Password</div>
+        <div class="col col2">
+            <input type='txt' class='gsniceinput1' gsname='password' value="<? echo $app->settings->{'password'}->value; ?>">
+        </div>
+    </div>
+    <div class="row">
+        <div class="spacer"></div>
+        <div class="col col1">Enable TLS/SSL</div>
+        <div class="col col2">
+            <select class='gsniceselect1' gsname='enabletls' value="<? echo $app->settings->{'enabletls'}->value; ?>">
+                <option value='false'>NO</option>
+                <option value='true' <?php if($app->settings->{'enabletls'}->value == "true") { echo "SELECTED"; } ?>>YES</option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="spacer"></div>
+        <div class="col col1"></div>
+        <div class="col col2">
+            <span class='shop_button' gstype='submit'>Save settings</span>
+        </div>
+    </div>
+</div>
+
+<style>
+    .Mail .col1 { width: 70%; display:inline-block; }
+    .Mail .col2 {  display:inline-block; text-align: right; width:25%;  }
+    .Mail .row {clear: both; font-size: 16px; margin-top: 10px; }
+</style>

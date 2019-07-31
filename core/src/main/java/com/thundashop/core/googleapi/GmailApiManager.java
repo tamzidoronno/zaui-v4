@@ -45,6 +45,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javax.mail.Address;
 import javax.mail.BodyPart;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
@@ -468,6 +469,19 @@ public class GmailApiManager extends ManagerBase implements IGmailApiManager {
             }
         }
     }
+    
+    public String sendMessage(String toEmail, String toName, String subject, String content, String fromName, String fromEmail, HashMap<String, String> attachments) {
+        try {
+            MimeMessage msg = createEmail("kai@getshop.com", "kai@getshop.com", subject, content);
+            Message message = createMessageWithEmail(msg);
+            message = getService().users().messages().send("me", message).execute();
+        } catch (MessagingException ex) {
+            throw new RuntimeException(ex);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+        return "OK";
+    }
 
     private MimeMessage createEmail(String to,
             String from,
@@ -485,6 +499,12 @@ public class GmailApiManager extends ManagerBase implements IGmailApiManager {
 
         MimeMessage email = new MimeMessage(session);
 
+        Address[] replyto = new Address[1];
+        
+        Address addr = new InternetAddress(from);
+        replyto[0] = addr;
+        
+        email.setReplyTo(replyto);
         email.setFrom(new InternetAddress(from));
         email.addRecipient(javax.mail.Message.RecipientType.TO,
                 new InternetAddress(to));

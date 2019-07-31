@@ -247,6 +247,7 @@ class ModulePageMenu {
         $menu = new \ModulePageMenu();
         $menu->entries[] = new ModulePageMenuItem("Other", "othersettings", "fa gsicon-gs-gears");
         $menu->entries[] = new ModulePageMenuItem("User accounts", "useraccounts", "fa fa-user");
+        $menu->entries[] = new ModulePageMenuItem("Mail settings", "mailsettings", "fa fa-inbox");
         
         return $menu;
     }

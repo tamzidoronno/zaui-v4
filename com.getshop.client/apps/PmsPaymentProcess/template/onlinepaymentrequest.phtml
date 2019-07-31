@@ -43,7 +43,7 @@ foreach ($paymentMethods as $method) {
 <div class='paymentmethodsselection'>
     <textarea style='width:100%; height: 100px; padding: 10px;' id='messagetosend'><?php echo $msg->content; ?></textarea>
 </div>
-<span class='shop_button' gsclick='reload'>Reload</span>
+<!--<span class='shop_button' gsclick='reload'>Reload</span>-->
 <br><br>
 <?php
 $counter = 0;
@@ -58,7 +58,7 @@ $contacts = array();
 $booker = new stdClass();
 $booker->id = $booking->id;
 foreach($booking->rooms as $r) {
-    $booker->amount += $r->unsettledAmount;
+    $booker->amount += $r->unpaidAmount;
 }
 
 $booker->title = "Send request for booking";
@@ -84,7 +84,7 @@ if($counter > 1) {
         }
         $booker = new stdClass();
         $booker->id = $r->pmsBookingRoomId;
-        $booker->amount = $r->unsettledAmount;
+        $booker->amount = $r->unpaidAmount;
         $booker->title = "Send request for room";
         $roomType = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $r->bookingItemTypeId);
         $name = $roomType->name;
@@ -148,10 +148,10 @@ foreach($fields as $key => $r) {
         <div class='sendpaymentrequestsfooter'>
             <?php echo $booker->footerText; ?>
             <?
-            $textForButton = $key == "booker" ? "the complete booking" : "for this room";
+            $textForButton = $key == "booker" ? "the complete booking" : "this room";
             ?>
             <span class='shop_button sendrequestbutton'>Send payment request <? echo $textForButton; ?> <i class='fa fa-arrow-right'></i></span>
-            <br/><a  style='color: blue' href='/pr.php?id=<? echo $r->id; ?>' target='_blank'>Open payment gateway <? echo $textForButton; ?></a>
+            <br/><a  style='color: blue' href='/pr.php?id=<? echo $r->id; ?>' target='_blank'>Open payment gateway for <? echo $textForButton; ?></a>
             <div class='sentmessage'>Message has been sent</div>
         </div>
         <div style='clear:both;margin-bottom: 20px;'></div>

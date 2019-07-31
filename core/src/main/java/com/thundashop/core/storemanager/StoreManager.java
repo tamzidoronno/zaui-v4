@@ -181,7 +181,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     
     @Override
     public Store getMyStore() throws ErrorException {
-        return finalize(storePool.getStoreBySessionId(getSession().id));
+        return finalize(storePool.getStore(storeId));
     }
 
     @Override

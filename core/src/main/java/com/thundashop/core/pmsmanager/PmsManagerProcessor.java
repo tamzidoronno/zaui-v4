@@ -827,12 +827,16 @@ public class PmsManagerProcessor {
                 forceSend = true;
             }
             
+            if(booking.isOta()) {
+                forceSend = true;
+            }
+            
             if(booking.payedFor != payedfor) {
                 booking.payedFor = payedfor;
                 needSaving = true;
             }
             if(booking.isRegisteredToday() && !booking.hasSentNotification("booking_completed")) {
-                if((payedfor == true || forceSend) && (booking.orderIds.size() == 1 || booking.createOrderAfterStay)) {
+                if((payedfor == true || forceSend) && (booking.orderIds.size() == 1 || booking.createOrderAfterStay || booking.isOta())) {
                     if(!booking.isSynxis()) {
                         manager.doNotificationFromProcessor("booking_completed", booking, null);
                         needSaving = true;

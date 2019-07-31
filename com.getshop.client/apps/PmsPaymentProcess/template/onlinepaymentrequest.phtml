@@ -41,7 +41,18 @@ foreach ($paymentMethods as $method) {
     
 </div>
 <div class='paymentmethodsselection'>
-    <textarea style='width:100%; height: 100px; padding: 10px;' id='messagetosend'><?php echo $msg->content; ?></textarea>
+    <textarea style='width:100%; height: 100px; padding: 10px;' id='messagetosend'><?php echo @$msg->content; ?></textarea>
+</div>
+
+<div class='nopaymentlink' style='margin: 20px;padding: 20px;background-color: red;color: #fff;'>
+    <i class='fa fa-warning'></i> We can not proceed without any {paymentlink} variable in the text above, please add the {paymentlink} variable in the text above.
+    <div>
+        <br>
+        PS: You can set up a standard predefined message the settings area.<br>
+        Example:<br>
+        Please pay the following link {paymentlink}.<br>
+    </div>
+    
 </div>
 <!--<span class='shop_button' gsclick='reload'>Reload</span>-->
 <br><br>
@@ -57,6 +68,7 @@ $fields = array();
 $contacts = array();
 $booker = new stdClass();
 $booker->id = $booking->id;
+$booker->amount = 0;
 foreach($booking->rooms as $r) {
     $booker->amount += $r->unpaidAmount;
 }
@@ -111,6 +123,7 @@ if($counter > 1) {
     }
 }
 
+echo "<div class='haspaymentlink'>";
 echo "<input type='hidden' id='customersobject' value='" . json_encode($contacts) . "'>";
 
 foreach($fields as $key => $r) {
@@ -158,7 +171,7 @@ foreach($fields as $key => $r) {
     </div>
     <?php
 }
-
+echo "</div>";
 ?>
 
 <style>
@@ -169,3 +182,7 @@ foreach($fields as $key => $r) {
     .sendpaymentrequestsfooter { margin-bottom: 30px; border-top: solid 0px; height: 38px; border-top: 0px; font-size: 16px; padding-top: 4px; padding-left: 5px; font-weight: bold;}
     .sendrequestbutton { padding-top: 2px; float:right; }
 </style>
+
+<script>
+app.PmsPaymentProcess.checkIfPaymentLinkVariableIsFound();
+</script>

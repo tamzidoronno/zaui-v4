@@ -298,7 +298,7 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
             try {
                 message.setSubject(subject, "UTF-8");
                 message.setHeader("Content-Type", "text/plain; charset=UTF-8");
-                message.addRecipient(RecipientType.TO, new InternetAddress("pal@getshop.com"));
+                message.addRecipient(RecipientType.TO, new InternetAddress(to));
                 if(mailSettings.fromName != null && !mailSettings.fromName.isEmpty()) {
                     message.addFrom(new InternetAddress[]{new InternetAddress(mailSettings.sendMailFrom, mailSettings.fromName)});
                 } else {
@@ -328,11 +328,11 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
                     message.setContent(content, "text/html; charset=UTF-8");
                 }
 
-//                if (frameworkConfig.productionMode || isToDeveloper(to)) {
+                if (frameworkConfig.productionMode || isToDeveloper(to)) {
                     Transport.send(message);
-//                } else {
-//                    GetShopLogHandler.logPrintStatic("Mail sent to: " + to + ", from: "+from+", subject: " + subject + ", content: " + content.replace("<br>", "\n"), storeId);
-//                }
+                } else {
+                    GetShopLogHandler.logPrintStatic("Mail sent to: " + to + ", from: "+from+", subject: " + subject + ", content: " + content.replace("<br>", "\n"), storeId);
+                }
                 updateMailStatus("delivered");
                 delivered = true;
                 break;

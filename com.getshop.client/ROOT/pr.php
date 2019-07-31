@@ -18,7 +18,7 @@ if($engine == "e625c003-9754-4d66-8bab-d1452f4d5562") { $engine = "demo"; } //Fa
 $orderId = $factory->getApi()->getPmsInvoiceManager()->autoCreateOrderForBookingAndRoom($engine, $roomBookingId, $res);
 if($orderId) {
     echo "Please wait...";
-    header("location:/?page=cart&payorder=". $orderId);
+    header("location:/?changeGetShopModule=cms&page=cart&payorder=". $orderId);
 } else {
     echo "We where not able to find your payment, please contact us.";
 }

@@ -49,7 +49,7 @@ class contactus extends PageCommon {
             $msg .= $content;
       
             $from = '<webpage@getshop.com>';
-            $to = '<post@gkroen.no>';
+            $to = '<post@nordlyshotell.no>';
             $subject = 'Melding fra nettsiden';
             $body = $msg;
 

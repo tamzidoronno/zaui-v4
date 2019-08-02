@@ -827,12 +827,16 @@ public class PmsManagerProcessor {
                 forceSend = true;
             }
             
+            if(booking.isOta()) {
+                forceSend = true;
+            }
+            
             if(booking.payedFor != payedfor) {
                 booking.payedFor = payedfor;
                 needSaving = true;
             }
             if(booking.isRegisteredToday() && !booking.hasSentNotification("booking_completed")) {
-                if((payedfor == true || forceSend) && (booking.orderIds.size() == 1 || booking.createOrderAfterStay)) {
+                if((payedfor == true || forceSend) && (booking.orderIds.size() == 1 || booking.createOrderAfterStay || booking.isOta())) {
                     if(!booking.isSynxis()) {
                         manager.doNotificationFromProcessor("booking_completed", booking, null);
                         needSaving = true;
@@ -1006,8 +1010,7 @@ public class PmsManagerProcessor {
             if(book.getActiveRooms().isEmpty()) {
                 continue;
             }
-            if(book.isSynxis()) {
-                //Gds don't send payment links.
+            if(!book.autosendPaymentLink()) {
                 continue;
             }
             
@@ -1033,47 +1036,18 @@ public class PmsManagerProcessor {
                 continue;
             }
             
-            for(String orderId : book.orderIds) {
-                Order order = manager.orderManager.getOrder(orderId);
-                if(order.avoidAutoSending) {
-                    continue;
-                }
-                if(order.status == Order.Status.PAYMENT_COMPLETED) {
-                   continue; 
-                }
-                if(order.payment != null && order.payment.paymentType != null && 
-                        (!order.payment.paymentType.toLowerCase().contains("dibs") &&
-                        !order.payment.paymentType.toLowerCase().contains("netaxept") &&
-                        !order.payment.paymentType.toLowerCase().contains("stripe") &&
-                        !order.payment.paymentType.toLowerCase().contains("epay"))) {
-                    continue;
-                }
-                
-                String key = "autosendmissingpayment_" + book.id;
-                if(order.attachedToRoom != null && !order.attachedToRoom.isEmpty()) {
-                    PmsBookingRooms room = book.getRoom(order.attachedToRoom);
-                    if(!room.date.start.before(cal.getTime())) {
-                        continue;
-                    }
-                    
-                    if(order.recieptEmail == null || order.recieptEmail.isEmpty()
-                            && room.guests != null && !room.guests.isEmpty()) {
-                        //Make sure it asks for the correct person to send email to.
-                        order.recieptEmail = room.guests.get(0).email;
-                        manager.orderManager.saveOrder(order);
-                    }
-                    
-                    key = key + "_" + order.id;
-                }
-                
-                if(book.notificationsSent.contains(key)) {
-                    continue;
-                }
-
-                manager.sendMissingPayment(orderId, book.id);
-                book.notificationsSent.add(key);
-                manager.saveBooking(book);
+            String key = "autosendmissingpayment_" + book.id;
+            if(book.notificationsSent.contains(key)) {
+                continue;
             }
+            
+            User usr = manager.userManager.getUserById(book.userId);
+            String bookingId = book.id;
+            String message = manager.getMessage(bookingId, "booking_paymentmissing");
+            manager.sendPaymentRequest(bookingId, usr.emailAddress, usr.prefix, usr.cellPhone, message);
+            
+            book.notificationsSent.add(key);
+            manager.saveBooking(book);
         }
     }
 
@@ -1282,8 +1256,16 @@ public class PmsManagerProcessor {
             }
             room.removeCode();    
             updated = true;
-        } else {        
-            LockCode nextUnusedCode = manager.getShopLockSystemManager.getNextUnusedCode(item.lockGroupId, room.pmsBookingRoomId, getClass().getSimpleName(), "Automatically assigned by PMS processor");
+        } else {
+            LockCode nextUnusedCode = null;
+            
+            try {
+                nextUnusedCode = manager.getShopLockSystemManager.getNextUnusedCode(item.lockGroupId, room.pmsBookingRoomId, getClass().getSimpleName(), "Automatically assigned by PMS processor");
+            } catch (Exception ex) {
+                manager.logPrintException(ex);
+                return false;
+            }
+            
             if (nextUnusedCode != null) {
                 room.code = ""+nextUnusedCode.pinCode;
                 room.addedToArx = true;

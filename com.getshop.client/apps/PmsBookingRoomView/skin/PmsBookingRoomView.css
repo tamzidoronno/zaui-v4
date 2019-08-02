@@ -514,9 +514,8 @@
 .PmsBookingRoomView .insideheader .gs_shop_small_icon {
     background: #86c330;
     background-color: #86c330;
-    position: absolute;
-    right: 0px;
     bottom: 5px;
+    float:right;
     border-radius: 3px;
     color: #FFF;
     border: solid 0px;

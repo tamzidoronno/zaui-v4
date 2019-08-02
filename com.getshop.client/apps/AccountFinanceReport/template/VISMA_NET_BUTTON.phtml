@@ -2,6 +2,11 @@
 /* @var $this \ns_e6570c0a_8240_4971_be34_2e67f0253fd3\AccountFinanceReport */
 $oauthSessionId = isset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_VISMA_NET_OAUTHSESSION']) ? $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_VISMA_NET_OAUTHSESSION'] : false;
 $needLogin = true;
+$doublePostId = "";
+
+if (isset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_current_doublepostfileid'])) {
+    $doublePostId = $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_current_doublepostfileid'];
+}
 
 if ($oauthSessionId) {
     $result = $this->getApi()->getOAuthManager()->getCurrentOAuthSession($oauthSessionId);
@@ -13,7 +18,7 @@ if ($oauthSessionId) {
 if ($needLogin) { ?>
     <div class="shop_button showresultbutton gs_ignorenavigate vismaloginlink"> <? echo $this->__f("Login to Visma"); ?></div>
 <? } else { ?>
-    <div class="shop_button showresultbutton gs_ignorenavigate transferdata" gsclick="transferData"> <? echo $this->__f("Transfer data to Visma"); ?></div>
+    <div class="shop_button showresultbutton gs_ignorenavigate transferdata" gsclick="transferData" <? echo $doublePostId ? "doublepostid='$doublePostId'" : ""; ?>> <? echo $this->__f("Transfer data to Visma"); ?></div>
     <div class="shop_button showresultbutton gs_ignorenavigate transferdata" gsclick="logoutVisma"> <? echo $this->__f("Logout Visma"); ?></div>
     <br/>
     <br/><b>Visma login expires:</b> <? echo date('d.m.Y H:i', strtotime($result->expiryDate)); ?>

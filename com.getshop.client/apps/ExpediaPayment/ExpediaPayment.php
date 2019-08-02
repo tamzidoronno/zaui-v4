@@ -14,6 +14,10 @@ class ExpediaPayment extends \PaymentApplication implements \Application  {
         return "ExpediaCollect";
     }
 
+    public function hiddenFromPaymentProcess() {
+        return true;
+    }
+    
     public function addPaymentMethods() {
     }
 

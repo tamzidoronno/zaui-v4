@@ -28,8 +28,8 @@ $_SESSION['firstloadpage'] = true;
         <title>Support - GetShop</title>
         <link rel="stylesheet" href="/icomoon/style.css">
         <link rel="stylesheet" href="/skin/default/getshop.css">
-        <link rel="stylesheet" href="/skin/default/getshopsupport.css">
         <link rel="stylesheet" href="/skin/default/getshopmodules.css">
+        <link rel="stylesheet" href="/skin/default/getshopsupport.css">
         <link rel="stylesheet" href="/skin/default/fontawesome/css/font-awesome.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
 
@@ -46,6 +46,9 @@ $_SESSION['firstloadpage'] = true;
         <script type="text/javascript" src="js/moments.js"></script>
         <script type="text/javascript" src="js/getshop/getshop.js"></script>
         <script type="text/javascript" src="js/getshop.support.js"></script>
+        <script type="text/javascript" src="js/dropzone/dropzone.js"></script>
+        
+        <link rel="stylesheet" href="js/dropzone/dropzone.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
         <? $page->loadAppsJavascripts(); ?>
     </head>

@@ -63,6 +63,7 @@ public class Store extends DataCommon {
     public boolean acceptedGDPR = false;
     public Date acceptedGDPRDate = null;
     public String acceptedByUser = "";
+    public boolean newPaymentProcess = false;
 
     public String getDefaultMailAddress() {
         if (configuration.emailAdress == null || configuration.emailAdress.isEmpty()) {

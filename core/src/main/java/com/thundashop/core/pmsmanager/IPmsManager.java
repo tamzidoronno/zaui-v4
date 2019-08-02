@@ -47,6 +47,9 @@ public interface IPmsManager {
     public void simpleCompleteCurrentBooking();
     
     @Administrator
+    public List<PmsRoomSimple> getAllRoomsOnOrder(String orderId);
+    
+    @Administrator
     public void markRoomAsCleanedWithoutLogging(String itemId);
             
     @Administrator
@@ -648,4 +651,7 @@ public interface IPmsManager {
 
     @Administrator
     public List<PmsRoomPaymentSummary> getSummaryForAllRooms(String pmsBookingId);
+    
+    @Administrator
+    public void attachOrderToBooking(String bookingId, String orderId);
 }

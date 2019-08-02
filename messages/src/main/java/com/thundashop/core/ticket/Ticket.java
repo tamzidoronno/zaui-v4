@@ -17,6 +17,10 @@ import java.util.List;
  */
 public class Ticket extends DataCommon {
     public List<TicketEvent> events = new ArrayList();
+    
+    /**
+     * The GetShop Customer ID
+     */
     public String userId;
     public TicketType type;
     public TicketState currentState = TicketState.CREATED;
@@ -25,16 +29,36 @@ public class Ticket extends DataCommon {
     public String externalId = "";
     
     public Date dateCompleted = null;
+   
+    public String assignedToUserId = "";
+    
+    /**
+     * Created by store and userid from the store.
+     */
+    public String belongsToStore = "";
+    public String createdByUserId = "";
+    
+    /** 
+     * This ID correspond to the TicketLight.ticketToken
+     */
+    public String ticketToken = "";
     
     /**
      * in minutes
      */
     public Double timeSpent = 0D;
     public Double timeInvoice = 0D;
-    
+    public boolean hasBeenValidedForTimeUsage = false;
+            
     public boolean transferredToAccounting = false;
     public String productId = "";
 
+    public List<String> attachmentIds = new ArrayList();
+    public String urgency = "";
+    public String replyToPhone;
+    public String replyToPrefix;
+    public String replyToEmail;
+    
     public Date getAddonInvoiceDate() {
         if (!currentState.equals(TicketState.COMPLETED)) {
             return null;
@@ -87,5 +111,9 @@ public class Ticket extends DataCommon {
         if (dateCompleted == null && currentState.equals(TicketState.COMPLETED)) {
             dateCompleted = new Date();
         }
+    }
+
+    public boolean isNotAssigned() {
+        return assignedToUserId == null || assignedToUserId.isEmpty() || assignedToUserId.equals("Not assigned");
     }
 }

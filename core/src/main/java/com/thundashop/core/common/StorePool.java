@@ -168,7 +168,7 @@ public class StorePool {
                 GetShopLogHandler.logPrintStatic("test", null);
             }
             try {
-                Gson useGson = isAdministrator(object) ? gson : gsonWithVirusScanner;
+                Gson useGson = isAdministrator(object) || whiteLabeledForVirusScans(object) ? gson : gsonWithVirusScanner;
                 Object argument = useGson.fromJson(object.args.get(parameter), casttypes[i]);
                 executeArgs[i] = argument;
             } catch (Exception e) {
@@ -245,10 +245,12 @@ public class StorePool {
                     }
                 }catch(Exception x) {
                     GetShopLogHandler.logPrintStatic("Exception: " + x.getMessage(), handler.getStoreId());
+                    x.printStackTrace();
                     throw x;
                 }
             }catch(ErrorException x) {
                 GetShopLogHandler.logPrintStatic("Error exception: " + x.getMessage(), handler.getStoreId());
+                x.printStackTrace();
                 throw x;
             }
         }
@@ -380,5 +382,22 @@ public class StorePool {
         
         boolean isAdmin = storeHandler.isAdministrator(object.sessionId, object);
         return isAdmin;
+    }
+
+    private boolean whiteLabeledForVirusScans(JsonObject2 object) {
+      
+        
+        if (object.interfaceName != null && object.interfaceName.equals("core.getshop.IGetShop")) {
+            if (object.method != null && object.method.equals("insertNewStore")) {
+                return true;
+            }
+        }
+        if (object.interfaceName != null && object.interfaceName.equals("core.ticket.ITicketManager")) {
+            if (object.method != null && object.method.equals("uploadAttachment")) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 }

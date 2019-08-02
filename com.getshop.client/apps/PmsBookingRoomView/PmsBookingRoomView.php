@@ -22,6 +22,14 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         
     }
     
+    public function sortGetShopTable() {
+        $_SESSION['lastsorttype'] = $_POST['data']['column'];
+        $_SESSION['lastsorttypeasc'] = "false";
+        if ($_POST['data']['sorting'] == "asc") {
+            $_SESSION['lastsorttypeasc'] = "true";
+        }
+    }
+    
     public function retrySendingCode() {
         $this->getApi()->getPmsManager()->processor($this->getSelectedMultilevelDomainName());
         $this->setData();
@@ -1200,6 +1208,10 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
                 $addon->price = $_POST['data'][$addon->addonId]['price'];
                 $addon->count = $_POST['data'][$addon->addonId]['count'];
                 $addon->date = $this->convertToJavaDate(strtotime($_POST['data'][$addon->addonId]['date']));
+                $addon->name = "";
+                if(isset($_POST['data'][$addon->addonId]['name'])) {
+                    $addon->name = $_POST['data'][$addon->addonId]['name'];
+                }
             }
         }
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
@@ -2025,6 +2037,11 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_showcredittedhistory'] = !$showCredittedHistory;
     }
 
+    public function toggleAllOrders() {
+        $showCredittedHistory = isset($_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_showallorders']) && $_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_showallorders'];
+        $_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_showallorders'] = !$showCredittedHistory;
+    }
+
     public function filterOrderIds($orderIds) {
         $showCredittedHistory = isset($_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_showcredittedhistory']) && $_SESSION['ns_f8cc5247_85bf_4504_b4f3_b39937bd9955_showcredittedhistory'];
         
@@ -2337,5 +2354,8 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $this->clearCache();
     }
 
+    public function attachOrderToBooking() {
+        $this->getApi()->getPmsManager()->attachOrderToBooking($this->getSelectedMultilevelDomainName(), $_POST['data']['bookingid'], $_POST['data']['orderid']);
+    }
 }
 ?>

@@ -448,24 +448,19 @@ class PageFactory {
     }
     public function createGetShopSupportPages() {
         $page = new \ModulePage("home", "getshopsupport");
-        $row = $page->createRow();
-        $row->addColumn("84268253-6c1e-4859-86e3-66c7fb157ea1", "c4eb8022-f405-11e8-8eb2-f2801f1b9fd1");
+        $row = $page->createRow(true);
+        $row->addColumn("a5175115-187a-4721-90e5-4752fa52ca7a", "c4eb8022-f405-11e8-8eb2-f2801f1b9fd1");
         $this->pages['home'] = $page;
         
         $page = new \ModulePage("getshopdevcenter", "getshopsupport");
-        $row = $page->createRow();
-        $row->addColumn("84268253-6c1e-4859-86e3-66c7fb157ea1", "c4eb8022-f405-11e8-8eb2-f2801f1b9fd1");
+        $row = $page->createRow(true);
+        $row->addColumn("13c0bc5f-ce62-45c5-be76-90237d16de91", "c4eb8022-f405-11e8-8eb2-f2801f1b9fd1");
         $this->pages['getshopdevcenter'] = $page;   
         
-        $page = new \ModulePage("getshopbillinghistory", "getshopsupport");
-        $row = $page->createRow();
-        $row->addColumn("84268253-6c1e-4859-86e3-66c7fb157ea1", "c4eb8022-f405-11e8-8eb2-f2801f1b9fd1");
-        $this->pages['getshopbillinghistory'] = $page;   
-        
-        $page = new \ModulePage("getshopusermanual", "getshopsupport");
-        $row = $page->createRow();
-        $row->addColumn("84268253-6c1e-4859-86e3-66c7fb157ea1", "c4eb8022-f405-11e8-8eb2-f2801f1b9fd1");
-        $this->pages['getshopusermanual'] = $page;   
+        $page = new \ModulePage("ticketview", "getshopsupport");
+        $row = $page->createRow(true);
+        $row->addColumn("f5e525cc-f11e-4611-93bb-1afacd9aade5", "c4eb8022-f405-11e8-8eb2-f2801f1b9fd1");
+        $this->pages['ticketview'] = $page;   
     }
 
     public function createSalesPointPages() {
@@ -754,6 +749,13 @@ class PageFactory {
         $row->addColumn("27656859-aeed-41f7-9941-f01d0f860212", "f05c190e-2ba5-4604-b8cc-ffe93647e46c");
         $this->pages[$page->getId()] = $page;
         
+        
+        $page = new \ModulePage("mailsettings", "settings");
+        $page->setLeftMenu(\ModulePageMenu::getSettingsLeftMenu());
+        $row = $page->createRow();
+        $row->addColumn("8ad8243c-b9c1-48d4-96d5-7382fa2e24cd", "478ba23d-1587-4e59-a749-936148b2c2b7");
+        $this->pages[$page->getId()] = $page;
+        
     }
     
     public function createGetShopPages() {
@@ -789,6 +791,11 @@ class PageFactory {
         $row->ignoreTopRow = true;
         $row->addColumn('ca4162a4-b26b-4920-8d51-80b809546167', "c2189ee9-ae84-473a-8df5-32534f74d0bc");
         $this->pages['iotdevices'] = $page;
+        
+        $page = new \ModulePage("ticketview", "getshop");
+        $row = $page->createRow(true);
+        $row->addColumn("f5e525cc-f11e-4611-93bb-1afacd9aade5", "c4eb8022-f405-11e8-8eb2-f2801f1b9fd1");
+        $this->pages['ticketview'] = $page;   
     }
 
     public function addExtraApplicationsNoneInstance($id) {

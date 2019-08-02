@@ -259,6 +259,8 @@ public class Database extends StoreComponent {
         obj.add(addBannedClass("com.thundashop.core.pmsmanager.PmsLog"));
         obj.add(addBannedClass("com.thundashop.core.wubook.WubookLog"));
         obj.add(addBannedClass("com.thundashop.core.common.ConferenceDiffLog"));
+        obj.add(addBannedClass("com.thundashop.core.ticket.TicketContent"));
+        obj.add(addBannedClass("com.thundashop.core.ticket.TicketAttachment"));
         andQuery.put("$and", obj);
         
         return andQuery;
@@ -460,8 +462,7 @@ public class Database extends StoreComponent {
     }
 
     public List<DataCommon> query(String manager, String storeId, DBObject query) {
-        DB db = mongo.getDB(manager);
-        DBCollection col = db.getCollection("col_" + storeId);
+        DBCollection col = getCollection(manager, storeId);
         DBCursor res = col.find(query);
         List<DataCommon> retObjecs = new ArrayList();
         while (res.hasNext()) {
@@ -471,6 +472,12 @@ public class Database extends StoreComponent {
         }
 
         return retObjecs;
+    }
+
+    public DBCollection getCollection(String manager, String storeId1) {
+        DB db = mongo.getDB(manager);
+        DBCollection col = db.getCollection("col_" + storeId1);
+        return col;
     }
 
     /**
@@ -496,6 +503,10 @@ public class Database extends StoreComponent {
         }
 
         addDataCommonToDatabase(data, credentials);
+    }
+    
+    public void saveDirect(DBObject dbObject, Credentials credentials) {
+        mongo.getDB(credentials.manangerName).getCollection(collectionPrefix + credentials.storeid).save(dbObject);
     }
 
     private void logSavedMessge(DataCommon newObject, String database, String collection) {
@@ -609,6 +620,10 @@ public class Database extends StoreComponent {
         }catch(Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public DataCommon convert(DBObject next) {
+        return morphia.fromDBObject(DataCommon.class, next);
     }
 }
 

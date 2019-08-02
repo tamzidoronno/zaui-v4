@@ -8,6 +8,6 @@
     background-color: #EFEFEF;
     padding: 50px;
 }
-
+.GetShopDeviceList .GetShopModuleTable .col { width: 150px; }
 .GetShopDeviceList .col_name {   width: 100px; }
 .GetShopDeviceList .col_type {   width: 100px; }

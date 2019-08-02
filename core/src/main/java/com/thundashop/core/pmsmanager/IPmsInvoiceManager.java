@@ -135,4 +135,12 @@ public interface IPmsInvoiceManager {
     public Double getTotalOrdersOnBooking(String bookingId);
     
     public String getRedirectForBooking(String bookingId);
+    
+    @Administrator
+    public void toggleNewPaymentProcess();
+    
+    @Administrator
+    public List<Order> getAllUnpaidOrdersForRoom(String pmsBookingRoomId);
+    
+    public String autoCreateOrderForBookingAndRoom(String roomBookingId, String paymentMethod);
 }

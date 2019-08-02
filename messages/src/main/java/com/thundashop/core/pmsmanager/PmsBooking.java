@@ -751,6 +751,37 @@ public class PmsBooking extends DataCommon {
         return diff < 60000;
     }
 
+    boolean autosendPaymentLink() {
+        //Send payment link on all bookings registered by ota not prepaid,
+        if(channel != null && channel.startsWith("wubook_")) {
+            if(paymentType == null || paymentType.isEmpty()) {
+                return true;
+            }
+        }
+        
+        //If pay later has been activated, send payment link
+        if(payLater) {
+            return true;
+        }
+        
+        return false;
+    }
+
+    public double getUnpaidAmount() {
+        double amount = 0;
+        for(PmsBookingRooms r : getActiveRooms()) {
+            amount += r.unpaidAmount;
+        }
+        return amount;
+    }
+
+    boolean isOta() {
+        if(channel != null && channel.contains("wubook")) {
+            return true;
+        }
+        return false;
+    }
+
     public static class PriceType {
         public static Integer daily = 1;
         public static Integer monthly = 2;

@@ -140,6 +140,8 @@ public class PmsBookingRooms implements Serializable {
      */
     public Double unsettledAmountIncAccrued = null;
     
+    double unpaidAmount = 0.0;
+    
 
     public boolean isOverBooking() {
         if(isAddedToBookingEngine()) {

@@ -21,7 +21,7 @@ class Mail extends \MarketingApplication implements \Application {
     }
     
     public function render() {
-        
+        $this->includefile("mailsettings");
     }
     
     
@@ -29,7 +29,30 @@ class Mail extends \MarketingApplication implements \Application {
         $this->includefile("config");
     }
     
+    public function saveMailSettings() {
+        $this->saveKeySettings("hostname", $_POST['data']['hostname']);
+        $this->saveKeySettings("port", $_POST['data']['port']);
+        $this->saveKeySettings("password", $_POST['data']['password'], true);
+        $this->saveKeySettings("username", $_POST['data']['username']);
+        $this->saveKeySettings("enabletls", $_POST['data']['enabletls']);
+        $this->saveKeySettings("sendMailFrom", $_POST['data']['sendMailFrom']);
+        $this->saveKeySettings("sendMailFromName", $_POST['data']['sendMailFromName']);        
+        $this->saveKeySettings("replyTo", $_POST['data']['replyTo']);        
+    }
+    
+    public function saveKeySettings($key, $value, $secure = false) {
+        
+        $setting = new \core_common_Setting();
+        $setting->id = $key;
+        $setting->value = $value;
+        $setting->name = $key;
+        $setting->secure = $secure;
+        
+        $this->getApi()->getStoreApplicationPool()->setSetting("8ad8243c-b9c1-48d4-96d5-7382fa2e24cd", $setting);
+    }
+    
     public function saveSettings() {
+        
         $this->setConfigurationSetting("hostname", $_POST['hostname']);
         $this->setConfigurationSetting("port", $_POST['port']);
         $this->setConfigurationSetting("password", $_POST['password'], true);

@@ -1,0 +1,106 @@
+<?
+/* @var $this \ns_f1706b4c_f779_4eb7_aec3_ee08f182e090\GetShopInbox */
+
+$tickets = $this->getTickets(); 
+$cachedUsers = new stdClass();
+$rightList = $this->getRightList();
+
+
+$states = array("CREATED", "COMPLETED");
+$groupedByStates = array();
+
+foreach ($states as $state) {
+    $groupedByStates[$state] = array();
+    foreach ($tickets as $ticket) {
+        if ($ticket->currentState != $state) {
+            continue;
+        }
+        $groupedByStates[$state][] = $ticket;
+    }
+}
+
+?>
+<div class="ticketlist">
+<?
+foreach ($states as $state) {
+    if (!$groupedByStates[$state]) {
+        continue;
+    }
+    
+    echo "<h2>".$state."</h2>";
+    
+    foreach ($groupedByStates[$state] as $ticket) {
+        $user = false;
+
+        if ($ticket->userId && !isset($cachedUsers->{$ticket->userId})) {
+            $user = $this->getApi()->getUserManager()->getUserById($ticket->userId);
+            $cachedUsers->{$ticket->userId} = $user;
+        }
+        
+        if (!$user && $cachedUsers->{$ticket->userId}) {
+            $user = $cachedUsers->{$ticket->userId};
+        }
+
+        $name = $user ? $user->fullName : "N/A";
+
+        ?>
+        <div class="row">
+            <a href="/getshop.php?page=ticketview&ticketId=<? echo $ticket->id; ?>">
+                <div>
+                    <div class="col col1 ticketid"><? echo $ticket->incrementalId; ?></div>
+                    <div class="col col2"><? echo date('d.m.Y H:i', strtotime($ticket->rowCreatedDate)); ?></div>
+                    <div class="col col3 title"><? echo $ticket->title; ?></div>
+
+                    <div class="col col5 customer"><? echo $name; ?></div>
+                    <div class="col col4 state"><? echo $ticket->currentState; ?></div>
+                    <div class="col col6 state"><? echo $ticket->type; ?></div>
+                    <div class="col col7 state"><? echo $ticket->urgency; ?></div>
+                </div>
+            </a>
+        </div>
+        <?
+    }
+}
+?>
+
+</div>
+
+<div class="lastcontentmessages">
+    <?
+    foreach ($rightList as $ticketContent) {
+        $isReadClass = ""; 
+        
+        if ($this->getCurrentTab() == "unassigned" && !$ticketContent->isReadByInboxHandler) { 
+            $isReadClass = "notread";
+        }
+        
+        if ($this->getCurrentTab() == "yourcases" && !$ticketContent->isReadByAssignedTo) { 
+            $isReadClass = "notread";
+        }
+        
+        if ($this->getCurrentTab() == "unassigned" && $ticketContent->isAssignedToAGetShopAdmin) {
+            $isReadClass = "assignedToUser";
+            if ($ticketContent->isReadByAssignedTo) {
+                $readText = '<i class="fa fa-check"></i> Read';
+            } else {
+                $readText = '<i class="fa fa-close"></i> Not read';
+            }
+        }
+        
+        ?>
+        <a href="/getshop.php?page=ticketview&ticketId=<? echo $ticketContent->ticketId; ?>">
+            <div class="ticketcontent_right <? echo $isReadClass; ?>">
+                <div><? echo $ticketContent->content; ?></div>
+                <div><? echo date("d.m.y H:i", strtotime($ticket->rowCreatedDate)); ?></div>
+                <?
+                if ($isReadClass === "assignedToUser") {
+                    echo $readText;
+                }
+                ?>
+            </div>
+        </a>
+        <? 
+    }
+    ?>
+</div>
+

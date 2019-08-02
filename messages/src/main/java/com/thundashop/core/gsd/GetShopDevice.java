@@ -20,6 +20,7 @@ public class GetShopDevice extends DataCommon {
     public String name ="";
     public String token = "";
     public String type = "";
+    public String ip = "";
     
     public HashMap<String, String> extraConfigs = new HashMap();
     

@@ -336,8 +336,8 @@ class ModulePage {
 
     public function getTopMenuGetShopSupport() {
         $menu = new \ModulePageMenu("support");
-        $menu->entries[] = new ModulePageMenuItem("Dashboard", "home", "gsicon-gs-dashboard");
-        $menu->entries[] = new ModulePageMenuItem("Dev center", "getshopdevcenter", "gsicon-list");
+        $menu->entries[] = new ModulePageMenuItem("New", "home", "gsicon-gs-new");
+        $menu->entries[] = new ModulePageMenuItem("Tickets", "getshopdevcenter", "gsicon-list");
         $menu->entries[] = new ModulePageMenuItem("Manuals", "getshopusermanual", "fa-support");
         return $menu;
     }

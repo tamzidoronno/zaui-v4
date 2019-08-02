@@ -123,7 +123,8 @@ if(sizeof($entries) == 0) {
                     $hasEventId = $this->hasEventOnTime($i,$i +(60*30), $eventsByItem, $entryids);
                     $hasEvent = $hasEventId['state'] ? "hasactivevent".$hasEventId['state']." openconference" : "";
                     $confid = $hasEventId['id'];
-                    $text = substr($hasEventId['title'],0,3);
+                    $title = preg_replace('/[^A-Za-z0-9\-]/', '', $hasEventId['title']);
+                    $text = substr($title,0,3);
                     if(!$hasEvent) { $hasEvent = "canaddevent"; }
                     echo "<span class='dayentry $hasEvent' conferenceid='$confid' ".$hasEventId['check']." title='".$hasEventId['title']."' itemid='".$entry->id."' from='$from' to='$to' date='$day'>";
                     if($hasEventId['state'] == "start" || $hasEventId['state'] == "both") { echo $text; } else { echo "&nbsp;"; }

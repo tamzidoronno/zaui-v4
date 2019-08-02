@@ -198,5 +198,4 @@ public interface IPosManager {
     @Editor
     public List<PmsConference> getConferencesThatHasUnsettledAmount(List<String> userIds);
 
-    public String autoCreateOrderForBookingAndRoom(String roomBookingId, String paymentMethod);
 }

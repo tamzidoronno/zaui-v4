@@ -3,6 +3,7 @@ package com.thundashop.core.verifonemanager;
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
+import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.ordermanager.OrderManager;
@@ -10,6 +11,8 @@ import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.socket.WebSocketServerImpl;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.data.SettingsRow;
+import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.User;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -37,6 +40,9 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
     
     @Autowired
     StoreApplicationPool storeApplicationPool;
+    
+    @Autowired
+    UserManager userManager;
     
     private Order orderToPay;
 
@@ -201,7 +207,23 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
                 logPrint("Found order to pay: " + orderToPay.id);
                 double paidAmount = orderToPay.getTotalAmount() + orderToPay.cashWithdrawal;
                 logPrint("Total amount to mark as paid: " + paidAmount);
-                orderManager.markAsPaid(orderToPay.id, new Date(), paidAmount);
+                try {
+                    try {
+                        boolean startedImpersonation = startImpersonationOfSystemScheduler();
+                        
+                        orderManager.markAsPaid(orderToPay.id, new Date(), paidAmount);
+                        
+                        if (startedImpersonation) {
+                            stopImpersonation();
+                        }
+                        
+                    }catch(Exception a) {
+                        logPrint("Exception occured: " + a.getMessage());
+                        logPrintException(a);
+                    }
+                }catch(ErrorException b) {
+                    logPrint("Error exception occured: " + b.getMessage());
+                }
                 logPrint("Marked order " + orderToPay.incrementOrderId + " as completed with paid amount: " + paidAmount);
             } else {
                 logPrint("Warning! Order is null, cant mark as completed... Why is it null?");
@@ -215,6 +237,33 @@ public class VerifoneManager extends ManagerBase implements IVerifoneManager {
         }
         saveOrderSomeHow(orderToPay);
         orderToPay = null;
+    }
+
+    private void stopImpersonation() {
+        try {
+            userManager.cancelImpersonating();
+            getSession().currentUser = null;
+        } catch (Exception ex) {
+            // This one should never happen, can be removed once securly made sure that it doesnt happen as its hard to test.
+            ex.printStackTrace();
+        }
+    }
+
+    private boolean startImpersonationOfSystemScheduler() {
+        boolean startedImpersonation = false;
+        try {
+            // Start impersonation
+            if (getSession().currentUser == null) {
+                User user = userManager.getInternalApiUser();
+                userManager.startImpersonationUnsecure(user.id);
+                getSession().currentUser = user;
+                startedImpersonation = true;
+            }
+        } catch (Exception ex) {
+            // This one should never happen, can be removed once securly made sure that it doesnt happen as its hard to test.
+            ex.printStackTrace();
+        }
+        return startedImpersonation;
     }
     
     private void saveOrderSomeHow(Order orderToPay) {

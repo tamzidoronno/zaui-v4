@@ -20,7 +20,7 @@ public class Setting extends DataCommon {
         clonedSetting.value = this.value;
         clonedSetting.type = this.type;
 
-        if (this.secure) {
+        if (secure  && value != null && !value.isEmpty()) {
             clonedSetting.value = "****************";
         }
         return clonedSetting;

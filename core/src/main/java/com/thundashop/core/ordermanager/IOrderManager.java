@@ -522,4 +522,7 @@ public interface IOrderManager {
     
     @Administrator
     public List<Order> getAutoCreatedOrdersForConference(String conferenceId);
+    
+    @Administrator
+    public List<String> getAllOrdersForRoom(String pmsBookingRoomId);
 }

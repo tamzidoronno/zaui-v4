@@ -33,6 +33,10 @@ $_SESSION['firstloadpage'] = true;
         <script type="text/javascript" src="js/jquery.ui/js/timepickeraddon.js"></script>
         <script type="text/javascript" src="js/moments.js"></script>
         <script type="text/javascript" src="js/getshop/getshop.js"></script>
+        
+        <script type="text/javascript" src="js/dropzone/dropzone.js"></script>
+        
+        <link rel="stylesheet" href="js/dropzone/dropzone.css">
         <script src="js/ckeditor/ckeditor.js"></script>
         <? $page->loadAppsJavascripts(); ?>
     </head>

@@ -14,5 +14,7 @@ public enum TicketEventType {
     INCOMING_OTHER,
     INCOMING_PHONE,
     INCOMING_SMS,
-    OUTGOING_EMAIL
+    OUTGOING_EMAIL,
+    STATUS_CHANGED, 
+    ASSIGNED_TO
 }

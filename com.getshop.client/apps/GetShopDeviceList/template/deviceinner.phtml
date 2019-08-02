@@ -1,5 +1,15 @@
 <?
-/* @var $this \ns_26958edf_e2a1_4e76_aca0_38e7edfe8c80\SalesPointAccessPoint */
+/* @var $this ns_26958edf_e2a1_4e76_aca0_38e7edfe8c80\GetShopDeviceList */
+$device = $this->getApi()->getGdsManager()->getDevice($_POST['data']['id']);
 ?>
-
+<div gstype='form' method='updateGetshopDevice'>
+    <input type='hidden' gsname='id' value='<?php echo $device->id; ?>'>
+    <input type='txt' class='gsniceinput1' gsname='name' placeholder='Name' value='<?php echo $device->name; ?>'>
+    <input type='txt' class='gsniceinput1' gsname='token' placeholder='Token' value='<?php echo $device->token; ?>'>
+    <input type='txt' class='gsniceinput1' gsname='ip' placeholder='ip address' value='<?php echo $device->ip; ?>'>
+    <span class='shop_button' gstype='submit'>Update device</span>
+</div>
+<br>
+<br>
+<br>
 <div class="shop_button" gsclick="deleteDevice" deviceid="<?php echo $_POST['data']['id']; ?>"> Delete device</div>

@@ -25,6 +25,9 @@ public interface IGdsManager {
     public void saveDevice(GetShopDevice device);
     
     @Administrator
+    public GetShopDevice getDevice(String deviceId);
+    
+    @Administrator
     public void deleteDevice(String deviceId);
     
     @ForceAsync

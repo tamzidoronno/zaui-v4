@@ -1,3 +1,6 @@
+.GetshopInbox {
+    font-size: 16px;
+}
 .GetshopInbox .workarea,
 .GetshopInbox .leftmenu {
     display: inline-block;
@@ -110,8 +113,6 @@
 }
 
 .GetshopInbox .typeselectionbtn.selected { background-color:green; }
-.GetshopInbox .emaillistarea { margin: 10px; background-color:#f8f8f8; padding: 10px; border-radius: 3px; border: solid 1px #bbb;}
-.GetshopInbox .emaillistarea h1 { margin: 0px; margin-bottom: 3px; }
 
 .GetshopInbox .row.email  .selected_checkbox_options .menu {
     margin-left: -400px;
@@ -208,4 +209,36 @@
     background-color: #ebffa9;
     box-sizing: border-box;
     padding: 15px;
+}
+
+.GetshopInbox .col.ticketid { width: 50px; padding-left: 20px;}
+.GetshopInbox .col.title { width: calc(100% - 1000px); }
+.GetshopInbox .col.state { width: 100px }
+.GetshopInbox .col.customer  { width: 300px; }
+
+.GetshopInbox .ticketlist {
+    display: inline-block;
+    width: calc(100% - 400px);
+    vertical-align: top;
+}
+
+.GetshopInbox .lastcontentmessages {
+    display: inline-block;
+    width: 390px;
+    vertical-align: top;
+    border-left: solid 1px #DDD;
+}
+
+.GetshopInbox .ticketcontent_right {
+    border-bottom: solid 1px #DDD;
+    padding: 10px;
+    font-size: 13px;
+}
+
+.GetshopInbox .ticketcontent_right.notread {
+    background-color: #f5ff82;
+}
+
+.GetshopInbox .ticketcontent_right.assignedToUser {
+    background-color: #16b018;
 }

@@ -1,0 +1,187 @@
+<?
+/* @var $this \ns_f5e525cc_f11e_4611_93bb_1afacd9aade5\TicketViewCustomer */
+if ($this->isGetShop()) {
+    $ticket = $this->getApi()->getTicketManager()->getTicket($_GET['ticketId']);
+    $contents = $this->getApi()->getTicketManager()->getTicketContents($ticket->id);
+} else {
+    $ticket = $this->getSystemGetShopApi()->getTicketManager()->getTicketByToken($this->getFactory()->getStore()->id, $_GET['ticketToken']);
+    $contents = $this->getSystemGetShopApi()->getCustomerTicketManager()->getTicketContents($this->getFactory()->getStore()->id, $ticket->ticketToken);
+}
+
+function formatBytes($bytes, $precision = 2) {  
+    if ($bytes >= 1073741824)
+    {
+        $bytes = number_format($bytes / 1073741824, 2) . ' GB';
+    }
+    elseif ($bytes >= 1048576)
+    {
+        $bytes = number_format($bytes / 1048576, 2) . ' MB';
+    }
+    elseif ($bytes >= 1024)
+    {
+        $bytes = number_format($bytes / 1024, 2) . ' KB';
+    }
+    elseif ($bytes > 1)
+    {
+        $bytes = $bytes . ' bytes';
+    }
+    elseif ($bytes == 1)
+    {
+        $bytes = $bytes . ' byte';
+    }
+    else
+    {
+        $bytes = '0 bytes';
+    }
+
+    return $bytes;
+} 
+?>
+
+<div class="heading">
+    <? echo $ticket->title; ?>
+</div>
+
+<?
+if ($this->isGetShop()) {
+    $this->includefile("ticketadmin");
+}
+?>
+<div class="ticketarea <? echo $this->isGetShop() ? "isgetshop" : ""; ?>";>
+    <?
+    foreach ($contents as $content) {               
+        $statusClass = $content->isStatusNotification ? "statusnotification" : "";
+        ?>
+        <div class='contentbox <? echo $statusClass; ?>'>
+            <? echo $content->content; ?>
+            <div class='rowinfo'>
+                <? 
+                
+                if ($this->isGetShop() && !$content->addedByGetShop) {
+                    echo "Customer";
+                } else {
+                    echo $content->addedByGetShop ? "GetShop" : $this->getApi()->getUserManager()->getUserById($ticket->createdByUserId)->fullName;
+                }
+                
+                echo " / ";
+                echo date('d.m.Y H:i', strtotime($content->rowCreatedDate)); 
+                
+                
+                ?>
+            </div>
+        </div>
+        <?
+    }
+    ?>
+        
+    <?
+    if ($ticket->currentState == "CREATED") {
+    ?>
+    <div class='replyarea' gstype='form' method='replyTicket'>
+        <input type='hidden' value='<? echo $ticket->ticketToken; ?>' gsname='ticketToken'/>
+        <?
+        echo $this->__f("Reply"); 
+        ?>
+        
+        <div>
+            <textarea class='replycontent' gsname='content'></textarea>    
+        </div>
+        
+        <div class='shop_button' gstype='submit'>
+            <?
+            echo $this->__f("Send");
+            ?>
+        </div>
+        
+    </div>
+    <?
+    } else {
+    ?>
+    <div class='compledissuebox'>
+        <i class='fa fa-check'></i> This issue has been <? echo strtolower($ticket->currentState); ?>
+    </div>
+    <?
+        if (!$ticket->transferredToAccounting && !$this->isGetShop()) {
+            ?>
+            <div style='padding: 10px; font-size: 20px;'>
+                <br/> If you have more to add you can reopen the ticket. 
+                <br/>
+                <br/>
+                <div class='shop_button' gsclick='reOpenTicket' tickettoken='<? echo $ticket->ticketToken; ?>'>Reopen ticket</div>
+                <br/>
+                <br/>
+            </div>
+            
+            <?
+        }
+    }
+    ?>
+        
+</div>
+
+<div class="imageviewer">
+    <div>
+        <img src='' style='max-width: 100%; max-height: 100%;'/>
+    </div>
+</div>
+
+<div class="ticketinfo">
+    Ticket: <? echo $ticket->incrementalId; ?>
+    <br/>Status: <? echo $ticket->currentState; ?>
+    <br/>
+    <br/><b>Date created:</b>
+    <br/><b>Urgency:</b> <? echo $ticket->urgency; ?>
+    <br/>
+    <br/> <? echo date('d.m.Y h:i', strtotime($ticket->rowCreatedDate)); ?>
+    
+    <br/>
+    <br/><b>Attachments</b>
+    <?
+    if (!$ticket->attachmentIds) {
+        echo "<div>".$this->__f("No attachments added yet")."</div>";
+    }
+    foreach ($ticket->attachmentIds as $attachmentId) {
+        $attachment = $this->getSystemGetShopApi()->getTicketManager()->getAttachment($attachmentId);
+        echo "<div>";
+            echo $attachment->name. " ( ". formatBytes($attachment->size)." )";
+            if (strstr($attachment->type, "image")) {
+                echo "<div>";
+                echo "<img class='imagethumbnail' style='border: solid 1px #DDD; background-color: #FFF; max-width: 100px; max-height: 100px;' src='data:".$attachment->type.";base64, ".$attachment->base64Content."'/>";
+                echo "</div>";
+            } else {
+                echo "<div>";
+                ?>
+                <a gs_ignorenavigate='true' target='_blank' href='/scripts/downloadTicketAttachment.php?attachmentid=<? echo $attachment->id; ?>'><i class='fa fa-download'></i> Download</a>
+                <?
+                echo "</div>";
+            }
+        echo "</div>";
+    }
+    ?>
+
+    <br/>
+    <div>
+        <div id="dropzone" action="/file-upload"
+      class="dropzone gsdropzone"
+      id="my-awesome-dropzone"></div>
+    </div>
+    
+    <div id='fileuploadedsuccessfully' style='display: none' tickettoken='<? echo $ticket->ticketToken; ?>' uuid=''></div>
+</div>
+
+
+<script>
+    gsDropZone = new Dropzone("div#dropzone", { 
+        url: "/scripts/ticket_dropzone.php"
+    });
+    
+    gsDropZone.on('sending', function(file, xhr, formData){
+        formData.append('uuid', file.upload.uuid);
+    });
+    
+    gsDropZone.on('success', function(){
+        var args = Array.prototype.slice.call(arguments);
+        $('#fileuploadedsuccessfully').attr('uuid', args[0].upload.uuid);
+        $('#fileuploadedsuccessfully').click();
+    });
+</script>

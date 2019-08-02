@@ -329,9 +329,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             
             if (dataFromDatabase instanceof Order) {
                 Order order = (Order) dataFromDatabase;
-                if (order.cleanMe()) {
-                    saveObject(order);
-                }
+//                if (order.cleanMe()) {
+//                    saveObject(order);
+//                }
 
                 if(order.payment != null && order.payment.paymentType != null && order.payment.paymentType.equals("ns_d02f8b7a_7395_455d_b754_888d7d701db8//Dibs")) {
                     order.payment.paymentType = "ns_d02f8b7a_7395_455d_b754_888d7d701db8\\Dibs";
@@ -769,6 +769,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public void saveOrder(Order order) throws ErrorException {
         validateOrder(order);
         saveOrderInternal(order);
+
+        try {
+            updateOrderChangedFromBooking(order.id);
+        } catch (GetShopBeanException ex) {
+            // Nothing to do, this happens when the order are removed by a named bean manager.
+            // In that case the manager should handle the order itself.
+        }      
     }
     
     public void markOrderForAutoSending(String orderId) {
@@ -1430,6 +1437,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             order.changePaymentType(app);
             saveObject(order);
         }
+        
+        try {
+            updateOrderChangedFromBooking(orderId);
+        } catch (GetShopBeanException ex) {
+            // Nothing to do, this happens when the order are removed by a named bean manager.
+            // In that case the manager should handle the order itself.
+        }          
     }
 
   
@@ -2446,14 +2460,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         saveObject(order);
         
         try {
-            removeOrderFromBooking(order.id);
+            updateOrderChangedFromBooking(order.id);
         } catch (GetShopBeanException ex) {
             // Nothing to do, this happens when the order are removed by a named bean manager.
             // In that case the manager should handle the order itself.
         }
     }
     
-    private void removeOrderFromBooking(String orderId) {
+    private void updateOrderChangedFromBooking(String orderId) {
         List<String> multiLevelNames = database.getMultilevelNames("PmsManager", storeId);
         for (String multilevelName : multiLevelNames) {
             PmsManager pmsManager = getShopSpringScope.getNamedSessionBean(multilevelName, PmsManager.class);
@@ -3173,7 +3187,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         if(order.isAlreadyPaidAndDifferentStatus(oldOrder)) {
-            messageManager.sendErrorNotification("Tried to revert an order with a different payment status, incid: " + order.incrementOrderId, null);
+            logPrint("Tried to revert an order with a different payment status, incid: " + order.incrementOrderId);
             resetOrder(oldOrder, order);
             throw new ErrorException(1063);
         }
@@ -4387,6 +4401,35 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return orders.values()
                 .stream()
                 .filter(o -> o.autoCreatedOrderForConferenceId != null && o.autoCreatedOrderForConferenceId.contains(conferenceId))
+                .collect(Collectors.toList());
+    }
+
+    public List<Order> getAllOrdersNotClosed() { 
+        List<Order> orderList = orders.values()
+                .stream()
+                .filter(o -> !o.closed)
+                .collect(Collectors.toList());
+        
+        return orderList;
+    }
+    
+    public Order getOrderCreatedByPaymentLinkWithRoomId(String roomBookingId) {
+        return orders.values()
+                .stream()
+                .filter(o -> o.createdByPaymentLinkId != null && o.createdByPaymentLinkId.equals(roomBookingId))
+                .filter(o -> !o.isFullyPaid() || o.status != Order.Status.PAYMENT_COMPLETED)
+                .filter(o -> !o.isCreditNote)
+                .filter(o -> !o.isNullOrder())
+                .findFirst()
+                .orElse(null);
+    } 
+
+    @Override
+    public List<String> getAllOrdersForRoom(String pmsBookingRoomId) {
+        return orders.values()
+                .stream()
+                .filter(o -> o.containsRoom(pmsBookingRoomId))
+                .map(o -> o.id)
                 .collect(Collectors.toList());
     }
 }

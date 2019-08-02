@@ -12,5 +12,7 @@ package com.thundashop.core.ticket;
 public enum TicketType {
     BUG,
     SUPPORT,
-    FEATURE
+    FEATURE,
+    BACKLOG,
+    UNKOWN
 }

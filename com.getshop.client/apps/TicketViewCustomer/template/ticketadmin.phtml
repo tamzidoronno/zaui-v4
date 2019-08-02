@@ -1,0 +1,112 @@
+<?
+/* @var $this \ns_f5e525cc_f11e_4611_93bb_1afacd9aade5\TicketViewCustomer */
+$ticket = $this->getApi()->getTicketManager()->getTicket($_GET['ticketId']);
+$user = $this->getApi()->getUserManager()->getUserById($ticket->userId);
+$systems = $this->getApi()->getSystemManager()->getSystemsForCompany($user->companyObject->id);
+$currentSystem = null;
+$otherSystemsForCustomer = null;
+
+$admins = $this->getApi()->getUserManager()->getUsersByType(100);
+
+if ($systems) {
+        foreach ($systems as $system) {
+            if ($system->remoteStoreId == $ticket->belongsToStore) {
+                $currentSystem = $system;
+                break;
+            }
+        }
+        
+        foreach ($systems as $system) {
+            if ($system->remoteStoreId != $ticket->belongsToStore) {
+                $otherSystemsForCustomer[] = $system;
+            }
+        }
+    }
+?>
+
+<div class="ticketadmin">
+    <h2>Admin options</h2>
+    Customer: <? echo $user ? $user->fullName : "N/A"; ?>
+    <br/>Email: <? echo $ticket->replyToEmail; ?>
+    <br/>Phone: <? echo $ticket->replyToPrefix." ".$ticket->replyToPhone; ?>
+    
+    <?
+    if (!$user) {
+        ?>
+        <br/>
+        <div class='gs_shop_small_icon' gsclick='reconnect' ticketid='<? echo $ticket->id; ?>'>Reconnect to customer</div>
+        <?  
+    }
+    
+    if ($currentSystem) {
+        echo "<br><br/> <b>Originated from system:</b><br/><a href='http://".$currentSystem->webAddresses."/totp.php' target='_blank'>".$currentSystem->webAddresses."</a>";
+    }
+    
+    if ($otherSystemsForCustomer) {
+        echo "<br/><br/><b>Other systems for customer</b>";
+        foreach ($otherSystemsForCustomer as $system) {
+            echo "<br/><a href='http://".$system->webAddresses."/totp.php' target='_blank'>".$system->webAddresses."</a>";
+        }  
+    }
+    ?>
+    <br/>
+    <br/>
+    <br/>
+    <div>
+        <h3>Settings</h3>
+        
+        <span style='display: inline-block; width: 150px;'>Status:</span>
+        <select class='gsniceselect1' gschange='changeState' ticketid='<? echo $_GET['ticketId']; ?>'>
+            <option <? echo $ticket->currentState === "CREATED" ? "selected='true'" : ""; ?> value='CREATED'>Created</option>
+            <option <? echo $ticket->currentState === "COMPLETED" ? "selected='true'" : ""; ?> value='COMPLETED'>Completed</option>
+            <option <? echo $ticket->currentState === "CLOSED" ? "selected='true'" : ""; ?> value='CLOSED'>Closed</option>
+        </select>
+        
+        <span style='display: inline-block; width: 150px;'>Type:</span>
+        <select class='gsniceselect1' gschange='changeType' ticketid='<? echo $_GET['ticketId']; ?>'>
+            <option <? echo !$ticket->type || $ticket->type === "UNKOWN" ? "selected='true'" : ""; ?> value='CREATED'>UNKOWN</option>
+            <option <? echo $ticket->type === "BUG" ? "selected='true'" : ""; ?> value='BUG'>BUG</option>
+            <option <? echo $ticket->type === "FEATURE" ? "selected='true'" : ""; ?> value='FEATURE'>FEATURE</option>
+            <option <? echo $ticket->type === "BACKLOG" ? "selected='true'" : ""; ?> value='BACKLOG'>BACKLOG</option>
+            <option <? echo $ticket->type === "SUPPORT" ? "selected='true'" : ""; ?> value='SUPPORT'>SUPPORT</option>
+        </select>
+        
+        <br/>
+        
+        <span style='display: inline-block; width: 150px;'>Assigned to:</span>
+        <select class='gsniceselect1' gschange='changeAssignment' ticketid='<? echo $_GET['ticketId']; ?>'>
+            <?
+            $loggedin = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
+            echo "<option>Not assigned</option>";
+            foreach ($admins as $admin) {
+                $me = $admin->id == $loggedin->id ? "( me )" : "";
+                $selected = $ticket->assignedToUserId == $admin->id ? "selected='true'" : "";
+                echo "<option $selected value='$admin->id'>".$admin->fullName." $me</option>";
+            }
+            ?>
+        </select>
+        <br/>
+    </div>
+    
+    <br/> <h3>Billing</h3>
+    
+    <?
+    if ($ticket->transferredToAccounting) {
+        echo "Already trasferred to order, values cant be changed";
+    } else {
+        ?>
+        <span style='display: inline-block; width: 150px;'>Hours spent:</span> <input gschange='setTimeSpent' ticketid='<? echo $ticket->id; ?>' class='gsniceinput1' value='<? echo $ticket->timeSpent; ?>'/>
+        <br/><span style='display: inline-block; width: 150px;'>Hours to invoice:</span> <input gschange='setTimeInvoice' class='gsniceinput1' ticketid='<? echo $ticket->id; ?>' value='<? echo $ticket->timeInvoice; ?>'/>
+        <br/> NB! <br/>15 minutes = 0.25 hour. <br/> 30 minutes = 0.5 hour <br/> 45 minutes = 0.75 hour
+
+        <?
+        if (!$ticket->hasBeenValidedForTimeUsage) {
+            ?>
+            <br/>
+            <br/>
+            <div class='shop_button' gsclick='validationCompleted' ticketid='<? echo $ticket->id; ?>'>Validation Completed</div>
+            <?
+        }
+    }
+    ?>
+</div>

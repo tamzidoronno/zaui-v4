@@ -16,12 +16,23 @@ app.PmsPaymentProcess = {
         $(document).on('click', '.PmsPaymentProcess .removeconference', this.removeConference);  
         $(document).on('change', '.PmsPaymentProcess .sendtobookerdropdown', this.changeSendToRecipient);  
         $(document).on('click', '.PmsPaymentProcess .sendrequestbutton', this.sendRequest);  
+        $(document).on('keyup', '.PmsPaymentProcess #messagetosend', this.checkIfPaymentLinkVariableIsFound);  
     },
     
     removeConference: function() {
         $(this).closest('.cart_room_summary').remove();
     },
     
+    checkIfPaymentLinkVariableIsFound : function() {
+        var msg = $('#messagetosend').val();
+        if(msg.indexOf("{paymentlink}") !== -1) {
+            $('.haspaymentlink').show();
+            $('.nopaymentlink').hide();
+        } else {
+            $('.nopaymentlink').show();
+            $('.haspaymentlink').hide();
+        }
+    },
     addPosTab: function() {
         var me = $(this);
         var event = thundashop.Ajax.createEvent(null, "getPosTabContent", this, {
@@ -315,6 +326,8 @@ app.PmsPaymentProcess = {
                     includedInRoomPrice : $(this).attr('includedinroomprice') == "1" ? true : false,
                     count : $(this).find('.item_count').val(),
                     price : $(this).find('.item_price').val(),
+                    textOnOrder : $(this).find('.textOnOrder').val(),
+                    addonId : $(this).find('.addonId').val(),
                     date : $(this).attr('date'),
                     cartItemId : $(this).attr('cartitemid')
                 }

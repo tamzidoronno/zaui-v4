@@ -10,10 +10,15 @@ if(!$res) {
 }
 $roomBookingId = $_GET['id'];
 
-$orderId = $factory->getApi()->getPosManager()->autoCreateOrderForBookingAndRoom($roomBookingId, $res);
+$engine = "default";
+if($engine == "a152b5bd-80b6-417b-b661-c7c522ccf305") { $engine = "demo"; } //Fast Hotel Svolver
+if($engine == "3b647c76-9b41-4c2a-80db-d96212af0789") { $engine = "demo"; } //Fast Hotel Havna
+if($engine == "e625c003-9754-4d66-8bab-d1452f4d5562") { $engine = "demo"; } //Fast Hotel Lofoten
+
+$orderId = $factory->getApi()->getPmsInvoiceManager()->autoCreateOrderForBookingAndRoom($engine, $roomBookingId, $res);
 if($orderId) {
     echo "Please wait...";
-    header("location:/?page=cart&payorder=". $orderId);
+    header("location:/?changeGetShopModule=cms&page=cart&payorder=". $orderId);
 } else {
     echo "We where not able to find your payment, please contact us.";
 }

@@ -885,7 +885,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     }
 
     private String addBookingToPms(WubookBooking booking) throws Exception {
-            try {
+        try {
             PmsBooking newbooking = null; 
 
             long start = System.currentTimeMillis();
@@ -914,6 +914,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                     sendErrorForReservation(booking.reservationCode, "Could not find deleted booking for a modification on reservation");
                     return "Did not find booking to delete.";
                 } else {
+                    pmsManager.logEntry("Deleted by channel manager", newbooking.id, null);
                     pmsManager.deleteBooking(newbooking.id);
                 }
                 
@@ -1059,6 +1060,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 if(newbooking.channel != null && newbooking.channel.equals("wubook_1")) {
                    if(pmsManager.getConfigurationSecure().useGetShopPricesOnExpedia) {
                        doNormalPricing = false;
+                        if(newbooking.paymentType != null && !newbooking.paymentType.isEmpty()) {
+                            pmsInvoiceManager.autoCreateOrderForBookingAndRoom(newbooking.id, newbooking.paymentType);
+                        }
                    }
                 }
             }
@@ -1089,7 +1093,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 filter.endInvoiceAt = end;
                 pmsInvoiceManager.clearOrdersOnBooking(newbooking);
                 if(!newbooking.hasOverBooking()) {
-                    pmsInvoiceManager.createOrder(newbooking.id, filter);
+                    if(newbooking.paymentType != null && !newbooking.paymentType.isEmpty()) {
+                        pmsInvoiceManager.autoCreateOrderForBookingAndRoom(newbooking.id, newbooking.paymentType);
+                    }
                 } else {
                     newbooking.rowCreatedDate = new Date();
                     

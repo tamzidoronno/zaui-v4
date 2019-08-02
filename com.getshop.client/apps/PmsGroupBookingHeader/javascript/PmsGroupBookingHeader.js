@@ -13,7 +13,30 @@ app.PmsGroupBookingHeader = {
         $(document).on('keyup', '.PmsGroupBookingHeader [gsname="count"]', app.PmsGroupBookingHeader.checkIfCanAddRoom);
         $(document).on('click', '.PmsGroupBookingHeader .domassupdate', app.PmsGroupBookingHeader.doMassUpdate);
         $(document).on('click', '.PmsGroupBookingHeader .doextendstay', app.PmsGroupBookingHeader.extendStay);
+        $(document).on('click', '.PmsGroupBookingHeader .updatePricePanelbtn', app.PmsGroupBookingHeader.showUpdatePricePanel);
+        $(document).on('click', '.PmsGroupBookingHeader .setnewpricebutton', app.PmsGroupBookingHeader.updateAllPrices);
     }, 
+    updateAllPrices : function() {
+        var form = $('.updatepricepanel');
+        var args = thundashop.framework.createGsArgs(form);
+        
+        var rooms = [];
+        $('.groupedactioncheckbox').each(function() {
+            if($(this).is(':checked')) {
+                rooms.push($(this).attr('roomid'));
+            }
+        });
+        args.rooms = rooms;
+        
+        var event = thundashop.Ajax.createEvent('','updatePriceByDateRange',$(this), args);
+        thundashop.Ajax.post(event);
+    },
+    showUpdatePricePanel : function() {
+        if($(this).hasClass('disabled')) {
+            return;
+        }
+        $('.updatepricepanel').toggle();
+    },
     extendStay : function() {
         var days = parseInt($('.extendstaydaysinput').val());
         var checkoutday = $('.checkoutdate').val();
@@ -106,6 +129,11 @@ app.PmsGroupBookingHeader = {
         });
         
         var type = $(this).attr('type');
+        
+        if($(this).attr('avoidaction') === "true") {
+            return;
+        }
+        
         var count = 0;
         if(type === "updateGuestCount") {
             count = parseInt(prompt("Number of guest", ""));

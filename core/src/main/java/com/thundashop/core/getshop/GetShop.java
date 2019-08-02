@@ -1,8 +1,12 @@
 package com.thundashop.core.getshop;
 
 import com.braintreegateway.org.apache.commons.codec.binary.Base64;
+import com.getshop.javaapi.GetShopApi;
+import com.getshop.scope.GetShopSchedulerBase;
 import com.getshop.scope.GetShopSessionScope;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
@@ -10,10 +14,12 @@ import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 import com.thundashop.core.applications.StoreApplicationPool;
+import com.thundashop.core.common.AnnotationExclusionStrategy;
 import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FrameworkConfig;
+import com.thundashop.core.common.GetShopScheduler;
 import com.thundashop.core.common.JsonObject2;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.Setting;
@@ -36,6 +42,7 @@ import com.thundashop.core.mecamanager.MecaManager;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.pdf.InvoiceManager;
+import com.thundashop.core.socket.GsonUTCDateAdapter;
 import com.thundashop.core.start.Runner;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.StorePool;
@@ -50,6 +57,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -62,8 +70,11 @@ import java.util.TimeZone;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
+import org.apache.commons.lang3.SerializationUtils;
 import org.mongodb.morphia.Morphia;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -405,15 +416,15 @@ public class GetShop extends ManagerBase implements IGetShop {
             String newStoreIdi = databaseName.equals("StoreManager") ? "all" : newStoreId;
             DB db = m.getDB(databaseName);
             DBCollection collection = db.getCollection("col_" + storeId);
-            DBCursor stores = collection.find();
+            DBCursor collections = collection.find();
 
             Credentials cred = new Credentials(null);
             cred.manangerName = databaseName;
             cred.password =  newStoreId;
             cred.storeid = newStoreId;
             
-            while (stores.hasNext()) {
-                DBObject data = stores.next();
+            while (collections.hasNext()) {
+                DBObject data = collections.next();
                 Morphia morphia = new Morphia();
                 morphia.map(DataCommon.class);
                 DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, data);
@@ -455,6 +466,84 @@ public class GetShop extends ManagerBase implements IGetShop {
         return newStoreId;
     }
 
+    public List<StoreData> copyData(String originalStoreId, String newAddress, StartData start, String newStoreId) throws UnknownHostException {
+        
+        List<StoreData> dataCopied = new ArrayList();
+        
+        Mongo m = new MongoClient("localhost", Database.mongoPort);
+
+        Gson gson = getGson();
+        
+        for (String databaseName : m.getDatabaseNames()) {
+            if (databaseName.equals("LoggerManager") || databaseName.equals("UserManager")) {
+                continue;
+            }
+
+            String storeId = databaseName.equals("StoreManager") ? "all" : originalStoreId;
+            String newStoreIdi = databaseName.equals("StoreManager") ? "all" : newStoreId;
+            DB db = m.getDB(databaseName);
+            DBCollection collection = db.getCollection("col_" + storeId);
+            DBCursor collections = collection.find();
+
+            Credentials cred = new Credentials(null);
+            cred.manangerName = databaseName;
+            cred.password =  newStoreIdi;
+            cred.storeid = newStoreIdi;
+            
+            StoreData storeData = new StoreData();
+            storeData.credentials = cred;
+            storeData.dbObjects = new ArrayList();
+            
+            while (collections.hasNext()) {
+                BasicDBObject data = (BasicDBObject)collections.next();
+                Morphia morphia = new Morphia();
+                morphia.map(DataCommon.class);
+                DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, data);
+                dataCommon.storeId = newStoreId;
+                
+                // Need to figure out a different way of creating the schedulers.
+                if (dataCommon instanceof GetShopScheduler) {
+                    continue;
+                }
+                
+                if (dataCommon instanceof Store) {
+                    Store store = (Store)dataCommon;
+                    
+                    if (!store.id.equals(originalStoreId)) {
+                        continue;
+                    }
+                    
+                    store.webAddressPrimary = newAddress;
+                    store.webAddress = null;
+                    store.storeId = newStoreIdi;
+                    store.id = newStoreId;
+                    store.isTemplate = false;
+                    store.configuration.emailAdress = start.email;
+                    store.configuration.shopName = start.shopName;
+                    
+                    if (start.color != null && !start.color.equals("")) {
+                        store.configuration.selectedColorTemplate = start.color;
+                    }
+                    
+                    Calendar cal = Calendar.getInstance(); 
+                    cal.add(Calendar.MONTH, 1);
+                    store.expiryDate = cal.getTime();
+                    store.rowCreatedDate = new Date();
+                    store.additionalDomainNames = new ArrayList();
+                    storeData.dbObjects.add(gson.toJson(store));
+                } else {
+                    storeData.dbObjects.add(gson.toJson(dataCommon));
+                }
+            }
+            
+            dataCopied.add(storeData);
+        }
+        
+        m.close();
+        
+        return dataCopied;
+    }
+    
     private User createUser(StartData startData, String storeId, String webshopAddress) {
         User user = new User();
         user.id = storeId;
@@ -746,7 +835,7 @@ public class GetShop extends ManagerBase implements IGetShop {
     }
 
     @Override
-    public void createNewStore(StartData startData) {
+    public String createNewStore(StartData startData) {
         int nextStoreId = storePool.incrementStoreCounter();
         
         String newAddress = nextStoreId + ".getshop.com";
@@ -754,64 +843,35 @@ public class GetShop extends ManagerBase implements IGetShop {
             newAddress = nextStoreId + ".3.0.local.getshop.com";
         }
         
+        if (startData.cluster != 0) {
+            newAddress = nextStoreId+"gc"+startData.cluster+".getshop.com";
+        }
+        
         try {
             // 7d89917f-c2de-4108-a9d6-33ba78f62c16 = http://bookingtemplate.getshop.com
-            String newStoreId = copyStore("7d89917f-c2de-4108-a9d6-33ba78f62c16", newAddress, startData);
-            storePool.loadStore(newStoreId, newAddress);
-            
-            GetShopSessionScope scope = AppContext.appContext.getBean(GetShopSessionScope.class);
-            User user = createUser(startData, newStoreId, newAddress);
-            
-            String resetCode = UUID.randomUUID().toString();
-            
-            user.passwordResetCode = resetCode;
-            user.type = User.Type.ADMINISTRATOR;
-            user.hasAccessToModules.add("cms");
-            user.hasAccessToModules.add("pms");
-            user.hasAccessToModules.add("crm");
-            user.hasAccessToModules.add("account");
-            user.hasAccessToModules.add("apac");
-           
-            
-            scope.setStoreId(newStoreId, "", null);
-            UserManager userManager = AppContext.appContext.getBean(UserManager.class);
-            userManager.saveUserSecure(user);
-            
-            Store store = storePool.getStore(newStoreId);
-            store.country = startData.country;
-            store.setTimeZone(startData.timeZone);
-            
-            storePool.saveStore(store);
-            
-            OrderManager orderManager = AppContext.appContext.getBean(OrderManager.class);
-            orderManager.clear();
-            
-            MecaManager mecaManager = AppContext.appContext.getBean(MecaManager.class);
-            mecaManager.clear();
-            
-            StoreApplicationPool applicationPool = AppContext.appContext.getBean(StoreApplicationPool.class);
-           
-            Setting setting = createStoreSetting("currencycode", startData);
-            
-            applicationPool.setSetting("d755efca-9e02-4e88-92c2-37a3413f3f41", setting);
-            
-            saveCustomerToGetShop(user, scope);
-        
-            
-            String resetLink = "https://"+newAddress+"/scripts/resetPassword.php?resetCode="+user.passwordResetCode;
-            String text = startData.emailText.replace("{VerifyLink}", "<a href='"+resetLink+"'>"+resetLink+"</a>");
-            text = text.replace("{Name}", user.fullName);
+            String newStoreId = UUID.randomUUID().toString();
+            List<StoreData> copiedDataObjects = copyData("7d89917f-c2de-4108-a9d6-33ba78f62c16", newAddress, startData, newStoreId);
+//            String newStoreId = copyStore("7d89917f-c2de-4108-a9d6-33ba78f62c16", newAddress, startData);
 
-            InitializeStoreThreadWhenCreate start = new InitializeStoreThreadWhenCreate(newStoreId, "", user, mailFactory, startData, text);
-            start.start();
-            
+            if (startData.cluster == 0) {
+                insertNewStore("02983ukjauhsfi8o723h4okiql23h4ro8a9sdhfiq234h90182744hgq2wirh128341234", newAddress, copiedDataObjects, newStoreId, startData);
+            } else {
+                
+                try {
+                    GetShopApi remoteApi = new GetShopApi(25554, "10.0."+startData.cluster+".33", UUID.randomUUID().toString(), "1gc"+startData.cluster+".getshop.com");
+//                    GetShopApi remoteApi = new GetShopApi(25554, "localhost", UUID.randomUUID().toString(), "no.3.0.local.getshop.com");
+                    remoteApi.getGetShop().insertNewStore("02983ukjauhsfi8o723h4okiql23h4ro8a9sdhfiq234h90182744hgq2wirh128341234", newAddress, copiedDataObjects, newStoreId, startData);
+                } catch (Exception ex) {
+                    Logger.getLogger(GetShop.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         } catch (UnknownHostException ex) {
             ex.printStackTrace();
         } catch (ErrorException ex) {
             throw ex;
         }
         
-        
+        return newAddress;
     }
 
     private Setting createStoreSetting(String key, StartData startData) {
@@ -981,5 +1041,124 @@ public class GetShop extends ManagerBase implements IGetShop {
             return 0;
         }
         return 1;
+    }
+
+    @Override
+    public void insertNewStore(String password, String newAddress, List<StoreData> storeDatas, String newStoreId, StartData startData) {
+        if (!password.equals("02983ukjauhsfi8o723h4okiql23h4ro8a9sdhfiq234h90182744hgq2wirh128341234")) {
+            return;
+        }
+        
+        Store oldStore = storePool.getStore(newStoreId);
+        if (oldStore != null) {
+            throw new RuntimeException("Store already exists");
+        }
+        
+        saveAllStoreData(storeDatas, newStoreId);
+        
+        storePool.loadStore(newStoreId, newAddress);
+            
+        GetShopSessionScope scope = AppContext.appContext.getBean(GetShopSessionScope.class);
+        User user = createUser(startData, newStoreId, newAddress);
+
+        String resetCode = UUID.randomUUID().toString();
+
+        user.passwordResetCode = resetCode;
+        user.type = User.Type.ADMINISTRATOR;
+        user.hasAccessToModules.add("cms");
+        user.hasAccessToModules.add("pms");
+        user.hasAccessToModules.add("crm");
+        user.hasAccessToModules.add("account");
+        user.hasAccessToModules.add("apac");
+
+
+        scope.setStoreId(newStoreId, "", null);
+        UserManager userManager = AppContext.appContext.getBean(UserManager.class);
+        userManager.saveUserSecure(user);
+
+        Store store = storePool.getStore(newStoreId);
+        store.country = startData.country;
+        store.setTimeZone(startData.timeZone);
+
+        storePool.saveStore(store);
+
+        OrderManager orderManager = AppContext.appContext.getBean(OrderManager.class);
+        orderManager.clear();
+
+        MecaManager mecaManager = AppContext.appContext.getBean(MecaManager.class);
+        mecaManager.clear();
+
+        StoreApplicationPool applicationPool = AppContext.appContext.getBean(StoreApplicationPool.class);
+
+        Setting setting = createStoreSetting("currencycode", startData);
+
+        applicationPool.setSetting("d755efca-9e02-4e88-92c2-37a3413f3f41", setting);
+
+        saveCustomerToGetShop(user, scope);
+
+
+        String resetLink = "https://"+newAddress+"/scripts/resetPassword.php?resetCode="+user.passwordResetCode;
+        String text = startData.emailText.replace("{VerifyLink}", "<a href='"+resetLink+"'>"+resetLink+"</a>");
+        text = text.replace("{Name}", user.fullName);
+
+        InitializeStoreThreadWhenCreate start = new InitializeStoreThreadWhenCreate(newStoreId, "", user, mailFactory, startData, text);
+        start.start();
+    }
+    
+    private Gson getGson() {
+            
+        Gson gson = new GsonBuilder()
+                .serializeNulls()
+                .serializeSpecialFloatingPointValues()
+                .registerTypeAdapter(Date.class, new GsonUTCDateAdapter())
+                .disableInnerClassSerialization()
+                .create();
+                
+        return gson;
+    }
+
+    private void saveAllStoreData(List<StoreData> storeDatas, String newStoreId) {
+        
+        for (StoreData storeData : storeDatas) {
+            Credentials cred = storeData.credentials;
+            if (cred.manangerName.equals("StoreManager") && cred.storeid.equals("all"))
+                continue;
+            
+            if (cred.storeid == null || !cred.storeid.equals(newStoreId)) {
+                throw new ErrorException(26);
+            }
+        }
+        
+        Gson gson = getGson();
+        
+        Morphia morphia = new Morphia();
+        morphia.map(DataCommon.class);
+        
+        for (StoreData storeData : storeDatas) {
+            Credentials cred = storeData.credentials;
+            List<String> dbCommons = storeData.dbObjects;
+                    
+            for (String dataJson : dbCommons) {
+                DataCommon lightData = gson.fromJson(dataJson, DataCommon.class);
+
+                try {
+                    Class res = Class.forName(lightData.className);
+                    DataCommon data = (DataCommon) gson.fromJson(dataJson, res);
+                    
+                    if (data instanceof Store) {
+                        if (data.id.equals(newStoreId)) {
+                            data.id = newStoreId;
+                        }
+                    } else {
+                        data.storeId = newStoreId;
+                    }
+
+                    database.save(data, cred);
+                } catch (ClassNotFoundException ex) {
+                    logPrint("Failed to transfer data as there are missing classes, please check that the system is up to date with system.getshop.com");
+                }
+                
+            }
+        }
     }
 }

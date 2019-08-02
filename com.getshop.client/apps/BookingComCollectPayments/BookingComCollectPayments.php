@@ -10,6 +10,10 @@ class BookingComCollectPayments extends \PaymentApplication implements \Applicat
         return "Booking.com";
     }
     
+    public function hiddenFromPaymentProcess() {
+        return true;
+    }
+    
     public function renderConfig() {
         $this->includeFile("config");
     }

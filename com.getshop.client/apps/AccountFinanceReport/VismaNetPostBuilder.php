@@ -41,7 +41,13 @@ class VismaNetPostBuilder {
     public function getResult($start, $end) {
         $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_SHOW_INC_TAX'] = "no";
         
-        $dayIncomes = $this->api->getOrderManager()->getDayIncomes($start, $end);
+        if (isset($_POST['data']['doublepostid']) && $_POST['data']['doublepostid']) {
+            $file = $this->parent->getApi()->getOrderManager()->getDoublePostAccountingTransfer($_POST['data']['doublepostid']);
+            $dayIncomes = $file->incomes;
+        } else {
+            $dayIncomes = $this->api->getOrderManager()->getDayIncomes($start, $end);
+        }
+        
         $rows = array();
         
         $taxAccounts = $this->getTaxAccounts();

@@ -17,6 +17,7 @@ import java.util.List;
  */
 @GetShopApi
 public interface ITicketManager {
+    @Administrator
     public void saveTicket(Ticket ticket);
     
     @Customer
@@ -25,8 +26,59 @@ public interface ITicketManager {
     @Editor
     public void updateEvent(String ticketId, TicketEvent event);
     
+    @Administrator
     public Ticket getTicket(String ticketId);
     
     @Administrator
     public void deleteTicket(String ticketId);
+    
+    @Administrator
+    public TicketLight createLightTicket(String title);
+    
+    @Administrator
+    public List<TicketLight> getTicketLights();
+    
+    public Ticket getTicketByToken(String storeId, String ticketToken);
+    
+    @Administrator
+    public List<TicketContent> getTicketContents(String ticketId);
+    
+    public void updateTicket(String ticketToken, TicketLight light);
+
+    @Administrator
+    public void addAttachmentToTicket(String ticketId, String ticketAttachmentId);
+    
+    public void uploadAttachment(TicketAttachment attachment);
+    
+    public TicketAttachment getAttachment(String attachmentId);
+    
+    @Administrator
+    public String getTicketIdByToken(String ticketToken);
+    
+    @Administrator
+    public void addTicketContent(String ticketId, TicketContent content);
+    
+    @Administrator
+    public void changeStateOfTicket(String ticketId, TicketState state);
+    
+    @Administrator
+    public void assignTicketToUser(String ticketId, String userId);
+    
+    @Administrator
+    public List<TicketContent> getLastTicketContent(String userId);
+    
+    @Administrator
+    public void markTicketAsRead(String ticketId);
+    
+    @Administrator
+    public void savePushOverSettings(TicketUserPushover pushOver, String pushOverToken);
+    
+    @Administrator
+    public TicketUserPushover getPushOverSettings(String userId);
+    
+    @Administrator
+    public void reconnectTicket(String ticketId);
+    
+    @Administrator
+    public void changeType(String ticketId, TicketType type);
 }

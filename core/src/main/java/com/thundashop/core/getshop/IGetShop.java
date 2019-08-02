@@ -1,9 +1,13 @@
 package com.thundashop.core.getshop;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopNotSynchronized;
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.getshop.data.DibsAutoCollectData;
 import com.thundashop.core.getshop.data.GetshopStore;
 import com.thundashop.core.getshop.data.Lead;
@@ -16,6 +20,7 @@ import com.thundashop.core.getshop.data.WebPageData;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.data.User;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -110,6 +115,8 @@ public interface IGetShop {
     public void saveSmsCallback(SmsResponse smsResponses);
     
     public String startStoreFromStore(StartData startData);
+   
+    public void insertNewStore(String password, String newAddress, List<StoreData> storeDatas, String newStoreId, StartData startData);
     
     @GetShopNotSynchronized
     public String getBase64EncodedPDFWebPage(String urlToPage);
@@ -121,7 +128,7 @@ public interface IGetShop {
     public void triggerPullRequest(String storeId);
     
     @GetShopNotSynchronized
-    public void createNewStore(StartData startData);
+    public String createNewStore(StartData startData);
     
     @Administrator
     public void toggleRemoteEditing();

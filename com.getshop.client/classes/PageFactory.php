@@ -760,6 +760,13 @@ class PageFactory {
         $row->addColumn("27656859-aeed-41f7-9941-f01d0f860212", "f05c190e-2ba5-4604-b8cc-ffe93647e46c");
         $this->pages[$page->getId()] = $page;
         
+        
+        $page = new \ModulePage("mailsettings", "settings");
+        $page->setLeftMenu(\ModulePageMenu::getSettingsLeftMenu());
+        $row = $page->createRow();
+        $row->addColumn("8ad8243c-b9c1-48d4-96d5-7382fa2e24cd", "478ba23d-1587-4e59-a749-936148b2c2b7");
+        $this->pages[$page->getId()] = $page;
+        
     }
     
     public function createGetShopPages() {

@@ -885,7 +885,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     }
 
     private String addBookingToPms(WubookBooking booking) throws Exception {
-            try {
+        try {
             PmsBooking newbooking = null; 
 
             long start = System.currentTimeMillis();

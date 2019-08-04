@@ -762,6 +762,15 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         List<String> hasSupportForOnDemandOrders = new ArrayList();
         hasSupportForOnDemandOrders.add("1ed4ab1f-c726-4364-bf04-8dcddb2fb2b1"); //Bergstaden
         hasSupportForOnDemandOrders.add("61216a03-827d-44a6-a7f1-8939402c51c1"); //Svanhild
+        
+        List<String> avoidNewOrderProcess = new ArrayList();
+        avoidNewOrderProcess.add("7b21932d-26ad-40a5-b3b6-c182f5ee4b2f");
+        avoidNewOrderProcess.add("c63cdffc-765b-44b2-9694-3628d53726fa");
+        if(avoidNewOrderProcess.contains(storeId)) {
+            return false;
+        }
+        
+        
         if(storeId != null && hasSupportForOnDemandOrders.contains(storeId)) {
             return true;
         }

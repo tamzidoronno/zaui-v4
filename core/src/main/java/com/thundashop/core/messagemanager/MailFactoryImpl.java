@@ -16,6 +16,7 @@ import com.thundashop.core.common.StoreComponent;
 import com.thundashop.core.databasemanager.Database;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -40,6 +41,7 @@ import org.springframework.stereotype.Component;
 @GetShopSession
 public class MailFactoryImpl extends StoreComponent implements MailFactory, Runnable {
     private String from;
+    private String replyTo;
     private String to;
     private String subject;
     private String content;
@@ -85,6 +87,13 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
             
             if (confSettings.get("password") != null && confSettings.get("password").value != null && !confSettings.get("password").value.isEmpty()) {
                 settings.password = confSettings.get("password").value;
+            }
+            if (confSettings.get("sendMailFromName") != null && confSettings.get("sendMailFromName").value != null && !confSettings.get("sendMailFromName").value.isEmpty()) {
+                settings.fromName = confSettings.get("sendMailFromName").value;
+            }
+            
+            if (confSettings.get("replyTo") != null && confSettings.get("replyTo").value != null && !confSettings.get("replyTo").value.isEmpty()) {
+                settings.replyTo = confSettings.get("replyTo").value;
             }
             
             if (confSettings.get("username") != null && confSettings.get("username").value != null && !confSettings.get("username").value.isEmpty()) {
@@ -274,19 +283,31 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
         if (mailSettings.sendMailFrom != null && mailSettings.sendMailFrom.contains("@") && !mailSettings.sendMailFrom.equals("noreply@getshop.com")) {
             from = mailSettings.sendMailFrom;
         }
-        
+        if (mailSettings.replyTo != null && mailSettings.replyTo.contains("@")) {
+            replyTo = mailSettings.replyTo;
+        }
+        if(replyTo == null || replyTo.isEmpty()) {
+            replyTo = from;
+        }
+
         if(to == null || !to.contains("@")) {
             GetShopLogHandler.logPrintStatic("Unable to send email to : " + to + " since it does not contain an @", storeId);
             return;
         }
-        for(int i = 0; i < 24; i++) {
+        for(int i = 0; i < 10; i++) {
             try {
                 message.setSubject(subject, "UTF-8");
                 message.setHeader("Content-Type", "text/plain; charset=UTF-8");
                 message.addRecipient(RecipientType.TO, new InternetAddress(to));
-                message.addFrom(new InternetAddress[]{new InternetAddress(mailSettings.sendMailFrom)});
-                message.setReplyTo(new InternetAddress[]{new InternetAddress(from)});
-
+                if(mailSettings.fromName != null && !mailSettings.fromName.isEmpty()) {
+                    message.addFrom(new InternetAddress[]{new InternetAddress(mailSettings.sendMailFrom, mailSettings.fromName)});
+                } else {
+                    message.addFrom(new InternetAddress[]{new InternetAddress(mailSettings.sendMailFrom)});
+                }
+                message.setReplyTo(new InternetAddress[]{new InternetAddress(replyTo)});
+                message.setSentDate(new Date());
+                
+                
                 if (files != null) {
                     Multipart multipart = new MimeMultipart("mixed");
 
@@ -321,7 +342,7 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
                 GetShopLogHandler.logStack(ex, storeId);
             }
             try {
-                Thread.sleep(1000);
+                Thread.sleep(10000);
             }catch(Exception e) {
                 e.printStackTrace();
             }

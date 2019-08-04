@@ -525,4 +525,7 @@ public interface IOrderManager {
     
     @Administrator
     public List<String> getAllOrdersForRoom(String pmsBookingRoomId);
+    
+    @Administrator
+    public boolean isStockManagementActive();
 }

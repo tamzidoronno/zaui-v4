@@ -86,7 +86,6 @@ app.GetShopQuickUser = {
     },
     
     userChanged: function(result) {
-        debugger;
         app.GetShopQuickUser.updateFieldsAfterUserChangedOrCreated(result);
         app.GetShopQuickUser.closeChangeUser();
         $('.GetShopQuickUser .userNotSelected').removeClass('userNotSelected');

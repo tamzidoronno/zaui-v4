@@ -1,0 +1,18 @@
+.WareHouseView .view {
+    margin: 50px;
+    margin-left: 100px;
+}
+
+.WareHouseView .col  {
+    display: inline-block;
+}
+
+.WareHouseView .col input {
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.WareHouseView .col1 { width: 60px; text-align: center; }
+.WareHouseView .col2 { width: 60px; text-align: center; }
+.WareHouseView .col3 { width: 60px; text-align: center; }

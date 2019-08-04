@@ -86,6 +86,7 @@ import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCard;
 import com.thundashop.core.verifonemanager.VerifoneFeedback;
+import com.thundashop.core.warehousemanager.WareHouseManager;
 import com.thundashop.core.webmanager.WebManager;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
@@ -201,6 +202,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Autowired
     private PosManager posManager;
+    
+    @Autowired
+    private WareHouseManager wareHouseManager;
     
     private List<String> terminalMessages = new ArrayList();
     private Order orderToPay;
@@ -460,27 +464,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return storeApplicationInstancePool.getApplicationInstanceSettingsByPhpName(phpApplicationName);
     }
     
-    private void updateStockQuantity(Order order, String key) throws ErrorException {
-        HashMap<String, Setting> map = this.getSettings("StockControl");
-        String setting = null;
-        if (map != null && map.containsKey(key)) {
-            setting = map.get(key).value;
-        }
-        
-        if (setting != null && setting.equals("true")) {
-//            for (Product product : order.cart.getProductList()) {
-//                int factor = -1;
-//                if (order.status == Order.Status.CANCELED) {
-//                    factor = 1;
-//                }
-//
-//                int change = order.cart.getProductCount(product) * factor;
-//                ProductManager productManager = getManager(ProductManager.class);
-//                productManager.changeStockQuantity(product.id, change);
-//            }
-        }
-    }
-    
     @Override
     public void cancelPaymentProcess(String tokenId) {
         printFeedBack("payment failed");
@@ -612,7 +595,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Order order = createOrderInternally(address, false);
         setPreferredPayment(order);
         saveOrder(order);
-        updateStockAndSendConfirmation(order);
         order.doFinalize();
         return order;
     }
@@ -680,7 +662,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         order.userId = user.id;
         order.payment = getUserPrefferedPaymentMethod(userId);
         saveOrder(order);
-        updateStockAndSendConfirmation(order);
         order.doFinalize();
         return order;
     }
@@ -693,7 +674,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Order order = createOrderInternally(user.address, false);
         order.userId = user.id;
         saveOrder(order);
-        updateStockAndSendConfirmation(order);
         order.doFinalize();
         return order;
     }
@@ -769,7 +749,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public void saveOrder(Order order) throws ErrorException {
         validateOrder(order);
         saveOrderInternal(order);
-
+        
         try {
             updateOrderChangedFromBooking(order.id);
         } catch (GetShopBeanException ex) {
@@ -931,10 +911,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     
-    private void updateCouponsCount(Order order) throws ErrorException {
-        cartManager.updateCoupons(order.cart.coupon);
-    }
-    
     @Override
     public List<CartTax> getTaxes(Order order) throws ErrorException {
         return order.cart.getCartTaxes();
@@ -972,19 +948,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         return order;
-    }
-    
-    private void updateStockAndSendConfirmation(Order order) throws ErrorException {
-        
-        updateStockQuantity(order, "trackControl");
-        updateCouponsCount(order);
-        
-        Application orderManagerApplication = storeApplicationPool.getApplication("27716a58-0749-4601-a1bc-051a43a16d14");
-        if (!orderManagerApplication.getSetting("shouldSendEmail").equals("true")) {
-            return;
-        }
-        
-        sendMail(order);
     }
     
     private void sendMail(Order order) {
@@ -3146,6 +3109,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         checkAndResetOrderByClosedPeriodeDate(data);
         super.saveObject(data); //To change body of generated methods, choose Tools | Templates.
+        
+        if (data instanceof Order) {
+            updateStock((Order)data);
+        }
+        
+        
     }
 
     private void checkAndResetOrderByClosedPeriodeDate(DataCommon data) {
@@ -4432,4 +4401,24 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .map(o -> o.id)
                 .collect(Collectors.toList());
     }
+
+    private void updateStock(Order order) {
+        if (!isStockManagementActive()) {
+            return;
+        }
+        
+        wareHouseManager.updateStockQuantity(order);
+    }
+
+    /**
+     * We should find some way to each money on this feature as
+     * there are much more data stored for each order etc.
+     * 
+     * @return 
+     */
+    @Override
+    public boolean isStockManagementActive() {
+        return storeId.equals("13442b34-31e5-424c-bb23-a396b7aeb8ca");
+    }
+
 }

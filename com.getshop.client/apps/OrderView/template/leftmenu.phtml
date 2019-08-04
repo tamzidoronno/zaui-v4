@@ -33,5 +33,14 @@
         <i class='fa fa-envelope'></i>
         Send
     </div>
-    
+    <?
+    if ($this->getApi()->getOrderManager()->isStockManagementActive()) {
+        ?>
+        <div class='entry taboperation' tab='stockmanagement' reprint='true'>
+            <i class='fa fa-hand-grab-o'></i>
+            Pickinglist
+        </div>
+        <?
+    }
+    ?>
 </div>

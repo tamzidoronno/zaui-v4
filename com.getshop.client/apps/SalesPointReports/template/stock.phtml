@@ -1,0 +1,98 @@
+<?
+/* @var $this ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7\SalesPointReports */
+$monthNum = date('m');
+$year = date('Y');
+
+if (isset($_SESSION['ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7_stock_year'])) {
+    $year = $_SESSION['ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7_stock_year'];
+    $monthNum = $_SESSION['ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7_stock_month'];
+}
+
+$dateObj   = DateTime::createFromFormat('!m', $monthNum);
+$monthName = $dateObj->format('F');
+
+$report = $this->getApi()->getWareHouseManager()->getMonthStockReport("", $year, $monthNum);
+?>
+<div class='stockreport'>
+    <h1> 
+        <? echo $monthName." ".$year; ?> | 
+        <select class='gsniceselect1' gschange='setNewMonthForStock'>
+            <option>Select to change</option>
+            <?
+            $currentMonth = date('m');
+            $imonth = date('m');
+            $iyear = date('Y');
+            
+            for ($i=0; $i < 36; $i++) {
+                if ($imonth == 0) {
+                    $imonth = 12;
+                    $iyear--;
+                }
+                $value = $imonth.".".$iyear;
+                ?>
+                <option value='<? echo $value; ?>'><? echo $value; ?></option>
+                <?
+                $imonth--;
+            }
+            ?>
+        </select>
+    </h1>
+    
+    <div class='row'>
+        <div class='col col1'><b>Product name</b></div>
+        <div class='col col2'><b>Ingoing balance</b></div>
+        <div class='col col3'><b>Month changes</b></div>
+        <div class='col col4'><b>Outgoing balance</b></div>
+
+    </div>
+    
+    <?
+    $sumStockValueIn = 0;
+    $sumStockValueChanges = 0;
+    
+    foreach ($report->stockReports as $productReport) {
+        $sumStockValueIn += $productReport->ingoingStockValue;
+        $sumStockValueChanges += $productReport->changesStockValue;
+        $controlSum = $productReport->ingoingStockValue + $productReport->changesStockValue;
+        if ($controlSum == 0) {
+            continue;
+        }
+        $product = $this->getApi()->getProductManager()->getProduct($productReport->productId);
+        ?>
+        <div class='row'>
+            <div class='col col1'><? echo $product->name;  ?></div>
+            <div class='col col2'>
+                <div class='col col1_1'><? echo $productReport->ingoingUnitCount;  ?></div>
+                <div class='col col1_2'><? echo $productReport->ingoingStockValue;  ?></div>    
+            </div>
+            <div class='col col3'>
+                <div class='col col1_1'><? echo $productReport->changesUnitCount;  ?></div>
+                <div class='col col1_2'><? echo $productReport->changesStockValue;  ?></div>    
+            </div>
+            <div class='col col4'>
+                <div class='col col1_1'><? echo $productReport->outgoingUnitCount;  ?></div>
+                <div class='col col1_2'><? echo $productReport->outgoingStockValue;  ?></div>    
+            </div>
+
+        </div>
+        <?
+    }
+    ?>
+    
+    <div class='row'>
+        <div class='col col1'><? echo "Total";  ?></div>
+        <div class='col col2'>
+            <div class='col col1_1'><? echo "-";  ?></div>
+            <div class='col col1_2'><? echo $sumStockValueIn;  ?></div>    
+        </div>
+        <div class='col col3'>
+            <div class='col col1_1'><? echo "-";  ?></div>
+            <div class='col col1_2'><? echo $sumStockValueChanges;  ?></div>    
+        </div>
+        <div class='col col4'>
+            <div class='col col1_1'><? echo "-";  ?></div>
+            <div class='col col1_2'><? echo ($sumStockValueIn + $sumStockValueChanges);  ?></div>    
+        </div>
+
+    </div>
+</div>

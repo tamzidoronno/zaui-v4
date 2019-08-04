@@ -10,7 +10,14 @@
     <div class="menuentry <? echo $this->isTabActive('accounting'); ?>" tab='accounting'><i class="fa fa-info"></i> <span><? echo $this->__f("Accounting"); ?></span></div>
     <div class="menuentry <? echo $this->isTabActive('lists'); ?>" tab='lists'><i class="fa fa-info"></i> <span><? echo $this->__f("Lists"); ?></span></div>
     <div class="menuentry <? echo $this->isTabActive('pictures'); ?>" tab='pictures'><i class="fa fa-info"></i> <span><? echo $this->__f("Pictures"); ?></span></div>
-    <div class="menuentry <? echo $this->isTabActive('variations'); ?>" tab='variations'><i class="fa fa-info"></i> <span><? echo $this->__f("variations"); ?></span></div>
+    <div class="menuentry <? echo $this->isTabActive('variations'); ?>" tab='variations'><i class="fa fa-info"></i> <span><? echo $this->__f("Variations"); ?></span></div>
+    <?
+    if ($this->getApi()->getOrderManager()->isStockManagementActive()) {
+    ?>
+    <div class="menuentry <? echo $this->isTabActive('stockmanagement'); ?>" tab='stockmanagement'><i class="fa fa-info"></i> <span><? echo $this->__f("Stock"); ?></span></div>
+    <?
+    }
+    ?>
 </div>
 
 <div class="workarea">
@@ -42,6 +49,11 @@
     <div class="producttab <? echo $this->isTabActive('accounting'); ?>" tab='accounting'>
         <?
         $this->includefile("accounting");
+        ?>
+    </div>
+    <div class="producttab <? echo $this->isTabActive('stockmanagement'); ?>" tab='stockmanagement'>
+        <?
+        $this->includefile("stockmanagement");
         ?>
     </div>
 </div>

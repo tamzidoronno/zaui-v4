@@ -74,6 +74,8 @@ public class Product extends DataCommon implements Comparable<Product>  {
     public String uniqueName;
     
     public int stockQuantity;
+    public Map<String, Integer> wareHouseStockQuantities = new HashMap();
+    public double stockValue = 0;
     public String pageId;
     public boolean freeShipping = false;
     public boolean promoted = false;
@@ -81,6 +83,8 @@ public class Product extends DataCommon implements Comparable<Product>  {
     public int taxgroup = -1;
     public boolean privateExcluded = false;
     public Integer incrementalProductId = null;
+    
+    public List<String> warehouseLocationIds = new ArrayList();
     
     
     /**

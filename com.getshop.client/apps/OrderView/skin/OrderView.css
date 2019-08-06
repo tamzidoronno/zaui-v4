@@ -405,3 +405,12 @@
     box-shadow: 5px 5px 5px rgba(0,0,0, 0.5);
     display: none;
 }
+
+.OrderView .warehouse {
+    margin: 30px;
+    font-size: 16px;
+}
+
+.OrderView .warehouselocations {
+    padding-left: 20px;
+}

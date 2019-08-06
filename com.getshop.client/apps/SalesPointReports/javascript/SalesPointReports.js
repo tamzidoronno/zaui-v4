@@ -4,7 +4,21 @@ app.SalesPointReports = {
         $(document).on('click', '.SalesPointReports .leftmenu .entry[tab="salesreport"]', app.SalesPointReports.salesReportClicked);
         $(document).on('click', '.SalesPointReports .leftmenu .entry[tab="xreport"]', app.SalesPointReports.xReportMenuClicked);
         $(document).on('click', '.SalesPointReports .leftmenu .entry[tab="masterreport"]', app.SalesPointReports.showMasterReport);
+        $(document).on('click', '.SalesPointReports .leftmenu .entry[tab="stock"]', app.SalesPointReports.showStockReport);
     },
+    showStockReport : function() {
+        var data = {
+            tab : $(this).attr('tab')
+        };
+        
+        var event = thundashop.Ajax.createEvent(null, "showStockReport", this, data);
+        event['synchron'] = true;
+        
+        thundashop.Ajax.post(event, function(res) {
+            $('.SalesPointReports .reportarea').html(res);
+        });
+    },
+    
     salesReportClicked : function() {
            var data = {
             tab : $(this).attr('tab')

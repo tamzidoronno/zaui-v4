@@ -1,0 +1,74 @@
+<?
+/* @var $this ns_2fa3ce10_3637_43d5_a2c7_8e9152fab41a\WareHouseView */
+$warehouse = $this->getApi()->getWareHouseManager()->getWareHouse($_SESSION['ns_2fa3ce10_3637_43d5_a2c7_8e9152fab41a_warehouseid']);
+
+?>
+
+<div class='view'>
+    <h1><? echo $warehouse->name; ?></h1>
+    <br/> Locations:
+    
+    <?
+    if (!count($warehouse->wareHouseLoccations)) {
+        echo "<div style='margin: 50px;'> No locations added yet</div>";
+    } else {
+        
+        ?>
+        <div class='row' locationid='<? echo $location->id; ?>'>
+            <i class='gs_shop_small_icon fa fa-trash' gsclick='deleteLocation' locationid='<? echo $location->id; ?>' gs_confirm='Are you sure?'></i> 
+
+            <div class='col col1'>
+                Location
+            </div> 
+
+            <div class='col col2'>
+                Row
+            </div> 
+
+            <div class='col col3'>
+                Column
+            </div> 
+
+            <div class='col col4'>
+                Barcode
+            </div>
+        </div>
+        <?
+        foreach ($warehouse->wareHouseLoccations as $location) {
+            ?>
+            <div class='row locationrow' locationid='<? echo $location->id; ?>'>
+                <i class='gs_shop_small_icon fa fa-trash' gsclick='deleteLocation' locationid='<? echo $location->id; ?>' gs_confirm='Are you sure?'></i> 
+                
+                <div class='col col1'>
+                    <input class='gsniceinput1' gsname='locationName' value='<? echo $location->locationName; ?>'/> 
+                </div> 
+                
+                <div class='col col2'>
+                    <input class='gsniceinput1' gsname='row' value='<? echo $location->row; ?>'/> 
+                </div> 
+                
+                <div class='col col3'>
+                    <input class='gsniceinput1' gsname='column' value='<? echo $location->column; ?>'/> 
+                </div> 
+
+                <div class='col col4'>
+                    <input class='gsniceinput1' gsname='barcode' value='<? echo $location->barcode; ?>'/>
+                </div>
+            </div>
+            <?
+        }
+    }
+    ?>
+
+    <h2>Create new</h2>
+
+    <div gstype='form' method='addLocation'>
+        Location: <input class='gsniceinput1' gsname='locationname'/> 
+        Row: <input class='gsniceinput1' gsname='row'/> 
+        Column: <input class='gsniceinput1' gsname='column'/> 
+        
+        <div class='shop_button' gstype='submit'>Create</div>
+    </div>
+    
+</div>
+    

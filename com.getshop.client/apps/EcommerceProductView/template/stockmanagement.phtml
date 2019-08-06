@@ -1,0 +1,124 @@
+<?
+/* @var $this \ns_4404dc7d_e68a_4fd5_bd98_39813974a606\EcommerceProductView */
+$product = $this->getProduct();
+$warehouses = $this->getApi()->getWareHouseManager()->getWareHouses();
+
+function getWareHouse($warehouses, $id) {
+    foreach ($warehouses as $warehouse) {
+        if (!$id && $warehouse->isDefault) {
+            return $warehouse;
+        }
+        
+        if ($warehouse->id == $id) {
+            return $warehouse;
+        }
+    }
+    
+    return null;
+}
+?>
+
+<div class='stockmanagement_inner'>
+    <span style='display: inline-block; width: 220px;'>Current Stock Quantity: </span><? echo $product->stockQuantity; ?>
+    <?
+    foreach ($warehouses as $warehouse) {
+        ?>
+        <br/><span style='display: inline-block; width: 220px;'><? echo $warehouse->name; ?></span>
+        <?
+        $wareHouseCount = $product->wareHouseStockQuantities->{$warehouse->id};
+        echo $wareHouseCount != null ? $wareHouseCount : 0;
+    }
+    ?>
+    <br/>
+    <br/>
+    <div gstype='form' method='setStockValue'>
+    <span style='display: inline-block; width: 220px;'>Stock value</span> <input style='vertical-align: top;' gsname='stockvalue' class='gsniceinput1' value='<? echo $product->stockValue; ?>'/> <div style='vertical-align: top;' class='shop_button' gstype='submit'>Set value</div>
+    </div>
+    <br/>
+    <div gstype='form' method='adjustStockQuantity'>
+        <span style='display: inline-block; width: 220px;'>Reduce/Add stock quantity
+            <br/><span style='font-size: 13px'>* Positive number to add to stock</span>
+        </span> 
+        
+        <input style='vertical-align: top;' gsname='quantity' class='gsniceinput1' value=''/> 
+        
+        <select class='gsniceselect1' gsname='warehouseid' style='vertical-align: top;'>
+            <?
+            foreach ($warehouses as $warehouse) {
+                ?>
+                <option value='<? echo $warehouse->id; ?>'><? echo $warehouse->name; ?></option>
+                <?
+            }
+            ?>    
+        </select>
+        
+        <div style='vertical-align: top;' class='shop_button' gstype='submit'>Adjust</div>
+    </div>
+
+    <br/>
+    <h2>Warehouses Locations</h2>
+    <?
+    if (!count($product->warehouseLocationIds)) {
+        echo "No locations added";
+    } else {
+        foreach ($product->warehouseLocationIds as $id) {
+            $location = $this->getApi()->getWareHouseManager()->getWareHouseLocation($id);
+            $warehouse = $this->getApi()->getWareHouseManager()->getWareHouse($location->wareHouseId);
+            $name = $warehouse->name ." / ".$location->locationName." - ".$location->row." - ".$location->column;
+            echo "<div><i class='gs_shop_small_icon fa fa-trash' gsclick='removeWareHouseLocationId' warehouselocationid='$location->id'></i> ".$name."</div>";
+        }
+    }
+    ?>
+    
+    <br/>
+    <br/>
+    <div gstype='form' method='addWareHouseLocation'>
+        <select class='gsniceselect1' gsname='warehouselocationid'>
+            <?
+            foreach ($warehouses as $warehouse) {
+                foreach($warehouse->wareHouseLoccations as $location) {
+                    $name = $warehouse->name ." / ".$location->locationName." - ".$location->row." - ".$location->column;
+                    $idstring = $location->id;
+                    echo "<option value='$idstring'>$name</option>";
+                }
+            }
+            ?>
+        </select>
+        <div class='shop_button' gstype='submit'>
+            Add warehouse location
+        </div>
+            
+    </div>
+    <br/>
+
+    <h2>Latest stock records</h2>
+    
+    <div class='row'> 
+        <div class='col col1'><? echo "Record date"; ?></div>
+        <div class='col col2'><? echo "Units Sold"; ?></div>
+        <div class='col col3'><? echo "Stock price"; ?></div>
+        <div class='col col4'><? echo "Stock Value"; ?></div>
+        <div class='col col5'><? echo "Orderid"; ?></div>
+        <div class='col col6'><? echo "Warehouse"; ?></div>
+    </div>
+    <?
+    $stockRecords = $this->getApi()->getWareHouseManager()->getStockQuantityRowsForProduct($this->getProduct()->id, 100);
+    foreach ($stockRecords as $record) {
+        ?>
+        <div class='row'> 
+            <div class='col col1'><? echo date('d.m.Y H:i:s', strtotime($record->rowCreatedDate)); ?></div>
+            <div class='col col2'><? echo $record->count; ?></div>
+            <div class='col col3'><? echo $record->stockUnitValue; ?></div>
+            <div class='col col4'><? echo $record->stockUnitValue * $record->count * -1; ?></div>
+            <div class='col col5'><? echo $record->orderId ? $this->getApi()->getOrderManager()->getIncrementalOrderIdByOrderId($record->orderId) : "Adjustment"; ?></div>
+            <div class='col col6'>
+                <?
+                $wareHouse = getWareHouse($warehouses, $record->warehouseId);
+                echo $wareHouse ? $wareHouse->name : "N/A";
+                ?>
+            </div>
+        </div>
+        <?
+    }
+    ?>
+</div>

@@ -28,6 +28,7 @@ public class CashPoint extends DataCommon {
     public String kitchenPrinterGdsDeviceId = "";
     
     public String departmentId = "";
+    public String warehouseid = "";
     
     /**
      * A master cashpoint will handle the online payements, invoices etc.

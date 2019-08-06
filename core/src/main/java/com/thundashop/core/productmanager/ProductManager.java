@@ -76,6 +76,20 @@ public class ProductManager extends AProductManager implements IProductManager {
         product.stockQuantity = product.stockQuantity + count;
         saveProduct(product);
     }
+    
+    public void changeStockQuantityForWareHouse(String productId, int count, String wareHouseId) throws ErrorException {
+        Product product = products.get(productId);
+        Integer oldCount = product.wareHouseStockQuantities.get(wareHouseId);
+        
+        if (oldCount == null) {
+            oldCount = 0;
+        }
+        
+        oldCount = oldCount + count;
+        
+        product.wareHouseStockQuantities.put(wareHouseId, oldCount);
+        saveProduct(product);
+    }
 
     @Override
     public List<Product> getProducts(ProductCriteria searchCriteria) throws ErrorException {

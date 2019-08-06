@@ -231,6 +231,7 @@ class ModulePageMenu {
         $menu->entries[] = new ModulePageMenuItem("Views", "views", "");
         $menu->entries[] = new ModulePageMenuItem("Tables", "tables", "");
         $menu->entries[] = new ModulePageMenuItem("Other", "othersettings", "");
+        $menu->entries[] = new ModulePageMenuItem("Warehouses", "warehouses", "");
         return $menu;
     }
 

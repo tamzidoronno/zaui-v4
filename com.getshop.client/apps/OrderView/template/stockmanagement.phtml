@@ -1,0 +1,52 @@
+<?
+/* @var $this \ns_4be8e427_bead_491e_8d9f_7dd16356d8eb\OrderView */
+$order = $this->getOrder();
+$groupedByWareHouseIdAndProductId = array();
+foreach ($order->cart->items as $cartItem) {
+    if (!isset($groupedByWareHouseIdAndProductId[$cartItem->wareHouseId])) {
+        $groupedByWareHouseIdAndProductId[$cartItem->wareHouseId] = array();
+    }
+    
+    if (!isset($groupedByWareHouseIdAndProductId[$cartItem->wareHouseId][$cartItem->product->id])) {
+        $groupedByWareHouseIdAndProductId[$cartItem->wareHouseId][$cartItem->product->id] = array();
+    }
+    
+    $groupedByWareHouseIdAndProductId[$cartItem->wareHouseId][$cartItem->product->id][] = $cartItem;
+}
+
+?>
+
+<div class='warehouse'> 
+<?
+foreach ($groupedByWareHouseIdAndProductId as $wareHouseId => $productIds) {
+    $wareHouse = $this->getApi()->getWareHouseManager()->getWareHouse($wareHouseId);
+    echo "<h2>".$wareHouse->name."</h2>";
+    foreach ($productIds as $productId => $cartItems) {
+        
+            $product = $this->getApi()->getProductManager()->getProduct($productId);
+            
+            $count = 0;
+            foreach ($cartItems as $cartItem) {
+                $count += $cartItem->count;
+            }
+        echo "<div class='row' style='margin-bottom: 20px;'>";    
+            echo "<div class='col col1'>$count x $product->name</div>";
+            
+            echo "<div class='warehouselocations'>";
+                foreach ($product->warehouseLocationIds as $locationId) {
+                    $wareHouseLocation = $this->getApi()->getWareHouseManager()->getWareHouseLocation($locationId);
+                    
+                    if ($wareHouseLocation && $wareHouseLocation->wareHouseId == $wareHouse->id) {
+                        echo "<div> Location: ".$wareHouseLocation->locationName . " <i class='fa fa-arrow-up' style='margin-left: 20px; '></i> ".$wareHouseLocation->row. " <i style='margin-left: 20px; ' class='fa fa-arrow-right'></i> ".$wareHouseLocation->column."</div>";
+                    }
+                }
+            
+            echo "</div>";
+            
+        echo "</div>";
+    }
+}
+
+
+?>
+</div>

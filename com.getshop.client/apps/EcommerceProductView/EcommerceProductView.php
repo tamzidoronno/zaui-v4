@@ -290,5 +290,34 @@ class EcommerceProductView extends \MarketingApplication implements \Application
         }
     }
 
+    public function setStockValue() {
+        $product = $this->getProduct();
+        $product->stockValue = $_POST['data']['stockvalue'];
+        $this->getApi()->getProductManager()->saveProduct($product);
+    }
+    
+    public function adjustStockQuantity() {
+        $this->getApi()->getWareHouseManager()->adjustStockQuantity($this->getProduct()->id, $_POST['data']['quantity'], $_POST['data']['warehouseid']);
+    }
+    
+    public function addWareHouseLocation() {
+        $product = $this->getProduct();
+        if ($_POST['data']['warehouselocationid'] && !in_array($_POST['data']['warehouselocationid'], $product->warehouseLocationIds)) {
+            $product->warehouseLocationIds[] = $_POST['data']['warehouselocationid'];
+            $this->getApi()->getProductManager()->saveProduct($product);
+        }
+    }
+    
+    public function removeWareHouseLocationId() {
+        $product = $this->getProduct();
+        $needle = $_POST['data']['warehouselocationid'];
+        $key = array_search($needle, $product->warehouseLocationIds);
+        
+        if ($key !== false) {
+            unset($product->warehouseLocationIds[$key]);
+        }
+        
+        $this->getApi()->getProductManager()->saveProduct($product);
+    }
 }
 ?>

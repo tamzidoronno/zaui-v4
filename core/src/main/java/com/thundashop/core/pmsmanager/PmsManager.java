@@ -8036,9 +8036,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return;
         }
         
-        bookings.values()
+        List<PmsBooking> bookingsWithOrderId = bookings.values()
                 .stream()
                 .filter(o -> o != null && o.orderIds != null && o.orderIds.contains(orderId))
+                .collect(Collectors.toList());
+        
+        bookingsWithOrderId
+                .stream()
                 .forEach(booking -> {
                     if (order.cart.getItems().isEmpty()) {
                         booking.orderIds.remove(orderId);

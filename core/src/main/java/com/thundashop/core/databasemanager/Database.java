@@ -261,6 +261,7 @@ public class Database extends StoreComponent {
         obj.add(addBannedClass("com.thundashop.core.common.ConferenceDiffLog"));
         obj.add(addBannedClass("com.thundashop.core.ticket.TicketContent"));
         obj.add(addBannedClass("com.thundashop.core.ticket.TicketAttachment"));
+        obj.add(addBannedClass("com.thundashop.core.warehousemanager.StockQuantityRow"));
         andQuery.put("$and", obj);
         
         return andQuery;

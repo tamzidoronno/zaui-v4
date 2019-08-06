@@ -33,6 +33,7 @@ class SalesPointCashPoints extends \MarketingApplication implements \Application
         $cashPoint->kitchenPrinterGdsDeviceId = $_POST['data']['kitchenprinter'];
         $cashPoint->departmentId = $_POST['data']['departmentId'];
         $cashPoint->isMaster = $_POST['data']['isMaster'];
+        $cashPoint->warehouseid = $_POST['data']['warehouseid'];
         $cashPoint->cashPointName = $_POST['data']['cashPointName'];
         
         $this->getApi()->getPosManager()->saveCashPoint($cashPoint);

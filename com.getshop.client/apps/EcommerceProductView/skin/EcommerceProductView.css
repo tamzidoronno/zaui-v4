@@ -137,3 +137,18 @@
 .EcommerceProductView .optionrows {
     margin-bottom: 0px;
 }
+
+.EcommerceProductView .stockmanagement_inner {
+    font-size: 16px;
+}
+
+.EcommerceProductView .stockmanagement_inner .row .col {
+    display: inline-block;
+    padding: 2px;
+}
+
+.EcommerceProductView .stockmanagement_inner .row .col1 { width: 200px; }
+.EcommerceProductView .stockmanagement_inner .row .col2 { width: 100px; }
+.EcommerceProductView .stockmanagement_inner .row .col3 { width: 100px; }
+.EcommerceProductView .stockmanagement_inner .row .col4 { width: 100px; }
+.EcommerceProductView .stockmanagement_inner .row .col5 { width: 100px; }

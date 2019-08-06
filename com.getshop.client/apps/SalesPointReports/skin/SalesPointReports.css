@@ -169,3 +169,29 @@
     width: 100px;
     text-align: right;
 }
+
+.SalesPointReports .stockreport {
+    font-size: 16px;
+}
+
+.SalesPointReports .stockreport .row {
+    border-bottom: solid 1px #DDD;
+}
+.SalesPointReports .stockreport .row .col {
+    display: inline-block;    
+    padding: 3px;
+}
+
+.SalesPointReports .stockreport .row .col1 { width: calc(100% - 600px); }
+
+.SalesPointReports .stockreport .row .col2,
+.SalesPointReports .stockreport .row .col4,
+.SalesPointReports .stockreport .row .col3 { width: 150px; text-align: center; }
+
+.SalesPointReports .stockreport .row .col1_1 { width: 60px; }
+.SalesPointReports .stockreport .row .col1_2 { width: 60px; }
+
+.SalesPointReports .stockreport .row .col4,
+.SalesPointReports .stockreport .row .col2 {
+    background-color: #FFF;
+}

@@ -19,6 +19,11 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
         $this->includefile("salesreport");
     }
     
+    public function showStockReport() {
+        $_SESSION['ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7_activetab'] = "stock";
+        $this->includefile("stock");
+    }
+    
     public function loadReport() {
         $_SESSION['ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7_start'] = $_POST['data']['startdate'];
         $_SESSION['ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7_end'] = $_POST['data']['enddate'];
@@ -40,6 +45,8 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
                 $this->includefile("masterreport");
             } else if ($tab == "salesreport") {
                 $this->includefile("salesreport");
+            } else if ($tab == "stock") {
+                $this->includefile("stock");
             } else {
                 $this->includefile("xreport");
             }
@@ -346,6 +353,11 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
 
     }
 
+    public function setNewMonthForStock() {
+        $data = explode(".", $_POST['data']['gsvalue']);
+        $_SESSION['ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7_stock_year'] = $data[1];
+        $_SESSION['ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7_stock_month'] = $data[0];
+    }
 }
 ?>
 

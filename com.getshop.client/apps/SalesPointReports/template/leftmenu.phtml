@@ -31,6 +31,17 @@ $cashPoint = $this->getApi()->getPosManager()->getCashPoint($this->getSelectedCa
                 </div>
             <?
         }
+        
+        if ($this->getApi()->getOrderManager()->isStockManagementActive()) {
+            ?>
+            <div class='entry all' tab='stock'>
+                <i class='fa fa-line-chart'></i>
+                Stock
+            </div>
+            <?
+            
+        }   
+        
         ?>
     </div>
 </div>

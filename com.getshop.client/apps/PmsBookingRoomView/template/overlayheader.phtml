@@ -12,6 +12,11 @@ if(!$pmsBooking->confirmed) {
     echo "<div style='text-align:center; color:#fff; background-color:red;padding: 10px;'>This booking has not been confirmed, <span gsclick='confirmbooking' style='cursor:pointer;'>confirm.</span></div>";
 }
 
+$missingOnGroup = 0;
+foreach($pmsBooking->rooms as $room) {
+    $missingOnGroup += $room->unpaidAmount;
+}
+
 ?>
 
 <div class='headerboxes'>
@@ -76,8 +81,8 @@ if($pmsBookingRoom->unpaidAmount > 0) {
                 <span class='missingonroomgroup'>
                     <?php 
                     $totalOrdersRoom = $this->getApi()->getPmsInvoiceManager()->getTotalOnOrdersForRoom($this->getSelectedMultilevelDomainName(), $pmsBookingRoom->pmsBookingRoomId, true);
-                    $unsettledRoom = round($pmsBookingRoom->totalCost - $totalOrdersRoom);
-                    echo "Missing on group: " . $pmsBooking->unsettled; 
+                    $unsettledRoom = round($pmsBookingRoom->unpaidAmount);
+                    echo "Missing on group: " . $missingOnGroup; 
                     echo ", Missing on room: " . $unsettledRoom;
                     ?>
                 </span>

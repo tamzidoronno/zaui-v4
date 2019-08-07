@@ -31,30 +31,6 @@ $totalMissingOnGroup = round($pmsBooking->totalPrice - $totalOrdersOnGroup);
 $totalOrdersOnGroup = round($totalOrdersOnGroup);
 
 ?>
-<div style='height: 155px; display:inline-block; width:100%;'>
-    <table width='100%'>
-        <tr>
-            <td></td>
-            <td align='center'>For room</td>
-            <td align='center'>For group</td>
-        </tr>
-        <tr>
-            <td>Total value</td>
-            <td align='center'><?php echo $totalOnRoom; ?></td>
-            <td align='center'><?php echo $totalOnBooking; ?></td>
-        </tr>
-        <tr>
-            <td>Missing</td>
-            <td align='center'><?php echo $unsettledRoom; ?></td>
-            <td align='center'><?php echo $totalMissingOnGroup; ?></td>
-        </tr>
-        <tr>
-            <td>Orders</td>
-            <td align='center'><?php echo $totalOrdersRoom; ?></td>
-            <td align='center'><?php echo $totalOrdersOnGroup; ?></td>
-        </tr>
-    </table>
-</div>
 <span>
     <span class="shop_button listpaymentbutton"><i class=""></i> <? echo $this->__f("List payments"); ?></span>
     <?php

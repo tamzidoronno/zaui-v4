@@ -289,6 +289,7 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
         if(replyTo == null || replyTo.isEmpty()) {
             replyTo = from;
         }
+        
 
         if(to == null || !to.contains("@")) {
             GetShopLogHandler.logPrintStatic("Unable to send email to : " + to + " since it does not contain an @", storeId);

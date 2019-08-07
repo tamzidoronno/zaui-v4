@@ -3489,6 +3489,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     public String autoCreateOrderForBookingAndRoom(String roomBookingId, String paymentMethod) {
         if(paymentMethod == null || paymentMethod.isEmpty()) {
             Application ecommerceSettingsApplication = applicationPool.getApplication("9de54ce1-f7a0-4729-b128-b062dc70dcce");
+            if(ecommerceSettingsApplication == null) {
+                return null;
+            }
             paymentMethod = ecommerceSettingsApplication.getSetting("defaultPaymentMethod");
         }
 

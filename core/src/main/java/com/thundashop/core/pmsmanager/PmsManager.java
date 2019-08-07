@@ -1662,7 +1662,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             email = configuration.sendAdminTo;
         }
         logEntry("Notified admin :" + message, booking.id, null);
-        messageManager.sendMail(email, "Administrator", "Notification", message, getFromEmail(), getFromName());
+        messageManager.sendMail(email, "Administrator", "Information from GetShop PMS", message, getFromEmail(), getFromName());
         messageManager.sendSms("sveve", phone, message, "47");
     }
 

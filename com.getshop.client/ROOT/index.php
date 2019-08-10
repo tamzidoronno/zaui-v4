@@ -129,7 +129,13 @@ $module = $factory->getPage()->javapage->getshopModule;
 if($module == "pms") {
     header('location:/pms.php');
 }
-if(!$factory->getApi()->getPageManager()->hasAccessToModule($module)) {
+
+$ignoreAccess = false;
+if(isset($_GET['page']) && $_GET['page'] == "cart") {
+    $ignoreAccess = true;
+}
+
+if(!$factory->getApi()->getPageManager()->hasAccessToModule($module) && !$ignoreAccess) {
     echo "access denied to module";
     exit(0);
 }

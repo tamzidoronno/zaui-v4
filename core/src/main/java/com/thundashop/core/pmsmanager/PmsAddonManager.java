@@ -65,14 +65,12 @@ public class PmsAddonManager extends GetShopSessionBeanNamed implements IPmsAddo
                 } else {
                     PmsBookingAddonItem addon = pmsManager.createAddonToAdd(addonConfig, cal.getTime(), room);
                     room.addons.add(addon);
-                    System.out.println("adding to room");
                 }
             }
             if(filter.singleDay) {
                 break;
             }
             cal.add(Calendar.DAY_OF_YEAR, 1);
-            System.out.println(cal.getTime());
             if(cal.getTime().after(filter.end)) {
                 break;
             }

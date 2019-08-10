@@ -14,6 +14,7 @@ import java.util.Date;
  */
 public class PmsEvent extends DataCommon {
     public String title;
+    public String content ="";
     public Date start;
     public Date end;
 }

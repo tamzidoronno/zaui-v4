@@ -12,7 +12,11 @@ $event = $this->getApi()->getPmsEventManager()->getEvent($this->getSelectedMulti
     <input class='gsniceinput1' gsname='title'  value='<?php echo $event->title; ?>'>
     <input type='hidden' gsname='id' value='<?php echo $event->id; ?>'>
     <span class='shop_button'  gstype='submit'>Save</span>
-    
+    <div style="text-align: left;">
+        Description:
+        <textarea gsname="content" style="width:100%; border: solid 1px; height: 200px;"><?php echo $event->content; ?></textarea>
+    </div>
+
     <br><br>
     <span class='shop_button' gsclick="deleteevent" eventid='<?php echo $event->id; ?>' gs_confirm="Are you sure">Delete this event</span>
     

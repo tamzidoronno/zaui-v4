@@ -13,6 +13,25 @@
     line-height: 36px;
     margin-bottom: 3px;
 }
+
+.PmsGroupBookingHeader .col.owner { width: 200px; }
+.PmsGroupBookingHeader .col.end { width: 170px; }
+.PmsGroupBookingHeader .col.start { width: 170px; }
+.PmsGroupBookingHeader .col.guestnames { width: 350px; }
+.PmsGroupBookingHeader .col.roomtype { width: 200px; }
+.PmsGroupBookingHeader .col.room { width: 200px; }
+.PmsGroupBookingHeader .col.choose { float:right; cursor:pointer; }
+.PmsGroupBookingHeader .addfromotherroomrow:hover { font-weight: bold; }
+
+.PmsGroupBookingHeader .findroomfrombooking {
+    border: solid 1px #bbb;
+    background-color: #efefef;
+    width: 100%;
+    display: none;
+    z-index: 2;
+    position:absolute;
+    left: 0px;
+}
 .PmsGroupBookingHeader .addAddonsPanel .addonsrow .addAddonsToRoom,
 .PmsGroupBookingHeader .addAddonsPanel .addonsrow .removeAddonFromRoom
 {

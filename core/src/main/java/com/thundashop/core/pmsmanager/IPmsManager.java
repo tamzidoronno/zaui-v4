@@ -654,4 +654,8 @@ public interface IPmsManager {
     
     @Administrator
     public void attachOrderToBooking(String bookingId, String orderId);
+    
+    @Administrator
+    public boolean moveRoomToBooking(String roomId, String bookingId);
+    
 }

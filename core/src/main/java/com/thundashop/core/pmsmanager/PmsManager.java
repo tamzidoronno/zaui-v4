@@ -10596,4 +10596,40 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
     }
 
+    @Override
+    public boolean moveRoomToBooking(String roomId, String bookingId) {
+        PmsBooking fromBooking = getBookingFromRoom(roomId);
+        PmsBooking toBooking = getBooking(bookingId);
+        PmsBookingRooms room = fromBooking.findRoom(roomId);
+        
+        if(fromBooking == null || toBooking == null || room == null) {
+            return false;
+        }
+        
+        toBooking.rooms.add(room);
+        fromBooking.rooms.remove(room);
+        
+        
+        List<String> toRemove = new ArrayList();
+        for(String orderId : fromBooking.orderIds) {
+            Order order = orderManager.getOrder(orderId);
+            if(order.containsRoom(room.pmsBookingRoomId)) {
+                toBooking.orderIds.add(order.id);
+            }
+            if(!order.containsBooking(fromBooking)) {
+                toRemove.add(order.id);
+            }
+        }
+        fromBooking.orderIds.removeAll(toRemove);
+        if(fromBooking.rooms.isEmpty()) {
+            toBooking.orderIds.addAll(fromBooking.orderIds);
+        }
+        
+        
+        saveBooking(toBooking);
+        saveBooking(fromBooking);
+        
+        return true;
+    }
+
 }

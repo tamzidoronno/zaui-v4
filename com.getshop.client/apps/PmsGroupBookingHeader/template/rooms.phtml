@@ -56,7 +56,7 @@ $this->includefile("addaddonstogroup");
 <span class='shop_button' style='float:right;' onclick="$('.addroombox').toggle();">Add another room</span>
 
 
-<div class='addroombox' style='display:none;' gstype="form" method="addRoomToGroup">
+<div class='addroombox' style='display:none;margin-bottom:15px;' gstype="form" method="addRoomToGroup">
     <h3>Add another room to this group</h3>
     <input type='txt' class='gsniceinput1' value='<?php echo $start; ?>' gsname='start'> 
     <input type='txt' class='gsniceinput1' value='<?php echo $end; ?>' gsname='end'> 
@@ -67,7 +67,7 @@ $this->includefile("addaddonstogroup");
         }
         ?>
     </select>
-    <select class='gsniceselect1' style='height:38px;' gsname='guestInfoOnRoom'>
+    <select class='gsniceselect1' style='height:38px; max-width:200pX;' gsname='guestInfoOnRoom'>
         <?php
         echo "<option value=''>No guest information</option>";
         foreach ($booking->rooms as $room) {
@@ -84,10 +84,18 @@ $this->includefile("addaddonstogroup");
     </select>
     <input type='txt' class='gsniceinput1' gsname='count' value="1" style="width:30px;"> 
     <span class='shop_button doaddroomtogroup' gstype="submit">Add room</span>
-
+    <span class="shop_button addfromdifferentroom" style="float:right; border-radius: 3px;">Add room from a different booking</span>
     <div class="notavailablerooms">I am sorry, you can not add room using the above selection, there are not enough rooms for that, if adding them they will be added to a waiting queue.</div>
 </div>
 
+<div style="position:relative">
+    <span class="findroomfrombooking" style="padding:10px;">
+        <div style='text-align:right;margin-bottom: 10px;'><i class='fa fa-close' style='cursor:pointer;' onclick='$(".findroomfrombooking").hide();'></i></div>
+        <input type="txt" class="gsniceinput1" placeholder="Search for booking" style="width:100%;box-sizing: border-box;" gstype='clicksubmit' gsname='keyword' method="searchbooking"  gstoarea=".searcharea">
+        <div class="searcharea" style='margin-top:10px;'><span style='font-size: 16px;'>Search for a booking to add in the box above.</span></div>
+        <div style='text-align: right;'><span  class='shop_button' onclick='window.location.href=window.location.href;'>Done importing</span></div>
+    </span>
+</div>
 <?php
 $filter = new core_pmsmanager_PmsBookingFilter();
 $filter->includeDeleted = true;

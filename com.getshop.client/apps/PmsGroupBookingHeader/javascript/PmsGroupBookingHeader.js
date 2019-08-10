@@ -18,7 +18,22 @@ app.PmsGroupBookingHeader = {
         $(document).on('click', '.PmsGroupBookingHeader .setnewpricebutton', app.PmsGroupBookingHeader.updateAllPrices);
         $(document).on('click', '.PmsGroupBookingHeader .addAddonsToRoom,.PmsGroupBookingHeader .removeAddonFromRoom', app.PmsGroupBookingHeader.addAddonsToRoom);
         $(document).on('click', '.PmsGroupBookingHeader .setsingleday', app.PmsGroupBookingHeader.setSingleDayAddons);
+        $(document).on('click', '.PmsGroupBookingHeader .addfromdifferentroom', app.PmsGroupBookingHeader.showSearchAreaFindBooking);
+        $(document).on('click', '.PmsGroupBookingHeader .importroom', app.PmsGroupBookingHeader.importRoom);
         $(document).on('keyup', '.PmsGroupBookingHeader .searchaddaddonslist', app.PmsGroupBookingHeader.searchAddAddonsList);
+    },
+    importRoom : function() {
+        var row = $(this).closest('.row');
+        var event = thundashop.Ajax.createEvent('','addExistingRoomToBooking',$(this), { "roomid" : $(this).attr('roomid') });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            if(res === "1") {
+                alert('Room has been moved');
+                row.fadeOut();
+            }
+        });
+    },
+    showSearchAreaFindBooking : function() {
+        $('.findroomfrombooking').show();
     },
     setSingleDayAddons : function() {
         if($(this).is(':checked')) {

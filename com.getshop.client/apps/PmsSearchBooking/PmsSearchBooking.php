@@ -288,6 +288,7 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         echo "$('.tablefilterinput').val(localStorage.getItem('filterKeyword'));";
         echo "app.PmsSearchBooking.filterRows();";
         echo "app.PmsSearchBooking.printAddedToCheckout();";
+        echo "app.PmsSearchBooking.loadSelectedRooms();";
         echo "</script>";
         
         $toPrint = ob_get_contents();

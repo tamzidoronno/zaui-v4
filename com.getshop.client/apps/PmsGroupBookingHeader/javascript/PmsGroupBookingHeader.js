@@ -14,8 +14,32 @@ app.PmsGroupBookingHeader = {
         $(document).on('click', '.PmsGroupBookingHeader .domassupdate', app.PmsGroupBookingHeader.doMassUpdate);
         $(document).on('click', '.PmsGroupBookingHeader .doextendstay', app.PmsGroupBookingHeader.extendStay);
         $(document).on('click', '.PmsGroupBookingHeader .updatePricePanelbtn', app.PmsGroupBookingHeader.showUpdatePricePanel);
+        $(document).on('click', '.PmsGroupBookingHeader .addAddonsPanelbtn', app.PmsGroupBookingHeader.showAddAddonsPanel);
         $(document).on('click', '.PmsGroupBookingHeader .setnewpricebutton', app.PmsGroupBookingHeader.updateAllPrices);
-    }, 
+        $(document).on('click', '.PmsGroupBookingHeader .addAddonsToRoom,.PmsGroupBookingHeader .removeAddonFromRoom', app.PmsGroupBookingHeader.addAddonsToRoom);
+        $(document).on('click', '.PmsGroupBookingHeader .setsingleday', app.PmsGroupBookingHeader.setSingleDayAddons);
+        $(document).on('keyup', '.PmsGroupBookingHeader .searchaddaddonslist', app.PmsGroupBookingHeader.searchAddAddonsList);
+    },
+    setSingleDayAddons : function() {
+        if($(this).is(':checked')) {
+            $("[gsname='end']").hide();
+        } else {
+            $("[gsname='end']").show();
+        }
+    },
+    searchAddAddonsList : function() {
+        var val = $(this).val();
+        $('.addonsrow').each(function() {
+            if($(this).text().toLowerCase().indexOf(val.toLowerCase()) !== -1) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    },
+    showAddAddonsPanel : function() {
+        $('.addAddonsPanel').show();
+    },
     updateAllPrices : function() {
         var form = $('.updatepricepanel');
         var args = thundashop.framework.createGsArgs(form);
@@ -29,6 +53,23 @@ app.PmsGroupBookingHeader = {
         args.rooms = rooms;
         
         var event = thundashop.Ajax.createEvent('','updatePriceByDateRange',$(this), args);
+        thundashop.Ajax.post(event);
+    },
+    addAddonsToRoom : function() {
+        var form = $('.addAddonsPanel');
+        var args = thundashop.framework.createGsArgs(form);
+        
+        var rooms = [];
+        $('.groupedactioncheckbox').each(function() {
+            if($(this).is(':checked')) {
+                rooms.push($(this).attr('roomid'));
+            }
+        });
+        args.rooms = rooms;
+        args.type = $(this).attr('type');
+        args.productid = $(this).attr('productId');
+        
+        var event = thundashop.Ajax.createEvent('','addAddonsToRoom',$(this), args);
         thundashop.Ajax.post(event);
     },
     showUpdatePricePanel : function() {
@@ -172,6 +213,8 @@ app.PmsGroupBookingHeader = {
         } else {
             $('.manipulateroomoptions .shop_button').addClass('disabled');
         }
+        
+        app.PmsSearchBooking.saveSelectedRooms();
     },
     removeGuestRow : function() {
         $(this).closest('.guestrow').remove();

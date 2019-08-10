@@ -552,7 +552,7 @@ public interface IPmsManager {
      */
     @Administrator
     public void addProductToRoom(String productId, String pmsRoomId, Integer count);
-    
+   
     @Administrator
     public void addAddonToRoom(PmsBookingAddonItem addon, String pmsRoomId);
     

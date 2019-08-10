@@ -11,6 +11,17 @@ class PmsGroupBookingHeader extends \MarketingApplication implements \Applicatio
         
     }
     
+    public function addAddonsToRoom() {
+        $filter = new \core_pmsmanager_PmsAddonFilter();
+        $filter->start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
+        $filter->end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
+        $filter->deleteAddons = $_POST['data']['type'] == "removeaddon";
+        $filter->productId = $_POST['data']['productid'];
+        $filter->rooms = $_POST['data']['rooms'];
+        $filter->singleDay = $_POST['data']['singleday'] == "true";
+        $this->getApi()->getPmsAddonManager()->addProductToGroup($this->getSelectedMultilevelDomainName(), $filter);
+    }
+    
     public function updatePriceByDateRange() {
         $booking = $this->getCurrentBooking();
         $bookingId = $booking->id;        

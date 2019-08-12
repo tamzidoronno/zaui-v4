@@ -3599,7 +3599,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         List<PmsOrderCreateRow> createOrder = new ArrayList();
         
         if(room == null) {
-            for(PmsBookingRooms r : booking.getActiveRooms()) {
+            for(PmsBookingRooms r : booking.rooms) {
                 PmsOrderCreateRow createOrderForRoom = new PmsOrderCreateRow();
                 createOrderForRoom.items = new ArrayList();
                 PmsRoomPaymentSummary summary = pmsManager.getSummaryWithoutAccrued(booking.id, r.pmsBookingRoomId);

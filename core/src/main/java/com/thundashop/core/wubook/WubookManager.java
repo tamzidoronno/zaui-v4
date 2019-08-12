@@ -1120,6 +1120,16 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 }
             }
             
+            boolean hasPaidOrders = checkForPaidOrders(newbooking);
+            if(hasPaidOrders) {
+                String orderId = pmsInvoiceManager.autoCreateOrderForBookingAndRoom(newbooking.id, newbooking.paymentType);
+                Order ord = orderManager.getOrder(orderId);
+                Double amount = orderManager.getTotalAmount(ord);
+                if(amount == 0.0) {
+                    pmsInvoiceManager.markOrderAsPaid(newbooking.id, orderId);
+                }
+            }
+            
             logPrint("Time takes to complete one booking: " + (System.currentTimeMillis() - start));
             }catch(Exception e) {
                 e.printStackTrace();
@@ -2356,6 +2366,17 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             address = "https://" + address;
         } 
         return address;
+    }
+
+    private boolean checkForPaidOrders(PmsBooking newbooking) {
+        boolean hasPaidOrders = false;
+        for(String orderId : newbooking.orderIds) {
+            Order ord = orderManager.getOrder(orderId);
+            if(ord.status == Order.Status.PAYMENT_COMPLETED) {
+                hasPaidOrders = true;
+            }
+        }
+        return hasPaidOrders;
     }
 
 

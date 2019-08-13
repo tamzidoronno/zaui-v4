@@ -6,6 +6,7 @@ import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
@@ -57,9 +58,10 @@ class PmsStatisticsBuilder {
         return 0;
     }
     
-    PmsStatistics buildStatistics(PmsBookingFilter filter, Integer totalRooms, PmsInvoiceManager invoiceManager, List<Booking> allBookings) {
+    PmsStatistics buildStatistics(PmsBookingFilter filter, Integer totalRooms, PmsInvoiceManager invoiceManager, List<Booking> allBookings, Store store) {
         PmsStatistics statics = new PmsStatistics();
         Calendar cal = Calendar.getInstance();
+        filter.startDate = store.convertToTimeZone(filter.startDate);
         cal.setTime(filter.startDate);
         List<String> roomsAddedForGuests = new ArrayList();
         while(true) {

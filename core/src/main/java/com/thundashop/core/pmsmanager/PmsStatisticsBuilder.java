@@ -166,7 +166,7 @@ class PmsStatisticsBuilder {
                                 cal2.add(Calendar.DAY_OF_YEAR, 1);
                                 if(!room.isSameDay(cal2.getTime(), cal.getTime())) {
                                     continue;
-                                }
+                               }
                             } else {
                                 if(!room.isSameDay(addon.date, cal.getTime())) {
                                     continue;

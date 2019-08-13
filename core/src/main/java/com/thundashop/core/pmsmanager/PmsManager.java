@@ -3370,7 +3370,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 if (!room.addedToArx && hasLockSystemActive() && !getConfiguration().markDirtyEvenWhenCodeNotPressed) {
                     continue;
                 }
-
+                
                 String ownerMail = storeManager.getMyStore().configuration.emailAdress;
                 String addressMail = storeManager.getMyStore().webAddress;
                 if (room.bookingItemId == null || room.bookingItemId.isEmpty()) {
@@ -8739,6 +8739,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
         if(!room.isStarted()) {
             room = changeDates(room.pmsBookingRoomId, booking.id, new Date(), room.date.end);
+            markRoomAsDirty(room.bookingItemId);
         }
         if (room != null) {
             logEntry("Room checkedin", booking.id, room.bookingItemId, room.pmsBookingRoomId, "checkin");

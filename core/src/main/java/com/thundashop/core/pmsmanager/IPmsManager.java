@@ -30,6 +30,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 public interface IPmsManager {
     
     @Administrator
+    public void checkInRoom(String pmsBookingRoomId);
+    
+    @Administrator
     public void setDefaultAddons(String bookingId);
     
     @Administrator
@@ -166,9 +169,6 @@ public interface IPmsManager {
     
     @Administrator
     public void undoCheckOut(String pmsBookingRoomId);
-    
-    @Administrator
-    public void checkInRoom(String pmsBookingRoomId);
     
     
     @Administrator

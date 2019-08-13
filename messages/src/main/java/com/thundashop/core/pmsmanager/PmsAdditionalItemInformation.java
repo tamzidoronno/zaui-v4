@@ -88,6 +88,7 @@ public class PmsAdditionalItemInformation extends DataCommon {
 
     void addCleaningDate() {
         cleaningDates.add(new Date());
+        lastCleaned = new Date();
     }
 
     public void addCleaningDate(Date date) {

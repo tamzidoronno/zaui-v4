@@ -7,7 +7,12 @@
     margin-bottom: 10px;
     padding-bottom: 5px;
  }
- .CrmCustomerView .companydetailsarea { height: 263px; }
+.CrmCustomerView .attacheddiscountcode { border: solid 1px #bbb; display:inline-block; padding: 7px; margin: 3px; border-radius: 3px; cursor:pointer; }
+.CrmCustomerView .attacheddiscountcode i { display:none; }
+.CrmCustomerView .attacheddiscountcode:hover i { display:inline-block; }
+.CrmCustomerView .primarydiscountcode { font-weight: bold;}
+.CrmCustomerView .chosendiscountcode { color:green; }
+.CrmCustomerView .companydetailsarea { height: 263px; }
 .CrmCustomerView .header { font-size: 20px; border-bottom: solid 2px #000; width:100%; line-height: 30px; padding-bottom: 10px; margin-bottom: 10px; }
 .CrmCustomerView .footer { padding-top: 10px; text-align: right; }
 .CrmCustomerView .selectedmenuentry { 

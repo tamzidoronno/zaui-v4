@@ -1,7 +1,9 @@
 package com.thundashop.core.pmsmanager;
 
 import com.thundashop.core.common.DataCommon;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class PmsUserDiscount extends DataCommon {
     public static class PmsUserDiscountType {
@@ -15,4 +17,5 @@ public class PmsUserDiscount extends DataCommon {
     public HashMap<String, Double> discounts = new HashMap();
     public String pricePlan = "";
     public String attachedDiscountCode = "";
+    public List<String> secondaryAttachedDiscountCodes = new ArrayList();
 }

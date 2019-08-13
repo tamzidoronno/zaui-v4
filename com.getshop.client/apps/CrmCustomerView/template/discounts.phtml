@@ -118,19 +118,24 @@ foreach ($domains as $domain) {
                     <td><b>Attached discount code (<a style='color:blue; cursor:pointer;' class='docreatenewcode' suggestion='<?php echo $codesuggestion; ?>'>create a new code</a>)</b><br>
                         Attach a discount code for this user, all bookings with the attached discounts will be booked on this user<br>
                     <td class='rowinput'>
-                        <select class='gsniceselect1' gsname='attachedDiscountCode'>
-                            <?php
-                            echo "<option value=''>None</option>";
-                            $coupons = $this->getApi()->getCartManager()->getCoupons();
-                            foreach ($coupons as $coupon) {
-                                $selected = "";
-                                if ($discounts->attachedDiscountCode == $coupon->code) {
-                                    $selected = "SELECTED";
-                                }
-                                echo "<option value='" . $coupon->code . "' $selected>" . $coupon->code . "</option>";
-                            }
-                            ?>                                    
-                        </select>
+                        <?php 
+                        echo "<span class='chosencodearea'>";
+                        if($discounts->attachedDiscountCode) {
+                            $this->printCodeButton($discounts->attachedDiscountCode, true, $user->id, true);
+                        } 
+                        foreach($discounts->secondaryAttachedDiscountCodes as $secondary) {
+                            $this->printCodeButton($secondary, false, $user->id, false);
+                        }
+                        echo "</span>";
+                        
+                        $coupons = $this->getApi()->getCartManager()->getCoupons();
+                        echo "<select gschange='addcouponcode' gs_callback='app.CrmCustomerView.codeAdded' class='gsniceselect1 connectdiscountcodedropdown' userid='".$user->id."'>";
+                        echo "<option value=''>Choose a code</option>";
+                        foreach($coupons as $code) {
+                            echo "<option value='".$code->code."'>".$code->code."</option>";
+                        }
+                        echo "</select>";
+                        ?>
                     </td>
                 </tr>
 
@@ -187,7 +192,7 @@ foreach ($domains as $domain) {
             </table>
         </div>
         <div class='footer'>
-            <span class='shop_button dashboardpmsbutton' gstype='submit' gs_callback='app.CrmCustomerView.saveSuccess'>Save</span>
+            <span class='shop_button dashboardpmsbutton savediscountcustomer' gs_callback='app.CrmCustomerView.saveSuccess'>Save</span>
         </div>
     </div>
     <?php

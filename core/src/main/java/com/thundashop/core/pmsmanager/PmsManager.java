@@ -8739,11 +8739,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
         if(!room.isStarted()) {
             room = changeDates(room.pmsBookingRoomId, booking.id, new Date(), room.date.end);
-            markRoomAsDirty(room.bookingItemId);
         }
         if (room != null) {
             logEntry("Room checkedin", booking.id, room.bookingItemId, room.pmsBookingRoomId, "checkin");
             room.checkedin = true;
+            markRoomAsDirty(room.bookingItemId);
             saveBooking(booking);
         }
     }

@@ -211,7 +211,15 @@ class GetShopInbox extends \MarketingApplication implements \Application {
             $filter->type = "BACKLOG";
         }
         
-        return $this->getApi()->getTicketManager()->getAllTickets($filter);
+        $result = $this->getApi()->getTicketManager()->getAllTickets($filter);
+        
+        if ($this->getCurrentTab() == "unassigned") {
+            $filter->state = "REPLIED";
+            $repliedresult = $this->getApi()->getTicketManager()->getAllTickets($filter);
+            $result = array_merge($result, $repliedresult);
+        }
+        
+        return $result;
     }
 
     public function getCurrentTab() {

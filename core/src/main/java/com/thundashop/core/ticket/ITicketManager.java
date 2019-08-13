@@ -24,6 +24,9 @@ public interface ITicketManager {
     public List<Ticket> getAllTickets(TicketFilter filter);
     
     @Editor
+    public void markAsRepied(String ticketId);
+    
+    @Editor
     public void updateEvent(String ticketId, TicketEvent event);
     
     @Administrator

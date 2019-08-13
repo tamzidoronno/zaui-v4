@@ -488,13 +488,13 @@ public class PmsBookingPaymentDiffer {
 
     private void setPriceToUseForOrders(PmsRoomPaymentSummary summary) {
         summary.rows.stream()
-                .forEach(o -> {
-                    o.priceToCreateOrders = (o.priceInBooking * o.countFromBooking) - (o.createdOrdersFor * o.countFromOrders);
-                    
-                    if (o.count != 0) {
-                        o.priceToCreateOrders = o.priceToCreateOrders / o.count;
-                    }
-                });
+        .forEach(o -> {
+            o.priceToCreateOrders = (o.priceInBooking * o.countFromBooking) - (o.createdOrdersFor * o.countFromOrders);
+
+            if (o.count != 0) {
+                o.priceToCreateOrders = o.priceToCreateOrders / o.count;
+            }
+        });
         
     }
 

@@ -33,6 +33,7 @@ class TicketViewCustomer extends \MarketingApplication implements \Application {
 
         if ($this->isGetShop()) {
             $this->getApi()->getTicketManager()->addTicketContent($_GET['ticketId'], $content);
+            $this->getApi()->getTicketManager()->markTicketAsRead($_GET['ticketId']);
         } else {
             $this->getSystemGetShopApi()->getCustomerTicketManager()->addContent($this->getFactory()->getStore()->id, $_GET['ticketToken'], $content);
         }

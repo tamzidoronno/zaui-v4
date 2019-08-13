@@ -434,7 +434,7 @@ public class PmsBookingPaymentDiffer {
             double sum = groupedItems.get(paymentType).stream().mapToDouble(item -> item.price * item.count).sum();
             double count = groupedItems.get(paymentType).stream().mapToInt(item -> item.count).sum();
 
-            if (sum != 0) {
+            if (sum != 0 && count != 0) {
                 retMap.put(paymentType, (sum/count));
             }
         }

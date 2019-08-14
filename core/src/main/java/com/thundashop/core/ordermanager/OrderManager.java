@@ -2434,7 +2434,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         List<String> multiLevelNames = database.getMultilevelNames("PmsManager", storeId);
         for (String multilevelName : multiLevelNames) {
             PmsManager pmsManager = getShopSpringScope.getNamedSessionBean(multilevelName, PmsManager.class);
-            pmsManager.orderChanged(orderId);
+            if(pmsManager != null) {
+                pmsManager.orderChanged(orderId);
+            }
         }
     }
 

@@ -8,14 +8,14 @@ foreach ($allRooms as $r) {
         $conferenceRooms[] = $r;
     }
 }
-$couponcodes = $this->getApi()->getCartManager()->getCoupons();
 $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
 
 $channelList = $this->getApi()->getPmsManager()->getChannelMatrix($this->getSelectedMultilevelDomainName());
 $formater = new \ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBookingColumnFormatters(null);
 $channelNames = $formater->getChannels();
-
 ?>
+<script src="/js/chosen/chosen.jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/js/chosen/chosen.css"/>
 <div class='newbookingprocess' for='newbookingstep2'>
     <div class='steptitle'>Step 2 / 3 adding rooms</div>
     <div class='addroomboxes '>
@@ -38,15 +38,13 @@ $channelNames = $formater->getChannels();
                 <span class="shop_button searchforfreeroomsbutton" gstype="submit">Search</span>
             </div>
             <div style='text-align: left;padding:10px;padding-left:20px;height:200px;'>
-                <select class='gsniceselect1 addcouponcode' style='width:240px;'>
+                <select class='addcouponcode' style='width:240px;'>
                     <?php
-                    echo "<option value=''>Choose a discount code</option>";
-                    foreach($couponcodes as $code) {
-                        $selected = $code->code == $booking->couponCode ? "SELECTED" : "";
-                        echo "<option value='".$code->code."' $selected>" .$code->code . "</option>";
-                    }
+                    $this->printCouponCodes($booking);
                     ?>
                 </select>
+                <span style='width:14px; display:inline-block;'></span>
+                
                 <select class='gsniceselect1 addsource' style='width:240px;margin-left: 20px;'>
                     <?php
                     foreach($channelList as $idx => $channel) {
@@ -57,6 +55,12 @@ $channelNames = $formater->getChannels();
                     }
                     ?>
                 </select>
+                
+                <div class='couponsummary' style='color: #aaa;margin: 3px;'>
+                <?php
+                $this->printCouponSummary($booking);
+                ?>
+                </div>
             </div>
         </div>
         <?php if (sizeof($conferenceRooms) > 0) { ?>
@@ -132,4 +136,13 @@ $channelNames = $formater->getChannels();
             }
         }});
     $('.PmsNewBooking20 .endconferencedate').datepicker({dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true, firstDay: 1});
+    $(function() {
+        var checkIfCanChosen = setInterval(function() {
+            if($('.addcouponcode').find('option').length > 0) {
+                $('.addcouponcode').chosen();
+                $('.addsource').chosen();
+                clearTimeout(checkIfCanChosen);
+            }
+        }, "100");
+    });
 </script>

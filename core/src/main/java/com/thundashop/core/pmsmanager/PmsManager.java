@@ -91,6 +91,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -10630,6 +10632,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         saveBooking(fromBooking);
         
         return true;
+    }
+
+    @Override
+    public void setBestCouponChoiceForCurrentBooking() throws Exception {
+        PmsBooking currentbooking = getCurrentBooking();
+        PmsUserDiscount discount = pmsInvoiceManager.getDiscountsForUser(currentbooking.userId);
+        currentbooking.couponCode = discount.attachedDiscountCode;
+        setBookingByAdmin(currentbooking, true);
     }
 
 }

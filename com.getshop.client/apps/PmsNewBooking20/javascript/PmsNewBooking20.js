@@ -32,6 +32,7 @@ app.PmsNewBooking20 = {
         
         thundashop.Ajax.postWithCallBack(event, function(res) {
             app.PmsNewBooking20.reloadAddedRoomsList();
+            $('.couponsummary').html(res);
         });
     },
     incraseDecreaseCounter : function () {

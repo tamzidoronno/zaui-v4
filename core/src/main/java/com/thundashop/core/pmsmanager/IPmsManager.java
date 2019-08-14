@@ -658,4 +658,6 @@ public interface IPmsManager {
     @Administrator
     public boolean moveRoomToBooking(String roomId, String bookingId);
     
+    public void setBestCouponChoiceForCurrentBooking() throws Exception;
+    
 }

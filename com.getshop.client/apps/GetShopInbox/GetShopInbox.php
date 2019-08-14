@@ -215,7 +215,7 @@ class GetShopInbox extends \MarketingApplication implements \Application {
         
         if ($this->getCurrentTab() == "unassigned") {
             $filter->state = "REPLIED";
-            $repliedresult = $this->getApi()->getTicketManager()->getAllTickets($filter);
+            $repliedresult = (array)$this->getApi()->getTicketManager()->getAllTickets($filter);
             $result = array_merge($result, $repliedresult);
         }
         

@@ -60,6 +60,7 @@ if ($systems) {
             <option <? echo $ticket->currentState === "CREATED" ? "selected='true'" : ""; ?> value='CREATED'>Created</option>
             <option <? echo $ticket->currentState === "COMPLETED" ? "selected='true'" : ""; ?> value='COMPLETED'>Completed</option>
             <option <? echo $ticket->currentState === "CLOSED" ? "selected='true'" : ""; ?> value='CLOSED'>Closed</option>
+            <option <? echo $ticket->currentState === "REPLIED" ? "selected='true'" : ""; ?> value='REPLIED'>Replied</option>
         </select>
         
         <span style='display: inline-block; width: 150px;'>Type:</span>

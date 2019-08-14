@@ -317,7 +317,6 @@ public class TicketManager extends ManagerBase implements ITicketManager {
         Ticket ticket = tickets.get(ticketId);
         if (ticket != null) {
             content.ticketId = ticketId;
-            ticket.currentState = ticket.currentState.REPLIED;
             
             if (content.addedByGetShop) {
                 content.addedByUserId = getSession().currentUser.id;

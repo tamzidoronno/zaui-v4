@@ -719,6 +719,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 continue;
             
             for(CartItem item : order.cart.getItems()) {
+                if(item.getProduct() == null) {
+                    continue;
+                }
                 String external = item.getProduct().externalReferenceId;
                 if(external.equals(pmsRoomId)) {
                     if(inctaxes) {

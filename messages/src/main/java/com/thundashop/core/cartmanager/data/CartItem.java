@@ -364,6 +364,11 @@ public class CartItem implements Serializable, Cloneable {
         rounded = rounded.multiply(new BigDecimal(count));
         return rounded;
     }
+
+    public BigDecimal getAmountRoundedWithTwoDecimals(int precision) {
+        BigDecimal rounded = TwoDecimalRounder.roundTwoDecimals(getProduct().price, precision);
+        return rounded;
+    }
     
     public BigDecimal getTotalAmountRoundedWithTwoDecimalsOverride(int precision) {
         BigDecimal rounded = TwoDecimalRounder.roundTwoDecimals(overridePriceIncTaxes, precision);

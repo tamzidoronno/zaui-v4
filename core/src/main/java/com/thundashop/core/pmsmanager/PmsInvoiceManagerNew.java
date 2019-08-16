@@ -217,8 +217,12 @@ public class PmsInvoiceManagerNew {
                 addonItem.count = d.count;
                 addonItem.price = d.price;
                 addonItem.productId = item.getProduct().id;
-                addonItem.addonId = referenceId;
-                addonItem.isUniqueOnOrder = (referenceId != null && !referenceId.isEmpty());
+                
+                if (referenceId != null && !referenceId.isEmpty()) {
+                    addonItem.addonId = referenceId;
+                    addonItem.isUniqueOnOrder = true;
+                }
+                
                 addonItem.setName(prod.name);
                 
                 try {

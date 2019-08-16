@@ -20,12 +20,12 @@ public class OneTimeCalculateUnsettledAmountForRooms extends OneTimeExecutor {
 
     @Override
     public void run() {
-        PmsManager manager = (PmsManager)getManager();
-        manager.getAllBookingsFlat()
-            .stream()
-            .forEach(booking -> {
-                manager.calculateUnsettledAmountForRooms(booking);
-                manager.saveObjectDirect(booking);
-            });
+//        PmsManager manager = (PmsManager)getManager();
+//        manager.getAllBookingsFlat()
+//            .stream()
+//            .forEach(booking -> {
+//                manager.calculateUnsettledAmountForRooms(booking);
+//                manager.saveObjectDirect(booking);
+//            });
     }    
 }

@@ -65,6 +65,7 @@ import com.thundashop.core.paymentmanager.PaymentManager;
 import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.pdf.data.AccountingDetails;
 import com.thundashop.core.pmsmanager.PmsBooking;
+import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.pos.PosConference;
 import com.thundashop.core.pos.PosManager;
@@ -321,6 +322,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
+        
         for (DataCommon dataFromDatabase : data.data) {
             if (dataFromDatabase instanceof VirtualOrder) {
                 virtualOrders.put(dataFromDatabase.id, (VirtualOrder)dataFromDatabase);
@@ -330,13 +332,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 AccountingFreePost freePost = (AccountingFreePost)dataFromDatabase;
                 accountingFreePosts.put(freePost.id, freePost);
             }
+
             
             if (dataFromDatabase instanceof Order) {
                 Order order = (Order) dataFromDatabase;
 //                if (order.cleanMe()) {
 //                    saveObject(order);
 //                }
-
+                
                 if(order.payment != null && order.payment.paymentType != null && order.payment.paymentType.equals("ns_d02f8b7a_7395_455d_b754_888d7d701db8//Dibs")) {
                     order.payment.paymentType = "ns_d02f8b7a_7395_455d_b754_888d7d701db8\\Dibs";
                     saveObject(order);
@@ -354,7 +357,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 order.isMatrixAndItemsValid();
                 orders.put(order.id, order);
             }
+            
         }
+        
+        // This function can be removed upon any release after 16 aug 2019
+        cleanupEmptyAddonIds();
+        
         createScheduler("ordercapturecheckprocessor", "2,7,12,17,22,27,32,37,42,47,52,57 * * * *", CheckOrdersNotCaptured.class);
         if(storeId.equals("c444ff66-8df2-4cbb-8bbe-dc1587ea00b7")) {
             checkChargeAfterDate();
@@ -4419,6 +4427,30 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Override
     public boolean isStockManagementActive() {
         return storeId.equals("13442b34-31e5-424c-bb23-a396b7aeb8ca");
+    }
+
+    private void cleanupEmptyAddonIds() {
+        List<Order> incrementalOrderIds = new ArrayList();            
+        
+        for (Order order : orders.values()) {
+            if (order != null) {
+                for (CartItem item : order.getCartItems()) {
+                    if (item.itemsAdded != null && !item.itemsAdded.isEmpty()) {
+                        for (PmsBookingAddonItem aitem : item.itemsAdded) {
+                            if (aitem.addonId == null || aitem.addonId.isEmpty()) {
+                                aitem.addonId = UUID.randomUUID().toString();
+                                if (!incrementalOrderIds.contains(order.incrementOrderId)) {
+                                    incrementalOrderIds.add(order);
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+
+        incrementalOrderIds.stream().forEach(o -> super.saveObject(o));
     }
 
 }

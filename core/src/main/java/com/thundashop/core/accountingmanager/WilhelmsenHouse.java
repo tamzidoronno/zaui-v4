@@ -428,7 +428,7 @@ public class WilhelmsenHouse implements AccountingInterface {
             entries.put("CostPrice", "");
             
             DecimalFormat df = new DecimalFormat("#.##");    
-            BigDecimal itemamount = item.getTotalAmountRoundedWithTwoDecimals(0);
+            BigDecimal itemamount = item.getAmountRoundedWithTwoDecimals(0);
             String amount = df.format(itemamount);
             
             entries.put("UnitPriceImp", amount);

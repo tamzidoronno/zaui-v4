@@ -753,15 +753,10 @@ public class PmsBooking extends DataCommon {
 
     boolean autosendPaymentLink() {
         //Send payment link on all bookings registered by ota not prepaid,
-        if(channel != null && channel.startsWith("wubook_")) {
+        if(channel != null && channel.startsWith("wubook_") || avoidAutoDelete || payLater) {
             if(paymentType == null || paymentType.isEmpty()) {
                 return true;
             }
-        }
-        
-        //If pay later has been activated, send payment link
-        if(payLater) {
-            return true;
         }
         
         return false;
@@ -780,6 +775,15 @@ public class PmsBooking extends DataCommon {
             return true;
         }
         return false;
+    }
+
+    public boolean hasUnpaidAmount() {
+        double unpaid = 0.0;
+        for(PmsBookingRooms r : rooms) {
+            unpaid += r.unpaidAmount;
+        }
+        
+        return unpaid != 0.0;
     }
 
     public static class PriceType {

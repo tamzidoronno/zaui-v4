@@ -11,6 +11,48 @@ class PmsGroupBookingHeader extends \MarketingApplication implements \Applicatio
         
     }
     
+    public function addAddonsToRoom() {
+        $filter = new \core_pmsmanager_PmsAddonFilter();
+        $filter->start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
+        $filter->end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
+        $filter->deleteAddons = $_POST['data']['type'] == "removeaddon";
+        $filter->productId = $_POST['data']['productid'];
+        $filter->rooms = $_POST['data']['rooms'];
+        $filter->singleDay = $_POST['data']['singleday'] == "true";
+        $this->getApi()->getPmsAddonManager()->addProductToGroup($this->getSelectedMultilevelDomainName(), $filter);
+    }
+
+    public function addExistingRoomToBooking() {
+        $curbooking = $this->getCurrentBooking();
+        $roomId = $_POST['data']['roomid'];
+        $moved = $this->getApi()->getPmsManager()->moveRoomToBooking($this->getSelectedMultilevelDomainName(), $roomId, $curbooking->id);
+        if($moved) {
+            echo "1";
+        } else {
+            echo "0";
+        }
+    }
+    
+    public function searchbooking() {
+        $keyword = $_POST['data']['keyword'];
+        $filter = new \core_pmsmanager_PmsBookingFilter();
+        $filter->searchWord = $keyword;
+        $rooms = $this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedMultilevelDomainName(), $filter);
+        foreach($rooms as $room) {
+            echo "<div class='row addfromotherroomrow'>";
+            echo "<span class='col owner ellipsis'>" . $room->owner . "</span>";
+            echo "<span class='col start ellipsis'>" . date("d.m.Y H:i", $room->start/1000) . "</span>";
+            echo "<span class='col end ellipsis'>" . date("d.m.Y H:i", $room->end/1000) . "</span>";
+            $guestNames = array();
+            foreach($room->guest as $g) { $guestNames[] = $g->name; }
+            echo "<span class='col guestnames ellipsis'>" . join(",", $guestNames) . "</span>";
+            echo "<span class='col roomtype ellipsis'>" . $room->roomType . "</span>";
+            echo "<span class='col room ellipsis'>" . $room->room . "</span>";
+            echo "<span class='col choose importroom' roomid='".$room->pmsRoomId."'>Import</span>";
+            echo "</div>";
+        }
+    }
+    
     public function updatePriceByDateRange() {
         $booking = $this->getCurrentBooking();
         $bookingId = $booking->id;        

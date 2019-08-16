@@ -114,6 +114,11 @@ public class Store extends DataCommon {
     }
     
     public Date convertToTimeZone(Date timing) {
+
+        if(timeZone == null || timeZone.isEmpty()) {
+            return timing;
+        }
+
         Calendar cal = Calendar.getInstance();
         cal.setTime(timing);
         

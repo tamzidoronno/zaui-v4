@@ -2442,7 +2442,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         List<String> multiLevelNames = database.getMultilevelNames("PmsManager", storeId);
         for (String multilevelName : multiLevelNames) {
             PmsManager pmsManager = getShopSpringScope.getNamedSessionBean(multilevelName, PmsManager.class);
-            pmsManager.orderChanged(orderId);
+            if(pmsManager != null) {
+                pmsManager.orderChanged(orderId);
+            }
         }
     }
 
@@ -4210,7 +4212,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
     }
 
-    private String getLocalCurrencyCode() {
+    public String getLocalCurrencyCode() {
         String localCurrency = getStoreSettingsApplication().getSetting("currencycode");
         
         if (localCurrency == null || localCurrency.isEmpty()) {
@@ -4451,6 +4453,21 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
 
         incrementalOrderIds.stream().forEach(o -> super.saveObject(o));
+    }
+    
+    @Override
+    public void resetLanguageAndCurrencyOnOrders() {
+        String currency = getLocalCurrencyCode();
+        String language = getSession().language;
+        
+        for(Order ord : orders.values()) {
+            if(ord.incrementOrderId == 100081) {
+                System.out.println("okey");
+            }
+            ord.language = language;
+            ord.currency = currency;
+            super.saveObject(ord);
+        }
     }
 
 }

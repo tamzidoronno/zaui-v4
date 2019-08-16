@@ -609,6 +609,13 @@ public class TicketManager extends ManagerBase implements ITicketManager {
             changeStateOfTicket(ticket.id, TicketState.CREATED);
         }
     }
+    
+    public void resetTicket(String id) {
+        Ticket ticket = tickets.get(id);
+        if (ticket != null) {
+            changeStateOfTicket(ticket.id, TicketState.CREATED);
+        }
+    }
 
     @Override
     public void changeType(String ticketId, TicketType type) {
@@ -620,6 +627,15 @@ public class TicketManager extends ManagerBase implements ITicketManager {
             String oldTypeS = oldType == null ? "none" : oldType.toString().toLowerCase();
             String newTypeS = ticket.type == null ? "none" : ticket.type.toString().toLowerCase();
             addNotificationContent(ticket.id, "Ticket type was changed from " + oldTypeS + " to " + newTypeS);
+        }
+    }
+
+    @Override
+    public void markAsRepied(String ticketId) {
+        Ticket ticket = getTicket(ticketId);
+        if (ticket != null) {
+            ticket.currentState = TicketState.REPLIED;
+            saveObject(ticket);
         }
     }
 }

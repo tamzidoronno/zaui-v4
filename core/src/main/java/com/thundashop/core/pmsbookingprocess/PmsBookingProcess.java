@@ -34,6 +34,7 @@ import com.thundashop.core.pmsmanager.PmsGuests;
 import com.thundashop.core.pmsmanager.PmsInvoiceManager;
 import com.thundashop.core.pmsmanager.PmsInvoiceManagerNew;
 import com.thundashop.core.pmsmanager.PmsManager;
+import com.thundashop.core.pmsmanager.PmsUserDiscount;
 import com.thundashop.core.pos.PosManager;
 import com.thundashop.core.printmanager.PrintJob;
 import com.thundashop.core.productmanager.ProductManager;
@@ -880,6 +881,19 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             }
         }
         booking = pmsManager.doCompleteBooking(pmsManager.getCurrentBooking());
+       
+        
+        PmsUserDiscount discount = pmsInvoiceManager.getDiscountsForUser(booking.userId);
+        User usr = userManager.getUserById(booking.userId);
+        if(usr != null && discount != null && usr.preferredPaymentType != null && usr.preferredPaymentType.equals("70ace3f0-3981-11e3-aa6e-0800200c9a66")) {
+            booking.avoidAutoDelete = true;
+            booking.paymentType = usr.preferredPaymentType;
+            if(discount.supportInvoiceAfter) {
+                booking.payLater = true;
+            } else {
+                pmsInvoiceManager.autoCreateOrderForBookingAndRoom(booking.id, booking.paymentType);
+            }
+        }
         
         BookingResult res = new BookingResult();
         res.success = 1;
@@ -918,7 +932,6 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             res.roomList.add(roomToReturn);
         }
         
-        User usr = userManager.getUserById(booking.userId);
         BookingResultUserData userData = new BookingResultUserData();
         userData.setUser(usr);
         res.userData = userData;

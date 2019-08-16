@@ -434,7 +434,7 @@ public class PmsBookingPaymentDiffer {
             double sum = groupedItems.get(paymentType).stream().mapToDouble(item -> item.price * item.count).sum();
             double count = groupedItems.get(paymentType).stream().mapToInt(item -> item.count).sum();
 
-            if (sum != 0) {
+            if (sum != 0 && count != 0) {
                 retMap.put(paymentType, (sum/count));
             }
         }
@@ -488,13 +488,13 @@ public class PmsBookingPaymentDiffer {
 
     private void setPriceToUseForOrders(PmsRoomPaymentSummary summary) {
         summary.rows.stream()
-                .forEach(o -> {
-                    o.priceToCreateOrders = (o.priceInBooking * o.countFromBooking) - (o.createdOrdersFor * o.countFromOrders);
-                    
-                    if (o.count != 0) {
-                        o.priceToCreateOrders = o.priceToCreateOrders / o.count;
-                    }
-                });
+        .forEach(o -> {
+            o.priceToCreateOrders = (o.priceInBooking * o.countFromBooking) - (o.createdOrdersFor * o.countFromOrders);
+
+            if (o.count != 0) {
+                o.priceToCreateOrders = o.priceToCreateOrders / o.count;
+            }
+        });
         
     }
 

@@ -719,6 +719,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 continue;
             
             for(CartItem item : order.cart.getItems()) {
+                if(item.getProduct() == null) {
+                    continue;
+                }
                 String external = item.getProduct().externalReferenceId;
                 if(external.equals(pmsRoomId)) {
                     if(inctaxes) {
@@ -1019,7 +1022,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             PmsBooking booking = pmsManager.getBookingUnsecure(bookingId);
 
             //Pay later button has been pressed.
-            if(booking.payLater) { return "?page=payment_success"; }
+            if(booking.payLater) { return "/?page=payment_success"; }
 
             User usr = userManager.getUserById(booking.userId);
 
@@ -3489,6 +3492,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     public String autoCreateOrderForBookingAndRoom(String roomBookingId, String paymentMethod) {
         if(paymentMethod == null || paymentMethod.isEmpty()) {
             Application ecommerceSettingsApplication = applicationPool.getApplication("9de54ce1-f7a0-4729-b128-b062dc70dcce");
+            if(ecommerceSettingsApplication == null) {
+                return null;
+            }
             paymentMethod = ecommerceSettingsApplication.getSetting("defaultPaymentMethod");
         }
 
@@ -3596,7 +3602,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         List<PmsOrderCreateRow> createOrder = new ArrayList();
         
         if(room == null) {
-            for(PmsBookingRooms r : booking.getActiveRooms()) {
+            for(PmsBookingRooms r : booking.rooms) {
                 PmsOrderCreateRow createOrderForRoom = new PmsOrderCreateRow();
                 createOrderForRoom.items = new ArrayList();
                 PmsRoomPaymentSummary summary = pmsManager.getSummaryWithoutAccrued(booking.id, r.pmsBookingRoomId);

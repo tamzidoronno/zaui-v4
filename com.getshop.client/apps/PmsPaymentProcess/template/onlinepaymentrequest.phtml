@@ -159,7 +159,7 @@ foreach($fields as $key => $r) {
             <input class='gsniceinput1' gsname='phone' placeholder='phone' value='<?php echo $selectedContact->phone; ?>'>
         </div>
         <div class='sendpaymentrequestsfooter'>
-            <?php echo $booker->footerText; ?>
+            <?php echo $r->footerText; ?>
             <?
             $textForButton = $key == "booker" ? "the complete booking" : "this room";
             ?>

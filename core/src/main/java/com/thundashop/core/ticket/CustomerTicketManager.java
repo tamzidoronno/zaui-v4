@@ -63,6 +63,7 @@ public class CustomerTicketManager extends ManagerBase implements ICustomerTicke
         Ticket ticket = ticketManager.getTicketByToken(inStoreId, secureTicketId);
         
         if (ticket != null) {
+            ticketManager.resetTicket(ticket.id);
             ticketManager.addTicketContent(ticket.id, content);
         }
         

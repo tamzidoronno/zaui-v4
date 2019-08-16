@@ -91,6 +91,7 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
         $booking->couponCode = $_POST['data']['code'];
         $this->getApi()->getPmsManager()->setBookingByAdmin($this->getSelectedMultilevelDomainName(), $booking, false);
+        $this->printCouponSummary($booking);
     }
     
     public function deleteRoom() {
@@ -252,6 +253,7 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
         $booking->userId = $_POST['data']['userid'];
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedMultilevelDomainName(), $booking);
+        $this->getApi()->getPmsManager()->setBestCouponChoiceForCurrentBooking($this->getSelectedMultilevelDomainName());
     }
 
     public function removeGuestFromRoom() {
@@ -570,6 +572,52 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
             }
         }
         return $closedtext;
+    }
+
+    /**
+     * 
+     * @param \core_pmsmanager_PmsBooking $booking
+     */
+    public function printCouponCodes($booking) {
+        $couponcodes = $this->getApi()->getCartManager()->getCoupons();
+        $discounts = $this->getApi()->getPmsInvoiceManager()->getDiscountsForUser($this->getSelectedMultilevelDomainName(), $booking->userId);
+        
+        $alreadyAdded = array();
+        if($discounts->attachedDiscountCode || sizeof((array)$discounts->secondaryAttachedDiscountCodes) > 0) {
+            echo "<optgroup label='Discount code connected to this user'>";
+            if($discounts->attachedDiscountCode) {
+                $selected = $booking->couponCode == $discounts->attachedDiscountCode ? "SELECTED" : "";
+                echo "<option value='".$discounts->attachedDiscountCode."' $selected>" .$discounts->attachedDiscountCode. "</option>";
+                $alreadyAdded[] = $discounts->attachedDiscountCode;
+            }
+            foreach($discounts->secondaryAttachedDiscountCodes as $code) {
+                $selected = $booking->couponCode == $code ? "SELECTED" : "";
+                echo "<option value='".$code."' $selected>" .$code. "</option>";
+                $alreadyAdded[] = $code;
+            }
+            echo "</optgroup>";
+        }
+        
+        echo "<optgroup label='Other discount codes'>";
+        echo "<option value=''>Choose a discount code</option>";
+        foreach($couponcodes as $code) {
+            if(in_array($code->code, $alreadyAdded)) {
+                continue;
+            }
+            $selected = $code->code == $booking->couponCode ? "SELECTED" : "";
+            echo "<option value='".$code->code."' $selected>" .$code->code . "</option>";
+        }
+        echo "</optgroup>";
+
+    }
+
+    public function printCouponSummary($booking) {
+         $pmspricing = new \ns_1be25b17_c17e_4308_be55_ae2988fecc7c\PmsPricing();
+        $coupon = null;
+        if($booking->couponCode) {
+            $coupon = $this->getApi()->getCartManager()->getCoupon($booking->couponCode);
+        }
+        if($coupon) { echo $coupon->code . " - " . $coupon->type . " - " . $pmspricing->getRepeatingSummary($coupon); }
     }
 
 }

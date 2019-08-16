@@ -30,12 +30,16 @@ public class UnsettledAmountProcessor extends CheckProcessorBase implements Chec
             return null;
         }
         
-        if (getPmsManager().isUnsettledAmount(booking)) {
+        getPmsManager().calculateUnsettledAmountForRooms(booking);
+        
+        double amount = booking.getUnpaidAmount();
+        
+        if (amount < -0.1 || amount > 0.1) {
             CheckListError error = new CheckListError();
             error.filterType = getClass().getSimpleName();
             error.metaData.put("pmsBookingId", booking.id);
             error.metaData.put("bookingEndDate", booking.endDate);
-            error.metaData.put("totalUnsettledAmount", booking.totalUnsettledAmount);
+            error.metaData.put("totalUnsettledAmount", amount);
             error.description = "Unsettled amount";
             return error;
         }

@@ -17,6 +17,7 @@ class PmsAvailabilityDateSelector extends \MarketingApplication implements \Appl
         $event->title = $_POST['data']['title'];
         $event->start = $this->convertToJavaDate(strtotime($_POST['data']['startdate']));
         $event->end = $this->convertToJavaDate(strtotime($_POST['data']['endate']));
+        $event->content = $_POST['data']['content'];
         $this->getApi()->getPmsEventManager()->saveEvent($this->getSelectedMultilevelDomainName(), $event);
     }
     

@@ -11,6 +11,10 @@ class GeneralSettingsOther extends \WebshopApplication implements \Application {
         return "GeneralSettingsOther";
     }
 
+    public function resetCurrencyAndLangaugeOnOrders() {
+        $this->getApi()->getOrderManager()->resetLanguageAndCurrencyOnOrders();
+    }
+    
     public function render() {
         $this->getApi()->getBackupManager()->createBackup();
         $this->includefile("settings");

@@ -29,9 +29,13 @@ $invoiceData = json_decode($inputJSON);
 $order = $invoiceData->order;
 $accountingDetails = $invoiceData->accountingDetails;
 
-$total = 0;
+$language = $order->language;
+$currency = $order->currency;
+if(!$language) { $language = $invoiceData->accountingDetails->language; }
+if(!$currency) { $currency = $invoiceData->accountingDetails->currency; }
 
-$translator = new InvoiceTemplateTranslator($order->language, $order->currency);
+$total = 0;
+$translator = new InvoiceTemplateTranslator($language, $currency);
 $calculatedTaxes = array();
 $isInvoice = $order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200c9a66\\InvoicePayment";
 

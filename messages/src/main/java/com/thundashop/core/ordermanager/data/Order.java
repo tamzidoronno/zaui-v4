@@ -13,7 +13,9 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.TwoDecimalRounder;
 import com.thundashop.core.gsd.TerminalResponse;
 import com.thundashop.core.pdf.data.AccountingDetails;
+import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
+import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import com.thundashop.core.usermanager.data.User;
@@ -1391,6 +1393,15 @@ public class Order extends DataCommon implements Comparable<Order> {
 
     public boolean isPaid() {
         return status == Order.Status.PAYMENT_COMPLETED;
+    }
+
+    public boolean containsBooking(PmsBooking fromBooking) {
+        for(PmsBookingRooms room : fromBooking.rooms) {
+            if(containsRoom(room.pmsBookingRoomId)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static class Status  {

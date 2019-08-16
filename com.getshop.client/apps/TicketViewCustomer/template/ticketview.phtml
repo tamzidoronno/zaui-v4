@@ -75,7 +75,7 @@ if ($this->isGetShop()) {
     ?>
         
     <?
-    if ($ticket->currentState == "CREATED") {
+    if ($ticket->currentState == "CREATED" || $ticket->currentState == "REPLIED") {
     ?>
     <div class='replyarea' gstype='form' method='replyTicket'>
         <input type='hidden' value='<? echo $ticket->ticketToken; ?>' gsname='ticketToken'/>

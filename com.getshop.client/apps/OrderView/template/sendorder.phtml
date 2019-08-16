@@ -1,12 +1,12 @@
 <?
-/* @var ns_4be8e427_bead_491e_8d9f_7dd16356d8eb\OrderView */
+/* @var $this ns_4be8e427_bead_491e_8d9f_7dd16356d8eb\OrderView */
 
 $order = $this->getOrder();
 $user = $this->getApi()->getUserManager()->getUserById($order->userId);
 
 $isCompany = $user->companyObject != null && $user->companyObject->vatNumber;
 $canUseEhf = false;
-$isInvoice = $order->payment && $order->payment->paymentId == "70ace3f0-3981-11e3-aa6e-0800200c9a66";
+$isInvoice = $order->payment && $order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200c9a66\InvoicePayment";
 
 // Add the payment methods that can be sent. (like dibs, etc)
 $supportToBeSent = $isInvoice;
@@ -19,49 +19,49 @@ if ($isCompany && $isInvoice) {
 
 if ($canUseEhf) {
     echo "<div class='sendByEhf'>";
-        echo "<h2>Send by EHF</h2>";
-        $ehfValitation = $this->getEhfProblems($order, $user);
-        $ehfConfigErrors = $this->getApi()->getOrderManager()->isConfiguredForEhf();
+    echo "<h2>Send by EHF</h2>";
+    $ehfValitation = $this->getEhfProblems($order, $user);
+    $ehfConfigErrors = $this->getApi()->getOrderManager()->isConfiguredForEhf();
 
-        if (count($ehfConfigErrors)) {
-            echo "<hr>";
-            echo "<b>EHF:</b>";
-            echo "<div>";
-            echo "This ivoice can not be sent by EHF because you have not configured the invoice settings properly.";
-            foreach ($ehfConfigErrors as $error) {
-                echo "<div>* $error</div>";
-            }
-            echo "</div>";
+    if (count($ehfConfigErrors)) {
+        echo "<hr>";
+        echo "<b>EHF:</b>";
+        echo "<div>";
+        echo "This ivoice can not be sent by EHF because you have not configured the invoice settings properly.";
+        foreach ($ehfConfigErrors as $error) {
+            echo "<div>* $error</div>";
+        }
+        echo "</div>";
 
-        } elseif (!$canUseEhf) {
-            echo $this->__f("This company can not receive invoice by EHF.");
-        } elseif (count($ehfValitation)) {
-            echo "<b>EHF Cant be sent due to:</b>";
-            foreach ($ehfValitation as $error) {
-                echo "<br/>* ".$error;
-            }
-        } else {
-            ?>
-            <span class='sendpaymentlinkbox dosendbox dontExpand sendehfbox' gstype='form' method='sendByEhf'>
-                <div style='padding-bottom: 10px;'>
-                    <input type='txt' class='gsniceinput1' gsname="vatNumber" value="<?php echo $user->companyObject->vatNumber; ?>" placeholder="Vat number">
-                </div>
-                <div class='ehfresult'>
-                </div>
-                <div class='shop_button dosendehf'>Send EHF </div>
-                <br/>
-                <br/>
-                
-                <?
-                echo $this->__f("* Ehf costs Kr 2.50,- pr invoice and you will be billed monthly.");
-                ?>
-            </span>
-            <div class="sendingehf" style="display: none;">
-                Sending EHF, please wait...
+    } elseif (!$canUseEhf) {
+        echo $this->__f("This company can not receive invoice by EHF.");
+    } elseif (count($ehfValitation)) {
+        echo "<b>EHF Cant be sent due to:</b>";
+        foreach ($ehfValitation as $error) {
+            echo "<br/>* ".$error;
+        }
+    } else {
+        ?>
+        <span class='sendpaymentlinkbox dosendbox dontExpand sendehfbox' gstype='form' method='sendByEhf'>
+            <div style='padding-bottom: 10px;'>
+                <input type='txt' class='gsniceinput1' gsname="vatNumber" value="<?php echo $user->companyObject->vatNumber; ?>" placeholder="Vat number">
             </div>
+            <div class='ehfresult'>
+            </div>
+            <div class='shop_button dosendehf'>Send EHF </div>
+            <br/>
+            <br/>
 
             <?
-        }
+            echo $this->__f("* Ehf costs Kr 2.50,- pr invoice and you will be billed monthly.");
+            ?>
+        </span>
+        <div class="sendingehf" style="display: none;">
+            Sending EHF, please wait...
+        </div>
+
+        <?
+    }
     echo "</div>";
 }
 

@@ -10,16 +10,13 @@
     gsisdevmode = true;
     $ = jQuery;
     jQuery(function ($) {
-        $.getScript("http://jarvsoberg.3.0.local.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
+        $.getScript("http://scholler.3.0.local.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
             $("#bookingprocess").getshopbooking(
                 {
-                    "endpoint": "http://jarvsoberg.3.0.local.getshop.com/",
-                    "jsendpoint": "http://jarvsoberg.3.0.local.getshop.com/",
+                    "endpoint": "http://scholler.3.0.local.getshop.com/",
+                    "jsendpoint": "http://scholler.3.0.local.getshop.com/",
                     "domain" : "default",
-                    "language" : "en",
-                    "success" : function(res) {
-                        console.log(res);
-                    }
+                    "language" : "en"
                 }
             );
             
@@ -29,6 +26,7 @@
 </script>
 
 <style>
+    /*.gslbookingBody i { color: pink !important; }*/
 /*    .gsl_button {
     background: #ab8b65 !important; }
     .GslBooking .removeallselectedroomsbtn { background-color:#ab8b65 !important; }

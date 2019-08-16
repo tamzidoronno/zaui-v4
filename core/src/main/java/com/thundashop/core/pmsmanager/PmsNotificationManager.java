@@ -670,7 +670,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
             String prefix = storeManager.getMyStore().configuration.defaultPrefix + "";
             
             pmsManager.logEntry("Notified admin :" + content + " phone: " + phone + ", email:" + email, booking.id, null);
-            messageManager.sendMail(email, "Administrator", "Notification", content, getFromEmail(), getFromName());
+            messageManager.sendMail(email, "Administrator", "Information from GetShop PMS", content, getFromEmail(), getFromName());
             messageManager.sendSms("sveve", phone, content, prefix);
         }
     }

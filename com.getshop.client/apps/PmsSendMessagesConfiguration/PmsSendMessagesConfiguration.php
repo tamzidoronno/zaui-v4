@@ -545,10 +545,8 @@ class PmsSendMessagesConfiguration extends \WebshopApplication implements \Appli
             $notifications['order_unabletopaywithsavecardwarning_'.$langauge] = "Warning sent 3 days before order expire (unable to pay with saved card)";
             $notifications['order_unabletopaywithsavecard_'.$langauge] = "Message sent when the order has expired and payment has not been completed.";
         }
-        if($hasArx) {
-            $notifications['room_added_to_arx_'.$langauge] = "When code is being sent out";
-            $notifications['room_removed_from_arx_'.$langauge] = "When code is removed from the door";
-        }
+        $notifications['room_added_to_arx_'.$langauge] = "When code is being sent out (integrated lock system)";
+        $notifications['room_removed_from_arx_'.$langauge] = "When code is removed from the door (integrated lock system)";
         if($hasEventCalendar) {
             $notifications['booking_eventcalendar_'.$langauge] = "Message to send to event helder in the event calendar";
         }

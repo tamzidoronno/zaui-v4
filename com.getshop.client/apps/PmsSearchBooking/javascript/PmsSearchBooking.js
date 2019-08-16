@@ -136,6 +136,32 @@ app.PmsSearchBooking = {
             });
         }
         app.PmsSearchBooking.printAddedToCheckout();
+        app.PmsSearchBooking.saveSelectedRooms();
+    },
+    
+    saveSelectedRooms : function() {
+        var curitems = localStorage.getItem('groupedactionscheckboxes');
+        if(curitems) {
+            curitems = JSON.parse(curitems);
+        }
+        var rooms = [];
+        $('.groupedactioncheckbox').each(function() {
+            if($(this).is(':checked')) {
+                rooms.push($(this).attr('roomid'));
+            }
+        });
+        localStorage.setItem('groupedactionscheckboxes',JSON.stringify(rooms));
+    },
+    loadSelectedRooms : function() {
+        var curitems = localStorage.getItem('groupedactionscheckboxes');
+        if(curitems) {
+            curitems = JSON.parse(curitems);
+            for(var k in curitems) {
+                var roomid = curitems[k];
+                $('.groupedactioncheckbox[roomid="'+roomid+'"]').attr('checked','checked');
+                $('.manipulateroomoptions .shop_button').removeClass('disabled');
+            }
+        }
     },
     loadUnpaidPriceView : function() {
         var event = thundashop.Ajax.createEvent('','loadUnpaidView',$(this), {

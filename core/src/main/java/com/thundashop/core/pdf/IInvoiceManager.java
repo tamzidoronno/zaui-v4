@@ -7,6 +7,8 @@ package com.thundashop.core.pdf;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.pdf.data.AccountingDetails;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -21,4 +23,7 @@ public interface IInvoiceManager {
     
     @Administrator
     public void sendReceiptToCashRegisterPoint(String deviceId, String orderId);
+    
+    @Autowired
+    public AccountingDetails getAccountingDetails() throws ErrorException;
 }

@@ -30,6 +30,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 public interface IPmsManager {
     
     @Administrator
+    public void checkInRoom(String pmsBookingRoomId);
+    
+    @Administrator
     public void setDefaultAddons(String bookingId);
     
     @Administrator
@@ -166,9 +169,6 @@ public interface IPmsManager {
     
     @Administrator
     public void undoCheckOut(String pmsBookingRoomId);
-    
-    @Administrator
-    public void checkInRoom(String pmsBookingRoomId);
     
     
     @Administrator
@@ -552,7 +552,7 @@ public interface IPmsManager {
      */
     @Administrator
     public void addProductToRoom(String productId, String pmsRoomId, Integer count);
-    
+   
     @Administrator
     public void addAddonToRoom(PmsBookingAddonItem addon, String pmsRoomId);
     
@@ -654,4 +654,10 @@ public interface IPmsManager {
     
     @Administrator
     public void attachOrderToBooking(String bookingId, String orderId);
+    
+    @Administrator
+    public boolean moveRoomToBooking(String roomId, String bookingId);
+    
+    public void setBestCouponChoiceForCurrentBooking() throws Exception;
+    
 }

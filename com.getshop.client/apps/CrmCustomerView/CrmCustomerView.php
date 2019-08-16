@@ -19,6 +19,22 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
         return sizeof($booking->rooms);
     }
     
+    public function addcouponcode() {
+        $code = $_POST['data']['gsvalue'];
+        
+        $discount = $this->getApi()->getPmsInvoiceManager()->getDiscountsForUser($this->getSelectedMultilevelDomainName(), $_POST['data']['userid']);
+        $primary = false;
+        if($discount->attachedDiscountCode) {
+            $discount->secondaryAttachedDiscountCodes[] = $code;
+        } else {
+            $primary = true;
+            $discount->attachedDiscountCode = $code;
+        }
+        $this->getApi()->getPmsInvoiceManager()->saveDiscounts($this->getSelectedMultilevelDomainName(), $discount);
+        
+        $this->printCodeButton($code, true, $_POST['data']['userid'],$primary);
+    }
+    
     public function createDiscountCode() {
         $coupon = new \core_cartmanager_data_Coupon();
         $coupon->amount = 0;
@@ -26,8 +42,9 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
         $coupon->code = $_POST['data']['code'];
         $coupon->timesLeft = 9999;
         $coupon->priceCode = "default";
-        
         $this->getApi()->getCartManager()->addCoupon($coupon);
+        $_POST['data']['gsvalue'] = $coupon->code;
+        $this->addcouponcode();
     }
     
     public function printCards($userId) {
@@ -82,7 +99,6 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
         $discount->supportInvoiceAfter = $_POST['data']['createAfterStay'] == "true";
         $discount->discountType = 0;
         $discount->pricePlan = "default";
-        $discount->attachedDiscountCode = $_POST['data']['attachedDiscountCode'];
 
         if($_POST['data']['discounttype'] == "fixedprice") {
             $discount->discountType = 1;
@@ -123,7 +139,7 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
         $this->getApi()->getPmsInvoiceManager()->saveDiscounts($domain, $discount);
         $this->getApi()->getUserManager()->saveUser($user);
         
-        if($_POST['data']['attachedDiscountCode']) {
+        if($_POST['data']['couponid']) {
             $this->updateDiscountCode();
         }
     }
@@ -412,6 +428,59 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
         }
         
         return strtoupper($code);
+    }
+
+    public function removeDiscountCode() {
+        $code = $_POST['data']['code'];
+        $discount = $this->getApi()->getPmsInvoiceManager()->getDiscountsForUser($this->getSelectedMultilevelDomainName(), $_POST['data']['userid']);
+        if($discount->attachedDiscountCode == $code) {
+            $discount->attachedDiscountCode = "";
+            if(sizeof($discount->secondaryAttachedDiscountCodes) > 0) {
+                $discount->attachedDiscountCode = $discount->secondaryAttachedDiscountCodes[0];
+            }
+        }
+        
+        $newarray = array();
+        foreach($discount->secondaryAttachedDiscountCodes as $tmpcode) {
+            if($tmpcode == $code || $tmpcode == $discount->attachedDiscountCode) {
+                continue;
+            }
+            $newarray[] = $tmpcode;
+        }
+        $discount->secondaryAttachedDiscountCodes = $newarray;
+        
+        $this->getApi()->getPmsInvoiceManager()->saveDiscounts($this->getSelectedMultilevelDomainName(), $discount);
+
+        $toReturn = array();
+        $toReturn['code'] = $code;
+        $toReturn['primary'] = $discount->attachedDiscountCode;
+        echo json_encode($toReturn);
+    }
+    
+    public function setAsPrimary() {
+        $code = $_POST['data']['code'];
+        $discount = $this->getApi()->getPmsInvoiceManager()->getDiscountsForUser($this->getSelectedMultilevelDomainName(), $_POST['data']['userid']);
+        $discount->secondaryAttachedDiscountCodes[] = $discount->attachedDiscountCode;
+        $discount->attachedDiscountCode = $code;
+        $newarray = array();
+        foreach($discount->secondaryAttachedDiscountCodes as $tmpcode) {
+            if($tmpcode == $discount->attachedDiscountCode) {
+                continue;
+            }
+            $newarray[] = $tmpcode;
+        }
+        $discount->secondaryAttachedDiscountCodes = $newarray;
+        $this->getApi()->getPmsInvoiceManager()->saveDiscounts($this->getSelectedMultilevelDomainName(), $discount);
+        echo $code;
+    }
+    
+    public function printCodeButton($code, $chosen, $userid, $primary) {
+        $chosenClass = $chosen ? "chosendiscountcode" : "";
+        $primaryClass = $primary ? "primarydiscountcode" : "";
+        echo "<span class='$chosenClass $primaryClass attacheddiscountcode' code='$code'>";
+        echo "<i class='fa fa-trash-o' title='Detach discount code' synchron='true' gsclick='removeDiscountCode' userid='$userid' code='$code' gs_callback='app.CrmCustomerView.removeDiscountCode'></i> ";
+        echo "<i class='fa fa-home' title='Set as primary' synchron='true' gsclick='setAsPrimary' userid='$userid' code='$code' gs_callback='app.CrmCustomerView.primarySet'></i> ";
+        echo "$code</span>";
     }
 
 }

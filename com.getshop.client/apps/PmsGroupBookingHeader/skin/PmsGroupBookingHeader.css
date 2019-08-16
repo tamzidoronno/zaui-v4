@@ -7,6 +7,53 @@
     
 }
 
+.PmsGroupBookingHeader .addAddonsPanel .addonsrow {
+    clear:both;
+    height: 36px;
+    line-height: 36px;
+    margin-bottom: 3px;
+}
+
+.PmsGroupBookingHeader .col.owner { width: 200px; }
+.PmsGroupBookingHeader .col.end { width: 170px; }
+.PmsGroupBookingHeader .col.start { width: 170px; }
+.PmsGroupBookingHeader .col.guestnames { width: 350px; }
+.PmsGroupBookingHeader .col.roomtype { width: 200px; }
+.PmsGroupBookingHeader .col.room { width: 200px; }
+.PmsGroupBookingHeader .col.choose { float:right; cursor:pointer; }
+.PmsGroupBookingHeader .addfromotherroomrow:hover { font-weight: bold; }
+
+.PmsGroupBookingHeader .findroomfrombooking {
+    border: solid 1px #bbb;
+    background-color: #efefef;
+    width: 100%;
+    display: none;
+    z-index: 2;
+    position:absolute;
+    left: 0px;
+}
+.PmsGroupBookingHeader .addAddonsPanel .addonsrow .addAddonsToRoom,
+.PmsGroupBookingHeader .addAddonsPanel .addonsrow .removeAddonFromRoom
+{
+    float:right;
+}
+.PmsGroupBookingHeader .addAddonsPanel .addonsrow .addAddonsToRoom:hover,
+.PmsGroupBookingHeader .addAddonsPanel .addonsrow .removeAddonFromRoom:hover
+{
+    font-weight: bold;
+}
+.PmsGroupBookingHeader .addAddonsPanel {
+    margin-bottom: 30px;
+    display: none;
+    width: 600px;
+    border: solid 1px #bbb;
+    background-color: #efefef;
+    position: absolute;
+    margin-top: 50px;
+    padding: 20px;
+    z-index:2;
+}
+
 .PmsGroupBookingHeader .searchbrregbutton { color: blue; cursor:pointer; }
 .PmsGroupBookingHeader .updatepricepanel { display:none; }
 .PmsGroupBookingHeader .brregsearchresultrow:hover { font-weight: bold; cursor:pointer;}

@@ -2,22 +2,33 @@
 /* @var $this ns_cbcf3e53_c035_43c2_a1ca_c267b4a8180f\PmsGroupBookingHeader */
 $types = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
 $start = date("d.m.Y", time());
-$end = date("d.m.Y", strtotime(date("d.m.Y",time()) . " +1 day"));
+$end = date("d.m.Y", strtotime(date("d.m.Y", time()) . " +1 day"));
 $booking = $this->getCurrentBooking();
 $bookingStart = "";
 $bookingEnd = "";
 
-foreach($booking->rooms as $r) {
-    if(!$bookingStart || strtotime($r->date->start) < $bookingStart) { $bookingStart = strtotime($r->date->start); }
-    if(!$bookingEnd || strtotime($r->date->end) > $bookingEnd) { $bookingEnd = strtotime($r->date->end); }
+foreach ($booking->rooms as $r) {
+    if (!$bookingStart || strtotime($r->date->start) < $bookingStart) {
+        $bookingStart = strtotime($r->date->start);
+    }
+    if (!$bookingEnd || strtotime($r->date->end) > $bookingEnd) {
+        $bookingEnd = strtotime($r->date->end);
+    }
 }
 ?>
 
+<div class="addAddonsPanel" style='margin-bottom: 30px;'>
+<?php
+$this->includefile("addaddonstogroup");
+?>
+    
+</div>
 <div class='manipulateroomoptions'>
     <span class='shop_button disabled' type='delete'><i class='fa fa-trash-o'></i> Delete selected rooms</span>
     <span class='shop_button disabled' type='split'><i class='fa fa-users'></i> Split into a new group</span>
     <span class='shop_button disabled' type='updateGuestCount'><i class='fa fa-plus-square-o'></i> Update guest count</span>
     <span class='shop_button disabled updatePricePanelbtn' type='updatepricepanelbtn' avoidaction='true'><i class='fa fa-money'></i> Update prices</span>
+    <span class='shop_button disabled addAddonsPanelbtn' type='addAddon' avoidaction='true'><i class='fa fa-plus-square-o'></i> Add/remove addons</span>
     <i class='fa fa-caret-down'></i>
 </div>
 <div class="updatepricepanel" style='margin-bottom: 30px;'>
@@ -45,23 +56,23 @@ foreach($booking->rooms as $r) {
 <span class='shop_button' style='float:right;' onclick="$('.addroombox').toggle();">Add another room</span>
 
 
-<div class='addroombox' style='display:none;' gstype="form" method="addRoomToGroup">
+<div class='addroombox' style='display:none;margin-bottom:15px;' gstype="form" method="addRoomToGroup">
     <h3>Add another room to this group</h3>
     <input type='txt' class='gsniceinput1' value='<?php echo $start; ?>' gsname='start'> 
     <input type='txt' class='gsniceinput1' value='<?php echo $end; ?>' gsname='end'> 
     <select class='gsniceselect1' style='height:38px;' gsname='type'>
         <?php
-        foreach($types as $type) {
+        foreach ($types as $type) {
             echo "<option value='" . $type->id . "'>" . $type->name . "</option>";
         }
         ?>
     </select>
-    <select class='gsniceselect1' style='height:38px;' gsname='guestInfoOnRoom'>
+    <select class='gsniceselect1' style='height:38px; max-width:200pX;' gsname='guestInfoOnRoom'>
         <?php
         echo "<option value=''>No guest information</option>";
-        foreach($booking->rooms as $room) {
+        foreach ($booking->rooms as $room) {
             $guestInfo = "";
-            if(isset($room->guests[0])) {
+            if (isset($room->guests[0])) {
                 $guestInfo = $room->guests[0]->name . " - ";
                 $guestInfo .= $room->guests[0]->email . " - ";
                 $guestInfo .= $room->guests[0]->prefix . " - ";
@@ -73,10 +84,18 @@ foreach($booking->rooms as $r) {
     </select>
     <input type='txt' class='gsniceinput1' gsname='count' value="1" style="width:30px;"> 
     <span class='shop_button doaddroomtogroup' gstype="submit">Add room</span>
-    
+    <span class="shop_button addfromdifferentroom" style="float:right; border-radius: 3px;">Add room from a different booking</span>
     <div class="notavailablerooms">I am sorry, you can not add room using the above selection, there are not enough rooms for that, if adding them they will be added to a waiting queue.</div>
 </div>
 
+<div style="position:relative">
+    <span class="findroomfrombooking" style="padding:10px;">
+        <div style='text-align:right;margin-bottom: 10px;'><i class='fa fa-close' style='cursor:pointer;' onclick='$(".findroomfrombooking").hide();'></i></div>
+        <input type="txt" class="gsniceinput1" placeholder="Search for booking" style="width:100%;box-sizing: border-box;" gstype='clicksubmit' gsname='keyword' method="searchbooking"  gstoarea=".searcharea">
+        <div class="searcharea" style='margin-top:10px;'><span style='font-size: 16px;'>Search for a booking to add in the box above.</span></div>
+        <div style='text-align: right;'><span  class='shop_button' onclick='window.location.href=window.location.href;'>Done importing</span></div>
+    </span>
+</div>
 <?php
 $filter = new core_pmsmanager_PmsBookingFilter();
 $filter->includeDeleted = true;
@@ -84,7 +103,7 @@ $filter->bookingId = $booking->id;
 $roomView = new \ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking();
 $roomView->page = $this->page;
 $roomView->setCurrentFilter($filter);
-$roomView->renderApplication(true,$this);
+$roomView->renderApplication(true, $this);
 ?>
 
 <style>
@@ -94,6 +113,6 @@ $roomView->renderApplication(true,$this);
 </style>
 
 <script>
-    getshop_loadDatePicker($('[gsname="start"]'), { dependant : $('[gsname="end"]'), jump : 0 });    
-    getshop_loadDatePicker($('[gsname="end"]'), { dependant : $('[gsname="start"]'), jump : 0 });
+    getshop_loadDatePicker($('[gsname="start"]'), {dependant: $('[gsname="end"]'), jump: 0});
+    getshop_loadDatePicker($('[gsname="end"]'), {dependant: $('[gsname="start"]'), jump: 0});
 </script>

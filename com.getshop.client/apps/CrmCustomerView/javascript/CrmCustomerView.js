@@ -3,32 +3,66 @@ app.CrmCustomerView = {
         $(document).on('click','.CrmCustomerView .crmmenuentry', app.CrmCustomerView.loadArea);
         $(document).on('click','.CrmCustomerView .paymentmethodbtn', app.CrmCustomerView.toggleButton);
         $(document).on('click','.CrmCustomerView .docreatenewcode', app.CrmCustomerView.doCreateNewDicountCode);
+        $(document).on('click','.CrmCustomerView .attacheddiscountcode', app.CrmCustomerView.changePrintedDiscountCode);
+        $(document).on('click','.CrmCustomerView .savediscountcustomer', app.CrmCustomerView.saveDiscountForm);
         $(document).on('change','.CrmCustomerView [gsname="attachedDiscountCode"]', app.CrmCustomerView.changeDiscountSystem);
+    },
+    saveDiscountForm : function() {
+        var form = $(this).closest('[gstype="form"]');
+        var args = thundashop.framework.createGsArgs(form);
+        var event = thundashop.Ajax.createEvent('',form.attr('method'), form, args);
+        
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            app.CrmCustomerView.saveSuccess();
+        });
     },
     saveSuccess : function() {
         thundashop.common.Alert('Saved');
     },
-    loadCorrectDiscountSystem : function() {
-        $("[gsname='attachedDiscountCode']").each(function() {
-            if($(this).is(':visible')) {
-                $(this).change();
-            }
-        });
-    },
-    changeDiscountSystem : function() {
-        if($(this).val() !== "") {
-            var event = thundashop.Ajax.createEvent('','loadDiscountCode',$(this), {
-                "code" : $(this).val()
-            });
-            thundashop.Ajax.postWithCallBack(event, function(res) {
-                $('.discountcodesystemconfig').html(res);
-            });
-            $('.newdiscountsystem').show();
-            $('.olddiscountsystem').hide();
-        } else {
-            $('.olddiscountsystem').show();
+    removeDiscountCode : function(res) {
+        $('.attacheddiscountcode[code="'+res.code+'"]').remove();
+        $('.chosendiscountcode').removeClass('chosendiscountcode');
+        $('.attacheddiscountcode[code="'+res.primary+'"]').addClass('chosendiscountcode');
+        if(!res.primary) {
             $('.newdiscountsystem').hide();
+            $('.olddiscountsystem').show();
+        } else {
+            $('.primarydiscountcode').removeClass('primarydiscountcode');
+            $('.attacheddiscountcode[code="'+res.primary+'"]').addClass('primarydiscountcode');
+            app.CrmCustomerView.changeDiscountSystem();
         }
+    },
+    primarySet : function(code) {
+        $('.primarydiscountcode').removeClass('primarydiscountcode');
+        $('.attacheddiscountcode[code="'+code+'"]').addClass('primarydiscountcode');
+    },
+    loadCorrectDiscountSystem : function() {
+        if($('.chosendiscountcode:visible').length > 0) {
+            app.CrmCustomerView.changeDiscountSystem();
+        }
+    },
+    changePrintedDiscountCode : function(res) {
+        $('.chosendiscountcode').removeClass('chosendiscountcode');
+        $(this).addClass('chosendiscountcode');
+        app.CrmCustomerView.changeDiscountSystem();
+    },
+    codeAdded : function(res) {
+        $('.chosencodearea').find('.chosendiscountcode').removeClass('chosendiscountcode');
+        $('.chosencodearea').append(res);
+        app.CrmCustomerView.changeDiscountSystem();
+        $('.connectdiscountcodedropdown').val('');
+    },
+    
+    changeDiscountSystem : function() {
+        var code = $('.chosendiscountcode').attr('code');
+        var event = thundashop.Ajax.createEvent('','loadDiscountCode',$('.chosendiscountcode'), {
+            "code" : code
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.discountcodesystemconfig').html(res);
+        });
+        $('.newdiscountsystem').show();
+        $('.olddiscountsystem').hide();
     },
     doCreateNewDicountCode : function() {
         var suggestion = $(this).attr('suggestion');
@@ -39,10 +73,8 @@ app.CrmCustomerView = {
         var event = thundashop.Ajax.createEvent('','createDiscountCode',$(this), {
             "code" : code
         });
-        thundashop.Ajax.postWithCallBack(event, function() {
-            $("[gsname='attachedDiscountCode']").append("<option value='" + code + "'>" + code + "</option>");
-             $("[gsname='attachedDiscountCode']").val(code);
-             app.CrmCustomerView.loadCorrectDiscountSystem();
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            app.CrmCustomerView.codeAdded(res);
         });
     },
     loadArea : function() {

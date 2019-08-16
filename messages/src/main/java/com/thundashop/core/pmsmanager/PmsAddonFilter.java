@@ -3,18 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.thundashop.core.pmseventmanager;
+package com.thundashop.core.pmsmanager;
 
-import com.thundashop.core.common.DataCommon;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
  * @author boggi
  */
-public class PmsEvent extends DataCommon {
-    public String title;
-    public String content ="";
+public class PmsAddonFilter {
     public Date start;
     public Date end;
+    public String productId;
+    public Boolean deleteAddons = false;
+    public boolean singleDay;
+    public List<String> rooms;
 }

@@ -103,6 +103,7 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
         }
     }
 
+    @Override
     public AccountingDetails getAccountingDetails() throws ErrorException {
         Application settings = storeApplicationPool.getApplicationIgnoreActive("70ace3f0-3981-11e3-aa6e-0800200c9a66");
         AccountingDetails details = new AccountingDetails();
@@ -129,6 +130,13 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
             details.kidType = settings.getSetting("defaultKidMethod");
             details.type = settings.getSetting("type");
             details.currency = settings.getSetting("currency");
+            
+            if(details.currency == null || details.currency.isEmpty()) {
+                details.currency = orderManager.getLocalCurrencyCode();
+            }
+            if(details.language == null || details.language.isEmpty()) {
+                details.language = getStoreSettingsApplicationKey("language");
+            }
         }
 
         return details;

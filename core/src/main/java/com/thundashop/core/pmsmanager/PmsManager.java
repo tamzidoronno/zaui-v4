@@ -240,6 +240,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private boolean convertedDiscountSystem = false;
     private String currentBookingId = "";
     private boolean updatedAllBookings = false;
+    private PmsBooking includeAlways = null;
+    
 
     @Autowired
     public void setOrderManager(OrderManager orderManager) {
@@ -256,7 +258,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         for (DataCommon dataCommon : data.data) {
             if (dataCommon instanceof PmsBooking) {
+                
                 PmsBooking booking = (PmsBooking) dataCommon;
+//                if(booking.orderIds.contains("c097c930-c4e6-42d5-85fe-6fa84b71dc0e")) {
+//                    includeAlways = booking;
+//                }
                 if(booking.nonrefundable) { booking.setAllRoomsNonRefundable(); }
                 bookings.put(booking.id, booking);
             }
@@ -719,6 +725,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsBooking getBooking(String bookingId) {
+        if(includeAlways != null) {
+            return includeAlways;
+        }
         return getBookingInternal(bookingId, true);
     }
     
@@ -3230,6 +3239,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsBooking getBookingFromRoom(String pmsBookingRoomId) {
+        if(includeAlways != null) {
+            bookings.put(includeAlways.id, includeAlways);
+            return includeAlways;
+        }
+
         PmsBooking booking = getBookingFromRoomSecure(pmsBookingRoomId);
         if (booking == null) {
             return null;
@@ -5344,6 +5358,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     public PmsBooking getBookingFromRoomSecure(String pmsBookingRoomId) {
+        if(includeAlways != null) {
+            return includeAlways;
+        }
         for (PmsBooking booking : bookings.values()) {
             for (PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
                 if (room.pmsBookingRoomId.equals(pmsBookingRoomId)) {
@@ -6196,6 +6213,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     PmsBooking getBookingUnfinalized(String bookingId) {
+        if(includeAlways != null) {
+            return includeAlways;
+        }
         return bookings.get(bookingId);
     }
 

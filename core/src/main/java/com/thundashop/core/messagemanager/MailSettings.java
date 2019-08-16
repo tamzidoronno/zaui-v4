@@ -21,7 +21,7 @@ public class MailSettings {
     public String hostname = "in-v3.mailjet.com";
     public String username = "462436fca65689925367216d1e6b006d";
     public String password = "4ae39388a1f61a402a0932c8b10148c3";
-    public String fromName = "The hotel";
+    public String fromName = "GetShop Booking System";
     public String replyTo = "";
     public boolean enableTls = true;
     public int port = 587;

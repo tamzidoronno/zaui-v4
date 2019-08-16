@@ -11,13 +11,14 @@ $prices = $priceObject->dailyPrices;
         <th align='left' style="position:absolute;left:20px;">Item</th>
         <th>Default</th>
         <?php
-        for($i = strtotime($this->getStart()); $i < strtotime($this->getEnd()); $i += 86400) {
+        for($i = strtotime($this->getStart()); $i <= strtotime($this->getEnd());) {
             $weekday = date("w", $i);
             $weekend = '';
             if($weekday == 6 || $weekday == 0) {
                 $weekend = "weeked";
             }
-            echo "<td class='$weekend'>".date("d.m.y", $i+3600)."</td>";
+            echo "<td class='$weekend'>".date("d.m.y", $i)."</td>";
+            $i = strtotime('+1 day', $i);
         }
         ?>
     </tr>
@@ -30,8 +31,8 @@ $prices = $priceObject->dailyPrices;
         echo "<tr itemtype='".$type->id."'>";
         echo "<td class='fixedpricerow'><span style='white-space:nowrap; padding-right: 15px;'>" . $type->name . "</span></td>";
         echo "<td><input date='default' type='text' value='".$price."' class='priceinput'></td>";
-        for($i = strtotime($this->getStart()); $i < strtotime($this->getEnd()); $i += 86400) {
-            $date = date("d-m-Y", $i+3600);
+        for($i = strtotime($this->getStart()); $i <= strtotime($this->getEnd());) {
+            $date = date("d-m-Y", $i);
             $weekday = date("w", $i);
             $price = "";
             if(isset($prices->{$type->id}->{$date})) {
@@ -42,6 +43,7 @@ $prices = $priceObject->dailyPrices;
                 $weekend = "weeked";
             }
             echo "<td class='$weekend'><input type='text' weekday='$weekday' microtime='$i' date='$date' value='".$price."' class='priceinput'></td>";
+            $i = strtotime('+1 day', $i);
         }
         echo "</tr>";
     }

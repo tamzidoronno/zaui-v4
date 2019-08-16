@@ -75,6 +75,7 @@ public class Database extends StoreComponent {
     public Logger logger;
 
     private boolean sandbox = false;
+    private boolean includeDeleted = false;
 
     @Autowired
     private StorePool storePool;
@@ -229,7 +230,7 @@ public class Database extends StoreComponent {
 
             try {
                 DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, dbObject);
-                if (dataCommon.deleted == null) {
+                if (dataCommon.deleted == null && !includeDeleted) {
                     dataCommon.colection = collection.getName();
                     dataCommon.gs_manager = collection.getDB().getName();
                     all.add(dataCommon);
@@ -249,7 +250,9 @@ public class Database extends StoreComponent {
     private BasicDBObject createQuery() {
         BasicDBObject andQuery = new BasicDBObject();
         List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
-        obj.add(new BasicDBObject("deleted", null));
+        if(!includeDeleted) {
+            obj.add(new BasicDBObject("deleted", null));
+        }
         
         obj.add(addBannedClass("com.thundashop.core.messagemanager.SmsLogEntry"));
         obj.add(addBannedClass("com.thundashop.core.googleapi.GmailMessage"));

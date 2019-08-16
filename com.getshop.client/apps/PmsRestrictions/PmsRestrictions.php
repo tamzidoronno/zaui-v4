@@ -72,6 +72,10 @@ class PmsRestrictions extends \WebshopApplication implements \Application {
             $data->firstEvent->end = $this->convertToJavaDate(strtotime($_POST['data']['eventStartsAt'] . " " . $_POST['data']['endtime']));
         }
         
+        if($data->timePeriodeType == 7 || $data->timePeriodeType == 8) {
+            $data->timePeriodeTypeAttribute = 1;
+        }
+        
         if($data->repeatPeride == "0") {
             $data->repeatEachTime = 1;
         }
@@ -140,6 +144,8 @@ class PmsRestrictions extends \WebshopApplication implements \Application {
         if($type == 3) { $prefix = "Maximum stay" . "(" . $data->timePeriodeTypeAttribute ." days)"; }
         if($type == 4) { $prefix = "Deny same day booking"; }
         if($type == 6) { $prefix = "Force confirmation same day booking"; }
+        if($type == 7) { $prefix = "No check in"; }
+        if($type == 8) { $prefix = "No check out"; }
         
         if($data->repeatPeride == "0") {
             $text = $prefix . " " . " daily";

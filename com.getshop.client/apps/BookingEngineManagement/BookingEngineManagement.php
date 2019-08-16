@@ -119,7 +119,6 @@ class BookingEngineManagement extends \WebshopApplication implements \Applicatio
             $data->data->repeatAtDayOfWeek = $_POST['data']['repeatmonthtype'] == "dayofweek";
         }
         $data->repeatPeride = $_POST['data']['repeat_periode'];
-        
         $data->firstEvent = new \core_pmsmanager_TimeRepeaterDateRange();
         $data->firstEvent->start = $this->convertToJavaDate(strtotime($_POST['data']['eventStartsAt'] . " " . $_POST['data']['starttime']));
         if(isset($_POST['data']['eventEndsAt'])) {

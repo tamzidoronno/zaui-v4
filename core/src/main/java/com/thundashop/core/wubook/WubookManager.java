@@ -615,14 +615,20 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             Calendar cal = Calendar.getInstance();
             cal.set(Calendar.HOUR_OF_DAY,16);
             for(int i = 0;i < (365*2); i++) {
-                Double minstay = getMinStay(cal.getTime(), rdata.bookingEngineTypeId);
-                if(minstay == null) {
-                    minstay = 1.0;
-                }
+                Double minstay = getSpecialRestriction(cal.getTime(), rdata.bookingEngineTypeId, TimeRepeaterData.TimePeriodeType.min_stay);
+                Double nocheckin = getSpecialRestriction(cal.getTime(), rdata.bookingEngineTypeId, TimeRepeaterData.TimePeriodeType.noCheckIn);
+                Double nocheckout = getSpecialRestriction(cal.getTime(), rdata.bookingEngineTypeId, TimeRepeaterData.TimePeriodeType.noCheckOut);
+                
+                if(minstay == null) { minstay = 1.0; }
+                if(nocheckin == null) { nocheckin = 0.0; }
+                if(nocheckout == null) { nocheckout = 0.0; }
+                
                 for(String roomId : roomIds) {
                     Vector list = results.get(roomId);
                     Hashtable dayEntry = new Hashtable();
                     dayEntry.put("min_stay", minstay);
+                    dayEntry.put("closed_arrival", nocheckin);
+                    dayEntry.put("closed_departure", nocheckout);
                     list.add(dayEntry);
                     found = true;
                 }
@@ -2072,10 +2078,10 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         return null;
     }
 
-    private Double getMinStay(Date time, String bookingEngineTypeId) {
-        List<TimeRepeaterData> minstayours = bookingEngine.getOpeningHoursWithType(bookingEngineTypeId, TimeRepeaterData.TimePeriodeType.min_stay);
+    private Double getSpecialRestriction(Date time, String bookingEngineTypeId, Integer type) {
+        List<TimeRepeaterData> minstayours = bookingEngine.getOpeningHoursWithType(bookingEngineTypeId, type);
         if(minstayours == null || minstayours.isEmpty()) {
-            minstayours = bookingEngine.getOpeningHoursWithType(null, TimeRepeaterData.TimePeriodeType.min_stay);
+            minstayours = bookingEngine.getOpeningHoursWithType(null, type);
         }
         
         if(minstayours == null || minstayours.isEmpty()) {
@@ -2084,6 +2090,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         
         TimeRepeater repeater = new TimeRepeater();
         double minstay = 1.0;
+        if(type.equals(TimeRepeaterData.TimePeriodeType.noCheckIn)) { minstay = 0.0; }
+        if(type.equals(TimeRepeaterData.TimePeriodeType.noCheckOut)) { minstay = 0.0; }
+        
         for(TimeRepeaterData res : minstayours) {
             LinkedList<TimeRepeaterDateRange> ranges = repeater.generateRange(res);
             for(TimeRepeaterDateRange range : ranges) {

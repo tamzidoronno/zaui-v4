@@ -7973,6 +7973,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (isRestricted(itemType, start, end, TimeRepeaterData.TimePeriodeType.closed)) {
             return true;
         }
+        
+        if(adminOverride) {
+            if (isRestricted(itemType, start, start, TimeRepeaterData.TimePeriodeType.noCheckIn)) {
+                return true;
+            }
+            if (isRestricted(itemType, end, end, TimeRepeaterData.TimePeriodeType.noCheckOut)) {
+                return true;
+            }
+        }
+        
         if (hasRoomsInWorkspace(start, end)) {
             return true;
         }

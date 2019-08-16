@@ -55,7 +55,7 @@ public class DiffByPaidAmountToTotal extends CheckProcessorBase implements Check
                     .filter(order -> order.status == Order.Status.PAYMENT_COMPLETED || order.isInvoice() || order.isSamleFaktura() || order.billable)
                     .filter(order -> pmsInvoiceManager.hasRoomItems(room.pmsBookingRoomId, order))
                     .flatMap(order -> order.cart.getItems().stream())
-                    .filter(item -> item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId))
+                    .filter(item -> (item != null && item.getProduct() != null && item.getProduct().externalReferenceId != null && item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId)))
                     .mapToDouble(item -> item.getTotalAmount())
                     .sum();
                     

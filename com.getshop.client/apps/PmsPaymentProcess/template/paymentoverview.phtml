@@ -3,7 +3,7 @@
 $order = $this->getApi()->getOrderManager()->getOrder($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_orderid']);
 $invoiceData = new \stdClass();
 $invoiceData->order = $order;
-$invoiceData->accountingDetails = $this->getApi()->getOrderManager()->getAccountingDetails();
+$invoiceData->accountingDetails = $this->getApi()->getInvoiceManager()->getAccountingDetails();
 $serializedOrder = json_encode($invoiceData);
 
 $app = $this->getApi()->getGetShopApplicationPool()->get("486009b1-3748-4ab6-aa1b-95a4d5e2d228");

@@ -55,6 +55,9 @@ public interface IOrderManager {
      */
     public Order createOrder(Address address) throws ErrorException;
 
+    @Administrator
+    public void resetLanguageAndCurrencyOnOrders();
+    
     /**
      * This will create a order for a given userId.
      * To avoid fraud, shipment address and etc will only be

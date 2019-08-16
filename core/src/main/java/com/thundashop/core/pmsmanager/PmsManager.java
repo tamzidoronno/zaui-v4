@@ -27,6 +27,7 @@ import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.AddonsInclude;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.Coupon;
+import com.thundashop.core.checklist.ChecklistManager;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.DataCommon;
@@ -226,6 +227,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Autowired
     private PosManager posManager;
+    
+    @Autowired
+    private ChecklistManager checkListManager;
+    
     
     @Autowired
     Database dataBase;
@@ -735,6 +740,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(!convertedDiscountSystem) { 
             cartManager.checkIfNeedsToConvertToNewCouponSystem(bookingEngine.getBookingItemTypes()); convertedDiscountSystem = true; 
         }
+        checkListManager.clearCache(bookingId);
         
         PmsBooking booking = bookings.get(bookingId);
         if (booking == null) {
@@ -3243,11 +3249,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             bookings.put(includeAlways.id, includeAlways);
             return includeAlways;
         }
-
+        
         PmsBooking booking = getBookingFromRoomSecure(pmsBookingRoomId);
         if (booking == null) {
             return null;
         }
+        
+        checkListManager.clearCache(booking.id);
         
         checkSecurity(booking);
         return booking;
@@ -10542,7 +10550,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 .map(id -> orderManager.getOrderSecure(id))
                 .filter(o -> o != null)
                 .filter(o -> !o.isAccruedPayment())
-                .filter(o -> (o.isPaid() || o.isInvoice() || o.isPrepaidByOTA()))
+                .filter(o -> (o.isPaid() || o.isInvoice() || o.isSamleFaktura() || o.isPrepaidByOTA()))
                 .collect(Collectors.toList());
         } else {       
             orders = orderIds

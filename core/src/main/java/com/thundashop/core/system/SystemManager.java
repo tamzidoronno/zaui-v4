@@ -18,6 +18,7 @@ import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -218,6 +219,16 @@ public class SystemManager extends ManagerBase implements ISystemManager {
         }
         
         return "";
+    }
+
+    private void printAllSystems() {
+        for(GetShopSystem sys : systems.values()) {
+            String pattern = "yyyy-MM-dd";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+
+
+            System.out.println(simpleDateFormat.format(sys.activeFrom) + ":" + sys.systemName + ":" + sys.webAddresses);
+        }
     }
         
 }

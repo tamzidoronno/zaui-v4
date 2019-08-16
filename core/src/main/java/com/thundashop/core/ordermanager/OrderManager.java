@@ -4204,7 +4204,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
     }
 
-    private String getLocalCurrencyCode() {
+    public String getLocalCurrencyCode() {
         String localCurrency = getStoreSettingsApplication().getSetting("currencycode");
         
         if (localCurrency == null || localCurrency.isEmpty()) {
@@ -4421,6 +4421,21 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Override
     public boolean isStockManagementActive() {
         return storeId.equals("13442b34-31e5-424c-bb23-a396b7aeb8ca");
+    }
+
+    @Override
+    public void resetLanguageAndCurrencyOnOrders() {
+        String currency = getLocalCurrencyCode();
+        String language = getSession().language;
+        
+        for(Order ord : orders.values()) {
+            if(ord.incrementOrderId == 100081) {
+                System.out.println("okey");
+            }
+            ord.language = language;
+            ord.currency = currency;
+            super.saveObject(ord);
+        }
     }
 
 }

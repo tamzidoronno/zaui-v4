@@ -17,7 +17,11 @@
 <div class="contentrow sized_and_centered_row"> 
     <div class="boxes boxes_3">
         <div class="box underbox">
+            
             <?php
+            $content = file_get_contents("http://10.0.3.95:8086/query?u=root&p=root&db=pmsmanager&q=SELECT%20sum(%22guests%22)%20FROM%20%22booking%22%20WHERE%20time%20%3E%201358279144s%20and%20time%20%3C%20now()%20GROUP%20BY%20time(3650d)%20fill(0)&epoch=ms");
+            $content = json_decode($content,true);
+            echo "<h2>" . $content['results'][0]['series'][0]['values'][0][1] . "</h2>";
             ContentManager::render("row_2_box_content_1");
             ?>
         </div>

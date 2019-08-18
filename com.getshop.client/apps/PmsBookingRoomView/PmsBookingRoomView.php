@@ -111,6 +111,16 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $booking = $this->getPmsBooking();
         $booking->couponCode = $code;
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+        if($_POST['data']['updateprices'] == "true") {
+            foreach($booking->rooms as $room) {
+                $this->getApi()->getCartManager()->forceNextCouponValid();
+                $this->getApi()->getPmsManager()->resetPriceForRoom($this->getSelectedMultilevelDomainName(), $room->pmsBookingRoomId);
+            }
+        }
+        
+        $this->pmsBooking = null;
+        $this->selectedRoom = null;
+        $this->clearCache();
     }
     
     public function segmentDiscountCode() {

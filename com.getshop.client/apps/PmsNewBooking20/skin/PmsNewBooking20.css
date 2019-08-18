@@ -35,7 +35,7 @@
 .PmsNewBooking20 .addroomboxes { text-align: center; }
 .PmsNewBooking20 .roominformationbox.conferenceroom .guestinformation { display:none; }
 .PmsNewBooking20 .roominformationbox.conferenceroom .title { margin-bottom: 0px; border-bottom: 0px; background-color:green; color:#fff; }
-.PmsNewBooking20 .addroombox { background-color: #fff; display:inline-block; width: 630px; height: 180px;}
+.PmsNewBooking20 .addroombox { background-color: #fff; display:inline-block; width: 630px; height: 200px;}
 .PmsNewBooking20 .edit_details_of_user,
 .PmsNewBooking20 .change_user { text-align: left; }
 .PmsNewBooking20 .edit_details_of_user .colbox .row { margin-bottom: 10px; }

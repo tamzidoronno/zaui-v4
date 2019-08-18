@@ -45,6 +45,7 @@ public class CartManager extends ManagerBase implements ICartManager {
     
     @Autowired
     private PageManager pageManager;
+    private boolean nextCouponValid;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -393,6 +394,12 @@ public class CartManager extends ManagerBase implements ICartManager {
     }
     
     public boolean couponIsValid(Date registrationDate, String couponCode, Date start, Date end, String productId, int days) {
+        if(nextCouponValid) {
+            return true;
+        }
+        
+        nextCouponValid = false;
+        
         if(start == null || end == null) {
             return true;
         }
@@ -597,5 +604,10 @@ public class CartManager extends ManagerBase implements ICartManager {
     public boolean isCartConflictingWithClosedPeriode() {
         Cart cart = getCart();
         return orderManager.isCartWithinClosedPeriode(cart);
+    }
+
+    @Override
+    public void forceNextCouponValid() {
+        nextCouponValid = true;
     }
 }

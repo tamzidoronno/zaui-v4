@@ -394,6 +394,10 @@ public class CartItem implements Serializable, Cloneable {
     }
     
     public double getTotalEx() {
+        if (getProduct() == null) {
+            return 0;
+        }
+        
         return count * getProduct().priceExTaxes;
     }
     

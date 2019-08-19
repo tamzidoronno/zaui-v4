@@ -1038,6 +1038,10 @@ public class PmsManagerProcessor {
                 //If access has been forced, do not send payment links
                 continue;
             }
+            User bookedBy = manager.userManager.getUserById(book.bookedByUserId);
+            if(bookedBy != null && bookedBy.isAdministrator()) {
+                continue;
+            }
             
             String key = "autosendmissingpayment_" + book.id;
             if(book.notificationsSent.contains(key)) {

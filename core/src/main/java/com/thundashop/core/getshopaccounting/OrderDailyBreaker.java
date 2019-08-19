@@ -303,7 +303,10 @@ public class OrderDailyBreaker {
         entry.cartItemId = item.getCartItemId();
         entry.orderId = order.id;
         entry.incrementalOrderId = order.incrementOrderId;
-        entry.isActualIncome = item.getProduct().isActuallyIncome();
+        
+        if (item.getProduct() != null) {
+            entry.isActualIncome = item.getProduct().isActuallyIncome();
+        }
         
         if (order.currency != null && !order.currency.isEmpty()) {
             entry.amount = TwoDecimalRounder.roundTwoDecimals(item.getTotalAmountInLocalCurrency(), precision);
@@ -458,6 +461,10 @@ public class OrderDailyBreaker {
 
     private String getAccountingNumberForProduct(CartItem item, Order order) throws DailyIncomeException {
         if (filter.ignoreConfig) {
+            return "";
+        }
+        
+        if (item.getProduct() == null) {
             return "";
         }
         

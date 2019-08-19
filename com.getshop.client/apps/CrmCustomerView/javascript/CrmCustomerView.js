@@ -71,7 +71,8 @@ app.CrmCustomerView = {
             return;
         }
         var event = thundashop.Ajax.createEvent('','createDiscountCode',$(this), {
-            "code" : code
+            "code" : code,
+            "userid" : $(this).attr('userid')
         });
         thundashop.Ajax.postWithCallBack(event, function(res) {
             app.CrmCustomerView.codeAdded(res);

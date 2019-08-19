@@ -50,6 +50,13 @@ $channelNames = $formater->getChannels();
     <div class="row odd">
         <div class="col col1"><? echo $this->__f("Discount code / segment"); ?></div>
         <div class="col col2">
+            
+            <div class='checkifneedupdateprices' style='position:absolute; background-color: #fff; border: solid 1px #bbb;padding: 3px; display:none;'>
+                <div>Update prices as well?</div>
+                <span class='shop_button doChangeDiscount' updateprices='true' style='width:50%;box-sizing: border-box;float:left;background-color:green;'>Yes</span>
+                <span class='shop_button doChangeDiscount' updateprices='false' style='width:50%;box-sizing: border-box;background-color:red;'>No</span>
+            </div>
+            
             <span class="codeselection">
                 <select class="changediscountcode gsniceselect1" style="width:48%">
                     <option value="">Not set</option>

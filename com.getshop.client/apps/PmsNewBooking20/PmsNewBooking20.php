@@ -580,6 +580,9 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
      */
     public function printCouponCodes($booking) {
         $couponcodes = $this->getApi()->getCartManager()->getCoupons();
+        foreach($couponcodes as $code) {
+            $couponcodes[$code->code] = $code;
+        }
         $discounts = $this->getApi()->getPmsInvoiceManager()->getDiscountsForUser($this->getSelectedMultilevelDomainName(), $booking->userId);
         
         $alreadyAdded = array();
@@ -587,12 +590,18 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
             echo "<optgroup label='Discount code connected to this user'>";
             if($discounts->attachedDiscountCode) {
                 $selected = $booking->couponCode == $discounts->attachedDiscountCode ? "SELECTED" : "";
-                echo "<option value='".$discounts->attachedDiscountCode."' $selected>" .$discounts->attachedDiscountCode. "</option>";
+                $coupon = $couponcodes[$discounts->attachedDiscountCode];
+                $description = $coupon->description;
+                if($description) { $description = " (" . $description . ")"; }
+                echo "<option value='".$coupon->code."' $selected>" .$coupon->code . $description . "</option>";
                 $alreadyAdded[] = $discounts->attachedDiscountCode;
             }
             foreach($discounts->secondaryAttachedDiscountCodes as $code) {
                 $selected = $booking->couponCode == $code ? "SELECTED" : "";
-                echo "<option value='".$code."' $selected>" .$code. "</option>";
+                $coupon = $couponcodes[$code];
+                $description = $coupon->description;
+                if($description) { $description = " (" . $description . ")"; }
+                echo "<option value='".$code."' $selected>" .$code . $description. "</option>";
                 $alreadyAdded[] = $code;
             }
             echo "</optgroup>";
@@ -604,8 +613,10 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
             if(in_array($code->code, $alreadyAdded)) {
                 continue;
             }
+            $description = $code->description;
+            if($description) { $description = " (" . $description . ")"; }
             $selected = $code->code == $booking->couponCode ? "SELECTED" : "";
-            echo "<option value='".$code->code."' $selected>" .$code->code . "</option>";
+            echo "<option value='".$code->code."' $selected>" .$code->code .$description. "</option>";
         }
         echo "</optgroup>";
 
@@ -617,7 +628,12 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         if($booking->couponCode) {
             $coupon = $this->getApi()->getCartManager()->getCoupon($booking->couponCode);
         }
-        if($coupon) { echo $coupon->code . " - " . $coupon->type . " - " . $pmspricing->getRepeatingSummary($coupon); }
+        if($coupon) { echo $coupon->code . " - " . $coupon->type . " - " . $pmspricing->getRepeatingSummary($coupon);
+        if($coupon->description) {
+            echo "<div>" . $coupon->description . "</div>";
+        }
+        
+        }
     }
 
 }

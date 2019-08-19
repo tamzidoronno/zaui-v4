@@ -2,6 +2,7 @@ app.PmsBookingRoomView = {
     init: function() {
         $(document).on('click', '.PmsBookingRoomView .orderpreview .close', this.closePreview);
         $(document).on('change', '.PmsBookingRoomView .changediscountcode', this.changeCouponCode);
+        $(document).on('click', '.PmsBookingRoomView .doChangeDiscount', this.doChangeCouponCode);
         $(document).on('change', '.PmsBookingRoomView .changesegment', this.changeSegment);
         $(document).on('click', '.PmsBookingRoomView .opengroup', this.openGroup);
         $(document).on('click', '.PmsBookingRoomView .adduserdescription', this.changeUserDescription);
@@ -318,11 +319,17 @@ app.PmsBookingRoomView = {
         thundashop.Ajax.post(event);
     },
     changeCouponCode : function() {
-        var newCode = $(this).val();
+        $('.checkifneedupdateprices').show();
+    },
+    doChangeCouponCode : function() {
+        var newCode = $('.changediscountcode').val();
         var event = thundashop.Ajax.createEvent('','changeDiscountCode',$(this), {
-            "code" : newCode
+            "code" : newCode,
+            "updateprices" : $(this).attr('updateprices')
         });
-        thundashop.Ajax.postWithCallBack(event, function() {});
+        thundashop.Ajax.postWithCallBack(event, function() {
+            thundashop.framework.reloadOverLayType1or2();
+        });
     },
     changeSegment : function() {
         var newSegment = $(this).val();

@@ -62,6 +62,9 @@ public interface ICartManager {
     
     public void removeCartItem(String cartItemId) throws ErrorException;
     
+    @Administrator
+    public void forceNextCouponValid();
+    
     /**
      * Fetch the current cart.
      * @return

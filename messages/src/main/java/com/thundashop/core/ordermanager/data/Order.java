@@ -405,9 +405,18 @@ public class Order extends DataCommon implements Comparable<Order> {
         if(cart == null || cart.getItems() == null) {
             return;
         }
+        List<String> removeItem = new ArrayList();
         for(CartItem item : cart.getItems()) {
-            item.doFinalize();
+            if(item.getProduct() == null) {
+                removeItem.add(item.getCartItemId());
+            } else {
+                item.doFinalize();
+            }
         }
+        for(String cartItemIdToRemove : removeItem) {
+            cart.removeItem(cartItemIdToRemove);
+        }
+        
         if(!closed && !forcedOpen) {
             if(status == Order.Status.PAYMENT_COMPLETED) {
                 closed = true;

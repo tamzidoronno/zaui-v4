@@ -29,8 +29,24 @@ $this->includefile("addaddonstogroup");
     <span class='shop_button disabled' type='updateGuestCount'><i class='fa fa-plus-square-o'></i> Update guest count</span>
     <span class='shop_button disabled updatePricePanelbtn' type='updatepricepanelbtn' avoidaction='true'><i class='fa fa-money'></i> Update prices</span>
     <span class='shop_button disabled addAddonsPanelbtn' type='addAddon' avoidaction='true'><i class='fa fa-plus-square-o'></i> Add/remove addons</span>
+    <span class='shop_button disabled moveCategoryPanelbtn' type='moveToCategory' avoidaction='true'><i class='fa fa-forward'></i> Move category</span>
     <i class='fa fa-caret-down'></i>
 </div>
+<div class="moveCategoryPanel" style='margin-bottom: 30px;'>
+    <i class="fa fa-close" style="float:right; cursor:pointer;" onclick="$('.moveCategoryPanel').hide();"></i>
+    <div>Please choose a category you would like to try to move the rooms to</div>
+    <br>
+    <select class='gsniceselect1 movetoroomtype'>
+        <?php
+        $categories = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+        foreach($categories as $category) {
+            echo "<option value='" . $category->id . "'>" . $category->name . "</option>";
+        }
+        ?>
+    </select>
+    <span class='shop_button startmovecategory'>Try to move</span>
+</div>
+
 <div class="updatepricepanel" style='margin-bottom: 30px;'>
     <div>
         <h2>Update all prices for all selected rooms</h2>

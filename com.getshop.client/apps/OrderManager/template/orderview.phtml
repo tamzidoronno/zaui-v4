@@ -32,9 +32,15 @@ $cart = $order->cart;
     <div class='customerdetails'>
         <?
         $user = $this->getApi()->getUserManager()->getUserById($order->userId);
-        $addr = "Name: " . $user->fullName . "<br>";
-        $addr .= "Address:<br>" . $user->address->address . "<br>";
-        $addr .= $user->address->postCode . " " . $user->address->city . "<br>";
+        $address = $user->address;
+        
+        if (!$address->fullName) {
+            $address = $order->cart->address;
+        }
+        
+        $addr = "Name: " . $address->fullName . "<br>";
+        $addr .= "Address:<br>" . $address->address . "<br>";
+        $addr .= $address->postCode . " " . $address->city . "<br>";
         $addr .= $user->emailAddressToInvoice ? $user->emailAddressToInvoice : $user->emailAddress;
         echo $addr;
         if($order->testOrder) {

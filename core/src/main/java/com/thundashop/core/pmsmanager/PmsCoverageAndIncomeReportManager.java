@@ -405,9 +405,34 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
 
     @Override
     public void forceUpdateSegmentsOnBooking(String bookingId, String segmentId) {
+        recursiveForceSegmentsOnBooking(bookingId, segmentId, new ArrayList());
+    }
+    
+    
+    public List<String> recursiveForceSegmentsOnBooking(String bookingId, String segmentId, List<String> bookingsTested) {
+        if(bookingsTested.contains(bookingId)) {
+            return bookingsTested;
+        }
+        bookingsTested.add(bookingId);
         PmsBooking booking = pmsManager.getBooking(bookingId);
+        for(String orderId : booking.orderIds) {
+            Order ord = orderManager.getOrder(orderId);
+            for(CartItem item : ord.getCartItems()) {
+                if(item.getProduct() != null && item.getProduct().externalReferenceId != null && !item.getProduct().externalReferenceId.isEmpty()) {
+                    String tmpRoomId = item.getProduct().externalReferenceId;
+                    if(!booking.hasRoom(tmpRoomId)) {
+                        PmsBooking toCheckBooking = pmsManager.getBookingFromRoom(tmpRoomId);
+                        if(toCheckBooking != null) {
+                            List<String> includeAsWell = recursiveForceSegmentsOnBooking(toCheckBooking.id, segmentId, bookingsTested);
+                            bookingsTested.addAll(includeAsWell);
+                        }
+                    }
+                }
+            }
+        }
         booking.segmentId = segmentId;
         pmsManager.saveBooking(booking);
+        return bookingsTested;
     }
 
 

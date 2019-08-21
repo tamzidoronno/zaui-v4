@@ -357,8 +357,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         createScheduler("pmsprocessor", "* * * * *", CheckPmsProcessing.class);
         createScheduler("pmsprocessor2", "5 * * * *", CheckPmsProcessingHourly.class);
         createScheduler("pmsprocessor3", "7,13,33,53 * * * *", CheckPmsFiveMin.class);
-        
-        tmpCheckForNanInRoomUnsettledAmount();
     }
 
     @Override
@@ -5970,7 +5968,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             int days = pmsInvoiceManager.getNumberOfDays(room.date.start, room.date.end);
             if (cartManager.couponIsValid(booking.rowCreatedDate, booking.couponCode, item.date, item.date, item.productId, days)) {
                 Coupon coupon = cartManager.getCoupon(booking.couponCode);
-                if (coupon.containsAddonProductToInclude(item.productId)) {
+                if (coupon != null && coupon.containsAddonProductToInclude(item.productId)) {
                     item.price = cartManager.calculatePriceForCouponWithoutSubstract(booking.couponCode, item.price, days, room.numberOfGuests, room.bookingItemTypeId);
                 }
             }

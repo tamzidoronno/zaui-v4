@@ -1039,7 +1039,7 @@ public class PmsManagerProcessor {
                 continue;
             }
             User bookedBy = manager.userManager.getUserById(book.bookedByUserId);
-            if(bookedBy != null && bookedBy.isAdministrator()) {
+            if(bookedBy != null && bookedBy.isAdministrator()  && !bookedBy.isProcessUser()) {
                 continue;
             }
             

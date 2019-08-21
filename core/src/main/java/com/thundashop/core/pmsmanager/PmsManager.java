@@ -5970,7 +5970,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             int days = pmsInvoiceManager.getNumberOfDays(room.date.start, room.date.end);
             if (cartManager.couponIsValid(booking.rowCreatedDate, booking.couponCode, item.date, item.date, item.productId, days)) {
                 Coupon coupon = cartManager.getCoupon(booking.couponCode);
-                if (coupon != null && item != null && coupon.containsAddonProductToInclude(item.productId)) {
+                if (coupon != null && coupon.containsAddonProductToInclude(item.productId)) {
                     item.price = cartManager.calculatePriceForCouponWithoutSubstract(booking.couponCode, item.price, days, room.numberOfGuests, room.bookingItemTypeId);
                 }
             }

@@ -21,6 +21,21 @@ class PmsGroupBookingHeader extends \MarketingApplication implements \Applicatio
         $filter->singleDay = $_POST['data']['singleday'] == "true";
         $this->getApi()->getPmsAddonManager()->addProductToGroup($this->getSelectedMultilevelDomainName(), $filter);
     }
+    
+    public function changeRoomCategory() {
+        $newType = $_POST['data']['totype'];
+        $roomId = $_POST['data']['roomId'];
+        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $roomId);
+        $changed = $this->getApi()->getPmsManager()->setNewRoomType($this->getSelectedMultilevelDomainName(), $roomId, $booking->id, $newType);
+        $res = array();
+        $res['roomid'] = $roomId;
+        if(!$changed) {
+            $res['status'] = 1;
+        } else {
+            $res['status'] = 0;
+        }
+        echo json_encode($res);
+    }
 
     public function addExistingRoomToBooking() {
         $curbooking = $this->getCurrentBooking();

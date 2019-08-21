@@ -10,9 +10,16 @@ foreach ($orders as $order) {
     $grandTotal += $this->getApi()->getOrderManager()->getTotalAmount($order);
 }
 
+$allSegments = $this->getApi()->getPmsCoverageAndIncomeReportManager()->getSegments($this->getSelectedMultilevelDomainName());
+$allSegments = $this->indexList($allSegments);
+
 $segmentIds = array();
 foreach ($orders as $order) {
     $booking = $this->getApi()->getPmsManager()->getBookingWithOrderId($this->getSelectedMultilevelDomainName(), $order->id);
+    if(isset($_GET['chooseSegment'])) {
+        $this->getApi()->getPmsCoverageAndIncomeReportManager()->forceUpdateSegmentsOnBooking($this->getSelectedMultilevelDomainName(), $booking->id, $_GET['chooseSegment']);
+        $booking->segmentId = $_GET['chooseSegment'];
+    }
     if ($booking != null) {
         $segmentIds[] = $booking->segmentId;
     }
@@ -21,7 +28,12 @@ foreach ($orders as $order) {
 $segmentIds = array_unique($segmentIds);
 
 if (count($segmentIds) > 1) {
-    echo "Please make sure that all rooms connected to the orders selected in previouse step are registered to the same segment";
+    echo "Please make sure that all rooms connected to the orders selected in previouse step are registered to the same segment.<br>";
+    echo "We can change the segments to the same segment, just choose the segment you would like to connect this invoice to below.<br>";
+    echo "PS: Historical reports will be changed due to this.<br>";
+    foreach($segmentIds as $segment) {
+        echo $allSegments[$segment]->name . " - <a style='color:blue;' href='/pos.php?page=invoicing&gs_getshopmodule=&chooseSegment=".$segment."'>select</a><br>";
+    }
     echo "<br/>";
     echo "<br/>";
 } else {

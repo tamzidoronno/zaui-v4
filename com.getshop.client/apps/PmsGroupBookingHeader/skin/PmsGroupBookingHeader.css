@@ -13,7 +13,17 @@
     line-height: 36px;
     margin-bottom: 3px;
 }
-
+.PmsGroupBookingHeader .moveCategoryPanel {
+    margin-bottom: 30px;
+    display: none;
+    width: 600px;
+    border: solid 1px #bbb;
+    background-color: #efefef;
+    position: absolute;
+    margin-top: 50px;
+    padding: 20px;
+    z-index:2; 
+}
 .PmsGroupBookingHeader .col.owner { width: 200px; }
 .PmsGroupBookingHeader .col.end { width: 170px; }
 .PmsGroupBookingHeader .col.start { width: 170px; }

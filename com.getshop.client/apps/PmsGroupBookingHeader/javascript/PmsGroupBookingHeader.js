@@ -14,13 +14,56 @@ app.PmsGroupBookingHeader = {
         $(document).on('click', '.PmsGroupBookingHeader .domassupdate', app.PmsGroupBookingHeader.doMassUpdate);
         $(document).on('click', '.PmsGroupBookingHeader .doextendstay', app.PmsGroupBookingHeader.extendStay);
         $(document).on('click', '.PmsGroupBookingHeader .updatePricePanelbtn', app.PmsGroupBookingHeader.showUpdatePricePanel);
+        $(document).on('click', '.PmsGroupBookingHeader .moveCategoryPanelbtn', app.PmsGroupBookingHeader.showMoveCategory);
         $(document).on('click', '.PmsGroupBookingHeader .addAddonsPanelbtn', app.PmsGroupBookingHeader.showAddAddonsPanel);
         $(document).on('click', '.PmsGroupBookingHeader .setnewpricebutton', app.PmsGroupBookingHeader.updateAllPrices);
         $(document).on('click', '.PmsGroupBookingHeader .addAddonsToRoom,.PmsGroupBookingHeader .removeAddonFromRoom', app.PmsGroupBookingHeader.addAddonsToRoom);
         $(document).on('click', '.PmsGroupBookingHeader .setsingleday', app.PmsGroupBookingHeader.setSingleDayAddons);
         $(document).on('click', '.PmsGroupBookingHeader .addfromdifferentroom', app.PmsGroupBookingHeader.showSearchAreaFindBooking);
         $(document).on('click', '.PmsGroupBookingHeader .importroom', app.PmsGroupBookingHeader.importRoom);
+        $(document).on('click', '.PmsGroupBookingHeader .startmovecategory', app.PmsGroupBookingHeader.tryToMoveRoom);
         $(document).on('keyup', '.PmsGroupBookingHeader .searchaddaddonslist', app.PmsGroupBookingHeader.searchAddAddonsList);
+    },
+    tryToMoveRoom : function() {
+        var toType = $('.movetoroomtype').val();
+        $('.moveCategoryPanel').hide();
+        var roomsToUpdate = [];
+        $('.groupedactioncheckbox').each(function() {
+            if($(this).is(':checked')) {
+                var roomId = $(this).attr('roomid');
+                $(this).closest('.col').attr('spinnerroomid',roomId);
+                $(this).closest('.col').html("<i class='fa fa-spin fa-spinner'></i>");
+                roomsToUpdate.push(roomId);
+            }
+        });
+        var updatedCounter = 0;
+        for(var k in roomsToUpdate) {
+            var roomId = roomsToUpdate[k];
+            var event = thundashop.Ajax.createEvent('','changeRoomCategory',$(this),{
+                "roomId" : roomId,
+                "totype" : toType
+            });
+            event.synchron = true;
+            
+            thundashop.Ajax.postWithCallBack(event, function(res) {
+                res = JSON.parse(res);
+                updatedCounter++;
+                if(res.status===1) {
+                    $('[spinnerroomid="'+res.roomid+'"]').html('<i class="fa fa-check"></i>');
+                } else {
+                    $('[spinnerroomid="'+res.roomid+'"]').html('<i class="fa fa-frown-o"></i>');
+                }
+            });
+        }
+        var checkifdonemoving = setInterval(function() {
+            if(updatedCounter === roomsToUpdate.length) {
+                $('.top_box.selected').click();
+                clearTimeout(checkifdonemoving);
+            }
+        }, "100");
+    },
+    showMoveCategory : function() {
+        $('.PmsGroupBookingHeader .moveCategoryPanel').show();
     },
     importRoom : function() {
         var row = $(this).closest('.row');

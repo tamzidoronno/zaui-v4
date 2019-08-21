@@ -403,5 +403,12 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
         return getSegmentForBooking(booking.id);
     }
 
+    @Override
+    public void forceUpdateSegmentsOnBooking(String bookingId, String segmentId) {
+        PmsBooking booking = pmsManager.getBooking(bookingId);
+        booking.segmentId = segmentId;
+        pmsManager.saveBooking(booking);
+    }
+
 
 }

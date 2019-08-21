@@ -25,6 +25,9 @@ public interface IPmsCoverageAndIncomeReportManager {
     public List<PmsSegment> getSegments();
 
     @Administrator
+    public void forceUpdateSegmentsOnBooking(String bookingId, String segmentId);
+    
+    @Administrator
     public void saveSegments(PmsSegment segment);
 
     @Administrator

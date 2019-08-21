@@ -15,7 +15,6 @@ class AccountProducts extends \MarketingApplication implements \Application {
     public function render() {
         if ($this->getApi()->getGetShopAccountingManager()->isCurrentSelectedAccountingSystemPrimitive()) {
             $this->includefile("primitivproductconfig");
-            $this->includefile("primitivaccountingcodes");
         } else {
             $this->includefile("productsview");
             $this->includefile("accountingcodes");
@@ -25,7 +24,7 @@ class AccountProducts extends \MarketingApplication implements \Application {
     public function saveTaxGroups() {
         foreach ($_POST['data'] as $key => $value) {
             if (strpos($key, "taxcode_") > -1) {
-                $x = explode("_", $key);
+//                $x = explode("_", $key);
                 $productId = $x[1];
                 $product = $this->getApi()->getProductManager()->getProduct($productId);
                 $product->sku = $value;
@@ -57,18 +56,7 @@ class AccountProducts extends \MarketingApplication implements \Application {
     }
     
     public function saveAccountingDescription() {
-        foreach ($_POST['data'] as $key => $value) {
-            $exp = explode("_", $key);
-            if ($exp[0] == "description") {
-                $accountDetail = new \core_productmanager_data_AccountingDetail();
-                $accountDetail->accountNumber = $exp[1];
-                $accountDetail->description = $value;
-                $accountDetail->taxgroup = $_POST['data']['taxcode_'.$exp[1]];
-                $accountDetail->subaccountid = $_POST['data']['subaccountid_'.$exp[1]];
-                $accountDetail->subaccountvalue = $_POST['data']['subaccountvalue_'.$exp[1]];
-                $this->getApi()->getProductManager()->saveAccountingDetail($accountDetail);
-            }
-        }
+        
     }
 
     /**

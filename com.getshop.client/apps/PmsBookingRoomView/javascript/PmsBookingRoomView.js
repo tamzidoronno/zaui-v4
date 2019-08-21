@@ -477,8 +477,9 @@ app.PmsBookingRoomView = {
     addcommentbutton : function() {
         var comment = $('.commenttext').val();
         thundashop.Ajax.simplePost($(this), 'addComment', {
-            "comment" : comment
-        });
+            "comment" : comment,
+            "type" : $(this).attr('type') 
+       });
     },
     tryundeleteroom : function() {
         thundashop.Ajax.simplePost($(this),'deleteRoom', {});

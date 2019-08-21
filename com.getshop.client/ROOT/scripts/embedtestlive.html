@@ -11,16 +11,19 @@
 
 <script>
     gsisdevmode = false;
-    getshop_websockethost = "websocket6.getshop.com";
+//    getshop_websockethost = "websocket6.getshop.com";
     $ = jQuery;
     jQuery(function ($) { 
-        $.getScript("https://hardangergjestehus.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
+        $.getScript("https://jarsvoberg.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
             $("#bookingprocess").getshopbooking(
                 { 
-                    "endpoint": "https://hardangergjestehus.getshop.com/",
-                    "jsendpoint": "https://hardangergjestehus.getshop.com/",
+                    "endpoint": "https://jarsvoberg.getshop.com/",
+                    "jsendpoint": "https://jarsvoberg.getshop.com/",
                     "domain" : "default",
-                    "language" : "en/no"
+                    "language" : "en",
+                    "success" : function(res) {
+                        console.log(res);
+                    }
                 }
             );
         });

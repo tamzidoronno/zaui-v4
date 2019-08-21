@@ -362,6 +362,9 @@ public interface IPmsManager {
     @Editor
     public void addComment(String bookingId, String comment);
     
+    @Editor
+    public void addCommentToRoom(String roomId, String comment);
+    
     @Administrator
     public String createPrepaymentOrder(String bookingId);
     

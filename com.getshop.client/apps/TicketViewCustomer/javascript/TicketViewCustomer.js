@@ -3,6 +3,8 @@ app.TicketViewCustomer = {
         $(document).on('click', '.TicketViewCustomer .imagethumbnail', app.TicketViewCustomer.showFullSizeImage)
         $(document).on('click', '.TicketViewCustomer .imageviewer', app.TicketViewCustomer.hideFullSizeImage)
         $(document).on('click', '.TicketViewCustomer #fileuploadedsuccessfully', app.TicketViewCustomer.fileUploaded);
+        $(document).on('click', '.TicketViewCustomer .savereplycontent', app.TicketViewCustomer.saveTicketContent);
+        $(document).on('click', '.TicketViewCustomer .editocontentinarea', app.TicketViewCustomer.editocontentinarea);
         
         document.onpaste = function(event){
             var items = (event.clipboardData || event.originalEvent.clipboardData).items;
@@ -15,6 +17,34 @@ app.TicketViewCustomer = {
             }
 
         }
+    },
+    
+    editocontentinarea : function() {
+        var area = $(this).closest('.contentbox').find('.editcontentarea');
+        $(this).closest('.contentbox').find('.savecontent').show();
+        var random = parseInt((Math.random()* 1000));
+        var id = 'fasfdasfase24234_'+random;
+        $(this).closest('.contentbox').find('.savecontent .savereplycontent').attr('saveid',id);
+        area.attr('id',id);
+        ClassicEditor
+            .create( document.querySelector( "#" + id ), {
+                toolbar : ["undo", "redo", "bold", "italic", "blockQuote", "ckfinder", "imageTextAlternative", "imageUpload", "heading", "imageStyle:full", "imageStyle:side", "link", "numberedList", "bulletedList", "mediaEmbed", "insertTable", "tableColumn", "tableRow", "mergeTableCells"]
+            })
+            .then( editor => {
+                myEditor = editor;
+            })
+            .catch( error => {
+                console.error( error );
+            } );
+    },
+    saveTicketContent : function () {
+        var content = myEditor.getData();
+        var event = thundashop.Ajax.createEvent('','updateResponseText',$(this), {
+            "content" : content,
+            "contentid" : $(this).closest('.contentbox').find('.contentid').val(),
+            "ticketid" : $('#ticketid').val()
+        });
+        thundashop.Ajax.post(event);
     },
     
     fileUploaded: function() {

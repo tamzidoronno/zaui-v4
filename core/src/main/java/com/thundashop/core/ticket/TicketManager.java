@@ -638,4 +638,58 @@ public class TicketManager extends ManagerBase implements ITicketManager {
             saveObject(ticket);
         }
     }
+
+    @Override
+    public String createSetupTicket(String title) {
+        Ticket ticket = new Ticket();
+        ticket.title = title;
+        ticket.type = TicketType.SETUP;
+        ticket.currentState = TicketState.INITIAL;
+        saveTicketDirect(ticket);
+        
+        TicketContent content = new TicketContent();
+        content.addedByGetShop = true;
+        content.content = "Content goes here";
+        content.isReadByAssignedTo = true;
+        content.isReadByInboxHandler = true;
+        content.isStatusNotification = true;
+        
+        addTicketContentInternal(ticket.id, content, true);
+        
+        return ticket.id;
+    }
+
+    @Override
+    public void updateContent(String ticketId, String contentId, String content) {
+        for(TicketContent con : getTicketContents(ticketId)) {
+            if(con.id.equals(contentId)) {
+                con.content = content;
+                saveObject(con);
+            }
+        }
+    }
+
+    @Override
+    public void addSubTask(String ticketId, String title) {
+        TicketSubTask subtask = new TicketSubTask();
+        subtask.title = title;
+        
+        Ticket ticket = getTicket(ticketId);
+        ticket.subtasks.put(subtask.id, subtask);
+        saveTicket(ticket);
+    }
+
+    @Override
+    public void deleteSubTask(String ticketId, String subTaskId) {
+        Ticket ticket = getTicket(ticketId);
+        ticket.subtasks.remove(subTaskId);
+        saveTicket(ticket);
+    }
+
+    @Override
+    public void toggleSubTask(String ticketId, String subTaskId) {
+        Ticket ticket = getTicket(ticketId);
+        ticket.subtasks.get(subTaskId).completed = !ticket.subtasks.get(subTaskId).completed;
+        saveTicket(ticket);
+    }
 }

@@ -15,7 +15,10 @@
 .TicketViewCustomer .ticketarea.isgetshop {
     width: calc(100% - 800px);
 }
-
+.TicketViewCustomer .togglesubtaskbutton {
+    margin-right: 5px; border-radius: 4px;line-height:35px; float:left;
+    width: 16px;
+}
 .TicketViewCustomer .ticketadmin,
 .TicketViewCustomer .ticketinfo {
     display: inline-block;

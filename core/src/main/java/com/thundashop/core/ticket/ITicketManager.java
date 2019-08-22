@@ -84,4 +84,20 @@ public interface ITicketManager {
     
     @Administrator
     public void changeType(String ticketId, TicketType type);
+    
+    @Administrator
+    public String createSetupTicket(String title);
+    
+    @Administrator
+    public void updateContent(String ticketId, String contentId, String content);
+    
+    @Administrator
+    public void addSubTask(String ticketId, String title);
+    
+    @Administrator
+    public void deleteSubTask(String ticketId, String subTaskId);
+    
+    @Administrator
+    public void toggleSubTask(String ticketId, String subTaskId);
+    
 }

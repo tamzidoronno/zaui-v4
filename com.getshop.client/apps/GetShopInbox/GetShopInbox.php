@@ -18,6 +18,7 @@ class GetShopInbox extends \MarketingApplication implements \Application {
         $types[2] = "Bug";
         $types[3] = "Feature";
         $types[4] = "Meeting";
+        $types[5] = "Setup";
         return $types;
     }
 
@@ -47,6 +48,8 @@ class GetShopInbox extends \MarketingApplication implements \Application {
             echo "<div class='emaillistarea'>";
                 if ($this->getCurrentTab() == "notifications") {
                     $this->includefile("notifications");
+                } else if($this->getCurrentTab() == "pretickets") {
+                    $this->includefile("pretickets");
                 } else {
                     $this->includefile("ticketlist");
                 }
@@ -206,11 +209,15 @@ class GetShopInbox extends \MarketingApplication implements \Application {
             $filter->checkForBilling = true;
             $filter->state = "COMPLETED";
         }
+        if ($this->getCurrentTab() == "pretickets") {
+            $filter->type = "SETUP";
+            $filter->state = "INITIAL";
+        }
         
         if ($this->getCurrentTab() == "backlog") {
             $filter->type = "BACKLOG";
         }
-        
+
         $result = $this->getApi()->getTicketManager()->getAllTickets($filter);
         
         if ($this->getCurrentTab() == "unassigned") {
@@ -243,6 +250,11 @@ class GetShopInbox extends \MarketingApplication implements \Application {
         $obj->userId = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id;
         $obj->receiveMessagesForUnassignedTickets = $_POST['data']['receiveMessagesForUnassignedTickets'];
         $this->getApi()->getTicketManager()->savePushOverSettings($obj, $_POST['data']['pushovertoken']);
+    }
+    
+    public function createSetupTicket() {
+        $title = $_POST['data']['title'];
+        $ticketId = $this->getApi()->getTicketManager()->createSetupTicket($title);
     }
 }
 

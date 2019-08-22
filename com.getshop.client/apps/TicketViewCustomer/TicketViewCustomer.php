@@ -25,6 +25,14 @@ class TicketViewCustomer extends \MarketingApplication implements \Application {
         }
     }
     
+    public function updateResponseText() {
+        $_GET['ticketId']  = $_POST['data']['ticketid'];
+        $content = $_POST['data']['content'];
+        $ticketId = $_POST['data']['ticketid'];
+        $contentId = $_POST['data']['contentid'];
+        $this->getApi()->getTicketManager()->updateContent($ticketId, $contentId, $content);
+    }
+    
     public function replyTicket() {
         $this->setGetVariables();
         
@@ -113,5 +121,16 @@ class TicketViewCustomer extends \MarketingApplication implements \Application {
         $this->setGetVariables();
         $this->getSystemGetShopApi()->getCustomerTicketManager()->reOpenTicket($this->getFactory()->getStore()->id, $_GET['ticketToken']);
     }
+    
+    public function createSubTask() {
+        $_GET['ticketId'] = $_POST['data']['ticketid'];
+        $this->getApi()->getTicketManager()->addSubTask($_POST['data']['ticketid'], $_POST['data']['title']);
+    }
+    
+    public function toggleSubClass() {
+        $this->getApi()->getTicketManager()->toggleSubTask($_POST['data']['ticketid'], $_POST['data']['subtaskid']);
+        $_GET['ticketId'] = $_POST['data']['ticketid'];
+    }
+    
 }
 ?>

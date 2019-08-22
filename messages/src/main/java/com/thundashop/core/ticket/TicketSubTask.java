@@ -5,19 +5,14 @@
  */
 package com.thundashop.core.ticket;
 
+import java.util.UUID;
+
 /**
  *
- * @author ktonder
+ * @author boggi
  */
-public enum TicketState {
-    CREATED,
-    COMPLETED,
-    
-    /**
-     * This status is used for all tickets that 
-     * we are not going to do anything more with.
-     */
-    CLOSED, 
-    REPLIED,
-    INITIAL
+public class TicketSubTask {
+    public String id = UUID.randomUUID().toString();
+    public String title = "";
+    public boolean completed = false;
 }

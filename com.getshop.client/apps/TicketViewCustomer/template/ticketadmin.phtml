@@ -61,6 +61,7 @@ if ($systems) {
             <option <? echo $ticket->currentState === "COMPLETED" ? "selected='true'" : ""; ?> value='COMPLETED'>Completed</option>
             <option <? echo $ticket->currentState === "CLOSED" ? "selected='true'" : ""; ?> value='CLOSED'>Closed</option>
             <option <? echo $ticket->currentState === "REPLIED" ? "selected='true'" : ""; ?> value='REPLIED'>Replied</option>
+            <option <? echo $ticket->currentState === "INITIAL" ? "selected='true'" : ""; ?> value='INITIAL'>Initial</option>
         </select>
         
         <span style='display: inline-block; width: 150px;'>Type:</span>
@@ -70,6 +71,7 @@ if ($systems) {
             <option <? echo $ticket->type === "FEATURE" ? "selected='true'" : ""; ?> value='FEATURE'>FEATURE</option>
             <option <? echo $ticket->type === "BACKLOG" ? "selected='true'" : ""; ?> value='BACKLOG'>BACKLOG</option>
             <option <? echo $ticket->type === "SUPPORT" ? "selected='true'" : ""; ?> value='SUPPORT'>SUPPORT</option>
+            <option <? echo $ticket->type === "SETUP" ? "selected='true'" : ""; ?> value='SETUP'>SETUP</option>
         </select>
         
         <br/>

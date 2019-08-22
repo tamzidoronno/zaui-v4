@@ -14,5 +14,6 @@ public enum TicketType {
     SUPPORT,
     FEATURE,
     BACKLOG,
-    UNKOWN
+    UNKOWN,
+    SETUP
 }

@@ -9,6 +9,7 @@ import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -37,6 +38,8 @@ public class Ticket extends DataCommon {
      */
     public String belongsToStore = "";
     public String createdByUserId = "";
+    
+    public HashMap<String, TicketSubTask> subtasks = new HashMap();
     
     /** 
      * This ID correspond to the TicketLight.ticketToken

@@ -7,6 +7,10 @@
     vertical-align: top;
 }
 
+.GetshopInbox .setuptickets {
+    padding: 10px;
+}
+
 .GetshopInbox .typeselection {     
     border: solid 1px #bbb;
     margin: 3px;

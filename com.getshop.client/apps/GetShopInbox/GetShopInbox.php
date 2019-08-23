@@ -213,6 +213,9 @@ class GetShopInbox extends \MarketingApplication implements \Application {
             $filter->type = "SETUP";
             $filter->state = "INITIAL";
         }
+        if ($this->getCurrentTab() == "inprogress") {
+            $filter->type = "SETUP";
+        }
         
         if ($this->getCurrentTab() == "backlog") {
             $filter->type = "BACKLOG";
@@ -224,6 +227,16 @@ class GetShopInbox extends \MarketingApplication implements \Application {
             $filter->state = "REPLIED";
             $repliedresult = (array)$this->getApi()->getTicketManager()->getAllTickets($filter);
             $result = array_merge($result, $repliedresult);
+        }
+        if ($this->getCurrentTab() == "inprogress") {
+            $newResult = array();
+            foreach($result as $r) {
+                if($r->currentState == "INITIAL") {
+                    continue;
+                }
+                $newResult[] = $r;
+            }
+            $result = $newResult;
         }
         
         return $result;

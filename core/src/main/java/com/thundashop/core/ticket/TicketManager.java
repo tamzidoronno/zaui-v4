@@ -262,11 +262,41 @@ public class TicketManager extends ManagerBase implements ITicketManager {
         return lightTicket;
     }
 
+    @Override
     public List<TicketLight> getTicketLights() {
         ArrayList<TicketLight> retList = new ArrayList(lightTickets.values());
         retList.sort((TicketLight a, TicketLight b) -> {
             return b.rowCreatedDate.compareTo(a.rowCreatedDate);
         });
+        
+        List<TicketLight> remove = new ArrayList();
+        for(TicketLight l : retList) {
+            if(l.type == TicketType.SETUP) {
+                remove.add(l);
+            }
+        }
+        retList.removeAll(remove);
+        
+        
+        return retList;
+    }
+
+    @Override
+    public List<TicketLight> getSetupTicketsLights() {
+        ArrayList<TicketLight> retList = new ArrayList(lightTickets.values());
+        retList.sort((TicketLight a, TicketLight b) -> {
+            return b.rowCreatedDate.compareTo(a.rowCreatedDate);
+        });
+        
+        List<TicketLight> remove = new ArrayList();
+        for(TicketLight l : retList) {
+            if(l.type != TicketType.SETUP) {
+                remove.add(l);
+            }
+        }
+        retList.removeAll(remove);
+        
+        
         return retList;
     }
 
@@ -691,5 +721,27 @@ public class TicketManager extends ManagerBase implements ITicketManager {
         Ticket ticket = getTicket(ticketId);
         ticket.subtasks.get(subTaskId).completed = !ticket.subtasks.get(subTaskId).completed;
         saveTicket(ticket);
+    }
+
+    void updateLightTicket(TicketLight light) {
+        saveObject(light);
+        lightTickets.put(light.id, light);
+    }
+    
+    @Override
+    public TicketLight createLightTicketOfClonedSetupTicket(Ticket ticket) {
+        TicketLight light = createLightTicket(ticket.title);
+        light.state = TicketState.CREATED;
+        light.type = TicketType.SETUP;
+        light.ticketId = ticket.id;
+        light.ticketToken = ticket.ticketToken;
+        light.ticketId = ticket.id;
+        light.incrementalTicketId = ticket.incrementalId;
+        updateLightTicket(light);
+        return light;
+    }
+
+    void saveContent(TicketContent contentcopy) {
+        saveObject(contentcopy);
     }
 }

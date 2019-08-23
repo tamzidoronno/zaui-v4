@@ -461,6 +461,11 @@ class PageFactory {
         $row = $page->createRow(true);
         $row->addColumn("f5e525cc-f11e-4611-93bb-1afacd9aade5", "c4eb8022-f405-11e8-8eb2-f2801f1b9fd1");
         $this->pages['ticketview'] = $page;   
+        
+        $page = new \ModulePage("systemsetup", "getshopsupport");
+        $row = $page->createRow(true);
+        $row->addColumn("13c0bc5f-ce62-45c5-be76-90237d16de91", "c4eb8022-f405-11e8-8eb2-f2801f1b9fd1");
+        $this->pages['systemsetup'] = $page;   
     }
 
     public function createSalesPointPages() {

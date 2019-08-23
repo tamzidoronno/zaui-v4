@@ -25,4 +25,5 @@ public class TicketLight extends DataCommon {
     public String replyToEmail = "";
     public String replyToPrefix = "";
     public String replyToPhone = "";
+    public TicketType type = TicketType.UNKOWN;
 }

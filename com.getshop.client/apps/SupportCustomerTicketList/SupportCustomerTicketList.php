@@ -11,7 +11,18 @@ class SupportCustomerTicketList extends \MarketingApplication implements \Applic
     }
 
     public function render() {
-        $this->includefile("list");
+        if(isset($_GET['subsection']) && $_GET['subsection'] == "predefined") {
+            $this->includefile("predefinedtickets");
+        } else {
+            $this->includefile("list");
+        }
     }
+    
+    public function selectPredefinedTicket() {
+        $storeId = $this->getApi()->getStoreManager()->getStoreId();
+        $ticket = $this->getSystemGetShopApi()->getCustomerTicketManager()->cloneSetupTicket($_POST['data']['ticketid'], $storeId);
+        $this->getApi()->getTicketManager()->createLightTicketOfClonedSetupTicket($ticket);
+    }
+    
 }
 ?>

@@ -23,4 +23,6 @@ public interface ICustomerTicketManager {
     public void addAttachmentToTicket(String storeId, String ticketToken, String ticketAttachmentId);
     
     public void reOpenTicket(String storeId, String ticketToken);
+    public List<Ticket> getPredefinedTickets();
+    public Ticket cloneSetupTicket(String ticketId, String storeId);
 }

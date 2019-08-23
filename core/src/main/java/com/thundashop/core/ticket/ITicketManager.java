@@ -41,6 +41,9 @@ public interface ITicketManager {
     @Administrator
     public List<TicketLight> getTicketLights();
     
+    @Administrator
+    public List<TicketLight> getSetupTicketsLights();
+    
     public Ticket getTicketByToken(String storeId, String ticketToken);
     
     @Administrator
@@ -100,4 +103,6 @@ public interface ITicketManager {
     @Administrator
     public void toggleSubTask(String ticketId, String subTaskId);
     
+    @Administrator
+    public TicketLight createLightTicketOfClonedSetupTicket(Ticket ticket);
 }

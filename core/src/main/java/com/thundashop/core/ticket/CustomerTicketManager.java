@@ -6,11 +6,15 @@
 package com.thundashop.core.ticket;
 
 import com.getshop.scope.GetShopSession;
+import com.google.gson.Gson;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.system.SystemManager;
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -94,5 +98,42 @@ public class CustomerTicketManager extends ManagerBase implements ICustomerTicke
             ticketManager.reOpenTicket(ticket.id);
         }
     }
+
+    @Override
+    public List<Ticket> getPredefinedTickets() {
+        TicketFilter filter = new TicketFilter();
+        filter.state = TicketState.INITIAL;
+        filter.type = TicketType.SETUP;
+        
+        return ticketManager.getAllTickets(filter);
+    }
+    
+    @Override
+    public Ticket cloneSetupTicket(String ticketId, String storeId) {
+        SecureRandom random = new SecureRandom();
+        Ticket originalTicket = ticketManager.getTicket(ticketId);
+        Gson gson = new Gson();
+        String clonedtext = gson.toJson(originalTicket);
+        Ticket copy = gson.fromJson(clonedtext, Ticket.class);
+        copy.type = TicketType.SETUP;
+        copy.currentState = TicketState.CREATED;
+        copy.id = null;
+        copy.ticketToken = new BigInteger(130, random).toString(32);
+        copy.belongsToStore = storeId;
+        copy.userId = systemManager.getCustomerIdForStoreId(storeId);
+        ticketManager.saveTicketDirect(copy);
+        
+        List<TicketContent> contents = ticketManager.getTicketContents(ticketId);
+        for(TicketContent con : contents) {
+            clonedtext = gson.toJson(con);
+            TicketContent contentcopy = gson.fromJson(clonedtext, TicketContent.class);
+            contentcopy.ticketId = copy.id;
+            contentcopy.id = null;
+            ticketManager.saveContent(contentcopy);
+        }
+        
+        return copy;
+    }
+    
 
 }

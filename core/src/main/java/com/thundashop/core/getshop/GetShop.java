@@ -113,6 +113,8 @@ public class GetShop extends ManagerBase implements IGetShop {
     private SupportManager supportManager;
     
     public HashMap<String, ServerStatusEntry> serverStatusEntries = new HashMap();
+    
+    private HashMap<String, String> recoveryStatus = new HashMap();
 
     
     @Override
@@ -1160,5 +1162,22 @@ public class GetShop extends ManagerBase implements IGetShop {
                 
             }
         }
+    }
+
+    @Override
+    public void startRecoveryForUnit(String id, String ip, String password) {
+        System.out.println("Starting recovery for : " + id);
+        System.out.println("Here we need to prepare a backup to download.");
+        recoveryStatus.put(id, "Waiting for unit to establish connection");
+    }
+
+    @Override
+    public void setRecoveryStatusForUnit(String id, String status) {
+        recoveryStatus.put(id, status);
+    }
+
+    @Override
+    public String getRecoveryStatusForUnit(String id) {
+        return recoveryStatus.get(id);
     }
 }

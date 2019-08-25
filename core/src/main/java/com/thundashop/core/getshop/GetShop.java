@@ -115,6 +115,7 @@ public class GetShop extends ManagerBase implements IGetShop {
     public HashMap<String, ServerStatusEntry> serverStatusEntries = new HashMap();
     
     private HashMap<String, String> recoveryStatus = new HashMap();
+    private HashMap<String, String>  recoveryIps = new HashMap();
 
     
     @Override
@@ -1166,9 +1167,14 @@ public class GetShop extends ManagerBase implements IGetShop {
 
     @Override
     public void startRecoveryForUnit(String id, String ip, String password) {
+        if(!password.equals("543gdnt345345GBFDSGFDSernbdbgfdsg6ty545134134fdsafsVBCXS")) {
+            return;
+        }
         System.out.println("Starting recovery for : " + id);
         System.out.println("Here we need to prepare a backup to download.");
         recoveryStatus.put(id, "Waiting for unit to establish connection");
+        recoveryIps.put(id, ip);
+        
     }
 
     @Override
@@ -1179,5 +1185,18 @@ public class GetShop extends ManagerBase implements IGetShop {
     @Override
     public String getRecoveryStatusForUnit(String id) {
         return recoveryStatus.get(id);
+    }
+
+    @Override
+    public String getIpForUnitId(String id) {
+        return recoveryIps.get(id);
+    }
+
+    @Override
+    public String canStartRestoringUnit(String id) {
+        if(recoveryIps.containsKey(id)) {
+            return "1";
+        }
+        return "0";
     }
 }

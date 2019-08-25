@@ -145,4 +145,8 @@ public interface IGetShop {
     public void setRecoveryStatusForUnit(String id, String status);
     
     public String getRecoveryStatusForUnit(String id);
+    
+    public String getIpForUnitId(String id);
+    
+    public String canStartRestoringUnit(String id);
 }

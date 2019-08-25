@@ -1,7 +1,13 @@
 <?php
-$url = "http://system.3.0.local.getshop.com/scripts/systembackupstatus.php?id=".$_GET['backupid']."&ip=$ip&password=543gdnt345345GBFDSGFDSernbdbgfdsg6ty545134134fdsafsVBCXS&startrecovery=true";
+$id = $_GET['backupid'];
+$id = str_replace("GS-", "", $id);
+$id = str_replace("gs-", "", $id);
+$id = str_replace("gS-", "", $id);
+$id = str_replace("Gs-", "", $id);
+
+$url = "http://system.3.0.local.getshop.com/scripts/systembackupstatus.php?id=".$id."&ip=$ip&password=543gdnt345345GBFDSGFDSernbdbgfdsg6ty545134134fdsafsVBCXS&startrecovery=true";
 if($factory->isProductionMode()) {
-    $url = "https://system.getshop.com/scripts/systembackupstatus.php?id=".$_GET['backupid'] . "&ip=$ip&password=543gdnt345345GBFDSGFDSernbdbgfdsg6ty545134134fdsafsVBCXS&startrecovery=true";
+    $url = "https://system.getshop.com/scripts/systembackupstatus.php?id=".$id . "&ip=$ip&password=543gdnt345345GBFDSGFDSernbdbgfdsg6ty545134134fdsafsVBCXS&startrecovery=true";
 }
 file_get_contents($url);
 ?>
@@ -38,7 +44,7 @@ file_get_contents($url);
     $(function() {
         setInterval(function() {
             <?php
-            $url = "/scripts/getbackupstatus.php?id=".$_GET['backupid'];
+            $url = "/scripts/getbackupstatus.php?id=".$id;
             ?>
             $.get('<?php echo $url; ?>', function(res) {
                 $('#backupstatus').html(res);
@@ -46,8 +52,3 @@ file_get_contents($url);
         }, "1000");
     });
 </script>
-
-<?php
-//Messagingtool.
-//http://system.3.0.local.getshop.com/scripts/systembackupstatus.php?id=123546&recoverymessage=jappsi
-?>

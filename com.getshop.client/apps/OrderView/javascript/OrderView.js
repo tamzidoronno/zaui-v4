@@ -261,6 +261,7 @@ app.OrderView = {
     
     createNewOrderLine: function() {
         var data = app.OrderView.getData(this);
+        data.productIdToAdd = $('#addorderlinedropdown').val();
         var event = thundashop.Ajax.createEvent(null, "addNewCartItemLine", $(this), data);
         event['synchron'] = true;
         thundashop.Ajax.post(event, function(res) {

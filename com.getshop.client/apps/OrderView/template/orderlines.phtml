@@ -64,12 +64,12 @@ if (!($closed && !count($cartItemsNormal))) {
        $totalInc = $this->getApi()->getOrderManager()->getTotalAmount($order);
        
        echo $this->__f("Total ex taxes").": ".round($totalEx, 2);
-       if ($order->currency) {
+       if (@$order->currency) {
            echo " (".$order->currency.")";
        }
        echo "<br/>".$this->__f("Total inc taxes").": ".round($totalInc, 2);
        
-       if ($order->currency) {
+       if (@$order->currency) {
            echo " (".$order->currency.")";
        }
        if ($order->cashWithdrawal) {

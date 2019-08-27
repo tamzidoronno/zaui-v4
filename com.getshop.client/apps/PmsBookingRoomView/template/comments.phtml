@@ -17,7 +17,11 @@ foreach($comments as $idx => $cmt) {
 krsort($comments);
 krsort($found);
 
-$comments = array_merge($found, $comments);
+
+foreach($comments as $idx => $cmnt) {
+    $found[$idx] = $cmnt;
+}
+$comments = $found;
 
 foreach ($comments as $time => $comment) {
     $allStyle = "";

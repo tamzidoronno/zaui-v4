@@ -142,5 +142,14 @@ public interface IPmsInvoiceManager {
     @Administrator
     public List<Order> getAllUnpaidOrdersForRoom(String pmsBookingRoomId);
     
+    @Administrator
+    public boolean autoSendPaymentLink(String bookingId);
+    
+    @Administrator
+    public Integer getReasonForNotSendingPaymentLink(String bookingId);
+    
+    @Administrator
+    public Date getPaymentLinkSendingDate(String bookingId);
+    
     public String autoCreateOrderForBookingAndRoom(String roomBookingId, String paymentMethod);
 }

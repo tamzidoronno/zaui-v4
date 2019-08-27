@@ -78,6 +78,18 @@ if($pmsBookingRoom->unpaidAmount > 0) {
             
             <div class='extraheaderstuff'>
                 <div class="shop_button addselecteditemstocart" isgroup='<?php echo $isgroup; ?>' roomid='<? echo $pmsBookingRoom->pmsBookingRoomId; ?>' style="background-color: #86c330; color: #FFF; vertical-align: top; margin-top: -10px; border-radius: 3px;"><? echo $this->__f("Start payment process"); ?></div>
+                <?php
+                $bookedby = $this->getApi()->getUserManager()->getUserById($pmsBooking->bookedByUserId);
+                $isAdmin = ($bookedby->type > 10) ? true : false;
+                $autosend = $this->getApi()->getPmsInvoiceManager()->autoSendPaymentLink($this->getSelectedMultilevelDomainName(), $pmsBooking->id);
+                if($isAdmin && $pmsBooking->bookedByUserId != "gs_system_scheduler_user") {
+                    $text = "Autosend";
+                    if($pmsBooking->autoSendPaymentLink) {
+                        $text = "Deactivate autosend";
+                    }
+                ?>
+                    <div class="shop_button activateautosendpaymentlink"  gs_callback='app.PmsBookingRoomView.refresh' gsclick='activateautosendpaymentlink' isgroup='<?php echo $isgroup; ?>' roomid='<? echo $pmsBookingRoom->pmsBookingRoomId; ?>' style="background-color: #86c330; color: #FFF; vertical-align: top; margin-top: -10px; border-radius: 3px;"><? echo $text; ?></div>
+                <? } ?>
                 <span class='missingonroomgroup'>
                     <?php 
                     $totalOrdersRoom = $this->getApi()->getPmsInvoiceManager()->getTotalOnOrdersForRoom($this->getSelectedMultilevelDomainName(), $pmsBookingRoom->pmsBookingRoomId, true);
@@ -87,7 +99,6 @@ if($pmsBookingRoom->unpaidAmount > 0) {
                     ?>
                 </span>
             </div>
-            
             <div class='collapser closed'><i class='fa fa-angle-up'></i></div>
             <div class='collapser open'><i class='fa fa-angle-down'></i></div>
         </div>
@@ -97,6 +108,18 @@ if($pmsBookingRoom->unpaidAmount > 0) {
             <i class='fa fa-angle-up' style='position: absolute;top: -10px;right: 45px;color:#bbb;'></i>
             <div class='checkoutviewinner'></div>
         </div>
+        <?php
+        echo "<div style='padding: 3px;font-style: italic; color:#bbb;'>";
+        if($autosend) {
+            $date = $this->getApi()->getPmsInvoiceManager()->getPaymentLinkSendingDate($this->getSelectedMultilevelDomainName(), $pmsBooking->id);
+            $date = date("d.m.Y", strtotime($date));
+            echo "* A payment link will automatically be sent to the guest at " . $date;
+        } else {
+            $reason = $this->getApi()->getPmsInvoiceManager()->getReasonForNotSendingPaymentLink($this->getSelectedMultilevelDomainName(), $pmsBooking->id);
+            echo "No payment link will be sent, reason: " . $this->translateNotSendPaymentLinkReason($reason);
+        }
+        echo "</div>";
+        ?>
         
         <div class='collapsable_content'>
         <?php

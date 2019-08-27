@@ -6,7 +6,7 @@ $id = str_replace("gS-", "", $id);
 $id = str_replace("Gs-", "", $id);
 
 $url = "http://system.3.0.local.getshop.com/scripts/systembackupstatus.php?id=".$id."&ip=$ip&password=543gdnt345345GBFDSGFDSernbdbgfdsg6ty545134134fdsafsVBCXS&startrecovery=true";
-if($factory->isProductionMode()) {
+if($this->getApi()->getStoreManager()->isProductMode()) {
     $url = "https://system.getshop.com/scripts/systembackupstatus.php?id=".$id . "&ip=$ip&password=543gdnt345345GBFDSGFDSernbdbgfdsg6ty545134134fdsafsVBCXS&startrecovery=true";
 }
 file_get_contents($url);
@@ -49,6 +49,6 @@ file_get_contents($url);
             $.get('<?php echo $url; ?>', function(res) {
                 $('#backupstatus').html(res);
             });
-        }, "1000");
+        }, "2000");
     });
 </script>

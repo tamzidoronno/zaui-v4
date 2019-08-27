@@ -1013,7 +1013,7 @@ public class PmsManagerProcessor {
             if(book.getActiveRooms().isEmpty()) {
                 continue;
             }
-            if(!book.autosendPaymentLink()) {
+            if(!book.autosendPaymentLink() && !book.autoSendPaymentLink) {
                 continue;
             }
             

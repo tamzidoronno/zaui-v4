@@ -137,6 +137,9 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
             if(details.language == null || details.language.isEmpty()) {
                 details.language = getStoreSettingsApplicationKey("language");
             }
+            if(settings.getSetting("language") != null && !settings.getSetting("language").isEmpty()) {
+                details.language = settings.getSetting("language");
+            }
         }
 
         return details;

@@ -323,7 +323,7 @@ public class PmsConfiguration extends DataCommon {
      * Timezone related data.
      */
     public Integer getBoardingHour(Date dateToCheckAgainst) {
-        return hourOfDayToStartBoarding + store.getTimeZoneDifferenceInHours(dateToCheckAgainst);
+        return hourOfDayToStartBoarding - store.getTimeZoneDifferenceInHours(dateToCheckAgainst);
     }
     public String getDefaultEnd() {
         Calendar cal = Calendar.getInstance();

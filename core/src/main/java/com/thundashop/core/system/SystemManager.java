@@ -192,10 +192,11 @@ public class SystemManager extends ManagerBase implements ISystemManager {
                     }
                     UnpaidInvoices toAdd = new UnpaidInvoices();
                     toAdd.amount = order.getTotalAmount();
+                    toAdd.paidRest = order.getPaidRest();
                     int days = Days.daysBetween(new LocalDate(order.getDueDate()), new LocalDate()).getDays();
                     toAdd.daysDue = days;
                     toAdd.incrementOrderId = order.incrementOrderId;
-                    if(toAdd.daysDue >= 5) {
+                    if(toAdd.daysDue >= 5 && toAdd.paidRest > 0) {
                         result.add(toAdd);
                     }
                 }

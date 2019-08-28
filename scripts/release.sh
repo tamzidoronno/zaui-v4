@@ -10,6 +10,7 @@ if [ $releaseAnswer = "1" ]; then
 	echo "3 = Server 3 ( First server ever created )";
 	echo "4 = Server 4 ( Created: 8 june 2017 )";
 	echo "5 = Server Kronen ( Created: 19 aug 2018 )";
+        echo "6 = Server cluster 6 ( Created: 19 juli 2019 )";
 	read serverQuestion;
 
 	if [ $serverQuestion = "3" ]; then
@@ -19,6 +20,8 @@ if [ $releaseAnswer = "1" ]; then
 		ssh naxa@jenkins.getshop.com '/home/naxa/scripts/releaseSoftware.sh 10.0.4.1'
 	elif [ $serverQuestion = "5" ]; then
 		ssh naxa@jenkins.getshop.com '/home/naxa/scripts/releaseSoftware.sh 10.0.5.1'
+        elif [ $serverQuestion = "6" ]; then
+                ssh naxa@jenkins.getshop.com '/home/naxa/scripts/releaseSoftware.sh 10.0.6.1'
 	else 
 		echo "Invalid server setup";
 	fi;

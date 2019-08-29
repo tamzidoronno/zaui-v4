@@ -4857,7 +4857,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public List<CleaningStatistics> getCleaningStatistics(Date start, Date end) {
         List<BookingItem> items = bookingEngine.getBookingItems();
-        List<BookingItemType> types = bookingEngine.getBookingItemTypes();
+        List<BookingItemType> types = bookingEngine.getBookingItemTypesWithSystemType(null);
         List<CleaningStatistics> toReturn = new ArrayList<CleaningStatistics>();
         Calendar cal = Calendar.getInstance();
         for (BookingItemType type : types) {

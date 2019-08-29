@@ -80,7 +80,7 @@ if($pmsBookingRoom->unpaidAmount > 0) {
                 <div class="shop_button addselecteditemstocart" isgroup='<?php echo $isgroup; ?>' roomid='<? echo $pmsBookingRoom->pmsBookingRoomId; ?>' style="background-color: #86c330; color: #FFF; vertical-align: top; margin-top: -10px; border-radius: 3px;"><? echo $this->__f("Start payment process"); ?></div>
                 <?php
                 $bookedby = $this->getApi()->getUserManager()->getUserById($pmsBooking->bookedByUserId);
-                $isAdmin = ($bookedby->type > 10) ? true : false;
+                $isAdmin = (@$bookedby->type > 10) ? true : false;
                 $autosend = $this->getApi()->getPmsInvoiceManager()->autoSendPaymentLink($this->getSelectedMultilevelDomainName(), $pmsBooking->id);
                 if($isAdmin && $pmsBooking->bookedByUserId != "gs_system_scheduler_user") {
                     $text = "Autosend";

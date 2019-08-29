@@ -2402,6 +2402,11 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $reasons[5] = "Everything is paid for.";
         $reasons[6] = "Its already been paid for by the OTA";
         $reasons[7] = "The booking has already started.";
+        $reasons[8] = "We are waiting for the booking to be automatically charged, if not charged in 10 minutes payment link is sent.";
+        $reasons[9] = "Payment link is not sent in the morning, its intrusive.";
+        $reasons[10] = "Booking will be deleted in 30 minutes.";
+        $reasons[11] = "We are waiting 30 minutes for payment to be completed, payment link is sent after that.";
+        $reasons[12] = "Access has been forced, we do not send paymentlink if access has been forced.";
         return $reasons[$reason];
     }
 

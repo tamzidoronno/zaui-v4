@@ -1182,6 +1182,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         PmsConfiguration config = pmsManager.getConfigurationSecure();
         
+        Calendar cal = Calendar.getInstance();
+        int hour = cal.get(Calendar.HOUR_OF_DAY);
+        
         if(!config.autoSendPaymentReminder) {
             return 0; //Not configure to send.
         }
@@ -1218,6 +1221,32 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         if(booking.isStarted()) {
             return 7; //Booking has started.
+        }
+
+        if(config.wubookAutoCharging && !booking.isOld(10) && booking.isWubook()) {
+            //If autocharing is activated, wait 10 minutes and try to automatically charge card first.
+            return 8;
+        }
+        
+        if(hour < 10 && !booking.isRegisteredToday()) {
+            return 9;
+        }
+
+        if(!booking.payLater && booking.isRegisteredToday() && (booking.channel == null || booking.channel.isEmpty() || booking.channel.equals("website")) && config.autoDeleteUnpaidBookings) {
+            //If autodeleting bookings and booked on website, do not send paymentlink
+            return 10;
+        }
+
+        if(booking.isRegisteredToday() && (booking.channel == null || booking.channel.isEmpty() || booking.channel.equals("website")) && !config.autoDeleteUnpaidBookings) {
+                //If autodelete bookings is disabled and booked on website, send paymenlink after 30 minutes
+            if(!booking.isOld(30)) {
+                return 11;
+            }
+        }
+        
+        if(booking.hasForcedAccessedRooms()) {
+            //If access has been forced, do not send payment links
+            return 12;
         }
         
         return -1;

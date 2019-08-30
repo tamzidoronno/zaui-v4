@@ -536,6 +536,8 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         $header[] = "Type";
         $header[] = "Room";
         $header[] = "Guest count";
+        $header[] = "Price";
+        $header[] = "Unpaid";
         $header[] = "Addons";
         $rows[] = $header;
         
@@ -552,6 +554,8 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
             $row[] = $r->roomType;
             $row[] = $r->room;
             $row[] = $r->numberOfGuests;
+            $row[] = $r->totalUnpaidAmount;
+            $row[] = $r->totalCost;
             $row[] = join(",",(array)$this->formatter->createAddonText($r, true));
             $rows[] = $row;
             if($withGuests) {

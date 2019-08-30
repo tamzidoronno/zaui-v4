@@ -26,19 +26,34 @@ class AccountingGeneralSettings extends \MarketingApplication implements \Applic
         $attributes = array(
             array('id', 'gs_hidden', 'id'),
             array('appName', 'Name', 'appName'),
-            array('accoutUserId', 'Account id', 'accountUserId')            
+            array('accoutUserId', 'Account id', 'accountUserId'),
+            array('description', 'Description', 'description'),
+            array('customernumberpaid', 'Customernumber paid', 'customernumberpaid'),       
+            array('offsetAccountingId_prepayment', 'Accrude prepaid', 'offsetAccountingId_prepayment'),         
+            array('offsetAccountingId_accrude', 'Accrude postpaid', 'offsetAccountingId_accrude')
         );
         
         $data = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
         foreach($data as $app) {
-            $conf = $this->getApi()->getPaymentManager()->getStorePaymentConfiguration($app->id);
-            $app->accountUserId = $conf ? $conf->userCustomerNumber : "Not set";
+            $config = $this->getApi()->getPaymentManager()->getStorePaymentConfiguration($app->id);
+            $app->accountUserId = $config ? $config->userCustomerNumber : "Not set";
+            $app->customernumberpaid = $config ? $config->userCustomerNumberPaid : "";
+            $app->description  = $config && isset($config->accountingDescription) ? $config->accountingDescription : "";
+            $app->offsetAccountingId_accrude  = $config && isset($config->offsetAccountingId_accrude) ? $config->offsetAccountingId_accrude : "";
+            $app->offsetAccountingId_prepayment  = $config && isset($config->offsetAccountingId_prepayment) ? $config->offsetAccountingId_prepayment : "";
+
+            
         }
-        
         $args = array(null);
         $table = new \GetShopModuleTable($this, 'StoreApplicationPool', 'getActivatedPaymentApplications', $args, $attributes);
         $table->setData($data);
         $table->render();
+        echo "Descriptions:<br>";
+        echo "* NAME: the name of the payment method.<br>";
+        echo "* ACCOUNT ID: The account / customer number you would like to transfer to.<br>";
+        echo "* CUSTOMERNUMBER PAID: When payment has been completed, put the money into this account (usually used for invoices).<br>";
+        echo "* ACCRUDE PREPAID: An interim / accrude / mellomfinansiering account when a customer has prepaid for their stay, usually : 2900.<br>";
+        echo "* ACCRUDE POSTPAID: An interim / accrude / mellomfinansiering account when  customer pay after their stay, usually : 1530.<br>";
         $this->includefile("extra");
     }
     

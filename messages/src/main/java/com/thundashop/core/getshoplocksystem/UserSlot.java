@@ -7,6 +7,7 @@ package com.thundashop.core.getshoplocksystem;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import org.mongodb.morphia.annotations.Transient;
 
 /**
@@ -47,6 +48,17 @@ public class UserSlot implements Serializable {
         
         code = new LockCode();
         code.generateRandomCode(codeSize);
+        takenInUseDate = null;
+        takenInUseTextReference = "";
+        takenInUseManagerName = "";
+        takenInUseReference = "";
+    }
+
+    void generateNewUniqueCode(int codeSize, List<Integer> codes) {
+        previouseCode = code;
+        
+        code = new LockCode();
+        code.generateNewUniqueCode(codeSize, codes);
         takenInUseDate = null;
         takenInUseTextReference = "";
         takenInUseManagerName = "";
@@ -164,9 +176,9 @@ public class UserSlot implements Serializable {
         return code != null;
     }
 
-    void changeCode(int pinCode, String cardId, int codeSize) {
+    void changeCode(int pinCode, String cardId, int codeSize, List<Integer> codesInUse) {
         if (code == null) {
-            generateNewCode(codeSize);
+            generateNewUniqueCode(codeSize, codesInUse);
         }
         
         code.changeCode(pinCode, cardId);

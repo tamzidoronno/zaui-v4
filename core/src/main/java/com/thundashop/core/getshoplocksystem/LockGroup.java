@@ -35,7 +35,7 @@ public class LockGroup extends DataCommon {
     
     public Integer codeSize;
     
-    public void rebuildCodeMatrix(List<LockServer> servers, int codeSize) {
+    public void rebuildCodeMatrix(List<LockServer> servers, int codeSize, List<Integer> codesInUse) {
         
         int j = 0;
         
@@ -49,7 +49,7 @@ public class LockGroup extends DataCommon {
             masterSlot.slotId = i;
             
             if (!masterSlot.hasCode()) {
-                masterSlot.generateNewCode(codeSize);
+                masterSlot.generateNewUniqueCode(codeSize, codesInUse);
             }
             
             connectedToLocks.clear();
@@ -79,14 +79,14 @@ public class LockGroup extends DataCommon {
         }
     }
 
-    public void changeCode(int slotId, int pinCode, String cardId, int codeSize) {
+    public void changeCode(int slotId, int pinCode, String cardId, int codeSize, List<Integer> codesInUse) {
         MasterUserSlot slot = groupLockCodes.get(slotId);
-        slot.changeCode(pinCode, cardId, codeSize);
+        slot.changeCode(pinCode, cardId, codeSize, codesInUse);
     }
 
-    void renewCodeForSlot(int slotId, int codeSize) {
+    void renewCodeForSlot(int slotId, int codeSize, List<Integer> codes) {
         MasterUserSlot slot = groupLockCodes.get(slotId);
-        slot.generateNewCode(codeSize);
+        slot.generateNewUniqueCode(codeSize, codes);
     }
 
     void changeDatesForSlot(int slotId, Date validFrom, Date validTo, int codeSize) {

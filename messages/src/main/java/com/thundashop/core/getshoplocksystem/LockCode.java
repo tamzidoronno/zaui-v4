@@ -8,6 +8,7 @@ package com.thundashop.core.getshoplocksystem;
 import com.thundashop.core.common.Administrator;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,7 +41,26 @@ public class LockCode implements Serializable, Cloneable {
         int stop = start * 9;
         pinCode = start + rnd.nextInt(stop);
     }
-
+   
+    void generateNewUniqueCode(int codeSize, List<Integer> codesAlreadyInUse) {
+        int i = 0;
+        while(true) {
+            Random rnd = new Random();
+            int start = (int)Math.pow(10, (codeSize - 1));
+            int stop = start * 9;
+            int tmpcode = start + rnd.nextInt(stop);
+            if(!codesAlreadyInUse.contains(tmpcode)) {
+                pinCode = tmpcode;
+                break;
+            }
+            i++;
+            if(i > 1000) {
+                generateRandomCode(codeSize);
+                break;
+            }
+        }
+    }
+    
     void changeCode(int pinCode, String cardId) {
         this.cardId = cardId;
         this.pinCode = pinCode;
@@ -59,6 +79,7 @@ public class LockCode implements Serializable, Cloneable {
     public int getCodeLength() {
         return String.valueOf(pinCode).length();
     }
+
     
     
 }

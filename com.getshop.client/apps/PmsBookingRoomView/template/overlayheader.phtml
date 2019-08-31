@@ -55,7 +55,7 @@ if($pmsBookingRoom->unpaidAmount > 0) {
                 <span class='title'>Pinned comment:</span>
                 <span class='text userdescription' title="<? echo $this->getPinnedComment(); ?>"><? echo $this->getPinnedComment(); ?></span>
                 <span class='title'>Order note:</span>
-                <span class='text'><? echo $pmsBooking->invoiceNote; ?></span>
+                <span class='text' title="<?php echo $pmsBooking->invoiceNote; ?>"><? echo $pmsBooking->invoiceNote; ?></span>
             </div>
             <div class='collapser closed'><i class='fa fa-angle-up'></i></div>
             <div class='collapser open'><i class='fa fa-angle-down'></i></div>

@@ -8440,6 +8440,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         bookingEngine.changeBookingItemAndDateOnBooking(booking.id, bookingItemId, start, end);
         resetBookingItem(room, bookingItemId, pmsBooking);
+        List<PmsBookingRooms> allRooms = new ArrayList();
+        allRooms.add(room);
+        addDefaultAddonsToRooms(allRooms);
+        
         
         String logText = "Changed start date and item <b>" + newStartDate + "</b> New room : " + bookingEngine.getBookingItem(bookingItemId).bookingItemName;
         logEntry(logText, pmsBooking.id, room.bookingItemId, room.pmsBookingRoomId, "changestay");
@@ -8570,7 +8574,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     continue;
                 }
                 if (room.bookingItemTypeId != null) {
-                    if (item.includedInBookingItemTypes.contains(room.bookingItemTypeId) || item.alwaysAddAddon) {
+                    if (item.includedInBookingItemTypes.contains(room.bookingItemTypeId) || item.alwaysAddAddon || !item.isSingle) {
                         int size = 1;
                         if (item.dependsOnGuestCount) {
                             size = room.numberOfGuests;

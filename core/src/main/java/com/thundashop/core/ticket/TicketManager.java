@@ -744,4 +744,40 @@ public class TicketManager extends ManagerBase implements ITicketManager {
     void saveContent(TicketContent contentcopy) {
         saveObject(contentcopy);
     }
+
+    @Override
+    public TicketStatistics getStatistics(TicketStatsFilter filter) {
+        TicketStatistics stats = new TicketStatistics();
+        stats.totalTicket = 0;
+        List<Ticket> allTickets = getAllTickets(new TicketFilter());
+        for(Ticket ticket : allTickets) {
+            if(ticket.type == TicketType.SETUP) {
+                continue;
+            }
+            String toStore = ticket.belongsToStore;
+            if(toStore == null || toStore.isEmpty()) {
+                continue;
+            }
+            TicketStatisticsStore storeStats = new TicketStatisticsStore();
+            if(stats.storeStats.containsKey(toStore)) {
+                storeStats = stats.storeStats.get(toStore);
+            }
+            storeStats.count++;
+            stats.storeStats.put(toStore, storeStats);
+            if(storeStats.name == null || storeStats.name.isEmpty()) {
+                String customerId = systemManager.getCustomerIdForStoreId(toStore);
+                User usr = userManager.getUserById(customerId);
+                if(usr != null ) {
+                    storeStats.name = usr.fullName;
+                }
+            }
+            stats.totalTicket++;
+        }
+        
+        for(TicketStatisticsStore stat : stats.storeStats.values()) {
+            stat.percentage = (int)(((double)stat.count / (double)stats.totalTicket) * 100);
+        }
+        
+        return stats;
+    }
 }

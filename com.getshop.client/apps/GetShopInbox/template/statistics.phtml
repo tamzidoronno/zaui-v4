@@ -1,0 +1,33 @@
+<?php
+/* @var $this ns_f1706b4c_f779_4eb7_aec3_ee08f182e090\GetShopInbox */
+$stats = $this->getApi()->getTicketManager()->getStatistics(null);
+//echo "<pre>";
+//print_r($stats);
+$sortTable = array();
+foreach($stats->storeStats as $storeId => $count) {
+    $sortTable[$storeId] = $count->count;
+}
+arsort($sortTable);
+echo "<table>";
+echo "<tr>";
+echo "<th>Name</th>";
+echo "<th>Tickets</th>";
+echo "<th>Percentage</th>";
+echo "</tr>";
+
+foreach($sortTable as $storeId => $count) {
+    $stat = $stats->storeStats->{$storeId};
+    echo "<tr>";
+    echo "<td>" . $stat->name  . "</td>";
+    echo "<td align='center'>" . $count . "</td>";
+    echo "<td align='center'>" . $stat->percentage . "</td>";
+    echo "</tr>";
+}
+echo "</table>";
+
+echo "Total tickets registered: " . $stats->totalTicket;
+
+//echo "<pre>";
+//print_r($stats);
+//echo "</pre>";
+?>

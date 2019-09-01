@@ -105,4 +105,7 @@ public interface ITicketManager {
     
     @Administrator
     public TicketLight createLightTicketOfClonedSetupTicket(Ticket ticket);
+    
+    @Administrator
+    public TicketStatistics getStatistics(TicketStatsFilter filter);
 }

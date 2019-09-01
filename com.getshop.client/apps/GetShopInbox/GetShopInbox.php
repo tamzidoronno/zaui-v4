@@ -50,6 +50,8 @@ class GetShopInbox extends \MarketingApplication implements \Application {
                     $this->includefile("notifications");
                 } else if($this->getCurrentTab() == "pretickets") {
                     $this->includefile("pretickets");
+                } else if($this->getCurrentTab() == "statistics") {
+                    $this->includefile("statistics");
                 } else {
                     $this->includefile("ticketlist");
                 }

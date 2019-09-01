@@ -16,4 +16,8 @@ public class TicketStatisticsStore {
     public String name;
     public HashMap<TicketType, Integer> counter = new HashMap();
     public Integer percentage = 0;
+    public Double hoursSpent = 0.0;
+    public Double hoursInvoiced = 0.0;
+    public Integer hoursIncluded = 0;
+    public Integer additonalHours = 0;
 }

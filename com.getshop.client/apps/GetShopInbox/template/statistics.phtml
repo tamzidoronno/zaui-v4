@@ -1,33 +1,66 @@
-<?php
-/* @var $this ns_f1706b4c_f779_4eb7_aec3_ee08f182e090\GetShopInbox */
-$stats = $this->getApi()->getTicketManager()->getStatistics(null);
-//echo "<pre>";
-//print_r($stats);
-$sortTable = array();
-foreach($stats->storeStats as $storeId => $count) {
-    $sortTable[$storeId] = $count->count;
-}
-arsort($sortTable);
-echo "<table>";
-echo "<tr>";
-echo "<th>Name</th>";
-echo "<th>Tickets</th>";
-echo "<th>Percentage</th>";
-echo "</tr>";
-
-foreach($sortTable as $storeId => $count) {
-    $stat = $stats->storeStats->{$storeId};
+<div style='padding: 10px;'>
+    <?php
+    $this->includefile("datefilter");
+    /* @var $this ns_f1706b4c_f779_4eb7_aec3_ee08f182e090\GetShopInbox */
+    $filter = new core_ticket_TicketStatsFilter();
+    $filter->start = $this->convertToJavaDate(strtotime($this->getSelectedStart()));
+    $filter->end = $this->convertToJavaDate(strtotime($this->getSelectedEnd()));
+    $stats = $this->getApi()->getTicketManager()->getStatistics($filter);
+    //echo "<pre>";
+    //print_r($stats);
+    $sortTable = array();
+    foreach($stats->storeStats as $storeId => $count) {
+        $sortTable[$storeId] = $count->count;
+    }
+    arsort($sortTable);
+    echo "<table>";
     echo "<tr>";
-    echo "<td>" . $stat->name  . "</td>";
-    echo "<td align='center'>" . $count . "</td>";
-    echo "<td align='center'>" . $stat->percentage . "</td>";
+    echo "<th>Name</th>";
+    echo "<th>Tickets</th>";
+    echo "<th>Percentage</th>";
+    echo "<th>Spent</th>";
+    echo "<th>Invoice</th>";
+    echo "<th>Monthly included</th>";
+    echo "<th>Additional</th>";
+    echo "<th>Real invoice</th>";
     echo "</tr>";
-}
-echo "</table>";
 
-echo "Total tickets registered: " . $stats->totalTicket;
+    $totalinvoiced = 0;
+    $totalToInvoice = 0;
+    $totalSpent = 0;
+    foreach($sortTable as $storeId => $count) {
+        $stat = $stats->storeStats->{$storeId};
+        $totalinvoiced += $stat->hoursInvoiced;
+        $totalSpent += $stat->hoursSpent;
+        $toInvoice = ($stat->hoursInvoiced-$stat->hoursIncluded-$stat->additonalHours);
+        if($toInvoice < 0) { $toInvoice = 0; }
+        $totalToInvoice += $toInvoice;
+        echo "<tr>";
+        echo "<td>" . $stat->name  . "</td>";
+        echo "<td align='center'>" . $count . "</td>";
+        echo "<td align='center'>" . $stat->percentage . "</td>";
+        echo "<td align='center'>" . round($stat->hoursSpent,2) . "</td>";
+        echo "<td align='center'>" . round($stat->hoursInvoiced,2) . "</td>";
+        echo "<td align='center'>" . $stat->hoursIncluded . "</td>";
+        echo "<td align='center'>" . $stat->additonalHours . "</td>";
+        echo "<td align='center'>" . round($toInvoice,2) . "</td>";
+        echo "<td align='center'><a href='?page=inbox&displayCustomerTickets=".$storeId."'><i class='fa fa-arrow-right'></i></a></td>";
+        echo "</tr>";
+    }
+    echo "<tR>";
+    echo "<td></td>";
+    echo "<td></td>";
+    echo "<td></td>";
+    echo "<td align='center'>".round($totalSpent,2)."</td>";
+    echo "<td align='center'>".round($totalinvoiced,2)."</td>";
+    echo "<td align='center'></td>";
+    echo "<td align='center'></td>";
+    echo "<td align='center'>".round($totalToInvoice,2)."</td>";
+    echo "</tr>";
 
-//echo "<pre>";
-//print_r($stats);
-//echo "</pre>";
-?>
+    echo "</table>";
+
+    echo "Total tickets registered: " . $stats->totalTicket;
+
+    ?>
+</div>

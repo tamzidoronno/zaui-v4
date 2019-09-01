@@ -147,6 +147,8 @@ class CompanyView extends \MarketingApplication implements \Application {
         $company->address->city = $_POST['data']['city'];
         $company->language = $_POST['data']['language'];
         $company->currency = $_POST['data']['currency'];
+        $company->monthlyHoursIncluded = $_POST['data']['monthlyHoursIncluded'];
+        $company->additionalHours = $_POST['data']['additionalHours'];
        
         $this->getApi()->getUserManager()->saveOrCreateCompanyAndUpdatePrimaryUser($company);
     }

@@ -5,10 +5,13 @@
  */
 package com.thundashop.core.ticket;
 
+import java.util.Date;
+
 /**
  *
  * @author boggi
  */
 public class TicketStatsFilter {
-    
+    public Date start;
+    public Date end;
 }

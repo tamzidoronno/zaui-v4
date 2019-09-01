@@ -18,7 +18,21 @@ app.TicketViewCustomer = {
 
         }
     },
-    
+    startTime : function() {
+        var time = $('#startTime').val();
+        var timeCounter = $('#startTime').val();
+        if(typeof(counterTimer) !== "undefined") {
+            clearTimeout(counterTimer);
+        }
+        counterTimer = setInterval(function() {
+            timeCounter++;
+            var secondsUsed = (timeCounter - time)+(60*5);
+            var minutes = parseInt(secondsUsed / 60);
+            var seconds = secondsUsed-(minutes * 60);
+            $('#secondsused').val(secondsUsed);
+            $('.cleartexttime').html(minutes + " minutes, " + seconds + " spent on this case");
+        }, "1000");
+    },
     editocontentinarea : function() {
         var area = $(this).closest('.contentbox').find('.editcontentarea');
         $(this).closest('.contentbox').find('.savecontent').show();

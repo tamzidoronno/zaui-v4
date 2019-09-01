@@ -43,6 +43,12 @@ class TicketViewCustomer extends \MarketingApplication implements \Application {
             $this->getApi()->getTicketManager()->addTicketContent($_GET['ticketId'], $content);
             $this->getApi()->getTicketManager()->markTicketAsRead($_GET['ticketId']);
             $this->getApi()->getTicketManager()->markAsRepied($_GET['ticketId']);
+            
+            $ticket = $this->getApi()->getTicketManager()->getTicket($_GET['ticketId']);
+            $ticket->timeSpent += (($_POST['data']['secondsused']/60)/60);
+            $ticket->timeInvoice += (($_POST['data']['secondsused']/60)/60);
+            $this->getApi()->getTicketManager()->saveTicket($ticket);
+
         } else {
             $this->getSystemGetShopApi()->getCustomerTicketManager()->addContent($this->getFactory()->getStore()->id, $_GET['ticketToken'], $content);
         }

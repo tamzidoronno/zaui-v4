@@ -38,7 +38,34 @@ class GetShopInbox extends \MarketingApplication implements \Application {
         $this->getApi()->getGmailApiManager()->changeTypeOnMessage($_POST['data']['msgid'], $_POST['data']['type']);
     }
     
+    public function getSelectedStart() {
+        if(!isset($_SESSION['ns_f1706b4c_f779_4eb7_aec3_ee08f182e090_start'])) {
+            return date("m/01/Y", time());
+        }
+        return $_SESSION['ns_f1706b4c_f779_4eb7_aec3_ee08f182e090_start'];
+    }
+    
+    public function getSelectedEnd() {
+        if(!isset($_SESSION['ns_f1706b4c_f779_4eb7_aec3_ee08f182e090_end'])) {
+            return date("m/t/Y", time());
+        }
+        return $_SESSION['ns_f1706b4c_f779_4eb7_aec3_ee08f182e090_end'];
+    }
+    
+    
+    public function updateDateRange() {
+        $_SESSION['ns_f1706b4c_f779_4eb7_aec3_ee08f182e090_end'] = $_POST['data']['enddate'];
+        $_SESSION['ns_f1706b4c_f779_4eb7_aec3_ee08f182e090_start'] = $_POST['data']['startdate'];
+    }
+    
     public function render() {
+        
+        if(isset($_GET['displayCustomerTickets'])) {
+            $_POST['data']['tab'] = "customerinbox";
+            $_SESSION['ns_f1706b4c_f779_4eb7_aec3_ee08f182e090_currentcustomer'] = $_GET['displayCustomerTickets'];
+            $this->changeMenu();
+        }
+        
         echo "<div class='leftmenu'>";
             $this->includefile("leftmenu");
         echo "</div>";
@@ -50,6 +77,8 @@ class GetShopInbox extends \MarketingApplication implements \Application {
                     $this->includefile("notifications");
                 } else if($this->getCurrentTab() == "pretickets") {
                     $this->includefile("pretickets");
+                } else if($this->getCurrentTab() == "customerinbox") {
+                    $this->includefile("customerstats");
                 } else if($this->getCurrentTab() == "statistics") {
                     $this->includefile("statistics");
                 } else {
@@ -177,7 +206,7 @@ class GetShopInbox extends \MarketingApplication implements \Application {
     public function getCurrentEmail() {
         return $this->currentEmail;
     }
-
+    
     public function getAdmins() {
         if(!$this->admins) {
             $this->admins = $this->getApi()->getUserManager()->getUsersByType(100);

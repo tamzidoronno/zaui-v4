@@ -1,0 +1,10 @@
+<div gstype='form' method='updateDateRange'>
+    <input type='txt' gsname='startdate' style='width:100px' value='<?php echo $this->getSelectedStart(); ?>'>
+    <input type='txt' gsname='enddate' style='width:100px' value='<?php echo $this->getSelectedEnd(); ?>'>
+    <input type='button' value='Set dates' gstype='submit'>
+</div>
+
+<script>
+    $('[gsname="startdate"]').datepicker();
+    $('[gsname="enddate"]').datepicker();
+</script>

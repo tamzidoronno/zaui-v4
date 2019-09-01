@@ -1,0 +1,27 @@
+<div style='padding: 20px;'>
+<?php
+$this->includefile("datefilter");
+/* @var $this ns_f1706b4c_f779_4eb7_aec3_ee08f182e090\GetShopInbox */
+$filter = new core_ticket_TicketFilter();
+$filter->userId = $_SESSION['ns_f1706b4c_f779_4eb7_aec3_ee08f182e090_currentcustomer'];
+$filter->start = $this->convertToJavaDate(strtotime($this->getSelectedStart()));
+$filter->end = $this->convertToJavaDate(strtotime($this->getSelectedEnd()));
+$tickets = $this->getApi()->getTicketManager()->getAllTickets($filter);
+echo "<table>";
+echo "<tr>";
+echo "<th>Date</th>";
+echo "<th>Title</th>";
+echo "<th>Spent</th>";
+echo "<th>Invoiced</th>";
+foreach($tickets as $ticket) {
+    echo "<tR>";
+    echo "<td>" . date("d.m.Y", strtotime($ticket->rowCreatedDate)) . "</td>";
+    echo "<td><a href='?page=ticketview&ticketId=". $ticket->id."' style='color:blue;'>" . $ticket->title . "</a></td>";
+    echo "<td align='center'>" . $ticket->timeSpent . "</td>";
+    echo "<td align='center'>" . $ticket->timeInvoice . "</td>";
+    echo "</tr>";
+}
+echo "</table>";
+echo "Total tickets: " . count($tickets); 
+?>
+</div>

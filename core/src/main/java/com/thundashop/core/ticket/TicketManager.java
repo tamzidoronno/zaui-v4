@@ -18,6 +18,7 @@ import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.messagemanager.PushOver;
 import com.thundashop.core.system.SystemManager;
 import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.webmanager.WebManager;
 import java.math.BigInteger;
@@ -139,6 +140,14 @@ public class TicketManager extends ManagerBase implements ITicketManager {
         if (filter.checkForBilling) {
             retList.removeIf(f -> f.hasBeenValidedForTimeUsage || f.incrementalId <= 359);
         }
+        
+        if(filter.start != null) {
+            retList.removeIf(f -> f.rowCreatedDate.before(filter.start));
+        }
+        if(filter.end != null) {
+            retList.removeIf(f -> f.rowCreatedDate.after(filter.end));
+        }
+        
 
         Collections.sort(retList, (Ticket t1, Ticket t2) -> {
             return t2.rowCreatedDate.compareTo(t1.rowCreatedDate);
@@ -749,7 +758,11 @@ public class TicketManager extends ManagerBase implements ITicketManager {
     public TicketStatistics getStatistics(TicketStatsFilter filter) {
         TicketStatistics stats = new TicketStatistics();
         stats.totalTicket = 0;
-        List<Ticket> allTickets = getAllTickets(new TicketFilter());
+        TicketFilter filtertofind = new TicketFilter();
+        filtertofind.start = filter.start;
+        filtertofind.end = filter.end;
+        
+        List<Ticket> allTickets = getAllTickets(filtertofind);
         for(Ticket ticket : allTickets) {
             if(ticket.type == TicketType.SETUP) {
                 continue;
@@ -758,18 +771,25 @@ public class TicketManager extends ManagerBase implements ITicketManager {
             if(toStore == null || toStore.isEmpty()) {
                 continue;
             }
+            String customerId = systemManager.getCustomerIdForStoreId(toStore);
+            User usr = userManager.getUserById(customerId);
+            if(usr == null ) {
+                continue;
+            }
+            Company comp = userManager.getCompany(usr.mainCompanyId);
+            
             TicketStatisticsStore storeStats = new TicketStatisticsStore();
-            if(stats.storeStats.containsKey(toStore)) {
-                storeStats = stats.storeStats.get(toStore);
+            if(stats.storeStats.containsKey(customerId)) {
+                storeStats = stats.storeStats.get(customerId);
             }
             storeStats.count++;
-            stats.storeStats.put(toStore, storeStats);
-            if(storeStats.name == null || storeStats.name.isEmpty()) {
-                String customerId = systemManager.getCustomerIdForStoreId(toStore);
-                User usr = userManager.getUserById(customerId);
-                if(usr != null ) {
-                    storeStats.name = usr.fullName;
-                }
+            stats.storeStats.put(customerId, storeStats);
+            storeStats.name = usr.fullName;
+            storeStats.hoursSpent += ticket.timeSpent;
+            storeStats.hoursInvoiced += ticket.timeInvoice;
+            if(comp != null) {
+                storeStats.hoursIncluded = comp.monthlyHoursIncluded;
+                storeStats.additonalHours = comp.additionalHours;
             }
             stats.totalTicket++;
         }

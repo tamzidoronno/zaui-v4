@@ -92,6 +92,10 @@ if ($this->isGetShop()) {
         ?>
         
         <div>
+            <?php if ($this->isGetShop()) { ?>
+            <input type="hidden" value="0" id="secondsused" gsname="secondsused"> <span class='cleartexttime'></span> spent on this case.
+                
+            <?php } ?>
             <textarea class='replycontent' gsname='content'></textarea>    
         </div>
         

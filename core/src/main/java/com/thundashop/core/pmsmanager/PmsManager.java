@@ -8574,7 +8574,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     continue;
                 }
                 if (room.bookingItemTypeId != null) {
-                    if (item.includedInBookingItemTypes.contains(room.bookingItemTypeId) || item.alwaysAddAddon) {
+                    if (item.includedInBookingItemTypes.contains(room.bookingItemTypeId) || item.alwaysAddAddon || (room.hasAddonOfProduct(item.productId) && !item.isSingle)) {
                         int size = 1;
                         if (item.dependsOnGuestCount) {
                             size = room.numberOfGuests;

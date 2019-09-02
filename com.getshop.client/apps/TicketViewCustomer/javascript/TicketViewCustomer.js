@@ -8,7 +8,7 @@ app.TicketViewCustomer = {
         $(document).on('keyup', '.TicketViewCustomer .updateTimeOnTicket', app.TicketViewCustomer.updateTimeOnTicket);
         $(document).on('click', '.TicketViewCustomer .updateTimeOnTicket', app.TicketViewCustomer.markAll);
         
-        document.onpaste = function(event){
+        document.onpaste = function(event) {
             var items = (event.clipboardData || event.originalEvent.clipboardData).items;
             for (index in items) {
               var item = items[index];
@@ -43,7 +43,7 @@ app.TicketViewCustomer = {
         }
         counterTimer = setInterval(function() {
             timeCounter++;
-            var secondsUsed = (timeCounter - time)+(60*5);
+            var secondsUsed = (timeCounter - time)+(60*3);
             var minutes = parseInt(secondsUsed / 60);
             var seconds = secondsUsed-(minutes * 60);
             $('#secondsused').val(secondsUsed);

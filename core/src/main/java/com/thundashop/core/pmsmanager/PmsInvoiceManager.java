@@ -1218,10 +1218,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 return 6; //Prepaid by ota
             }
         }
-        
-        if(booking.isStarted()) {
-            return 7; //Booking has started.
-        }
 
         if(config.wubookAutoCharging && !booking.isOld(10) && booking.isWubook()) {
             //If autocharing is activated, wait 10 minutes and try to automatically charge card first.

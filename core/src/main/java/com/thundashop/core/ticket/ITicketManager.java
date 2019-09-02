@@ -108,4 +108,8 @@ public interface ITicketManager {
     
     @Administrator
     public TicketStatistics getStatistics(TicketStatsFilter filter);
+    
+    @Administrator
+    public TicketStatisticsStore getStoreStatistics(TicketStatsFilter filter);
+    
 }

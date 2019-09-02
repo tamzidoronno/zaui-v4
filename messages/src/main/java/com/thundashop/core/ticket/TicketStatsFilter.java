@@ -14,4 +14,6 @@ import java.util.Date;
 public class TicketStatsFilter {
     public Date start;
     public Date end;
+    public String userId = "";
+    public String storeId = "";
 }

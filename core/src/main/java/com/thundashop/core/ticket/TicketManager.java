@@ -759,14 +759,10 @@ public class TicketManager extends ManagerBase implements ITicketManager {
         TicketStatistics stats = new TicketStatistics();
         stats.totalTicket = 0;
         TicketFilter filtertofind = new TicketFilter();
-        filtertofind.start = filter.start;
-        filtertofind.end = filter.end;
+        filtertofind.userId = filter.userId;
         
         List<Ticket> allTickets = getAllTickets(filtertofind);
         for(Ticket ticket : allTickets) {
-            if(ticket.type == TicketType.SETUP) {
-                continue;
-            }
             String toStore = ticket.belongsToStore;
             if(toStore == null || toStore.isEmpty()) {
                 continue;
@@ -776,6 +772,14 @@ public class TicketManager extends ManagerBase implements ITicketManager {
             if(usr == null ) {
                 continue;
             }
+            
+            Double timeSpentInPeriode = ticket.getTimeSpentInPeriode(filter.start, filter.end);
+            Double timeInvoicedInPeriode = ticket.getTimeInvoicedInPeriode(filter.start, filter.end);
+            
+            if(timeInvoicedInPeriode == 0.0 || timeSpentInPeriode == 0.0) {
+                continue;
+            }
+            
             Company comp = userManager.getCompany(usr.mainCompanyId);
             
             TicketStatisticsStore storeStats = new TicketStatisticsStore();
@@ -785,8 +789,8 @@ public class TicketManager extends ManagerBase implements ITicketManager {
             storeStats.count++;
             stats.storeStats.put(customerId, storeStats);
             storeStats.name = usr.fullName;
-            storeStats.hoursSpent += ticket.timeSpent;
-            storeStats.hoursInvoiced += ticket.timeInvoice;
+            storeStats.hoursSpent += timeSpentInPeriode;
+            storeStats.hoursInvoiced += timeInvoicedInPeriode;
             if(comp != null) {
                 storeStats.hoursIncluded = comp.monthlyHoursIncluded;
                 storeStats.additonalHours = comp.additionalHours;
@@ -798,6 +802,22 @@ public class TicketManager extends ManagerBase implements ITicketManager {
             stat.percentage = (int)(((double)stat.count / (double)stats.totalTicket) * 100);
         }
         
+        if(filter.userId != null && !filter.userId.isEmpty() && !stats.storeStats.containsKey(filter.userId)) {
+            User usr = userManager.getUserById(filter.userId);
+            Company comp = userManager.getCompany(usr.mainCompanyId);
+            TicketStatisticsStore stats11 = new TicketStatisticsStore();
+            stats11.name = usr.fullName;
+            stats11.hoursIncluded = comp.monthlyHoursIncluded;
+            stats11.additonalHours = comp.additionalHours;
+            stats.storeStats.put(filter.userId, stats11);
+        }
+        
         return stats;
+    }
+
+    @Override
+    public TicketStatisticsStore getStoreStatistics(TicketStatsFilter filter) {
+        TicketStatistics statistics = getStatistics(filter);
+        return statistics.storeStats.get(filter.userId);
     }
 }

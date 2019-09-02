@@ -134,6 +134,12 @@ public class CustomerTicketManager extends ManagerBase implements ICustomerTicke
         
         return copy;
     }
+
+    @Override
+    public TicketStatisticsStore getStoreStatistics(TicketStatsFilter filter) {
+        filter.userId = systemManager.getCustomerIdForStoreId(filter.storeId);
+        return ticketManager.getStoreStatistics(filter);
+    }
     
 
 }

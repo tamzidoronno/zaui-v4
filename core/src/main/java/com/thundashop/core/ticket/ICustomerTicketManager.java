@@ -25,4 +25,5 @@ public interface ICustomerTicketManager {
     public void reOpenTicket(String storeId, String ticketToken);
     public List<Ticket> getPredefinedTickets();
     public Ticket cloneSetupTicket(String ticketId, String storeId);
+    public TicketStatisticsStore getStoreStatistics(TicketStatsFilter filter);
 }

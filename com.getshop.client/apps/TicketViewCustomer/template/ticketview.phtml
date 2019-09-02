@@ -61,6 +61,7 @@ if ($this->isGetShop()) {
             ?>
             <input type='hidden' class='contentid' value='<?php echo $content->id; ?>'>
             <div class='editcontentarea'><? echo $content->content; ?></div>
+            
             <div class='savecontent' style='display:none;text-align: right;'><span class='shop_button savereplycontent'>Save</span></div>
             <div class='rowinfo'>
                 <? 
@@ -98,6 +99,31 @@ if ($this->isGetShop()) {
             <?php } ?>
             <textarea class='replycontent' gsname='content'></textarea>    
         </div>
+        
+        <?php 
+        if($this->isGetShop()) {
+            echo "<select gsname='ignoreinvoice' class='gsniceselect1'>";
+            echo "<option value='false'>Bill</option>";
+            echo "<option value='true'>Avoid billing</option>";
+            echo "</select>";
+            
+            $types = $this->getTypes();
+            echo "<select gsname='type' class='gsniceselect1'>";
+            foreach($types as $type => $typename) {
+                $selected = ($ticket->type === $type) ? "SELECTED" : "";
+                echo "<option value='$type' $selected>$typename</option>";
+            }
+            echo "</select>";
+            
+            $types = $this->getStates();
+            echo "<select gsname='state' class='gsniceselect1'>";
+            foreach($types as $type => $typename) {
+                $selected = ($ticket->currentState === $type) ? "SELECTED" : "";
+                echo "<option value='$type' $selected>$typename</option>";
+            }
+            echo "</select>";
+        }
+        ?>
         
         <div class='shop_button' gstype='submit'>
             <?

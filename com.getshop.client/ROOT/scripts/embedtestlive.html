@@ -14,13 +14,14 @@
 //    getshop_websockethost = "websocket6.getshop.com";
     $ = jQuery;
     jQuery(function ($) { 
-        $.getScript("https://jarsvoberg.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
+        $.getScript("https://kotel.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
             $("#bookingprocess").getshopbooking(
                 { 
-                    "endpoint": "https://jarsvoberg.getshop.com/",
-                    "jsendpoint": "https://jarsvoberg.getshop.com/",
+                    "endpoint": "https://kotel.getshop.com/",
+                    "jsendpoint": "https://kotel.getshop.com/",
                     "domain" : "default",
                     "language" : "en",
+                    "nextPage" : "https://kotel.co.uk/book/",
                     "success" : function(res) {
                         console.log(res);
                     }

@@ -303,7 +303,7 @@ class ModulePageMenu {
                         $('.ticketnotificationsarea').hide();
                     } else {
                         $('.ticketnotificationsarea').fadeIn();
-                    }
+                    } 
                 } else {
                     window.open("/getshopsupport.php", "gsfdasfasfdeesupport");
                 }

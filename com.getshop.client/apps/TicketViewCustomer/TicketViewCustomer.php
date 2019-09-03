@@ -25,6 +25,35 @@ class TicketViewCustomer extends \MarketingApplication implements \Application {
         }
     }
     
+    public function updateResponseText() {
+        $_GET['ticketId']  = $_POST['data']['ticketid'];
+        $content = $_POST['data']['content'];
+        $ticketId = $_POST['data']['ticketid'];
+        $contentId = $_POST['data']['contentid'];
+        $this->getApi()->getTicketManager()->updateContent($ticketId, $contentId, $content);
+    }
+    
+    public function getStates() {
+        $states = array();
+        $states['CREATED'] = "Created";
+        $states['COMPLETED'] = "Completed";
+        $states['CLOSED'] = "Closed";
+        $states['REPLIED'] = "Replied";
+        $states['INITIAL'] = "Initial";
+        return $states;
+    }
+    
+    public function getTypes() {
+        $types = array();
+        $types['UNKOWN'] = "UNKOWN";
+        $types['BUG'] = "BUG";
+        $types['FEATURE'] = "FEATURE";
+        $types['BACKLOG'] = "BACKLOG";
+        $types['SUPPORT'] = "SUPPORT";
+        $types['SETUP'] = "SETUP";
+        return $types;
+    }
+    
     public function replyTicket() {
         $this->setGetVariables();
         
@@ -35,9 +64,31 @@ class TicketViewCustomer extends \MarketingApplication implements \Application {
             $this->getApi()->getTicketManager()->addTicketContent($_GET['ticketId'], $content);
             $this->getApi()->getTicketManager()->markTicketAsRead($_GET['ticketId']);
             $this->getApi()->getTicketManager()->markAsRepied($_GET['ticketId']);
+            
+            $ticket = $this->getApi()->getTicketManager()->getTicket($_GET['ticketId']);
+            $ticket->timeSpent += (($_POST['data']['secondsused']/60)/60);
+            $ticket->timeSpentAtDate->{time()*1000} = (($_POST['data']['secondsused']/60)/60);
+            $ticket->type = $_POST['data']['type'];
+            $ticket->currentState = $_POST['data']['state'];
+            if($_POST['data']['ignoreinvoice'] != "true") {
+                $ticket->timeInvoice += (($_POST['data']['secondsused']/60)/60);
+                $ticket->timeInvoiceAtDate->{time()*1000} = (($_POST['data']['secondsused']/60)/60);
+            }
+            $this->getApi()->getTicketManager()->saveTicket($ticket);
+
         } else {
             $this->getSystemGetShopApi()->getCustomerTicketManager()->addContent($this->getFactory()->getStore()->id, $_GET['ticketToken'], $content);
         }
+    }
+    
+    public function updateTimeOnTicket() {
+        $ticket = $this->getApi()->getTicketManager()->getTicket($_POST['data']['ticketId']);
+        if($_POST['data']['timetype'] == "billing") {
+            $ticket->timeInvoiceAtDate->{$_POST['data']['time']} = $_POST['data']['value'];
+        } else {
+            $ticket->timeSpentAtDate->{$_POST['data']['time']} = $_POST['data']['value'];
+        }
+        $this->getApi()->getTicketManager()->saveTicket($ticket);
     }
     
     public function isGetShop() {
@@ -113,5 +164,16 @@ class TicketViewCustomer extends \MarketingApplication implements \Application {
         $this->setGetVariables();
         $this->getSystemGetShopApi()->getCustomerTicketManager()->reOpenTicket($this->getFactory()->getStore()->id, $_GET['ticketToken']);
     }
+    
+    public function createSubTask() {
+        $_GET['ticketId'] = $_POST['data']['ticketid'];
+        $this->getApi()->getTicketManager()->addSubTask($_POST['data']['ticketid'], $_POST['data']['title']);
+    }
+    
+    public function toggleSubClass() {
+        $this->getApi()->getTicketManager()->toggleSubTask($_POST['data']['ticketid'], $_POST['data']['subtaskid']);
+        $_GET['ticketId'] = $_POST['data']['ticketid'];
+    }
+    
 }
 ?>

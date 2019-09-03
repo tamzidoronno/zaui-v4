@@ -3952,7 +3952,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                         }
                     }
                 }catch(Exception e) {
-                    messageManager.sendErrorNotification("Failed to automark order as paid", e);
+//                    messageManager.sendErrorNotification("Failed to automark order as paid", e);
                 }
                 saveObject(order);
             });  

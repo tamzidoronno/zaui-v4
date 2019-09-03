@@ -7,6 +7,7 @@ package com.thundashop.core.usermanager;
 
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.Database;
+import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.data.User;
 import com.warrenstrange.googleauth.GoogleAuthenticator;
 import java.util.ArrayList;
@@ -26,6 +27,9 @@ public class TotpHandler {
     @Autowired
     private Database database;
     
+    @Autowired
+    private StoreManager storeManager;
+    
     private List<User> users = new ArrayList();
 
     public TotpHandler() {
@@ -36,6 +40,10 @@ public class TotpHandler {
         
         if (user == null) {
             return null;
+        }
+        
+        if(!storeManager.isProductMode()) {
+            return user;
         }
         
         if (user.lastTotpVerificationCodeUsed == code) {

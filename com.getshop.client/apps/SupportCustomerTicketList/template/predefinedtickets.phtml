@@ -1,0 +1,12 @@
+<div style="text-align: center;">
+    <h1>Choose setup tasks that needs to be added to this system</h1>
+</div>
+<?php
+/* @var $this \ns_13c0bc5f_ce62_45c5_be76_90237d16de91\SupportCustomerTicketList */
+$predefined = $this->getSystemGetShopApi()->getCustomerTicketManager()->getPredefinedTickets();
+foreach($predefined as $pred) {
+    echo "<div class='predefinedticketrole'>" . $pred->title;
+    echo "<span class='shop_button' style='float:right;border-radius:3px;' synchron='true' gs_callback='asdfasf' gsclick='selectPredefinedTicket' onclick='$(this).hide();' ticketid='".$pred->id."'>Add <i class='fa fa-arrow-right'></i></span>";
+    echo "</div>";
+}
+?>

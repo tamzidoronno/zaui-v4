@@ -29,5 +29,5 @@ public class MasterUserSlot extends UserSlot {
      * yet been updated on the locks
      */
     public List<UserSlot> slotsNotOk = new ArrayList();    
-   
+
 }

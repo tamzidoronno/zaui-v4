@@ -26,11 +26,21 @@ class PmsBookingMessageFormatter {
         if(message == null) {
             return "";
         }
-         String startMinute = new SimpleDateFormat("m").format(room.date.start).toString();
+        Date start = null;
+        Date end = null;
+            
+        if(room.date != null && room.date.start != null) {
+            start = productManager.getStore().convertToTimeZone(room.date.start);
+        }
+        if(room.date != null && room.date.end != null) {
+            end = productManager.getStore().convertToTimeZone(room.date.end);
+        }
+        
+         String startMinute = new SimpleDateFormat("m").format(start).toString();
         if (startMinute.length() < 2) {
             startMinute = "0" + startMinute;
         }
-        String endMinute = new SimpleDateFormat("m").format(room.date.end).toString();
+        String endMinute = new SimpleDateFormat("m").format(end).toString();
         if (endMinute.length() < 2) {
             endMinute = "0" + endMinute;
         }
@@ -38,17 +48,17 @@ class PmsBookingMessageFormatter {
         if(room.code != null) {
             message = message.replace("{code}", room.code);
         }
-        if(room.date != null && room.date.start != null) {
-            message = message.replace("{checkin_date}", formatDate(room.date.start));
+        if(room.date != null && start != null) {
+            message = message.replace("{checkin_date}", formatDate(start));
         }
-        if(room.date != null && room.date.end != null) {
-            message = message.replace("{checkout_date}", formatDate(room.date.end));
+        if(room.date != null && end != null) {
+            message = message.replace("{checkout_date}", formatDate(end));
         }
-        if(room.date != null && room.date.start != null) {
-            message = message.replace("{checkin_time}", new SimpleDateFormat("H:").format(room.date.start) + startMinute);
+        if(room.date != null && start != null) {
+            message = message.replace("{checkin_time}", new SimpleDateFormat("H:").format(start) + startMinute);
         }
-        if(room.date != null && room.date.end != null) {
-            message = message.replace("{checkout_time}", new SimpleDateFormat("H:").format(room.date.end) + endMinute);
+        if(room.date != null && end != null) {
+            message = message.replace("{checkout_time}", new SimpleDateFormat("H:").format(end) + endMinute);
         }
         if(room.guests != null && !room.guests.isEmpty()) {
             PmsGuests guest = room.guests.get(0);
@@ -137,15 +147,24 @@ class PmsBookingMessageFormatter {
                 rooms += bookingEngine.getBookingItemType(room.bookingItemTypeId).name;
             }
             long diff = 365*60*60*100;
-            if(room.date.end != null && room.date.start != null) {
-                diff = (room.date.end.getTime() - room.date.start.getTime()) / 1000;
+            Date start = null;
+            Date end = null;
+            
+            if(room.date != null && room.date.start != null) {
+                start = productManager.getStore().convertToTimeZone(room.date.start);
+            }
+            if(room.date != null && room.date.end != null) {
+                end = productManager.getStore().convertToTimeZone(room.date.end);
+            }
+            if(end != null && start != null) {
+                diff = (end.getTime() - start.getTime()) / 1000;
             }
             if(diff > (365*60*60*24)) {
-                simpleRoom += "<td style='font-size:12px;'>" + formatDate(room.date.start) + "</td><td></td>";
-                rooms += formatDate(room.date.start);
+                simpleRoom += "<td style='font-size:12px;'>" + formatDate(start) + "</td><td></td>";
+                rooms += formatDate(start);
             } else {
-                simpleRoom += "<td style='font-size:12px;'>" + formatDate(room.date.start) + "</td><td>" + formatDate(room.date.end) + "</td>";
-                rooms += formatDate(room.date.start) + " - " + formatDate(room.date.end);
+                simpleRoom += "<td style='font-size:12px;'>" + formatDate(start) + "</td><td>" + formatDate(end) + "</td>";
+                rooms += formatDate(start) + " - " + formatDate(end);
             }
             if(room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
                 BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
@@ -406,8 +425,19 @@ class PmsBookingMessageFormatter {
                 }
             }
             
+            
+            Date start = null;
+            Date end = null;
+            
+            if(room.date != null && room.date.start != null) {
+                start = productManager.getStore().convertToTimeZone(room.date.start);
+            }
+            if(room.date != null && room.date.end != null) {
+                end = productManager.getStore().convertToTimeZone(room.date.end);
+            }
+            
             list += "<div class='roominfo' style='margin-top: 10px; margin-bottom: 10px;'>"; 
-            list += "   <div class='roomname' style='font-weight: bold; padding-bottom: 10px;'>" + type.name + " ( " + slf.format(room.date.start) + " - " + slf.format(room.date.end) + " )"+ "</div>";
+            list += "   <div class='roomname' style='font-weight: bold; padding-bottom: 10px;'>" + type.name + " ( " + slf.format(start) + " - " + slf.format(end) + " )"+ "</div>";
             for (PmsGuests guest : room.guests) {
                 String text = guest.name;
                 String phone = "";
@@ -445,7 +475,18 @@ class PmsBookingMessageFormatter {
         for (PmsBookingRooms room : booking.getActiveRooms()) {
             BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
             
-            list +=  type.name + " ( " + slf.format(room.date.start) + " - " + slf.format(room.date.end) + " )"+ "\n";
+            
+            Date start = null;
+            Date end = null;
+            
+            if(room.date != null && room.date.start != null) {
+                start = productManager.getStore().convertToTimeZone(room.date.start);
+            }
+            if(room.date != null && room.date.end != null) {
+                end = productManager.getStore().convertToTimeZone(room.date.end);
+            }
+            
+            list +=  type.name + " ( " + slf.format(start) + " - " + slf.format(end) + " )"+ "\n";
         }
         
         return list;

@@ -29,7 +29,7 @@ public class UnsettledAmountProcessor extends CheckProcessorBase implements Chec
         if (booking.ignoreUnsettledAmount) {
             return null;
         }
-        
+
         getPmsManager().calculateUnsettledAmountForRooms(booking);
         
         double amount = booking.getUnpaidAmount();

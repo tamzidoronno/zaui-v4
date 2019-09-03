@@ -52,6 +52,7 @@ public class PmsRoomSimple implements Serializable {
     public String bookingTypeId;
     public String wubookchannelid;
     List<String> orderIds;
+    List<Long> incrementOrderIds = new ArrayList();
     public Integer numberOfNights;
     boolean createOrderAfterStay;
     boolean hasBeenCleaned = false;

@@ -784,6 +784,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         String ipaddr = getIpadressOnTerminal(data.terminalId);
         
         if(ipaddr == null || ipaddr.isEmpty()) {
+            logPrint("Printing using integrated terminal");
             printRecieptIntegratatedTerminal(data.orderId, data.terminalId);
             return;
         }
@@ -798,6 +799,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         String text = order.createThermalPrinterReciept(getAccountingDetails(), user);
         pmsManager.processor();
         String url = "http://" + settings.ip + ":8080/print.php";
+        logPrint("Printing to address " + url);
         try {
             
             PmsBooking booking = pmsManager.getBookingWithOrderId(order.id);

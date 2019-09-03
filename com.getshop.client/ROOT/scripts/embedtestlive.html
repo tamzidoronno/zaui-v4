@@ -11,16 +11,20 @@
 
 <script>
     gsisdevmode = false;
-    getshop_websockethost = "websocket6.getshop.com";
+//    getshop_websockethost = "websocket6.getshop.com";
     $ = jQuery;
     jQuery(function ($) { 
-        $.getScript("https://hardangergjestehus.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
+        $.getScript("https://kotel.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
             $("#bookingprocess").getshopbooking(
                 { 
-                    "endpoint": "https://hardangergjestehus.getshop.com/",
-                    "jsendpoint": "https://hardangergjestehus.getshop.com/",
+                    "endpoint": "https://kotel.getshop.com/",
+                    "jsendpoint": "https://kotel.getshop.com/",
                     "domain" : "default",
-                    "language" : "en/no"
+                    "language" : "en",
+                    "nextPage" : "https://kotel.co.uk/book/",
+                    "success" : function(res) {
+                        console.log(res);
+                    }
                 }
             );
         });

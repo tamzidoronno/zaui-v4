@@ -48,6 +48,14 @@ $company = $this->getSelectedCompany();
         <br/>
         <textarea gsname="description"><? echo $company->description; ?></textarea>
     </div>
+    <div class="textfield gss_setting" id="contactPerson">
+        <span class="title">Monthly free hours</span>
+        <input class='gsniceinput1' gsname="monthlyHoursIncluded" value="<? echo $company->monthlyHoursIncluded; ?>">
+    </div>
+    <div class="textfield gss_setting" id="contactPerson">
+        <span class="title">Extra hours</span>
+        <input class='gsniceinput1' gsname="additionalHours" value="<? echo $company->additionalHours; ?>">
+    </div>
     <br><br>
     <h2>Address</h2>
     <div class="textfield gss_setting" id="address">

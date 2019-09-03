@@ -200,7 +200,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         if (server != null) {
             Lock lock = server.getLock(lockId);
             if (lock != null) {
-                lock.generateNewCodes(getCodeSizeInternal(null));
+                lock.generateNewCodes(getCodeSizeInternal(null), getAllCodesInUse());
                 server.save();
             }
         }
@@ -338,7 +338,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
 
     private void rebuildGroupMatrix(LockGroup group) {
         List<LockServer> servers = getLockServers();
-        group.rebuildCodeMatrix(servers, getCodeSizeInternal(group.id));
+        group.rebuildCodeMatrix(servers, getCodeSizeInternal(group.id), getAllCodesInUse());
         saveObject(group);
     }
 
@@ -468,8 +468,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
                 
             }
         } else {
-
-            group.renewCodeForSlot(slotId, getCodeSizeInternal(groupId));
+            group.renewCodeForSlot(slotId, getCodeSizeInternal(groupId), getAllCodesInUse());
 
             lockServers.values().stream().forEach(server -> {
                 server.syncGroupSlot(group, slotId);
@@ -484,7 +483,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
     @Override
     public void changeCode(String groupId, int slotId, int pinCode, String cardId) {
         LockGroup group = getGroup(groupId);
-        group.changeCode(slotId, pinCode, cardId, getCodeSizeInternal(groupId));
+        group.changeCode(slotId, pinCode, cardId, getCodeSizeInternal(groupId), getAllCodesInUse());
         saveObject(group);
         
         lockServers.values().stream().forEach(server -> {
@@ -1007,6 +1006,17 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
 
     public List<LockServer> getLockServersUnfinalized() {
         return new ArrayList(lockServers.values());
+    }
+
+    private List<Integer> getAllCodesInUse() {
+        List<Integer> codes = new ArrayList();
+        List<LockGroup> tmpgroups = getAllGroupsUnfinalized();
+        for(LockGroup grp : tmpgroups) {
+            for(MasterUserSlot slot : grp.getGroupLockCodes().values()) {
+                codes.add(slot.getPincode());
+            }
+        }
+        return codes;
     }
 
     

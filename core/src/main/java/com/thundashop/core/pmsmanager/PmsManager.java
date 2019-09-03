@@ -4857,7 +4857,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public List<CleaningStatistics> getCleaningStatistics(Date start, Date end) {
         List<BookingItem> items = bookingEngine.getBookingItems();
-        List<BookingItemType> types = bookingEngine.getBookingItemTypes();
+        List<BookingItemType> types = bookingEngine.getBookingItemTypesWithSystemType(null);
         List<CleaningStatistics> toReturn = new ArrayList<CleaningStatistics>();
         Calendar cal = Calendar.getInstance();
         for (BookingItemType type : types) {
@@ -8440,6 +8440,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         bookingEngine.changeBookingItemAndDateOnBooking(booking.id, bookingItemId, start, end);
         resetBookingItem(room, bookingItemId, pmsBooking);
+        List<PmsBookingRooms> allRooms = new ArrayList();
+        allRooms.add(room);
+        addDefaultAddonsToRooms(allRooms);
+        
         
         String logText = "Changed start date and item <b>" + newStartDate + "</b> New room : " + bookingEngine.getBookingItem(bookingItemId).bookingItemName;
         logEntry(logText, pmsBooking.id, room.bookingItemId, room.pmsBookingRoomId, "changestay");
@@ -8570,7 +8574,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     continue;
                 }
                 if (room.bookingItemTypeId != null) {
-                    if (item.includedInBookingItemTypes.contains(room.bookingItemTypeId) || item.alwaysAddAddon) {
+                    if (item.includedInBookingItemTypes.contains(room.bookingItemTypeId) || item.alwaysAddAddon || (room.hasAddonOfProduct(item.productId) && !item.isSingle)) {
                         int size = 1;
                         if (item.dependsOnGuestCount) {
                             size = room.numberOfGuests;
@@ -10676,6 +10680,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsUserDiscount discount = pmsInvoiceManager.getDiscountsForUser(currentbooking.userId);
         currentbooking.couponCode = discount.attachedDiscountCode;
         setBookingByAdmin(currentbooking, true);
+    }
+
+    @Override
+    public void addCommentToRoom(String roomId, String comment) {
+        PmsBookingComment commentobj = new PmsBookingComment();
+        commentobj.added = new Date();
+        commentobj.pmsBookingRoomId = roomId;
+        commentobj.userId = getSession().currentUser.id;
+        commentobj.comment = comment;
+        
+        PmsBooking booking = getBookingFromRoom(roomId);
+        booking.comments.put(System.currentTimeMillis(), commentobj);
+        saveBooking(booking);
     }
 
 }

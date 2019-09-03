@@ -803,7 +803,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         messageManager.sendMail(email, email, msg.title, msg.content, email, email);
 
 
-        String logText = msg.content + "<div>Sent to: ";
+        String logText = "a" +msg.content + "<div>Sent to: ";
         logText += email;
         logText += "</div>";
         pmsManager.logEntry(logText, bookingId, null, roomId, msg.key + "_email");

@@ -9,6 +9,7 @@ import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -38,6 +39,8 @@ public class Ticket extends DataCommon {
     public String belongsToStore = "";
     public String createdByUserId = "";
     
+    public HashMap<String, TicketSubTask> subtasks = new HashMap();
+    
     /** 
      * This ID correspond to the TicketLight.ticketToken
      */
@@ -48,6 +51,8 @@ public class Ticket extends DataCommon {
      */
     public Double timeSpent = 0D;
     public Double timeInvoice = 0D;
+    public HashMap<Long, Double> timeSpentAtDate = new HashMap();
+    public HashMap<Long, Double> timeInvoiceAtDate = new HashMap();
     public boolean hasBeenValidedForTimeUsage = false;
             
     public boolean transferredToAccounting = false;
@@ -115,5 +120,31 @@ public class Ticket extends DataCommon {
 
     public boolean isNotAssigned() {
         return assignedToUserId == null || assignedToUserId.isEmpty() || assignedToUserId.equals("Not assigned");
+    }
+
+    Double getTimeSpentInPeriode(Date start, Date end) {
+        Double result = 0.0;
+        if(start == null || end == null) {
+            for(Long time : timeSpentAtDate.keySet()) {
+                result += timeSpentAtDate.get(time);
+            }
+        } else {
+            for(Long time : timeSpentAtDate.keySet()) {
+                if(time > start.getTime() && time < end.getTime()) {
+                    result += timeSpentAtDate.get(time);
+                }
+            }
+        }
+        return result;
+    }
+
+    Double getTimeInvoicedInPeriode(Date start, Date end) {
+        Double result = 0.0;
+        for(Long time : timeInvoiceAtDate.keySet()) {
+            if(time > start.getTime() && time < end.getTime()) {
+                result += timeInvoiceAtDate.get(time);
+            }
+        }
+        return result;
     }
 }

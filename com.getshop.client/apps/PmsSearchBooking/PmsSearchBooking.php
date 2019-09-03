@@ -523,7 +523,6 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         $filter = $this->getSelectedFilter();
         $data = $this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedMultilevelDomainName(), $filter);
         $rows = array();
-        
         $header = array();
         $header[] = "State";
         $header[] = "Reg date";
@@ -536,7 +535,10 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         $header[] = "Type";
         $header[] = "Room";
         $header[] = "Guest count";
+        $header[] = "Price";
+        $header[] = "Unpaid";
         $header[] = "Addons";
+        $header[] = "Orders";
         $rows[] = $header;
         
         foreach($data as $r) {
@@ -552,7 +554,10 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
             $row[] = $r->roomType;
             $row[] = $r->room;
             $row[] = $r->numberOfGuests;
+            $row[] = $r->totalUnpaidAmount;
+            $row[] = $r->totalCost;
             $row[] = join(",",(array)$this->formatter->createAddonText($r, true));
+            $row[] = join(",", (array)      $r->incrementOrderIds);
             $rows[] = $row;
             if($withGuests) {
                 foreach($r->guest as $guest) {

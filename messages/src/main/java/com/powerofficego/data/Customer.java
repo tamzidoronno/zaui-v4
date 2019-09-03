@@ -34,5 +34,10 @@ public class Customer {
         mailAddress.countryCode = user.address.countrycode;
         mailAddress.id = 1;
         mailAddress.isPrimary = true;
+        
+        if(mailAddress.countryCode == null || mailAddress.countryCode.isEmpty()) {
+            mailAddress.countryCode = "NO";
+        }
+        
     }
 }

@@ -193,7 +193,12 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     public function addComment() {
         $comment = $_POST['data']['comment'];
         $booking = $this->getPmsBooking();
-        $this->getApi()->getPmsManager()->addComment($this->getSelectedMultilevelDomainName(), $booking->id, $comment);
+        if($_POST['data']['type'] == "toroom") {
+            $selectedRoom = $this->getPmsRoom();
+            $this->getApi()->getPmsManager()->addCommentToRoom($this->getSelectedMultilevelDomainName(), $selectedRoom->pmsBookingRoomId, $comment);
+        } else {
+            $this->getApi()->getPmsManager()->addComment($this->getSelectedMultilevelDomainName(), $booking->id, $comment);
+        }
     }
     
     public function removeFromWaitingList() {
@@ -2367,5 +2372,43 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     public function attachOrderToBooking() {
         $this->getApi()->getPmsManager()->attachOrderToBooking($this->getSelectedMultilevelDomainName(), $_POST['data']['bookingid'], $_POST['data']['orderid']);
     }
+    
+    public function activateautosendpaymentlink() {
+        $booking = $this->getPmsBooking();
+        $booking->autoSendPaymentLink = !$booking->autoSendPaymentLink;
+        $this->getApi()->getPmsManager()->logEntry($this->getSelectedMultilevelDomainName(), "Autopaymentlink toggled", $booking->id, null);
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+    }
+
+    public function translateNotSendPaymentLinkReason($reason) {
+        $reasons = array();
+        /*
+         if(!config.autoSendPaymentReminder) {
+            return 0; //Not configure to send.
+            return 1; //Booking is deleted
+            return 2; //No active rooms.
+            return 3; //Registrered by administrator
+            return 4; //Already sent
+            return 5; //Everything is paid for
+                return 6; //Prepaid by ota
+            return 7; //Booking has started.
+         * 
+         */
+        $reasons[0] = "Payment links has not been configured yet, go to settings -> global settings to configure the payment link system";
+        $reasons[1] = "The booking has been deleted";
+        $reasons[2] = "There are not rooms added to this booking to require payment on";
+        $reasons[3] = "Booked by a receptionist / hotellier.";
+        $reasons[4] = "The payment link has already been sent";
+        $reasons[5] = "Everything is paid for.";
+        $reasons[6] = "Its already been paid for by the OTA";
+        $reasons[7] = "The booking has already started.";
+        $reasons[8] = "We are waiting for the booking to be automatically charged, if not charged in 10 minutes payment link is sent.";
+        $reasons[9] = "Payment link is not sent in the morning, its intrusive.";
+        $reasons[10] = "Booking will be deleted in 30 minutes.";
+        $reasons[11] = "We are waiting 30 minutes for payment to be completed, payment link is sent after that.";
+        $reasons[12] = "Access has been forced, we do not send paymentlink if access has been forced.";
+        return $reasons[$reason];
+    }
+
 }
 ?>

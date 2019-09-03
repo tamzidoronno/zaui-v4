@@ -770,12 +770,16 @@ public class PmsBookingRooms implements Serializable {
             days = getNumberOfMonths();
         }
         
-        if(priceType.equals(PriceType.daily) && priceMatrix != null && !priceMatrix.isEmpty()) {
-            for(Double price : priceMatrix.values()) {
-                if(isDeleted() && (!nonrefundable || deletedByChannelManagerForModification)) {
-                    continue;
+        if(priceType.equals(PriceType.daily)) {
+            if(priceMatrix != null && !priceMatrix.isEmpty()) {
+                for(Double price : priceMatrix.values()) {
+                    if(isDeleted() && (!nonrefundable || deletedByChannelManagerForModification)) {
+                        continue;
+                    }
+                    totalCost += price;
                 }
-                totalCost += price;
+            } else {
+                totalCost = 0;
             }
         } else {
             totalCost += days * price;

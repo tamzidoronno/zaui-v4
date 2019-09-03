@@ -978,10 +978,7 @@ public class PmsManagerProcessor {
             return;
         }
         
-        boolean hasAutoCharge = manager.getConfigurationSecure().wubookAutoCharging;
-        
         Calendar cal = Calendar.getInstance();
-        int hour = cal.get(Calendar.HOUR_OF_DAY);
         
         int days = manager.getConfigurationSecure().numberOfDaysToSendPaymentLinkAheadOfStay;
         cal = Calendar.getInstance();
@@ -1001,45 +998,8 @@ public class PmsManagerProcessor {
         bookingsCheckingIn.addAll(nonRefBookings);
         
         for(PmsBooking book : bookingsCheckingIn) {
-            if(hour < 10 && !book.isRegisteredToday()) {
-                continue;
-            }            
-            if(book.payedFor) {
-                continue;
-            }
-            if(book.isDeleted) {
-                continue;
-            }
-            if(book.getActiveRooms().isEmpty()) {
-                continue;
-            }
-            if(!book.autosendPaymentLink()) {
-                continue;
-            }
-            
-            if(hasAutoCharge && !book.isOld(10) && book.isWubook()) {
-                //If autocharing is activated, wait 10 minutes and try to automatically charge card first.
-                continue;
-            }
-            
-            if(!book.payLater && book.isRegisteredToday() && (book.channel == null || book.channel.isEmpty() || book.channel.equals("website")) && manager.getConfigurationSecure().autoDeleteUnpaidBookings) {
-                //If autodeleting bookings and booked on website, do not send paymentlink
-                continue;
-            }
-            
-            if(book.isRegisteredToday() && (book.channel == null || book.channel.isEmpty() || book.channel.equals("website")) && !manager.getConfigurationSecure().autoDeleteUnpaidBookings) {
-                //If autodelete bookings is disabled and booked on website, send paymenlink after 30 minutes
-                if(!book.isOld(30)) {
-                    continue;
-                }
-            }
-            
-            if(book.hasForcedAccessedRooms()) {
-                //If access has been forced, do not send payment links
-                continue;
-            }
-            User bookedBy = manager.userManager.getUserById(book.bookedByUserId);
-            if(bookedBy != null && bookedBy.isAdministrator()  && !bookedBy.isProcessUser()) {
+            Integer reason = manager.pmsInvoiceManager.getReasonForNotSendingPaymentLink(book.id);
+            if(reason >= 0) {
                 continue;
             }
             

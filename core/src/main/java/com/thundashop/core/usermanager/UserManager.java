@@ -337,14 +337,13 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     private User addUserToSession(User user, boolean saveUser) throws ErrorException {
         sessionFactory.addToSession(getSession().id, "user", user.id);
-        if(saveUser) {
-            saveSessionFactory();
-            user.prevLoggedIn = user.lastLoggedIn;
-            user.lastLoggedIn = new Date();
-            user.loggedInCounter++;
-            saveObject(user);
-        }
-
+        
+        saveSessionFactory();
+        user.prevLoggedIn = user.lastLoggedIn;
+        user.lastLoggedIn = new Date();
+        user.loggedInCounter++;
+        saveObject(user);
+            
         return user;
     }
     
@@ -358,9 +357,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         User loggedOnUser = getLoggedOnUser();
         sessionFactory.removeFromSession(getSession().id);
         
-        if(loggedOnUser != null && loggedOnUser.lastLoggedIn != null) {
-            saveSessionFactory();
-        }
+        saveSessionFactory();
     }
 
     @Override
@@ -669,7 +666,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     private void saveSessionFactory() throws ErrorException {
         if(lastSaved != null) {
             long diff = new Date().getTime() - lastSaved.getTime();
-            if(diff < 180000) {
+            if(diff < 120000) {
                 return;
             }
        }
@@ -691,6 +688,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     @Override
     public User getUserById(String id) throws ErrorException {
+        saveSessionFactory();
         UserStoreCollection storeCollection = getUserStoreCollection(storeId);
         User user = storeCollection.getUser(id);
         if(user != null) {

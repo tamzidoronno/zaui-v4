@@ -47,13 +47,22 @@ if ($this->isGetShop()) {
     $this->includefile("ticketadmin");
 }
 ?>
+<input type='hidden' id='ticketid' value='<?php echo $ticket->id; ?>'>
 <div class="ticketarea <? echo $this->isGetShop() ? "isgetshop" : ""; ?>";>
     <?
     foreach ($contents as $content) {               
         $statusClass = $content->isStatusNotification ? "statusnotification" : "";
         ?>
         <div class='contentbox <? echo $statusClass; ?>'>
-            <? echo $content->content; ?>
+            <?php
+            if ($this->isGetShop()) {
+                echo "<i class='fa fa-edit editocontentinarea' style='float:right; cursor:pointer;'></i>";
+            }
+            ?>
+            <input type='hidden' class='contentid' value='<?php echo $content->id; ?>'>
+            <div class='editcontentarea'><? echo $content->content; ?></div>
+            
+            <div class='savecontent' style='display:none;text-align: right;'><span class='shop_button savereplycontent'>Save</span></div>
             <div class='rowinfo'>
                 <? 
                 
@@ -84,8 +93,37 @@ if ($this->isGetShop()) {
         ?>
         
         <div>
+            <?php if ($this->isGetShop()) { ?>
+            <input type="hidden" value="0" id="secondsused" gsname="secondsused"> <span class='cleartexttime'></span> spent on this case.
+                
+            <?php } ?>
             <textarea class='replycontent' gsname='content'></textarea>    
         </div>
+        
+        <?php 
+        if($this->isGetShop()) {
+            echo "<select gsname='ignoreinvoice' class='gsniceselect1'>";
+            echo "<option value='false'>Bill</option>";
+            echo "<option value='true'>Avoid billing</option>";
+            echo "</select>";
+            
+            $types = $this->getTypes();
+            echo "<select gsname='type' class='gsniceselect1'>";
+            foreach($types as $type => $typename) {
+                $selected = ($ticket->type === $type) ? "SELECTED" : "";
+                echo "<option value='$type' $selected>$typename</option>";
+            }
+            echo "</select>";
+            
+            $types = $this->getStates();
+            echo "<select gsname='state' class='gsniceselect1'>";
+            foreach($types as $type => $typename) {
+                $selected = ($ticket->currentState === $type) ? "SELECTED" : "";
+                echo "<option value='$type' $selected>$typename</option>";
+            }
+            echo "</select>";
+        }
+        ?>
         
         <div class='shop_button' gstype='submit'>
             <?
@@ -150,9 +188,7 @@ if ($this->isGetShop()) {
                 echo "</div>";
             } else {
                 echo "<div>";
-                ?>
-                <a gs_ignorenavigate='true' target='_blank' href='/scripts/downloadTicketAttachment.php?attachmentid=<? echo $attachment->id; ?>'><i class='fa fa-download'></i> Download</a>
-                <?
+                ?><a gs_ignorenavigate='true' target='_blank' href='/scripts/downloadTicketAttachment.php?attachmentid=<? echo $attachment->id; ?>'><i class='fa fa-download'></i> Download</a><?
                 echo "</div>";
             }
         echo "</div>";
@@ -167,6 +203,25 @@ if ($this->isGetShop()) {
     </div>
     
     <div id='fileuploadedsuccessfully' style='display: none' tickettoken='<? echo $ticket->ticketToken; ?>' uuid=''></div>
+    <br>
+    <div gstype='form' method='createSubTask'>
+        <input type='txt' class='gsniceinput1' gsname='title'>
+        <input type='hidden' class='gsniceinput1' gsname='ticketid' value='<?php echo $ticket->id; ?>'>
+        <span class='shop_button' gstype='submit'>Create subtask</span>
+    </div>
+    <br>
+    <?php
+    foreach($ticket->subtasks as $subtask) {
+        echo "<div style='margin-bottom: 3px;'>";
+        if($subtask->completed) {
+            echo "<span class='shop_button togglesubtaskbutton' gsclick='toggleSubClass' ticketid='".$ticket->id."' subtaskid='".$subtask->id."' style='background-color:green;'><i class='fa fa-check' style='line-height:35px;'></i></span>";
+        } else {
+            echo "<span class='shop_button togglesubtaskbutton' gsclick='toggleSubClass' ticketid='".$ticket->id."' subtaskid='".$subtask->id."' ><i class='fa fa-frown-o' style='line-height:35px;'></i></span>";
+        }
+        echo "<span style='line-height:35px;display:inline-block;'>" . $subtask->title . "</span>";
+        echo "</div>";
+    }
+    ?>
 </div>
 
 

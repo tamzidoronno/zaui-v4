@@ -2,21 +2,41 @@
 /* @var $this ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
 
 $pmsBooking = $this->getPmsBooking();
-
+$pmsSelectedRoom = $this->getSelectedRoom();
 $comments = (array) $pmsBooking->comments;
-ksort($comments);
+
+$found = array();
+foreach($comments as $idx => $cmt) {
+    if($cmt->pmsBookingRoomId == $pmsSelectedRoom->pmsBookingRoomId) {
+        $found[$idx] = $cmt;
+        unset($comments[$idx]);
+    }
+}
+
+
+krsort($comments);
+krsort($found);
+
+
+foreach($comments as $idx => $cmnt) {
+    $found[$idx] = $cmnt;
+}
+$comments = $found;
 
 foreach ($comments as $time => $comment) {
-    echo "<div style='vertical-align: top; border-bottom: solid 1px #DDD; padding: 3px;' >";
+    $allStyle = "";
+    if($comment->pmsBookingRoomId == $pmsSelectedRoom->pmsBookingRoomId) {
+        $allStyle = "font-style: oblique;background-color:#91d7e2; ";
+    }
+    echo "<div style='vertical-align: top; border-bottom: solid 1px #DDD; padding: 3px; $allStyle' >";
 
         $style = "";
         if ($comment->deleted) {
             $style = "text-decoration: line-through;";
         }
-
         echo "<div style='display: inline-block; vertical-align: top; color:#777;$style'>";
             echo "<i class='fa fa-trash-o deletecomment' time='$time' style='cursor:pointer;'></i> ";
-            echo date("d.m.Y H:i", $time / 1000);
+            echo date("d.m.Y H:i", strtotime($comment->added));
         echo "</div>";
 
         echo "<div style='display: inline-block; margin-left: 20px; $style'>";

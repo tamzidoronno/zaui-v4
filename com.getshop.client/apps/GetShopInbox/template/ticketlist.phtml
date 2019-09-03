@@ -5,7 +5,7 @@ $cachedUsers = new stdClass();
 $rightList = $this->getRightList();
 
 
-$states = array("CREATED", "REPLIED", "COMPLETED");
+$states = array("CREATED", "REPLIED", "COMPLETED", "INITIAL");
 $groupedByStates = array();
 
 foreach ($states as $state) {
@@ -17,7 +17,6 @@ foreach ($states as $state) {
         $groupedByStates[$state][] = $ticket;
     }
 }
-
 ?>
 <div class="ticketlist">
 <?

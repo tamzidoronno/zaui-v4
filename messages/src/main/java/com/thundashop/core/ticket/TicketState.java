@@ -18,5 +18,6 @@ public enum TicketState {
      * we are not going to do anything more with.
      */
     CLOSED, 
-    REPLIED
+    REPLIED,
+    INITIAL
 }

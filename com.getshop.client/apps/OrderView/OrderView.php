@@ -170,7 +170,7 @@ class OrderView extends \MarketingApplication implements \Application {
         $ret = array();
         
         foreach ($order->cart->items as $item) {
-            if ($item->priceMatrix != null && count($item->priceMatrix)) {
+            if ($item->priceMatrix != null && is_array($item->priceMatrix) && count($item->priceMatrix)) {
                 $ret[] = $item;
             }
             
@@ -211,9 +211,8 @@ class OrderView extends \MarketingApplication implements \Application {
     public function getNormalCartItems() {
         $order = $this->getOrder();
         $ret = array();
-        
         foreach ($order->cart->items as $item) {
-            if ($item->priceMatrix != null && count($item->priceMatrix)) {
+            if ($item->priceMatrix != null && is_array($item->priceMatrix) && count($item->priceMatrix)) {
                 continue;
             }
             
@@ -228,10 +227,12 @@ class OrderView extends \MarketingApplication implements \Application {
     }
 
     public function addNewCartItemLine() {
+        $product = $this->getApi()->getProductManager()->getProduct($_POST['data']['productIdToAdd']);
         $order = $this->getOrder();
         $cartItem = new \core_cartmanager_data_CartItem();
         $cartItem->cartItemId = $this->gen_uuid();
-        
+        $cartItem->product = $product;
+        $cartItem->count = 1;
         $order->cart->items[] = $cartItem;
         $this->getApi()->getOrderManager()->saveOrder($order);
         

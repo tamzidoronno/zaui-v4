@@ -117,7 +117,7 @@ $callbackurl = $this->getApi()->getWubookManager()->getCallbackUrl($this->getSel
     <?php
         $otas = $this->getApi()->getWubookManager()->getOtas($this->getSelectedMultilevelDomainName());
         $data = $this->getApi()->getWubookManager()->getWubookRoomData($this->getSelectedMultilevelDomainName());
-        $items = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+        $items = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
         $roommap = array();
         $items = $this->indexList($items);
         echo "<table width='100%' cellspacing='1' cellpadding='0' bgcolor='#ffffff'>";

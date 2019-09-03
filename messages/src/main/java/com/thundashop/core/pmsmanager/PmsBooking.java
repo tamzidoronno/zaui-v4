@@ -25,6 +25,7 @@ public class PmsBooking extends DataCommon {
     public Date sessionStartDate = null;
     public Date sessionEndDate = null;
     public boolean silentNotification = false;
+    public boolean autoSendPaymentLink = false;
     
     public List<String> bookingEngineAddons = new ArrayList();
     public RegistrationRules registrationData = new RegistrationRules();

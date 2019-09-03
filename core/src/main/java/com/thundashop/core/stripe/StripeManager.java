@@ -65,7 +65,7 @@ public class StripeManager extends ManagerBase implements IStripeManager {
             // Create a Customer:
             User usr = userManager.getUserById(order.userId);
             String email = usr.emailAddress;
-            if(email == null || email.isEmpty()) {
+            if(email == null || email.isEmpty() || !email.contains("@")) {
                 email = "dummy@email.com";
             }
             

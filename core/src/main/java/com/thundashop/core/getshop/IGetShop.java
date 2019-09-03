@@ -139,4 +139,14 @@ public interface IGetShop {
     
     @Administrator
     public boolean canInvoiceOverEhf(String vatNumber);
+    
+    public void startRecoveryForUnit(String id, String ip, String password);
+    
+    public void setRecoveryStatusForUnit(String id, String status);
+    
+    public String getRecoveryStatusForUnit(String id);
+    
+    public String getIpForUnitId(String id);
+    
+    public String canStartRestoringUnit(String id);
 }

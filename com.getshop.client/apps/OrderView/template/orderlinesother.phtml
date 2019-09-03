@@ -101,8 +101,34 @@ foreach ($cartItems as $item) {
 }
 
 if (!$closed) {
+    $productsLight = $this->getApi()->getProductManager()->getAllProductsLight();
+    echo "<select id='addorderlinedropdown'>";
+    foreach($productsLight as $light) {
+        echo "<option value='" . $light->id . "'>" . $light->name . "</option>";
+    }
+    echo "</select>";
     ?>
     <div class='shop_button createnewOrderLine'><? echo $this->__f("Add new orderline"); ?></div>
     <?
 }
 ?>
+<script src="/js/chosen/chosen.jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/js/chosen/chosen.css"/>
+
+<script>
+    $(function() {
+        var checkifcounter = 0;
+        var checkIfCanChosen = setInterval(function() {
+            if($('#addorderlinedropdown').find('option').length > 0) {
+                $('#addorderlinedropdown').chosen();
+                clearTimeout(checkIfCanChosen);
+            }
+            checkifcounter++;
+            console.log(checkifcounter);
+            if(checkifcounter > 20) {
+                clearTimeout(checkIfCanChosen);
+            }
+        }, "100");
+    });
+</script>
+        

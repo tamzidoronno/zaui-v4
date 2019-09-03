@@ -13,4 +13,5 @@ public class UnpaidInvoices {
     Long incrementOrderId = 0L;
     Integer daysDue = 0;
     Double amount = 0.0;
+    Double paidRest = 0.0;
 }

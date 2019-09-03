@@ -36,6 +36,8 @@ public class Company extends DataCommon implements Comparable<Company> {
     
     public String language = "";
     public String currency = "";
+    public Integer monthlyHoursIncluded = 1;
+    public Integer additionalHours = 0;
     
     public List<Company> subCompanies = new ArrayList();
     

@@ -38,7 +38,7 @@ public class ZwaveAddCodeThread extends ZwaveThread {
         }
         
         if (slot.isAddedToLock.equals("yes") && !removeCodeFromSlot()) {
-            logEntry("Code was already added but was not able to remove it from slot on attempt: " + attempt + ", slot: " + slot.slotId + ", pinCode: " + slot.code.pinCode + ", cardId: " + slot.code.cardId);
+//            logEntry("Code was already added but was not able to remove it from slot on attempt: " + attempt + ", slot: " + slot.slotId + ", pinCode: " + slot.code.pinCode + ", cardId: " + slot.code.cardId);
             return false;
         }
 

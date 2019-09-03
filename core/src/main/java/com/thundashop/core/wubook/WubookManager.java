@@ -2069,7 +2069,14 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         
         logText("Executing api call: " + apicall);
         try {
+            long start = System.currentTimeMillis();
             Vector res = (Vector) client.execute(apicall, params);
+            long end = System.currentTimeMillis();
+            long diff = end - start;
+            if(diff > 2000) {
+                logPrint("Excecuted api call: " + apicall + ", time: " + diff);
+            }
+            
             return res;
         }catch(Exception d) {
             logPrint("Could not connect to wubook on api call: " + apicall + " message: " + d.getMessage());

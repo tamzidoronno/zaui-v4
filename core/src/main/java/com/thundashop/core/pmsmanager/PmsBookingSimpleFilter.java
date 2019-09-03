@@ -3,6 +3,7 @@ package com.thundashop.core.pmsmanager;
 
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
+import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -146,6 +147,11 @@ public class PmsBookingSimpleFilter {
         simple.wubookchannelid = booking.wubookchannelreservationcode;
         simple.testReservation = booking.testReservation;
         simple.orderIds = booking.orderIds;
+        for(String ordId : booking.orderIds) {
+            Order ord = manager.orderManager.getOrderDirect(ordId);
+            simple.incrementOrderIds.add(ord.incrementOrderId);
+        }
+        
         simple.channel = booking.channel;
         simple.numberOfNights = room.getNumberOfDays();
         simple.numberOfRoomsInBooking = booking.getActiveRooms().size();

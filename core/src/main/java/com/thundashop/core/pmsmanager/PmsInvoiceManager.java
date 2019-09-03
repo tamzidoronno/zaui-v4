@@ -779,6 +779,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return result;
     }
         
+    @Override
     public Date getPaymentLinkSendingDate(String bookingId) {
         PmsBooking booking = pmsManager.getBookingUnsecure(bookingId);
         Calendar cal = Calendar.getInstance();
@@ -1113,6 +1114,20 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 .count() > 0;
     }
 
+    @Override
+    public boolean autoSendPaymentLink(String bookingId) {
+        PmsBooking booking = pmsManager.getBooking(bookingId);
+        
+        PmsConfiguration config = pmsManager.getConfigurationSecure();
+        
+        Integer doNotSend = getReasonForNotSendingPaymentLink(bookingId);
+        if(doNotSend >= 0) {
+            return false;
+        }
+        
+        return true;
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0; 
@@ -1146,6 +1161,78 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 sendRecieptOnOrder(order, bookingId);
             }
         }
+    }
+    
+    @Override
+    public Integer getReasonForNotSendingPaymentLink(String bookingId) {
+        PmsBooking booking = pmsManager.getBooking(bookingId);
+        
+        PmsConfiguration config = pmsManager.getConfigurationSecure();
+        
+        Calendar cal = Calendar.getInstance();
+        int hour = cal.get(Calendar.HOUR_OF_DAY);
+        
+        if(!config.autoSendPaymentReminder) {
+            return 0; //Not configure to send.
+        }
+        
+        if(booking.isDeleted) {
+            return 1; //Booking is deleted
+        }
+        if(booking.getActiveRooms().isEmpty()) {
+            return 2; //No active rooms.
+        }
+        
+        //Do not send payment links from administrator unless forced to
+        User user = userManager.getUserById(booking.bookedByUserId);
+        if(user != null && user.isAdministrator() && !user.isProcessUser() && !booking.autoSendPaymentLink) {
+            return 3; //Registrered by administrator
+        }
+        
+        double amount = booking.getUnpaidAmount();
+        if(amount <= 0) {
+            return 5; //Everything is paid for
+        }
+        
+        if(booking.notificationsSent.contains("booking_sendpaymentlink")) {
+            return 4; //Already sent
+        }
+        
+        
+        for(String orderId : booking.orderIds) {
+            Order ord = orderManager.getOrderDirect(orderId);
+            if(ord.isPrepaidByOTA()) {
+                return 6; //Prepaid by ota
+            }
+        }
+
+        if(config.wubookAutoCharging && !booking.isOld(10) && booking.isWubook()) {
+            //If autocharing is activated, wait 10 minutes and try to automatically charge card first.
+            return 8;
+        }
+        
+        if(hour < 10 && !booking.isRegisteredToday()) {
+            return 9;
+        }
+
+        if(!booking.payLater && booking.isRegisteredToday() && (booking.channel == null || booking.channel.isEmpty() || booking.channel.equals("website")) && config.autoDeleteUnpaidBookings) {
+            //If autodeleting bookings and booked on website, do not send paymentlink
+            return 10;
+        }
+
+        if(booking.isRegisteredToday() && (booking.channel == null || booking.channel.isEmpty() || booking.channel.equals("website")) && !config.autoDeleteUnpaidBookings) {
+                //If autodelete bookings is disabled and booked on website, send paymenlink after 30 minutes
+            if(!booking.isOld(30)) {
+                return 11;
+            }
+        }
+        
+        if(booking.hasForcedAccessedRooms()) {
+            //If access has been forced, do not send payment links
+            return 12;
+        }
+        
+        return -1;
     }
     
     @Override

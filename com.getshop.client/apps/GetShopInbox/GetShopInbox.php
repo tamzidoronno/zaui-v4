@@ -18,6 +18,7 @@ class GetShopInbox extends \MarketingApplication implements \Application {
         $types[2] = "Bug";
         $types[3] = "Feature";
         $types[4] = "Meeting";
+        $types[5] = "Setup";
         return $types;
     }
 
@@ -37,7 +38,34 @@ class GetShopInbox extends \MarketingApplication implements \Application {
         $this->getApi()->getGmailApiManager()->changeTypeOnMessage($_POST['data']['msgid'], $_POST['data']['type']);
     }
     
+    public function getSelectedStart() {
+        if(!isset($_SESSION['ns_f1706b4c_f779_4eb7_aec3_ee08f182e090_start'])) {
+            return date("m/01/Y", time());
+        }
+        return $_SESSION['ns_f1706b4c_f779_4eb7_aec3_ee08f182e090_start'];
+    }
+    
+    public function getSelectedEnd() {
+        if(!isset($_SESSION['ns_f1706b4c_f779_4eb7_aec3_ee08f182e090_end'])) {
+            return date("m/t/Y", time());
+        }
+        return $_SESSION['ns_f1706b4c_f779_4eb7_aec3_ee08f182e090_end'];
+    }
+    
+    
+    public function updateDateRange() {
+        $_SESSION['ns_f1706b4c_f779_4eb7_aec3_ee08f182e090_end'] = $_POST['data']['enddate'];
+        $_SESSION['ns_f1706b4c_f779_4eb7_aec3_ee08f182e090_start'] = $_POST['data']['startdate'];
+    }
+    
     public function render() {
+        
+        if(isset($_GET['displayCustomerTickets'])) {
+            $_POST['data']['tab'] = "customerinbox";
+            $_SESSION['ns_f1706b4c_f779_4eb7_aec3_ee08f182e090_currentcustomer'] = $_GET['displayCustomerTickets'];
+            $this->changeMenu();
+        }
+        
         echo "<div class='leftmenu'>";
             $this->includefile("leftmenu");
         echo "</div>";
@@ -47,6 +75,12 @@ class GetShopInbox extends \MarketingApplication implements \Application {
             echo "<div class='emaillistarea'>";
                 if ($this->getCurrentTab() == "notifications") {
                     $this->includefile("notifications");
+                } else if($this->getCurrentTab() == "pretickets") {
+                    $this->includefile("pretickets");
+                } else if($this->getCurrentTab() == "customerinbox") {
+                    $this->includefile("customerstats");
+                } else if($this->getCurrentTab() == "statistics") {
+                    $this->includefile("statistics");
                 } else {
                     $this->includefile("ticketlist");
                 }
@@ -172,7 +206,7 @@ class GetShopInbox extends \MarketingApplication implements \Application {
     public function getCurrentEmail() {
         return $this->currentEmail;
     }
-
+    
     public function getAdmins() {
         if(!$this->admins) {
             $this->admins = $this->getApi()->getUserManager()->getUsersByType(100);
@@ -206,17 +240,34 @@ class GetShopInbox extends \MarketingApplication implements \Application {
             $filter->checkForBilling = true;
             $filter->state = "COMPLETED";
         }
+        if ($this->getCurrentTab() == "pretickets") {
+            $filter->type = "SETUP";
+            $filter->state = "INITIAL";
+        }
+        if ($this->getCurrentTab() == "inprogress") {
+            $filter->type = "SETUP";
+        }
         
         if ($this->getCurrentTab() == "backlog") {
             $filter->type = "BACKLOG";
         }
-        
+
         $result = $this->getApi()->getTicketManager()->getAllTickets($filter);
         
         if ($this->getCurrentTab() == "unassigned") {
             $filter->state = "REPLIED";
             $repliedresult = (array)$this->getApi()->getTicketManager()->getAllTickets($filter);
             $result = array_merge($result, $repliedresult);
+        }
+        if ($this->getCurrentTab() == "inprogress") {
+            $newResult = array();
+            foreach($result as $r) {
+                if($r->currentState == "INITIAL") {
+                    continue;
+                }
+                $newResult[] = $r;
+            }
+            $result = $newResult;
         }
         
         return $result;
@@ -243,6 +294,11 @@ class GetShopInbox extends \MarketingApplication implements \Application {
         $obj->userId = \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->id;
         $obj->receiveMessagesForUnassignedTickets = $_POST['data']['receiveMessagesForUnassignedTickets'];
         $this->getApi()->getTicketManager()->savePushOverSettings($obj, $_POST['data']['pushovertoken']);
+    }
+    
+    public function createSetupTicket() {
+        $title = $_POST['data']['title'];
+        $ticketId = $this->getApi()->getTicketManager()->createSetupTicket($title);
     }
 }
 

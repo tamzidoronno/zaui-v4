@@ -142,9 +142,9 @@ public class Lock {
         
     }
 
-    void generateNewCodes(int codeSize) {
+    void generateNewCodes(int codeSize, List<Integer> codesInUse) {
         getUserSlots().stream()
-                .forEach(s -> s.generateNewCode(codeSize));
+                .forEach(s -> s.generateNewUniqueCode(codeSize, codesInUse));
     }
 
     public List<UserSlot> getToRemove() {
@@ -171,12 +171,6 @@ public class Lock {
         }
         
         return null;
-    }
-
-    void generateNewCode(int slotId, int codeSize) {
-        if (userSlots.get(slotId) != null) {
-            userSlots.get(slotId).generateNewCode(codeSize);
-        }
     }
 
     void codeAddedSuccessfully(int slotId) {

@@ -1003,19 +1003,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return amount;
     }
 
-    private void setDepartmentId(CartItem item, String roomId) {
-        PmsBooking booking = pmsManager.getBookingFromRoom(roomId);
-        
-        if (booking != null) {
-            PmsBookingRooms room = booking.getRoom(roomId);
-            if (room != null) {
-                BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
-                if (type != null) {
-                    item.departmentId = type.departmentId;
-                }
-            }
-        }
-    }
 
     @Override
     public String getRedirectForBooking(String bookingId) {
@@ -2985,8 +2972,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }catch(Exception error) {
             
         }
-        
-        setDepartmentId(item, roomId);
         
         if(!runningDiffRoutine) {
             addItemToItemsToReturn(item);

@@ -57,7 +57,7 @@ public class CartItem implements Serializable, Cloneable {
     public boolean disabled = false;
     public String addedByGetShopModule = "";
     public String pmsBookingId = "";
-    public String departmentId = "";
+    
     public String wareHouseId = "";
     private List<ProductPriceOverride> overridePriceHistory = new ArrayList();
     
@@ -727,10 +727,6 @@ public class CartItem implements Serializable, Cloneable {
             return product.externalReferenceId.equals(pmsBookingRoomId);
         }
         return false;
-    }
-    
-    public String getDepartmentId() {
-        return departmentId;
     }
 
     public void changeAllTaxes(TaxGroup taxGroupObject) {

@@ -57,6 +57,8 @@ public class Product extends DataCommon implements Comparable<Product>  {
     
     public String tag = "";
     
+    public String departmentId = "";
+    
     /**
      * Specified in seconds.
      */

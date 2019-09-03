@@ -12,7 +12,7 @@
  * @author ktonder
  */
 class home extends PageCommon {
-    public $title = "Products";
+    public $title = "GetShop - The automated hotel system which enables you to automate your check in";
     public $title_rewrite = "homepage";
     public $subpageof = "";
     public $hiddenFromMenu = true;

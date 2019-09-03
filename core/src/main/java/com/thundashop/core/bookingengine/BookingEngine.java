@@ -468,12 +468,8 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
             boolean anyUpdated = false;
             
             for (CartItem item : order.getCartItems()) {
-                if (item.departmentId == null || !item.departmentId.isEmpty()) {
-                    continue;
-                }
-                    
                 if (item.getProduct() != null && item.getProduct().id.equals(type.productId)) {
-                    item.departmentId = type.departmentId;
+                    item.getProduct().departmentId = type.departmentId;
                     anyUpdated = true;
                 }
             }

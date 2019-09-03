@@ -13,6 +13,7 @@ import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.common.PermenantlyDeleteData;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.messagemanager.PushOver;
@@ -47,6 +48,7 @@ public class TicketManager extends ManagerBase implements ITicketManager {
     public HashMap<String, Ticket> tickets = new HashMap();
     public HashMap<String, TicketLight> lightTickets = new HashMap();
     public HashMap<String, TicketUserPushover> pushOverUsers = new HashMap();
+    public HashMap<String, UnreadTickets> unreadTickets = new HashMap();
 
     @Autowired
     public UserManager userManager;
@@ -68,6 +70,9 @@ public class TicketManager extends ManagerBase implements ITicketManager {
             }
             if (inData instanceof TicketLight) {
                 lightTickets.put(inData.id, (TicketLight) inData);
+            }
+            if (inData instanceof UnreadTickets) {
+                unreadTickets.put(((UnreadTickets) inData).ticketId, (UnreadTickets) inData);
             }
             if (inData instanceof TicketUserPushover) {
                 pushOverUsers.put(inData.id, (TicketUserPushover) inData);
@@ -819,5 +824,44 @@ public class TicketManager extends ManagerBase implements ITicketManager {
     public TicketStatisticsStore getStoreStatistics(TicketStatsFilter filter) {
         TicketStatistics statistics = getStatistics(filter);
         return statistics.storeStats.get(filter.userId);
+    }
+
+    @Override
+    public void markTicketAsUnread(String ticketId) {
+        if(unreadTickets.containsKey(ticketId)) {
+            return;
+        }
+        
+        Ticket ticket = getTicket(ticketId);
+        UnreadTickets unread = new UnreadTickets();
+        unread.ticketId = ticket.id;
+        unread.tokenId = ticket.ticketToken;
+        unread.title = ticket.title;
+        unread.belongsToStore = ticket.belongsToStore;
+        unreadTickets.put(ticket.id, unread);
+        saveObject(unread);
+    }
+
+    void markAsRead(String tokenId) {
+        UnreadTickets toremove = null;
+        for(UnreadTickets t : unreadTickets.values()) {
+            if(t.tokenId.equals(tokenId)) {
+                toremove = t;
+            }
+        }
+        if(toremove != null) {
+            unreadTickets.remove(toremove.ticketId);
+            deleteObject(toremove);
+        }
+    }
+
+    public List<UnreadTickets> getUnreadTickets(String storeId) {
+        List<UnreadTickets>  result = new ArrayList();
+        for(UnreadTickets t : unreadTickets.values()) {
+            if(t.belongsToStore.equals(storeId)) {
+                result.add(t);
+            }
+        }
+        return result;
     }
 }

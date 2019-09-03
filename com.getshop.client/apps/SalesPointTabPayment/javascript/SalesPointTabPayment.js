@@ -7,8 +7,38 @@ app.SalesPointTabPayment = {
         $(document).on('click', '.SalesPointTabPayment .startpayment', app.SalesPointTabPayment.startPayment);
         $(document).on('click', '.SalesPointTabPayment .debugaction', app.SalesPointTabPayment.postDebugMessage);
         $(document).on('keyup', '.SalesPointTabPayment .filterconferences', app.SalesPointTabPayment.filterConferences);
+        $(document).on('click', '.SalesPointTabPayment .updateOrderNote', app.SalesPointTabPayment.updateOrderNote);
+        $(document).on('click', '.SalesPointTabPayment .updateDueDate', app.SalesPointTabPayment.updateDueDate);
     },
-    
+    refresh: function() {
+        window.location.href=window.location.href;
+    },
+
+    updateOrderNote : function() {
+        var note = prompt("Note to set on order");
+        var event = thundashop.Ajax.createEvent('','updateOrderNote',$(this), {
+            "note" : note,
+            "text" : $(this).val(),
+            "orderid" : $(this).attr('orderid')
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            app.SalesPointTabPayment.refresh();
+        });
+    },
+    updateDueDate : function() {
+        var days = prompt("Number of days");
+        if(!days) {
+            return;
+        }
+        var event = thundashop.Ajax.createEvent('','updateDueDate',$(this), { 
+            "days" : days,
+            "orderid" : $(this).attr('orderid')
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            app.SalesPointTabPayment.refresh();
+        });
+
+    },    
     filterConferences: function() {
         var searchWord = $(this).val();
         var rows = $('.SalesPointTabPayment .conference.row');

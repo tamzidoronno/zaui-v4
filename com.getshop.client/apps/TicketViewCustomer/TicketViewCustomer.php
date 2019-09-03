@@ -75,6 +75,7 @@ class TicketViewCustomer extends \MarketingApplication implements \Application {
                 $ticket->timeInvoiceAtDate->{time()*1000} = (($_POST['data']['secondsused']/60)/60);
             }
             $this->getApi()->getTicketManager()->saveTicket($ticket);
+            $this->getApi()->getTicketManager()->markTicketAsUnread($ticket->id);
 
         } else {
             $this->getSystemGetShopApi()->getCustomerTicketManager()->addContent($this->getFactory()->getStore()->id, $_GET['ticketToken'], $content);

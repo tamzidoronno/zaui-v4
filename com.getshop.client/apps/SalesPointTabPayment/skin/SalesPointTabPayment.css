@@ -3,15 +3,32 @@
     text-align: center;
     padding: 50px;
 }
+.SalesPointTabPayment .receipt_template {
+    background-color: #FFF;
+    width:600px;
+    padding: 40px;
+    box-shadow: 0px 2px 15px rgba(0,0,0,0.3);
+    float:left;
+}
+.SalesPointTabPayment .payment_method_options {
+    width: 300px;
+    margin-left: 27px;
+    font-size: 16px;
+    float:left;
+}
+
+.SalesPointTabPayment .receipt_template .receipt_template_inner {
+    zoom: 60%;
+}
 
 .SalesPointTabPayment .cartitem {
-    border-bottom: solid 1px #DDD;
+    border-bottom: solid 1px #DDD; 
     padding-top: 5px;
     padding-bottom: 5px;
 }
 .SalesPointTabPayment .cartitem .col {
     display: inline-block;
-    vertical-align: top;
+    vertical-align: top; 
 }
 
 .SalesPointTabPayment .cartitem .col.checkbox input { width:  25px; height: 25px; }

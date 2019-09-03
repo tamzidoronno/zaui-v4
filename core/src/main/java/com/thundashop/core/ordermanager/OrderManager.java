@@ -1851,6 +1851,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         finalize(ordersToFinalise);
     }
 
+    
+    
     private void updateAddressIfNotClosed(Order order) {
         if (!order.closed && order.userId != null && !order.userId.isEmpty() && order.cart != null) {
             try {
@@ -4468,6 +4470,15 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             ord.currency = currency;
             super.saveObject(ord);
         }
+    }
+
+    @Override
+    public Order changeUserOnOrder(String orderId, String userId) {
+        Order order = getOrder(orderId);
+        order.userId = userId;
+        finalizeOrder(order);
+        saveOrder(order);
+        return order;
     }
 
 }

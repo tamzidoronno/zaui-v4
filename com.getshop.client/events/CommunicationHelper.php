@@ -55,7 +55,6 @@ class CommunicationHelper {
             return;
         }
         
-        file_put_contents("/tmp/test.txt", "");
         $this->socket = @fsockopen($this->host, $this->port, $erstr, $errno, 220);
         if (!$this->socket) {
             header("HTTP/1.0 500 Internal server error");

@@ -269,7 +269,9 @@ public class PosManager extends ManagerBase implements IPosManager {
         order.getCartItems().stream()
                 .forEach(item -> {
                     item.departmentId = tag.departmentId;
-                    item.wareHouseId = cashPoints.get(cashPointId).warehouseid;
+                    if(cashPoints.get(cashPointId) != null) {
+                        item.wareHouseId = cashPoints.get(cashPointId).warehouseid;
+                    }
                 });
                 
         

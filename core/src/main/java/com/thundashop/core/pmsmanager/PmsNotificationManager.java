@@ -202,8 +202,10 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         }catch(Exception e) {
             e.printStackTrace();
         }
-        booking.notificationsSent.add(addNotificationSent);
-        pmsManager.saveBooking(booking);
+        if(booking != null) {
+            booking.notificationsSent.add(addNotificationSent);
+            pmsManager.saveBooking(booking);
+        }
         clearSendingTo();
     }
 
@@ -232,7 +234,9 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
                     logText += sent + ",";
                 }
                 logText += "</div>";
-                pmsManager.logEntry(logText, booking.id, null, roomId, key + "_email");
+                if(booking != null) {
+                    pmsManager.logEntry(logText, booking.id, null, roomId, key + "_email");
+                }
                 
                 if(orderIdToSend != null && !orderIdToSend.isEmpty()) {
                     for(String email : emailRecipients) {
@@ -273,8 +277,10 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
             prefix = "";
         }
         prefix = prefix.replace("+", "");
-        
-        String code = booking.language;
+        String code = getSession().language;
+        if(booking != null) {
+            code = booking.language;
+        }
         if(room != null && room.language != null && !room.language.isEmpty()) {
             code = room.language;
         }
@@ -283,8 +289,10 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         
         List<String> languagesSupported = getLanguagesForMessage(key, type);
         List<String> prefixesSupported = getPrefixesForMessage(key, type);
-        
-        List<String> roomTypes = booking.rooms.stream().map(e->e.bookingItemTypeId).collect(Collectors.toList());
+        List<String> roomTypes = new ArrayList();
+        if(booking != null) {
+            roomTypes = booking.rooms.stream().map(e->e.bookingItemTypeId).collect(Collectors.toList());
+        }
         
         for(PmsNotificationMessage msg : messages.values()) {
             if(msg.isManual) { continue; }
@@ -353,6 +361,9 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
     }
     
     private String formatMessage(String message, PmsBooking booking, PmsBookingRooms room, String key, String type) {
+        if(booking == null) {
+            booking = new PmsBooking();
+        }
         if (message != null) {
             message = message.trim();
         }
@@ -513,6 +524,13 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
     
     private List<PmsGuests> sendSms(String key, PmsBooking booking, PmsBookingRooms room, String type) {
         PmsConfiguration configuration = pmsManager.getConfigurationSecure();
+        if(booking == null) {
+            booking = new PmsBooking();
+            if(orderIdToSend != null) {
+                Order tmpOrder = orderManager.getOrder(orderIdToSend);
+                booking.userId = tmpOrder.userId;
+            }
+        }
         
         List<PmsGuests> recipients = getSmsRecipients(booking, room, type);
         for(PmsGuests guest : recipients) {

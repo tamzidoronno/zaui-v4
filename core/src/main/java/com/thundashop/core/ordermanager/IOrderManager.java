@@ -255,6 +255,9 @@ public interface IOrderManager {
     public void setOrderStatus(String password, String orderId, String currency, double price, int status) throws ErrorException;
     
     
+    @Administrator
+    public Order changeUserOnOrder(String orderId, String userId);
+    
     /**
      * Change order status of a specified order.
      * The id could be the orderId or the transaction id.

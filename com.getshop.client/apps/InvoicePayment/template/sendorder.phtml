@@ -16,6 +16,11 @@ $user = $this->getApi()->getUserManager()->getUserById($order->userId);
 $rooms = $this->getRoomsFromOrder();
 $bookings = $this->getRoomsBookingsOrder();
 
+$invoiceEmail = $user->emailAddress;
+if($user->emailAddressToInvoice) {
+    $invoiceEmail = $user->emailAddressToInvoice;
+}
+
 $isCompany = $user->companyObject != null && $user->companyObject->vatNumber;
 $canUseEhf = false;
 //
@@ -110,7 +115,7 @@ if ($canUseEhf) {
             }
             ?>
             <input type='hidden' value='<? echo $order->id; ?>' gsname='orderid'/>
-            <span style='display: inline-block; width: 100px;'>Email:</span> <input class='gsniceinput1' gsname='bookerEmail' value=''/>
+            <span style='display: inline-block; width: 100px;'>Email:</span> <input class='gsniceinput1' gsname='bookerEmail' value="<?php echo $invoiceEmail; ?>"/>
             <br/><span style='display: inline-block; width: 100px;'>Subject:</span> <input class='gsniceinput1' gsname='subject' value='<? echo $messageToUse ? $messageToUse->title : ""; ?>'/>
             <br/>
             <br/>Content:
@@ -124,7 +129,14 @@ if ($canUseEhf) {
             <div class='invoicesent' style='display: none'>
                 <i class='fa fa-check'></i> <? echo $this->__f("Invoice sent"); ?>
             </div>
-            <br/><div class='shop_button' gstype='submit' gs_callback='app.InvoicePayment.invoiceSent'>Send invoice</div>
+            <?php
+            $callback = "app.InvoicePayment.invoiceSent";
+            if($this->overrideSentInvoiceCallback) {
+                $callback = $this->overrideSentInvoiceCallback;
+            }
+            ?>
+            
+            <br/><div class='shop_button' gstype='submit' gs_callback='<?php echo $callback; ?>'>Send invoice</div>
         </div>
     </div>
 </div>

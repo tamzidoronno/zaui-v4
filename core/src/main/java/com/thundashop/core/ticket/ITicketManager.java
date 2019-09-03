@@ -112,4 +112,7 @@ public interface ITicketManager {
     @Administrator
     public TicketStatisticsStore getStoreStatistics(TicketStatsFilter filter);
     
+    @Administrator
+    public void markTicketAsUnread(String ticketId);
+    
 }

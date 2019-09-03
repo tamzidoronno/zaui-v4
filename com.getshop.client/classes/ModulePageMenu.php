@@ -289,11 +289,44 @@ class ModulePageMenu {
         
         $factory = IocContainer::getFactorySingelton();
         
-        echo "<a href='/getshopsupport.php' target='_blank'>";
-            echo "<div class='gs_framework_module modulechangericoncontainer'><i class='fa fa-question'></i>";
+        echo "<span id='opensupportcenter' href='/getshopsupport.php' target='_blank'>";
+            echo "<div class='gs_framework_module modulechangericoncontainer' id='opensupportcases' style='position:relative;'><i class='fa fa-question'></i>";
                 echo "<div class='support'>".$factory->__f("I Need Help")."</div>";
             echo "</div>";
-        echo "</a>";
+        echo "</span>";
+        
+        ?>
+        <script>
+            $('#opensupportcenter').on('click',function() {
+                if($(this).find('#ticketnotifications').length > 0) {
+                    if($('.ticketnotificationsarea').is(':visible')) {
+                        $('.ticketnotificationsarea').hide();
+                    } else {
+                        $('.ticketnotificationsarea').fadeIn();
+                    }
+                } else {
+                    window.open("/getshopsupport.php", "gsfdasfasfdeesupport");
+                }
+            });
+            
+            function getSupportTicketsNotifications() {
+                $.get("/getticketnotifcations.php", function(res) {
+                    if($('.ticketnotificationsarea').is(':visible')) {
+                        return;
+                    }
+                    $('#opensupportcases').find('#ticketnotifications').remove();
+                    $('#opensupportcases').prepend(res);
+                });
+                setTimeout(function() {
+                    getSupportTicketsNotifications();
+                }, "60000");
+            }
+            setTimeout(function() {
+                getSupportTicketsNotifications();
+            }, "3000");
+            
+        </script>
+        <?php
     }
 
 }

@@ -30,7 +30,6 @@ class SalesPointTabPayment extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\Sale
         }
         
         if (isset($_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_complete_payment'])) {
-            
             if (isset($_SESSION['gs_error_message_payment'])) {
                 echo "<div class='usererror'>".$_SESSION['gs_error_message_payment']."</div>";;
             }
@@ -168,6 +167,11 @@ class SalesPointTabPayment extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\Sale
         if ($this->fromDirect()) {
             $this->closeModal();
         }
+    }
+    
+    public function cancelInvoicePayment() {
+        $_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_complete_payment'] = $_POST['data']['orderid'];
+        $this->cancelCurrentOrder();
     }
     
     public function completeCurrentOrder() {
@@ -309,6 +313,18 @@ class SalesPointTabPayment extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\Sale
         $_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_invoice_userid'] = $_POST['data']['userid'];
     }
     
+    public function updateDueDate() {
+        $order = $this->getCurrentOrder();
+        $order->dueDays = $_POST['data']['days'];
+        $this->getApi()->getOrderManager()->saveOrder($order);
+    }
+
+    public function updateOrderNote() {
+        $order = $this->getCurrentOrder();
+        $order->invoiceNote = $_POST['data']['note'];
+        $this->getApi()->getOrderManager()->saveOrder($order);
+    }
+        
     public function createNewUser() {
         $user = new \core_usermanager_data_User();
         $user->fullName = $_POST['data']['name'];
@@ -316,6 +332,16 @@ class SalesPointTabPayment extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\Sale
         $_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_invoice_userid'] = $user->id;
         return $user;
     }
+
+    /**
+     * @param \core_usermanager_data_User $user
+     */
+    public function saveUser($user) {
+        $this->getApi()->getUserManager()->saveUser($user);
+        $_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_invoice_userid'] = $user->id;
+    }
+    
+        
     
     public function createCompany() {
         $company = new \core_usermanager_data_Company();
@@ -339,7 +365,7 @@ class SalesPointTabPayment extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\Sale
         $this->completeCurrentOrder();
         unset($_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_invoice_userid']);
     }
-
+    
     public function getNameOfPaymentMethod($paymentAppId) {
         if (isset($_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_name_payment_method_'.$paymentAppId])) {
             return $_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_name_payment_method_'.$paymentAppId];
@@ -389,6 +415,7 @@ class SalesPointTabPayment extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\Sale
             '7587fdcb-ff65-4362-867a-1684cbae6aef', 
             'conference',
             'cbe3bb0f-e54d-4896-8c70-e08a0d6e55ba',
+            '70ace3f0-3981-11e3-aa6e-0800200c9a66',
             'a263b749-abcd-4812-b052-e20eccb69aa5',
             '8650475d-ebc6-4dfb-86c3-eba4a8aba979');
         

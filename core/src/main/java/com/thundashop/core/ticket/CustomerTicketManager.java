@@ -140,6 +140,22 @@ public class CustomerTicketManager extends ManagerBase implements ICustomerTicke
         filter.userId = systemManager.getCustomerIdForStoreId(filter.storeId);
         return ticketManager.getStoreStatistics(filter);
     }
+
+    @Override
+    public TicketNotifications getNiggerFriendlyTicketNotifications(String storeId) {
+        List<UnreadTickets> unreadTickets = ticketManager.getUnreadTickets(storeId);
+        TicketNotifications result = new TicketNotifications();
+        result.numberOfUnReadTickets = unreadTickets.size();
+        for(UnreadTickets t : unreadTickets) {
+            result.unreadTickets.put(t.tokenId, t.title);
+        }
+        return result;
+    }
+
+    @Override
+    public void markTicketAsRead(String tokenId) {
+        ticketManager.markAsRead(tokenId);
+    }
     
 
 }

@@ -179,12 +179,7 @@ public class OrderDailyBreaker {
         }
         
         order.cart.getItems().stream().forEach(item -> {
-            if (filter.departmentIds != null && !filter.departmentIds.isEmpty()) {
-                if (!filter.departmentIds.contains(item.departmentId)) {
-                    return;
-                }
-            }
-            
+
             if (item.isPriceMatrixItem()) {
                 List<DayEntry> entries = createEntriesOfPriceMatrix(order, item);
                 orderDayEntries.addAll(entries);

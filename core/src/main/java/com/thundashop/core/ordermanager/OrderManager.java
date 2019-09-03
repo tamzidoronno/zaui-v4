@@ -3603,7 +3603,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             Map<String, List<DayEntry>> groupedByDepartmentId = dayIncome.dayEntries.stream()
                 .filter(entry -> !(!entry.isActualIncome || entry.isOffsetRecord))
                 .filter(o -> o.orderId != null)
-                .collect(Collectors.groupingBy(o -> getOrder(o.orderId).cart.getCartItem(o.cartItemId).departmentId));
+                .collect(Collectors.groupingBy(o -> {
+                    CartItem cartItem = getOrder(o.orderId).cart.getCartItem(o.cartItemId);
+                    if (cartItem == null || cartItem.getProduct() == null || cartItem.getProduct().departmentId == null) {
+                        return "";
+                    }
+                    
+                    return cartItem.getProduct().departmentId;
+                }));
 
 
             for (String departmentId : groupedByDepartmentId.keySet()) {

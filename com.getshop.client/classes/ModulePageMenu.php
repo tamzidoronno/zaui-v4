@@ -317,9 +317,6 @@ class ModulePageMenu {
                     $('#opensupportcases').find('#ticketnotifications').remove();
                     $('#opensupportcases').prepend(res);
                 });
-                setTimeout(function() {
-                    getSupportTicketsNotifications();
-                }, "60000");
             }
             setTimeout(function() {
                 getSupportTicketsNotifications();

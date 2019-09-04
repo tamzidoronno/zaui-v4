@@ -228,7 +228,7 @@ class GetShopInbox extends \MarketingApplication implements \Application {
         
         if ($this->getCurrentTab() == "unassigned") {
             $filter->state = "CREATED";
-            $filter->type = "UNKOWN";
+//            $filter->type = "UNKOWN";
             $filter->uassigned = true;
         }
         
@@ -258,6 +258,19 @@ class GetShopInbox extends \MarketingApplication implements \Application {
             $filter->state = "REPLIED";
             $repliedresult = (array)$this->getApi()->getTicketManager()->getAllTickets($filter);
             $result = array_merge((array)$result, (array)$repliedresult);
+            
+            $filteredresult = array();
+            foreach($result as $k => $obj) {
+                if($obj->type == "BACKLOG") {
+                    continue;
+                }
+                if($obj->type == "SETUP") {
+                    continue;
+                }
+                $filteredresult[] = $obj;
+            }
+            $result = $filteredresult;
+            
         }
         if ($this->getCurrentTab() == "inprogress") {
             $newResult = array();
@@ -303,3 +316,4 @@ class GetShopInbox extends \MarketingApplication implements \Application {
 }
 
 ?>
+

@@ -883,7 +883,12 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             }
         }
         booking = pmsManager.doCompleteBooking(pmsManager.getCurrentBooking());
-       
+         
+        BookingResult res = new BookingResult();
+        if(booking == null) {
+            res.success = 0;
+            return res;
+        }
         
         PmsUserDiscount discount = pmsInvoiceManager.getDiscountsForUser(booking.userId);
         User usr = userManager.getUserById(booking.userId);
@@ -897,15 +902,9 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             }
         }
         
-        BookingResult res = new BookingResult();
         res.success = 1;
         res.orderid = booking.id;
-        
-        if(booking == null) {
-            res.success = 0;
-            return res;
-        }
-        
+      
         booking.calculateTotalCost();
         res.amount = booking.getUnpaidAmount();
         

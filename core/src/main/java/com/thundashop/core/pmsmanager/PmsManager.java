@@ -265,7 +265,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (dataCommon instanceof PmsBooking) {
                 
                 PmsBooking booking = (PmsBooking) dataCommon;
-//                if(booking.orderIds.contains("c097c930-c4e6-42d5-85fe-6fa84b71dc0e")) {
+//                if(booking.orderIds.contains("7efc86d1-4147-4c78-8cc1-c0d57c33fdc8")) {
 //                    includeAlways = booking;
 //                }
                 if(booking.nonrefundable) { booking.setAllRoomsNonRefundable(); }
@@ -729,6 +729,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public PmsBooking getBooking(String bookingId) {
         if(includeAlways != null) {
+            bookings.put(includeAlways.id, includeAlways);
             return includeAlways;
         }
         return getBookingInternal(bookingId, true);

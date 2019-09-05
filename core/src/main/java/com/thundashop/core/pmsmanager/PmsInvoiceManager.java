@@ -1345,7 +1345,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             usersEmail = order.recieptEmail;
         }
         sendRecieptOrInvoice(order.id, usersEmail, bookingId);
-        pmsManager.logEntry("Reciept / invoice sent to : " + usersEmail + " orderid: " + order.incrementOrderId, bookingId, null);
+        pmsManager.logEntry("Receipt / invoice sent to : " + usersEmail + " orderid: " + order.incrementOrderId, bookingId, null);
         
     }
 

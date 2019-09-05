@@ -491,7 +491,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
             attachments.put("termsandcondition.html", createContractAttachment(booking.id));
         }
         if (key.startsWith("sendreciept")) {
-            attachments.put("reciept.pdf", createInvoiceAttachment());
+            attachments.put("receipt.pdf", createInvoiceAttachment());
         }
         if (key.startsWith("sendinvoice")) {
             attachments.put("invoice.pdf", createInvoiceAttachment());

@@ -202,6 +202,14 @@ $payAfterStay = $room->createOrdersOnZReport && !($needToCreateOrdersFor <= 1 &&
     }
     
     if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isGetShopUser()) {
+        ?>
+    <br>
+        <div gstype="form" method="addIncrementOrderIdToBooking">
+            Import order:<br>
+            <input type="txt" class="gsniceinput1" gsname="orderid" placeholder="100123">
+            <span class="shop_button" gstype="submit">Import order</span>
+        </div>
+        <?php
         $orderIds = $this->getApi()->getOrderManager()->getAllOrdersForRoom($room->pmsBookingRoomId);
         $found = false;
         foreach ($orderIds as $orderId) {
@@ -361,9 +369,6 @@ $payAfterStay = $room->createOrdersOnZReport && !($needToCreateOrdersFor <= 1 &&
 </div>
 
 
-<div class="information" style="margin-bottom: 30px; border: solid 1px #DDD; padding: 10px; background-color: #feffc1; text-align: center">
-    <div class="gs_shop_small_icon" gsclick="switchToOldVersion">Go back to old version</div>
-</div>
 <style>
     .row_payment_status_line_expanded  { border-top: 0px !important; padding:0px !important;}
     .row_payment_status_line_expanded  .col_guestname { width: 120px; }

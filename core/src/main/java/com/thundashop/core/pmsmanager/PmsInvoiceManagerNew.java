@@ -5,11 +5,13 @@
  */
 package com.thundashop.core.pmsmanager;
 
+import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.pdf.data.AccountingDetails;
 import com.thundashop.core.pos.PosConference;
 import com.thundashop.core.pos.PosManager;
 import com.thundashop.core.pos.PosTab;
@@ -89,9 +91,19 @@ public class PmsInvoiceManagerNew {
 
     private void addAccomodationToCart(PmsOrderCreateRow roomData) {
         Map<String, List<PmsOrderCreateRowItemLine>> res = roomData.items.stream()
-                .filter(o -> o.isAccomocation)
-                .collect(Collectors.groupingBy(o -> o.createOrderOnProductId));
+            .filter(o -> o.isAccomocation)
+            .collect(Collectors.groupingBy(o -> o.createOrderOnProductId));
 
+        Application settings = pmsManager.storeApplicationPool.getApplicationIgnoreActive("70ace3f0-3981-11e3-aa6e-0800200c9a66");
+        String language = pmsManager.getStoreSettingsApplicationKey("language");
+        if(settings.getSetting("language") != null && !settings.getSetting("language").isEmpty()) {
+            language = settings.getSetting("language");
+        }
+        boolean useSingleRoomTypes = false;
+        if(settings.getSetting("useSingleRoomTypes") != null && !settings.getSetting("useSingleRoomTypes").isEmpty()) {
+            useSingleRoomTypes = settings.getSetting("useSingleRoomTypes").equals("true");
+        }
+        
         for (String productId : res.keySet()) {
             List<PmsOrderCreateRowItemLine> days = res.get(productId);
             CartItem item = cartManager.addProductItem(productId, getCount(days));
@@ -105,6 +117,13 @@ public class PmsInvoiceManagerNew {
                 item.setCount(1);
             }
             
+            if(useSingleRoomTypes) {
+                String name = "Overnatting";
+                if(language != null && (language.equalsIgnoreCase("en_en") || language.equalsIgnoreCase("en"))) {
+                    name = "Accommodation";
+                }
+                prod.name = name;
+            }
             item.priceMatrix = new HashMap();
             setMetaData(item, roomData);
             setGuestName(item, roomData);

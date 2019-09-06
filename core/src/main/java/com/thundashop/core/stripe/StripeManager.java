@@ -167,6 +167,7 @@ public class StripeManager extends ManagerBase implements IStripeManager {
             
             order.payment.transactionLog.put(System.currentTimeMillis(), "Transferred to payment window");
             orderManager.saveOrder(order);
+            messageManager.sendErrorNotification("Payment on new stripe integration initiated, orderid: " + order.incrementOrderId, null);
             
             return session.getId();
         }catch(Exception e) {
@@ -260,7 +261,10 @@ public class StripeManager extends ManagerBase implements IStripeManager {
         } else {
             Stripe.apiKey = "sk_test_K7lzjnniaCB8MjTZjpodqriy";
         }
-
+        
+        Order order = orderManager.getOrderDirect(result.orderId);
+        if(order==null) { return; }
+        
         try {
            result.payload = new String(Base64.getDecoder().decode(result.payload.getBytes()));
            Event event = Webhook.constructEvent(result.payload, result.validationKey, settings.webhookSecret);
@@ -273,7 +277,6 @@ public class StripeManager extends ManagerBase implements IStripeManager {
             return;
         }
         
-        Order order = orderManager.getOrderSecure(result.orderId);
         order.payment.callBackParameters = result.result;
         orderManager.saveOrder(order);
         orderManager.markAsPaid(result.orderId, new Date(), (double)result.amount/100);
@@ -305,9 +308,16 @@ public class StripeManager extends ManagerBase implements IStripeManager {
             }
             
             Map<String, Object> params = new HashMap<String, Object>();
-            params.put("limit", "3");
+            params.put("limit", "30");
             WebhookEndpointCollection webhooks = WebhookEndpoint.list(params);
-            if(webhooks.getData().size() > 0) {
+            List<WebhookEndpoint> webhooksList = webhooks.getData();
+            for(WebhookEndpoint endpoint : webhooksList) {
+                if(endpoint.getUrl().equals(endpoint)) {
+                    return;
+                }
+            }
+            
+            if(!webhooksList.isEmpty()) {
                 return;
             }
             

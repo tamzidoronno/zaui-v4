@@ -10059,7 +10059,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
        
                 PmsBooking booking = getBookingFromRoomSecure(o.roomId);
-                
+                if(booking.invoiceNote != null && !booking.invoiceNote.isEmpty()) {
+                    order.invoiceNote = booking.invoiceNote;
+                    orderManager.saveOrder(order);
+                }
                 if (!booking.orderIds.contains(order.id)) {
                     booking.orderIds.add(order.id);
                     saveBooking(booking);

@@ -282,7 +282,7 @@ public class DirectorManager extends ManagerBase implements IDirectorManager {
         item.setProduct(productManager.getProduct(system.productId));
         item.getProduct().description = "Periode: "+periode+" ("+system.webAddresses+")";
         item.getProduct().name += " Periode: "+ periode + " ("+system.webAddresses+")";
-        item.setCount(1);
+        item.setCount(system.numberOfMonthsToInvoice);
         item.getProduct().price = system.monthlyPrice * (item.getProduct().taxGroupObject.getTaxRate() + 1);
         items.add(item);
         
@@ -359,24 +359,27 @@ public class DirectorManager extends ManagerBase implements IDirectorManager {
     }
 
     private void addTickets(User mainCompanyUser, boolean virtual) {
-        TicketFilter filter = new TicketFilter();
-        filter.userId = mainCompanyUser.id;
-        filter.state = TicketState.COMPLETED;
-        ticketManager.getAllTickets(filter).stream()
-            .filter(ticket -> !ticket.transferredToAccounting)
-            .forEach(ticket -> {
-                int seconds = (int) (ticket.timeInvoice * 60 * 60);
-                String timeSpent = timeConversion(seconds);
-
-                Product ticketProduct = getTicketProduct(ticket).clone();
-                ticketProduct.price = (ticketProduct.price * ticket.timeInvoice);
-                ticketProduct.name = "Support: " + ticket.incrementalId + " - " + ticket.title + " ( " + timeSpent + " )";
-                CartItem item = cartManager.getCart().createCartItem(ticketProduct, 1);
-                
-                if (!virtual) {
-                    ticketManager.markTicketAsTransferredToAccounting(ticket.id);
-                }
-            });
+        //  TODO: Start using the new ticket system....
+        // NB!!!! Support forign currencty also..
+        
+//        TicketFilter filter = new TicketFilter();
+//        filter.userId = mainCompanyUser.id;
+//        filter.state = TicketState.COMPLETED;
+//        ticketManager.getAllTickets(filter).stream()
+//            .filter(ticket -> !ticket.transferredToAccounting)
+//            .forEach(ticket -> {
+//                int seconds = (int) (ticket.timeInvoice * 60 * 60);
+//                String timeSpent = timeConversion(seconds);
+//
+//                Product ticketProduct = getTicketProduct(ticket).clone();
+//                ticketProduct.price = (ticketProduct.price * ticket.timeInvoice);
+//                ticketProduct.name = "Support: " + ticket.incrementalId + " - " + ticket.title + " ( " + timeSpent + " )";
+//                CartItem item = cartManager.getCart().createCartItem(ticketProduct, 1);
+//                
+//                if (!virtual) {
+//                    ticketManager.markTicketAsTransferredToAccounting(ticket.id);
+//                }
+//            });
     }
     
     private Product getTicketProduct(Ticket ticket) {

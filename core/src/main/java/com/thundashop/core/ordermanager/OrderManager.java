@@ -4206,7 +4206,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         for (CartItem item : order.getCartItems()) {
-            boolean samePriceInTaxAsOldOrder = oldOrder != null && oldOrder.cart.getCartItem(item.getCartItemId()).getProductPrice() == item.getProductPrice();
+            boolean samePriceInTaxAsOldOrder = oldOrder != null && oldOrder.cart.getCartItem(item.getCartItemId()) != null && oldOrder.cart.getCartItem(item.getCartItemId()).getProductPrice() == item.getProductPrice();
             boolean currencySame = oldOrder != null && order.currency.equals(oldOrder.currency);
             boolean hasOldOrder = oldOrder != null;
             

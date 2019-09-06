@@ -16,5 +16,5 @@ public interface IStripeManager {
     public boolean createAndChargeCustomer(String orderId, String token);
     public boolean chargeOrder(String orderId, String cardId);
     public String createSessionForPayment(String orderId, String address);
-    public void handleWebhookCallback(WebhookCallback result);
+    public void handleWebhookCallback(WebhookCallback callbackResult);
 }

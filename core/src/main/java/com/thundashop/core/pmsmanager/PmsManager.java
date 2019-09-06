@@ -5354,7 +5354,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void markGuestArrivedInternal(PmsBooking booking, PmsBookingRooms room) throws ErrorException {
-        if (room.checkedin) {
+        if (room.checkedin || !room.isDeleted()) {
             return;
         }
 
@@ -8619,8 +8619,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
-    public boolean removeFromWaitingList(String pmsRoomId) {
-        PmsBooking booking = getBookingFromRoom(pmsRoomId);
+    public boolean removeFromWaitingList(String pmsRoomId) { 
+       PmsBooking booking = getBookingFromRoom(pmsRoomId);
         PmsBookingRooms room = booking.getRoom(pmsRoomId);
         if (!room.addedToWaitingList) {
             return true;

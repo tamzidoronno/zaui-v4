@@ -43,6 +43,20 @@ $title = $this->getConfigurationSetting("title");
                 <?php  echo $this->__f("Title of the store"); ?>
             </div>
         </div>
+
+           <div class="textfield gss_setting"  id="useScaCompliant">
+           <span class="title"><?php echo $this->__f("Upgrade to SCA friendly payment gateway"); ?></span>
+           <div class="gss_onoff" gs_model="dibsmodel" gs_model_attr="useScaCompliant">
+               <?
+               $class = $this->getConfigurationSetting("useScaCompliant") == "true" ? "fa-toggle-on" : "fa-toggle-off";
+               ?>
+               <? echo $this->__f("Off"); ?><i class="fa <? echo $class; ?>"></i><? echo $this->__f("On"); ?>
+           </div>
+           <div class="description">
+               <?php echo $this->__w("Automatically mark orders by this order as paid?"); ?>
+           </div>
+    </div>
+        
     </div>
 
     <div class='gss_button_area'>

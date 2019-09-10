@@ -24,7 +24,7 @@ class AccountProducts extends \MarketingApplication implements \Application {
     public function saveTaxGroups() {
         foreach ($_POST['data'] as $key => $value) {
             if (strpos($key, "taxcode_") > -1) {
-//                $x = explode("_", $key);
+                $x = explode("_", $key);
                 $productId = $x[1];
                 $product = $this->getApi()->getProductManager()->getProduct($productId);
                 $product->sku = $value;

@@ -54,7 +54,7 @@ echo "<div style='padding: 30px;'>";
         echo "<div class='col'>Total ex taxes</div>";
         echo "<div class='col'>Total inc taxes</div>";
     echo "</div>";
-
+    
     foreach ($entriesByProductId as $productId => $entries) {
         $product = $this->getApi()->getProductManager()->getProduct($productId);
         $totalExTax = 0;

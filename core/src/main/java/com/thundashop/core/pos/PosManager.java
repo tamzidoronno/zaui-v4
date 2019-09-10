@@ -884,7 +884,7 @@ public class PosManager extends ManagerBase implements IPosManager {
         
         canClose.uncompletedOrders = orderManager.getAllOrders()
                 .stream()
-                .filter(o -> !o.isNullOrder() && !o.isAccruedPayment())
+                .filter(o -> !o.isNullOrder() && !o.isAccruedPayment() && !o.isInvoice())
                 .filter(o -> o.status != Order.Status.PAYMENT_COMPLETED)
                 .filter(o -> createdCashPoint(o, cashPointId))
                 .collect(Collectors.toList());

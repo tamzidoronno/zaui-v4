@@ -21,6 +21,8 @@ public class DoublePostAccountingTransfer extends DataCommon {
     public String userId;
 
     public List<DayIncome> incomes = new ArrayList();
+    
+    public List<Date> transferredToAccountingDates = new ArrayList();
 
     public boolean isWithinOrEqual(Date start, Date end) {
         Date startDate = this.start;
@@ -43,5 +45,9 @@ public class DoublePostAccountingTransfer extends DataCommon {
             return true;
      
         return false;
+    }
+
+    void addTransferredDate(Date date) {
+        transferredToAccountingDates.add(date);
     }
 }

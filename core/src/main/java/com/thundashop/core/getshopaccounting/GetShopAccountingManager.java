@@ -381,4 +381,16 @@ public class GetShopAccountingManager extends ManagerBase implements IGetShopAcc
         return getActivatedAccountingSystemOther().getTransferData(incomes);
     }
 
+    @Override
+    public void transferDoublePostFile(String doublePostFileId) {
+        DoublePostAccountingTransfer file = orderManager.getDoublePostAccountingTransfer(doublePostFileId);
+        if (file == null) {
+            return;
+        }
+        
+        getActivatedAccountingSystemOther().transfer(file.incomes);
+        file.addTransferredDate(new Date());
+        orderManager.saveObject(file);
+    }
+
 }

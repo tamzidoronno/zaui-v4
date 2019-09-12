@@ -270,6 +270,8 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
         
         if ($system == "VISMA_NET") {
             $this->doVismaTransfer();
+        } else {
+            $this->getApi()->getGetShopAccountingManager()->transferDoublePostFile($_POST['data']['doublepostid']);
         }
     }
     
@@ -430,5 +432,8 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
         unset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_account_diff_report']);
     }
 
+    public function transferFileToPo() {
+        echo "OK";
+    }
 }
 ?>

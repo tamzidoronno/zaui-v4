@@ -76,7 +76,9 @@ public class ProductPriceOverride {
     }
     
     public void finalize() {
-        if (Double.isNaN(newValue) || Double.isFinite(newValue)) {
+        boolean isNan = Double.isNaN(newValue);
+        
+        if (isNan) {
             newValue = 0D;
         }
     }

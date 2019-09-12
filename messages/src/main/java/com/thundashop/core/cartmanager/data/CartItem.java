@@ -185,7 +185,7 @@ public class CartItem implements Serializable, Cloneable {
             }
         }
         
-        if (overridePriceIncTaxes == null || Double.isNaN(overridePriceIncTaxes) || Double.isFinite(overridePriceIncTaxes)) {
+        if (overridePriceIncTaxes == null || Double.isNaN(overridePriceIncTaxes) ) {
             overridePriceIncTaxes = null;
         }
         

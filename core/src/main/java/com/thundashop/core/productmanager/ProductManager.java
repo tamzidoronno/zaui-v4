@@ -599,5 +599,12 @@ public class ProductManager extends AProductManager implements IProductManager {
         }
     }
 
+    @Override
+    public void changeAccountingNumber(int oldAccountNumber, int accountNumber) {
+        AccountingDetail res = getAccountingDetail(oldAccountNumber);
+        res.accountNumber = accountNumber;
+        saveObject(res);
+    }
+
     
 }

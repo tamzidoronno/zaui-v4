@@ -274,4 +274,7 @@ public interface IProductManager {
     
     @Administrator
     public void deleteAccountingAccount(int accountNumber);
+    
+    @Administrator
+    public void changeAccountingNumber(int oldAccountNumber, int accountNumber);
 }

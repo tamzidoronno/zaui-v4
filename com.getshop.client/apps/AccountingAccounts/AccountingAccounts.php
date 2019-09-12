@@ -40,5 +40,9 @@ class AccountingAccounts extends \SystemApplication implements \Application {
     public function deleteAccount() {
         $this->getApi()->getProductManager()->deleteAccountingAccount($_POST['data']['accountid']);
     }
+    
+    public function changeAccountingNumber() {
+        $this->getApi()->getProductManager()->changeAccountingNumber($_POST['data']['oldAccountNumber'], $_POST['data']['accountNumber']);
+    }
 }
 ?>

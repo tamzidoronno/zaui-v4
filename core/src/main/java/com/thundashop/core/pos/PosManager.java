@@ -233,6 +233,10 @@ public class PosManager extends ManagerBase implements IPosManager {
 
     @Override
     public Double getTotal(String tabId) {
+        if (tabId == null) {
+            return 0D;
+        }
+        
         PosTab tab = getTab(tabId);
         Cart cart = new Cart();
         cart.addCartItems(tab.cartItems);

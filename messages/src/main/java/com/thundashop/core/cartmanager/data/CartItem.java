@@ -185,6 +185,13 @@ public class CartItem implements Serializable, Cloneable {
             }
         }
         
+        if (overridePriceIncTaxes == null || Double.isNaN(overridePriceIncTaxes) || Double.isFinite(overridePriceIncTaxes)) {
+            overridePriceIncTaxes = null;
+        }
+        
+        overridePriceHistory.stream().forEach(o -> o.finalize());
+        
+        
         if(itemsAdded != null) {
             for(PmsBookingAddonItem toCheck : itemsAdded) {
                 

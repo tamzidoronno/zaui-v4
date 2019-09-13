@@ -1189,21 +1189,34 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             return 3; //Registrered by administrator
         }
         
-        double amount = booking.getUnpaidAmount();
-        if(amount <= 0) {
-            return 5; //Everything is paid for
-        }
-        
         if(booking.notificationsSent.contains("booking_sendpaymentlink")) {
             return 4; //Already sent
         }
         
         
+        if(booking.isPrePaid) {
+            return 6; //Paid by ota.
+        }
+        
+        boolean hasUnpaid = false;
         for(String orderId : booking.orderIds) {
             Order ord = orderManager.getOrderDirect(orderId);
-            if(ord.isPrepaidByOTA()) {
-                return 6; //Prepaid by ota
+            if(!ord.isPaid()) {
+                hasUnpaid = true;
             }
+            if(ord.isPrepaidByOTA()) {
+                return 13; //Has order prepaid by ota.
+            }
+        }
+        
+        double amount = booking.getUnpaidAmount();
+        if(amount <= 0 && hasUnpaid) {
+            pmsManager.calculateUnsettledAmountForRooms(booking);
+            amount = booking.getUnpaidAmount();
+        }
+        
+        if(amount <= 0) {
+            return 5; //Everything is paid for
         }
 
         if(config.wubookAutoCharging && !booking.isOld(10) && booking.isWubook()) {

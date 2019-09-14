@@ -132,6 +132,9 @@ public interface IOrderManager {
     @Editor
     public FilteredData getOrdersFiltered(FilterOptions filterOptions);
     
+    @Administrator
+    public void doRoundUpOnCurrentOrder(String orderId);
+    
     @Editor
     public List<OrderResult> getOrdersByFilter(OrderFilter filter);
     

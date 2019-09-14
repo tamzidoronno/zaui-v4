@@ -803,4 +803,23 @@ public class StoreManager extends ManagerBase implements IStoreManager {
             }
         }
     }
+
+    public String getCurrency() {
+        String currency = getStoreSettingsApplicationKey("currencycode");
+        if(currency == null || currency.isEmpty()) {
+            currency = "NOK";
+        }
+        return currency;
+    }
+
+    public String getLanguage() {
+        String lang = getSession().language;
+        if(lang == null || lang.isEmpty()) {
+            lang = "no";
+        }
+        if(lang.equalsIgnoreCase("nb_no")) {
+            lang = "no";
+        }
+        return lang;
+    }
 }

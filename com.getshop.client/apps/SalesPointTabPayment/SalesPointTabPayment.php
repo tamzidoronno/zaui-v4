@@ -3,7 +3,7 @@ namespace ns_11234b3f_452e_42ce_ab52_88426fc48f8d;
 
 class SalesPointTabPayment extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPointCommon implements \Application {
     private $tab = null;
-    private $currentOrder = null;
+    public $currentOrder = null;
     
     public function getDescription() {
         

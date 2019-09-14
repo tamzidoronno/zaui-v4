@@ -4488,4 +4488,59 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return order;
     }
 
+    @Override
+    public void doRoundUpOnCurrentOrder(String orderId) {
+        Order order = getOrderSecure(orderId);
+        String currency = storeManager.getCurrency();
+        String language = StoreManager.getLanguage();
+        
+        Product prod = productManager.getProduct("roundupproduct");
+        if(prod == null) {
+            String productName = "Øreavrunding";
+            if(!language.equals("no")) {
+                productName = "Exchange roundup";
+            }
+            
+            prod = new Product();
+            prod.name = productName;
+            prod.id = "roundupproduct";
+            prod.price = 0.0;
+            prod.taxgroup = 0;
+            productManager.saveProduct(prod);
+        }
+        
+        List<String> removeItem = new ArrayList();
+        for(CartItem item : order.getCartItems()) {
+            if(item.getProduct().id.equals("roundupproduct")) {
+                removeItem.add(item.getCartItemId());
+            }
+        }
+        for(String itemId : removeItem) {
+            order.cart.removeItem(itemId);
+        }
+        
+        saveOrder(order);
+        
+        double total = getTotalAmount(order);
+        double ceiltotal = Math.ceil(total);
+        double roundup = ceiltotal - total;
+        
+        if(roundup > 0.1) {
+            
+            if(currency.equals("adifferentcurrency")) {
+                //Do something here.
+            } else {
+                roundup = Math.round(roundup*100) / (double)100;
+            }
+            addProductToOrder(order.id, prod.id, 1);
+            order = getOrder(orderId);
+            for(CartItem item : order.getCartItems()) {
+                if(item.getProduct().id.equals("roundupproduct")) {
+                    item.getProduct().price = roundup;
+                }
+            }
+            saveOrder(order);
+        }
+    }
+
 }

@@ -154,14 +154,12 @@ public class StripeManager extends ManagerBase implements IStripeManager {
                 currency = "NOK";
             }
             HashMap<String, Object> lineItem = new HashMap<String, Object>();
-            
-            for(CartItem item : order.getCartItems()) {
-                lineItem.put("name", item.getProduct().name);
-                lineItem.put("description", "Payment for order " + order.incrementOrderId);
-                lineItem.put("amount", (int)(item.getProduct().price*100)+"");
-                lineItem.put("currency", currency);
-                lineItem.put("quantity", item.getCount());
-            }
+            lineItem.put("name", "Payment");
+            lineItem.put("description", "Payment for order " + order.incrementOrderId);
+            lineItem.put("amount", (int)(orderManager.getTotalAmount(order)*100));
+            lineItem.put("currency", currency);
+            lineItem.put("quantity", 1);
+
             ArrayList<HashMap<String, Object>> lineItems = new ArrayList<>();
             lineItems.add(lineItem);
             params.put("line_items", lineItems);

@@ -21,7 +21,7 @@ foreach($pmsBooking->rooms as $room) {
 
 <div class='headerboxes'>
 <?php
-if($pmsBookingRoom->unpaidAmount > 0) {
+if($pmsBookingRoom->unpaidAmount > 0.1) {
     echo "<div class='unpaidamountwarning'><i class='fa fa-warning'></i> For this room there is a total of " . $pmsBookingRoom->unpaidAmount ." which not yet has been paid";
     echo "<div class='shop_button addselecteditemstocart' isgroup='yes' roomid='".$pmsBookingRoom->pmsBookingRoomId."' style='background-color: #86c330; color: #FFF; vertical-align: top;border-radius: 3px; border: solid 0px; float:right;'>Start payment process</div>";
     echo "</div>";

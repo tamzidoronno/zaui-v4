@@ -866,6 +866,26 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         if (order != null) {
             order.status = status;
+            if(order.payment != null) {
+                order.payment.transactionLog.put(System.currentTimeMillis(), "Changed orderstatus to : " + status);
+            }
+            saveOrderInternal(order);
+        }
+    }
+    
+    @Override
+    public void changeOrderStatusWithPassword(String id, int status, String password) throws ErrorException {
+        if(!password.equals("gfdsabdf034534BHdgfsdgfs#!")) {
+            return;
+        }
+        
+        Order order = orders.get(id);
+        
+        if(order.status != Order.Status.PAYMENT_COMPLETED && (status == Order.Status.NEEDCOLLECTING || status == Order.Status.PAYMENT_FAILED)) {
+            order.status = status;
+            if(order.payment != null) {
+                order.payment.transactionLog.put(System.currentTimeMillis(), "Changed orderstatus to : " + status);
+            }
             saveOrderInternal(order);
         }
     }
@@ -4486,6 +4506,67 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         finalizeOrder(order);
         saveOrder(order);
         return order;
+    }
+
+    @Override
+    public void doRoundUpOnCurrentOrder(String orderId) {
+        
+        if(true) {
+            //Wait on realasing this.
+            return;
+        }
+        
+        Order order = getOrderSecure(orderId);
+        String currency = storeManager.getCurrency();
+        String language = StoreManager.getLanguage();
+        
+        Product prod = productManager.getProduct("roundupproduct");
+        if(prod == null) {
+            String productName = "Øreavrunding";
+            if(!language.equals("no")) {
+                productName = "Exchange roundup";
+            }
+            
+            prod = new Product();
+            prod.name = productName;
+            prod.id = "roundupproduct";
+            prod.price = 0.0;
+            prod.taxgroup = 0;
+            productManager.saveProduct(prod);
+        }
+        
+        List<String> removeItem = new ArrayList();
+        for(CartItem item : order.getCartItems()) {
+            if(item.getProduct().id.equals("roundupproduct")) {
+                removeItem.add(item.getCartItemId());
+            }
+        }
+        for(String itemId : removeItem) {
+            order.cart.removeItem(itemId);
+        }
+        
+        saveOrder(order);
+        
+        double total = getTotalAmount(order);
+        double ceiltotal = Math.ceil(total);
+        double roundup = ceiltotal - total;
+        
+        if(roundup > 0.1) {
+            
+            if(currency.equals("adifferentcurrency")) {
+                //Do something here.
+            } else {
+                roundup = Math.round(roundup*100) / (double)100;
+            }
+            addProductToOrder(order.id, prod.id, 1);
+            order = getOrder(orderId);
+            for(CartItem item : order.getCartItems()) {
+                if(item.getProduct().id.equals("roundupproduct")) {
+                    item.getProduct().price = roundup;
+                }
+            }
+            saveOrder(order);
+        }
     }
 
 }

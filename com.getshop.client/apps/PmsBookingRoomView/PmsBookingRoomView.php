@@ -2415,6 +2415,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $reasons[10] = "Booking will be deleted in 30 minutes.";
         $reasons[11] = "We are waiting 30 minutes for payment to be completed, payment link is sent after that.";
         $reasons[12] = "Access has been forced, we do not send paymentlink if access has been forced.";
+        $reasons[13] = "It have an order which is a prepaid order by ota.";
         return $reasons[$reason];
     }
 

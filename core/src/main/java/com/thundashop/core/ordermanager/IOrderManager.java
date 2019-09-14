@@ -132,6 +132,9 @@ public interface IOrderManager {
     @Editor
     public FilteredData getOrdersFiltered(FilterOptions filterOptions);
     
+    @Administrator
+    public void doRoundUpOnCurrentOrder(String orderId);
+    
     @Editor
     public List<OrderResult> getOrdersByFilter(OrderFilter filter);
     
@@ -264,6 +267,8 @@ public interface IOrderManager {
      */
     @Administrator
     public void changeOrderStatus(String id, int status) throws ErrorException;
+    
+    public void changeOrderStatusWithPassword(String id, int status, String password);
     
     @Administrator
     public void markAsInvoicePayment(String orderId);

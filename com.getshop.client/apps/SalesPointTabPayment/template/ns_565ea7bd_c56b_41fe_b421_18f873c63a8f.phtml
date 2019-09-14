@@ -1,6 +1,9 @@
 <?php
 /* @var $this \ns_11234b3f_452e_42ce_ab52_88426fc48f8d\SalesPointTabPayment */
 $order = $this->getCurrentOrder();
+$this->getApi()->getOrderManager()->doRoundUpOnCurrentOrder($order->id);
+$this->currentOrder = null;
+$order = $this->getCurrentOrder();
 $total = $this->getApi()->getOrderManager()->getTotalAmount($order);
 ?>
 

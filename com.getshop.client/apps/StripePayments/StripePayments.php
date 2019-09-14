@@ -153,28 +153,29 @@ class StripePayments extends \PaymentApplication implements \Application {
     
     public function handleCallBack() {
         
-        $content = "";
-//        $content .= "POST: " . json_encode($_POST);
-//        $content .= "GET: " . json_encode($_GET);
-        $striperesult = json_decode(file_get_contents("php://input"), true);
-        $data = $striperesult['data']['object'];
-        $striperesult = array_merge($striperesult, $data);
-        unset($striperesult['data']);
-        unset($striperesult['display_items']);
-        unset($striperesult['payment_method_types']);
-        unset($striperesult['request']);
-        
-        $orderid = $striperesult['client_reference_id'];
-        
-        $calling = new \core_stripe_WebhookCallback();
-        $calling->orderId = $orderid;
-        $calling->result = $striperesult;
-        $calling->validationKey = $_SERVER['HTTP_STRIPE_SIGNATURE'];
-        $calling->amount = $striperesult['amount'];
-        $calling->payload = base64_encode(file_get_contents('php://input'));
+        if(isset($_GET['page'])) {
+            $this->handlePaymentRedirect();
+        } else {
+            $content = "";
+            $striperesult = json_decode(file_get_contents("php://input"), true);
+            $data = $striperesult['data']['object'];
+            $striperesult = array_merge($striperesult, $data);
+            unset($striperesult['data']);
+            unset($striperesult['display_items']);
+            unset($striperesult['payment_method_types']);
+            unset($striperesult['request']);
 
-        
-        $this->getApi()->getStripeManager()->handleWebhookCallback($calling);
+            $orderid = $striperesult['client_reference_id'];
+
+            $calling = new \core_stripe_WebhookCallback();
+            $calling->orderId = $orderid;
+            $calling->result = $striperesult;
+            $calling->validationKey = $_SERVER['HTTP_STRIPE_SIGNATURE'];
+            $calling->amount = $striperesult['amount'];
+            $calling->payload = base64_encode(file_get_contents('php://input'));
+            
+            $this->getApi()->getStripeManager()->handleWebhookCallback($calling);
+        }
     }
 
     public function renderNewCheckout() {
@@ -218,6 +219,15 @@ class StripePayments extends \PaymentApplication implements \Application {
         </script>
         <?php
         
+    }
+
+    public function handlePaymentRedirect() {
+        if($_GET['page'] == "payment_success") {
+            $this->getApi()->getOrderManager()->changeOrderStatusWithPassword($_GET['orderid'], 9, "gfdsabdf034534BHdgfsdgfs#!");
+        } else {
+            $this->getApi()->getOrderManager()->changeOrderStatusWithPassword($_GET['orderid'], 3, "gfdsabdf034534BHdgfsdgfs#!");
+        }
+        header('Location: /?page=' . $_GET['page']);
     }
 
 }

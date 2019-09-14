@@ -1008,7 +1008,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     public String getRedirectForBooking(String bookingId) {
         try {
             PmsBooking booking = pmsManager.getBookingUnsecure(bookingId);
-
+            if(!booking.isCompletedBooking()) {
+                return "/?page=payment_failed";
+            }
+            
             //Pay later button has been pressed.
             if(booking.payLater) { return "/?page=payment_success"; }
 

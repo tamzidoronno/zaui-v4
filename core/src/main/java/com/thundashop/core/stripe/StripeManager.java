@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.opentravel.ota._2003._05.ActionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -134,7 +135,9 @@ public class StripeManager extends ManagerBase implements IStripeManager {
                 email = "no@emailset.com";
             }
             
-            createWebHook(Stripe.apiKey, address);
+            String endpoints = createWebHook(Stripe.apiKey);
+            
+            String callback = getCallBackAddr();
             
             Map<String, Object> params = new HashMap<String, Object>();
 
@@ -143,8 +146,8 @@ public class StripeManager extends ManagerBase implements IStripeManager {
             params.put("payment_method_types", paymentMethodTypes);
             params.put("customer_email", email);
             params.put("client_reference_id", order.id);
-            params.put("success_url", address+"/?page=payment_success&session_id={CHECKOUT_SESSION_ID}");
-            params.put("cancel_url", address+"/?page=payment_failed&session_id");
+            params.put("success_url", callback+"&page=payment_success&session_id={CHECKOUT_SESSION_ID}&orderid=" + orderId);
+            params.put("cancel_url", callback+"&page=payment_failed&session_id={CHECKOUT_SESSION_ID}&orderid=" + orderId);
 
             String currency = storeManager.getStoreSettingsApplicationKey("currencycode");
             if(currency == null || currency.isEmpty()) {
@@ -167,7 +170,7 @@ public class StripeManager extends ManagerBase implements IStripeManager {
             
             order.payment.transactionLog.put(System.currentTimeMillis(), "Transferred to payment window");
             orderManager.saveOrder(order);
-            messageManager.sendErrorNotification("Payment on new stripe integration initiated, orderid: " + order.incrementOrderId, null);
+            messageManager.sendErrorNotification("Payment on new stripe integration initiated, orderid: " + order.incrementOrderId + "<br>endpoints created:<br>" + endpoints, null);
             
             return session.getId();
         }catch(Exception e) {
@@ -269,11 +272,12 @@ public class StripeManager extends ManagerBase implements IStripeManager {
            result.payload = new String(Base64.getDecoder().decode(result.payload.getBytes()));
            Event event = Webhook.constructEvent(result.payload, result.validationKey, settings.webhookSecret);
         } catch (JsonSyntaxException e) {
-            logPrint("Invalid payload");
-            messageManager.sendErrorNotification("Failed to handle webhook callback from stripe on payload" + result.payload, null);
+            order.payment.transactionLog.put(System.currentTimeMillis(), "Failed to handle webhook callback from stripe on payload" + result.payload);
+            orderManager.saveOrder(order);
             return;
         } catch (SignatureVerificationException e) {
-            messageManager.sendErrorNotification("Failed to handle webhook callback from stripe on payload (invalid signature)" + result.payload, null);
+            order.payment.transactionLog.put(System.currentTimeMillis(), "Failed to handle webhook callback from stripe on payload (invalid signature)" + result.payload);
+            orderManager.saveOrder(order);
             return;
         }
         
@@ -298,42 +302,39 @@ public class StripeManager extends ManagerBase implements IStripeManager {
     }
     
 
-    private void createWebHook(String key, String address) {
+    private String createWebHook(String key) {
         try {
             Stripe.apiKey = key;
+            String webhookaddress = getCallBackAddr();
             
-            String webhookaddress = "http://20360.3.0.mdev.getshop.com/callback.php?useapp=stripe";
-            if(storeManager.isProductMode()) {
-                webhookaddress = address + "/?useapp=stripe";
+            boolean createWebHook = settings.webhookSecret.isEmpty();
+            
+            if(createWebHook) {
+                Map<String, Object> webhookendpointParams = new HashMap<String, Object>();
+                webhookendpointParams.put("url", webhookaddress);
+                webhookendpointParams.put("enabled_events", Arrays.asList("checkout.session.completed"));
+
+                WebhookEndpoint result = WebhookEndpoint.create(webhookendpointParams);
+
+                String secret = result.getSecret();
+                settings.webhookSecret = secret;
+                saveObject(settings);
             }
-            
+
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("limit", "30");
             WebhookEndpointCollection webhooks = WebhookEndpoint.list(params);
             List<WebhookEndpoint> webhooksList = webhooks.getData();
+            String endpointsCreated = "";
             for(WebhookEndpoint endpoint : webhooksList) {
-                if(endpoint.getUrl().equals(endpoint)) {
-                    return;
-                }
+                endpointsCreated += endpoint.getUrl() + "<br>";
             }
             
-            if(!webhooksList.isEmpty()) {
-                return;
-            }
-            
-            Map<String, Object> webhookendpointParams = new HashMap<String, Object>();
-            webhookendpointParams.put("url", webhookaddress);
-            webhookendpointParams.put("enabled_events", Arrays.asList("checkout.session.completed"));
-
-            WebhookEndpoint result = WebhookEndpoint.create(webhookendpointParams);
-            
-            String secret = result.getSecret();
-            System.out.println("Stripe webhook secret: " + secret);
-            settings.webhookSecret = secret;
-            saveObject(settings);
+            return endpointsCreated;
         }catch(Exception e) {
             logPrint(e.getMessage());
         }
+        return "";
     }
 
     private void saveCards(String userId, String customerId, List<PaymentSource> data) {
@@ -367,6 +368,27 @@ public class StripeManager extends ManagerBase implements IStripeManager {
             userManager.addCardToUser(userId, card);
         }
         
+    }
+
+    private String getCallBackAddr() {
+        if(!storeManager.isProductMode()) {
+            return "http://20360.3.0.mdev.getshop.com/callback.php?useapp=stripe";
+        }
+
+        String address = "";
+        String mainaddress = storeManager.getMyStore().getDefaultWebAddress();
+        if(mainaddress.contains("getshop.com")) {
+            address = "https://" + mainaddress + "/callback.php?useapp=stripe";
+        } else {
+            for(String tmpAddr : storeManager.getMyStore().additionalDomainNames) {
+                if(tmpAddr.contains("getshop.com")) {
+                    address = "https://" + tmpAddr + "/callback.php?useapp=stripe";
+                    break;
+                }
+            }
+        }
+        
+        return address;
     }
     
 }

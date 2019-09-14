@@ -866,6 +866,26 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         if (order != null) {
             order.status = status;
+            if(order.payment != null) {
+                order.payment.transactionLog.put(System.currentTimeMillis(), "Changed orderstatus to : " + status);
+            }
+            saveOrderInternal(order);
+        }
+    }
+    
+    @Override
+    public void changeOrderStatusWithPassword(String id, int status, String password) throws ErrorException {
+        if(!password.equals("gfdsabdf034534BHdgfsdgfs#!")) {
+            return;
+        }
+        
+        Order order = orders.get(id);
+        
+        if(order.status != Order.Status.PAYMENT_COMPLETED && (status == Order.Status.NEEDCOLLECTING || status == Order.Status.PAYMENT_FAILED)) {
+            order.status = status;
+            if(order.payment != null) {
+                order.payment.transactionLog.put(System.currentTimeMillis(), "Changed orderstatus to : " + status);
+            }
             saveOrderInternal(order);
         }
     }

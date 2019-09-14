@@ -268,6 +268,8 @@ public interface IOrderManager {
     @Administrator
     public void changeOrderStatus(String id, int status) throws ErrorException;
     
+    public void changeOrderStatusWithPassword(String id, int status, String password);
+    
     @Administrator
     public void markAsInvoicePayment(String orderId);
     

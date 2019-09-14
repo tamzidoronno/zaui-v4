@@ -408,6 +408,8 @@ public class EhfXmlGenerator {
             lineText += " (" + startDate + " - " + endDate + ")";
         }
         
+        lineText = xmlComplientString(lineText);
+        
         return lineText;
     }
 

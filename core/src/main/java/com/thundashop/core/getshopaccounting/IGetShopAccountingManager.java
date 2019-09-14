@@ -87,4 +87,7 @@ public interface IGetShopAccountingManager {
     
     @Administrator
     public List<String> getTransferData(Date start, Date end, String doublePostingFileId);
+    
+    @Administrator
+    public void transferDoublePostFile(String doublePostFileId);
 }

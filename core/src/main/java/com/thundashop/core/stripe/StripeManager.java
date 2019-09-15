@@ -131,7 +131,7 @@ public class StripeManager extends ManagerBase implements IStripeManager {
             
             User usr = userManager.getUserById(order.userId);
             String email = usr.emailAddress;
-            if(email == null || email.isEmpty() || !email.contains("@")) {
+            if(email == null || email.isEmpty() || !email.contains("@") || email.contains(" ")) {
                 email = "no@emailset.com";
             }
             

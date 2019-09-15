@@ -57,6 +57,14 @@ class GeneralSettingsOther extends \WebshopApplication implements \Application {
         $this->getStoreSettingsApp()->setConfigurationSetting("language", $_POST['data']['mainlanguage']);
         $this->getStoreSettingsApp()->setConfigurationSetting("countrycode", $_POST['data']['countrycode']);
         
+        
+        $store = $this->getApi()->getStoreManager()->getMyStore();
+        $store->configuration->defaultPrefix = $_POST['data']['defaultprefix'];
+        $store->configuration->emailAdress = $_POST['data']['emailAdress'];
+        $store->configuration->phoneNumber = $_POST['data']['phoneNumber'];
+            
+        $this->getApi()->getStoreManager()->saveStore($store->configuration);
+        
     }
     
    public function getCurrencyCode() {

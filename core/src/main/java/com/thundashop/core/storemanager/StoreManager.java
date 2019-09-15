@@ -194,7 +194,6 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         
         if (!isCmsModule()) {
             saveModuleHomePage(config.homePage);
-            return store;
         }
 
         store.configuration = config;

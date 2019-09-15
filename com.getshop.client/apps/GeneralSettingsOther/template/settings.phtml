@@ -227,6 +227,33 @@ $slaves = $this->getApi()->getStoreManager()->getSlaves();
             </div>
             <div class='spacer'></div>
         </div>
+        <div class='row'>
+            <div class='col col1'>Default phone prefix</div>
+            <div class='col col2'>
+                <?php
+                $prefix = $this->getApi()->getStoreManager()->getMyStore()->configuration->defaultPrefix;
+                ?>
+                <input type="txt" class="gsniceinput1" gsname='defaultprefix' value="<?php echo $prefix; ?>" style="width:50px; text-align: center;">
+            <div class='spacer'></div>
+        </div>
+        <div class='row'>
+            <div class='col col1'>Your phone number </div>
+            <div class='col col2'>
+                <?php
+                $prefix = $this->getApi()->getStoreManager()->getMyStore()->configuration->phoneNumber;
+                ?>
+                <input type="txt" class="gsniceinput1" gsname='phoneNumber' value="<?php echo $prefix; ?>" style="width:200px;">
+            <div class='spacer'></div>
+        </div>
+        <div class='row'>
+            <div class='col col1'>Your email address</div>
+            <div class='col col2'>
+                <?php
+                $prefix = $this->getApi()->getStoreManager()->getMyStore()->configuration->emailAdress;
+                ?>
+                <input type="txt" class="gsniceinput1" gsname='emailAdress' value="<?php echo $prefix; ?>" style="width:200px; ">
+            <div class='spacer'></div>
+        </div>
         <div style='text-align: right; margin-right: 10px; margin-top:10px;'>
             <div class='spacer'></div>
             <div class='row' style="text-align: left;">

@@ -61,12 +61,12 @@ class StripePayments extends \PaymentApplication implements \Application {
     }
     
     public function preProcess() {
-        $useScaCompliant = $this->getConfigurationSetting("useScaCompliant") == "true";
-        if($useScaCompliant) {
+//        $useScaCompliant = $this->getConfigurationSetting("useScaCompliant") == "true";
+//        if($useScaCompliant) {
             $this->renderNewCheckout();
-        } else {
-            $this->renderOldCheckout();
-        }
+//        } else {
+//            $this->renderOldCheckout();
+//        }
     }
     
 

@@ -40,8 +40,8 @@ void WiegandNG::pause() {
 	noInterrupts();									// disable interrupt so that user can process data 
 }
 
-volatile unsigned char * WiegandNG::getRawData() {
-	return _buffer;									// return pointer of the buffer
+void WiegandNG::getRawData(unsigned char* buf) {
+	memcpy(buf, _buffer, 6);						// return pointer of the buffer
 }
 
 unsigned int WiegandNG::getPacketGap() {

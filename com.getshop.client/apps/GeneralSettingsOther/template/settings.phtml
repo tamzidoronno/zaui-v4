@@ -216,13 +216,13 @@ $slaves = $this->getApi()->getStoreManager()->getSlaves();
             <div class='col col1'>Main language</div>
             <div class='col col2'>
                 <select gsname="mainlanguage" class="gsniceselect1">
-                    <?php
-                    $states = $this->getFactory()->getLanguageReadable();
-                    foreach ($states as $key => $lang) {
-                        $selected = $this->getFactory()->getMainLanguage() == $key ? "selected='true'" : "";
-                        ?>
-                        <option <? echo $selected; ?> value="<? echo $key; ?>"><? echo $lang; ?></option>
-<?php } ?>
+                <?php
+                $states = $this->getFactory()->getLanguageReadable();
+                foreach ($states as $key => $lang) {
+                    $selected = $this->getFactory()->getMainLanguage() == $key ? "selected='true'" : "";
+                    ?>
+                    <option <? echo $selected; ?> value="<? echo $key; ?>"><? echo $lang; ?></option>
+                <?php } ?>
                 </select>
             </div>
             <div class='spacer'></div>

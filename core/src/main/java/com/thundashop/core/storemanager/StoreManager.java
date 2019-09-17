@@ -821,4 +821,8 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         }
         return lang;
     }
+
+    public String getPrefix() {
+        return getMyStore().configuration.defaultPrefix + "";
+    }
 }

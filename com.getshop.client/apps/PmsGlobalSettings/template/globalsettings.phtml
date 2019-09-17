@@ -105,7 +105,27 @@ if(stristr($user->emailAddress, "@getshop.com")) {
             Sms name<br>
             * Send sms'es from this name/number (max 8 characters).
         </span>
-    </div>    
+    </div>
+    <div class='container'>
+        <span class='option'>
+            <?php
+            $defaultLanguage = $config->defaultRegistrationLanguage;
+             $states = $this->getFactory()->getLanguageReadable();
+             
+            echo "<select class='gsniceselect1' gsname='defaultRegistrationLanguage'>";
+            echo "<option value=''>Use default language</option>";
+             foreach($states as $state => $val) {
+                 $selected = $defaultLanguage == $state ? "SELECTED" : "";
+                 echo "<option value='$state' $selected>$val</option>";
+             }
+             echo "</select>";
+            ?>
+        </span>
+        <span class='title'>
+            Default registration language<br>
+            * The default langauge to use when registering a booking.
+        </span>
+    </div>
     <h1>Booking engine</h1>
     <div class='container'>
         <span class='option'>

@@ -2968,7 +2968,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         room.date = new PmsBookingDateRange();
         room.date.start = start;
         room.date.end = end;
-        room.guests.add(new PmsGuests());
+        PmsGuests guest = new PmsGuests();
+        guest.prefix = storeManager.getPrefix();
+        room.guests.add(guest);
         setPriceOnRoom(room, true, booking);
 
         List<PmsBookingRooms> toAdd = new ArrayList();

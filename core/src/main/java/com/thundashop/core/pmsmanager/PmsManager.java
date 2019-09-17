@@ -10707,4 +10707,41 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         saveBooking(booking);
     }
 
+    @Override
+    public boolean willAutoDelete(String pmsBookingId) {
+        PmsConfiguration configuration = getConfigurationSecure();
+        if(!configuration.autoDeleteUnpaidBookings) {
+            return false;
+        }
+        
+        PmsBooking booking = getBooking(pmsBookingId);
+        
+        if(booking.payedFor) {
+            return false;
+        }
+        if(booking.avoidAutoDelete) {
+            return false;
+        }
+        if(booking.channel != null && !booking.channel.isEmpty() && !booking.channel.equals("website")) {
+            return false;
+        }
+        if(booking.bookedByUserId != null && !booking.bookedByUserId.isEmpty()) {
+            return false;
+        }
+        if(booking.orderIds.size() > 1) {
+            return false;
+        }
+        if(booking.isOld(100)) {
+            return false;
+        }
+        if(booking.transferredToLock()) {
+            return false;
+        }
+        if(booking.getActiveRooms().isEmpty()) {
+            return false;
+        }
+
+        return true;
+    }
+
 }

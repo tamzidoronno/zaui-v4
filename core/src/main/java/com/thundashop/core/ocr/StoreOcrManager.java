@@ -68,7 +68,6 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
         }
         account.lines.addAll(newlines);
         saveObject(account);
-        
     }
 
     @Override

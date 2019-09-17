@@ -22,6 +22,12 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         
     }
     
+    public function cancelautodeletion() {
+        $booking = $this->getPmsBooking();
+        $booking->avoidAutoDelete = true;
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+    }
+    
     public function sortGetShopTable() {
         $_SESSION['lastsorttype'] = $_POST['data']['column'];
         $_SESSION['lastsorttypeasc'] = "false";

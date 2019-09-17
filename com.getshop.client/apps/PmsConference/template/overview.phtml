@@ -25,8 +25,6 @@ if(sizeof($entries) == 0) {
         $toTime = strtotime(date("d.m.Y 00:00",$toTime)) + (60*60*2);
     }
     
-    echo $fromTime . " - " . $toTime . "<bR><br>";
-    
     $events = (array)$this->getApi()->getPmsConferenceManager()->getConferenceEventsBetweenTime($this->convertToJavaDate($fromTime), $this->convertToJavaDate($toTime));
     $eventsByItem = $this->convertEventsByItem($events);
     ?>

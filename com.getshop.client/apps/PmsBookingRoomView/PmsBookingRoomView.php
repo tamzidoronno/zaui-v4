@@ -36,6 +36,17 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         }
     }
     
+    public function ignorechannelmanager() {
+        $booking = $this->getPmsBooking();
+        $booking->ignoreWubook = !$booking->ignoreWubook;
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+        if($booking->ignoreWubook) {
+            $this->getApi()->getPmsManager()->logEntry($this->getSelectedMultilevelDomainName(), "Ignore update from channel manager", $booking->id, null);
+        } else {
+            $this->getApi()->getPmsManager()->logEntry($this->getSelectedMultilevelDomainName(), "cancelled - ignore update from channel manager", $booking->id, null);
+        }
+    }
+    
     public function addIncrementOrderIdToBooking() {
         $order = $this->getApi()->getOrderManager()->getOrderByincrementOrderId($_POST['data']['orderid']);
         $booking = $this->getPmsBooking();

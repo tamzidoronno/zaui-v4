@@ -70,6 +70,7 @@ public class PmsBooking extends DataCommon {
     public String wubookChannelReservationId;
     public String channel = "";
     public boolean ignoreCheckChangesInBooking = false;
+    public boolean ignoreWubook = false;
     public String deletedBySource = "";
     private double totalPrice;
     public String paymentType = "";

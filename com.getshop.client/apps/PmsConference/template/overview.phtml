@@ -19,6 +19,14 @@ if(sizeof($entries) == 0) {
         $view = "month";
     }
     
+    
+    if($view == "month") {
+        $fromTime = strtotime(date("d.m.Y 00:00",$fromTime)) + (60*60*2);
+        $toTime = strtotime(date("d.m.Y 00:00",$toTime)) + (60*60*2);
+    }
+    
+    echo $fromTime . " - " . $toTime . "<bR><br>";
+    
     $events = (array)$this->getApi()->getPmsConferenceManager()->getConferenceEventsBetweenTime($this->convertToJavaDate($fromTime), $this->convertToJavaDate($toTime));
     $eventsByItem = $this->convertEventsByItem($events);
     ?>
@@ -102,7 +110,6 @@ if(sizeof($entries) == 0) {
             <?php
             $entryids = $entry->subItems;
             $entryids[] = $entry->id;
-            
             if($view == "month") {
                 for($i = $fromTime; $i <= $toTime; $i = $i +(60*60*24)) {
                     $from = date("H:i", $i); $to = date("H:i", $i +(60*60*24));
@@ -112,7 +119,7 @@ if(sizeof($entries) == 0) {
                     $confid = $hasEventId['id'];
                     if(!$hasEvent) { $hasEvent = "canaddevent"; }
                     $text = "&nbsp;";
-                    echo "<span class='dayentry $hasEvent'conferenceid='$confid' ".$hasEventId['check']." itemid='".$entry->id."' from='$from' to='$to' date='$day'>";
+                    echo "<span class='dayentry $hasEvent' conferenceid='$confid' ".$hasEventId['check']." itemid='".$entry->id."' from='$from' to='$to' date='$day'>";
                      if($hasEventId['state'] == "start" || $hasEventId['state'] == "both") { echo $text; } else { echo "&nbsp;"; }
                    echo "</span>";
                 }

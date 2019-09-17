@@ -156,7 +156,11 @@ public class StripeManager extends ManagerBase implements IStripeManager {
             HashMap<String, Object> lineItem = new HashMap<String, Object>();
             lineItem.put("name", "Payment");
             lineItem.put("description", "Payment for order " + order.incrementOrderId);
-            lineItem.put("amount", (int)(orderManager.getTotalAmount(order)*100));
+            int total = (int)(orderManager.getTotalAmount(order)*100);
+            if(total <= 0) {
+                return "";
+            }
+            lineItem.put("amount", total);
             lineItem.put("currency", currency);
             lineItem.put("quantity", 1);
 
@@ -168,7 +172,6 @@ public class StripeManager extends ManagerBase implements IStripeManager {
             
             order.payment.transactionLog.put(System.currentTimeMillis(), "Transferred to payment window");
             orderManager.saveOrder(order);
-            messageManager.sendErrorNotification("Payment on new stripe integration initiated, orderid: " + order.incrementOrderId + "<br>endpoints created:<br>" + endpoints, null);
             
             return session.getId();
         }catch(Exception e) {

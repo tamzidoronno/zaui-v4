@@ -7,6 +7,7 @@ if ($this->isGetShop()) {
     $ticket = $this->getSystemGetShopApi()->getTicketManager()->getTicketByToken($this->getFactory()->getStore()->id, $_GET['ticketToken']);
     $contents = $this->getSystemGetShopApi()->getCustomerTicketManager()->getTicketContents($this->getFactory()->getStore()->id, $ticket->ticketToken);
     $this->getSystemGetShopApi()->getCustomerTicketManager()->markTicketAsRead($_GET['ticketToken']);
+    $this->getApi()->getTicketManager()->updateLightTicketState($_GET['ticketToken'], $ticket->currentState);
 }
 
 function formatBytes($bytes, $precision = 2) {  

@@ -115,4 +115,8 @@ public interface ITicketManager {
     @Administrator
     public void markTicketAsUnread(String ticketId);
     
+    
+    @Administrator
+    public void updateLightTicketState(String ticketToken, TicketState state);
+    
 }

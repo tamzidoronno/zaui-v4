@@ -344,12 +344,20 @@ public class TicketManager extends ManagerBase implements ITicketManager {
     
     @Override
     public Ticket getTicketByToken(String storeId, String ticketToken) {
-        return tickets.values()
+        Ticket ticket = tickets.values()
                 .stream()
                 .filter(o -> o.belongsToStore != null && !o.belongsToStore.isEmpty() && o.belongsToStore.equals(storeId))
                 .filter(o -> o.ticketToken != null && !o.ticketToken.isEmpty() && o.ticketToken.equals(ticketToken))
                 .findAny()
                 .orElse(null);
+        
+        TicketLight lightTicket = getLightTicketByToken(ticketToken);
+        if(lightTicket != null) {
+            lightTicket.state = ticket.currentState;
+            saveObject(lightTicket);
+        }
+        
+        return ticket;
     }
 
     @Override
@@ -863,5 +871,21 @@ public class TicketManager extends ManagerBase implements ITicketManager {
             }
         }
         return result;
+    }
+
+    private TicketLight getLightTicketByToken(String ticketToken) {
+        for(TicketLight l : lightTickets.values()) {
+            if(l.ticketToken.equals(ticketToken)) {
+                return l;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void updateLightTicketState(String ticketToken, TicketState state) {
+        TicketLight lightTicket = getLightTicketByToken(ticketToken);
+        lightTicket.state = state;
+        saveObject(lightTicket);
     }
 }

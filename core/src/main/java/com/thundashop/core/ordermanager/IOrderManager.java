@@ -542,4 +542,7 @@ public interface IOrderManager {
     
     @Administrator
     public void deleteDoublePostingFile(String fileId);
+    
+    @Administrator
+    public void cleanupMessedUpOrderTransactionForForignCurrencyCreditNotes(String password);
 }

@@ -289,8 +289,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         saveOrder(order);
         
         if (order.status != Order.Status.PAYMENT_COMPLETED) {
-            markAsPaid(order.id, new Date(), order.getTotalAmount());
-            markAsPaid(credited.id, new Date(), credited.getTotalAmount());
+            markAsPaidWithTransactionTypeInternal(order.id, order.getTotalAmount(), new Date(), 1, "unkown", order.getTotalAmountLocalCurrency(), order.getTotalRegisteredAgio());
+            markAsPaidWithTransactionTypeInternal(credited.id, credited.getTotalAmount(), new Date(), 1, "unkown", credited.getTotalAmountLocalCurrency(), credited.getTotalRegisteredAgio());   
         }
         
         revertOrderLinesToPreviouseState(order);
@@ -2795,13 +2795,17 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     public void markAsPaidWithTransactionType(String orderId, Date date, Double amount, int transactiontype, String refId) {
+        markAsPaidWithTransactionTypeInternal(orderId, amount, date, transactiontype, refId, null, null);
+    }
+
+    private void markAsPaidWithTransactionTypeInternal(String orderId, Double amount, Date date, int transactiontype, String refId, Double amountInLocalCurrency, Double agio) throws ErrorException {
         Order order = orders.get(orderId);
         if(amount != null && amount != 0.0) {
             String userId = "";
             if(getSession() != null && getSession().currentUser != null) {
                 userId = getSession().currentUser.id;
             }
-            order.registerTransaction(date, amount, userId, transactiontype, refId, "", null, null);
+            order.registerTransaction(date, amount, userId, transactiontype, refId, "", amountInLocalCurrency, agio);
             feedGrafanaPaymentAmount(amount);
             if(order.isFullyPaid() || order.isCreditNote) {
                 markAsPaidInternal(order, date,amount);
@@ -4224,7 +4228,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     private void updateCurrencyForItems(Order order) {
-        if (order.currency == null || order.currency.isEmpty()) {
+        if (order.currency == null || order.currency.isEmpty() || order.isCreditNote) {
             return;
         }
         
@@ -4603,6 +4607,40 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
        
         deleteObject(file);
+    }
+
+    @Override
+    public void cleanupMessedUpOrderTransactionForForignCurrencyCreditNotes(String password) {
+        if (!password.equals("asd9fasdfiasdjfoasidfjqaweraisdfnaejdfn")) {
+            return;
+        }
+        
+        List<Order> fixOrders = orders
+            .values()
+            .stream()
+            .filter(order -> {
+
+                if (order.currency != null && !order.currency.isEmpty()) {
+                    for (OrderTransaction trans : order.orderTransactions) {
+                        if (trans.amountInLocalCurrency == null) {
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
+            })
+            .collect(Collectors.toList());
+
+        for (Order order : fixOrders) {
+            for (OrderTransaction trans : order.orderTransactions) {
+                if (trans.amountInLocalCurrency == null) {
+                    trans.amountInLocalCurrency = 0D;
+                }
+            }
+            
+            saveObject(order);
+        }
     }
 
 }

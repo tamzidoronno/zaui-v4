@@ -226,3 +226,37 @@
     margin-bottom: 20px;
     text-align: center;
 }
+
+.AccountFinanceReport .header2 {
+    font-weight: bold;
+    background-color: #EFEFEF;
+    padding: 3px;
+    text-align: center; 
+}
+
+.AccountFinanceReport .row2 .col2 {
+    display: inline-block;
+    padding: 3px;
+}
+
+.AccountFinanceReport .row2 .col2_1 {
+    width: 100px;
+}
+
+.AccountFinanceReport .row2 .col2_2 {
+    width: 100px;
+}
+
+.AccountFinanceReport .row2 .col2_3 {
+    width: 100px;
+}
+
+.AccountFinanceReport .dayrow {
+    margin-bottom: 20px;
+    border: solid 1px #DDD;
+}
+
+.AccountFinanceReport .row2.totalrow {
+    
+    background-color: #EFEFEF;
+}

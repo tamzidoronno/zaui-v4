@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.DBCollection;
 import com.thundashop.core.applications.GetShopApplicationPool;
 import com.thundashop.core.applications.StoreApplicationInstancePool;
 import com.thundashop.core.applications.StoreApplicationPool;
@@ -42,6 +43,7 @@ import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.listmanager.data.TreeNode;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.MessageManager;
+import com.thundashop.core.ocr.StoreOcrManager;
 import com.thundashop.core.ordermanager.data.AccountingFreePost;
 import com.thundashop.core.ordermanager.data.CartItemDates;
 import com.thundashop.core.ordermanager.data.ClosedOrderPeriode;
@@ -206,6 +208,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Autowired
     private WareHouseManager wareHouseManager;
+    
+    @Autowired
+    private StoreOcrManager storeOcrManager;
     
     private List<String> terminalMessages = new ArrayList();
     private Order orderToPay;
@@ -2874,7 +2879,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             dayIncomes.stream().forEach(o -> o.isFinal = true);
         }
         
-        OrderDailyBreaker breaker = new OrderDailyBreaker(getAllOrders(), filter, paymentManager, productManager, getOrderManagerSettings().whatHourOfDayStartADay, getAllFreePosts());
+        OrderDailyBreaker breaker = new OrderDailyBreaker(getAllOrders(), filter, paymentManager, productManager, getOrderManagerSettings().whatHourOfDayStartADay, getAllFreePosts(), storeOcrManager);
         breaker.breakOrders();
         
         if (breaker.hasErrors()) {
@@ -2982,7 +2987,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         List<Order> orders = new ArrayList();
         orders.add(order);
-        OrderDailyBreaker breaker = new OrderDailyBreaker(orders, filter, paymentManager, productManager, getOrderManagerSettings().whatHourOfDayStartADay, getAllFreePosts());
+        OrderDailyBreaker breaker = new OrderDailyBreaker(orders, filter, paymentManager, productManager, getOrderManagerSettings().whatHourOfDayStartADay, getAllFreePosts(), storeOcrManager);
         breaker.breakOrders();
         
         return breaker.getDayEntries();
@@ -3708,6 +3713,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
     
     public List<DayIncome> getPaymentRecordsInternal(String paymentId, Date from, Date to, boolean doublePostingRecords) {
+        boolean concatOcrPayments = paymentId.equals("70ace3f0-3981-11e3-aa6e-0800200c9a66") && storeOcrManager.isActivated();
+        
         List<Order> orders = this.orders.values()
                 .stream()
                 .filter(o -> o.payment != null && o.payment.getPaymentTypeId().equals(paymentId))
@@ -3724,7 +3731,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         filter.start = from;
         filter.end = to;
         
-        OrderDailyBreaker breaker = new OrderDailyBreaker(orders, filter, paymentManager, productManager, getOrderManagerSettings().whatHourOfDayStartADay, getAllFreePosts());
+        OrderDailyBreaker breaker = new OrderDailyBreaker(orders, filter, paymentManager, productManager, getOrderManagerSettings().whatHourOfDayStartADay, getAllFreePosts(), storeOcrManager);
         breaker.breakOrders();
         
         return breaker.getDayIncomes();
@@ -3774,6 +3781,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return database.query("OrderManager", storeId, query)
                 .stream()
                 .map(o -> (DoublePostAccountingTransfer)o)
+                .filter(o -> o.deleted == null)
                 .filter(o -> o.isWithinOrEqual(from, to))
                 .collect(Collectors.toList());
     }
@@ -3799,6 +3807,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         return database.query("OrderManager", storeId, query)
                 .stream()
+//                .filter(o -> o.deleted != null)
                 .map(o -> (DoublePostAccountingTransfer)o)
                 .findAny()
                 .orElse(null);
@@ -4567,6 +4576,33 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
             saveOrder(order);
         }
+    }
+
+    @Override
+    public void deleteDoublePostingFile(String fileId) {
+        DoublePostAccountingTransfer file = getDoublePostAccountingTransfer(fileId);
+        if (file == null) {
+            return;
+        }
+        
+        for (DayIncome income : file.incomes) {
+            for (DayEntry entry : income.dayEntries) {
+                for (Order order : orders.values()) {
+                    boolean found = false;
+                    for (OrderTransaction trans : order.orderTransactions) {
+                        if (trans.transactionId.equals(entry.orderTransactionId)) {
+                            trans.transferredToAccounting = false;
+                            found = true;
+                        }
+                    }
+                    if (found) {
+                        saveObject(order);
+                    }
+                }
+            }
+        }
+       
+        deleteObject(file);
     }
 
 }

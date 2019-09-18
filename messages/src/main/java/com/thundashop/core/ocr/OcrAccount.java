@@ -15,5 +15,27 @@ import java.util.List;
  */
 public class OcrAccount extends DataCommon {
     public String accountId;
-    public List<OcrFileLines> lines = new ArrayList();
+    /**
+     * @Deprecated
+     * 
+     * The lines should be stored directly in the manager in
+     * a sepearted map..
+     * 
+     * Saving all lines into a list in a document is 
+     * bad as the ducment size is limited!
+     */
+    private List<OcrFileLines> lines = new ArrayList();
+
+    public List<OcrFileLines> getLines() {
+        return lines;
+    }
+    
+    public boolean hasLines() {
+        return !lines.isEmpty();
+    }
+
+    void clearLines() {
+        lines.clear();
+    }
+    
 }

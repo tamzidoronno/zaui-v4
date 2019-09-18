@@ -9,6 +9,8 @@ import com.google.gson.Gson;
 import com.ibm.icu.util.Calendar;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.TwoDecimalRounder;
+import com.thundashop.core.ocr.OcrFileLines;
+import com.thundashop.core.ocr.StoreOcrManager;
 import com.thundashop.core.ordermanager.data.AccountingFreePost;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.OrderTransaction;
@@ -44,8 +46,9 @@ public class OrderDailyBreaker {
     private final int precision = 10;
     private final DayIncomeFilter filter;
     private List<AccountingFreePost> freePosts = new ArrayList();
+    private final StoreOcrManager storeOcrManager;
     
-    public OrderDailyBreaker(List<Order> ordersToBreak, DayIncomeFilter filter, PaymentManager paymentManager, ProductManager productManager, int whatHourOfDayStartADayorderManager, List<AccountingFreePost> freePosts) {
+    public OrderDailyBreaker(List<Order> ordersToBreak, DayIncomeFilter filter, PaymentManager paymentManager, ProductManager productManager, int whatHourOfDayStartADayorderManager, List<AccountingFreePost> freePosts, StoreOcrManager storeOcrManager) {
         this.dayIncomes = new ArrayList();
         this.ordersToBreak = ordersToBreak;
         this.filter = filter;        
@@ -53,6 +56,7 @@ public class OrderDailyBreaker {
         this.productManager = productManager;
         this.whatHourOfDayStartADay = whatHourOfDayStartADayorderManager;
         this.freePosts = freePosts;
+        this.storeOcrManager = storeOcrManager;
         correctStartAndEndTime();
         createEmptyDays();
     }
@@ -713,6 +717,10 @@ public class OrderDailyBreaker {
             dayEntry.date = orderTransaction.date;
             dayEntry.orderTransactionId = orderTransaction.transactionId;
             
+            if (order.isInvoice()) {
+                dayEntry.batchId = getBatchId(orderTransaction);
+            }
+            
             orderDayEntries.add(dayEntry);
             
             try {
@@ -845,6 +853,20 @@ public class OrderDailyBreaker {
         }
         
         
+    }
+
+    private String getBatchId(OrderTransaction orderTransaction) {
+        if (orderTransaction.refId == null || orderTransaction.refId.isEmpty()) {
+            
+        }
+        
+        OcrFileLines line = storeOcrManager.getOcrFileLine(orderTransaction.refId);
+        
+        if (line != null) {
+            return line.getBatchId();
+        }
+        
+        return "";
     }
 
 }

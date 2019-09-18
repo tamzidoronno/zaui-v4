@@ -5,18 +5,21 @@
  */
 package com.thundashop.core.ocr;
 
+import com.thundashop.core.common.DataCommon;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 /**
  *
  * @author boggi
  */
-public class OcrFileLines {
+public class OcrFileLines extends DataCommon {
 
     private String rawLine = "";
     String avtaleId = "";
@@ -110,5 +113,19 @@ public class OcrFileLines {
         }
         
         return null;
+    }
+
+    boolean isForDay(int year, int month, int day) {
+        Calendar cal = Calendar.getInstance();
+        
+        cal.setTime(getPaymentDate());
+        
+        return cal.get(Calendar.YEAR) == year 
+                && cal.get(Calendar.MONTH) == (month-1)
+                && cal.get(Calendar.DAY_OF_MONTH) == day;
+    }
+
+    public String getBatchId() {
+        return rawLine.substring(21, 31);
     }
 }

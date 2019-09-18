@@ -23,4 +23,10 @@ public interface IStoreOcrManager {
     public String getAccountingId();
     @Administrator
     public List<OcrFileLines> getAllTransactions();
+    
+    @Administrator
+    public boolean isActivated();
+    
+    @Administrator
+    public List<OcrFileLines> getOcrLinesForDay(int year, int month, int day);
 }

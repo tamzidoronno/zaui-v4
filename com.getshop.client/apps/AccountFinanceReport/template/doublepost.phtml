@@ -132,10 +132,20 @@ if (file_exists($appTemplateFile)) {
     foreach ($files as $file) {
         $accountsSum = $this->getSum($file);
         $user = $this->getApi()->getUserManager()->getUserById($file->userId);
-        
         ?>
         <div class='downloadlink'>
-            <div class='col'><? echo date('d.m.Y H:i', strtotime($file->rowCreatedDate)); ?></div>
+            <div class='col'>
+            <?
+            if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isGetShopUser()) {
+            ?> 
+                <i gsclick='deleteDoublePostingFile' gs_confirm='Are you sure???' class="fa fa-trash" fileid='<? echo $file->id; ?>'></i>
+            <?
+            }
+            ?>
+                
+                <? echo date('d.m.Y H:i', strtotime($file->rowCreatedDate)); ?>
+            
+            </div>
             <div class='col'><? echo $user->fullName; ?></div>
             <?
             foreach ($accountsSum as $acc => $sumi) {

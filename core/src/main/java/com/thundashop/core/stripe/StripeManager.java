@@ -96,7 +96,7 @@ public class StripeManager extends ManagerBase implements IStripeManager {
             // Create a Customer:
             User usr = userManager.getUserById(order.userId);
             String email = usr.emailAddress;
-            if(email == null || email.isEmpty() || !email.contains("@")) {
+            if(email == null || !isValidEmail(email)) {
                 email = "dummy@email.com";
             }
             
@@ -116,6 +116,10 @@ public class StripeManager extends ManagerBase implements IStripeManager {
         return false;
     }
 
+    private boolean isValidEmail(String email) {
+        String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+        return email.matches(regex);
+    }
     
     public String createSessionForPayment(String orderId, String address) {
         try {
@@ -131,7 +135,7 @@ public class StripeManager extends ManagerBase implements IStripeManager {
             
             User usr = userManager.getUserById(order.userId);
             String email = usr.emailAddress;
-            if(email == null || email.isEmpty() || !email.contains("@") || email.contains(" ")) {
+            if(email == null || !isValidEmail(email)) {
                 email = "no@emailset.com";
             }
             

@@ -104,7 +104,6 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
         saveLines(newlines);
         
         saveObject(account);
-        
     }
 
     @Override

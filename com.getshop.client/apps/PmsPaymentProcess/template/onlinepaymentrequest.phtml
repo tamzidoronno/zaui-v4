@@ -59,7 +59,7 @@ foreach ($paymentMethods as $method) {
 <?php
 $counter = 0;
 foreach($booking->rooms as $r) {
-    if($r->unsettledAmount > 0) {
+    if($r->unpaidAmount > 0) {
         $counter++;
     }
 }
@@ -88,10 +88,10 @@ $contact->id = $user->id;
 $contact->roomId = $booking->id;
 
 $contacts[] = $contact;
-if($counter > 1) {
+if($counter > 0) {
     $i = 0;
     foreach($booking->rooms as $r) {
-        if($r->unsettledAmount <= 0) {
+        if($r->unpaidAmount <= 0) {
             continue;
         }
         $booker = new stdClass();

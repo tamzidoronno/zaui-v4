@@ -451,7 +451,12 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
     }
     
     public function clearRoomList() {
-        $this->getApi()->getPmsManager()->startBooking($this->getSelectedMultilevelDomainName());
+        $booking = $this->getApi()->getPmsManager()->startBooking($this->getSelectedMultilevelDomainName());
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        if($config->defaultRegistrationLanguage) {
+            $booking->language = $config->defaultRegistrationLanguage;
+        }
+        $this->getApi()->getPmsManager()->setBooking($this->getSelectedMultilevelDomainName(), $booking);
     }
     
     public function searchForEvent() {

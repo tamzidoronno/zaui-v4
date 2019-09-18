@@ -4523,12 +4523,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public void doRoundUpOnCurrentOrder(String orderId) {
-        
-        if(true) {
-            //Wait on realasing this.
-            return;
-        }
-        
         Order order = getOrderSecure(orderId);
         String currency = storeManager.getCurrency();
         String language = StoreManager.getLanguage();

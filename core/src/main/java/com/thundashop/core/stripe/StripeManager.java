@@ -96,7 +96,7 @@ public class StripeManager extends ManagerBase implements IStripeManager {
             // Create a Customer:
             User usr = userManager.getUserById(order.userId);
             String email = usr.emailAddress;
-            if(email == null || email.isEmpty() || !email.contains("@")) {
+            if(email == null || !isValidEmail(email)) {
                 email = "dummy@email.com";
             }
             
@@ -116,6 +116,10 @@ public class StripeManager extends ManagerBase implements IStripeManager {
         return false;
     }
 
+    private boolean isValidEmail(String email) {
+        String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+        return email.matches(regex);
+    }
     
     public String createSessionForPayment(String orderId, String address) {
         try {
@@ -131,7 +135,7 @@ public class StripeManager extends ManagerBase implements IStripeManager {
             
             User usr = userManager.getUserById(order.userId);
             String email = usr.emailAddress;
-            if(email == null || email.isEmpty() || !email.contains("@")) {
+            if(email == null || !isValidEmail(email)) {
                 email = "no@emailset.com";
             }
             
@@ -156,7 +160,11 @@ public class StripeManager extends ManagerBase implements IStripeManager {
             HashMap<String, Object> lineItem = new HashMap<String, Object>();
             lineItem.put("name", "Payment");
             lineItem.put("description", "Payment for order " + order.incrementOrderId);
-            lineItem.put("amount", (int)(orderManager.getTotalAmount(order)*100));
+            int total = (int)(orderManager.getTotalAmount(order)*100);
+            if(total <= 0) {
+                return "";
+            }
+            lineItem.put("amount", total);
             lineItem.put("currency", currency);
             lineItem.put("quantity", 1);
 
@@ -168,7 +176,6 @@ public class StripeManager extends ManagerBase implements IStripeManager {
             
             order.payment.transactionLog.put(System.currentTimeMillis(), "Transferred to payment window");
             orderManager.saveOrder(order);
-            messageManager.sendErrorNotification("Payment on new stripe integration initiated, orderid: " + order.incrementOrderId + "<br>endpoints created:<br>" + endpoints, null);
             
             return session.getId();
         }catch(Exception e) {

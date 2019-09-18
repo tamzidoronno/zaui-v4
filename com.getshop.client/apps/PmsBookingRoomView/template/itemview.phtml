@@ -24,7 +24,13 @@ if(!isset($room->tmpModified) || !$validSelection) {
 
 if(stristr($booking->channel, "wubook_")) {
     echo "<div style='padding: 10px; background-color:red; color:white;'>";
-    echo "Be careful doing changes in this area. The booking is connected to an OTA and should be changed by them. They can be overwritten and in worse case cenario cause overbooking, read more about overbookings <a href='https://getshop.com/double_booking_error.html' target='_fsdaf' style='color:cyan;'>here</a>.";
+    if(!$booking->ignoreWubook) {
+        echo "Be careful doing changes in this area. The booking is connected to an OTA and should be changed by them. They can be overwritten and in worse case cenario cause overbooking, read more about overbookings <a href='https://system.getshop.com/double_booking_error.html' target='_fsdaf' style='color:cyan;'>here</a>.";
+        echo "<span style='float:right;cursor:pointer; color:#c5c5f7;' gsclick='ignorechannelmanager'>ignore future updates from channel manager</span>";
+    } else {
+        echo "This booking has been taken out from the channel manager, future updates from the OTA will not be affected, read more about overbookings <a href='https://system.getshop.com/double_booking_error.html' target='_fsdaf' style='color:cyan;'>here</a>.";
+        echo "<span style='float:right;cursor:pointer; color:#c5c5f7;' gsclick='ignorechannelmanager'>cancel ignore</span>";
+    }
     echo "</div>";
 }
 

@@ -38,6 +38,16 @@ if($pmsBookingRoom->unpaidAmount > 0.1) {
     </style>
 <?php
 }
+
+$willbedeleted = $this->getApi()->getPmsManager()->willAutoDelete($this->getSelectedMultilevelDomainName(), $pmsBooking->id);
+if($willbedeleted) {
+    $start = strtotime($pmsBooking->completedDate);
+    $start = $start+(60*90);
+    echo "<div class='unpaidamountwarning' style='font-size: 18px;'><i class='fa fa-warning'></i> This booking has been booked online and not yet paid, will be autodeleted at " . date("d.m.Y H:i", $start). ".";
+    echo "<span class='shop_button' style='float:right;' gsclick='cancelautodeletion'>Cancel autodeletion</span>";
+    echo "</div>";
+}
+
 ?>
     <div class='collapsable_shadowbox first_collapsable_shadowbox' defaultclosed='false'>
         <div class='colheader'>

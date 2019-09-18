@@ -901,6 +901,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 if(newbooking == null) {
                     sendErrorForReservation(booking.reservationCode, "Could not find existing booking for a modification on reservation");
                 } else {
+                    if(newbooking.ignoreWubook) {
+                        pmsManager.logEntry("Booking modified, but ignored due to force ignore.", newbooking.id, null);
+                        return "";
+                    }
+                    
                     for(PmsBookingRooms room : newbooking.getActiveRooms()) {
                         if(room.isStarted()) {
                             newbooking.wubookModifiedResId.add(booking.reservationCode);
@@ -920,6 +925,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                     sendErrorForReservation(booking.reservationCode, "Could not find deleted booking for a modification on reservation");
                     return "Did not find booking to delete.";
                 } else {
+                    if(newbooking.ignoreWubook) {
+                        pmsManager.logEntry("Booking modified, but ignored due to force ignore (delete).", newbooking.id, null);
+                        return "";
+                    }
+
                     pmsManager.logEntry("Deleted by channel manager", newbooking.id, null);
                     pmsManager.deleteBooking(newbooking.id);
                 }
@@ -943,6 +953,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
             if(newbooking == null) {
                 newbooking = pmsManager.startBooking();
+            }
+            
+            if(newbooking.ignoreWubook) {
+                pmsManager.logEntry("Booking modified, but ignored due to force ignore (standard process).", newbooking.id, null);
+                return "";
             }
             
             for(PmsBookingRooms room : newbooking.getAllRooms()) {

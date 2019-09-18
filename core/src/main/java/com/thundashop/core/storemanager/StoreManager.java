@@ -194,7 +194,6 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         
         if (!isCmsModule()) {
             saveModuleHomePage(config.homePage);
-            return store;
         }
 
         store.configuration = config;
@@ -821,5 +820,9 @@ public class StoreManager extends ManagerBase implements IStoreManager {
             lang = "no";
         }
         return lang;
+    }
+
+    public String getPrefix() {
+        return getMyStore().configuration.defaultPrefix + "";
     }
 }

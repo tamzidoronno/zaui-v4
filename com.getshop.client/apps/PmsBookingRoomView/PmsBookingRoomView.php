@@ -22,11 +22,28 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         
     }
     
+    public function cancelautodeletion() {
+        $booking = $this->getPmsBooking();
+        $booking->avoidAutoDelete = true;
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+    }
+    
     public function sortGetShopTable() {
         $_SESSION['lastsorttype'] = $_POST['data']['column'];
         $_SESSION['lastsorttypeasc'] = "false";
         if ($_POST['data']['sorting'] == "asc") {
             $_SESSION['lastsorttypeasc'] = "true";
+        }
+    }
+    
+    public function ignorechannelmanager() {
+        $booking = $this->getPmsBooking();
+        $booking->ignoreWubook = !$booking->ignoreWubook;
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+        if($booking->ignoreWubook) {
+            $this->getApi()->getPmsManager()->logEntry($this->getSelectedMultilevelDomainName(), "Ignore update from channel manager", $booking->id, null);
+        } else {
+            $this->getApi()->getPmsManager()->logEntry($this->getSelectedMultilevelDomainName(), "cancelled - ignore update from channel manager", $booking->id, null);
         }
     }
     

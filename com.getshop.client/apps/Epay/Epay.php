@@ -29,6 +29,10 @@ class Epay extends \PaymentApplication implements \Application {
         return $toReturn;
     }
     
+    public function hasPaymentLink() {
+        return true;
+    }
+    
     public function paymentCallback() {
         $orderId = $_GET['orderId'];
         $nextPage = $_GET['nextpage'];

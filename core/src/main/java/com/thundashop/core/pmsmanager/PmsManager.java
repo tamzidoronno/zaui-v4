@@ -45,6 +45,7 @@ import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.getshopaccounting.DayIncomeReport;
 import com.thundashop.core.getshoplock.GetShopDeviceLog;
 import com.thundashop.core.getshoplock.GetShopLockManager;
+import com.thundashop.core.getshoplocksystem.AccessEvent;
 import com.thundashop.core.getshoplocksystem.GetShopLockSystemManager;
 import com.thundashop.core.getshoplocksystem.LockCode;
 import com.thundashop.core.getshoplocksystem.LockGroup;
@@ -9114,8 +9115,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void checkIfGuestHasArrivedApac() {
-        getShopLockSystemManager.getAccessEvents()
-                .stream()
+        List<AccessEvent> events = getShopLockSystemManager.getAccessEvents(); 
+        
+            events.stream()
                 .forEach(event -> {
                     for (PmsBooking booking : bookings.values()) {
                         for (PmsBookingRooms room : booking.rooms) {
@@ -9125,6 +9127,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                             if (room.bookingItemId != null && room.codeObject != null) {
                                 BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
                                 if (item != null && item.lockGroupId.equals(event.groupId) && event.date.after(room.date.start) && event.date.before(room.date.end)) {
+                                    logEntry("Marking room as arrived", booking.id, item.id, room.pmsBookingRoomId, "markedarrived");
                                     markGuestArrivedInternal(booking, room);
                                 }
                             }

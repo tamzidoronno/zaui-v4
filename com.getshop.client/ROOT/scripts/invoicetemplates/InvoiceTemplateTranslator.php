@@ -57,7 +57,7 @@ class InvoiceTemplateTranslator {
             return "$ ".round($price, 2);
         }
         
-        if ($this->currency == "EUR") {
+        if ($this->currency == "EURO") {
             return "€ ".round($price, 2);
         }
         
@@ -77,7 +77,7 @@ class InvoiceTemplateTranslator {
             return "USD";
         }
         
-        if ($this->currency == "EUR") {
+        if ($this->currency == "EURO") {
             return "EURO";
         }
         

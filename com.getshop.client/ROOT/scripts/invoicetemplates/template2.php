@@ -33,7 +33,6 @@ $language = $order->language;
 $currency = $order->currency;
 if(!$language) { $language = $invoiceData->accountingDetails->language; }
 if(!$currency) { $currency = $invoiceData->accountingDetails->currency; }
-
 $total = 0;
 $translator = new InvoiceTemplateTranslator($language, $currency);
 $calculatedTaxes = array();

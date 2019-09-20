@@ -1208,6 +1208,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 hasUnpaid = true;
             }
             if(ord.isPrepaidByOTA()) {
+                booking.isPrePaid = true;
                 return 13; //Has order prepaid by ota.
             }
         }

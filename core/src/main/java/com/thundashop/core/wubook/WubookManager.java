@@ -2401,6 +2401,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
     private boolean checkForPaidOrders(PmsBooking newbooking) {
         boolean hasPaidOrders = false;
+        
+        if(newbooking.orderIds == null) {
+            newbooking.orderIds = new ArrayList();
+        }
+        
         for(String orderId : newbooking.orderIds) {
             Order ord = orderManager.getOrder(orderId);
             if(ord.status == Order.Status.PAYMENT_COMPLETED) {

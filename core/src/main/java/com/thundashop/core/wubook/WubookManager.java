@@ -1027,14 +1027,17 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             if(booking.isExpediaCollect) {
                 checkIfPaymentMethodIsActive("92bd796f-758e-4e03-bece-7d2dbfa40d7a");
                 newbooking.paymentType = "92bd796f-758e-4e03-bece-7d2dbfa40d7a";
+                newbooking.isPrePaid = true;
             }
             if(booking.isBookingComVirtual) {
                 checkIfPaymentMethodIsActive("d79569c6-ff6a-4ab5-8820-add42ae71170");
                 newbooking.paymentType = "d79569c6-ff6a-4ab5-8820-add42ae71170";
+                newbooking.isPrePaid = true;
             }
             if(newbooking.channel.equals("wubook_43")) {
                 checkIfPaymentMethodIsActive("639164bc-37f2-11e6-ac61-9e71128cae77");
                 newbooking.paymentType = "639164bc-37f2-11e6-ac61-9e71128cae77";
+                newbooking.isPrePaid = true;
             }
             pmsManager.setBooking(newbooking);
             int i = 0;

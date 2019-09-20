@@ -4240,6 +4240,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         pmsNotificationManager.setMessageToSend(message);
         pmsNotificationManager.setPaymentRequestId(bookingId);
 
+        PmsBooking booking = getBooking(bookingId);
+        if(booking == null) {
+            booking = getBookingFromRoom(bookingId);
+        }
+        booking.recieptEmail.put(bookingId, email);
+        saveBooking(booking);
+        
+        
         if(pmsNotificationManager.isActive()) {
             pmsNotificationManager.doNotification("booking_sendpaymentlink", bookingId);
             return;

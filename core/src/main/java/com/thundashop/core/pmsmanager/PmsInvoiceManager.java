@@ -3601,7 +3601,13 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         Order alreadyCreatedOrder = orderManager.getOrderCreatedByPaymentLinkWithRoomId(roomBookingId);
         
+        String recieptEmail = booking.recieptEmail.get(roomBookingId);
+        
         if (shouldUseAlreadyCreatedOrder(alreadyCreatedOrder, booking, room)) {
+            if(recieptEmail != null) { 
+                alreadyCreatedOrder.recieptEmail = recieptEmail; 
+                orderManager.saveOrder(alreadyCreatedOrder);
+            }
             return alreadyCreatedOrder.id;
         }
         
@@ -3612,6 +3618,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         Order ord = orderManager.getOrderSecure(orderId);
         ord.createdByPaymentLinkId = roomBookingId;
+        if(recieptEmail != null) { 
+            ord.recieptEmail = recieptEmail; 
+        }
         orderManager.saveOrder(ord);
         
         return orderId;

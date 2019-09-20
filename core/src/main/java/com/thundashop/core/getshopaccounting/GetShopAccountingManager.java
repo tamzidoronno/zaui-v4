@@ -372,7 +372,7 @@ public class GetShopAccountingManager extends ManagerBase implements IGetShopAcc
             incomes = transferFile.incomes;
         } else {
             for (DayIncome income : incomes) {
-                if (!income.isFinal) {
+                if (!income.isFinal && !income.dayEntries.isEmpty()) {
                     throw new RuntimeException("Can not transfer to accountin a dayincome that is nor marked as final!");
                 }
             }

@@ -833,7 +833,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             nowCal.add(Calendar.HOUR_OF_DAY, -1);
         }
         
-        if ((booking.secretBookingId == null || booking.secretBookingId.isEmpty()) && save)  {
+        if ((booking.secretBookingId == null || booking.secretBookingId.isEmpty()) && save) {
             booking.secretBookingId = UUID.randomUUID().toString();
             saveObject(booking);
         }

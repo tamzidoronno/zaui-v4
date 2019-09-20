@@ -802,6 +802,10 @@ public class PmsManagerProcessor {
                     payedfor = true;
                 }
                 
+                if(booking.getUnpaidAmount() > 0.0) {
+                    payedfor = false;
+                }
+                
                 try {
                     booking.calculateTotalCost();
                     double totalPrice = booking.getTotalPrice();

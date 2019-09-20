@@ -23,6 +23,7 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 import com.powerofficego.data.SalesOrderTransfer;
 import com.thundashop.core.productmanager.data.AccountingDetail;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -133,57 +134,68 @@ public class PowerOfficeGoPrimitiveAccounting extends AccountingSystemBase {
         Map<String, List<DayEntry>> groupedIncomes = income.getGroupedByAccountExTaxes();
         List<PowerOfficeGoImportLine> result = new ArrayList();
         for (String accountingNumber : groupedIncomes.keySet()) {
-            BigDecimal total = groupedIncomes.get(accountingNumber).stream()
-                    .map(o -> o.amount)
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            Map<String, List<DayEntry>> dayEntriesGroupedByBatchId = groupedIncomes.get(accountingNumber)
+                    .stream()
+                    .collect(Collectors.groupingBy(o -> {
+                        return o.batchId;
+                    }));
+            
+            for (String batchId : dayEntriesGroupedByBatchId.keySet()) {
+                BigDecimal total = dayEntriesGroupedByBatchId.get(batchId)
+                        .stream()
+                        .map(o -> o.amount)
+                        .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-            zeroCheck = zeroCheck.add(total);
-            
-            logPrint("To be transfered on account: " + accountingNumber + ", total: " + total);
-            PowerOfficeGoImportLine toAdd = new PowerOfficeGoImportLine();
-            
-            if (accountingNumber.length() == 4) {
-                toAdd.accountNumber = new Integer(accountingNumber);
-            } else {
-                toAdd.customerCode = new Integer(accountingNumber);
-            }
-            
-            toAdd.postingDate = income.start;
-            toAdd.amount = total.doubleValue();
-            toAdd.documentNumber = number;
-            toAdd.description = "getshop file for: " +income.start + " - " + income.end;
-            
-            DayEntry dayEntry = groupedIncomes.get(accountingNumber).get(0);
+                zeroCheck = zeroCheck.add(total);
 
-            if(dayEntry.isActualIncome && !dayEntry.isOffsetRecord) {
-                AccountingDetail detail = productManager.getAccountingDetail(toAdd.accountNumber);
-                if(detail == null) {
-                    logPrint("nullpointer occurded when it should not.");
-                    addToLog("nullpointer occurded when it should not on account: " + toAdd.accountNumber);
+                logPrint("To be transfered on account: " + accountingNumber + ", total: " + total);
+                PowerOfficeGoImportLine toAdd = new PowerOfficeGoImportLine();
+
+                if (accountingNumber.length() == 4) {
+                    toAdd.accountNumber = new Integer(accountingNumber);
+                } else {
+                    toAdd.customerCode = new Integer(accountingNumber);
                 }
-                toAdd.vatCode = detail.taxgroup + "";
-            } else {
-                toAdd.vatCode = "0";
-            }
 
-            String currency = storeManager.getStoreSettingsApplicationKey("currencycode");
-            if(currency == null || currency.isEmpty()) {
-                currency = "NOK";
+                toAdd.postingDate = income.start;
+                toAdd.amount = total.doubleValue();
+                toAdd.documentNumber = number;
+                if (batchId != null && !batchId.isEmpty()) {
+                    toAdd.description = "OCR GetStop Reference: " + batchId;
+                } else {
+                    toAdd.description = "getshop file for: " +income.start + " - " + income.end;
+                }
+                
+
+                DayEntry dayEntry = groupedIncomes.get(accountingNumber).get(0);
+
+                if(dayEntry.isActualIncome && !dayEntry.isOffsetRecord) {
+                    AccountingDetail detail = productManager.getAccountingDetail(toAdd.accountNumber);
+                    if(detail == null) {
+                        logPrint("nullpointer occurded when it should not.");
+                        addToLog("nullpointer occurded when it should not on account: " + toAdd.accountNumber);
+                    }
+                    toAdd.vatCode = detail.taxgroup + "";
+                } else {
+                    toAdd.vatCode = "0";
+                }
+
+                String currency = storeManager.getStoreSettingsApplicationKey("currencycode");
+                if(currency == null || currency.isEmpty()) {
+                    currency = "NOK";
+                }
+
+                toAdd.currencyAmount = toAdd.amount;
+                toAdd.documentDate = new Date();
+                toAdd.currencyCode = currency;
+                String department = getConfigOptions().get("department");
+                if(department != null && !department.isEmpty()) {
+                    toAdd.departmentCode = getConfig("department");
+                }
+
+                result.add(toAdd);
             }
-            
-            toAdd.currencyAmount = toAdd.amount;
-            toAdd.documentDate = new Date();
-            toAdd.currencyCode = currency;
-            String department = getConfigOptions().get("department");
-            if(department != null && !department.isEmpty()) {
-                toAdd.departmentCode = getConfig("department");
-            }
-            
-            result.add(toAdd);
         }
         return result;
     }
-    
-    
-    
 }

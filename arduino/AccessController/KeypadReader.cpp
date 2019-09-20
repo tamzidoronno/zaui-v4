@@ -17,8 +17,9 @@ volatile bool KeyPadReader::_dataAvailable;
 WiegandNG wg;
 
 
-KeyPadReader::KeyPadReader() {
+KeyPadReader::KeyPadReader(Clock* clock) {
 	_dataAvailable = false;
+	_clock = clock;
 }
 
 void KeyPadReader::clear() {
@@ -40,7 +41,8 @@ void KeyPadReader::shiftright()
 }
 
 String KeyPadReader::printDataToSerial(WiegandNG &tempwg) {
-	volatile unsigned char *buffer=tempwg.getRawData();
+	unsigned char buf[6];
+	tempwg.getRawData(buf);
 	volatile unsigned int bufferSize = tempwg.getBufferSize();
 	volatile unsigned int countedBits = tempwg.getBitCounted();
 
@@ -48,10 +50,9 @@ String KeyPadReader::printDataToSerial(WiegandNG &tempwg) {
 	if ((countedBits % 8)>0) {
 	  countedBytes++;
 	}
-//
+
 	for (unsigned int i=bufferSize-countedBytes; i< bufferSize;i++) {
-		// Not sure if we should add 48 to convert it from binary to ascii numbers...
-		volatile unsigned char bufByte=buffer[i]+48;
+		volatile unsigned char bufByte=buf[i];
 
 		shiftright();
 		_codeBuffer[0] = bufByte;
@@ -87,14 +88,12 @@ bool KeyPadReader::isAvailable() {
 }
 
 bool KeyPadReader::checkWiegand() {
-
 	if(wg.available()) {
 		wg.pause();				// pause Wiegand pin interrupts
 		printDataToSerial(wg);	// display raw data in binary form, raw data inclusive of PARITY
 		wg.clear();				// compulsory to call clear() to enable interrupts for subsequent data
 		wg.resume();
 		KeyPadReader::_dataAvailable = true;
-
 		delay(10);
 		return true;
 	}

@@ -539,4 +539,10 @@ public interface IOrderManager {
     
     @Administrator
     public boolean isStockManagementActive();
+    
+    @Administrator
+    public void deleteDoublePostingFile(String fileId);
+    
+    @Administrator
+    public void cleanupMessedUpOrderTransactionForForignCurrencyCreditNotes(String password);
 }

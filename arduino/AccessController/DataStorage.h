@@ -7,7 +7,7 @@ class DataStorage {
 	  void DataStorage::writeCode(unsigned int slot, unsigned char* code);
 	  void DataStorage::setupDataStorageBus();
 	  void DataStorage::getCode(unsigned int slot, unsigned char* buffer);
-	  bool DataStorage::handleMessage(unsigned char* msgFromGateWay);
+	  unsigned int DataStorage::handleCodeMessage(unsigned char* msgFromGateWay);
 
    private:
 	  void DataStorage::writeEEPROMPage(unsigned int eeAddress, unsigned char* data);

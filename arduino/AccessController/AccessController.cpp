@@ -4,7 +4,7 @@
 #include "KeypadReader.h"
 #include "DataStorage.h"
 #include "CodeHandler.h"
-
+#include "Logging.h"
 
 #define disk1 0x50
 
@@ -13,13 +13,17 @@ int cycles = 0;
 byte key[16] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F};
 byte ciphertext[16] = {0xE0, 0xC4, 0xE0, 0xD8, 0x6A, 0x7B, 0x04, 0x30, 0xD8, 0xCD, 0xB7, 0x80, 0x70, 0xB4, 0xC5, 0x5A};
 
-DataStorage storage;
-Communication communication(key, ciphertext);
+Clock clock;
 
-KeyPadReader keypadReader;
-CodeHandler codeHandler(storage, keypadReader, communication);
+DataStorage dataStorage;
 
+Logging logging(&dataStorage, &clock);
+Communication communication(key, ciphertext, &clock);
 
+KeyPadReader keypadReaderObj(&clock);
+KeyPadReader& keypadReader = keypadReaderObj;
+
+CodeHandler codeHandler(&dataStorage, &keypadReader, &communication);
 
 bool started = false;
 bool lighstat = LOW;
@@ -36,10 +40,6 @@ void initLora() {
 	  delay(20);
 	  digitalWrite(PB5, HIGH);
 	  delay(500);
-//	  Serial.print("AT+RESET\r\n");
-//	  delay(200);
-//	  Serial.print("AT+IPR=115200\r\n");
-//	  delay(200);
 	  Serial.print("AT+ADDRESS=250\r\n");
 	  delay(200);
 	  Serial.print("AT+NETWORKID=5\r\n");
@@ -57,10 +57,9 @@ void setup()
 	Serial.begin(115200);
 
 	initLora();
-	storage.setupDataStorageBus();
+	dataStorage.setupDataStorageBus();
 	keypadReader.setupWiegand();
-
-
+	logging.init();
 
 	pinMode(14, OUTPUT); // Engine
 	pinMode(15, OUTPUT); // Strike
@@ -71,8 +70,10 @@ void setup()
 	digitalWrite(PD5, HIGH);
 	digitalWrite(14, HIGH);
 
-	communication.writeEncrypted("Started", 7);
-	delay(1000);
+
+	logging.addLog("Started1", 8, true);
+	logging.addLog("Started2", 8, true);
+	logging.addLog("Started3", 8, true);
 }
 
 void toggleLight() {
@@ -84,7 +85,6 @@ void toggleLight() {
 
 	cycles = 0;
 	digitalWrite(PD5, lighstat);
-//	communication.writeEncrypted("test", 4);
 }
 
 void aliveDebugLight() {
@@ -96,25 +96,33 @@ void aliveDebugLight() {
 
 void loop()
 {
-
-// Check for data at the different inputs.
-
 	communication.check();
 	keypadReader.checkWiegand();
 
 	if (keypadReader.isAvailable()) {
 		keypadReader.getBuffer(bufferForWiegand);
-		codeHandler.testCodes(bufferForWiegand);
+		bool usedACode = codeHandler.testCodes(bufferForWiegand);
+		if (usedACode) {
+			keypadReader.clearBuffer();
+		}
 	}
 
 	if (communication.isDataAvailable()) {
 		communication.getData(bufferForCommunication);
 
-		if (storage.handleMessage(bufferForCommunication)) {
-			communication.writeEncrypted("Code stored", 11);
+		if (bufferForCommunication[0] == 'C') {
+			unsigned int slotId = dataStorage.handleCodeMessage(bufferForCommunication);
+			char buf[5];
+			itoa(slotId, buf, 10);
+			logging.addLog("C:S:" + slotId, 9, true);
+			return;
+		}
+
+		if (bufferForCommunication[0] == 'A' && bufferForCommunication[1] == 'C' && bufferForCommunication[2] == 'K') {
+			logging.handleAckMessage(bufferForCommunication);
+			return;
 		}
 	}
 
-//	communication.writeEncrypted("C", 1);
-//	aliveDebugLight();
+	logging.runSendCheck(&communication);
 }

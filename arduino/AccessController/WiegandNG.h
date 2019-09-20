@@ -32,7 +32,7 @@ public:
 	unsigned int getBitAllocated();
 	unsigned int getBufferSize();
 	unsigned int getPacketGap();
-	volatile unsigned char *getRawData();
+	void WiegandNG::getRawData(unsigned char* buf);
 	WiegandNG();
 	~WiegandNG();
 };

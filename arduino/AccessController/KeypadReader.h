@@ -2,10 +2,11 @@
 #define KeyPadReader_h
 
 #include "WiegandNG.h"
+#include "Clock.h"
 
 class KeyPadReader {
 	public:
-		KeyPadReader();
+		KeyPadReader(Clock* clock);
 		static volatile bool _dataAvailable;
 		static volatile unsigned char * _codeBuffer[26];
 		static volatile unsigned char * _tmpCodeBuffer[26];
@@ -17,12 +18,12 @@ class KeyPadReader {
 		void KeyPadReader::stop();
 		void KeyPadReader::start();
 		void clear();
+		void KeyPadReader::clearBuffer();
 
 	private:
-
+		Clock* _clock;
 		void KeyPadReader::shiftright();
 		String KeyPadReader::printDataToSerial(WiegandNG &tempwg);
-		void KeyPadReader::clearBuffer();
 
 
 };

@@ -10,10 +10,10 @@
 #include "Communication.h";
 
 
-CodeHandler::CodeHandler(DataStorage &dataStorage, KeyPadReader &keypadReader, Communication &com) {
+CodeHandler::CodeHandler(DataStorage* dataStorage, KeyPadReader* keypadReader, Communication* commu) {
 	this->dataStorage = dataStorage;
 	this->keypadReader = keypadReader;
-	this->communication = communication;
+	this->communication = commu;
 }
 
 bool CodeHandler::compareCodes(unsigned char* savedCode, unsigned char* typedCode, int codeSlot) {
@@ -45,18 +45,14 @@ bool CodeHandler::compareCodes(unsigned char* savedCode, unsigned char* typedCod
 	return true;
 }
 
-void CodeHandler::testCodes(unsigned char* codeFromPanel) {
+bool CodeHandler::testCodes(unsigned char* codeFromPanel) {
 	unsigned char buffer[16];
 
-	for (int i=0; i<=10; i++) {
+	for (int i=0; i<=2000; i++) {
 
-		this->dataStorage.getCode(i, buffer);
+		dataStorage->getCode(i, buffer);
 
 		if (this->compareCodes(buffer, codeFromPanel, i)) {
-			char openBuff[10];
-			sprintf(openBuff, "O:%5d", i);
-			communication.writeEncrypted(openBuff, 7);
-
 			digitalWrite(14, LOW);
 			digitalWrite(PD5, LOW);
 
@@ -64,11 +60,13 @@ void CodeHandler::testCodes(unsigned char* codeFromPanel) {
 			digitalWrite(14, HIGH);
 			digitalWrite(PD5, HIGH);
 
-			break;
+			return true;
 		}
 
-		if (keypadReader.checkWiegand()) {
+		if (keypadReader->checkWiegand()) {
 			break;
 		}
 	}
+
+	return false;
 }

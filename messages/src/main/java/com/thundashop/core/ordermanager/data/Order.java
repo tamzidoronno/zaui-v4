@@ -1413,6 +1413,18 @@ public class Order extends DataCommon implements Comparable<Order> {
         return false;
     }
 
+    public Double getTotalRegisteredAgio() {
+        Double agio = 0D;
+        
+        for (OrderTransaction trans : orderTransactions) {
+            if (trans.agio != null) {
+                agio = agio + trans.agio;
+            }
+        }
+        
+        return agio;
+    }
+
     public static class Status  {
         public static int CREATED = 1;
         public static int WAITING_FOR_PAYMENT = 2;

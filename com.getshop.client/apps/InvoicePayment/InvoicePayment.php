@@ -110,8 +110,8 @@ class InvoicePayment extends \PaymentApplication implements \Application{
         $orderid = $_POST['data']['orderid'];
         $msg = $_POST['data']['emailMessage'];
         $subject = $_POST['data']['subject'];
-        $res = $this->getApi()->getPmsInvoiceManager()->sendRecieptOrInvoiceWithMessage($this->getSelectedMultilevelDomainName(), $orderid, $email, $bookingId, $msg, $subject);
         $this->getApi()->getOrderManager()->closeOrder($orderid, "Sent to customer");
+        $res = $this->getApi()->getPmsInvoiceManager()->sendRecieptOrInvoiceWithMessage($this->getSelectedMultilevelDomainName(), $orderid, $email, $bookingId, $msg, $subject);
         
         $salesPoint = new \ns_11234b3f_452e_42ce_ab52_88426fc48f8d\SalesPointTabPayment();
         unset($_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_complete_payment']);

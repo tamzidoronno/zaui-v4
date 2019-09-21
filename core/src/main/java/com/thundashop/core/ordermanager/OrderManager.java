@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.DBCollection;
 import com.thundashop.core.applications.GetShopApplicationPool;
 import com.thundashop.core.applications.StoreApplicationInstancePool;
 import com.thundashop.core.applications.StoreApplicationPool;
@@ -42,6 +43,7 @@ import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.listmanager.data.TreeNode;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.MessageManager;
+import com.thundashop.core.ocr.StoreOcrManager;
 import com.thundashop.core.ordermanager.data.AccountingFreePost;
 import com.thundashop.core.ordermanager.data.CartItemDates;
 import com.thundashop.core.ordermanager.data.ClosedOrderPeriode;
@@ -207,6 +209,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Autowired
     private WareHouseManager wareHouseManager;
     
+    @Autowired
+    private StoreOcrManager storeOcrManager;
+    
     private List<String> terminalMessages = new ArrayList();
     private Order orderToPay;
     private String tokenInUse;
@@ -284,8 +289,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         saveOrder(order);
         
         if (order.status != Order.Status.PAYMENT_COMPLETED) {
-            markAsPaid(order.id, new Date(), order.getTotalAmount());
-            markAsPaid(credited.id, new Date(), credited.getTotalAmount());
+            markAsPaidWithTransactionTypeInternal(order.id, order.getTotalAmount(), new Date(), 1, "unkown", order.getTotalAmountLocalCurrency(), order.getTotalRegisteredAgio());
+            markAsPaidWithTransactionTypeInternal(credited.id, credited.getTotalAmount(), new Date(), 1, "unkown", credited.getTotalAmountLocalCurrency(), credited.getTotalRegisteredAgio());   
         }
         
         revertOrderLinesToPreviouseState(order);
@@ -866,6 +871,26 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         if (order != null) {
             order.status = status;
+            if(order.payment != null) {
+                order.payment.transactionLog.put(System.currentTimeMillis(), "Changed orderstatus to : " + status);
+            }
+            saveOrderInternal(order);
+        }
+    }
+    
+    @Override
+    public void changeOrderStatusWithPassword(String id, int status, String password) throws ErrorException {
+        if(!password.equals("gfdsabdf034534BHdgfsdgfs#!")) {
+            return;
+        }
+        
+        Order order = orders.get(id);
+        
+        if(order.status != Order.Status.PAYMENT_COMPLETED && (status == Order.Status.NEEDCOLLECTING || status == Order.Status.PAYMENT_FAILED)) {
+            order.status = status;
+            if(order.payment != null) {
+                order.payment.transactionLog.put(System.currentTimeMillis(), "Changed orderstatus to : " + status);
+            }
             saveOrderInternal(order);
         }
     }
@@ -1851,6 +1876,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         finalize(ordersToFinalise);
     }
 
+    
+    
     private void updateAddressIfNotClosed(Order order) {
         if (!order.closed && order.userId != null && !order.userId.isEmpty() && order.cart != null) {
             try {
@@ -2768,13 +2795,17 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     public void markAsPaidWithTransactionType(String orderId, Date date, Double amount, int transactiontype, String refId) {
+        markAsPaidWithTransactionTypeInternal(orderId, amount, date, transactiontype, refId, null, null);
+    }
+
+    private void markAsPaidWithTransactionTypeInternal(String orderId, Double amount, Date date, int transactiontype, String refId, Double amountInLocalCurrency, Double agio) throws ErrorException {
         Order order = orders.get(orderId);
         if(amount != null && amount != 0.0) {
             String userId = "";
             if(getSession() != null && getSession().currentUser != null) {
                 userId = getSession().currentUser.id;
             }
-            order.registerTransaction(date, amount, userId, transactiontype, refId, "", null, null);
+            order.registerTransaction(date, amount, userId, transactiontype, refId, "", amountInLocalCurrency, agio);
             feedGrafanaPaymentAmount(amount);
             if(order.isFullyPaid() || order.isCreditNote) {
                 markAsPaidInternal(order, date,amount);
@@ -2852,7 +2883,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             dayIncomes.stream().forEach(o -> o.isFinal = true);
         }
         
-        OrderDailyBreaker breaker = new OrderDailyBreaker(getAllOrders(), filter, paymentManager, productManager, getOrderManagerSettings().whatHourOfDayStartADay, getAllFreePosts());
+        OrderDailyBreaker breaker = new OrderDailyBreaker(getAllOrders(), filter, paymentManager, productManager, getOrderManagerSettings().whatHourOfDayStartADay, getAllFreePosts(), storeOcrManager);
         breaker.breakOrders();
         
         if (breaker.hasErrors()) {
@@ -2960,7 +2991,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         List<Order> orders = new ArrayList();
         orders.add(order);
-        OrderDailyBreaker breaker = new OrderDailyBreaker(orders, filter, paymentManager, productManager, getOrderManagerSettings().whatHourOfDayStartADay, getAllFreePosts());
+        OrderDailyBreaker breaker = new OrderDailyBreaker(orders, filter, paymentManager, productManager, getOrderManagerSettings().whatHourOfDayStartADay, getAllFreePosts(), storeOcrManager);
         breaker.breakOrders();
         
         return breaker.getDayEntries();
@@ -3603,7 +3634,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             Map<String, List<DayEntry>> groupedByDepartmentId = dayIncome.dayEntries.stream()
                 .filter(entry -> !(!entry.isActualIncome || entry.isOffsetRecord))
                 .filter(o -> o.orderId != null)
-                .collect(Collectors.groupingBy(o -> getOrder(o.orderId).cart.getCartItem(o.cartItemId).departmentId));
+                .collect(Collectors.groupingBy(o -> {
+                    CartItem cartItem = getOrder(o.orderId).cart.getCartItem(o.cartItemId);
+                    if (cartItem == null || cartItem.getProduct() == null || cartItem.getProduct().departmentId == null) {
+                        return "";
+                    }
+                    
+                    return cartItem.getProduct().departmentId;
+                }));
 
 
             for (String departmentId : groupedByDepartmentId.keySet()) {
@@ -3679,6 +3717,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
     
     public List<DayIncome> getPaymentRecordsInternal(String paymentId, Date from, Date to, boolean doublePostingRecords) {
+        boolean concatOcrPayments = paymentId.equals("70ace3f0-3981-11e3-aa6e-0800200c9a66") && storeOcrManager.isActivated();
+        
         List<Order> orders = this.orders.values()
                 .stream()
                 .filter(o -> o.payment != null && o.payment.getPaymentTypeId().equals(paymentId))
@@ -3695,7 +3735,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         filter.start = from;
         filter.end = to;
         
-        OrderDailyBreaker breaker = new OrderDailyBreaker(orders, filter, paymentManager, productManager, getOrderManagerSettings().whatHourOfDayStartADay, getAllFreePosts());
+        OrderDailyBreaker breaker = new OrderDailyBreaker(orders, filter, paymentManager, productManager, getOrderManagerSettings().whatHourOfDayStartADay, getAllFreePosts(), storeOcrManager);
         breaker.breakOrders();
         
         return breaker.getDayIncomes();
@@ -3745,6 +3785,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return database.query("OrderManager", storeId, query)
                 .stream()
                 .map(o -> (DoublePostAccountingTransfer)o)
+                .filter(o -> o.deleted == null)
                 .filter(o -> o.isWithinOrEqual(from, to))
                 .collect(Collectors.toList());
     }
@@ -3770,6 +3811,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         return database.query("OrderManager", storeId, query)
                 .stream()
+//                .filter(o -> o.deleted != null)
                 .map(o -> (DoublePostAccountingTransfer)o)
                 .findAny()
                 .orElse(null);
@@ -4186,7 +4228,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     private void updateCurrencyForItems(Order order) {
-        if (order.currency == null || order.currency.isEmpty()) {
+        if (order.currency == null || order.currency.isEmpty() || order.isCreditNote) {
             return;
         }
         
@@ -4197,7 +4239,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         for (CartItem item : order.getCartItems()) {
-            boolean samePriceInTaxAsOldOrder = oldOrder != null && oldOrder.cart.getCartItem(item.getCartItemId()).getProductPrice() == item.getProductPrice();
+            boolean samePriceInTaxAsOldOrder = oldOrder != null && oldOrder.cart.getCartItem(item.getCartItemId()) != null && oldOrder.cart.getCartItem(item.getCartItemId()).getProductPrice() == item.getProductPrice();
             boolean currencySame = oldOrder != null && order.currency.equals(oldOrder.currency);
             boolean hasOldOrder = oldOrder != null;
             
@@ -4467,6 +4509,131 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             ord.language = language;
             ord.currency = currency;
             super.saveObject(ord);
+        }
+    }
+
+    @Override
+    public Order changeUserOnOrder(String orderId, String userId) {
+        Order order = getOrder(orderId);
+        order.userId = userId;
+        finalizeOrder(order);
+        saveOrder(order);
+        return order;
+    }
+
+    @Override
+    public void doRoundUpOnCurrentOrder(String orderId) {
+        Order order = getOrderSecure(orderId);
+        String currency = storeManager.getCurrency();
+        String language = StoreManager.getLanguage();
+        
+        Product prod = productManager.getProduct("roundupproduct");
+        if(prod == null) {
+            String productName = "Øreavrunding";
+            if(!language.equals("no")) {
+                productName = "Exchange roundup";
+            }
+            
+            prod = new Product();
+            prod.name = productName;
+            prod.id = "roundupproduct";
+            prod.price = 0.0;
+            prod.taxgroup = 0;
+            productManager.saveProduct(prod);
+        }
+        
+        List<String> removeItem = new ArrayList();
+        for(CartItem item : order.getCartItems()) {
+            if(item.getProduct().id.equals("roundupproduct")) {
+                removeItem.add(item.getCartItemId());
+            }
+        }
+        for(String itemId : removeItem) {
+            order.cart.removeItem(itemId);
+        }
+        
+        saveOrder(order);
+        
+        double total = getTotalAmount(order);
+        double ceiltotal = Math.ceil(total);
+        double roundup = ceiltotal - total;
+        
+        if(roundup > 0.1) {
+            
+            if(currency.equals("adifferentcurrency")) {
+                //Do something here.
+            } else {
+                roundup = Math.round(roundup*100) / (double)100;
+            }
+            addProductToOrder(order.id, prod.id, 1);
+            order = getOrder(orderId);
+            for(CartItem item : order.getCartItems()) {
+                if(item.getProduct().id.equals("roundupproduct")) {
+                    item.getProduct().price = roundup;
+                }
+            }
+            saveOrder(order);
+        }
+    }
+
+    @Override
+    public void deleteDoublePostingFile(String fileId) {
+        DoublePostAccountingTransfer file = getDoublePostAccountingTransfer(fileId);
+        if (file == null) {
+            return;
+        }
+        
+        for (DayIncome income : file.incomes) {
+            for (DayEntry entry : income.dayEntries) {
+                for (Order order : orders.values()) {
+                    boolean found = false;
+                    for (OrderTransaction trans : order.orderTransactions) {
+                        if (trans.transactionId.equals(entry.orderTransactionId)) {
+                            trans.transferredToAccounting = false;
+                            found = true;
+                        }
+                    }
+                    if (found) {
+                        saveObject(order);
+                    }
+                }
+            }
+        }
+       
+        deleteObject(file);
+    }
+
+    @Override
+    public void cleanupMessedUpOrderTransactionForForignCurrencyCreditNotes(String password) {
+        if (!password.equals("asd9fasdfiasdjfoasidfjqaweraisdfnaejdfn")) {
+            return;
+        }
+        
+        List<Order> fixOrders = orders
+            .values()
+            .stream()
+            .filter(order -> {
+
+                if (order.currency != null && !order.currency.isEmpty()) {
+                    for (OrderTransaction trans : order.orderTransactions) {
+                        if (trans.amountInLocalCurrency == null) {
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
+            })
+            .collect(Collectors.toList());
+
+        for (Order order : fixOrders) {
+            for (OrderTransaction trans : order.orderTransactions) {
+                if (trans.amountInLocalCurrency == null) {
+                    trans.amountInLocalCurrency = 0D;
+                }
+            }
+            
+            saveObject(order);
         }
     }
 

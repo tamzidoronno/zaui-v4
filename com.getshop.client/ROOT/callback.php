@@ -3,6 +3,16 @@ include '../loader.php';
 $factory = IocContainer::getFactorySingelton();
 
 $cartManager = new ns_900e5f6b_4113_46ad_82df_8dafe7872c99\CartManager();
+if(isset($_GET['useapp']) && $_GET['useapp'] == "stripe") {
+     foreach ($cartManager->getPaymentApplications() as $paymentApp) {
+        if($paymentApp->applicationSettings->appName == "StripePayments") {
+            $stripe = $paymentApp;
+        }
+    }
+    $stripe->handleCallBack();
+    return;
+}
+
 if(isset($_GET['useapp']) && $_GET['useapp'] == "netaxept") {
     $transId = json_decode(file_get_contents("php://input"), true);
     $transId = $transId['TransactionId'];

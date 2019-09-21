@@ -1,6 +1,6 @@
 app.IntegratedPaymentTerminal = {
     init: function() {
-        $(document).on('click', '.IntegratedPaymentTerminal .refresh', app.VerifoneTerminal.refresh);
+        $(document).on('click', '.IntegratedPaymentTerminal .refresh', app.IntegratedPaymentTerminal.refresh);
     },
     
     refresh: function() {

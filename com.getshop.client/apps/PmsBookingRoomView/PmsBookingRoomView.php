@@ -22,12 +22,37 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         
     }
     
+    public function cancelautodeletion() {
+        $booking = $this->getPmsBooking();
+        $booking->avoidAutoDelete = true;
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+    }
+    
     public function sortGetShopTable() {
         $_SESSION['lastsorttype'] = $_POST['data']['column'];
         $_SESSION['lastsorttypeasc'] = "false";
         if ($_POST['data']['sorting'] == "asc") {
             $_SESSION['lastsorttypeasc'] = "true";
         }
+    }
+    
+    public function ignorechannelmanager() {
+        $booking = $this->getPmsBooking();
+        $booking->ignoreWubook = !$booking->ignoreWubook;
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+        if($booking->ignoreWubook) {
+            $this->getApi()->getPmsManager()->logEntry($this->getSelectedMultilevelDomainName(), "Ignore update from channel manager", $booking->id, null);
+        } else {
+            $this->getApi()->getPmsManager()->logEntry($this->getSelectedMultilevelDomainName(), "cancelled - ignore update from channel manager", $booking->id, null);
+        }
+    }
+    
+    public function addIncrementOrderIdToBooking() {
+        $order = $this->getApi()->getOrderManager()->getOrderByincrementOrderId($_POST['data']['orderid']);
+        $booking = $this->getPmsBooking();
+        echo $order->id;
+        $booking->orderIds[] = $order->id;
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
     }
     
     public function retrySendingCode() {
@@ -2407,6 +2432,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $reasons[10] = "Booking will be deleted in 30 minutes.";
         $reasons[11] = "We are waiting 30 minutes for payment to be completed, payment link is sent after that.";
         $reasons[12] = "Access has been forced, we do not send paymentlink if access has been forced.";
+        $reasons[13] = "It have an order which is a prepaid order by ota.";
         return $reasons[$reason];
     }
 

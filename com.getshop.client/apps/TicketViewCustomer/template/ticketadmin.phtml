@@ -53,6 +53,12 @@ if ($systems) {
     <br/>
     <br/>
     <div>
+        <h3>Timer</h3>
+        <input type="hidden" value="<?php echo time()-(60*5); ?>" id="startTime">
+        <script>
+                app.TicketViewCustomer.startTime();
+        </script>
+        
         <h3>Settings</h3>
         
         <span style='display: inline-block; width: 150px;'>Status:</span>
@@ -97,9 +103,38 @@ if ($systems) {
     if ($ticket->transferredToAccounting) {
         echo "Already trasferred to order, values cant be changed";
     } else {
+        echo "<table width='100%'>";
+        echo "<tr>";
+        echo "<th>When</th>";
+        echo "<th>Spent</th>";
+        echo "<th>Invoiced</th>";
+        echo "</tr>";
+        
+        $sorted = (array)$ticket->timeSpentAtDate;
+        asort($sorted);
+        $totalInvoiced = 0;
+        $totalSpent = 0;
+        foreach($sorted as $time => $spent) {
+            $billing = 0;
+            if(isset($ticket->timeInvoiceAtDate->{$time})) {
+                $billing = $ticket->timeInvoiceAtDate->{$time};
+            }
+            $totalInvoiced += $billing;
+            $totalSpent += $spent;
+            echo "<tr>";
+            echo "<td style='width: 150px;'>" . date("d.m.Y H:i:s", $time / 1000) . "</td>";
+            echo "<td align='center'><input value='".$spent."' style='width:40px;' class='gsniceinput1 updateTimeOnTicket' ticketid='".$ticket->id."' time='$time' timetype='spent'></td>";
+            echo "<td align='center'><input value='".$billing."' style='width:40px;' class='gsniceinput1 updateTimeOnTicket' ticketid='".$ticket->id."' time='$time' timetype='billing' value='$billing'></td>";
+            echo "</tr>";
+        }
+        echo "<tr>";
+        echo "<td>Total</td>";
+        echo "<td align='center'>" . round($totalSpent,2) . "</td>";
+        echo "<td align='center'>" . round($totalInvoiced,2) . "</td>";
+        echo "</tr>";
+        
+        echo "</table>";
         ?>
-        <span style='display: inline-block; width: 150px;'>Hours spent:</span> <input gschange='setTimeSpent' ticketid='<? echo $ticket->id; ?>' class='gsniceinput1' value='<? echo $ticket->timeSpent; ?>'/>
-        <br/><span style='display: inline-block; width: 150px;'>Hours to invoice:</span> <input gschange='setTimeInvoice' class='gsniceinput1' ticketid='<? echo $ticket->id; ?>' value='<? echo $ticket->timeInvoice; ?>'/>
         <br/> NB! <br/>15 minutes = 0.25 hour. <br/> 30 minutes = 0.5 hour <br/> 45 minutes = 0.75 hour
 
         <?

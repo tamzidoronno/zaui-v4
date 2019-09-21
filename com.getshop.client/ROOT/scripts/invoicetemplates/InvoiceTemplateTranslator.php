@@ -29,11 +29,15 @@ class InvoiceTemplateTranslator {
         }
         
         $prefix = strstr(getcwd(), "invoicetemplates") ? "" : "scripts/invoicetemplates/";
-        
-        if ($this->language === "nb_NO") {
+        if ($this->language === "nb_NO" || $this->language === "nb_no") {
             $data = file_get_contents($prefix.'lang_nb_NO.json');
-        } else { 
-            $data = file_get_contents($prefix.'lang_default.json');
+        } else {
+            $defaultlanguagefile = $prefix."lang_". $this->language.'.json';
+            if(file_exists($defaultlanguagefile)) {
+                $data = file_get_contents($defaultlanguagefile);
+            } else {
+                $data = file_get_contents($prefix.'lang_default.json');
+            }
         }
         
         $this->matrix = json_decode($data);
@@ -53,7 +57,7 @@ class InvoiceTemplateTranslator {
             return "$ ".round($price, 2);
         }
         
-        if ($this->currency == "EUR") {
+        if ($this->currency == "EURO") {
             return "€ ".round($price, 2);
         }
         
@@ -73,7 +77,7 @@ class InvoiceTemplateTranslator {
             return "USD";
         }
         
-        if ($this->currency == "EUR") {
+        if ($this->currency == "EURO") {
             return "EURO";
         }
         

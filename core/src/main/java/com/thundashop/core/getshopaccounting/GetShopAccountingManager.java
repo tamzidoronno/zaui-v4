@@ -372,13 +372,25 @@ public class GetShopAccountingManager extends ManagerBase implements IGetShopAcc
             incomes = transferFile.incomes;
         } else {
             for (DayIncome income : incomes) {
-                if (!income.isFinal) {
+                if (!income.isFinal && !income.dayEntries.isEmpty()) {
                     throw new RuntimeException("Can not transfer to accountin a dayincome that is nor marked as final!");
                 }
             }
         }
         
         return getActivatedAccountingSystemOther().getTransferData(incomes);
+    }
+
+    @Override
+    public void transferDoublePostFile(String doublePostFileId) {
+        DoublePostAccountingTransfer file = orderManager.getDoublePostAccountingTransfer(doublePostFileId);
+        if (file == null) {
+            return;
+        }
+        
+        getActivatedAccountingSystemOther().transfer(file.incomes);
+        file.addTransferredDate(new Date());
+        orderManager.saveObject(file);
     }
 
 }

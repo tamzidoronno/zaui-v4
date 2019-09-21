@@ -154,12 +154,14 @@ public class StorePool {
         if (store == null) {
             webAddress = webAddress.replace(".3.0.local.", ".3.0.");
             webAddress = webAddress.replace(".3.0.mpal.", ".3.0.");
+            webAddress = webAddress.replace(".3.0.mdev.", ".3.0.");
             webAddress = webAddress.replace(".local.", ".");
             webAddress = webAddress.replace(".mlocal.", ".");
             webAddress = webAddress.replace(".beta.", ".");
             webAddress = webAddress.replace("gsmobile", "");
             webAddress = webAddress.replace(".mpal.", ".");
             webAddress = webAddress.replace(".dev.", ".");
+            webAddress = webAddress.replace(".mdev.", ".");
             store = getStoreByWebaddress(webAddress);
             if (store == null) {
                 webAddress = webAddress.replace(".3.0", "");

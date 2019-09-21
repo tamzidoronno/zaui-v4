@@ -1,0 +1,72 @@
+<?
+/* @var $this ns_11234b3f_452e_42ce_ab52_88426fc48f8d\SalesPointTabPayment */
+$user = null;
+if (isset($_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_invoice_userid'])) {
+    $user = $this->getApi()->getUserManager()->getUserById($_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_invoice_userid']);
+}
+$order = $this->getCurrentOrder();
+?>
+
+<div style='padding-left: 20px;'>
+    <div class='shop_button' gsclick='cancelInvoicePayment' orderid="<?php echo $order->id; ?>" style='float:right;'><i class='fa fa-undo'></i> <? echo $this->__f("Cancel"); ?></div>
+    <h2>1. <? echo $this->__f("Select customer"); ?> </h2>
+    <div style='padding-left: 20px;'>
+        <?
+         $extraArgs = array();
+        $extraArgs['invokeJavascriptFunctionAfterActions'] = 'app.SalesPointTabPayment.refresh';
+        
+        $quser = new \ns_b5e9370e_121f_414d_bda2_74df44010c3b\GetShopQuickUser();
+        $quser->setUser($user);
+        $quser->setExtraArgs($extraArgs);
+        $quser->renderApplication(true, $this);
+        ?>
+    </div>
+    <?php
+    if($user) {
+        $order = $this->getApi()->getOrderManager()->changeUserOnOrder($order->id, $user->id);
+        echo "<br>";
+        $invoiceData = new \stdClass();
+        $invoiceData->order = $order;
+        $invoiceData->accountingDetails = $this->getApi()->getInvoiceManager()->getAccountingDetails();
+        $serializedOrder = json_encode($invoiceData);
+
+        $app = $this->getApi()->getGetShopApplicationPool()->get("486009b1-3748-4ab6-aa1b-95a4d5e2d228");
+        $defaultAction = $this->getFactory()->getApplicationPool()->createInstace($app);
+        $defaultAction->order = $order;
+
+        $idArr = explode("\\", $order->payment->paymentType);
+        $id = $idArr[0];
+        $id = str_replace("_", "-", $id);
+        $id = str_replace("ns-", "", $id);
+        $app = $this->getApi()->getStoreApplicationPool()->getApplication("70ace3f0-3981-11e3-aa6e-0800200c9a66");
+        $paymentApp = $this->getFactory()->getApplicationPool()->createInstace($app);
+        $paymentApp->setCurrentOrder($order);
+        $paymentApp->overrideSentInvoiceCallback = "app.SalesPointTabPayment.refresh";
+
+        $fullsize = $paymentApp->hasPaymentProcess() ? "" : "fullsize";
+        ?>
+
+        <div class="shop_button updateOrderNote" style="margin-left: 30px;"><i class="fa fa-plus-square-o"></i> Update order note</div> 
+        <div class="shop_button updateDueDate"><i class="fa fa-adjust"></i> Update due date</div>
+        <div class="receipt_template <? echo $fullsize; ?>">
+            <div class="receipt_template_inner">
+                <?
+                include 'scripts/invoicetemplates/template2.php';
+                ?>
+            </div>
+        </div>
+
+        <div class="payment_method_options <? echo $fullsize; ?>">
+            <div class="paymentoptions">
+                <? echo $paymentApp->renderStandAlone(); ?>
+            </div>
+        </div>
+
+        <style>
+            .gsoverlay3 .gsoverlayinner { background-color: #f5f8fa; }
+        </style>
+        <?php
+        }
+    ?>
+</div>
+

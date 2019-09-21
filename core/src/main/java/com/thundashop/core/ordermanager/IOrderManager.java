@@ -132,6 +132,9 @@ public interface IOrderManager {
     @Editor
     public FilteredData getOrdersFiltered(FilterOptions filterOptions);
     
+    @Administrator
+    public void doRoundUpOnCurrentOrder(String orderId);
+    
     @Editor
     public List<OrderResult> getOrdersByFilter(OrderFilter filter);
     
@@ -255,12 +258,17 @@ public interface IOrderManager {
     public void setOrderStatus(String password, String orderId, String currency, double price, int status) throws ErrorException;
     
     
+    @Administrator
+    public Order changeUserOnOrder(String orderId, String userId);
+    
     /**
      * Change order status of a specified order.
      * The id could be the orderId or the transaction id.
      */
     @Administrator
     public void changeOrderStatus(String id, int status) throws ErrorException;
+    
+    public void changeOrderStatusWithPassword(String id, int status, String password);
     
     @Administrator
     public void markAsInvoicePayment(String orderId);
@@ -531,4 +539,10 @@ public interface IOrderManager {
     
     @Administrator
     public boolean isStockManagementActive();
+    
+    @Administrator
+    public void deleteDoublePostingFile(String fileId);
+    
+    @Administrator
+    public void cleanupMessedUpOrderTransactionForForignCurrencyCreditNotes(String password);
 }

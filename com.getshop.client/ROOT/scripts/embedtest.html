@@ -10,16 +10,13 @@
     gsisdevmode = true;
     $ = jQuery;
     jQuery(function ($) {
-        $.getScript("http://jarvsoberg.3.0.local.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
+        $.getScript("http://lilandtunet.3.0.local.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
             $("#bookingprocess").getshopbooking(
                 {
-                    "endpoint": "http://jarvsoberg.3.0.local.getshop.com/",
-                    "jsendpoint": "http://jarvsoberg.3.0.local.getshop.com/",
+                    "endpoint": "http://lilandtunet.3.0.local.getshop.com/",
+                    "jsendpoint": "http://lilandtunet.3.0.local.getshop.com/",
                     "domain" : "default",
-                    "language" : "se",
-                    "success": function(res) {
-                        console.log(res);
-                    }
+                    "language" : "no"
                 }
             );
             
@@ -29,6 +26,9 @@
 </script>
 
 <style>
+    .GslBooking input {
+        /*-webkit-appearance: initial !important;*/
+    }
     /*.gslbookingBody i { color: pink !important; }*/
 /*    .gsl_button {
     background: #ab8b65 !important; }

@@ -220,7 +220,7 @@ public class MessageManager extends ManagerBase implements IMessageManager {
     private void attachInvioce(HashMap<String, String> attachments, String orderId) {
         String invoice = invoiceManager.getBase64EncodedInvoice(orderId);
         if (invoice != null && !invoice.isEmpty()) {
-            attachments.put("reciept.pdf", invoice);
+            attachments.put("receipt.pdf", invoice);
         }
     }
 

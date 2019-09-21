@@ -8,6 +8,7 @@ package com.thundashop.core.ticket;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Customer;
 import com.thundashop.core.common.Editor;
+import com.thundashop.core.common.ForceAsync;
 import com.thundashop.core.common.GetShopApi;
 import java.util.List;
 
@@ -44,6 +45,7 @@ public interface ITicketManager {
     @Administrator
     public List<TicketLight> getSetupTicketsLights();
     
+    @ForceAsync
     public Ticket getTicketByToken(String storeId, String ticketToken);
     
     @Administrator
@@ -105,4 +107,19 @@ public interface ITicketManager {
     
     @Administrator
     public TicketLight createLightTicketOfClonedSetupTicket(Ticket ticket);
+    
+    @Administrator
+    public TicketStatistics getStatistics(TicketStatsFilter filter);
+    
+    @Administrator
+    public TicketStatisticsStore getStoreStatistics(TicketStatsFilter filter);
+    
+    @Administrator
+    public void markTicketAsUnread(String ticketId);
+    
+    
+    @Administrator
+    @ForceAsync
+    public void updateLightTicketState(String ticketToken, TicketState state);
+    
 }

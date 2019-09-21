@@ -7,7 +7,6 @@ $total = $this->getApi()->getOrderManager()->getTotalAmount($order);
 <div class='completepayment cash' total='<? echo $total; ?>'>
     <div class='total'>
         <? echo $this->__f("Total")." ".$total; ?>
-        
     </div>
     <?
     echo $this->__f("How much money did you receive from customer?");

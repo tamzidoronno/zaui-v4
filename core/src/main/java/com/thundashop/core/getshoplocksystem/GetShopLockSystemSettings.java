@@ -12,7 +12,7 @@ import com.thundashop.core.common.DataCommon;
  * @author ktonder
  */
 public class GetShopLockSystemSettings extends DataCommon {
-    private int codeSize = 6;
+    private int codeSize = 4;
     
     public int getCodeSize() {
         if (storeId.equals("31e0a6ff-656e-4ef5-8973-945ffae8edd0")) {

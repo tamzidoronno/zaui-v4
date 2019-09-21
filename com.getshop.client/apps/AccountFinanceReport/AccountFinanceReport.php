@@ -118,7 +118,7 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
         $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_day_end'] = $_POST['data']['end'];
     }
 
-    public function groupOnAccounting($incomes) {
+    public function groupOnAccounting($incomes, $batchId = false) {
         $grouped = array();
         
         foreach ($incomes as $entry) {
@@ -130,6 +130,9 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
                 $grouped[$entry->accountingNumber] = 0;
             }
             
+            if ($batchId !== false && $entry->batchId != $batchId) {
+                continue;
+            }
             
             $amount = $entry->isActualIncome && !$entry->isOffsetRecord && !$this->isShowingIncTaxes() ? $entry->amountExTax : $entry->amount;
             $newVal = $grouped[$entry->accountingNumber] + $amount;
@@ -270,6 +273,8 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
         
         if ($system == "VISMA_NET") {
             $this->doVismaTransfer();
+        } else {
+            $this->getApi()->getGetShopAccountingManager()->transferDoublePostFile($_POST['data']['doublepostid']);
         }
     }
     
@@ -428,6 +433,26 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
     
     public function cancelDiffReport() {
         unset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_account_diff_report']);
+    }
+
+    public function transferFileToPo() {
+        echo "OK";
+    }
+    
+    public function deleteDoublePostingFile() {
+        $this->getApi()->getOrderManager()->deleteDoublePostingFile($_POST['data']['fileid']);
+    }
+
+    public function getBatchIncomes($dayEntries) {
+        $ids = array();
+        
+        foreach ($dayEntries as $entry) {
+            $ids[] = $entry->batchId;
+        }
+        
+        $ids = array_unique($ids);
+        
+        return $ids;
     }
 
 }

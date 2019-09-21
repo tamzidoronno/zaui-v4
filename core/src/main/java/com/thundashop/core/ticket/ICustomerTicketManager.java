@@ -6,8 +6,10 @@
 package com.thundashop.core.ticket;
 
 import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.ForceAsync;
 import com.thundashop.core.common.GetShopApi;
 import java.util.List;
+import org.springframework.scheduling.annotation.Async;
 
 /**
  *
@@ -25,4 +27,17 @@ public interface ICustomerTicketManager {
     public void reOpenTicket(String storeId, String ticketToken);
     public List<Ticket> getPredefinedTickets();
     public Ticket cloneSetupTicket(String ticketId, String storeId);
+    public TicketStatisticsStore getStoreStatistics(TicketStatsFilter filter);
+
+    /**
+     * A customer (black man) had a problem where he was not able to find the tickets replied to, 
+     * so he just complained about not getting any answers even if we had answered all his question.
+     * Something had to be done.
+     * @return 
+     */
+    @ForceAsync
+    public TicketNotifications getNiggerFriendlyTicketNotifications(String storeId);
+    @ForceAsync
+    public void markTicketAsRead(String tokenId);
+    
 }

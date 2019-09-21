@@ -1003,25 +1003,15 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return amount;
     }
 
-    private void setDepartmentId(CartItem item, String roomId) {
-        PmsBooking booking = pmsManager.getBookingFromRoom(roomId);
-        
-        if (booking != null) {
-            PmsBookingRooms room = booking.getRoom(roomId);
-            if (room != null) {
-                BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
-                if (type != null) {
-                    item.departmentId = type.departmentId;
-                }
-            }
-        }
-    }
 
     @Override
     public String getRedirectForBooking(String bookingId) {
         try {
             PmsBooking booking = pmsManager.getBookingUnsecure(bookingId);
-
+            if(!booking.isCompletedBooking()) {
+                return "/?page=payment_failed";
+            }
+            
             //Pay later button has been pressed.
             if(booking.payLater) { return "/?page=payment_success"; }
 
@@ -1202,25 +1192,35 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             return 3; //Registrered by administrator
         }
         
-        double amount = booking.getUnpaidAmount();
-        if(amount <= 0) {
-            return 5; //Everything is paid for
-        }
-        
         if(booking.notificationsSent.contains("booking_sendpaymentlink")) {
             return 4; //Already sent
         }
         
         
+        if(booking.isPrePaid) {
+            return 6; //Paid by ota.
+        }
+        
+        boolean hasUnpaid = false;
         for(String orderId : booking.orderIds) {
             Order ord = orderManager.getOrderDirect(orderId);
+            if(!ord.isPaid()) {
+                hasUnpaid = true;
+            }
             if(ord.isPrepaidByOTA()) {
-                return 6; //Prepaid by ota
+                booking.isPrePaid = true;
+                return 13; //Has order prepaid by ota.
             }
         }
         
-        if(booking.isStarted()) {
-            return 7; //Booking has started.
+        double amount = booking.getUnpaidAmount();
+        if(amount <= 0 && hasUnpaid) {
+            pmsManager.calculateUnsettledAmountForRooms(booking);
+            amount = booking.getUnpaidAmount();
+        }
+        
+        if(amount <= 0) {
+            return 5; //Everything is paid for
         }
 
         if(config.wubookAutoCharging && !booking.isOld(10) && booking.isWubook()) {
@@ -1362,7 +1362,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             usersEmail = order.recieptEmail;
         }
         sendRecieptOrInvoice(order.id, usersEmail, bookingId);
-        pmsManager.logEntry("Reciept / invoice sent to : " + usersEmail + " orderid: " + order.incrementOrderId, bookingId, null);
+        pmsManager.logEntry("Receipt / invoice sent to : " + usersEmail + " orderid: " + order.incrementOrderId, bookingId, null);
         
     }
 
@@ -2990,8 +2990,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             
         }
         
-        setDepartmentId(item, roomId);
-        
         if(!runningDiffRoutine) {
             addItemToItemsToReturn(item);
         }
@@ -3604,7 +3602,13 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         Order alreadyCreatedOrder = orderManager.getOrderCreatedByPaymentLinkWithRoomId(roomBookingId);
         
+        String recieptEmail = booking.recieptEmail.get(roomBookingId);
+        
         if (shouldUseAlreadyCreatedOrder(alreadyCreatedOrder, booking, room)) {
+            if(recieptEmail != null) { 
+                alreadyCreatedOrder.recieptEmail = recieptEmail; 
+                orderManager.saveOrder(alreadyCreatedOrder);
+            }
             return alreadyCreatedOrder.id;
         }
         
@@ -3615,6 +3619,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         Order ord = orderManager.getOrderSecure(orderId);
         ord.createdByPaymentLinkId = roomBookingId;
+        if(recieptEmail != null) { 
+            ord.recieptEmail = recieptEmail; 
+        }
         orderManager.saveOrder(ord);
         
         return orderId;

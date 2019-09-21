@@ -235,7 +235,7 @@ public class EhfXmlGenerator {
                 + "                                <cbc:StreetName>" + details.address + "</cbc:StreetName>\n";
 
         if (customer.address.address2 != null && !customer.address.address2.isEmpty()) {
-            xml += "                                <cbc:AdditionalStreetName></cbc:AdditionalStreetName>\n";
+            xml += "                                <cbc:AdditionalStreetName>" + customer.address.address2 + "</cbc:AdditionalStreetName>\n";
         }
 
         xml
@@ -407,6 +407,8 @@ public class EhfXmlGenerator {
         if(!startDate.isEmpty() && !endDate.isEmpty() && !item.hideDates) {
             lineText += " (" + startDate + " - " + endDate + ")";
         }
+        
+        lineText = xmlComplientString(lineText);
         
         return lineText;
     }

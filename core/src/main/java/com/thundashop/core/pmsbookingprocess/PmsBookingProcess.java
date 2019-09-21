@@ -784,6 +784,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         String ipaddr = getIpadressOnTerminal(data.terminalId);
         
         if(ipaddr == null || ipaddr.isEmpty()) {
+            logPrint("Printing using integrated terminal");
             printRecieptIntegratatedTerminal(data.orderId, data.terminalId);
             return;
         }
@@ -798,6 +799,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         String text = order.createThermalPrinterReciept(getAccountingDetails(), user);
         pmsManager.processor();
         String url = "http://" + settings.ip + ":8080/print.php";
+        logPrint("Printing to address " + url);
         try {
             
             PmsBooking booking = pmsManager.getBookingWithOrderId(order.id);
@@ -881,7 +883,12 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             }
         }
         booking = pmsManager.doCompleteBooking(pmsManager.getCurrentBooking());
-       
+         
+        BookingResult res = new BookingResult();
+        if(booking == null) {
+            res.success = 0;
+            return res;
+        }
         
         PmsUserDiscount discount = pmsInvoiceManager.getDiscountsForUser(booking.userId);
         User usr = userManager.getUserById(booking.userId);
@@ -895,15 +902,9 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             }
         }
         
-        BookingResult res = new BookingResult();
         res.success = 1;
         res.orderid = booking.id;
-        
-        if(booking == null) {
-            res.success = 0;
-            return res;
-        }
-        
+      
         booking.calculateTotalCost();
         res.amount = booking.getUnpaidAmount();
         

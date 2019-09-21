@@ -13,6 +13,7 @@
 namespace ns_70ace3f0_3981_11e3_aa6e_0800200c9a66;
 
 class InvoicePayment extends \PaymentApplication implements \Application{
+    var $overrideSentInvoiceCallback;
     
     public function getDescription() {
         return $this->__f("Allows customers to pay by invoice.");
@@ -68,6 +69,7 @@ class InvoicePayment extends \PaymentApplication implements \Application{
         $this->setConfigurationSetting("language", $_POST['language']);
         $this->setConfigurationSetting("phoneNumber", $_POST['phoneNumber']);
         $this->setConfigurationSetting("logo", $_POST['logo']);
+        $this->setConfigurationSetting("useSingleRoomTypes", $_POST['useSingleRoomTypes']);
     }
     
     public function renderPaymentOption() {
@@ -108,8 +110,14 @@ class InvoicePayment extends \PaymentApplication implements \Application{
         $orderid = $_POST['data']['orderid'];
         $msg = $_POST['data']['emailMessage'];
         $subject = $_POST['data']['subject'];
-        $res = $this->getApi()->getPmsInvoiceManager()->sendRecieptOrInvoiceWithMessage($this->getSelectedMultilevelDomainName(), $orderid, $email, $bookingId, $msg, $subject);
         $this->getApi()->getOrderManager()->closeOrder($orderid, "Sent to customer");
+        $res = $this->getApi()->getPmsInvoiceManager()->sendRecieptOrInvoiceWithMessage($this->getSelectedMultilevelDomainName(), $orderid, $email, $bookingId, $msg, $subject);
+        
+        $salesPoint = new \ns_11234b3f_452e_42ce_ab52_88426fc48f8d\SalesPointTabPayment();
+        unset($_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_complete_payment']);
+        $salesPoint->cancelCurrentOrder();
+        $salesPointNew = new \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPointNewSale();
+        $salesPointNew->deleteCurrentTab();
     }
     
     public function sendEhf() {

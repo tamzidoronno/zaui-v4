@@ -258,6 +258,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         String uncryptedPassword = user.password;
         
         user.password = encryptPassword(user.password);
+        user.address = new Address();
         
         saveObject(user);
         

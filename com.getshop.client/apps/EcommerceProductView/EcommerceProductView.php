@@ -288,6 +288,11 @@ class EcommerceProductView extends \MarketingApplication implements \Application
                 $this->getApi()->getProductManager()->saveProduct($product);
             }
         }
+        
+        $this->setProduct();
+        $product = $this->getProduct();
+        $product->departmentId = $_POST['data']['departmentid'];
+        $this->getApi()->getProductManager()->saveProduct($product);
     }
 
     public function setStockValue() {

@@ -70,6 +70,7 @@ public class PmsBooking extends DataCommon {
     public String wubookChannelReservationId;
     public String channel = "";
     public boolean ignoreCheckChangesInBooking = false;
+    public boolean ignoreWubook = false;
     public String deletedBySource = "";
     private double totalPrice;
     public String paymentType = "";
@@ -80,6 +81,8 @@ public class PmsBooking extends DataCommon {
     Double unsettled;
     public boolean nonrefundable = false;
     public boolean tryAutoCharge = false;
+    public HashMap<String, String> recieptEmail = new HashMap();
+    
     
     @Administrator
     public String secretBookingId = "";

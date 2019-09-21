@@ -1,3 +1,4 @@
+
 <?
 /* @var $this ns_bce90759_5488_442b_b46c_a6585f353cfe\EcommerceOrderView */
 $order = $this->getOrder();
@@ -12,6 +13,9 @@ if(!$closed && $order->manuallyClosed) {
 if($order->manuallyClosed) {
     $closed = true;
 }
+?>
+<span class='shop_button' style="position:absolute; right:0px; z-index:3;" onclick="window.open('/pms.php?page=orderviewpage&orderid=<?php echo $order->id; ?>')">Open order in view</span>
+<?php
 if ($closed) {
 ?>
 <div>

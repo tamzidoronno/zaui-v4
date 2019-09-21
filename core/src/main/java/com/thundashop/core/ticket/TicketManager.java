@@ -13,11 +13,13 @@ import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.common.PermenantlyDeleteData;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.messagemanager.PushOver;
 import com.thundashop.core.system.SystemManager;
 import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.webmanager.WebManager;
 import java.math.BigInteger;
@@ -46,6 +48,7 @@ public class TicketManager extends ManagerBase implements ITicketManager {
     public HashMap<String, Ticket> tickets = new HashMap();
     public HashMap<String, TicketLight> lightTickets = new HashMap();
     public HashMap<String, TicketUserPushover> pushOverUsers = new HashMap();
+    public HashMap<String, UnreadTickets> unreadTickets = new HashMap();
 
     @Autowired
     public UserManager userManager;
@@ -67,6 +70,9 @@ public class TicketManager extends ManagerBase implements ITicketManager {
             }
             if (inData instanceof TicketLight) {
                 lightTickets.put(inData.id, (TicketLight) inData);
+            }
+            if (inData instanceof UnreadTickets) {
+                unreadTickets.put(((UnreadTickets) inData).ticketId, (UnreadTickets) inData);
             }
             if (inData instanceof TicketUserPushover) {
                 pushOverUsers.put(inData.id, (TicketUserPushover) inData);
@@ -139,6 +145,14 @@ public class TicketManager extends ManagerBase implements ITicketManager {
         if (filter.checkForBilling) {
             retList.removeIf(f -> f.hasBeenValidedForTimeUsage || f.incrementalId <= 359);
         }
+        
+        if(filter.start != null) {
+            retList.removeIf(f -> f.rowCreatedDate.before(filter.start));
+        }
+        if(filter.end != null) {
+            retList.removeIf(f -> f.rowCreatedDate.after(filter.end));
+        }
+        
 
         Collections.sort(retList, (Ticket t1, Ticket t2) -> {
             return t2.rowCreatedDate.compareTo(t1.rowCreatedDate);
@@ -330,12 +344,20 @@ public class TicketManager extends ManagerBase implements ITicketManager {
     
     @Override
     public Ticket getTicketByToken(String storeId, String ticketToken) {
-        return tickets.values()
+        Ticket ticket = tickets.values()
                 .stream()
                 .filter(o -> o.belongsToStore != null && !o.belongsToStore.isEmpty() && o.belongsToStore.equals(storeId))
                 .filter(o -> o.ticketToken != null && !o.ticketToken.isEmpty() && o.ticketToken.equals(ticketToken))
                 .findAny()
                 .orElse(null);
+        
+        TicketLight lightTicket = getLightTicketByToken(ticketToken);
+        if(lightTicket != null) {
+            lightTicket.state = ticket.currentState;
+            saveObject(lightTicket);
+        }
+        
+        return ticket;
     }
 
     @Override
@@ -743,5 +765,127 @@ public class TicketManager extends ManagerBase implements ITicketManager {
 
     void saveContent(TicketContent contentcopy) {
         saveObject(contentcopy);
+    }
+
+    @Override
+    public TicketStatistics getStatistics(TicketStatsFilter filter) {
+        TicketStatistics stats = new TicketStatistics();
+        stats.totalTicket = 0;
+        TicketFilter filtertofind = new TicketFilter();
+        filtertofind.userId = filter.userId;
+        
+        List<Ticket> allTickets = getAllTickets(filtertofind);
+        for(Ticket ticket : allTickets) {
+            String toStore = ticket.belongsToStore;
+            if(toStore == null || toStore.isEmpty()) {
+                continue;
+            }
+            String customerId = systemManager.getCustomerIdForStoreId(toStore);
+            User usr = userManager.getUserById(customerId);
+            if(usr == null ) {
+                continue;
+            }
+            
+            Double timeSpentInPeriode = ticket.getTimeSpentInPeriode(filter.start, filter.end);
+            Double timeInvoicedInPeriode = ticket.getTimeInvoicedInPeriode(filter.start, filter.end);
+            
+            if(timeInvoicedInPeriode == 0.0 && timeSpentInPeriode == 0.0) {
+                continue;
+            }
+            
+            Company comp = userManager.getCompany(usr.mainCompanyId);
+            
+            TicketStatisticsStore storeStats = new TicketStatisticsStore();
+            if(stats.storeStats.containsKey(customerId)) {
+                storeStats = stats.storeStats.get(customerId);
+            }
+            storeStats.count++;
+            stats.storeStats.put(customerId, storeStats);
+            storeStats.name = usr.fullName; 
+            storeStats.hoursSpent += timeSpentInPeriode;
+            storeStats.hoursInvoiced += timeInvoicedInPeriode;
+            if(comp != null) {
+                storeStats.hoursIncluded = comp.monthlyHoursIncluded;
+                storeStats.additonalHours = comp.additionalHours;
+            }
+            stats.totalTicket++;
+        }
+        
+        for(TicketStatisticsStore stat : stats.storeStats.values()) {
+            stat.percentage = (int)(((double)stat.count / (double)stats.totalTicket) * 100);
+        }
+        
+        if(filter.userId != null && !filter.userId.isEmpty() && !stats.storeStats.containsKey(filter.userId)) {
+            User usr = userManager.getUserById(filter.userId);
+            Company comp = userManager.getCompany(usr.mainCompanyId);
+            TicketStatisticsStore stats11 = new TicketStatisticsStore();
+            stats11.name = usr.fullName;
+            stats11.hoursIncluded = comp.monthlyHoursIncluded;
+            stats11.additonalHours = comp.additionalHours;
+            stats.storeStats.put(filter.userId, stats11);
+        }
+        
+        return stats;
+    }
+
+    @Override
+    public TicketStatisticsStore getStoreStatistics(TicketStatsFilter filter) {
+        TicketStatistics statistics = getStatistics(filter);
+        return statistics.storeStats.get(filter.userId);
+    }
+
+    @Override
+    public void markTicketAsUnread(String ticketId) {
+        if(unreadTickets.containsKey(ticketId)) {
+            return;
+        }
+        
+        Ticket ticket = getTicket(ticketId);
+        UnreadTickets unread = new UnreadTickets();
+        unread.ticketId = ticket.id;
+        unread.tokenId = ticket.ticketToken;
+        unread.title = ticket.title;
+        unread.belongsToStore = ticket.belongsToStore;
+        unreadTickets.put(ticket.id, unread);
+        saveObject(unread);
+    }
+
+    void markAsRead(String tokenId) {
+        UnreadTickets toremove = null;
+        for(UnreadTickets t : unreadTickets.values()) {
+            if(t.tokenId.equals(tokenId)) {
+                toremove = t;
+            }
+        }
+        if(toremove != null) {
+            unreadTickets.remove(toremove.ticketId);
+            deleteObject(toremove);
+        }
+    }
+
+    public List<UnreadTickets> getUnreadTickets(String storeId) {
+        List<UnreadTickets>  result = new ArrayList();
+        for(UnreadTickets t : unreadTickets.values()) {
+            if(t.belongsToStore.equals(storeId)) {
+                result.add(t);
+            }
+        }
+        return result;
+    }
+
+    private TicketLight getLightTicketByToken(String ticketToken) {
+        for(TicketLight l : lightTickets.values()) {
+            if(l.ticketToken.equals(ticketToken)) {
+                return l;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void updateLightTicketState(String ticketToken, TicketState state) {
+        TicketLight lightTicket = getLightTicketByToken(ticketToken);
+        lightTicket.state = state;
+        saveObject(lightTicket);
     }
 }

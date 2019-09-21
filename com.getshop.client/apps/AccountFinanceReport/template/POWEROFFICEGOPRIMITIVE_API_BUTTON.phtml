@@ -1,0 +1,22 @@
+<?
+/* @var $this OrderManager */
+
+$doublePostId = "";
+$filename = "data.csv";
+
+if (isset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_current_doublepostfileid'])) {
+    $doublePostId = $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_current_doublepostfileid'];
+    $filename = "transactions.csv";
+}
+
+$file = $this->getApi()->getOrderManager()->getDoublePostAccountingTransfer($doublePostId);
+?>
+
+<div doublepostid='<? echo $doublePostId; ?>' class="shop_button showresultbutton" gsclick='transferData'> <? echo $this->__f("Upload file to PO"); ?></div>
+
+<?
+if (count($file->transferredToAccountingDates)) {
+    foreach ($file->transferredToAccountingDates as $trans)
+    echo "<div><i class='fa fa-check'></i> Transferred: $trans</div>";
+}
+?>

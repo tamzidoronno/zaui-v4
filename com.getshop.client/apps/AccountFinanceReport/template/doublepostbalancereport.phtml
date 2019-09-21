@@ -1,4 +1,7 @@
 <?
+
+/* @var $this ns_e6570c0a_8240_4971_be34_2e67f0253fd3\AccountFinanceReport */
+
 if (isset($_POST['data']['value']) && $_POST['data']['value']) {
     $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_paymentid'] = $_POST['data']['value'];
 }
@@ -24,6 +27,7 @@ $selectedMonth = date('m', strtotime($start));
 
 $isSuportingDirectTransfer = $this->getApi()->getGetShopAccountingManager()->isCurrentSelectedSupportingDirectTransfer();
 
+$ocrActivated = $this->getApi()->getStoreOcrManager()->isActivated();
 
 $errors  = array();
 foreach ($dayIncomes as $dayIncome) {
@@ -170,4 +174,49 @@ echo "<div class='outer'>";
     printIncomeValues($accounts, $incomeBalance, $this->__f("Balance out"));
 echo "</div>";
 
-?>
+
+
+
+if ($ocrActivated) {
+    echo "<h1> OCR Payments Overview </h1>";
+    foreach ($dayIncomes as $dayIncome) {
+        
+        $lines = $this->getApi()->getStoreOcrManager()->getOcrLinesForDay($selectedYear, $selectedMonth, date('d', strtotime($dayIncome->start)));
+        
+        if (!count($lines)) {
+            continue;
+        }
+        
+        $groupedByTransactionId = array();
+
+        foreach ($lines as $line) {
+            $transId = substr($line->rawLine, 21, 10);
+            $groupedByTransactionId[$transId][] = $line;
+        }
+
+        echo "<div class='dayrow'>";
+            echo "<div class='header2'> Date: ".date('d.m.Y', strtotime($dayIncome->start))."</div>";
+            foreach ($groupedByTransactionId as $transId => $lines) {
+                $total = 0;
+
+                echo "<div>";
+                    foreach ($lines as $line) {
+                        $total += $line->amount;
+                    }
+
+                    foreach ($lines as $line) {
+                        
+                        echo "<div class='row2'><div class='col2 col2_1'>".$line->matchOnOrderId."</div><div class='col2 col2_2'> $line->amount</div><div class='col2 col2_3'>Kid: $line->kid</div></div>";
+                    }
+
+                    echo "<div class='row2 totalrow'><div class='col2 col2_1'> Total <br/> </div><div class='col2 col2_2'> $total </div> <div class='col2 col2_3'> ( Payment id: $transId ) </div></div>";
+                echo "</div>";
+
+            }
+        echo "</div>";
+        
+    }
+
+} ?>
+
+

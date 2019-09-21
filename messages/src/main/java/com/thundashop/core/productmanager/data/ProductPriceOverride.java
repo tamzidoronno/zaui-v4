@@ -74,5 +74,13 @@ public class ProductPriceOverride {
     public boolean isDeleted() {
         return deletedDate != null;
     }
+    
+    public void finalize() {
+        boolean isNan = Double.isNaN(newValue);
+        
+        if (isNan) {
+            newValue = 0D;
+        }
+    }
 }
 

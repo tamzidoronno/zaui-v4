@@ -194,7 +194,6 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         
         if (!isCmsModule()) {
             saveModuleHomePage(config.homePage);
-            return store;
         }
 
         store.configuration = config;
@@ -802,5 +801,28 @@ public class StoreManager extends ManagerBase implements IStoreManager {
                 saveObject(tmp);
             }
         }
+    }
+
+    public String getCurrency() {
+        String currency = getStoreSettingsApplicationKey("currencycode");
+        if(currency == null || currency.isEmpty()) {
+            currency = "NOK";
+        }
+        return currency;
+    }
+
+    public String getLanguage() {
+        String lang = getSession().language;
+        if(lang == null || lang.isEmpty()) {
+            lang = "no";
+        }
+        if(lang.equalsIgnoreCase("nb_no")) {
+            lang = "no";
+        }
+        return lang;
+    }
+
+    public String getPrefix() {
+        return getMyStore().configuration.defaultPrefix + "";
     }
 }

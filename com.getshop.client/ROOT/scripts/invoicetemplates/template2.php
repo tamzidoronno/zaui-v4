@@ -33,7 +33,6 @@ $language = $order->language;
 $currency = $order->currency;
 if(!$language) { $language = $invoiceData->accountingDetails->language; }
 if(!$currency) { $currency = $invoiceData->accountingDetails->currency; }
-
 $total = 0;
 $translator = new InvoiceTemplateTranslator($language, $currency);
 $calculatedTaxes = array();
@@ -170,15 +169,11 @@ $isInvoice = $order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200
                     <div class='col col3'></div>
                 </div>
         <? } ?>
-        <? if ($order->status != 7) { ?>
-            <div class='row'>
-                <div class='col col1'><? echo $order->cart->address->postCode." ".$order->cart->address->city; ?></div>
-                <div class='col col2'><? echo $translator->translate("Due date"); ?></div>
-                <div class='col col3 bold' style='color: red;'><? echo date('d.m.Y', strtotime($order->dueDate)); ?></div>
-            </div>
-        <?
-        }
-        ?>
+        <div class='row'>
+            <div class='col col1'><? echo $order->cart->address->postCode." ".$order->cart->address->city; ?></div>
+            <div class='col col2'><? echo $translator->translate("Due date"); ?></div>
+            <div class='col col3 bold' style='color: red;'><? echo date('d.m.Y', strtotime($order->dueDate)); ?></div>
+        </div>
 
         <div class='row'>
             <div class='col col1'><? 
@@ -189,7 +184,7 @@ $isInvoice = $order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200
                 }
             }
             ?></div>
-            <div class='col col2 bold' style='color: green;'><? echo $translator->translate("Currency"); ?></div>
+            <div class='col col2'><? echo $translator->translate("Currency"); ?></div>
             <div class='col col3'><? echo $translator->getCurrencyDisplayText(); ?></div>
         </div>
     </div>

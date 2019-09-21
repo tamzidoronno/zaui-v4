@@ -233,6 +233,10 @@ public class PosManager extends ManagerBase implements IPosManager {
 
     @Override
     public Double getTotal(String tabId) {
+        if (tabId == null) {
+            return 0D;
+        }
+        
         PosTab tab = getTab(tabId);
         Cart cart = new Cart();
         cart.addCartItems(tab.cartItems);
@@ -268,8 +272,9 @@ public class PosManager extends ManagerBase implements IPosManager {
         order.addOrderTag(tag);
         order.getCartItems().stream()
                 .forEach(item -> {
-                    item.departmentId = tag.departmentId;
-                    item.wareHouseId = cashPoints.get(cashPointId).warehouseid;
+                    if(cashPoints.get(cashPointId) != null) {
+                        item.wareHouseId = cashPoints.get(cashPointId).warehouseid;
+                    }
                 });
                 
         
@@ -883,7 +888,7 @@ public class PosManager extends ManagerBase implements IPosManager {
         
         canClose.uncompletedOrders = orderManager.getAllOrders()
                 .stream()
-                .filter(o -> !o.isNullOrder() && !o.isAccruedPayment())
+                .filter(o -> !o.isNullOrder() && !o.isAccruedPayment() && !o.isInvoice())
                 .filter(o -> o.status != Order.Status.PAYMENT_COMPLETED)
                 .filter(o -> createdCashPoint(o, cashPointId))
                 .collect(Collectors.toList());

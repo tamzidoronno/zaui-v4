@@ -7,8 +7,11 @@ package com.thundashop.core.getshopaccounting;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Stream;
 import org.mongodb.morphia.annotations.Transient;
 
 /**
@@ -84,6 +87,23 @@ public class DayEntry implements Serializable, Cloneable {
      */
     public String orderTransactionId = "";
     
+    /**
+     * If this record is connected to multiple 
+     * The transactionids are listed here.
+     */
+    public List<String> orderTransactionIds = new ArrayList();
+    
+    /**
+     * If this is set to other then blank or zero all payments
+     * should be grouped by this id.
+     * 
+     * Normally used if there is one payment for multiple orders ( etc OCR / KID invoices )
+     * 
+     * Accounting integrations should take this value into consideration 
+     */
+    public String batchId = "";
+    
+    
     @Transient
     public HashMap<String, String> metaData = new HashMap();
     
@@ -99,5 +119,13 @@ public class DayEntry implements Serializable, Cloneable {
     
     public String getOrderId() {
         return orderId;
+    }
+
+    public boolean isForBatch(String batchId) {
+        if (this.batchId != null) {
+            return this.batchId.equals(batchId);
+        }
+        
+        return false;
     }
 }

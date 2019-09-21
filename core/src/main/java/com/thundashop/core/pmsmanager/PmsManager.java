@@ -45,6 +45,7 @@ import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.getshopaccounting.DayIncomeReport;
 import com.thundashop.core.getshoplock.GetShopDeviceLog;
 import com.thundashop.core.getshoplock.GetShopLockManager;
+import com.thundashop.core.getshoplocksystem.AccessEvent;
 import com.thundashop.core.getshoplocksystem.GetShopLockSystemManager;
 import com.thundashop.core.getshoplocksystem.LockCode;
 import com.thundashop.core.getshoplocksystem.LockGroup;
@@ -265,7 +266,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (dataCommon instanceof PmsBooking) {
                 
                 PmsBooking booking = (PmsBooking) dataCommon;
-//                if(booking.orderIds.contains("c097c930-c4e6-42d5-85fe-6fa84b71dc0e")) {
+//                if(booking.orderIds.contains("7efc86d1-4147-4c78-8cc1-c0d57c33fdc8")) {
 //                    includeAlways = booking;
 //                }
                 if(booking.nonrefundable) { booking.setAllRoomsNonRefundable(); }
@@ -729,6 +730,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public PmsBooking getBooking(String bookingId) {
         if(includeAlways != null) {
+            bookings.put(includeAlways.id, includeAlways);
             return includeAlways;
         }
         return getBookingInternal(bookingId, true);
@@ -832,7 +834,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             nowCal.add(Calendar.HOUR_OF_DAY, -1);
         }
         
-        if ((booking.secretBookingId == null || booking.secretBookingId.isEmpty()) && save)  {
+        if ((booking.secretBookingId == null || booking.secretBookingId.isEmpty()) && save) {
             booking.secretBookingId = UUID.randomUUID().toString();
             saveObject(booking);
         }
@@ -865,6 +867,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             room.checkAddons();
             if (room.price.isNaN() || room.price.isInfinite()) {
                 room.price = 0.0;
+            }
+            if(room.unsettledAmount == null || room.unsettledAmount.isNaN() || room.unsettledAmount.isInfinite()) {
+                room.unsettledAmount = 0.0;
+            }
+            if(room.unsettledAmountIncAccrued == null || room.unsettledAmountIncAccrued.isNaN() || room.unsettledAmountIncAccrued.isInfinite()) {
+                room.unsettledAmountIncAccrued = 0.0;
             }
             if (room.priceMatrix != null) {
                 for (String offset : room.priceMatrix.keySet()) {
@@ -1489,7 +1497,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 attachments.put("termsandcondition.html", createContractAttachment(booking.id));
             }
             if (key.startsWith("sendreciept")) {
-                attachments.put("reciept.pdf", createInvoiceAttachment());
+                attachments.put("receipt.pdf", createInvoiceAttachment());
             }
             if (key.startsWith("sendinvoice")) {
                 attachments.put("invoice.pdf", createInvoiceAttachment());
@@ -2961,7 +2969,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         room.date = new PmsBookingDateRange();
         room.date.start = start;
         room.date.end = end;
-        room.guests.add(new PmsGuests());
+        PmsGuests guest = new PmsGuests();
+        guest.prefix = storeManager.getPrefix();
+        room.guests.add(guest);
         setPriceOnRoom(room, true, booking);
 
         List<PmsBookingRooms> toAdd = new ArrayList();
@@ -4230,6 +4240,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         pmsNotificationManager.setMessageToSend(message);
         pmsNotificationManager.setPaymentRequestId(bookingId);
 
+        PmsBooking booking = getBooking(bookingId);
+        if(booking == null) {
+            booking = getBookingFromRoom(bookingId);
+        }
+        booking.recieptEmail.put(bookingId, email);
+        saveBooking(booking);
+        
+        
         if(pmsNotificationManager.isActive()) {
             pmsNotificationManager.doNotification("booking_sendpaymentlink", bookingId);
             return;
@@ -9105,8 +9123,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void checkIfGuestHasArrivedApac() {
-        getShopLockSystemManager.getAccessEvents()
-                .stream()
+        List<AccessEvent> events = getShopLockSystemManager.getAccessEvents(); 
+        
+            events.stream()
                 .forEach(event -> {
                     for (PmsBooking booking : bookings.values()) {
                         for (PmsBookingRooms room : booking.rooms) {
@@ -9116,6 +9135,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                             if (room.bookingItemId != null && room.codeObject != null) {
                                 BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
                                 if (item != null && item.lockGroupId.equals(event.groupId) && event.date.after(room.date.start) && event.date.before(room.date.end)) {
+                                    logEntry("Marking room as arrived", booking.id, item.id, room.pmsBookingRoomId, "markedarrived");
                                     markGuestArrivedInternal(booking, room);
                                 }
                             }
@@ -9660,36 +9680,36 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void resetDeparmentsOnOrders() {
-        for (PmsBooking booking : bookings.values()) {
-            for (String orderId : booking.orderIds) {
-                Order order = orderManager.getOrder(orderId);
-                boolean found = false;
-                if (order != null) {
-                    for (CartItem cartItem : order.getCartItems()) {
-                        
-                        if (cartItem.departmentId != null && !cartItem.departmentId.isEmpty()) {
-                            continue;
-                        }
-                        
-                        Product product = cartItem.getProduct();
-                        if (product != null && product.externalReferenceId != null && !product.externalReferenceId.isEmpty()) {
-                            PmsBookingRooms room = booking.getRoom(product.externalReferenceId);
-                            if (room != null) {
-                                BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
-                                if (type != null) {
-                                    found = true;
-                                    cartItem.departmentId = type.departmentId;
-                                }
-                            }
-                        }
-                    }
-                }
-                
-                if (found) {
-                    orderManager.saveObject(order);
-                }
-            }
-        }
+//        for (PmsBooking booking : bookings.values()) {
+//            for (String orderId : booking.orderIds) {
+//                Order order = orderManager.getOrder(orderId);
+//                boolean found = false;
+//                if (order != null) {
+//                    for (CartItem cartItem : order.getCartItems()) {
+//                        
+//                        if (cartItem.departmentId != null && !cartItem.departmentId.isEmpty()) {
+//                            continue;
+//                        }
+//                        
+//                        Product product = cartItem.getProduct();
+//                        if (product != null && product.externalReferenceId != null && !product.externalReferenceId.isEmpty()) {
+//                            PmsBookingRooms room = booking.getRoom(product.externalReferenceId);
+//                            if (room != null) {
+//                                BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
+//                                if (type != null) {
+//                                    found = true;
+//                                    cartItem.departmentId = type.departmentId;
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//                
+//                if (found) {
+//                    orderManager.saveObject(order);
+//                }
+//            }
+//        }
     }
 
     @Override
@@ -10058,7 +10078,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
        
                 PmsBooking booking = getBookingFromRoomSecure(o.roomId);
-                
+                if(booking.invoiceNote != null && !booking.invoiceNote.isEmpty()) {
+                    order.invoiceNote = booking.invoiceNote;
+                    orderManager.saveOrder(order);
+                }
                 if (!booking.orderIds.contains(order.id)) {
                     booking.orderIds.add(order.id);
                     saveBooking(booking);
@@ -10693,6 +10716,43 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBooking booking = getBookingFromRoom(roomId);
         booking.comments.put(System.currentTimeMillis(), commentobj);
         saveBooking(booking);
+    }
+
+    @Override
+    public boolean willAutoDelete(String pmsBookingId) {
+        PmsConfiguration configuration = getConfigurationSecure();
+        if(!configuration.autoDeleteUnpaidBookings) {
+            return false;
+        }
+        
+        PmsBooking booking = getBooking(pmsBookingId);
+        
+        if(booking.payedFor) {
+            return false;
+        }
+        if(booking.avoidAutoDelete) {
+            return false;
+        }
+        if(booking.channel != null && !booking.channel.isEmpty() && !booking.channel.equals("website")) {
+            return false;
+        }
+        if(booking.bookedByUserId != null && !booking.bookedByUserId.isEmpty()) {
+            return false;
+        }
+        if(booking.orderIds.size() > 1) {
+            return false;
+        }
+        if(booking.isOld(100)) {
+            return false;
+        }
+        if(booking.transferredToLock()) {
+            return false;
+        }
+        if(booking.getActiveRooms().isEmpty()) {
+            return false;
+        }
+
+        return true;
     }
 
 }

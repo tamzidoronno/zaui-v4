@@ -195,6 +195,9 @@ public interface IPmsManager {
     public void createNewUserOnBooking(String bookingId, String name, String orgId);
     
     @Administrator
+    public boolean willAutoDelete(String pmsBookingId);
+    
+    @Administrator
     public void addToWorkSpace(String pmsRoomId);
     
     @Administrator

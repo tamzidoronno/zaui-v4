@@ -32,8 +32,8 @@ class PmsBookingMessageFormatter {
         if(room.date != null && room.date.start != null) {
             start = productManager.getStore().convertToTimeZone(room.date.start);
         }
-        if(room.date != null && end != null) {
-            end = productManager.getStore().convertToTimeZone(end);
+        if(room.date != null && room.date.end != null) {
+            end = productManager.getStore().convertToTimeZone(room.date.end);
         }
         
          String startMinute = new SimpleDateFormat("m").format(start).toString();

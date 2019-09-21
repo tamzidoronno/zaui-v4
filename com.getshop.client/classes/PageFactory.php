@@ -483,6 +483,7 @@ class PageFactory {
         $row->addColumn("57db782b-5fe7-478f-956a-ab9eb3575855", "");
         $page->addExtraApplications("11234b3f-452e-42ce-ab52-88426fc48f8d");
         $page->addExtraApplications("b5e9370e-121f-414d-bda2-74df44010c3b");
+        $page->addExtraApplications("70ace3f0-3981-11e3-aa6e-0800200c9a66");
         $this->pages['new'] = $page;
         
         $this->createProductsPage("salespoint");

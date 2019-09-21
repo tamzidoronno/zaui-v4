@@ -6,6 +6,33 @@ if($this->getPageIdModule() == "systemsetup") {
     $lightTickets = $this->getApi()->getTicketManager()->getTicketLights();
 }
 
+
+//Tmp to update all tickets out there.
+if($this->getPageIdModule() != "systemsetup") {
+    foreach($lightTickets as $tmp) {
+        if($tmp->state == "CREATED") {
+            $ticket = $this->getSystemGetShopApi()->getTicketManager()->getTicketByToken($this->getFactory()->getStore()->id, $tmp->ticketToken);
+            $this->getApi()->getTicketManager()->updateLightTicketState($tmp->ticketToken, $ticket->currentState);
+        }
+    }
+    $lightTickets = $this->getApi()->getTicketManager()->getTicketLights();
+}
+//Can and should be removed.
+
+$states = array("REPLIED", "CREATED", "COMPLETED", "CLOSED", "INITIAL");
+$groupedByStates = array();
+
+foreach ($states as $state) {
+    $groupedByStates[$state] = array();
+    foreach ($lightTickets as $ticket) {
+        if ($ticket->state != $state) {
+            continue;
+        }
+        $groupedByStates[$state][] = $ticket;
+    }
+}
+
+
 $users = new \stdClass();
 if (!count($lightTickets)) {
     ?>
@@ -21,32 +48,45 @@ if($this->getPageIdModule() == "systemsetup") {
 </div>
 <?php } ?>
 <div class="ticketlist">
-    <div class="row header">
-        <div class="date col col1"><? echo $this->__f("Ticket Id"); ?></div>
-        <div class="date col col1"><? echo $this->__f("Date"); ?></div>
-        <div class="title col col2"><? echo $this->__f("Title"); ?></div>
-        <div class="name col col4"><? echo $this->__f("Created by"); ?></div>
-    </div>
 
     <?
     $i = 0;
-    foreach ($lightTickets as $lightTicket) {
-        $i++;
-        $odd = $i % 2 ? "odd" : "even";
-        if (!$users->{$lightTicket->userId}) {
-            $users->{$lightTicket->userId} = $this->getApi()->getUserManager()->getUserById($lightTicket->userId);
+    foreach($groupedByStates as $state => $lightTickets) {
+        if(sizeof($lightTickets) == 0) {
+            continue;
+        }
+        if($state == "CREATED") {
+            echo "<h1>CREATED / AWAITING REPLY</h1>";
+        } else {
+            echo "<h1>$state</h1>";
         }
         ?>
-    
-        <a href="/getshopsupport.php?page=ticketview&ticketToken=<? echo $lightTicket->ticketToken; ?>">
-            <div class="row <? echo $odd; ?>">
-                <div class="date col col1"><? echo $lightTicket->incrementalTicketId; ?></div>
-                <div class="date col col1"><? echo date('d.m.Y h:i', strtotime($lightTicket->rowCreatedDate)); ?></div>
-                <div class="title col col2"><? echo $lightTicket->title; ?></div>
-                <div class="name col col4"><? echo $users->{$lightTicket->userId}->fullName; ?></div>
-            </div>
-        </a>
-        <?
+        <div class="row header">
+            <div class="date col col1"><? echo $this->__f("Ticket Id"); ?></div>
+            <div class="date col col1"><? echo $this->__f("Date"); ?></div>
+            <div class="title col col2"><? echo $this->__f("Title"); ?></div>
+            <div class="name col col4"><? echo $this->__f("Created by"); ?></div>
+        </div>
+        <?php
+        
+        foreach ($lightTickets as $lightTicket) {
+            $i++;
+            $odd = $i % 2 ? "odd" : "even";
+            if (!@$users->{$lightTicket->userId}) {
+                $users->{$lightTicket->userId} = $this->getApi()->getUserManager()->getUserById($lightTicket->userId);
+            }
+            ?>
+
+            <a href="/getshopsupport.php?page=ticketview&ticketToken=<? echo $lightTicket->ticketToken; ?>">
+                <div class="row <? echo $odd; ?>">
+                    <div class="date col col1"><? echo $lightTicket->incrementalTicketId; ?></div>
+                    <div class="date col col1"><? echo date('d.m.Y h:i', strtotime($lightTicket->rowCreatedDate)); ?></div>
+                    <div class="title col col2"><? echo $lightTicket->title; ?></div>
+                    <div class="name col col4"><? echo $users->{$lightTicket->userId}->fullName; ?></div>
+                </div>
+            </a>
+            <?
+        }
     }
     ?>
 </div>

@@ -231,5 +231,23 @@ public class SystemManager extends ManagerBase implements ISystemManager {
             System.out.println(simpleDateFormat.format(sys.activeFrom) + ":" + sys.systemName + ":" + sys.webAddresses);
         }
     }
+
+    @Override
+    public List<GetShopSystem> getSystemsForStore(String storeId) {
+        GetShopSystem retSystem = systems.values()
+                .stream()
+                .filter(o -> o.remoteStoreId != null && o.remoteStoreId.equals(storeId))
+                .findAny()
+                .orElse(null);
+        
+        if (retSystem == null || retSystem.companyId == null || retSystem.companyId.isEmpty()) {
+            return new ArrayList();
+        }
+        
+        return systems.values()
+                .stream()
+                .filter(o -> o.companyId != null && o.companyId.equals(retSystem.companyId))
+                .collect(Collectors.toList());
+    }
         
 }

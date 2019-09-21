@@ -81,6 +81,8 @@ public class PmsBooking extends DataCommon {
     Double unsettled;
     public boolean nonrefundable = false;
     public boolean tryAutoCharge = false;
+    public HashMap<String, String> recieptEmail = new HashMap();
+    
     
     @Administrator
     public String secretBookingId = "";

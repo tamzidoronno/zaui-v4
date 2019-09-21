@@ -122,6 +122,9 @@ public class PmsInvoiceManagerNew {
                 if(language != null && (language.equalsIgnoreCase("en_en") || language.equalsIgnoreCase("en"))) {
                     name = "Accommodation";
                 }
+                if(language != null && (language.equalsIgnoreCase("de"))) {
+                    name = "Unterkunft";
+                }
                 prod.name = name;
             }
             item.priceMatrix = new HashMap();

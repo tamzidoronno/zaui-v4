@@ -139,16 +139,11 @@ $channelNames = $formater->getChannels();
     $(function() {
         var checkifcounter = 0;
         var checkIfCanChosen = setInterval(function() {
-            if($('.addcouponcode').find('option').length > 0) {
+            if($('.addcouponcode').find('option').length > 0 && $('.addcouponcode').is(':visible')) {
                 $('.addcouponcode').chosen();
                 $('.addsource').chosen();
                 clearTimeout(checkIfCanChosen);
             }
-            checkifcounter++;
-            console.log(checkifcounter);
-            if(checkifcounter > 20) {
-                clearTimeout(checkIfCanChosen);
-            }
-        }, "100");
+        }, "200");
     });
 </script>

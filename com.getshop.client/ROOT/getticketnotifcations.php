@@ -26,7 +26,7 @@ if($result->numberOfUnReadTickets == 0) {
 </span>
 
 <style>
-    .ticketnotificationsarea { position:absolute; width: 400px; border: solid 1px #bbb; text-align: left; background-color:#efefef; color:#000; top:70px; border-radius:3px; }
+    .ticketnotificationsarea { position:absolute; width: 400px; border: solid 1px #bbb; text-align: left; background-color:#efefef; color:#000; top:70px; border-radius:3px; z-index: 5; }
     .ticketnotificationsarea .unreadtexttitle { border-bottom: solid 1px #bbb; line-height: 26px; height: 26px;position:relative; cursor:pointer; padding-left: 3px;}
     .ticketnotificationsarea .unreadtexttitle i { font-size: 14px; position:absolute; top:0px; right:0px;  width: 26px; height: 26px;text-align: center;}
 </style>

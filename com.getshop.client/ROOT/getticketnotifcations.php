@@ -22,7 +22,7 @@ if($result->numberOfUnReadTickets == 0) {
         <a href="/getshopsupport.php">
             <div class='unreadtexttitle' target='_fdasfasfasfs' style='text-align: center;border-bottom: 0px;'>Open support center</div>
         </a>
-    </div>ble to help you as best as possible to recover your lost device you will need to tell us what device you have. Please locate the device na
+    </div>
 </span>
 
 <style>

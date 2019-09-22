@@ -12,6 +12,11 @@ class PmsSendMessagesConfiguration extends \WebshopApplication implements \Appli
         $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $config);
     }
     
+    public function toggleAvoidSendingConfirmationToOTA() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        $config->avoidSendingBookingConfigurationsToOTA = !$config->avoidSendingBookingConfigurationsToOTA;
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $config);
+    }
     
     public function getName() {
         return "PmsSendMessagesConfiguration";

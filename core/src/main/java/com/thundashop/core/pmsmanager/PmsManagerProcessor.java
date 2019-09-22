@@ -723,6 +723,10 @@ public class PmsManagerProcessor {
                 continue;
             }
             
+            if(booking.isOta() && config.avoidSendingBookingConfigurationsToOTA) {
+                continue;
+            }
+            
             if(booking.isEndedOverTwoMonthsAgo()) {
                 //Ended bookings are not relevant anymore.
                 continue;

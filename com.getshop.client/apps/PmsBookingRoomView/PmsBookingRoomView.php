@@ -22,6 +22,11 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         
     }
     
+    public function togglePriorityRoom() {
+        $selectedroom = $this->getSelectedRoom();
+        $this->getApi()->getPmsManager()->togglePrioritizedRoom($this->getSelectedMultilevelDomainName(), $selectedroom->pmsBookingRoomId);
+    }
+    
     public function cancelautodeletion() {
         $booking = $this->getPmsBooking();
         $booking->avoidAutoDelete = true;

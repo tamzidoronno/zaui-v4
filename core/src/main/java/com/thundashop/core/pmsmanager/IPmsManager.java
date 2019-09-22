@@ -50,6 +50,9 @@ public interface IPmsManager {
     public void simpleCompleteCurrentBooking();
     
     @Administrator
+    public void togglePrioritizedRoom(String roomId);
+    
+    @Administrator
     public List<PmsRoomSimple> getAllRoomsOnOrder(String orderId);
     
     @Administrator

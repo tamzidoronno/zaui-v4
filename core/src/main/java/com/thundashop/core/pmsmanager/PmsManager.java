@@ -10761,4 +10761,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return true;
     }
 
+    @Override
+    public void togglePrioritizedRoom(String roomId) {
+        PmsBooking booking = getBookingFromRoom(roomId);
+        PmsBookingRooms room = booking.getRoom(roomId);
+        room.prioritizeInWaitingList = !room.prioritizeInWaitingList;
+        saveBooking(booking);
+        logEntry("Room has been prioritized", booking.id, room.bookingItemId);
+    }
+
 }

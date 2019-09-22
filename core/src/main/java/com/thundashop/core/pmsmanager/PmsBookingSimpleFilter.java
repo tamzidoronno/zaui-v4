@@ -246,6 +246,9 @@ public class PmsBookingSimpleFilter {
         if(room.addedToWaitingList) {
             simple.progressState = "waiting";
         }
+        if(room.prioritizeInWaitingList) {
+            simple.progressState = "prioritized";
+        }
         
         simple.checkedIn = room.checkedin;
         simple.checkedOut = room.checkedout;

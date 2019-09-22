@@ -189,7 +189,6 @@ class PageFactory {
         
         $page->addExtraApplications('f8cc5247-85bf-4504-b4f3-b39937bd9955');
         $page->addExtraApplications('b5e9370e-121f-414d-bda2-74df44010c3b');
-        $page->addExtraApplications('28886d7d-91d6-409a-a455-9351a426bed5');
         $page->addExtraApplications('b72ec093-caa2-4bd8-9f32-e826e335894e');
         $page->addExtraApplications('9a6ea395-8dc9-4f27-99c5-87ccc6b5793d');
         $page->addExtraApplications('2e51d163-8ed2-4c9a-a420-02c47b1f7d67');

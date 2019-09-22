@@ -1005,7 +1005,7 @@ public class PmsBookingRooms implements Serializable {
 
     boolean hasAddonOfProduct(String productId) {
         for(PmsBookingAddonItem item : addons) {
-            if(item.productId.equals(productId)) {
+            if(item.productId != null && item.productId.equals(productId)) {
                 return true;
             }
         }

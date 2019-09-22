@@ -4380,6 +4380,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         checkSecurity(booking);
         PmsBookingAddonItem addonConfig = configuration.addonConfiguration.get(type);
 
+        Product validproduct = productManager.getProduct(addonConfig.productId);
+        if(validproduct == null) {
+            validproduct = productManager.getDeletedProduct(addonConfig.productId);
+            validproduct.deleted = null;
+            productManager.saveProduct(validproduct);
+        }
         if (!remove) {
             PmsBookingRooms room = booking.getRoom(roomId);
             if (room != null && !addonConfig.isValidForPeriode(room.date.start, room.date.end, booking.rowCreatedDate)) {

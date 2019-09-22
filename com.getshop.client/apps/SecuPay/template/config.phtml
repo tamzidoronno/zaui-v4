@@ -1,0 +1,35 @@
+<?
+/* @var $this ns_d02f8b7a_7395_455d_b754_888d7d701db8\Dibs */
+
+$automarkpaid = $this->getConfigurationSetting("automarkpaid");
+
+?>
+
+<div class='gss_settings_header'>
+    <i class='fa fa-envelope'></i>
+
+    <div class='gss_settings_header_description'>
+        <div class='gss_settings_header_title'>
+            <?php echo $this->getName(); ?>
+        </div>
+        <div class='gss_settings_header_description_inner'>
+            <?php echo $this->getDescription(); ?>
+        </div>
+    </div>	
+</div>
+
+<div class='gss_settings_content'>
+    <div class="textfield gss_setting"  id="savecard">
+           <span class="title"><?php echo $this->__f("API Key"); ?></span>
+           <div class="gss_onoff" gs_model="dibsmodel" gs_model_attr="automarkpaid">
+               <input type="textfield" gs_model="paymentmethod1" gs_model_attr="name" value="External payment terminal">
+           </div>
+           <div class="description">
+               <?php echo $this->__w("An api key provided by secupay"); ?>
+           </div>
+    </div>
+    
+    <div class='gss_button_area'>
+        <div class="gss_button" gss_method="saveSettings" gss_model="invoicepaymentmodel" gss_success_message="Saved successfully"><i class='fa fa-save'></i><?php echo $this->__("Save"); ?></div>
+    </div>
+</div>

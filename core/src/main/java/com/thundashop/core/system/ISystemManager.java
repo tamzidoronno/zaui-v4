@@ -33,6 +33,9 @@ public interface ISystemManager {
     public List<GetShopSystem> getSystemsForCompany(String companyId);
     
     @Administrator
+    public List<GetShopSystem> getSystemsForStore(String storeId);
+    
+    @Administrator
     @ForceAsync
     public void syncSystem(String systemId) throws Exception;
     

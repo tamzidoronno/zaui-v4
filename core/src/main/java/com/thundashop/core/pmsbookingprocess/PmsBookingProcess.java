@@ -938,12 +938,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         userData.setUser(usr);
         res.userData = userData;
         
-        try {
-            calculateCountryFromPhonePrefix(booking);
-        }catch(Exception e) {
-            logPrintException(e);
-        }
-        
+        calculateCountryFromPhonePrefix(booking);
         
         return res;
     }
@@ -1675,18 +1670,29 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     }
 
     private void calculateCountryFromPhonePrefix(PmsBooking booking) {
-        if(booking == null || booking.userId == null) {
-            return;
+        try {
+            if(booking == null || booking.userId == null) {
+                return;
+            }
+            User usr = userManager.getUserById(booking.userId);
+            if(usr == null) {
+                return;
+            }
+
+            if(booking.countryCode == null || booking.countryCode.isEmpty()) {
+                String code = SmsHandlerAbstract.getCountryCodeOfPhonePrefix(usr.prefix);
+                booking.countryCode = code;
+                pmsManager.saveBooking(booking);
+            }
+        }catch(Exception e) {
+            logPrintException(e);
         }
-        User usr = userManager.getUserById(booking.userId);
-        if(usr == null) {
-            return;
-        }
-        
-        if(booking.countryCode == null || booking.countryCode.isEmpty()) {
-            String code = SmsHandlerAbstract.getCountryCodeOfPhonePrefix(usr.prefix);
-            booking.countryCode = code;
-            pmsManager.saveBooking(booking);
-        }
+    }
+
+    @Override
+    public void simpleCompleteCurrentBooking() {
+        PmsBooking booking = pmsManager.getCurrentBooking();
+        pmsManager.simpleCompleteCurrentBooking();
+        calculateCountryFromPhonePrefix(booking);
     }
 }

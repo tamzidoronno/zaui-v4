@@ -175,7 +175,7 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
     
     public function completeBooking() {
         $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
-        $this->getApi()->getPmsManager()->simpleCompleteCurrentBooking($this->getSelectedMultilevelDomainName());
+        $this->getApi()->getPmsBookingProcess()->simpleCompleteCurrentBooking($this->getSelectedMultilevelDomainName());
         echo $booking->id;
     }
     

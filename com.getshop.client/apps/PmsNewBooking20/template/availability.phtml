@@ -16,24 +16,46 @@ $total = 0;
 $items = $this->getApi()->getPmsManager()->getAllRoomTypes($this->getSelectedMultilevelDomainName(), $start, $end);
 $current = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
 
+$arg = new core_pmsbookingprocess_StartBooking();
+$arg->start = $start;
+$arg->end = $end;
+$arg->discountCode = $_POST['data']['couponcode'];
+$arg->adults = 1;
+$arg->children = 0;
+$arg->rooms = 0;
+
+$test = $this->getApi()->getPmsBookingProcess()->startBooking($this->getSelectedMultilevelDomainName(), $arg);
+
 $closedtext = $this->checkIfClosedPeriodes($start,$end);
 ?>
 <div class='datetitle'><i class='fa fa-clock-o'></i> <?php echo date("d.m.Y H:i", strtotime($start)) . " - " . date("d.m.Y H:i", strtotime($end)); ?></div>
 <div class='avilabilityarea' gstype='form' method='registerRoomsFromAvailabilityCheck' synchron='true' gstoarea='.roomsreadytobeadded'>
     <input type='hidden' gsname='start' value='<?php echo strtotime($start); ?>'>
     <input type='hidden' gsname='end' value='<?php echo strtotime($end); ?>'>
+    
+     <div class='searchbookingrow'>
+            <span class='itemtypename ellipsis secondarytextcolor' style='font-size: 10px;'>Room category</span>
+            <span class='numberofguests secondarytextcolor' style='font-size: 10px;'>Guests</span>
+            <span class='numberavailable secondarytextcolor' style='font-size: 10px;'>Rooms</span>
+            <span class='price secondarytextcolor' style='font-size: 10px;'>Price</span>
+            <span class='selection counterrow secondarytextcolor' style='font-size: 10px;'>Choose room</span>
+        </div>
+    
     <?php
-    foreach ($items as $item) {
-        $count = $size = $this->getNumberOfAvailableForType($item->type, $current, $start, $end);
+    foreach ($test->rooms as $item) {
+//        echo "<pre style='text-align:left;'>";
+//        print_r($item);
+//        echo "</pre>";
+        $count = $size = $this->getNumberOfAvailableForType($item->id, $current, $start, $end);
         $total += $count;
         ?>
         <div class='searchbookingrow'>
-            <span class='itemtypename ellipsis secondarytextcolor'><?php echo $item->type->name; ?></span>
+            <span class='itemtypename ellipsis secondarytextcolor'><?php echo $item->name; ?></span>
             <span class='numberofguests secondarytextcolor'>
-                <?php if($item->numberOfGuests > 0) { ?>
-                    <select class="gsniceselect1 guestcounter" gsname="<?php echo $item->type->id; ?>_guestcounter">
+                <?php if($item->maxGuests > 0) { ?>
+                    <select class="gsniceselect1 guestcounter" gsname="<?php echo $item->id; ?>_guestcounter">
                         <?php
-                        for($i = 1; $i <= $item->numberOfGuests; $i++) {
+                        for($i = 1; $i <= $item->maxGuests; $i++) {
                             echo "<option value='$i'>$i</option>";
                         }
                         ?>
@@ -41,10 +63,18 @@ $closedtext = $this->checkIfClosedPeriodes($start,$end);
                 <?php } ?>
             </span>
             <span class='numberavailable secondarytextcolor'><?php echo $count; ?></span>
-            <span class='price secondarytextcolor'><?php echo $item->price; ?></span>
+            <span class='price secondarytextcolor'>
+            <?php 
+                if(isset($item->pricesByGuests->{1})) {
+                    echo $item->pricesByGuests->{1};
+                } else {
+                    echo "0";
+                }
+            ?>
+            </span>
             <span class='selection counterrow'>
                 <i class='fa fa-minus-circle decreaseroomcounter'></i>
-                <input type='text' value='0' class='gsniceinput1 roomcount' gsname='<?php echo $item->type->id; ?>' style='width: 20px;text-align: center;'>
+                <input type='text' value='0' class='gsniceinput1 roomcount' gsname='<?php echo $item->id; ?>' style='width: 20px;text-align: center;'>
                 <i class='fa fa-plus-circle increaseroomcounter'></i>
             </span>
         </div>

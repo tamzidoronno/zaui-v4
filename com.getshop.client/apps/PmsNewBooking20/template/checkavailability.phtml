@@ -1,11 +1,19 @@
 <?php
 /* @var $this ns_bf644a39_c932_4e3b_a6c7_f6fd16baa34d\PmsNewBooking20 */
+$codes = $this->getApi()->getCartManager()->getCoupons();
 ?>
 <div class='steptitle'>Check availability</div>
 <div class='gsshadowbox checkavailabilitybox'>
     <div gstype="form" method="printavailability" gstoarea=".availabilityoverview">
         <div class='stepboxtitle'>Check availability</div>
         <div class='stepboxbody'>
+            <div style='margin-bottom: 10px;'>
+                <span style='text-align: left;'>
+                    <select class='addcouponcode' style='width:240px;' gsname='couponcode'>
+                    <?php $this->printCouponCodes($booking); ?>
+                    </select>
+                </span>
+            </div>
             <span style='position:relative'>
                 <i class='fa fa-calendar'
                    onmouseup="$('.startdate').focus();"
@@ -25,3 +33,15 @@
 </div>
 <br><br>
 <div class='roomsreadytobeadded gsshadowbox'><?php $this->printRoomsAddedToReadyList(); ?></div>
+<script>
+$(function() {
+   var checkifcounter = 0;
+   var checkIfCanChosen = setInterval(function() {
+       if($('.addcouponcode').find('option').length > 0 && $('.addcouponcode').is(':visible')) {
+           $('.addcouponcode').chosen();
+           $('.addsource').chosen();
+           clearTimeout(checkIfCanChosen);
+       }
+   }, "200");
+});
+</script>

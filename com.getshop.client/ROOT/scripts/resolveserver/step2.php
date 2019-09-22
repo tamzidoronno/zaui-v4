@@ -1,4 +1,4 @@
-<h1 style='text-align: center;'>Step 2 / 4 - Check your internet connection</h1>
+<h1 style='text-align: center;'>Step 1 / 3 - Check your internet connection</h1>
 The most obvious reason we can not reach the server is that the network connection has been cut between us and the server.<br>
 <br>
 <b>If your devices is connected to the wifi:</b><br>
@@ -18,15 +18,15 @@ The most obvious reason we can not reach the server is that the network connecti
 <b>If your device is connected with an ethernet cable:</b>
 <ul>
     <li>
-        Make sure your network cables are connected correctly, see image below.<br>
+        Make sure your network cables are connected correctly, see image below (network (3), the lamp should flash green).<br>
     </li>
     <li>
         If possible try to connect the network cable to your laptop and see if the internet connection works as supposed to.
     </li>
 </ul>
 
-<img src='images/getshoplockbox3_step2.png' style='width:100%;'>
-<span class='continuetostep3button'>The internet connection seems to be fine, continue to step 3</span>
+<img src='images/zwaveserver_step2.png' style='width:100%;'>
+<span class='continuetostep3button'>The internet connection seems to be fine, continue to step 2</span>
 <style>
     .continuetostep3button {
         margin-top: 3px;

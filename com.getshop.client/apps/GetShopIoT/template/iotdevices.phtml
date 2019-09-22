@@ -1,8 +1,22 @@
-<br>
-<br>
-<br>
-<br>
-<br>
+
+<div style="padding: 20px;">
+    <h1>Backups in progress</h1>
+    <h2>Devices waiting to be recovered (from usb pen)</h2>
+    <?php
+    $devices = $this->getApi()->getGetShop()->getUnitsAskedForUpdate();
+    foreach($devices as $time => $dev) {
+        echo date("d.m.Y H:i", $time / 1000) . " - " . $dev . "<br>";
+    }
+    ?>
+    <h2>Device that needs to be recovered (from web gui)</h2>
+    <?php
+    $devices = $this->getApi()->getGetShop()->unitsTryingToRecover();
+    foreach($devices as $dev) {
+        echo $dev . "<br>";
+    }
+    ?>
+</div>
+
 <div style="width:600px; margin:auto;">
     <?php
     /* @var $this ns_ca4162a4_b26b_4920_8d51_80b809546167\GetShopIoT */

@@ -39,13 +39,6 @@ nameserver 8.8.8.8" > /etc/resolv.conf
     rm -rf systembackupstatus.php*
     echo "done" > /storage/setupdone.txt
     `wget "https://system.getshop.com/scripts/systembackupstatus.php?id=$id&recoverymessage=Restore complete, please reboot your server by unplugging its power and connect it back again"`
-    `wget "https://system.getshop.com/scripts/systembackupstatus.php?id=$id&recoveryCompleted=true"`
 else
     `wget "https://system.getshop.com/scripts/systembackupstatus.php?id=$id&recoverymessage=Unable to download backup, please contact support"`
 fi
-
-
-
-
-
-

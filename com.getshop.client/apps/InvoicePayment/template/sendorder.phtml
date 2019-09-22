@@ -92,6 +92,9 @@ if ($canUseEhf) {
                 foreach ($bookings as $pmsBooking) {
                     $user = $this->getApi()->getUserManager()->getUserById($pmsBooking->userId);
                     if ($user != null) {
+                        if($user->emailAddressToInvoice) {
+                            echo "<option value='$user->emailAddressToInvoice'>".$user->fullName. " / ".$user->emailAddressToInvoice." / ".$user->cellPhone."</option>";
+                        }
                         echo "<option value='$user->emailAddress'>".$user->fullName. " / ".$user->emailAddress." / ".$user->cellPhone."</option>";
                     }
                 }

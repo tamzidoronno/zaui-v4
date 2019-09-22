@@ -17,6 +17,7 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.gsd.GdsManager;
 import com.thundashop.core.gsd.GetShopDevice;
 import com.thundashop.core.gsd.RoomReceipt;
+import com.thundashop.core.messagemanager.SmsHandlerAbstract;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.paymentterminalmanager.PaymentTerminalManager;
@@ -937,6 +938,12 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         userData.setUser(usr);
         res.userData = userData;
         
+        try {
+            calculateCountryFromPhonePrefix(booking);
+        }catch(Exception e) {
+            logPrintException(e);
+        }
+        
         
         return res;
     }
@@ -1188,6 +1195,8 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         booking.userId = user.id;
         
         pmsManager.saveBooking(booking);
+        
+        calculateCountryFromPhonePrefix(booking);
         
         BookingResult res = new BookingResult();
         res.success = 1;
@@ -1663,5 +1672,21 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             ipaddr = app.getSetting("ipaddr" + terminalId);
         }
         return ipaddr;
+    }
+
+    private void calculateCountryFromPhonePrefix(PmsBooking booking) {
+        if(booking == null || booking.userId == null) {
+            return;
+        }
+        User usr = userManager.getUserById(booking.userId);
+        if(usr == null) {
+            return;
+        }
+        
+        if(booking.countryCode == null || booking.countryCode.isEmpty()) {
+            String code = SmsHandlerAbstract.getCountryCodeOfPhonePrefix(usr.prefix);
+            booking.countryCode = code;
+            pmsManager.saveBooking(booking);
+        }
     }
 }

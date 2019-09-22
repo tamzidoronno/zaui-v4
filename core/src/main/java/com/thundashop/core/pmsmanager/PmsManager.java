@@ -2574,7 +2574,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         user.cellPhone = result.get("user_cellPhone");
         user.emailAddress = result.get("user_emailAddress");
         user.relationship = result.get("user_relationship");
-        if (result.get("prefix") != null) {
+        if (result.get("user_prefix") != null) {
             user.prefix = result.get("user_prefix");
         }
 

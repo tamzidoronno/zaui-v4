@@ -241,6 +241,12 @@ public abstract class SmsHandlerAbstract implements Runnable {
         this.message = message;
     }
     
+    public static String getCountryCodeOfPhonePrefix(String prefix) {
+        PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+        String code = phoneUtil.getRegionCodeForCountryCode(new Integer(prefix));
+        return code;
+    }
+    
     private void createSmsMessage() {
         SmsMessage smsMessage = new SmsMessage();
         smsMessage.from = from;

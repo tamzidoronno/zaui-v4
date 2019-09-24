@@ -1,5 +1,5 @@
 <?
-/* @var $this ns_d02f8b7a_7395_455d_b754_888d7d701db8\Dibs */
+/* @var $this ns_3c41b0d9_e8e5_45d5_8054_2536159554f0\SecuPay */
 
 $automarkpaid = $this->getConfigurationSetting("automarkpaid");
 
@@ -19,10 +19,10 @@ $automarkpaid = $this->getConfigurationSetting("automarkpaid");
 </div>
 
 <div class='gss_settings_content'>
-    <div class="textfield gss_setting"  id="savecard">
+    <div class="textfield gss_setting"  id="apikey">
            <span class="title"><?php echo $this->__f("API Key"); ?></span>
-           <div class="gss_onoff" gs_model="dibsmodel" gs_model_attr="automarkpaid">
-               <input type="textfield" gs_model="paymentmethod1" gs_model_attr="name" value="External payment terminal">
+           <div gs_model="dibsmodel" gs_model_attr="apikey">
+               <input type="textfield" gs_model="paymentmethod1" gs_model_attr="apikey" value="<?php echo $this->getApiKey(); ?>">
            </div>
            <div class="description">
                <?php echo $this->__w("An api key provided by secupay"); ?>

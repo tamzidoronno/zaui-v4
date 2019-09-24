@@ -43,6 +43,12 @@ public class UserSlot implements Serializable {
     @Transient
     public String isAddedToLock = "unkown";
 
+    /**
+     * Will be set to true if the slot is in use 
+     * by the group slot.
+     */
+    public boolean inUse = false;
+    
     public void generateNewCode(int codeSize) {
         previouseCode = code;
         

@@ -6,6 +6,7 @@ app.OrderView = {
         $(document).on('click', '.OrderView .gsniceinput1.product', app.OrderView.showSearchProduct);
         $(document).on('change', '.OrderView .gsniceinput1.searchword', app.OrderView.searchForProduct);
         $(document).on('change', '.OrderView .updatecurrencyonorder', app.OrderView.updateCurrency);
+        $(document).on('change', '.OrderView .updatelanguageonorder', app.OrderView.updateLanguage);
         $(document).on('click', '.OrderView .searchForProductBox .searchForProductBoxInner .closebutton', app.OrderView.closeSearchBox);
         $(document).on('click', '.OrderView .searchForProductBox .selectproductid', app.OrderView.selectProduct);
         $(document).on('click', '.OrderView .changeoverridedatebox .shop_button', app.OrderView.submitNewOverrideDate);
@@ -242,6 +243,16 @@ app.OrderView = {
         data.currency = $(this).val();
         
         var event = thundashop.Ajax.createEvent(null, "updateCurrencyOnOrder", $(this), data);
+        event['synchron'] = true;
+        thundashop.Ajax.post(event, function(res) {
+            app.OrderView.rePrintTab(res, 'orderlines', data);
+        });
+    },
+    updateLanguage : function() {
+        var data = app.OrderView.getData(this);
+        data.language = $(this).val();
+        
+        var event = thundashop.Ajax.createEvent(null, "updateLanguageOnOrder", $(this), data);
         event['synchron'] = true;
         thundashop.Ajax.post(event, function(res) {
             app.OrderView.rePrintTab(res, 'orderlines', data);

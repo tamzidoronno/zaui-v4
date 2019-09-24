@@ -58,7 +58,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     private Boolean transferedToAccountingSystem = false;
     public Date transferToAccountingDate = null;
     public Date shouldHaveBeenTransferredToAccountingOnDate = null;
-    
+    public String secretId = UUID.randomUUID().toString();
     public Date needCollectingDate = null;
     public String paymentTransactionId = "";
     public Shipping shipping;

@@ -27,6 +27,7 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -786,8 +787,14 @@ public class TicketManager extends ManagerBase implements ITicketManager {
                 continue;
             }
             
-            Double timeSpentInPeriode = ticket.getTimeSpentInPeriode(filter.start, filter.end);
-            Double timeInvoicedInPeriode = ticket.getTimeInvoicedInPeriode(filter.start, filter.end);
+            Double timeSpentInPeriode = 0.0;
+            Double timeInvoicedInPeriode = 0.0;
+            if(filter.start != null) {
+                timeSpentInPeriode = ticket.getTimeSpentInPeriode(filter.start, filter.end);
+            }
+            if(filter.start != null) {
+                timeInvoicedInPeriode = ticket.getTimeInvoicedInPeriode(filter.start, filter.end);
+            }
             
             if(timeInvoicedInPeriode == 0.0 && timeSpentInPeriode == 0.0) {
                 continue;
@@ -818,16 +825,29 @@ public class TicketManager extends ManagerBase implements ITicketManager {
         if(filter.userId != null && !filter.userId.isEmpty() && !stats.storeStats.containsKey(filter.userId)) {
             User usr = userManager.getUserById(filter.userId);
             Company comp = userManager.getCompany(usr.mainCompanyId);
-            TicketStatisticsStore stats11 = new TicketStatisticsStore();
-            stats11.name = usr.fullName;
-            stats11.hoursIncluded = comp.monthlyHoursIncluded;
-            stats11.additonalHours = comp.additionalHours;
-            stats.storeStats.put(filter.userId, stats11);
+            if(comp != null) {
+                TicketStatisticsStore stats11 = new TicketStatisticsStore();
+                stats11.name = usr.fullName;
+                stats11.hoursIncluded = comp.monthlyHoursIncluded;
+                stats11.additonalHours = comp.additionalHours;
+                stats.storeStats.put(filter.userId, stats11);
+            }
         }
         
         return stats;
     }
 
+
+    Integer getHoursIncluded(String userId) {
+        User usr = userManager.getUserById(userId);
+        Company comp = userManager.getCompany(usr.mainCompanyId);
+        if(comp != null) {
+            return comp.monthlyHoursIncluded + comp.additionalHours;
+        }
+        return 0;
+    }
+        
+    
     @Override
     public TicketStatisticsStore getStoreStatistics(TicketStatsFilter filter) {
         TicketStatistics statistics = getStatistics(filter);
@@ -888,4 +908,78 @@ public class TicketManager extends ManagerBase implements ITicketManager {
         lightTicket.state = state;
         saveObject(lightTicket);
     }
+
+    List<TicketReportLine> getAllTicketsRepliedToBetween(Date start, Date end, String storeId) {
+        List<TicketReportLine> lines = new ArrayList();
+        String usrId = systemManager.getCustomerIdForStoreId(storeId);
+        
+        for(Ticket ticket : tickets.values()) {
+            String userId = systemManager.getCustomerIdForStoreId(ticket.belongsToStore);
+            
+            if(usrId == null || userId == null) {
+                continue;
+            }
+            if(!usrId.equals(userId)) {
+                continue;
+            }
+            
+            
+            for(Long timeEnd : ticket.timeSpentAtDate.keySet()) {
+                if(timeEnd > start.getTime() && timeEnd < end.getTime()) {
+                    long millisecondsspent = (long)(ticket.timeSpentAtDate.get(timeEnd) * 3600000);
+                    long timeStart = timeEnd - millisecondsspent;
+                    Date timeStartDate = new Date();
+                    timeStartDate.setTime(timeStart);
+                    Date timeEndDate = new Date();
+                    timeEndDate.setTime(timeEnd);
+                    
+                    TicketReportLine reportLine = new TicketReportLine();
+                    reportLine.startSupport = timeStartDate;
+                    reportLine.endSupport = timeEndDate;
+                    reportLine.title = ticket.title;
+                    if(ticket.timeInvoiceAtDate.get(timeEnd) != null && ticket.timeInvoiceAtDate.get(timeEnd) > 0) {
+                        reportLine.billable = true;
+                    }
+                    reportLine.token = ticket.ticketToken;
+                    
+                    setDifferenceOnLine(timeStartDate, timeEndDate, reportLine);
+                    lines.add(reportLine);
+                }
+            }
+        }
+        
+        lines.sort(new Comparator<TicketReportLine>() {
+            @Override
+            public int compare(TicketReportLine m1, TicketReportLine m2) {
+                return m2.startSupport.compareTo(m1.startSupport);
+             }
+        });
+
+        
+        return lines;
+    }
+    
+    private void setDifferenceOnLine(Date startDate, Date endDate, TicketReportLine line){
+
+        //milliseconds
+        long different = endDate.getTime() - startDate.getTime();
+
+        long secondsInMilli = 1000;
+        long minutesInMilli = secondsInMilli * 60;
+        long hoursInMilli = minutesInMilli * 60;
+
+        long elapsedHours = different / hoursInMilli;
+        different = different % hoursInMilli;
+
+        long elapsedMinutes = different / minutesInMilli;
+        different = different % minutesInMilli;
+
+        long elapsedSeconds = different / secondsInMilli;
+
+        line.hours = (int)elapsedHours;
+        line.minutes = (int)elapsedMinutes;
+        line.seconds = (int)elapsedSeconds;
+
+    }
+
 }

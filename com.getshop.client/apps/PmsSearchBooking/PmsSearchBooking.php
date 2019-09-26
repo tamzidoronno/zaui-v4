@@ -539,6 +539,7 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         $header[] = "Unpaid";
         $header[] = "Addons";
         $header[] = "Orders";
+        $header[] = "Channel id";
         $rows[] = $header;
         
         foreach($data as $r) {
@@ -558,6 +559,7 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
             $row[] = $r->totalCost;
             $row[] = join(",",(array)$this->formatter->createAddonText($r, true));
             $row[] = join(",", (array)      $r->incrementOrderIds);
+            $row[] = $r->wubookchannelid;
             $rows[] = $row;
             if($withGuests) {
                 foreach($r->guest as $guest) {

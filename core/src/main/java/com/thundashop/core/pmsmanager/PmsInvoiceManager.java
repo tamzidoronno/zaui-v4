@@ -959,8 +959,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     boolean hasUnchargedPrePaidOrders(PmsBookingRooms room, PmsBooking booking) {
-        for(String orderId : getAllOrderIds(booking)) {
-            Order order = orderManager.getOrderSecure(orderId);
+        for(String orderId : booking.orderIds) {
+            Order order = orderManager.getOrderDirect(orderId);
             if(order != null) {
                 if(order.status == Order.Status.PAYMENT_COMPLETED) {
                     continue;
@@ -1119,10 +1119,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     @Override
     public boolean autoSendPaymentLink(String bookingId) {
-        PmsBooking booking = pmsManager.getBooking(bookingId);
-        
-        PmsConfiguration config = pmsManager.getConfigurationSecure();
-        
         Integer doNotSend = getReasonForNotSendingPaymentLink(bookingId);
         if(doNotSend >= 0) {
             return false;

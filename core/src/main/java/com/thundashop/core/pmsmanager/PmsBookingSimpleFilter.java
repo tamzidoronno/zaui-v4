@@ -158,11 +158,11 @@ public class PmsBookingSimpleFilter {
         simple.createOrderAfterStay = booking.createOrderAfterStay;
         simple.cleaningComment = room.cleaningComment;
         simple.bookingComments = booking.comments;
-        simple.totalUnsettledAmount = pmsInvoiceManager.getTotalUnpaidOnRoom(room, booking, false);
+        simple.totalUnsettledAmount = room.unpaidAmount;
         simple.totalUnpaidAmount = room.unpaidAmount;
         simple.hasUnchargedPrePaidOrders = pmsInvoiceManager.hasUnchargedPrePaidOrders(room, booking);
         simple.totalCost = room.totalCost;
-        simple.totalUnpaidCost = pmsInvoiceManager.getTotalUnpaidOnRoom(room, booking,true);
+        simple.totalUnpaidCost = room.unpaidAmount;
         simple.requestedEndDate = room.requestedEndDate;
         simple.userId = booking.userId;
         simple.language = room.language;

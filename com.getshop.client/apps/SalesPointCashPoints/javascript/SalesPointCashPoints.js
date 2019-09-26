@@ -1,6 +1,15 @@
 app.SalesPointCashPoints = {
     init: function() {
         $(document).on('click', '.saveproductconfig', app.SalesPointCashPoints.saveConfig)
+        $(document).on('click', '.activateExternal', app.SalesPointCashPoints.activateExternal)
+    },
+    
+    activateExternal: function() {
+        var data = {
+            id: $('.config_sales_point').attr('cashpointid')
+        }
+        
+        thundashop.Ajax.simplePost($('.SalesPointCashPoints'), "activateExternal", data);
     },
     
     saveConfig: function() {

@@ -52,6 +52,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -1420,4 +1421,24 @@ public class PosManager extends ManagerBase implements IPosManager {
                 .mapToInt(o -> o.getCount())
                 .sum();
     }
+
+    @Override
+    public void toggleExternalAccess(String cashPointId) {
+        CashPoint point = getCashPoint(cashPointId);
+        
+        if (point == null) {
+            return;
+        }
+        
+        if (point.token == null) {
+            point.token = UUID.randomUUID().toString();
+        } else {
+            point.token = null;
+        }
+        
+        saveObject(point);
+        
+    }
+
+  
 }

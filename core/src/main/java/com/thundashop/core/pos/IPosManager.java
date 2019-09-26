@@ -198,4 +198,7 @@ public interface IPosManager {
     @Editor
     public List<PmsConference> getConferencesThatHasUnsettledAmount(List<String> userIds);
 
+    @Administrator
+    public void toggleExternalAccess(String cashPointId);
+    
 }

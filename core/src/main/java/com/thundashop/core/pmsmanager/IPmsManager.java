@@ -231,7 +231,7 @@ public interface IPmsManager {
     public String setBookingItemAndDate(String roomId, String itemId, boolean split, Date start, Date end);
     
     @Administrator
-    public void addCartItemToRoom(CartItem item, String pmsBookingRoomId, String addedBy);
+    public String addCartItemToRoom(CartItem item, String pmsBookingRoomId, String addedBy);
     
     @Administrator
     public String setNewRoomType(String roomId, String bookingId, String newType);

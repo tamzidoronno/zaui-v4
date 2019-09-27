@@ -12,7 +12,7 @@ $f = $this->__w("Thursday");
 $f = $this->__w("Friday");
 $f = $this->__w("Saturday");
 $f = $this->__w("Sunday");
-
+// 
 /*Settings*/
 $showWeekOnly = $this->getConfigurationSetting("showWeekOnly");
 $withSideBar = "";
@@ -21,7 +21,10 @@ if(!$this->isItemPage()) {
 }
 
 
+if($this->getApi()->getUserManager()->getLoggedOnUser()->type == 100) {
 ?>
+    <div style='background-color:red; font-size: 22px; color:#fff; padding: 10px;'>VIKTIG INFORMASJON: På grunn av manglende resurser for vedlikehold av denne tjensten blir den lagt ned 01.01.2020. Dere må derfor finne et nytt system før 31.12.2019 som erstatter denne. All linsenser avsluttes fra månedsslutt og dere vil ikke bli belastet for de siste 3 månedene for bruk av tjenesten.</div>
+<? } ?>    
 <span class="timeselectionpanel">
     Fra <span class="startTime"></span> til <span class="endTime"></span>
 </span>
@@ -32,6 +35,7 @@ if(!$this->isItemPage()) {
         $this->includefile("tinycalendar"); 
     }
     ?>
+    
     <div class='dayorweekdiv'>
         <div style="position:relative">
             <?php  if(!$this->isItemPage()) { ?>

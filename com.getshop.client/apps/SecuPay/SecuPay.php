@@ -6,6 +6,8 @@ class SecuPay extends \PaymentApplication implements \Application {
         return "Secupay is a german payment gateway widely used.";
     }
 
+    private $address = "https://api-testing.secupay-ag.de";
+    
     public function getName() {
         return "SecuPay";
     }
@@ -31,39 +33,68 @@ class SecuPay extends \PaymentApplication implements \Application {
         $this->addPaymentMethod("Visa / MasterCard", "/showApplicationImages.php?appNamespace=$namespace&image=Dibs.png", "dibs");
     }
     
+    public function getSuccessPage() {
+        $redirectUrl = $this->redirectUrl();
+        return $redirectUrl . "payment_success";
+    }
         
+    public function getFailedPage() {
+        $redirectUrl = $this->redirectUrl();
+        return $redirectUrl . "payment_failed";
+    }
+        
+    public function getCallbackUrl() {
+        $redirectUrl = $this->redirectUrl();
+        return $redirectUrl;
+    }
+    
+    
     public function getIcon() {
         return "card.png";
     }
     
     public function preProcess() {
-        $url = 'http://example.com/api/JSON/create';
+         $url = $this->address . '/payment/init';
  
+         $types = $this->getTypes();
+        
         //Initiate cURL.
         $ch = curl_init($url);
 
         //The JSON data.
         $jsonData = array(
-            'apikey' => 'MyUsername',
-            'payment_type' => 'MyPassword',
-            'amount' => 'MyPassword',
-            'currency' => 'MyPassword',
-            'url_success' => 'MyPassword',
-            'url_failure' => 'MyPassword'
+            'apikey' => $this->getApiKey(),
+            'payment_type' => $types,
+            'amount' => $this->totalAmount(),
+            'currency' => $this->getCurrency(),
+            'url_success' => $this->getSuccessPage(),
+            'url_failure' => $this->getFailedPage(),
+            'url_push' => $this->getCallbackUrl(),
+            'language' => $this->getFactory()->getSelectedLanguage()
         );
-
+        echo "<pre>";
+        print_r($jsonData);
+        echo "</pre>";
+        
         //Encode the array into JSON.
         $jsonDataEncoded = json_encode($jsonData);
+        
+        $cg = $this->setHeaders($ch, $jsonDataEncoded);
+        
+        //Execute the request
+        $result = curl_exec($ch);
+    }
+    
+    public function getTypes() {
+        $url = $this->address . '/payment/gettypes';
+        $ch = curl_init($url);
 
-        //Tell cURL that we want to send a POST request.
-        curl_setopt($ch, CURLOPT_POST, 1);
-
-        //Attach our encoded JSON string to the POST fields.
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonDataEncoded);
-
-        //Set the content type to application/json
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json')); 
-
+        $jsonData = array(
+            'apikey' => $this->getApiKey()
+        );
+        
+        $cg = $this->setHeaders($ch, json_encode($jsonData));
+        
         //Execute the request
         $result = curl_exec($ch);
     }
@@ -77,7 +108,7 @@ class SecuPay extends \PaymentApplication implements \Application {
     }
     
     public function saveSettings() {
-        $this->getConfigurationSetting("key", $_POST['data']['key']);
+        $this->setConfigurationSetting("apikey", $_POST['data']['apikey']);
     }
     
     public function renderConfig() {
@@ -94,6 +125,36 @@ class SecuPay extends \PaymentApplication implements \Application {
     
     public function hasPaymentProcess() {
          return ($this->order != null && $this->order->status != 7);
+    }
+
+    public function setHeaders($ch, $jsonData) {
+        //Tell cURL that we want to send a POST request.
+        curl_setopt($ch, CURLOPT_POST, 1);
+
+        if($jsonData) {
+            //Attach our encoded JSON string to the POST fields.
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
+        }
+
+        //Set the content type to application/json
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/json','User-Agent: GetShop', 'cookie: WBS=gwapzFWhcm9LjfGhtQ0uDc0JJD4PRzB8')); 
+    }
+
+    public function redirectUrl() {
+        $redirect_url = "https://" . $_SERVER["HTTP_HOST"] . "/callback.php?app=" . $this->applicationSettings->id. "&orderId=" . $this->order->id . "&nextpage=";
+        return $redirect_url;
+    }
+
+    public function getApiKey() {
+        return $this->getConfigurationSetting("apikey");
+    }
+
+    public function totalAmount() {
+        return (int)($this->getApi()->getOrderManager()->getTotalAmount($this->order) * 100);
+    }
+
+    public function getCurrency() {
+        return $this->getApi()->getStoreManager()->getSelectedCurrency();
     }
 
 }

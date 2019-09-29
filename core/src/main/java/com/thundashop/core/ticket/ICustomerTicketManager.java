@@ -8,6 +8,7 @@ package com.thundashop.core.ticket;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.ForceAsync;
 import com.thundashop.core.common.GetShopApi;
+import java.util.Date;
 import java.util.List;
 import org.springframework.scheduling.annotation.Async;
 
@@ -40,4 +41,6 @@ public interface ICustomerTicketManager {
     @ForceAsync
     public void markTicketAsRead(String tokenId);
     
+    @ForceAsync
+    public TicketReport getTicketReportForCustomer(Date start, Date end, String storeId);
 }

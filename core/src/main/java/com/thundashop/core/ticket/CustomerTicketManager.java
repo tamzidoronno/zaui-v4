@@ -13,11 +13,12 @@ import com.thundashop.core.system.SystemManager;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
+    
 /**
  *
  * @author ktonder
@@ -155,6 +156,24 @@ public class CustomerTicketManager extends ManagerBase implements ICustomerTicke
     @Override
     public void markTicketAsRead(String tokenId) {
         ticketManager.markAsRead(tokenId);
+    }
+
+    @Override
+    public TicketReport getTicketReportForCustomer(Date start, Date end, String storeId) {
+        TicketReport report = new TicketReport();
+        report.start = start;
+        report.end = end;
+        
+        List<TicketReportLine> tickets = ticketManager.getAllTicketsRepliedToBetween(start, end, storeId);
+        report.lines = tickets;
+        
+        report.summarizeSupport();
+        
+        
+        String userId = systemManager.getCustomerIdForStoreId(storeId);
+        report.hoursIncluded = ticketManager.getHoursIncluded(userId);
+
+        return report;
     }
     
 

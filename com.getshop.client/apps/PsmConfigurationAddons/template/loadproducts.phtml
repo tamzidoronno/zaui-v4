@@ -33,6 +33,7 @@ foreach($config->addonConfiguration as $item) {
         <th class="rotate"><div><span>Tax</span></div></th>
         <th class="rotate"><div><span>Per guest</span></div></th>
         <th class="rotate"><div><span>Non refundable</span></div></th>
+        <th class="rotate"><div><span>Always add</span></div></th>
         <th class="rotate"><div><span>Included in room price</span></div></th>
         <th class="rotate"><div><span>Unique on order</span></div></th>
         <th ></th>
@@ -50,6 +51,7 @@ foreach($config->addonConfiguration as $item) {
     </tr>
        
     <tr>
+        <td></td>
         <td></td>
         <td></td>
         <td></td>
@@ -82,6 +84,7 @@ foreach($config->addonConfiguration as $item) {
         $perGuest = $addonItem->dependsOnGuestCount ? "CHECKED" : "";
         $noRefundable = $addonItem->noRefundable ? "CHECKED" : "";
         $isIncludedInRoomPrice = $addonItem->isIncludedInRoomPrice ? "CHECKED" : "";
+        $alwaysAddAddon = $addonItem->alwaysAddAddon ? "CHECKED" : "";
         $isUniqueOnOrder = $addonItem->isUniqueOnOrder ? "CHECKED" : "";
         $states = $this->getFactory()->getLanguageReadable();
     ?>
@@ -156,6 +159,7 @@ foreach($config->addonConfiguration as $item) {
         <td><input type="checkbox" gsname='perguest' <?php echo $perGuest; ?>></td>
         <td><input type="checkbox" gsname='nonrefundable' <?php echo $noRefundable; ?>></td>
         <td><input type='checkbox' gsname='isIncludedInRoomPrice' <?php echo $isIncludedInRoomPrice; ?>></td>
+        <td><input type='checkbox' gsname='alwaysAddAddon' <?php echo $alwaysAddAddon; ?>></td>
         <td><input type='checkbox' gsname='isUniqueOnOrder' <?php echo $isUniqueOnOrder; ?>></td>
         <td></td>
         <?php

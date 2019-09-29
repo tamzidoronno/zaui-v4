@@ -8628,7 +8628,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private List<PmsRoomSimple> removeByCustomersCodesAndAddons(List<PmsRoomSimple> res, PmsBookingFilter filter) {
         List<PmsRoomSimple> finalList = new ArrayList();
         for (PmsRoomSimple r : res) {
-            PmsBooking booking = getBooking(r.bookingId);
+            PmsBooking booking = getBookingInternal(r.bookingId, false);
             if (!filter.customers.isEmpty() && !filter.customers.contains(r.userId)) {
                 continue;
             }

@@ -456,6 +456,11 @@ class PageFactory {
         $row->addColumn("13c0bc5f-ce62-45c5-be76-90237d16de91", "c4eb8022-f405-11e8-8eb2-f2801f1b9fd1");
         $this->pages['getshopdevcenter'] = $page;   
         
+        $page = new \ModulePage("supportreport", "getshopsupport");
+        $row = $page->createRow(true);
+        $row->addColumn("b372a413-dbbe-44c0-b473-13fd48e2d1ff", "07f22a21-091d-470d-ac42-5c0b34519db7");
+        $this->pages['supportreport'] = $page;   
+        
         $page = new \ModulePage("ticketview", "getshopsupport");
         $row = $page->createRow(true);
         $row->addColumn("f5e525cc-f11e-4611-93bb-1afacd9aade5", "c4eb8022-f405-11e8-8eb2-f2801f1b9fd1");

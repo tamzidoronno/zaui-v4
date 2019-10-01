@@ -61,6 +61,8 @@ public class PmsManagerProcessor {
     
     public void hourlyProcessor() {
         start = System.currentTimeMillis();
+        try { autoCreateInvoice(); }catch(Exception e) { manager.logPrintException(e); }
+        checkTimer("Autocreating invoices");
         try { processAutoExtend(); }catch(Exception e) { manager.logPrintException(e); }
         checkTimer("processAutoExtend");
         try { processIntervalCleaning(false); }catch(Exception e) { manager.logPrintException(e); }
@@ -1340,6 +1342,18 @@ public class PmsManagerProcessor {
                 });
     }
 
-
+    private void autoCreateInvoice() {
+        List<PmsBooking> bookings = getAllConfirmedNotDeleted(true);
+        for(PmsBooking booking : bookings) {
+            if(booking.isEnded() && booking.createOrderAfterStay) {
+                if(booking.getUnpaidAmount() > 0.0) {
+                    User usr = manager.userManager.getUserById(booking.userId);
+                    if(usr.preferredPaymentType != null && usr.preferredPaymentType.equals("70ace3f0-3981-11e3-aa6e-0800200c9a66") || booking.isInvoice()) {
+                        manager.pmsInvoiceManager.autoCreateOrderForBookingAndRoom(booking.id, "70ace3f0-3981-11e3-aa6e-0800200c9a66");
+                    }
+                }
+            }
+        }
+    }
 
 }

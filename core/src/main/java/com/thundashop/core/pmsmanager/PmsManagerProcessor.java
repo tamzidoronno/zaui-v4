@@ -742,14 +742,6 @@ public class PmsManagerProcessor {
                 continue;
             }
             
-            if(config.getRequirePayments() && booking.createOrderAfterStay && booking.isEnded()) {
-                NewOrderFilter filter = new NewOrderFilter();
-                filter.createNewOrder = true;
-                filter.endInvoiceAt = booking.getEndDate();
-                manager.pmsInvoiceManager.createOrder(booking.id, filter);
-                booking.orderCreatedAfterStay = new Date();
-                manager.saveBooking(booking);
-            }
             boolean needSaving = false;
             boolean payedfor = true; 
             boolean firstDate = true;

@@ -9076,7 +9076,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         if(title == null || title.isEmpty() && key.startsWith("sendreciept")) {
-            return "reciept for your stay";
+            return "receipt for your stay";
         }
         if(title == null || title.isEmpty() && key.startsWith("sendinvoice")) {
             return "invoice for your stay";

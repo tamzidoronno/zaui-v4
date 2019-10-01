@@ -1050,9 +1050,9 @@ class PmsManagement extends \WebshopApplication implements \Application {
 
         echo "<div style='border: solid 1px; padding: 10px; margin-bottom: 10px;'>";
         if(!$res) {
-            echo "<i class='fa fa-info'></i> Invoice / reciept has been sent.";
+            echo "<i class='fa fa-info'></i> Invoice / receipt has been sent.";
         } else {
-            echo "<i class='fa fa-info'></i> Invoice / reciept where <b>NOT</b> sent due to the following:" . $res;
+            echo "<i class='fa fa-info'></i> Invoice / receipt where <b>NOT</b> sent due to the following:" . $res;
         }
         echo "</div>";
         echo "<script>$('.informationbox-outer').scrollTop(0);</script>";
@@ -1888,7 +1888,7 @@ class PmsManagement extends \WebshopApplication implements \Application {
             echo "<span class='continueorderbutton' gstype='submitToInfoBox' gsvalue='sendPaymentLink'>Send payment link</span>";
         } else {
             echo "<span class='continueorderbutton' gstype='submitToInfoBox' gsvalue='markPaid'>Mark order as paid</span>";
-            echo "<span class='continueorderbutton' gstype='submitToInfoBox' gsvalue='markPaidSendReciept'>Mark order as paid and send reciept</span>";
+            echo "<span class='continueorderbutton' gstype='submitToInfoBox' gsvalue='markPaidSendReciept'>Mark order as paid and send receipt</span>";
         }
         echo "<br><span class='continueorderbutton' gstype='submitToInfoBox' gsvalue='refresh'>Continue</span>";
         echo "</div>";

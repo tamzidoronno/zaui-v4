@@ -826,11 +826,11 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 addToLog = true;
             }
             if(storeManager.isProductMode()) {
-                order.payment.transactionLog.put(System.currentTimeMillis(), "Print reciept (" + url + ")");
+                order.payment.transactionLog.put(System.currentTimeMillis(), "Print receipt (" + url + ")");
                 webManager.htmlPostThreaded(url, text, false, "UTF-8");
             } else {
-                order.payment.transactionLog.put(System.currentTimeMillis(), "Print reciept (dev mode)");
-                logPrint("Printing reciept to url: " + url);
+                order.payment.transactionLog.put(System.currentTimeMillis(), "Print receipt (dev mode)");
+                logPrint("Printing receipt to url: " + url);
                 logPrint(text);
             }
             orderManager.saveOrder(order);

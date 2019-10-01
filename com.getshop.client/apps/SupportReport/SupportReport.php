@@ -61,12 +61,6 @@ class SupportReport extends \WebshopApplication implements \Application {
         
         $report = $this->getSystemGetShopApi()->getCustomerTicketManager()->getTicketReportForCustomer($start, $end, $this->getFactory()->getStore()->id);
         
-        /*
-        supportHours = (int)elapsedHours;
-        supportMinutes = (int)elapsedMinutes;
-        supportSeconds = (int)elapsedSeconds;
-        */
-        
         echo "Total support " . $report->supportHours . " hours, " . $report->supportMinutes . " minutes, " . $report->supportSeconds. " seconds.<br>";
         echo "Billable support " . $report->billableHours . " hours, " . $report->billableMinutes . " minutes, " . $report->billableSeconds. " seconds.<br>";
         echo "You have " . $report->hoursIncluded . " hours in your subscription plan, this will be deducted on the invoice.<br><br>";

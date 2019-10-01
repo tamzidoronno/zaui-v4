@@ -1087,6 +1087,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             logPrintException(e);
         }
 
+        try {
+            calculateUnsettledAmountForRooms(booking);
+        }catch(Exception e) {
+            logPrintException(e);
+        }
+        
         saveObject(booking);
         bookingUpdated(booking.id, "modified", null);
     }
@@ -6142,6 +6148,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBookingRooms room = booking.getRoom(pmsRoomId);
         room.priceMatrix = new LinkedHashMap();
         pmsInvoiceManager.updatePriceMatrix(booking, room, booking.priceType);
+        saveBooking(booking);
     }
 
     private List<PmsBooking> filterByUnpaid(List<PmsBooking> finalized, PmsBookingFilter filter) {
@@ -9079,7 +9086,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         if(title == null || title.isEmpty() && key.startsWith("sendreciept")) {
-            return "reciept for your stay";
+            return "receipt for your stay";
         }
         if(title == null || title.isEmpty() && key.startsWith("sendinvoice")) {
             return "invoice for your stay";

@@ -543,7 +543,7 @@ class PmsSendMessagesConfiguration extends \WebshopApplication implements \Appli
         $notifications['room_ended_24_hours_'.$langauge] = "Booking ended 1 day ago";
         $notifications['room_ended_48_hours_'.$langauge] = "Booking ended two days ago";
         $notifications['room_cancelled_'.$langauge] = "Room has been cancelled (ignored if booked by ota)";
-        $notifications['sendreciept_'.$langauge] = "When sending a reciept";
+        $notifications['sendreciept_'.$langauge] = "When sending a receipt";
         $notifications['sendinvoice_'.$langauge] = "When sending an invoice";
         $notifications['warnfirstordernotpaid_'.$langauge] = "If order has not been paid for.";
         if($notificationSettings->runAutoPayWithCard) {

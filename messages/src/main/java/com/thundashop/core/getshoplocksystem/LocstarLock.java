@@ -35,6 +35,10 @@ public class LocstarLock extends Lock {
     public boolean shouldPrioty() {
         finalize();
         
+        if (prioritizeLockUpdate) {
+            return true;
+        }
+        
         if (getJobSize() > 0 && prioritizeLockUpdate)
             return true;
         

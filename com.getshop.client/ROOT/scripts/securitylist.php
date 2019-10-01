@@ -12,8 +12,8 @@ function convertToJavaDate($time) {
 }        
     
 $bookingfilter = new core_pmsmanager_PmsBookingFilter();
-$bookingfilter->startDate = convertToJavaDate(date("d.m.Y", time()));
-$bookingfilter->endDate = convertToJavaDate(date("d.m.Y", time()+1000));
+$bookingfilter->startDate = convertToJavaDate(date("d.m.Y H:i", time()));
+$bookingfilter->endDate = convertToJavaDate(date("d.m.Y, H:i", time()+1000));
 $bookingfilter->filterType = "active";
 $bookingfilter->includeDeleted = false;
 

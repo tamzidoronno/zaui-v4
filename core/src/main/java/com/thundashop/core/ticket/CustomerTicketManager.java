@@ -172,7 +172,9 @@ public class CustomerTicketManager extends ManagerBase implements ICustomerTicke
         
         String userId = systemManager.getCustomerIdForStoreId(storeId);
         report.hoursIncluded = ticketManager.getHoursIncluded(userId);
-
+        report.generateHoursToInvoiceData();
+        
+        
         return report;
     }
     

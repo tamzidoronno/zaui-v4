@@ -195,6 +195,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public boolean virtuallyDeleted = false;
     public boolean supportMultipleBookings = false;
     public String createdByPaymentLinkId = "";
+    private boolean notfiedAutoSend = false;
     
     public Order jsonClone() {
         Gson gson = new Gson();
@@ -1146,6 +1147,15 @@ public class Order extends DataCommon implements Comparable<Order> {
             if (payment.paymentType.equals("ns_def1e922_972f_4557_a315_a751a9b9eff1\\Netaxept")) {
                 return true;
             }
+            if (payment.paymentType.equals("ns_be004408_e969_4dba_9b23_5922b8f1d7e2\\EasyByNets")) {
+                return true;
+            }
+            if (payment.paymentType.equals("ns_3c41b0d9_e8e5_45d5_8054_2536159554f0\\SecuPay")) {
+                return true;
+            }
+            if (payment.paymentType.equals("ns_def1e922_972f_4557_a315_a751a9b9eff1\\Netaxept")) {
+                return true;
+            }
             if (payment.paymentType.equals("ns_d02f8b7a_7395_455d_b754_888d7d701db8\\Dibs")) {
                 return true;
             }
@@ -1424,6 +1434,15 @@ public class Order extends DataCommon implements Comparable<Order> {
         
         return agio;
     }
+
+    public boolean isNotified() {
+        return notfiedAutoSend;
+    }
+    
+    public void markAsAutosent() {
+        notfiedAutoSend = true;
+    }
+    
 
     public static class Status  {
         public static int CREATED = 1;

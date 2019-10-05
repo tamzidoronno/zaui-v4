@@ -287,7 +287,6 @@ public class DibsManager extends ManagerBase implements IDibsManager {
             order.captured = true;
             order.payment.captured = true;
             orderManager.markAsPaid(order.id, new Date(), new Double(amount) / 100);
-            orderManager.markOrderForAutoSending(order.id);
         } else if (response.get("status").equals("DECLINE")) {
             messageManager.sendMail("post@getshop.com", "post@getshop.com", "Declined to capture order (" + order.incrementOrderId + ")", respresult, "post@getshop.com", "post@getshop.com");
             order.status = Order.Status.COLLECTION_FAILED;
@@ -490,9 +489,6 @@ public class DibsManager extends ManagerBase implements IDibsManager {
                 } else {
                     captureOrder(order, toCapture);
                 }
-                if(order.status == Order.Status.PAYMENT_COMPLETED) {
-                    orderManager.markOrderForAutoSending(order.id);
-                }
 
                 orderManager.saveOrder(order);
             }catch(Exception d) {
@@ -541,9 +537,6 @@ public class DibsManager extends ManagerBase implements IDibsManager {
                     orderManager.saveOrder(order);
                 }
                 
-                if(order.status == Order.Status.PAYMENT_COMPLETED) {
-                    orderManager.markOrderForAutoSending(order.id);
-                }
 
                 orderManager.saveOrder(order);
             }catch(Exception d) {

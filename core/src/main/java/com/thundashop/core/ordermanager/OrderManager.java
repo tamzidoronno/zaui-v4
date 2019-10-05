@@ -760,6 +760,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Override
     public void saveOrder(Order order) throws ErrorException {
+        
+        if(order.isPaid() && !order.isNotified() && order.isPaymentLinkType()) {
+            order.markAsAutosent();
+            markOrderForAutoSending(order.id);
+        }
+        
         validateOrder(order);
         saveOrderInternal(order);
         

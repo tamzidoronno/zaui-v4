@@ -281,4 +281,12 @@ public class Lock {
             userSlots.get(slotId).codeAddedSuccesfully();
         }
     }
+    
+    public List<UserSlot> getSlotsUnfinalized() {
+        return new ArrayList(userSlots.values());
+    }
+
+    void markSlotInUse(int slotId) {
+        userSlots.get(slotId).inUse = true;
+    }
 }

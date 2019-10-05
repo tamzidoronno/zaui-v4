@@ -6284,7 +6284,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
-    public void addCartItemToRoom(CartItem item, String pmsBookingRoomId, String addedBy) {
+    public String addCartItemToRoom(CartItem item, String pmsBookingRoomId, String addedBy) {
 
         Product product = item.getProduct();
 
@@ -6293,6 +6293,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         addon.count = item.getCount();
         addon.price = product.price;
         addon.isSingle = true;
+        addon.isUniqueOnOrder = true;        
         addon.priceExTaxes = product.priceExTaxes;
         addon.variations = product.variationCombinations;
         addon.date = item.getStartingDate();
@@ -6303,6 +6304,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         addon.description = product.description;
 
         addAddonOnRoom(pmsBookingRoomId, addon);
+        
+        return addon.addonId;
     }
 
     public void addAddonOnRoom(String pmsBookingRoomId, PmsBookingAddonItem addon) {
@@ -10775,6 +10778,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         room.prioritizeInWaitingList = !room.prioritizeInWaitingList;
         saveBooking(booking);
         logEntry("Room has been prioritized", booking.id, room.bookingItemId);
+    }
+
+    public void setOverrideNameOfAddon(String roomId, String addonId, String overrideProductName) {
+        PmsBooking booking = getBookingFromRoom(roomId);
+        booking.getRoom(roomId).addons
+                .stream()
+                .filter(o -> o.addonId != null && o.addonId.equals(addonId))
+                .forEach(o -> {
+                    o.setName(overrideProductName);
+                });
     }
 
 }

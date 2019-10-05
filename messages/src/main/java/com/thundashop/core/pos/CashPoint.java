@@ -36,6 +36,12 @@ public class CashPoint extends DataCommon {
      * received the zreport for all other cashpoints, including external cashpoints.
      */
     public boolean isMaster = false;
+    
+    /**
+     * If this is set the cashpoint is allowed to post 
+     * to the RemoteCashPointApi with the access token.
+     */
+    public String token = null;
 
     public void setUserView(String userId, String viewId) {
         selectedUserView.put(userId, viewId);

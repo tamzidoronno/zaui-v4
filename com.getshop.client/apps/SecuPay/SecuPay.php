@@ -6,7 +6,7 @@ class SecuPay extends \PaymentApplication implements \Application {
         return "Secupay is a german payment gateway widely used.";
     }
 
-    private $address = "https://api-testing.secupay-ag.de";
+    private $address = "https://api.secupay.ag";
     
     public function getName() {
         return "SecuPay";
@@ -57,6 +57,7 @@ class SecuPay extends \PaymentApplication implements \Application {
          $url = $this->address . '/payment/init';
  
          $types = $this->getTypes();
+         print_r($types);
         
         //Initiate cURL.
         $ch = curl_init($url);
@@ -64,25 +65,42 @@ class SecuPay extends \PaymentApplication implements \Application {
         //The JSON data.
         $jsonData = array(
             'apikey' => $this->getApiKey(),
-            'payment_type' => $types,
+            'payment_type' => "invoice",
             'amount' => $this->totalAmount(),
             'currency' => $this->getCurrency(),
             'url_success' => $this->getSuccessPage(),
+            "payment_action" => "sale",
+            "apiversion" => "2.11",
+            "firstname" => "fdsaf",
+            "lastname" => "gakksen",
+            "company" => "",
+            "email" => "fdsafsa@test.no",
+            "street" => "abcveien",
+            "housenumber" => "22",
+            "zip" => 3158,
+            "city" => "Andebu",
+            "country" => "Norway",
             'url_failure' => $this->getFailedPage(),
             'url_push' => $this->getCallbackUrl(),
+            "order_id" => "100203",
             'language' => $this->getFactory()->getSelectedLanguage()
         );
         echo "<pre>";
         print_r($jsonData);
         echo "</pre>";
         
-        //Encode the array into JSON.
-        $jsonDataEncoded = json_encode($jsonData);
-        
-        $cg = $this->setHeaders($ch, $jsonDataEncoded);
+        $cg = $this->setHeaders($ch, $jsonData);
         
         //Execute the request
         $result = curl_exec($ch);
+        $result = json_decode($result,true);
+        print_r($result);
+        if($result['status'] != "ok") {
+            print_r($result['errors']);
+            echo $result['errors']['message'];
+            exit(0);
+        }
+        
     }
     
     public function getTypes() {
@@ -93,10 +111,18 @@ class SecuPay extends \PaymentApplication implements \Application {
             'apikey' => $this->getApiKey()
         );
         
-        $cg = $this->setHeaders($ch, json_encode($jsonData));
+        $this->setHeaders($ch, $jsonData);
         
         //Execute the request
         $result = curl_exec($ch);
+        $result = json_decode($result, true);
+        
+        if($result['status'] != "ok") {
+            print_r($result['errors']);
+            exit(0);
+        }
+        
+        return $result['data'];
     }
     
     public function postProcess() {
@@ -129,15 +155,22 @@ class SecuPay extends \PaymentApplication implements \Application {
 
     public function setHeaders($ch, $jsonData) {
         //Tell cURL that we want to send a POST request.
+        
+        $test = array();
+        $test['data'] = $jsonData;
+
+        
         curl_setopt($ch, CURLOPT_POST, 1);
 
         if($jsonData) {
             //Attach our encoded JSON string to the POST fields.
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($test));
         }
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_VERBOSE, 0);       
 
         //Set the content type to application/json
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/json','User-Agent: GetShop', 'cookie: WBS=gwapzFWhcm9LjfGhtQ0uDc0JJD4PRzB8')); 
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json; charset=utf-8;", "Accept: application/json", "User-Agent: GetShop")); 
     }
 
     public function redirectUrl() {

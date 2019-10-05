@@ -8,58 +8,62 @@ $warehouses = $this->getApi()->getWareHouseManager()->getWareHouses();
 <div class='config_sales_point' cashpointid='<? echo $_POST['data']['id']; ?>'>
 <?
     $cashPoint = $this->getApi()->getPosManager()->getCashPoint($_POST['data']['id']);
-    echo "<input type='text' gsname='cashPointName' class='gsniceinput1' value='".$cashPoint->cashPointName."'>";
-    $productLists = $this->getApi()->getProductManager()->getProductLists();
-    foreach ($productLists as $list) {
-        $selected = in_array($list->id, $cashPoint->productListIds) ? "checked='true'" : "";
-        echo "<br/><input $selected type='checkbox' class='selectedposlist' value='$list->id'/> ".$list->listName;
-    }
-    
-    if (is_array($devices) && count($devices)) {
-    ?>
-    <div>
-        <br/>
-        Receipt printer:
-        <br/> <select gsname='receiptprinter' class="gsniceselect1">
-            <?
-            echo "<option value=''>Not selected</option>";
-            foreach ($devices as $device) {
-                $selected = $device->id == $cashPoint->receiptPrinterGdsDeviceId ? "selected='true'" : "";
-                echo "<option $selected value='$device->id'>".$device->name."</option>";
-            }
-            ?>    
-        </select>
-        <br/>
-        <br/>Kitchen printer:
-        <br/> 
-        <select gsname='kitchenprinter' class="gsniceselect1">
-            <?
-            echo "<option value=''>Not selected</option>";
-            foreach ($devices as $device) {
-                $selected = $device->id == $cashPoint->kitchenPrinterGdsDeviceId ? "selected='true'" : "";
-                echo "<option $selected value='$device->id'>".$device->name."</option>";
-            }
-            ?>    
-        </select>
-    </div>
-    <?
-    }
-    
-    if (is_array($departments) && count($departments)) {
-        echo "<br/>";
-        echo $this->__f("Department").":";
+    if ($cashPoint->token) {
+        echo "External token:<br/>" . $cashPoint->token;
+    } else {
+        echo "<input type='text' gsname='cashPointName' class='gsniceinput1' value='".$cashPoint->cashPointName."'>";
+        $productLists = $this->getApi()->getProductManager()->getProductLists();
+        foreach ($productLists as $list) {
+            $selected = in_array($list->id, $cashPoint->productListIds) ? "checked='true'" : "";
+            echo "<br/><input $selected type='checkbox' class='selectedposlist' value='$list->id'/> ".$list->listName;
+        }
+
+        if (is_array($devices) && count($devices)) {
         ?>
-        <br/>
-        <select gsname='departmentid' class="gsniceselect1">
-            <?
-            echo "<option value=''>Not selected</option>";
-            foreach ($departments as $deparment) {
-                $selected = $deparment->id == $cashPoint->departmentId ? "selected='true'" : "";
-                echo "<option $selected value='$deparment->id'>" . $deparment->name . "</option>";
-            }
-            ?>    
-        </select>
+        <div>
+            <br/>
+            Receipt printer:
+            <br/> <select gsname='receiptprinter' class="gsniceselect1">
+                <?
+                echo "<option value=''>Not selected</option>";
+                foreach ($devices as $device) {
+                    $selected = $device->id == $cashPoint->receiptPrinterGdsDeviceId ? "selected='true'" : "";
+                    echo "<option $selected value='$device->id'>".$device->name."</option>";
+                }
+                ?>    
+            </select>
+            <br/>
+            <br/>Kitchen printer:
+            <br/> 
+            <select gsname='kitchenprinter' class="gsniceselect1">
+                <?
+                echo "<option value=''>Not selected</option>";
+                foreach ($devices as $device) {
+                    $selected = $device->id == $cashPoint->kitchenPrinterGdsDeviceId ? "selected='true'" : "";
+                    echo "<option $selected value='$device->id'>".$device->name."</option>";
+                }
+                ?>    
+            </select>
+        </div>
         <?
+        }
+
+        if (is_array($departments) && count($departments)) {
+            echo "<br/>";
+            echo $this->__f("Department").":";
+            ?>
+            <br/>
+            <select gsname='departmentid' class="gsniceselect1">
+                <?
+                echo "<option value=''>Not selected</option>";
+                foreach ($departments as $deparment) {
+                    $selected = $deparment->id == $cashPoint->departmentId ? "selected='true'" : "";
+                    echo "<option $selected value='$deparment->id'>" . $deparment->name . "</option>";
+                }
+                ?>    
+            </select>
+            <?
+        }
     }
     
     if (is_array($warehouses) && count($warehouses)) {
@@ -83,9 +87,19 @@ $warehouses = $this->getApi()->getWareHouseManager()->getWareHouses();
     <br/>
     <br/>
     
-    Is master: <input type='checkbox' gsname='isMaster' <? echo $cashPoint->isMaster ? 'checked="true"' : ''; ?>/>
+    <?
+    if (!$cashPoint->token) {
+    ?>
+        Is master: <input type='checkbox' gsname='isMaster' <? echo $cashPoint->isMaster ? 'checked="true"' : ''; ?>/>
+    <?
+    }
+    ?>
     
     <br/>
     <br/>
     <div class='shop_button saveproductconfig'><? echo $this->__f("Save"); ?></div>
+    <?
+    $txt = $cashPoint->token ? "Deactivate external access" : "Activate external access";
+    ?>
+    <div class='shop_button activateExternal'><? echo $txt; ?></div>
 </div>

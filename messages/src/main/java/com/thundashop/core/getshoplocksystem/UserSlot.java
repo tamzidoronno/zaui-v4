@@ -42,12 +42,18 @@ public class UserSlot implements Serializable {
     
     @Transient
     public String isAddedToLock = "unkown";
+    public int pinCodeAddedToServer = 0;
 
     /**
      * Will be set to true if the slot is in use 
      * by the group slot.
      */
     public boolean inUse = false;
+    
+    /**
+     * This is the device id that it is used on the server.
+     */
+    public Integer serverLockSlotId;
     
     public void generateNewCode(int codeSize) {
         previouseCode = code;

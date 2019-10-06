@@ -204,39 +204,36 @@ if (sizeof($coupons) == 0) {
                     <span class="pmsbutton" gstype="submit">Save coverage prices</span>
                 </div>
                 <br>
-                
-                <?php if($notificationSettings->enableCoveragePrices) { ?>
 
-                    <span class="pmsbutton editadvanceyieldplan" planid=''>Create advanced price yielding</span>
-                    <div class='outerpriceyieldplan' style='display:none;'>
-                        <?php
-                        $this->includefile("priceyieldpanel");
-                        ?>
-                    </div>
-
+                <span class="pmsbutton editadvanceyieldplan" planid=''>Create advanced price yielding</span>
+                <div class='outerpriceyieldplan' style='display:none;'>
                     <?php
-                    $advanceplane = (array)$this->getApi()->getPmsInvoiceManager()->getAllAdvancePriceYields($this->getSelectedMultilevelDomainName());
-                    foreach($advanceplane as $plan) {
-                        echo "<div>";
-                        echo "<i class='fa fa-trash-o' gsclick='deleteAdvancePricePlan' planid='".$plan->id."' gs_confirm='Are you sure?' style='cursor:pointer;'></i> <i class='fa fa-edit editadvanceyieldplan' style='cursor:pointer;' planid='".$plan->id."'></i> " . date("d.m.Y", strtotime($plan->start)) . " - " . date("d.m.Y", strtotime($plan->end));
-                        echo " ";
-                        if(sizeof((array)$plan->types) == 0) {
-                            echo "for no categories";
-                        } else {
-                            echo "<div>";
-                            echo "&nbsp;&nbsp;";
-                            echo "&nbsp;&nbsp;";
-                            $names = array();
-                            foreach($plan->types as $typeId) {
-                                $names[] = $types[$typeId]->name;
-                            } 
-                            echo join(",", $names);
-                            echo "</div>";
-                        }
-                       echo "</div>";
-                    }
+                    $this->includefile("priceyieldpanel");
                     ?>
-                <?php } ?>
+                </div>
+
+                <?php
+                $advanceplane = (array)$this->getApi()->getPmsInvoiceManager()->getAllAdvancePriceYields($this->getSelectedMultilevelDomainName());
+                foreach($advanceplane as $plan) {
+                    echo "<div>";
+                    echo "<i class='fa fa-trash-o' gsclick='deleteAdvancePricePlan' planid='".$plan->id."' gs_confirm='Are you sure?' style='cursor:pointer;'></i> <i class='fa fa-edit editadvanceyieldplan' style='cursor:pointer;' planid='".$plan->id."'></i> " . date("d.m.Y", strtotime($plan->start)) . " - " . date("d.m.Y", strtotime($plan->end));
+                    echo " ";
+                    if(sizeof((array)$plan->types) == 0) {
+                        echo "for no categories";
+                    } else {
+                        echo "<div>";
+                        echo "&nbsp;&nbsp;";
+                        echo "&nbsp;&nbsp;";
+                        $names = array();
+                        foreach($plan->types as $typeId) {
+                            $names[] = $types[$typeId]->name;
+                        } 
+                        echo join(",", $names);
+                        echo "</div>";
+                    }
+                   echo "</div>";
+                }
+                ?>
             </div>
         </td>
     </tr>

@@ -22,12 +22,19 @@ foreach ($_POST['data'] as $key => $value) {
     }
 }
 
-$users = $this->getApi()->getUserManager()->findUsers($searchvalue);
+$users = (array)$this->getApi()->getUserManager()->findUsers($searchvalue);
 $callback = 'gs_callback="app.GetShopQuickUser.userChanged"';
 $extraArgs = $this->getExtraArgs();
 if(isset($extraArgs['invokeJavascriptFunctionAfterActions'])) {
     $callback = 'gs_callback="'.$extraArgs['invokeJavascriptFunctionAfterActions'].'"';
 }
+
+if(sizeof($users) == 0) {
+    return;
+}
+
+echo "<h1>Search result</h1>";
+
 foreach ($users as $user) {
     ?>
     <div class="row usersearchrow">

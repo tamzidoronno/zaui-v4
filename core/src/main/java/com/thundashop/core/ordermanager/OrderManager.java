@@ -774,7 +774,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         } catch (GetShopBeanException ex) {
             // Nothing to do, this happens when the order are removed by a named bean manager.
             // In that case the manager should handle the order itself.
-        }      
+        }
     }
     
     public void markOrderForAutoSending(String orderId) {

@@ -530,7 +530,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             Date end = cal.getTime();
             PmsPricing prices = pmsManager.getPrices(now, end);
             Calendar calStart = Calendar.getInstance();
-            calStart.set(Calendar.HOUR_OF_DAY, 15);
+            calStart.setTime(pmsManager.getConfigurationSecure().getDefaultStart(now));
             
             HashMap<String, Double> pricesForType = prices.dailyPrices.get(rdata.bookingEngineTypeId);
             if(pricesForType == null) {

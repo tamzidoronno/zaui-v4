@@ -62,19 +62,17 @@ if(isset($extraArgs['invokeJavascriptFunctionAfterActions'])) {
                 <input gs_callback="app.GetShopQuickUser.userSearchResult" gsname='searchvalue' gstype="submitenter" class="gsniceinput1 searchguestsfield" value="" placeholder="<? echo $this->__f("Name / Phone / Email / etc"); ?>"/> 
                 <div gs_callback="app.GetShopQuickUser.userSearchResult" gstype="submit" class="shop_button"><i class="fa fa-search"></i> <? echo $this->__f("Search"); ?></div>
             </div>
-            
-            <div class="searchresult">
-                <? 
-                $this->includefile("searchusers");
-                ?>
-            </div>
-            
             <br/>
             <?php if(!isset($this->extraArgs['avoidCloseButton']) || $this->extraArgs['avoidCloseButton'] != "true") { ?>
                 <div class="shop_button show_change_user"><i class="fa fa-close"></i> <? echo $this->__f("Close"); ?></div>
             <?php } ?>
         </div>
-       
+        <div class="searchresult">
+        <? 
+        $this->includefile("searchusers");
+        ?>
+        </div>
+
         <div class='tab_content' tab_content="company">
             <div gstype="form" method="createCompany" callback="app.GetShopQuickUser.userCreated" gs_callback="app.GetShopQuickUser.userCreated">
                 <div class="warning">

@@ -10714,11 +10714,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
-    public void setBestCouponChoiceForCurrentBooking() throws Exception {
+    public String setBestCouponChoiceForCurrentBooking() throws Exception {
         PmsBooking currentbooking = getCurrentBooking();
         PmsUserDiscount discount = pmsInvoiceManager.getDiscountsForUser(currentbooking.userId);
         currentbooking.couponCode = discount.attachedDiscountCode;
         setBookingByAdmin(currentbooking, true);
+        return discount.attachedDiscountCode;
     }
 
     @Override

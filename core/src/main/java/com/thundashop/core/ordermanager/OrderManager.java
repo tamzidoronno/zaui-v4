@@ -760,6 +760,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Override
     public void saveOrder(Order order) throws ErrorException {
+        
+        if(order.isPaid() && !order.isNotified() && order.isPaymentLinkType()) {
+            order.markAsAutosent();
+            markOrderForAutoSending(order.id);
+        }
+        
         validateOrder(order);
         saveOrderInternal(order);
         
@@ -768,7 +774,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         } catch (GetShopBeanException ex) {
             // Nothing to do, this happens when the order are removed by a named bean manager.
             // In that case the manager should handle the order itself.
-        }      
+        }
     }
     
     public void markOrderForAutoSending(String orderId) {

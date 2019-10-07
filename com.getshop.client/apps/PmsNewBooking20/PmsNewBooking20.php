@@ -166,7 +166,14 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
     }
     
     public function changeUser($user) {
-        
+        $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+        $booking->userId = $user->id;
+        $this->getApi()->getPmsManager()->setBooking($this->getSelectedMultilevelDomainName(), $booking);
+        $code = $this->getApi()->getPmsManager()->setBestCouponChoiceForCurrentBooking($this->getSelectedMultilevelDomainName());
+        echo "<script>";
+        echo "$('.couponsummary').html('');";
+        echo "$('.addcouponcode').val('" . $code . "');";
+        echo "</script>";
     }
     
     public function unlockroom() {
@@ -240,6 +247,7 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
         $booking->userId = $_POST['data']['userid'];
         $this->getApi()->getPmsManager()->setBooking($this->getSelectedMultilevelDomainName(), $booking);
+        $this->getApi()->getPmsManager()->setBestCouponChoiceForCurrentBooking($this->getSelectedMultilevelDomainName());
     }
 
     public function translateDiscountType($type) {
@@ -584,11 +592,13 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
      * @param \core_pmsmanager_PmsBooking $booking
      */
     public function printCouponCodes($booking) {
-        $couponcodes = $this->getApi()->getCartManager()->getCoupons();
-        foreach($couponcodes as $code) {
+        $couponcodesfetched = $this->getApi()->getCartManager()->getCoupons();
+        
+        foreach($couponcodesfetched as $code) {
             $couponcodes[$code->code] = $code;
         }
         $discounts = $this->getApi()->getPmsInvoiceManager()->getDiscountsForUser($this->getSelectedMultilevelDomainName(), $booking->userId);
+        
         
         $alreadyAdded = array();
         if($discounts->attachedDiscountCode || sizeof((array)$discounts->secondaryAttachedDiscountCodes) > 0) {

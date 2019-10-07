@@ -43,9 +43,6 @@ $closedtext = $this->checkIfClosedPeriodes($start,$end);
     
     <?php
     foreach ($test->rooms as $item) {
-//        echo "<pre style='text-align:left;'>";
-//        print_r($item);
-//        echo "</pre>";
         $count = $size = $this->getNumberOfAvailableForType($item->id, $current, $start, $end);
         $total += $count;
         ?>
@@ -56,7 +53,7 @@ $closedtext = $this->checkIfClosedPeriodes($start,$end);
                     <select class="gsniceselect1 guestcounter" gsname="<?php echo $item->id; ?>_guestcounter">
                         <?php
                         for($i = 1; $i <= $item->maxGuests; $i++) {
-                            echo "<option value='$i'>$i</option>";
+                            echo "<option value='$i' price='".$item->pricesByGuests->{$i}."'>$i</option>";
                         }
                         ?>
                     </select>

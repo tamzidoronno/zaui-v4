@@ -800,7 +800,7 @@ public class PmsManagerProcessor {
                     payedfor = true;
                 }
                 
-                if(booking.getUnpaidAmount() > 0.0) {
+                if(booking.getUnpaidAmount() > 0.0 && !booking.createOrderAfterStay) {
                     payedfor = false;
                 }
                 

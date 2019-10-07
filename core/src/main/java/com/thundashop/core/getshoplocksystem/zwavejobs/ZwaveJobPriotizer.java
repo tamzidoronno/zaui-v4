@@ -31,6 +31,11 @@ public class ZwaveJobPriotizer {
             return l1.getJobSize().compareTo(l2.getJobSize());
         });
         
+        for (LocstarLock lock : locks) {
+            if (lock.shouldPrioty())
+                return lock;
+        }
+        
         List<LocstarLock> toUpdate = locks.stream()
                 .filter(l -> l.canUpdate())
                 .filter(l -> l.getJobSize() > 0)

@@ -175,4 +175,17 @@ public class GiftCardManager extends ManagerBase implements IGiftCardManager {
         giftCard.addOrder(order.id, amount);
         saveObject(giftCard);
     }
+
+    @Override
+    public void deleteGiftCard(String id) {
+        GiftCard card = getGiftCard(id);
+        cards.remove(id);
+        deleteObject(card);
+    }
+
+    @Override
+    public void saveGiftCard(GiftCard card) {
+        cards.put(card.id, card);
+        saveObject(card);
+    }
 }

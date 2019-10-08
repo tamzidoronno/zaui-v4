@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.giftcard;
 
+import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.GetShopApi;
 import java.util.List;
@@ -18,6 +19,12 @@ public interface IGiftCardManager {
     
     @Editor
     public List<GiftCard> getAllCards();
+    
+    @Administrator
+    public void deleteGiftCard(String id);
+    
+    @Administrator
+    public void saveGiftCard(GiftCard card);
 
     public GiftCard getGiftCard(String giftCardCode);
 }

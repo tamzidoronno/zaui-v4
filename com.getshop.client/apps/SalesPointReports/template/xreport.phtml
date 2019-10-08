@@ -23,6 +23,11 @@ if ($cashPointName) {
     echo "</div>";
 }
 
+if(sizeof($report->orderIds) > 10000) {
+    echo "Maximum number of orders exceeded.";
+    return;
+}
+
 
 $orders = $this->getApi()->getOrderManager()->getOrders($report->orderIds, 1, 99999);
 $totalForPaymentMethods = array();

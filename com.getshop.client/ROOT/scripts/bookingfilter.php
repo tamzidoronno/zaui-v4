@@ -25,7 +25,7 @@ $data = $factory->getApi()->getPmsReportManager()->getFilteredBookings("default"
 $formater = new ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBookingColumnFormatters(null);
 $channels = $formater->getChannels();
 
-if(isset($_GET['showtypes'])) {
+if(isset($_GET['showhtml'])) {
     echo "<table width='100%'>";
     echo "<tr>";
     echo "<th align='left'>Id</th>";

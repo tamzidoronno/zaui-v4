@@ -10791,4 +10791,22 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 });
     }
 
+    @Override
+    public boolean updatePrices(List<PmsPricingDayObject> prices) {
+        try {
+            PmsPricing pricestoupdate = priceMap.get("default");
+            System.out.println(pricestoupdate);
+            
+            for(PmsPricingDayObject price : prices) {
+                pricestoupdate.dailyPrices.get(price.typeId).put(price.date, price.newPrice);
+            }
+            
+            wubookManager.updatePrices();
+            return true;
+        }catch(Exception e) {
+            logPrintException(e);
+        }
+        return false;
+    }
+
 }

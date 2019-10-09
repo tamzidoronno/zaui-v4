@@ -447,6 +447,9 @@ public interface IPmsManager {
     @Administrator
     public PmsActivityLines getActivitiesEntries(Date start, Date end);
 
+    @Administrator
+    public boolean updatePrices(List<PmsPricingDayObject> prices);
+    
     public void freezeSubscription(String pmsBookingRoomId, Date freezeUntil);
     
     public PmsPricing getPrices(Date start, Date end); 

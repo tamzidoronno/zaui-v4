@@ -204,13 +204,14 @@ if (sizeof($coupons) == 0) {
                     <span class="pmsbutton" gstype="submit">Save coverage prices</span>
                 </div>
                 <br>
+
                 <span class="pmsbutton editadvanceyieldplan" planid=''>Create advanced price yielding</span>
                 <div class='outerpriceyieldplan' style='display:none;'>
                     <?php
                     $this->includefile("priceyieldpanel");
                     ?>
                 </div>
-                
+
                 <?php
                 $advanceplane = (array)$this->getApi()->getPmsInvoiceManager()->getAllAdvancePriceYields($this->getSelectedMultilevelDomainName());
                 foreach($advanceplane as $plan) {

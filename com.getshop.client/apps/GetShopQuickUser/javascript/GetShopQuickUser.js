@@ -7,6 +7,17 @@ app.GetShopQuickUser = {
         $(document).on('click', '.GetShopQuickUser .searchbox .tab', this.changeTab);
         $(document).on('click','.GetShopQuickUser .searchbrregbutton', app.GetShopQuickUser.showBrregSearch);
         $(document).on('click','.GetShopQuickUser .brregsearchresultrow', app.GetShopQuickUser.selectBrregResult);
+        $(document).on('keyup','.GetShopQuickUser .newuserinputfield', app.GetShopQuickUser.searchExistingCustomer);
+    },
+    
+    searchExistingCustomer : function() {
+        var args = thundashop.framework.createGsArgs($("[method='searchForUsers']"));
+        args.searchvalue = $(this).val();
+        
+        var event = thundashop.Ajax.createEvent('','searchForUsers', $(this),args);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.GetShopQuickUser .change_user_form .searchresult').html(res);
+        });
     },
     editUserSaveButton : function() {
         var form = $(this).closest("[gstype='form']");
@@ -129,9 +140,13 @@ app.GetShopQuickUser = {
         $('.GetShopQuickUser .edit_details_of_user').html(result);
         $('.GetShopQuickUser .edit_details_directprint').html(result);
         
-        var name = $(result).find('.fullName').val();
-        $('.GetShopQuickUser span.booked_for').html(name);
-        $('.GetShopQuickUser').closest('.datarow').find('.booked_for').html(name);
+        try {
+            var name = $(result).find('.fullName').val();
+            $('.GetShopQuickUser span.booked_for').html(name);
+            $('.GetShopQuickUser').closest('.datarow').find('.booked_for').html(name);
+        }catch(e) {
+            
+        }
         
     },
   

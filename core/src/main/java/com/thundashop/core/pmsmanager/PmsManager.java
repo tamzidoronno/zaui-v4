@@ -1087,6 +1087,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             logPrintException(e);
         }
 
+        try {
+            calculateUnsettledAmountForRooms(booking);
+        }catch(Exception e) {
+            logPrintException(e);
+        }
+        
         saveObject(booking);
         bookingUpdated(booking.id, "modified", null);
     }
@@ -2574,7 +2580,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         user.cellPhone = result.get("user_cellPhone");
         user.emailAddress = result.get("user_emailAddress");
         user.relationship = result.get("user_relationship");
-        if (result.get("prefix") != null) {
+        if (result.get("user_prefix") != null) {
             user.prefix = result.get("user_prefix");
         }
 
@@ -4380,6 +4386,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         checkSecurity(booking);
         PmsBookingAddonItem addonConfig = configuration.addonConfiguration.get(type);
 
+        Product validproduct = productManager.getProduct(addonConfig.productId);
+        if(validproduct == null) {
+            validproduct = productManager.getDeletedProduct(addonConfig.productId);
+            validproduct.deleted = null;
+            productManager.saveProduct(validproduct);
+        }
         if (!remove) {
             PmsBookingRooms room = booking.getRoom(roomId);
             if (room != null && !addonConfig.isValidForPeriode(room.date.start, room.date.end, booking.rowCreatedDate)) {
@@ -6136,6 +6148,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBookingRooms room = booking.getRoom(pmsRoomId);
         room.priceMatrix = new LinkedHashMap();
         pmsInvoiceManager.updatePriceMatrix(booking, room, booking.priceType);
+        saveBooking(booking);
     }
 
     private List<PmsBooking> filterByUnpaid(List<PmsBooking> finalized, PmsBookingFilter filter) {
@@ -6271,7 +6284,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
-    public void addCartItemToRoom(CartItem item, String pmsBookingRoomId, String addedBy) {
+    public String addCartItemToRoom(CartItem item, String pmsBookingRoomId, String addedBy) {
 
         Product product = item.getProduct();
 
@@ -6280,6 +6293,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         addon.count = item.getCount();
         addon.price = product.price;
         addon.isSingle = true;
+        addon.isUniqueOnOrder = true;        
         addon.priceExTaxes = product.priceExTaxes;
         addon.variations = product.variationCombinations;
         addon.date = item.getStartingDate();
@@ -6290,6 +6304,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         addon.description = product.description;
 
         addAddonOnRoom(pmsBookingRoomId, addon);
+        
+        return addon.addonId;
     }
 
     public void addAddonOnRoom(String pmsBookingRoomId, PmsBookingAddonItem addon) {
@@ -8619,7 +8635,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private List<PmsRoomSimple> removeByCustomersCodesAndAddons(List<PmsRoomSimple> res, PmsBookingFilter filter) {
         List<PmsRoomSimple> finalList = new ArrayList();
         for (PmsRoomSimple r : res) {
-            PmsBooking booking = getBooking(r.bookingId);
+            PmsBooking booking = getBookingInternal(r.bookingId, false);
             if (!filter.customers.isEmpty() && !filter.customers.contains(r.userId)) {
                 continue;
             }
@@ -9070,7 +9086,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         if(title == null || title.isEmpty() && key.startsWith("sendreciept")) {
-            return "reciept for your stay";
+            return "receipt for your stay";
         }
         if(title == null || title.isEmpty() && key.startsWith("sendinvoice")) {
             return "invoice for your stay";
@@ -10698,11 +10714,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
-    public void setBestCouponChoiceForCurrentBooking() throws Exception {
+    public String setBestCouponChoiceForCurrentBooking() throws Exception {
         PmsBooking currentbooking = getCurrentBooking();
         PmsUserDiscount discount = pmsInvoiceManager.getDiscountsForUser(currentbooking.userId);
         currentbooking.couponCode = discount.attachedDiscountCode;
         setBookingByAdmin(currentbooking, true);
+        return discount.attachedDiscountCode;
     }
 
     @Override
@@ -10753,6 +10770,43 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         return true;
+    }
+
+    @Override
+    public void togglePrioritizedRoom(String roomId) {
+        PmsBooking booking = getBookingFromRoom(roomId);
+        PmsBookingRooms room = booking.getRoom(roomId);
+        room.prioritizeInWaitingList = !room.prioritizeInWaitingList;
+        saveBooking(booking);
+        logEntry("Room has been prioritized", booking.id, room.bookingItemId);
+    }
+
+    public void setOverrideNameOfAddon(String roomId, String addonId, String overrideProductName) {
+        PmsBooking booking = getBookingFromRoom(roomId);
+        booking.getRoom(roomId).addons
+                .stream()
+                .filter(o -> o.addonId != null && o.addonId.equals(addonId))
+                .forEach(o -> {
+                    o.setName(overrideProductName);
+                });
+    }
+
+    @Override
+    public boolean updatePrices(List<PmsPricingDayObject> prices) {
+        try {
+            PmsPricing pricestoupdate = priceMap.get("default");
+            System.out.println(pricestoupdate);
+            
+            for(PmsPricingDayObject price : prices) {
+                pricestoupdate.dailyPrices.get(price.typeId).put(price.date, price.newPrice);
+            }
+            
+            wubookManager.updatePrices();
+            return true;
+        }catch(Exception e) {
+            logPrintException(e);
+        }
+        return false;
     }
 
 }

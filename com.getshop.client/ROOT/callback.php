@@ -54,7 +54,6 @@ foreach ($cartManager->getPaymentApplications() as $paymentApp) {
     }
 }
 
-
 if(isset($_GET['callback_method'])) {
     call_user_method($_GET['callback_method'], $application);
 } else {

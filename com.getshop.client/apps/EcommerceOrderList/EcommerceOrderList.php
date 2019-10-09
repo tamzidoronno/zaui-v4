@@ -126,7 +126,7 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
             $text .= "<i class='fa fa-trash-o dontExpand deleteOrder' style='cursor:pointeR;' orderid='".$order->id."' title='Delete order'></i>";
         }
         $text .= "<i class='fa fa-download dontExpand' title='Download order' style='cursor:pointeR;' onclick='window.open(\"/scripts/downloadInvoice.php?orderId=".$order->id."&incrementalOrderId=".$order->incrementOrderId."\");'></i>";
-        $text .= "<i class='fa fa-forward dontExpand sendemail' roomid='".$roomid."' orderid='".$order->id."' title='Send order / reciept' style='cursor:pointer;'></i><span class='sendpaymentlinkwindow'></span> ";
+        $text .= "<i class='fa fa-forward dontExpand sendemail' roomid='".$roomid."' orderid='".$order->id."' title='Send order / receipt' style='cursor:pointer;'></i><span class='sendpaymentlinkwindow'></span> ";
         if($instance->hasPaymentLink()) {
             $text .= "<i class='fa fa-arrow-right dontExpand sendpaymentlink' roomid='".$roomid."' callback='".$this->paymentLinkCallback."' orderid='".$order->id."' title='Send payment link' style='cursor:pointer;'></i> ";
         }

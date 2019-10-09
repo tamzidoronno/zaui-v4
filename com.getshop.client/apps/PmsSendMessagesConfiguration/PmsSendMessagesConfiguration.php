@@ -12,6 +12,11 @@ class PmsSendMessagesConfiguration extends \WebshopApplication implements \Appli
         $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $config);
     }
     
+    public function toggleAvoidSendingConfirmationToOTA() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        $config->avoidSendingBookingConfigurationsToOTA = !$config->avoidSendingBookingConfigurationsToOTA;
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $config);
+    }
     
     public function getName() {
         return "PmsSendMessagesConfiguration";
@@ -538,7 +543,7 @@ class PmsSendMessagesConfiguration extends \WebshopApplication implements \Appli
         $notifications['room_ended_24_hours_'.$langauge] = "Booking ended 1 day ago";
         $notifications['room_ended_48_hours_'.$langauge] = "Booking ended two days ago";
         $notifications['room_cancelled_'.$langauge] = "Room has been cancelled (ignored if booked by ota)";
-        $notifications['sendreciept_'.$langauge] = "When sending a reciept";
+        $notifications['sendreciept_'.$langauge] = "When sending a receipt";
         $notifications['sendinvoice_'.$langauge] = "When sending an invoice";
         $notifications['warnfirstordernotpaid_'.$langauge] = "If order has not been paid for.";
         if($notificationSettings->runAutoPayWithCard) {

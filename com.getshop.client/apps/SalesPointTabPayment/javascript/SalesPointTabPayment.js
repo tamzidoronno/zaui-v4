@@ -76,7 +76,7 @@ app.SalesPointTabPayment = {
         var remainingOnGiftCard = $('.SalesPointTabPayment .giftcardvalue').attr('value');
         total = parseInt(total, 10);
         remainingOnGiftCard = parseInt(remainingOnGiftCard, 10);
-        var enough = remainingOnGiftCard > total;
+        var enough = remainingOnGiftCard >= total;
         
         if (!enough) {
             alert("Not enough credit on given gift card");

@@ -26,8 +26,11 @@ $this->setLock($lock);
     <div class='slots'>
         <h2>Codes and slots</h2>
         <?
-
         foreach ($lock->userSlots as $slot) {
+            if (($lock->typeOfLock == "GetShopLock" || $lock->typeOfLock == "LockBoxLock") && !$slot->inUse) {
+                continue;
+            }
+            
             /* @var $slot \core_getshoplocksystem_UserSlot */
             $this->setSlot($slot);
             $this->includefile('slotview');

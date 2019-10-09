@@ -50,6 +50,9 @@ public interface IPmsManager {
     public void simpleCompleteCurrentBooking();
     
     @Administrator
+    public void togglePrioritizedRoom(String roomId);
+    
+    @Administrator
     public List<PmsRoomSimple> getAllRoomsOnOrder(String orderId);
     
     @Administrator
@@ -228,7 +231,7 @@ public interface IPmsManager {
     public String setBookingItemAndDate(String roomId, String itemId, boolean split, Date start, Date end);
     
     @Administrator
-    public void addCartItemToRoom(CartItem item, String pmsBookingRoomId, String addedBy);
+    public String addCartItemToRoom(CartItem item, String pmsBookingRoomId, String addedBy);
     
     @Administrator
     public String setNewRoomType(String roomId, String bookingId, String newType);
@@ -444,6 +447,9 @@ public interface IPmsManager {
     @Administrator
     public PmsActivityLines getActivitiesEntries(Date start, Date end);
 
+    @Administrator
+    public boolean updatePrices(List<PmsPricingDayObject> prices);
+    
     public void freezeSubscription(String pmsBookingRoomId, Date freezeUntil);
     
     public PmsPricing getPrices(Date start, Date end); 
@@ -664,6 +670,6 @@ public interface IPmsManager {
     @Administrator
     public boolean moveRoomToBooking(String roomId, String bookingId);
     
-    public void setBestCouponChoiceForCurrentBooking() throws Exception;
+    public String setBestCouponChoiceForCurrentBooking() throws Exception;
     
 }

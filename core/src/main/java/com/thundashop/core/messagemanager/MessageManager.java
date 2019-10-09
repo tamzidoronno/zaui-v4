@@ -206,7 +206,7 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         if (subject != null)
             title = subject;
         
-        String message = "Attached you will find your reciept for the payment for order id: " + order.incrementOrderId + ", amount: " + order.cart.getTotal(false);
+        String message = "Attached you will find your receipt for the payment for order id: " + order.incrementOrderId + ", amount: " + order.cart.getTotal(false);
         
         if (body != null)
             message = body;

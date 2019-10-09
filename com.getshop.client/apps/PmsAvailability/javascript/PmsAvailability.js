@@ -11,9 +11,24 @@ app.PmsAvailability = {
         $(document).on('click', '.PmsAvailability .markRoomClean', this.markRoomClean);
         $(document).on('click', '.PmsAvailability .displaywatinglist', this.showWaitinglistList);
         $(document).on('click', '.PmsAvailability .otherevents', this.loadEvent);
+        $(document).on('click', '.PmsAvailability .prioritizeRoom', this.prioritizeRoom);
 //        $(document).on('click', '.PmsAvailability .contains_booking', this.showMenuBox);
     },
-    
+    prioritizeRoom : function() {
+        var row = $(this).closest('tr');
+        var event = thundashop.Ajax.createEvent('','prioritizeroom',$(this),{
+            "roomid" : $(this).attr('roomid')
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            if(row.hasClass('prioritized')) {
+                row.removeClass('prioritized');
+                row.find('.progressState').html('waiting');
+            } else {
+                row.addClass('prioritized');
+                row.find('.progressState').html('prioritized');
+            }
+        });
+    },
     loadEvent : function() {
         var sourceid = $(this).attr('sourceid');
         var event = thundashop.Ajax.createEvent('','loadEventData', $(this), {

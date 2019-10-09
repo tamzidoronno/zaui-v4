@@ -73,7 +73,7 @@ if($order->status != 7) {
     if($mesage && $mesage->content) {
         $msg = $mesage->content;
     } else {
-        $msg = "Reciept for stay";
+        $msg = "Receipt for stay";
     }
     $subject = $mesage && $mesage->title ? $mesage->title : "";
 }
@@ -128,7 +128,7 @@ foreach($guests as $guest) {
 if($order->status != 7) {
     $sendText = "Send invoice";
 } else {
-    $sendText = "Send reciept";
+    $sendText = "Send receipt";
 }
 
 echo "</select><br>";

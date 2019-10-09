@@ -38,5 +38,11 @@ class SalesPointCashPoints extends \MarketingApplication implements \Application
         
         $this->getApi()->getPosManager()->saveCashPoint($cashPoint);
     }
+    
+    public function activateExternal() {
+        echo "OK";
+        $this->getApi()->getPosManager()->toggleExternalAccess($_POST['data']['id']);
+        
+    }
 }
 ?>

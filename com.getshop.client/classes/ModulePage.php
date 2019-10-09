@@ -338,6 +338,7 @@ class ModulePage {
         $menu = new \ModulePageMenu("support");
         $menu->entries[] = new ModulePageMenuItem("New", "home", "gsicon-gs-new");
         $menu->entries[] = new ModulePageMenuItem("Tickets", "getshopdevcenter", "gsicon-list");
+        $menu->entries[] = new ModulePageMenuItem("Reports", "supportreport", "fa-flag");
         $menu->entries[] = new ModulePageMenuItem("Setup", "systemsetup", "fa-bullhorn");
         $menu->entries[] = new ModulePageMenuItem("Manuals", "getshopusermanual", "fa-support");
         return $menu;

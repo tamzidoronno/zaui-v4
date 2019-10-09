@@ -61,6 +61,8 @@ public class PmsManagerProcessor {
     
     public void hourlyProcessor() {
         start = System.currentTimeMillis();
+        try { autoCreateInvoice(); }catch(Exception e) { manager.logPrintException(e); }
+        checkTimer("Autocreating invoices");
         try { processAutoExtend(); }catch(Exception e) { manager.logPrintException(e); }
         checkTimer("processAutoExtend");
         try { processIntervalCleaning(false); }catch(Exception e) { manager.logPrintException(e); }
@@ -289,6 +291,11 @@ public class PmsManagerProcessor {
         
         manager.gsTiming("\t Before looping " + bookings.size() + " bookings");
         for (PmsBooking booking : bookings) {
+            
+            if(booking.id.equals("e1d7b9c9-e1ff-4e6f-8709-45574cd9de65")) {
+                System.out.println("dfasfasf");
+            }
+            
             if(!booking.confirmed) {
                 continue;
             }
@@ -723,6 +730,10 @@ public class PmsManagerProcessor {
                 continue;
             }
             
+            if(booking.isOta() && config.avoidSendingBookingConfigurationsToOTA) {
+                continue;
+            }
+            
             if(booking.isEndedOverTwoMonthsAgo()) {
                 //Ended bookings are not relevant anymore.
                 continue;
@@ -736,14 +747,6 @@ public class PmsManagerProcessor {
                 continue;
             }
             
-            if(config.getRequirePayments() && booking.createOrderAfterStay && booking.isEnded()) {
-                NewOrderFilter filter = new NewOrderFilter();
-                filter.createNewOrder = true;
-                filter.endInvoiceAt = booking.getEndDate();
-                manager.pmsInvoiceManager.createOrder(booking.id, filter);
-                booking.orderCreatedAfterStay = new Date();
-                manager.saveBooking(booking);
-            }
             boolean needSaving = false;
             boolean payedfor = true; 
             boolean firstDate = true;
@@ -802,7 +805,7 @@ public class PmsManagerProcessor {
                     payedfor = true;
                 }
                 
-                if(booking.getUnpaidAmount() > 0.0) {
+                if(booking.getUnpaidAmount() > 0.0 && !booking.createOrderAfterStay) {
                     payedfor = false;
                 }
                 
@@ -1336,6 +1339,18 @@ public class PmsManagerProcessor {
                 });
     }
 
-
+    private void autoCreateInvoice() {
+        List<PmsBooking> bookings = getAllConfirmedNotDeleted(true);
+        for(PmsBooking booking : bookings) {
+            if(booking.isEnded() && booking.createOrderAfterStay) {
+                if(booking.getUnpaidAmount() > 0.0) {
+                    User usr = manager.userManager.getUserById(booking.userId);
+                    if(usr.preferredPaymentType != null && usr.preferredPaymentType.equals("70ace3f0-3981-11e3-aa6e-0800200c9a66") || booking.isInvoice()) {
+                        manager.pmsInvoiceManager.autoCreateOrderForBookingAndRoom(booking.id, "70ace3f0-3981-11e3-aa6e-0800200c9a66");
+                    }
+                }
+            }
+        }
+    }
 
 }

@@ -17,6 +17,7 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.gsd.GdsManager;
 import com.thundashop.core.gsd.GetShopDevice;
 import com.thundashop.core.gsd.RoomReceipt;
+import com.thundashop.core.messagemanager.SmsHandlerAbstract;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.paymentterminalmanager.PaymentTerminalManager;
@@ -825,11 +826,11 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 addToLog = true;
             }
             if(storeManager.isProductMode()) {
-                order.payment.transactionLog.put(System.currentTimeMillis(), "Print reciept (" + url + ")");
+                order.payment.transactionLog.put(System.currentTimeMillis(), "Print receipt (" + url + ")");
                 webManager.htmlPostThreaded(url, text, false, "UTF-8");
             } else {
-                order.payment.transactionLog.put(System.currentTimeMillis(), "Print reciept (dev mode)");
-                logPrint("Printing reciept to url: " + url);
+                order.payment.transactionLog.put(System.currentTimeMillis(), "Print receipt (dev mode)");
+                logPrint("Printing receipt to url: " + url);
                 logPrint(text);
             }
             orderManager.saveOrder(order);
@@ -937,6 +938,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         userData.setUser(usr);
         res.userData = userData;
         
+        calculateCountryFromPhonePrefix(booking);
         
         return res;
     }
@@ -1188,6 +1190,8 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         booking.userId = user.id;
         
         pmsManager.saveBooking(booking);
+        
+        calculateCountryFromPhonePrefix(booking);
         
         BookingResult res = new BookingResult();
         res.success = 1;
@@ -1663,5 +1667,32 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             ipaddr = app.getSetting("ipaddr" + terminalId);
         }
         return ipaddr;
+    }
+
+    private void calculateCountryFromPhonePrefix(PmsBooking booking) {
+        try {
+            if(booking == null || booking.userId == null) {
+                return;
+            }
+            User usr = userManager.getUserById(booking.userId);
+            if(usr == null) {
+                return;
+            }
+
+            if(booking.countryCode == null || booking.countryCode.isEmpty()) {
+                String code = SmsHandlerAbstract.getCountryCodeOfPhonePrefix(usr.prefix);
+                booking.countryCode = code;
+                pmsManager.saveBooking(booking);
+            }
+        }catch(Exception e) {
+            logPrintException(e);
+        }
+    }
+
+    @Override
+    public void simpleCompleteCurrentBooking() {
+        PmsBooking booking = pmsManager.getCurrentBooking();
+        pmsManager.simpleCompleteCurrentBooking();
+        calculateCountryFromPhonePrefix(booking);
     }
 }

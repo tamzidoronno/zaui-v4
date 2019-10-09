@@ -19,6 +19,10 @@ class PmsAvailability extends \MarketingApplication implements \Application {
         $this->includefile("eventseditarea");
     }
 
+    public function prioritizeroom() {
+        $roomId = $_POST['data']['roomid'];
+        $this->getApi()->getPmsManager()->togglePrioritizedRoom($this->getSelectedMultilevelDomainName(), $roomId);
+    }
     
     public function updateevent() {
         $event = $this->getApi()->getPmsEventManager()->getEvent($this->getSelectedMultilevelDomainName(), $_POST['data']['id']);

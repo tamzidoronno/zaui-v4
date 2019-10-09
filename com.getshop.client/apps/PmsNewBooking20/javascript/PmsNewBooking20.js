@@ -22,8 +22,20 @@ app.PmsNewBooking20 = {
         $(document).on('click','.PmsNewBooking20 .attachguesttoevent', app.PmsNewBooking20.attachGuestToConference);
         $(document).on('change','.PmsNewBooking20 .addcouponcode', app.PmsNewBooking20.addCouponCode);
         $(document).on('change','.PmsNewBooking20 .addsource', app.PmsNewBooking20.addSource);
+        $(document).on('change','.PmsNewBooking20 .guestcounter', app.PmsNewBooking20.updateGuestPrice);
+        $(document).on('change','.PmsNewBooking20 .addcouponcodecheckavail', app.PmsNewBooking20.changedDiscountCode);
         $(document).on('click','.PmsNewBooking20 .increasedecreasecount', app.PmsNewBooking20.incraseDecreaseCounter);
         $(document).on('click','.PmsNewBooking20 .resetBooking', app.PmsNewBooking20.resetBooking);
+    },
+    changedDiscountCode : function() {
+        if($('.searchbookingrow').is(':visible')) {
+            $('.searchforfreeroomsbutton').click();
+        }
+    },
+    updateGuestPrice : function() {
+        var row = $(this).closest('.searchbookingrow');
+        var optionprice = $('option:selected', this).attr('price');
+        row.find('.price').text(optionprice);
     },
     addCouponCode : function() {
         var event = thundashop.Ajax.createEvent('','setCouponCode',$(this), {
@@ -312,6 +324,9 @@ app.PmsNewBooking20 = {
         }
         if(goto === "addtoexisting") {
             $('.searchforbookinginput').focus();
+        }
+        if(goto === "newcustomer") {
+            $('[tab="newuser"]').click();
         }
     }
 };

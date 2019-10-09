@@ -21,19 +21,24 @@ echo "Connected and ready to restore" > /storage/restoring.txt
 echo "Connected" > /storage/restoring.txt
 `wget "https://system.getshop.com/scripts/systembackupstatus.php?id=$id&recoverymessage=$id is connected."`
 `wget "https://system.getshop.com/scripts/systembackupstatus.php?id=$id&recoverymessage=Downloading backup..."`
+rm /backup.tar.gz
 `wget -O /backup.tar.gz "https://system.getshop.com/scripts/systembackupstatus.php?id=$id&downloadfile=true"`
-`wget "https://system.getshop.com/scripts/systembackupstatus.php?id=$id&recoverymessage=Done downloading backup, restoring, this might take a couple of minutes, please wait..."`
-rm -rf /etc
-rm -rf /root
-rm -rf /home
-rm -rf /opt/z-way-server
-rm -rf /storage
-rm -rf /var/spool/cron/crontabs
-cd /
-tar xzvf /backup.tar.gz
-sync
-echo "domain home
+if [[ $(find /backup.tar.gz -type f -size +51200c 2>/dev/null) ]]; then
+    `wget "https://system.getshop.com/scripts/systembackupstatus.php?id=$id&recoverymessage=Done downloading backup, restoring, this might take a couple of minutes, please wait..."`
+    rm -rf /etc
+    rm -rf /root
+    rm -rf /home
+    rm -rf /opt/z-way-server
+    rm -rf /storage
+    rm -rf /var/spool/cron/crontabs
+    cd /
+    tar xzvf /backup.tar.gz
+    sync
+    echo "domain home
 nameserver 8.8.8.8" > /etc/resolv.conf
-rm -rf systembackupstatus.php*
-echo "done" > /storage/setupdone.txt
-`wget "https://system.getshop.com/scripts/systembackupstatus.php?id=$id&recoverymessage=Restore complete, please reboot your server by unplugging its power and connect it back again"`
+    rm -rf systembackupstatus.php*
+    echo "done" > /storage/setupdone.txt
+    `wget "https://system.getshop.com/scripts/systembackupstatus.php?id=$id&recoverymessage=Restore complete, please reboot your server by unplugging its power and connect it back again"`
+else
+    `wget "https://system.getshop.com/scripts/systembackupstatus.php?id=$id&recoverymessage=Unable to download backup, please contact support"`
+fi

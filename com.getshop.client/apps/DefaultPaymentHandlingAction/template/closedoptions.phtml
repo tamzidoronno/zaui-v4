@@ -1,7 +1,7 @@
 <?
 /* @var $this \ns_486009b1_3748_4ab6_aa1b_95a4d5e2d228\DefaultPaymentHandlingAction */
 $order = $this->getOrder();
-$cashpoints = $this->getApi()->getGdsManager()->getDevices();
+$cashpoints = (array)$this->getApi()->getGdsManager()->getDevices();
 $canCreditOrder = !$order->isCreditNote && !count($order->creditOrderId);
 $roomid = $_SESSION['PmsBookingRoomView_current_pmsroom_id'];
 ?>
@@ -33,7 +33,7 @@ $roomid = $_SESSION['PmsBookingRoomView_current_pmsroom_id'];
     if ($canCreditOrder) {
     ?>
 
-        <div class='order_action_button' gs_confirm="Are you sure?" gs_callback='app.DefaultPaymentHandlingAction.refresh' gsclick='creditOrder' orderid='<? echo $order->id; ?>'>
+        <div class='order_action_button' gs_confirm="Are you sure?" gs_callback='app.DefaultPaymentHandlingAction.creditCompleted' gsclick='creditOrder' orderid='<? echo $order->id; ?>'>
             <i class='fa fa-history'></i>
             <? echo $this->__f("Credit order"); ?>
         </div>
@@ -54,7 +54,7 @@ $roomid = $_SESSION['PmsBookingRoomView_current_pmsroom_id'];
             <span class='shop_button sendReceiptWithMessage' style="width:100%; box-sizing: border-box;">Send</span>
         </div>
         <div class='order_action_button' onclick="$('.sendReceiptWithMessageForm').slideDown();">
-            <? echo $this->__f("Send reciept"); ?>
+            <? echo $this->__f("Send receipt"); ?>
             <i class='fa fa-arrow-right'></i>
         </div>
         <?

@@ -2,7 +2,7 @@
 /* @var $this \ns_f5e525cc_f11e_4611_93bb_1afacd9aade5\TicketViewCustomer */
 $ticket = $this->getApi()->getTicketManager()->getTicket($_GET['ticketId']);
 $user = $this->getApi()->getUserManager()->getUserById($ticket->userId);
-$systems = $this->getApi()->getSystemManager()->getSystemsForCompany($user->companyObject->id);
+$systems = $this->getApi()->getSystemManager()->getSystemsForStore($ticket->belongsToStore);
 $currentSystem = null;
 $otherSystemsForCustomer = null;
 

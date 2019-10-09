@@ -21,7 +21,7 @@ echo "<th>Accounting</th>";
 echo "<th>Plink</th>";
 echo "<th>Prices</th>";
 echo "<th>wubook</th>";
-echo "<th>reciept</th>";
+echo "<th>receipt</th>";
 echo "<th>locks</th>";
 echo "<th>training</th>";
 echo "<th>completed</th>";

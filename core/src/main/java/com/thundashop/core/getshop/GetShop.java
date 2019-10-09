@@ -40,6 +40,7 @@ import com.thundashop.core.getshop.data.WebPageData;
 import com.thundashop.core.getshoplocksystem.LockServer;
 import com.thundashop.core.mecamanager.MecaManager;
 import com.thundashop.core.messagemanager.MailFactory;
+import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.socket.GsonUTCDateAdapter;
@@ -112,10 +113,14 @@ public class GetShop extends ManagerBase implements IGetShop {
     @Autowired
     private SupportManager supportManager;
     
+    @Autowired
+    private MessageManager messageManager;
+    
     public HashMap<String, ServerStatusEntry> serverStatusEntries = new HashMap();
     
     private HashMap<String, String> recoveryStatus = new HashMap();
     private HashMap<String, String>  recoveryIps = new HashMap();
+    private HashMap<Long, String>  askedToStartRecovery = new HashMap();
 
     
     @Override
@@ -1170,11 +1175,8 @@ public class GetShop extends ManagerBase implements IGetShop {
         if(!password.equals("543gdnt345345GBFDSGFDSernbdbgfdsg6ty545134134fdsafsVBCXS")) {
             return;
         }
-        System.out.println("Starting recovery for : " + id);
-        System.out.println("Here we need to prepare a backup to download.");
-        recoveryStatus.put(id, "Waiting for unit to establish connection");
+        recoveryStatus.put(id, "Waiting for unit to establish connection, this could take a couple of minutes");
         recoveryIps.put(id, ip);
-        
     }
 
     @Override
@@ -1194,9 +1196,26 @@ public class GetShop extends ManagerBase implements IGetShop {
 
     @Override
     public String canStartRestoringUnit(String id) {
+        askedToStartRecovery.put(System.currentTimeMillis(), id);
         if(recoveryIps.containsKey(id)) {
             return "1";
         }
         return "0";
+    }
+
+    @Override
+    public HashMap<Long, String> getUnitsAskedForUpdate() {
+        return askedToStartRecovery;
+    }
+
+    @Override
+    public List<String> unitsTryingToRecover() {
+        return new ArrayList(recoveryIps.keySet());
+    }
+
+    @Override
+    public void recoveryCompleted(String id) {
+        String msg = "Restore has been completed on ip" + recoveryIps.get(id) + ", please send a new backup pen.";
+        messageManager.sendErrorNotification(msg, null);
     }
 }

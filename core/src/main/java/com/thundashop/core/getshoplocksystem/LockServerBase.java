@@ -9,8 +9,13 @@ import static com.thundashop.core.arx.WrapClient.wrapClient;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ExcludeFromJson;
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
@@ -49,6 +54,8 @@ public abstract class LockServerBase extends DataCommon {
     
     @Administrator
     public String password;
+    
+    private final String USER_AGENT = "Mozilla/5.0";
     
     @Transient
     @ExcludeFromJson
@@ -286,7 +293,7 @@ public abstract class LockServerBase extends DataCommon {
             return "";
         }
         
-        if (slot.code.addedDate.after(time) && (slot.code.removedDate == null || slot.code.removedDate.before(time))) {
+        if ((slot.code.addedDate != null && slot.code.addedDate.after(time)) && (slot.code.removedDate == null || slot.code.removedDate.before(time))) {
             return ""+slot.code.pinCode;
         }
         
@@ -336,5 +343,29 @@ public abstract class LockServerBase extends DataCommon {
     
     public String getAccessToken() {
         return token;
+    }
+    
+    public String getHtml(String url) {
+        try {
+            URL urlObj = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) urlObj.openConnection();
+
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("User-Agent", USER_AGENT);
+
+            BufferedReader responseStream = new BufferedReader(new InputStreamReader(connection.getInputStream()));    
+
+            String responseLine;
+            StringBuilder responseBuffer = new StringBuilder();
+
+            while((responseLine = responseStream.readLine()) != null) {
+                responseBuffer.append(responseLine);
+            }
+
+            return responseBuffer.toString();
+        } catch (Exception ex) {
+//            ex.printStackTrace();
+            return "";
+        }
     }
 }

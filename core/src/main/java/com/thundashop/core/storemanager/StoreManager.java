@@ -825,4 +825,9 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     public String getPrefix() {
         return getMyStore().configuration.defaultPrefix + "";
     }
+
+    @Override
+    public String getSelectedCurrency() {
+        return getCurrency();
+    }
 }

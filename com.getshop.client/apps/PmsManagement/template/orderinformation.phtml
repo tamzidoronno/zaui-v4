@@ -160,7 +160,7 @@ if($booking->orderIds) {
         $addr .= $user->address->postCode . " " . $user->address->city . "<br>";
         $addr .= $user->emailAddressToInvoice ? $user->emailAddressToInvoice : $user->emailAddress . "<br>";
         if(isset($order->recieptEmail)) {
-            $addr .= "Order reciept email: " . $order->recieptEmail;
+            $addr .= "Order receipt email: " . $order->recieptEmail;
         }
         
         
@@ -213,7 +213,7 @@ if($booking->orderIds) {
         
         echo "<div style='padding-bottom: 10px;'>";
         echo "<i class='fa fa-close closesendreciept' style='float:right;cursor:pointer;'></i>";
-        echo "Send reciept";
+        echo "Send receipt";
         echo "</div>";
         echo "<input type='hidden' value='".$booking->id."' gsname='bookingid'>";
         echo "<input type='hidden' value='".$order->id."' gsname='orderid'>";
@@ -376,7 +376,7 @@ if($booking->orderIds) {
                 if(stristr($order->payment->paymentType, "invoice") || stristr($order->payment->paymentType, "sendregning")) {
                     echo "<span style='cursor:pointer; color:blue' class='sendinvoice' orderid='".$order->id."' bookingid='".$booking->id."'>Send invoice</span>";
                 } else {
-                    echo "<span style='cursor:pointer; color:blue' class='sendreciept' orderid='".$order->id."' bookingid='".$booking->id."'>Send reciept</span>";
+                    echo "<span style='cursor:pointer; color:blue' class='sendreciept' orderid='".$order->id."' bookingid='".$booking->id."'>Send receipt</span>";
                 }
             }
         }

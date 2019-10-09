@@ -71,6 +71,7 @@ if(isset($extraArgs['invokeJavascriptFunctionAfterActions'])) {
         <div class='row'><div class='col col1'>Prefix</div><div class='col col'><input class='gsniceinput1' type="txt" gsname="prefix" value="<?php echo $user->prefix; ?>" <?php echo $disabled; ?>></div></div>
         <div class='row'><div class='col col1'>Phone</div><div class='col col'><input class='gsniceinput1' type="txt" gsname="cellPhone" value="<?php echo $user->cellPhone; ?>" <?php echo $disabled; ?>></div></div>
         <div class='row'><div class='col col1'>Email</div><div class='col col'><input class='gsniceinput1' type="txt" gsname="emailAddress" value="<?php echo $user->emailAddress; ?>" <?php echo $disabled; ?>></div></div>
+        <div class='row'><div class='col col1'>Invoice email</div><div class='col col'><input class='gsniceinput1' type="txt" gsname="emailAddressToInvoice" value="<?php echo $user->emailAddressToInvoice; ?>" <?php echo $disabled; ?>></div></div>
         <div class='row'><div class='col col1'>Address</div><div class='col col'><input class='gsniceinput1' type="txt" gsname="address.address" value="<?php echo $user->address ? $user->address->address : ""; ?>" <?php echo $disabled; ?>></div></div>
         <div class='row'><div class='col col1'>Address2</div><div class='col col'><input class='gsniceinput1' type="txt" gsname="address.address2" value="<?php echo $user->address ? $user->address->address2 : ""; ?>" <?php echo $disabled; ?>></div></div>
         <div class='row'><div class='col col1'>Postcode</div><div class='col col'><input class='gsniceinput1' type="txt" gsname="address.postCode" value="<?php echo $user->address ? $user->address->postCode : ""; ?>" <?php echo $disabled; ?>></div></div>
@@ -85,7 +86,7 @@ if(isset($extraArgs['invokeJavascriptFunctionAfterActions'])) {
             <div class='col col2'>
                 <select class="gsniceselect1" gsname='preferredpaymenttype' <?php echo $disabled; ?>>
                     <?php
-                    echo "<option value='' $selected>Default</option>";
+                    echo "<option value=''>Default</option>";
                     foreach ($paymentApps as $id => $type) {
                         $selected = "";
                         $instance = $this->getFactory()->getApplicationPool()->createInstace($type);

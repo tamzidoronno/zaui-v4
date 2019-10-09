@@ -60,6 +60,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
     @Autowired
     StoreManager storeManager;
     
+    
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon iData : data.data) {
@@ -84,6 +85,11 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
                 server.setManger(this);
                 lockServers.put(iData.id, server);
             }
+            if (iData instanceof GetShopLoraServer) {
+                GetShopLoraServer server = (GetShopLoraServer)iData;                
+                server.setManger(this);
+                lockServers.put(iData.id, server);
+            }
             if (iData instanceof AccessGroupUserAccess) {
                 AccessGroupUserAccess access = (AccessGroupUserAccess)iData;                
                 users.put(access.id, access);
@@ -98,6 +104,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         });
         
         createScheduler("checkCronGetShopLockSystemManager", "*/5 * * * *", ZwaveTriggerCheckCron.class);
+        
     }
     
     private HashMap<String, LockGroup> getFinalizedGroups() {
@@ -121,6 +128,10 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         
         if (type.equals("rcosystem")) {
             createRcoServer(hostname, userName, password, givenName, token);
+        }
+        
+        if (type.equals("getshoploragateway")) {
+            createGetShopLoraGateway(hostname, userName, password, givenName, token);
         }
     }   
 
@@ -184,6 +195,9 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         LockServer server = lockServers.get(serverId);
         
         if (server != null) {
+            if (!hasCachedBuild(serverId, lockId)) {
+                getCodesInUse(serverId, lockId);
+            }
             Lock lock = server.getLock(lockId);
             lock.finalize();
             
@@ -411,6 +425,9 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         slot.takenInUseTextReference = textReference;
         saveObject(group);
         clearCache(null);
+        
+        triggerCheckOfCodesForAllServers();
+        
         return slot.code;
     }
 
@@ -478,6 +495,8 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         }
         
         clearCache(null);
+        
+        triggerCheckOfCodesForAllServers();
     }
     
     @Override
@@ -513,6 +532,10 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         if (server instanceof ZwaveLockServer) {
             ((ZwaveLockServer)server).startUpdatingOfLocks();
         }
+        
+        if (server instanceof GetShopLoraServer) {
+            checkLoraServer((GetShopLoraServer)server);
+        }
     }
     
     @Override
@@ -525,6 +548,10 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
 
     @Override
     public void triggerCronTab() {
+        triggerCheckOfCodesForAllServers();
+    }
+
+    private void triggerCheckOfCodesForAllServers() {
         lockServers.values().stream()
                 .forEach(s -> triggerCheckOfCodes(s.getId()));
     }
@@ -787,6 +814,19 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
             slotsToReturn.addAll(add);
         };
         
+        Lock lock = lockServers.get(serverId).getLock(lockId);
+        lock.getSlotsUnfinalized().stream().forEach(o -> o.inUse = false);
+        
+        for (UserSlot islot : slotsToReturn) {
+            MasterUserSlot mslot = (MasterUserSlot)islot;
+            for (UserSlot slot : mslot.subSlots) {
+                if (slot.connectedToLockId != null && slot.connectedToLockId.equals(lockId)) {
+                    slot.inUse = true;
+                    lock.markSlotInUse(slot.slotId);
+                }
+            }
+        }
+        
         cacheSlotsInUse.put(serverId+"_"+lockId, slotsToReturn);
         
         return slotsToReturn;
@@ -983,6 +1023,12 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
     @Override
     public void addTransactionEntranceDoorByToken(String tokenId, int lockIncrementalId, int code) {
         LockServer server = getServerByToken(tokenId);
+        
+        if (server != null && server instanceof GetShopLoraServer) {
+            ((GetShopLoraServer)server).doorAccess(lockIncrementalId, code, new Date());
+            return;
+        }
+        
         if (server != null) {
             Lock lock = server.getLocks().stream()
                     .filter(o -> o.lockIncrementalId != null && o.lockIncrementalId.equals(lockIncrementalId))
@@ -1019,5 +1065,27 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         return codes;
     }
 
-    
+    private void createGetShopLoraGateway(String hostname, String userName, String password, String givenName, String token) {
+        GetShopLoraServer server = new GetShopLoraServer();
+        server.setDetails(hostname, userName, password, givenName, token);
+        server.setManger(this);
+        saveObject(server);
+        lockServers.put(server.id, server);
+    }
+
+    private boolean hasCachedBuild(String serverId, String lockId) {
+        return (cacheSlotsInUse.get(serverId+"_"+lockId) != null);
+    }
+
+    private void checkLoraServer(GetShopLoraServer getShopLoraServer) {
+        List<String> lockIds = getShopLoraServer.getLocks()
+                .stream()
+                .map(o -> o.id)
+                .collect(Collectors.toList());
+        
+        for (String lockId : lockIds) {
+            Lock lock = getLock(getShopLoraServer.id, lockId);
+            getShopLoraServer.transferToLoraGateWay((GetShopLock)lock);
+        }
+    }   
 }

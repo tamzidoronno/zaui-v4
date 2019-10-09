@@ -38,5 +38,9 @@ public interface IPmsReportManager {
     @Administrator
     public PmsUserStats getUserStatistics(String userId);
     
-   
+    @Administrator
+    public PmsCoverageReport getCoverageReport(PmsBookingFilter filter);
+    
+    @Administrator
+    public List<PmsBookingsFiltered> getFilteredBookings(PmsBookingFilter filter);
 }

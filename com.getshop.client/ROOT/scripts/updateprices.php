@@ -21,8 +21,13 @@ if(isset($_GET['showhtml'])) {
     foreach($types as $type) {
         $obj = new stdClass();
         $obj->categoryId = $type->id;
-        $obj->price = "9999.33";
-        $obj->date = date("d-m-Y", time()+86000*365);
+        $obj->prices = array();
+        for($i = 0; $i < 3; $i++) {
+            $priceobj = new stdClass();
+            $priceobj->price = 800+$i;
+            $priceobj->date = date("d-m-Y", time()+86000*(365+$i));
+            $obj->prices[] = $priceobj;
+        }
         $topostslist[] = $obj;
     }
     ?>
@@ -50,27 +55,27 @@ if(isset($_GET['showhtml'])) {
     }
     
     foreach($entries as $entry) {
-        $updateEntry = new core_pmsmanager_PmsPricingDayObject();
-        
-        if(date("d-m-Y", strtotime($entry->date)) != $entry->date) {
-            echo "Invalid date format: " . $entry->date . " date format need to be : dd-mm-YYYY" . " (Category: " . $entry->categoryId .")" . "<br>";
-            $failed = true;
-        }
         if(!in_array($entry->categoryId, $typeids)) {
             echo "Invalid category id: " . $entry->categoryId . " does not exists." . "<br>";
             $failed = true;
         }
-        
-        if(!is_numeric($entry->price)) {
-            echo "Invalid price: " . $entry->price . " for date ". $entry->date . " (Category: " . $entry->categoryId .")<br>";
-            $failed = true;
+        foreach($entry->prices as $dayprice) {
+            if(date("d-m-Y", strtotime($dayprice->date)) != $dayprice->date) {
+                echo "Invalid date format: " . $dayprice->date . " date format need to be : dd-mm-YYYY" . " (Category: " . $entry->categoryId .")" . "<br>";
+                $failed = true;
+            }
+
+            if(!is_numeric($dayprice->price)) {
+                echo "Invalid price: " . $dayprice->price . " for date ". $dayprice->date . " (Category: " . $entry->categoryId .")<br>";
+                $failed = true;
+            }
+
+            $updateEntry = new core_pmsmanager_PmsPricingDayObject();
+            $updateEntry->date = $dayprice->date;
+            $updateEntry->typeId = $entry->categoryId;
+            $updateEntry->newPrice = $dayprice->price;
+            $toUpdateList[] = $updateEntry;
         }
-        
-        
-        $updateEntry->date = $entry->date;
-        $updateEntry->typeId = $entry->categoryId;
-        $updateEntry->newPrice = $entry->price;
-        $toUpdateList[] = $updateEntry;
     }
     if($failed) {
         echo "Invalid input, can not proceed.";

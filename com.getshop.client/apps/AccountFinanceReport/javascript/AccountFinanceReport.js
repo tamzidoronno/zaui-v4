@@ -8,7 +8,19 @@ app.AccountFinanceReport = {
         $(document).on('click', '.AccountFinanceReport .leftmenu .taboperation', app.AccountFinanceReport.changeMenu);
         $(document).on('click', '.AccountFinanceReport .totalcolforaccount', app.AccountFinanceReport.showSummaryRow);
         $(document).on('click', '.AccountFinanceReport .transferalldays', app.AccountFinanceReport.transferAllDays);
+        $(document).on('click', '.AccountFinanceReport .issuersum', app.AccountFinanceReport.showDetailedOrderViewForPaymentMethod);
     },
+    
+    showDetailedOrderViewForPaymentMethod: function() {
+        var summary = $(this).find('.ordersummary');
+        if (summary.is(':visible')) {
+            summary.hide();
+        } else {
+            $('.ordersummary').hide();
+            summary.show();
+        }
+    },
+    
     transferredToAccounting : function() {
         
     },

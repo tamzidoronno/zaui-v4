@@ -1,0 +1,28 @@
+<?
+/* @var $this \ns_d02f8b7a_7395_455d_b754_888d7d701db8\Dibs */
+$opt = $this->getPaymentOptions();
+?>
+<div>
+    <div class="paymentinfo">
+        <?
+        echo $this->__f("When you create payments with this option you will be able to collect the payment by SMS and email. What happens is that a link is sent to the customer and they can pay by VISA, MasterCard etc.");
+        ?>    
+    </div>
+    
+    
+    <br/>
+    <?
+    
+    ?>
+    <input type="checkbox" gsname="sendPaymentLink"/> <? echo $this->__f("Send paymentlink to guest?"); ?>
+    <br/>
+    <br/> <? echo $this->__f("Text message (This message will be sent if checkbox above is checked)"); ?>
+    <br/><textarea class="message" gsname="textMessage"><? echo $opt->message; ?></textarea>
+    <br/>
+    <br/> <? echo $this->__f("Contact details"); ?>
+    <br/> <? echo $this->__f("Phone"); ?>: <input class="gsniceinput1 prefix" gsname="prefix" value="<? echo $opt->prefix; ?>"/> - <input gsname="cellphone" class="gsniceinput1 phonenumber" value="<? echo $opt->cellphone; ?>"/>
+    <br/> <? echo $this->__f("Email"); ?>: <input gsname="email" class="gsniceinput1 email" value="<? echo $opt->guestEmail; ?>"/>
+    <?
+    $this->renderPaymentButtons();
+    ?>
+</div>

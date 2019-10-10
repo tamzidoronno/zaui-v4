@@ -22,7 +22,7 @@ $cashPoint = $this->getApi()->getPosManager()->getCashPoint($this->getSelectedCa
         </div>
     
         <?
-        if ($cashPoint->isMaster) {
+        if (@$cashPoint->isMaster) {
             ?>
                 <div class='entry all' tab='masterreport'>
                     <i class='fa fa-lightbulb-o'></i>

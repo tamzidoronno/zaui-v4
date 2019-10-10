@@ -86,7 +86,7 @@ if(isset($extraArgs['invokeJavascriptFunctionAfterActions'])) {
             <div class='col col2'>
                 <select class="gsniceselect1" gsname='preferredpaymenttype' <?php echo $disabled; ?>>
                     <?php
-                    echo "<option value='' $selected>Default</option>";
+                    echo "<option value=''>Default</option>";
                     foreach ($paymentApps as $id => $type) {
                         $selected = "";
                         $instance = $this->getFactory()->getApplicationPool()->createInstace($type);

@@ -140,9 +140,13 @@ app.GetShopQuickUser = {
         $('.GetShopQuickUser .edit_details_of_user').html(result);
         $('.GetShopQuickUser .edit_details_directprint').html(result);
         
-        var name = $(result).find('.fullName').val();
-        $('.GetShopQuickUser span.booked_for').html(name);
-        $('.GetShopQuickUser').closest('.datarow').find('.booked_for').html(name);
+        try {
+            var name = $(result).find('.fullName').val();
+            $('.GetShopQuickUser span.booked_for').html(name);
+            $('.GetShopQuickUser').closest('.datarow').find('.booked_for').html(name);
+        }catch(e) {
+            
+        }
         
     },
   

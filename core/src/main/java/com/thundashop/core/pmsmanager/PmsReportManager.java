@@ -44,6 +44,9 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
     @Autowired
     PmsInvoiceManager pmsInvoiceManager;
     
+    @Autowired
+    PmsCoverageReportManager pmsCoverageReportManager;
+    
     @Override
     public List<PmsMobileReport> getReport(Date start, Date end, String compareTo, boolean excludeClosedRooms) {
         
@@ -470,6 +473,32 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
             }
         }
         return res;
+    }
+
+    @Override
+    public PmsCoverageReport getCoverageReport(PmsBookingFilter filter) {
+        return pmsCoverageReportManager.getCoverageReport(filter);
+    }
+
+    @Override
+    public List<PmsBookingsFiltered> getFilteredBookings(PmsBookingFilter filter) {
+        filter.filterType = "registered";
+        List<PmsBookingsFiltered> result = new ArrayList();
+        List<PmsBooking> bookings = pmsManager.getAllBookings(filter);
+        for(PmsBooking booking : bookings) {
+            PmsBookingsFiltered filtered = new PmsBookingsFiltered();
+            filtered.bookingId = booking.id;
+            filtered.numberOfRooms = booking.rooms.size();
+            filtered.bookedDate = booking.rowCreatedDate;
+            filtered.arrivalDate = booking.getStartDate();
+            filtered.checkoutDate = booking.getEndDate();
+            filtered.numberOfRooms = booking.getActiveRooms().size();
+            filtered.price = booking.getTotalPrice();
+            filtered.channel = booking.channel;
+            result.add(filtered);
+        }
+        
+        return result;
     }
     
 }

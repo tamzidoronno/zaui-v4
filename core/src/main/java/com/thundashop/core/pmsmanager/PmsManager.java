@@ -5384,7 +5384,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void markGuestArrivedInternal(PmsBooking booking, PmsBookingRooms room) throws ErrorException {
-        if (room.checkedin) {
+        if (room.checkedin || !room.isDeleted()) {
             return;
         }
 
@@ -8653,8 +8653,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
-    public boolean removeFromWaitingList(String pmsRoomId) {
-        PmsBooking booking = getBookingFromRoom(pmsRoomId);
+    public boolean removeFromWaitingList(String pmsRoomId) { 
+       PmsBooking booking = getBookingFromRoom(pmsRoomId);
         PmsBookingRooms room = booking.getRoom(pmsRoomId);
         if (!room.addedToWaitingList) {
             return true;
@@ -10789,6 +10789,24 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 .forEach(o -> {
                     o.setName(overrideProductName);
                 });
+    }
+
+    @Override
+    public boolean updatePrices(List<PmsPricingDayObject> prices) {
+        try {
+            PmsPricing pricestoupdate = priceMap.get("default");
+            System.out.println(pricestoupdate);
+            
+            for(PmsPricingDayObject price : prices) {
+                pricestoupdate.dailyPrices.get(price.typeId).put(price.date, price.newPrice);
+            }
+            
+            wubookManager.updatePrices();
+            return true;
+        }catch(Exception e) {
+            logPrintException(e);
+        }
+        return false;
     }
 
 }

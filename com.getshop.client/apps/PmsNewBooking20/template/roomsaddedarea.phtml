@@ -52,7 +52,10 @@ $addons = $this->getApi()->getPmsManager()->getAddonsAvailable($this->getSelecte
             <div class='guestinformation'>
                 <?php
                 for($i = 0; $i < $room->numberOfGuests; $i++) {
-                    $guest = $room->guests[$i];
+                    $guest = @$room->guests[$i];
+                    if(!$guest) {
+                        $guest = new core_pmsmanager_PmsGuests();
+                    }
                     $addedToConference = "";
                     if(@$guest->pmsConferenceEventId) {
                         $addedToConference = "eventaddedtoguest";

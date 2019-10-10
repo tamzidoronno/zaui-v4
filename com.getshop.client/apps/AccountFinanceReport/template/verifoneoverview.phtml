@@ -1,0 +1,138 @@
+<?
+/*@var $this ns_e6570c0a_8240_4971_be34_2e67f0253fd3\AccountFinanceReport */
+
+$accountNumber = $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_detailed_for_payment_type'];;
+$start = $this->getStart();
+$end = $this->getEnd();
+
+$dayIncomes = $this->getApi()->getOrderManager()->getDayIncomes($this->convertToJavaDate(strtotime($start)), $this->convertToJavaDate(strtotime($end)));
+
+$issuerNames = array();
+$issuerNames[-1] = "Manually";
+$issuerNames[1] = "Bank Axcept";
+$issuerNames[3] = "Visa";
+$issuerNames[4] = "MasterCard";
+$issuerNames[5] = "American Express";
+$issuerNames[14] = "Maestro";
+
+echo "<div style='padding: 20px;'>";
+    echo "<div class='payment header'>";
+        echo "<div class='coldate'>&nbsp;</div>";
+
+        foreach ($issuerNames as $name) {
+            echo "<div class='issuercol'>";
+                echo "<div style='text-align: center'>$name</div>";
+                echo "<div class='issuersum'>System</div>";
+                echo "<div class='issuersum'>Employee</div>";
+            echo "</div>";
+        }
+
+    echo "</div>";
+
+    foreach ($dayIncomes as $day => $dayIncome) {
+        $grouped = array();
+
+        echo "<div class='coldate'>".date('d.m.Y', strtotime($dayIncome->start))."</div>";
+
+        foreach ($dayIncome->dayEntries as $entry) {
+
+            if ($entry->accountingNumber != $accountNumber) {
+                continue;
+            }
+
+            if ($entry->isTaxTransaction && $this->isShowingIncTaxes()) {
+                continue;
+            }
+//
+            $grouped[] = $entry;
+        }
+
+        $ordersGroupedByIssuer = array();
+        $ordersGroupedByIssuer[-1] = array();
+        $ordersGroupedByIssuer[1] = array();
+        $ordersGroupedByIssuer[3] = array();
+        $ordersGroupedByIssuer[4] = array();
+        $ordersGroupedByIssuer[5] = array();
+        $ordersGroupedByIssuer[14] = array();
+
+
+        foreach ($grouped as $dayEntry) {
+            $order = $this->getApi()->getOrderManager()->getOrder($dayEntry->orderId);
+            $issuer = -1;
+            if ($order->payment != null && $order->payment->transactionLog) {
+                $logs = (array)$order->payment->transactionLog;
+                ksort($logs);
+                foreach ($logs as $log) {
+                    if(strstr($log, "Issuer")) {
+                        $issuer = explode("Issuer:", $log);
+                        $issuer = $issuer[1];
+                        $issuer = explode("Data:", $issuer);
+                        $issuer = intval($issuer[0]);
+                    }
+                }
+
+                if ($issuer == 0) {
+                    $issuer = -1;
+                }
+                
+                
+                $ordersGroupedByIssuer[$issuer][] = $order;
+                
+                if (!array_key_exists($issuer, $issuerNames)) {
+                    echo "<pre>";
+                    print_r($logs);
+                }
+            }
+
+        }
+
+        
+        foreach ($ordersGroupedByIssuer as $issuer => $orders) {
+            $sumByUser = array();
+            $sumByUser["gs_system_scheduler_user"] = 0;
+            $sumByUser["other"] = 0;
+            
+            $orderIdByUser = array();
+            $orderIdByUser["gs_system_scheduler_user"] = array();
+            $orderIdByUser["other"] = array();
+            
+            $orderSum = array();
+            $orderSum["gs_system_scheduler_user"] = array();
+            $orderSum["other"] = array();
+
+            foreach ($orders as $order) {
+                foreach ($order->orderTransactions as $transaction) {
+                    $userId = $transaction->userId == "gs_system_scheduler_user" ? "gs_system_scheduler_user" : "other";
+                    $sumByUser[$userId] += $transaction->amount;
+                    $orderSum[$userId][$order->id] += $transaction->amount;
+                }
+                
+                $orderIdByUser[$userId][] = $order;
+            }
+
+            echo "<div class='issuercol'>";
+            foreach ($sumByUser as $user => $sum) {
+                echo "<div class='issuersum'>";
+                    
+                    echo $sum;
+
+                    echo "<div class='ordersummary'>";
+                        foreach ($orderIdByUser[$user] as $order) {
+                            echo "<a class='gs_ignorenavigate' target='_overview' href='/invoicing.php?page=orderviewpage&orderid=$order->id'><div>".$order->incrementOrderId. " : " .$orderSum[$user][$order->id]."</div></a>";
+                        }
+                    echo "</div>";
+
+                echo "</div>";
+                
+            }
+            echo "</div>";
+        }
+
+        echo "<hr/>";
+
+    }
+
+echo "</div>";
+
+
+?>

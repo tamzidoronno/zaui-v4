@@ -238,9 +238,12 @@ echo "<div class='outer'>";
             
             $val = isset($sum[$account]) && $sum[$account] ? $sum[$account] : "&nbsp;";
             $incomeBalance->balances->{$account} += $val;
+
             echo "<div account='$account' class='col $account totalcolforaccount'>".round($val,2);
             ?>
             <div class='summarymenu'>
+                
+                <div class='entry' gsclick='showPaymentMethodSummary' account='<? echo $account; ?>' ><? echo $this->__f("Show detailed order for payment type"); ?></div>
                 <div class='entry' gsclick='showSummaryForAccount' account='<? echo $account; ?>' ><? echo $this->__f("Show open balances pr")." ".date('d.m.Y', strtotime($end)); ?></div>
                 <div class='entry' gsclick='showAllTransactionsForMonth' account='<? echo $account; ?>' ><? echo $this->__f("Show all transactions for month"); ?></div>
             </div>

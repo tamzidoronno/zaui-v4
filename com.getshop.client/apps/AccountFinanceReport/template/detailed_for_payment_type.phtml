@@ -1,0 +1,34 @@
+<?
+/* @var $this ns_e6570c0a_8240_4971_be34_2e67f0253fd3\AccountFinanceReport */
+
+$methods = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+$accountNumber = $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_detailed_for_payment_type'];;
+
+$config = null;
+
+foreach ($methods as $method) {
+    $aConfig = $this->getApi()->getPaymentManager()->getStorePaymentConfiguration($method->id);
+    if ($aConfig->userCustomerNumber == $accountNumber) {
+        $config = $aConfig;
+    }
+    
+    if ($config != null) {
+        break;
+    }
+}
+
+?>
+<div class='shop_button' gsclick='cancelPaymentDetailedOverview'>
+    <? 
+    echo "Cancel";
+    ?>
+</div>
+<?
+
+if ($config && $config->paymentAppId == "6dfcf735-238f-44e1-9086-b2d9bb4fdff2") {
+    $this->includefile("verifoneoverview");
+} else {
+    echo "Not found";
+}
+
+?>

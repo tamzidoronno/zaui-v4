@@ -30,6 +30,11 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
             return;
         }
         
+        if (isset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_detailed_for_payment_type'])) {
+            $this->includefile("detailed_for_payment_type");
+            return;
+        }
+        
         if (isset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_detailed_product_view'])) {
             $this->includefile("productsummary");
             return;
@@ -455,5 +460,12 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
         return $ids;
     }
 
+    public function showPaymentMethodSummary() {
+        $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_detailed_for_payment_type'] = $_POST['data']['account'];
+    }
+    
+    public function cancelPaymentDetailedOverview() {
+        unset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_detailed_for_payment_type']);
+    }
 }
 ?>

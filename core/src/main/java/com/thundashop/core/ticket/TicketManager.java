@@ -840,9 +840,11 @@ public class TicketManager extends ManagerBase implements ITicketManager {
 
     Integer getHoursIncluded(String userId) {
         User usr = userManager.getUserById(userId);
-        Company comp = userManager.getCompany(usr.mainCompanyId);
-        if(comp != null) {
-            return comp.monthlyHoursIncluded + comp.additionalHours;
+        if(usr != null) {
+            Company comp = userManager.getCompany(usr.mainCompanyId);
+            if(comp != null) {
+                return comp.monthlyHoursIncluded + comp.additionalHours;
+            }
         }
         return 0;
     }

@@ -376,7 +376,7 @@ class PmsPricingNew extends \WebshopApplication implements \Application {
     }
 
     public function removeCoupon() {
-        $coupon = $this->getApi()->getCartManager()->getCouponById($_POST['data']['id']);
+        $coupon = $this->getApi()->getCartManager()->getCouponById($_POST['data']['couponid']);
         $this->getApi()->getCartManager()->removeCoupon($coupon->code);
     }
     

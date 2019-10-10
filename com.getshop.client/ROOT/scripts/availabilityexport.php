@@ -79,12 +79,12 @@ foreach($types as $type) {
     } else {
         $toprintobj = new stdClass();
         $toprintobj->name = $type->name;
-        $toprintobj->typeId = $type->id;
+        $toprintobj->categoryId = $type->id;
         $toprintobj->days = $data->entries;
         $toprint[] = $toprintobj;
-        header('Content-type:application/json;charset=utf-8');
-        echo json_encode($toprint);
     }
 }
+header('Content-type:application/json;charset=utf-8');
+echo json_encode($toprint);
 
 ?>

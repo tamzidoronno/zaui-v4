@@ -1,0 +1,20 @@
+<?php
+/* @var $this ns_8650475d_ebc6_4dfb_86c3_eba4a8aba979\GiftCard */
+
+$code = "";
+$amount = $this->getApi()->getOrderManager()->getTotalAmount($this->order);
+if(isset($_POST['data']['code'])) {
+    $code = $_POST['data']['code'];
+}
+if($this->paidResult == -1) {
+    $card = $this->getApi()->getGiftCardManager()->getGiftCard($giftCardCode);
+    echo "Error: there are insufficent funds on the the selected giftcard, remaining value for the card is: " . $card->remainingValue;
+}
+?>
+<div gstype='form' method='paywithcode' gs_callback='app.DefaultPaymentHandlingAction.markAsPaidCompleted'>
+    <input type='txt' class='gsniceinput1 giftcardinput' gsname='code' amount='<?php echo $amount; ?>' gstype="submitenter" style='width:50px;' placeholder='Code' value='<?php echo $code; ?>'  gs_callback='app.DefaultPaymentHandlingAction.markAsPaidCompleted'>
+    <input type='hidden' gsname='orderid' value='<?php echo $this->order->id;?>'>
+    <span class='shop_button  submitgiftcard disabled' gstype='submit'  gs_callback='app.DefaultPaymentHandlingAction.markAsPaidCompleted'>Pay with card</span>
+</div>
+
+<div class='coderesultarea'></div>

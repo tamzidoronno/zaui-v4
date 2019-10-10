@@ -12,11 +12,13 @@ import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.gsd.GdsManager;
 import com.thundashop.core.gsd.GiftCardPrintMessage;
+import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pdf.InvoiceManager;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +39,9 @@ public class GiftCardManager extends ManagerBase implements IGiftCardManager {
     
     @Autowired
     private GdsManager gdsManager;
+    
+    @Autowired
+    private OrderManager orderManager;
     
     public Map<String, GiftCard> cards = new HashMap();
 
@@ -176,6 +181,7 @@ public class GiftCardManager extends ManagerBase implements IGiftCardManager {
         saveObject(giftCard);
     }
 
+    
     @Override
     public void deleteGiftCard(String id) {
         GiftCard card = getGiftCard(id);
@@ -187,5 +193,26 @@ public class GiftCardManager extends ManagerBase implements IGiftCardManager {
     public void saveGiftCard(GiftCard card) {
         cards.put(card.id, card);
         saveObject(card);
+    }
+
+    @Override
+    public Integer payOrderWithGiftCard(String code, String orderId) {
+        double amount = orderManager.getTotalForOrderById(orderId);
+        GiftCard card = getGiftCard(code);
+        if(card.remainingValue < amount) {
+            return -1;
+        }
+        Order order = orderManager.getOrder(orderId);
+        if(order.payment != null) {
+            order.payment.transactionLog.put(System.currentTimeMillis(), "Paid with giftcard code: " + code);
+            order.payment.metaData.put("giftCardCode", code);
+            orderManager.saveOrder(order);
+        }
+        
+        orderManager.markAsPaid(orderId, new Date(), amount);
+        
+        
+        
+        return 1;
     }
 }

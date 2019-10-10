@@ -27,4 +27,8 @@ public interface IGiftCardManager {
     public void saveGiftCard(GiftCard card);
 
     public GiftCard getGiftCard(String giftCardCode);
+    
+    @Administrator
+    public Integer payOrderWithGiftCard(String code, String orderId);
+    
 }

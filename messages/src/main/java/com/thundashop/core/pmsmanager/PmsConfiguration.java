@@ -310,7 +310,7 @@ public class PmsConfiguration extends DataCommon {
     public boolean useGetShopPricesOnExpedia = false;
     public boolean ignoreNoShow = false;
     public Integer increaseByPercentage = 0;
-    public Integer daysAllowedInTheFuture = 370;
+    public Integer daysAllowedInTheFuture = 310;
     
     public String tripTeaseHotelId = "";
 

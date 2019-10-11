@@ -793,6 +793,10 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
 
     @Override
     public List<UserSlot> getCodesInUse(String serverId, String lockId) {
+        return fetchCodesInternal(serverId, lockId, false);
+    }
+
+    private List<UserSlot> fetchCodesInternal(String serverId, String lockId, boolean fetchAll) {
         if (cacheSlotsInUse.get(serverId+"_"+lockId) != null) {
             return cacheSlotsInUse.get(serverId+"_"+lockId);
         }
@@ -806,10 +810,15 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
                 continue;
             }
             
-            List<MasterUserSlot> add = group.getGroupLockCodes().values()
-                    .stream()
-                    .filter(masterSlot -> masterSlot.takenInUseDate != null || group.isVirtual)
-                    .collect(Collectors.toList());
+            List<MasterUserSlot> add = new ArrayList();
+            if(fetchAll) {
+                add = group.getGroupLockCodes().values().stream().collect(Collectors.toList());
+            } else {
+                add = group.getGroupLockCodes().values()
+                        .stream()
+                        .filter(masterSlot -> masterSlot.takenInUseDate != null || group.isVirtual)
+                        .collect(Collectors.toList());
+            }
             
             slotsToReturn.addAll(add);
         };
@@ -1002,7 +1011,8 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         HashMap<Integer, List<UserSlot>> retMap = new HashMap();
         
         for (Lock lock : server.getLocks()) {
-            retMap.put(lock.lockIncrementalId, getCodesInUse(server.getId(), lock.id));
+            boolean fetchAll = tokenId.equals("349792c3-0d08-4d96-8c3e-841ffb2aaf54") || tokenId.equals("8f15a818-80e9-49f9-966b-479e9b642739");
+            retMap.put(lock.lockIncrementalId, fetchCodesInternal(server.getId(), lock.id, fetchAll));
         }
         
         return retMap;

@@ -255,16 +255,26 @@ class PmsReport extends \MarketingApplication implements \Application {
     
     public function printCoverageReport() {
         $date = date("d-m-Y", time());
-        echo "<div style='text-align:right;'>";
-        echo "<span style='color:blue; cursor:pointer;' gs_downloadExcelReport='downloadCoverageReport' gs_fileName='coveragereport-$date'>Download this report to excel</span>";
-        echo "</div>";
+        echo "<span style='    color: #000;
+    cursor: pointer;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    padding: 3px;
+    padding-right: 20px;
+    background-color: #efefef;
+    padding-left: 20px;
+    border-left: solid 1px;
+    border-bottom: solid 1px;
+    border-bottom-left-radius: 10px;
+    border-color: #bbb;' gs_downloadExcelReport='downloadCoverageReport' gs_fileName='coveragereport-$date'>Download this report to excel</span>";
         $filter = $this->getCoverageFilter();
         $data = $this->getApi()->getPmsManager()->getStatistics($this->getSelectedMultilevelDomainName(), $filter);
         $attributes = array(
             array('rowdate', 'gs_hidden', 'date'),
             array('date', 'Date', null, 'formatDate'),
             array('avilable', 'Available', 'spearRooms', null),
-            array('rentedout', 'Rented out', 'roomsRentedOut', null),
+            array('rentedout', 'In House', 'roomsRentedOut', null),
             array('arrivals', 'Arrivals', 'arrivals', null),
             array('departures', 'Departures', 'departures', null),
             array('guests', 'Guests', 'guestCount', null),
@@ -273,7 +283,7 @@ class PmsReport extends \MarketingApplication implements \Application {
             array('total', 'Total', 'totalForcasted', null),
             array('totalbilled', 'Billed', 'totalPrice', 'roundTotalPrice'),
             array('totalremaining', 'Remaining', 'totalRemaining', 'formatRemaining'),
-            array('Coverage', 'Coverage', 'coverage', null)
+            array('Coverage', '%Occupancy', 'coverage', null)
         );
         
         $rowsToHighLight = $this->getWeekendRows($data->entries);

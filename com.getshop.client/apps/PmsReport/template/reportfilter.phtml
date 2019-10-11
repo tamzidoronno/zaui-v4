@@ -92,12 +92,12 @@ $chnls = $pmssearchbox->getChannels();
                 echo "</select>";
                 ?>
             </td>
-            <td><br><input type='button' value='Load report' gstype='submit' style='padding: 9px;'><bR>
+            <td><br><span class='shop_button' gstype='submit'>Load report</span><bR>
             </td>
         </tr>
     </table>
-        <span class='shop_button filterbycustomerbutton' style="float:right;">Filter by customers</span> 
-        <span class='shop_button filterbydiscountcodes' style="float:right; margin-right: 10px;" onclick='$(".PmsReport .discountcodeselection").toggle();'>Filter by discount codes</span>
+        <span class='shop_button filterbycustomerbutton' style="position: absolute;right: 10px;top: 30px;">Filter by customers</span> 
+        <span class='shop_button filterbydiscountcodes' style="margin-right: 10px;position: absolute;right: 170px;top: 30px;" onclick='$(".PmsReport .discountcodeselection").toggle();'>Filter by discount codes</span>
         <span class='discountcodeselection'>
             <?php
             $codes = $this->getApi()->getCartManager()->getCoupons();

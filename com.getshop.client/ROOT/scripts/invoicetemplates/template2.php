@@ -260,12 +260,15 @@ $isInvoice = $order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200
         <div class='col col4'><? echo $translator->formatPrice($total); ?></div>
     </div>
 
-    <div class='outerproductrow'>
-        <div class='col col1'></div>
-        <div class='col col2'><? echo $translator->translate("Balance due"); ?></div>
-        <div class='col col3'></div>
-        <div class='col col4' style='color: #3b7fb1; font-size: 22px;'><? echo $translator->formatPrice($total); ?></div>
-    </div>
+    <?php
+    if($order->status != 7) { ?>
+        <div class='outerproductrow'>
+            <div class='col col1'></div>
+            <div class='col col2'><? echo $translator->translate("Balance due"); ?></div>
+            <div class='col col3'></div>
+            <div class='col col4' style='color: #3b7fb1; font-size: 22px;'><? echo $translator->formatPrice($total); ?></div>
+        </div>
+    <? } ?>
 
     <div class='outerproductrow bold' style='border-bottom: solid 1px #DDD; margin-top: 30px;'>
         <div class='col col1'><? echo $translator->translate("Calculated Taxes"); ?></div>

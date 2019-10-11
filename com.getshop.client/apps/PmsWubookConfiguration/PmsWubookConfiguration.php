@@ -33,6 +33,10 @@ class PmsWubookConfiguration extends \WebshopApplication implements \Application
         $config->ignoreNoShow = $_POST['data']['ignoreNoShow'] == "true";
         $config->increaseByPercentage = $_POST['data']['increaseByPercentage'];
         $config->numberOfRoomsToRemoveFromBookingCom = $_POST['data']['numberOfRoomsToRemoveFromBookingCom'];
+        $config->daysAllowedInTheFuture = $_POST['data']['daysAllowedInTheFuture'];
+        if($config->daysAllowedInTheFuture > 500) {
+            $config->daysAllowedInTheFuture = 500;
+        }
         $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $config);
     }
 

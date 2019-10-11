@@ -131,7 +131,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     }
     
     public boolean updateAvailability() throws Exception {
-        int numberOfDays = 370;
+        int numberOfDays = pmsManager.getConfigurationSecure().daysAllowedInTheFuture;
         if(lastUpdateLongTime == null) {
             numberOfDays = 720;
             lastUpdateLongTime = new Date();
@@ -526,7 +526,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             
             Calendar cal = Calendar.getInstance();
             Date now = cal.getTime();
-            cal.add(Calendar.DAY_OF_YEAR, 365*2);
+            cal.add(Calendar.DAY_OF_YEAR, pmsManager.getConfigurationSecure().daysAllowedInTheFuture);
             Date end = cal.getTime();
             PmsPricing prices = pmsManager.getPrices(now, end);
             Calendar calStart = Calendar.getInstance();
@@ -1764,7 +1764,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
             Calendar startcal = getCalendar(true);
             Calendar endCal = getCalendar(false);
-            for (int i = 0; i < 310; i++) {
+            for (int i = 0; i < pmsManager.getConfigurationSecure().daysAllowedInTheFuture; i++) {
                 Date start = startcal.getTime();
                 endCal.add(Calendar.DAY_OF_YEAR, 1);
                 Date end = endCal.getTime();

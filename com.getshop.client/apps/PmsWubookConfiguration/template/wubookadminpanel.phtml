@@ -90,6 +90,13 @@ $callbackurl = $this->getApi()->getWubookManager()->getCallbackUrl($this->getSel
                             </td>
                         </tr>
                         <tr>
+                            <td>Number of days allowed to sell in the future<br>
+                                <b>To make sure stays in the distant future are not occupied before you are able to tune the price, max 500 days</b> 
+                            </td>
+                            <td><input type="text" class='gsniceinput1' placeholder='0' gsname="daysAllowedInTheFuture" value="<?php echo $config->daysAllowedInTheFuture; ?>">
+                            </td>
+                        </tr>
+                        <tr>
                             <td>Avoid sending noshow to booking.com
                             </td>
                             <?php $checked = $config->ignoreNoShow == true ? "CHECKED" : ""; ?>

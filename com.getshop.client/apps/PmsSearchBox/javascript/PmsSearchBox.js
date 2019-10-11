@@ -15,10 +15,14 @@ app.PmsSearchBox = {
         $(document).on('click','.PmsSearchBox .applyfilterbutton',app.PmsSearchBox.applyFilter);
         $(document).on('click','.PmsSearchBox .addonstofilter',app.PmsSearchBox.updateOtherFilterCounter);
         $(document).on('click','.PmsSearchBox .clearfilter',app.PmsSearchBox.clearFilter);
-        $(document).on('mouseover','.PmsSearchBox .displaydailydatepicker',app.PmsSearchBox.displayDailyRangePicker);
-        $(document).on('mouseout','.PmsSearchBox .displaydailydatepicker',app.PmsSearchBox.rangePickerOut);
+        if(getshop.pms.is_touch_device()) {
+            $(document).on('click','.PmsSearchBox .displaydailydatepicker',app.PmsSearchBox.displayDailyRangePicker);
+        } else {
+            $(document).on('mouseover','.PmsSearchBox .displaydailydatepicker',app.PmsSearchBox.displayDailyRangePicker);
+            $(document).on('mouseout','.PmsSearchBox .displaydailydatepicker',app.PmsSearchBox.rangePickerOut);
+            $(document).on('click',app.PmsSearchBox.hideRangePicker);
+        }
         $(document).on('click','.PmsSearchBox [daytype]',app.PmsSearchBox.changeSelection);
-        $(document).on('click',app.PmsSearchBox.hideRangePicker);
     },
     hideRangePicker : function() {
         $('.dailydaterangepicker').hide();
@@ -28,12 +32,15 @@ app.PmsSearchBox = {
     },
     changeSelection : function() {
         var date = $(this).attr('daytype');
+        if(getshop.pms.is_touch_device() && $(this).attr('type')) {
+            return;
+        } 
         var type = $('.dailydaterangepicker').attr('type');
         var event = thundashop.Ajax.createEvent('', "quickfilterselection",$(this), {
             "date" : date,
             "type" : type
         });
-        if($('.dailydaterangepicker').is(':visible')) {
+        if(!getshop.pms.is_touch_device() && $('.dailydaterangepicker').is(':visible')) {
             app.PmsSearchBox.disableHover = true;
         }
         thundashop.Ajax.post(event, function(res) {

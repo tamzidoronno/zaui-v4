@@ -27,13 +27,20 @@
     z-index: 2;
     font-size: 14px;
     width: 200px;
-    background-color: #fff;
+    background-color: #23314e;
     top: 50px;
+    color:#fff;
     left:0px;
     text-align: left;
     padding: 10px;
     display:none;
     border: solid 1px #bbb;
+    border-radius:15px;
+}
+.PmsSearchBox .dailydaterangepicker .entries {
+    padding:10px;
+    padding-bottom: 3px;
+    padding-top: 3px;
 }
 .PmsSearchBox .dailydaterangepicker div:hover {
     font-weight: bold;

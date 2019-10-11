@@ -18,6 +18,14 @@ getshop.pms = {
    hideInformationBox : function() {
        $('.gsoverlay1').removeClass('active');
    },
+   is_touch_device: function () {
+        try {
+            document.createEvent("TouchEvent");
+            return true;
+        } catch (e) {
+            return false;
+        }
+    },
    postToInformationBox : function(event) {
         if(event.type == "keyup") {
             if(event.keyCode !== 13) {

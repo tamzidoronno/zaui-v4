@@ -61,6 +61,16 @@ $user = $this->getUser();
                         </div>
                     </div>
 
+                    <div class="row">
+                        <div class="col col1">
+                            <? echo $this->__f("Default due dates"); ?><br>
+                            -1 means using standard.
+                        </div>
+                        <div class="col col2">
+                            <input class="gsniceinput1" gsname="defaultDueDate" value="<? echo $user->defaultDueDate; ?>"/>
+                        </div>
+                    </div>
+
                     <div class='header'><? echo $this->__f("Address"); ?></div>
                     <div class="row">
                         <div class="col col1">

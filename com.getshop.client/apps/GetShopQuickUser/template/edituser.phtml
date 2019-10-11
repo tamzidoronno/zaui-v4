@@ -81,6 +81,7 @@ if(isset($extraArgs['invokeJavascriptFunctionAfterActions'])) {
         <div class='row'><div class='col col1'>City</div><div class='col col'><input class='gsniceinput1' type="txt" gsname="address.city" value="<?php echo $user->address ? $user->address->city : ""; ?>" <?php echo $disabled; ?>></div></div>
         <div class='row'><div class='col col1'>Birthdate</div><div class='col col'><input class='gsniceinput1' type="txt" gsname="birthDay" value="<?php echo $user->birthDay; ?>" <?php echo $disabled; ?>></div></div>
         <div class='row'><div class='col col1'>Relationship</div><div class='col col'><input class='gsniceinput1' type="txt" gsname="relationship" value="<?php echo $user->relationship; ?>" <?php echo $disabled; ?>></div></div>
+        <div class='row'><div class='col col1'>Default due days (-1 using standard)</div><div class='col col'><input class='gsniceinput1' type="txt" gsname="defaultDueDate" value="<?php echo $user->defaultDueDate; ?>" <?php echo $disabled; ?>></div></div>
         <div class='row'>
             <div class='col col1'>Payment type</div>
             <div class='col col2'>

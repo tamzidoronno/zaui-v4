@@ -226,6 +226,7 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
         $user->prefix = $_POST['data']['prefix'];
         $user->cellPhone = $_POST['data']['cellPhone'];
         $user->emailAddressToInvoice = $_POST['data']['emailAddressToInvoice'];
+        $user->defaultDueDate = $_POST['data']['defaultDueDate'];
         if(!$user->address) {
             $user->address = new \core_usermanager_data_Address();
         }

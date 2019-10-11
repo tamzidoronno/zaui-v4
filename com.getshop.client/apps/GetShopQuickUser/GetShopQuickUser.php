@@ -82,6 +82,7 @@ class GetShopQuickUser extends \SystemApplication implements \Application {
         $user->address->co = $_POST['data']['address.co'];
         $user->birthDay = $_POST['data']['birthDay'];
         $user->relationship = $_POST['data']['relationship'];
+        $user->defaultDueDate = $_POST['data']['defaultDueDate'];
         $user->preferredPaymentType = $_POST['data']['preferredpaymenttype'];
         if(!isset($_POST['data']['avoidsaving'])) {
             $this->getApi()->getUserManager()->saveUser($user);

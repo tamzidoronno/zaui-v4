@@ -80,6 +80,9 @@ public class PmsInvoiceManagerNew {
         order.supportMultipleBookings = true;
         order.createByManager = "PmsDailyOrderGeneration";
         order.userId = userId;
+        if(user.defaultDueDate >= 0) {
+            order.dueDays = user.defaultDueDate;
+        }
         
         orderManager.saveOrder(order);
         orderManager.changeOrderType(order.id, paymentMethodId);

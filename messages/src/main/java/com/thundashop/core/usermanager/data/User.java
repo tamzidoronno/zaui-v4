@@ -84,6 +84,8 @@ public class User extends DataCommon implements Comparable<User> {
     public boolean createInSendRegning = false;
     public boolean autoConfirmBookings = false;
     
+    public Integer defaultDueDate = -1;
+    
     @Administrator
     public String totpKey;
     public int lastTotpVerificationCodeUsed = 0;

@@ -16,9 +16,11 @@
 }
 .PmsPricingNew .stepbox tr.invalid { color:red;  text-decoration: line-through;}
 .PmsPricingNew .editcomment { position:absolute; display:none; padding: 5px; border: solid 1px; background-color:#fff; }
-.PmsPricingNew .stepbox {     box-shadow: 0px 0px 10px rgba(0,0,0,0.3); padding: 20px; min-height: 300px; background-color:#fdfdfd; padding-top: 0px; }
-.PmsPricingNew .weeked { border: solid 1px red; }
-.PmsPricingNew .priceinput { width: 50px; }
+.PmsPricingNew .stepbox { box-shadow: 0px 0px 3px rgba(0,0,0,0.3); min-height: 300px; background-color:#fdfdfd; padding-top: 0px; }
+.PmsPricingNew .stepbox .steopbox_title { font-size: 20px; text-align: center; padding-top: 4px; padding-bottom: 4px; color:#EEE; background-color:#23314e; }
+.PmsPricingNew .stepbox .body { padding: 20px; }
+.PmsPricingNew .weeked input { background-color:#7568a7; color:#fff; }
+.PmsPricingNew .priceinput { width: 46px; padding:6px; }
 .PmsPricingNew .pricetableview { width: 80%; overflow: auto;margin-left:20%;}
 .PmsPricingNew .selectedpriceplan { color: #000; }
 .PmsPricingNew .fixedpricerow{

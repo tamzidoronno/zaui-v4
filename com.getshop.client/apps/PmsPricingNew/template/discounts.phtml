@@ -20,220 +20,225 @@ if (sizeof($coupons) == 0) {
     <tr>
         <td>
             <div class="stepbox" style="min-height: 800px;">
-                <h1>Discount codes</h1>
-
-                <table width='100%' cellspacing='1' cellpadding='1'>
-                    <tr>
-                        <th></th>
-                        <th align='left'>Code</th>
-                        <th align='left'>Discount</th>
-                        <th align='left'>Times left</th>
-                        <th align='left'>Type</th>
-                        <th align='left'>Description</th>
-                        <th align='left' width='80'>Restriction</th>
-                        <th align='left' width='10'></th>
-                        <th align='left' width='80'>Addons</th>
-                        <th align='right'>Connected to user</th>
-                    </tR>
-                    <?php
-                    foreach ($coupons as $coupon) {
-                        if ($coupon->priceCode != $this->getSelectedPricePlan()) {
-                            continue;
-                        }
-                        $text = "";
-                        foreach ($coupon->addonsToInclude as $toInclude) {
-                            $product = $this->getApi()->getProductManager()->getProduct($toInclude->productId);
-                            $text .= $product->name . ", ";
-                        }
-                        $invalid = "";
-                        if($coupon->timesLeft <= 0) {
-                            $invalid = "invalid";
-                        }
-                        echo "<tr class='$invalid'>";
-                        echo "<td style='width:60px;'><i class='fa fa-trash-o' gs_confirm='Are you sure you want to delete this code?' gsclick='removeCoupon' couponid='" . $coupon->id . "' gsname='id' style='cursor:pointer;'></i>";
-                        echo " <i class='fa fa-edit toggleUpdateDiscountCode' couponcode='".$coupon->code."' style='cursor:pointer;'></i>";
-                        ?>
-                        <div gstype='form' method='updateDiscountCode' class="updateDiscountCodeForm" style="position:absolute; padding: 10px; display:none; border: solid 1px; background-color:#fff; z-index: 2; width:1250px;">
-                            <div class='innerupdatediscountcodeform'></div>
-                            <div style='text-align: right'>
-                                <span class='shop_button' gstype='submit'>Save</span>
-                            </div>
-                        </div>
-                        <?php
-                        echo "</td>";
-                        echo "<td align='left'>" . $coupon->code . "</td>";
-                        echo "<td>" . $coupon->amount . "</td>";
-                        echo "<td>" . $coupon->timesLeft . "</td>";
-                        echo "<td>" . $coupon->type . "</td>";
-                        echo "<td>" . $coupon->description;
-                        echo "<span class='editcomment' method='savecommentoncoupon'  gstype='form' style='padding:10px;'>";
-                        echo '<i class="fa fa-close" style="float:right;cursor:pointer;" onclick="$(\'.editcomment\').hide()"></i>';
-                        echo "<br>";
-                        echo "<input type='hidden' gsname='couponid' value='" . $coupon->id . "'>";
-                        echo "<input type='txt' gsname='description' class='gsniceinput1' value='" . $coupon->description . "'></input><br>";
-                        echo "<span class='pmsbutton' gstype='submit' style='width:100%; box-sizing:border-box;margin-top:10px;'>Save description</span>";
-                        echo "</span>";
-
-                        echo "</td>";
-                        echo "<td style='position:relative;'><span style=' width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis; display:block;' title='" . $this->getRepeatingSummary($coupon) . "'>" . $this->getRepeatingSummary($coupon) . "</span>";
-                        echo "<span class='addmoredatespanel'></span>";
-                        echo "</td>";
-                        echo "<td style='position:relative;'>";
-                        echo "<span class='addaddonsinludepanel'></span>";
-                        echo "</td>";
-                        echo "<td><span style='width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis; display:block;' title='$text'>$text</span></td>";
-                        echo "<td align='right'>";
-                        $pmsdiscount = $this->getApi()->getPmsInvoiceManager()->getUserDiscountByCouponCode($this->getSelectedMultilevelDomainName(), $coupon->code);
-                        if($pmsdiscount) {
-                            $user = $this->getApi()->getUserManager()->getUserById($pmsdiscount->userId);
-                            echo $user->fullName;
-                        }
-                        echo "</td>";
-
-                        echo "</tr>";
-                    }
-                    ?>
-                </table>
-                <br>
-                <?php
-                if (isset($this->addCouponError) && $this->addCouponError) {
-                    echo "<div style='font-size: 16px; color: red; font-weight:bold;'>";
-                    echo $this->addCouponError;
-                    echo "</div>";
-                }
-                ?>
-
-                <div gstype='form' method='createcoupon'>
-                    <label style='font-size: 12px; display:inline-block;'>
-                        Name of the code<br>
-                        <input type='text' gsname='code' class="gsniceinput1">
-                    </label>
-                    <label style='font-size: 12px; display:inline-block;'>
-                        * Times<br>
-                        <input type='text' gsname='times' value='1' style='width:40px;' class="gsniceinput1">
-                    </label>
-                    <label style='font-size: 12px; display:inline-block;'>
-                        * Amount<br>
-                        <input type='text' gsname='amount' style='width:60px;' class="gsniceinput1">
-                    </label>
-                    <label style='font-size: 12px; display:inline-block;'>
-                        Type<br>
-                        <select gsname='type' class="gsniceselect1" style="height:36px;">
-                        <?php 
-                            foreach($discountTypes as $idx => $val) {
-                                $selected = ($coupon->type == $idx) ? "SELECTED" : "";
-                                echo "<option value='$idx' $selected>$val</option>";
-                            }
-                        ?>
-                        </select>
-                    </label>
-                    <span class='pmsbutton' gstype='submit'>Add discount coupon</span>
-                    <div style='font-size: 12px;'>* Times: specify the number of times you want the code to be active for</div>
-                    <div style='font-size: 12px;'>* Amount: the amount to discount, if percentage enter the percentage as a number</div>
-                </div>
-                <br>
-            </div>
-        </td>
-        <td valign="top">
-            <div class="stepbox" style="min-height: 800px;">
-                <h1>Long term deals</h1>
-                <div gstype="form" method="savelongtermdeal">
-                    <table>
+                <div class='steopbox_title'>Discount codes</div>
+                <div class='body'>
+                    <table width='100%' cellspacing='1' cellpadding='1'>
                         <tr>
-                            <th>Min days</th>
-                            <th>discount(%)</th>
-                        </tr>
+                            <th></th>
+                            <th align='left'>Code</th>
+                            <th align='left'>Discount</th>
+                            <th align='left'>Times left</th>
+                            <th align='left'>Type</th>
+                            <th align='left'>Description</th>
+                            <th align='left' width='80'>Restriction</th>
+                            <th align='left' width='10'></th>
+                            <th align='left' width='80'>Addons</th>
+                            <th align='right'>Connected to user</th>
+                        </tR>
                         <?php
-                        $longtermdeal = (array) $prices->longTermDeal;
-                        ksort($longtermdeal);
+                        foreach ($coupons as $coupon) {
+                            if ($coupon->priceCode != $this->getSelectedPricePlan()) {
+                                continue;
+                            }
+                            $text = "";
+                            foreach ($coupon->addonsToInclude as $toInclude) {
+                                $product = $this->getApi()->getProductManager()->getProduct($toInclude->productId);
+                                $text .= $product->name . ", ";
+                            }
+                            $invalid = "";
+                            if($coupon->timesLeft <= 0) {
+                                $invalid = "invalid";
+                            }
+                            echo "<tr class='$invalid'>";
+                            echo "<td style='width:60px;'><i class='fa fa-trash-o' gs_confirm='Are you sure you want to delete this code?' gsclick='removeCoupon' couponid='" . $coupon->id . "' gsname='id' style='cursor:pointer;'></i>";
+                            echo " <i class='fa fa-edit toggleUpdateDiscountCode' couponcode='".$coupon->code."' style='cursor:pointer;'></i>";
+                            ?>
+                            <div gstype='form' method='updateDiscountCode' class="updateDiscountCodeForm" style="position:absolute; padding: 10px; display:none; border: solid 1px; background-color:#fff; z-index: 2; width:1250px;">
+                                <div class='innerupdatediscountcodeform'></div>
+                                <div style='text-align: right'>
+                                    <span class='shop_button' gstype='submit'>Save</span>
+                                </div>
+                            </div>
+                            <?php
+                            echo "</td>";
+                            echo "<td align='left'>" . $coupon->code . "</td>";
+                            echo "<td>" . $coupon->amount . "</td>";
+                            echo "<td>" . $coupon->timesLeft . "</td>";
+                            echo "<td>" . $coupon->type . "</td>";
+                            echo "<td>" . $coupon->description;
+                            echo "<span class='editcomment' method='savecommentoncoupon'  gstype='form' style='padding:10px;'>";
+                            echo '<i class="fa fa-close" style="float:right;cursor:pointer;" onclick="$(\'.editcomment\').hide()"></i>';
+                            echo "<br>";
+                            echo "<input type='hidden' gsname='couponid' value='" . $coupon->id . "'>";
+                            echo "<input type='txt' gsname='description' class='gsniceinput1' value='" . $coupon->description . "'></input><br>";
+                            echo "<span class='pmsbutton' gstype='submit' style='width:100%; box-sizing:border-box;margin-top:10px;'>Save description</span>";
+                            echo "</span>";
 
-                        $keys = array_keys($longtermdeal);
-                        $values = array_values($longtermdeal);
-                        for ($i = 0; $i < 10; $i++) {
-                            $days = "";
-                            $discount = "";
-                            if (isset($keys[$i])) {
-                                $days = $keys[$i];
+                            echo "</td>";
+                            echo "<td style='position:relative;'><span style=' width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis; display:block;' title='" . $this->getRepeatingSummary($coupon) . "'>" . $this->getRepeatingSummary($coupon) . "</span>";
+                            echo "<span class='addmoredatespanel'></span>";
+                            echo "</td>";
+                            echo "<td style='position:relative;'>";
+                            echo "<span class='addaddonsinludepanel'></span>";
+                            echo "</td>";
+                            echo "<td><span style='width: 100px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis; display:block;' title='$text'>$text</span></td>";
+                            echo "<td align='right'>";
+                            $pmsdiscount = $this->getApi()->getPmsInvoiceManager()->getUserDiscountByCouponCode($this->getSelectedMultilevelDomainName(), $coupon->code);
+                            if($pmsdiscount) {
+                                $user = $this->getApi()->getUserManager()->getUserById($pmsdiscount->userId);
+                                echo $user->fullName;
                             }
-                            if (isset($values[$i])) {
-                                $discount = $values[$i];
-                            }
-                            echo "<tr>";
-                            echo "<td align='center'><input type='txt' style='width:40px;' gsname='minday_$i' value='$days' class='gsniceinput1'></td>";
-                            echo "<td align='center'><input type='txt' style='width:40px;' gsname='discount_$i' value='$discount' class='gsniceinput1'></td>";
+                            echo "</td>";
+
                             echo "</tr>";
                         }
                         ?>
                     </table>
-                    <span class="pmsbutton" gstype="submit">Save long term stay deal</span>
+                    <br>
+                    <?php
+                    if (isset($this->addCouponError) && $this->addCouponError) {
+                        echo "<div style='font-size: 16px; color: red; font-weight:bold;'>";
+                        echo $this->addCouponError;
+                        echo "</div>";
+                    }
+                    ?>
+
+                    <div gstype='form' method='createcoupon'>
+                        <label style='font-size: 12px; display:inline-block;'>
+                            Name of the code<br>
+                            <input type='text' gsname='code' class="gsniceinput1">
+                        </label>
+                        <label style='font-size: 12px; display:inline-block;'>
+                            * Times<br>
+                            <input type='text' gsname='times' value='1' style='width:40px;' class="gsniceinput1">
+                        </label>
+                        <label style='font-size: 12px; display:inline-block;'>
+                            * Amount<br>
+                            <input type='text' gsname='amount' style='width:60px;' class="gsniceinput1">
+                        </label>
+                        <label style='font-size: 12px; display:inline-block;'>
+                            Type<br>
+                            <select gsname='type' class="gsniceselect1" style="height:36px;">
+                            <?php 
+                                foreach($discountTypes as $idx => $val) {
+                                    $selected = ($coupon->type == $idx) ? "SELECTED" : "";
+                                    echo "<option value='$idx' $selected>$val</option>";
+                                }
+                            ?>
+                            </select>
+                        </label>
+                        <span class='shop_button' gstype='submit'>Create discount coupon</span>
+                        <div style='font-size: 12px;'>* Times: specify the number of times you want the code to be active for</div>
+                        <div style='font-size: 12px;'>* Amount: the amount to discount, if percentage enter the percentage as a number</div>
+                    </div>
+                    <br>
+                </div>
+            </div>
+        </td>
+        <td valign="top">
+            <div class="stepbox" style="min-height: 800px;">
+                <div class='steopbox_title'>Long term deals</div>
+                <div class='body'>
+                    <div gstype="form" method="savelongtermdeal">
+                        <table>
+                            <tr>
+                                <th>Min days</th>
+                                <th>discount(%)</th>
+                            </tr>
+                            <?php
+                            $longtermdeal = (array) $prices->longTermDeal;
+                            ksort($longtermdeal);
+
+                            $keys = array_keys($longtermdeal);
+                            $values = array_values($longtermdeal);
+                            for ($i = 0; $i < 10; $i++) {
+                                $days = "";
+                                $discount = "";
+                                if (isset($keys[$i])) {
+                                    $days = $keys[$i];
+                                }
+                                if (isset($values[$i])) {
+                                    $discount = $values[$i];
+                                }
+                                echo "<tr>";
+                                echo "<td align='center'><input type='txt' style='width:40px;' gsname='minday_$i' value='$days' class='gsniceinput1'></td>";
+                                echo "<td align='center'><input type='txt' style='width:40px;' gsname='discount_$i' value='$discount' class='gsniceinput1'></td>";
+                                echo "</tr>";
+                            }
+                            ?>
+                        </table>
+                        <span class="shop_button" style='width:100%;box-sizing: border-box; margin-top:3px;' gstype="submit">Save long term stay deal</span>
+                    </div>
                 </div>
             </div>
         </td>
         <td valign="top">
             <div class="stepbox" style="min-height: 800px;">
                 <div gstype="form" method="saveCoveragePrices">
-                    <h1>Increase by coverage</h1>
-                    <table>
-                        <tr>
-                            <th>Percentage</th>
-                            <th>Increase</th>
-                        </tr>
-                        <?php
-                        for ($i = 0; $i < 3; $i++) {
-                            $keys = array_keys((array) $prices->coveragePrices);
-                            $price = "";
-                            $coverage = "";
-                            if (isset($keys[$i])) {
-                                $coverage = $keys[$i];
-                                $price = $prices->coveragePrices->{$coverage};
+                    <div class='steopbox_title'>Increase by coverage</div>
+                    <div class='body'>
+                        <table>
+                            <tr>
+                                <th>Percentage</th>
+                                <th>Increase</th>
+                            </tr>
+                            <?php
+                            for ($i = 0; $i < 3; $i++) {
+                                $keys = array_keys((array) $prices->coveragePrices);
+                                $price = "";
+                                $coverage = "";
+                                if (isset($keys[$i])) {
+                                    $coverage = $keys[$i];
+                                    $price = $prices->coveragePrices->{$coverage};
+                                }
+                                echo "<tr>";
+                                echo "<td><input type='text' style='width:50px' value='$coverage' gsname='coverage_$i' class='gsniceinput1'></td>";
+                                echo "<td><input type='text' style='width:50px' value='$price' gsname='price_$i' class='gsniceinput1'></td>";
+                                echo "</tr>";
                             }
-                            echo "<tr>";
-                            echo "<td><input type='text' style='width:50px' value='$coverage' gsname='coverage_$i'></td>";
-                            echo "<td><input type='text' style='width:50px' value='$price' gsname='price_$i'></td>";
-                            echo "</tr>";
-                        }
+                            ?>
+                        </table><br>
+                        <select gsname='coveragePriceType' class='gsniceselect1' style='width:100%; box-sizing: border-box;'>
+                            <option value="0">Percentage</option>
+                            <option value="1" <?php if ($prices->coverageType == 1) {
+                                echo "SELECTED";
+                            } ?> >Fixed price</option>
+                        </select>
+                        <br><br>
+                        <span class="shop_button" gstype="submit" style='width:100%;box-sizing: border-box; margin-top:3px;'>Save coverage prices</span>
+                    <br>
+
+                    <span class="shop_button editadvanceyieldplan" style='width:100%;box-sizing: border-box; margin-top:3px;' planid=''>Create advanced price yielding</span>
+                    <div class='outerpriceyieldplan' style='display:none;'>
+                        <?php
+                        $this->includefile("priceyieldpanel");
                         ?>
-                    </table><br>
-                    <select gsname='coveragePriceType'>
-                        <option value="0">Percentage</option>
-                        <option value="1" <?php if ($prices->coverageType == 1) {
-                            echo "SELECTED";
-                        } ?> >Fixed price</option>
-                    </select>
-                    <br><br>
-                    <span class="pmsbutton" gstype="submit">Save coverage prices</span>
-                </div>
-                <br>
+                    </div>
 
-                <span class="pmsbutton editadvanceyieldplan" planid=''>Create advanced price yielding</span>
-                <div class='outerpriceyieldplan' style='display:none;'>
                     <?php
-                    $this->includefile("priceyieldpanel");
-                    ?>
-                </div>
-
-                <?php
-                $advanceplane = (array)$this->getApi()->getPmsInvoiceManager()->getAllAdvancePriceYields($this->getSelectedMultilevelDomainName());
-                foreach($advanceplane as $plan) {
-                    echo "<div>";
-                    echo "<i class='fa fa-trash-o' gsclick='deleteAdvancePricePlan' planid='".$plan->id."' gs_confirm='Are you sure?' style='cursor:pointer;'></i> <i class='fa fa-edit editadvanceyieldplan' style='cursor:pointer;' planid='".$plan->id."'></i> " . date("d.m.Y", strtotime($plan->start)) . " - " . date("d.m.Y", strtotime($plan->end));
-                    echo " ";
-                    if(sizeof((array)$plan->types) == 0) {
-                        echo "for no categories";
-                    } else {
+                    $advanceplane = (array)$this->getApi()->getPmsInvoiceManager()->getAllAdvancePriceYields($this->getSelectedMultilevelDomainName());
+                    foreach($advanceplane as $plan) {
                         echo "<div>";
-                        echo "&nbsp;&nbsp;";
-                        echo "&nbsp;&nbsp;";
-                        $names = array();
-                        foreach($plan->types as $typeId) {
-                            $names[] = $types[$typeId]->name;
-                        } 
-                        echo join(",", $names);
-                        echo "</div>";
+                        echo "<i class='fa fa-trash-o' gsclick='deleteAdvancePricePlan' planid='".$plan->id."' gs_confirm='Are you sure?' style='cursor:pointer;'></i> <i class='fa fa-edit editadvanceyieldplan' style='cursor:pointer;' planid='".$plan->id."'></i> " . date("d.m.Y", strtotime($plan->start)) . " - " . date("d.m.Y", strtotime($plan->end));
+                        echo " ";
+                        if(sizeof((array)$plan->types) == 0) {
+                            echo "for no categories";
+                        } else {
+                            echo "<div>";
+                            echo "&nbsp;&nbsp;";
+                            echo "&nbsp;&nbsp;";
+                            $names = array();
+                            foreach($plan->types as $typeId) {
+                                $names[] = $types[$typeId]->name;
+                            } 
+                            echo join(",", $names);
+                            echo "</div>";
+                        }
+                       echo "</div>";
                     }
-                   echo "</div>";
-                }
-                ?>
+                    ?>
+                    </div>
+                </div>
             </div>
         </td>
     </tr>

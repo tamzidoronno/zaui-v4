@@ -200,7 +200,6 @@ app.PmsPricingNew = {
         data['prices_ex_taxes'] = $('.pricesextaxes').is(':checked');
         data['privatePeopleDoNotPayTaxes'] = $('.privatePeopleDoNotPayTaxes').is(':checked');
         data['pricetype'] = $('.pricetypeselection').val();
-        
         var event = thundashop.Ajax.createEvent('','setNewPrices',$(this), data);
         thundashop.Ajax.post(event);
     },

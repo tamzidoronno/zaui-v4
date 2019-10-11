@@ -238,8 +238,6 @@ class PageFactory {
         
         // PRICING
         $page = new \ModulePage("394bb905-8448-45c1-8910-e9a60f8aebc5", "pms");
-        $row = $page->createRow();
-        $row->addText("Pricing");
         
         $row = $page->createRow();
         $row->addColumn("4c8e3fe7-3c81-4a74-b5f6-442f841a0cb1", "d9ceed66-33af-4163-850d-a11e10a01def");

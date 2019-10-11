@@ -25,7 +25,8 @@ $pricetypes[8] = "Interval pricing";
 
 $priceCodes = (array)$this->getApi()->getPmsManager()->getpriceCodes($this->getSelectedName());
 ?>
-<div style=" margin-bottom: 20px; padding-bottom: 20px;">
+<div style='height:50px;'></div>
+<div style=" margin-bottom: 20px; padding-bottom: 20px; display:none;">
     <?php
     foreach($priceCodes as $code) {
         $selected = "";
@@ -65,50 +66,54 @@ $priceCodes = (array)$this->getApi()->getPmsManager()->getpriceCodes($this->getS
     <tr>
         <td valign='top'>
             <div class="stepbox">
-                <h1>Step 1 / 3: Select a date range</h1>
-                <div gstype='form' method="selectDates">
-                    <input type='text' gsname='start' value='<? echo $start; ?>' style='margin-right:5px; font-size: 20px; width: 110px; text-align:center;' class="gsniceinput1">
-                    <input type='text' gsname='end' value='<? echo $end; ?>' style='margin-right:5px; font-size: 20px; width: 110px; text-align:center;' class="gsniceinput1">
-                    <span gstype='submit' class='pmsbutton'>Set date range</span>
+                <div class='steopbox_title'>Step 1 / 3: Select a date range</div>
+                <div class='body'>
+                    <div gstype='form' method="selectDates">
+                        <input type='text' gsname='start' value='<? echo $start; ?>' style='margin-right:5px; font-size: 20px; width: 110px; text-align:center;' class="gsniceinput1">
+                        <input type='text' gsname='end' value='<? echo $end; ?>' style='margin-right:5px; font-size: 20px; width: 110px; text-align:center;' class="gsniceinput1">
+                        <span gstype='submit' class='shop_button'>Set date range</span>
+                    </div>
                 </div>
             </div>
         </td>
         <td valign='top' style='padding-left: 50px;'>
             <div class="stepbox">
-                <h1>Step 2 / 3: Set the prices</h1>
-                <table width='100%'>
-                    <tr>
-                        <th align='left'>Item</th>
-                        <th align='left'>Mo<br><input type='checkbox' class='selectcol' weekday='1'></input></th>
-                        <th align='left'>Tu<br><input type='checkbox' class='selectcol' weekday='2'></input></th>
-                        <th align='left'>We<br><input type='checkbox' class='selectcol' weekday='3'></input></th>
-                        <th align='left'>Th<br><input type='checkbox' class='selectcol' weekday='4'></input></th>
-                        <th align='left'>Fr<br><input type='checkbox' class='selectcol' weekday='5'></input></th>
-                        <th align='left'>Sa<br><input type='checkbox' class='selectcol' weekday='6'></input></th>
-                        <th align='left'>Su<br><input type='checkbox' class='selectcol' weekday='0'></input></th>
-                        <th align='left'>Price<br>&nbsp;</th>
-                <?php
-                foreach($itemTypes as $item) {
-                    echo "<tr itemid='".$item->id."'>";
-                    echo "<td><input type='checkbox' class='selectrow'> " . $item->name . "</td>";
-                    echo "<td><input type='checkbox' weekday='1' class='pricecheckbox'></td>";
-                    echo "<td><input type='checkbox' weekday='2' class='pricecheckbox'></td>";
-                    echo "<td><input type='checkbox' weekday='3' class='pricecheckbox'></td>";
-                    echo "<td><input type='checkbox' weekday='4' class='pricecheckbox'></td>";
-                    echo "<td><input type='checkbox' weekday='5' class='pricecheckbox'></td>";
-                    echo "<td><input type='checkbox' weekday='6' class='pricecheckbox'></td>";
-                    echo "<td><input type='checkbox' weekday='0' class='pricecheckbox'></td>";
-                    echo "<td><input type='txt' class='priceinput priceinputsetter ' itemid='".$item->id."'></td>";
-                    echo "</tr>";
-                }
-                ?>
-                    <tr>
-                        <td colspan='8'></td>
-                        <td>
-                            <span class='pmsbutton updatePricingTable'>Update</span>
-                        </td>
-                    </tr>
-                </table>
+                <div class='steopbox_title'>Step 2 / 3: Set the prices</div>
+                <div class='body'>
+                    <table width='100%'>
+                        <tr>
+                            <th align='left'>Item</th>
+                            <th align='left'>Mo<br><input type='checkbox' class='selectcol' weekday='1'></input></th>
+                            <th align='left'>Tu<br><input type='checkbox' class='selectcol' weekday='2'></input></th>
+                            <th align='left'>We<br><input type='checkbox' class='selectcol' weekday='3'></input></th>
+                            <th align='left'>Th<br><input type='checkbox' class='selectcol' weekday='4'></input></th>
+                            <th align='left'>Fr<br><input type='checkbox' class='selectcol' weekday='5'></input></th>
+                            <th align='left'>Sa<br><input type='checkbox' class='selectcol' weekday='6'></input></th>
+                            <th align='left'>Su<br><input type='checkbox' class='selectcol' weekday='0'></input></th>
+                            <th align='left'>Price<br>&nbsp;</th>
+                    <?php
+                    foreach($itemTypes as $item) {
+                        echo "<tr itemid='".$item->id."'>";
+                        echo "<td><input type='checkbox' class='selectrow'> " . $item->name . "</td>";
+                        echo "<td><input type='checkbox' weekday='1' class='pricecheckbox'></td>";
+                        echo "<td><input type='checkbox' weekday='2' class='pricecheckbox'></td>";
+                        echo "<td><input type='checkbox' weekday='3' class='pricecheckbox'></td>";
+                        echo "<td><input type='checkbox' weekday='4' class='pricecheckbox'></td>";
+                        echo "<td><input type='checkbox' weekday='5' class='pricecheckbox'></td>";
+                        echo "<td><input type='checkbox' weekday='6' class='pricecheckbox'></td>";
+                        echo "<td><input type='checkbox' weekday='0' class='pricecheckbox'></td>";
+                        echo "<td><input type='txt' class='priceinput priceinputsetter gsniceinput1 ' itemid='".$item->id."'></td>";
+                        echo "</tr>";
+                    }
+                    ?>
+                        <tr>
+                            <td colspan='8'></td>
+                            <td>
+                                <span class='shop_button updatePricingTable'>Update</span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </td>
     </tr>
@@ -118,7 +123,7 @@ $priceCodes = (array)$this->getApi()->getPmsManager()->getpriceCodes($this->getS
     <?php
     echo "<div class='stepbox'>";
     echo "<input type='hidden' gsname='priceType' value='" . $priceObject->defaultPriceType . "'>";
-    echo "<h1>Step 3 / 3: Verify the new pricing table</h1>";
+    echo "<div class='steopbox_title'>Step 3 / 3: Verify the new pricing table</div>";
     if($priceObject->defaultPriceType == 7 || $priceObject->defaultPriceType == 8) {
         $this->includefile("progressivepricing");
     } else {

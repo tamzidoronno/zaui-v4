@@ -4,51 +4,52 @@ $itemTypes = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemT
 $priceObject = $this->getPrices();
 $prices = $priceObject->dailyPrices;
 ?>
-<h2>Price day by day</h2>
 <div class='pricetableview'>
-<table cellspacing='0' cellpadding='0'>
-    <tr>
-        <th align='left' style="position:absolute;left:20px;">Item</th>
-        <th>Default</th>
-        <?php
-        for($i = strtotime($this->getStart()); $i <= strtotime($this->getEnd());) {
-            $weekday = date("w", $i);
-            $weekend = '';
-            if($weekday == 6 || $weekday == 0) {
-                $weekend = "weeked";
+    <div class='body'>
+        <table cellspacing='0' cellpadding='0'>
+            <tr>
+                <th align='left' style="position:absolute;left:20px;">Item</th>
+                <th>Default</th>
+                <?php
+                for($i = strtotime($this->getStart()); $i <= strtotime($this->getEnd());) {
+                    $weekday = date("w", $i);
+                    $weekend = '';
+                    if($weekday == 6 || $weekday == 0) {
+                        $weekend = "weeked";
+                    }
+                    echo "<td class='$weekend' style='text-align:center;'>".date("d.m.y", $i)."</td>";
+                    $i = strtotime('+1 day', $i);
+                }
+                ?>
+            </tr>
+            <?
+            foreach($itemTypes as $type) {
+                $price = "";
+                if(isset($prices->{$type->id}->{'default'})) {
+                    $price = $prices->{$type->id}->{'default'};
+                }
+                echo "<tr itemtype='".$type->id."'>";
+                echo "<td class='fixedpricerow'><span style='white-space:nowrap; padding-right: 15px;'>" . $type->name . "</span></td>";
+                echo "<td><input date='default' type='text' value='".$price."' class='priceinput gsniceinput1'></td>";
+                for($i = strtotime($this->getStart()); $i <= strtotime($this->getEnd());) {
+                    $date = date("d-m-Y", $i);
+                    $weekday = date("w", $i);
+                    $price = "";
+                    if(isset($prices->{$type->id}->{$date})) {
+                        $price = $prices->{$type->id}->{$date};
+                    }
+                    $weekend = '';
+                    if($weekday == 6 || $weekday == 0) {
+                        $weekend = "weeked";
+                    }
+                    echo "<td class='$weekend'><input type='text' weekday='$weekday' microtime='$i' date='$date' value='".$price."' class='priceinput gsniceinput1'></td>";
+                    $i = strtotime('+1 day', $i);
+                }
+                echo "</tr>";
             }
-            echo "<td class='$weekend'>".date("d.m.y", $i)."</td>";
-            $i = strtotime('+1 day', $i);
-        }
-        ?>
-    </tr>
-    <?
-    foreach($itemTypes as $type) {
-        $price = "";
-        if(isset($prices->{$type->id}->{'default'})) {
-            $price = $prices->{$type->id}->{'default'};
-        }
-        echo "<tr itemtype='".$type->id."'>";
-        echo "<td class='fixedpricerow'><span style='white-space:nowrap; padding-right: 15px;'>" . $type->name . "</span></td>";
-        echo "<td><input date='default' type='text' value='".$price."' class='priceinput'></td>";
-        for($i = strtotime($this->getStart()); $i <= strtotime($this->getEnd());) {
-            $date = date("d-m-Y", $i);
-            $weekday = date("w", $i);
-            $price = "";
-            if(isset($prices->{$type->id}->{$date})) {
-                $price = $prices->{$type->id}->{$date};
-            }
-            $weekend = '';
-            if($weekday == 6 || $weekday == 0) {
-                $weekend = "weeked";
-            }
-            echo "<td class='$weekend'><input type='text' weekday='$weekday' microtime='$i' date='$date' value='".$price."' class='priceinput'></td>";
-            $i = strtotime('+1 day', $i);
-        }
-        echo "</tr>";
-    }
-    ?>
-</table>
+            ?>
+        </table>
+    </div>
 </div>
 <span style='cursor:pointer;' onclick='$(".additionalguestprices").toggle()'>Show more options</span>
 <div style='display:none;' class='additionalguestprices'>
@@ -141,5 +142,5 @@ $prices = $priceObject->dailyPrices;
 </div>
 
 <div style='text-align: right;'>
-<span class='pmsbutton setnewprices'>Save prices</span>
+<span class='shop_button setnewprices'>Save prices</span>
 </div>

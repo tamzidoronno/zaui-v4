@@ -245,7 +245,7 @@ $isInvoice = $order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200
                     echo "<div class='metadata'>".$metadata."</div>";
                 }
             ?></div>
-            <div class='col col2'><? echo $item->product->price; ?></div>
+            <div class='col col2'><? echo $translator->formatPrice($item->product->price); ?></div>
             <div class='col col3'><? echo $item->count; ?></div>
             <div class='col col4'><? echo $translator->formatPrice($lineTotal); ?></div>
         </div>
@@ -276,6 +276,9 @@ $isInvoice = $order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200
 
     <?
     foreach ($calculatedTaxes as $percent => $taxTotal) {
+        if($taxTotal == 0) {
+            continue;
+        }
     ?>
         <div class='outerproductrow'>
             <div class='col col1'></div>

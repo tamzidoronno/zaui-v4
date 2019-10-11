@@ -4,15 +4,15 @@
     "Due date": "Fälligkeit",
     "Account number": "Kontoinhaber",
     "IBAN": "IBAN",
-    "VAT": "MwSt.",
-    "Phone": "Telefon",
-    "Email": "Email",
+    "VAT": "USt-ID",
+    "Phone": "Tel",
+    "Email": "E-mail",
     "BIC/SWIFT": "BIC/SWIFT",
     "KID": "Kind",
     "Product": "Produkt",
     "QTY": "Anzahl",
     "Unit Price": "Preis",
-    "Calculated Taxes": "enthaltene Steuer",
+    "Calculated Taxes": "Enthaltene Steuern",
     "Percent": "Prozent",
     "Amount": "Summe",
     "Balance due": "Betrag",
@@ -27,7 +27,7 @@
     "Proforma Invoice": "Vorläufige Rechnung",
     "Room" : "Zimmer",
     "Date" : "Datum",
-    "Order number" : "Buchungsnummer",
+    "Order number" : "Rechnungsnummer",
     "Order date" : "Buchungsdatum"
 }
 

@@ -123,7 +123,7 @@ public class PmsInvoiceManagerNew {
                     name = "Accommodation";
                 }
                 if(language != null && (language.equalsIgnoreCase("de"))) {
-                    name = "Unterkunft";
+                    name = "Unterkunft Hotelzimmer";
                 }
                 prod.name = name;
             }

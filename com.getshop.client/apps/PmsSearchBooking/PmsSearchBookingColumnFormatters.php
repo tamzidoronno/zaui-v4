@@ -318,7 +318,7 @@ class PmsSearchBookingColumnFormatters {
     public function getChannels() {
         $channels = array();
         $channels['web'] = "Admins";
-        $channels[''] = "Website";
+        $channels[''] = "Admins";
         $channels['website'] = "Website";
         $channels['wubook_0'] = "Wubook";
         $channels['wubook_1'] = "Exp.";

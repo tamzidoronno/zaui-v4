@@ -1128,6 +1128,14 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         retval.phonePrefix = "" + store.configuration.defaultPrefix;
         retval.currencyText = currencycode;
         retval.startYesterday = false;
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(store.getCurrentTimeInTimeZone());
+        Integer hour = cal.get(Calendar.HOUR_OF_DAY);
+        if(hour < 8) {
+            retval.startYesterday = true;
+        }
+        
         retval.defaultCheckinTime = config.getDefaultStartRaw();
         retval.ignoreGuestInformation = config.ignoreGuestInformation;
         retval.doNotRecommendBestPrice = config.doNotRecommendBestPrice;

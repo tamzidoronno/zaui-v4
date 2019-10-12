@@ -214,11 +214,12 @@ $isInvoice = $order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200
         $lineTotal = $item->product->price * $item->count;
         $total += $lineTotal;
         $taxes = ($item->product->price - $item->product->priceExTaxes) * $item->count;
-        if (!isset($calculatedTaxes[$item->product->taxGroupObject->taxRate])) {
-            $calculatedTaxes[$item->product->taxGroupObject->taxRate] = 0;
+        $key = $item->product->taxGroupObject->description . "_" . $item->product->taxGroupObject->taxRate;
+        if (!isset($calculatedTaxes[$key])) {
+            $calculatedTaxes[$key] = 0;
         }
 
-        $calculatedTaxes[$item->product->taxGroupObject->taxRate] += $taxes;
+        $calculatedTaxes[$key] += $taxes;
         $metadata = "";
         
         if ($item->product->additionalMetaData) {
@@ -282,9 +283,12 @@ $isInvoice = $order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200
         if($taxTotal == 0) {
             continue;
         }
+        $percent = explode("_", $percent);
+        $desc = $percent[0];
+        $percent = $percent[1];
     ?>
         <div class='outerproductrow'>
-            <div class='col col1'></div>
+            <div class='col col1'><?php echo $desc; ?></div>
             <div class='col col2'></div>
             <div class='col col3'><? echo $percent."%"; ?></div>
             <div class='col col4'><? echo $translator->formatPrice($taxTotal); ?></div>

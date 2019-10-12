@@ -1442,6 +1442,43 @@ public class Order extends DataCommon implements Comparable<Order> {
     public void markAsAutosent() {
         notfiedAutoSend = true;
     }
+
+    public void correctStartEndDate() {
+        for(CartItem item : getCartItems()) {
+            Date start = null;
+            Date end = null;
+            
+            if(item.getItemsAdded() != null) {
+                for(PmsBookingAddonItem addonItem : item.getItemsAdded()) {
+                    if(addonItem.date != null && (start == null || start.after(addonItem.date))) {
+                        start = addonItem.date;
+                    }
+                    if(addonItem.date != null && (end == null || end.before(addonItem.date))) {
+                        end = addonItem.date;
+                    }
+                }
+            }
+            
+            
+            if(item.priceMatrix != null) {
+                for(String key : item.priceMatrix.keySet()) {
+                    Date priceMatrixDate = PmsBookingRooms.convertOffsetToDate(key);
+                    if(priceMatrixDate != null && (start == null || start.after(priceMatrixDate))) {
+                        start = priceMatrixDate;
+                    }
+                    if(priceMatrixDate != null && (end == null || end.before(priceMatrixDate))) {
+                        end = priceMatrixDate;
+                    }
+                }
+            }
+            if(start != null) {
+                item.startDate = start;
+            }
+            if(end != null) {
+                item.endDate = end;
+            }
+        }
+    }
     
 
     public static class Status  {

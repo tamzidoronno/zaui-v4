@@ -83,6 +83,7 @@ public class PmsInvoiceManagerNew {
         if(user.defaultDueDate >= 0) {
             order.dueDays = user.defaultDueDate;
         }
+        order.correctStartEndDate();
         
         orderManager.saveOrder(order);
         orderManager.changeOrderType(order.id, paymentMethodId);

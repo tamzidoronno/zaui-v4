@@ -34,7 +34,7 @@ class PmsChartOverview extends \MarketingApplication implements \Application {
             case "ECONOMY":
                 $res = $this->getEconomyReport();
                 break;
-            case "Coverage":
+            case "Occupancy":
                 $res = $this->getCoverage();
                 break;
             case "Janitor":
@@ -157,7 +157,7 @@ class PmsChartOverview extends \MarketingApplication implements \Application {
         
         $today = 0;
         foreach($rooms as $room) {
-            if(sizeof($room->bookingComments) > 0) {
+            if(sizeof((array)$room->bookingComments) > 0) {
                 $today++;
             }
         }

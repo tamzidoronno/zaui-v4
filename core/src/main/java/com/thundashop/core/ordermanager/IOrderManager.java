@@ -408,6 +408,10 @@ public interface IOrderManager {
     
     @ForceAsync
     @Administrator
+    public List<DayEntry> getActualDayIncome(Date start, Date end);
+    
+    @ForceAsync
+    @Administrator
     public List<DayIncome> getDayIncomesWithMetaData(Date start, Date end);
     
     @Administrator

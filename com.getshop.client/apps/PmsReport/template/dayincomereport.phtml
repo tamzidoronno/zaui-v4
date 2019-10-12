@@ -1,0 +1,71 @@
+<?php
+/* @var $this ns_39fd9a07_94ea_4297_b6e8_01e052e3b8b9\PmsReport */
+
+$day = $_POST['data']['day'];
+if($day) {
+    $start = $day . " 00:00:00";
+    $end = $day . " 23:59:59";
+} else {
+    $filter = $this->getSelectedFilter();
+    $start = $filter->start;
+    $end = $filter->end;
+}
+
+$start = $this->convertToJavaDate(strtotime($start));
+$end = $this->convertToJavaDate(strtotime($end));
+
+$result = $this->getApi()->getOrderManager()->getActualDayIncome($start, $end);
+
+echo "<h1>Show result for periode: " . date("d.m.Y H:i:s", strtotime($start)) . " - " . date("d.m.Y H:i:s", strtotime($end)) . "</h1>";
+
+$products = array();
+foreach($result as $res) {
+    $products[$res->productId] = 1;
+}
+
+foreach($products as $productId => $whatever) {
+    $product = $this->getApi()->getProductManager()->getProduct($productId);
+    echo "<div style='font-weight:bold;text-transform:uppercase;'>" . $product->name . "</div>";
+    echo "<div class='incomreportdailyentry' style='border-bottom: solid 1px #bbb; font-style:italic;'>";
+    echo "<span class='dailyentrycolumn orderid'>Order id</span>";
+    echo "<span class='dailyentrycolumn date'>Date</span>";
+    echo "<span class='dailyentrycolumn count'>Count</span>";
+    echo "<span class='dailyentrycolumn inctaxes'>Inc taxes</span>";
+    echo "<span class='dailyentrycolumn extaxes'>Ex taxes</span>";
+    echo "<span class='dailyentrycolumn accountingnumber'>Accounting number</span>";
+    echo "</div>";
+    $totalExtaxes = 0;
+    $totalCount = 0;
+    $totalIncTaxes = 0;
+    foreach($result as $res) {
+        if($res->productId != $productId) {
+            continue;
+        }
+        $cartItem = $res->cartItemId;
+        $productId = $res->productId;
+        echo "<div class='incomreportdailyentry'>";
+        echo "<span class='dailyentrycolumn orderid'>".$res->incrementalOrderId."</span>";
+        echo "<span class='dailyentrycolumn date'>".date("d.m.Y", strtotime($res->date))."</span>";
+        echo "<span class='dailyentrycolumn count'>".$res->count."</span>";
+        echo "<span class='dailyentrycolumn inctaxes'>".round(($res->amount*-1),2)."</span>";
+        echo "<span class='dailyentrycolumn extaxes'>".round(($res->amountExTax*-1),2)."</span>";
+        echo "<span class='dailyentrycolumn accountingnumber'>".$res->accountingNumber."</span>";
+        echo "</div>";
+        $totalCount += $res->count;
+        $totalExtaxes += $res->amountExTax*-1;
+        $totalIncTaxes += $res->amount*-1;
+    }
+    
+    echo "<div class='incomreportdailyentry' style='border-top: solid 1px #bbb; border-bottom: solid 1px #bbb;'>";
+    echo "<span class='dailyentrycolumn orderid'>Total</span>";
+    echo "<span class='dailyentrycolumn date'></span>";
+    echo "<span class='dailyentrycolumn count'>$totalCount</span>";
+    echo "<span class='dailyentrycolumn inctaxes'>".round($totalIncTaxes,2)."</span>";
+    echo "<span class='dailyentrycolumn extaxes'>".round($totalExtaxes,2)."</span>";
+    echo "<span class='dailyentrycolumn accountingnumber'></span>";
+    echo "</div>";
+    
+    echo "<br><br>";
+}
+        
+?>

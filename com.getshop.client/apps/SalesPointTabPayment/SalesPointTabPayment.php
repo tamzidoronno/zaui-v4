@@ -207,7 +207,7 @@ class SalesPointTabPayment extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\Sale
             $messages = $this->getApi()->getOrderManager()->getTerminalMessages();
             $this->getApi()->getOrderManager()->clearMessages();
         }
-        echo "Terminal message";
+
         if ($messages && count($messages)) {
             $_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_last_terminal_message'] = end($messages);
         }

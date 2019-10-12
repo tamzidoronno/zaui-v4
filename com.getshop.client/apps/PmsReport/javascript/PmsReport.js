@@ -13,9 +13,26 @@ app.PmsReport = {
         $(document).on('click', '.PmsReport .removecustomerfromfilter', app.PmsReport.removeCustomer);
         $(document).on('click', '.PmsReport .removecodefromfilter', app.PmsReport.removeDiscount);
         $(document).on('click', '.PmsReport .filterbycustomerbutton', app.PmsReport.toggleFilterByCustomer);
+        $(document).on('click', '.PmsReport .column', app.PmsReport.loadDayInformation);
+        $(document).on('click', '.PmsReport .closeDayInformation', app.PmsReport.closeDayInformation);
         $(document).on('click', '.PmsReport .displayto30list', app.PmsReport.toggleTop30List);
         $(document).on('change', '.PmsReport [gsname="segment"]', app.PmsReport.changeSegments);
     },
+    closeDayInformation : function() {
+        $('.PmsReport .informationoverlay').fadeOut();
+    },
+    loadDayInformation : function() {
+        $('.PmsReport .informationoverlay').fadeIn();
+        var day = $(this).attr('date');
+        var event = thundashop.Ajax.createEvent('','loadDayIncomeReportEntry',$(this), {
+            day : day
+        });
+        
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.PmsReport .informationoverlay .inneroverlay').html(res);
+        });
+        
+    }, 
     changeSegments : function() {
         var val = $(this).val();
         if(val && val !== "") {

@@ -248,6 +248,8 @@ public class OrderDailyBreaker {
                 DayEntry entry = new DayEntry();
                 entry.cartItemId = item.getCartItemId();
                 entry.orderId = order.id;
+                entry.productId = item.getProductId();
+                entry.count = item.getCount();
                 entry.incrementalOrderId = order.incrementOrderId;
                 entry.isActualIncome = item.getProduct().isActuallyIncome();
                 entry.amount = TwoDecimalRounder.roundTwoDecimals(item.priceMatrix.get(dateString), precision);
@@ -281,6 +283,8 @@ public class OrderDailyBreaker {
             
             DayEntry entry = new DayEntry();
             entry.cartItemId = item.getCartItemId();
+            entry.productId = item.getProductId();
+            entry.count = item.getCount();
             entry.orderId = order.id;
             entry.amount = TwoDecimalRounder.roundTwoDecimals(total, precision);
             entry.amountExTax = TwoDecimalRounder.roundTwoDecimals((total / taxFactor), precision);
@@ -300,6 +304,8 @@ public class OrderDailyBreaker {
     private DayEntry createNormalOrderEntry(Order order, CartItem item) {
         DayEntry entry = new DayEntry();
         entry.cartItemId = item.getCartItemId();
+        entry.productId = item.getProductId();
+        entry.count = item.getCount();
         entry.orderId = order.id;
         entry.incrementalOrderId = order.incrementOrderId;
         
@@ -822,6 +828,8 @@ public class OrderDailyBreaker {
             dayEntry.date  = entry.date;
             dayEntry.orderId  = entry.orderId;
             dayEntry.cartItemId  = entry.cartItemId;
+            dayEntry.productId = entry.productId;
+            dayEntry.count = entry.count;
             dayEntry.isTaxTransaction = true;
             orderDayEntries.add(dayEntry);
         }

@@ -24,6 +24,10 @@ class PmsReport extends \MarketingApplication implements \Application {
         return $addonsResult;
     }
     
+    public function loadDayIncomeReportEntry() {
+        $this->includefile("dayincomereport");
+    }
+    
     public function getTotalSlept($saleStats) {
         $total = 0;
         foreach($saleStats->entries as $entry) {

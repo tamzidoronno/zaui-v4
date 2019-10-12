@@ -4643,4 +4643,18 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
     }
 
+    @Override
+    public List<DayEntry> getActualDayIncome(Date start, Date end) {
+        List<DayIncome> income = getDayIncomes(start, end);
+        List<DayEntry> res = new ArrayList();
+        for(DayIncome in : income) {
+            for(DayEntry entry : in.dayEntries) {
+                if(entry.isActualIncome && !entry.isOffsetRecord) {
+                    res.add(entry);
+                }
+            }
+        }
+        return res;
+    }
+
 }

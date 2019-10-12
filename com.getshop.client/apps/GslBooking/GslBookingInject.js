@@ -1542,7 +1542,7 @@ function getshop_removeGuest(e) {
 }
 
 function getshop_setDatePicker() {
-    try {
+    try {        
         var currentDate = new Date();
         var rooms = $('#count_room');
         var adults = $('#count_adult');
@@ -1550,7 +1550,7 @@ function getshop_setDatePicker() {
         var discountCode = $('#coupon_input');
         var endDate = new Date();
         endDate.setTime(endDate.getTime() + (86400*1000)); 
-
+        console.log('setting datepicker');
         var hash = window.location.hash.substr(1);
         var result = hash.split('&').reduce(function (result, item) {
             var parts = item.split('=');
@@ -1635,7 +1635,12 @@ function getshop_setDatePicker() {
         }
         $('.ui-datepicker').remove();
         
-        $('.date_picker_start_gsl').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true,firstDay: 1,
+        var minDate = "0d";
+        if(getshop_bookingconfiguration.startYesterday) {
+            var minDate = "-1d";
+        }
+        
+        $('.date_picker_start_gsl').datepicker({ dateFormat: "dd.mm.yy", minDate: minDate, changeMonth: true, changeYear: true, showButtonPanel: true,firstDay: 1,
             onSelect: function(dateText) {
                var date = moment.utc(dateText, "DD.MM.YYYY").local();
                var currentEnd = $('#date_picker_end').val();

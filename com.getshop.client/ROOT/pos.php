@@ -14,7 +14,7 @@ $printPageMenuInModulesMenu=true;
 
 $factory = IocContainer::getFactorySingelton();
 if(!$factory->getApi()->getUserManager()->isLoggedIn() || !ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()) {
-    header('location:/login.php?redirectto=/salespoint.php');
+    header('location:/login.php?redirectto=/pos.php');
     exit(0);
 }
 

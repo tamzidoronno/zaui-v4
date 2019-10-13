@@ -44,4 +44,7 @@ public interface ISystemManager {
     
     public List<UnpaidInvoices> getUnpaidInvoicesForStore(String storeId);
     
+    @Administrator
+    public List<GetShopSystem> findSystem(String keyword);
+    
 }

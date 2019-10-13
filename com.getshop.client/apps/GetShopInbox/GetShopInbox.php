@@ -58,6 +58,23 @@ class GetShopInbox extends \MarketingApplication implements \Application {
         $_SESSION['ns_f1706b4c_f779_4eb7_aec3_ee08f182e090_start'] = $_POST['data']['startdate'];
     }
     
+    
+    public function quickSearchCustomer() {
+        $systems = $this->getApi()->getSystemManager()->findSystem($_POST['data']['keyword']);
+        echo "<table cellpadding='1' cellspacing='1' style='margin:10px;' width='100%'>";
+        foreach($systems as $res) {
+            echo "<tr>";
+            echo "<td>".$res->systemName."</td>";
+            echo "<td>".$res->webAddresses."</td>";
+            $company = $this->getApi()->getUserManager()->getCompany($res->companyId);
+            echo "<td>".$company->name."</td>";
+            echo "<td><span class='shop_button startticket' systemid='".$res->id."' address='".$res->webAddresses."'>Start ticket</span> <span class='shop_button' onclick='window.open(\"https:\\\\".$res->webAddresses."/totp.php\", \"fdsafasf\")'>Open system</span></td>";
+            echo "</tr>";
+        }
+        echo "</table>";
+        
+    }
+    
     public function render() {
         
         if(isset($_GET['displayCustomerTickets'])) {
@@ -66,11 +83,13 @@ class GetShopInbox extends \MarketingApplication implements \Application {
             $this->changeMenu();
         }
         
+        
         echo "<div class='leftmenu'>";
             $this->includefile("leftmenu");
         echo "</div>";
 
         echo "<div class='workarea'>";
+        $this->includefile("quicksearchsystem");
 //            $this->includefile("topmenu");
             echo "<div class='emaillistarea'>";
                 if ($this->getCurrentTab() == "notifications") {

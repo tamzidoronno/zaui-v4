@@ -15,7 +15,18 @@ app.GetShopInbox = {
         $(document).on('click', '.GetShopInbox .timespentupdate', app.GetShopInbox.promtTimeSpent);
         $(document).on('click', '.GetShopInbox .mailview .sendreply', app.GetShopInbox.sendReply);
         $(document).on('click', '.GetShopInbox .mailview .markCompleted', app.GetShopInbox.markCompleted);
+        $(document).on('click', '.GetShopInbox .startticket', app.GetShopInbox.startTicket);
         $(document).on('keydown', app.GetShopInbox.keyDownPressed);
+    },
+    
+    startTicket : function() {
+        var addr = $(this).attr('address');
+        var systemid = $(this).attr('systemid');
+        $.get("https://" + addr + "/scripts/createTicket.php", function(res) {
+            window.open("https://" + addr + "/totp.php", "fdasfasdfs");
+            window.location.href='/getshop.php?page=ticketview&ticketId=' + res;
+         });
+
     },
     promtTimeSpent : function() {
         var time = prompt("Time spent");

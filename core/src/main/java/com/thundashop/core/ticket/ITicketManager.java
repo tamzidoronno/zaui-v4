@@ -39,6 +39,8 @@ public interface ITicketManager {
     @Administrator
     public TicketLight createLightTicket(String title);
     
+    public TicketLight createLightTicketWithPassword(String title, String password);
+    
     @Administrator
     public List<TicketLight> getTicketLights();
     

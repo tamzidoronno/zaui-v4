@@ -35,7 +35,7 @@ foreach ($states as $state) {
             $cachedUsers->{$ticket->userId} = $user;
         }
         
-        if (!$user && $cachedUsers->{$ticket->userId}) {
+        if (!$user && @$cachedUsers->{$ticket->userId}) {
             $user = $cachedUsers->{$ticket->userId};
         }
 

@@ -1,0 +1,19 @@
+<div style="margin:10px;'">
+    <input type="txt" class="gsniceinput1 searchcustomerquick" placeholder='Search customer'>
+    <span class="shop_button">Search</span>
+</div>
+
+<div class='searcharea'></div>
+
+<script>
+    $('.searchcustomerquick').focus();
+     $('.searchcustomerquick').on('keyup', function(res) {
+         var search = $(this).val();
+         var event = thundashop.Ajax.createEvent('','quickSearchCustomer',$(this), {
+             "keyword" : search
+         });
+         thundashop.Ajax.postWithCallBack(event, function(res) {
+             $('.searcharea').html(res);
+         })
+     });
+</script>

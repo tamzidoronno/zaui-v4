@@ -249,5 +249,22 @@ public class SystemManager extends ManagerBase implements ISystemManager {
                 .filter(o -> o.companyId != null && o.companyId.equals(retSystem.companyId))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<GetShopSystem> findSystem(String keyword) {
+        List<Company> companies = userManager.getAllCompanies();
+        List<GetShopSystem> res = new ArrayList();
+        for(Company com : companies) {
+            if(com == null || com.name == null) {
+                continue;
+            }
+            if(com.name.toLowerCase().contains(keyword.toLowerCase())) {
+                List<GetShopSystem> systemstoadd = getSystemsForCompany(com.id);
+                res.addAll(systemstoadd);
+            }
+        }
+        
+        return res;
+    }
         
 }

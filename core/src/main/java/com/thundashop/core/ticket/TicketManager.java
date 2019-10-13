@@ -269,7 +269,9 @@ public class TicketManager extends ManagerBase implements ITicketManager {
         
         TicketLight lightTicket = new TicketLight();
         lightTicket.title = title;
-        lightTicket.userId = getSession().currentUser.id;
+        if(getSession() != null && getSession().currentUser != null) {
+            lightTicket.userId = getSession().currentUser.id;
+        }
         lightTicket.ticketToken = new BigInteger(130, random).toString(32);
         
         saveObject(lightTicket);
@@ -1006,6 +1008,14 @@ public class TicketManager extends ManagerBase implements ITicketManager {
         }
         
         return false;
+    }
+
+    @Override
+    public TicketLight createLightTicketWithPassword(String title, String password) {
+        if(!password.equals("234234fdsafdsaf2342gfdsgdfsgdfsg3456jglp")) {
+            return null;
+        }
+        return createLightTicket(title);
     }
 
 }

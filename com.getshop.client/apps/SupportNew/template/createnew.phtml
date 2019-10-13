@@ -70,7 +70,8 @@ $phone = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->cellPho
         $stats = $this->getSystemGetShopApi()->getCustomerTicketManager()->getTicketReportForCustomer($filter->start, $filter->end, $filter->storeId, null);
         
         echo "<div style='font-weight:bold;margin-top: 20px;'>";
-        echo "PS: You have " . round($stats->hoursIncluded,2) . " hours included in your support package, and have used: " . $stats->billableHours . " hours ". $stats->billableMinutes ." minutes of them.<br>";
+        echo "PS: You have " . round($stats->hoursIncluded,2) . " hours included in your support package, and have used: " . $stats->billableHours . " hours ". $stats->billableMinutes ." minutes of them<br>";
+        echo "Meetings, accounting, and extraordinary support is not included in the free support.<br>";
         echo "We will charge an additional fee for all support above the monthly included time, for a more detailed view go to the reports section in the top menu.";
         echo "</div>";
         

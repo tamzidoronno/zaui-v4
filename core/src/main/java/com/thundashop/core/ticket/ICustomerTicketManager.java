@@ -42,5 +42,5 @@ public interface ICustomerTicketManager {
     public void markTicketAsRead(String tokenId);
     
     @ForceAsync
-    public TicketReport getTicketReportForCustomer(Date start, Date end, String storeId);
+    public TicketReport getTicketReportForCustomer(Date start, Date end, String storeId, TicketType type);
 }

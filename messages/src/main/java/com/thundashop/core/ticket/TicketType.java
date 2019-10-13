@@ -15,5 +15,10 @@ public enum TicketType {
     FEATURE,
     BACKLOG,
     UNKOWN,
-    SETUP
+    SETUP,
+    MEETING,
+    PHONE,
+    ACCOUNTING,
+    HARDWARE,
+    EXTRAORDINARY
 }

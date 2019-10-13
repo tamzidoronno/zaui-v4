@@ -45,12 +45,16 @@ class TicketViewCustomer extends \MarketingApplication implements \Application {
     
     public function getTypes() {
         $types = array();
-        $types['UNKOWN'] = "UNKOWN";
-        $types['BUG'] = "BUG";
-        $types['FEATURE'] = "FEATURE";
-        $types['BACKLOG'] = "BACKLOG";
         $types['SUPPORT'] = "SUPPORT";
+        $types['MEETING'] = "MEETING";
+        $types['PHONE'] = "PHONE";
+        $types['BUG'] = "BUG";
+        $types['ACCOUNTING'] = "ACCOUNTING";
+        $types['HARDWARE'] = "HARDWARE";
+        $types['BACKLOG'] = "BACKLOG";
         $types['SETUP'] = "SETUP";
+        $types['EXTRAORDINARY'] = "EXTRAORDINARY";
+        $types['UNKOWN'] = "UNKOWN";
         return $types;
     }
     
@@ -68,7 +72,7 @@ class TicketViewCustomer extends \MarketingApplication implements \Application {
             $ticket = $this->getApi()->getTicketManager()->getTicket($_GET['ticketId']);
             $ticket->timeSpent += (($_POST['data']['secondsused']/60)/60);
             $ticket->timeSpentAtDate->{time()*1000} = (($_POST['data']['secondsused']/60)/60);
-            $ticket->type = $_POST['data']['type'];
+            $ticket->type = $_POST['data']['submit'];
             $ticket->currentState = $_POST['data']['state'];
             if($_POST['data']['ignoreinvoice'] != "true") {
                 $ticket->timeInvoice += (($_POST['data']['secondsused']/60)/60);

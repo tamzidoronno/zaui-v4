@@ -911,7 +911,7 @@ public class TicketManager extends ManagerBase implements ITicketManager {
         saveObject(lightTicket);
     }
 
-    List<TicketReportLine> getAllTicketsRepliedToBetween(Date start, Date end, String storeId) {
+    List<TicketReportLine> getAllTicketsRepliedToBetween(Date start, Date end, String storeId, TicketType type) {
         List<TicketReportLine> lines = new ArrayList();
         String usrId = systemManager.getCustomerIdForStoreId(storeId);
         
@@ -928,6 +928,14 @@ public class TicketManager extends ManagerBase implements ITicketManager {
             
             for(Long timeEnd : ticket.timeSpentAtDate.keySet()) {
                 if(timeEnd > start.getTime() && timeEnd < end.getTime()) {
+                    if(type != null) {
+                        if(!ticket.type.equals(type)) {
+                            continue;
+                        }
+                    } else if(avoidNotIncludedTicketTypes(ticket.type)) {
+                        continue;
+                    }
+
                     long millisecondsspent = (long)(ticket.timeSpentAtDate.get(timeEnd) * 3600000);
                     long timeStart = timeEnd - millisecondsspent;
                     Date timeStartDate = new Date();
@@ -935,10 +943,12 @@ public class TicketManager extends ManagerBase implements ITicketManager {
                     Date timeEndDate = new Date();
                     timeEndDate.setTime(timeEnd);
                     
+                    
                     TicketReportLine reportLine = new TicketReportLine();
                     reportLine.startSupport = timeStartDate;
                     reportLine.endSupport = timeEndDate;
                     reportLine.title = ticket.title;
+                    reportLine.type = ticket.type;
                     if(ticket.timeInvoiceAtDate.get(timeEnd) != null && ticket.timeInvoiceAtDate.get(timeEnd) > 0) {
                         reportLine.billable = true;
                     }
@@ -982,6 +992,20 @@ public class TicketManager extends ManagerBase implements ITicketManager {
         line.minutes = (int)elapsedMinutes;
         line.seconds = (int)elapsedSeconds;
 
+    }
+
+    private boolean avoidNotIncludedTicketTypes(TicketType type) {
+        if(type.equals(TicketType.ACCOUNTING)) {
+            return true;
+        }
+        if(type.equals(TicketType.MEETING)) {
+            return true;
+        }
+        if(type.equals(TicketType.EXTRAORDINARY)) {
+            return true;
+        }
+        
+        return false;
     }
 
 }

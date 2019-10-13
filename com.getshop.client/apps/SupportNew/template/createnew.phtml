@@ -67,7 +67,7 @@ $phone = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->cellPho
         $filter->start = $this->convertToJavaDate(strtotime(date("01.m.Y")));
         $filter->end =  $this->convertToJavaDate(strtotime(date("t.m.Y")));
         $filter->storeId = $this->getApi()->getStoreManager()->getStoreId();
-        $stats = $this->getSystemGetShopApi()->getCustomerTicketManager()->getTicketReportForCustomer($filter->start, $filter->end, $filter->storeId);
+        $stats = $this->getSystemGetShopApi()->getCustomerTicketManager()->getTicketReportForCustomer($filter->start, $filter->end, $filter->storeId, null);
         
         echo "<div style='font-weight:bold;margin-top: 20px;'>";
         echo "PS: You have " . round($stats->hoursIncluded,2) . " hours included in your support package, and have used: " . $stats->billableHours . " hours ". $stats->billableMinutes ." minutes of them.<br>";

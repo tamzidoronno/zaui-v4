@@ -47,28 +47,44 @@ class SupportReport extends \WebshopApplication implements \Application {
         echo "<br>";
         echo "<br>";
         echo "<br>";
-        $this->printReport();
+        
+        
+        $this->printReport(null);
+        $this->printReport("MEETING");
+        $this->printReport("EXTRAORDINARY");
+        $this->printReport("ACCOUNTING");
         echo "</div>";
         
     }
 
-    public function printReport() {
+    public function printReport($type) {
         $selectedTime = $this->getSelectedTimePeriode();
-        echo "<h1>Support report for periode " . date("01.m.Y", $selectedTime) . " - " . date('t.m.Y', $selectedTime) . "</h1>";
         
         $start = $this->convertToJavaDate(strtotime(date("01.m.Y 00:00", $selectedTime)));
         $end = $this->convertToJavaDate(strtotime(date("t.m.Y 23:59", $selectedTime)));
         
-        $report = $this->getSystemGetShopApi()->getCustomerTicketManager()->getTicketReportForCustomer($start, $end, $this->getFactory()->getStore()->id);
+        $report = $this->getSystemGetShopApi()->getCustomerTicketManager()->getTicketReportForCustomer($start, $end, $this->getFactory()->getStore()->id, $type);
         
-        echo "Total support " . $report->supportHours . " hours, " . $report->supportMinutes . " minutes, " . $report->supportSeconds. " seconds.<br>";
-        echo "Billable support " . $report->billableHours . " hours, " . $report->billableMinutes . " minutes, " . $report->billableSeconds. " seconds.<br>";
-        echo "You have " . $report->hoursIncluded . " hours in your subscription plan, this will be deducted on the invoice.<br><br>";
+        if(sizeof((array)$report->lines) == 0) {
+            return;
+        }
+        
+        if($type) {
+            echo "<h1>" . $type . "</h1>";
+            echo "Total ".strtolower($type)." support " . $report->supportHours . " hours, " . $report->supportMinutes . " minutes, " . $report->supportSeconds. " seconds, will be added to your next bill.<br>";
+        } else {
+            echo "<h1>General support</h1>";
+            echo "<h3>Support report for periode " . date("01.m.Y", $selectedTime) . " - " . date('t.m.Y', $selectedTime) . "</h3>";
+            echo "Total support " . $report->supportHours . " hours, " . $report->supportMinutes . " minutes, " . $report->supportSeconds. " seconds.<br>";
+            echo "Billable support " . $report->billableHours . " hours, " . $report->billableMinutes . " minutes, " . $report->billableSeconds. " seconds.<br>";
+            echo "You have " . $report->hoursIncluded . " hours in your subscription plan, this will be deducted on the invoice.<br><br>";
+        }
         
         echo "<table width='100%'>";
         echo "<tr>";
         echo "<th align='left'>Start</th>";
         echo "<th align='left'>End</th>";
+        echo "<th align='left'>Type</th>";
         echo "<th align='left'>Title</th>";
         echo "<th align='left'>Hours</th>";
         echo "<th align='left'>Minutes</th>";
@@ -80,6 +96,7 @@ class SupportReport extends \WebshopApplication implements \Application {
             echo "<tr>";
             echo "<td>" . date("d.m.Y H:i:s", strtotime($line->startSupport)) . "</td>";
             echo "<td>" . date("d.m.Y H:i:s", strtotime($line->endSupport)) . "</td>";
+            echo "<td>" . $line->type . "</td>";
             echo "<td>";
             if(!$line->billable) {
                 echo "(free) ";

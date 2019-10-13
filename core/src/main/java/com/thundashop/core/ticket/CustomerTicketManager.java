@@ -159,12 +159,12 @@ public class CustomerTicketManager extends ManagerBase implements ICustomerTicke
     }
 
     @Override
-    public TicketReport getTicketReportForCustomer(Date start, Date end, String storeId) {
+    public TicketReport getTicketReportForCustomer(Date start, Date end, String storeId, TicketType type) {
         TicketReport report = new TicketReport();
         report.start = start;
         report.end = end;
         
-        List<TicketReportLine> tickets = ticketManager.getAllTicketsRepliedToBetween(start, end, storeId);
+        List<TicketReportLine> tickets = ticketManager.getAllTicketsRepliedToBetween(start, end, storeId, type);
         report.lines = tickets;
         
         report.summarizeSupport();

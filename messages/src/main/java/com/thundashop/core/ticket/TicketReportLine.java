@@ -21,4 +21,5 @@ public class TicketReportLine {
     Integer minutes;
     Integer seconds;
     boolean billable = false;
+    TicketType type;
 }

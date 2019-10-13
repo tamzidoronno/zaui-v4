@@ -20,13 +20,18 @@ import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.system.GetShopSystem;
 import com.thundashop.core.system.SystemManager;
+import com.thundashop.core.ticket.CustomerTicketManager;
 import com.thundashop.core.ticket.Ticket;
 import com.thundashop.core.ticket.TicketFilter;
 import com.thundashop.core.ticket.TicketManager;
+import com.thundashop.core.ticket.TicketReport;
 import com.thundashop.core.ticket.TicketState;
+import com.thundashop.core.ticket.TicketType;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -76,6 +81,9 @@ public class DirectorManager extends ManagerBase implements IDirectorManager {
     
     @Autowired
     private TicketManager ticketManager;
+    
+    @Autowired
+    private CustomerTicketManager customerTicketManager;
     
     private DirectorySyncUtils syncUtils;
     
@@ -163,9 +171,12 @@ public class DirectorManager extends ManagerBase implements IDirectorManager {
         List<GetShopSystem> systems = systemManager.getSystemsForCompany(company.id);
         systems.forEach(system -> addSmsAndEhf(system, virtual, company));
         systems.forEach(system -> addMonthlyCost(system));
+        GetShopSystem anySystem = systems.stream()
+                .findAny()
+                .orElse(null);
         
-        if (mainCompanyUser != null) {
-            addTickets(mainCompanyUser, virtual);
+        if (anySystem != null) {
+            addTickets(anySystem, virtual, company);
         }
         
         if (!cartManager.getCart().isNullCart()) {
@@ -322,6 +333,11 @@ public class DirectorManager extends ManagerBase implements IDirectorManager {
     private boolean ignoreSystem(GetShopSystem system) {
         Date today = new Date();
         
+        // Avoid making bills to us self. - system.getshop.com
+        if (system.remoteStoreId.equals("13442b34-31e5-424c-bb23-a396b7aeb8ca")) {
+            return true;
+        }
+        
         // Return if there current periode already has been invoiced.
         if (system.invoicedTo != null && today.before(system.invoicedTo)) {
             return true;
@@ -358,35 +374,71 @@ public class DirectorManager extends ManagerBase implements IDirectorManager {
         return (cal.get(Calendar.MONTH)+1)+"."+cal.get(Calendar.YEAR);
     }
 
-    private void addTickets(User mainCompanyUser, boolean virtual) {
-        //  TODO: Start using the new ticket system....
-        // NB!!!! Support forign currencty also..
+    private void addTickets(GetShopSystem system, boolean virtual, Company company) {
+        if (ignoreSystem(system)) {
+            return;
+        }
+    
+        boolean isNonNorwegian = isNonNorwegian(company);
         
-//        TicketFilter filter = new TicketFilter();
-//        filter.userId = mainCompanyUser.id;
-//        filter.state = TicketState.COMPLETED;
-//        ticketManager.getAllTickets(filter).stream()
-//            .filter(ticket -> !ticket.transferredToAccounting)
-//            .forEach(ticket -> {
-//                int seconds = (int) (ticket.timeInvoice * 60 * 60);
-//                String timeSpent = timeConversion(seconds);
-//
-//                Product ticketProduct = getTicketProduct(ticket).clone();
-//                ticketProduct.price = (ticketProduct.price * ticket.timeInvoice);
-//                ticketProduct.name = "Support: " + ticket.incrementalId + " - " + ticket.title + " ( " + timeSpent + " )";
-//                CartItem item = cartManager.getCart().createCartItem(ticketProduct, 1);
-//                
-//                if (!virtual) {
-//                    ticketManager.markTicketAsTransferredToAccounting(ticket.id);
-//                }
-//            });
+        Calendar aCalendar = Calendar.getInstance();
+        aCalendar.set(Calendar.DATE, 1);
+        aCalendar.set(Calendar.HOUR_OF_DAY, 0);
+        aCalendar.set(Calendar.MINUTE, 0);
+        aCalendar.set(Calendar.SECOND, 0);
+        aCalendar.set(Calendar.MILLISECOND, 0);
+
+        Date end = aCalendar.getTime();
+
+        aCalendar.add(Calendar.MONTH, -1);
+        // set actual maximum date of previous month
+        
+        //read it
+        Date start = aCalendar.getTime();
+    
+        String periode = "";
+        if (start == null) {
+            periode = "To "+getMonthAndYear(end);
+        } else {
+            periode = getMonthAndYear(start)+" - "+getMonthAndYear(end);
+        }
+        
+        List<CartItem> items = new ArrayList();
+    
+        TicketReport ret = customerTicketManager.getTicketReportForCustomer(start, end, system.remoteStoreId, null);
+        
+        BigDecimal bd = new BigDecimal(ret.getToAddOnInvoice()).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal free = new BigDecimal(ret.getToDeductOnInvoice()).setScale(2, RoundingMode.HALF_UP);
+
+        if (bd.doubleValue() == 0D) {
+            return;
+        }
+        
+        // 80 euro each hour for none norwegian | 800 nok for norwegian
+        double price = isNonNorwegian ? 80 : 800 * 1.25;
+        
+        CartItem item = new CartItem();
+        item.setProduct(getTicketProduct("SUPPORT").clone());
+        item.getProduct().name = "Total support for periode: "+ periode + ". " + convertToMinutesAndSeconds(bd);
+        item.setCount(1);
+        item.getProduct().price = bd.doubleValue() * price;
+        items.add(item);
+        
+        item = new CartItem();
+        item.setProduct(getTicketProduct("SUPPORT").clone());
+        item.getProduct().name = "Free support for periode: "+ periode + ". " + convertToMinutesAndSeconds(free);
+        item.setCount(-1);
+        item.getProduct().price = free.doubleValue() * price;
+        items.add(item);
+        
+        cartManager.getCart().addCartItems(items);
     }
     
-    private Product getTicketProduct(Ticket ticket) {
-        Product ticketProduct = productManager.getProduct("TICKET-" + ticket.type);
+    private Product getTicketProduct(String ticketType) {
+        Product ticketProduct = productManager.getProduct("TICKET-" + ticketType);
         if (ticketProduct == null) {
             ticketProduct = new Product();
-            ticketProduct.id = "TICKET-" + ticket.type;
+            ticketProduct.id = "TICKET-" + ticketType;
             ticketProduct.price = 1000;
             productManager.saveProduct(ticketProduct);
         }
@@ -454,4 +506,21 @@ public class DirectorManager extends ManagerBase implements IDirectorManager {
         
         order.invoiceNote = note;
     }
+
+    private String convertToMinutesAndSeconds(BigDecimal bd) {
+        int totalMinutes = (int) (bd.doubleValue() * 60);
+        String res = "";
+        int hours = (int)(totalMinutes / 60);
+        int minutes = totalMinutes - (hours * 60);
+        
+        if (hours > 0) {
+            res += hours + " hours and ";
+        }
+        
+        res += minutes + " minutes";
+        
+        return res;
+    }
+
+    
 }

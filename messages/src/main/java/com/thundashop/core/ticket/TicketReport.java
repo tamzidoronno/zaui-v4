@@ -97,5 +97,14 @@ public class TicketReport {
             toDeductOnInvoice = toAddOnInvoice;
         }
     }
+
+    public Double getToAddOnInvoice() {
+        return toAddOnInvoice;
+    }
+
+    public Double getToDeductOnInvoice() {
+        return toDeductOnInvoice;
+    }
+    
     
 }

@@ -1699,7 +1699,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                     count = 0;
                 }
                 
-                if(i > 305) {
+                if(i > pmsManager.getConfigurationSecure().daysAllowedInTheFuture) {
                     count = 0;
                 }
                 

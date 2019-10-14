@@ -117,7 +117,7 @@ public class PmsCoverageReportManager extends ManagerBase {
             }
         }
 
-        fillInBlankSpots();
+        fillInBlankSpots(filter);
 
         return new LinkedList(entries.values());
     }
@@ -167,7 +167,7 @@ public class PmsCoverageReportManager extends ManagerBase {
         return toAdd;
     }
 
-    private void fillInBlankSpots() {
+    private void fillInBlankSpots(PmsBookingFilter filter) {
         Date start = new Date();
         Date end = new Date();
         for (PmsCoverageReportEntry entry : entries.values()) {
@@ -177,6 +177,14 @@ public class PmsCoverageReportManager extends ManagerBase {
             if (end.before(entry.date)) {
                 end = entry.date;
             }
+        }
+        
+        if(filter.endDate.after(end)) {
+            end = filter.endDate;
+        }
+        
+        if(filter.startDate.before(start)) {
+            start = filter.startDate;
         }
 
         Calendar cal = Calendar.getInstance();

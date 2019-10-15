@@ -499,7 +499,7 @@ public class ManagerSubBase {
     }
     
     public void gsTiming(String description) {
-        GetShopTimer.timeEntry(description, getClass().getSimpleName());
+        // 
     }
 
     private void storeRemote(DataCommon data) {

@@ -68,7 +68,7 @@ class GetShopInbox extends \MarketingApplication implements \Application {
             echo "<td>".$res->webAddresses."</td>";
             $company = $this->getApi()->getUserManager()->getCompany($res->companyId);
             echo "<td>".$company->name."</td>";
-            echo "<td><span class='shop_button startticket' systemid='".$res->id."' address='".$res->webAddresses."'>Start ticket</span> <span class='shop_button' onclick='window.open(\"https:\\\\".$res->webAddresses."/totp.php\", \"fdsafasf\")'>Open system</span></td>";
+            echo "<td><span class='shop_button startticket' systemid='".$res->id."' address='".$res->webAddresses."'>Start ticket</span> <span class='shop_button' onclick='window.open(\"https://".$res->webAddresses."/totp.php\", \"fdsafasf\")'>Open system</span></td>";
             echo "</tr>";
         }
         echo "</table>";

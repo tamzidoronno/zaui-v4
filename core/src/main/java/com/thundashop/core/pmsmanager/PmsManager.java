@@ -5316,6 +5316,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return;
         }
         if (getConfigurationSecure().isArx()) {
+            if (storeId != null && storeId.equals("8888708d-ede5-4bcd-b5ab-7cfe7ee3d489")) {
+                return;
+            }
+            
             long end = System.currentTimeMillis();
             long start = end - (1000 * 60 * 25);
             try {

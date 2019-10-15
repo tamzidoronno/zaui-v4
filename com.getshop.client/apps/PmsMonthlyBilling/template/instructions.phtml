@@ -1,0 +1,83 @@
+<?php
+/* @var $this ns_9ab6923e_3d6b_4b7c_b94e_c14e5ebe5364\PmsMonthlyBilling */
+$start = date("01.m.Y", time());
+$end = date("t.m.Y", time());
+?>
+
+<div style='max-width:1500px; margin:auto;'>
+<div class='title'>Step 1: Select a periode you want to require payment for</div>
+<div>
+    <input type='txt' class='gsniceinput1' gsname='startdate' value='<?php echo $start; ?>' style='width:80px;'>
+    <input type='txt' class='gsniceinput1' gsname='enddate' value='<?php echo $end; ?>' style='width:80px;'>
+</div>
+<br>
+<br>
+<div class='title'>Step 2: Choose who to bill</div>
+
+<?php
+$filter = new core_pmsmanager_PmsBookingFilter();
+$filter->startDate = $this->convertToJavaDate(strtotime($start));
+$filter->endDate = $this->convertToJavaDate(strtotime($end));
+$filter->filterType = "active";
+
+$bookings = $this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedMultilevelDomainName(), $filter);
+
+echo "<table width=100%'>";
+echo "<tr>";
+echo "<th align='left'><input type='checkbox' class='togglechecklistbox'></th>";
+echo "<th align='left'>Booker</th>";
+echo "<th align='left'>Start</th>";
+echo "<th align='left'>End</th>";
+echo "<th align='left'>Type</th>";
+echo "<th align='left'>Room</th>";
+echo "<th align='left'>Phone</th>";
+echo "<th align='left'>Email</th>";
+echo "</tr>";
+foreach($bookings as $booking) {
+    if(!$booking->room) {
+        continue;
+    }
+    if($booking->totalUnpaidCost == 0) {
+        continue;
+    }
+    
+    $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
+    
+    echo "<tr>";
+    echo "<td><input type='checkbox' class='sendpaymentlinkcheckbox'></td>";
+    echo "<td>" . $booking->owner . "</td>";
+    echo "<td>" . date("d.m.Y H:i", $booking->start/1000) . "</td>";
+    echo "<td>" . date("d.m.Y H:i", $booking->end/1000) . "</td>";
+    echo "<td>" . $booking->roomType . "</td>";
+    echo "<td>" . $booking->room . "</td>";
+    
+    $email = $user->emailAddress;
+    if($user->emailAddressToInvoice) {
+        $email = $user->emailAddressToInvoice;
+    }
+    
+    echo "<td><input type='txt' value='".$user->prefix."' class='gsniceinput1' style='width:17px'><input type='txt' value='".$user->cellPhone."' style='width:80px' class='gsniceinput1'></td>";
+    echo "<td><input type='txt' value='".$email."' class='gsniceinput1'></td>";
+    echo "<td>" . $booking->room . "</td>";
+    echo "</tr>";
+}
+echo "</table>";
+?>
+<br>
+<br>
+<div class='title'>Step 3: Send the payment link</div>
+<textarea style='width:100%;padding: 10px;'>Hi, this is a payment reminder to pay for periode {start} - {end}, please pay by following the following address: {paymentlink}</textarea>
+<div style='text-align: right; margin-top: 10px;'>
+    <span class='shop_button'>Send requests</span>
+</div>
+<br>
+<br>
+<br>
+<br>
+</div>
+
+<script>
+    getshop_loadDatePicker($('[gsname="startdate"]'), { dependant : $('[gsname="enddate"]'), jump : 1 });    
+    getshop_loadDatePicker($('[gsname="enddate"]'), { dependant : $('[gsname="startdate"]'), jump : -11 });    
+</script>
+

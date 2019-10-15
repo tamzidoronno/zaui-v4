@@ -273,11 +273,20 @@ class ModulePageMenu {
                         }
                         if($entry->getPageId() == "getshopsupport") {
                             continue;
-                        } 
+                        }
+                        $hassubs = $entry->getPageId() == "a90a9031-b67d-4d98-b034-f8c201a8f496" ? "hassubentries" : "";
                         ?>
-                        <div class="entry"><a href="?page=<? echo $entry->getPageId(); ?>&gs_getshopmodule=<? echo \PageFactory::getGetShopModule(); ?>"><div><i class="fa <? echo $entry->getIcon(); ?>"></i>  <? echo $entry->getName(); ?> </div></a></div>
+                        <div class="entry <?php echo $hassubs; ?>"><a href="?page=<? echo $entry->getPageId(); ?>&gs_getshopmodule=<? echo \PageFactory::getGetShopModule(); ?>"><div><i class="fa <? echo $entry->getIcon(); ?>"></i>  <? echo $entry->getName(); ?> </div></a>
                         <?php
-                    } ?>
+                        if($entry->getPageId() == "a90a9031-b67d-4d98-b034-f8c201a8f496") {
+                            //@TODO CONTINUE THIS SUPPORt
+//                            echo "<span class='gss_dropdownmenu'>";
+//                            echo "<a href='/pms.php?page=monthlypaymentlinks'><div class='subentry'>Monthly payment link</div></a>";
+//                            echo "</span>";
+                        }
+                        ?>
+                        </div>
+                    <?php } ?>
                 </div>
             </div>
         <?

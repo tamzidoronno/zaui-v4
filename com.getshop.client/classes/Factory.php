@@ -348,8 +348,17 @@ class Factory extends FactoryBase {
         return "cms";
     }
     
-    public function initialize() {
-        $this->store = $this->getApi()->getStoreManager()->initializeStoreWithModuleId($_SERVER['HTTP_HOST'], session_id(), $this->getCurrentModuleId());
+    public function initialize($light=false, $withoutmoduleid=false) {
+        if ($withoutmoduleid) {
+            $this->store = $this->getApi()->getStoreManager()->initializeStore($_SERVER['HTTP_HOST'], session_id());
+        } else {
+            $this->store = $this->getApi()->getStoreManager()->initializeStoreWithModuleId($_SERVER['HTTP_HOST'], session_id(), $this->getCurrentModuleId());    
+        }
+        
+        if ($light) {
+            return;
+        }
+        
         if(!$this->store) {
             $this->store = $this->getApi()->getStoreManager()->getMyStore();
         }
@@ -360,9 +369,12 @@ class Factory extends FactoryBase {
         }
     }
 
-    function __construct() {
+    function __construct($light=false) {
         @session_start();
         @header('Content-Type: text/html; charset=UTF-8');
+        if ($light) {
+            return;
+        }
         $this->setCurrentModuleId();
         $this->initialize();
         $this->applicationPool = new ApplicationPool($this);
@@ -443,6 +455,7 @@ class Factory extends FactoryBase {
 
     public function initPage() {
         $this->checkRewrite();
+        
         if (isset($_GET['page'])) {
             if ($_GET['page'] == "clear_page" || $_GET['page'] == "{HOMEPAGE}") {
                 $navigation = Navigation::getNavigation();
@@ -461,7 +474,8 @@ class Factory extends FactoryBase {
 
         if (!isset($navigation->currentPageId)) {
             if($_SERVER['REQUEST_URI'] && strlen($_SERVER['REQUEST_URI']) > 4 && $_SERVER['SCRIPT_NAME'] == "/index.php") {
-                header('location:/');
+//                header('location:/');
+                http_response_code(404);
                 exit(0);
             }
             

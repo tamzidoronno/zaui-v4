@@ -1,6 +1,8 @@
 <?php
 include '../loader.php';
-$factory = IocContainer::getFactorySingelton();
+$factory = new Factory(true);
+$factory->initialize(true);
+
 header('content-type:image/x-icon');
 //echo getcwd();
 //echo $factory->getStore()->favicon;

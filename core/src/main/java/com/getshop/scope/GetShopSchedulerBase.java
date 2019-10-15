@@ -6,15 +6,22 @@
 package com.getshop.scope;
 
 import com.getshop.javaapi.GetShopApi;
+import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.ManagerSubBase;
+import com.thundashop.core.databasemanager.Database;
+import com.thundashop.core.databasemanager.DatabaseLog;
 import com.thundashop.core.usermanager.data.User;
 import it.sauronsoftware.cron4j.Scheduler;
 import java.lang.reflect.Field;
+import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.springframework.context.ApplicationContext;
 
 /**
  *
@@ -31,6 +38,10 @@ public abstract class GetShopSchedulerBase implements Runnable {
     private String webAddress;
     private String storeId;
     private String schedulerInterval = "";
+    
+    private static ConcurrentHashMap<String, ReentrantLock> storeLocks = new ConcurrentHashMap();
+    
+    private DatabaseLog database;
     
     public String getUsername() {
         return username;
@@ -101,8 +112,25 @@ public abstract class GetShopSchedulerBase implements Runnable {
         }
         
         sleepRandomTime();
-        execute();
-        closeConnection();
+        
+        ReentrantLock storeLock = getStoreLock();
+        
+        if (storeLock != null) {
+            storeLock.lock();
+        }
+        
+        try {
+            CronThreadStartLog logmsg = logStarted();
+            execute();
+            closeConnection();
+            logEnded(logmsg);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        
+        if (storeLock != null) {
+            storeLock.unlock();
+        }
     }
     
     @Override
@@ -167,5 +195,59 @@ public abstract class GetShopSchedulerBase implements Runnable {
         } catch (Exception ex) {
             ex.printStackTrace();
         } 
+    }
+
+    private ReentrantLock getStoreLock() {
+        if (storeId == null || storeId.isEmpty()) 
+            return null;
+        
+        ReentrantLock lock = storeLocks.get(storeId);
+        
+        if (lock == null) {
+            lock = new ReentrantLock();
+            storeLocks.put(storeId, lock);
+        }
+        
+        return lock;
+    }
+
+    private CronThreadStartLog logStarted() {
+        DatabaseLog db = getDatabase();
+        
+        if (db != null) {
+            CronThreadStartLog log = new CronThreadStartLog();
+            log.storeId = "all";
+            log.belongsToStoreId = storeId;
+            log.threadName = this.getClass().getCanonicalName();
+            log.type = "cron";
+            log.started = new Date();
+            log.startedMs = System.currentTimeMillis();
+            db.save("StoreThreadLog", "col_all", log);
+            
+            return log;
+        }
+        
+        return null;
+    }
+
+    private void logEnded(CronThreadStartLog logmsg) {
+        DatabaseLog db = getDatabase();
+        
+        if (db != null && logmsg != null) {
+            logmsg.ended = new Date();
+            logmsg.endedMs = System.currentTimeMillis();
+            logmsg.timeUsed = logmsg.endedMs - logmsg.startedMs;
+            db.save("StoreThreadLog", "col_all", logmsg);
+        }
+    }
+
+    private DatabaseLog getDatabase() {
+        ApplicationContext context = AppContext.appContext;
+        
+        if (context != null && database == null) {
+            database = context.getBean(DatabaseLog.class);
+        }
+        
+        return database;
     }
 }

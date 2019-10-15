@@ -4,6 +4,7 @@
  */
 package com.thundashop.core.common;
 
+import com.getshop.scope.CronThreadStartLog;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.getshop.scope.GetShopSessionObject;
@@ -14,6 +15,7 @@ import com.google.gson.GsonBuilder;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.databasemanager.Database;
+import com.thundashop.core.databasemanager.DatabaseLog;
 import com.thundashop.core.socket.GsonUTCDateAdapter;
 import com.thundashop.core.usermanager.IUserManager;
 import com.thundashop.core.usermanager.UserManager;
@@ -32,6 +34,7 @@ import java.util.List;
 import java.util.Set;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 
@@ -47,6 +50,7 @@ public class StoreHandler {
     private HashMap<String, Session> sessions = new HashMap();
     private GetShopSessionScope scope;
     private ArrayList<GetShopSessionObject> sessionScopedBeans;
+    private DatabaseLog databaseLog;
 
     public StoreHandler(String storeId) {
         this.storeId = storeId;
@@ -84,25 +88,13 @@ public class StoreHandler {
     }
 
     private Object executeMethodWithTiming(JsonObject2 inObject, Class[] types, Object[] argumentValues) throws ErrorException {
-        long currentThreadId = Thread.currentThread().getId();
+        GetShopTimer.timeEntry("Thread dead timer started", "StoreHandler");
+        Object rest = executeMethod(inObject, types, argumentValues, true);
+        return rest;
         
-        SyncronizedMethodCountDownThread timerThread = new SyncronizedMethodCountDownThread(inObject.interfaceName, inObject.method, storeId, currentThreadId);
-        timerThread.setName("Timing thread for sync api call.");
-        timerThread.start();
-        
-        try {
-            GetShopTimer.timeEntry("Thread dead timer started", "StoreHandler");
-            Object rest = executeMethod(inObject, types, argumentValues, true);
-            return rest;
-        } catch (Exception ex) {
-            throw ex;
-        } finally {
-            timerThread.printFinishedMessage();
-            timerThread.terminate();
-        }
     }
     
-    public synchronized void setGetShopModule(String sessionId, String moduleId) {
+    public  void setGetShopModule(String sessionId, String moduleId) {
         Session session = getSession(sessionId);
         if (session != null) {
             moduleId = moduleId == null || moduleId.isEmpty() ? "cms" : moduleId;
@@ -111,6 +103,20 @@ public class StoreHandler {
     }
     
     public Object executeMethod(JsonObject2 inObject, Class[] types, Object[] argumentValues, boolean isFromSynchronizedCall) throws ErrorException {
+        String type = isFromSynchronizedCall ? "synchronized" : "async";
+        CronThreadStartLog logMsg = logStarted(inObject.interfaceName+"."+inObject.method, type);
+        
+        try { 
+            return internaleExecuteMethod(inObject, types, argumentValues, isFromSynchronizedCall);
+        } catch (Exception ex) {
+            throw ex;
+        } finally {
+            logEnded(logMsg);
+        }
+        
+    }
+    
+    private Object internaleExecuteMethod(JsonObject2 inObject, Class[] types, Object[] argumentValues, boolean isFromSynchronizedCall) throws ErrorException {
         Session session = getSession(inObject.sessionId);
         initMultiLevels(storeId, session); 
         
@@ -663,5 +669,45 @@ public class StoreHandler {
     
     public int getSessionCount() {
         return sessions.size();
+    }
+    
+    private CronThreadStartLog logStarted(String interfaceName, String type) {
+        DatabaseLog db = getDatabase();
+        
+        if (db != null) {
+            CronThreadStartLog log = new CronThreadStartLog();
+            log.storeId = "all";
+            log.belongsToStoreId = storeId;
+            log.threadName = interfaceName;
+            log.type = type;
+            log.started = new Date();
+            log.startedMs = System.currentTimeMillis();
+            db.save("StoreThreadLog", "col_all", log);
+            
+            return log;
+        }
+        
+        return null;
+    }
+
+    private void logEnded(CronThreadStartLog logmsg) {
+        DatabaseLog db = getDatabase();
+        
+        if (db != null && logmsg != null) {
+            logmsg.ended = new Date();
+            logmsg.endedMs = System.currentTimeMillis();
+            logmsg.timeUsed = logmsg.endedMs - logmsg.startedMs;
+            db.save("StoreThreadLog", "col_all", logmsg);
+        }
+    }
+    
+    private DatabaseLog getDatabase() {
+        ApplicationContext context = AppContext.appContext;
+        
+        if (context != null && databaseLog == null) {
+            databaseLog = context.getBean(DatabaseLog.class);
+        }
+        
+        return databaseLog;
     }
 }

@@ -5384,7 +5384,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void markGuestArrivedInternal(PmsBooking booking, PmsBookingRooms room) throws ErrorException {
-        if (room.checkedin || !room.isDeleted()) {
+        if (room.checkedin || room.isDeleted()) {
             return;
         }
 

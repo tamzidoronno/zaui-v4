@@ -247,6 +247,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private String currentBookingId = "";
     private boolean updatedAllBookings = false;
     private PmsBooking includeAlways = null;
+    private Integer daysInRestrioction;
     
 
     @Autowired
@@ -3600,7 +3601,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return false;
     }
 
-    private boolean isRestricted(String itemType, Date start, Date end, Integer periodeType) {
+    public boolean isRestricted(String itemType, Date start, Date end, Integer periodeType) {
         int days = pmsInvoiceManager.getNumberOfDays(start, end);
         Session sess = getSession();
         if (sess != null && sess.currentUser != null) {
@@ -3638,7 +3639,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
                 if (isBetween) {
                     if (periodeType.equals(TimeRepeaterData.TimePeriodeType.min_stay)) {
-                        Integer daysInRestrioction = 1;
+                        daysInRestrioction = 1;
                         try {
                             daysInRestrioction = new Integer(res.timePeriodeTypeAttribute);
                         } catch (Exception e) {
@@ -3648,7 +3649,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                             return true;
                         }
                     } else if (periodeType.equals(TimeRepeaterData.TimePeriodeType.max_stay)) {
-                        Integer daysInRestrioction = 1;
+                        daysInRestrioction = 1;
                         try {
                             daysInRestrioction = new Integer(res.timePeriodeTypeAttribute);
                         } catch (Exception e) {
@@ -3665,6 +3666,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         return false;
+    }
+    
+    public Integer getLatestRestrictionTime() {
+        return daysInRestrioction;
     }
 
     private boolean canAdd(List<Booking> toCheck) {

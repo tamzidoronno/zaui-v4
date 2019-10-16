@@ -28,6 +28,7 @@ Error      : #de5353; red
 .GslBooking .continuetoguestinformationbtn,
 .GslBooking .removeallselectedroomsbtn { padding: 10px; }
 .GslBooking .removeallselectedroomsbtn { background-color:red !important; }
+.GslBooking .getshop_specialerrormsg { color:red; margin-top: 10px; }
 .GslBooking .paymentmethodselection #paymentmethodselection { padding: 5px; width: 100%; box-sizing: border-box; }
 #warningstartyesterday {  text-align: center; padding: 10px; color:red; font-weight: bold; display:none; }
 .GslBooking .terminalpaymentprocess {  

@@ -1963,7 +1963,16 @@ function getshop_searchRooms(e) {
             }
 
             var translation = getshop_getBookingTranslations();
-
+            
+            $('.getshop_specialerrormsg').remove();
+            if(res.errorMessage) {
+                var errorstring = res.errorMessage.split(":");
+                $('.noroomsfound').show();
+                var text = translation[errorstring[0]];
+                text = text.replace(errorstring[1], errorstring[2]);
+                $('.noroomsfound').append('<div class="getshop_specialerrormsg">' + text + "</div>");
+            }
+            
             for (var k in res.rooms) {
                 var room = res.rooms[k];
                 var firstFile = "";

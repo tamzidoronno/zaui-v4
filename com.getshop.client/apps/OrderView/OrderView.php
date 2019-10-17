@@ -177,11 +177,11 @@ class OrderView extends \MarketingApplication implements \Application {
         $ret = array();
         
         foreach ($order->cart->items as $item) {
-            if ($item->priceMatrix != null && is_array($item->priceMatrix) && count($item->priceMatrix)) {
+            if ($item->priceMatrix != null && count((array)$item->priceMatrix) > 0) {
                 $ret[] = $item;
             }
             
-            if ($item->itemsAdded != null && count($item->itemsAdded)) {
+            if ($item->itemsAdded != null && count((array)$item->itemsAdded) > 0) {
                 $ret[] = $item;
             }
         }
@@ -219,11 +219,11 @@ class OrderView extends \MarketingApplication implements \Application {
         $order = $this->getOrder();
         $ret = array();
         foreach ($order->cart->items as $item) {
-            if ($item->priceMatrix != null && is_array($item->priceMatrix) && count($item->priceMatrix)) {
+            if ($item->priceMatrix != null && count((array)$item->priceMatrix) > 0) {
                 continue;
             }
             
-            if ($item->itemsAdded != null && count($item->itemsAdded)) {
+            if ($item->itemsAdded != null && count((array)$item->itemsAdded) > 0) {
                 continue;
             }
             

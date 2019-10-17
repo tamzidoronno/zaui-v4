@@ -2358,9 +2358,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsAdditionalItemInformation additional = getAdditionalInfo(bookingItemId);
         PmsRoomSimple currentBookerOnRoom = getCurrentRoomOnItem(bookingItemId);
         if (currentBookerOnRoom != null) {
-            additional.markDirty(currentBookerOnRoom.pmsRoomId);
+            additional.markDirty(currentBookerOnRoom.pmsRoomId, storeId);
         } else {
-            additional.markDirty(null);
+            additional.markDirty(null, storeId);
         }
         saveAdditionalInfo(additional);
 
@@ -3423,7 +3423,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 } else {
                     PmsAdditionalItemInformation additional = getAdditionalInfo(room.bookingItemId);
                     if (additional.isClean(false) && !additional.closed) {
-                        additional.markDirty(room.pmsBookingRoomId);
+                        additional.markDirty(room.pmsBookingRoomId, storeId);
                         needSaving = true;
                         logEntry("Marking item " + item.bookingItemName + " as dirty (failure in marking)", booking.id, item.id, room.pmsBookingRoomId, "cleaning");
                         saveObject(additional);
@@ -3475,7 +3475,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             resetDoorLockCode(room);
             PmsAdditionalItemInformation add = getAdditionalInfo(itemId);
             if (!hasLockSystemActive()) {
-                add.markDirty(room.pmsBookingRoomId);
+                add.markDirty(room.pmsBookingRoomId, storeId);
             }
             saveObject(add);
             if (room.isStarted() && !room.isEnded()) {

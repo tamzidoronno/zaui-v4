@@ -1312,6 +1312,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         List<String> orderIdsToRemove = new ArrayList();
         for(String orderId : getAllOrderIds(booking)) {
             Order order = orderManager.getOrderSecure(orderId);
+            if(order == null) {
+                continue;
+            }
             if(order.closed) {
                 continue;
             }

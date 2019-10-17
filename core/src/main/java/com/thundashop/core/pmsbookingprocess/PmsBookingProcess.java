@@ -1741,13 +1741,23 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
 
     private void checkIfCouponIsValid(StartBookingResult result, StartBooking arg) {
         boolean removeAvailability = false;
+        List<String> roomsToRemove = new ArrayList();
         if(arg.discountCode != null && !arg.discountCode.isEmpty()) {
             Coupon coupon = cartManager.getCoupon(arg.discountCode);
             
-            if(!cartManager.couponIsValid(new Date(), arg.discountCode, arg.start,arg.end, null, arg.getNumberOfDays())) {
-                result.errorMessage = "outsideperiode::";
-                removeAvailability = true;
+            for(BookingProcessRooms r : result.rooms) {
+                BookingItemType type = bookingEngine.getBookingItemType(r.id);
+                if(!cartManager.couponIsValid(new Date(), arg.discountCode, arg.start,arg.end, type.productId, arg.getNumberOfDays())) {
+                    roomsToRemove.add(r.id);
+                    removeAvailability = true;
+                }
+                
+                if(removeAvailability && roomsToRemove.size() == result.rooms.size()) {
+                    result.errorMessage = "outsideperiode::";
+                }
+                
             }
+            
             
             if(coupon.minDays > 0 && coupon.minDays > arg.getNumberOfDays()) {
                 result.errorMessage = "min_days:{arg}:" + coupon.minDays;
@@ -1759,12 +1769,15 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             }
         }
         if(removeAvailability) {
-            removeAllRooms(result);
+            removeAllRooms(result, roomsToRemove);
         }
     }
 
-    private void removeAllRooms(StartBookingResult result) {
+    private void removeAllRooms(StartBookingResult result, List<String> types) {
         for(BookingProcessRooms r : result.rooms) {
+            if(!types.isEmpty() && !types.contains(r.id)) {
+                continue;
+            }
             r.availableRooms = 0;
             r.roomsSelectedByGuests = new HashMap();
         }
@@ -1773,16 +1786,18 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
 
     private void checkForRestrictions(StartBookingResult result, StartBooking arg) {
         boolean remove = false;
-        if (pmsManager.isRestricted(null, arg.start, arg.end, TimeRepeaterData.TimePeriodeType.min_stay)) {
-            remove = true;
-            result.errorMessage = "min_days:{arg}:" + pmsManager.getLatestRestrictionTime();
-        }
-        if (pmsManager.isRestricted(null, arg.start, arg.end, TimeRepeaterData.TimePeriodeType.max_stay)) {
-            remove = true;
-            result.errorMessage = "max_days:{arg}:" + pmsManager.getLatestRestrictionTime();
+        for(BookingProcessRooms r : result.rooms) {
+            if (pmsManager.isRestricted(r.id, arg.start, arg.end, TimeRepeaterData.TimePeriodeType.min_stay)) {
+                remove = true;
+                result.errorMessage = "min_days:{arg}:" + pmsManager.getLatestRestrictionTime();
+            }
+            if (pmsManager.isRestricted(r.id, arg.start, arg.end, TimeRepeaterData.TimePeriodeType.max_stay)) {
+                remove = true;
+                result.errorMessage = "max_days:{arg}:" + pmsManager.getLatestRestrictionTime();
+            }
         }
         if(remove) {
-            removeAllRooms(result);
+            removeAllRooms(result, new ArrayList());
         }
     }
 }

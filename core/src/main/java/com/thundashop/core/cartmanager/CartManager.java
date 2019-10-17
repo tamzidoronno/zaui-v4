@@ -11,6 +11,7 @@ import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.pagemanager.PageManager;
+import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.pmsmanager.PmsRepeatingData;
 import com.thundashop.core.pmsmanager.TimeRepeater;
 import com.thundashop.core.pmsmanager.TimeRepeaterDateRange;
@@ -437,9 +438,25 @@ public class CartManager extends ManagerBase implements ICartManager {
         
         TimeRepeater repeater = new TimeRepeater();
         LinkedList<TimeRepeaterDateRange> res = repeater.generateRange(when.data);
-        for(TimeRepeaterDateRange range : res) {
-            if((range.start.before(start) || range.start.equals(start)) && (range.end.after(end) || end.equals(range.end))) {
-                return true;
+        
+        if(when.repeattype != null && when.repeattype.equals("repeat")) {
+            if(PmsBookingRooms.getNumberOfDays(start, end) > 7) {
+                return false;
+            }
+            
+            boolean foundStart = false;
+            boolean foundEnd = false;
+            
+            for(TimeRepeaterDateRange range : res) {
+                if(range.isBetweenTime(start)) { foundStart = true; }
+                if(range.isBetweenTime(end)) { foundEnd = true; }
+            }
+            return foundStart && foundEnd;
+        } else {
+            for(TimeRepeaterDateRange range : res) {
+                if((range.start.before(start) || range.start.equals(start)) && (range.end.after(end) || end.equals(range.end))) {
+                    return true;
+                }
             }
         }
         return false;

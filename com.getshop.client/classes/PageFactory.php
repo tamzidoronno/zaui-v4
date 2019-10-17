@@ -176,6 +176,14 @@ class PageFactory {
         $row->addColumn("f8d72daf-97d8-4be2-84dc-7bec90ad8462", "2e43f480-636a-4842-9769-8a326ee09cce");
         $this->pages['home'] = $page;   
         
+        // Monthly payment link
+        $page = new \ModulePage("monthlypaymentlinks", "pms");
+        $row = $page->createRow();
+        $row->addText("Monthly payment requests");
+        $row = $page->createRow();
+        $row->addColumn("9ab6923e-3d6b-4b7c-b94e-c14e5ebe5364", "fd90cc1d-327c-42e6-8b53-9dfa0c7ddf2a");
+        $this->pages['monthlypaymentlinks'] = $page;
+        
         // AVAILABILITY
         $page = new \ModulePage("0da68de9-da08-4b60-9652-3ac456da2627", "pms");
         $page->addExtraApplications('961efe75-e13b-4c9a-a0ce-8d3906b4bd73');    

@@ -16,6 +16,7 @@ public class StartBookingResult {
     public List<String> supportedPaymentMethods = new ArrayList();
     String prefilledContactUser = "";
     String bookingId = "";
+    public String errorMessage = "";
 
     public List<RoomsSelected> getRoomsSelected() {
         List<RoomsSelected> res = new ArrayList();

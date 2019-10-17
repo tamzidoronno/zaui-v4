@@ -1,6 +1,7 @@
 package com.thundashop.core.pmsbookingprocess;
 
 import com.thundashop.core.pmsmanager.BrowserVersion;
+import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -19,5 +20,9 @@ public class StartBooking implements Serializable {
 
     int getGuests() {
         return adults+children;
+    }
+    
+    int getNumberOfDays() {
+        return PmsBookingRooms.getNumberOfDays(start, end);
     }
 }

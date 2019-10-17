@@ -13,6 +13,9 @@ import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
+import com.thundashop.core.cartmanager.CartManager;
+import com.thundashop.core.cartmanager.data.AddonsInclude;
+import com.thundashop.core.cartmanager.data.Coupon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.gsd.GdsManager;
 import com.thundashop.core.gsd.GetShopDevice;
@@ -36,9 +39,11 @@ import com.thundashop.core.pmsmanager.PmsInvoiceManager;
 import com.thundashop.core.pmsmanager.PmsInvoiceManagerNew;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.pmsmanager.PmsUserDiscount;
+import com.thundashop.core.pmsmanager.TimeRepeaterData;
 import com.thundashop.core.pos.PosManager;
 import com.thundashop.core.printmanager.PrintJob;
 import com.thundashop.core.productmanager.ProductManager;
+import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.UserManager;
@@ -84,6 +89,9 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     
     @Autowired
     StoreManager storeManager;
+    
+    @Autowired
+    CartManager cartManager;
     
     @Autowired
     UserManager userManager;
@@ -246,6 +254,10 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         if(booking.userId != null && !booking.userId.isEmpty()) {
             result.prefilledContactUser = userManager.getUserById(booking.userId).fullName;
         }
+        
+        addCouponPricesToRoom(result, arg);
+        checkIfCouponIsValid(result, arg);
+        checkForRestrictions(result, arg);
         
         return result;
     }
@@ -1702,5 +1714,75 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         PmsBooking booking = pmsManager.getCurrentBooking();
         pmsManager.simpleCompleteCurrentBooking();
         calculateCountryFromPhonePrefix(booking);
+    }
+
+    private void addCouponPricesToRoom(StartBookingResult result, StartBooking arg) {
+        if(arg.discountCode != null && !arg.discountCode.isEmpty()) {
+            Coupon coupon = cartManager.getCoupon(arg.discountCode);
+            if(coupon != null && coupon.addonsToInclude != null) {
+               for(AddonsInclude inc : coupon.addonsToInclude) {
+                   if(inc.includeInRoomPrice) {
+                       continue;
+                   }
+                   
+                   Product product = productManager.getProduct(inc.productId);
+                   
+                   for(BookingProcessRooms tmp : result.rooms) {
+                       for(Integer guests : tmp.pricesByGuests.keySet()) {
+                           double price = tmp.pricesByGuests.get(guests);
+                           price += product.price * guests;
+                           tmp.pricesByGuests.put(guests, price);
+                       }
+                   }
+               }
+            }
+        }
+    }
+
+    private void checkIfCouponIsValid(StartBookingResult result, StartBooking arg) {
+        boolean removeAvailability = false;
+        if(arg.discountCode != null && !arg.discountCode.isEmpty()) {
+            Coupon coupon = cartManager.getCoupon(arg.discountCode);
+            
+            if(!cartManager.couponIsValid(new Date(), arg.discountCode, arg.start,arg.end, null, arg.getNumberOfDays())) {
+                result.errorMessage = "outsideperiode::";
+                removeAvailability = true;
+            }
+            
+            if(coupon.minDays > 0 && coupon.minDays > arg.getNumberOfDays()) {
+                result.errorMessage = "min_days:{arg}:" + coupon.minDays;
+                removeAvailability = true;
+            }
+            if(coupon.maxDays > 0 && coupon.maxDays < arg.getNumberOfDays()) {
+                result.errorMessage = "max_days:{arg}:" + coupon.maxDays;
+                removeAvailability = true;
+            }
+        }
+        if(removeAvailability) {
+            removeAllRooms(result);
+        }
+    }
+
+    private void removeAllRooms(StartBookingResult result) {
+        for(BookingProcessRooms r : result.rooms) {
+            r.availableRooms = 0;
+            r.roomsSelectedByGuests = new HashMap();
+        }
+        result.roomsSelected = 0;
+    }
+
+    private void checkForRestrictions(StartBookingResult result, StartBooking arg) {
+        boolean remove = false;
+        if (pmsManager.isRestricted(null, arg.start, arg.end, TimeRepeaterData.TimePeriodeType.min_stay)) {
+            remove = true;
+            result.errorMessage = "min_days:{arg}:" + pmsManager.getLatestRestrictionTime();
+        }
+        if (pmsManager.isRestricted(null, arg.start, arg.end, TimeRepeaterData.TimePeriodeType.max_stay)) {
+            remove = true;
+            result.errorMessage = "max_days:{arg}:" + pmsManager.getLatestRestrictionTime();
+        }
+        if(remove) {
+            removeAllRooms(result);
+        }
     }
 }

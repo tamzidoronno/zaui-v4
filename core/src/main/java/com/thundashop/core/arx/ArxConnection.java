@@ -36,10 +36,6 @@ public class ArxConnection {
     
     public String httpLoginRequest(String address, String username, String password, String content, String storeId) throws Exception {
         
-        if (storeId != null && storeId.equals("8888708d-ede5-4bcd-b5ab-7cfe7ee3d489")) {
-            return "failed";
-        }
-        
         if(address == null || address.isEmpty() || !address.startsWith("http") || address.contains("://:50")) {
             GetShopLogHandler.logPrintStatic("Tried accessing arx with empty host: " + address, null);
             return "";

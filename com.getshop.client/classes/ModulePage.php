@@ -312,7 +312,14 @@ class ModulePage {
                 if (!$instance && $column->text) {
                     echo $column->text;
                 } else {
-                    $instance->renderApp();
+                    if(!$instance) {
+                        echo "Instance not found";
+                        echo "<pre>";
+                        print_r($column);
+                        echo "</pre>";
+                    } else {
+                        $instance->renderApp();
+                    }
                 }
                 echo "</div>";
                 $colcount++;

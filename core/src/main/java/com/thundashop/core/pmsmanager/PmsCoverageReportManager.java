@@ -92,7 +92,7 @@ public class PmsCoverageReportManager extends ManagerBase {
                 report.roomsArriving++;
                 report.guestsArriving += r.numberOfGuests;
                 if(booking.getActiveRooms().size() > 2) {
-                    report.groupRoomsArriving += booking.getActiveRooms().size();
+                    report.groupRoomsArriving++;
                 }
                 
                 
@@ -100,7 +100,7 @@ public class PmsCoverageReportManager extends ManagerBase {
                 report.guestsDeparting += r.numberOfGuests;
                 report.roomsDeparting++;
                 if(booking.getActiveRooms().size() > 2) {
-                    report.groupRoomsDeparting += booking.getActiveRooms().size();
+                    report.groupRoomsDeparting++;
                 }
                 
                 for (String k : r.priceMatrix.keySet()) {

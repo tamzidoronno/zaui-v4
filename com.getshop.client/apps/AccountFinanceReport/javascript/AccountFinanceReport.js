@@ -9,6 +9,17 @@ app.AccountFinanceReport = {
         $(document).on('click', '.AccountFinanceReport .totalcolforaccount', app.AccountFinanceReport.showSummaryRow);
         $(document).on('click', '.AccountFinanceReport .transferalldays', app.AccountFinanceReport.transferAllDays);
         $(document).on('click', '.AccountFinanceReport .issuersum', app.AccountFinanceReport.showDetailedOrderViewForPaymentMethod);
+        $(document).on('click', '.AccountFinanceReport .applydiff', app.AccountFinanceReport.applyDiff);
+    },
+    
+    applyDiff: function() {
+       var password = prompt("Password please");
+       var data = {
+           'orderid' : $(this).attr('orderid'),
+           'password' : password
+       };
+       
+       thundashop.Ajax.simplePost($(this), "applyDiff", data);
     },
     
     showDetailedOrderViewForPaymentMethod: function() {

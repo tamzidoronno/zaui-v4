@@ -58,15 +58,12 @@ foreach ($diffreport as $orderReport) {
 
     usort($allDates, 'asdfasdfasdf_date_sort');
     
+    ?>
+
+<?
     $order = $this->getApi()->getOrderManager()->getOrder($orderReport->orderId);
-    echo "<h2 style='margin-left: 40px; '>".$order->incrementOrderId." - ".$order->id."</h2>";
-    
-    if ($order->id == "82c0ba76-8e97-479e-8a50-078436e6adfd") {
-        echo "<pre>";
-        print_r($orderReport);
-        echo "</pre>";
-    }
-    
+    echo "<h2 style='margin-left: 40px; '>".$order->incrementOrderId." - ".$order->id." <div class='gs_shop_small_icon applydiff' orderid='$order->id'> Apply Diff</div></h2>";
+
     echo "<div style='background-color: #EFEFEF;'>";
         echo "<div class='col' style='width: 200px;'></div>";
         foreach ($allAccounts as $account) {
@@ -110,9 +107,9 @@ foreach ($diffreport as $orderReport) {
     }
     
     echo "<div style='border-top: solid 1px #DDD;'>";
-        echo "<div class='col' style='width: 200px;'>Diff (+ = more on current)</div>";
+        echo "<div class='col ' style='width: 200px;'>Diff (+ = more on current)</div>";
         foreach ($allAccounts as $account) {
-            echo "<div class='col'>";
+            echo "<div class='col orderaccountsumcol' accountnumber='$account'>";
             echo $accountDiff[$account] ? round($accountDiff[$account],2) : "";
             echo "</div>";
         }
@@ -134,7 +131,7 @@ echo "<div style='margin: 50px;'>";
     echo "<div style='border-top: solid 1px #DDD;'>";
         echo "<div class='col' style='width: 200px;'>Diff (+ = more on current)</div>";
         foreach ($allAccounts as $account) {
-            echo "<div class='col'>";
+            echo "<div class='col ' >";
             echo $totalDiffAll[$account] ? round($totalDiffAll[$account],2) : "-";
             echo "</div>";
         }

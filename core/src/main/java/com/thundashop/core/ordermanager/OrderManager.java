@@ -4397,6 +4397,76 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         DiffReportCreator creator = new DiffReportCreator();
         return creator.createReport(lockedReport, currentReport, incTaxes);
     }
+    
+    @Override
+    public void applyCorrectionForOrder(String orderId, String password) {
+        if (password == null || !password.equals("asdfjadsfjasdkflj")) {
+            return;
+        }
+        
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.YEAR, 10);
+        
+        DayIncomeFilter filter = new DayIncomeFilter();
+        filter.start = new Date(0);
+        filter.end = cal.getTime();
+        
+        ArrayList<Order> ordersToBreak = new ArrayList();
+        ordersToBreak.add(orders.get(orderId));
+        OrderDailyBreaker breaker = new OrderDailyBreaker(ordersToBreak, filter, paymentManager, productManager, 0, new ArrayList(), storeOcrManager);
+        breaker.breakOrders();
+        List<DayIncome> currentDayIncomes = breaker.getDayIncomes();
+        
+        BasicDBObject query = new BasicDBObject();
+        query.put("className", DayIncomeReport.class.getCanonicalName());
+        
+        database.query("OrderManager", storeId, query)
+                .stream()
+                .map(o -> (DayIncomeReport)o)
+                .forEach(o -> {
+                    boolean found = false;
+                    
+                    for (DayIncome dayIncome : o.incomes) {
+                        List<DayEntry> dayEntriesToRemove = new ArrayList();
+                        
+                        for (DayEntry entry : dayIncome.dayEntries) {
+                            if (entry.orderId != null && entry.orderId.equals(orderId)) {
+                                dayEntriesToRemove.add(entry);
+                            }
+                        }
+                        
+                        DayIncome dayIncomeToAdd = null;
+                        
+                        for (DayIncome currentIncome : currentDayIncomes) {
+                            if (currentIncome.start.equals(dayIncome.start)) {
+                                dayIncomeToAdd = currentIncome;
+                                break;
+                            }
+                        }
+                        
+                        if (dayIncomeToAdd != null) {
+                            List<DayEntry> dayEntriesToAdd = dayIncomeToAdd
+                                    .dayEntries
+                                    .stream()
+                                    .filter(j -> j.orderId != null && j.orderId.equals(orderId))
+                                    .collect(Collectors.toList());
+                            
+                            dayIncome.dayEntries.removeAll(dayEntriesToRemove);
+                            dayIncome.dayEntries.addAll(dayEntriesToAdd);
+                            
+                            if (!dayEntriesToRemove.isEmpty() || !dayEntriesToAdd.isEmpty()) {
+                                found = true;    
+                            }
+                            
+                        }   
+                    }
+                    
+                    if (found) {
+                        saveObject(o);
+                    }
+                });
+        
+    }
 
     private List<DayIncome> getCurrentDayIncomes(Date start, Date end) {
         DayIncomeFilter filter = new DayIncomeFilter();

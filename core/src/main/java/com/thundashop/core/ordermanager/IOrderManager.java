@@ -549,4 +549,7 @@ public interface IOrderManager {
     
     @Administrator
     public void cleanupMessedUpOrderTransactionForForignCurrencyCreditNotes(String password);
+    
+    @Administrator
+    public void applyCorrectionForOrder(String orderId, String passord);
 }

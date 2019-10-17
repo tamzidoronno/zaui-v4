@@ -467,5 +467,9 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
     public function cancelPaymentDetailedOverview() {
         unset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_detailed_for_payment_type']);
     }
+    
+    public function applyDiff() {
+        $this->getApi()->getOrderManager()->applyCorrectionForOrder($_POST['data']['orderid'], $_POST['data']['password']);
+    }
 }
 ?>

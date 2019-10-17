@@ -474,8 +474,8 @@ class Factory extends FactoryBase {
 
         if (!isset($navigation->currentPageId)) {
             if($_SERVER['REQUEST_URI'] && strlen($_SERVER['REQUEST_URI']) > 4 && $_SERVER['SCRIPT_NAME'] == "/index.php") {
-//                header('location:/');
-                http_response_code(404);
+                header('location:/');
+//                http_response_code(404);
                 exit(0);
             }
             

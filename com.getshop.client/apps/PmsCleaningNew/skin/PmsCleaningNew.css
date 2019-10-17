@@ -2,23 +2,21 @@
 .PmsCleaningNew .roomIsReady { color: green; font-weight: bold; }
 .PmsCleaningNew .guestname { display:inline-block; width: 50px; overflow:hidden;  text-overflow: ellipsis; white-space: nowrap; height: 12px; line-height: 12px;
  }
-.PmsCleaningNew .stepbox { border: solid 1px #ddd; border-radius : 5px; padding: 20px; background-color:#fff; padding-top: 0px; }
- 
+.PmsCleaningNew .stepbox { border: solid 1px #ddd; border-radius : 5px; background-color:#fff; padding-top: 0px; }
+.PmsCleaningNew .cleaningheader { text-align: center; padding: 10px; background-color:#23314e; color:#EEE; text-transform:uppercase;font-size: 16px; border-top-left-radius: 5px;
+    border-top-right-radius: 5px;} 
+
 .PmsCleaningNew th {
 	font: bold 11px "Trebuchet MS", Verdana, Arial, Helvetica,
 	sans-serif;
 	color: #6D929B;
-	border-right: 1px solid #C1DAD7;
 	border-bottom: 1px solid #C1DAD7;
-	border-top: 1px solid #C1DAD7;
 	letter-spacing: 2px;
 	text-transform: uppercase;
 	padding: 6px 6px 6px 12px;
-	background: #CAE8EA url(images/bg_header.jpg) no-repeat;
 }
 
 .PmsCleaningNew td {
-	border-right: 1px solid #C1DAD7;
 	border-bottom: 1px solid #C1DAD7;
 	background: #fff;
 	padding: 6px 6px 6px 12px;

@@ -25,7 +25,7 @@ class PmsCleaningNew extends \WebshopApplication implements \Application {
         
         
         ?>
-    <table cellspacing="1" cellpadding="1">
+    <table cellspacing="0" cellpadding="0">
     <tr>
         <th>Date</th>
         <th>Stayovers</th>
@@ -204,11 +204,6 @@ class PmsCleaningNew extends \WebshopApplication implements \Application {
             $roomsNeedCleaning[$tmpr->roomId] = $tmpr;
         }
         $items = $this->getItems();
-        echo "<span class='roomisclosed' style='color:#fff !important; width:230px; display:inline-block; padding: 5px;'>Room is closed</span><br>";
-        echo "<span class='notclean' style='color:#fff !important; width:230px; display:inline-block; padding: 5px;'>Room is not clean</span><br>";
-        echo "<span class='notcleancheckedout' style='color:#fff !important; width:230px; display:inline-block; padding: 5px;'>Room is not clean checked out</span><br>";
-        echo "<span class='clean' style='color:#fff !important; width:230px; display:inline-block; padding: 5px;'>Room is clean</span><br>";
-        echo "<span class='inUse' style='color:#fff !important; width:230px; display:inline-block; padding: 5px;'>Room is in use</span><br><br>";
         foreach($additional as $add) {
             $isClean = "notclean roomNotReady";
             $state = $roomsNeedCleaning[$add->itemId]->cleaningState;
@@ -229,6 +224,14 @@ class PmsCleaningNew extends \WebshopApplication implements \Application {
             }
             echo "<span class='roombox cleaningbox $isClean' itemid='".$add->itemId."'>" . $items[$add->itemId]->bookingItemName . "</span>";
         }
+        echo "<div>";
+        echo "<span class='roomisclosed' style='color:#fff !important; width:230px; display:inline-block; padding: 5px;'>Room is closed</span><br>";
+        echo "<span class='notclean' style='color:#fff !important; width:230px; display:inline-block; padding: 5px;'>Room is not clean</span><br>";
+        echo "<span class='notcleancheckedout' style='color:#fff !important; width:230px; display:inline-block; padding: 5px;'>Room is not clean checked out</span><br>";
+        echo "<span class='clean' style='color:#fff !important; width:230px; display:inline-block; padding: 5px;'>Room is clean</span><br>";
+        echo "<span class='inUse' style='color:#fff !important; width:230px; display:inline-block; padding: 5px;'>Room is in use</span><br><br>";
+        echo "</div>";
+        
         return $res;
     }
     public function getAdditionalInfo() {

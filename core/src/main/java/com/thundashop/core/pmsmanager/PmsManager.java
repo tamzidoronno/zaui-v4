@@ -5607,6 +5607,24 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         }
+        
+        Collections.sort(result, new Comparator<PmsBookingAddonItem>() {
+            public int compare(PmsBookingAddonItem s1, PmsBookingAddonItem s2) {
+                if(s1 == null || s1.productId == null || s2 == null || s2.productId == null) {
+                    return -1;
+                }
+                Product s1Product = productManager.getProduct(s1.productId);
+                Product s2Product = productManager.getProduct(s2.productId);
+                
+                if(s1Product == null || s2Product == null) {
+                    return -1;
+                }
+                
+                return s1Product.name.compareTo(s2Product.name);
+                
+            }
+        });
+        
         return result;
     }
 

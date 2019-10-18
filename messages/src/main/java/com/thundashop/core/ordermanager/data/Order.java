@@ -1459,7 +1459,7 @@ public class Order extends DataCommon implements Comparable<Order> {
                 }
             }
             
-            
+            boolean increaseEndDate = false;
             if(item.priceMatrix != null) {
                 for(String key : item.priceMatrix.keySet()) {
                     Date priceMatrixDate = PmsBookingRooms.convertOffsetToDate(key);
@@ -1468,9 +1468,18 @@ public class Order extends DataCommon implements Comparable<Order> {
                     }
                     if(priceMatrixDate != null && (end == null || end.before(priceMatrixDate))) {
                         end = priceMatrixDate;
+                        increaseEndDate = true;
                     }
                 }
             }
+            
+            if(increaseEndDate) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(end);
+                cal.add(Calendar.DAY_OF_YEAR, 1);
+                end = cal.getTime();
+            }
+            
             if(start != null) {
                 item.startDate = start;
             }

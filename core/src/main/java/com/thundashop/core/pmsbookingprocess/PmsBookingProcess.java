@@ -219,6 +219,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             try {
                 PmsAdditionalTypeInformation typeInfo = pmsManager.getAdditionalTypeInformationById(type.id);
                 room.images.addAll(typeInfo.images);
+                room.sortDefaultImageFirst();
                 room.name = type.getTranslatedName(getSession().language);
                 room.maxGuests = type.size;
                 
@@ -1744,32 +1745,33 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         List<String> roomsToRemove = new ArrayList();
         if(arg.discountCode != null && !arg.discountCode.isEmpty()) {
             Coupon coupon = cartManager.getCoupon(arg.discountCode);
-            
-            for(BookingProcessRooms r : result.rooms) {
-                BookingItemType type = bookingEngine.getBookingItemType(r.id);
-                if(!cartManager.couponIsValid(new Date(), arg.discountCode, arg.start,arg.end, type.productId, arg.getNumberOfDays())) {
-                    roomsToRemove.add(r.id);
+            if(coupon != null) {
+                for(BookingProcessRooms r : result.rooms) {
+                    BookingItemType type = bookingEngine.getBookingItemType(r.id);
+                    if(!cartManager.couponIsValid(new Date(), arg.discountCode, arg.start,arg.end, type.productId, arg.getNumberOfDays())) {
+                        roomsToRemove.add(r.id);
+                        removeAvailability = true;
+                    }
+
+                    if(removeAvailability && roomsToRemove.size() == result.rooms.size()) {
+                        result.errorMessage = "outsideperiode::";
+                    }
+
+                }
+
+
+                if(coupon.minDays > 0 && coupon.minDays > arg.getNumberOfDays()) {
+                    result.errorMessage = "min_days:{arg}:" + coupon.minDays;
                     removeAvailability = true;
                 }
-                
-                if(removeAvailability && roomsToRemove.size() == result.rooms.size()) {
-                    result.errorMessage = "outsideperiode::";
+                if(coupon.maxDays > 0 && coupon.maxDays < arg.getNumberOfDays()) {
+                    result.errorMessage = "max_days:{arg}:" + coupon.maxDays;
+                    removeAvailability = true;
                 }
-                
             }
-            
-            
-            if(coupon.minDays > 0 && coupon.minDays > arg.getNumberOfDays()) {
-                result.errorMessage = "min_days:{arg}:" + coupon.minDays;
-                removeAvailability = true;
+            if(removeAvailability) {
+                removeAllRooms(result, roomsToRemove);
             }
-            if(coupon.maxDays > 0 && coupon.maxDays < arg.getNumberOfDays()) {
-                result.errorMessage = "max_days:{arg}:" + coupon.maxDays;
-                removeAvailability = true;
-            }
-        }
-        if(removeAvailability) {
-            removeAllRooms(result, roomsToRemove);
         }
     }
 
@@ -1782,6 +1784,15 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             r.roomsSelectedByGuests = new HashMap();
         }
         result.roomsSelected = 0;
+        
+        
+        PmsBooking currentbooking = pmsManager.getCurrentBooking();
+        currentbooking.rooms.clear();
+        try {
+            pmsManager.setBooking(currentbooking);
+        }catch(Exception e) {
+            logPrintException(e);
+        }     
     }
 
     private void checkForRestrictions(StartBookingResult result, StartBooking arg) {

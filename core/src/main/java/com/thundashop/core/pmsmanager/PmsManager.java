@@ -5616,7 +5616,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 Product s1Product = productManager.getProduct(s1.productId);
                 Product s2Product = productManager.getProduct(s2.productId);
                 
-                if(s1Product == null || s2Product == null) {
+                if(s1Product == null || s2Product == null || s1Product.name == null || s2Product.name == null) {
                     return -1;
                 }
                 

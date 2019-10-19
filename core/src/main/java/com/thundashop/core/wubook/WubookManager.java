@@ -581,6 +581,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         if(!connectToApi()) {
             return "failed to connect to api";
         }
+        
+        if(!needUpdateMinStay()) {
+            return "Min stay update not needed";
+        }
+        
         Hashtable table = new Hashtable();
         
         String pattern = "dd/MM/yyyy";
@@ -2416,6 +2421,16 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             }
         }
         return hasPaidOrders;
+    }
+
+    private boolean needUpdateMinStay() {
+        return lastAvailability.needUpdateMinStay;
+    }
+
+    @Override
+    public void doUpdateMinStay() {
+        lastAvailability.needUpdateMinStay = true;
+        saveObject(lastAvailability);
     }
 
 

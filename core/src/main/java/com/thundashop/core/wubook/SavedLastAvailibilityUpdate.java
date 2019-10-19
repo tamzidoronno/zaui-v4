@@ -6,4 +6,5 @@ import java.util.List;
 
 public class SavedLastAvailibilityUpdate extends DataCommon {
     List<WubookAvailabilityField> lastAvailabilityUpdated = new ArrayList();
+    boolean needUpdateMinStay = false;
 }

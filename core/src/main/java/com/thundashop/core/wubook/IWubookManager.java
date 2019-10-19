@@ -28,6 +28,9 @@ public interface IWubookManager {
     public HashMap<Long, String> getLogEntries();
     
     @Administrator
+    public void doUpdateMinStay();
+    
+    @Administrator
     public List<WubookBooking> fetchAllBookings(Integer daysback) throws Exception;
     @Administrator
     public List<Integer> fetchBookingCodes(Integer daysback) throws Exception;

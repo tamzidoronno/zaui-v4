@@ -10105,6 +10105,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         setLanguageOnBooking(currentBooking);
 
         addDefaultAddons(currentBooking);
+        wubookManager.setAvailabilityChanged(currentBooking.getStartDate(), currentBooking.getEndDate());
         saveBooking(currentBooking);
     }
 
@@ -10820,15 +10821,26 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public boolean updatePrices(List<PmsPricingDayObject> prices) {
+        Date start = null;
+        Date end = null;
         try {
             PmsPricing pricestoupdate = priceMap.get("default");
-            System.out.println(pricestoupdate);
             
             for(PmsPricingDayObject price : prices) {
-                pricestoupdate.dailyPrices.get(price.typeId).put(price.date, price.newPrice);
+                Date dayPrice = PmsBookingRooms.convertOffsetToDate(price.date);
+                if(start == null || dayPrice.before(start)) {
+                    start = dayPrice;
+                }
+                if(end == null || dayPrice.after(end)) {
+                    end = dayPrice;
+                }
+                HashMap<String, Double> dailypricematrix = pricestoupdate.dailyPrices.get(price.typeId);
+                if(dailypricematrix != null) {
+                    dailypricematrix.put(price.date, price.newPrice);
+                }
             }
             
-            wubookManager.updatePrices();
+            wubookManager.updatePricesBetweenDates(start, end);
             return true;
         }catch(Exception e) {
             logPrintException(e);

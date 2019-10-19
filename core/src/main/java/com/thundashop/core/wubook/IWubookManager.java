@@ -10,6 +10,7 @@ import com.thundashop.core.common.ForceAsync;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import org.apache.xmlrpc.XmlRpcException;
@@ -35,6 +36,7 @@ public interface IWubookManager {
     @Administrator
     public List<Integer> fetchBookingCodes(Integer daysback) throws Exception;
     @Administrator
+    @ForceAsync
     public List<WubookBooking> addNewBookingsPastDays(Integer daysback) throws Exception;
     @Administrator
     public List<WubookBooking> fetchNewBookings() throws Exception;
@@ -65,6 +67,7 @@ public interface IWubookManager {
     public String deleteBooking(String rcode) throws Exception;
     
     @Administrator
+    @ForceAsync
     public void doubleCheckDeletedBookings() throws Exception;
     
     @Administrator
@@ -104,4 +107,8 @@ public interface IWubookManager {
     public String getCallbackUrl();
     
     public void fetchBookingFromCallback(String rcode) throws Exception;
+    
+    @Administrator
+    public String updatePricesBetweenDates(Date now, Date end) throws XmlRpcException, Exception;
+    
 }

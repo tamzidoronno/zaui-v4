@@ -1,18 +1,37 @@
 <?php
 /* @var $this ns_9ab6923e_3d6b_4b7c_b94e_c14e5ebe5364\PmsMonthlyBilling */
-$start = date("01.m.Y", time());
-$end = date("t.m.Y", time());
+
+$start = $this->getStartDate();
+$end = $this->getEndDate();
+
+$store = $this->getFactory()->getStore()->configuration;
+$pluginpages = (array)$store->additionalPlugins;
+$user = $this->getApi()->getUserManager()->getLoggedOnUser();
+
+if(stristr($user->emailAddress, "@getshop.com")) {
+    if(!in_array("monthlypaymentlinks",$pluginpages)) {
+        echo "<div style='background-color:red; text-align:center; color:#fff; padding: 10px; margin-bottom: 30pX; cursor:pointer' gsclick='activatePluginModule' module='monthlypaymentlinks'>";
+        echo "This feature has not been activated yet, activate it";
+        echo "</div>";
+    } else {
+        echo "<div style='background-color:green; text-align:center; color:#fff; padding: 10px; margin-bottom: 30pX;' gsclick='deActivatePluginModule' module='monthlypaymentlinks'>";
+        echo "This is active, deactivate it";
+        echo "</div>";
+    }
+}
+
 ?>
 
-<div style='max-width:1500px; margin:auto;'>
+<div style='max-width:1500px; margin:auto;' gstype='form' method='chooseCandidates'>
 <div class='title'>Step 1: Select a periode you want to require payment for</div>
-<div>
+<div gstype='form' method='updateDateRange'>
     <input type='txt' class='gsniceinput1' gsname='startdate' value='<?php echo $start; ?>' style='width:80px;'>
     <input type='txt' class='gsniceinput1' gsname='enddate' value='<?php echo $end; ?>' style='width:80px;'>
+    <span class='shop_button' gstype='submit'>Update date range</span>
 </div>
 <br>
 <br>
-<div class='title'>Step 2: Choose who to bill</div>
+<div class='title'>Step 2: Choose who to bill, this selection will be saved until next time</div>
 
 <?php
 $filter = new core_pmsmanager_PmsBookingFilter();
@@ -32,20 +51,53 @@ echo "<th align='left'>Type</th>";
 echo "<th align='left'>Room</th>";
 echo "<th align='left'>Phone</th>";
 echo "<th align='left'>Email</th>";
+echo "<th align='left'>Room</th>";
+echo "<th align='left'>Unpaid</th>";
 echo "</tr>";
+$lastBookingId = "";
 foreach($bookings as $booking) {
+    
     if(!$booking->room) {
         continue;
     }
-    if($booking->totalUnpaidCost == 0) {
+    if($booking->totalUnpaidCost < 1) {
         continue;
     }
     
+
+        
+    $summary = $this->getApi()->getPmsManager()->getSummaryWithoutAccrued($this->getSelectedMultilevelDomainName(), $booking->bookingId, $booking->pmsRoomId);
+    
+    $totalPrice = 0;
+    $startTime = strtotime($start . " 00:00:00");
+    $endTime = strtotime($end . " 23:59:59");
+    
+    foreach($summary->rows as $row) {
+        $date = strtotime($row->date);
+        if($date < $startTime) {
+            continue;
+        }
+        if($date > $endTime) {
+            continue;
+        }
+        
+        $totalPrice += ($row->count * $row->priceToCreateOrders);
+    }
+    
+    if($totalPrice < 1) {
+        continue;
+    }
+
     $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
     
     echo "<tr>";
-    echo "<td><input type='checkbox' class='sendpaymentlinkcheckbox'></td>";
-    echo "<td>" . $booking->owner . "</td>";
+    
+    if($booking->bookingId == $lastBookingId) {
+        echo "<td></td>";
+    } else {
+        echo "<td><input type='checkbox' class='sendpaymentlinkcheckbox' gsname='chosen_".$booking->bookingId."'></td>";
+    }
+    echo "<td>" . $booking->owner . " " . "</td>";
     echo "<td>" . date("d.m.Y H:i", $booking->start/1000) . "</td>";
     echo "<td>" . date("d.m.Y H:i", $booking->end/1000) . "</td>";
     echo "<td>" . $booking->roomType . "</td>";
@@ -55,20 +107,30 @@ foreach($bookings as $booking) {
     if($user->emailAddressToInvoice) {
         $email = $user->emailAddressToInvoice;
     }
-    
-    echo "<td><input type='txt' value='".$user->prefix."' class='gsniceinput1' style='width:17px'><input type='txt' value='".$user->cellPhone."' style='width:80px' class='gsniceinput1'></td>";
-    echo "<td><input type='txt' value='".$email."' class='gsniceinput1'></td>";
+    if($booking->bookingId != $lastBookingId) {
+        echo "<td><input type='txt' gsname='prefix_".$booking->bookingId."' value='".$user->prefix."' class='gsniceinput1' style='width:17px'><input type='txt' value='".$user->cellPhone."' gsname='phone_".$booking->bookingId."' style='width:80px' class='gsniceinput1'></td>";
+        echo "<td><input type='txt' gsname='email_".$booking->bookingId."' value='".$email."' class='gsniceinput1'></td>";
+    } else {
+        echo "<td></td>";
+        echo "<td></td>";
+    }
     echo "<td>" . $booking->room . "</td>";
+    
+    echo "<td>";
+    echo round($totalPrice);
+    echo "</td>";
+    
     echo "</tr>";
+    $lastBookingId = $booking->bookingId;
 }
 echo "</table>";
 ?>
 <br>
 <br>
 <div class='title'>Step 3: Send the payment link</div>
-<textarea style='width:100%;padding: 10px;'>Hi, this is a payment reminder to pay for periode {start} - {end}, please pay by following the following address: {paymentlink}</textarea>
+<textarea style='width:100%;padding: 10px;' gsname='message'>Hi, this is a payment reminder to pay for periode {start} - {end}, please pay by following the following address: {paymentlink}</textarea>
 <div style='text-align: right; margin-top: 10px;'>
-    <span class='shop_button'>Send requests</span>
+    <span class='shop_button' gstype='submit'>Send requests</span>
 </div>
 <br>
 <br>

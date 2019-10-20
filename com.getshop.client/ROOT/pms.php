@@ -96,7 +96,7 @@ if(sizeof($user->pmsPageAccess) > 0) {
         <div area="header" class="gsarea">
             <?
             $menu = $page->getMenu("pms");
-            $menu->renderTop($user);
+            $menu->renderTop($user, false, $factory->getStore());
             ?>
         </div>
         

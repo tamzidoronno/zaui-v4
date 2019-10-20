@@ -86,6 +86,7 @@ class PmsRestrictions extends \WebshopApplication implements \Application {
         }
 
         $this->getApi()->getBookingEngine()->saveOpeningHours($this->getSelectedMultilevelDomainName(), $data, $typeid);
+        $this->getApi()->getWubookManager()->doUpdateMinStay($this->getSelectedMultilevelDomainName());
     }
     
     public function render() {
@@ -195,6 +196,7 @@ class PmsRestrictions extends \WebshopApplication implements \Application {
     
     public function deleteRestriction() {
         $this->getApi()->getBookingEngine()->deleteOpeningHours($this->getSelectedMultilevelDomainName(), $_POST['data']['id']);
+        $this->getApi()->getWubookManager()->updateMinStay($this->getSelectedMultilevelDomainName());
     }
     
     public function printRestrictions() {

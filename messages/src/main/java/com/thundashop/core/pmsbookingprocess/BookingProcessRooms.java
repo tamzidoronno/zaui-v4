@@ -18,4 +18,27 @@ public class BookingProcessRooms {
     public boolean visibleForBooker = false;
     public double totalPriceForRoom = 0.0;
     String userId = "";
+
+    void sortDefaultImageFirst() {
+        PmsTypeImages defaultImg = null;
+        for(PmsTypeImages img : images) {
+            if(img.isDefault) {
+                defaultImg = img;
+            }
+        }
+        
+        LinkedList<PmsTypeImages> tmpImages = new LinkedList();
+        if(defaultImg != null) {
+            tmpImages.add(defaultImg);
+        }
+        
+        for(PmsTypeImages img : images) {
+            if(img.isDefault) {
+                continue;
+            }
+            tmpImages.add(img);
+        }
+        
+        images = tmpImages;
+    }
 }

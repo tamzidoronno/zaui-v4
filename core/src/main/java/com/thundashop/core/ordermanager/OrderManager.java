@@ -1880,6 +1880,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         List<Order> ordersToFinalise = new ArrayList();
         ordersToFinalise.add(order);
         finalize(ordersToFinalise);
+        order.correctStartEndDate();
     }
 
     

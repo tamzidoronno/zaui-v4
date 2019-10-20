@@ -219,6 +219,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             try {
                 PmsAdditionalTypeInformation typeInfo = pmsManager.getAdditionalTypeInformationById(type.id);
                 room.images.addAll(typeInfo.images);
+                room.sortDefaultImageFirst();
                 room.name = type.getTranslatedName(getSession().language);
                 room.maxGuests = type.size;
                 
@@ -1741,48 +1742,73 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
 
     private void checkIfCouponIsValid(StartBookingResult result, StartBooking arg) {
         boolean removeAvailability = false;
+        List<String> roomsToRemove = new ArrayList();
         if(arg.discountCode != null && !arg.discountCode.isEmpty()) {
             Coupon coupon = cartManager.getCoupon(arg.discountCode);
-            
-            if(!cartManager.couponIsValid(new Date(), arg.discountCode, arg.start,arg.end, null, arg.getNumberOfDays())) {
-                result.errorMessage = "outsideperiode::";
-                removeAvailability = true;
+            if(coupon != null) {
+                for(BookingProcessRooms r : result.rooms) {
+                    BookingItemType type = bookingEngine.getBookingItemType(r.id);
+                    if(!cartManager.couponIsValid(new Date(), arg.discountCode, arg.start,arg.end, type.productId, arg.getNumberOfDays())) {
+                        roomsToRemove.add(r.id);
+                        removeAvailability = true;
+                    }
+
+                    if(removeAvailability && roomsToRemove.size() == result.rooms.size()) {
+                        result.errorMessage = "outsideperiode::";
+                    }
+
+                }
+
+
+                if(coupon.minDays > 0 && coupon.minDays > arg.getNumberOfDays()) {
+                    result.errorMessage = "min_days:{arg}:" + coupon.minDays;
+                    removeAvailability = true;
+                }
+                if(coupon.maxDays > 0 && coupon.maxDays < arg.getNumberOfDays()) {
+                    result.errorMessage = "max_days:{arg}:" + coupon.maxDays;
+                    removeAvailability = true;
+                }
             }
-            
-            if(coupon.minDays > 0 && coupon.minDays > arg.getNumberOfDays()) {
-                result.errorMessage = "min_days:{arg}:" + coupon.minDays;
-                removeAvailability = true;
+            if(removeAvailability) {
+                removeAllRooms(result, roomsToRemove);
             }
-            if(coupon.maxDays > 0 && coupon.maxDays < arg.getNumberOfDays()) {
-                result.errorMessage = "max_days:{arg}:" + coupon.maxDays;
-                removeAvailability = true;
-            }
-        }
-        if(removeAvailability) {
-            removeAllRooms(result);
         }
     }
 
-    private void removeAllRooms(StartBookingResult result) {
+    private void removeAllRooms(StartBookingResult result, List<String> types) {
         for(BookingProcessRooms r : result.rooms) {
+            if(!types.isEmpty() && !types.contains(r.id)) {
+                continue;
+            }
             r.availableRooms = 0;
             r.roomsSelectedByGuests = new HashMap();
         }
         result.roomsSelected = 0;
+        
+        
+        PmsBooking currentbooking = pmsManager.getCurrentBooking();
+        currentbooking.rooms.clear();
+        try {
+            pmsManager.setBooking(currentbooking);
+        }catch(Exception e) {
+            logPrintException(e);
+        }     
     }
 
     private void checkForRestrictions(StartBookingResult result, StartBooking arg) {
         boolean remove = false;
-        if (pmsManager.isRestricted(null, arg.start, arg.end, TimeRepeaterData.TimePeriodeType.min_stay)) {
-            remove = true;
-            result.errorMessage = "min_days:{arg}:" + pmsManager.getLatestRestrictionTime();
-        }
-        if (pmsManager.isRestricted(null, arg.start, arg.end, TimeRepeaterData.TimePeriodeType.max_stay)) {
-            remove = true;
-            result.errorMessage = "max_days:{arg}:" + pmsManager.getLatestRestrictionTime();
+        for(BookingProcessRooms r : result.rooms) {
+            if (pmsManager.isRestricted(r.id, arg.start, arg.end, TimeRepeaterData.TimePeriodeType.min_stay)) {
+                remove = true;
+                result.errorMessage = "min_days:{arg}:" + pmsManager.getLatestRestrictionTime();
+            }
+            if (pmsManager.isRestricted(r.id, arg.start, arg.end, TimeRepeaterData.TimePeriodeType.max_stay)) {
+                remove = true;
+                result.errorMessage = "max_days:{arg}:" + pmsManager.getLatestRestrictionTime();
+            }
         }
         if(remove) {
-            removeAllRooms(result);
+            removeAllRooms(result, new ArrayList());
         }
     }
 }

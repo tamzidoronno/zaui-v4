@@ -10,6 +10,7 @@ import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
@@ -108,6 +109,8 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     public Date disableWubook = null;
     public Vector bookingsToAdd = null;
     boolean fetchBookingThreadIsRunning = false;
+    private List<WubookBooking> nextBookings;
+    private List<String> bookingCodesToAdd = new ArrayList();
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -127,7 +130,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         }
         
         createScheduler("wubookprocessor", "* * * * *", WuBookManagerProcessor.class);
-        createScheduler("wubookprocessor2", "1 1,5,7,9,12,18,22 * * *", WuBookHourlyProcessor.class);
+        createScheduler("wubookprocessor2", "1 5,12,22 * * *", WuBookHourlyProcessor.class);
     }
     
     public boolean updateAvailability() throws Exception {
@@ -398,11 +401,24 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         
         if(disableWubook != null) {
             long diff = new Date().getTime() - disableWubook.getTime();
-            if(diff < (60*60*1000)) {
+            if(diff < (10*60*1000)) {
                 logText("Fetch new booking disabled from : " + disableWubook);
                 return new ArrayList();
             }
         }
+        
+        if(nextBookings != null) {
+            checkBookingsToDelete(nextBookings);
+        }
+        
+        if(!bookingCodesToAdd.isEmpty()) {
+            for(String code : bookingCodesToAdd) {
+                WubookBooking booking = fetchBooking(code + "");
+                addBookingToPms(booking);
+            }
+            bookingCodesToAdd.clear();
+        }
+        
         connectToApi();
         PmsConfiguration config = pmsManager.getConfigurationSecure();
         if(config.wubooklcode == null || config.wubooklcode.isEmpty()) {
@@ -508,72 +524,13 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         if(!connectToApi()) {
             return "failed to connect to api";
         }
-        Hashtable table = new Hashtable();
         
-        String pattern = "dd/MM/yyyy";
-        SimpleDateFormat format = new SimpleDateFormat(pattern);
-        String dfrom = format.format(new Date());
-        pmsInvoiceManager.startCacheCoverage();
-        for (WubookRoomData rdata : wubookdata.values()) {
-            if(!rdata.addedToWuBook) {
-                continue;
-            }
-            BookingItemType type = bookingEngine.getBookingItemType(rdata.bookingEngineTypeId);
-            if(type == null) {
-                //Type has been deleted.
-                continue;
-            }
-            
-            Calendar cal = Calendar.getInstance();
-            Date now = cal.getTime();
-            cal.add(Calendar.DAY_OF_YEAR, pmsManager.getConfigurationSecure().daysAllowedInTheFuture);
-            Date end = cal.getTime();
-            PmsPricing prices = pmsManager.getPrices(now, end);
-            Calendar calStart = Calendar.getInstance();
-            calStart.setTime(pmsManager.getConfigurationSecure().getDefaultStart(now));
-            
-            HashMap<String, Double> pricesForType = prices.dailyPrices.get(rdata.bookingEngineTypeId);
-            if(pricesForType == null) {
-                logPrint("Invalid price daily prices for : " + rdata.bookingEngineTypeId);
-                continue;
-            }
-            
-            String[] roomIds = new String[1];
-            roomIds[0] = rdata.wubookroomid + "";
-            if(rdata.newRoomPriceSystem) {
-                roomIds = rdata.virtualWubookRoomIds.split(";");
-            }
-            int guests = 1;
-            for(String roomId : roomIds) {
-                Vector list = new Vector(); 
-                Calendar copy = Calendar.getInstance();
-                copy.setTime(calStart.getTime());
-                list = createRoomPriceList(rdata, pricesForType,copy,list,guests);
-                if(!list.isEmpty()) {
-                    if(!roomId.equals("-1") && !roomId.isEmpty()) {
-                        table.put(roomId, list);
-                    }
-                }
-                guests++;
-            }
-        } 
-        
-        Vector params = new Vector();
-        params.addElement(token);
-        params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
-        params.addElement(0);
-        params.addElement(dfrom);
-        params.addElement(table);
-        
-        Vector result = executeClient("update_plan_prices", params);
-        if((Integer)result.get(0) != 0) {
-            logText("Where not able to update prices:" + result.get(1));
-            return "Failed to update price, " + result.get(1);
-        }
-        
-        updateMinStay(); 
-        
-        return "";
+        Calendar cal = Calendar.getInstance();
+        Date now = cal.getTime();
+        cal.add(Calendar.DAY_OF_YEAR, pmsManager.getConfigurationSecure().daysAllowedInTheFuture+20);
+        Date end = cal.getTime();
+
+        return updatePricesBetweenDates(now, end);
     }
 
     @Override
@@ -581,6 +538,14 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         if(!connectToApi()) {
             return "failed to connect to api";
         }
+        
+        if(!needUpdateMinStay()) {
+            logText("Min stay not updated since no min stay is needed to be updated");
+            return "Min stay update not needed";
+        }
+        
+        logText("Updating minstay");
+        
         Hashtable table = new Hashtable();
         
         String pattern = "dd/MM/yyyy";
@@ -1257,9 +1222,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             }
             
             if(!found) {
-                WubookBooking booking = fetchBooking(code + "");
-                addBookingToPms(booking);
-                bookingsAdded.add(booking);
+                bookingCodesToAdd.add(code + "");
             }
         }
         
@@ -1361,7 +1324,10 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             return;
         }
         
-        List<WubookBooking> nextBookings = fetchBookings(3, false);
+        nextBookings = fetchBookings(3, false);
+    }
+
+    private void checkBookingsToDelete(List<WubookBooking> nextBookings) throws ErrorException {
         for(WubookBooking booking : nextBookings) {
             if(booking.delete) {
                 PmsBooking pmsbooking = getPmsBooking(booking.reservationCode);
@@ -1384,6 +1350,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 }
             }
         }
+        nextBookings = null;
     }
 
     @Override
@@ -1873,7 +1840,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         if(availabilityHasBeenChanged == null) {
             return "";
         }
-
+        
+        if(availabiltyyHasBeenChangedEnd != null && availabiltyyHasBeenChangedStart != null) {
+            updatePricesBetweenDates(availabiltyyHasBeenChangedStart, availabiltyyHasBeenChangedEnd);
+        }
+        
         return sparseUpdateAvailabilityInternal();
     }
 
@@ -2181,11 +2152,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         saveObject(data);
     }
 
-    private Vector createRoomPriceList(WubookRoomData rdata, HashMap<String, Double> pricesForType, Calendar calStart, Vector list, int guests) {
+    private Vector createRoomPriceList(WubookRoomData rdata, HashMap<String, Double> pricesForType, Calendar calStart, Vector list, int guests, Date endAtDate) {
         Double defaultPrice = pricesForType.get("default");
         PmsConfiguration config = pmsManager.getConfigurationSecure();
             
-        for(int i = 0;i < (365*2); i++) {
+        for(int i = 0;i < (365*3); i++) {
             int year = calStart.get(Calendar.YEAR);
             int month = calStart.get(Calendar.MONTH)+1;
             int day = calStart.get(Calendar.DAY_OF_MONTH);
@@ -2223,8 +2194,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 priceToAdd = 1.0;
             }
             
-            //Lofoten bed and breakfast icreases the rooms by 15%.
-            if(storeId.equals("7bb18e4a-7a5c-4a0a-9a59-7e7705f0f004") || config.increaseByPercentage > 0) {
+            if(config.increaseByPercentage > 0) {
                 double factor = 1.15;
                 if(config.increaseByPercentage > 0) {
                     factor = 1.0 + ((double)config.increaseByPercentage/100);
@@ -2234,6 +2204,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             }
 
             list.add(priceToAdd);
+            if(endAtDate.before(calStart.getTime())) {
+                break;
+            }
             calStart.add(Calendar.DAY_OF_YEAR, 1);
         }
         return list;
@@ -2416,6 +2389,86 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             }
         }
         return hasPaidOrders;
+    }
+
+    private boolean needUpdateMinStay() {
+        return lastAvailability.needUpdateMinStay;
+    }
+
+    @Override
+    public void doUpdateMinStay() {
+        lastAvailability.needUpdateMinStay = true;
+        saveObject(lastAvailability);
+    }
+
+    public String updatePricesBetweenDates(Date now, Date end) throws XmlRpcException, Exception {
+        connectToApi();
+        
+        Hashtable table = new Hashtable();
+        
+        String pattern = "dd/MM/yyyy";
+        SimpleDateFormat format = new SimpleDateFormat(pattern);
+        String dfrom = format.format(now);
+        pmsInvoiceManager.startCacheCoverage();
+        
+        for (WubookRoomData rdata : wubookdata.values()) {
+            if(!rdata.addedToWuBook) {
+                continue;
+            }
+            BookingItemType type = bookingEngine.getBookingItemType(rdata.bookingEngineTypeId);
+            if(type == null) {
+                //Type has been deleted.
+                continue;
+            }
+            
+            PmsPricing prices = pmsManager.getPrices(now, end);
+            Calendar calStart = Calendar.getInstance();
+            calStart.setTime(pmsManager.getConfigurationSecure().getDefaultStart(now));
+            
+            HashMap<String, Double> pricesForType = prices.dailyPrices.get(rdata.bookingEngineTypeId);
+            if(pricesForType == null) {
+                logPrint("Invalid price daily prices for : " + rdata.bookingEngineTypeId);
+                continue;
+            }
+            
+            String[] roomIds = new String[1];
+            roomIds[0] = rdata.wubookroomid + "";
+            if(rdata.newRoomPriceSystem) {
+                roomIds = rdata.virtualWubookRoomIds.split(";");
+            }
+            int guests = 1;
+            for(String roomId : roomIds) {
+                Vector list = new Vector(); 
+                Calendar copy = Calendar.getInstance();
+                copy.setTime(calStart.getTime());
+                list = createRoomPriceList(rdata, pricesForType,copy,list,guests, end);
+                if(!list.isEmpty()) {
+                    if(!roomId.equals("-1") && !roomId.isEmpty()) {
+                        table.put(roomId, list);
+                    }
+                }
+                guests++;
+            }
+        } 
+        
+        Vector params = new Vector();
+        params.addElement(token);
+        params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
+        params.addElement(0);
+        params.addElement(dfrom);
+        params.addElement(table);
+        
+        Vector result = executeClient("update_plan_prices", params);
+        if((Integer)result.get(0) != 0) {
+            logText("Where not able to update prices:" + result.get(1));
+            return "Failed to update price, " + result.get(1);
+        } else {
+            logText("Prices updated between " + now + " - " + end);
+        }
+        
+        updateMinStay(); 
+        
+        return "";
     }
 
 

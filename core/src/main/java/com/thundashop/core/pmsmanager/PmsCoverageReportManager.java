@@ -128,8 +128,15 @@ public class PmsCoverageReportManager extends ManagerBase {
             return entries.get(key);
         }
 
+        
+        cal.setTime(date);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        
         PmsCoverageReportEntry toAdd = new PmsCoverageReportEntry();
-        toAdd.date = date;
+        toAdd.date = cal.getTime();
         entries.put(key, toAdd);
         return toAdd;
     }
@@ -162,7 +169,14 @@ public class PmsCoverageReportManager extends ManagerBase {
         }
 
         PmsCoverageReportEntry toAdd = new PmsCoverageReportEntry();
-        toAdd.date = PmsBookingRooms.convertOffsetToDate(key);
+        
+        cal.setTime(PmsBookingRooms.convertOffsetToDate(key));
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        
+        toAdd.date = cal.getTime();
         entries.put(key, toAdd);
         return toAdd;
     }

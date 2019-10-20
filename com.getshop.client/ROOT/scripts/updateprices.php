@@ -24,7 +24,7 @@ if(isset($_GET['showhtml'])) {
         $obj->prices = array();
         for($i = 0; $i < 3; $i++) {
             $priceobj = new stdClass();
-            $priceobj->price = 800+$i;
+            $priceobj->price = 9999+$i;
             $priceobj->date = date("d-m-Y", time()+86000*(365+$i));
             $obj->prices[] = $priceobj;
         }

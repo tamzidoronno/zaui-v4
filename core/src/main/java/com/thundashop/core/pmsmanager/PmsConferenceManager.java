@@ -432,12 +432,14 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
     private ArrayList<PmsConference> getFilterResult(PmsConferenceFilter filter) {
         ArrayList<PmsConference> retList = new ArrayList(conferences.values());
         
-        if (filter.onlyNoneExpiredEvents) {
-            retList.removeIf(o -> eventHasExpired(o));
-        }
-        
-        if (!filter.userIds.isEmpty()) {
-            retList.removeIf(o -> !filter.userIds.contains(o.forUser));
+        if(filter != null) {
+            if (filter.onlyNoneExpiredEvents) {
+                retList.removeIf(o -> eventHasExpired(o));
+            }
+
+            if (!filter.userIds.isEmpty()) {
+                retList.removeIf(o -> !filter.userIds.contains(o.forUser));
+            }
         }
         
         return retList;

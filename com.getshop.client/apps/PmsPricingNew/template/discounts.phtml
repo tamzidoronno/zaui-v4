@@ -53,7 +53,7 @@ if (sizeof($coupons) == 0) {
                             echo "<td style='width:60px;'><i class='fa fa-trash-o' gs_confirm='Are you sure you want to delete this code?' gsclick='removeCoupon' couponid='" . $coupon->id . "' gsname='id' style='cursor:pointer;'></i>";
                             echo " <i class='fa fa-edit toggleUpdateDiscountCode' couponcode='".$coupon->code."' style='cursor:pointer;'></i>";
                             ?>
-                            <div gstype='form' method='updateDiscountCode' class="updateDiscountCodeForm" style="position:absolute; padding: 10px; display:none; border: solid 1px; background-color:#fff; z-index: 2; width:1250px;">
+                            <div gstype='form' method='updateDiscountCode' class="updateDiscountCodeForm" style="position:absolute; padding: 10px; border-radius: 5px; display:none; border: solid 1px #bbb; background-color:#efefef; z-index: 2; width:1250px;">
                                 <div class='innerupdatediscountcodeform'></div>
                                 <div style='text-align: right'>
                                     <span class='shop_button' gstype='submit'>Save</span>

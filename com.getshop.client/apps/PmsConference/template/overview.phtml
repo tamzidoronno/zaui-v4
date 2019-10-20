@@ -22,7 +22,7 @@ if(sizeof($entries) == 0) {
     
     if($view == "month") {
         $fromTime = strtotime(date("d.m.Y 00:00",$fromTime)) + (60*60*2);
-        $toTime = strtotime(date("d.m.Y 00:00",$toTime)) + (60*60*2);
+        $toTime = strtotime(date("d.m.Y 23:59",$toTime)) + (60*60*2);
     }
     
     $events = (array)$this->getApi()->getPmsConferenceManager()->getConferenceEventsBetweenTime($this->convertToJavaDate($fromTime), $this->convertToJavaDate($toTime));

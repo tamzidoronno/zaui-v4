@@ -507,6 +507,11 @@ body {
 }
 
 
+@media only all and (max-width:1100px){
+    .gsarea[area="header"] .Menu .entry  {
+        width:50px !important;
+    }
+}
 @media only all and (max-width:800px){
     .gsarea[area="header"] {padding-bottom:40px;}
     .gs_framework_modules {left:0 !important;}

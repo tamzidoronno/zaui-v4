@@ -104,7 +104,12 @@ $isInvoice = $order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200
         font-size: 15px;
         padding: 3px;
     }
-    
+    @media print {
+        .new-page {
+            page-break-before: always;
+        }
+    }
+
     .invoice_template .productrowheader {
         border-top: solid 1px #DDD;
         padding-top: 20px;
@@ -210,6 +215,9 @@ $isInvoice = $order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200
         <div class='col col4'><? echo $translator->translate("Line Total"); ?></div>
     </div>
     <?
+    $i = 1;
+    $totalLines = sizeof((array)$order->cart->items);
+//    $totalLines = 55;
     foreach ($order->cart->items as $item) {
         $lineTotal = $item->product->price * $item->count;
         $total += $lineTotal;
@@ -251,6 +259,19 @@ $isInvoice = $order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200
             <div class='col col4'><? echo $translator->formatPrice($lineTotal); ?></div>
         </div>
         <?
+        $i++;
+        if($i == $totalLines) {
+            break;
+        }
+        if($totalLines < 17 && $i == $totalLines && $totalLines >= 12) {
+            echo "<div class='new-page'></div>";
+        } else if($i == 17) {
+            echo "<div class='new-page'></div>";
+        }
+    }
+    $numberOfRowsOnLastPage = (($i-16) % 21)-1;
+    if($numberOfRowsOnLastPage >= 17) {
+        echo "<div class='new-page'></div>";
     }
     ?>
 

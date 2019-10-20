@@ -2358,9 +2358,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsAdditionalItemInformation additional = getAdditionalInfo(bookingItemId);
         PmsRoomSimple currentBookerOnRoom = getCurrentRoomOnItem(bookingItemId);
         if (currentBookerOnRoom != null) {
-            additional.markDirty(currentBookerOnRoom.pmsRoomId);
+            additional.markDirty(currentBookerOnRoom.pmsRoomId, storeId);
         } else {
-            additional.markDirty(null);
+            additional.markDirty(null, storeId);
         }
         saveAdditionalInfo(additional);
 
@@ -3423,7 +3423,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 } else {
                     PmsAdditionalItemInformation additional = getAdditionalInfo(room.bookingItemId);
                     if (additional.isClean(false) && !additional.closed) {
-                        additional.markDirty(room.pmsBookingRoomId);
+                        additional.markDirty(room.pmsBookingRoomId, storeId);
                         needSaving = true;
                         logEntry("Marking item " + item.bookingItemName + " as dirty (failure in marking)", booking.id, item.id, room.pmsBookingRoomId, "cleaning");
                         saveObject(additional);
@@ -3475,7 +3475,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             resetDoorLockCode(room);
             PmsAdditionalItemInformation add = getAdditionalInfo(itemId);
             if (!hasLockSystemActive()) {
-                add.markDirty(room.pmsBookingRoomId);
+                add.markDirty(room.pmsBookingRoomId, storeId);
             }
             saveObject(add);
             if (room.isStarted() && !room.isEnded()) {
@@ -5607,6 +5607,24 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         }
+        
+        Collections.sort(result, new Comparator<PmsBookingAddonItem>() {
+            public int compare(PmsBookingAddonItem s1, PmsBookingAddonItem s2) {
+                if(s1 == null || s1.productId == null || s2 == null || s2.productId == null) {
+                    return -1;
+                }
+                Product s1Product = productManager.getProduct(s1.productId);
+                Product s2Product = productManager.getProduct(s2.productId);
+                
+                if(s1Product == null || s2Product == null || s1Product.name == null || s2Product.name == null) {
+                    return -1;
+                }
+                
+                return s1Product.name.compareTo(s2Product.name);
+                
+            }
+        });
+        
         return result;
     }
 
@@ -10087,6 +10105,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         setLanguageOnBooking(currentBooking);
 
         addDefaultAddons(currentBooking);
+        wubookManager.setAvailabilityChanged(currentBooking.getStartDate(), currentBooking.getEndDate());
         saveBooking(currentBooking);
     }
 
@@ -10802,15 +10821,26 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public boolean updatePrices(List<PmsPricingDayObject> prices) {
+        Date start = null;
+        Date end = null;
         try {
             PmsPricing pricestoupdate = priceMap.get("default");
-            System.out.println(pricestoupdate);
             
             for(PmsPricingDayObject price : prices) {
-                pricestoupdate.dailyPrices.get(price.typeId).put(price.date, price.newPrice);
+                Date dayPrice = PmsBookingRooms.convertOffsetToDate(price.date);
+                if(start == null || dayPrice.before(start)) {
+                    start = dayPrice;
+                }
+                if(end == null || dayPrice.after(end)) {
+                    end = dayPrice;
+                }
+                HashMap<String, Double> dailypricematrix = pricestoupdate.dailyPrices.get(price.typeId);
+                if(dailypricematrix != null) {
+                    dailypricematrix.put(price.date, price.newPrice);
+                }
             }
             
-            wubookManager.updatePrices();
+            wubookManager.updatePricesBetweenDates(start, end);
             return true;
         }catch(Exception e) {
             logPrintException(e);

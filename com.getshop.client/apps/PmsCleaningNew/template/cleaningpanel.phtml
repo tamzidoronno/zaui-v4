@@ -5,21 +5,20 @@ ob_start();
 ?> 
 
 <div class='stepbox'>
-    <h1>Guests arriving today</h1>
-
+    <div class='cleaningheader'>Guests arriving today</div>
+    <?php
+    $this->print_guests_table($time, true);
+    ?>
+    <br>
     <i class="fa fa-clock-o" style="color:red"></i>  Early check in, priority room. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <i class="fa fa-clock-o" style="color:green"></i> Late check out, can leave later &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <i class="fa fa-user-plus"></i> Additional bed request &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <i class="fa fa-bed"></i> Addition bed for children requested&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <i class="fa fa-sign-out"></i> Guest has checked out<br>
-    <div style='height:10px;'></div>
-    <?php
-    $this->print_guests_table($time, true);
-    ?>
 </div>
 <br>
 <div class='stepbox'>
-    <h1>Need cleaning today</h1>
+    <div class='cleaningheader'>Need cleaning today</div>
     <?php
     $this->print_interval_cleaning($time);
     ?>
@@ -35,14 +34,14 @@ ob_start();
 ?>
 <br>    
 <div class='stepbox'>
-    <h1>Guests arriving tomorrow</h1>
+    <div class='cleaningheader'>Guests arriving tomorrow</div>
     <?php
     $this->print_guests_table($time+86400, true);
-    ?>
+//    ?>
 </div>
 <br>
 <div class='stepbox'>
-    <h1>Cleaning table (<a href='?page=e03b19de-d1bf-4d1c-ac40-8c100ef53366&detailedcleanlingtable=show' style='color:blue;'>Display detailed cleaning table</a>)</h1>
+    <div class='cleaningheader'>Cleaning table (<a href='?page=e03b19de-d1bf-4d1c-ac40-8c100ef53366&detailedcleanlingtable=show' style='color:#efefef;'>Display detailed cleaning table</a>)</div>
     <?php
     if(isset($_GET['detailedcleanlingtable'])) {
         $this->printCleaningTable($time);
@@ -53,7 +52,7 @@ ob_start();
 </div>
 <br>
 <div class='stepbox'>
-    <h1>Total room overview</h1>
+    <div class='cleaningheader'>Total room overview</div>
     <?php
     $overview = $this->printRoomOverview();
     ?>

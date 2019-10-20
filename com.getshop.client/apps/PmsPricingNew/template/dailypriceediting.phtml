@@ -51,12 +51,12 @@ $prices = $priceObject->dailyPrices;
         </table>
     </div>
 </div>
-<span style='cursor:pointer;' onclick='$(".additionalguestprices").toggle()'>Show more options</span>
+<span style='cursor:pointer; margin-left:20px;' onclick='$(".additionalguestprices").toggle()'>Show more options</span>
 <div style='display:none;' class='additionalguestprices'>
     <table>
         <tr>
             <td>
-                <div style='overflow: auto;max-width: 800px; min-width: 520px;padding: 20px; margin-right: 20PX;'>
+                <div style='overflow: auto;max-width: 675px; min-width: 520px;padding: 20px; margin-right: 20PX;'>
                     <h1>Additional guest price per adult</h1>
                     <table>
                     <?php
@@ -88,7 +88,7 @@ $prices = $priceObject->dailyPrices;
                                     }
                                 }
 
-                                echo "<td><input type='txt' class='derivedprices' style='width: 50px;' value='$toSet' bookingtype='".$type->id."' guestcount='$i'></td>";
+                                echo "<td><input type='txt' class='derivedprices gsniceinput1' style='width: 50px;' value='$toSet' bookingtype='".$type->id."' guestcount='$i'></td>";
                             }
                             echo "</tr>";
                         }
@@ -97,7 +97,7 @@ $prices = $priceObject->dailyPrices;
                 </div>
             </td>
             <td>
-                <div style='overflow: auto;max-width: 800px; min-width: 520px;padding: 20px; margin-right: 20PX;'>
+                <div style='overflow: auto;max-width: 675px; min-width: 520px;padding: 20px; margin-right: 20PX;'>
                     <h1>Additional guest price per child</h1>
                     <table>
                     <?php
@@ -129,7 +129,7 @@ $prices = $priceObject->dailyPrices;
                                     }
                                 }
 
-                                echo "<td><input type='txt' class='derivedPricesChildren' style='width: 50px;' value='$toSet' bookingtype='".$type->id."' guestcount='$i'></td>";
+                                echo "<td><input type='txt' class='derivedPricesChildren gsniceinput1' style='width: 50px;' value='$toSet' bookingtype='".$type->id."' guestcount='$i'></td>";
                             }
                             echo "</tr>";
                         }

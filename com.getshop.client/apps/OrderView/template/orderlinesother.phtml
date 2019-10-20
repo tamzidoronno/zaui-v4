@@ -51,6 +51,7 @@ foreach ($cartItems as $item) {
     if (sizeof((array) $item->priceMatrix) > 0) {
         $hasSpecialItems = true;
     }
+    
     if (isset($item->itemsAdded) && $item->itemsAdded && sizeof((array) $item->itemsAdded) > 0) {
         $hasSpecialItems = true;
     }

@@ -220,6 +220,7 @@ class PmsPricingNew extends \WebshopApplication implements \Application {
         }
         
         $this->getApi()->getPmsManager()->setPrices($this->getSelectedName(), $this->getSelectedPricePlan(), $pricingObject);
+        $this->getApi()->getWubookManager()->updatePricesBetweenDates($this->getSelectedName(), $this->convertToJavaDate(strtotime($this->getStart())), $this->convertToJavaDate(strtotime($this->getEnd())));
     }
 
     public function selectDates() {

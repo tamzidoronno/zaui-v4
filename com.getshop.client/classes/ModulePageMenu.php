@@ -31,14 +31,14 @@ class ModulePageMenu {
      * 
      * @param core_usermanager_data_User $user
      */
-    public function renderTop($user, $printPageMenuInModulesMenu=false) {
+    public function renderTop($user, $printPageMenuInModulesMenu=false, $store = null) {
         ?>
 
         <div class="Menu">
             <?php
-            $this->printChangedMenues($user, $printPageMenuInModulesMenu);
+            $this->printChangedMenues($user, $printPageMenuInModulesMenu, $store);
             if (!$printPageMenuInModulesMenu) {
-                $this->printHorizantalMenu($user);
+                $this->printHorizantalMenu($user, $store);
             }
             ?>
         </div>
@@ -120,14 +120,14 @@ class ModulePageMenu {
         return $menu;
     }
 
-    public function printChangedMenues($user, $printPageMenuInModulesMenu) {
+    public function printChangedMenues($user, $printPageMenuInModulesMenu, $store) {
         $factory = IocContainer::getFactorySingelton();
         $modules = $factory->getApi()->getPageManager()->getModules();
         echo "<div class='gs_framework_modules'>";
         
             if ($printPageMenuInModulesMenu) {
                 echo "<div class='inner_header_top_menu_gs'>Menu</div>";
-                $this->printHorizantalMenu($user);
+                $this->printHorizantalMenu($user, $store);
             }
 
             echo "<div class='inner_header_top_menu_gs'>Modules</div>";
@@ -253,7 +253,11 @@ class ModulePageMenu {
         return $menu;
     }
 
-    public function printHorizantalMenu($user) {
+    public function printHorizantalMenu($user, $store = null) {
+        $pluginpages = array();
+        if($store != null) {
+            $pluginpages = $store->configuration->additionalPlugins;
+        }
         $menuEntries = $this->getEntries();
         if ($this->moduleName == "pms") {
             $useraccess = (array)$user->pmsPageAccess;
@@ -279,10 +283,11 @@ class ModulePageMenu {
                         <div class="entry <?php echo $hassubs; ?>"><a href="?page=<? echo $entry->getPageId(); ?>&gs_getshopmodule=<? echo \PageFactory::getGetShopModule(); ?>"><div><i class="fa <? echo $entry->getIcon(); ?>"></i>  <? echo $entry->getName(); ?> </div></a>
                         <?php
                         if($entry->getPageId() == "a90a9031-b67d-4d98-b034-f8c201a8f496") {
-                            //@TODO CONTINUE THIS SUPPORt
-//                            echo "<span class='gss_dropdownmenu'>";
-//                            echo "<a href='/pms.php?page=monthlypaymentlinks'><div class='subentry'>Monthly payment link</div></a>";
-//                            echo "</span>";
+                            if(stristr($user->emailAddress, "@getshop.com") || in_array("monthlypaymentlinks",$pluginpages)) {
+                                echo "<span class='gss_dropdownmenu'>";
+                                echo "<a href='/pms.php?page=monthlypaymentlinks'><div class='subentry'>Monthly payment link</div></a>";
+                                echo "</span>";
+                            }
                         }
                         ?>
                         </div>

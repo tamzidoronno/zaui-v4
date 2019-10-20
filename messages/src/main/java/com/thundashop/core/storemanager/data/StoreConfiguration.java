@@ -49,6 +49,7 @@ public class StoreConfiguration extends DataCommon {
     
     public boolean hasSMSPriviliges = false;
     public boolean hasSelectedDesign = false;
+    public List<String> additionalPlugins = new ArrayList();
     
     @Transient
     public ModuleHomePages moduleHomePages;

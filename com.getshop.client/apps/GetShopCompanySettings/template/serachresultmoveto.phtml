@@ -1,0 +1,17 @@
+<?
+/* @var $this ns_a22fa681_6882_4869_8add_b1cc9c7b661b\GetShopCompanySettings */
+$customers = $this->getApi()->getUserManager()->findUsers($_POST['data']['value']);
+
+echo "<br/>";
+echo "<br/>";
+foreach ($customers as $cust) {
+    ?>
+<div>
+    <div class='shop_button' gsclick='moveSystemToCustomer' systemid='<? echo $_POST['data']['systemId']; ?>' userid='<? echo $cust->id; ?>'>Move to customer <? echo $cust->fullName; ?> </div> 
+</div>
+    <?
+}
+
+echo "<br/>";
+echo "<br/>";
+?>

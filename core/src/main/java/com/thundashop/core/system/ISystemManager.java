@@ -46,5 +46,7 @@ public interface ISystemManager {
     
     @Administrator
     public List<GetShopSystem> findSystem(String keyword);
-    
+
+    @Administrator
+    public void moveSystemToCustomer(String systemId, String userId);
 }

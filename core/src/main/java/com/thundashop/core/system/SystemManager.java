@@ -266,5 +266,15 @@ public class SystemManager extends ManagerBase implements ISystemManager {
         
         return res;
     }
+
+    @Override
+    public void moveSystemToCustomer(String systemId, String userId) {
+        GetShopSystem system = getSystem(systemId);
+        User user = userManager.getUserById(userId);
+        if (user != null && user.companyObject != null) {
+            system.companyId = user.companyObject.id;
+            saveObject(system);
+        }
+    }
         
 }

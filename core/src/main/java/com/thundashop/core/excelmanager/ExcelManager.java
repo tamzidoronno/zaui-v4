@@ -74,15 +74,6 @@ public class ExcelManager extends ManagerBase implements IExcelManager {
         }
         
     }
-    
-    private void setFontSize(Cell cell, int fontSize, boolean bold) {
-        XSSFFont font = workbook.createFont();
-        font.setFontHeightInPoints((short) fontSize);
-        font.setBold(bold);
-        XSSFCellStyle style = workbook.createCellStyle();
-        style.setFont(font);
-        cell.setCellStyle(style);
-    }
 
     private boolean isNumeric(String field) {
         try {
@@ -105,29 +96,48 @@ public class ExcelManager extends ManagerBase implements IExcelManager {
     }
 
     private void createExcelSheet(String sheetName, List<List<String>> array) {
+
+        XSSFFont sfont = workbook.createFont();
+        sfont.setFontHeightInPoints((short) 12);
+        sfont.setBold(false);
+        
+        XSSFCellStyle standardFontStyle = workbook.createCellStyle();
+        standardFontStyle.setFont(sfont);
+
         XSSFSheet sheet = workbook.createSheet(sheetName);
+        CellStyle numericStyle = workbook.createCellStyle();
+        numericStyle.setDataFormat(workbook.getCreationHelper().createDataFormat().getFormat("#.##"));
+        numericStyle.setFont(sfont);
+        
+        XSSFFont font = workbook.createFont();
+        font.setFontHeightInPoints((short) 12);
+        font.setBold(true);
+        XSSFCellStyle boldFontStyle = workbook.createCellStyle();
+        boldFontStyle.setFont(font);
+
+        
         for(Integer i = 0; i < array.size(); i++) {
             List<String> fields = array.get(i);
             int j = 0;
             Row row = sheet.createRow(i);
+            
             for(String field : fields) {
                 Cell cell = row.createCell(j);
                 cell.setCellValue(field);
-                if(isNumeric(field)) {
-                    cell.setCellType(CellType.NUMERIC);
-                    CellStyle cellStyle = workbook.createCellStyle();
-                    cellStyle.setDataFormat(workbook.getCreationHelper().createDataFormat().getFormat("#.#"));
-                    cell.setCellValue(new Double(field));
-                } else if(isDouble(field)) {
-                    CellStyle cellStyle = workbook.createCellStyle();
-                    cellStyle.setDataFormat(workbook.getCreationHelper().createDataFormat().getFormat("#.#"));
-                    cell.setCellValue(new Double(field));
-                    cell.setCellStyle(cellStyle);
-                }
                 if(i == 0) {
-                    setFontSize(cell, 12, true);
+                    cell.setCellStyle(boldFontStyle);
                 } else {
-                    setFontSize(cell, 12, false);
+                    if(isNumeric(field)) {
+                        cell.setCellType(CellType.STRING);
+                        cell.setCellValue(new Double(field));
+                        cell.setCellStyle(numericStyle);
+                    } else if(isDouble(field)) {
+                        cell.setCellType(CellType.STRING);
+                        cell.setCellValue(new Double(field));
+                        cell.setCellStyle(numericStyle);
+                    } else {
+                        cell.setCellStyle(standardFontStyle);
+                    }
                 }
                 j++;
             }

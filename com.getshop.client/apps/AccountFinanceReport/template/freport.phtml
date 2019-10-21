@@ -156,8 +156,32 @@ echo "</script>";
             <?
         }
         ?>
+        <span class='shop_button showresultbutton' onclick='$(".detailedexcelreportform").toggle();' style='float:right;'>Detailed excel report</span>
+        
+        <span class='detailedexcelreportform' style='position:absolute; border: solid 1px #bbb; border-radius: 5px; background-color: #fff; padding: 10px; right: 30px; top: 205px;display:none;height: 60px;'>
+            <div>Select a periode you want download the report</div>
+            <?php
+            $defstart = date("d.m.Y", strtotime($this->getStart()));
+            $defend = date("d.m.Y", strtotime($this->getEnd()));
+            ?>
+            <input type='txt' class='gsniceinput1' gsname='start' style='width:80px;' value='<?php echo $defstart; ?>'>
+            <input type='txt' class='gsniceinput1' gsname='end' style='width:80px;' value='<?php echo $defend; ?>'>
+            <span class='shop_button downloaddetailedreportbutton'  gs_fileName='detailedreport.xls' gs_downloadExcelReport="downloadDetailedReport" start='<?php echo $defstart; ?>' end='<?php echo $defend; ?>'>Download report</span>
+        </span>
     </div>
     
+    <script>
+        $('[gsname="start"]').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
+            onSelect : function(dateText) {
+                $('.downloaddetailedreportbutton').attr('start',dateText);
+            }
+        });
+        $('[gsname="end"]').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
+            onSelect : function(dateText) {
+                $('.downloaddetailedreportbutton').attr('end',dateText);
+            }
+        });
+    </script>
 </div>
 
 <?

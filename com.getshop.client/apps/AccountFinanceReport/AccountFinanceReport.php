@@ -9,6 +9,62 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
     public function getDescription() {
         
     }
+    
+    public function downloadDetailedReport() {
+        $start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
+        $end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
+        
+        $dayIncomes = $this->getApi()->getOrderManager()->getDayIncomes($start, $end);
+
+        $accountingNumbers = array();
+        $entries = array();
+        foreach($dayIncomes as $income) {
+            foreach($income->dayEntries as $dayEntry) {
+                $accountingNumbers[$dayEntry->accountingNumber] = 0;
+                $entries[] = $dayEntry;
+            }
+        }
+
+        ksort($accountingNumbers);
+        
+        $i = 0;
+        foreach($accountingNumbers as $accountnumber => $val) {
+            $accountingNumbers[$accountnumber] = $i;
+            $i++;
+        }
+        
+        
+        $header = array();
+        $header[] = "Date";
+        $header[] = "Orderid";
+        foreach($accountingNumbers as $accountNumber => $offset) {
+            $header[] = $accountNumber;
+        }
+        
+        $matrix = array();
+        $matrix[] = $header;
+        
+        $orders = $this->groupDayEntriesByOrder($dayIncomes);
+        foreach($orders as $order) {
+            $row = array();
+            $row[] = date("d.m.Y", strtotime($order[0]->date));
+            $row[] = $order[0]->incrementalOrderId;
+
+            $entries = $this->groupOnAccounting($order);
+
+            foreach($accountingNumbers as $accountNumber => $offset) {
+                if(!isset($entries[$accountNumber])) {
+                    $row[] = 0;
+                } else {
+                    $row[] = $entries[$accountNumber];
+                }
+            }
+
+            $matrix[] = $row;
+        }
+        echo json_encode($matrix);
+    }
+    
 
     public function getName() {
         return "AccountFinanceReport";
@@ -471,5 +527,30 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
     public function applyDiff() {
         $this->getApi()->getOrderManager()->applyCorrectionForOrder($_POST['data']['orderid'], $_POST['data']['password']);
     }
+
+    public function groupDayEntriesByOrder($dayIncomes) {
+        $orders = array();
+        foreach ($dayIncomes as $dayIncome) {
+            foreach ($dayIncome->dayEntries as $entry) {
+                if ($entry->isTaxTransaction && $this->isShowingIncTaxes()) {
+                    continue;
+                }
+
+                $orderId = $entry->orderId;
+
+                if ($entry->freePostId) {
+                    $orderId = $entry->freePostId;
+                } 
+
+                if (!isset($orders[$orderId])) {
+                    $orders[$orderId] = array();
+                }
+
+                $orders[$orderId][] = $entry;
+            }
+        }
+        return $orders;
+    }
+
 }
 ?>

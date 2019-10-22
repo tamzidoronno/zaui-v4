@@ -2402,7 +2402,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     }
 
     public String updatePricesBetweenDates(Date now, Date end) throws XmlRpcException, Exception {
-        connectToApi();
+        if(!connectToApi()) {
+            return "Not able to connect";
+        }
         
         Hashtable table = new Hashtable();
         

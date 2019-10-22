@@ -5,8 +5,13 @@
  */
 package com.thundashop.core.pmsmanager;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collector;
 
 /**
@@ -30,5 +35,26 @@ public class PmsOrderCreateRowItemLine {
 
     public String getKey() {
         return createOrderOnProductId + ";" + addonId;
+    }
+
+    boolean isWithin(Date start, Date end) {
+        if (date == null && date.isEmpty()) {
+            return false;
+        }
+        
+        SimpleDateFormat sdf  = new SimpleDateFormat("dd-MM-yyyy");
+        
+        
+        try {
+            long startDate = start.getTime();
+            long endDate = end.getTime();
+            long curDate = sdf.parse(date).getTime();
+            return startDate <= curDate && curDate <= endDate;
+        } catch (ParseException ex) {
+            Logger.getLogger(PmsOrderCreateRowItemLine.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return false;
+        
     }
 }

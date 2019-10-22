@@ -260,9 +260,6 @@ $isInvoice = $order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200
         </div>
         <?
         $i++;
-        if($i == $totalLines) {
-            break;
-        }
         if($totalLines < 17 && $i == $totalLines && $totalLines >= 12) {
             echo "<div class='new-page'></div>";
         } else if($i == 17) {

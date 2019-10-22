@@ -1127,6 +1127,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return true;
     }
 
+    @Override
+    public String autoCreateOrderForBookingAndRoomBetweenDates(String roomBookingId, String paymentMethod, Date start, Date end) {
+        return autoCreateOrderForBookingAndRoomInternal(roomBookingId, paymentMethod, start, end);
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0; 
@@ -3581,6 +3586,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     
     @Override
     public String autoCreateOrderForBookingAndRoom(String roomBookingId, String paymentMethod) {
+        return autoCreateOrderForBookingAndRoomInternal(roomBookingId, paymentMethod, null, null);
+    }
+
+    private String autoCreateOrderForBookingAndRoomInternal(String roomBookingId, String paymentMethod, Date start, Date end) throws ErrorException {
         if(paymentMethod == null || paymentMethod.isEmpty()) {
             Application ecommerceSettingsApplication = applicationPool.getApplication("9de54ce1-f7a0-4729-b128-b062dc70dcce");
             if(ecommerceSettingsApplication == null) {
@@ -3607,7 +3616,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         String recieptEmail = booking.recieptEmail.get(roomBookingId);
         
         if (shouldUseAlreadyCreatedOrder(alreadyCreatedOrder, booking, room)) {
-            if(recieptEmail != null) { 
+            if(recieptEmail != null) {
                 alreadyCreatedOrder.recieptEmail = recieptEmail; 
                 orderManager.saveOrder(alreadyCreatedOrder);
             }
@@ -3617,11 +3626,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         deleteOrCreditExistingOrders(booking, room);
         
         // If room = null then the order will be created for the booking, otherwise it will be created for the room itself.
-        String orderId = createOrderWithPaymentMethod(booking, room, paymentMethod);
+        String orderId = createOrderWithPaymentMethod(booking, room, paymentMethod, start, end);
         
         Order ord = orderManager.getOrderSecure(orderId);
         ord.createdByPaymentLinkId = roomBookingId;
-        if(recieptEmail != null) { 
+        if(recieptEmail != null) {
             ord.recieptEmail = recieptEmail; 
         }
         orderManager.saveOrder(ord);
@@ -3698,7 +3707,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
     }
     
-    public String createOrderWithPaymentMethod(PmsBooking booking, PmsBookingRooms room, String roomId) {
+    public String createOrderWithPaymentMethod(PmsBooking booking, PmsBookingRooms room, String roomId, Date start, Date end) {
         List<PmsOrderCreateRow> createOrder = new ArrayList();
         
         if(room == null) {
@@ -3716,6 +3725,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             createOrderForRoom.roomId = room.pmsBookingRoomId;
             createOrderForRoom.items = summary.getCheckoutRows();
             createOrder.add(createOrderForRoom);
+        }
+        
+        if (start != null && end != null) {
+            createOrder.stream()
+                .forEach(o -> o.removeRowsNotWithin(start, end));
         }
         
         String userId = booking.userId != null && !booking.userId.isEmpty() ? booking.userId : getSession().currentUser.id;

@@ -80,5 +80,13 @@ class GetShopCompanySettings extends \MarketingApplication implements \Applicati
     public function syncSystem() {
         $this->getApi()->getSystemManager()->syncSystem($_POST['data']['systemid']);
     }
+    
+    public function searchForCustomerToMoveSystemTo() {
+        $this->includefile("serachresultmoveto");
+    }
+    
+    public function moveSystemToCustomer() {
+        $this->getApi()->getSystemManager()->moveSystemToCustomer($_POST['data']['systemid'], $_POST['data']['userid']);
+    }
 }
 ?>

@@ -6,6 +6,7 @@
 package com.thundashop.core.pmsmanager;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -16,4 +17,8 @@ public class PmsOrderCreateRow {
     public String roomId;
     public String conferenceId;
     public List<PmsOrderCreateRowItemLine> items = new ArrayList();
+
+    void removeRowsNotWithin(Date start, Date end) {
+        items.removeIf(o -> !o.isWithin(start, end));
+    }
 }

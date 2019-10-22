@@ -151,5 +151,16 @@ public interface IPmsInvoiceManager {
     @Administrator
     public Date getPaymentLinkSendingDate(String bookingId);
     
-    public String autoCreateOrderForBookingAndRoom(String roomBookingId, String paymentMethod);
+        public String autoCreateOrderForBookingAndRoom(String roomBookingId, String paymentMethod);
+    
+    /**
+     * The dates are included the given dates.
+     * 
+     * @param roomBookingId
+     * @param paymentMethod
+     * @param start
+     * @param end
+     * @return 
+     */
+    public String autoCreateOrderForBookingAndRoomBetweenDates(String roomBookingId, String paymentMethod, Date start, Date end);
 }

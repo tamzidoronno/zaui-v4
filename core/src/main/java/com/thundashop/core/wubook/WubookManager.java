@@ -169,6 +169,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         
         if(tokenCount < 30 && token != null && !token.isEmpty()) {
             tokenCount++;
+            
             return true;
         }
         
@@ -176,7 +177,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 //        client = new XmlRpcClient("https://wubook.net/xrws/");
         //New
         client = new XmlRpcClient("https://wired.wubook.net/xrws/");
-
+        logText("Reloading token");
         Vector<String> params = new Vector<String>();
         params.addElement(pmsManager.getConfigurationSecure().wubookusername);
         params.addElement(pmsManager.getConfigurationSecure().wubookpassword);
@@ -398,7 +399,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
     @Override
     public List<WubookBooking> fetchNewBookings() throws Exception {
-        
+       
         if(disableWubook != null) {
             long diff = new Date().getTime() - disableWubook.getTime();
             if(diff < (10*60*1000)) {
@@ -408,16 +409,29 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         }
         
         if(nextBookings != null) {
-            checkBookingsToDelete(nextBookings);
-        }
-        
-        if(!bookingCodesToAdd.isEmpty()) {
-            for(String code : bookingCodesToAdd) {
-                WubookBooking booking = fetchBooking(code + "");
-                addBookingToPms(booking);
+            try {
+                logText("Next bookings found:" + nextBookings.size());
+                checkBookingsToDelete(nextBookings);
+            }catch(Exception e) {
+                messageManager.sendErrorNotification("Failed to double delete bookings", e);
+                logPrintException(e);
             }
-            bookingCodesToAdd.clear();
+            nextBookings = null;
         }
+
+        try {
+            if(!bookingCodesToAdd.isEmpty()) {
+                logText("BookingsCodesToAdd is not empty:" + bookingCodesToAdd.size());
+                for(String code : bookingCodesToAdd) {
+                    WubookBooking booking = fetchBooking(code + "");
+                    addBookingToPms(booking);
+                }
+            }
+        }catch(Exception e) {
+            logPrintException(e);
+            messageManager.sendErrorNotification("Failed to add booking codes", e);
+        }
+        bookingCodesToAdd.clear();
         
         connectToApi();
         PmsConfiguration config = pmsManager.getConfigurationSecure();

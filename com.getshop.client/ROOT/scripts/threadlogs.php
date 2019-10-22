@@ -4,7 +4,11 @@
 //$factory = new Factory(true);
 //$factory->initialize(true, true);
 
-
+if(!isset($_GET['start'])) {
+    $_GET['start'] = date("d.m.Y H:i", time()-(60*60*3));
+    $_GET['end'] = date("d.m.Y H:i", time());
+    
+}
 
 if (!isset($_GET['start']) || !isset($_GET['end'])) {
     echo "Please specify start and end date";
@@ -51,7 +55,7 @@ usort($result, "cmp");
     th { text-align: left; padding: 5px; }
     td { text-align: left; padding: 5px; }
     tr.yellow td { background-color: yellow; }
-    tr.red td { background-color: red; }
+    tr.red td { background-color: red; color:#fff; }
     tr.black td { background-color: black; color: #FFF; }
 </style>
 <table>
@@ -65,23 +69,35 @@ usort($result, "cmp");
     
 <?
     foreach ($result as $threadlog) {
+        if($threadlog->belongsToStoreId != "1ed4ab1f-c726-4364-bf04-8dcddb2fb2b1") {
+            continue;
+        }
+        if($threadlog->type == "async") {
+            continue;
+        }
+        if($threadlog->type == "cron") {
+            continue;
+        }
         $warningClass = "";
-        if ($threadlog->timeUsed > 40) {
-            $warningClass = "yellow";
-        }
-        if ($threadlog->timeUsed > 2000) {
-            $warningClass = "red";
-        }
-        if (!$threadlog->timeUsed) {
+        if (!@$threadlog->timeUsed) {
             $warningClass = "black";
+            continue;
+        } else if (@$threadlog->timeUsed > 2000) {
+            $warningClass = "red";
+        } else if ($threadlog->timeUsed > 40) {
+            $warningClass = "yellow";
+            continue;
+        } else {
+            continue;
         }
+        
        ?>
         <tr class="<? echo $warningClass; ?>">
             <td><? echo date('d.m.Y h:i:s', date($threadlog->startedMs/1000)); ?></td>
             <td><? echo $threadlog->threadName; ?></td>
             <td><? echo $threadlog->startedMs; ?></td>
-            <td><? echo $threadlog->endedMs; ?></td>
-            <td><? echo $threadlog->timeUsed; ?></td>
+            <td><? echo @$threadlog->endedMs; ?></td>
+            <td><? echo @$threadlog->timeUsed; ?></td>
             <td><? echo $threadlog->type; ?></td>
             <td><? echo $threadlog->belongsToStoreId; ?></td>
 

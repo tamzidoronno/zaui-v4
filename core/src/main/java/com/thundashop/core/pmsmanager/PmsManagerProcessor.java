@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import org.joda.time.DateTime;
 
@@ -686,12 +687,16 @@ public class PmsManagerProcessor {
     private void checkForIncosistentBookings() {
         List<Booking> allBookings = manager.bookingEngine.getAllBookings();
         List<String> allBookingIdsInPmsManager = new ArrayList();
-        List<String> allBookingIdsInBookingEngine = new ArrayList();
+        HashSet<String> allBookingIdsInBookingEngine = new HashSet();
         List<PmsBookingRooms> allRoomsInPmsManager = new ArrayList();
         for(PmsBooking booking : manager.getBookingMap().values()) {
             if(booking.isDeleted) {
                 continue;
             }
+            if(booking.isEnded()) {
+                continue;
+            }
+            
             if(booking.getActiveRooms() != null) {
                 for(PmsBookingRooms room : booking.getActiveRooms()) {
                     if(room.bookingId != null) {
@@ -703,6 +708,9 @@ public class PmsManagerProcessor {
         }
         
         for(Booking test : allBookings) {
+            if(test.isEnded()) {
+                continue;
+            }
             if(test.source != null && !test.source.isEmpty()) {
                 continue;
             }
@@ -712,7 +720,6 @@ public class PmsManagerProcessor {
                 manager.bookingEngine.deleteBooking(test.id);
             }
         }
-        
         for(PmsBookingRooms room : allRoomsInPmsManager) {
             if(!allBookingIdsInBookingEngine.contains(room.bookingId)) {
                 PmsBooking booking = manager.getBookingFromRoom(room.pmsBookingRoomId);
@@ -1031,7 +1038,8 @@ public class PmsManagerProcessor {
             return;
         }
         
-        List<Order> orders = manager.orderManager.getOrders(null, null, null);
+        List<Order> orders = manager.orderManager.getAllOrders();
+        checkTimer("Fetching orders");
         for(Order ord : orders) {
             if(ord.createdOnDay(new Date())) {
                 continue;
@@ -1208,7 +1216,7 @@ public class PmsManagerProcessor {
     
     private void checkTimerInner(String text) { 
         long diff = System.currentTimeMillis() - start;
-//        manager.logPrint("\t Processor inner:" + diff + " : " + text);
+        manager.logPrint("\t Processor inner:" + diff + " : " + text);
         start = System.currentTimeMillis();
     }
 

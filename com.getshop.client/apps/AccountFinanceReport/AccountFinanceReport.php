@@ -59,7 +59,7 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
                     $row[] = $entries[$accountNumber];
                 }
             }
-
+                    
             $matrix[] = $row;
         }
         echo json_encode($matrix);

@@ -4,6 +4,11 @@ chdir("../");
 include '../loader.php';
 $factory = IocContainer::getFactorySingelton();
 
+$tget =  json_encode($_GET);
+$tpost = json_encode($_POST);
+$tstdin = json_encode(file_get_contents('php://input'));
+
+file_put_contents("/tmp/updatepriceslog.txt", "GET:$tget POST:$tpost Stdin:$tstdin");
 
 if(isset($_GET['username'])) {
     $username = $_GET['username'];
@@ -40,11 +45,17 @@ if(isset($_GET['showhtml'])) {
 } else {
     $prices = $_POST['prices'];
     if(!$prices) {
-        echo "Prices post variable has not been pushed, please push all prices to the prices object.";
-        return;
+
+        $stdinpost = json_decode(file_get_contents('php://input'));
+        $prices = $stdinpost->prices;
+        $entries = $prices;
+        if(!$prices) {
+            echo "Prices post variable has not been pushed, please push all prices to the prices object.";
+            return;
+        }
+    } else {
+        $entries = json_decode($prices);
     }
-    
-    $entries = json_decode($prices);
     $toUpdateList = array();
     $failed = false;
     
@@ -62,11 +73,6 @@ if(isset($_GET['showhtml'])) {
         foreach($entry->prices as $dayprice) {
             if(date("d-m-Y", strtotime($dayprice->date)) != $dayprice->date) {
                 echo "Invalid date format: " . $dayprice->date . " date format need to be : dd-mm-YYYY" . " (Category: " . $entry->categoryId .")" . "<br>";
-                $failed = true;
-            }
-
-            if(!is_numeric($dayprice->price)) {
-                echo "Invalid price: " . $dayprice->price . " for date ". $dayprice->date . " (Category: " . $entry->categoryId .")<br>";
                 $failed = true;
             }
 

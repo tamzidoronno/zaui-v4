@@ -15,7 +15,6 @@ $filter = array(
     'startedMs' => array('$gt' => strtotime($_GET['start'])*1000, '$lt' => strtotime($_GET['end'])*1000),
 ); 
 
-
 $options = array();
 
 $query = new MongoDB\Driver\Query($filter, $options);
@@ -24,7 +23,7 @@ $javaStartDate = date("c", strtotime($_GET['start']));
 $javaEndDate = date("c", strtotime($_GET['end']));
 
 
-$manager = new MongoDB\Driver\Manager("mongodb://localhost:30000");
+$manager = new MongoDB\Driver\Manager("mongodb://10.0.4.33:30000");
 $cursor = $manager->executeQuery('StoreThreadLog.col_all', $query);
 
 $result = array();

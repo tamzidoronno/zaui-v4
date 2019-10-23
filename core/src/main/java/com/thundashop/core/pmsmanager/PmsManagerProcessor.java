@@ -698,32 +698,32 @@ public class PmsManagerProcessor {
             }
             
             
-            if(!manager.hasCheckedForUndeletion) {
-                PmsLog filter = new PmsLog();
-                filter.bookingId = booking.id;
-                Calendar cal = Calendar.getInstance();
-
-                for(PmsBookingRooms r : booking.rooms) {
-                    try {
-                        if(r.isEnded() && r.isDeleted()) {
-                            List<PmsLog> entries = manager.getLogEntries(filter);
-                            for(PmsLog logentry : entries) {
-                                if(logentry.bookingItemId.equals(r.bookingItemId) && logentry.logText.contains("Room is out of sync between pmsmanager and in booking engine")) {
-                                    cal.setTime(logentry.dateEntry);
-                                    Integer dayOfYear = cal.get(Calendar.DAY_OF_YEAR);
-                                    if(dayOfYear == 294 || dayOfYear == 295 || dayOfYear == 296) {
-                                        System.out.println("MAYBE: " + dayOfYear + " : " + logentry.dateEntry  + " : "  + logentry.logText);
-                                        manager.removeFromBooking(booking.id, r.pmsBookingRoomId);
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }catch(Exception e) {
-                        manager.logPrintException(e);
-                    }
-                }
-            }
+//            if(!manager.hasCheckedForUndeletion) {
+//                PmsLog filter = new PmsLog();
+//                filter.bookingId = booking.id;
+//                Calendar cal = Calendar.getInstance();
+//
+//                for(PmsBookingRooms r : booking.rooms) {
+//                    try {
+//                        if(r.isEnded() && r.isDeleted()) {
+//                            List<PmsLog> entries = manager.getLogEntries(filter);
+//                            for(PmsLog logentry : entries) {
+//                                if(logentry.bookingItemId.equals(r.bookingItemId) && logentry.logText.contains("Room is out of sync between pmsmanager and in booking engine")) {
+//                                    cal.setTime(logentry.dateEntry);
+//                                    Integer dayOfYear = cal.get(Calendar.DAY_OF_YEAR);
+//                                    if(dayOfYear == 294 || dayOfYear == 295 || dayOfYear == 296) {
+//                                        System.out.println("MAYBE: " + dayOfYear + " : " + logentry.dateEntry  + " : "  + logentry.logText);
+//                                        manager.removeFromBooking(booking.id, r.pmsBookingRoomId);
+//                                        break;
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }catch(Exception e) {
+//                        manager.logPrintException(e);
+//                    }
+//                }
+//            }
             
             
             if(booking.getActiveRooms() != null) {
@@ -736,7 +736,7 @@ public class PmsManagerProcessor {
                 }
             }
         }
-        manager.hasCheckedForUndeletion = true;
+//        manager.hasCheckedForUndeletion = true;
         
         for(Booking test : allBookings) {
             if(test.isEnded()) {

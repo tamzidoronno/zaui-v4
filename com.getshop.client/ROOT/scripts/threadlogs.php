@@ -69,9 +69,9 @@ usort($result, "cmp");
     
 <?
     foreach ($result as $threadlog) {
-        if($threadlog->belongsToStoreId != "1ed4ab1f-c726-4364-bf04-8dcddb2fb2b1") {
-            continue;
-        }
+//        if($threadlog->belongsToStoreId != "1ed4ab1f-c726-4364-bf04-8dcddb2fb2b1") {
+//            continue;
+//        }
         if($threadlog->type == "async") {
             continue;
         }
@@ -82,7 +82,7 @@ usort($result, "cmp");
         if (!@$threadlog->timeUsed) {
             $warningClass = "black";
             continue;
-        } else if (@$threadlog->timeUsed > 2000) {
+        } else if (@$threadlog->timeUsed > 15000) {
             $warningClass = "red";
         } else if ($threadlog->timeUsed > 40) {
             $warningClass = "yellow";

@@ -64,7 +64,6 @@ import com.thundashop.core.pmseventmanager.PmsEventManager;
 import com.thundashop.core.pos.PosManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
-import com.thundashop.core.ratemanager.BookingComRateManagerManager;
 import com.thundashop.core.webmanager.WebManager;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.stripe.StripeManager;
@@ -200,9 +199,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     StoreApplicationPool storeApplicationPool;
 
     @Autowired
-    BookingComRateManagerManager bookingComRateManagerManager;
-
-    @Autowired
     BrRegEngine brRegEngine;
 
     @Autowired
@@ -248,6 +244,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private boolean updatedAllBookings = false;
     private PmsBooking includeAlways = null;
     private Integer daysInRestrioction;
+    public boolean hasCheckedForUndeletion = false;
     
 
     @Autowired
@@ -6755,18 +6752,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private void bookingUpdated(String bookingId, String type, String roomId) {
         virtualOrdersCreated = null;
         PmsBooking booking = getBookingUnsecure(bookingId);
-        try {
-            if (type.equals("created")) {
-                bookingComRateManagerManager.pushBooking(booking, "Commit", true);
-            } else if (type.equals("room_removed")
-                    || type.equals("room_changed")
-                    || type.equals("date_changed")
-                    || type.equals("booking_undeleted")) {
-                bookingComRateManagerManager.pushBooking(booking, "Modify", true);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         try {
             if (type.equals("room_removed")

@@ -3680,6 +3680,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 if (ord.isInvoice())
                     return;
                 
+                if(ord.isPrepaidByOTA()) {
+                    return;
+                }
+                
                 if (room != null && !doesOrderCorrolateToRoom(room.pmsBookingRoomId, ord)) {
                     return;
                 }

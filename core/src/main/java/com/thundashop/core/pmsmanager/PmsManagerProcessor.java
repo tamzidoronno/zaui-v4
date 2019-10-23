@@ -699,6 +699,7 @@ public class PmsManagerProcessor {
             
             if(booking.getActiveRooms() != null) {
                 for(PmsBookingRooms room : booking.getActiveRooms()) {
+                    if(room.isEnded()) { continue; }
                     if(room.bookingId != null) {
                         allBookingIdsInPmsManager.add(room.bookingId);
                         allRoomsInPmsManager.add(room);

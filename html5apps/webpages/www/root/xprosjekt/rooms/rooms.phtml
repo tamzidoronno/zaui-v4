@@ -1,7 +1,7 @@
 <div class="contentrow row_width_degreed"> 
     <div class="row_inner">
         <div class="col col_1 col_size_2">
-            <img  onclick='showGallary("double")' src="nordlyshotell/images/dobbeltrom1.jpg" style="width: 100%; border-radius: 10px;"/>
+            <img  onclick='showGallary("apartment")' src="xprosjekt/images/dummyroom1.jpg" style="width: 100%; border-radius: 10px;"/>
         </div>
         <div class="col col_2 col_size_2">
             <?php
@@ -14,11 +14,24 @@
 <div class="contentrow "> 
     <div class="row_inner">
         <div class="col col_1 col_size_2">
-            <img  onclick='showGallary("single")' src="nordlyshotell/images/enkeltrom.jpg" style="width: 100%; border-radius: 10px;"/>
+            <img  onclick='showGallary("studioapartment")' src="xprosjekt/images/dummyroom1.jpg" style="width: 100%; border-radius: 10px;"/>
         </div>
         <div class="col col_2 col_size_2">
             <?php
                 ContentManager::render("row_3_room_1");
+            ?>
+        </div>
+    </div>
+</div>
+
+<div class="contentrow row_width_degreed_reversed"> 
+    <div class="row_inner">
+        <div class="col col_1 col_size_2">
+            <img  onclick='showGallary("anneks")' src="xprosjekt/images/dummyroom1.jpg" style="width: 100%; border-radius: 10px;"/>
+        </div>
+        <div class="col col_2 col_size_2">
+            <?php
+                ContentManager::render("row_4_room_1");
             ?>
         </div>
     </div>
@@ -31,46 +44,56 @@
         // build items array
         var items = [
             {
-                src: 'xprosjekt/images/dobbeltrom1.jpg',
+                src: 'xprosjekt/images/dummyroom1.jpg',
                 w: 1200,
                 h: 900
             },
             {
-                src: 'xprosjekt/images/dobbeltrom2.jpg',
+                src: 'xprosjekt/images/dummyroom2.jpg',
                 w: 1200,
                 h: 900
             },
             {
-                src: 'xprosjekt/images/dobbeltrom3.jpg',
-                w: 1200,
-                h: 900
-            },
-            {
-                src: 'xprosjekt/images/dobbeltrom4.jpg',
-                w: 1200,
-                h: 900
-            },
-            {
-                src: 'xprosjekt/images/dobbeltrom5.jpg',
+                src: 'xprosjekt/images/dummyroom3.jpeg',
                 w: 1200,
                 h: 900
             }
         ];
 
-        if (t == "single") {
+        if (t == "studioapartment") {
             var items = [
             {
-                src: 'xprosjekt/images/enkeltrom.jpg',
-                w: 900,
-                h: 1200
-            },
-            {
-                src: 'xprosjekt/images/dobbeltrom4.jpg',
+                src: 'xprosjekt/images/dummyroom1.jpg',
                 w: 1200,
                 h: 900
             },
             {
-                src: 'xprosjekt/images/dobbeltrom5.jpg',
+                src: 'xprosjekt/images/dummyroom2.jpg',
+                w: 1200,
+                h: 900
+            },
+            {
+                src: 'xprosjekt/images/dummyroom3.jpeg',
+                w: 1200,
+                h: 900
+            }
+        ];
+        }
+
+        if (t == "anneks") {
+            var items = [
+            {
+                src: 'xprosjekt/images/dummyroom1.jpg',
+                w: 1200,
+                h: 900
+            },
+            {
+                src: 'xprosjekt/images/dummyroom2.jpg',
+                w: 1200,
+                h: 900
+            },
+            {
+                src: 'xprosjekt/images/dummyroom3.jpeg',
                 w: 1200,
                 h: 900
             }

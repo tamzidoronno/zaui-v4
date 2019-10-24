@@ -157,15 +157,6 @@ $payAfterStay = $room->createOrdersOnZReport && !($needToCreateOrdersFor <= 1 &&
                             }
                             ?>
 
-                            <?
-                            if ($order->status != 7) {
-                                ?>
-                                <div class='entry showmarkorderaspaid' orderid="<? echo $order->id; ?>">
-                                    <i class="fa fa-dollar"></i> <? echo $this->__f("Mark order as paid"); ?>
-                                </div>
-                                <?
-                            }
-                            ?>
 
                             <a href='/pms.php?page=orderviewpage&orderid=<? echo $order->id; ?>' target='_blank'>
                                 <div class='entry' orderid="<? echo $order->id; ?>">

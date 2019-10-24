@@ -24,7 +24,14 @@ class DefaultPaymentHandlingAction extends \PaymentApplication implements \Appli
     }
     
     public function creditOrder() {
-        $this->getApi()->getOrderManager()->creditOrder($_POST['data']['orderid']);
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        $creditorder = $this->getApi()->getOrderManager()->creditOrder($_POST['data']['orderid']);
+        if($order->status == 7) {
+            $date = $this->convertToJavaDate(time());
+            $orderId = $creditorder->id;
+            $amount = $this->getApi()->getOrderManager()->getTotalAmount($creditorder);
+            $this->getApi()->getOrderManager()->markAsPaid($orderId, $date, $amount);
+        }
         $this->order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
     }
     

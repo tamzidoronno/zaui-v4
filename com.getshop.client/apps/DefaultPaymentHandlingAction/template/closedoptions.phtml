@@ -4,8 +4,33 @@ $order = $this->getOrder();
 $cashpoints = (array)$this->getApi()->getGdsManager()->getDevices();
 $canCreditOrder = !$order->isCreditNote && !count($order->creditOrderId);
 $roomid = $_SESSION['PmsBookingRoomView_current_pmsroom_id'];
+$amount = $this->getApi()->getOrderManager()->getTotalAmount($order);
 ?>
 <div class='commonbox'>
+    <?php
+        
+    if($order->status != 7) {
+        ?>
+        <div class='commonbox' style="position:absolute; top:70px;">
+            <div style='display:inline-block; vertical-align: top;'>
+                <? echo $this->__f("Payment date").":"; ?>
+                <br/><input class="gsniceinput1 payment_date" style='width: 110px;' gsname='paymentdate' value='<? echo date('d.m.Y H:i'); ?>'/>    
+            </div>
+        </div>
+   <?php
+    $text = "Mark as paid";
+    if($order->payment->paymentType == "ns_92bd796f_758e_4e03_bece_7d2dbfa40d7a\ExpediaPayment" && $amount > 0) {
+        $text = "Bill Expedia";
+    }
+    if($order->payment->paymentType == "ns_d79569c6_ff6a_4ab5_8820_add42ae71170\BookingComCollectPayments" && $amount > 0) {
+        $text = "Bill Booking.com";
+    }
+    ?>
+        <div class='order_action_button' gs_also='payment_date' orderid='<? echo $order->id; ?>' gsclick='markOrderAsPaid' gs_callback='app.DefaultPaymentHandlingAction.markAsPaidCompleted'><i class='fa fa-check'></i> <? echo $text; ?></div>
+    <?php
+    }
+    ?>
+    
     
     <div class='order_action_button' onclick='window.open("/scripts/downloadInvoice.php?orderId=<? echo $order->id; ?>&incrementalOrderId=<? echo $order->incrementOrderId; ?>");'>
         <i class='fa fa-download'></i>
@@ -58,7 +83,18 @@ $roomid = $_SESSION['PmsBookingRoomView_current_pmsroom_id'];
             <i class='fa fa-arrow-right'></i>
         </div>
         <?
+    } else if($order->payment->paymentType == "ns_92bd796f_758e_4e03_bece_7d2dbfa40d7a\ExpediaPayment") {
+        echo "<div>";
+        echo "* Only mark this order as paid if you are going to invoice expedia for the stay. If it is a virtual card change the payment method to be the same as the one you are using to charge the card.";
+        echo "</div>";
+    } else if($order->payment->paymentType == "ns_d79569c6_ff6a_4ab5_8820_add42ae71170\BookingComCollectPayments") {
+        echo "<div>";
+        echo "* Only mark this order as paid if you are going to invoice booking or having a bank transfer from booking.com If it is a virtual card change the payment method to be the same as the one you are using to charge the card.";
+        echo "</div>";
     }
+
+
+    
     ?>
 
 </div>

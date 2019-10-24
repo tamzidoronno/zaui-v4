@@ -149,4 +149,13 @@ public interface IGetShop {
     public String getIpForUnitId(String id);
     
     public String canStartRestoringUnit(String id);
+    
+    @Administrator
+    public HashMap<Long, String> getUnitsAskedForUpdate();
+    
+    @Administrator
+    public void recoveryCompleted(String id);
+    
+    @Administrator
+    public List<String> unitsTryingToRecover();
 }

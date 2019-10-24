@@ -86,11 +86,11 @@ class PmsChartOverview extends \MarketingApplication implements \Application {
         if($type == "checkin" || $type == "checkout") {
             $res['today'] = 0;
             foreach($rooms as $r) {
-                $res['today'] += $r->numberOfGuests;
+                $res['today']++;
             }
             $res['tomorrow'] = 0;
             foreach((array)$roomsTomorrow as $r) {
-                $res['tomorrow'] += $r->numberOfGuests;
+                $res['tomorrow']++;
             }
         } else {
             $res['today'] = sizeof($rooms);

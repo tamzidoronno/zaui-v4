@@ -256,7 +256,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         users.addUser(user);
         
         String uncryptedPassword = user.password;
-        
+        user.prefix = storeManager.getPrefix();
         user.password = encryptPassword(user.password);
         user.address = new Address();
         

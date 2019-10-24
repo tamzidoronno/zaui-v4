@@ -54,15 +54,16 @@ class InvoiceTemplateTranslator {
         }
         
         if ($this->currency == "USD") {
-            return "$ ".round($price, 2);
+            return "$ ".sprintf('%0.2f', $price);
         }
         
         if ($this->currency == "EURO") {
-            return "€ ".round($price, 2);
+            
+            return "€ ".sprintf('%0.2f', $price);
         }
         
         if ($this->currency == "GBP") {
-            return "£ ".round($price, 2);
+            return "£ ".sprintf('%0.2f', $price);
         }
         
         return $price;   

@@ -1460,7 +1460,9 @@ function getshop_loadDatePicker(target, options) {
             var diff = endMoment.diff(date, "minutes");
             if((diff <= 0 && options.jump > 0) || (diff >= 0 && options.jump < 0))
             {
-               var day = moment(date).get('date')+options.jump;
+               var date = moment(date).add(options.jump, 'days');
+                var day = moment(date).get('date');
+
                if(day < 10) { day = "0" + day; }
                options.dependant.val(day + "." + month + "." + moment(date).get('year'));
             };

@@ -1,5 +1,17 @@
+<?php
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+?>
 <div class="loadeditevent"></div>
 <span class="shop_button" loadeditmeesage="-1">Create a new automated message</span>
+
+<?php 
+if($config->avoidSendingBookingConfigurationsToOTA) {
+    echo '<span class="shop_button" style="background-color:blue;float:right;" gsclick="toggleAvoidSendingConfirmationToOTA">Confirmation is not sent to OTAs anymore, activat eit again</span>';
+} else {
+    echo '<span class="shop_button" style="background-color:red;float:right;" gsclick="toggleAvoidSendingConfirmationToOTA">Stop sending confirmations to OTAs</span>';
+}
+?>
+
 <br>
 <br>
 

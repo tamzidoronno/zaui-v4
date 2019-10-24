@@ -77,6 +77,11 @@ if($pmsSelectedRoom->addedToWaitingList) {
     echo "<div class='isgroupinformation'>";
     echo "This room is added to the waiting list rooms, <a style='color:blue; cursor:pointer;' gstype='clicksubmit' gsname='id' gsvalue='".$pmsSelectedRoom->pmsBookingRoomId."' method='removeFromWaitingList'>try adding this room.</a>.";
     echo "<span style='float:right; background-color:red; color:#fff; padding-left:5px; padding-right: 5px; cursor:pointer;' gstype='clicksubmit' gsname='id' gsvalue='".$pmsSelectedRoom->pmsBookingRoomId."' method='deleteWaitingListRoom'>Delete from waiting list</span>";
+    if($pmsSelectedRoom->prioritizeInWaitingList) {
+        echo " This rooms is proritized, <span style='color:blue;cursor:pointer;' gsclick='togglePriorityRoom'>deactivate prioritization</span>";
+    } else {
+        echo ", <span style='color:blue;cursor:pointer;' gsclick='togglePriorityRoom'>prioritize</span>";
+    }
     echo "</div>";
 } 
 

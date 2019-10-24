@@ -1,4 +1,4 @@
-<h1 style='text-align: center;'>Step 4 / 4 - Start recovery</h1>
+<h1 style='text-align: center;'>Step 3 / 3 - Start recovery</h1>
 It seems like your unit did not get back online. We are now left with two options.
 <ul>
     <li>Try again</li>
@@ -16,14 +16,17 @@ It seems like your unit did not get back online. We are now left with two option
     <b>2. Recover the unit.</b>
 <ul>
     <li>Find your backup usb pen</li>
-    <li>Remove the old usb pen</li>
-    <li>Remove insert the new usb pen</li>
-    <li>Restart the unit</li>
+    <li>Remove the old usb pen (see picture below on where to find it)</li>
+    <li>Insert the new usb pen (in one of the four slots in the picture below)</li>
+    <li>Restart the unit (by unplugging the power cord (power (1))</li>
+    <li>Double check that the green light (lamp (2)) is starting to flash.</li>
     <li>Enter the id that comes with the back usb pen</li>
+    <li>Click on "start recovery process"</li>
 </ul>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     <input type='text' placeholder='GS-XXXXXX' id='recoveryid'><input type='button' class='startrecoverbutton' value='Start recovery process'>
 </div>
+<img src='images/zwaveserver_recovery.png' style='width:100%;'>
 
 <style>
     .retryrestart { color:blue; cursor:pointer; }

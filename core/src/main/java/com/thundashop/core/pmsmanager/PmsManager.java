@@ -2574,7 +2574,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         user.cellPhone = result.get("user_cellPhone");
         user.emailAddress = result.get("user_emailAddress");
         user.relationship = result.get("user_relationship");
-        if (result.get("prefix") != null) {
+        if (result.get("user_prefix") != null) {
             user.prefix = result.get("user_prefix");
         }
 
@@ -4380,6 +4380,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         checkSecurity(booking);
         PmsBookingAddonItem addonConfig = configuration.addonConfiguration.get(type);
 
+        Product validproduct = productManager.getProduct(addonConfig.productId);
+        if(validproduct == null) {
+            validproduct = productManager.getDeletedProduct(addonConfig.productId);
+            validproduct.deleted = null;
+            productManager.saveProduct(validproduct);
+        }
         if (!remove) {
             PmsBookingRooms room = booking.getRoom(roomId);
             if (room != null && !addonConfig.isValidForPeriode(room.date.start, room.date.end, booking.rowCreatedDate)) {
@@ -10753,6 +10759,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         return true;
+    }
+
+    @Override
+    public void togglePrioritizedRoom(String roomId) {
+        PmsBooking booking = getBookingFromRoom(roomId);
+        PmsBookingRooms room = booking.getRoom(roomId);
+        room.prioritizeInWaitingList = !room.prioritizeInWaitingList;
+        saveBooking(booking);
+        logEntry("Room has been prioritized", booking.id, room.bookingItemId);
     }
 
 }

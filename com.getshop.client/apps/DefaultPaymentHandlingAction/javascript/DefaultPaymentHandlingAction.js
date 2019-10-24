@@ -52,6 +52,10 @@ app.DefaultPaymentHandlingAction = {
     },
     
     markAsPaidCompleted: function(res) {
+        app.PmsPaymentProcess.refresh();
+    },
+    
+    creditCompleted: function(res) {
         thundashop.Ajax.closeOverLay3();
     }
 };

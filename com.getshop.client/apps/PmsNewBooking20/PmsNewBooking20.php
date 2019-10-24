@@ -22,11 +22,11 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         $this->includefile("availability");
     }
     
-     public function getNumberOfAvailableForType($type,$current,$start,$end) {
-        $size = $this->getApi()->getPmsManager()->getNumberOfAvailable($this->getSelectedMultilevelDomainName(), $type->id, $start, $end, false);
+     public function getNumberOfAvailableForType($id,$current,$start,$end) {
+        $size = $this->getApi()->getPmsManager()->getNumberOfAvailable($this->getSelectedMultilevelDomainName(), $id, $start, $end, false);
 
         foreach($current->rooms as $room) {
-            if($room->bookingItemTypeId == $type->id) {
+            if($room->bookingItemTypeId == $id) {
                 $size--;
             }
         }
@@ -175,7 +175,7 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
     
     public function completeBooking() {
         $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
-        $this->getApi()->getPmsManager()->simpleCompleteCurrentBooking($this->getSelectedMultilevelDomainName());
+        $this->getApi()->getPmsBookingProcess()->simpleCompleteCurrentBooking($this->getSelectedMultilevelDomainName());
         echo $booking->id;
     }
     

@@ -10,6 +10,8 @@ if(isset($_GET['startrecovery'])) {
     $factory->getApi()->getGetShop()->startRecoveryForUnit($id, $ip, $password);
 } else if(isset($_GET['canStartDownload'])) {
     echo $factory->getApi()->getGetShop()->canStartRestoringUnit($id);
+} else if(isset($_GET['recoveryCompleted'])) {
+    echo $factory->getApi()->getGetShop()->recoveryCompleted($id);
 } else if(isset($_GET['downloadfile'])) {
     $factory->getApi()->getGetShop()->setRecoveryStatusForUnit($id, "Preparing backup");
     $ip = $factory->getApi()->getGetShop()->getIpForUnitId($id);

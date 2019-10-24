@@ -7,8 +7,6 @@ $servers = $factory->getApi()->getGetShopLockSystemManager()->getLockServers();
 $name = "";
 foreach($servers as $server) {
     if($server->id == $_GET['id']) {
-//        echo "<pre>";
-//        print_r($server);
         $ip = $server->hostname;
         $name = $server->givenName;
     }
@@ -17,12 +15,12 @@ foreach($servers as $server) {
 if($_GET['pingserver'] && $_GET['pingserver'] == "true") {
     $port = 22;
     $waitTimeoutInSeconds = 1; 
-    if($fp = fsockopen($ip,$port,$errCode,$errStr,$waitTimeoutInSeconds)){   
+    if($fp = @fsockopen($ip,$port,$errCode,$errStr,$waitTimeoutInSeconds)){   
         echo "yes";
     } else {
         echo date("d.m.y H:i:s");
     } 
-    fclose($fp);
+    @fclose($fp);
     exit(0);
 }
 ?>

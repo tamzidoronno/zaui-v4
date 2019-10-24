@@ -69,6 +69,7 @@ class GetShopQuickUser extends \SystemApplication implements \Application {
         $user->fullName = $_POST['data']['fullName'];
         $user->prefix = $_POST['data']['prefix'];
         $user->emailAddress = $_POST['data']['emailAddress'];
+        $user->emailAddressToInvoice = $_POST['data']['emailAddressToInvoice'];
         $user->cellPhone = $_POST['data']['cellPhone'];
         if(!$user->address) {
             $user->address = new \core_usermanager_data_Address();

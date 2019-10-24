@@ -16,6 +16,7 @@
     margin: 20px;
     padding: 20px;
 }
+.PmsAvailability .prioritized { font-weight: bold; }
 .PmsAvailability .waitinglist { cursor:pointer; }
 .PmsAvailability .gsdayevent { cursor:pointer; }
 .PmsAvailability .weekend { color: red !important; }

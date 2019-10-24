@@ -306,6 +306,7 @@ public class PmsManagerProcessor {
                     if(room.addedToArx) {
                         continue;
                     }
+                    
                     if (!manager.isClean(room.bookingItemId) && manager.getConfigurationSecure().cleaningInterval > 0) {
                         continue;
                     }
@@ -357,6 +358,12 @@ public class PmsManagerProcessor {
                             manager.markRoomAsDirty(room.bookingItemId);
                             save = true;
                             room.forceUpdateLocks = false;
+                            
+                            if(manager.getConfigurationSecure().automaticallyCheckInOutGuests) {
+                                room.checkedin = true;
+                                room.checkedout = false;
+                            }
+                            
                             if(notifyRoomAddedToArx(room.cardformat)) {
                                 manager.doNotificationFromProcessor("room_added_to_arx", booking, room);
                             }
@@ -375,6 +382,12 @@ public class PmsManagerProcessor {
                     if (pushToLock(room, true)) {
                         room.addedToArx = false;
                         save = true;
+                        
+                        if(manager.getConfigurationSecure().automaticallyCheckInOutGuests) {
+                            room.checkedin = false;
+                            room.checkedout = true;
+                        }
+                        
                         manager.doNotificationFromProcessor("room_removed_from_arx", booking, room);
                     }
                 }

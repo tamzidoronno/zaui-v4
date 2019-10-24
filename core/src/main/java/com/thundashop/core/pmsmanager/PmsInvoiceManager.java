@@ -3624,7 +3624,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         
         deleteOrCreditExistingOrders(booking, room);
-        
         // If room = null then the order will be created for the booking, otherwise it will be created for the room itself.
         String orderId = createOrderWithPaymentMethod(booking, room, paymentMethod, start, end);
         

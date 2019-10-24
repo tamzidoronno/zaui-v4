@@ -51,6 +51,14 @@ if(stristr($user->emailAddress, "@getshop.com")) {
     </div>
     <div class='container'>
         <span class='option'>
+            <input type='checkbox' gsname='automaticallyCheckInOutGuests' <?php if($config->automaticallyCheckInOutGuests) { echo "CHECKED"; } ?>>
+        </span>
+        <span class='title'>
+            Automatically check in guest when code is being sent out.
+        </span>
+    </div>
+    <div class='container'>
+        <span class='option'>
             <input type='text' class='gsniceinput1' gsname='hourOfDayToStartBoarding' value='<?php echo $config->hourOfDayToStartBoarding; ?>' style='width: 50px; text-align: center;'>
         </span>
         <span class='title'>

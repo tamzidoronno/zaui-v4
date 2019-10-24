@@ -2728,7 +2728,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     private void blockManuallyPaymentMarkingForPaymentMethodsThatShouldNotDoThat(Method executeMethod, Object[] argObjects) throws ErrorException {
-        if (executeMethod != null && executeMethod.getName().equals("markAsPaid")) {
+        if (executeMethod != null && (executeMethod.getName().equals("markAsPaid") || executeMethod.getName().equals("addOrderTransaction"))) {
             String orderId = (String)argObjects[0];
             Order order = getOrder(orderId);
             if (order.payment == null) {
@@ -2736,7 +2736,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
             
             // AccruedPayment
-            if (order.getPaymentApplicationId().equals("60f2f24e-ad41-4054-ba65-3a8a02ce0190") && order.getTotalAmount() > 0) {
+            if (order.getPaymentApplicationId().equals("60f2f24e-ad41-4054-ba65-3a8a02ce0190")) {
                 throw new ErrorException(1052);
             }
             

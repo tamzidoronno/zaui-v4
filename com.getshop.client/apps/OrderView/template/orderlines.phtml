@@ -34,16 +34,32 @@ if (!($closed && !count($cartItemsNormal))) {
     if(!$closed) {
         $ecomsettings = new ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings();
         $currencies = $ecomsettings->getCurrencies();
+        $languages = $ecomsettings->getL
         ?>
-        <select class='gsniceselect1 updatecurrencyonorder' style='float:right;'>
-            <?php
-            echo "<option value=''>Default currency</option>";
-            foreach($currencies as $currencyCode => $currencyName) {
-                $selected = $currencyCode == $order->currency ? "SELECTED" : "";
-                echo "<option value='$currencyCode' $selected>$currencyCode : $currencyName</option>";
-            }
-            ?>
-        </select>
+        <div style="float: right">
+            
+
+            <select class='gsniceselect1 updatecurrencyonorder' >
+                <?php
+                echo "<option value=''>Default currency</option>";
+                foreach($currencies as $currencyCode => $currencyName) {
+                    $selected = $currencyCode == $order->currency ? "SELECTED" : "";
+                    echo "<option value='$currencyCode' $selected>$currencyCode : $currencyName</option>";
+                }
+                ?>
+            </select>
+            -
+            <select gsname="language" class="gsniceselect1 updatelanguageonorder">
+                <option>Not selected</option>
+                <?php
+                $states = $this->getFactory()->getLanguageReadable();
+                foreach ($states as $key => $lang) {
+                    $selected = $order->language == $key ? "selected='true'" : "";
+                    ?>
+                    <option <? echo $selected; ?> value="<? echo $key; ?>"><? echo $lang; ?></option>
+                <?php } ?>
+            </select>
+        </div>
         <?php
     }
     ?>

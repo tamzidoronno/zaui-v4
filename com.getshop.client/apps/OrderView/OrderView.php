@@ -20,6 +20,13 @@ class OrderView extends \MarketingApplication implements \Application {
         $this->rePrintTab('orderlines');
     }
     
+    public function updateLanguageOnOrder() {
+        $order = $this->getOrder();
+        $order->language = $_POST['data']['language'];
+        $this->getApi()->getOrderManager()->saveOrder($order);
+        $this->rePrintTab('orderlines');
+    }
+    
     public function getName() {
         return "OrderView";
     }

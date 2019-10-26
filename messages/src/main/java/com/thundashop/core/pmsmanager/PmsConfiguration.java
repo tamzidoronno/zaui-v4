@@ -138,6 +138,7 @@ public class PmsConfiguration extends DataCommon {
     public String bookingProfile = "hotel";
     public boolean markDirtyEvenWhenCodeNotPressed = false;
     public boolean doNotRecommendBestPrice = false;
+    public boolean automaticallyCheckInOutGuests = false;
 
     /* Invoice creation options */
     public boolean fastOrderCreation = false;

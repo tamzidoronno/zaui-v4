@@ -24,7 +24,8 @@ class DefaultPaymentHandlingAction extends \PaymentApplication implements \Appli
     }
     
     public function creditOrder() {
-        $this->getApi()->getOrderManager()->creditOrder($_POST['data']['orderid']);
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        $creditorder = $this->getApi()->getOrderManager()->creditOrder($_POST['data']['orderid']);
         $this->order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
     }
     

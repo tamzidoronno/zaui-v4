@@ -1,6 +1,16 @@
 <?
 /* @var $this \ns_486009b1_3748_4ab6_aa1b_95a4d5e2d228\DefaultPaymentHandlingAction */
 $order = $this->getOrder();
+$amount = $this->getApi()->getOrderManager()->getTotalAmount($order);
+
+$text = "Mark as paid";
+if($order->payment->paymentType == "ns_92bd796f_758e_4e03_bece_7d2dbfa40d7a\ExpediaPayment" && $amount > 0) {
+    $text = "Bill Expedia";
+}
+if($order->payment->paymentType == "ns_d79569c6_ff6a_4ab5_8820_add42ae71170\BookingComCollectPayments" && $amount > 0) {
+    $text = "Bill booking.com";
+}
+
 ?>
 <div class='commonbox'>
     <div style='display:inline-block; vertical-align: top;'>
@@ -10,10 +20,10 @@ $order = $this->getOrder();
 </div>
 
 <div class='commonbox'>
-    <div class='order_action_button' gs_also='payment_date' orderid='<? echo $order->id; ?>' gsclick='markOrderAsPaid' gs_callback='app.DefaultPaymentHandlingAction.markAsPaidCompleted'><i class='fa fa-check'></i> <? echo $this->__f("Mark as paid"); ?>
+    <div class='order_action_button' gs_also='payment_date' orderid='<? echo $order->id; ?>' gsclick='markOrderAsPaid' gs_callback='app.DefaultPaymentHandlingAction.markAsPaidCompleted'><i class='fa fa-check'></i> <? echo $text; ?>
     </div>
     
-    <div synchron='true' gs_confirm="Are you sure?" class='order_action_button' orderid='<? echo $order->id; ?>' gsclick='cancelCurrentOrder' gs_callback='app.DefaultPaymentHandlingAction.markAsPaidCompleted' >
+    <div synchron='true' gs_confirm="Are you sure?" class='order_action_button' orderid='<? echo $order->id; ?>' gsclick='cancelCurrentOrder' gs_callback='app.DefaultPaymentHandlingAction.creditCompleted' >
         <i class='fa fa-trash'></i> 
         <? echo $this->__f("Delete order"); ?>
     </div>
@@ -48,6 +58,16 @@ $order = $this->getOrder();
             <? echo $this->__f("Close order"); ?>
         </div>
         <?php
+    } 
+    if($order->payment->paymentType == "ns_92bd796f_758e_4e03_bece_7d2dbfa40d7a\ExpediaPayment") {
+        echo "<div>";
+        echo "* Only mark this order as paid if you are going to invoice expedia for the stay. If it is a virtual card change the payment method to be the same as the one you are using to charge the card.";
+        echo "</div>";
+    }
+    if($order->payment->paymentType == "ns_d79569c6_ff6a_4ab5_8820_add42ae71170\BookingComCollectPayments") {
+        echo "<div>";
+        echo "* Only mark this order as paid if you are going to invoice booking or having a bank transfer from booking.com If it is a virtual card change the payment method to be the same as the one you are using to charge the card.";
+        echo "</div>";
     }
     ?>
 </div>

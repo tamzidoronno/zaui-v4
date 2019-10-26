@@ -1,0 +1,74 @@
+
+<div class="contentrow firstrow"> 
+    <div class="row_inner">
+        <div>
+            <?php
+            ContentManager::render("top_alnes");
+            ?>
+        </div>
+    </div>
+</div>
+
+<div class="contentrow row_width_degreed"> 
+    <div class="row_inner">
+        <div class="col col_1 col_size_2">
+            <img  onclick='showGallary("alnesgaard")' src="xprosjekt/images/alnes1.jpg" style="width: 100%; border-radius: 10px;"/>
+        </div>
+        <div class="col col_2 col_size_2">
+            <?php
+                ContentManager::render("row_1_alnes_1");
+            ?>
+        </div>
+    </div>
+</div>
+
+<div class="contentrow"> 
+    <div class="row_inner">
+        <div class="col col_1 col_size_3">
+            <?php
+                ContentManager::render("row_2_alnes_1");
+            ?>
+        </div>
+        <div class="col col_2 col_size_3">
+            <?php
+                ContentManager::render("row_2_alnes_2");
+            ?>
+        </div>
+        <div class="col col_3 col_size_3">
+            <?php
+                ContentManager::render("row_2_alnes_3");
+            ?>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function showGallary(t) {
+        var pswpElement = document.querySelectorAll('.pswp')[0];
+
+        // build items array
+        var items = [];
+        for(var i = 1; i < 17; i++) {
+            var toAdd = {
+                src: 'xprosjekt/images/dummyroom1.jpg',
+                w: 1200,
+                h: 900
+            };
+            toAdd.src =  'xprosjekt/images/alnes'+i+'.jpg';
+            items.push(toAdd);
+        }
+        
+
+        // define options (if needed)
+        var options = {
+            // optionName: 'option value'
+            // for example:
+            index: 0 // start at first slide
+        };
+
+        // Initializes and opens PhotoSwipe
+        var gallery = new PhotoSwipe( pswpElement, PhotoSwipeUI_Default, items, options);
+        gallery.init();
+    }
+</script>

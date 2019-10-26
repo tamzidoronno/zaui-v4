@@ -12,7 +12,7 @@
 #include "Arduino.h"
 
 /**
- * We start logging at dataslot 2000.
+ * We start logging at dataslot 5000.
  */
 unsigned int loggingStartsAtSlot = 5000;
 
@@ -21,7 +21,7 @@ unsigned int loggingStartsAtSlot = 5000;
  */
 unsigned int maxLogSlot = 5100;
 
-int timeBetweenEeachCheck = 5000;
+int timeBetweenEeachCheck = 5;
 
 /**
  * We reserve 100 slots for data storage
@@ -237,7 +237,7 @@ bool Logging::handleAckMessage(unsigned char* msg) {
 	if (!found) {
 		nextCheck = 4294967290;
 	} else {
-		nextCheck = _clock->getTime() + 2000;
+		nextCheck = _clock->getTime() + 2;
 	}
 
 	return found;

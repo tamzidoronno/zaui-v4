@@ -3,6 +3,19 @@
  *
  *  Created on: Sep 5, 2019
  *      Author: ktonder
+ *
+ *
+ *  Following datapages are used:
+ *  Codes:
+ *  0 <= 2000 : Access Codes
+ *
+ *  Logging:
+ *  5000 <= 5100 : Logs
+ *  5050 = Loglinenumber
+ *
+ *  Other:
+ *  5500 = Device id
+ *
  */
 
 #include <Arduino.h>
@@ -93,5 +106,34 @@ unsigned int DataStorage::handleCodeMessage(unsigned char* msgFromGateWay) {
 
 void DataStorage::writeCode(unsigned int slot, unsigned char* str_data) {
 	 writeEEPROMPage(slot*pagesize, str_data);
+}
+
+void DataStorage::resetAll() {
+	digitalWrite(PB5, LOW);
+
+	unsigned char blank[16] = {
+		0xFF, 0xFF, 0xFF, 0xFF,
+		0xFF, 0xFF, 0xFF, 0xFF,
+		0xFF, 0xFF, 0xFF, 0xFF,
+		0xFF, 0xFF, 0xFF, 0xFF
+	};
+
+	unsigned int deviceIdSlot = 5500;
+	writeCode(deviceIdSlot, blank);
+
+	for (unsigned int i=0; i<=2000; i++) {
+		writeCode(i, blank);
+	}
+
+	for (unsigned int i=5000; i<=5100; i++) {
+		writeCode(i, blank);
+	}
+
+	writeCode(5050, blank);
+
+	delay(1000);
+
+	digitalWrite(PB5, HIGH);
+
 }
 

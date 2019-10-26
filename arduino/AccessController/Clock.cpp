@@ -8,22 +8,29 @@
 
 #include "Clock.h"
 #include "Arduino.h"
+#include <util/atomic.h>
+
 
 Clock::Clock() {
 	diffSinceStartup = 0;
 }
 
-void Clock::adjustClock(long tsamp) {
-	diffSinceStartup = tsamp - millis();
+void Clock::adjustClock(unsigned long tsamp) {
+	diffSinceStartup = tsamp;
+
+	extern unsigned long timer0_millis;
+	ATOMIC_BLOCK (ATOMIC_RESTORESTATE) {
+		timer0_millis = 0;
+	}
 }
 
 long Clock::getTime() {
-	return (diffSinceStartup + millis());
+	return (diffSinceStartup + (millis()/1000));
 }
 
 
 void Clock::getTimeChar(char* charBuf) {
-	long value = getTime();
+	unsigned long value = getTime();
 
 //	sprintf(charBuf, "%04lX", value);
 

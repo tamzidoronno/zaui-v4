@@ -12,6 +12,9 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
+import com.mongodb.ServerAddress;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopLogHandler;
@@ -87,7 +90,12 @@ public class DatabaseLog extends StoreComponent {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        mongo = new Mongo("localhost", mongoPort);
+        
+        
+        MongoClientOptions.Builder builder = new MongoClientOptions.Builder();
+        builder.connectionsPerHost(2000);
+        
+        mongo = new MongoClient(new ServerAddress("localhost", mongoPort), builder.build());
         morphia = new Morphia();
         morphia.getMapper().getConverters().addConverter(BigDecimalConverter.class);
         morphia.map(DataCommon.class);

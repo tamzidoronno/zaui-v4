@@ -79,6 +79,10 @@ public class GetShopTimer {
     public static String getPrintedTiming() {
         Map<Long, GetShopTimePerformanceEntry> maps = timers.logs.get(Thread.currentThread().getId());
         
+        if (maps == null) {
+            return "";
+        }
+        
         if (maps.size() < 2) {
             return "";
         }

@@ -244,13 +244,15 @@ public class StorePool {
                         res = handler.executeMethodSync(object, types, argumentValues);
                     }
                 }catch(Exception x) {
-                    GetShopLogHandler.logPrintStatic("Exception: " + x.getMessage(), handler.getStoreId());
-                    x.printStackTrace();
+                    
+                    if (!(x instanceof ErrorException)) {
+                        GetShopLogHandler.logPrintStatic("Exception: " + x.getMessage(), handler.getStoreId());
+                        x.printStackTrace();
+                    }
+                    
                     throw x;
                 }
             }catch(ErrorException x) {
-                GetShopLogHandler.logPrintStatic("Error exception: " + x.getMessage(), handler.getStoreId());
-                x.printStackTrace();
                 throw x;
             }
         }

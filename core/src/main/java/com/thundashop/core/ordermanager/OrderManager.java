@@ -761,10 +761,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Override
     public void saveOrder(Order order) throws ErrorException {
         
-        if(order.isPaid() && !order.isNotified() && order.isPaymentLinkType()) {
+        boolean isPaid = order.isPaid();
+        boolean isNotified = order.isNotified();
+        boolean isPaymentLinkType = order.isPaymentLinkType();
+        
+        if(isPaid && !isNotified && isPaymentLinkType) {
             order.payment.transactionLog.put(System.currentTimeMillis(), "Marking order for autosending");
             order.markAsAutosent();
             markOrderForAutoSending(order.id);
+        } else if(order.payment != null && order.payment.transactionLog != null) {
+            order.payment.transactionLog.put(System.currentTimeMillis(), "Avoid autosending, ispaid: " + isPaid + ", notified:" + isNotified + ", paymenlink:" + isPaymentLinkType);
         }
         
         validateOrder(order);

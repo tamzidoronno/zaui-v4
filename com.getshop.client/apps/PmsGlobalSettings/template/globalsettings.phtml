@@ -224,6 +224,17 @@ if(stristr($user->emailAddress, "@getshop.com")) {
     
     
     <h1>Enterprise settings</h1>
+
+    <div class='container'>
+        <span class='option'>
+            <input type='text' class='gsniceinput1' gsname='bookingTag' value='<?php echo $config->bookingTag; ?>' style='width: 250px;'>
+        </span>
+        <span class='title'>
+            Tag your booking system (if you have multiple systems to operate)<br>
+            Example: Hotel Amandus
+        </span>
+    </div>    
+    
     <div class='container'>
         <span class='option'>
             <select class="gsniceselect1" gsname="defaultmultilevelname">

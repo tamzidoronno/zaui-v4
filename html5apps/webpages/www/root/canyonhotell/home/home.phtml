@@ -1,0 +1,90 @@
+<script src="/javascript/sss/sss.min.js"></script>
+<link rel="stylesheet" href="/javascript/sss/sss.css" type="text/css" media="all">
+
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v3.3&appId=123789677717136&autoLogAppEvents=1"></script>
+
+<div class="contentrow firstrow"> 
+    <div class="row_inner">
+        
+        <div>
+            <?php
+            ContentManager::render("top_content");
+            ?>
+        </div>
+        <div style='max-width: 1000px; margin: 0 auto;' id='bookingprocess'></div>
+    </div>
+</div>
+
+<div class="contentrow row_2"> 
+    <div class="row_inner">
+        <div class="col col_1 col_size_3 mobilebox">
+            <?php
+                ContentManager::render("row2_col_1");
+            ?>
+        </div>
+        <div class="col col_2 col_size_3 mobilebox">
+            <?php
+                ContentManager::render("row2_col_2");
+            ?>
+        </div>
+        <div class="col col_3 col_size_3 mobilebox">
+            <?php
+                ContentManager::render("row2_col_3");
+            ?>
+        </div>
+    </div>
+</div>
+
+<div class="contentrow row_2"> 
+    <div class="row_inner">
+        <div class="col col_1 col_size_3 mobilebox">
+            <?php
+                ContentManager::render("row30_col_1");
+            ?>
+        </div>
+        <div class="col col_2 col_size_3 mobilebox">
+            <?php
+                ContentManager::render("row30_col_2");
+            ?>
+        </div>
+        <div class="col col_3 col_size_3 mobilebox">
+            <?php
+                ContentManager::render("row30_col_3");
+            ?>
+        </div>
+    </div>
+</div>
+
+<div class="contentrow row_4"> 
+    <div class="row_inner">
+        <?php
+            ContentManager::render("row_4");
+        ?>
+        
+    </div>
+</div>
+    <img src="/canyonhotell/images/test.png" style="width:100%;">
+
+<script>
+       $('.slider').sss({slideShow : true});
+</script>
+
+<script>
+    gsisdevmode = false;
+    
+    $ = jQuery;
+    jQuery(function ($) {
+        $.getScript("https://20490gc6.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
+            $("#bookingprocess").getshopbooking(
+                {
+                    "endpoint": "https://20490gc6.getshop.com/",
+                    "jsendpoint": "https://20490gc6.getshop.com/",
+                    "domain" : "default",
+                    "language" : "en",
+                    "websocket" : "websocket6.getshop.com"
+                }
+            );
+        });
+    });
+</script>

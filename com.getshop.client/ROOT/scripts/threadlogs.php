@@ -81,9 +81,10 @@ usort($result, "cmp");
         $warningClass = "";
         if (!@$threadlog->timeUsed) {
             $warningClass = "black";
-            continue;
+//            continue;
         } else if (@$threadlog->timeUsed > 15000) {
             $warningClass = "red";
+//	     continue;
         } else if ($threadlog->timeUsed > 40) {
             $warningClass = "yellow";
             continue;

@@ -99,6 +99,7 @@ public class PmsConfiguration extends DataCommon {
     public String otherinstructions = "";
     public String cleaninginstruction = "";
     public String maintanceinstruction = "";
+    public String bookingTag = "";
     
     
     /* other configurations */

@@ -13,6 +13,10 @@ $page = $pageFactory->getPage(@$_GET['page']);
 $showingModal = isset($_SESSION['gs_currently_showing_modal']) ? "active" : "";
 
 
+$appbase = new ApplicationBase();
+$name = $appbase->getSelectedMultilevelDomainName();
+$config = $factory->getApi()->getPmsManager()->getConfiguration($name);
+
 $timezone = $factory->getStore()->timeZone;
 if($timezone) {
     date_default_timezone_set($timezone);
@@ -52,10 +56,15 @@ if(sizeof($user->pmsPageAccess) > 0) {
     }
 }
 
+$title = $page->getTitle();
+if($config->bookingTag) {
+    $title = $config->bookingTag . " - " . $title;
+}
+
 ?>
 <html pageid="<? echo $page->getId(); ?>" module="pms">
     <head>
-        <title><? echo $page->getTitle(); ?></title>
+        <title><? echo $title; ?></title>
         <link rel="stylesheet" href="/icomoon/style.css?<? echo calculateCacheName(); ?>">
         <link rel="stylesheet" href="/skin/default/getshop.css?<? echo calculateCacheName(); ?>">
         <link rel="stylesheet" href="/skin/default/pms.css?<? echo calculateCacheName(); ?>">
@@ -65,7 +74,6 @@ if(sizeof($user->pmsPageAccess) > 0) {
         <link rel="stylesheet" href="/js/jquery.ui/css/smoothness/jquery-ui-1.9.2.custom.min.css?<? echo calculateCacheName(); ?>">
         
         <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-        
         <? $page->loadAppsCss(); ?>
         <script type="text/javascript" src="js/jquery-1.9.0.js?<? echo calculateCacheName(); ?>"></script>
         <script type="text/javascript" src="js/jquery.ui/js/jquery-ui-1.9.2.custom.min.js?<? echo calculateCacheName(); ?>"></script>
@@ -78,7 +86,14 @@ if(sizeof($user->pmsPageAccess) > 0) {
     </head>
     
     <body>
-        
+    <?php
+    if($config->bookingTag) {
+        echo "<div style='text-align:center; text-transform:uppercase; background-color:yellow; position:fixed; top: 0px; width:100%;z-index:1;'>";
+        echo $config->bookingTag;
+        echo "</div>";
+        echo "<div>&nbsp;</div>";
+    }
+    ?>
         <div id="loaderbox" style="display: none; position: absolute; z-index: 9999999999999999;"><img src="skin/default/images/loader.gif"/></div>
         <script>
             $(document).bind('mousemove', function(e) {

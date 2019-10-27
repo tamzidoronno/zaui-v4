@@ -173,7 +173,6 @@ public class StoreHandler {
             throw ex;
         } finally {
             clearSessionObject();
-            logCpuUsageForThread(inObject);
         }
     }
 
@@ -660,11 +659,6 @@ public class StoreHandler {
         }
         
        return null;
-    }
-
-    private void logCpuUsageForThread(JsonObject2 inObject) {
-        long timeUsed = ManagementFactory.getThreadMXBean().getThreadCpuTime(Thread.currentThread().getId());
-        GetShopProfiler.getProfiler().addToProfiler(storeId, inObject.interfaceName, inObject.method, timeUsed);
     }
     
     public int getSessionCount() {

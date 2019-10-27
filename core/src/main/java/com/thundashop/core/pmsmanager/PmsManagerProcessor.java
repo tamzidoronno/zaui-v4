@@ -292,11 +292,7 @@ public class PmsManagerProcessor {
         
         manager.gsTiming("\t Before looping " + bookings.size() + " bookings");
         for (PmsBooking booking : bookings) {
-            
-            if(booking.id.equals("e1d7b9c9-e1ff-4e6f-8709-45574cd9de65")) {
-                System.out.println("dfasfasf");
-            }
-            
+         
             if(!booking.confirmed) {
                 continue;
             }

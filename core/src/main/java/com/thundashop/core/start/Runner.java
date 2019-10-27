@@ -1,5 +1,6 @@
 package com.thundashop.core.start;
 
+import com.getshop.scope.GetShopSessionScopeCleaner;
 import com.google.gson.Gson;
 import com.mashape.unirest.http.ObjectMapper;
 import com.mashape.unirest.http.Unirest;
@@ -89,6 +90,9 @@ public class Runner {
 //        sslWebSocketServer.start();
 
 
+        Thread cleaner = new Thread(new GetShopSessionScopeCleaner());
+        cleaner.start();
+        
         startJettyServer();
     }
 
@@ -139,6 +143,5 @@ public class Runner {
                 return gson.toJson(value);
             }
         });
-
     }
 }

@@ -119,13 +119,18 @@ public abstract class GetShopSchedulerBase implements Runnable {
             storeLock.lock();
         }
         
+        CronThreadStartLog logmsg = null;
         try {
-            CronThreadStartLog logmsg = logStarted();
+            logmsg = logStarted();
             execute();
             closeConnection();
-            logEnded(logmsg);
+            
         } catch (Exception ex) {
             ex.printStackTrace();
+        } finally {
+            if (logmsg != null) {
+                logEnded(logmsg);
+            }
         }
         
         if (storeLock != null) {

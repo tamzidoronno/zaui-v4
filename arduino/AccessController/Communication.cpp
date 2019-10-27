@@ -15,7 +15,7 @@
 
 AES128 aes128;
 
-static long lastReceivedTimestamp = 0;
+static volatile unsigned long lastReceivedTimestamp = 0;
 
 volatile unsigned char	*Communication::readData;		// buffer for data retention
 
@@ -133,7 +133,7 @@ void Communication::writeEncrypted(char *msgToSend, volatile unsigned int length
 
 	Serial.print("AT+SEND=0,");
 	Serial.print(length);
-	Serial.print(",");;
+	Serial.print(",");
 
 	for (int i=0; i<length; i++) {
 		Serial.print(msgToSend[i]);

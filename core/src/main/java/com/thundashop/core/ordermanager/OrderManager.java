@@ -3627,6 +3627,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             unsettledAmount.amount = sumOfAccount;
             unsettledAmount.order = getOrder(orderId);
             unsettledAmount.account = accountNumber;
+            
+            if (unsettledAmount.amount < 1 && unsettledAmount.amount > -1) {
+                continue;
+            }
+            
             retList.add(unsettledAmount);
         }
         

@@ -63,7 +63,9 @@ public class WebInterfaceSocketThread2 implements Runnable {
                 executeMessage(json, socket.getInetAddress().getHostAddress());
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            if (!(ex instanceof ErrorException)) {
+                ex.printStackTrace();
+            }
         } finally {
             try {
                 socket.close();

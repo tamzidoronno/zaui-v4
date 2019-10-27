@@ -13,6 +13,7 @@ import com.thundashop.core.common.StoreComponent;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.storemanager.data.Store;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -218,5 +219,21 @@ public class GetShopSessionScope implements Scope {
         for (String key : keysToRemove2) {
             objectMap.remove(key);
         }
+    }
+    
+    public void cleanupThreadSessions() {
+        System.out.println(new Date() + " | Thread sessions before removal : " + threadSessions.size() );
+        List<Long> toRemove = new ArrayList();
+        
+        for (Long threadId : threadSessions.keySet()) {
+            Session session = threadSessions.get(threadId);
+            if (session.hasExpired()) {
+                toRemove.add(threadId);
+            }
+        }
+                
+        toRemove.stream().forEach(o -> threadSessions.remove(o));
+        
+        System.out.println(new Date() + " | Thread sessions after removal : " + threadSessions.size() );
     }
 }

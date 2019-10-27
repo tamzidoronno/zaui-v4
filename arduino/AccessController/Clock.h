@@ -12,12 +12,12 @@ class Clock {
 	public:
 		Clock();
 
-		void adjustClock(long timestamp);
+		void adjustClock(unsigned long timestamp);
 		long getTime();
 		void Clock::getTimeChar(char* charBuf);
 
 	private:
-		volatile long diffSinceStartup;
+		volatile unsigned long diffSinceStartup;
 };
 
 #endif

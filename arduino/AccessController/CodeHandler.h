@@ -13,17 +13,37 @@
 #include "DataStorage.h";
 #include "KeypadReader.h";
 #include "Communication.h";
+#include "Logging.h";
+#include "Clock.h";
 
 class CodeHandler {
 	public:
-		CodeHandler(DataStorage* dataStorage, KeyPadReader* keypadReader, Communication* com);
+		CodeHandler(DataStorage* dataStorage, KeyPadReader* keypadReader, Communication* com, Logging* logging, Clock* clock);
 		bool CodeHandler::testCodes(unsigned char* codeFromPanel);
+		void setCloseTimeStamp(unsigned long tstamp);
+		void setOpenTimeStamp(unsigned long tstamp);
+		void unlock(unsigned int triggeredBySlot);
+		void triggerDoorAutomation();
+		void lock(unsigned int triggeredBySlot);
+		bool isLocked();
+		void setup();
+		void check();
+		void toggleForceState();
 
 	private:
 		DataStorage* dataStorage;
 		KeyPadReader* keypadReader;
 		Communication* communication;
+		Logging* logging;
+		Clock* clock;
 		bool CodeHandler::compareCodes(unsigned char* savedCode, unsigned char* typedCode, int codeSlot);
+
+		unsigned long closeTimeStamp;
+		unsigned long openTimeStamp;
+		bool _forceOpen;
+		void CodeHandler::resetOpenTimeStamp();
+		void CodeHandler::resetCloseTimeStamp();
+		void internalUnlock();
 };
 
 #endif

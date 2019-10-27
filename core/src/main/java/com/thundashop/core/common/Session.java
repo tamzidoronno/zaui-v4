@@ -31,4 +31,19 @@ public class Session {
     public Object get(String key) {
         return storedSessionObjects.get(key);
     }
+
+    public boolean hasExpired() {
+        if (lastActive == null) {
+            return false;
+        }
+        
+        long lastActiveTime = lastActive.getTime();
+        long currentTime = System.currentTimeMillis();
+        
+        // 12 hours expiration time.
+        boolean expired = (currentTime - lastActiveTime) > (12*60*60*1000);
+        
+        return expired;
+        
+    }
 }

@@ -640,10 +640,13 @@ public class StoreHandler {
             ex.printStackTrace();
         }
         
-        if (thread.getUserId() != null) {
-            manager.logout();
+        try {
+            if (thread.getUserId() != null) {
+                manager.logout();
+            }
+        } finally {
+            clearSessionObject();
         }
-        clearSessionObject();
     }
 
     public void sessionRemoved(String sessionId) {

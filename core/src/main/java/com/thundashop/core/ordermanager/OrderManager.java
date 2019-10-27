@@ -762,6 +762,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public void saveOrder(Order order) throws ErrorException {
         
         if(order.isPaid() && !order.isNotified() && order.isPaymentLinkType()) {
+            order.payment.transactionLog.put(System.currentTimeMillis(), "Marking order for autosending");
             order.markAsAutosent();
             markOrderForAutoSending(order.id);
         }

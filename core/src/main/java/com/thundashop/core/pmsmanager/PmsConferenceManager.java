@@ -182,6 +182,7 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
 
     @Override
     public PmsConference getConference(String conferenceId) {
+        checkIfDateIsCorrectOnConferences();
         return conferences.get(conferenceId);
     }
 
@@ -205,12 +206,22 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
     @Override
     public List<PmsConferenceEventEntry> getEventEntries(String eventId) {
         List<PmsConferenceEventEntry> result = new ArrayList();
+        PmsConferenceEvent event = getConferenceEvent(eventId);
         for(PmsConferenceEventEntry entry : conferenceEventEntries.values()) {
             if(entry.pmsEventId.equals(eventId)) {
                 if(entry.from == null) {
                     entry.from = new Date();
                 }
-                result.add(entry);
+                if(!PmsBookingRooms.isSameDayStatic(event.from, entry.from)) {
+                    Calendar cal1 = Calendar.getInstance();
+                    Calendar cal2 = Calendar.getInstance();
+                    cal1.setTime(event.from);
+                    cal2.setTime(entry.from);
+                    cal2.set(Calendar.DAY_OF_YEAR, cal1.get(Calendar.DAY_OF_YEAR));
+                    cal2.set(Calendar.YEAR, cal1.get(Calendar.YEAR));
+                    entry.from = cal2.getTime();
+               }
+               result.add(entry);
             }
         }
         
@@ -521,5 +532,25 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
                     return b.rowCreatedDate.compareTo(a.rowCreatedDate);
                 })
                 .collect(Collectors.toList());
+    }
+
+    private void checkIfDateIsCorrectOnConferences() {
+        try {
+            List<PmsConferenceEventEntry> events = getAllEventEntries();
+            Calendar cal1 = Calendar.getInstance();
+            Calendar cal2 = Calendar.getInstance();
+            for(PmsConferenceEventEntry entry : events) {
+                PmsConferenceEvent event = getConferenceEvent(entry.pmsEventId);
+                if(!PmsBookingRooms.isSameDayStatic(event.from, entry.from)) {
+                    cal1.setTime(event.from);
+                    cal2.setTime(entry.from);
+                    cal2.set(Calendar.DAY_OF_YEAR, cal1.get(Calendar.DAY_OF_YEAR));
+                    cal2.set(Calendar.YEAR, cal1.get(Calendar.YEAR));
+                    entry.from = cal2.getTime();
+               }
+            }
+        }catch(Exception e) {
+            
+        }
     }
 }

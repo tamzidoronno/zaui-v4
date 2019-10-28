@@ -7,7 +7,7 @@ $isLocked = $this->getApi()->getOrderManager()->isLocked($end);
 $bankAccountClosed = $this->getApi()->getOrderManager()->isBankAccountClosed($end);
 $isShowingExTaxes = $this->isShowingIncTaxes();
 $autoCloseActivated = $this->getApi()->getOrderManager()->getOrderManagerSettings()->autoCloseFinancialDataWhenCreatingZReport;
-$incomeBalance = $this->getApi()->getOrderManager()->getBalance($start, null);
+$incomeBalance = $this->getApi()->getOrderManager()->getBalance($start, null, $isShowingExTaxes);
 
 $this->getApi()->getPmsManager()->markOtaPaymentsAutomaticallyPaidOnCheckin($this->getSelectedMultilevelDomainName(), $start, $end);
 

@@ -508,7 +508,7 @@ public interface IOrderManager {
     
     @Administrator
     @ForceAsync
-    public AccountingBalance getBalance(Date date, String paymentId);
+    public AccountingBalance getBalance(Date date, String paymentId, boolean incTaxes);
     
     @Administrator
     @ForceAsync

@@ -4048,7 +4048,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     @Override
-    public AccountingBalance getBalance(Date date, String paymentId) {
+    public AccountingBalance getBalance(Date date, String paymentId, boolean incTaxes) {
         AccountingBalance balance = new AccountingBalance();
         balance.balanceToDate = date;
         
@@ -4060,19 +4060,18 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             res = getPaymentRecords(paymentId, getStore().rowCreatedDate, date);
         }
         
-        addBalance(res, balance);
+        addBalance(res, balance, incTaxes);
         
         return balance;
     }
 
-    private void addBalance(List<DayIncome> res, AccountingBalance balance) {
+    private void addBalance(List<DayIncome> res, AccountingBalance balance, boolean incTaxes) {
         Map<String, List<DayEntry>> groupedByAccountNumber = res.stream()
                 .flatMap(o -> o.dayEntries.stream())
                 .collect(Collectors.groupingBy(o -> o.accountingNumber));
         
         for (String accountNumber : groupedByAccountNumber.keySet()) {
-            Double total = groupedByAccountNumber.get(accountNumber).stream()
-                    .mapToDouble(o -> o.amount.doubleValue())
+            Double total = groupedByAccountNumber.get(accountNumber).stream().mapToDouble(o -> (incTaxes ? o.amount.doubleValue() : o.amountExTax.doubleValue()))
                     .sum();
             
             balance.balances.put(accountNumber, total);

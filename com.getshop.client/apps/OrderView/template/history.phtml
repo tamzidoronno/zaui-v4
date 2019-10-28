@@ -20,14 +20,23 @@ if (!count($order->shipmentLog)) {
 
 <div class="summaryheader"><? echo $this->__f("Payment log"); ?></div>
 <?
-if (!count($order->payment->transactionLog)) {
+if (!count((array)$order->payment->transactionLog)) {
     echo "<div class='warning_not_sent'>";
         echo "<i class='fa fa-warning'></i> ".$this->__f("This order has not been sent yet to your customer");
     echo "</div>";
 } else {
+    
+    $entries = array();
     foreach ($order->payment->transactionLog as $time => $log) {
+        $entries[$time] = $log;
+    }
+    
+    krsort($entries);
+    
+    foreach ($entries as $time => $log) {
         echo "<div class='shipmentlogline'>";
-            echo "<div class='date'>".date('d.m.Y H:i:s', ($time/1000))."</div>";
+        $millis = $time % 1000;
+            echo "<div class='date'>".date('d.m.Y H:i:s', ($time/1000)) . ":" . $millis."</div>";
             echo "<div class='to'>".$log."</div>";
         echo "</div>";
     }

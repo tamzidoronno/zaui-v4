@@ -541,16 +541,18 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
             Calendar cal2 = Calendar.getInstance();
             for(PmsConferenceEventEntry entry : events) {
                 PmsConferenceEvent event = getConferenceEvent(entry.pmsEventId);
-                if(!PmsBookingRooms.isSameDayStatic(event.from, entry.from)) {
-                    cal1.setTime(event.from);
-                    cal2.setTime(entry.from);
-                    cal2.set(Calendar.DAY_OF_YEAR, cal1.get(Calendar.DAY_OF_YEAR));
-                    cal2.set(Calendar.YEAR, cal1.get(Calendar.YEAR));
-                    entry.from = cal2.getTime();
-               }
+                if(event != null && entry.from != null && event.from != null) {
+                    if(!PmsBookingRooms.isSameDayStatic(event.from, entry.from)) {
+                        cal1.setTime(event.from);
+                        cal2.setTime(entry.from);
+                        cal2.set(Calendar.DAY_OF_YEAR, cal1.get(Calendar.DAY_OF_YEAR));
+                        cal2.set(Calendar.YEAR, cal1.get(Calendar.YEAR));
+                        entry.from = cal2.getTime();
+                   }
+                }
             }
         }catch(Exception e) {
-            
+            e.printStackTrace();
         }
     }
 }

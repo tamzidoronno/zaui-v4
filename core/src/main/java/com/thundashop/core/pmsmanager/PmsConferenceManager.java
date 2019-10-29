@@ -552,7 +552,6 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
                 }
             }
         }catch(Exception e) {
-            e.printStackTrace();
         }
     }
 }

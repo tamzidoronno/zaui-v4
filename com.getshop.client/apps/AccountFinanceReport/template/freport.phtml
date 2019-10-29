@@ -56,7 +56,7 @@ function printIncomeValues($accounts, $incomeBalance, $text) {
             echo "<div class='col orderid'>$text</div>";
             
             foreach ($accounts as $account) {
-                $val = $incomeBalance->balances->{$account};
+                $val = @$incomeBalance->balances->{$account};
                 echo "<div class='col $account'>".round($val,2)."</div>";
             }
             
@@ -261,7 +261,7 @@ echo "<div class='outer'>";
             }
             
             $val = isset($sum[$account]) && $sum[$account] ? $sum[$account] : "&nbsp;";
-            $incomeBalance->balances->{$account} += $val;
+            @$incomeBalance->balances->{$account} += $val;
 
             echo "<div account='$account' class='col $account totalcolforaccount'>".round($val,2);
             ?>

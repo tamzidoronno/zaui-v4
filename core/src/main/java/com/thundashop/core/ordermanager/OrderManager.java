@@ -3596,9 +3596,40 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
     }
 
+    private Date getFirstOrderDate() {
+        Date check = null;
+        try {
+            for(Order ord : orders.values()) {
+                if(check == null || ord.rowCreatedDate.before(check)) {
+                    check = ord.rowCreatedDate;
+                }
+
+                if(check == null || (ord.paymentDate != null && ord.paymentDate.before(check))) {
+                    check = ord.paymentDate;
+                }
+
+                for(Long time : ord.payment.transactionLog.keySet()) {
+                    if(check != null && check.getTime() > time) {
+                        check.setTime(time);
+                    }
+                }
+            }
+        }catch(Exception e) {
+            logPrintException(e);
+        }
+        return check;
+    }
+    
     @Override
     public List<OrderUnsettledAmountForAccount> getOrdersUnsettledAmount(String accountNumber, Date endDate, String paymentId) {
         Date startDate = getStore().rowCreatedDate;
+        
+        Date firstOrderDate = getFirstOrderDate();
+        
+        if(firstOrderDate != null && firstOrderDate != null && firstOrderDate.before(startDate)) {
+            startDate = firstOrderDate;
+        }
+        
         List<DayIncome> dayEntries = new ArrayList();
         if (paymentId != null && !paymentId.isEmpty()) {
             dayEntries = getPaymentRecords(paymentId, startDate, endDate);

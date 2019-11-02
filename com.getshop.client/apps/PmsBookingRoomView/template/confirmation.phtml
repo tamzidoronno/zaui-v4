@@ -11,6 +11,18 @@ foreach($msgs as $msg) {
         $confirmationmessages[] = $msg;
     }
 }
+
+$hasLanguage = false;
+foreach($msgs as $msg) {
+    if($msg->key != "booking_completed") {
+        continue;
+    }
+    $langs = (array)$msg->languages;
+    if(in_array($booking->language, $langs)) {
+        $hasLanguage = true;
+    }
+}
+
 foreach($booking->rooms as $room) {
     foreach($room->guests as $guest) {
         $emails[] = $guest->email;
@@ -26,7 +38,11 @@ echo "<select class='gsniceselect1 confirmationEmailTemplate' style='width:100%;
 $selected = null;
 foreach($confirmationmessages as $conf) {
     $sel = "";
-    if(!$conf->isManual) { $selected = $conf; $sel = "SELECTED"; }
+    if($hasLanguage) {
+        if(in_array($booking->language, $conf->languages)) { $selected = $conf; $sel = "SELECTED"; }
+    } else {
+        if(!$conf->isManual && sizeof($conf->languages) == 0) { $selected = $conf; $sel = "SELECTED"; }
+    }
     echo "<option value='".$conf->id."' $sel>".$conf->title."</option>";
     if(!$selected) {$selected=$conf;}
 }

@@ -147,4 +147,16 @@ public class Ticket extends DataCommon {
         }
         return result;
     }
+
+    public Date getLastRepliedDate() {
+        Date replyDate = rowCreatedDate;
+        
+        for(TicketEvent ev : events) {
+            if(ev.date != null && ev.date.after(replyDate)) {
+                replyDate = ev.date;
+            }
+        }
+        
+        return replyDate;
+    }
 }

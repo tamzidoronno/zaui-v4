@@ -156,7 +156,7 @@ public class TicketManager extends ManagerBase implements ITicketManager {
         
 
         Collections.sort(retList, (Ticket t1, Ticket t2) -> {
-            return t2.rowCreatedDate.compareTo(t1.rowCreatedDate);
+            return t2.getLastRepliedDate().compareTo(t1.getLastRepliedDate());
         });
 
         return retList;

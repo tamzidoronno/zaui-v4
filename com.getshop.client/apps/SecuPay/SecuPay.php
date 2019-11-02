@@ -272,8 +272,8 @@ class SecuPay extends \PaymentApplication implements \Application {
     }
 
     public function isProdMode() {
-        return true;
-//        return $this->getApi()->getStoreManager()->isProductMode();
+//        return true;
+        return $this->getApi()->getStoreManager()->isProductMode();
     }
 
 }

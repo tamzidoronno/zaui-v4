@@ -84,7 +84,22 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
             //001188671
             return;
         }
+        
+        if(id.length() != 9) {
+            return;
+        }
+        
         account.accountId = id;
+        saveObject(account);
+    }
+
+    @Override
+    public void disconnectAccountId(String password) {
+        if(!password.equals("fdsafdasfbvdsert")) {
+            //001188671
+            return;
+        }
+        account.accountId = null;
         saveObject(account);
     }
 

@@ -78,6 +78,19 @@ $distinctUserIds = array();
 
 if (count($uniqueSegmentIds) > 1) {
     echo "<div style='font-size: 16px; padding-top: 30px; padding-bottom: 30px;'>".$this->__f("Not possible. Make sure that all rooms you have selected are on the same segment before continuing..")."</div>";
+    
+    $segments = $this->getApi()->getPmsCoverageAndIncomeReportManager()->getSegments($this->getSelectedMultilevelDomainName());
+    $segments = $this->indexList($segments);
+    foreach ($bookings as $booking) {
+        echo $booking->incrementBookingId . " - " . $segments[$booking->segmentId]->name . "<bR>"; 
+    }
+    
+    
+    echo "<br><br>";
+    foreach($uniqueSegmentIds as $unique) {
+        echo "Change all segments to : <span gsclick='changeAllSegments' gs_confirm='I understand that reports might be affected historically by doing this operation and all support regarding changes to reports will be charged upon.' segmentid='$unique' style='color:blue; cursor:pointer;'>" . $segments[$unique]->name . "</span><br>";
+    }
+    
 } else {
 
     foreach ($bookings as $booking) {

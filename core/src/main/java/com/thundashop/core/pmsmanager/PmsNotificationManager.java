@@ -392,6 +392,8 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         if (key.startsWith("booking_sendpaymentlink")
                 || key.startsWith("booking_unabletochargecard")
                 || key.startsWith("booking_paymentmissing")
+                || key.startsWith("booking_confirmed")
+                || key.startsWith("booking_completed")
                 || key.startsWith("order_")) {
             if(paymentRequestId != null) {
                 String link = pmsInvoiceManager.getPaymentLinkConfig().webAdress + "/pr.php?id=" + paymentRequestId;
@@ -406,6 +408,9 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
                     message = message.replace("{paymentlink}", link);
                 }
                 message = message.replace("{selfmanagelink}", pmsInvoiceManager.getPaymentLinkConfig().webAdress + "/?page=booking_self_management&id=" + booking.secretBookingId);
+            } else {
+                String link = pmsInvoiceManager.getPaymentLinkConfig().webAdress + "/pr.php?id=" + booking.id;
+                message = message.replace("{paymentlink}", "<a href='" + link + "'>" + link + "</a>");
             }
         }        
         

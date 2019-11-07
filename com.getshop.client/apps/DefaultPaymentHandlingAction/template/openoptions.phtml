@@ -39,6 +39,10 @@ if($order->payment->paymentType == "ns_d79569c6_ff6a_4ab5_8820_add42ae71170\Book
             <i class='fa fa-plus-square-o'></i> 
             <? echo $this->__f("Update order note"); ?>
         </div>
+        <div class='ordernotesupdatearea'>
+            <textarea class='notetextarea'><?php echo @$order->invoiceNote; ?></textarea>
+            <span class='shop_button doupdateOrderNote' orderid='<? echo $order->id; ?>'>Update order note</span>
+        </div>
     <?php
     if(!$order->closed) {
         if($order->payment && stristr($order->payment->paymentType, "invoice")) {

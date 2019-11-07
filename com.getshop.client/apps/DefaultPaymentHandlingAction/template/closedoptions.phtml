@@ -41,6 +41,10 @@ $amount = $this->getApi()->getOrderManager()->getTotalAmount($order);
         <i class='fa fa-plus-square-o'></i> 
         <? echo $this->__f("Update order note"); ?>
     </div>
+    <div class='ordernotesupdatearea'>
+        <textarea class='notetextarea'><?php echo @$order->invoiceNote; ?></textarea>
+        <span class='shop_button doupdateOrderNote' orderid='<? echo $order->id; ?>'>Update order note</span>
+    </div>
 
     <?
     if (count($cashpoints)) {

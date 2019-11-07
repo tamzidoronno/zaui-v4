@@ -13,6 +13,27 @@
     text-overflow: ellipsis;
     margin: 5px;
 }
+.DefaultPaymentHandlingAction .ordernotesupdatearea {
+    position: absolute;
+    width: 225px;
+    background-color: #bbb;
+    padding: 2px;
+    border: solid 1px #efefef;
+    border-radius: 3px;
+    display:none;
+}
+
+.DefaultPaymentHandlingAction .doupdateOrderNote {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.DefaultPaymentHandlingAction .ordernotesupdatearea textarea {
+    width: 100%;
+    height: 90px;
+    margin-bottom: 3px;
+}
+
 .DefaultPaymentHandlingAction .edit_user_btn {
     color:#4da6cb;
 }

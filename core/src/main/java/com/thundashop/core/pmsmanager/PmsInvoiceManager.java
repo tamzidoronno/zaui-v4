@@ -3638,6 +3638,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         orderManager.saveOrder(ord);
         
+
         return orderId;
     }
     
@@ -3718,6 +3719,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         List<PmsOrderCreateRow> createOrder = new ArrayList();
         
         if(room == null) {
+
             for(PmsBookingRooms r : booking.rooms) {
                 PmsOrderCreateRow createOrderForRoom = new PmsOrderCreateRow();
                 createOrderForRoom.items = new ArrayList();

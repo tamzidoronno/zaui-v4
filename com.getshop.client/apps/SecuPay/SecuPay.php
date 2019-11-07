@@ -61,19 +61,33 @@ class SecuPay extends \PaymentApplication implements \Application {
     
     public function preProcess() {
          $url = $this->address . '/payment/init';
- 
          
          if(!isset($_GET['paymentmethod'])) {
+             
+             if(isset($_GET['incid'])) {
+                 $order = $this->getApi()->getOrderManager()->getOrderByincrementOrderIdAndPassword($_GET['incid'], "fdsafd4e3453ngdgdf");
+                 $_GET['payorder'] = $order->id;
+             }
+             
              $types = $this->getTypes();
              echo "<div style='text-align:center;'>";
              echo "<h1>Please select a payment type</h1>";
+             
+             $txts = array();
+             $txts['debit'] = "Debit / Lastschrifteinzug";
+             $txts['creditcard'] = "Credit card / Kreditkarte";
+             $txts['sofort'] = "Sofort / Sofortüberweisung";
+             
              foreach($types as $type) {
                  if($type == "invoice") {
                      continue;
                  }
+                 
+                 $txt = $txts[$type];
+                 
                  echo "<a href='/?changeGetShopModule=cms&page=cart&payorder=".$_GET['payorder']."&paymentmethod=$type'>";
                  echo "<div style='text-transform:uppercase; margin: 10px; cursor:pointer;' class='selectpaymentmethod'>";
-                 echo $type;
+                 echo $txt;
                  echo "</div>";
                  echo "</a>";
              }
@@ -87,7 +101,7 @@ class SecuPay extends \PaymentApplication implements \Application {
              echo "<br><br>";
              
              echo "<style>";
-             echo ".selectpaymentmethod { border: solid 1px #bbb; display:inline-block; width: 300px; height: 300px; line-height: 150px; background-color:#a2bef3; }";
+             echo ".selectpaymentmethod { border: solid 1px #bbb; display:inline-block; width: 300px;  background-color:#a2bef3; }";
              echo "</style>";
              
              return;

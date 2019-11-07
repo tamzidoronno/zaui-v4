@@ -6,7 +6,7 @@
     text-align:center;
 }
 .CartManager .choosepaymentmethod { text-align: center; }
-.CartManager .selectpaymentmethod {transition: background-color 0.5s ease; border: solid 1px; display: inline-block; width: 150px; height: 150px; border-radius: 4px; margin-right: 10px; }
+.CartManager .selectpaymentmethod {transition: background-color 0.5s ease; border: solid 1px; display: inline-block; width: 150px; padding-top: 35px; padding-bottom: 35px; border-radius: 4px; margin-right: 10px; }
 .CartManager .paymentappheading { border-bottom: solid 1px; width: 150px; display:inline-block; box-sizing: border-box; padding: 3px; }
 .CartManager .selectpaymentmethod:hover { background-color: #0c7e00; color:#fff; cursor:pointer; }
 .CartManager .checkoutarea .checkoutinner {

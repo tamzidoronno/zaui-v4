@@ -1083,12 +1083,14 @@ public class Order extends DataCommon implements Comparable<Order> {
     }
 
     public boolean isFullyPaid() {
+        System.out.println(incrementOrderId + " : " + getTotalAmount());
         double transactionAmount = getTransactionAmount();
         double total = getTotalAmount() + cashWithdrawal;
         double diff = total - transactionAmount;
-        if(diff > 1 || diff < -1) {
+        if(diff >= 1 || diff <= -1) {
             return false;
         }
+
         return true;
     }
     

@@ -287,6 +287,9 @@ public class PmsBookingSimpleFilter {
              if(booking.wubookreservationid != null && booking.wubookreservationid.equals(filter.searchWord)) {
                 return true;
             }
+             if(room.pmsBookingRoomId != null && room.pmsBookingRoomId.equals(filter.searchWord)) {
+                return true;
+            }
             if(booking.wubookchannelreservationcode != null && booking.wubookchannelreservationcode.equals(filter.searchWord)) {
                 return true;
             }

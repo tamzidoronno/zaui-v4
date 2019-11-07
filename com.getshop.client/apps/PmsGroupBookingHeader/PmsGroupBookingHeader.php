@@ -464,6 +464,12 @@ class PmsGroupBookingHeader extends \MarketingApplication implements \Applicatio
             foreach($_POST['data']['rooms'] as $roomid) {
                 $this->getApi()->getPmsManager()->removeFromBooking($this->getSelectedMultilevelDomainName(), $bookingId, $roomid);
             }
+        } else if($action == "splitunique") {
+            foreach($_POST['data']['rooms'] as $roomId) {
+                $singleroomids = array();
+                $singleroomids[] = $roomId;
+                $this->getApi()->getPmsManager()->splitBooking($this->getSelectedMultilevelDomainName(), $singleroomids);
+            }
         } else if($action == "split") {
             $this->getApi()->getPmsManager()->splitBooking($this->getSelectedMultilevelDomainName(), $_POST['data']['rooms']);
         } else if($action == "updateGuestCount") {

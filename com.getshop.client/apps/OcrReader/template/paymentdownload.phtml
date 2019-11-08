@@ -4,8 +4,8 @@ $linesToTransfer = $this->getApi()->getOrderManager()->getBankOrderTransactions(
 if (!$linesToTransfer || !count($linesToTransfer)) {
     return;
 }
+$this->getApi()->getStoreOcrManager()->checkForPayments();
 ?>
-
 <div style='max-width: 1600px; margin: auto;margin-top: 50px;margin-bottom: 20px; border-bottom: solid 1px #DDD;'>
     <div class="isnotactive">
         <div class="kaipal infobox">

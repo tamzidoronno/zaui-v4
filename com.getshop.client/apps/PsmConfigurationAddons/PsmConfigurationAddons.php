@@ -20,6 +20,12 @@ class PsmConfigurationAddons extends \WebshopApplication implements \Application
         $this->getApi()->getProductManager()->saveProduct($product);
     }
     
+    public function deactivateProduct() {
+        $product = $this->getApi()->getProductManager()->getProduct($_POST['data']['productid']);
+        $product->deactivated = !$product->deactivated;
+        $this->getApi()->getProductManager()->saveProduct($product);
+    }
+    
     public function readAddons() {
         $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
         $roomId = $_POST['data']['roomid'];

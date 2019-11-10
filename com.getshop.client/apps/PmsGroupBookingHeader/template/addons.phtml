@@ -11,6 +11,9 @@ foreach($products as $product) {
     if(in_array($product->id, $roomProducts)) {
         continue;
     }
+    if($product->deactivated) {
+        continue;
+    }
     
     $count = 0;
     foreach($booking->rooms as $room) {

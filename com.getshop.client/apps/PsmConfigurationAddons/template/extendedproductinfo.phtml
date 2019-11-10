@@ -92,6 +92,8 @@ echo "<br>";
     <input type="button" class='addNewDateRange' value="Set valid date range">
 </div>
 
+<br>
+<span class='shop_button' gsclick='deactivateProduct' productid='<?php echo $addonItem->productId; ?>' style='background-color:red;'>Deactivate this product</span>
 
 <script>
      $('.start_date_input').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true});

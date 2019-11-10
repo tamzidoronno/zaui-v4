@@ -1370,6 +1370,13 @@ public class PmsManagerProcessor {
         for(String orderId : ordersToAutosend) {
             PmsBooking booking = manager.getBookingWithOrderId(orderId);
             Order order = manager.orderManager.getOrder(orderId);
+            
+            if(order.recieptEmail == null || order.recieptEmail.isEmpty()) {
+                order.payment.transactionLog.put(System.currentTimeMillis(), "Did not autosend reciept because it has no reciept email to send to");
+                manager.orderManager.saveOrder(order);
+                continue;
+            }
+            
             if(booking != null) {
                 manager.pmsInvoiceManager.sendRecieptOnOrder(order, booking.id);
             } else {

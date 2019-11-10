@@ -280,6 +280,7 @@ public class ProductManager extends AProductManager implements IProductManager {
             result.id = prod.id;
             result.name = prod.name;
             result.price = prod.price;
+            result.deactivated = prod.deactivated;
             retval.add(result);
         }
 

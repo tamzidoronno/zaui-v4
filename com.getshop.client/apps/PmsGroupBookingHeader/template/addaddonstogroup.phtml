@@ -50,6 +50,9 @@ foreach($booking->rooms as $room) {
     ksort($newproducts);
     
     foreach($newproducts as $product) {
+        if($product->deactivated) {
+            continue;
+        }
         if(in_array($product->id, $productsToExclude)) {
             continue;
         }

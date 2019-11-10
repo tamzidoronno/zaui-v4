@@ -573,6 +573,21 @@
     display: inline-block;
 }
 
+.SalesPointNewSale .changecount {
+    width: 25px !important;
+}
+
+.SalesPointNewSale .details .gs_shop_small_icon {
+    font-size: 10px;
+    height: 29px;
+    vertical-align: top;
+    padding-top: 10px;
+}
+
+.SalesPointNewSale .changeprice {
+    width: 45px !important;
+}
+
 @media (max-width: 1050px) {
     .SalesPointNewSale .topmenu .entry {
         width: 70px;

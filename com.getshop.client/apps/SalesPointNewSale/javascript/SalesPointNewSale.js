@@ -18,6 +18,17 @@ app.SalesPointNewSale = {
         $(document).on('click', '.SalesPointNewSale .openList', app.SalesPointNewSale.openList);
     },
     
+    calculatePriceWithTaxAndSet: function(newValue, fromTarget) {
+        var cartItemLine = $(fromTarget).closest('.cartitemline');
+        var tax = cartItemLine.attr('tax');
+        var newPrice = newValue;
+        if (tax > 0) {
+            newPrice = newPrice * (1 + (tax/100));
+        } 
+        cartItemLine.find('input.changeprice').val(newPrice);
+        cartItemLine.find('input.changeprice').trigger("change");
+    },
+    
     openList: function() {
         var listId = $(this).attr('listid');
         var listToShow = $('.SalesPointNewSale .productlist.isGroup[listid="'+listId+'"]');

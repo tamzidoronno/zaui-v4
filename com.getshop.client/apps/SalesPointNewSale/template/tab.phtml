@@ -100,7 +100,8 @@ foreach ($cartItems as $item) {
         
     $priceText = $this->getPriceHtml($item);
     
-    echo "<div class='cartitemline' cartitemid='$item->cartItemId'>";
+    $tax = $item->product->taxGroupObject ? $item->product->taxGroupObject->taxRate : 0;
+    echo "<div class='cartitemline' cartitemid='$item->cartItemId' tax='$tax'>";
         echo "<div class='col count'>".$item->count."</div>";
         echo "<div class='col productname'>$foodIcon".$item->product->name."</div>";
         echo "<div class='col price'>".$priceText."</div>";
@@ -142,6 +143,12 @@ foreach ($cartItems as $item) {
             <span class="gs_shop_small_icon removefromtab">
                 <span class="fa-stack fa-lg">
                     <i class="fa fa-stack-2x  fa-trash "></i>
+                </span> 
+            </span>
+
+            <span class="gs_shop_small_icon changepriceextax" title="<? echo $this->__f("Change Price Ex Taxes"); ?>" cartitemid='<? echo $item->cartItemId; ?>' gstype='numpad' gsnumpadtitle='Change price ( EX TAX )' gsnumpad_on_ok='app.SalesPointNewSale.calculatePriceWithTaxAndSet'>
+                <span class="fa-stack fa-lg">
+                    <i class="fa fa-calculator fa-stack-2x" ></i>
                 </span> 
             </span>
             <?

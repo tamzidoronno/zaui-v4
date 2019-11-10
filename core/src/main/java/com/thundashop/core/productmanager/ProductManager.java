@@ -606,5 +606,13 @@ public class ProductManager extends AProductManager implements IProductManager {
         saveObject(res);
     }
 
+    @Override
+    public AccountingDetail getAccountingDetailById(String accountingDetailId) {
+        return getAccountingAccounts().stream()
+                .filter(o -> o.id != null && o.id.equals(accountingDetailId))
+                .findFirst()
+                .orElse(null);
+    }
+
     
 }

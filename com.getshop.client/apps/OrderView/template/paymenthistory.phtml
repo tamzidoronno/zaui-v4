@@ -23,6 +23,11 @@ if (!count($order->orderTransactions)) {
         echo "<div class='addeddate'>".$this->__f("Date added")."</div>";
     echo "</div>";
     foreach ($order->orderTransactions as $paymentLog) {
+        $type = "";
+        if ($paymentLog->accountingDetailId) {
+            $accountingDetail = $this->getApi()->getProductManager()->getAccountingDetailById($paymentLog->accountingDetailId);
+            $type = $accountingDetail->accountNumber . " - " . $accountingDetail->description;
+        }
         $user = $this->getApi()->getUserManager()->getUserById($paymentLog->userId);
         echo "<div class='shipmentlogline'>";
             echo "<div class='date'>".date('d.m.Y H:i', strtotime($paymentLog->date))."</div>";
@@ -38,9 +43,22 @@ if (!count($order->orderTransactions)) {
             echo "</div>";
             
             echo "<div class='user'>".$user->fullName."</div>";
-            echo "<div class='comment'>".$paymentLog->comment."</div>";
+            echo "<div class='comment'>";
+                echo $type;
+                if ($type && $paymentLog->comment) {
+                    echo " / ";
+                }
+                echo $paymentLog->comment."</div>";
             echo "<div class='addeddate'>".date('d.m.Y H:i', strtotime($paymentLog->rowCreatedDate))."</div>";
         echo "</div>";
+    }
+}
+
+$accounts = $this->getApi()->getProductManager()->getAccountingAccounts();
+$feeAccounts = array();
+foreach ($accounts as $account) {
+    if ($account->type == "fee") {
+        $feeAccounts[] = $account;
     }
 }
 ?>
@@ -52,6 +70,13 @@ if (!count($order->orderTransactions)) {
     $now = date('d.m.Y');
     ?>
     <div>
+        <?
+        if ($feeAccounts) {
+            ?>
+            <span style='display: inline-block; width: 200px;'>Type</span>
+            <?
+        }
+        ?>
         <span style='display: inline-block; width: 200px;'>Date</span>
         <span style='display: inline-block; width: 200px;'>Comment</span>
         <span style='display: inline-block; width: 200px;'>Value</span>
@@ -64,6 +89,22 @@ if (!count($order->orderTransactions)) {
         }
         ?>
     </div>
+    <?
+    if ($feeAccounts) {
+        ?>
+        <select class="gsniceselect1 manualregisterpaymenttype">
+            <option>Normal</option>
+            <?
+            foreach ($feeAccounts as $account) {
+                ?>
+                <option value="<? echo $account->id; ?>"><? echo $account->accountNumber." - ".$account->description; ?></option>
+                <?
+            }
+            ?>
+        </select>
+        <?
+    }
+    ?>
     <input class="gsniceinput1 manualregisterpaymentdate" value="<? echo $now; ?>"/>
     <input class="gsniceinput1 manualregisterpaymentcomment" placeholder="<? echo $this->__f('Optional comment'); ?>" />
     <input class="gsniceinput1 manualregisterpaymentamount" value="<? echo $order->restAmount; ?>" />

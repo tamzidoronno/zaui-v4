@@ -255,6 +255,9 @@ public interface IProductManager {
     public AccountingDetail getAccountingDetail(int accountNumber);
     
     @Editor
+    public AccountingDetail getAccountingDetailById(String accountingDetailId);
+    
+    @Editor
     public void saveAccountingDetail(AccountingDetail detail);
     
     @Editor

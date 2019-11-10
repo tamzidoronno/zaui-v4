@@ -128,8 +128,9 @@ class OrderView extends \MarketingApplication implements \Application {
         $date = $this->convertToJavaDate(strtotime($_POST['data']['date']));
         $amountInLocalCurrency = isset($_POST['data']['localCurrency']) ? $_POST['data']['localCurrency'] : null;
         $agio = isset($_POST['data']['agio']) ? $_POST['data']['agio'] : null;
+        $accountingDetailId = isset($_POST['data']['type']) ? $_POST['data']['type'] : "";
         
-        $this->getApi()->getOrderManager()->addOrderTransaction($order->id, $_POST['data']['amount'], $_POST['data']['comment'], $date, $amountInLocalCurrency, $agio);
+        $this->getApi()->getOrderManager()->addOrderTransaction($order->id, $_POST['data']['amount'], $_POST['data']['comment'], $date, $amountInLocalCurrency, $agio, $accountingDetailId);
         $this->rePrintTab("paymenthistory");
     }
     

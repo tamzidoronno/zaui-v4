@@ -139,6 +139,7 @@ app.OrderView = {
         data.comment = $(tab).find('.manualregisterpaymentcomment').val();
         data.localCurrency = $(tab).find('.localcurrencyvalue').val();
         data.agio = $(tab).find('.disaglo').val();
+        data.type = $(tab).find('.manualregisterpaymenttype').val();
         
         var event = thundashop.Ajax.createEvent(null, "addTransactionRecord", $(this), data);
         event['synchron'] = true;

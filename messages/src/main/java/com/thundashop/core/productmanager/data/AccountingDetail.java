@@ -18,4 +18,11 @@ public class AccountingDetail  extends DataCommon {
     public String subaccountid = "";
     public String subaccountvalue = "";
 
+    /**
+     * The different types are following:
+     * 
+     * blank = normal accounts
+     * fee = Accounts with type fee will be displayed where its possible to register payments.
+     */
+    public String type = "";
 }

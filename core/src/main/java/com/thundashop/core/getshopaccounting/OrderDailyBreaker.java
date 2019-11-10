@@ -18,6 +18,7 @@ import com.thundashop.core.paymentmanager.PaymentManager;
 import com.thundashop.core.paymentmanager.StorePaymentConfig;
 import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
 import com.thundashop.core.productmanager.ProductManager;
+import com.thundashop.core.productmanager.data.AccountingDetail;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductAccountingInformation;
 import com.thundashop.core.productmanager.data.TaxGroup;
@@ -717,7 +718,19 @@ public class OrderDailyBreaker {
                 dayEntry.amountExTax = dayEntry.amountExTax.add(new BigDecimal(orderTransaction.agio));
             }
 
-            dayEntry.accountingNumber = getAccountingNumberForPaymentApplicationId(order.getPaymentApplicationId());
+            if (orderTransaction.accountingDetailId != null && !orderTransaction.accountingDetailId.isEmpty()) {
+                AccountingDetail detail = productManager.getAccountingDetailById(orderTransaction.accountingDetailId);
+                
+                if (detail == null) {
+                    throw new NullPointerException("Payment records that are registerered towards acounts that are no longer existing?");
+                }
+                
+                dayEntry.accountingNumber = ""+detail.accountNumber;
+            } else {
+                dayEntry.accountingNumber = getAccountingNumberForPaymentApplicationId(order.getPaymentApplicationId());
+            }
+            
+            
             dayEntry.orderId = order.id;
             dayEntry.incrementalOrderId = order.incrementOrderId;
             dayEntry.date = orderTransaction.date;

@@ -42,6 +42,12 @@ $accounts = $this->getApi()->getProductManager()->getAccountingAccounts();
 <div class='createAccountBox' gstype='form' method='createAccountingAccoutn'>
     <span>Account number: </span><input class='gsniceinput1' gsname='accountnumber'/>
     <br/><span>Description: </span><input class='gsniceinput1' gsname='accountdescription'/>
-    <br/>
+    <br/><span>Type: </span>
+    <select gsname="type" class="gsniceselect1" style="width: 199px; margin-left: -3px;">
+        <option value="">Normal</option>
+        <option value="fee">Fee</option>
+    </select>
+    <br/> 
+    <br/> 
     <br/><div gstype='submit' class='shop_button'>Create account</div>
 </div>

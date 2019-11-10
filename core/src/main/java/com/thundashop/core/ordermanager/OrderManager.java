@@ -2812,7 +2812,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             if(getSession() != null && getSession().currentUser != null) {
                 userId = getSession().currentUser.id;
             }
-            order.registerTransaction(date, amount, userId, transactiontype, refId, "", amountInLocalCurrency, agio);
+            order.registerTransaction(date, amount, userId, transactiontype, refId, "", amountInLocalCurrency, agio, "");
             feedGrafanaPaymentAmount(amount);
             if(order.isFullyPaid() || order.isCreditNote) {
                 markAsPaidInternal(order, date,amount);
@@ -3528,11 +3528,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     @Override
-    public void addOrderTransaction(String orderId, double amount, String comment, Date paymentDate, Double amountInLocalCurrency, Double agio) {
+    public void addOrderTransaction(String orderId, double amount, String comment, Date paymentDate, Double amountInLocalCurrency, Double agio, String accountDetailId) {
         Order order = getOrder(orderId);
         if (order != null) {
             String userId = getSession().currentUser.id;
-            order.registerTransaction(paymentDate, amount, userId, Order.OrderTransactionType.MANUAL, "", comment, amountInLocalCurrency, agio);
+            order.registerTransaction(paymentDate, amount, userId, Order.OrderTransactionType.MANUAL, "", comment, amountInLocalCurrency, agio, accountDetailId);
             if (order.isFullyPaid()) {
                 markAsPaidInternal(order, paymentDate, amount);
             }

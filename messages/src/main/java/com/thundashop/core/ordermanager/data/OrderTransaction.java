@@ -29,7 +29,8 @@ public class OrderTransaction implements Serializable {
     @Transient
     public String orderId = "";
     
-
+    public String accountingDetailId = "";
+    
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof OrderTransaction) {

@@ -1061,7 +1061,7 @@ public class Order extends DataCommon implements Comparable<Order> {
         return cal.getTime();
     }
 
-    public void registerTransaction(Date date, Double amount, String userId, Integer transactionType, String refId, String comment, Double amountInLocalCurrency, Double agio) {
+    public void registerTransaction(Date date, Double amount, String userId, Integer transactionType, String refId, String comment, Double amountInLocalCurrency, Double agio, String accountingDetailId) {
         OrderTransaction transaction = new OrderTransaction();
         transaction.date = date;
         transaction.amount = amount;
@@ -1071,6 +1071,7 @@ public class Order extends DataCommon implements Comparable<Order> {
         transaction.refId = refId;
         transaction.transactionType = transactionType;
         transaction.comment = comment;
+        transaction.accountingDetailId = accountingDetailId;
         orderTransactions.add(transaction);
     }
 

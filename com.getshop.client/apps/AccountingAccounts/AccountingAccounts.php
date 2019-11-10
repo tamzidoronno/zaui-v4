@@ -18,6 +18,7 @@ class AccountingAccounts extends \SystemApplication implements \Application {
         $detail = new \core_productmanager_data_AccountingDetail();
         $detail->accountNumber = $_POST['data']['accountnumber'];
         $detail->description = $_POST['data']['accountdescription'];
+        $detail->type = $_POST['data']['type'];
         
         $this->getApi()->getProductManager()->saveAccountingDetail($detail);
     }

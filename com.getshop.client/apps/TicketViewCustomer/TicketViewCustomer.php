@@ -25,6 +25,11 @@ class TicketViewCustomer extends \MarketingApplication implements \Application {
         }
     }
     
+    public function ignorehideticket() {
+        $ticketId = $_POST['data']['ticketid'];
+        $this->getApi()->getTicketManager()->toggleIgnoreTicket($ticketId);
+    }
+    
     public function updateResponseText() {
         $_GET['ticketId']  = $_POST['data']['ticketid'];
         $content = $_POST['data']['content'];

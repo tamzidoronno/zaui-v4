@@ -1018,4 +1018,11 @@ public class TicketManager extends ManagerBase implements ITicketManager {
         return createLightTicket(title);
     }
 
+    @Override
+    public void toggleIgnoreTicket(String ticketId) {
+        Ticket ticket = getTicket(ticketId);
+        ticket.ignored = !ticket.ignored;
+        saveTicket(ticket);
+    }
+
 }

@@ -29,6 +29,9 @@ foreach ($states as $state) {
     
     foreach ($groupedByStates[$state] as $ticket) {
         $user = false;
+        if($ticket->ignored && !isset($_GET['showignored'])) {
+            continue;
+        }
 
         if ($ticket->userId && !isset($cachedUsers->{$ticket->userId})) {
             $user = $this->getApi()->getUserManager()->getUserById($ticket->userId);
@@ -47,7 +50,11 @@ foreach ($states as $state) {
                 <div>
                     <div class="col col1 ticketid"><? echo $ticket->incrementalId; ?></div>
                     <div class="col col2"><? echo date('d.m.Y H:i', strtotime($ticket->rowCreatedDate)); ?></div>
-                    <div class="col col3 title"><? echo $ticket->title; ?></div>
+                    <div class="col col3 title"><?
+                    if($ticket->ignored) {
+                        echo "<b>(IGNORED)</b> ";
+                    }
+                    echo $ticket->title; ?></div>
 
                     <div class="col col5 customer"><? echo $name; ?></div>
                     <div class="col col4 state"><? echo $ticket->currentState; ?></div>

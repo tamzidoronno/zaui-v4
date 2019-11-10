@@ -1,5 +1,13 @@
 <?
 /* @var $this \ns_f5e525cc_f11e_4611_93bb_1afacd9aade5\TicketViewCustomer */
+
+if(isset($_POST['data']['gsclick']) && $_POST['data']['gsclick'] == "ignorehideticket") {
+    echo "<script>";
+    echo "window.location.href='/getshop.php?page=inbox';";
+    echo "</script>";
+    return;
+}
+
 if ($this->isGetShop()) {
     $ticket = $this->getApi()->getTicketManager()->getTicket($_GET['ticketId']);
     $contents = $this->getApi()->getTicketManager()->getTicketContents($ticket->id);
@@ -116,6 +124,8 @@ if ($this->isGetShop()) {
                 echo "<option value='$type' $selected>$typename</option>";
             }
             echo "</select>";
+            
+            echo "<div class='shop_button' style='float:right;' gsclick='ignorehideticket' ticketid='".$ticket->id."'>Ignore/hide this ticket</div>";
         }
         
         $types = $this->getTypes();

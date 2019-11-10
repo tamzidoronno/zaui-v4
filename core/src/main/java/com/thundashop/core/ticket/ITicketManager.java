@@ -37,6 +37,9 @@ public interface ITicketManager {
     public void deleteTicket(String ticketId);
     
     @Administrator
+    public void toggleIgnoreTicket(String ticketId);
+    
+    @Administrator
     public TicketLight createLightTicket(String title);
     
     public TicketLight createLightTicketWithPassword(String title, String password);

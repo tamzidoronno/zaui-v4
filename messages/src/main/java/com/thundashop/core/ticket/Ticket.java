@@ -56,6 +56,7 @@ public class Ticket extends DataCommon {
     public boolean hasBeenValidedForTimeUsage = false;
             
     public boolean transferredToAccounting = false;
+    public boolean ignored = false;
     public String productId = "";
 
     public List<String> attachmentIds = new ArrayList();

@@ -1,4 +1,5 @@
 app.PmsBookingRoomView = {
+    searchguesttimeout : null,
     init: function() {
         $(document).on('click', '.PmsBookingRoomView .orderpreview .close', this.closePreview);
         $(document).on('change', '.PmsBookingRoomView .changediscountcode', this.changeCouponCode);
@@ -60,6 +61,50 @@ app.PmsBookingRoomView = {
         $(document).on('click','.PmsBookingRoomView .removeConferenceFromGuest', app.PmsBookingRoomView.removeGuestToConference);
         $(document).on('click','.PmsBookingRoomView .autocreateonzreport', app.PmsBookingRoomView.autoCreateOnZReport);
         $(document).on('click','.PmsBookingRoomView .sendconfirmationbutton', app.PmsBookingRoomView.sendConfirmation);
+        $(document).on('click','.PmsBookingRoomView .selectsameasbooker', app.PmsBookingRoomView.selectSameAsBooker);
+        $(document).on('click','.PmsBookingRoomView .addsuggestionarrow', app.PmsBookingRoomView.addSuggestedRow);
+        $(document).on('keyup','.PmsBookingRoomView [searchtype]', app.PmsBookingRoomView.searchGuests);
+    },
+    searchGuests : function() {
+        if(typeof(app.PmsBookingRoomView.searchguesttimeout) !== "undefined") {
+            clearTimeout(app.PmsBookingRoomView.searchguesttimeout);
+        }
+        
+        var row = $(this).closest('.guest_row');
+        var keyword = $(this).val();
+        row.find('.selectsameasbooker').hide();
+        var type = $(this).attr('searchtype');
+        app.PmsBookingRoomView.searchguesttimeout = setTimeout(function() {
+            var searchEvent = thundashop.Ajax.createEvent('','searchForGuest',row, {"keyword" : keyword, "type" : type});
+            thundashop.Ajax.postWithCallBack(searchEvent, function(res) {
+                row.find('.searchsuggestions').html(res);
+            });
+        }, "300");
+        
+    },
+    
+    addSuggestedRow : function() {
+        var row = $(this).closest('.guest_row');
+        var suggestionrow = $(this).closest('.guestsuggestionrow');
+        var counter = row.attr('counter');
+        row.find('[gsname="guestinfo_'+counter+'_name"]').val(suggestionrow.find('.guestsuggestionname').text());
+        row.find('[gsname="guestinfo_'+counter+'_email"]').val(suggestionrow.find('.guestsuggestionemail').text());
+        row.find('[gsname="guestinfo_'+counter+'_prefix"]').val(suggestionrow.find('.guestsuggestionphoneprefix').text());
+        row.find('[gsname="guestinfo_'+counter+'_phone"]').val(suggestionrow.find('.guestsuggestionphonenumber').text());
+        $(this).closest('.searchsuggestions').html('');
+    },
+    
+    selectSameAsBooker : function() {
+        var event = thundashop.Ajax.createEvent('','getBookerInformation', $(this), {});
+        var row = $(this).closest('.guest_row');
+        thundashop.Ajax.postWithCallBack(event,function(res) {
+            res = JSON.parse(res);
+            var counter = row.attr('counter');
+            row.find('[gsname="guestinfo_'+counter+'_name"]').val(res.name);
+            row.find('[gsname="guestinfo_'+counter+'_email"]').val(res.email);
+            row.find('[gsname="guestinfo_'+counter+'_prefix"]').val(res.prefix);
+            row.find('[gsname="guestinfo_'+counter+'_phone"]').val(res.phone);
+        });
     },
     sendConfirmation: function() {
         var event = thundashop.Ajax.createEvent('','sendConfirmation',$(this), {

@@ -19,6 +19,39 @@
     display:none;
 }
 
+    
+.PmsBookingRoomView .guestsuggestionname {
+        display:inline-block;
+        width: 35%;
+        white-space: nowrap; 
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+.PmsBookingRoomView .guestsuggestionemail {
+        display:inline-block;
+        width: 35%;
+        white-space: nowrap; 
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+.PmsBookingRoomView .guestsuggestionphone
+    {
+        display:inline-block;
+        width: 20%;
+        white-space: nowrap; 
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+.PmsBookingRoomView .guestionsuggestionarea { padding: 10px; padding-left: 22px; }
+.PmsBookingRoomView .guestionsuggestionarea .addsuggestionarrow {
+    position: absolute;
+    left: -18px;
+    top: 4px;
+    cursor:pointer;
+    color:#86c330;
+}
+
+
 .PmsBookingRoomView .countrylanguagebox { display:inline-block; width: 45%; }
 .PmsBookingRoomView .countrylanguagebox .gsniceselect1 { border: solid 0px; border-bottom: solid 1px #DDD; cursor:pointer;text-transform: uppercase; }
 .PmsBookingRoomView .activeroom { background-color:#ebfbcb !important; }

@@ -9,6 +9,7 @@ if (!$_POST['data']['start'] || !$_POST['data']['end']) {
     return;
 }
 
+
 $end = $_POST['data']['end'] . " " . $config->defaultEnd;
 $end = $this->convertToJavaDate(strtotime($end));
 $items = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
@@ -25,6 +26,48 @@ $arg->children = 0;
 $arg->rooms = 0;
 
 $test = $this->getApi()->getPmsBookingProcess()->startBooking($this->getSelectedMultilevelDomainName(), $arg);
+
+
+
+$activities = array();
+$activities['closed'] = "Closed off";
+$activities['overbooking'] = "Waiting list / overbook";
+$lines = $this->getApi()->getPmsManager()->getActivitiesEntries($this->getSelectedMultilevelDomainName(), $start, $end);
+foreach($lines->lines as $key => $l) {
+    $activities[$key] = $key;
+}
+ksort($activities);
+$numberOfLines = sizeof($activities);
+
+
+
+if(sizeof((array)$lines->lines) > 0) {
+    echo "<div style='background-color:red;padding: 10px; color:#fff;'>";
+    echo "<div style='margin-top: 10px; margin-bottom: 10px; font-weight:bold;' >Events happening in this periode</div>";
+    echo "<center>";
+    echo "<table>";
+    echo "<tr style='color:#fff;'>";
+    echo "<th align='left'>Title</th>";
+    echo "<th align='left'>Event</th>";
+    echo "<th align='left'>Days</th>";
+    echo "</tr>";
+
+    foreach($lines->lines as $line) {
+        /* @var $line core_pmsmanager_PmsActivityLine */
+        foreach($line->entry as $entry) {
+            $date = explode("-", $entry->date);
+            $date = DateTime::createFromFormat('z Y', strval(((int)$date[0])-1) . ' ' . strval($date[1]));
+            echo "<tr style='color:#fff;'>";
+            echo "<td>" . date("d.m.Y", $date->getTimestamp()) . "</td><td>" . $entry->title . "</td>";
+            echo "<td  align='center'>" . $entry->days . "</td>";
+            echo "</tr>";
+            break;
+        }
+    }
+    echo "</table>";
+    echo "</center>";
+    echo "</div>";
+}
 
 $closedtext = $this->checkIfClosedPeriodes($start,$end);
 ?>

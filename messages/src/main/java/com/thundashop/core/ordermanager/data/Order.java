@@ -1491,6 +1491,20 @@ public class Order extends DataCommon implements Comparable<Order> {
             }
         }
     }
+
+    public boolean changedFromNormalToBlank() {
+        if (orderTransactions != null && !orderTransactions.isEmpty()) {
+            List<OrderTransaction> result = orderTransactions
+                    .stream()
+                    .filter(o -> o.accountingDetailId != null && o.accountingDetailId.equals("Normal"))
+                    .collect(Collectors.toList());
+            
+            result.forEach(o -> o.accountingDetailId = "");
+            return !result.isEmpty();
+        }
+        
+        return false;
+    }
     
 
     public static class Status  {

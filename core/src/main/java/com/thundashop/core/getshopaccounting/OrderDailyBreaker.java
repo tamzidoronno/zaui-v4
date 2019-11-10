@@ -718,23 +718,12 @@ public class OrderDailyBreaker {
                 dayEntry.amountExTax = dayEntry.amountExTax.add(new BigDecimal(orderTransaction.agio));
             }
 
-            if (orderTransaction.accountingDetailId != null && !orderTransaction.accountingDetailId.isEmpty()) {
-                AccountingDetail detail = productManager.getAccountingDetailById(orderTransaction.accountingDetailId);
-                
-                if (detail == null) {
-                    throw new NullPointerException("Payment records that are registerered towards acounts that are no longer existing?");
-                }
-                
-                dayEntry.accountingNumber = ""+detail.accountNumber;
-            } else {
-                dayEntry.accountingNumber = getAccountingNumberForPaymentApplicationId(order.getPaymentApplicationId());
-            }
-            
-            
             dayEntry.orderId = order.id;
             dayEntry.incrementalOrderId = order.incrementOrderId;
             dayEntry.date = orderTransaction.date;
             dayEntry.orderTransactionId = orderTransaction.transactionId;
+            
+            dayEntry.accountingNumber = getAccountingNumberForPaymentApplicationId(order.getPaymentApplicationId());
             
             if (order.isInvoice()) {
                 dayEntry.batchId = getBatchId(orderTransaction);
@@ -744,7 +733,19 @@ public class OrderDailyBreaker {
             
             try {
                 dayEntry = dayEntry.clone();
-                dayEntry.accountingNumber = getAccountingNumberForPaymentApplicationId_paid(order.getPaymentApplicationId());
+                if (orderTransaction.accountingDetailId != null && !orderTransaction.accountingDetailId.isEmpty() && !orderTransaction.accountingDetailId.equals("Normal")) {
+                    AccountingDetail detail = productManager.getAccountingDetailById(orderTransaction.accountingDetailId);
+
+                    if (detail == null) {
+                        throw new NullPointerException("Payment records that are registerered towards acounts that are no longer existing?");
+                    }
+
+                    dayEntry.accountingNumber = ""+detail.accountNumber;
+                } else {
+                    dayEntry.accountingNumber = getAccountingNumberForPaymentApplicationId_paid(order.getPaymentApplicationId());
+                }
+                
+                
                 if (orderTransaction.agio != null) {
                     dayEntry.amount = dayEntry.amount.subtract(new BigDecimal(orderTransaction.agio));
                     dayEntry.amountExTax = dayEntry.amountExTax.subtract(new BigDecimal(orderTransaction.agio));

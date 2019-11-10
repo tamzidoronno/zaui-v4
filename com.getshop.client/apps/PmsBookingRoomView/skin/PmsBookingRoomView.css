@@ -19,7 +19,21 @@
     display:none;
 }
 
-    
+.PmsBookingRoomView .whyoutofsync { 
+    display:none;
+    padding: 10px;
+    background-color:#fff;
+}
+
+.PmsBookingRoomView .unpaidamountwarning { 
+    border-bottom: solid 1px;
+    background-color: #ff0000;
+    padding: 10px;
+    color: #fff;
+    height: 35px;
+    font-size: 24px;
+}
+
 .PmsBookingRoomView .guestsuggestionname {
         display:inline-block;
         width: 35%;

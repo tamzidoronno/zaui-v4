@@ -25,18 +25,41 @@ if($pmsBookingRoom->unpaidAmount > 0.1) {
     echo "<div class='unpaidamountwarning'><i class='fa fa-warning'></i> For this room there is a total of " . $pmsBookingRoom->unpaidAmount ." which not yet has been paid";
     echo "<div class='shop_button addselecteditemstocart' isgroup='yes' roomid='".$pmsBookingRoom->pmsBookingRoomId."' style='background-color: #86c330; color: #FFF; vertical-align: top;border-radius: 3px; border: solid 0px; float:right;'>Start payment process</div>";
     echo "</div>";
-?>   
-    <style>
-        .unpaidamountwarning { 
-            border-bottom: solid 1px;
-            background-color: #ff0000;
-            padding: 10px;
-            color: #fff;
-            height: 35px;
-            font-size: 24px;
+} else {
+    $summary = $this->getApi()->getPmsManager()->getSummaryWithoutAccrued($this->getSelectedMultilevelDomainName(), $pmsBooking->id, $room->pmsBookingRoomId);
+    $found = false;
+    foreach ($summary->rows as $row) {
+        if ($row->count == 0) {
+            continue;
+        } 
+        $found = true;
+    }
+    
+    if($found) {
+        echo "<div class='unpaidamountwarning'><i class='fa fa-warning'></i> This booking is out of sync with the accounting information.";
+        echo "<div class='shop_button' onclick='$(\".whyoutofsync\").slideDown()' style='background-color: #86c330; color: #FFF; vertical-align: top;border-radius: 3px; border: solid 0px; float:right;'>Show me why</div>";
+        echo "</div>";
+        echo "<div class='whyoutofsync'>";
+        echo "<b>Here is the problem</b><br>";
+        foreach ($summary->rows as $row) {
+            if ($row->count == 0) {
+                continue;
+            } 
+            
+            $product = $this->getApi()->getProductManager()->getProduct($row->createOrderOnProductId);
+            
+            echo "At " . $row->date . " you need to create an order for " . $product->name . " for a total of " . $row->priceToCreateOrders . "<br>";
         }
-    </style>
-<?php
+        
+        echo "<br><b>Why is this happening?</b><br>";
+        echo "The answer is simple. The guest books and pay for a stay and everything is registered into the accounting module. This data can not be modified later on and thus correction orders are needed to be created. An example, a guest books for a stay on monday and are sendt a reciept for the monday. Then he decides to move the stay ahead to Tuesday. He now have a reciept for Monday but a stay for Tuesday. A correction is needed.";
+        echo "<br><br><b>How do I solve this?</b><br>";
+        echo "There are two ways to correct data that is out of sync.<br>";
+        echo "1. Credit the original order and create a new one that is correct.<br>";
+        echo "2. Create a new order by starting a payment process that has the differences included (an order with a total amount of 0).";
+        echo "<div class='shop_button addselecteditemstocart' isgroup='yes' roomid='".$pmsBookingRoom->pmsBookingRoomId."' style='background-color: #86c330; color: #FFF; vertical-align: top;border-radius: 3px; border: solid 0px; float:right;'>Start payment process</div>";
+        echo "</div>";
+    }
 }
 
 $willbedeleted = $this->getApi()->getPmsManager()->willAutoDelete($this->getSelectedMultilevelDomainName(), $pmsBooking->id);

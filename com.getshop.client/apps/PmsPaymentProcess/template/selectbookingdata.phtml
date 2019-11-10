@@ -173,9 +173,10 @@ if (count($uniqueSegmentIds) > 1) {
                                 <div class='col date' style='vertical-align: top;'><? echo $row->date; ?></div>
                                 <div class='col count' style='vertical-align: top;'><input class='gsniceinput1 item_count' orgcount='<? echo $row->count; ?>' value='<? echo $row->count; ?>'/> x </div>
                                 <div class='col price' style='vertical-align: top;'><input class='gsniceinput1 item_price' orgvalue='<? echo round($row->priceToCreateOrders,2); ?>' value='<? echo round($row->priceToCreateOrders,2); ?>'/></div>
-                                <div class='col productname' style='vertical-align: top;'>
+                                <div class='col productname' style='vertical-align: top;line-height: 36px;'>
                                     <input class='gsniceinput1 textOnOrder' type='hidden' orgvalue='<? echo $name; ?>' value='<? echo $name; ?>'/>
                                     <input class='gsniceinput1 addonId' type='hidden' orgvalue='<? echo $row->addonId; ?>' value='<? echo $row->addonId; ?>'/>
+                                    <?php echo $product->name; ?>
                                 </div>
                             </div>
                             <?

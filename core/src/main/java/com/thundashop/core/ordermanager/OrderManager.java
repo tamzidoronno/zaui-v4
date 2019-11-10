@@ -489,6 +489,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         gdsManager.sendMessageToDevice(device.id, paymentAction);
     }
     
+    public Order getOrderFromDatabase(String id) throws ErrorException {
+        HashMap<String,String> searchCriteria = new HashMap();
+        searchCriteria.put("_id", id);
+        List<DataCommon> res = database.findWithDeleted("col_" + storeId, null, null, "OrderManager", searchCriteria, true);
+        if(res.isEmpty()) {
+            return null;
+        }
+        return (Order) res.get(0);
+    }
+    
     @Override
     public void logTransactionEntry(String orderId, String entry) throws ErrorException {
         Order order = getOrder(orderId);
@@ -2166,6 +2176,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         if (incomeOrder.id != null && !incomeOrder.id.isEmpty()) {
             inMemory = getOrderSecure(incomeOrder.id);
+        }
+        
+        if(inMemory != null && inMemory.isCreditNote) {
+            Order dbOrder = getOrderFromDatabase(inMemory.id);
+            if(dbOrder != null && (inMemory.getTotalAmount() != dbOrder.getTotalAmount()) || (incomeOrder.getTotalAmount() != dbOrder.getTotalAmount())) {
+                orders.put(dbOrder.id, dbOrder);
+                throw new ErrorException(1064);
+            }
         }
         
         if (incomeOrder.paymentDate == null)

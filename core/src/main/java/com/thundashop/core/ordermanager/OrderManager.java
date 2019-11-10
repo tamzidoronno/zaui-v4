@@ -2090,7 +2090,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         details.vatNumber = settings.getSetting("vatNumber");
         details.webAddress = settings.getSetting("webAddress");
         details.type = settings.getSetting("type");
-        details.currency = settings.getSetting("currency");
+        details.currency = getLocalCurrencyCode();
         details.iban = settings.getSetting("iban");
         details.swift = settings.getSetting("swift");
 

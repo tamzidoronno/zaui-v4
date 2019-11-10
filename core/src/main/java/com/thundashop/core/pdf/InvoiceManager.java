@@ -129,11 +129,8 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
             }
             details.kidType = settings.getSetting("defaultKidMethod");
             details.type = settings.getSetting("type");
-            details.currency = settings.getSetting("currency");
+            details.currency = orderManager.getLocalCurrencyCode();
             
-            if(details.currency == null || details.currency.isEmpty()) {
-                details.currency = orderManager.getLocalCurrencyCode();
-            }
             if(details.language == null || details.language.isEmpty()) {
                 details.language = getStoreSettingsApplicationKey("language");
             }

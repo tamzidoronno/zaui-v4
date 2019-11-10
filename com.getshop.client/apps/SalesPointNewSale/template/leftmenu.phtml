@@ -53,6 +53,11 @@ $cashpoints = $this->getApi()->getPosManager()->getCashPoints();
         List tabs
     </div>
     
+    <div class='entry showsearch' >
+        <i class='fa fa-search'></i>
+        Search
+    </div>
+    
     <?
     if ($this->getSelectedCashPointId() && count($cashpoints) > 1) {
     ?>

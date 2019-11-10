@@ -146,7 +146,7 @@ foreach ($cartItems as $item) {
                 </span> 
             </span>
 
-            <span class="gs_shop_small_icon changepriceextax" title="<? echo $this->__f("Change Price Ex Taxes"); ?>" cartitemid='<? echo $item->cartItemId; ?>' gstype='numpad' gsnumpadtitle='Change price ( EX TAX )' gsnumpad_on_ok='app.SalesPointNewSale.calculatePriceWithTaxAndSet'>
+            <span class="gs_shop_small_icon changepriceextax" title="<? echo $this->__f("Change Price Ex Taxes ($tax%)"); ?>" cartitemid='<? echo $item->cartItemId; ?>' gstype='numpad' gsnumpadtitle='Change price ( EX TAX: <? echo $tax; ?>% )' gsnumpad_on_ok='app.SalesPointNewSale.calculatePriceWithTaxAndSet'>
                 <span class="fa-stack fa-lg">
                     <i class="fa fa-calculator fa-stack-2x" ></i>
                 </span> 

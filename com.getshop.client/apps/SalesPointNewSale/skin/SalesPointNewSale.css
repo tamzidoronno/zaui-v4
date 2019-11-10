@@ -588,6 +588,18 @@
     width: 45px !important;
 }
 
+.SalesPointNewSale .searchforproducts {
+    padding: 10px;
+    display: none;
+}
+
+.SalesPointNewSale .searchforproducts .product  {
+    width: 100%;
+    display: block;
+    text-align: left;
+    padding-left: 10px;
+}
+
 @media (max-width: 1050px) {
     .SalesPointNewSale .topmenu .entry {
         width: 70px;

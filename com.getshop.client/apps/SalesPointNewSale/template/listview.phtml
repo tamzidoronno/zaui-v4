@@ -34,6 +34,17 @@ foreach ($lists as $list) {
     }
 }
 
+?>
+<div class="searchforproducts">
+    <input class="gsniceinput1"/> <div class="gs_shop_small_icon"> Search </div> 
+    <div class="productlist " listid="">
+        <h2>Search Result</h2>
+        <div class="product_list_inner">  </div>                  
+                  
+    </div>
+</div>
+<?
+
 foreach ($grouped as $groupName => $lists) {
     foreach ($lists as $list) {
         $isGroup = $this->isGroupListMode($list->id);

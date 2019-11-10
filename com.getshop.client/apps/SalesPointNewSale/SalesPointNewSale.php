@@ -400,5 +400,24 @@ class SalesPointNewSale extends SalesPointCommon implements \Application {
     public function closeCurrentTab() {
         unset($_SESSION['ns_57db782b_5fe7_478f_956a_ab9eb3575855_tabid']);
     }
+    
+    public function searchForProducts() {
+        $this->includefile("searchresult");
+    }
+    
+    public function changeProductName() {
+        $tab = $this->getCurrentTab();
+        foreach ($tab->cartItems as $item) {
+            if ($item->cartItemId == $_POST['data']['cartitemid']) {
+                $item->product->name = $_POST['data']['newName'];
+                $item->product->description = $_POST['data']['newName'];
+                $this->getApi()->getPosManager()->addToTab($tab->id, $item);
+                $this->reloadPosViewer();
+                
+                echo $item->product->name;
+                die();
+            }
+        }
+    }
 }
 ?>

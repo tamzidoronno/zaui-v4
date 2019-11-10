@@ -16,6 +16,52 @@ app.SalesPointNewSale = {
         $(document).on('click', '.SalesPointNewSale .product.checkbox', app.SalesPointNewSale.toggleCheckBox);
         $(document).on('click', '.SalesPointNewSale .configurelist', app.SalesPointNewSale.configureList);
         $(document).on('click', '.SalesPointNewSale .openList', app.SalesPointNewSale.openList);
+        $(document).on('click', '.SalesPointNewSale .showsearch', app.SalesPointNewSale.showSearch);
+        $(document).on('click', '.SalesPointNewSale .rightmenu .productname', app.SalesPointNewSale.changeProductName);
+        $(document).on('change', '.SalesPointNewSale .searchforproducts input', app.SalesPointNewSale.searchForProducts);
+    },
+    
+    changeProductName: function() {
+        var newName = prompt("Please enter new name");
+        
+        if (newName) {
+            var data = {
+               cartitemid : $(this).closest('.cartitemline').attr('cartitemid'),
+               newName : newName
+            }
+
+            var event = thundashop.Ajax.createEvent(null, "changeProductName", this, data);
+            event['synchron'] = true;
+            var me = this;
+            
+            thundashop.Ajax.post(event, function(res) {
+                
+               $(me).closest('.cartitemline').find('.productname').html(res);
+               app.SalesPointNewSale.tabChanged();
+            });   
+        }
+    },
+    
+    showSearch: function () {
+        var div = $('.SalesPointNewSale .searchforproducts');
+        if (div.is(':visible')) {
+            $('.SalesPointNewSale .searchforproducts').hide();
+        } else {
+            $('.SalesPointNewSale .searchforproducts').show();
+        }
+        
+    },
+    
+    searchForProducts: function() {
+        var data = {
+            searchvalue : $(this).val()
+        };
+        
+        var event = thundashop.Ajax.createEvent(null, "searchForProducts", this, data);
+        event['synchron'] = true;
+        thundashop.Ajax.post(event, function(res) {
+            $('.SalesPointNewSale .searchforproducts .product_list_inner').html(res);
+        });
     },
     
     calculatePriceWithTaxAndSet: function(newValue, fromTarget) {

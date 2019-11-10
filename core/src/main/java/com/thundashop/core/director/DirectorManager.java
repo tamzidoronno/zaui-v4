@@ -35,6 +35,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -403,35 +404,47 @@ public class DirectorManager extends ManagerBase implements IDirectorManager {
             periode = getMonthAndYear(start)+" - "+getMonthAndYear(end);
         }
         
-        List<CartItem> items = new ArrayList();
+        
     
-        TicketReport ret = customerTicketManager.getTicketReportForCustomer(start, end, system.remoteStoreId, null);
+        ArrayList<TicketType> types = new ArrayList();
+        types.add(null);
+        types.add(TicketType.EXTRAORDINARY);
+        types.add(TicketType.MEETING);
         
-        BigDecimal bd = new BigDecimal(ret.getToAddOnInvoice()).setScale(2, RoundingMode.HALF_UP);
-        BigDecimal free = new BigDecimal(ret.getToDeductOnInvoice()).setScale(2, RoundingMode.HALF_UP);
+        for (TicketType type : types) {
+            List<CartItem> items = new ArrayList();
+            
+            TicketReport ret = customerTicketManager.getTicketReportForCustomer(start, end, system.remoteStoreId, type);
 
-        if (bd.doubleValue() == 0D) {
-            return;
+            BigDecimal bd = new BigDecimal(ret.getToAddOnInvoice()).setScale(2, RoundingMode.HALF_UP);
+            BigDecimal free = new BigDecimal(ret.getToDeductOnInvoice()).setScale(2, RoundingMode.HALF_UP);
+
+            if (bd.doubleValue() == 0D) {
+                continue;
+            }
+
+            // 80 euro each hour for none norwegian | 800 nok for norwegian
+            double price = isNonNorwegian ? 80 : 800 * 1.25;
+
+            CartItem item = new CartItem();
+            String productName = type == null ? "SUPPORT" : type.toString();
+            item.setProduct(getTicketProduct(productName).clone());
+            item.getProduct().name = getName(productName) + " for periode: "+ periode + ". " + convertToMinutesAndSeconds(bd);
+            item.setCount(1);
+            item.getProduct().price = bd.doubleValue() * price;
+            items.add(item);
+
+            if (type == null) {
+                item = new CartItem();
+                item.setProduct(getTicketProduct(productName).clone());
+                item.getProduct().name = "Free " + getName(productName) +" for periode: "+ periode + ". " + convertToMinutesAndSeconds(free);
+                item.setCount(-1);
+                item.getProduct().price = free.doubleValue() * price;
+                items.add(item);
+            }
+
+            cartManager.getCart().addCartItems(items);
         }
-        
-        // 80 euro each hour for none norwegian | 800 nok for norwegian
-        double price = isNonNorwegian ? 80 : 800 * 1.25;
-        
-        CartItem item = new CartItem();
-        item.setProduct(getTicketProduct("SUPPORT").clone());
-        item.getProduct().name = "Total support for periode: "+ periode + ". " + convertToMinutesAndSeconds(bd);
-        item.setCount(1);
-        item.getProduct().price = bd.doubleValue() * price;
-        items.add(item);
-        
-        item = new CartItem();
-        item.setProduct(getTicketProduct("SUPPORT").clone());
-        item.getProduct().name = "Free support for periode: "+ periode + ". " + convertToMinutesAndSeconds(free);
-        item.setCount(-1);
-        item.getProduct().price = free.doubleValue() * price;
-        items.add(item);
-        
-        cartManager.getCart().addCartItems(items);
     }
     
     private Product getTicketProduct(String ticketType) {
@@ -439,6 +452,7 @@ public class DirectorManager extends ManagerBase implements IDirectorManager {
         if (ticketProduct == null) {
             ticketProduct = new Product();
             ticketProduct.id = "TICKET-" + ticketType;
+            ticketProduct.name = "TICKET-" + ticketType;
             ticketProduct.price = 1000;
             productManager.saveProduct(ticketProduct);
         }
@@ -520,6 +534,22 @@ public class DirectorManager extends ManagerBase implements IDirectorManager {
         res += minutes + " minutes";
         
         return res;
+    }
+
+    private String getName(String type) {
+        if (type.equals("SUPPORT")) {
+            return "Regular support ";
+        }
+        
+        if (type.equals("EXTRAORDINARY")) {
+            return "Extraordinary support ";
+        }
+        
+        if (type.equals("MEETING")) {
+            return "Meeting ";
+        }
+        
+        return "Other support ";
     }
 
     

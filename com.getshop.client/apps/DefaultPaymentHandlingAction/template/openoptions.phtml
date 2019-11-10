@@ -11,6 +11,11 @@ if($order->payment->paymentType == "ns_d79569c6_ff6a_4ab5_8820_add42ae71170\Book
     $text = "Bill booking.com";
 }
 
+$hidePayButton = false;
+if($order->payment->paymentType == "ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2\VerifoneTerminal" || $order->payment->paymentType == "ns_8edb700e_b486_47ac_a05f_c61967a734b1\IntegratedPaymentTerminal") {
+     $hidePayButton = true;
+}
+
 ?>
 <div class='commonbox'>
     <div style='display:inline-block; vertical-align: top;'>
@@ -20,7 +25,9 @@ if($order->payment->paymentType == "ns_d79569c6_ff6a_4ab5_8820_add42ae71170\Book
 </div>
 
 <div class='commonbox'>
-    <div class='order_action_button' gs_also='payment_date' orderid='<? echo $order->id; ?>' gsclick='markOrderAsPaid' gs_callback='app.DefaultPaymentHandlingAction.markAsPaidCompleted'><i class='fa fa-check'></i> <? echo $text; ?>
+    <?php if(!$hidePayButton) { ?>
+        <div class='order_action_button' gs_also='payment_date' orderid='<? echo $order->id; ?>' gsclick='markOrderAsPaid' gs_callback='app.DefaultPaymentHandlingAction.markAsPaidCompleted'><i class='fa fa-check'></i> <? echo $text; ?>
+    <?php } ?>
     </div>
     
     <div synchron='true' gs_confirm="Are you sure?" class='order_action_button' orderid='<? echo $order->id; ?>' gsclick='cancelCurrentOrder' gs_callback='app.DefaultPaymentHandlingAction.creditCompleted' >
@@ -71,6 +78,10 @@ if($order->payment->paymentType == "ns_d79569c6_ff6a_4ab5_8820_add42ae71170\Book
     if($order->payment->paymentType == "ns_d79569c6_ff6a_4ab5_8820_add42ae71170\BookingComCollectPayments") {
         echo "<div>";
         echo "* Only mark this order as paid if you are going to invoice booking or having a bank transfer from booking.com If it is a virtual card change the payment method to be the same as the one you are using to charge the card.";
+        echo "</div>";
+    } else if($order->payment->paymentType == "ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2\VerifoneTerminal" || $order->payment->paymentType == "ns_8edb700e_b486_47ac_a05f_c61967a734b1\IntegratedPaymentTerminal") {
+        echo "<div>";
+        echo "* Integrated payment terminals are not able to manually mark as paid.";
         echo "</div>";
     }
     ?>

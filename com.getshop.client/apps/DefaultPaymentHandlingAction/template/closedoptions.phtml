@@ -5,6 +5,12 @@ $cashpoints = (array)$this->getApi()->getGdsManager()->getDevices();
 $canCreditOrder = !$order->isCreditNote && !count($order->creditOrderId);
 $roomid = $_SESSION['PmsBookingRoomView_current_pmsroom_id'];
 $amount = $this->getApi()->getOrderManager()->getTotalAmount($order);
+
+$hidePayButton = false;
+if($order->payment->paymentType == "ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2\VerifoneTerminal" || $order->payment->paymentType == "ns_8edb700e_b486_47ac_a05f_c61967a734b1\IntegratedPaymentTerminal") {
+     $hidePayButton = true;
+}
+
 ?>
 <div class='commonbox'>
     <?php
@@ -17,17 +23,20 @@ $amount = $this->getApi()->getOrderManager()->getTotalAmount($order);
                 <br/><input class="gsniceinput1 payment_date" style='width: 110px;' gsname='paymentdate' value='<? echo date('d.m.Y H:i'); ?>'/>    
             </div>
         </div>
-   <?php
-    $text = "Mark as paid";
-    if($order->payment->paymentType == "ns_92bd796f_758e_4e03_bece_7d2dbfa40d7a\ExpediaPayment" && $amount > 0) {
-        $text = "Bill Expedia";
-    }
-    if($order->payment->paymentType == "ns_d79569c6_ff6a_4ab5_8820_add42ae71170\BookingComCollectPayments" && $amount > 0) {
-        $text = "Bill Booking.com";
-    }
-    ?>
-        <div class='order_action_button' gs_also='payment_date' orderid='<? echo $order->id; ?>' gsclick='markOrderAsPaid' gs_callback='app.DefaultPaymentHandlingAction.markAsPaidCompleted'><i class='fa fa-check'></i> <? echo $text; ?></div>
-    <?php
+        <?php
+         $text = "Mark as paid";
+         if($order->payment->paymentType == "ns_92bd796f_758e_4e03_bece_7d2dbfa40d7a\ExpediaPayment" && $amount > 0) {
+             $text = "Bill Expedia";
+         }
+         if($order->payment->paymentType == "ns_d79569c6_ff6a_4ab5_8820_add42ae71170\BookingComCollectPayments" && $amount > 0) {
+             $text = "Bill Booking.com";
+         }
+    
+        if(!$hidePayButton) {
+        ?>
+            <div class='order_action_button' gs_also='payment_date' orderid='<? echo $order->id; ?>' gsclick='markOrderAsPaid' gs_callback='app.DefaultPaymentHandlingAction.markAsPaidCompleted'><i class='fa fa-check'></i> <? echo $text; ?></div>
+        <?php
+        }
     }
     ?>
     
@@ -94,6 +103,10 @@ $amount = $this->getApi()->getOrderManager()->getTotalAmount($order);
     } else if($order->payment->paymentType == "ns_d79569c6_ff6a_4ab5_8820_add42ae71170\BookingComCollectPayments") {
         echo "<div>";
         echo "* Only mark this order as paid if you are going to invoice booking or having a bank transfer from booking.com If it is a virtual card change the payment method to be the same as the one you are using to charge the card.";
+        echo "</div>";
+    } else if($order->payment->paymentType == "ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2\VerifoneTerminal" || $order->payment->paymentType == "ns_8edb700e_b486_47ac_a05f_c61967a734b1\IntegratedPaymentTerminal") {
+        echo "<div>";
+        echo "* Integrated payment terminals are not able to manually mark as paid!";
         echo "</div>";
     }
 

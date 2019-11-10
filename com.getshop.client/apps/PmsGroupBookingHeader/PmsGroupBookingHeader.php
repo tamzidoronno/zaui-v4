@@ -284,7 +284,7 @@ class PmsGroupBookingHeader extends \MarketingApplication implements \Applicatio
         foreach($booking->rooms as $room) {
             foreach($config->addonConfiguration as $addonItem) {
                 if($addonItem->productId == $productId) {
-                    $this->getApi()->getPmsManager()->addAddonsToBooking($this->getSelectedMultilevelDomainName(), $addonItem->addonType, $room->pmsBookingRoomId, false);
+                    $this->getApi()->getPmsManager()->addAddonsToBookingIgnoreRestriction($this->getSelectedMultilevelDomainName(), $addonItem->addonType, $room->pmsBookingRoomId, false);
                     break;
                 }
             }

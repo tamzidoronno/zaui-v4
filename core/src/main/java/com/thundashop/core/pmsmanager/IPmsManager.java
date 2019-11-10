@@ -579,6 +579,10 @@ public interface IPmsManager {
     public void toggleAddon(String itemId) throws Exception;
     public void addAddonToCurrentBooking(String itemtypeId) throws Exception;
     public void addAddonsToBooking(Integer type, String roomId, boolean remove);
+    
+    @Administrator
+    public void addAddonsToBookingIgnoreRestriction(Integer type, String roomId, boolean remove);
+    
     public void updateAddonsCountToBooking(Integer type, String roomId, Integer count);
 
 

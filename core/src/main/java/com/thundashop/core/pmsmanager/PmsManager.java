@@ -3964,9 +3964,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public List<PmsRoomSimple> getSimpleRooms(PmsBookingFilter filter) {
-        if(!convertedDiscountSystem) { 
-            cartManager.checkIfNeedsToConvertToNewCouponSystem(bookingEngine.getBookingItemTypes()); convertedDiscountSystem = true; 
-        }
         List<PmsRoomSimple> res = new ArrayList();
         gsTiming("filtering 1");
         PmsBookingSimpleFilter filtering = new PmsBookingSimpleFilter(this, pmsInvoiceManager);
@@ -4376,67 +4373,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void addAddonsToBooking(Integer type, String roomId, boolean remove) {
-        boolean foundRoom = true;
-        PmsBooking booking = getBookingFromRoomSecure(roomId);
-        if (booking == null) {
-            foundRoom = false;
-            booking = getBooking(roomId);
-        }
-        if (booking == null) {
-            logPrint("Failed to find a booking while adding addons: " + roomId);
-        }
-        checkSecurity(booking);
-        PmsBookingAddonItem addonConfig = configuration.addonConfiguration.get(type);
+        addAddonsToBookingInternal(type,roomId,remove,false);
+    }
 
-        Product validproduct = productManager.getProduct(addonConfig.productId);
-        if(validproduct == null) {
-            validproduct = productManager.getDeletedProduct(addonConfig.productId);
-            validproduct.deleted = null;
-            productManager.saveProduct(validproduct);
-        }
-        if (!remove) {
-            PmsBookingRooms room = booking.getRoom(roomId);
-            if (room != null && !addonConfig.isValidForPeriode(room.date.start, room.date.end, booking.rowCreatedDate)) {
-                return;
-            }
-        }
-
-        List<String> roomIds = new ArrayList();
-        if (!foundRoom) {
-            for (PmsBookingRooms room : booking.getActiveRooms()) {
-                roomIds.add(room.pmsBookingRoomId);
-            }
-        } else {
-            roomIds.add(roomId);
-        }
-
-        for (String tmpRoomId : roomIds) {
-            PmsBookingRooms room = booking.getRoom(tmpRoomId);
-            if (remove) {
-                room.clearAddonType(type);
-            }
-            changeTimeFromAddon(addonConfig, room, remove);
-            if (remove) {
-                continue;
-            }
-
-            List<PmsBookingAddonItem> result = createAddonForTimePeriodeWithDiscount(type, room, booking);
-            result = combineExistingAddons(room.addons, result);
-            room.addons.addAll(result);
-            for (PmsBookingAddonItem toReturn : result) {
-                if (toReturn == null || toReturn.productId == null || !toReturn.productId.equals(addonConfig.productId)) {
-                    continue;
-                }
-
-                if (addonConfig.addonType == PmsBookingAddonItem.AddonTypes.BREAKFAST || addonConfig.dependsOnGuestCount) {
-                    toReturn.count = room.numberOfGuests;
-                }
-            }
-
-            setAddonPricesOnRoom(room, booking);
-            updateRoomPriceFromAddons(room, booking);
-        }
-        saveBooking(booking);
+    @Override
+    public void addAddonsToBookingIgnoreRestriction(Integer type, String roomId, boolean remove) {
+        addAddonsToBookingInternal(type,roomId,remove,true);
     }
 
     public PmsBookingAddonItem createAddonToAdd(PmsBookingAddonItem addonConfig, Date date, PmsBookingRooms room) {
@@ -8943,8 +8885,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     continue;
                 }
 
+                for (PmsBookingRooms room : booking.rooms) {
+                    if (room.pmsBookingRoomId != null && room.pmsBookingRoomId.equals(filter.searchWord)) {
+                        result.add(booking);
+                        continue;
+                    }
+                }
                 for (PmsBookingRooms room : booking.getActiveRooms()) {
                     boolean found = false;
+                    
                     if (room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
                         BookingItem item = bookingEngine.getBookingItemUnfinalized(room.bookingItemId);
                         if (item != null && item.bookingItemName != null && item.bookingItemName.contains(filter.searchWord)) {
@@ -10831,6 +10780,70 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             logPrintException(e);
         }
         return false;
+    }
+
+    private void addAddonsToBookingInternal(Integer type, String roomId, boolean remove, boolean ignoreRestrictions) {
+        boolean foundRoom = true;
+        PmsBooking booking = getBookingFromRoomSecure(roomId);
+        if (booking == null) {
+            foundRoom = false;
+            booking = getBooking(roomId);
+        }
+        if (booking == null) {
+            logPrint("Failed to find a booking while adding addons: " + roomId);
+        }
+        checkSecurity(booking);
+        PmsBookingAddonItem addonConfig = configuration.addonConfiguration.get(type);
+
+        Product validproduct = productManager.getProduct(addonConfig.productId);
+        if(validproduct == null) {
+            validproduct = productManager.getDeletedProduct(addonConfig.productId);
+            validproduct.deleted = null;
+            productManager.saveProduct(validproduct);
+        }
+        if (!remove) {
+            PmsBookingRooms room = booking.getRoom(roomId);
+            if (room != null && !addonConfig.isValidForPeriode(room.date.start, room.date.end, booking.rowCreatedDate) && !ignoreRestrictions) {
+                return;
+            }
+        }
+
+        List<String> roomIds = new ArrayList();
+        if (!foundRoom) {
+            for (PmsBookingRooms room : booking.getActiveRooms()) {
+                roomIds.add(room.pmsBookingRoomId);
+            }
+        } else {
+            roomIds.add(roomId);
+        }
+
+        for (String tmpRoomId : roomIds) {
+            PmsBookingRooms room = booking.getRoom(tmpRoomId);
+            if (remove) {
+                room.clearAddonType(type);
+            }
+            changeTimeFromAddon(addonConfig, room, remove);
+            if (remove) {
+                continue;
+            }
+
+            List<PmsBookingAddonItem> result = createAddonForTimePeriodeWithDiscount(type, room, booking);
+            result = combineExistingAddons(room.addons, result);
+            room.addons.addAll(result);
+            for (PmsBookingAddonItem toReturn : result) {
+                if (toReturn == null || toReturn.productId == null || !toReturn.productId.equals(addonConfig.productId)) {
+                    continue;
+                }
+
+                if (addonConfig.addonType == PmsBookingAddonItem.AddonTypes.BREAKFAST || addonConfig.dependsOnGuestCount) {
+                    toReturn.count = room.numberOfGuests;
+                }
+            }
+
+            setAddonPricesOnRoom(room, booking);
+            updateRoomPriceFromAddons(room, booking);
+        }
+        saveBooking(booking);
     }
 
 }

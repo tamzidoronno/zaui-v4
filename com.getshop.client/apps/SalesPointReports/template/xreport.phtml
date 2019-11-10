@@ -13,6 +13,12 @@ if (!$report->orderIds || !count($report->orderIds)) {
     echo "<div class='nofound'>";
     echo $this->__f("No transactions found");
     echo "</div>";
+    echo "<div style='text-align:center;'>";
+    echo '<div class="shop_button" gsclick="createZReport">'.$this->__f("Create empty ZReport").'</div>';
+    echo "<br>";
+    echo "<br>";
+    echo "<br>";
+    echo "</div>";
     return;
 }
 

@@ -156,7 +156,7 @@ public class TicketManager extends ManagerBase implements ITicketManager {
         
 
         Collections.sort(retList, (Ticket t1, Ticket t2) -> {
-            return t2.rowCreatedDate.compareTo(t1.rowCreatedDate);
+            return t2.getLastRepliedDate().compareTo(t1.getLastRepliedDate());
         });
 
         return retList;
@@ -1016,6 +1016,13 @@ public class TicketManager extends ManagerBase implements ITicketManager {
             return null;
         }
         return createLightTicket(title);
+    }
+
+    @Override
+    public void toggleIgnoreTicket(String ticketId) {
+        Ticket ticket = getTicket(ticketId);
+        ticket.ignored = !ticket.ignored;
+        saveTicket(ticket);
     }
 
 }

@@ -2,6 +2,7 @@ app.DefaultPaymentHandlingAction = {
     init: function() {
         $(document).on('click', '.DefaultPaymentHandlingAction .showChangePaymentMenu', app.DefaultPaymentHandlingAction.showChangePaymentMenu);
         $(document).on('click', '.DefaultPaymentHandlingAction .updateOrderNote', app.DefaultPaymentHandlingAction.updateOrderNote);
+        $(document).on('click', '.DefaultPaymentHandlingAction .doupdateOrderNote', app.DefaultPaymentHandlingAction.doUpdateOrderNote);
         $(document).on('click', '.DefaultPaymentHandlingAction .updateDueDate', app.DefaultPaymentHandlingAction.updateDueDate);
         $(document).on('click', '.DefaultPaymentHandlingAction .sendReceiptWithMessage', app.DefaultPaymentHandlingAction.sendReceiptWithMessage);
     },
@@ -13,16 +14,18 @@ app.DefaultPaymentHandlingAction = {
             app.DefaultPaymentHandlingAction.refresh(res);
         });
     },
-    updateOrderNote : function() {
-        var note = prompt("Note to set on order");
+    doUpdateOrderNote : function() {
         var event = thundashop.Ajax.createEvent('','updateOrderNote',$(this), {
-            "note" : note,
-            "text" : $(this).val(),
+            "note" : $(this).closest('.ordernotesupdatearea').find('.notetextarea').val(),
             "orderid" : $(this).attr('orderid')
         });
         thundashop.Ajax.postWithCallBack(event, function(res) {
             app.PmsPaymentProcess.refresh();
         });
+ 
+    },
+    updateOrderNote : function() {
+        $('.ordernotesupdatearea').toggle();
     },
     updateDueDate : function() {
         var days = prompt("Number of days");

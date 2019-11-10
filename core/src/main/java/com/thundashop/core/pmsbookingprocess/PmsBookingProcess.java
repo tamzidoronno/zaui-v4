@@ -259,6 +259,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         addCouponPricesToRoom(result, arg);
         checkIfCouponIsValid(result, arg);
         checkForRestrictions(result, arg);
+        addAddonsIncluded(result,arg);
         
         return result;
     }
@@ -1809,6 +1810,39 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         }
         if(remove) {
             removeAllRooms(result, new ArrayList());
+        }
+    }
+
+    private void addAddonsIncluded(StartBookingResult result, StartBooking arg) {
+        
+        if(!storeId.equals("ba845b2d-2293-4afc-91f1-eef47db7f8ca")) {
+            return;
+        }
+        
+        List<PmsBookingAddonItem> addons = pmsManager.getAddonsAvailable();
+        for(PmsBookingAddonItem addon : addons) {
+            if(addon.isIncludedInRoomPrice) {
+                continue;
+            }
+            if(addon.includedInBookingItemTypes.size() > 0 && addon.isValidForPeriode(arg.start, arg.end, new Date())) {
+                System.out.println(addon.productId + " : " + addon.includedInBookingItemTypes.size());
+                for(BookingProcessRooms tmp : result.rooms) {
+                    if(!addon.includedInBookingItemTypes.contains(tmp.id)) {
+                        continue;
+                    }
+                    
+                    for(Integer guests : tmp.pricesByGuests.keySet()) {
+                        double price = tmp.pricesByGuests.get(guests);
+                        if(addon.isSingle) {
+                            price += addon.price;
+                        } else {
+                            price += addon.price * guests;
+                        }
+                        tmp.pricesByGuests.put(guests, price);
+                    }
+                }
+            }
+            
         }
     }
 }

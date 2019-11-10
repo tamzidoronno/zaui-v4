@@ -489,6 +489,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         gdsManager.sendMessageToDevice(device.id, paymentAction);
     }
     
+    public Order getOrderFromDatabase(String id) throws ErrorException {
+        HashMap<String,String> searchCriteria = new HashMap();
+        searchCriteria.put("_id", id);
+        List<DataCommon> res = database.findWithDeleted("col_" + storeId, null, null, "OrderManager", searchCriteria, true);
+        if(res.isEmpty()) {
+            return null;
+        }
+        return (Order) res.get(0);
+    }
+    
     @Override
     public void logTransactionEntry(String orderId, String entry) throws ErrorException {
         Order order = getOrder(orderId);
@@ -761,9 +771,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Override
     public void saveOrder(Order order) throws ErrorException {
         
-        if(order.isPaid() && !order.isNotified() && order.isPaymentLinkType()) {
+        boolean isPaid = order.isPaid();
+        boolean isNotified = order.isNotified();
+        boolean isPaymentLinkType = order.isPaymentLinkType();
+        
+        if(isPaid && !isNotified && isPaymentLinkType) {
+            order.payment.transactionLog.put(System.currentTimeMillis(), "Marking order for autosending");
             order.markAsAutosent();
             markOrderForAutoSending(order.id);
+        } else if(order.payment != null && order.payment.transactionLog != null) {
+            order.payment.transactionLog.put(System.currentTimeMillis(), "Avoid autosending, ispaid: " + isPaid + ", notified:" + isNotified + ", paymenlink:" + isPaymentLinkType);
         }
         
         validateOrder(order);
@@ -2161,6 +2178,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             inMemory = getOrderSecure(incomeOrder.id);
         }
         
+        if(inMemory != null && inMemory.isCreditNote) {
+            Order dbOrder = getOrderFromDatabase(inMemory.id);
+            if(dbOrder != null && (inMemory.getTotalAmount() != dbOrder.getTotalAmount()) || (incomeOrder.getTotalAmount() != dbOrder.getTotalAmount())) {
+                orders.put(dbOrder.id, dbOrder);
+                throw new ErrorException(1064);
+            }
+        }
+        
         if (incomeOrder.paymentDate == null)
             return;
         
@@ -2747,7 +2772,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             
             // Verifone
             if (order.getPaymentApplicationId().equals("6dfcf735-238f-44e1-9086-b2d9bb4fdff2") && order.getTotalAmount() > 0) {
-//                throw new ErrorException(1052);
+                throw new ErrorException(1052);
+            }            
+            
+            // Integrated payment terminal
+            if (order.getPaymentApplicationId().equals("8edb700e-b486-47ac-a05f-c61967a734b1") && order.getTotalAmount() > 0) {
+                throw new ErrorException(1052);
             }            
         }
     }
@@ -3589,9 +3619,40 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
     }
 
+    private Date getFirstOrderDate() {
+        Date check = null;
+        try {
+            for(Order ord : orders.values()) {
+                if(check == null || ord.rowCreatedDate.before(check)) {
+                    check = ord.rowCreatedDate;
+                }
+
+                if(check == null || (ord.paymentDate != null && ord.paymentDate.before(check))) {
+                    check = ord.paymentDate;
+                }
+
+                for(Long time : ord.payment.transactionLog.keySet()) {
+                    if(check != null && check.getTime() > time) {
+                        check.setTime(time);
+                    }
+                }
+            }
+        }catch(Exception e) {
+            logPrintException(e);
+        }
+        return check;
+    }
+    
     @Override
     public List<OrderUnsettledAmountForAccount> getOrdersUnsettledAmount(String accountNumber, Date endDate, String paymentId) {
         Date startDate = getStore().rowCreatedDate;
+        
+        Date firstOrderDate = getFirstOrderDate();
+        
+        if(firstOrderDate != null && firstOrderDate != null && firstOrderDate.before(startDate)) {
+            startDate = firstOrderDate;
+        }
+        
         List<DayIncome> dayEntries = new ArrayList();
         if (paymentId != null && !paymentId.isEmpty()) {
             dayEntries = getPaymentRecords(paymentId, startDate, endDate);
@@ -4041,7 +4102,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     @Override
-    public AccountingBalance getBalance(Date date, String paymentId) {
+    public AccountingBalance getBalance(Date date, String paymentId, boolean incTaxes) {
         AccountingBalance balance = new AccountingBalance();
         balance.balanceToDate = date;
         
@@ -4053,19 +4114,18 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             res = getPaymentRecords(paymentId, getStore().rowCreatedDate, date);
         }
         
-        addBalance(res, balance);
+        addBalance(res, balance, incTaxes);
         
         return balance;
     }
 
-    private void addBalance(List<DayIncome> res, AccountingBalance balance) {
+    private void addBalance(List<DayIncome> res, AccountingBalance balance, boolean incTaxes) {
         Map<String, List<DayEntry>> groupedByAccountNumber = res.stream()
                 .flatMap(o -> o.dayEntries.stream())
                 .collect(Collectors.groupingBy(o -> o.accountingNumber));
         
         for (String accountNumber : groupedByAccountNumber.keySet()) {
-            Double total = groupedByAccountNumber.get(accountNumber).stream()
-                    .mapToDouble(o -> o.amount.doubleValue())
+            Double total = groupedByAccountNumber.get(accountNumber).stream().mapToDouble(o -> (incTaxes ? o.amount.doubleValue() : o.amountExTax.doubleValue()))
                     .sum();
             
             balance.balances.put(accountNumber, total);

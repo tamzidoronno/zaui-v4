@@ -18,6 +18,8 @@ public interface IStoreOcrManager {
     @Administrator
     public void setAccountId(String id, String password);
     @Administrator
+    public void disconnectAccountId(String password);
+    @Administrator
     public void checkForPayments();
     @Administrator
     public String getAccountingId();

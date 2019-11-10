@@ -87,16 +87,18 @@ foreach($config->addonConfiguration as $item) {
         $alwaysAddAddon = $addonItem->alwaysAddAddon ? "CHECKED" : "";
         $isUniqueOnOrder = $addonItem->isUniqueOnOrder ? "CHECKED" : "";
         $states = $this->getFactory()->getLanguageReadable();
+        $deactivated = $product->deactivated ? "style='color:#afafaf;'" : "";
+        $color = $product->deactivated ? "#afafaf;'" : "green";
     ?>
-    <tr class='settingsForProduct' productid='<?php echo $product->id; ?>' productincid="<?php echo $product->incrementalProductId; ?>">
+    <tr class='settingsForProduct' <?php echo $deactivated; ?> productid='<?php echo $product->id; ?>' productincid="<?php echo $product->incrementalProductId; ?>">
         <td style="width:300px;text-align: left;position:relative;">
-            <i class="fa fa-info-circle loadExtendedProductInformation" style="color:green; cursor:pointer;"></i>
-            <i class="fa fa-language" style="color:green; cursor:pointer;" aria-hidden="true" title='Description / Translation' gss_method="submitToInfoBox" method="loadTranslationText" gsname="id" gsvalue="<?php echo $product->id; ?>"></i>
-            <i class='fa fa-edit changeproductname' productid='<?php echo $product->id; ?>' style="color:green; cursor:pointer;"></i>
+            <i class="fa fa-info-circle loadExtendedProductInformation" style="color:<?php echo $color; ?>; cursor:pointer;"></i>
+            <i class="fa fa-language" style="color:<?php echo $color; ?>; cursor:pointer;" aria-hidden="true" title='Description / Translation' gss_method="submitToInfoBox" method="loadTranslationText" gsname="id" gsvalue="<?php echo $product->id; ?>"></i>
+            <i class='fa fa-edit changeproductname' productid='<?php echo $product->id; ?>' style="color:<?php echo $color; ?>; cursor:pointer;"></i>
             <?
             if ($addonItem->groupAddonType) {
                 ?>
-                <i class='fa fa-chain editgroupaddon' productid='<?php echo $product->id; ?>' style="color:green; cursor:pointer;"></i>
+                <i class='fa fa-chain editgroupaddon' productid='<?php echo $product->id; ?>' style="color:<?php echo $color; ?>; cursor:pointer;"></i>
                 <?
             }
             ?>

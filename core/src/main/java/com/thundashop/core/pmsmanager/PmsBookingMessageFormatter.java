@@ -21,6 +21,7 @@ import org.jsoup.nodes.Element;
 class PmsBookingMessageFormatter { 
 
     private ProductManager productManager;
+    private PmsInvoiceManager invoiceManager;
     private PmsConfiguration config;
     public String formatRoomData(String message, PmsBookingRooms room, BookingEngine bookingEngine) {
         if(message == null) {

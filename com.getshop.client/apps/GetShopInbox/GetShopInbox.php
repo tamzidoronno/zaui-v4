@@ -60,6 +60,9 @@ class GetShopInbox extends \MarketingApplication implements \Application {
     
     
     public function quickSearchCustomer() {
+        if(!$_POST['data']['keyword']) {
+            return;
+        }
         $systems = $this->getApi()->getSystemManager()->findSystem($_POST['data']['keyword']);
         echo "<table cellpadding='1' cellspacing='1' style='margin:10px;' width='100%'>";
         foreach($systems as $res) {

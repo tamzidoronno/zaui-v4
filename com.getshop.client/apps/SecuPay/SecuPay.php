@@ -61,20 +61,49 @@ class SecuPay extends \PaymentApplication implements \Application {
     
     public function preProcess() {
          $url = $this->address . '/payment/init';
- 
          
          if(!isset($_GET['paymentmethod'])) {
+             
+             if(isset($_GET['incid'])) {
+                 $order = $this->getApi()->getOrderManager()->getOrderByincrementOrderIdAndPassword($_GET['incid'], "fdsafd4e3453ngdgdf");
+                 $_GET['payorder'] = $order->id;
+             }
+             
              $types = $this->getTypes();
              echo "<div style='text-align:center;'>";
              echo "<h1>Please select a payment type</h1>";
+             
+             $txts = array();
+             $txts['debit'] = "Debit / Lastschrifteinzug";
+             $txts['creditcard'] = "Credit card / Kreditkarte";
+             $txts['sofort'] = "Sofort / Sofortüberweisung";
+             
              foreach($types as $type) {
-                 echo "<div style='text-transform:uppercase; margin: 10px; cursor:pointer;'>";
+                 if($type == "invoice") {
+                     continue;
+                 }
+                 
+                 $txt = $txts[$type];
+                 
                  echo "<a href='/?changeGetShopModule=cms&page=cart&payorder=".$_GET['payorder']."&paymentmethod=$type'>";
-                 echo $type;
-                 echo "</a>";
+                 echo "<div style='text-transform:uppercase; margin: 10px; cursor:pointer;' class='selectpaymentmethod'>";
+                 echo $txt;
                  echo "</div>";
+                 echo "</a>";
              }
              echo "</div>";
+             echo "<br><br>";
+             echo "<br><br>";
+             echo "<br><br>";
+             echo "<br><br>";
+             echo "<br><br>";
+             echo "<br><br>";
+             echo "<br><br>";
+             
+             echo "<style>";
+             echo ".selectpaymentmethod { border: solid 1px #bbb; display:inline-block; width: 300px;  background-color:#a2bef3; }";
+             echo "</style>";
+             
              return;
          }
         
@@ -95,13 +124,14 @@ class SecuPay extends \PaymentApplication implements \Application {
             "lastname" => "",
             'url_failure' => $this->getFailedPage(),
             'url_push' => $this->getCallbackUrl(),
-            "order_id" => "100203",
+            "order_id" => $this->order->incrementOrderId,
             'language' => $this->getFactory()->getSelectedLanguage()
         );
-        if(!$this->getApi()->getStoreManager()->isProductMode()) {
+        if(!$this->isProdMode()) {
             $jsonData['demo'] = "1";
         }
-        
+//        print_r($jsonData);
+//        exit(0);
         $cg = $this->setHeaders($ch, $jsonData);
         
         //Execute the request
@@ -198,7 +228,7 @@ class SecuPay extends \PaymentApplication implements \Application {
 
     public function redirectUrl() {
         $protocol = "https";
-        if(!$this->getApi()->getStoreManager()->isProductMode()) {
+        if(!$this->isProdMode()) {
             $protocol = "http";
         }
         $redirect_url = $protocol. "://" . $_SERVER["HTTP_HOST"] . "/callback.php?app=" . $this->applicationSettings->id. "&orderId=" . $this->order->id . "&nextpage=";
@@ -218,6 +248,14 @@ class SecuPay extends \PaymentApplication implements \Application {
     }
     
     public function paymentCallback() {
+        
+        $methods = "GET:" . json_encode($_GET);
+        $methods .= "POST:" . json_encode($_POST);
+        $methods .= "BODY:" . json_encode(file_get_contents('php://input'));
+        $methods .= "Referer: " . $_SERVER['HTTP_REFERER'];
+        
+//        file_put_contents("secupay.txt", $methods);
+        
         if(isset($_GET['nextpage']) && $_GET['nextpage']) {
             //Redirect from payment window
             if($_GET['success'] == "1") {
@@ -226,17 +264,13 @@ class SecuPay extends \PaymentApplication implements \Application {
             header('location:' . "/?page=" . $_GET['nextpage']);
         } else {
             //Callback from secupay.
-            $methods = "GET:" . json_encode($_GET);
-            $methods .= "POST:" . json_encode($_POST);
-            $methods .= "BODY:" . json_encode(file_get_contents('php://input'));
-            
             $ref = $_SERVER['HTTP_REFERER'];
             if (strpos($ref, 'api.secupay.ag') !== FALSE){
                 echo" Der Push ist von $ref";
             }
             
             
-            if($_POST['status_id'] == "11" || $_POST['status_id'] == 11) {
+            if($_POST['status_id'] == "11" || $_POST['status_id'] == 11 || $_POST['status_id'] == "6" || $_POST['status_id'] == 6) {
                 $orderId = $_GET['orderId'];
                 $order = $this->getApi()->getOrderManager()->getOrderWithIdAndPassword($orderId, "gfdsg9o3454835nbsfdg");
                 
@@ -250,8 +284,11 @@ class SecuPay extends \PaymentApplication implements \Application {
             echo "ack=Approved";
         }
     }
-    
-    
+
+    public function isProdMode() {
+//        return true;
+        return $this->getApi()->getStoreManager()->isProductMode();
+    }
 
 }
 ?>

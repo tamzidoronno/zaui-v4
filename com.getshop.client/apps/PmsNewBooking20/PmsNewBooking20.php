@@ -318,7 +318,7 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
             }
             ?>
             <div class='guestsuggestionrow'>
-                <i class='fa fa-arrow-circle-up addsuggestionarrow'></i>
+                <i class='fa fa-arrow-circle-up addsuggestionarrow bookinghighlightcolor'></i>
             <span class='guestsuggestionname'><?php echo $suggestion->guest->name; ?></span>
             <span class='guestsuggestionemail'><?php echo $suggestion->guest->email; ?></span>
             <span class='guestsuggestionphone'><?php echo "(<span class='guestsuggestionphoneprefix'>" . $suggestion->guest->prefix . "</span>)<span class='guestsuggestionphonenumber'>" . $suggestion->guest->phone; ?></span></span>

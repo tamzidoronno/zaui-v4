@@ -56,6 +56,7 @@ public class Ticket extends DataCommon {
     public boolean hasBeenValidedForTimeUsage = false;
             
     public boolean transferredToAccounting = false;
+    public boolean ignored = false;
     public String productId = "";
 
     public List<String> attachmentIds = new ArrayList();
@@ -146,5 +147,17 @@ public class Ticket extends DataCommon {
             }
         }
         return result;
+    }
+
+    public Date getLastRepliedDate() {
+        Date replyDate = rowCreatedDate;
+        
+        for(TicketEvent ev : events) {
+            if(ev.date != null && ev.date.after(replyDate)) {
+                replyDate = ev.date;
+            }
+        }
+        
+        return replyDate;
     }
 }

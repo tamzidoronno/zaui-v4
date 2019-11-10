@@ -6,8 +6,13 @@ $closed = $order->closed;
 $cartItemsPms = $this->getPmsCartItems();
 $cartItemsNormal = $this->getNormalCartItems();
 
+
 if($order->manuallyClosed) {
     $closed = $order->manuallyClosed;
+}
+
+if($order->isCreditNote) {
+    echo "<div style='background-color:red; color:#fff; font-size: 20px;padding-bottom: 20px; text-align:center;'>A credit note can not be modified</div>";
 }
 
 if (!count($cart->items)) {
@@ -34,7 +39,7 @@ if (!($closed && !count($cartItemsNormal))) {
     if(!$closed) {
         $ecomsettings = new ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings();
         $currencies = $ecomsettings->getCurrencies();
-        $languages = $ecomsettings->getL
+//        $languages = $ecomsettings->
         ?>
         <div style="float: right">
             

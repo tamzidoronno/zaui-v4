@@ -789,7 +789,7 @@ public class PmsBookingRooms implements Serializable {
             if(item.isIncludedInRoomPrice) {
                 continue;
             }
-            if(isDeleted() && (!item.noRefundable || deletedByChannelManagerForModification)) {
+            if(isDeleted() && ((!item.noRefundable && !nonrefundable) || deletedByChannelManagerForModification)) {
                 continue;
             }
             if (item.price != null && item.count != null) {

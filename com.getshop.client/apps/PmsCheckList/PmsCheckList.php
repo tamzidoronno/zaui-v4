@@ -30,15 +30,17 @@ class PmsCheckList extends \MarketingApplication implements \Application {
     public function printMonthSelector() {
         $this->getCurrentMonth();
         echo "<div style='text-align: center' gstype='form' method='dateChanged'>";
-            echo "Select month<br/> <select gsname='date' class='gsniceselect1'>";
-            for ($i=0;$i<24;$i++) {
-                $year = date('Y', strtotime('-'.$i.' month'));
-                $month = date('m', strtotime('-'.$i.' month'));
-                $selected = $this->getCurrentMonth() == $year."_".$month ? "selected='true'" : "";
-                echo "<option $selected value='".$year."_".$month."'>".date('M Y', strtotime('-'.$i.' month'))."</option>";
-            }
-            echo "</select>";
-            echo "<br/><div class='shop_button' gstype='submit'>Show</div>";
+        echo "Select month<br/> <select gsname='date' class='gsniceselect1'>";
+        $now = time();
+        for ($i=0;$i<24;$i++) {
+            $year = date('Y', $now);
+            $month = date('m', $now);
+            $selected = $this->getCurrentMonth() == $year."_".$month ? "selected='true'" : "";
+            echo "<option $selected value='".$year."_".$month."'>".date('M Y', $now)."</option>";
+            $now = strtotime('-1 month', $now);
+        }
+        echo "</select>";
+        echo "<br/><div class='shop_button' gstype='submit'>Show</div>";
         echo "</div>";
         
     }

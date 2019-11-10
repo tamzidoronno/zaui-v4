@@ -21,6 +21,11 @@ class OcrReader extends \WebshopApplication implements \Application {
         $this->getApi()->getStoreOcrManager()->setAccountId($id, $password);
     }
     
+    public function disconnectAccountingId() {
+        $password = $_POST['data']['prompt'];
+        $this->getApi()->getStoreOcrManager()->disconnectAccountId($password);
+    }
+    
     public function createTransactionFile() {
         $result = $this->getApi()->getGetShopAccountingManager()->createBankTransferFile();
         echo $result;

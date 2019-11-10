@@ -22,6 +22,37 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         
     }
     
+    public function searchForGuest() {
+        $guest = new \core_pmsmanager_PmsGuests();
+        switch($_POST['data']['type']) {
+            case "name": 
+                $guest->name = $_POST['data']['keyword'];
+                break;
+            case "phone": 
+                $guest->phone = $_POST['data']['keyword'];
+                break;
+            case "email": 
+                $guest->email = $_POST['data']['keyword'];
+                break;
+        }
+        $suggestions = $this->getApi()->getPmsManager()->findRelatedGuests($this->getSelectedMultilevelDomainName(), $guest);
+        $newbooking = new \ns_bf644a39_c932_4e3b_a6c7_f6fd16baa34d\PmsNewBooking20();
+        $newbooking->printSuggestions($suggestions);
+    }
+    
+    public function getBookerInformation() {
+        $booking = $this->getPmsBooking();
+        $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
+        
+        $data = array();
+        $data['name'] = $user->fullName;
+        $data['email'] = $user->emailAddress;
+        $data['prefix'] = $user->prefix;
+        $data['phone'] = $user->cellPhone;
+        
+        echo json_encode($data);
+    }
+    
     public function togglePriorityRoom() {
         $selectedroom = $this->getSelectedRoom();
         $this->getApi()->getPmsManager()->togglePrioritizedRoom($this->getSelectedMultilevelDomainName(), $selectedroom->pmsBookingRoomId);

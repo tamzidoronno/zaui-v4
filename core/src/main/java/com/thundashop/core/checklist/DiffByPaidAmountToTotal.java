@@ -49,6 +49,8 @@ public class DiffByPaidAmountToTotal extends CheckProcessorBase implements Check
                 continue;
             }
             
+            room.calculateTotalCost(booking.priceType);
+            
             double totalPaidPrice = booking.orderIds
                     .stream()
                     .map(id -> getOrderManager().getOrder(id))

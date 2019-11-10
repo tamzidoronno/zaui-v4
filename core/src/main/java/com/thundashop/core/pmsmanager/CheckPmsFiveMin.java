@@ -20,6 +20,11 @@ public class CheckPmsFiveMin extends GetShopSchedulerBase {
     @Override
     public void execute() throws Exception {
         String name = getMultiLevelName();
+        String storeId = getStoreId();
+        
+        if(storeId != null && storeId.equals("87cdfab5-db67-4716-bef8-fcd1f55b770b") && !name.equals("default")) {
+            return;
+        }
         getApi().getPmsManager().checkIfGuestHasArrived(name);
     }
     

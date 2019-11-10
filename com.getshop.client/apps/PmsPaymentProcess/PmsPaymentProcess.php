@@ -16,6 +16,25 @@ class PmsPaymentProcess extends \MarketingApplication implements \Application {
         
     }
     
+    public function changeAllSegments() {
+        $bookings = $this->getSelectedBookings();
+        $segments = $this->getApi()->getPmsCoverageAndIncomeReportManager()->getSegments($this->getSelectedMultilevelDomainName());
+        $segments = $this->indexList($segments);
+        foreach($bookings as $booking) {
+            if($booking->segmentId != $_POST['data']['segmentid']) {
+                
+                $existingsegment = $segments[$booking->segmentId]->name;
+                $existingsegment .= " -> " . $segments[$_POST['data']['segmentid']]->name;
+                
+                $this->getApi()->getPmsManager()->logEntry($this->getSelectedMultilevelDomainName(), "Segment changed due to group invoicing. ($existingsegment)", $booking->id, null);
+                $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedMultilevelDomainName(), $booking->id);
+                $booking->segmentId = $_POST['data']['segmentid'];
+                $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+            }
+        }
+        $this->pmsBookings = array();
+    }
+    
     public function deleteOrCreditOrder() {
         $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
         if($order->closed) {

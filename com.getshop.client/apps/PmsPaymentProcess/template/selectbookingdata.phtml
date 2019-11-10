@@ -78,6 +78,19 @@ $distinctUserIds = array();
 
 if (count($uniqueSegmentIds) > 1) {
     echo "<div style='font-size: 16px; padding-top: 30px; padding-bottom: 30px;'>".$this->__f("Not possible. Make sure that all rooms you have selected are on the same segment before continuing..")."</div>";
+    
+    $segments = $this->getApi()->getPmsCoverageAndIncomeReportManager()->getSegments($this->getSelectedMultilevelDomainName());
+    $segments = $this->indexList($segments);
+    foreach ($bookings as $booking) {
+        echo $booking->incrementBookingId . " - " . $segments[$booking->segmentId]->name . "<bR>"; 
+    }
+    
+    
+    echo "<br><br>";
+    foreach($uniqueSegmentIds as $unique) {
+        echo "Change all segments to : <span gsclick='changeAllSegments' gs_confirm='I understand that reports might be affected historically by doing this operation and all support regarding changes to reports will be charged upon.' segmentid='$unique' style='color:blue; cursor:pointer;'>" . $segments[$unique]->name . "</span><br>";
+    }
+    
 } else {
 
     foreach ($bookings as $booking) {
@@ -160,9 +173,10 @@ if (count($uniqueSegmentIds) > 1) {
                                 <div class='col date' style='vertical-align: top;'><? echo $row->date; ?></div>
                                 <div class='col count' style='vertical-align: top;'><input class='gsniceinput1 item_count' orgcount='<? echo $row->count; ?>' value='<? echo $row->count; ?>'/> x </div>
                                 <div class='col price' style='vertical-align: top;'><input class='gsniceinput1 item_price' orgvalue='<? echo round($row->priceToCreateOrders,2); ?>' value='<? echo round($row->priceToCreateOrders,2); ?>'/></div>
-                                <div class='col productname' style='vertical-align: top;'>
+                                <div class='col productname' style='vertical-align: top;line-height: 36px;'>
                                     <input class='gsniceinput1 textOnOrder' type='hidden' orgvalue='<? echo $name; ?>' value='<? echo $name; ?>'/>
                                     <input class='gsniceinput1 addonId' type='hidden' orgvalue='<? echo $row->addonId; ?>' value='<? echo $row->addonId; ?>'/>
+                                    <?php echo $product->name; ?>
                                 </div>
                             </div>
                             <?

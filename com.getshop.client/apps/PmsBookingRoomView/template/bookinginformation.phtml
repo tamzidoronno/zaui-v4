@@ -69,20 +69,24 @@ if($guestcount > $numberofguests) {
     <div  class="guest_row row_template" style='display: none' guestid=''>
         <div class="guest_col guest_col1">
             <input type="hidden" temp_gsname="guestinfo_guestid" class="gsniceinput1 guestidfield" value=""/>
-            <input temp_gsname="guestinfo_name" class="gsniceinput1" value="" placeholder='<? echo $this->__f("Name"); ?>'/>
+            <input temp_gsname="guestinfo_name" class="gsniceinput1" searchtype='name'  value="" placeholder='<? echo $this->__f("Name"); ?>'/>
         </div>
 
         <div class="guest_col guest_col2">
-            <input temp_gsname="guestinfo_email" class="gsniceinput1" value="" placeholder='<? echo $this->__f("Email"); ?>'/>
+            <input temp_gsname="guestinfo_email" class="gsniceinput1" searchtype='email'  value="" placeholder='<? echo $this->__f("Email"); ?>'/>
         </div>
 
         <div class="guest_col guest_col3">
-            <input  temp_gsname="guestinfo_prefix" class="gsniceinput1 prefix" value="<?php echo $this->getDefaultPrefix(); ?> "/> - <input class="gsniceinput1 cellnumber"  temp_gsname="guestinfo_phone"  value="" placeholder='<? echo $this->__f("Phone"); ?>'/>
+            <input  temp_gsname="guestinfo_prefix" class="gsniceinput1 prefix" value="<?php echo $this->getDefaultPrefix(); ?> "/> - <input class="gsniceinput1 cellnumber" searchtype='phone'   temp_gsname="guestinfo_phone"  value="" placeholder='<? echo $this->__f("Phone"); ?>'/>
         </div>
 
         <div class="guest_col guest_col4">
             <div class="gs_shop_small_icon remove_guest"><i class="fa fa-close"></i></div>
         </div>
+        <span style='font-size: 12px; margin-left: 12px; cursor:pointer;' class='bookinghighlightcolor selectsameasbooker'>
+            same as booker
+        </span>
+        <div style='font-size: 12px; margin-left: 12px; cursor:pointer;' class='searchsuggestions'></div>
         <?
         if($hasConferences) {
             echo "<div class='guestconferenceinformation'>";
@@ -108,11 +112,11 @@ if($guestcount > $numberofguests) {
             
             <div class="guest_col guest_col1">
                 <input type="hidden" gsname="guestinfo_<? echo $i; ?>_guestid" class="gsniceinput1 prefix" value="<? echo $guest->guestId; ?>"/>
-                <input gsname="guestinfo_<? echo $i; ?>_name" class="gsniceinput1" value="<? echo $guest->name; ?>"/>
+                <input gsname="guestinfo_<? echo $i; ?>_name" class="gsniceinput1" searchtype='name' value="<? echo $guest->name; ?>"/>
             </div>
 
             <div class="guest_col guest_col2">
-                <input gsname="guestinfo_<? echo $i; ?>_email" class="gsniceinput1" value="<? echo $guest->email; ?>"/>
+                <input gsname="guestinfo_<? echo $i; ?>_email" class="gsniceinput1" searchtype='email' value="<? echo $guest->email; ?>"/>
             </div>
 
             <div class="guest_col guest_col3">
@@ -122,12 +126,16 @@ if($guestcount > $numberofguests) {
                     $prefix = $this->getDefaultPrefix();
                 }
                 ?>
-                <input  gsname="guestinfo_<? echo $i; ?>_prefix" class="gsniceinput1 prefix" value="<? echo $prefix; ?>"/> - <input class="gsniceinput1 cellnumber"  gsname="guestinfo_<? echo $i; ?>_phone"  value="<? echo $guest->phone; ?>"/>
+                <input  gsname="guestinfo_<? echo $i; ?>_prefix" class="gsniceinput1 prefix" value="<? echo $prefix; ?>"/> - <input class="gsniceinput1 cellnumber"  searchtype='phone'  gsname="guestinfo_<? echo $i; ?>_phone"  value="<? echo $guest->phone; ?>"/>
             </div>
 
             <div class="guest_col guest_col4">      
                 <div class="gs_shop_small_icon remove_guest"><i class="fa fa-close"></i></div>
             </div>
+            <span style='font-size: 12px; margin-left: 12px; cursor:pointer;' class='bookinghighlightcolor selectsameasbooker'>
+                same as booker
+            </span>
+            <div style='font-size: 12px; margin-left: 12px; cursor:pointer;' class='searchsuggestions'></div>
             <?
             if($hasConferences) {
                 echo "<div class='guestconferenceinformation'>";

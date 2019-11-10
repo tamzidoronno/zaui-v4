@@ -18,7 +18,7 @@ echo "<div class='eventreportarea'>";
 $this->includefile("reportheader");
 foreach($events as $event) {
     $from = "";
-    if($event->from) { $from = date("H:i", strtotime($event->from)); }
+    if($event->from) { $from = date("d.m H:i", strtotime($event->from)); }
     $to = "";
     if($event->to) { $to = date("H:i", strtotime($event->to)); }
     $status = $statuses[$event->status];
@@ -43,7 +43,7 @@ foreach($events as $event) {
     <?php
     foreach($eventEntries as $eventEntry) {
         $from = "";
-        if($eventEntry->from) { $from = date("H:i", strtotime($eventEntry->from)); }
+        if($eventEntry->from) { $from = date("d.m H:i", strtotime($eventEntry->from)); }
         $to = "";
         if($eventEntry->to) { $to = date("H:i", strtotime($eventEntry->to)); }
         $text = $eventEntry->text;
@@ -73,7 +73,7 @@ echo "</div>";
     .eventheader { margin-top: 10px; font-weight: bold; padding-bottom: 10px; }
     .eventdetails { border-bottom: dashed 1px; }
     .evententry { padding-left: 140px; }
-    .from { display:inline-block; width: 70px; }
+    .from { display:inline-block; width: 90px; }
     .to { display:inline-block; width: 70px; }
     .text { display:inline-block; width: 240px; }
     .roomname { display:inline-block; width: 240px; }

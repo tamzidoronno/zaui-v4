@@ -34,7 +34,6 @@ public class PmsManagerProcessor {
     }
 
     public void doProcessing() {
-        
         start = System.currentTimeMillis();
         clearCachedObject();
         checkTimer("Cleared cache");
@@ -1370,9 +1369,21 @@ public class PmsManagerProcessor {
         List<String> ordersToAutosend = manager.orderManager.getOrdersToAutoSend();
         for(String orderId : ordersToAutosend) {
             PmsBooking booking = manager.getBookingWithOrderId(orderId);
+            Order order = manager.orderManager.getOrder(orderId);
+            
+            if(order.recieptEmail == null || order.recieptEmail.isEmpty()) {
+                order.payment.transactionLog.put(System.currentTimeMillis(), "Did not autosend reciept because it has no reciept email to send to");
+                manager.orderManager.saveOrder(order);
+                continue;
+            }
+            
             if(booking != null) {
-                Order order = manager.orderManager.getOrder(orderId);
                 manager.pmsInvoiceManager.sendRecieptOnOrder(order, booking.id);
+            } else {
+                if(order != null && order.payment != null && order.payment.transactionLog != null) {
+                    order.payment.transactionLog.put(System.currentTimeMillis(), "Did not autosend order since the booking connected does not exist");
+                    manager.orderManager.saveOrder(order);
+                }
             }
         }
     }

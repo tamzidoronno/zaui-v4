@@ -58,8 +58,8 @@ $attributes = array(
     array('date', 'Date', null, 'formatDate'),
     array('bookingItemName', 'Name', 'name', 'formatName'),
     array('squareMetres', 'Square<br>metres', 'squareMetres', null),
-    array('squareMetres', 'Last<br>cleaned', 'lastCleaned', 'formatCleanedDate'),
-    array('squareMetres', 'Type', 'typeName', null),
+    array('lastCleaned', 'Last<br>cleaned', 'lastCleaned', 'formatCleanedDate'),
+    array('type', 'Type', 'typeName', null),
 );
 
 $table = new \GetShopModuleTable($this, 'PmsRoomConfiguration', 'loadRoomConfiguration', null, $attributes);

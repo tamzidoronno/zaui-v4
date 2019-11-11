@@ -1,0 +1,66 @@
+<script src="/javascript/sss/sss.min.js"></script>
+<link rel="stylesheet" href="/javascript/sss/sss.css" type="text/css" media="all">
+
+<div class="contentrow firstrow"> 
+    <div class="row_inner">
+        
+        <div>
+            <?php
+            ContentManager::render("top_content");
+            ?>
+        </div>
+        <div style='max-width: 1000px; margin: 0 auto;' id='bookingprocess'></div>
+    </div>
+</div>
+
+<div class="contentrow row_2"> 
+    <div class="row_inner">
+        <div class="col col_1 col_size_2 mobilebox">
+            <?php
+                ContentManager::render("row2_col_1");
+            ?>
+            <img src='/ba10/images/frontColage.png' style='width:100%;'>
+        </div>
+        <div class="col col_2 col_size_2 mobilebox" style='color:#9a9999; padding-right:0px;'>
+            <?php
+                ContentManager::render("row2_col_2");
+            ?>
+            <br>
+            <a href='/?page=leiligheter'><div class='utleieprivatbtn'><?php ContentManager::render("utleieprivatknapp"); ?></div></a>
+            <a href='/?page=naring'><div class='utleienaeringbtn'><?php ContentManager::render("utleienaeringknapp"); ?></div></a>
+        </div>
+    </div>
+</div>
+
+<div class="contentrow row_2" style='background:#e2e2e2;'> 
+    <div class="row_inner" style='padding-top: 50px; padding-bottom: 50px;'>
+        <div class="col col_1 col_size_3 mobilebox" style='background-color: #eeeded; padding:0px;'>
+            <img src='/ba10/images/PrivatSmall.jpg' style='width:100%;'>
+            <div style='padding: 10px; min-height: 250px;'>
+                <?php
+                    ContentManager::render("row30_col_1");
+                ?>
+            </div>
+            <a href='/?page=leiligheter'><div class='utleieprivatbtn' style='width:100%; box-sizing: border-box;'><?php ContentManager::render("utleieprivatknapp"); ?></div></a>
+        </div>
+        <div class="col col_2 col_size_3 mobilebox" style='background-color: #eeeded; padding:0px;margin-right: 10px; margin-left:10pX;'>
+            <img src='/ba10/images/neeringSmall.jpg' style='width:100%;'>
+            <div style='padding: 10px; min-height: 250px;'>
+            <?php
+                ContentManager::render("row30_col_2");
+            ?>
+            </div>
+
+            <a href='/?page=naring'><div class='utleieprivatbtn' style='width:100%; box-sizing: border-box;'><?php ContentManager::render("utleienaeringknapp"); ?></div></a>
+        </div>
+        <div class="col col_3 col_size_3 mobilebox" style='background-color: #eeeded; padding:0px;'>
+            <img src='/ba10/images/KlassiskSmall.jpg' style='width:100%;'>
+            <div style='padding: 10px; min-height: 250px;'>
+            <?php
+                ContentManager::render("row30_col_3");
+            ?>
+            </div>
+            <a href='/?page=leiligheter'><div class='utleieprivatbtn' style='width:100%; box-sizing: border-box;'><?php ContentManager::render("utleieklassiskknapp"); ?></div></a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,66 @@
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/3.1.8/imagesloaded.pkgd.min.js"></script>
+<script src="https://unpkg.com/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"></script>
+
+
+
+<div class="contentrow firstrow"> 
+    <div class="row_inner">
+        
+        <div>
+            <?php
+            ContentManager::render("top_content_privat");
+            ?>
+        </div>
+        <div style='max-width: 1000px; margin: 0 auto;' id='bookingprocess'></div>
+    </div>
+</div>
+
+
+
+<div class="contentrow row_2" style='padding-top: 50px; padding-bottom: 50px;'> 
+    <div class="row_inner">
+        <div class="col col_1 col_size_2 mobilebox">
+            <?php
+                ContentManager::render("row2_naring_col_1");
+            ?>
+            <img src='/ba10/images/frontColage.png' style='width:100%;'>
+        </div>
+        <div class="col col_2 col_size_2 mobilebox" style='color:#9a9999; padding-right:0px;'>
+            <?php
+                ContentManager::render("row2_naring_col_2");
+            ?>
+            <br>
+            <a href='http://www.akershave.no'><div class='utleieprivatbtn'><?php ContentManager::render("akershaveknapp"); ?></div></a>
+            <a href='/?page=contactus'><div class='utleienaeringbtn'><?php ContentManager::render("kontaktossknapp"); ?></div></a>
+        </div>
+    </div>
+</div>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div style='text-align: center; color:#585b9e;'>
+    <h1>Bilder av leiligheter</h1>
+    <span class='chooseimagebtn'>Alle</span>
+    <span class='chooseimagebtn'>240kvm</span>
+    <span class='chooseimagebtn'>120kvm</span>
+    <span class='chooseimagebtn'>18kvm</span>
+</div>
+<br>
+<div  style='text-align: center;'>
+    <div class="grid">
+        <?php
+        for($i = 1; $i <= 19; $i++) {
+            echo '<div class="grid-item"><img src="/ba10/images/naring/'.$i.'.jpg"></div>';
+        }
+        ?>
+    </div>
+</div>
+
+<div style='clear:both;'></div>
+
+<script>
+    loadGrid();
+</script>

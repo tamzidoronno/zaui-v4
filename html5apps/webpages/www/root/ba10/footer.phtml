@@ -1,0 +1,22 @@
+<div class="footer_row"> 
+    <div class='footer_inner'>
+        <div class="col" style='width: 50%;'>
+            <img src="ba10/logo.png" style='height: 100px; float:left; margin-right: 20px;'>
+            <?php
+            ContentManager::render("footer_product_text2", true);
+
+            $pages = $router->getAllPages();
+            echo "<ul>";
+            foreach ($pages as $page) {
+                if ($page->subpageof == "products") {
+                    $className = get_class($page);
+                    echo "<a href='?page=$className'><li>".$page->getMenuName()."</li></a>";
+                }
+            }
+            echo "</ul>";
+            ?>
+        </div>
+    </div>
+    <div style='text-align: center; background-color: #253946;'>
+    </div>
+</div>

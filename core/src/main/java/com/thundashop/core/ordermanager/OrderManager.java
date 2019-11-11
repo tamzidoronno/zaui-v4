@@ -2757,6 +2757,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     private void blockManuallyPaymentMarkingForPaymentMethodsThatShouldNotDoThat(Method executeMethod, Object[] argObjects) throws ErrorException {
+        
+        User curUsr = getSession().currentUser;
+        boolean isGetShop = false;
+        if(curUsr != null && curUsr.emailAddress != null && curUsr.emailAddress.endsWith("@getshop.com")) {
+            isGetShop = true;
+        }
+        
         if (executeMethod != null && (executeMethod.getName().equals("markAsPaid") || executeMethod.getName().equals("addOrderTransaction"))) {
             String orderId = (String)argObjects[0];
             Order order = getOrder(orderId);
@@ -2775,12 +2782,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
             
             // Verifone
-            if (order.getPaymentApplicationId().equals("6dfcf735-238f-44e1-9086-b2d9bb4fdff2") && order.getTotalAmount() > 0) {
+            if (order.getPaymentApplicationId().equals("6dfcf735-238f-44e1-9086-b2d9bb4fdff2") && !isGetShop) {
                 throw new ErrorException(1052);
             }            
             
             // Integrated payment terminal
-            if (order.getPaymentApplicationId().equals("8edb700e-b486-47ac-a05f-c61967a734b1") && order.getTotalAmount() > 0) {
+            if (order.getPaymentApplicationId().equals("8edb700e-b486-47ac-a05f-c61967a734b1") && !isGetShop) {
                 throw new ErrorException(1052);
             }            
         }

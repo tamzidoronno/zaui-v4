@@ -17,6 +17,7 @@ import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.OrderShipmentLogEntry;
 import com.thundashop.core.pdf.InvoiceManager;
+import com.thundashop.core.pdf.data.AccountingDetails;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.UserManager;
@@ -397,7 +398,11 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
                 || key.startsWith("order_")) {
             if(paymentRequestId != null) {
                 String link = pmsInvoiceManager.getPaymentLinkConfig().webAdress + "/pr.php?id=" + paymentRequestId;
-                message = message.replace("{paymentlink}", "<a href='" + link + "'>" + link + "</a>");
+                if (type.equals("email")) {
+                    message = message.replace("{paymentlink}", "<a href='" + link + "'>" + link + "</a>");
+                } else {
+                    message = message.replace("{paymentlink}", link);
+                }
             } else if (orderIdToSend != null) {
                 message = message.replace("{orderid}", this.orderIdToSend);
                 Order order = orderManager.getOrderSecure(this.orderIdToSend);
@@ -410,7 +415,11 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
                 message = message.replace("{selfmanagelink}", pmsInvoiceManager.getPaymentLinkConfig().webAdress + "/?page=booking_self_management&id=" + booking.secretBookingId);
             } else {
                 String link = pmsInvoiceManager.getPaymentLinkConfig().webAdress + "/pr.php?id=" + booking.id;
-                message = message.replace("{paymentlink}", "<a href='" + link + "'>" + link + "</a>");
+                if (type.equals("email")) {
+                    message = message.replace("{paymentlink}", "<a href='" + link + "'>" + link + "</a>");
+                } else {
+                    message = message.replace("{paymentlink}", link);
+                }
             }
         }        
         
@@ -491,15 +500,24 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
     private List<String> sendEmail(String key, PmsBooking booking, PmsBookingRooms room, String type, String title, String content) {
         List<String> recipients = getEmailRecipients(booking, room, type, key);
         
+        AccountingDetails details = invoiceManager.getAccountingDetails();
         HashMap<String, String> attachments = new HashMap();
         if (key.startsWith("booking_completed")) {
             attachments.put("termsandcondition.html", createContractAttachment(booking.id));
         }
         if (key.startsWith("sendreciept")) {
-            attachments.put("receipt.pdf", createInvoiceAttachment());
+            String name = "reciept";
+            if(details != null && details.language != null && details.language.contains("de")) {
+                name = "Rechnung";
+            }
+            attachments.put(name+".pdf", createInvoiceAttachment());
         }
         if (key.startsWith("sendinvoice")) {
-            attachments.put("invoice.pdf", createInvoiceAttachment());
+            String name = "invoice";
+            if(details != null && details.language != null && details.language.contains("de")) {
+                name = "Rechnung";
+            }
+            attachments.put(name+".pdf", createInvoiceAttachment());
         }
 
         for(String email : recipients) {

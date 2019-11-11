@@ -71,12 +71,12 @@ class SecuPay extends \PaymentApplication implements \Application {
              
              $types = $this->getTypes();
              echo "<div style='text-align:center;'>";
-             echo "<h1>Please select a payment type</h1>";
+             echo "<h1>Bitte wählen Sie eine Zahlungsmethode aus:</h1>";
              
              $txts = array();
-             $txts['debit'] = "Debit / Lastschrifteinzug";
-             $txts['creditcard'] = "Credit card / Kreditkarte";
-             $txts['sofort'] = "Sofort / Sofortüberweisung";
+             $txts['debit'] = "Lastschrifteinzug (debit card)";
+             $txts['creditcard'] = "Kreditkarte (credit card)";
+             $txts['sofort'] = "Sofortüberweisung";
              
              foreach($types as $type) {
                  if($type == "invoice") {
@@ -86,10 +86,11 @@ class SecuPay extends \PaymentApplication implements \Application {
                  $txt = $txts[$type];
                  
                  echo "<a href='/?changeGetShopModule=cms&page=cart&payorder=".$_GET['payorder']."&paymentmethod=$type'>";
-                 echo "<div style='text-transform:uppercase; margin: 10px; cursor:pointer;' class='selectpaymentmethod'>";
+                 echo "<div style='text-transform:uppercase; margin: 10px; cursor:pointer;' class='paymentmethodbutton green'>";
                  echo $txt;
                  echo "</div>";
                  echo "</a>";
+                 echo "<br>";
              }
              echo "</div>";
              echo "<br><br>";
@@ -100,9 +101,104 @@ class SecuPay extends \PaymentApplication implements \Application {
              echo "<br><br>";
              echo "<br><br>";
              
-             echo "<style>";
-             echo ".selectpaymentmethod { border: solid 1px #bbb; display:inline-block; width: 300px;  background-color:#a2bef3; }";
-             echo "</style>";
+             ?>
+            <style>
+
+                
+/* Colored buttons styles */
+
+        .paymentmethodbutton.green {
+          color: #fff;
+          text-shadow: 0 1px 0 rgba(0,0,0,.2);
+
+          background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,.3)), to(rgba(255,255,255,0)));
+          background-image: -webkit-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
+          background-image: -moz-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
+          background-image: -ms-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
+          background-image: -o-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
+          background-image: linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
+        }
+
+        /* */
+
+        .paymentmethodbutton.green{
+          background-color: #57a957;
+          border-color: #57a957;
+          width: 250px;
+        }
+        
+        [cellid="6eecdcf1-004d-48bf-890f-3cc1d630bd6b"],
+        [cellid="6eecdcf1-004d-48bf-890f-3cc1d630bd6b"]
+        {
+            display:none;
+        }
+        .gsaddcontent { display:none; }
+        
+        
+        h1 {
+            font-weight: normal; color:#000;
+        }
+
+                
+            .paymentmethodbutton::-moz-focus-inner{
+              border: 0;
+              padding: 0;
+            }
+
+            .paymentmethodbutton{
+              display: inline-block;
+              *display: inline;
+              zoom: 1;
+              padding: 6px 20px;
+              margin: 0;
+              cursor: pointer;
+              border: 1px solid #bbb;
+              overflow: visible;
+              font: bold 13px arial, helvetica, sans-serif;
+              text-decoration: none;
+              white-space: nowrap;
+              color: #555;
+
+              background-color: #ddd;
+              background-image: -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,1)), to(rgba(255,255,255,0)));
+              background-image: -webkit-linear-gradient(top, rgba(255,255,255,1), rgba(255,255,255,0));
+              background-image: -moz-linear-gradient(top, rgba(255,255,255,1), rgba(255,255,255,0));
+              background-image: -ms-linear-gradient(top, rgba(255,255,255,1), rgba(255,255,255,0));
+              background-image: -o-linear-gradient(top, rgba(255,255,255,1), rgba(255,255,255,0));
+              background-image: linear-gradient(top, rgba(255,255,255,1), rgba(255,255,255,0));
+
+              -webkit-transition: background-color .2s ease-out;
+              -moz-transition: background-color .2s ease-out;
+              -ms-transition: background-color .2s ease-out;
+              -o-transition: background-color .2s ease-out;
+              transition: background-color .2s ease-out;
+              background-clip: padding-box; /* Fix bleeding */
+              -moz-border-radius: 3px;
+              -webkit-border-radius: 3px;
+              border-radius: 3px;
+              -moz-box-shadow: 0 1px 0 rgba(0, 0, 0, .3), 0 2px 2px -1px rgba(0, 0, 0, .5), 0 1px 0 rgba(255, 255, 255, .3) inset;
+              -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, .3), 0 2px 2px -1px rgba(0, 0, 0, .5), 0 1px 0 rgba(255, 255, 255, .3) inset;
+              box-shadow: 0 1px 0 rgba(0, 0, 0, .3), 0 2px 2px -1px rgba(0, 0, 0, .5), 0 1px 0 rgba(255, 255, 255, .3) inset;
+              text-shadow: 0 1px 0 rgba(255,255,255, .9);
+
+              -webkit-touch-callout: none;
+              -webkit-user-select: none;
+              -khtml-user-select: none;
+              -moz-user-select: none;
+              -ms-user-select: none;
+              user-select: none;
+            }
+
+            .paymentmethodbutton:hover{
+              background-color: #eee;
+              color: #555;
+            }
+
+             .selectpaymentmethod { border: solid 1px #bbb; border-radius:0px !important; display:inline-block; width: 300px !important;  background-color:#a2bef3; padding: 10px !important;   }
+
+             </style>
+            <?php
+             
              
              return;
          }
@@ -125,7 +221,7 @@ class SecuPay extends \PaymentApplication implements \Application {
             'url_failure' => $this->getFailedPage(),
             'url_push' => $this->getCallbackUrl(),
             "order_id" => $this->order->incrementOrderId,
-            'language' => $this->getFactory()->getSelectedLanguage()
+            'language' => "de_DE"
         );
         if(!$this->isProdMode()) {
             $jsonData['demo'] = "1";

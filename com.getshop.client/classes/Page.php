@@ -1865,7 +1865,7 @@ class Page {
             }
             echo "<div class='gs_language_selection'>";
             echo "<a href='?setLanguage=$mainLangCode'><div class='gs_language_code gs_lang_code_$mainLangCode $active'>";
-            echo $langText[$mainLangCode];
+            echo @$langText[$mainLangCode];
             echo "</div></a>";
             foreach ($languages as $lang) {
                 $active = $lang == $selectedTranslation ? "active" : "";

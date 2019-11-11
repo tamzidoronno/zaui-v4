@@ -293,12 +293,33 @@ class PmsBookingMessageFormatter {
             }
             
         }catch(Exception e) {}
+        
+        
+        String translation = "en";
+        if(message.contains("{translation=")) {
+            int offset = message.indexOf("{translation=")+13;
+            translation = message.substring(offset, message.indexOf("}", offset));
+            message = message.replace("{translation=" + translation + "}", "");
+        }
+        
+        String room = "Room";
+        String start = "Start";
+        String end = "End";
+        String amount = "Amount";
+        
+        if(translation != null && translation.equals("de")) {
+            room = "Kategorie";
+            start = "Anreise";
+            end = "Abreise";
+            amount = "EUR";
+        }
+        
         String header = "<tr bgcolor='#efefef'>";
-        header += "<th align='left' style='font-size:12px;'>Room</th>";
-        header += "<th align='left' style='font-size:12px;'>Start</th>";
-        header += "<th align='left' style='font-size:12px;'>End</th><th align='left'></th>";
+        header += "<th align='left' style='font-size:12px;'>"+room+"</th>";
+        header += "<th align='left' style='font-size:12px;'>"+start+"</th>";
+        header += "<th align='left' style='font-size:12px;'>"+end+"</th><th align='left'></th>";
         if(booking.getTotalPrice() > 0 && booking.getTotalPrice() < 100000) {
-            header += "<th align='left' style='font-size:12px;'>Amount</th>";
+            header += "<th align='left' style='font-size:12px;'>"+amount+"</th>";
         }
         header += "</tr>";
         

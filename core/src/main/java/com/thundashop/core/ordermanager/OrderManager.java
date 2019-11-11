@@ -4664,9 +4664,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         String language = getSession().language;
         
         for(Order ord : orders.values()) {
-            if(ord.incrementOrderId == 100081) {
-                System.out.println("okey");
-            }
             ord.language = language;
             ord.currency = currency;
             super.saveObject(ord);

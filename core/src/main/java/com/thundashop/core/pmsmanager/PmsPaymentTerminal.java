@@ -430,7 +430,7 @@ public class PmsPaymentTerminal extends GetShopSessionBeanNamed implements IPmsP
             }
             details.kidType = settings.getSetting("defaultKidMethod");
             details.type = settings.getSetting("type");
-            details.currency = settings.getSetting("currency");
+            details.currency = orderManager.getLocalCurrencyCode();
         }
 
         return details;

@@ -53,12 +53,11 @@ class InvoiceTemplateTranslator {
             return "Kr ".round($price, 2);
         }
         
-        if ($this->currency == "USD") {
+        if (strtolower($this->currency) == "usd" || strtolower($this->currency) == "cad") {
             return "$ ".sprintf('%0.2f', $price);
         }
         
-        if ($this->currency == "EURO") {
-            
+        if (strtolower($this->currency) == "eur") {
             return "€ ".sprintf('%0.2f', $price);
         }
         
@@ -78,12 +77,16 @@ class InvoiceTemplateTranslator {
             return "USD";
         }
         
-        if ($this->currency == "EURO") {
+        if ( strtolower($this->currency) == "eur") {
             return "EURO";
         }
         
         if ($this->currency == "GBP") {
             return "GBP";
+        }
+        
+        if (strtolower($this->currency) == "cad") {
+            return "CAD";
         }
         
         return "";

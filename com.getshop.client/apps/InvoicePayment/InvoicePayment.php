@@ -62,7 +62,6 @@ class InvoicePayment extends \PaymentApplication implements \Application{
         $this->setConfigurationSetting("duedays", $_POST['duedays']);
         $this->setConfigurationSetting("defaultKidMethod", $_POST['defaultKidMethod']);
         $this->setConfigurationSetting("kidSize", $_POST['kidSize']);
-        $this->setConfigurationSetting("currency", $_POST['currency']);
         $this->setConfigurationSetting("type", $_POST['type']);
         $this->setConfigurationSetting("iban", $_POST['iban']);
         $this->setConfigurationSetting("swift", $_POST['swift']);

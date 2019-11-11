@@ -341,6 +341,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             
             if (dataFromDatabase instanceof Order) {
                 Order order = (Order) dataFromDatabase;
+                
+                if (order.changedFromNormalToBlank()) {
+                    saveObject(order);
+                }
 //                if (order.cleanMe()) {
 //                    saveObject(order);
 //                }
@@ -2090,7 +2094,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         details.vatNumber = settings.getSetting("vatNumber");
         details.webAddress = settings.getSetting("webAddress");
         details.type = settings.getSetting("type");
-        details.currency = settings.getSetting("currency");
+        details.currency = getLocalCurrencyCode();
         details.iban = settings.getSetting("iban");
         details.swift = settings.getSetting("swift");
 
@@ -4112,6 +4116,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             res = getDayIncomes(getStore().rowCreatedDate, date);
         } else {
             res = getPaymentRecords(paymentId, getStore().rowCreatedDate, date);
+        }
+        
+        for (DayIncome ires : res) {
+            for (DayEntry ien : ires.dayEntries) {
+                if (ien.accountingNumber == null) {
+                    System.out.println("Fodun it: " + ien.incrementalOrderId);
+                }
+            }
         }
         
         addBalance(res, balance, incTaxes);

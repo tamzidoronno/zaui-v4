@@ -197,7 +197,7 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
                 $guest->phone = $_POST['data'][$guest->guestId]['phone'];
             }
         }
-        $this->getApi()->getPmsManager()->setBooking($this->getSelectedMultilevelDomainName(), $booking);
+        $this->getApi()->getPmsManager()->setBookingByAdmin($this->getSelectedMultilevelDomainName(), $booking, true);
     }
     
     public function searchfreerom() {

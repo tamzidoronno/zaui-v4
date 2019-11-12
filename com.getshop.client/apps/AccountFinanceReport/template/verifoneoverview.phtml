@@ -14,6 +14,8 @@ $issuerNames[3] = "Visa";
 $issuerNames[4] = "MasterCard";
 $issuerNames[5] = "American Express";
 $issuerNames[14] = "Maestro";
+$issuerNames[38] = "iGive Gavekort";
+$issuerNames[68] = "Union pay";
 
 echo "<div style='padding: 20px;'>";
     echo "<div class='payment header'>";
@@ -79,6 +81,7 @@ echo "<div style='padding: 20px;'>";
                 $ordersGroupedByIssuer[$issuer][] = $order;
                 
                 if (!array_key_exists($issuer, $issuerNames)) {
+                    echo "Issuer: ".$issuer;
                     echo "<pre>";
                     print_r($logs);
                 }

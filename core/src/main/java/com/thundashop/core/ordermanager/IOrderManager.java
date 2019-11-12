@@ -374,6 +374,9 @@ public interface IOrderManager {
     public List<Order> getAllUnpaid(String paymentMethod);
     
     @Administrator
+    public List<String> getUnpaidOrderIdsThatAreIllegalWhenClosingPeriode();
+    
+    @Administrator
     public Order mergeAndCreateNewOrder(String userId, List<String> orderIds, String paymentMethod, String note);
     
     @Administrator

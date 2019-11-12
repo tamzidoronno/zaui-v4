@@ -308,6 +308,7 @@ public class PmsConfiguration extends DataCommon {
     public String wubooklcode = "";
     public boolean wubookcallbackactivated = false;
     public int numberOfRoomsToRemoveFromBookingCom = 1;
+    public HashMap<String, Integer> maxNumberForEachCategory = new HashMap();
     public boolean usePricesFromChannelManager = false;
     public boolean useGetShopPricesOnExpedia = false;
     public boolean ignoreNoShow = false;

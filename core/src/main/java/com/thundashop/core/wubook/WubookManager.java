@@ -1684,6 +1684,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                     count = 0;
                 }
                 
+                Integer maxToAdd = getMaxForCategory(rdata.bookingEngineTypeId);
+                if(maxToAdd >= 0 && maxToAdd < count) {
+                    count = maxToAdd;
+                }
+                
                 Hashtable result = new Hashtable();
                 result.put("avail", count);
                 result.put("no_ota", 0);
@@ -1778,6 +1783,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 
                 if(i > 305) {
                     count = 0;
+                }
+                
+                Integer maxToAdd = getMaxForCategory(rdata.bookingEngineTypeId);
+                if(maxToAdd >= 0 && maxToAdd < count) {
+                    count = maxToAdd;
                 }
                 
                 WubookAvailabilityField field = new WubookAvailabilityField();
@@ -2485,6 +2495,14 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         updateMinStay(); 
         
         return "";
+    }
+
+    private Integer getMaxForCategory(String bookingEngineTypeId) {
+        Integer count = -1;
+        if(pmsManager.getConfigurationSecure().maxNumberForEachCategory.containsKey(bookingEngineTypeId)) {
+            count = pmsManager.getConfigurationSecure().maxNumberForEachCategory.get(bookingEngineTypeId);
+        }
+        return count;
     }
 
 

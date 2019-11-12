@@ -4,6 +4,7 @@ $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedM
 $callbackactive = $config->wubookcallbackactivated ? "<div style='color:green;'>callback is active</div>" : "<span style='color:red;'>callback is not active</span>";
 $autochargeactive = $config->wubookAutoCharging ? "<div style='color:green;'>Autocharging of credit cards are active</div>" : "";
 $callbackurl = $this->getApi()->getWubookManager()->getCallbackUrl($this->getSelectedMultilevelDomainName());
+$types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
 ?>
 <br>
     <div class='section'>
@@ -89,6 +90,25 @@ $callbackurl = $this->getApi()->getWubookManager()->getCallbackUrl($this->getSel
                             <td><input type="text" class='gsniceinput1' placeholder='0' gsname="numberOfRoomsToRemoveFromBookingCom" value="<?php echo $config->numberOfRoomsToRemoveFromBookingCom; ?>">
                             </td>
                         </tr>
+                        
+                        <?php
+                        foreach($types as $type) {
+                            $maxNumber = -1;
+                            $configArray = (array)$config->maxNumberForEachCategory;
+                            if(isset($configArray[$type->id])) {
+                                $maxNumber = $configArray[$type->id];
+                            }
+                            ?>
+                            <tr>
+                                <td>Maximum number of rooms to be available for <b style="text-transform: lowercase;"><?php echo $type->name; ?></b> (-1 means all)
+                                </td>
+                                <td><input type="text" class='gsniceinput1' placeholder='0' gsname="maxNumberForEachCategory_<?php echo $type->id; ?>" value="<?php echo $maxNumber; ?>">
+                                </td>
+                            </tr>
+                            <?php
+                        }
+                        ?>
+                        
                         <tr>
                             <td>Number of days allowed to sell in the future<br>
                                 <b>To make sure stays in the distant future are not occupied before you are able to tune the price, max 500 days</b> 

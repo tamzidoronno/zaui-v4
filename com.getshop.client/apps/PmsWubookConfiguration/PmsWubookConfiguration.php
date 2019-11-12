@@ -37,6 +37,14 @@ class PmsWubookConfiguration extends \WebshopApplication implements \Application
         if($config->daysAllowedInTheFuture > 500) {
             $config->daysAllowedInTheFuture = 500;
         }
+        
+        $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+        foreach($types as $type) {
+            if(isset($_POST['data']['maxNumberForEachCategory_'.$type->id])) {
+                $config->maxNumberForEachCategory->{$type->id} = $_POST['data']['maxNumberForEachCategory_'.$type->id];
+            }
+        }
+        
         $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $config);
     }
 

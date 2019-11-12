@@ -39,6 +39,9 @@ public interface IPmsManager {
     public void markRoomAsCleaned(String itemId);
     
     @Administrator
+    public void updateCommentOnBooking(String bookingId, String commentId, String newText);
+    
+    @Administrator
     public void updatePriceMatrixOnRoom(String pmsBookingRoomId, LinkedHashMap<String,Double> priceMatrix);
     
     public void warnFailedBooking(PmsBooking booking);

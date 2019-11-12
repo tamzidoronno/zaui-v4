@@ -28,20 +28,26 @@ foreach ($comments as $time => $comment) {
     if($comment->pmsBookingRoomId == $pmsSelectedRoom->pmsBookingRoomId) {
         $allStyle = "font-style: oblique;background-color:#91d7e2; ";
     }
-    echo "<div style='vertical-align: top; border-bottom: solid 1px #DDD; padding: 3px; $allStyle' >";
+    echo "<div style='vertical-align: top; border-bottom: solid 1px #DDD; padding: 3px; $allStyle' class='commentrow'>";
 
         $style = "";
         if ($comment->deleted) {
             $style = "text-decoration: line-through;";
         }
-        echo "<div style='display: inline-block; vertical-align: top; color:#777;$style'>";
+        echo "<div style='display: inline-block; vertical-align: top; width:215px; color:#777;$style'>";
             echo "<i class='fa fa-trash-o deletecomment' time='$time' style='cursor:pointer;'></i> ";
+            echo "<i class='fa fa-edit' style='cursor:pointer;' onclick='$(\".savechangestocommentbtn\").fadeIn();$(\".contenttoedit\").focus();'></i> ";
             echo date("d.m.Y H:i", strtotime($comment->added));
         echo "</div>";
 
-        echo "<div style='display: inline-block; margin-left: 20px; $style'>";
+        echo "<div style='display: inline-block; margin-left: 20px;    width: calc(100% - 250px); $style' contenteditable='true' class='contenttoedit'>";
             echo nl2br($comment->comment);
         echo "</div>";
+        foreach($comment->modifiedByUser as $time => $userId) {
+            $user = $this->getApi()->getUserManager()->getUserById($userId);
+            echo "<div style='color:#bbb; text-align:right; font-size:10px;'>Modified by " . $user->fullName . " at " . date("d.m.Y H:i", $time/1000) . "</div>";
+        }
+        echo "<div style='text-align:right;margin-top:10px;'><span class='shop_button savechangestocommentbtn' commentid='".$comment->commentId."' style='display:none;'>Save changes</span></div>";
 
         if ($comment->userId) {
             $commentUser = $this->getApi()->getUserManager()->getUserById($comment->userId);

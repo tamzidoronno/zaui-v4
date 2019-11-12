@@ -22,6 +22,13 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         
     }
     
+    public function updatePmsComment() {
+        $id = $_POST['data']['id'];
+        $text = $_POST['data']['text'];
+//        $text = str_replace("<br>", "", $text);
+        $this->getApi()->getPmsManager()->updateCommentOnBooking($this->getSelectedMultilevelDomainName(), $this->getPmsBooking()->id, $id, $text);
+    }
+    
     public function searchForGuest() {
         $guest = new \core_pmsmanager_PmsGuests();
         switch($_POST['data']['type']) {

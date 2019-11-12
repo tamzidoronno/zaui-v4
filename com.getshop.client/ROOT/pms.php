@@ -90,6 +90,10 @@ if($config->bookingTag) {
     if($config->bookingTag) {
         echo "<div style='text-align:center; text-transform:uppercase; background-color:yellow; position:fixed; top: 0px; width:100%;z-index:1;'>";
         echo $config->bookingTag;
+        
+        $loggedOnUser = $factory->getApi()->getUserManager()->getLoggedOnUser();
+        echo " logged on as " . $loggedOnUser->fullName;
+        
         echo "</div>";
         echo "<div>&nbsp;</div>";
     }

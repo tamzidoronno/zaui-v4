@@ -10846,4 +10846,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         saveBooking(booking);
     }
 
+    @Override
+    public void updateCommentOnBooking(String bookingId, String commentId, String newText) {
+        PmsBooking booking = getBooking(bookingId);
+        for(PmsBookingComment comment : booking.comments.values()) {
+            if(comment.commentId.equals(commentId)) {
+                comment.comment = newText.replace("\n","");
+                comment.modifiedByUser.put(System.currentTimeMillis(), getSession().currentUser.id);
+            }
+        }
+        saveBooking(booking);
+    }
+
 }

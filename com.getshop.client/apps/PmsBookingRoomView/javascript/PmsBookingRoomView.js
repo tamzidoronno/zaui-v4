@@ -63,7 +63,28 @@ app.PmsBookingRoomView = {
         $(document).on('click','.PmsBookingRoomView .sendconfirmationbutton', app.PmsBookingRoomView.sendConfirmation);
         $(document).on('click','.PmsBookingRoomView .selectsameasbooker', app.PmsBookingRoomView.selectSameAsBooker);
         $(document).on('click','.PmsBookingRoomView .addsuggestionarrow', app.PmsBookingRoomView.addSuggestedRow);
+        $(document).on('click','.PmsBookingRoomView .savechangestocommentbtn', app.PmsBookingRoomView.saveChangesToComment);
+        $(document).on('focus','.PmsBookingRoomView .contenttoedit', app.PmsBookingRoomView.showSaveButton);
         $(document).on('keyup','.PmsBookingRoomView [searchtype]', app.PmsBookingRoomView.searchGuests);
+    },
+    showSaveButton : function() {
+        var row = $(this).closest('.commentrow');
+        row.find('.savechangestocommentbtn').show();
+    },
+    saveChangesToComment : function() {
+        var row = $(this).closest('.commentrow');
+        var text = row.find('.contenttoedit').html();
+        var id = $(this).attr('commentid');
+        
+        var event = thundashop.Ajax.createEvent('','updatePmsComment',$(this), {
+            "id" : id,
+            "text" : text
+        });
+        
+        var btn = $(this);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            btn.fadeOut();
+        });
     },
     searchGuests : function() {
         if(typeof(app.PmsBookingRoomView.searchguesttimeout) !== "undefined") {
@@ -80,7 +101,6 @@ app.PmsBookingRoomView = {
                 row.find('.searchsuggestions').html(res);
             });
         }, "300");
-        
     },
     
     addSuggestedRow : function() {

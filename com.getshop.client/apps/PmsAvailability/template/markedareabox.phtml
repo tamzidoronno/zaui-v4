@@ -20,6 +20,7 @@ if($booking) {
 }
 
 $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedMultilevelDomainName());
+$categories = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
 
 
 if($_POST['data']['isclosed'] && $_POST['data']['isclosed'] == "true") {
@@ -82,15 +83,15 @@ if($_POST['data']['isclosed'] && $_POST['data']['isclosed'] == "true") {
             } else {
                 $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
                 echo "<div style='text-align:center;padding-bottom: 10px; margin-bottom: 10px;'>" . $user->fullName . "</div>";
-                echo "<div>Check-in <span style='float:right;'>" . date("d.m.Y H:i:s", strtotime($room->date->start)) . " <i class='fa fa-edit' style='cursor:pointer;' onclick='$(\".quickupdatestay\").show();'></i></span></div>";
-                echo "<div>Check-out <span style='float:right;'>" . date("d.m.Y H:i:s", strtotime($room->date->end)) . " <i class='fa fa-edit' style='cursor:pointer;' onclick='$(\".quickupdatestay\").show();'></i></span></div>";
+                echo "<div>Check-in <span style='float:right;'>" . date("d.m.Y H:i:s", strtotime($room->date->start)) . " <i class='fa fa-edit' style='cursor:pointer;' onclick='$(\".quickupdatestay\").show();$(\".choosecategory\").chosen();'></i></span></div>";
+                echo "<div>Check-out <span style='float:right;'>" . date("d.m.Y H:i:s", strtotime($room->date->end)) . " <i class='fa fa-edit' style='cursor:pointer;' onclick='$(\".quickupdatestay\").show();$(\".choosecategory\").chosen();'></i></span></div>";
                 echo "<div>Total price <span style='float:right;'>" . $room->totalCost . "</span></div>";
                 echo "<br>";
                 
                 echo "<div gstype='form' method='updateStayTime' class='quickupdatestay' style='border: solid 1px #bbb; padding: 5px;position:absolute;background-color:#fff; display:none;'>";
                 echo "<input type='hidden' gsname='bookingid' value='".$booking->id."'>";
                 echo "<input type='hidden' gsname='roomid' value='".$room->pmsBookingRoomId."'>";
-                echo "<i class='fa fa-close' style='float:right; cursor:pointer;' onclick='$(\".quickupdatestay\").hide();'></i>";
+                echo "<i class='fa fa-close' style='float:right; cursor:pointer;' onclick='$(\".quickupdatestay\").hide();$(\".choosecategory\").chosen();'></i>";
                 echo "<div>Check-in<br>";
                 echo "<input type='txt' gsname='startdate' class='gsniceinput1' value='".date("d.m.Y", strtotime($room->date->start))."' style='width:80px'>";
                 echo "<input type='txt' gsname='starttime' class='gsniceinput1' value='".date("H:i", strtotime($room->date->start))."' style='width:40px'>";
@@ -99,14 +100,23 @@ if($_POST['data']['isclosed'] && $_POST['data']['isclosed'] == "true") {
                 echo "<input type='txt' gsname='enddate' class='gsniceinput1' value='".date("d.m.Y", strtotime($room->date->end))."' style='width:80px'>";
                 echo "<input type='txt' gsname='endtime' class='gsniceinput1' value='".date("H:i", strtotime($room->date->end))."' style='width:40px'>";
                 
-                echo "<select class='gsniceselect1' style='width:100%; box-sizing:border-box; margin-top:5px;' gsname='itemid'>";
-                echo "<option value=''>Floating</option>";
-                foreach($items as $item) {
-                    $selected = "";
-                    if($item->id == $room->bookingItemId) {
-                        $selected = "SELECTED";
+                echo "<div style='height: 5px;'></div>";
+                echo "<select class='gsniceselect1 choosecategory' style='width:100%; box-sizing:border-box; margin-top:5px;' gsname='itemid'>";
+                foreach($categories as $category) {
+                    echo '<optgroup label="'.$category->name.'">';
+                    echo "<option value='floating_".$category->id."'>Floating ".$category->name."</option>";
+                    foreach($items as $item) {
+                        if($item->bookingItemTypeId != $category->id) {
+                            continue;
+                        }
+                        $selected = "";
+                        if($item->id == $room->bookingItemId) {
+                            $selected = "SELECTED";
+                        }
+                        echo "<option value='". $item->id ."' $selected>" . $item->bookingItemName . "</option>";
                     }
-                    echo "<option value='". $item->id ."' $selected>" . $item->bookingItemName . "</option>";
+                    echo "</optgroup>";
+                    
                 }
                 echo "</select>";
                 

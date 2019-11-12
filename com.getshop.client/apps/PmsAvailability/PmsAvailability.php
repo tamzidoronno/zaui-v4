@@ -89,6 +89,12 @@ class PmsAvailability extends \MarketingApplication implements \Application {
             $app->setStartDate(date("d.m.Y", time()-86400));
             $app->setEndDate(date("d.m.Y", time()+(86400*14)));
         }
+        
+        ?>
+        <script src="/js/chosen/chosen.jquery.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="/js/chosen/chosen.css"/>
+
+        <?php
 
         $this->setPmsBookingIdsFilter();
         
@@ -340,10 +346,15 @@ class PmsAvailability extends \MarketingApplication implements \Application {
     public function updateStayTime() {
         $start = $this->convertToJavaDate(strtotime($_POST['data']['startdate'] . " " . $_POST['data']['starttime']));
         $end = $this->convertToJavaDate(strtotime($_POST['data']['enddate'] . " " . $_POST['data']['endtime']));
-        $roomId = $_POST['data']['roomid'];
         $bookingId = $_POST['data']['bookingid'];
         $itemId = $_POST['data']['itemid'];
-        $this->getApi()->getPmsManager()->setBookingItemAndDate($this->getSelectedMultilevelDomainName(), $roomId, $itemId, false, $start, $end);
+        $roomId = $_POST['data']['roomid'];
+        
+        if(stristr($itemId, "floating_")) {
+            $this->getApi()->getPmsManager()->setNewRoomType($this->getSelectedMultilevelDomainName(), $roomId,$bookingId, str_replace("floating_", "", $itemId));
+        } else {
+            $this->getApi()->getPmsManager()->setBookingItemAndDate($this->getSelectedMultilevelDomainName(), $roomId, $itemId, false, $start, $end);
+        }
         unset($_SESSION['tmpselectedroom']);
     }
     

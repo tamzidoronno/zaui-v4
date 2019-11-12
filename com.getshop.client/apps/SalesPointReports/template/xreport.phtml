@@ -175,6 +175,30 @@ foreach ($ordersGrouped as $paymentType => $orders) {
    
 </div>
 <?
+
+$orders = $this->getApi()->getOrderManager()->getUnpaidOrderIdsThatAreIllegalWhenClosingPeriode();
+
+if (count($orders)) {
+    ?>
+    <div style="padding: 50px;">
+        <h2 style="color: red">Unpaid orders</h2>
+        <div>
+            The following orders are created but not marked as paid, please delete them if they are started but not completed. 
+        </div>
+        <?
+        foreach ($orders as $orderId) {
+            $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+            $date = date('d.m.y', strtotime($order->rowCreatedDate));
+            echo '<div style="border-top: solid 1px #DDD; padding-top: 5px; margin-top: 5px;"><a target="_blank" href="/pos.php?page=orderviewpage&orderid='.$orderId.'">'.$date. " - ".$order->incrementOrderId.', total: '.$this->getApi()->getOrderManager()->getTotalAmount($order).'</a></div>';
+        }
+        ?>
+    </div>
+    <?
+    
+    return;
+}
+
+
 if (!$this->isCurrentZReportASavedReport() && $this->canMakeZReport()) {
 ?>
     <div style="padding: 50px;">

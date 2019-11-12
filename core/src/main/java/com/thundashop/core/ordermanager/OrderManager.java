@@ -124,6 +124,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     private OrderManagerSettings orderManagerSettings = null;
     
+    private List<String> fullyIntegratedPaymentMethods = new ArrayList();
+    
     @Autowired
     public MailFactory mailFactory;
     
@@ -327,6 +329,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
+        addPaymentMethodsNotAllowedToMarkAsPaid();
         
         for (DataCommon dataFromDatabase : data.data) {
             if (dataFromDatabase instanceof VirtualOrder) {
@@ -2252,6 +2255,26 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         return retOrders;
     }
+    
+    @Override
+    public List<String> getUnpaidOrderIdsThatAreIllegalWhenClosingPeriode() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, 2019);
+        cal.set(Calendar.DAY_OF_MONTH, 13);
+//        cal.set(Calendar.MONTH, Calendar.NOVEMBER);
+        cal.set(Calendar.MONTH, Calendar.JUNE);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        
+        Date date = cal.getTime();
+        
+        return orders.values()
+                .stream()
+                .filter(o -> o.status != 7 && !o.isNullOrder())
+                .filter(o -> o.payment != null && o.payment.paymentId != null && fullyIntegratedPaymentMethods.contains(o.payment.paymentId))
+                .filter(o -> o.rowCreatedDate.after(date))
+                .map(o -> o.id)
+                .collect(Collectors.toList());
+    }
  
    @Override
     public Order mergeAndCreateNewOrder(String userId, List<String> orderIds, String paymentMethod, String note) {
@@ -2259,6 +2282,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         if (user == null) {
             throw new ErrorException(8);
+            
+            
+            
         }
         
         if (orderIds.isEmpty())
@@ -2772,7 +2798,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
             
             // AccruedPayment
-            if (order.getPaymentApplicationId().equals("60f2f24e-ad41-4054-ba65-3a8a02ce0190")) {
+            if (fullyIntegratedPaymentMethods.contains(order.getPaymentApplicationId()) && !isGetShop) {
                 throw new ErrorException(1052);
             }
             
@@ -2781,15 +2807,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 throw new ErrorException(1052);
             }
             
-            // Verifone
-            if (order.getPaymentApplicationId().equals("6dfcf735-238f-44e1-9086-b2d9bb4fdff2") && !isGetShop) {
+            // AccruedPayment
+            if (order.getPaymentApplicationId().equals("60f2f24e-ad41-4054-ba65-3a8a02ce0190")) {
                 throw new ErrorException(1052);
-            }            
-            
-            // Integrated payment terminal
-            if (order.getPaymentApplicationId().equals("8edb700e-b486-47ac-a05f-c61967a734b1") && !isGetShop) {
-                throw new ErrorException(1052);
-            }            
+            }
         }
     }
 
@@ -4807,6 +4828,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
         }
         return res;
+    }
+
+    private void addPaymentMethodsNotAllowedToMarkAsPaid() {
+        fullyIntegratedPaymentMethods.add("6dfcf735-238f-44e1-9086-b2d9bb4fdff2");
+        fullyIntegratedPaymentMethods.add("8edb700e-b486-47ac-a05f-c61967a734b1");
     }
 
 }

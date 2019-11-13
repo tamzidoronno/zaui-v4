@@ -632,6 +632,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 logText("Failed to update daily min stay, " + result.get(1));
                 return "Failed to update daily min stay, " + result.get(1);
             }
+            lastAvailability.needUpdateMinStay = false;
         }
         return "";
     }

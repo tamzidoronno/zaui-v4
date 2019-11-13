@@ -2261,8 +2261,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, 2019);
         cal.set(Calendar.DAY_OF_MONTH, 13);
-//        cal.set(Calendar.MONTH, Calendar.NOVEMBER);
-        cal.set(Calendar.MONTH, Calendar.JUNE);
+        cal.set(Calendar.MONTH, Calendar.NOVEMBER);
+//        cal.set(Calendar.MONTH, Calendar.JUNE);
         cal.set(Calendar.HOUR_OF_DAY, 0);
         
         Date date = cal.getTime();

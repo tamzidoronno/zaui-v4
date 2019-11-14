@@ -2267,13 +2267,15 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         Date date = cal.getTime();
         
-        return orders.values()
+        List<String> retlist = orders.values()
                 .stream()
                 .filter(o -> o.status != 7 && !o.isNullOrder())
-                .filter(o -> o.payment != null && o.payment.paymentId != null && fullyIntegratedPaymentMethods.contains(o.payment.paymentId))
+                .filter(o -> o.payment != null && o.payment.paymentId != null && o.isPartOfAnyPaymentTypes(fullyIntegratedPaymentMethods))
                 .filter(o -> o.rowCreatedDate.after(date))
                 .map(o -> o.id)
                 .collect(Collectors.toList());
+
+        return retlist;
     }
  
    @Override

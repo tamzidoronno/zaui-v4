@@ -1505,6 +1505,17 @@ public class Order extends DataCommon implements Comparable<Order> {
         
         return false;
     }
+
+    public boolean isPartOfAnyPaymentTypes(List<String> fullyIntegratedPaymentMethods) {
+        for (String paymentId : fullyIntegratedPaymentMethods) {
+            String pmId = paymentId.replaceAll("-", "_");
+            if (payment != null && payment.paymentType != null && payment.paymentType.contains(pmId)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
     
 
     public static class Status  {

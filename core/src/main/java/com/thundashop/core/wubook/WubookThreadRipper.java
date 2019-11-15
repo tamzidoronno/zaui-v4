@@ -3,6 +3,7 @@ package com.thundashop.core.wubook;
 import static com.stripe.net.OAuth.token;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
@@ -65,8 +66,15 @@ public class WubookThreadRipper extends Thread {
     public void fetchNewBookings() {
         if(manager.fetchBookingThreadIsRunning) {
             manager.logText("A thread already running for fetchnewbooking");
+            Calendar cal = Calendar.getInstance();
+            long diff = System.currentTimeMillis() - manager.fetchBookingThreadStarted.getTime();
+            diff = diff / 10000;
+            if(diff > 600) {
+                manager.fetchBookingThreadIsRunning = false;
+            }
             return;
         }
+        manager.fetchBookingThreadStarted = new Date();
         manager.fetchBookingThreadIsRunning = true;
         try {
             markBookingsFetched();

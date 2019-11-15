@@ -109,6 +109,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     public Date disableWubook = null;
     public Vector bookingsToAdd = null;
     boolean fetchBookingThreadIsRunning = false;
+    Date fetchBookingThreadStarted = null;
     private List<WubookBooking> nextBookings;
     private List<String> bookingCodesToAdd = new ArrayList();
     

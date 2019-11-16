@@ -167,7 +167,11 @@ body[pageid="home"] .footer_row {
 }
 
 
-.chooseimagebtn {
+.choosefloorbtn.chosenfloor {
+    font-weight: bold;
+}
+
+.choosefloorbtn {
     border: solid 1px #bbb;
     width: 200px;
     background-color:#fff;

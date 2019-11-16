@@ -28,6 +28,8 @@ and open the template in the editor.
         <link rel="stylesheet" href="css.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>        
         <script src="javascript/ContentManager.js"></script>
+        <script src="javascript/CategoryGallery/CategoryGallery.js"></script>
+        <link rel="stylesheet" href="javascript/CategoryGallery/CategoryGallery.css">
         <script src="javascript.js"></script>
         <script src="<?php echo Config::$domain; ?>/common.js"></script>
         <script src="javascript/ckeditor/ckeditor.js"></script>

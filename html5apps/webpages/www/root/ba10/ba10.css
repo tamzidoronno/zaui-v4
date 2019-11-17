@@ -167,15 +167,18 @@ body[pageid="home"] .footer_row {
 }
 
 
-.choosefloorbtn.chosenfloor {
-    font-weight: bold;
+.choosefloorbtn.chosenfloor,.gs_categorygallerybutton_chosen {
+     background-color:#fff !important;
+     font-weight: normal !important;
 }
 
-.choosefloorbtn {
-    border: solid 1px #bbb;
+.choosefloorbtn,.gs_categorygallerybutton {
+    border: solid 0px #bbb;
     width: 200px;
-    background-color:#fff;
+    background-color:#e4e4e4;
     padding: 10px;
+    margin-right: 13px !important;
+    border-radius: 3px;
     display:inline-block;
     cursor:pointer;
     margin-right: 3px;

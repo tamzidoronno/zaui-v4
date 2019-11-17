@@ -11,11 +11,11 @@
  *
  * @author ktonder
  */
-class naring extends PageCommon {
-    public $title = "Utleie Næring";
+class facilities extends PageCommon {
+    public $title = "Utleie fasiliteter";
     public $title_rewrite = "rooms";
     public $subpageof = "";
     public $hiddenFromMenu = false;
     
-    public $menuEntries = array('en' => "Rooms", "no" => "Næring");
+    public $menuEntries = array('en' => "Rooms", "no" => "Fasiliteter");
 }

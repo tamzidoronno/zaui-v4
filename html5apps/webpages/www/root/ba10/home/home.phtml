@@ -9,8 +9,10 @@
             ContentManager::render("top_content");
             ?>
         </div>
-        <div style='max-width: 1000px; margin: 0 auto;' id='bookingprocess'></div>
     </div>
+</div>
+<div style="padding-top: 50px;">
+    <div style='max-width: 1000px; margin: 0 auto;' id='bookingprocess'></div>
 </div>
 
 <div class="contentrow row_2"> 
@@ -64,3 +66,27 @@
         </div>
     </div>
 </div>
+
+<script>
+    gsisdevmode = false;
+    
+    $ = jQuery;
+    jQuery(function ($) {
+        $.getScript("https://20489gc6.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
+            $("#bookingprocess").getshopbooking(
+                {
+                    "endpoint": "https://20489gc6.getshop.com/",
+                    "jsendpoint": "https://20489gc6.getshop.com/",
+                    "domain" : "default",
+                    "language" : "no",
+                    "websocket" : "websocket6.getshop.com"
+                }
+            );
+        });
+    });
+</script>
+<style>
+    .GslBooking .picker_header {
+        color:#9a9999 !important;
+    }
+</style>

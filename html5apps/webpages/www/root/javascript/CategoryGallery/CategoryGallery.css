@@ -2,7 +2,7 @@
 
 .gs_categorygallerybutton {
     border: solid 1px #bbb;
-    width: 200px;
+    min-width: 200px;
     background-color:#fff;
     padding: 10px;
     display:inline-block;

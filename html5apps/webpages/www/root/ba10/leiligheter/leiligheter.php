@@ -17,5 +17,5 @@ class leiligheter extends PageCommon {
     public $subpageof = "";
     public $hiddenFromMenu = false;
     
-    public $menuEntries = array('en' => "Rooms", "no" => "Utleie leiligheter");
+    public $menuEntries = array('en' => "Rooms", "no" => "Leiligheter");
 }

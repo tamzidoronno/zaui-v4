@@ -1,10 +1,13 @@
 package com.thundashop.core.pmsmanager;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 public class TimeRepeaterData implements Serializable {
+
     /* 0, daily, 1. Weekly, 2. Monthly, 3. From start to end */
     public static class RepeatPeriodeTypes {
         public static Integer daily = 0;
@@ -53,6 +56,15 @@ public class TimeRepeaterData implements Serializable {
     
     boolean avoidFirstEvent = false;
     
+    List<String> categories = new ArrayList();
+    
     Date createdDate = new Date();
 
+    public boolean containsCategory(String typeId) {
+        if(categories.isEmpty()) {
+            return true;
+        }
+        return categories.contains(typeId);
+    }
+    
 }

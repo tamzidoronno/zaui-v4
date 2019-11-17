@@ -6,8 +6,8 @@ $diff = $error->metaData->diff;
 
 ?>
 
-<div class='col type'>
-    <? echo "Booking: ".$booking->incrementBookingId; ?>
+<div class='col bookingId'>
+    <? echo "Booking: ".$this->getApi()->getPmsManager()->getBookingSummaryText($this->getSelectedMultilevelDomainName(),$error->metaData->pmsbookingid); ?>
 </div>
 <div class='col type' style='width: 400px'>
     <?

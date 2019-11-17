@@ -2814,13 +2814,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         LinkedList<TimeRepeaterDateRange> result = new LinkedList<TimeRepeaterDateRange>();
         List<TimeRepeaterData> repeaters = bookingEngine.getOpeningHoursWithType(bookingItemId, type);
-        if (repeaters.isEmpty()) {
-            repeaters = bookingEngine.getOpeningHoursWithType(null, type);
-        }
-
-        if (type.equals(TimeRepeaterData.TimePeriodeType.closed)) {
-            repeaters.addAll(bookingEngine.getOpeningHoursWithType(null, type));
-        }
 
         for (TimeRepeaterData repeater : repeaters) {
             TimeRepeater generator = new TimeRepeater();
@@ -3611,9 +3604,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         List<TimeRepeaterData> openingshours = bookingEngine.getOpeningHoursWithType(itemType, periodeType);
-        if (openingshours.isEmpty()) {
-            openingshours = bookingEngine.getOpeningHoursWithType(null, periodeType);
-        }
 
         if (periodeType.equals(TimeRepeaterData.TimePeriodeType.open)) {
             return true;
@@ -10856,6 +10846,20 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         saveBooking(booking);
+    }
+    
+    @Override
+    public String getBookingSummaryText(String pmsBookingId) {
+        PmsBooking booking = bookings.get(pmsBookingId);
+        User usr = userManager.getUserByIdUnfinalized(booking.userId);
+        SimpleDateFormat simpleformat = new SimpleDateFormat("dd.M.yyyy");
+
+        String result = booking.incrementBookingId + ", " + usr.fullName + ", " + booking.rooms.size() + " room(s)<br>";
+        if(booking.getStartDate() != null && booking.getEndDate() != null) {
+            result += simpleformat.format(booking.getStartDate()) + " - " + simpleformat.format(booking.getEndDate());
+        }
+        
+        return result;
     }
 
 }

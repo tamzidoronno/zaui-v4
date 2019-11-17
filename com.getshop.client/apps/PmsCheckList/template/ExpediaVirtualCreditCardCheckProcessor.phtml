@@ -7,8 +7,8 @@ $booking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedMultil
 $room = $booking->rooms[0];
 ?>
 
-<div class='col type'>
-    <? echo "Booking: ".$booking->incrementBookingId; ?>
+<div class='col bookingId'>
+    <? echo "Booking: ".$this->getApi()->getPmsManager()->getBookingSummaryText($this->getSelectedMultilevelDomainName(),$error->metaData->pmsbookingid); ?>
 </div>
 <div class='col type'>
     <? echo "Expedia payment not collected"; ?>

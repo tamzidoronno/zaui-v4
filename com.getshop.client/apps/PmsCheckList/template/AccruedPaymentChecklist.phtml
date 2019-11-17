@@ -14,8 +14,8 @@ foreach ($booking->rooms as $iroom) {
 }
 ?>
 
-<div class='col type'>
-    <? echo "Booking: ".$booking->incrementBookingId; ?>
+<div class='col bookingId'>
+    <? echo "Booking: ".$this->getApi()->getPmsManager()->getBookingSummaryText($this->getSelectedMultilevelDomainName(),$error->metaData->pmsbookingid); ?>
 </div>
 <div class='col type'>
     <? echo "Room has been set to have pay after stay.<br>"; 

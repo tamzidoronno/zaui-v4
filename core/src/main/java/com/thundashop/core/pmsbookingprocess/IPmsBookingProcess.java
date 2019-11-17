@@ -40,6 +40,7 @@ public interface IPmsBookingProcess {
     public void cancelPaymentProcess(StartPaymentProcess data);
     public void chargeOrderWithVerifoneTerminal(String orderId, String terminalId);
     public List<String> getTerminalMessages();
+    public CategoriesSummary getAllCategories();
     public void addTestMessagesToQueue(String message);
     public List<BookingProcessRoomStatus> getBooking(String pmsBookingId);
     public void setBookingItemToCurrentBooking(String roomId, String itemId);

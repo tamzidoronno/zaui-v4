@@ -1,4 +1,5 @@
 <?php
+/* @var $this ns_7db21d0e_6636_4dd3_a767_48b06932416c\PmsRestrictions */
 $timePeriodeType = array();
 $timePeriodeType[1] = "Closed";
 $timePeriodeType[2] = "Min stay";
@@ -60,6 +61,16 @@ $curdate = date("d.m.Y", time());
     </span>
     <h3>Ending at</h3>
     <input type='txt' class='gsniceinput1 enddate' value='<?php echo $curdate; ?>' style='width: 90px;' gsname='endingAt'>
+    <hr>
+    <h3>Include only this categories</h3>
+    * PS: Category filter is in beta and might not work.<br>Please give us feedback if it does not work.<bR><bR>
+    <?php
+    $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+    foreach($types as $type) {
+        echo "<div><input type='checkbox' gsname='category_".$type->id."'>" . $type->name . "</div>";
+    }
+    ?>
+    
     <input type='button' style='padding:9px;float:right;' value='Create restriction' gstype='submit'>
 </span>
 

@@ -1798,18 +1798,21 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
 
     private void checkForRestrictions(StartBookingResult result, StartBooking arg) {
         boolean remove = false;
+        List<String> types = new ArrayList();
         for(BookingProcessRooms r : result.rooms) {
             if (pmsManager.isRestricted(r.id, arg.start, arg.end, TimeRepeaterData.TimePeriodeType.min_stay)) {
                 remove = true;
                 result.errorMessage = "min_days:{arg}:" + pmsManager.getLatestRestrictionTime();
+                types.add(r.id);
             }
             if (pmsManager.isRestricted(r.id, arg.start, arg.end, TimeRepeaterData.TimePeriodeType.max_stay)) {
                 remove = true;
                 result.errorMessage = "max_days:{arg}:" + pmsManager.getLatestRestrictionTime();
+                types.add(r.id);
             }
         }
-        if(remove) {
-            removeAllRooms(result, new ArrayList());
+        if(types.size() > 0) {
+            removeAllRooms(result, types);
         }
     }
 
@@ -1844,5 +1847,36 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             }
             
         }
+    }
+
+    @Override
+    public CategoriesSummary getAllCategories() {
+        CategoriesSummary result = new CategoriesSummary();
+        try {
+            List<BookingItemType> types = bookingEngine.getBookingItemTypesWithSystemType(null);
+            for(BookingItemType type : types) {
+                CategoriesSummaryEntry entry = new CategoriesSummaryEntry();
+                entry.name = type.name;
+                entry.categoryId = type.id;
+                PmsAdditionalTypeInformation additiontal;
+                    additiontal = pmsManager.getAdditionalTypeInformationById(type.id);
+                entry.description = type.descriptionTranslations.get(getSession().language);
+                if(entry.description == null || entry.description.isEmpty()) {
+                    for(String k : type.descriptionTranslations.values()) {
+                        if(k != null && !k.isEmpty()) {
+                            entry.description = k;
+                        }
+                    }
+                }
+                if(entry.description == null || entry.description.isEmpty()) {
+                    entry.description = type.description;
+                }
+                result.entries.put(entry.categoryId, entry);
+                entry.images = additiontal.images;
+            }
+        } catch (Exception ex) {
+            logPrintException(ex);
+        }
+        return result;
     }
 }

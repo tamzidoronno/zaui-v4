@@ -4,6 +4,8 @@ namespace ns_7db21d0e_6636_4dd3_a767_48b06932416c;
 class PmsRestrictions extends \WebshopApplication implements \Application {
     var $errorMessage = "";
     var $wubookWarning = "";
+    var $categories = null;
+    
     public function getDescription() {
         
     }
@@ -85,6 +87,14 @@ class PmsRestrictions extends \WebshopApplication implements \Application {
             $typeid = $_POST['data']['typeid'];
         }
 
+        $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+        $data->categories = array();
+        foreach($types as $type) {
+            if(isset($_POST['data']['category_'.$type->id]) && $_POST['data']['category_'.$type->id] == "true") {
+                $data->categories[] = $type->id;
+            }
+        }
+        
         $this->getApi()->getBookingEngine()->saveOpeningHours($this->getSelectedMultilevelDomainName(), $data, $typeid);
         $this->getApi()->getWubookManager()->doUpdateMinStay($this->getSelectedMultilevelDomainName());
     }
@@ -191,6 +201,21 @@ class PmsRestrictions extends \WebshopApplication implements \Application {
         if($type == 4 || $type == 6) {
             $text .= ", time between: " . date("H:i", strtotime($data->firstEvent->start)) . " - " . date("H:i", strtotime($data->firstEvent->end));
         }
+        
+        if(sizeof((array)$data->categories) > 0) {
+            if(!$this->categories) {
+                $this->categories = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+                $this->categories = $this->indexList($this->categories);
+            }
+            
+            $catnames = array();
+            foreach($data->categories as $cat) {
+                $catnames[] = $this->categories[$cat]->name;
+            }
+
+            $text .= " (" .  join(",", $catnames) . ")";
+        }
+
         return $text;
     }
     

@@ -10,12 +10,16 @@
     vertical-align: top;
 }
 
+.PmsCheckList .bookingId {
+    width: 30%;
+}
+
 .PmsCheckList .type {
     width: 200px;
 }
 
 .PmsCheckList .total {
-    width: 100px;
+    width: 60px;
 }
 
 .PmsCheckList {

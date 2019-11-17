@@ -2102,9 +2102,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
     private Double getSpecialRestriction(Date time, String bookingEngineTypeId, Integer type) {
         List<TimeRepeaterData> minstayours = bookingEngine.getOpeningHoursWithType(bookingEngineTypeId, type);
-        if(minstayours == null || minstayours.isEmpty()) {
-            minstayours = bookingEngine.getOpeningHoursWithType(null, type);
-        }
         
         if(minstayours == null || minstayours.isEmpty()) {
             return null;

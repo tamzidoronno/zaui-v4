@@ -47,6 +47,9 @@ public interface IPmsManager {
     public void warnFailedBooking(PmsBooking booking);
     
     @Administrator
+    public String getBookingSummaryText(String pmsBookingId);
+    
+    @Administrator
     public void setCurrentBooking(String bookingId);
     
     @Administrator

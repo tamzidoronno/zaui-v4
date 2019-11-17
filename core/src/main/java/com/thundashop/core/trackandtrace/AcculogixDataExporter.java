@@ -74,6 +74,9 @@ public class AcculogixDataExporter {
             return null;
         }
         
+        if (route.rowCreatedDate == null)
+            return null;
+        
         AcculogixExport exp = new AcculogixExport();
         exp.ArrivalDateTime = dest.startInfo.started ? formatDate(dest.startInfo.startedTimeStamp) : "";
         exp.RDDriver$ID = route.startInfo.startedByUserId;

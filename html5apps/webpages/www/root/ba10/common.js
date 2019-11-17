@@ -1,3 +1,4 @@
+getshop_endpoint = "https://20489gc6.getshop.com";
 var masonryinitialized = false;
 $(document).on('click','.chooseimagebtn',function(res) {
     $('.chosenimagebtn').removeClass('chosenimagebtn');

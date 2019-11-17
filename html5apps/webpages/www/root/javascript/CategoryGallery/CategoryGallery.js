@@ -1,8 +1,9 @@
 
 
-var getshop_endpoint = "http://20489gc6.3.0.local.getshop.com/";
-
 $.fn.CategoryGallery = function(data) {
+    if(typeof(getshop_endpoint) === "undefined") {
+        alert("getshop_endpoint variable not set, include it into the booking");
+    }
     if(!data) {
         data = [];
     }

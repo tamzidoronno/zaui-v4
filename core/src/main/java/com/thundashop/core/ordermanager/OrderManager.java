@@ -4837,4 +4837,15 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         fullyIntegratedPaymentMethods.add("8edb700e-b486-47ac-a05f-c61967a734b1");
     }
 
+    @Override
+    public String getNameOnOrder(String orderId, String password) {
+        if(!password.equals("fsa2342bvdfsbrgfh56756jhndhgfsgda234")) {
+            return "";
+        }
+        
+        Order order = getOrder(orderId);
+        User usr = userManager.getUserById(order.userId);
+        return usr.fullName;
+    }
+
 }

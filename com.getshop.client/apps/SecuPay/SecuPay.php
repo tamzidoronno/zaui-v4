@@ -207,6 +207,9 @@ class SecuPay extends \PaymentApplication implements \Application {
         $ch = curl_init($url);
         
         $type = $_GET['paymentmethod'];
+        
+        $name = $this->getApi()->getOrderManager()->getNameOnOrder($this->order->id, "fsa2342bvdfsbrgfh56756jhndhgfsgda234");
+        
         //The JSON data.
         $jsonData = array(
             'apikey' => $this->getApiKey(),
@@ -216,7 +219,7 @@ class SecuPay extends \PaymentApplication implements \Application {
             'url_success' => $this->getSuccessPage(),
             "payment_action" => "sale",
             "apiversion" => "2.11",
-            "firstname" => "",
+            "firstname" => $name,
             "lastname" => "",
             'url_failure' => $this->getFailedPage(),
             'url_push' => $this->getCallbackUrl(),

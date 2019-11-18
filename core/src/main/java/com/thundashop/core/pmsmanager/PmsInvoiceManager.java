@@ -1017,6 +1017,21 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
             User usr = userManager.getUserById(booking.userId);
 
+            String invoiceEmail = usr.emailAddress;
+            if(usr.emailAddressToInvoice != null && !usr.emailAddressToInvoice.isEmpty()) {
+                invoiceEmail = usr.emailAddressToInvoice;
+            }
+            
+            if (booking.registrationData.resultAdded.containsKey("company_email")) {
+                String companyEmail = booking.registrationData.resultAdded.get("company_email");
+                if (companyEmail != null && companyEmail.contains("@")) {
+                    invoiceEmail = companyEmail;
+                }
+            }
+
+            
+            booking.recieptEmail.put(booking.id, invoiceEmail);
+            
             //Booker is preferring this payment method.
             if(usr.preferredPaymentType != null && usr.preferredPaymentType.equals("70ace3f0-3981-11e3-aa6e-0800200c9a66")) {
                 pmsManager.logEntry("Redirect to payment success due to preferred payment type invoice.", bookingId, null);

@@ -72,6 +72,8 @@ public interface IOrderManager {
     @Administrator
     public void deleteAllVirtualOrders();
     
+    public String getNameOnOrder(String orderId, String password);
+    
     @Administrator
     public void checkForOrdersFailedCollecting();
     

@@ -1038,10 +1038,15 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed implements IB
             if(bookingtype != null) {
                result = new ArrayList(bookingtype.openingHoursData.values());
             }
+            
+            for(TimeRepeaterData data : config.openingHoursData.values()) {
+                if(data.containsCategory(typeId)) {
+                    result.add(data);
+                }
+            }
         }
         
         return result;
-        
     }
     
     @Override

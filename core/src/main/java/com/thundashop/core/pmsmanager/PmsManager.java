@@ -10862,4 +10862,91 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return result;
     }
 
+    @Override
+    public Order updateOrderDetails(String bookingId, String orderId, boolean preview) {
+        Order order = orderManager.getOrder(orderId);
+        
+        if (order == null) {
+            return null;
+        }
+
+        PmsBooking booking = getBooking(bookingId);
+        if (booking == null) {
+            return null;
+        }
+        
+        Order newOrder = order.jsonCloneLight();
+    
+        User user = userManager.getUserById(booking.userId);
+        Address address = user != null ? user.address : null;
+        
+        if (address != null && user.fullName != null && !user.fullName.isEmpty() && (address.fullName == null || address.fullName.isEmpty())) {
+           address.fullName = user.fullName; 
+        }
+        
+        newOrder.userId = booking.userId;
+        newOrder.incrementOrderId = -1;
+        
+        PmsInvoiceManagerNew invoiceManager = new PmsInvoiceManagerNew(orderManager, cartManager, productManager, this, posManager);
+        
+        newOrder.getCartItems().stream().forEach(item -> {
+            if (item.getProduct().externalReferenceId != null && !item.getProduct().externalReferenceId.isEmpty()) {
+                if (booking != null) {
+                    PmsBookingRooms room = booking.getRoom(item.getProduct().externalReferenceId);
+                    if (room != null) {
+                         invoiceManager.setGuestName(item, item.getProduct().externalReferenceId);
+                         invoiceManager.setMetaData(item, item.getProduct().externalReferenceId);
+                   }
+                }
+            };
+        });
+        
+        newOrder.cart.address = address;
+        
+                
+        if (!preview) {
+            orderManager.ignoreValidation();
+            
+            try {
+                Order credittedOrder = orderManager.creditOrder(orderId);
+                credittedOrder.rowCreatedDate = order.rowCreatedDate;
+                
+                newOrder.incrementOrderId = orderManager.getNextIncrementalOrderId();
+                
+                if (order.paymentDate != null && !credittedOrder.isFullyPaid()) {
+                    orderManager.markAsPaid(credittedOrder.id, order.paymentDate, credittedOrder.getPaidRest());
+                }
+                
+                newOrder.createdBasedOnCorrectionFromOrderIds.addAll(order.createdBasedOnCorrectionFromOrderIds);
+                newOrder.createdBasedOnCorrectionFromOrderIds.add(order.id);
+                newOrder.createdBasedOnCorrectionFromOrderIds.add(credittedOrder.id);
+                newOrder.overrideAccountingDate = credittedOrder.overrideAccountingDate;
+                
+                orderManager.saveObject(newOrder);
+                orderManager.addOrderDirectToMap(newOrder);
+                
+                addOrderToBooking(booking, newOrder.id);
+                addOrderToBooking(booking, credittedOrder.id);
+                
+                order.correctedAtTime = new Date();
+                order.correctedByUserId = getSession().currentUser.id;
+                order.createdBasedOnCorrectionFromOrderIds.clear();
+                
+                credittedOrder.correctedAtTime = new Date();
+                credittedOrder.correctedByUserId = getSession().currentUser.id;
+                credittedOrder.createdBasedOnCorrectionFromOrderIds.clear();
+                
+                orderManager.saveObject(credittedOrder);
+                
+                orderManager.saveObject(order);
+            } catch (Exception ex) {
+                messageManager.sendErrorNotification("Failed to do a correction of an order....", ex);
+            }
+            
+            orderManager.enableValidation();
+        }
+        
+        return newOrder;
+    }
+
 }

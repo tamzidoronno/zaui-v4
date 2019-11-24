@@ -1,0 +1,56 @@
+
+<?
+/* @var $this ns_af54ced1_4e2d_444f_b733_897c1542b5a8\PmsPaymentProcess */
+$order = $this->getApi()->getPmsManager()->updateOrderDetails( $this->getSelectedMultilevelDomainName(), $_POST['data']['bookingid'], $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_orderid'], true);
+$invoiceData = new \stdClass();
+$invoiceData->order = $order;
+$invoiceData->accountingDetails = $this->getApi()->getInvoiceManager()->getAccountingDetails();
+$serializedOrder = json_encode($invoiceData);
+
+$app = $this->getApi()->getGetShopApplicationPool()->get("486009b1-3748-4ab6-aa1b-95a4d5e2d228");
+$defaultAction = $this->getFactory()->getApplicationPool()->createInstace($app);
+$defaultAction->order = $order;
+
+$idArr = explode("\\", $order->payment->paymentType);
+$id = $idArr[0];
+$id = str_replace("_", "-", $id);
+$id = str_replace("ns-", "", $id);
+$app = $this->getApi()->getStoreApplicationPool()->getApplication($id);
+$paymentApp = $this->getFactory()->getApplicationPool()->createInstace($app);
+$paymentApp->setCurrentOrder($order);
+
+$fullsize = $paymentApp->hasPaymentProcess() ? "" : "fullsize";
+
+echo "<div class='paymentheaderoptions'>";
+    ?>
+    <div style="padding: 20px; text-align: center; background-color: #f6f7c6; font-size: 16px;">
+        You are about to update this order to be reflecting the contact details for the booking. Please check that the fields below are updated according to what you excpect and then click on the update button.
+        <br/>
+        <div style="margin-top: 10px;" class="shop_button updateorder" orderid="<? echo $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_orderid']; ?>" bookingid="<? echo $_POST['data']['bookingid']; ?>" >Update</div>
+    </div>
+    <?
+echo "</div>";
+?>
+
+<div class="receipt_template <? echo $fullsize; ?>">
+    <div class="receipt_template_inner">
+        <?
+        include 'scripts/invoicetemplates/template2.php';
+        ?>
+    </div>
+</div>
+
+<div class="payment_method_options <? echo $fullsize; ?>">
+    
+    <div class="paymenttypeheader">
+        <? echo $paymentApp->getName(); ?>
+    </div>
+    
+    <div class="paymentoptions">
+        <? echo $paymentApp->renderStandAlone(); ?>
+    </div>
+</div>
+
+<style>
+    .gsoverlay3 .gsoverlayinner { background-color: #f5f8fa; }
+</style>

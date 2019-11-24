@@ -11,6 +11,7 @@ import com.thundashop.core.common.FilteredData;
 import com.thundashop.core.common.ForceAsync;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
+import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pmseventmanager.PmsEventFilter;
 import com.thundashop.core.usermanager.data.User;
 import java.util.Date;
@@ -682,4 +683,6 @@ public interface IPmsManager {
     
     public String setBestCouponChoiceForCurrentBooking() throws Exception;
     
+    @Administrator
+    public Order updateOrderDetails(String bookingId, String orderId, boolean preview);
 }

@@ -5,6 +5,7 @@
 package com.thundashop.core.ordermanager.data;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;
@@ -30,6 +31,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -197,11 +199,12 @@ public class Order extends DataCommon implements Comparable<Order> {
     public String createdByPaymentLinkId = "";
     private boolean notfiedAutoSend = false;
     
+    public String correctedByUserId = "";
+    public Date correctedAtTime = null;
+    public TreeSet<String> createdBasedOnCorrectionFromOrderIds = new TreeSet();
+    
     public Order jsonClone() {
-        Gson gson = new Gson();
-        String gsonOrder = gson.toJson(this);
-        Order orderNew = gson.fromJson(gsonOrder, Order.class);
-        orderNew.id = UUID.randomUUID().toString();
+        Order orderNew = jsonCloneLight();
         orderNew.expiryDate = null;
         orderNew.rowCreatedDate = new Date();
         orderNew.triedTransferredToAccountingSystem = false;
@@ -215,6 +218,14 @@ public class Order extends DataCommon implements Comparable<Order> {
             orderNew.cart.rowCreatedDate = new Date();
         }
 
+        return orderNew;
+    }
+
+    public Order jsonCloneLight() throws JsonSyntaxException {
+        Gson gson = new Gson();
+        String gsonOrder = gson.toJson(this);
+        Order orderNew = gson.fromJson(gsonOrder, Order.class);
+        orderNew.id = UUID.randomUUID().toString();
         return orderNew;
     }
     
@@ -1084,7 +1095,6 @@ public class Order extends DataCommon implements Comparable<Order> {
     }
 
     public boolean isFullyPaid() {
-        System.out.println(incrementOrderId + " : " + getTotalAmount());
         double transactionAmount = getTransactionAmount();
         double total = getTotalAmount() + cashWithdrawal;
         double diff = total - transactionAmount;

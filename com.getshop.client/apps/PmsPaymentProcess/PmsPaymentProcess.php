@@ -64,6 +64,8 @@ class PmsPaymentProcess extends \MarketingApplication implements \Application {
             $this->includefile('selectbookingdata');
         } elseif ($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_state'] == "paymentoverview") {
             $this->includefile('paymentoverview');
+        } elseif ($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_state'] == "prewviewfixorder") {
+            $this->includefile('prewviewfixorder');
         } elseif ($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_state'] == "select_user") {
             $this->includefile("select_user");
         } elseif ($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_state'] == "select_rooms") {
@@ -308,6 +310,10 @@ class PmsPaymentProcess extends \MarketingApplication implements \Application {
     
     public function getPosTabContent() {
         $this->includefile("postabcontent");
+    }
+    
+    public function updateOrder() {
+        $this->getApi()->getPmsManager()->updateOrderDetails($this->getSelectedMultilevelDomainName(), $_POST['data']['bookingid'], $_POST['data']['orderid'], false);
     }
 }
 ?>

@@ -217,6 +217,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     private List<String> terminalMessages = new ArrayList();
     private Order orderToPay;
     private String tokenInUse;
+    private boolean ignoreValidation = false;
     
     @Override
     public void addProductToOrder(String orderId, String productId, Integer count) throws ErrorException {
@@ -2780,6 +2781,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Override
     public void postProcessMessage(Method executeMethod, Object[] argObjects) {
+        if (ignoreValidation) {
+            return;
+        }
+        
         blockManuallyPaymentMarkingForPaymentMethodsThatShouldNotDoThat(executeMethod, argObjects);
         overridePaymentDate(executeMethod, argObjects);
     }
@@ -3235,6 +3240,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             return;
         }
         
+        if (ignoreValidation) {
+            return;
+        }
+        
         Date closedDate = getOrderManagerSettings().closedTilPeriode;
 
         Order order = (Order)data;
@@ -3483,7 +3492,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .collect(Collectors.toList());
     }
 
-    private long getNextIncrementalOrderId() {
+    public long getNextIncrementalOrderId() {
         incrementingOrderId++;
         
         OrderManagerSettings settings = getOrderManagerSettings();
@@ -4846,6 +4855,18 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Order order = getOrder(orderId);
         User usr = userManager.getUserById(order.userId);
         return usr.fullName;
+    }
+
+    public void ignoreValidation() {
+        this.ignoreValidation = true;
+    }
+
+    public void enableValidation() {
+        this.ignoreValidation = false;
+    }
+
+    public void addOrderDirectToMap(Order newOrder) {
+        orders.put(newOrder.id, newOrder);
     }
 
 }

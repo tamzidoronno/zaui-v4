@@ -1090,6 +1090,14 @@
     display: none;
 }
 
+.PmsBookingRoomView .row_payment_status_line.corrected {
+    color: red;
+    border-left: solid 1px #DDD;
+    margin-left: 10px;
+    border-bottom: solid 1px #DDD;
+    border-right: solid 1px #DDD;
+}
+
 @media screen and (max-width: 1300px) {
     .PmsBookingRoomView .isgroupinformation {
         font-size: 10px;

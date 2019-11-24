@@ -111,11 +111,11 @@ public class PmsInvoiceManagerNew {
         for (String productId : res.keySet()) {
             List<PmsOrderCreateRowItemLine> days = res.get(productId);
             CartItem item = cartManager.addProductItem(productId, getCount(days));
-            
+            String roomId = roomData.roomId;
             Product prod = item.getProduct();
             prod.price = getAveragePrice(days);
             prod.discountedPrice = prod.price;
-            prod.externalReferenceId = roomData.roomId;
+            prod.externalReferenceId = roomId;
             
             if (prod.price != 0 && item.getCount() == 0) {
                 item.setCount(1);
@@ -132,9 +132,9 @@ public class PmsInvoiceManagerNew {
                 prod.name = name;
             }
             item.priceMatrix = new HashMap();
-            setMetaData(item, roomData);
-            setGuestName(item, roomData);
-            setDates(item, roomData);
+            setMetaData(item, roomId);
+            setGuestName(item, roomId);
+            setDates(item, roomId);
             
             days.stream().forEach(o -> {
                 item.priceMatrix.put(o.date, (o.price * o.count));
@@ -171,9 +171,9 @@ public class PmsInvoiceManagerNew {
         return count;
     }
 
-    private void setMetaData(CartItem item, PmsOrderCreateRow roomData) {
-        PmsBooking booking = pmsManager.getBookingFromRoomSecure(roomData.roomId);
-        PmsBookingRooms room = booking.getRoom(roomData.roomId);
+    public void setMetaData(CartItem item, String roomId) {
+        PmsBooking booking = pmsManager.getBookingFromRoomSecure(roomId);
+        PmsBookingRooms room = booking.getRoom(roomId);
         
         item.getProduct().additionalMetaData = "";
         
@@ -183,9 +183,9 @@ public class PmsInvoiceManagerNew {
         }
     }
 
-    private void setGuestName(CartItem item, PmsOrderCreateRow roomData) {
-        PmsBooking booking = pmsManager.getBookingFromRoomSecure(roomData.roomId);
-        PmsBookingRooms room = booking.getRoom(roomData.roomId);
+    public void setGuestName(CartItem item, String roomId) {
+        PmsBooking booking = pmsManager.getBookingFromRoomSecure(roomId);
+        PmsBookingRooms room = booking.getRoom(roomId);
         
         item.getProduct().metaData = "";
         
@@ -195,9 +195,9 @@ public class PmsInvoiceManagerNew {
         
     }
 
-    private void setDates(CartItem item, PmsOrderCreateRow roomData) {
-        PmsBooking booking = pmsManager.getBookingFromRoomSecure(roomData.roomId);
-        PmsBookingRooms room = booking.getRoom(roomData.roomId);
+    public void setDates(CartItem item, String roomId) {
+        PmsBooking booking = pmsManager.getBookingFromRoomSecure(roomId);
+        PmsBookingRooms room = booking.getRoom(roomId);
         
         item.startDate = room.date.start;
         item.endDate = room.date.end;
@@ -220,6 +220,7 @@ public class PmsInvoiceManagerNew {
             
             List<PmsOrderCreateRowItemLine> days = res.get(rowKey);
             String orderText = getOrderText(days, rowKey);
+            String roomId = roomData.roomId;
             CartItem item = cartManager.addProductItem(productId, getCount(days));
             
             Product prod = item.getProduct();
@@ -232,9 +233,9 @@ public class PmsInvoiceManagerNew {
             
             item.setCount(getCount(days));
             
-            setMetaData(item, roomData);
-            setGuestName(item, roomData);
-            setDates(item, roomData);
+            setMetaData(item, roomId);
+            setGuestName(item, roomId);
+            setDates(item, roomId);
             
             item.itemsAdded = new ArrayList();
             

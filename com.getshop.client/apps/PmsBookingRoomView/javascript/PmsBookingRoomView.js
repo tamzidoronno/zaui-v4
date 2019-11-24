@@ -55,6 +55,7 @@ app.PmsBookingRoomView = {
         $(document).on('change', '.PmsBookingRoomView .emailRecipient', this.changeEmailRecipent)
         $(document).on('change', '.PmsBookingRoomView .confirmationEmailTemplate', this.changeEmailTemplate)
         $(document).on('click', '.PmsBookingRoomView .showOrderSummary', this.showOrderSummary);
+        $(document).on('click', '.PmsBookingRoomView .showPreviewFixOrder', this.showPreviewFixOrder);
         $(document).on('click', '.PmsPaymentProcess .showOrderSummary', this.showOrderSummary);
         $(document).on('click', '.PmsBookingRoomView .connectGuestToConference', this.showAddConferencePanel);
         $(document).on('click','.PmsBookingRoomView .attachguesttoevent', app.PmsBookingRoomView.attachGuestToConference);
@@ -227,6 +228,14 @@ app.PmsBookingRoomView = {
         thundashop.framework.loadAppInOverLay("af54ced1-4e2d-444f-b733-897c1542b5a8", "3", {
             orderId: $(this).attr('orderid'),
             state: 'paymentoverview'
+        });
+    },
+    
+    showPreviewFixOrder: function() {
+        thundashop.framework.loadAppInOverLay("af54ced1-4e2d-444f-b733-897c1542b5a8", "3", {
+            orderId: $(this).attr('orderid'),
+            bookingid : $(this).attr('bookingid'),
+            state: 'prewviewfixorder'
         });
     },
     

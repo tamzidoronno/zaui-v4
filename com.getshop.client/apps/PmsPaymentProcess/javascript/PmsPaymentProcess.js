@@ -9,6 +9,7 @@ app.PmsPaymentProcess = {
         $(document).on('click', '.PmsPaymentProcess .toggledatefilter', this.togleDateFilter);  
         $(document).on('click', '.PmsPaymentProcess .toggleselector', this.toggleSelector);  
         $(document).on('click', '.PmsPaymentProcess .showcalc', this.toggleCalc);  
+        $(document).on('click', '.PmsPaymentProcess .updateorder', this.updateOrder);  
         $(document).on('keyup', '.PmsPaymentProcess .percentcalculator', this.recalcByPercent);  
         $(document).on('change', '.PmsPaymentProcess .totalvalcalculator', this.recalcByTotalVal);  
         $(document).on('change', '.PmsPaymentProcess .searchfortabs', this.searchForTabs);  
@@ -17,6 +18,21 @@ app.PmsPaymentProcess = {
         $(document).on('change', '.PmsPaymentProcess .sendtobookerdropdown', this.changeSendToRecipient);  
         $(document).on('click', '.PmsPaymentProcess .sendrequestbutton', this.sendRequest);  
         $(document).on('keyup', '.PmsPaymentProcess #messagetosend', this.checkIfPaymentLinkVariableIsFound);  
+    },
+    
+    updateOrder: function() {
+        
+        var data = {
+            bookingid : $(this).attr('bookingid'),
+            orderid : $(this).attr('orderid')
+        };
+        
+        var event = thundashop.Ajax.createEvent(null, "updateOrder", this, data);
+        event['synchron'] = true;
+        
+        thundashop.Ajax.post(event, function(res) {
+            $('.gsoverlay3.active').click();
+        });
     },
     
     removeConference: function() {

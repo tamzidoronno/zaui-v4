@@ -210,6 +210,10 @@ class SecuPay extends \PaymentApplication implements \Application {
         
         $name = $this->getApi()->getOrderManager()->getNameOnOrder($this->order->id, "fsa2342bvdfsbrgfh56756jhndhgfsgda234");
         
+        $name = trim($name);
+        $last_name = (strpos($name, ' ') === false) ? '' : preg_replace('#.*\s([\w-]*)$#', '$1', $name);
+        $first_name = trim( preg_replace('#'.$last_name.'#', '', $name ) );
+        
         //The JSON data.
         $jsonData = array(
             'apikey' => $this->getApiKey(),
@@ -219,8 +223,8 @@ class SecuPay extends \PaymentApplication implements \Application {
             'url_success' => $this->getSuccessPage(),
             "payment_action" => "sale",
             "apiversion" => "2.11",
-            "firstname" => $name,
-            "lastname" => "",
+            "firstname" => $first_name,
+            "lastname" => $last_name,
             'url_failure' => $this->getFailedPage(),
             'url_push' => $this->getCallbackUrl(),
             "order_id" => $this->order->incrementOrderId,
@@ -353,7 +357,7 @@ class SecuPay extends \PaymentApplication implements \Application {
         $methods .= "BODY:" . json_encode(file_get_contents('php://input'));
         $methods .= "Referer: " . $_SERVER['HTTP_REFERER'];
         
-//        file_put_contents("secupay.txt", $methods);
+        file_put_contents("secupay.txt", $methods);
         
         if(isset($_GET['nextpage']) && $_GET['nextpage']) {
             //Redirect from payment window
@@ -379,6 +383,9 @@ class SecuPay extends \PaymentApplication implements \Application {
                 } else {
                     $this->getApi()->getOrderManager()->logTransactionEntry($order->id, "Security check failed, secret id is not correct..");
                 }
+            } else {
+                $this->getApi()->getOrderManager()->logTransactionEntry($order->id, "Failed to mark as paid from secupay;" + $methods);
+                $this->getApi()->getOrderManager()->markAsPaidWithPassword($order->id, $this->convertToJavaDate(time()), $this->getApi()->getOrderManager()->getTotalAmount($order), "fdsvb4354345345");
             }
             echo "ack=Approved";
         }

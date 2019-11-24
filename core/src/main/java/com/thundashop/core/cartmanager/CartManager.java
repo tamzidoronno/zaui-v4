@@ -444,12 +444,25 @@ public class CartManager extends ManagerBase implements ICartManager {
                 return false;
             }
             
+            Date toCheckStart = start;
+            Date toCheckEnd = end;
+            
+            if(coupon.pmsWhenAvailable != null && !coupon.pmsWhenAvailable.isEmpty() && coupon.pmsWhenAvailable.equals("REGISTERED")) {
+                if(registrationDate != null) {
+                    toCheckStart = start;
+                    toCheckEnd = end;
+                } else {
+                    toCheckStart = new Date();
+                    toCheckEnd = new Date();
+                }
+            }
+            
             boolean foundStart = false;
             boolean foundEnd = false;
             
             for(TimeRepeaterDateRange range : res) {
-                if(range.isBetweenTime(start)) { foundStart = true; }
-                if(range.isBetweenTime(end)) { foundEnd = true; }
+                if(range.isBetweenTime(toCheckStart)) { foundStart = true; }
+                if(range.isBetweenTime(toCheckEnd)) { foundEnd = true; }
             }
             return foundStart && foundEnd;
         } else {

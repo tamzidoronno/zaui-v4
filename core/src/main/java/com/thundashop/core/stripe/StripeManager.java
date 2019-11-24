@@ -152,6 +152,20 @@ public class StripeManager extends ManagerBase implements IStripeManager {
             params.put("client_reference_id", order.id);
             params.put("success_url", callback+"&page=payment_success&session_id={CHECKOUT_SESSION_ID}&orderid=" + orderId);
             params.put("cancel_url", callback+"&page=payment_failed&session_id={CHECKOUT_SESSION_ID}&orderid=" + orderId);
+            
+            
+            List<String> supportedLanguages = Arrays.asList("da", "de", "en", "es", "fi", "fr", "it", "ja", "nb", "nl", "pl", "pt", "sv", "zh");
+            
+            
+            if(order.language != null && !order.language.isEmpty()) {
+                if(supportedLanguages.contains(order.language.toLowerCase())) {
+                    params.put("locale",order.language);
+                } else if(order.language.equalsIgnoreCase("no")) {
+                    params.put("locale","nb");
+                }
+            }
+            
+//            params.put("locale", "nb");
 
             String currency = storeManager.getStoreSettingsApplicationKey("currencycode");
             if(currency == null || currency.isEmpty()) {
@@ -183,6 +197,50 @@ public class StripeManager extends ManagerBase implements IStripeManager {
             logPrint(e.getMessage());
         }
         return "";
+    }
+    
+    @Override
+    public boolean chargeSofort(String orderId, String source) {
+        try {
+            if(storeManager.isProductMode()) {
+                Application stripeApp = storeApplicationPool.getApplication("3d02e22a-b0ae-4173-ab92-892a94b457ae");
+                Stripe.apiKey = stripeApp.getSetting("key");
+            } else {
+                Stripe.apiKey = "sk_test_K7lzjnniaCB8MjTZjpodqriy";
+            }
+
+            String currency = storeManager.getStoreSettingsApplicationKey("currencycode");
+            if(currency == null || currency.isEmpty()) {
+                currency = "NOK";
+            }
+
+            Order order = orderManager.getOrderSecure(orderId);
+            User user = userManager.getUserById(order.userId);
+            Double amount = orderManager.getTotalAmount(order);
+            Map<String, Object> customerParams = new HashMap<>();
+            customerParams.put("amount", (int)(amount * 100));
+            customerParams.put("currency", currency);
+            customerParams.put("source", source);
+            try {
+                Charge charge = Charge.create(customerParams);
+                order.payment.transactionLog.put(System.currentTimeMillis(), "Trying to charge card using sofort source" + source);
+                if(charge.getCaptured()) {
+                    orderManager.markAsPaid(orderId, new Date(), amount);
+                    return true;
+                } else {
+                    order.status = Order.Status.PAYMENT_FAILED;
+                    orderManager.saveOrder(order);
+                }
+            }catch(Exception d) {
+                order.payment.transactionLog.put(System.currentTimeMillis(), "Failed to charge card: " + d.getMessage());
+                logPrintException(d);
+            }
+            orderManager.saveOrderInternal(order);
+        }catch(Exception e) {
+            logPrintException(e);
+            messageManager.sendErrorNotification("Stripe integration exception", e);
+        }
+        return false;
     }
     
     @Override

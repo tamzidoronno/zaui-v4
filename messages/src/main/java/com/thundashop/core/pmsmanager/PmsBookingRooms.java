@@ -1014,6 +1014,14 @@ public class PmsBookingRooms implements Serializable {
     }
 
     boolean beforeFirstOfJan2019() {
+        
+        if(pmsBookingRoomId != null && pmsBookingRoomId.equals("0f1976ae-1668-4106-9c56-48ec422bdbac")) {
+            return false;
+        }
+        if(pmsBookingRoomId != null && pmsBookingRoomId.equals("ac80abc8-2457-4269-8993-554a9aef886e")) {
+            return false;
+        }
+        
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, 2019);
         cal.set(Calendar.DAY_OF_MONTH, 1);

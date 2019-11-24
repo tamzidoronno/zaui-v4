@@ -11,8 +11,8 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
     }
     
     public function downloadDetailedReport() {
-        $start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
-        $end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
+        $start = $this->convertToJavaDate(strtotime($_POST['data']['start'] . " 00:00:00"));
+        $end = $this->convertToJavaDate(strtotime($_POST['data']['end'] . " 23:59:59"));
         
         $dayIncomes = $this->getApi()->getOrderManager()->getDayIncomes($start, $end);
 

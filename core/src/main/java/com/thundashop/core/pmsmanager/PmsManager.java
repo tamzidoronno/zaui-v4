@@ -10948,5 +10948,4 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         return newOrder;
     }
-
 }

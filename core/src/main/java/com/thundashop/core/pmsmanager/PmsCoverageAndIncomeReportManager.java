@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -116,11 +117,14 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
     
     public BigDecimal getTotalForProduct(DayIncome income, String productId, CoverageAndIncomeReportFilter filter, LinkedHashMap<String, BigDecimal> toadd, LinkedHashMap<String, BigDecimal> products) {
         BigDecimal result = new BigDecimal(0);
+        
+        HashSet<String> orderIdsToCheck = new HashSet(filter.orderIds);
+        
         for(DayEntry entry : income.dayEntries) {
             if(!entry.isActualIncome || entry.isOffsetRecord  || entry.orderId == null) {
                 continue;
             }
-            if(!filter.orderIds.isEmpty() && !filter.orderIds.contains(entry.orderId)) {
+            if(!orderIdsToCheck.isEmpty() && !orderIdsToCheck.contains(entry.orderId)) {
                 continue;
             }
             Order order = orderManager.getOrderDirect(entry.orderId);

@@ -64,6 +64,7 @@ class StripePayments extends \PaymentApplication implements \Application {
 //        $useScaCompliant = $this->getConfigurationSetting("useScaCompliant") == "true";
 //        if($useScaCompliant) {
             $this->renderNewCheckout();
+//            $this->renderSofort();
 //        } else {
 //            $this->renderOldCheckout();
 //        }
@@ -151,8 +152,22 @@ class StripePayments extends \PaymentApplication implements \Application {
         <?php
     }
     
+    public function paymentCallback() {
+        if(isset($_GET['type']) && $_GET['type'] == "sofort") {
+            $orderId = $_GET['orderId'];
+            $source = $_GET['source'];
+            $charged = $this->getApi()->getStripeManager()->chargeSofort($orderId, $source);
+            echo "<script>";
+            if($charged) {
+                echo "window.location.href='/?page=payment_success'";
+            } else {
+                echo "window.location.href='/?page=payment_failed'";
+            }
+            echo "</script>";
+        }
+    }
+    
     public function handleCallBack() {
-        
         if(isset($_GET['page'])) {
             $this->handlePaymentRedirect();
         } else {
@@ -221,6 +236,92 @@ class StripePayments extends \PaymentApplication implements \Application {
         
     }
 
+    public function doSofort() {
+        $email = "";
+        $currency = \ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::fetchCurrencyCode();
+        if(isset($this->order->cart->address->emailAddress)) {
+            $email = $this->order->cart->address->emailAddress;
+        }
+        $amount = $this->getApi()->getOrderManager()->getTotalAmount($this->order)*100;
+        $amount = round($amount);
+
+        $key = $this->getConfigurationSetting("pkey");
+        $title = $this->getConfigurationSetting("title");
+        
+        if(!$this->getApi()->getStoreManager()->isProductMode()) {
+            $key = "pk_test_4LQngWyMqLjFLNwXEVro6DRL";
+        }
+       
+        $hasssl = $this->getConfigurationSetting("hasssl");
+        $protocol = "http";
+        
+        if($hasssl == "true") {
+           $protocol = "https"; 
+        }
+        
+        $sessid = $this->getApi()->getStripeManager()->createSessionForPayment($this->order->id, $protocol."://" . $_SERVER["HTTP_HOST"]);
+        $redirect = $this->redirectUrl() . "&type=sofort";
+        
+        
+        $supportedLang = array();
+        $supportedLang[] = "de";
+        $supportedLang[] = "en";
+        $supportedLang[] = "es";
+        $supportedLang[] = "it";
+        $supportedLang[] = "fr";
+        $supportedLang[] = "nl";
+        $supportedLang[] = "pl";
+        
+        $lang = "en";
+        if(in_array(strtolower($this->order->language), $supportedLang)) {
+            $lang = $this->order->language;
+        }
+        
+        ?>
+        <script src="https://js.stripe.com/v3/"></script>
+        <script>
+            
+            var stripe = Stripe('<?php echo $key; ?>');            
+            stripe.createSource({
+                type: 'sofort',
+                amount: <?php echo $amount; ?>,
+                currency: 'eur',
+                statement_descriptor: 'Order <?php echo $this->order->incrementOrderId; ?>',
+                redirect: {
+                  return_url: '<?php echo $redirect; ?>',
+                },
+                sofort: {
+                  country: 'DE',
+                  "preferred_language": "<?php echo $lang; ?>"
+                },
+            }).then(function(result) {
+                // handle result.error or result.source
+                console.log(result);
+                if(typeof(result.source.redirect.url) !== "undefined") {
+                    window.location.href=result.source.redirect.url;
+                }
+            });
+            
+        </script>
+        <?php
+        
+    }
+
+    public function redirectUrl() {
+        $protocol = "https";
+        if(!$this->isProdMode()) {
+            $protocol = "http";
+        }
+        $redirect_url = $protocol. "://" . $_SERVER["HTTP_HOST"] . "/callback.php?app=" . $this->applicationSettings->id. "&orderId=" . $this->order->id . "&nextpage=";
+        return $redirect_url;
+    }
+
+    public function isProdMode() {
+//        return true;
+        return $this->getApi()->getStoreManager()->isProductMode();
+    }
+
+    
     public function handlePaymentRedirect() {
         if($_GET['page'] == "payment_success") {
             $this->getApi()->getOrderManager()->changeOrderStatusWithPassword($_GET['orderid'], 9, "gfdsabdf034534BHdgfsdgfs#!");

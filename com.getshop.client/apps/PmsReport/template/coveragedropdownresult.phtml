@@ -145,10 +145,11 @@
                             if($room->pmsBookingRoomId == $roomId) {
                                 echo "<tr>";
                                 echo "<td>";
+                                $found = false;
                                 foreach($removedBooking->orderIds as $ordId) {
                                     $order = $this->getApi()->getOrderManager()->getOrder($ordId);
                                     foreach($order->cart->items as $itm) {
-                                        if($itm->product->externalReferenceId == $roomIncluded) {
+                                        if($itm->product->externalReferenceId == @$roomIncluded) {
                                             $found = true;
                                         }
                                     }
@@ -157,7 +158,7 @@
                                         echo "<i class='fa fa-file-pdf-o' style='cursor:pointer' title='Download order $incId' orderid='".$ordId."' onclick='window.open(\"/scripts/downloadInvoice.php?orderId=".$ordId."&incrementalOrderId=".$incId."\");'></i> ";
                                     }
                                 }
-                                echo "<i class='fa fa-edit' gs_show_modal='booking_room_view' roomid='".$room->pmsBookingRoomId."' bookingid='".$booking->id."' style='cursor:pointer' title='Open booking' ></i> ";
+                                echo "<i class='fa fa-edit' gs_show_modal='booking_room_view' roomid='".$room->pmsBookingRoomId."' bookingid='".@$booking->id."' style='cursor:pointer' title='Open booking' ></i> ";
                                 
                                 echo $room->guests[0]->name . "</td>";
                                 echo "<td>" . round($val) . "</td>";

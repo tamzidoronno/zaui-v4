@@ -14,6 +14,7 @@ public class PmsGuests implements Serializable {
     public String prefix = "47";
     public String guestId = UUID.randomUUID().toString();
     public boolean isChild = false;
+    public boolean isDisabled = false;
     public List<String> pmsConferenceEventIds = new ArrayList();
     
     

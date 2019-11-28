@@ -1914,7 +1914,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             saveObject(user);
         }
     }
-
+    
     @Override
     public void mergeUsers(List<String> userIds, HashMap<String,String> properties) {
         User mergedUser = new User();
@@ -2562,6 +2562,13 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         saveUser(user);
         
         return company;
+    }
+
+    @Override
+    public void deactivateAccount(String userId) {
+        User usr = getUserById(userId);
+        usr.deactivated = !usr.deactivated;
+        saveUser(usr);
     }
 
 }

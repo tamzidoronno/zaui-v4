@@ -28,6 +28,7 @@
     "Room" : "Zimmer",
     "Date" : "Datum",
     "Order number" : "Rechnungsnummer",
-    "Order date" : "Buchungsdatum"
+    "Order date" : "Buchungsdatum",
+    "Already paid" : "Bereits bezahlt"
 }
 

@@ -549,6 +549,9 @@ class PmsReport extends \MarketingApplication implements \Application {
             echo "No customers / companies found.";
         } else {
             foreach($users as $usr) {
+                if($usr->deactivated) {
+                    continue;
+                }
                 echo "<div class='customerselectionrow'>";
                 echo "<span class='shop_button includecustomerinfilter' style='float:right;' userid='".$usr->id."'>Select</span>";
                 echo $usr->fullName. "<br>";

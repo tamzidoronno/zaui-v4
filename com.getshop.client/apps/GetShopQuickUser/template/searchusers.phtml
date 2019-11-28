@@ -36,6 +36,9 @@ if(sizeof($users) == 0) {
 echo "<h1>Search result</h1>";
 
 foreach ($users as $user) {
+    if($user->deactivated) {
+        continue;
+    }
     ?>
     <div class="row usersearchrow">
         

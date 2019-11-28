@@ -27,10 +27,29 @@
     ?>
     <div class='footer'>
         <span class='shop_button' gs_callback='app.CrmCustomerView.success' gstype='submit'>Save settings</span>
+        <?php
+        if($user->deactivated) {
+        ?>
+            <span class='shop_button' userid='<?php echo $user->id; ?>' gs_callback='app.CrmCustomerView.refresh' gsclick='deactivateAccount' style='float:left;' gs_confirm='Are you sure you want to deactivate this account?'>User has been deactivated, activate it</span>
+        <?php
+        } else {
+        ?>
+        <span class='shop_button' userid='<?php echo $user->id; ?>' gs_callback='app.CrmCustomerView.refresh' gsclick='deactivateAccount' style='float:left;' gs_confirm='Are you sure you want to deactivate this account?'>Deactivate account</span>
+        <? } ?>
     </div>
-    <div class='footer'>
-        <span class='shop_button' gsclick='deleteUser' style='background-color:red' userid='<?php echo $user->id; ?>' gs_confirm="Are you sure?">Delete this user</span>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="header"><? echo $this->__f("Profile merging"); ?></div>
+    Have you multiple customers that should have been merged into one customer? <br>You can do so by searching for the customers here and click merge.
+    <br>
+    <br>
+    <div>
+        Enter the name of the profile you would like to merge:<br>
+        <input type='txt' class='gsniceinput1 nameofcustomertomerge' style='width:500px;'><span class='shop_button searchcustomer' userid='<?php echo $user->id; ?>'>Search</span>
     </div>
-        
-        
+    
+    <div class='searcharea'></div>
+    
 </div>

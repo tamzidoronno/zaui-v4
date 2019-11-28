@@ -820,7 +820,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             String toWarn = "Booking with pms booking id not found in booking engine: " + booking.id + "<br>";
             warnedAboutNotAddedToBookingEngine.add(booking.id);
             if(getConfigurationSecure().bookingProfile != null && getConfiguration().bookingProfile.equals("hotel")) {
-                messageManager.sendErrorNotificationToEmail("pal@getshop.com", toWarn, null);
+                messageManager.sendErrorNotificationToEmail("pal@getshop.com", toWarn, new Exception());
             }
         }
         
@@ -10954,4 +10954,25 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         return newOrder;
     }
+    
+    public void moveAllOnUserToUser(String tomainuser, String secondaryuser) {
+        orderManager.moveAllOnUserToUser(tomainuser, secondaryuser);
+        moveAllOnUserToUserInternal(tomainuser, secondaryuser);
+        User user = userManager.getUserById(secondaryuser);
+        user.merged = true;
+        userManager.saveUser(user);
+    }
+
+    
+    public void moveAllOnUserToUserInternal(String tomainuser, String secondaryuser) {
+        for(PmsBooking booking : bookings.values()) {
+            if(booking != null && booking.userId != null && booking.userId.equals(secondaryuser)) {
+                booking.userId = tomainuser;
+                logEntry("Moved booking due to merging users", booking.id, null);
+                saveBooking(booking);
+            }
+        }
+    }
+
+    
 }

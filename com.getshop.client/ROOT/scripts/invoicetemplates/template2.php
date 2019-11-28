@@ -100,6 +100,20 @@ $isInvoice = $order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200
     .invoice_template .outerproductrow .col.col4,
     .invoice_template .productrow .col.col4 { width: 150px; text-align: right;}
     
+    .invoice_template .paymenthasbeencompleted {    
+        position: absolute;
+    width: 100%;
+    height: 166px;
+    background-color: rgba(0,0,0,0.7);
+    box-sizing: border-box;
+    text-align: center;
+    padding-top: 60px;
+    font-size: 40px;
+    color: #fff;
+    border-radius: 7px;
+    margin-top: 10px;
+    }
+    
     .invoice_template .metadata {
         font-size: 15px;
         padding: 3px;
@@ -290,8 +304,15 @@ $isInvoice = $order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200
             <div class='col col3'></div>
             <div class='col col4' style='color: #3b7fb1; font-size: 22px;'><? echo $translator->formatPrice($total); ?></div>
         </div>
-    <? } ?>
-
+    <? } else {
+        ?>
+        <div class='outerproductrow' style='position:relative;'>
+            <div class='paymenthasbeencompleted'><? echo $translator->translate("Already paid"); ?></div>
+        </div>
+        <?php
+       } 
+    ?>
+    
     <div class='outerproductrow bold' style='border-bottom: solid 1px #DDD; margin-top: 30px;'>
         <div class='col col1'><? echo $translator->translate("Calculated Taxes"); ?></div>
         <div class='col col2'></div>

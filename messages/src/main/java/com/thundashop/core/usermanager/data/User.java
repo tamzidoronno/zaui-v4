@@ -95,6 +95,8 @@ public class User extends DataCommon implements Comparable<User> {
     
     public boolean emailVerified = false;
     public AdditionalCrmData additionalCrmData;
+    public boolean deactivated = false;
+    public boolean merged = false;
     
     public void cleanWhiteSpaces() {
         cleanWhiteSpace(cellPhone);

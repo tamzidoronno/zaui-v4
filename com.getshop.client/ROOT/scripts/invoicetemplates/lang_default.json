@@ -28,5 +28,6 @@
     "Room" : "Room",
     "Date" : "Date",
     "Order number" : "Order number",
-    "Order date" : "Order date"
+    "Order date" : "Order date",
+    "Already paid" : "Already paid"
 }

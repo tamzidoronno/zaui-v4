@@ -228,6 +228,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
     
 
+    public void moveAllOnUserToUser(String tomainuser, String secondaryuser) {
+         for(Order ord : orders.values()) {
+             if(ord != null && ord.userId != null && ord.userId.equals(secondaryuser)) {
+                ord.userId = tomainuser;
+                ord.originalUserBeforeMerge = secondaryuser;
+                saveObject(ord);
+             }
+         }
+    }
+    
     @Override
     public String createRegisterCardOrder(String paymentTypeId) {
         User user = userManager.getUserById(getSession().currentUser.id);

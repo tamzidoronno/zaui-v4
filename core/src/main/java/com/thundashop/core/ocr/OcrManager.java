@@ -13,8 +13,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -68,16 +70,21 @@ public class OcrManager extends ManagerBase implements IOcrManager {
         }
     }
 
-    List<OcrFileLines> getNewOcrLines(String accountId) {
+    List<OcrFileLines> getNewOcrLines(String accountId, boolean doFailedTransfers) {
         List<OcrFileLines> newLines = new ArrayList();
         for(OcrFile file : files.values()) {
             boolean needSaving = false;
             for(OcrFileLines line : file.ocrLines) {
-                if(line.isTransferred()) {
-                    continue;
-                }
-                
                 if(line.avtaleId.equals(accountId)) {
+                    if(line.isTransferred() && !doFailedTransfers) {
+                        continue;
+                    }
+                    
+                    if(doFailedTransfers && line.getMatchonOnOrder() != -1) {
+                        continue;
+                    }
+                    
+
                     String transaksjonstype = line.getTransaksjonsType();
                     String recordtype = line.getRecordType();
                     if(transaksjonstype.equals("13") && recordtype.equals("30")) {
@@ -93,5 +100,21 @@ public class OcrManager extends ManagerBase implements IOcrManager {
             }
         }
         return newLines;
+    }
+
+    LinkedList<OcrFileLines> getAllLines(String accountId) {
+        LinkedList<OcrFileLines> lines = new LinkedList<OcrFileLines>();
+        for(OcrFile file : files.values()) {
+            for(OcrFileLines line : file.ocrLines) {
+                if(line.avtaleId.equals(accountId)) {
+                    String transaksjonstype = line.getTransaksjonsType();
+                    String recordtype = line.getRecordType();
+                    if(transaksjonstype.equals("13") && recordtype.equals("30")) {
+                        lines.add(line);
+                    }
+                }
+            }
+        }
+        return lines;
     }
 }

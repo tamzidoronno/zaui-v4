@@ -39,7 +39,12 @@ class PmsCrm extends \WebshopApplication implements \Application {
      * @return type
      */
     public function formatFullName($user) {
-        $name = $user->fullName;
+        $name = "";
+        if($user->deactivated) {
+            $name .= "<span style='color:#bbb;'>" . $user->fullName . "(deactivated)</span>";   
+        } else {
+            $name = $user->fullName;
+        }
         if($user->primaryCompanyUser) {
             $name = "<i class='fa fa-industry'></i> " . $name;
         }

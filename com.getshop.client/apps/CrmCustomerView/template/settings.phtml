@@ -42,14 +42,24 @@
     <br>
     <br>
     <div class="header"><? echo $this->__f("Profile merging"); ?></div>
-    Have you multiple customers that should have been merged into one customer? <br>You can do so by searching for the customers here and click merge.
-    <br>
-    <br>
-    <div>
-        Enter the name of the profile you would like to merge:<br>
-        <input type='txt' class='gsniceinput1 nameofcustomertomerge' style='width:500px;'><span class='shop_button searchcustomer' userid='<?php echo $user->id; ?>'>Search</span>
-    </div>
+    <?php 
     
-    <div class='searcharea'></div>
+    if(!$user->deactivated) {
+    ?>
+        Have you multiple customers that should have been merged into one customer? <br>You can do so by searching for the customers here and click merge.
+        <br>
+        <br>
+        <div>
+            Enter the name of the profile you would like to merge:<br>
+            <input type='txt' class='gsniceinput1 nameofcustomertomerge' style='width:500px;'><span class='shop_button searchcustomer' userid='<?php echo $user->id; ?>'>Search</span>
+        </div>
+
+        <div class='searcharea'></div>
+    <?php
+    } else {
+        echo "Profile merging can only be initiated from an active account, this account has been deactivated.";
+    }
+    ?>
+    
     
 </div>

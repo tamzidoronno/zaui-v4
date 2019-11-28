@@ -226,7 +226,7 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
         $filter = new \core_common_FilterOptions();
         $filter->searchWord = $_POST['data']['keyword'];
         $users = $this->getApi()->getUserManager()->getAllUsersFiltered($filter);
-
+        
         echo "<div style='font-weight:bold; margin-top: 30px;'>";
         echo "<span class='fullname'>Profile</span>";
         echo "<span class='email'>Email</span>";

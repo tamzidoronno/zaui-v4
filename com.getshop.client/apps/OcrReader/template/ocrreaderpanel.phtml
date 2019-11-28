@@ -34,6 +34,7 @@ $avtaleid = $this->getApi()->getStoreOcrManager()->getAccountingId();
                         <?
                         echo $this->__f("OCR reading is a system for automatically marking invoices as paid when paid by bank.") . "<br>";
                         echo $this->__f("Below you find a complete list for payments recieved.") . "<br>";
+                        echo "<span style='color:blue; cursor:pointer; float:right' gstype='clicksubmitforce' method='retryConnectUnmatched'>Retry connecting unmatched orders</span>";
                         echo $this->__f("I am connected to id : $avtaleid") . ", <span style='color:blue; cursor:pointer;' gstype='clicksubmitforce' method='disconnectAccountingId' gs_prompt='Password'>disconnect</span>.<br>";
                         ?>
                     </div>

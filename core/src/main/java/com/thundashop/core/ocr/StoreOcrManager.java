@@ -11,11 +11,14 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +37,9 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
     
     @Autowired
     OrderManager orderManager;
+    
+    @Autowired
+    MessageManager messageManager;
     
     OcrAccount account = new OcrAccount();
     
@@ -105,25 +111,44 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
 
     @Override
     public void checkForPayments() {
-        ocrManager.scanOcrFiles();
-        List<OcrFileLines> newlines = ocrManager.getNewOcrLines(account.accountId);
-        for(OcrFileLines line : newlines) {
-            Order toMatch = orderManager.getOrderByKid(line.getKid());
-            logPrint("New record found: " + line.getKid());
-            if(toMatch != null) {
-                logPrint("found matching order");
-                Date paymentDate = line.getPaymentDate();
-                orderManager.markAsPaidWithTransactionType(toMatch.id, paymentDate, line.getAmountInDouble(), Order.OrderTransactionType.OCR, line.getOcrLineId());
-                line.setMatchOnOrderId(toMatch.incrementOrderId);
-                logPrint("did match done");
-            } else {
-                logPrint("Did not find correct order to match this for");
+        checkForPaymentsInternal(false);
+    }
+
+    private void checkForPaymentsInternal(boolean doFailedTransfers) {
+        try {
+            ocrManager.scanOcrFiles();
+            List<OcrFileLines> lines = getAllTransactions();
+            List<OcrFileLines> newlines = new ArrayList();
+            for(OcrFileLines line : lines) {
+                if(line.isTransferred() && !doFailedTransfers) {
+                    continue;
+                }
+                
+                if(doFailedTransfers && line.getMatchonOnOrder() != -1) {
+                    continue;
+                }
+                newlines.add(line);
+                Order toMatch = orderManager.getOrderByKid(line.getKid());
+                logPrint("New record found: " + line.getKid());
+                if(toMatch != null) {
+                    logPrint("found matching order");
+                    Date paymentDate = line.getPaymentDate();
+                    orderManager.markAsPaidWithTransactionType(toMatch.id, paymentDate, line.getAmountInDouble(), Order.OrderTransactionType.OCR, line.getOcrLineId());
+                    line.setMatchOnOrderId(toMatch.incrementOrderId);
+                    logPrint("did match done");
+                } else {
+                    logPrint("Did not find correct order to match this for");
+                    messageManager.sendErrorNotification("failed to match ocr line: " + line.toString(), null);
+                }
             }
+
+            saveLines(newlines);
+
+            saveObject(account);
+        }catch(Exception e) {
+            messageManager.sendErrorNotification("Outer ocr scanning exception occured", e);
+            logPrintException(e);
         }
-        
-        saveLines(newlines);
-        
-        saveObject(account);
     }
 
     @Override
@@ -133,8 +158,15 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
 
     @Override
     public List<OcrFileLines> getAllTransactions() {
-        checkForPayments();
-        return new ArrayList(lines.values());
+        LinkedList<OcrFileLines> result = ocrManager.getAllLines(account.accountId);
+        for(OcrFileLines line : result) {
+            OcrFileLines savedLine = getMatchedLine(line);
+            if(savedLine != null) {
+                line.setMatchOnOrderId(savedLine.getMatchonOnOrder());
+            }
+        }
+        Collections.sort(result);
+        return result;
     }
 
     @Override
@@ -156,5 +188,20 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
                 .filter(o -> o.getOcrLineId().equals(ocrLineId))
                 .findFirst()
                 .orElse(null);
+    }
+
+    @Override
+    public void retryMatchOrders() {
+        checkForPaymentsInternal(true);
+    }
+
+    private OcrFileLines getMatchedLine(OcrFileLines line) {
+        for(OcrFileLines l : lines.values()) {
+            if(l.getKid().equals(line.getKid())) {
+                return l;
+            }
+        }
+        
+        return null;
     }
 }

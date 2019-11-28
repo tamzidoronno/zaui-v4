@@ -15,6 +15,10 @@ class OcrReader extends \WebshopApplication implements \Application {
         $this->includefile("ocrreaderpanel");
     }
 
+    public function retryConnectUnmatched() {
+        $this->getApi()->getStoreOcrManager()->retryMatchOrders();
+    }
+    
     public function setAccountingId() {
         $id = $_POST['data']['id'];
         $password = $_POST['data']['password'];

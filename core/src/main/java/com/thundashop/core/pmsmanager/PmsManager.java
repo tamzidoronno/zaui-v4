@@ -3614,6 +3614,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for (TimeRepeaterData res : openingshours) {
             LinkedList<TimeRepeaterDateRange> ranges = repeater.generateRange(res);
             for (TimeRepeaterDateRange range : ranges) {
+                if(periodeType.equals(TimeRepeaterData.TimePeriodeType.closed) && range.isWithin(start, end)) {
+                    return true;
+                }
+                
                 if (isBetween) {
                     continue;
                 }
@@ -8762,7 +8766,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (room != null) {
             logEntry("Room checkedin", booking.id, room.bookingItemId, room.pmsBookingRoomId, "checkin");
             room.checkedin = true;
-            markRoomAsDirty(room.bookingItemId);
+            if(!hasLockSystemActive()) {
+                markRoomAsDirty(room.bookingItemId);
+            }
             saveBooking(booking);
         }
     }
@@ -8992,7 +8998,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             TimeRepeater repeater = new TimeRepeater();
             LinkedList<TimeRepeaterDateRange> timeRanges = repeater.generateRange(data);
             for(TimeRepeaterDateRange range : timeRanges) {
-                if(range.isBetweenTimeOrStartingAt(start) || range.isBetweenTime(end)) {
+                if(range.isBetweenTimeOrStartingAt(start) || range.isBetweenTime(end) || range.isWithin(start, end)) {
                     return true;
                 }
             }

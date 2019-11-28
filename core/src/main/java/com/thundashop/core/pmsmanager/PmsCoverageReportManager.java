@@ -9,6 +9,7 @@ import com.getshop.scope.GetShopSession;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.storemanager.StoreManager;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -36,6 +37,9 @@ public class PmsCoverageReportManager extends ManagerBase {
     
     @Autowired
     BookingEngine engine;
+    
+    @Autowired
+    StoreManager storeManager;
 
     PmsCoverageReport getCoverageReport(PmsBookingFilter filter) {
         entries.clear();
@@ -54,7 +58,7 @@ public class PmsCoverageReportManager extends ManagerBase {
         PmsCoverageReport report = new PmsCoverageReport();
         
         for(PmsCoverageReportEntry check : result) {
-            if(check.date.after(filter.startDate) && check.date.before(filter.endDate)) {
+            if((check.date.after(filter.startDate) || check.date.equals(filter.startDate)) && check.date.before(filter.endDate)) {
                 report.entries.add(check);
             }
         }

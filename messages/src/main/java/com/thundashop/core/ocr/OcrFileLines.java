@@ -19,7 +19,7 @@ import java.util.stream.Stream;
  *
  * @author boggi
  */
-public class OcrFileLines extends DataCommon {
+public class OcrFileLines extends DataCommon implements Comparable<OcrFileLines> {
 
     private String rawLine = "";
     String avtaleId = "";
@@ -39,6 +39,18 @@ public class OcrFileLines extends DataCommon {
     
     OcrFileLines(String line) {
         rawLine = line;
+    }
+    
+    @Override
+    public int compareTo(OcrFileLines u) {
+        if (getPaymentDate() == null || u.getPaymentDate() == null) {
+          return 0;
+        }
+        return u.getPaymentDate().compareTo(getPaymentDate());
+    }
+    
+    public String toString() {
+        return rawLine + ", kid: " + kid;
     }
     
     public String getTjenesteKode() {
@@ -96,6 +108,11 @@ public class OcrFileLines extends DataCommon {
         kid = getKid();
         beenTransferred = true;
     }
+    
+    public void unsetBeenTransferred() {
+        beenTransferred = false;
+    }
+    
     void setMatchOnOrderId(Long orderId) {
         matchOnOrderId = orderId;
     }
@@ -127,5 +144,9 @@ public class OcrFileLines extends DataCommon {
 
     public String getBatchId() {
         return rawLine.substring(21, 31);
+    }
+
+    long getMatchonOnOrder() {
+        return matchOnOrderId;
     }
 }

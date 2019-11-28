@@ -158,7 +158,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     @Override
     public void connectCompanyToUser(String userId, String taxNumber) {
         User user = getUserById(userId);
-        if(user.primaryCompanyUser) {
+        if(user.primaryCompanyUser && user.companyObject != null && !user.companyObject.vatNumber.isEmpty()) {
             logPrint("Can not connect a company to an existing company user");
             return;
         }

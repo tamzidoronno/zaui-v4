@@ -260,15 +260,18 @@ $isInvoice = $order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200
         </div>
         <?
         $i++;
-        if($totalLines < 17 && $i == $totalLines && $totalLines >= 12) {
+        if($totalLines < 13 && $i == $totalLines && $totalLines >= 12) {
             echo "<div class='new-page'></div>";
-        } else if($i == 17) {
+            echo "<br><bR>";
+        } else if($i == 13) {
             echo "<div class='new-page'></div>";
+            echo "<br><bR>";
         }
     }
     $numberOfRowsOnLastPage = (($i-16) % 21)-1;
-    if($numberOfRowsOnLastPage >= 17) {
+    if($numberOfRowsOnLastPage >= 14 || ($totalLines > 8 && $totalLines < 13)) {
         echo "<div class='new-page'></div>";
+        echo "<br><bR>";
     }
     ?>
 
@@ -313,6 +316,15 @@ $isInvoice = $order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200
         </div>
     <?
     }
+    
+    ?>
+        <div class='outerproductrow'>
+            <div class='col col1'></div>
+            <div class='col col2'></div>
+            <div class='col col3'><? echo $translator->translate("Amount"); ?></div>
+            <div class='col col4'><? echo $translator->formatPrice($total); ?></div>
+        </div>
+    <?
     
     if ($order->status != 7) {
     ?>

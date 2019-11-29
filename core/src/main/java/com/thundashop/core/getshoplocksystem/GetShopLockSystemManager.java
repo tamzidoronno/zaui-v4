@@ -797,7 +797,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
     }
 
     private List<UserSlot> fetchCodesInternal(String serverId, String lockId, boolean fetchAll) {
-        if (cacheSlotsInUse.get(serverId+"_"+lockId) != null) {
+        if (hasCachedBuild(serverId, lockId)) {
             return cacheSlotsInUse.get(serverId+"_"+lockId);
         }
         

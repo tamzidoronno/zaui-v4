@@ -143,6 +143,14 @@ public class GetShopLoraServer extends LockServerBase implements LockServer {
         // TODO - Need to thread 
     }
 
+    @Override
+    public void markCodeForResending(String lockId, int slotId) {
+        super.markCodeForResending(lockId, slotId); //To change body of generated methods, choose Tools | Templates.
+        Lock lock = getLock(lockId);
+        transferToLoraGateWay((GetShopLock)lock);
+    }
+    
+
     private GetShopLock getLockByDeviceId(int deviceId) {
         return locks.values()
                 .stream()
@@ -156,9 +164,16 @@ public class GetShopLoraServer extends LockServerBase implements LockServer {
         
         refreshLockFromServer(lock);
         
+        if (lock.deviceId == 24) {
+            System.out.println("Found");
+        }
+        
         for (UserSlot slot : lock.getUserSlots()) {
 
-            if (!slot.inUse && slot.serverLockSlotId != null && slot.pinCodeAddedToServer != slot.code.pinCode) {
+            boolean resend = slot.serverLockSlotId != null && slot.code.addedDate == null;
+            boolean toBeRemoved = !slot.inUse && slot.serverLockSlotId != null && slot.pinCodeAddedToServer != slot.code.pinCode;
+            
+            if (resend || toBeRemoved) {
                 String res = getHtml("http://"+hostname+":5000/removeCode?token="+getAccessToken()+"&device="+lock.deviceId+"&slot="+slot.serverLockSlotId);
                 if (res.equals("MARKED_FOR_REMOVAL") || res.equals("CODE_NOT_ADDED")) {
                     slot.serverLockSlotId = null;
@@ -178,6 +193,7 @@ public class GetShopLoraServer extends LockServerBase implements LockServer {
                 
                 if (res.equals("CODE_RECEIVED")) {
                     codeUpdated = true;
+                    slot.setAddedDate(new Date());
                     slot.pinCodeAddedToServer = slot.code.pinCode;
                     System.out.println("Asked to save code " + slot.code.pinCode + " to slot : " + nextUnusedSlot);
                 } else {
@@ -226,7 +242,7 @@ public class GetShopLoraServer extends LockServerBase implements LockServer {
                 continue;
             }
 
-            if (iGetShopSlot.setOnLock && userSlotForLock.code.addedDate == null) {
+            if (iGetShopSlot.setOnLock && userSlotForLock.code.addedDate != null) {
                 userSlotForLock.codeAddedSuccesfully();
             }
         }

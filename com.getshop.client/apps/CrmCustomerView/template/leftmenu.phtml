@@ -3,13 +3,6 @@
 $user = $this->getUser();
 ?>
 <div class='menuentry crmmenuentry <?php if($this->getSelectedArea() == "overview") { echo "selectedmenuentry"; } ?>' area='overview'>Overview</div>
-<?php
-if($user->primaryCompanyUser) {
-    ?>
-    <div class='menuentry crmmenuentry <?php if($this->getSelectedArea() == "subaccounts") { echo "selectedmenuentry"; } ?>' area='subaccounts'>Subaccounts</div>
-    <?php
-}
-?>
 <div class='menuentry crmmenuentry <?php if($this->getSelectedArea() == "password") { echo "selectedmenuentry"; } ?>' area='password'>Password</div>
 <div class='menuentry crmmenuentry <?php if($this->getSelectedArea() == "payments") { echo "selectedmenuentry"; } ?>' area='payments'>Payments</div>
 <div class='menuentry crmmenuentry <?php if($this->getSelectedArea() == "bookings") { echo "selectedmenuentry"; } ?>' area='bookings'>Bookings</div>

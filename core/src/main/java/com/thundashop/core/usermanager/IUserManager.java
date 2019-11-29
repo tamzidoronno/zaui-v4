@@ -63,6 +63,9 @@ public interface IUserManager {
     @Editor
     public List<User> findUsers(String searchCriteria) throws ErrorException;
     
+    @Administrator
+    public void deactivateAccount(String userId);
+    
     /**
      * Logon a given user.
      * @param email The username to use when logging on, an also be the users email.

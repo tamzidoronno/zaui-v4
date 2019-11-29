@@ -29,7 +29,7 @@
 .PmsReport .weekenddate { background-color:#23314e !important; color:#fff !important; }
 .PmsReport .weekenddate.active { color:#000 !important; }
 .PmsReport .weekenddate .datarow_extended_content { background-color:#fff !important;}
-.PmsReport .customerfilter { border: solid 1px #bbb; background-color:#c7c5c5; position: absolute; display: inline-block; padding: 2px; width: 500px; right: 0px; top: 115px; display:none; }
+.PmsReport .customerfilter { z-index: 3; border: solid 1px #bbb; background-color:#c7c5c5; position: absolute; display: inline-block; padding: 2px; width: 500px; right: 0px; top: 115px; display:none; }
 .PmsReport .discountcodeselection { border: solid 1px #bbb; background-color:#c7c5c5; position: absolute; display: inline-block; padding: 2px; width: 500px; right: 0px; top: 115px; display:none; }
 .PmsReport .customercodebtn { border: solid 1px; padding: 3px; background-color:#fff;display: inline-block;margin: 2px;border-radius: 9px; cursor:pointer;}
 .PmsReport .customerfilter .customersearch { width: 100%; box-sizing: border-box; }

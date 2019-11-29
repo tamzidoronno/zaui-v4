@@ -65,8 +65,24 @@ app.PmsBookingRoomView = {
         $(document).on('click','.PmsBookingRoomView .selectsameasbooker', app.PmsBookingRoomView.selectSameAsBooker);
         $(document).on('click','.PmsBookingRoomView .addsuggestionarrow', app.PmsBookingRoomView.addSuggestedRow);
         $(document).on('click','.PmsBookingRoomView .savechangestocommentbtn', app.PmsBookingRoomView.saveChangesToComment);
+        $(document).on('click','.PmsBookingRoomView .toggleDisabledGuest', app.PmsBookingRoomView.toggleDisabledGuest);
         $(document).on('focus','.PmsBookingRoomView .contenttoedit', app.PmsBookingRoomView.showSaveButton);
         $(document).on('keyup','.PmsBookingRoomView [searchtype]', app.PmsBookingRoomView.searchGuests);
+    },
+    toggleDisabledGuest : function() {
+        var btn = $(this);
+        var event = thundashop.Ajax.createEvent('','toggleDisabledGuest', $(this), {
+            "disabledGuest" : btn.hasClass('isdisabled'),
+            "guestid" : btn.closest('.guest_row').attr('guestid')
+        });
+        
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            if(btn.hasClass('isdisabled')) {
+                btn.removeClass('isdisabled');
+            } else {
+                btn.addClass('isdisabled');
+            }
+        });
     },
     showSaveButton : function() {
         var row = $(this).closest('.commentrow');

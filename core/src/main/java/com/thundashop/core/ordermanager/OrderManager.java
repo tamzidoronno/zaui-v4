@@ -233,6 +233,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
     
 
+    public void moveAllOnUserToUser(String tomainuser, String secondaryuser) {
+         for(Order ord : orders.values()) {
+             if(ord != null && ord.userId != null && ord.userId.equals(secondaryuser)) {
+                ord.userId = tomainuser;
+                ord.originalUserBeforeMerge = secondaryuser;
+                saveObject(ord);
+             }
+         }
+    }
+    
     @Override
     public String createRegisterCardOrder(String paymentTypeId) {
         User user = userManager.getUserById(getSession().currentUser.id);
@@ -846,6 +856,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             logPrint("Tried to fetch an order on id: " + orderId + " when session is null.");
             return null;
         }
+        if(orderId == null) {
+            logPrint("Tried to fetch a order with id null.");
+            return null;
+        } 
+        
         orderId = orderId.replaceAll(",", "");
         orderId = orderId.replaceAll("\\.", "");
         

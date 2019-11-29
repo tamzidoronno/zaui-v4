@@ -81,6 +81,7 @@ if($guestcount > $numberofguests) {
         </div>
 
         <div class="guest_col guest_col4">
+            <div class="gs_shop_small_icon toggleDisabledGuest" title='Is this guest disabled?'><i class='fa fa-wheelchair'></i></div>
             <div class="gs_shop_small_icon remove_guest"><i class="fa fa-close"></i></div>
         </div>
         <span style='font-size: 12px; margin-left: 12px; cursor:pointer;' class='bookinghighlightcolor selectsameasbooker'>
@@ -107,6 +108,7 @@ if($guestcount > $numberofguests) {
     echo "<div class='guestinforows'>";
     foreach ($room->guests as $guest) {
         $i++;
+        $isDisabled = $guest->isDisabled ? "isdisabled" : "";
         ?>
         <div class="guest_row" counter='<? echo $i; ?>' guestid='<?php echo $guest->guestId; ?>'>
             
@@ -130,6 +132,7 @@ if($guestcount > $numberofguests) {
             </div>
 
             <div class="guest_col guest_col4">      
+                <div class="gs_shop_small_icon toggleDisabledGuest <?php echo $isDisabled; ?>" title='Is this guest disabled?'><i class='fa fa-wheelchair'></i></div>
                 <div class="gs_shop_small_icon remove_guest"><i class="fa fa-close"></i></div>
             </div>
             <span style='font-size: 12px; margin-left: 12px; cursor:pointer;' class='bookinghighlightcolor selectsameasbooker'>

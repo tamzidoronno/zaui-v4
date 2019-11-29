@@ -47,6 +47,10 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
         $this->addcouponcode();
     }
     
+    public function deactivateAccount() {
+        $this->getApi()->getUserManager()->deactivateAccount($_POST['data']['userid']);
+    }
+    
     public function printCards($userId) {
         $user = $this->getApi()->getUserManager()->getUserById($userId);
         $res = (array)$user->savedCards;
@@ -216,6 +220,55 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
         echo "</td>";
         echo "</tr>";
         echo "</table>";
+    }
+    
+    public function searchCustomerToMerge() {
+        $filter = new \core_common_FilterOptions();
+        $filter->searchWord = $_POST['data']['keyword'];
+        $users = $this->getApi()->getUserManager()->getAllUsersFiltered($filter);
+        
+        echo "<div style='font-weight:bold; margin-top: 30px;'>";
+        echo "<span class='fullname'>Profile</span>";
+        echo "<span class='email'>Email</span>";
+        echo "<span class='cellphone'>Phone</span>";
+        echo "</div>";
+
+        
+        $found = false;
+        foreach($users->datas as $user) {
+            if($user->id == $_POST['data']['userid']) {
+                continue;
+            }
+            if(!$user->deactivated) {
+                continue;
+            }
+             /* @var $user \core_usermanager_data_User */
+            $found = true;
+            
+            $merged = "";
+            $mergedText = "";
+            if($user->merged) {
+                $merged = "style='color:#bbb;'";
+                $mergedText = "(merged)";
+            }
+            
+            echo "<div class='mergeuserprofilerow' $merged>";
+            echo "<span class='fullname'>" . $user->fullName . " $mergedText</span>";
+            echo "<span class='email'>" . $user->emailAddress . "</span>";
+            echo "<span class='cellphone'>(" . $user->prefix . ") " . $user->cellPhone . "</span>";
+            echo "<span class='merge' style='float:right;'><span class='mergeUsers' secondaryuser='".$user->id."' tomainuser='".$_POST['data']['userid']."' style='cursor:pointer;' gsclick='doMergeUsers' gs_confirm='Are you sure you want to merge this profile? This action can not be undone' gs_callback='app.CrmCustomerView.doneMerging'>Merge this profile</span></span>";
+            echo "</div>";
+        }
+        
+        if(!$found) {
+            echo "Im sorry, no profile where found, you can only merge deactivated profiles!";
+        }
+    }
+    
+    public function doMergeUsers() {
+        $tomainuser = $_POST['data']['tomainuser'];
+        $secondaryuser = $_POST['data']['secondaryuser'];
+        $this->getApi()->getPmsManager()->moveAllOnUserToUser($this->getSelectedMultilevelDomainName(), $tomainuser, $secondaryuser);
     }
     
     public function saveCumsterDetails() {

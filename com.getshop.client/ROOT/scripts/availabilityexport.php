@@ -5,6 +5,11 @@ include '../loader.php';
 $factory = IocContainer::getFactorySingelton();
 
 
+$timezone = $factory->getStore()->timeZone;
+if($timezone) {
+    date_default_timezone_set($timezone);
+}
+
 if(isset($_GET['username'])) {
     $username = $_GET['username'];
     $password = $_GET['password'];
@@ -81,6 +86,9 @@ foreach($types as $type) {
         $toprintobj->name = $type->name;
         $toprintobj->categoryId = $type->id;
         $toprintobj->days = $data->entries;
+        foreach($toprintobj->days as $i => $day) {
+            $toprintobj->days[$i]->date = date("d.m.Y", strtotime($day->date));
+        }
         $toprint[] = $toprintobj;
     }
 }

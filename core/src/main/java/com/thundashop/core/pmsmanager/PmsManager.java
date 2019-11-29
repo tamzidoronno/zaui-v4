@@ -820,7 +820,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             String toWarn = "Booking with pms booking id not found in booking engine: " + booking.id + "<br>";
             warnedAboutNotAddedToBookingEngine.add(booking.id);
             if(getConfigurationSecure().bookingProfile != null && getConfiguration().bookingProfile.equals("hotel")) {
-                messageManager.sendErrorNotificationToEmail("pal@getshop.com", toWarn, null);
+                messageManager.sendErrorNotificationToEmail("pal@getshop.com", toWarn, new Exception());
             }
         }
         
@@ -3614,6 +3614,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for (TimeRepeaterData res : openingshours) {
             LinkedList<TimeRepeaterDateRange> ranges = repeater.generateRange(res);
             for (TimeRepeaterDateRange range : ranges) {
+                if(periodeType.equals(TimeRepeaterData.TimePeriodeType.closed) && range.isWithin(start, end)) {
+                    return true;
+                }
+                
                 if (isBetween) {
                     continue;
                 }
@@ -8762,7 +8766,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (room != null) {
             logEntry("Room checkedin", booking.id, room.bookingItemId, room.pmsBookingRoomId, "checkin");
             room.checkedin = true;
-            markRoomAsDirty(room.bookingItemId);
+            if(!hasLockSystemActive()) {
+                markRoomAsDirty(room.bookingItemId);
+            }
             saveBooking(booking);
         }
     }
@@ -8992,7 +8998,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             TimeRepeater repeater = new TimeRepeater();
             LinkedList<TimeRepeaterDateRange> timeRanges = repeater.generateRange(data);
             for(TimeRepeaterDateRange range : timeRanges) {
-                if(range.isBetweenTimeOrStartingAt(start) || range.isBetweenTime(end)) {
+                if(range.isBetweenTimeOrStartingAt(start) || range.isBetweenTime(end) || range.isWithin(start, end)) {
                     return true;
                 }
             }
@@ -10948,4 +10954,25 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         return newOrder;
     }
+    
+    public void moveAllOnUserToUser(String tomainuser, String secondaryuser) {
+        orderManager.moveAllOnUserToUser(tomainuser, secondaryuser);
+        moveAllOnUserToUserInternal(tomainuser, secondaryuser);
+        User user = userManager.getUserById(secondaryuser);
+        user.merged = true;
+        userManager.saveUser(user);
+    }
+
+    
+    public void moveAllOnUserToUserInternal(String tomainuser, String secondaryuser) {
+        for(PmsBooking booking : bookings.values()) {
+            if(booking != null && booking.userId != null && booking.userId.equals(secondaryuser)) {
+                booking.userId = tomainuser;
+                logEntry("Moved booking due to merging users", booking.id, null);
+                saveBooking(booking);
+            }
+        }
+    }
+
+    
 }

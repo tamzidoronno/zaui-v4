@@ -22,6 +22,18 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         
     }
     
+    public function toggleDisabledGuest() {
+        $booking = $this->getPmsBooking();
+        foreach($booking->rooms as $r) {
+            foreach($r->guests as $g) {
+                if($g->guestId == $_POST['data']['guestid']) {
+                    $g->isDisabled = true;
+                }
+            }
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+    }
+    
     public function updatePmsComment() {
         $id = $_POST['data']['id'];
         $text = $_POST['data']['text'];

@@ -17,6 +17,47 @@ class PmsPricingNew extends \WebshopApplication implements \Application {
     public function loadAdvancedPricePlan() {
         $this->includefile("priceyieldpanel");
     }
+    
+    public function downloadToExcel() {
+        $result = array();
+        
+        $itemTypes = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedName(),null);
+        $itemTypes = $this->indexList($itemTypes);
+        
+        $priceObject = $this->getPrices();
+        $prices = $priceObject->dailyPrices;
+        
+        $row = array();
+        $row[] = "Category";
+        $days = array();
+        
+        $start = strtotime($this->getStart());
+        $end = strtotime($this->getEnd());
+        
+        for($i = $start;$i <= $end;$i = $i+86400) {
+            $row[] = date("d.m.Y", $i);
+        }
+        $result[] = $row;
+        
+        foreach($prices as $type => $dailyPrices) {
+            $row = array();
+            if(!isset($itemTypes[$type])) {
+                continue;
+            }
+            $row[] = $itemTypes[$type]->name;
+            for($i = $start;$i <= $end;$i = $i+86400) {
+                $key = date("d-m-Y", $i);
+                if(isset($dailyPrices->{$key})) {
+                    $row[] = $dailyPrices->{$key};
+                } else {
+                    $row[] = "";
+                }
+            }
+            $result[] = $row;
+        }
+        
+        echo json_encode($result);
+    }
 
     public function saveYieldPlan() {
         $plan = new \core_pmsmanager_PmsAdvancePriceYield();

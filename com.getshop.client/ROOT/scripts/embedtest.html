@@ -10,13 +10,21 @@
     gsisdevmode = true;
     $ = jQuery;
     jQuery(function ($) {
-        $.getScript("http://haugesund.3.0.local.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
+        $.getScript("http://bergstaden.3.0.local.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
             $("#bookingprocess").getshopbooking(
                 {
-                    "endpoint": "http://haugesund.3.0.local.getshop.com/",
-                    "jsendpoint": "http://haugesund.3.0.local.getshop.com/",
+                    "endpoint": "http://bergstaden.3.0.local.getshop.com/",
+                    "jsendpoint": "http://bergstaden.3.0.local.getshop.com/",
                     "domain" : "default",
-                    "language" : "no"
+                    "language" : "no",
+                    "events" : function(eventType, data) {
+                        //Handle events happening her.
+                        //Eventtype : search
+                        //Eventtype : continue
+                        //Eventtype : userdataregistered
+                        //Eventtype : proceedtopayment
+                        //Eventtype : pressedpaylater
+                    }
                 }
             );
             

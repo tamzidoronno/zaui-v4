@@ -528,14 +528,19 @@
     width: calc(100% - 61px);
 }
 
+.PmsBookingRoomView .isdisabled {
+    background:green;
+    color:#fff;
+}
+
 .PmsBookingRoomView .payment_process_started {
     padding: 20px;
 }
 
 .PmsBookingRoomView .bookinginformation .guest_col1 { width: calc(100% - 550px); }
-.PmsBookingRoomView .bookinginformation .guest_col2 { width: 300px; }
+.PmsBookingRoomView .bookinginformation .guest_col2 { width: 260px; }
 .PmsBookingRoomView .bookinginformation .guest_col3 { width: 200px; }
-.PmsBookingRoomView .bookinginformation .guest_col4 { width: 35px; }
+.PmsBookingRoomView .bookinginformation .guest_col4 { width: 85px; }
 .PmsBookingRoomView .bookinginformation .guest_col5 { width: 225px; }
 
 .PmsBookingRoomView .GetShopQuickUser .booked_for {

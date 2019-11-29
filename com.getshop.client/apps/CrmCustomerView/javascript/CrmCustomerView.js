@@ -5,7 +5,21 @@ app.CrmCustomerView = {
         $(document).on('click','.CrmCustomerView .docreatenewcode', app.CrmCustomerView.doCreateNewDicountCode);
         $(document).on('click','.CrmCustomerView .attacheddiscountcode', app.CrmCustomerView.changePrintedDiscountCode);
         $(document).on('click','.CrmCustomerView .savediscountcustomer', app.CrmCustomerView.saveDiscountForm);
+        $(document).on('click','.CrmCustomerView .searchcustomer', app.CrmCustomerView.searchCustomer);
         $(document).on('change','.CrmCustomerView [gsname="attachedDiscountCode"]', app.CrmCustomerView.changeDiscountSystem);
+    },
+    
+    doneMerging : function() {
+        $('.searchcustomer').click();
+    },
+    searchCustomer : function() {
+        var event = thundashop.Ajax.createEvent('','searchCustomerToMerge',$(this), {
+            "keyword" : $('.nameofcustomertomerge').val(),
+            "userid" : $(this).attr('userid')
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.searcharea').html(res);
+        });
     },
     saveDiscountForm : function() {
         var form = $(this).closest('[gstype="form"]');

@@ -30,5 +30,8 @@ public interface IStoreOcrManager {
     public boolean isActivated();
     
     @Administrator
+    public void retryMatchOrders();
+    
+    @Administrator
     public List<OcrFileLines> getOcrLinesForDay(int year, int month, int day);
 }

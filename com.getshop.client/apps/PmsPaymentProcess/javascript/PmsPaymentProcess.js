@@ -277,7 +277,7 @@ app.PmsPaymentProcess = {
             
                 totalForRoom = Math.round(totalForRoom * 100) / 100;
                 $(this).find('.totalforroom').html(totalForRoom);
-                $('.PmsPaymentProcess').find('input.totalval').val(totalForRoom);
+//                $('.PmsPaymentProcess').find('input.totalval').val(totalForRoom);
             });
             
             

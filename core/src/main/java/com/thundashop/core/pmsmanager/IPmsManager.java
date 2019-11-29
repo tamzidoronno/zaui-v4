@@ -685,4 +685,7 @@ public interface IPmsManager {
     
     @Administrator
     public Order updateOrderDetails(String bookingId, String orderId, boolean preview);
+    
+    @Administrator
+    public void moveAllOnUserToUser(String tomainuser, String secondaryuser);
 }

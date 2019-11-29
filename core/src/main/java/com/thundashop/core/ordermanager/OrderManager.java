@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DBCollection;
+import com.thundashop.core.accountingmanager.SavedOrderFile;
 import com.thundashop.core.applications.GetShopApplicationPool;
 import com.thundashop.core.applications.StoreApplicationInstancePool;
 import com.thundashop.core.applications.StoreApplicationPool;
@@ -32,6 +33,7 @@ import com.thundashop.core.getshopaccounting.DayIncomeReport;
 import com.thundashop.core.getshopaccounting.DayIncomeTransferToAaccountingInformation;
 import com.thundashop.core.getshopaccounting.DiffReport;
 import com.thundashop.core.getshopaccounting.DoublePostAccountingTransfer;
+import com.thundashop.core.getshopaccounting.GetShopAccountingManager;
 import com.thundashop.core.getshopaccounting.OrderDailyBreaker;
 import com.thundashop.core.getshopaccounting.OrderUnsettledAmountForAccount;
 import com.thundashop.core.giftcard.GiftCardManager;
@@ -213,6 +215,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Autowired
     private StoreOcrManager storeOcrManager;
+    
+    @Autowired
+    private GetShopAccountingManager getShopAccountingManager;
     
     private List<String> terminalMessages = new ArrayList();
     private Order orderToPay;
@@ -2959,7 +2964,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             dayIncomes.stream().forEach(o -> o.isFinal = true);
         }
         
-        OrderDailyBreaker breaker = new OrderDailyBreaker(getAllOrders(), filter, paymentManager, productManager, getOrderManagerSettings().whatHourOfDayStartADay, getAllFreePosts(), storeOcrManager);
+        List<Order> ordersToUse = getAllOrders();
+        
+        if (filter.excludedOldOrders) {
+            ordersToUse = ordersToUse
+                    .stream()
+                    .filter(o -> !o.excludeFromFReport)
+                    .collect(Collectors.toList());
+        }
+        
+        OrderDailyBreaker breaker = new OrderDailyBreaker(ordersToUse, filter, paymentManager, productManager, getOrderManagerSettings().whatHourOfDayStartADay, getAllFreePosts(), storeOcrManager);
         breaker.breakOrders();
         
         if (breaker.hasErrors()) {
@@ -4157,14 +4171,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             res = getPaymentRecords(paymentId, getStore().rowCreatedDate, date);
         }
         
-        for (DayIncome ires : res) {
-            for (DayEntry ien : ires.dayEntries) {
-                if (ien.accountingNumber == null) {
-                    System.out.println("Fodun it: " + ien.incrementalOrderId);
-                }
-            }
-        }
-        
         addBalance(res, balance, incTaxes);
         
         return balance;
@@ -4868,5 +4874,21 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public void addOrderDirectToMap(Order newOrder) {
         orders.put(newOrder.id, newOrder);
     }
+
+    @Override
+    public void transferToNewFReport() {
+        
+        List<Order> ordersAlreadyTransferred = getAllOrders().stream()
+                .filter(o -> o.transferredToAccountingSystem)
+                .collect(Collectors.toList());
+        
+        ordersAlreadyTransferred.stream().forEach(order -> {
+            order.excludeFromFReport = true;
+            saveObject(order);
+        });
+
+        
+    }
+
 
 }

@@ -107,6 +107,8 @@ public class Order extends DataCommon implements Comparable<Order> {
     public String currency = "";
     public String language = "";
     
+    public boolean excludeFromFReport = false;
+    
     /**
      * When an order is created during the payment process 
      * this will act as an refence for thouse orders. 

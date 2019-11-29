@@ -22,4 +22,5 @@ public class DayIncomeFilter {
     public boolean doublePostingRecords = false;
     public boolean includePaymentTransaction = false;
     public boolean ignoreFromDatabase = false;
+    public boolean excludedOldOrders = true;
 }

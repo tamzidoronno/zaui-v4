@@ -552,5 +552,25 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
         return $orders;
     }
 
+    public function addExtraAccounts($allAccountNumbers) {
+        $accounts = $this->getApi()->getProductManager()->getAccountingAccounts();
+        
+        foreach ($accounts as $account) {
+            if (!in_array($account->accountNumber, $allAccountNumbers)) {
+                $allAccountNumbers[] = $account->accountNumber;
+            }
+        }
+        
+        $data = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+        foreach($data as $app) {
+            $config = $this->getApi()->getPaymentManager()->getStorePaymentConfiguration($app->id);
+            if ($config && $config->userCustomerNumber && !in_array($config->userCustomerNumber, $allAccountNumbers)) {
+                $allAccountNumbers[] = $config->userCustomerNumber;
+            }
+        }
+        
+        return $allAccountNumbers;
+    }
+
 }
 ?>

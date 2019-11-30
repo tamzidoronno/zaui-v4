@@ -60,15 +60,17 @@ if($order->payment->paymentType == "ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2\Veri
             </div>
             <?php
         }
-        ?>
-        <div class='order_action_button'
-             gs_confirm="Are you want to close this order? It can not be modified after." class='order_action_button' 
-             orderid='<? echo $order->id; ?>' gsclick='closeCurrentOrder' gs_callback='app.DefaultPaymentHandlingAction.refresh'
-             style='position: relative;' >
-            <i class='fa fa-lock'></i> 
-            <? echo $this->__f("Close order"); ?>
-        </div>
-        <?php
+        if($order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200c9a66\InvoicePayment") {
+            ?>
+            <div class='order_action_button'
+                 gs_confirm="Are you want to close this order? It can not be modified after." class='order_action_button' 
+                 orderid='<? echo $order->id; ?>' gsclick='closeCurrentOrder' gs_callback='app.DefaultPaymentHandlingAction.refresh'
+                 style='position: relative;' >
+                <i class='fa fa-lock'></i> 
+                <? echo $this->__f("Close order"); ?>
+            </div>
+            <?php
+        }
     } 
     if($order->payment->paymentType == "ns_92bd796f_758e_4e03_bece_7d2dbfa40d7a\ExpediaPayment") {
         echo "<div>";

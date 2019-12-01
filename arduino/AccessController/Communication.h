@@ -18,7 +18,7 @@ class Communication {
 		bool Communication::checksum(unsigned char* buffer);
 		void Communication::printByteArray(byte inArray[], bool lineFeed);
 		void Communication::encryptAndSend(byte* msgToSend);
-		bool Communication::checkIfTimeIsNewer(unsigned char *buffer);
+		int Communication::checkIfTimeIsNewer(unsigned char *buffer);
 		byte* key;
 		byte* ciphertext;
 		static volatile unsigned char *readData;

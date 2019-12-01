@@ -13,11 +13,10 @@ class Clock {
 		Clock();
 
 		void adjustClock(unsigned long timestamp);
-		long getTime();
+		unsigned long getTime();
 		void Clock::getTimeChar(char* charBuf);
-
-	private:
 		volatile unsigned long diffSinceStartup;
+
 };
 
 #endif

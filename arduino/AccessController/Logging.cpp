@@ -180,15 +180,25 @@ void Logging::runSendCheck(Communication* communication) {
 
 		_dataStorage->getCode(i, metaData);
 
+		// Make sure that we dont send any whitespaces back to the server
+
+
 		if (metaData[0] == 0x02) {
 			_dataStorage->getCode(i+1, logLine);
+
+			// Make sure that we dont send any whitespaces back to the server
+//			for (int j=0; j<16; j++) {
+//				if (logLine[j] == 0x00) {
+//					logLine[j] = 0xFF;
+//				}
+//			}
+
 			this->sendLogLine(communication, metaData, logLine);
 			return;
 		}
 
 		i++;
 	}
-
 }
 
 void Logging::sendLogLine(Communication* comminucation, unsigned char* meta, unsigned char* logline) {

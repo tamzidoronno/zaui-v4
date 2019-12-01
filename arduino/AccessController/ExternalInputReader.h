@@ -20,6 +20,8 @@ class ExternalInputReader {
 		volatile bool _exitButtonInsideTriggered;
 		volatile bool _exitButtonOutsideTriggered;
 
+		volatile int _timePushButtonPressMs = 0;
+
 		Clock* _clock;
 		Logging* _logging;
 		CodeHandler* _codeHandler;

@@ -27,6 +27,7 @@ foreach ($server->locks as $lock) {
         <div class='shop_button' gsclick='startExclusion' serverid='<? echo $server->id; ?>'>Start exlusion</div>
         <div class='shop_button' gsclick='stopInclusion' serverid='<? echo $server->id; ?>'>Stop inclusion</div>
         <div class='shop_button' gsclick='stopExclusion' serverid='<? echo $server->id; ?>'>Stop exclusion</div>
+        <div class='shop_button' gsclick='resyncGateway' serverid='<? echo $server->id; ?>'>Resync Gateway</div>
         
         <div class="serverdetails" gstype="form" method="saveConnectionDetails">
             <input type="hidden" gsname="serverid" value="<? echo $server->id; ?>"/>

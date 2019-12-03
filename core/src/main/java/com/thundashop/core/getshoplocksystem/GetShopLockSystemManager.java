@@ -1098,4 +1098,14 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
             getShopLoraServer.transferToLoraGateWay((GetShopLock)lock);
         }
     }   
+
+    @Override
+    public void resyncDatabaseWithLoraGateway(String serverId) {
+        LockServer server = getLockServer(serverId);
+        if (server != null) {
+            if (server instanceof GetShopLoraServer) {
+                ((GetShopLoraServer)server).resyncDatabaseWithLoraGateway();
+            }
+        }
+    }
 }

@@ -129,13 +129,21 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
                 }
                 newlines.add(line);
                 Order toMatch = orderManager.getOrderByKid(line.getKid());
-                logPrint("New record found: " + line.getKid());
                 if(toMatch != null) {
-                    logPrint("found matching order");
-                    Date paymentDate = line.getPaymentDate();
-                    orderManager.markAsPaidWithTransactionType(toMatch.id, paymentDate, line.getAmountInDouble(), Order.OrderTransactionType.OCR, line.getOcrLineId());
-                    line.setMatchOnOrderId(toMatch.incrementOrderId);
-                    logPrint("did match done");
+                    if(toMatch.hasTransaction(line.getOcrLineId())) {
+                        logPrint("Duplicate ocr registration done for order: " + toMatch.incrementOrderId);
+                        toMatch.removeDuplicateTransactions(line.getOcrLineId());
+                        line.setMatchOnOrderId(toMatch.incrementOrderId);
+                        line.setBeenTransferred();
+                    } else {
+                        logPrint("New record found: " + line.getKid());
+                        logPrint("found matching order");
+                        Date paymentDate = line.getPaymentDate();
+                        orderManager.markAsPaidWithTransactionType(toMatch.id, paymentDate, line.getAmountInDouble(), Order.OrderTransactionType.OCR, line.getOcrLineId());
+                        line.setMatchOnOrderId(toMatch.incrementOrderId);
+                        line.setBeenTransferred();
+                        logPrint("did match done");
+                    }
                 } else {
                     logPrint("Did not find correct order to match this for");
                     messageManager.sendErrorNotification("failed to match ocr line: " + line.toString(), null);
@@ -163,6 +171,9 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
             OcrFileLines savedLine = getMatchedLine(line);
             if(savedLine != null) {
                 line.setMatchOnOrderId(savedLine.getMatchonOnOrder());
+                if(savedLine.isTransferred()) {
+                    line.setBeenTransferred();
+                }
             }
         }
         Collections.sort(result);

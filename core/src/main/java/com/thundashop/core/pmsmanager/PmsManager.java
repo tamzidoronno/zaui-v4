@@ -9488,6 +9488,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsConfiguration config = getConfigurationSecure();
         if(!config.wubookAutoCharging) {
             config.wubookAutoCharging = true;
+            config.autochargeCardDaysBefore = 0;
             saveConfiguration(config);
         }
         Integer daysBeforeToCharge = config.autochargeCardDaysBefore;

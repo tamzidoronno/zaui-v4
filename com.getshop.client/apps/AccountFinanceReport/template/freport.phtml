@@ -34,6 +34,8 @@ foreach ($dayIncomes as $dayIncome) {
     }
 }
 
+$allAccountNumbers = $this->addExtraAccounts($allAccountNumbers);
+
 if (count($errors)) {
     echo "<h1>".$this->__f("There are a few errors you have to sort out first.")."</h1>";
     foreach ($errors as $error) {

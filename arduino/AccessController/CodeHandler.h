@@ -41,6 +41,7 @@ class CodeHandler {
 		unsigned long closeTimeStamp;
 		unsigned long openTimeStamp;
 		bool _forceOpen;
+		bool _isOpen = false;
 		void CodeHandler::resetOpenTimeStamp();
 		void CodeHandler::resetCloseTimeStamp();
 		void internalUnlock();

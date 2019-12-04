@@ -31,6 +31,10 @@ class AccountingDownload extends \MarketingApplication implements \Application {
             echo "<h2>$type</h2>";
             $this->printFileTable($group);
         }
+        
+        if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isGetShopUser()) {
+            echo "<br/><center><div gsclick='transferToNewFReport' class='shop_button'> Transfer to new F-Report </div></center>";
+        }
     }
     
     public function formatOrderCount($file) {
@@ -248,6 +252,10 @@ class AccountingDownload extends \MarketingApplication implements \Application {
         $order->transferredToAccountingSystem = true;
         $order->triedTransferredToAccountingSystem  = true;
         $this->getApi()->getOrderManager()->saveOrder($order);
+    }
+    
+    public function transferToNewFReport() {
+        $this->getApi()->getOrderManager()->transferToNewFReport();
     }
 }
 ?>

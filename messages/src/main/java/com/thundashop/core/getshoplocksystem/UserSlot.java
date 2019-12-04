@@ -208,4 +208,10 @@ public class UserSlot implements Serializable {
         
     }
 
+    void setAddedDate(Date date) {
+        if (code != null) {
+            code.addedDate = date;
+        }
+    }
+
 }

@@ -29,6 +29,7 @@ CodeHandler::CodeHandler(DataStorage* dataStorage, KeyPadReader* keypadReader, C
 	this->_forceOpen = false;
 	this->resetCloseTimeStamp();
 	this->resetOpenTimeStamp();
+	this->_isOpen = false;
 }
 
 void CodeHandler::setup() {
@@ -37,8 +38,8 @@ void CodeHandler::setup() {
 	pinMode(PD5, OUTPUT); // CP LIGHT
 
 	digitalWrite(PD5, HIGH);
-	digitalWrite(engineRelay, HIGH);
-	digitalWrite(strikeRelay, HIGH);
+	digitalWrite(engineRelay, LOW);
+	digitalWrite(strikeRelay, LOW);
 }
 
 void CodeHandler::resetOpenTimeStamp() {
@@ -115,7 +116,7 @@ void CodeHandler::check() {
 		this->unlock(0);
 	}
 
-	if (time > closeTimeStamp) {
+	if (millis() > closeTimeStamp) {
 		this->lock(0);
 	}
 }
@@ -127,10 +128,11 @@ void CodeHandler::check() {
 void CodeHandler::lock(unsigned int triggeredBySlot) {
 	this->resetCloseTimeStamp();
 
-	digitalWrite(strikeRelay, HIGH);
+	digitalWrite(strikeRelay, LOW);
 	digitalWrite(PD5, HIGH);
 
 	this->logging->addLog("D:LOCKED", 8, true);
+	this->_isOpen = false;
 }
 
 /**
@@ -139,7 +141,7 @@ void CodeHandler::lock(unsigned int triggeredBySlot) {
  	 	 	 	 	 if triggeredBySlot = 32767, then its triggered by exit button (inside)
  */
 void CodeHandler::unlock(unsigned int triggeredBySlot) {
-	this->setCloseTimeStamp(clock->getTime() + 5);
+	this->setCloseTimeStamp(millis() + 5000);
 
 	this->internalUnlock();
 
@@ -164,8 +166,9 @@ void CodeHandler::unlock(unsigned int triggeredBySlot) {
 }
 
 void CodeHandler::internalUnlock() {
+	this->_isOpen = true;
 	this->resetOpenTimeStamp();
-	digitalWrite(strikeRelay, LOW);
+	digitalWrite(strikeRelay, HIGH);
 	digitalWrite(PD5, LOW);
 }
 
@@ -178,7 +181,7 @@ void CodeHandler::setOpenTimeStamp(unsigned long tstamp) {
 }
 
 bool CodeHandler::isLocked() {
-	return digitalRead(strikeRelay) == HIGH;
+	return !this->_isOpen;
 }
 
 void CodeHandler::triggerDoorAutomation() {
@@ -187,9 +190,9 @@ void CodeHandler::triggerDoorAutomation() {
 	}
 
 	delay(200);
-	digitalWrite(engineRelay, LOW);
-	delay(100);
 	digitalWrite(engineRelay, HIGH);
+	delay(100);
+	digitalWrite(engineRelay, LOW);
 }
 
 void CodeHandler::toggleForceState() {

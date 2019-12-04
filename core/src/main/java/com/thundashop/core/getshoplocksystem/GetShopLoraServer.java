@@ -8,7 +8,11 @@ package com.thundashop.core.getshoplocksystem;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -23,6 +27,8 @@ import java.util.logging.Logger;
  */
 public class GetShopLoraServer extends LockServerBase implements LockServer {
 
+    
+    private final String USER_AGENT = "Mozilla/5.0";
     
     private Map<String, GetShopLock> locks = new HashMap();
     
@@ -143,12 +149,35 @@ public class GetShopLoraServer extends LockServerBase implements LockServer {
         // TODO - Need to thread 
     }
 
+    @Override
+    public void markCodeForResending(String lockId, int slotId) {
+        super.markCodeForResending(lockId, slotId); //To change body of generated methods, choose Tools | Templates.
+        Lock lock = getLock(lockId);
+        transferToLoraGateWay((GetShopLock)lock);
+    }
+    
+
     private GetShopLock getLockByDeviceId(int deviceId) {
         return locks.values()
                 .stream()
                 .filter(o -> o.deviceId == deviceId)
                 .findAny()
                 .orElse(null);
+    }
+    
+    public void resyncDatabaseWithLoraGateway() {
+        List<Lock> locks = getLocks();
+        for (Lock lock : locks) {
+            GetShopLock getShopLock = (GetShopLock)lock;
+            for (UserSlot slot : lock.getUserSlots()) {
+                if (slot.inUse && slot.serverLockSlotId != null) {
+                    String isSet = slot.code != null && slot.code.addedDate != null ? "true" : "false";
+                    getHtml("http://"+hostname+":5000/setCode?token="+getAccessToken()+"&device="+getShopLock.deviceId+"&slot="+slot.serverLockSlotId+"&code="+slot.code.pinCode+"&isSet="+isSet);
+                }
+            }
+        }
+        
+        getHtml("http://"+hostname+":5000/setDeviceCount?token="+getAccessToken()+"&devicecount=" + locks.size());
     }
 
     void transferToLoraGateWay(GetShopLock lock) {
@@ -158,7 +187,10 @@ public class GetShopLoraServer extends LockServerBase implements LockServer {
         
         for (UserSlot slot : lock.getUserSlots()) {
 
-            if (!slot.inUse && slot.serverLockSlotId != null && slot.pinCodeAddedToServer != slot.code.pinCode) {
+            boolean resend = slot.serverLockSlotId != null && slot.code.addedDate == null;
+            boolean toBeRemoved = !slot.inUse && slot.serverLockSlotId != null && slot.pinCodeAddedToServer != slot.code.pinCode;
+            
+            if (resend || toBeRemoved) {
                 String res = getHtml("http://"+hostname+":5000/removeCode?token="+getAccessToken()+"&device="+lock.deviceId+"&slot="+slot.serverLockSlotId);
                 if (res.equals("MARKED_FOR_REMOVAL") || res.equals("CODE_NOT_ADDED")) {
                     slot.serverLockSlotId = null;
@@ -174,10 +206,11 @@ public class GetShopLoraServer extends LockServerBase implements LockServer {
                 }
                 
                 slot.serverLockSlotId = nextUnusedSlot;
-                String res = getHtml("http://"+hostname+":5000/setCode?token="+getAccessToken()+"&device="+lock.deviceId+"&slot="+nextUnusedSlot+"&code="+slot.code.pinCode);
+                String res = getHtml("http://"+hostname+":5000/setCode?token="+getAccessToken()+"&device="+lock.deviceId+"&slot="+nextUnusedSlot+"&code="+slot.code.pinCode+"&isSet=false");
                 
                 if (res.equals("CODE_RECEIVED")) {
                     codeUpdated = true;
+                    slot.setAddedDate(new Date());
                     slot.pinCodeAddedToServer = slot.code.pinCode;
                     System.out.println("Asked to save code " + slot.code.pinCode + " to slot : " + nextUnusedSlot);
                 } else {
@@ -226,7 +259,7 @@ public class GetShopLoraServer extends LockServerBase implements LockServer {
                 continue;
             }
 
-            if (iGetShopSlot.setOnLock && userSlotForLock.code.addedDate == null) {
+            if (iGetShopSlot.setOnLock && userSlotForLock.code.addedDate != null) {
                 userSlotForLock.codeAddedSuccesfully();
             }
         }
@@ -245,5 +278,31 @@ public class GetShopLoraServer extends LockServerBase implements LockServer {
             }
         }
         
+    }
+    
+    public String getHtml(String url) {
+        try {
+            URL urlObj = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) urlObj.openConnection();
+
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("User-Agent", USER_AGENT);
+            connection.setConnectTimeout(5000);
+            
+            BufferedReader responseStream = new BufferedReader(new InputStreamReader(connection.getInputStream()));    
+
+            String responseLine;
+            StringBuilder responseBuffer = new StringBuilder();
+
+            while((responseLine = responseStream.readLine()) != null) {
+                responseBuffer.append(responseLine);
+            }
+
+            return responseBuffer.toString();
+        } catch (Exception ex) {
+            
+//            ex.printStackTrace();
+            return "";
+        }
     }
 }

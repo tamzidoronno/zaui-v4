@@ -797,7 +797,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
     }
 
     private List<UserSlot> fetchCodesInternal(String serverId, String lockId, boolean fetchAll) {
-        if (cacheSlotsInUse.get(serverId+"_"+lockId) != null) {
+        if (hasCachedBuild(serverId, lockId)) {
             return cacheSlotsInUse.get(serverId+"_"+lockId);
         }
         
@@ -1098,4 +1098,14 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
             getShopLoraServer.transferToLoraGateWay((GetShopLock)lock);
         }
     }   
+
+    @Override
+    public void resyncDatabaseWithLoraGateway(String serverId) {
+        LockServer server = getLockServer(serverId);
+        if (server != null) {
+            if (server instanceof GetShopLoraServer) {
+                ((GetShopLoraServer)server).resyncDatabaseWithLoraGateway();
+            }
+        }
+    }
 }

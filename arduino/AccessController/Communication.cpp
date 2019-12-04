@@ -31,19 +31,25 @@ Communication::Communication(byte* key, byte* ciphertext, Clock* clock) {
  * We check the timestamp so its not possible to just
  * re-transmit encrypted packages to get access to old codes etc.
  */
-bool Communication::checkIfTimeIsNewer(unsigned char *buffer) {
+int Communication::checkIfTimeIsNewer(unsigned char *buffer) {
 	unsigned long timestampInPackage = buffer[11];
 	timestampInPackage = timestampInPackage * 256 + buffer[12];
 	timestampInPackage = timestampInPackage * 256 + buffer[13];
 	timestampInPackage = timestampInPackage * 256 + buffer[14];
 
 	if (timestampInPackage <= lastReceivedTimestamp) {
-		return false;
+		return 1;
+	}
+
+	unsigned long diffSinceStartup = this->_clock->diffSinceStartup;
+
+	if (diffSinceStartup != 0 && timestampInPackage > this->_clock->getTime()) {
+		return 2;
 	}
 
 	lastReceivedTimestamp = timestampInPackage;
 
-	return true;
+	return 0;
 }
 
 /**
@@ -91,8 +97,15 @@ void Communication::check() {
 			return;
 		}
 
-		if (!checkIfTimeIsNewer(decrypted)) {
+		int resultOfTimeCheck = checkIfTimeIsNewer(decrypted);
+		if (resultOfTimeCheck == 1) {
 			this->writeEncrypted("Old package?", 12);
+			this->dataAvailable = false;
+			return;
+		}
+
+		if (resultOfTimeCheck == 2) {
+			this->writeEncrypted("Future package?", 15);
 			this->dataAvailable = false;
 			return;
 		}
@@ -126,10 +139,7 @@ void Communication::getData(unsigned char* buffer) {
 }
 
 void Communication::writeEncrypted(char *msgToSend, volatile unsigned int length) {
-	volatile unsigned int gatewayAddress =0;
-//	char buffer[512];
-//	sprintf(buffer, "AT+SEND=%u,%u,%s", gatewayAddress, length, msgToSend);
-//	Serial.print(buffer);
+	volatile unsigned int gatewayAddress = 1;
 
 	Serial.print("AT+SEND=0,");
 	Serial.print(length);

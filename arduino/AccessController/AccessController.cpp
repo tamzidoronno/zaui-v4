@@ -7,6 +7,9 @@
 #include "Logging.h"
 #include "ExternalInputReader.h"
 
+#include <util/atomic.h>
+
+
 #define disk1 0x50
 
 int cycles = 0;
@@ -99,6 +102,14 @@ void initLora() {
 	delay(200);
 }
 
+void setMillis(unsigned long ms)
+{
+    extern unsigned long timer0_millis;
+    ATOMIC_BLOCK (ATOMIC_RESTORESTATE) {
+        timer0_millis = ms;
+    }
+}
+
 void setup()
 {
 	Serial.begin(115200);
@@ -138,11 +149,17 @@ void aliveDebugLight() {
 void loop()
 {
 
+//	pinMode(15, OUTPUT);
+//	DIGITALWRITE(15, LOW);
+//	DELAY(2000);
+//	DIGITALWRITE(15, HIGH);
+//	DELAY(2000);
+
 //	pinMode(14, OUTPUT);
 //	digitalWrite(14, LOW);
-//	delay(4000);
+//	delay(2000);
 //	digitalWrite(14, HIGH);
-//	delay(4000);
+//	delay(2000);
 
 	delay(1);
 	communication.check();
@@ -150,7 +167,7 @@ void loop()
 	codeHandler.check();
 	externalReader.checkButtons();
 	externalReader.checkAlarms();
-//
+
 	if (keypadReader.isAvailable()) {
 		keypadReader.getBuffer(bufferForWiegand);
 		bool usedACode = codeHandler.testCodes(bufferForWiegand);
@@ -158,7 +175,7 @@ void loop()
 			keypadReader.clearBuffer();
 		}
 	}
-//
+
 	if (communication.isDataAvailable()) {
 		communication.getData(bufferForCommunication);
 
@@ -205,7 +222,7 @@ void loop()
 			return;
 		}
 	}
-//
+
 	logging.runSendCheck(&communication);
 
 }

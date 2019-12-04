@@ -557,4 +557,7 @@ public interface IOrderManager {
     
     @Administrator
     public void applyCorrectionForOrder(String orderId, String passord);
+    
+    @Administrator
+    public void transferToNewFReport();
 }

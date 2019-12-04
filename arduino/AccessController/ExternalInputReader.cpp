@@ -21,6 +21,7 @@ ExternalInputReader::ExternalInputReader(Clock* clock, Logging* logging, CodeHan
 	this->_alarmActivated2 = true;
 	this->_exitButtonInsideTriggered = true;
 	this->_exitButtonOutsideTriggered = true;
+	this->_timePushButtonPressMs = 0;
 	this->reset();
 }
 
@@ -61,11 +62,13 @@ void ExternalInputReader::checkButtons() {
 	// Reset states
 	if (this->_exitButtonInsideTriggered && digitalRead(exitButtonInside) == HIGH) {
 		this->_exitButtonInsideTriggered = false;
+		this->_timePushButtonPressMs = 0;
 		return;
 	}
 
 	if (this->_exitButtonOutsideTriggered && digitalRead(exitButtonOutside) == HIGH) {
 		this->_exitButtonOutsideTriggered = false;
+		this->_timePushButtonPressMs = 0;
 		return;
 	}
 

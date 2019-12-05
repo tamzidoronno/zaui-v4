@@ -137,6 +137,7 @@ class PmsReport extends \MarketingApplication implements \Application {
         $filter->view = $_POST['data']['view'];
         $filter->departmentIds = array();
         $filter->segment = $_POST['data']['segment'];
+        $filter->priceIncTaxes = $_POST['data']['includetaxes'] == "true";
         
         if (isset($_POST['data']['departmentid']) && $_POST['data']['departmentid']) {
             $filter->departmentIds[] = $_POST['data']['departmentid'];
@@ -616,6 +617,7 @@ class PmsReport extends \MarketingApplication implements \Application {
         $filter->includeNonBookable = $selectedFilter->includeNonBookableRooms;
         $filter->channel = @$selectedFilter->channel;
         $filter->customers = array();
+        $filter->priceIncTaxes = $selectedFilter->priceIncTaxes;
         if(isset($selectedFilter->customers)) {
             foreach($selectedFilter->customers as $id => $val) {
                 $filter->customers[] = $id;
@@ -627,7 +629,6 @@ class PmsReport extends \MarketingApplication implements \Application {
                 $filter->codes[] = $id;
             }
         }
-        
         return $filter;
     }
 
@@ -874,7 +875,6 @@ class PmsReport extends \MarketingApplication implements \Application {
 
     public function getIncomeReportData($convertToExcelDate) {
         $filter = $this->createPmsCoverageFilter();
-        
         $data = $this->getApi()->getPmsCoverageAndIncomeReportManager()->getStatistics($this->getSelectedMultilevelDomainName(), $filter);
         $result = $data->entries;
         if(!$convertToExcelDate) {
@@ -1002,6 +1002,7 @@ class PmsReport extends \MarketingApplication implements \Application {
         $filter->channel = $selectedFilter->channel;
         $filter->departmentIds = $selectedFilter->departmentIds;
         $filter->segments = array();
+        $filter->incTaxes = $selectedFilter->priceIncTaxes;
         if($selectedFilter->segment) {
             $filter->segments[] = $selectedFilter->segment;
         } 

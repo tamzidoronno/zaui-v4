@@ -61,7 +61,6 @@ class PmsStatisticsBuilder {
     PmsStatistics buildStatistics(PmsBookingFilter filter, Integer totalRooms, PmsInvoiceManager invoiceManager, List<Booking> allBookings, Store store) {
         PmsStatistics statics = new PmsStatistics();
         Calendar cal = Calendar.getInstance();
-        filter.startDate = store.convertToTimeZone(filter.startDate);
         cal.setTime(filter.startDate);
         List<String> roomsAddedForGuests = new ArrayList();
         while(true) {
@@ -178,7 +177,6 @@ class PmsStatisticsBuilder {
                             if(addonPrice == null) { addonPrice = 0.0; }
                             count += addon.count;
                             addonPrice += (addon.price*addon.count);
-    //                            addonPriceEx += addon.priceExTaxes;
 
                             if (addon.addonType != null) {
                                 entry.addonsCount.put(addon.addonType, count);
@@ -194,9 +192,6 @@ class PmsStatisticsBuilder {
             if(cal.getTime().after(filter.endDate)) {
                 break;
             }
-//            if(true) {
-//                break;
-//            }
         }
         
         return statics;

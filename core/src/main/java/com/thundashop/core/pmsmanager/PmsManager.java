@@ -1770,25 +1770,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         convertTextDates(filter);
         Calendar cal = Calendar.getInstance();
-        cal.setTime(filter.startDate);
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        filter.startDate = cal.getTime();
         int startYear = cal.get(Calendar.YEAR);
 
-        cal.setTime(filter.endDate);
-        cal.set(Calendar.HOUR_OF_DAY, 23);
-        cal.set(Calendar.MINUTE, 59);
-        cal.set(Calendar.SECOND, 59);
-        filter.endDate = cal.getTime();
 
         filter.filterType = "active";
         List<PmsBooking> allBookings = getAllBookings(filter);
         gsTiming("After get all bookings");
-        PmsPricing prices = getDefaultPriceObject();
         PmsStatisticsBuilder builder = new PmsStatisticsBuilder(allBookings,
-                prices.pricesExTaxes,
+                filter.priceIncTaxes,
                 userManager,
                 new ArrayList(bookings.values()),
                 addiotionalItemInfo,
@@ -1798,10 +1787,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         int totalRooms = getTotalRoomsBasedOnFilter(filter);
         
-//        if (true) {
-//            return new PmsStatistics();
-//        }
-
         PmsStatistics result = builder.buildStatistics(filter, totalRooms, pmsInvoiceManager, bookingEngine.getAllBookings(), getStore());
         gsTiming("After after build statistics");
         if ((storeId.equals("123865ea-3232-4b3b-9136-7df23cf896c6") || filter.includeOrderStatistics) && !filter.fromPms) {

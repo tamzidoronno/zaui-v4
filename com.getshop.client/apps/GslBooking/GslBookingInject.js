@@ -1887,6 +1887,12 @@ function getshop_printPrice(price) {
     if(curtext == "NOK") {
         prefix = "kr ";
     }
+    if(curtext == "CAD" || curtext == "USD") {
+        prefix = "&#36; ";
+    }
+    if(curtext == "EUR") {
+        prefix = "&#8364; ";
+    }
     if(price) {
         return  prefix + parseInt(price);
     } else {

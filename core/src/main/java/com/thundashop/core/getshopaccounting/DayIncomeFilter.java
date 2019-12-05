@@ -23,4 +23,5 @@ public class DayIncomeFilter {
     public boolean includePaymentTransaction = false;
     public boolean ignoreFromDatabase = false;
     public boolean excludedOldOrders = true;
+    public boolean ignoreHourOfDay = false;
 }

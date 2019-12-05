@@ -580,27 +580,35 @@ public class OrderDailyBreaker {
     }
 
     private Date calculateEndTimeForDate(Date date) {
-//        if (date.equals(filter.end))
-//            return date;
-//        
-//        Calendar cal = Calendar.getInstance();
-//        cal.setTime(date);
-//        cal.set(Calendar.HOUR_OF_DAY, whatHourOfDayStartADay);
-//        cal.set(Calendar.MINUTE, 0);
-//        cal.set(Calendar.SECOND, 0);
-//        cal.set(Calendar.MILLISECOND, 0);
-//        cal.add(Calendar.DAY_OF_MONTH, 1);
-        return date;
+        if(filter.ignoreHourOfDay) {
+            return date;
+        }
+        
+        if (date.equals(filter.end))
+            return date;
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.HOUR_OF_DAY, whatHourOfDayStartADay);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        cal.add(Calendar.DAY_OF_MONTH, 1);
+        return cal.getTime();
     }
 
     private Date calculateStartTimeForDate(Date date) {
-//        Calendar cal = Calendar.getInstance();
-//        cal.setTime(date);
-//        cal.set(Calendar.HOUR_OF_DAY, whatHourOfDayStartADay);
-//        cal.set(Calendar.MINUTE, 0);
-//        cal.set(Calendar.SECOND, 0);
-//        cal.set(Calendar.MILLISECOND, 0);
-        return date;
+        if(filter.ignoreHourOfDay) {
+            return date;
+        }
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.HOUR_OF_DAY, whatHourOfDayStartADay);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
     }
 
     private void invertAccountNumbers(List<DayEntry> orderDayEntries) {

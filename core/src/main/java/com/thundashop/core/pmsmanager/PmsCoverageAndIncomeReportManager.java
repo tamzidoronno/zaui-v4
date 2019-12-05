@@ -70,6 +70,7 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
         dayIncomeFilter.start = filter.start;
         dayIncomeFilter.end = filter.end;
         dayIncomeFilter.excludedOldOrders = false;
+        dayIncomeFilter.ignoreHourOfDay = true;
         
         
         gsTiming("Before get day income");

@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -264,5 +265,31 @@ public class Booking extends DataCommon implements Comparable<Booking> {
     public boolean isEnded() {
         return !endDate.after(new Date());
         
+    }
+
+    public boolean endingAtDate(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(endDate);
+        Integer year = cal.get(Calendar.YEAR);
+        Integer dayofyear = cal.get(Calendar.DAY_OF_YEAR);
+        
+        cal.setTime(date);
+        Integer year2 = cal.get(Calendar.YEAR);
+        Integer dayofyear2 = cal.get(Calendar.DAY_OF_YEAR);
+        
+        return Objects.equals(year, year2) && Objects.equals(dayofyear, dayofyear2);
+    }
+
+    public boolean startAtDate(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(startDate);
+        Integer year = cal.get(Calendar.YEAR);
+        Integer dayofyear = cal.get(Calendar.DAY_OF_YEAR);
+        
+        cal.setTime(date);
+        Integer year2 = cal.get(Calendar.YEAR);
+        Integer dayofyear2 = cal.get(Calendar.DAY_OF_YEAR);
+        
+        return Objects.equals(year, year2) && Objects.equals(dayofyear, dayofyear2);
     }
 }

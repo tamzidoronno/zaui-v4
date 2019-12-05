@@ -10,13 +10,13 @@
     gsisdevmode = true;
     $ = jQuery;
     jQuery(function ($) {
-        $.getScript("http://20487gc6.3.0.local.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
+        $.getScript("http://kotel.3.0.local.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
             $("#bookingprocess").getshopbooking(
                 {
-                    "endpoint": "http://20487gc6.3.0.local.getshop.com/",
-                    "jsendpoint": "http://20487gc6.3.0.local.getshop.com/",
+                    "endpoint": "http://kotel.3.0.local.getshop.com/",
+                    "jsendpoint": "http://kotel.3.0.local.getshop.com/",
                     "domain" : "default",
-                    "language" : "no",
+                    "language" : "en",
                     "events" : function(eventType, data) {
                         //Handle events happening her.
                         //Eventtype : search

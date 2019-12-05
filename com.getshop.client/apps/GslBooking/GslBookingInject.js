@@ -664,7 +664,7 @@ function getshop_loadAddonsAndGuestSummaryByResult(res) {
             entry.addClass('addonprinted');
             entry.find('.icon').html(fontawesomeicon);
             entry.find('.text').html(item.name);
-            entry.find('.price').html(item.price);
+            entry.find('.price').html(getshop_printPrice(item.price));
             if(item.isAdded) {
                 entry.find('.addButton').addClass('added_addon').html(translation['remove']);
             } else if(item.maxAddonCount > 1) {
@@ -735,7 +735,7 @@ function getshop_loadTextualSummary(res) {
         }
         if(typeof(translation['totalprice']) !== "undefined") {
             text = text.replace("{totalprice}", translation['totalprice']);
-            text = text.replace("{currency}", getshop_bookingconfiguration.currencyText);
+            text = text.replace("{currency}", getshop_printPrice(""));
         }
         $('.yourstaysummary').append(text + "<br>");
     }
@@ -754,7 +754,7 @@ function getshop_loadRooms(res) {
         var room = res.rooms[k];
         newRoom.find('[gsname="newroomstartdate"]').val(getshop_js_yyyy_mm_dd_hh_mm_ss(room.start).substr(0, 10));
         newRoom.find('[gsname="newroomenddate"]').val(getshop_js_yyyy_mm_dd_hh_mm_ss(room.end).substr(0, 10));
-        newRoom.find('.totalroomprice').html(parseInt(room.totalCost));
+        newRoom.find('.totalroomprice').html(getshop_printPrice(room.totalCost));
         var guestTemplateRow = newRoom.find('#guestentryrow');
         var addedAddons = false;
         for(var i = 0; i < room.guestCount;i++) {
@@ -1423,7 +1423,7 @@ function getshop_updateOrderSummary(res, isSearch) {
                 row += text;
                 row += ")</td>";
                 
-                row += "<td>" + parseInt(price*count) + ",-</td>";
+                row += "<td>" + getshop_printPrice(price*count) + ",-</td>";
                 row += "</tr>";
                 total += parseInt(price*count);
                 totalRooms += parseInt(count);
@@ -1438,7 +1438,7 @@ function getshop_updateOrderSummary(res, isSearch) {
     }
     $('.GslBooking .ordersummary .selectedguests').html("<table id='priceoffertable' style='text-align:center'>"+ header + row + "</table>");
     
-    var txt = "<strong>"+ chosenRoomText['price']+":</strong> " + total +",- <strong>"+ chosenRoomText['numberofguests']+":</strong> "+totalGuests;
+    var txt = "<strong>"+ chosenRoomText['price']+":</strong> " + getshop_printPrice(total) +",- <strong>"+ chosenRoomText['numberofguests']+":</strong> "+totalGuests;
     
     for(var systemType in systemCounter) {
         var totalCount = systemCounter[systemType];
@@ -1877,6 +1877,22 @@ function getshop_get_browser() {
     };
  }
 
+function getshop_printPrice(price) {
+    var curtext = getshop_bookingconfiguration.currencyText;
+    
+    var prefix = "";
+    if(curtext == "GBP") {
+        prefix = "&#163; ";
+    }
+    if(curtext == "NOK") {
+        prefix = "kr ";
+    }
+    if(price) {
+        return  prefix + parseInt(price);
+    } else {
+        return prefix;
+    }
+}
 
 function getshop_searchRooms(e) {
     try {
@@ -2025,7 +2041,7 @@ function getshop_searchRooms(e) {
                     roomBox.find('.guestselection').show();
                     if(numberofrooms) {
                         numberofrooms = "<option value='0' data-price='0'>0</option>" +  numberofrooms;
-                        productentry = $('<tr class="productentry_itemlist"><td><i class="gsicon-gs-user"></i> x ' + user_icon + ''+ multipleGuests + '</td><td>' + parseInt(room.pricesByGuests[guest]) + ',-</td><td style="float:right;padding-right:10px;"><div class="select-wrapper"><select class="numberof_rooms" guests="'+guest+'">' + numberofrooms + '</select></div></td></tr>');
+                        productentry = $('<tr class="productentry_itemlist"><td><i class="gsicon-gs-user"></i> x ' + user_icon + ''+ multipleGuests + '</td><td>' + getshop_printPrice(room.pricesByGuests[guest]) + ',-</td><td style="float:right;padding-right:10px;"><div class="select-wrapper"><select class="numberof_rooms" guests="'+guest+'">' + numberofrooms + '</select></div></td></tr>');
                         productentry.find('.numberof_rooms').val(room.roomsSelectedByGuests[guest]);
                     } else {
                         roomBox.find('.guestselection').hide();

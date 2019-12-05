@@ -168,7 +168,10 @@ public class PmsBookingSimpleFilter {
         simple.language = room.language;
         simple.segmentName = "";
         if(booking.segmentId != null && !booking.segmentId.isEmpty()) {
-            simple.segmentName = manager.pmsCoverageAndIncomeReportManager.getSegment(booking.segmentId).name;
+            PmsSegment segment = manager.pmsCoverageAndIncomeReportManager.getSegment(booking.segmentId);
+            if(segment != null) {
+                simple.segmentName = segment.name;
+            }
         }
         if(simple.language == null || simple.language.isEmpty()) {
             simple.language = booking.language;

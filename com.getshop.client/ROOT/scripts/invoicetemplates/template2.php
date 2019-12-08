@@ -104,12 +104,11 @@ $isInvoice = $order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200
         position: absolute;
     width: 100%;
     height: 166px;
-    background-color: rgba(0,0,0,0.7);
     box-sizing: border-box;
     text-align: center;
     padding-top: 60px;
     font-size: 40px;
-    color: #fff;
+    color: red;
     border-radius: 7px;
     margin-top: 10px;
     }

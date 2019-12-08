@@ -244,7 +244,7 @@ $isInvoice = $order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200
 
         $calculatedTaxes[$key] += $taxes;
         $metadata = "";
-        
+        $isStay = sizeof((array)$item->priceMatrix) > 0;
         if ($item->product->additionalMetaData) {
             $metadata .= $translator->translate("Room").": ".$item->product->additionalMetaData;
         }
@@ -254,10 +254,11 @@ $isInvoice = $order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200
             $metadata .= $item->product->metaData;
         }
         
-        if (@$item->startDate) {
+        
+        if ($isStay && @$item->startDate) {
             $metadata .= $metadata ? ", " : "";
             $metadata .= $translator->translate("Date").": ".date('d.m.Y', strtotime($item->startDate));
-            if (@$item->endDate) {
+            if (@$item->endDate && ($item->startDate != $item->endDate)) {
                 $metadata .= " - ".date('d.m.Y', strtotime($item->endDate));
             }
         }

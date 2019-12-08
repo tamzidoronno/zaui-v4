@@ -27,7 +27,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         foreach($booking->rooms as $r) {
             foreach($r->guests as $g) {
                 if($g->guestId == $_POST['data']['guestid']) {
-                    $g->isDisabled = true;
+                    $g->isDisabled = !$g->isDisabled;
                 }
             }
         }

@@ -302,7 +302,7 @@ class EcommerceProductView extends \MarketingApplication implements \Application
     }
     
     public function adjustStockQuantity() {
-        $this->getApi()->getWareHouseManager()->adjustStockQuantity($this->getProduct()->id, $_POST['data']['quantity'], $_POST['data']['warehouseid']);
+        $this->getApi()->getWareHouseManager()->adjustStockQuantity($this->getProduct()->id, $_POST['data']['quantity'], $_POST['data']['warehouseid'], "");
     }
     
     public function addWareHouseLocation() {

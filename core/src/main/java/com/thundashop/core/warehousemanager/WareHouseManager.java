@@ -16,6 +16,8 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -38,6 +40,9 @@ public class WareHouseManager extends ManagerBase implements IWareHouseManager {
 
     @Autowired
     private ProductManager productManager;
+    
+    @Autowired
+    private UserManager userManager;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -124,9 +129,9 @@ public class WareHouseManager extends ManagerBase implements IWareHouseManager {
     }
 
     @Override
-    public void adjustStockQuantity(String productId, int quantity, String warehouseId) {
+    public void adjustStockQuantity(String productId, int quantity, String warehouseId, String comment) {
         WareHouse wareHouse = wareHouses.get(warehouseId);
-        createDiff("", productId, (quantity*-1), wareHouse);
+        createDiff("", productId, (quantity*-1), wareHouse, comment);
     }
 
     /**
@@ -143,6 +148,9 @@ public class WareHouseManager extends ManagerBase implements IWareHouseManager {
         
         List<StockQuantityRow> oldStockQuantityRows = getQuantityRowsFromDatabase(order);
         
+        User usr = userManager.getUserById(order.userId);
+        
+        
         Map<String, List<CartItem>> itemsGroupedByProduct = getQuantityRows(order);
         
         List<String> productIds = getProductIdsInDatabaseAndFromOrder(oldStockQuantityRows, itemsGroupedByProduct);
@@ -154,7 +162,7 @@ public class WareHouseManager extends ManagerBase implements IWareHouseManager {
                 int diff = countInOrder - oldCountForOrder;
 
                 if (diff != 0) {
-                    createDiff(order.id, productId, diff, wareHouse);
+                    createDiff(order.id, productId, diff, wareHouse, "Sales for customer: " + usr.customerId);
                 }
             }
         }
@@ -216,13 +224,14 @@ public class WareHouseManager extends ManagerBase implements IWareHouseManager {
         return countInOrder;
     }
 
-    private void createDiff(String orderId, String productId, int diff, WareHouse warehouse) {
+    private void createDiff(String orderId, String productId, int diff, WareHouse warehouse, String comment) {
         StockQuantityRow row = new StockQuantityRow();
         row.orderId = orderId;
         row.count = diff;
         row.productId = productId;
         row.warehouseId = warehouse.id;
         row.stockUnitValue = productManager.getProduct(productId).stockValue;
+        row.comment = comment;
         saveObject(row);
         
         productManager.changeStockQuantity(productId, (diff*-1));
@@ -324,6 +333,30 @@ public class WareHouseManager extends ManagerBase implements IWareHouseManager {
                     return startTime <= recordTime && recordTime < endTime;
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<StockQuantityRow> getStockQuantityForWareHouseBetweenDate(String warehouseId, Date start, Date end) {
+        BasicDBObject query = new BasicDBObject();
+        query.put("className", "com.thundashop.core.warehousemanager.StockQuantityRow");
+        query.put("warehouseId", warehouseId);
+        
+        DBCollection collection = database.getCollection("WareHouseManager", storeId);
+        DBCursor cur = collection
+                .find(query)
+                .sort(new BasicDBObject("rowCreatedDate", -1))
+                .limit(2000);
+        
+        ArrayList<StockQuantityRow> retList = new ArrayList();
+        
+        while (cur.hasNext()) {
+            DataCommon dataCommon = database.convert(cur.next());
+            retList.add((StockQuantityRow)dataCommon);
+        }
+
+        List<StockQuantityRow> toReturn = getRecordsBetween(start, end, retList);
+        
+        return toReturn;
     }
 
 }

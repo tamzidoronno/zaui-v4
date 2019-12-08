@@ -211,6 +211,31 @@ public class ProductManager extends AProductManager implements IProductManager {
         return list;
     }
 
+    @Override
+    public List<Product> getAllProductsSortedByName() throws ErrorException {
+        long time = System.currentTimeMillis();
+        
+        ArrayList<Product> list = new ArrayList(products.values());
+        ArrayList<Product> finalized = new ArrayList();
+        for (Product prod : list) {
+            finalized.add(finalize(prod));
+        }
+        list = finalized;
+
+        Comparator<Product> comparator = new Comparator<Product>() {
+            public int compare(Product c1, Product c2) {
+                if (c1 == null || c2 == null || c1.name == null || c2.name == null) {
+                    return 0;
+                }
+
+                return c1.name.compareTo(c2.name);
+            }
+        };
+
+        Collections.sort(list, comparator);
+        return list;
+    }
+
 
     @Override
     public String getPageIdByName(String name) {

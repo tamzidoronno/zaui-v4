@@ -34,6 +34,9 @@ public interface IPmsManager {
     public void checkInRoom(String pmsBookingRoomId);
     
     @Administrator
+    public void reinstateStay(String pmsBookingRoomId, Integer minutes);
+    
+    @Administrator
     public void setDefaultAddons(String bookingId);
     
     @Administrator

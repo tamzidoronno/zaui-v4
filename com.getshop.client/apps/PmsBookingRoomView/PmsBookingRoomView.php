@@ -2293,6 +2293,14 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         
         return count($distinctDates) > 30;
     }
+    
+    public function reinstateStay() {
+        $room = $this->getPmsRoom();
+        $minutes = $_POST['data']['minutes'];
+        $this->getApi()->getPmsManager()->reinstateStay($this->getSelectedMultilevelDomainName(), $room->pmsBookingRoomId, $minutes);
+        $this->clearCache();
+    }
+    
 
     public function getDistinctMonthsAndYears($distinctDates) {
         $distinctList = array();
@@ -2489,6 +2497,13 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         $reasons[12] = "Access has been forced, we do not send paymentlink if access has been forced.";
         $reasons[13] = "It have an order which is a prepaid order by ota.";
         return $reasons[$reason];
+    }
+
+    public function isEndedToday($room) {
+        if(date("dmy", time()) == date("dmy", strtotime($room->date->end)) && time() > strtotime($room->date->end)) {
+            return true;
+        }
+        return false;
     }
 
 }

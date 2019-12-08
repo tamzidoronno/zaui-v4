@@ -4,6 +4,10 @@
     margin-top: 50px;
     margin-bottom: 50px;
 }
+.PmsBookingRoomView .reinstatestay {
+    cursor:pointer;
+}
+
 .PmsBookingRoomView .addguesttoconferencepanel {
     position: absolute;
     width: 600px;

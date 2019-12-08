@@ -10961,4 +10961,20 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     
+    @Override
+    public void reinstateStay(String pmsBookingRoomId, Integer minutes) {
+        PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
+        PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
+        room.checkedout = false;
+        room.checkedin = true;
+        room.forceUpdateLocks = true;
+        Date end = room.date.end;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(end);
+        cal.add(Calendar.MINUTE, minutes);
+        changeDates(pmsBookingRoomId, booking.id, room.date.start, cal.getTime());
+        resetDoorLockCode(room);
+        processor();
+    }
+    
 }

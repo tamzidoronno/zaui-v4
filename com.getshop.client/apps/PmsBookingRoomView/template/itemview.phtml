@@ -60,6 +60,8 @@ if(stristr($booking->channel, "wubook_")) {
                 echo "<span class='checkinguest bookinghighlightcolor checkincheckoutbutton'><i class='fa fa-sign-in'></i> Check in guest</span>";
             } else if($room->checkedin && !$room->checkedout) {
                 echo "<span class='checkoutguest bookinghighlightcolor checkincheckoutbutton'><i class='fa fa-sign-out'></i> Check out guest</span>";
+            } else if($this->isEndedToday($room)) {
+                echo "<span class='bookinghighlightcolor reinstatestay'><i class='fa fa-refresh'></i> Reinstate stay</span>";
             } else if($room->checkedin && $room->checkedout) {
                 echo "<span class='checkoutguest bookinghighlightcolor checkincheckoutbutton'><i class='fa fa-refresh'></i> Undo checkout</span>";
             }

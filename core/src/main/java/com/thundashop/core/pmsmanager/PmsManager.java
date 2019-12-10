@@ -1222,6 +1222,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsPricing setPrices(String code, PmsPricing newPrices) {
+        logPrint("New prices set from setPrices call (" + code + "), " + newPrices.getStartDate() + " - " + newPrices.getEndDate());
         PmsPricing prices = getPriceObject(code);
         prices.defaultPriceType = newPrices.defaultPriceType;
         prices.progressivePrices = newPrices.progressivePrices;
@@ -10739,6 +10740,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public boolean updatePrices(List<PmsPricingDayObject> prices) {
         Date start = null;
         Date end = null;
+        logPrint("Prices are being updated");
+        List<BookingItemType> alltypes = bookingEngine.getBookingItemTypes();
+        HashMap<String, BookingItemType> types = new HashMap();
+        for(BookingItemType t : alltypes) {
+            types.put(t.id, t);
+        }
         try {
             PmsPricing pricestoupdate = priceMap.get("default");
             
@@ -10753,9 +10760,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 HashMap<String, Double> dailypricematrix = pricestoupdate.dailyPrices.get(price.typeId);
                 if(dailypricematrix != null) {
                     dailypricematrix.put(price.date, price.newPrice);
+                    logPrint("New prices set from updatePrices " + types.get(price.typeId).name + " : date : " + price.date + ", new price: "  + price.newPrice);
                 }
             }
-            
             wubookManager.updatePricesBetweenDates(start, end);
             return true;
         }catch(Exception e) {

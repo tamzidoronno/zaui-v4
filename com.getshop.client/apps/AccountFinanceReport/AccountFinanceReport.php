@@ -572,5 +572,56 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
         return $allAccountNumbers;
     }
 
+    public function getFreportRows($start, $end) {
+        $dayIncomes = $this->getApi()->getOrderManager()->getDayIncomes($start, $end);
+
+        foreach ($dayIncomes as $dayIncome) {
+            if ($dayIncome->errorMsg) {
+                $errors[] = $dayIncome->errorMsg;
+            } else {
+                foreach ($dayIncome->dayEntries as $entry) {
+                    if ($entry->isTaxTransaction && $this->isShowingIncTaxes()) {
+                        continue;
+                    }
+                    $allAccountNumbers[] = $entry->accountingNumber;
+                }
+            }
+        }
+        $allAccountNumbers = $this->addExtraAccounts($allAccountNumbers);
+        $accounts = array_unique($allAccountNumbers);
+
+
+        $rows = array();
+        foreach ($dayIncomes as $dayIncome) {
+            $row = new \stdClass();
+            $row->start = date("d.m.Y H:i", strtotime($dayIncome->start));
+            $row->end = date("d.m.Y H:i", strtotime($dayIncome->end));
+            $row->locked = $dayIncome->isFinal ? true : false;
+            $grouped = $this->groupOnAccounting($dayIncome->dayEntries);
+            $controlSum = 0;
+            foreach ($accounts as $account) {
+                if (isset($grouped[$account]) && $grouped[$account]) {
+                    $sum[$account] = @$sum[$account] + $grouped[$account];
+                }
+
+                if (isset($grouped[$account]) && $grouped[$account]) {
+                    $controlSum += ($grouped[$account]);
+                }
+
+                $val = isset($grouped[$account]) && $grouped[$account] ? $grouped[$account] : "0";
+
+                $row->$account = $val;
+            }
+
+            if ($controlSum < 0.00001 && $controlSum > -0.00001 ) {
+                $controlSum = 0;
+            }
+            $row->controlSum = $controlSum;
+            $rows[] = $row;
+        }        
+        
+        return $rows;
+    }
+
 }
 ?>

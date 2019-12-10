@@ -86,7 +86,7 @@ class PmsSearchBookingColumnFormatters {
             $name = $guest[0]->name;
         }
         
-        $vistorText .= "<img src='/skin/flags/blank.gif' class='flag flag-".$room->countryCode."' style='float:left;'/><div class='guestinfo2' getshop_sorting='".$name."'>";
+        $vistorText .= "<img src='/skin/flags/blank.gif' class='flag flag-".strtolower($room->countryCode)."' style='float:left;'/><div class='guestinfo2' getshop_sorting='".$name."'>";
             foreach($room->guest as $guest) {
                 $isDisabled = $guest->isDisabled ? "<i class='fa fa-wheelchair'></i>" : "";
                 

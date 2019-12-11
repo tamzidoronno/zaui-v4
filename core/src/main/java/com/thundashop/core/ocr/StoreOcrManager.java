@@ -14,6 +14,8 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.pdf.InvoiceManager;
+import com.thundashop.core.pdf.data.AccountingDetails;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -40,6 +42,9 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
     
     @Autowired
     MessageManager messageManager;
+    
+    @Autowired
+    InvoiceManager invoiceManager;
     
     OcrAccount account = new OcrAccount();
     OcrWarnings warnings =  new OcrWarnings();
@@ -132,7 +137,14 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
                     continue;
                 }
                 newlines.add(line);
+                AccountingDetails details = invoiceManager.getAccountingDetails();
+                
+                if(details.kidSize != line.getKid().trim().length()) {
+                    continue;
+                }
+                
                 Order toMatch = orderManager.getOrderByKid(line.getKid());
+                
                 if(toMatch != null) {
                     if(toMatch.hasTransaction(line.getOcrLineId())) {
                         logPrint("Duplicate ocr registration done for order: " + toMatch.incrementOrderId);
@@ -179,6 +191,7 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
             OcrFileLines savedLine = getMatchedLine(line);
             if(savedLine != null) {
                 line.setMatchOnOrderId(savedLine.getMatchonOnOrder());
+                line.setData(savedLine);
                 if(savedLine.isTransferred()) {
                     line.setBeenTransferred();
                 }

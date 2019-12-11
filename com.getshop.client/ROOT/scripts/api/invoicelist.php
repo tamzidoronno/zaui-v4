@@ -18,13 +18,13 @@ if(isset($_GET['username'])) {
 }
 
 $invoiceingoverduelist = new ns_b7fb195b_8cea_4d7b_922e_dee665940de2\InvoicingOverdueList();
-$list = $invoiceingoverduelist->getOverDueInvoices();
+$list = $invoiceingoverduelist->getAllInvoices();
 
 $rows = array();
 foreach($list as $order) {
     $object = new stdClass();
     $object->id = $order->incrementOrderId;
-    $amount = $invoiceingoverduelist->getTotalAmountForOrder($order);
+    $amount = $order->totalAmount;
     $object->amount = $amount;
 
     $paidAmount = $invoiceingoverduelist->getTotalPaidAmount($order);

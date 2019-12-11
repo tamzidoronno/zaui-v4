@@ -181,7 +181,7 @@ if ($ocrActivated) {
     echo "<h1> OCR Payments Overview </h1>";
     foreach ($dayIncomes as $dayIncome) {
         
-        $lines = $this->getApi()->getStoreOcrManager()->getOcrLinesForDay($selectedYear, $selectedMonth, date('d', strtotime($dayIncome->start)));
+        $lines = (array)$this->getApi()->getStoreOcrManager()->getOcrLinesForDay($selectedYear, $selectedMonth, date('d', strtotime($dayIncome->start)));
         
         if (!count($lines)) {
             continue;

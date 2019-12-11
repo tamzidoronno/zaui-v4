@@ -8,6 +8,16 @@ chdir("../");
 include '../loader.php';
 $factory = IocContainer::getFactorySingelton();
 
+if(isset($_GET['username'])) {
+    $username = $_GET['username'];
+    $password = $_GET['password'];
+    $login = $factory->getFactory()->getApi()->getUserManager()->logOn($username, $password);
+    if(!$login) {
+        echo "Login failed.";
+        return;
+    }
+}
+
 $res = $factory->getApi()->getInvoiceManager()->getBase64EncodedInvoice($_GET['orderId']);
 echo base64_decode($res);
 ?>

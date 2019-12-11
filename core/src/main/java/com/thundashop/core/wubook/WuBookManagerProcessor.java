@@ -24,6 +24,7 @@ public class WuBookManagerProcessor extends GetShopSchedulerBase {
             getApi().getWubookManager().updateShortAvailability(getMultiLevelName());
         }catch(Exception e) {
             GetShopLogHandler.logPrintStatic("Failed to handle wubook api call, " + e.getMessage(), storeId);
+            GetShopLogHandler.logStack(e, storeId);
         }
     }
     

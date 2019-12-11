@@ -42,6 +42,7 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
     MessageManager messageManager;
     
     OcrAccount account = new OcrAccount();
+    OcrWarnings warnings =  new OcrWarnings();
     
     HashMap<String, OcrFileLines> lines = new HashMap();
     
@@ -50,6 +51,9 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
         for(DataCommon com : data.data) {
             if(com instanceof OcrAccount) {
                 account = (OcrAccount) com;
+            }
+            if(com instanceof OcrWarnings) {
+                warnings = (OcrWarnings) com;
             }
             if(com instanceof OcrFileLines) {
                 OcrFileLines line = (OcrFileLines) com;
@@ -145,8 +149,12 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
                         logPrint("did match done");
                     }
                 } else {
-                    logPrint("Did not find correct order to match this for");
-                    messageManager.sendErrorNotification("failed to match ocr line: " + line.toString(), null);
+                    if(!warnings.hasId(line.getOcrLineId())) {
+                        logPrint("Did not find correct order to match this for");
+                        messageManager.sendErrorNotification("failed to match ocr line: " + line.toString(), null);
+                        warnings.addId(line.getOcrLineId());
+                        saveObject(warnings);
+                    }
                 }
             }
 

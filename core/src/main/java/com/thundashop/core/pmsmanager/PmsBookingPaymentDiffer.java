@@ -389,6 +389,14 @@ public class PmsBookingPaymentDiffer {
         double sum = items.stream().mapToDouble(item -> item.price * item.count).sum();
         double count = items.stream().mapToInt(item -> item.count).sum();
         
+        if (count == 0) {
+            boolean isEmpty = sum < 0.001 && sum > -0.001;
+            
+            if (!isEmpty) {
+                return sum;
+            }
+        }
+        
         if (sum == 0 || count == 0)
             return 0;
         
@@ -451,8 +459,22 @@ public class PmsBookingPaymentDiffer {
                 .filter(addon -> addon.getKey().equals(key))
                 .collect(Collectors.toList());
         
-        return items.stream()
+        int retVal = items.stream()
                 .mapToInt(item -> item.count).sum();
+        
+        double sumOfProducts = items.stream()
+                .mapToDouble(item -> item.price * item.count)
+                .sum();
+        
+        if (retVal == 0) {
+            boolean isEmpty = sumOfProducts < 0.001 && sumOfProducts > -0.001;
+            
+            if (!isEmpty) {
+                return 1;
+            }
+        }
+        
+        return retVal;
     }
 
     private void calculateRoomCount(PmsRoomPaymentSummary summary) {

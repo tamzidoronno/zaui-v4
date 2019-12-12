@@ -1,0 +1,13 @@
+<?php
+/* @var $this Resturant */
+$productLists = $this->getApi()->getProductManager()->getProductListsForPga();
+
+foreach ($productLists as $productlist) {
+    
+    ?>
+    <div class="listbox">
+        <a href='/scripts/pga/?list=<? echo $productlist->id; ?>'><div><? echo $productlist->listName; ?></div></a>
+    </div>
+    <?
+}
+?>

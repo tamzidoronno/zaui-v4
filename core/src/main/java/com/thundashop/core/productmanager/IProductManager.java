@@ -280,4 +280,6 @@ public interface IProductManager {
     
     @Administrator
     public void changeAccountingNumber(int oldAccountNumber, int accountNumber);
+   
+    public List<ProductList> getProductListsForPga();
 }

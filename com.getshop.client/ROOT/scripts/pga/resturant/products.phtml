@@ -1,0 +1,41 @@
+<?php
+/* @var $this Resturant */
+$productList = $this->getApi()->getProductManager()->getProductList($_GET['list']);
+
+?>
+<a href="/scripts/pga">
+    <div class="backbutton">
+        <i class="fa fa-arrow-left"></i> Tilbake
+    </div>
+</a>
+
+<div class="productpage">
+   
+    <?
+    foreach ($productList->productIds as $productId) {
+        $product = $this->getApi()->getProductManager()->getProduct($productId);
+        ?>
+        <div class='product' onclick="Resturant.addToCart('<? echo $productId; ?>');">
+            <div class='prodcuttitle'>
+                <div class='productname'>
+                    <? echo $product->name; ?>
+                </div> 
+                <div class='productprice'>
+                    <?
+                    echo "Kr ".$product->price.",-";
+                    ?>        
+                </div>
+            </div>
+            <div class='description'>
+                Allergener: L, E, S, ME
+            </div>
+
+        </div>
+        <?
+    }
+
+
+
+    ?>
+
+</div>

@@ -24,6 +24,7 @@ public class PosTab extends DataCommon {
     public int printedToKitchenTimes = 0;
     public String tabTaxGroupId;
     public Double discount;
+    public String createdBySessionId = "";
 
     
     void removeCartItem(CartItem cartItem) {

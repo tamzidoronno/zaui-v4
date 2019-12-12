@@ -615,5 +615,10 @@ public class ProductManager extends AProductManager implements IProductManager {
                 .orElse(null);
     }
 
+    @Override
+    public List<ProductList> getProductListsForPga() {
+        return getProductLists();
+    }
+
     
 }

@@ -167,9 +167,18 @@ public class PosManager extends ManagerBase implements IPosManager {
 
     private PosTab createTab(String referenceName) {
         PosTab posTab = new PosTab();
-        posTab.createdByUserId = getSession().currentUser.id;
+        
+        if (getSession().currentUser != null) {
+            posTab.createdByUserId = getSession().currentUser.id;
+        }
+        
         posTab.name = referenceName;
         posTab.incrementalTabId = getNextTabId();
+        
+        if (getSession() != null) {
+            posTab.createdBySessionId = getSession().id;
+        }
+        
         return posTab;
     }
 
@@ -191,7 +200,11 @@ public class PosManager extends ManagerBase implements IPosManager {
     public void addToTab(String tabId, CartItem cartItem) {
         PosTab tab = getTab(tabId);
         if (tab != null) {
-            cartItem.addedBy = getSession().currentUser.id;
+            
+            if (getSession().currentUser != null) {
+                cartItem.addedBy = getSession().currentUser.id;
+            }
+            
             cartItem.addedDate = new Date();
             if (cartItem.getCartItemId() != null) {
                 tab.cartItems.removeIf(c -> c.getCartItemId().equals(cartItem.getCartItemId()));
@@ -1440,5 +1453,50 @@ public class PosManager extends ManagerBase implements IPosManager {
         
     }
 
+    @Override
+    public void addToTabPga(String tabId, CartItem cartItem) {
+        PosTab tab = getTab(tabId);
+        if (tab == null || !tab.createdBySessionId.equals(getSession().id)) {
+            return;
+        }
+        
+        addToTab(tab.id, cartItem);
+    }
+
+    @Override
+    public PosTab createTabForPga(String tabId, String name) {
+        if (getTab(tabId) != null) {
+            return null;
+        }
+        
+        PosTab tab = createTab(name);
+        tab.id = tabId;
+        saveObject(tab);
+        tabs.put(tab.id, tab);
+        
+        return tab;
+    }
+    
+    @Override
+    public PosTab getTabForPga(String tabId) {
+        PosTab tab = getTab(tabId);
+        if (tab != null && tab.createdBySessionId != null && tab.createdBySessionId.equals(getSession().id)) {
+            return tab;
+        }
+        
+        return null;
+    }
+
+    @Override
+    public int getProductCountForPgaTab(String tabId) {
+        PosTab tab = getTab(tabId);
+        if (tab == null || !tab.createdBySessionId.equals(getSession().id)) {
+            return 0;
+        }
+        
+        return tab.cartItems.stream()
+                .map(o -> o.getCount())
+                .collect(Collectors.summingInt(Integer::intValue));
+    }
   
 }

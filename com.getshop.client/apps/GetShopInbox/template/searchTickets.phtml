@@ -1,0 +1,30 @@
+<?php
+
+/* 
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+$searchWord = "";
+if(isset($_POST['data']['keyword'])) {
+    $searchWord = $_POST['data']['keyword'];
+}
+?>
+
+<hr>
+<div gstype='form' method='searchTickets' style='text-align:center;'>
+    <input class='gsniceinput1' id='searchtickets' placeholder='Search ticket' gsname='keyword' gstype='submitenter' value='<?php echo $searchWord; ?>'><span class='shop_button' gstype='submit'>Search</span>
+</div>
+
+<div>
+    <?php
+    if(isset($_POST['event']) && $_POST['event'] == "searchTickets") {
+        $this->includefile("searchticketresult");
+    }
+    ?>
+</div>
+
+<script>
+    $('#searchtickets').focus();
+</script>

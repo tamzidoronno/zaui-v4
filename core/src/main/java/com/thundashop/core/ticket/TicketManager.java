@@ -102,6 +102,9 @@ public class TicketManager extends ManagerBase implements ITicketManager {
     }
 
     private void checkSecurity(Ticket ticket) throws ErrorException {
+        if(ticket == null) {
+            throw new ErrorException(26);
+        }
         String userId = ticket.userId;
 
         if (getSession() == null || getSession().currentUser == null) {
@@ -1023,6 +1026,76 @@ public class TicketManager extends ManagerBase implements ITicketManager {
         Ticket ticket = getTicket(ticketId);
         ticket.ignored = !ticket.ignored;
         saveTicket(ticket);
+    }
+
+    @Override
+    public List<TicketSearchResult> searchTicket(String keyWord) {
+        
+        String[] keywords = keyWord.split(" ");
+        
+        BasicDBObject query = new BasicDBObject();
+        query.put("className", "com.thundashop.core.ticket.TicketContent");
+        query.put("content",  new BasicDBObject("$regex", keywords[0]).append("$options","i"));
+        List<TicketContent> result = database.query("TicketManager", storeId, query)
+                .stream()
+                .map( o -> (TicketContent)o)
+                .sorted((TicketContent c1, TicketContent c2) -> {
+                    return c1.rowCreatedDate.compareTo(c2.rowCreatedDate);
+                })
+                .collect(Collectors.toList());
+        
+        HashMap<String, TicketSearchResult> results = new HashMap();
+        if(result.size() > 1000) {
+            logPrint("Over 1000 results");
+            return new ArrayList();
+        }
+        for(TicketContent content : result) {
+            
+            boolean notFound = false;
+            for(String k : keywords) {
+                if(!content.content.toLowerCase().contains(k.toLowerCase())) {
+                    notFound= true;
+                }
+            }
+            if(notFound) {
+                continue;
+            }
+            
+            TicketSearchResult searchresult = new TicketSearchResult();
+            if(results.containsKey(content.ticketId)) {
+                searchresult = results.get(content.ticketId);
+            } else {
+                results.put(content.ticketId, searchresult);
+            }
+            
+            if(content.ticketId == null || content.ticketId.isEmpty()) {
+                continue;
+            }
+            
+            Ticket ticket = getTicket(content.ticketId);
+            if(searchresult.byWho.isEmpty()) {
+                String userId = systemManager.getCustomerIdForStoreId(ticket.belongsToStore);
+
+                if(userId == null) {
+                    continue;
+                }
+                
+                User usr = userManager.getUserById(userId);
+                if(usr != null) {
+                    searchresult.byWho = usr.fullName;
+                }
+
+            }
+            
+            searchresult.incId = ticket.incrementalId;
+            searchresult.title = ticket.title;
+            searchresult.ticketId = ticket.id;
+            searchresult.createdDate = ticket.rowCreatedDate;
+            searchresult.lastRepliedDate = ticket.lastModified;
+            searchresult.resultStrings.add(content.content);
+        }
+        
+        return new ArrayList(results.values());
     }
 
 }

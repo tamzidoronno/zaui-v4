@@ -201,4 +201,11 @@ public interface IPosManager {
     @Administrator
     public void toggleExternalAccess(String cashPointId);
     
+    public void addToTabPga(String tabId, CartItem cartItem);
+    
+    public PosTab createTabForPga(String tabId, String name);
+    
+    public PosTab getTabForPga(String tabId);
+    
+    public int getProductCountForPgaTab(String tabId);
 }

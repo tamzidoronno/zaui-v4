@@ -18,6 +18,7 @@ import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -69,6 +70,7 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
         dayIncomeFilter.start = filter.start;
         dayIncomeFilter.end = filter.end;
         dayIncomeFilter.excludedOldOrders = false;
+        dayIncomeFilter.ignoreHourOfDay = true;
         
         
         gsTiming("Before get day income");
@@ -173,7 +175,7 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
         CoverageAndIncomeReportFilter cfilter = new CoverageAndIncomeReportFilter();
         cfilter.start = filter.startDate;
         cfilter.end = filter.endDate;
-        cfilter.incTaxes = false;
+        cfilter.incTaxes = filter.priceIncTaxes;
         cfilter.channel = filter.channel;
         cfilter.departmentIds = filter.departmentIds;
         cfilter.segments = filter.segments;

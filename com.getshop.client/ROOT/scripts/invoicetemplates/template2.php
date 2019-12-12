@@ -104,12 +104,11 @@ $isInvoice = $order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200
         position: absolute;
     width: 100%;
     height: 166px;
-    background-color: rgba(0,0,0,0.7);
     box-sizing: border-box;
     text-align: center;
     padding-top: 60px;
     font-size: 40px;
-    color: #fff;
+    color: red;
     border-radius: 7px;
     margin-top: 10px;
     }
@@ -231,7 +230,9 @@ $isInvoice = $order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200
     <?
     $i = 1;
     $totalLines = sizeof((array)$order->cart->items);
-//    $totalLines = 55;
+    $pagenumber = 1;
+    $lineNumber = 1;
+    $rowsonlastpage = 0;
     foreach ($order->cart->items as $item) {
         $lineTotal = $item->product->price * $item->count;
         $total += $lineTotal;
@@ -243,7 +244,7 @@ $isInvoice = $order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200
 
         $calculatedTaxes[$key] += $taxes;
         $metadata = "";
-        
+        $isStay = sizeof((array)$item->priceMatrix) > 0;
         if ($item->product->additionalMetaData) {
             $metadata .= $translator->translate("Room").": ".$item->product->additionalMetaData;
         }
@@ -253,10 +254,11 @@ $isInvoice = $order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200
             $metadata .= $item->product->metaData;
         }
         
-        if (@$item->startDate) {
+        
+        if ($isStay && @$item->startDate) {
             $metadata .= $metadata ? ", " : "";
             $metadata .= $translator->translate("Date").": ".date('d.m.Y', strtotime($item->startDate));
-            if (@$item->endDate) {
+            if (@$item->endDate && ($item->startDate != $item->endDate)) {
                 $metadata .= " - ".date('d.m.Y', strtotime($item->endDate));
             }
         }
@@ -273,20 +275,33 @@ $isInvoice = $order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200
             <div class='col col4'><? echo $translator->formatPrice($lineTotal); ?></div>
         </div>
         <?
-        $i++;
-        if($totalLines < 13 && $i == $totalLines && $totalLines >= 12) {
+        if($pagenumber == 1 && $lineNumber == 13) {
             echo "<div class='new-page'></div>";
             echo "<br><bR>";
-        } else if($i == 13) {
-            echo "<div class='new-page'></div>";
-            echo "<br><bR>";
+            $pagenumber++;
+            $lineNumber = 0;
         }
+        if($pagenumber > 1 && $lineNumber == 18) {
+            echo "<div class='new-page'></div>";
+            echo "<br><bR>";
+            $pagenumber++;
+            $lineNumber = 0;
+        }
+        
+        $lineNumber++;
     }
-    $numberOfRowsOnLastPage = (($i-16) % 21)-1;
-    if($numberOfRowsOnLastPage >= 14 || ($totalLines > 8 && $totalLines < 13)) {
+    
+    
+    if($pagenumber == 1 && $lineNumber > 8) {
         echo "<div class='new-page'></div>";
         echo "<br><bR>";
     }
+    
+    if($pagenumber > 1 && $lineNumber > 15) {
+        echo "<div class='new-page'></div>";
+        echo "<br><bR>";
+    }
+    
     ?>
 
     <div class='outerproductrow'>

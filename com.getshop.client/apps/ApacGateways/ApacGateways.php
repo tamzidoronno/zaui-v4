@@ -146,5 +146,9 @@ class ApacGateways extends \MarketingApplication implements \Application {
     public function toggleUpdate() {
         $this->getApi()->getGetShopLockSystemManager()->toggleActiveServer($_POST['data']['serverid']);
     }
+    
+    public function resyncGateway() {
+        $this->getApi()->getGetShopLockSystemManager()->resyncDatabaseWithLoraGateway($_POST['data']['serverid']);
+    }
 }
 ?>

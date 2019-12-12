@@ -3,6 +3,7 @@ package com.thundashop.core.pmsmanager;
 
 import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.SortedSet;
@@ -48,4 +49,38 @@ public class PmsPricing extends DataCommon {
     public LinkedHashMap<Integer, Integer> longTermDeal = new LinkedHashMap();
     public HashMap<Integer, Double> coveragePrices = new HashMap();
     public Integer coverageType = PmsPricing.PmsPricingCoverageType.PERCENTAGE;
+    
+    public Date getStartDate() {
+        Date retval = null;
+        for(String type : dailyPrices.keySet()) {
+            HashMap<String, Double> priceMap = dailyPrices.get(type);
+            for(String date : priceMap.keySet()) {
+                if(date.contains("-")) {
+                    Date checkDate = PmsBookingRooms.convertOffsetToDate(date);
+                    if(retval == null || retval.getTime() > checkDate.getTime()) {
+                        retval = checkDate;
+                    }
+                }
+            }
+        }
+        
+        return retval;
+    }
+    
+    public Date getEndDate() {
+        Date retval = null;
+        for(String type : dailyPrices.keySet()) {
+            HashMap<String, Double> priceMap = dailyPrices.get(type);
+            for(String date : priceMap.keySet()) {
+                if(date.contains("-")) {
+                    Date checkDate = PmsBookingRooms.convertOffsetToDate(date);
+                    if(retval == null || retval.getTime() < checkDate.getTime()) {
+                        retval = checkDate;
+                    }
+                }
+            }
+        }
+        
+        return retval;
+    }
 }

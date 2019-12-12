@@ -7,6 +7,7 @@ package com.thundashop.core.pmsmanager;
 
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.bookingengine.BookingEngine;
+import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.storemanager.StoreManager;
@@ -62,6 +63,9 @@ public class PmsCoverageReportManager extends ManagerBase {
                 report.entries.add(check);
             }
         }
+        
+        checkForClosedRooms(filter, report);
+        
         
         return report;
     }
@@ -264,5 +268,23 @@ public class PmsCoverageReportManager extends ManagerBase {
             return true;
         }
         return false;
+    }
+
+    private void checkForClosedRooms(PmsBookingFilter filter, PmsCoverageReport report) {
+        List<Booking> allBookings = engine.getAllBookings();
+        for(Booking book : allBookings) {
+            if(filter.typeFilter != null && !filter.typeFilter.isEmpty() && !filter.typeFilter.contains(book.bookingItemTypeId)) {
+                continue;
+            }
+            if(book.within(filter.startDate, filter.endDate)) {
+                if(book.source != null && (book.source.contains("closed by") || book.source.contains("cleaning"))) {
+                    for(PmsCoverageReportEntry entry : report.entries) {
+                        if((book.within(entry.date, entry.date) && !book.endingAtDate(entry.date)) || book.startAtDate(entry.date)) {
+                            entry.roomsAvailable--;
+                        }
+                    }
+                }
+            }
+        }
     }
 }

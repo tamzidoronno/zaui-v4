@@ -149,4 +149,11 @@ public class OcrFileLines extends DataCommon implements Comparable<OcrFileLines>
     long getMatchonOnOrder() {
         return matchOnOrderId;
     }
+
+    void setData(OcrFileLines savedLine) {
+        amount = savedLine.getAmountInDouble();
+        kid = savedLine.getKid();
+        setMatchOnOrderId(savedLine.getMatchonOnOrder());
+        matchDate = savedLine.getOppgjorsDato();
+    }
 }

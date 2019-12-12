@@ -14,6 +14,8 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.pdf.InvoiceManager;
+import com.thundashop.core.pdf.data.AccountingDetails;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -41,7 +43,11 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
     @Autowired
     MessageManager messageManager;
     
+    @Autowired
+    InvoiceManager invoiceManager;
+    
     OcrAccount account = new OcrAccount();
+    OcrWarnings warnings =  new OcrWarnings();
     
     HashMap<String, OcrFileLines> lines = new HashMap();
     
@@ -50,6 +56,9 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
         for(DataCommon com : data.data) {
             if(com instanceof OcrAccount) {
                 account = (OcrAccount) com;
+            }
+            if(com instanceof OcrWarnings) {
+                warnings = (OcrWarnings) com;
             }
             if(com instanceof OcrFileLines) {
                 OcrFileLines line = (OcrFileLines) com;
@@ -128,17 +137,36 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
                     continue;
                 }
                 newlines.add(line);
+                AccountingDetails details = invoiceManager.getAccountingDetails();
+                
+                if(details.kidSize != line.getKid().trim().length()) {
+                    continue;
+                }
+                
                 Order toMatch = orderManager.getOrderByKid(line.getKid());
-                logPrint("New record found: " + line.getKid());
+                
                 if(toMatch != null) {
-                    logPrint("found matching order");
-                    Date paymentDate = line.getPaymentDate();
-                    orderManager.markAsPaidWithTransactionType(toMatch.id, paymentDate, line.getAmountInDouble(), Order.OrderTransactionType.OCR, line.getOcrLineId());
-                    line.setMatchOnOrderId(toMatch.incrementOrderId);
-                    logPrint("did match done");
+                    if(toMatch.hasTransaction(line.getOcrLineId())) {
+                        logPrint("Duplicate ocr registration done for order: " + toMatch.incrementOrderId);
+                        toMatch.removeDuplicateTransactions(line.getOcrLineId());
+                        line.setMatchOnOrderId(toMatch.incrementOrderId);
+                        line.setBeenTransferred();
+                    } else {
+                        logPrint("New record found: " + line.getKid());
+                        logPrint("found matching order");
+                        Date paymentDate = line.getPaymentDate();
+                        orderManager.markAsPaidWithTransactionType(toMatch.id, paymentDate, line.getAmountInDouble(), Order.OrderTransactionType.OCR, line.getOcrLineId());
+                        line.setMatchOnOrderId(toMatch.incrementOrderId);
+                        line.setBeenTransferred();
+                        logPrint("did match done");
+                    }
                 } else {
-                    logPrint("Did not find correct order to match this for");
-                    messageManager.sendErrorNotification("failed to match ocr line: " + line.toString(), null);
+                    if(!warnings.hasId(line.getOcrLineId())) {
+                        logPrint("Did not find correct order to match this for");
+                        messageManager.sendErrorNotification("failed to match ocr line: " + line.toString(), null);
+                        warnings.addId(line.getOcrLineId());
+                        saveObject(warnings);
+                    }
                 }
             }
 
@@ -163,6 +191,10 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
             OcrFileLines savedLine = getMatchedLine(line);
             if(savedLine != null) {
                 line.setMatchOnOrderId(savedLine.getMatchonOnOrder());
+                line.setData(savedLine);
+                if(savedLine.isTransferred()) {
+                    line.setBeenTransferred();
+                }
             }
         }
         Collections.sort(result);

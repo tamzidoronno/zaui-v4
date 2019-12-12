@@ -7,6 +7,7 @@ package com.thundashop.core.warehousemanager;
 
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -37,10 +38,13 @@ public interface IWareHouseManager {
     public WareHouseLocation getWareHouseLocation(String wareHouseLocationId);
     
     @Administrator
-    public void adjustStockQuantity(String productId, int quantity, String warehouseId);
+    public void adjustStockQuantity(String productId, int quantity, String warehouseId, String comment);
     
     @Administrator
     public List<StockQuantityRow> getStockQuantityRowsForProduct(String productId, int limit);
+    
+    @Administrator
+    public List<StockQuantityRow> getStockQuantityForWareHouseBetweenDate(String warehouseId, Date start, Date end);
     
     @Administrator
     public void setAsDefaultWareHosue(String wareHouseId);

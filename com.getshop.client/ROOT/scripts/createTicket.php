@@ -1,5 +1,5 @@
 <?php
-header('Access-Control-Allow-Origin: http://system.3.0.local.getshop.com');
+header('Access-Control-Allow-Origin: https://system.getshop.com');
 chdir("../");
 include '../loader.php';
 

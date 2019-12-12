@@ -217,3 +217,18 @@ gslog_type="" gslog_value="" gslog_description=""
 
 Download PDF:
 <div class='shop_button' gstype='downloadpdf' filename='file.pdf' method="methodToGenerateBase64PDF"> download </div>
+
+Api exports:
+PMI:
+    https://bergstaden.kronen.getshop.com/scripts/pmi.php?start=15.06.2018&end=15.06.2018&domain=default&username=d2o@getshop.com&password=XXXXXXX&type=roomrevenue&includevirtual=1
+    https://bergstaden.kronen.getshop.com/scripts/pmi.php?start=01.06.2018&end=15.06.2018&domain=default&username=d2o@getshop.com&password=XXXXXXX&type=allrevenue&includevirtual=1
+    https://bergstaden.kronen.getshop.com/scripts/pmi.php?start=01.08.2018&end=15.08.2018&domain=default&username=d2o@getshop.com&password=XXXXXXX&type=reservations&includevirtual=1
+
+PMHR.SE:
+    https://haugesund.getshop.com/scripts/availabilityexport.php?start=19.11.2017&end=23.11.2017&username=integration@pmhr.se&password=XXXXXXX&showhtml=true
+    https://20440.getshop.com/scripts/updateprices.php?username=3213213@demo.com&password=XXXXXXX
+
+IIZY:
+    http://gkroen.3.0.local.getshop.com/scripts/api/invoiceexport.php?id=116516
+    http://gkroen.3.0.local.getshop.com/scripts/api/invoicelist.php
+    http://gkroen.3.0.local.getshop.com/scripts/api/freport.php?start=01.10.2019&end=31.12.2019

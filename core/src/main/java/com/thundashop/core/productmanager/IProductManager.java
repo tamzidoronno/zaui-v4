@@ -143,6 +143,13 @@ public interface IProductManager {
      */
     public List<Product> getAllProducts() throws ErrorException;
     
+    /**
+     * Fetch all products the store has available.
+     * @return
+     * @throws ErrorException 
+     */ 
+    public List<Product> getAllProductsSortedByName() throws ErrorException;
+    
     @Administrator
     public List<Product> getAllProductsIncDeleted() throws ErrorException;
     

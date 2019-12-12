@@ -1222,6 +1222,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsPricing setPrices(String code, PmsPricing newPrices) {
+        logPrint("New prices set from setPrices call (" + code + "), " + newPrices.getStartDate() + " - " + newPrices.getEndDate());
         PmsPricing prices = getPriceObject(code);
         prices.defaultPriceType = newPrices.defaultPriceType;
         prices.progressivePrices = newPrices.progressivePrices;
@@ -1770,25 +1771,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         convertTextDates(filter);
         Calendar cal = Calendar.getInstance();
-        cal.setTime(filter.startDate);
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        filter.startDate = cal.getTime();
         int startYear = cal.get(Calendar.YEAR);
 
-        cal.setTime(filter.endDate);
-        cal.set(Calendar.HOUR_OF_DAY, 23);
-        cal.set(Calendar.MINUTE, 59);
-        cal.set(Calendar.SECOND, 59);
-        filter.endDate = cal.getTime();
 
         filter.filterType = "active";
         List<PmsBooking> allBookings = getAllBookings(filter);
         gsTiming("After get all bookings");
-        PmsPricing prices = getDefaultPriceObject();
         PmsStatisticsBuilder builder = new PmsStatisticsBuilder(allBookings,
-                prices.pricesExTaxes,
+                filter.priceIncTaxes,
                 userManager,
                 new ArrayList(bookings.values()),
                 addiotionalItemInfo,
@@ -1798,10 +1788,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         int totalRooms = getTotalRoomsBasedOnFilter(filter);
         
-//        if (true) {
-//            return new PmsStatistics();
-//        }
-
         PmsStatistics result = builder.buildStatistics(filter, totalRooms, pmsInvoiceManager, bookingEngine.getAllBookings(), getStore());
         gsTiming("After after build statistics");
         if ((storeId.equals("123865ea-3232-4b3b-9136-7df23cf896c6") || filter.includeOrderStatistics) && !filter.fromPms) {
@@ -9488,6 +9474,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsConfiguration config = getConfigurationSecure();
         if(!config.wubookAutoCharging) {
             config.wubookAutoCharging = true;
+            config.autochargeCardDaysBefore = 0;
             saveConfiguration(config);
         }
         Integer daysBeforeToCharge = config.autochargeCardDaysBefore;
@@ -10753,6 +10740,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public boolean updatePrices(List<PmsPricingDayObject> prices) {
         Date start = null;
         Date end = null;
+        logPrint("Prices are being updated");
+        List<BookingItemType> alltypes = bookingEngine.getBookingItemTypes();
+        HashMap<String, BookingItemType> types = new HashMap();
+        for(BookingItemType t : alltypes) {
+            types.put(t.id, t);
+        }
         try {
             PmsPricing pricestoupdate = priceMap.get("default");
             
@@ -10767,9 +10760,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 HashMap<String, Double> dailypricematrix = pricestoupdate.dailyPrices.get(price.typeId);
                 if(dailypricematrix != null) {
                     dailypricematrix.put(price.date, price.newPrice);
+                    logPrint("New prices set from updatePrices " + types.get(price.typeId).name + " : date : " + price.date + ", new price: "  + price.newPrice);
                 }
             }
-            
             wubookManager.updatePricesBetweenDates(start, end);
             return true;
         }catch(Exception e) {
@@ -10974,5 +10967,21 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
     }
 
+    
+    @Override
+    public void reinstateStay(String pmsBookingRoomId, Integer minutes) {
+        PmsBooking booking = getBookingFromRoom(pmsBookingRoomId);
+        PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
+        room.checkedout = false;
+        room.checkedin = true;
+        room.forceUpdateLocks = true;
+        Date end = room.date.end;
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(end);
+        cal.add(Calendar.MINUTE, minutes);
+        changeDates(pmsBookingRoomId, booking.id, room.date.start, cal.getTime());
+        resetDoorLockCode(room);
+        processor();
+    }
     
 }

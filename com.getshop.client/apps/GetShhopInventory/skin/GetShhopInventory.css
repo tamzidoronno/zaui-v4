@@ -1,0 +1,28 @@
+.productlists { margin: auto; max-width: 1600px; margin-top: 50px; }
+.productlists tr:hover { background-color:#efefef; }
+.productlists tr:hover i { display:inline-block; } 
+.productlists tr i { display:none; cursor:pointer; }
+
+
+.productlists {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.productlists td, .productlists th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.productlists tr:nth-child(even){background-color: #f2f2f2;}
+
+.productlists tr:hover {background-color: #ddd;}
+
+.productlists th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}

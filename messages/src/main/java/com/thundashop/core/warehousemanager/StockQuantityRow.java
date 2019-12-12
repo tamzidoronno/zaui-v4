@@ -22,5 +22,6 @@ public class StockQuantityRow extends DataCommon {
      */
     public int count;
     public boolean isAdjustment = false;
+    String comment = "";
     
 }

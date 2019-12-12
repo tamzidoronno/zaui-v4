@@ -66,8 +66,20 @@ app.PmsBookingRoomView = {
         $(document).on('click','.PmsBookingRoomView .addsuggestionarrow', app.PmsBookingRoomView.addSuggestedRow);
         $(document).on('click','.PmsBookingRoomView .savechangestocommentbtn', app.PmsBookingRoomView.saveChangesToComment);
         $(document).on('click','.PmsBookingRoomView .toggleDisabledGuest', app.PmsBookingRoomView.toggleDisabledGuest);
+        $(document).on('click','.PmsBookingRoomView .reinstatestay', app.PmsBookingRoomView.reinstateStay);
         $(document).on('focus','.PmsBookingRoomView .contenttoedit', app.PmsBookingRoomView.showSaveButton);
         $(document).on('keyup','.PmsBookingRoomView [searchtype]', app.PmsBookingRoomView.searchGuests);
+    },
+    reinstateStay : function() {
+        var minutes = prompt("How many minutes do you want to increase the stay for?");
+        if(!minutes) {
+            return;
+        }
+        
+        var event = thundashop.Ajax.createEvent('','reinstateStay',$(this), {
+            "minutes" : minutes
+        });
+        thundashop.Ajax.post(event);
     },
     toggleDisabledGuest : function() {
         var btn = $(this);

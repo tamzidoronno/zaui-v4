@@ -1,6 +1,9 @@
 <?php
 /* @var $this ns_36de3b7e_e29e_4327_b3f5_7206febf4909\OcrReader */
 $avtaleid = $this->getApi()->getStoreOcrManager()->getAccountingId();
+
+$details = $this->getApi()->getInvoiceManager()->getAccountingDetails();
+
 ?>
 <div style='max-width: 1600px; margin: auto;margin-top: 50px;margin-bottom: 20px;'>
     <div class="isnotactive">
@@ -57,19 +60,24 @@ $avtaleid = $this->getApi()->getStoreOcrManager()->getAccountingId();
             <th align='left'>Date</th>
             <th align='left'>TXTLINE</th>
             <th align='left'>Amount</th>
-            <th align='left'>KID</th>
+            <th align='left'>KID (kidsize)</th>
             <th align='left'>Matched to</th>
         </tr>
     <?php
     
     $transactions = $this->getApi()->getStoreOcrManager()->getAllTransactions();
     foreach($transactions as $trans) {
-        echo "<tr>";
+        $kidsize = strlen(trim($trans->kid));
+        if($kidsize != $details->kidSize) {
+            echo "<tr style='color:#bbb;' title='Kid size does not match configuration in invoice settings'>";
+        } else {
+            echo "<tr>";
+        }
         echo "<td>" . $trans->avtaleId . "</td>";
         echo "<td>" . $trans->matchDate . "</td>";
         echo "<td>" . $trans->rawLine . "</td>";
         echo "<td>" . $trans->amount . "</td>";
-        echo "<td>" . $trans->kid . "</td>";
+        echo "<td>" . $trans->kid  . " ($kidsize)</td>";
         echo "<td>" . $trans->matchOnOrderId . "</td>";
         echo "</tr>";
     }

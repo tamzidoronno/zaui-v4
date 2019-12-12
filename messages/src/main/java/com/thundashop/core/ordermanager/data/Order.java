@@ -1529,8 +1529,33 @@ public class Order extends DataCommon implements Comparable<Order> {
         
         return false;
     }
-    
 
+    public boolean hasTransaction(String transactionId) {
+        for(OrderTransaction transaction : orderTransactions) {
+            if(transaction.isReferenceId(transactionId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    
+    public void removeDuplicateTransactions(String transactionId) {
+        OrderTransaction original = null;
+        List<OrderTransaction> toRemove = new ArrayList();
+        for(OrderTransaction transaction : orderTransactions) {
+            if(transaction.isReferenceId(transactionId)) {
+                if(original == null) {
+                    original = transaction;
+                } else {
+                    toRemove.add(transaction);
+                }
+            }
+        }
+        orderTransactions.removeAll(toRemove);
+    }
+    
+    
     public static class Status  {
         public static int CREATED = 1;
         public static int WAITING_FOR_PAYMENT = 2;

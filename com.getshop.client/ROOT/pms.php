@@ -62,6 +62,7 @@ if($config->bookingTag) {
 }
 
 ?>
+<!DOCTYPE html>
 <html pageid="<? echo $page->getId(); ?>" module="pms">
     <head>
         <title><? echo $title; ?></title>

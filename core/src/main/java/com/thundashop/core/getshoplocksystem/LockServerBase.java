@@ -55,8 +55,6 @@ public abstract class LockServerBase extends DataCommon {
     @Administrator
     public String password;
     
-    private final String USER_AGENT = "Mozilla/5.0";
-    
     @Transient
     @ExcludeFromJson
     private GetShopLockSystemManager getShopLockSystemManager;
@@ -345,27 +343,4 @@ public abstract class LockServerBase extends DataCommon {
         return token;
     }
     
-    public String getHtml(String url) {
-        try {
-            URL urlObj = new URL(url);
-            HttpURLConnection connection = (HttpURLConnection) urlObj.openConnection();
-
-            connection.setRequestMethod("GET");
-            connection.setRequestProperty("User-Agent", USER_AGENT);
-
-            BufferedReader responseStream = new BufferedReader(new InputStreamReader(connection.getInputStream()));    
-
-            String responseLine;
-            StringBuilder responseBuffer = new StringBuilder();
-
-            while((responseLine = responseStream.readLine()) != null) {
-                responseBuffer.append(responseLine);
-            }
-
-            return responseBuffer.toString();
-        } catch (Exception ex) {
-//            ex.printStackTrace();
-            return "";
-        }
-    }
 }

@@ -580,6 +580,10 @@ public class OrderDailyBreaker {
     }
 
     private Date calculateEndTimeForDate(Date date) {
+        if(filter.ignoreHourOfDay) {
+            return date;
+        }
+        
         if (date.equals(filter.end))
             return date;
         
@@ -594,6 +598,10 @@ public class OrderDailyBreaker {
     }
 
     private Date calculateStartTimeForDate(Date date) {
+        if(filter.ignoreHourOfDay) {
+            return date;
+        }
+        
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         cal.set(Calendar.HOUR_OF_DAY, whatHourOfDayStartADay);

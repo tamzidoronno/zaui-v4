@@ -627,7 +627,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             }
         }
         
-        result.textualSummary.add("{totalprice} ({currency}) : " + Math.round(booking.getTotalPrice()));
+        result.textualSummary.add("{totalprice} {currency}" + Math.round(booking.getTotalPrice()));
         
     }
 

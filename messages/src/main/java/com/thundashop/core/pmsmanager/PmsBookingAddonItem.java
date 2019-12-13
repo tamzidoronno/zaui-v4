@@ -145,8 +145,9 @@ public class PmsBookingAddonItem extends TranslationHandler implements Serializa
     }
     
     public String getStringDate() {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-YYYY");
-        return sdf.format(date);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        String retDate = sdf.format(date);
+        return retDate;
     }
     
     /**

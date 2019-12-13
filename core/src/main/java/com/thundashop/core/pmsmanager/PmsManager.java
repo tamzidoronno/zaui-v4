@@ -3190,7 +3190,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private String convertToStandardTime(Date start) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.YYYY HH:mm");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
         return sdf.format(start);
     }
 

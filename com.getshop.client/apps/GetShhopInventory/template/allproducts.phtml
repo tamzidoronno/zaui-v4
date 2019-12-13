@@ -33,12 +33,15 @@ echo "<center><h1>Warehouse: " . $warehouse->name . ", <a href='?page=inventory&
 <?php
 echo "<table width='100%' cellspacing='0' cellpadding='0'>";
 echo "<tr>";
+echo "<th width='100'>SKU</th>";
 echo "<th>Product name</th>";
+echo "<th style='text-align:center;'>Ordered</th>";
 echo "<th style='text-align:center;'>Quantity</th>";
 echo "<th style='text-align:center;'>Value</th>";
 echo "<th style='text-align:center;'>Total price</th>";
 $totalStock = 0;
 $totalCount = 0;
+$totalOrdered = 0;
 foreach($products as $product) {
     
     if($product->hideFromStorageList && !isset($_GET['showhidden'])) {
@@ -52,14 +55,33 @@ foreach($products as $product) {
     }
     
     $stockQuantity = 0;
-    if(isset($product->wareHouseStockQuantities->{'57decea2-8ac6-4231-9dc7-f3992d1e3a03'})) {
-        $stockQuantity = $product->wareHouseStockQuantities->{'57decea2-8ac6-4231-9dc7-f3992d1e3a03'};
+    $stockQuantityOrdered = 0;
+    if(isset($product->wareHouseStockQuantities->{$_SESSION['warehouseid']})) {
+        $stockQuantity = $product->wareHouseStockQuantities->{$_SESSION['warehouseid']};
+    }
+    if(isset($product->wareHouseStockQuantitiesOrdered->{$_SESSION['warehouseid']})) {
+        $stockQuantityOrdered = $product->wareHouseStockQuantitiesOrdered->{$_SESSION['warehouseid']};
     }
     
+    $totalOrdered += $stockQuantityOrdered * $product->stockValue;
+    
+    echo "<td><i class='fa fa-edit' gstype='clicksubmitforce' method='updateSku' gsname='productid' gsvalue='".$product->id."' gs_prompt='New value'></i>".$product->sku."</td>";
     echo "<td><i class='fa fa-trash-o' title='Hide from list' gsclick='disableProduct' style='cursor:pointer;' productId='".$product->id."' gs_confirm='Are you sure?'></i> <i class='fa fa-edit' gstype='clicksubmitforce' method='renameProduct' gsname='productid' gsvalue='".$product->id."' gs_prompt='New name'></i> ".$product->name."</td>";
-    echo "<td align='center' width='100'><i class='fa fa-minus-circle updateInventoryCount removefromstorage'></i> ".$stockQuantity." <i class='fa fa-plus-circle updateInventoryCount'></i></td>";
+
+    echo "<td align='center' width='100'>";
+    echo "<i class='fa fa-minus-circle updateInventoryCount removefromstorage' type='orderedinventory'></i> ";
+    echo $stockQuantityOrdered;
+    echo " <i class='fa fa-plus-circle updateInventoryCount' type='orderedinventory'></i>";
+    echo "</td>";
+
+    echo "<td align='center' width='100'>";
+    echo "<i class='fa fa-minus-circle updateInventoryCount removefromstorage' type='inventory'></i> ";
+    echo $stockQuantity;
+    echo " <i class='fa fa-plus-circle updateInventoryCount' type='inventory'></i>";
+    echo "</td>";
+    
     echo "<td align='center' width='100'><i class='fa fa-edit' gstype='clicksubmitforce' method='updateStockPrice' gsname='productid' gsvalue='".$product->id."' gs_prompt='New value'></i> ".$product->stockValue."</td>";
-    $total = $stockQuantity * $product->stockQuantity;
+    $total = $stockQuantity * $product->stockValue;
     echo "<td align='center' width='100'>$total</td>";
     echo "</tr>";
     $totalCount += $stockQuantity;
@@ -67,6 +89,8 @@ foreach($products as $product) {
 }
 echo "<tr>";
 echo "<td></td>";
+echo "<td></td>";
+echo "<td align='center'>$totalOrdered</td>";
 echo "<td align='center'>$totalCount</td>";
 echo "<td align='center'></td>";
 echo "<td align='center'>$totalStock</td>";
@@ -109,6 +133,7 @@ echo "</table>";
     
     echo "<td></td>";
     echo "<td></td>";
+    echo "<td></td>";
     echo "<td align='center' width='10'></td>";
     echo "<td align='center' width='10'>$totalout</td>";
     echo "</tr>";
@@ -122,3 +147,10 @@ echo "</table>";
 <bR>
 <bR>
 <bR>
+
+<script>
+    if(typeof(lastsearched) !== "undefined") {
+        $('.searchinventory').val(lastsearched);
+        $('.searchinventory').keyup();
+    }
+</script>

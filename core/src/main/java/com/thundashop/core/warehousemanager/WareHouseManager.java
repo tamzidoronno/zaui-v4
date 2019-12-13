@@ -359,4 +359,17 @@ public class WareHouseManager extends ManagerBase implements IWareHouseManager {
         return toReturn;
     }
 
+    @Override
+    public void adjustStockOrderedQuantity(String productId, int quantity, String warehouseId) {
+        Product product = productManager.getProduct(productId);
+        Integer count = 0;
+        if(product.wareHouseStockQuantitiesOrdered.containsKey(warehouseId)) {
+            count = product.wareHouseStockQuantitiesOrdered.get(warehouseId);
+        }
+        
+        count += quantity;
+        product.wareHouseStockQuantitiesOrdered.put(warehouseId, count);
+        productManager.saveProduct(product);
+    }
+
 }

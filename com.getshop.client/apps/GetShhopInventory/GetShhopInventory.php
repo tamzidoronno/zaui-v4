@@ -26,9 +26,23 @@ class GetShhopInventory extends \WebshopApplication implements \Application {
         $this->getApi()->getProductManager()->saveProduct($product);
     }
     
-    public function updateInventoryCount() {
+    public function updateSku() {
         $product = $this->getApi()->getProductManager()->getProduct($_POST['data']['productid']);
-        $this->getApi()->getWareHouseManager()->adjustStockQuantity($product->id,  $_POST['data']['count'], $this->getWareHouseId(), $_POST['data']['comment']);
+        $product->sku = $_POST['data']['prompt'];
+        $this->getApi()->getProductManager()->saveProduct($product);
+    }
+    
+    public function updateInventoryCount() {
+        $comment = "";
+        if(isset( $_POST['data']['comment'])) {
+            $comment = $_POST['data']['comment'];
+        }
+        $product = $this->getApi()->getProductManager()->getProduct($_POST['data']['productid']);
+        if($_POST['data']['type'] == "orderedinventory") {
+            $this->getApi()->getWareHouseManager()->adjustStockOrderedQuantity($product->id,  $_POST['data']['count'], $this->getWareHouseId());
+        } else {
+            $this->getApi()->getWareHouseManager()->adjustStockQuantity($product->id,  $_POST['data']['count'], $this->getWareHouseId(), $comment);
+        }
     }
     
     public function renameProduct() {

@@ -3031,11 +3031,15 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .map(o -> (DayIncomeReport)o)
                 .filter(r -> r.deleted == null)
                 .collect(Collectors.toList());
+       
+        List<String> usedIds = new ArrayList();
         
         List<DayIncome> dayIncomes = all.stream()
                 .flatMap(o -> o.incomes.stream())
                 .filter(r -> {
-                    
+                    if (usedIds.contains(r.id)) {
+                        return false;
+                    }
                     if(r.dayEntries.isEmpty()) {
                         return false;
                     }
@@ -3047,6 +3051,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                     boolean endIsWithin = iEnd >= start && iEnd < end;
                     boolean everythingIsBetween = iStart >= start && iEnd < end;
                     
+                    usedIds.add(r.id);
                     return startIsWithin || endIsWithin || everythingIsBetween;
                 })
                 .collect(Collectors.toList());
@@ -3616,6 +3621,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     private boolean isInArray(DayIncome income, List<DayIncome> dayIncomes) {
         for (DayIncome i : dayIncomes) {
+            if (i.id != null && !i.id.isEmpty() && i.id.equals(income.id)) {
+                return true;
+            }
+            
             if (i.start.equals(income.start) && i.end.equals(i.end)) {
                 return true;
             }

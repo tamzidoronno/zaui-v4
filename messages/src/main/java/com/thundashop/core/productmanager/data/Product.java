@@ -79,6 +79,7 @@ public class Product extends DataCommon implements Comparable<Product>  {
     
     public int stockQuantity;
     public Map<String, Integer> wareHouseStockQuantities = new HashMap();
+    public Map<String, Integer> wareHouseStockQuantitiesOrdered = new HashMap();
     public double stockValue = 0;
     public String pageId;
     public boolean freeShipping = false;

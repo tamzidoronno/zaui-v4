@@ -41,6 +41,9 @@ public interface IWareHouseManager {
     public void adjustStockQuantity(String productId, int quantity, String warehouseId, String comment);
     
     @Administrator
+    public void adjustStockOrderedQuantity(String productId, int quantity, String warehouseId);
+    
+    @Administrator
     public List<StockQuantityRow> getStockQuantityRowsForProduct(String productId, int limit);
     
     @Administrator

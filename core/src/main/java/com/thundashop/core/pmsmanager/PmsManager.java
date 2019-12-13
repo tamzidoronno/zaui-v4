@@ -10763,6 +10763,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     logPrint("New prices set from updatePrices " + types.get(price.typeId).name + " : date : " + price.date + ", new price: "  + price.newPrice);
                 }
             }
+            setPrices(pricestoupdate.code, pricestoupdate);
             wubookManager.updatePricesBetweenDates(start, end);
             return true;
         }catch(Exception e) {

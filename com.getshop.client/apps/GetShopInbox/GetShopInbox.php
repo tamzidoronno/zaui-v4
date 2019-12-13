@@ -103,12 +103,17 @@ class GetShopInbox extends \MarketingApplication implements \Application {
                     $this->includefile("customerstats");
                 } else if($this->getCurrentTab() == "statistics") {
                     $this->includefile("statistics");
+                } else if($this->getCurrentTab() == "search") {
+                    $this->includefile("searchTickets");
                 } else {
                     $this->includefile("ticketlist");
                 }
                 
             echo "</div>";
         echo "</div>";
+    }
+    
+    public function searchTickets() {
     }
 
     public function isCompletedEmails() {
@@ -335,6 +340,11 @@ class GetShopInbox extends \MarketingApplication implements \Application {
         $title = $_POST['data']['title'];
         $ticketId = $this->getApi()->getTicketManager()->createSetupTicket($title);
     }
+
+    public function getTicketSearchResult() {
+        return $this->getApi()->getTicketManager()->searchTicket($_POST['data']['keyword']);
+    }
+
 }
 
 ?>

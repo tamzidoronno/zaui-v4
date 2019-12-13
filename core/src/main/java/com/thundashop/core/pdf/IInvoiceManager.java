@@ -7,7 +7,9 @@ package com.thundashop.core.pdf;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pdf.data.AccountingDetails;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -26,4 +28,8 @@ public interface IInvoiceManager {
     
     @Autowired
     public AccountingDetails getAccountingDetails() throws ErrorException;
+    
+    @Administrator
+    public List<Order> getAllInvoices();
+    
 }

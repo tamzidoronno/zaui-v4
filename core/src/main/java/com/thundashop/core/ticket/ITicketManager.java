@@ -120,6 +120,9 @@ public interface ITicketManager {
     public TicketStatisticsStore getStoreStatistics(TicketStatsFilter filter);
     
     @Administrator
+    public List<TicketSearchResult> searchTicket(String keyWord);
+    
+    @Administrator
     public void markTicketAsUnread(String ticketId);
     
     

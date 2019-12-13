@@ -48,8 +48,9 @@ function formatBytes($bytes, $precision = 2) {
 } 
 ?>
 
-<div class="heading">
-    <? echo $ticket->title; ?>
+<div class="heading" contenteditable="true">
+    <input type="button" class="saveticketheading" value="Save title" style="float:right;">
+    <span class="ticketheading" ticketid='<?php echo $ticket->id; ?>'><? echo $ticket->title; ?></span> 
 </div>
 
 <?

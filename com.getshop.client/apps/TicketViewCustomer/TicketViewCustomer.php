@@ -91,6 +91,13 @@ class TicketViewCustomer extends \MarketingApplication implements \Application {
         }
     }
     
+    public function saveTicketHeading() {
+        $ticket = $this->getApi()->getTicketManager()->getTicket($_POST['data']['tickedId']);
+        $ticket->title = $_POST['data']['title'];
+        $this->getApi()->getTicketManager()->saveTicket($ticket);
+        $_GET['ticketId'] = $_POST['data']['tickedId'];
+    }
+    
     public function updateTimeOnTicket() {
         $ticket = $this->getApi()->getTicketManager()->getTicket($_POST['data']['ticketId']);
         if($_POST['data']['timetype'] == "billing") {

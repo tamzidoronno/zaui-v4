@@ -196,6 +196,10 @@ public class Order extends DataCommon implements Comparable<Order> {
     @Transient
     public double restAmount;
     
+    //This is being used to optimze speed when showing complete list (specific invoice export).
+    @Transient
+    public Double totalAmount;
+    
     public boolean virtuallyDeleted = false;
     public boolean supportMultipleBookings = false;
     public String createdByPaymentLinkId = "";
@@ -1230,6 +1234,7 @@ public class Order extends DataCommon implements Comparable<Order> {
         
         return false;
     }
+    
 
     private Date convertPriceMatrixDate(String dateString) throws RuntimeException {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");

@@ -40,8 +40,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -383,6 +386,21 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
         }
         
         return application.appName;
+    }
+
+    @Override
+    public List<Order> getAllInvoices() {
+        LinkedList<Order> orders = new LinkedList();
+        for(Order ord : orderManager.getAllOrders()) {
+            if(ord.isInvoice()) {
+                ord.totalAmount = orderManager.getTotalAmount(ord);
+                orders.add(ord);
+            }
+        }
+        
+        Collections.sort(orders);
+        
+        return orders;
     }
 
 }

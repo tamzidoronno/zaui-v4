@@ -1,0 +1,66 @@
+<?php
+
+/* @var $this ns_f1706b4c_f779_4eb7_aec3_ee08f182e090\GetShopInbox */
+$result = $this->getTicketSearchResult();
+echo "<div style='max-width:1600px; margin:auto;'>";
+echo "<center>Found: " . sizeof($result) . " results</center>";
+echo "<table width='100%' id='ticketlist' cellspacing='0' cellpadding='0'>";
+echo "<tr>";
+echo "<th>Id</th>";
+echo "<th align='left'>Title</th>";
+echo "<th>Created</th>";
+echo "<th>Last replied</th>";
+echo "<th>By who</th>";
+echo "</tr>";
+
+$keyword = $_POST['data']['keyword'];
+foreach($result as $res) {
+    echo "<tr>";
+    echo "<td align='center' valign='top'>".$res->incId."</td>";
+    echo "<td><div><b><a href='/getshop.php?page=ticketview&ticketId=".$res->ticketId."' target='_new'>".$res->title."</a></b></div>";
+    foreach($res->resultStrings as $str) {
+        $text =  str_replace($keyword, "<b>". $keyword . "</b>", $str);
+        $text = strip_tags($text);
+        echo "<div class='oneliner'>" .$text. "</div>";
+    }
+    echo "</td>";
+    echo "<td align='center' valign='top'>".date("d.m.Y H:i", strtotime($res->createdDate))."</td>";
+    echo "<td align='center' valign='top'>".date("d.m.Y H:i", strtotime($res->lastRepliedDate))."</td>";
+    echo "<td align='center' valign='top'>".$res->byWho."</td>";
+    echo "</tr>";
+}
+echo "</table>";
+echo "</div>";
+
+?>
+
+<style>
+    .oneliner { display:block;  white-space: nowrap;  width:800px; padding-left: 30px;
+  overflow: hidden;
+  text-overflow: ellipsis;}
+    
+    <style>
+#ticketlist {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#ticketlist td, #customers th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#ticketlist tr:nth-child(even){background-color: #f2f2f2;}
+
+#ticketlist tr:hover {background-color: #ddd;}
+
+#ticketlist th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  background-color: #4CAF50;
+  color: white;
+}
+</style>
+    
+</style>

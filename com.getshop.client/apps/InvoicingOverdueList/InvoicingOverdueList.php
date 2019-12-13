@@ -73,5 +73,9 @@ class InvoicingOverdueList extends \MarketingApplication implements \Application
         }
     }
 
+    public function getAllInvoices() {
+        return $this->getApi()->getInvoiceManager()->getAllInvoices();
+    }
+
 }
 ?>

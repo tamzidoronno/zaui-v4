@@ -7,6 +7,8 @@ app.TicketViewCustomer = {
         $(document).on('click', '.TicketViewCustomer .editocontentinarea', app.TicketViewCustomer.editocontentinarea);
         $(document).on('keyup', '.TicketViewCustomer .updateTimeOnTicket', app.TicketViewCustomer.updateTimeOnTicket);
         $(document).on('click', '.TicketViewCustomer .updateTimeOnTicket', app.TicketViewCustomer.markAll);
+        $(document).on('click', '.TicketViewCustomer .saveticketheading', app.TicketViewCustomer.saveTicketHeading);
+        $(document).on('keydown', '.TicketViewCustomer .heading', app.TicketViewCustomer.ticketHeading);
         
         document.onpaste = function(event) {
             var items = (event.clipboardData || event.originalEvent.clipboardData).items;
@@ -20,6 +22,23 @@ app.TicketViewCustomer = {
 
         }
     },
+    
+    ticketHeading : function(event) {
+        if(event.keyCode === 13) {
+            app.TicketViewCustomer.saveTicketHeading();
+        }
+    },
+    
+    saveTicketHeading : function() {
+        var title = $('.ticketheading').text();
+        var ticketid = $('.ticketheading').attr('ticketid');
+        var event = thundashop.Ajax.createEvent('','saveTicketHeading',$('.TicketViewCustomer'), {
+            "title" : title,
+            "tickedId" : ticketid
+        });
+        thundashop.Ajax.post(event);
+    },
+    
     markAll : function() {
         $(this).select();
     },

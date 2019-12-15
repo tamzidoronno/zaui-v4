@@ -98,6 +98,8 @@ void Communication::check() {
 		}
 
 		int resultOfTimeCheck = checkIfTimeIsNewer(decrypted);
+
+		/*
 		if (resultOfTimeCheck == 1) {
 			this->writeEncrypted("Old package?", 12);
 			this->dataAvailable = false;
@@ -109,6 +111,7 @@ void Communication::check() {
 			this->dataAvailable = false;
 			return;
 		}
+		*/
 
 		_clock->adjustClock(lastReceivedTimestamp);
 
@@ -141,7 +144,7 @@ void Communication::getData(unsigned char* buffer) {
 void Communication::writeEncrypted(char *msgToSend, volatile unsigned int length) {
 	volatile unsigned int gatewayAddress = 1;
 
-	Serial.print("AT+SEND=0,");
+	Serial.print("AT+SEND=1,");
 	Serial.print(length);
 	Serial.print(",");
 

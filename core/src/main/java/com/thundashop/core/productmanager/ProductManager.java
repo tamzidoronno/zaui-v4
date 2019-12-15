@@ -508,6 +508,11 @@ public class ProductManager extends AProductManager implements IProductManager {
     @Override
     public void addAdditionalTaxGroup(String productId, String taxGroupId) {
         Product product = getProduct(productId);
+        
+        if (product == null) {
+            product = getDeletedProduct(productId);
+        }
+        
         if (product != null) {
             if (product.taxGroupObject != null && product.taxGroupObject.id.equals(taxGroupId)) {
                 return;

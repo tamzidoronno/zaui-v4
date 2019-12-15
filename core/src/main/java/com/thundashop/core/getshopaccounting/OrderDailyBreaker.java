@@ -495,7 +495,22 @@ public class OrderDailyBreaker {
             return "";
             
         Product product = productManager.getProduct(productId);
-        ProductAccountingInformation res = product.getAccountingInformation(inProduct.taxGroupObject.groupNumber);
+        
+        if (product == null) {
+            product = productManager.getDeletedProduct(productId);
+        }
+        
+        if (inProduct.taxGroupObject == null) {
+            throw new NullPointerException("Tax Group Object is null");
+        }
+        
+        ProductAccountingInformation res = null;
+        
+        if (product == null) {
+            throw new NullPointerException("Was not able to find the original product");
+        }
+        
+        res = product.getAccountingInformation(inProduct.taxGroupObject.groupNumber);   
         
         if (res == null) {
             if (!product.soldOnTaxGroups.contains(inProduct.taxGroupObject.groupNumber)) {

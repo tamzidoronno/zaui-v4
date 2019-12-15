@@ -94,6 +94,10 @@ class EcommerceProductView extends \MarketingApplication implements \Application
         }
         
         $this->product = $this->getApi()->getProductManager()->getProduct($_SESSION['ns_4404dc7d_e68a_4fd5_bd98_39813974a606_productid']);
+        
+        if (!$this->product) {
+            $this->product = $this->getApi()->getProductManager()->getDeletedProduct($_SESSION['ns_4404dc7d_e68a_4fd5_bd98_39813974a606_productid']);
+        }
     }
     
     public function subMenuChanged() {
@@ -289,6 +293,7 @@ class EcommerceProductView extends \MarketingApplication implements \Application
             }
         }
         
+        $this->product = null;
         $this->setProduct();
         $product = $this->getProduct();
         $product->departmentId = $_POST['data']['departmentid'];

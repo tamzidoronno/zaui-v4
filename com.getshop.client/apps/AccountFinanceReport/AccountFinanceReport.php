@@ -148,14 +148,14 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
         $end = $this->getEnd();
         $dayIncome = $this->getApi()->getOrderManager()->getDayIncomesWithMetaData($start, $end);
         
-        $excel[] = array("Date", "Order id", "Amount inc tax", "Amount ex tax");
+        $excel[] = array("Date", "Order id", "Amount inc tax", "Amount ex tax", "Name");
         foreach ($dayIncome as $income) {
             $day = date('d.m.Y', strtotime($income->start));
             foreach ($income->dayEntries as $entry) {
                 if ($entry->accountingNumber != $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_account_all_transactions']) {
                     continue;
                 }
-                $excel[] = array($day, $entry->incrementalOrderId, round($entry->amount,2), round($entry->amountExTax,2));
+                $excel[] = array($day, $entry->incrementalOrderId, round($entry->amount,2), round($entry->amountExTax,2), @$entry->metaData->{"Guest name"});
             }
         }
         

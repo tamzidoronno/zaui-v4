@@ -15,6 +15,9 @@ app.PmsSearchBox = {
         $(document).on('click','.PmsSearchBox .applyfilterbutton',app.PmsSearchBox.applyFilter);
         $(document).on('click','.PmsSearchBox .addonstofilter',app.PmsSearchBox.updateOtherFilterCounter);
         $(document).on('click','.PmsSearchBox .clearfilter',app.PmsSearchBox.clearFilter);
+        $(document).on('click','.PmsSearchBox .sendmessagesbox',app.PmsSearchBox.showSendMessages);
+        $(document).on('click','.PmsSearchBox .togglerow',app.PmsSearchBox.toggleRow);
+        $(document).on('click','.PmsSearchBox .sendmessagebtn',app.PmsSearchBox.sendMessage);
         if(getshop.pms.is_touch_device()) {
             $(document).on('click','.PmsSearchBox .displaydailydatepicker',app.PmsSearchBox.displayDailyRangePicker);
         } else {
@@ -23,6 +26,57 @@ app.PmsSearchBox = {
             $(document).on('click',app.PmsSearchBox.hideRangePicker);
         }
         $(document).on('click','.PmsSearchBox [daytype]',app.PmsSearchBox.changeSelection);
+    },
+    sendMessage : function() {
+        $(this).html('<i class="fa fa-spinner fa-spin"></i>');
+        var phoneNumbers = [];
+        $('.phonemessagerow').each(function() {
+            if($(this).hasClass('disabled')) {
+                return;
+            }
+            var phone = {};
+            phone.prefix = $(this).find('.prefix').val();
+            phone.phone = $(this).find('.phone').val();
+            phone.roomid = $(this).attr('roomid');
+            phoneNumbers.push(phone);
+        });
+        var emails = [];
+        $('.emailmessagerow').each(function() {
+            if($(this).hasClass('disabled')) {
+                return;
+            }
+            var email = {};
+            email.email = $(this).find('.email').val();
+            email.roomid = $(this).attr('roomid');
+            emails.push(email);
+        });
+        
+        data = {};
+        data.phonenumbers = phoneNumbers;
+        data.emails = emails;
+        data.type = $(this).attr('type');
+        data.message = $('#massmessagebox').val();
+        data.title = $('#masstitle').val();
+        
+        var event = thundashop.Ajax.createEvent('','sendMassMessages',$(this),data);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            thundashop.common.Alert('Done','Messages has been sent');
+            $('.sendmessageoverviewbox').hide();
+        });
+    },
+    toggleRow : function() {
+        if($(this).closest('.messagerow').hasClass('disabled')) {
+            $(this).closest('.messagerow').removeClass('disabled');
+        } else {
+            $(this).closest('.messagerow').addClass('disabled');
+        }
+    },
+    showSendMessages : function() {
+        var event = thundashop.Ajax.createEvent('','sendMessagesOverview',$(this), {});
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.sendmessageoverviewbox').html(res);
+            $('.sendmessageoverviewbox').show();
+        });
     },
     hideRangePicker : function() {
         $('.dailydaterangepicker').hide();

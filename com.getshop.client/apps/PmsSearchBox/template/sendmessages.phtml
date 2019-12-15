@@ -1,0 +1,44 @@
+<?php
+
+$pms = new \ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking();
+
+/* @var $this \ns_1ba01a11_1b79_4d80_8fdd_c7c2e286f94c\PmsSearchBox */
+$rows = $this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedMultilevelDomainName(), $pms->getSelectedFilter());
+
+echo "<input type='txt' class='gsniceinput1' id='masstitle' placeholder='title' style='width:100%; box-sizing:border-box; margin-bottom: 5px;'></input>";
+echo "<textarea style='width:100%; height: 100px;box-sizing:border-box;border:solid 1px #dcdcdc' id='massmessagebox'></textarea>";
+echo "<div style='text-align:right;'>";
+echo "<span class='shop_button sendmessagebtn'  type='sms' style='margin-right: 10px;'>Send as sms</span>";
+echo "<span class='shop_button sendmessagebtn'  type='email'style='margin-right: 10px;'>Send as email</span>";
+echo "<span class='shop_button sendmessagebtn' type='both'>Send as both</span>";
+echo "</div>";
+
+echo "<table>";
+echo "<tr>";
+echo "<td width='50%' valign='top'>";
+echo "<h1>Phone numbers</h1>";
+foreach($rows as $row) {
+    foreach($row->guest as $guest) {
+        echo "<div style='margin-bottom: 5px;' class='phonemessagerow messagerow' roomid='".$row->pmsRoomId."'>";
+        echo "<span class='shop_button togglerow' style='margin-right:10px;border-radius:5px; text-align:center;'><i class='fa fa-trash-o' style='width:5px;'></i></span>";
+        echo "<input class='gsniceinput1' value='".$guest->name."' disabled>";
+        echo "<input class='gsniceinput1 prefix' value='".$guest->prefix."' style='width:20px; margin-left: 30px;'>";
+        echo "<input class='gsniceinput1 phone' value='".$guest->phone ."' style='width: 100px;'>";
+        echo "</div>";
+    }
+}
+echo "</td><td valign='top'>";
+echo "<h1>Emails</h1>";
+foreach($rows as $row) {
+    foreach($row->guest as $guest) {
+        echo "<div style='margin-bottom: 5px;' class='emailmessagerow messagerow' roomid='".$row->pmsRoomId."'>";
+        echo "<span class='shop_button togglerow' style='margin-right:10px;border-radius:5px; text-align:center;'><i class='fa fa-trash-o' style='width:5px;'></i></span>";
+        echo "<input class='gsniceinput1 email' value='".$guest->email."' style='width:300px;'>";
+        echo "<span style='font-size: 16px; margin-left: 20px;'>" . date("d.m.Y H:i", $row->start/1000) . " - " . date("d.m.Y H:i", $row->end/1000) . "</span>";
+        echo "</div>";
+    }
+}
+echo "</td>";
+echo "</tr>";
+echo "</table>";
+?>

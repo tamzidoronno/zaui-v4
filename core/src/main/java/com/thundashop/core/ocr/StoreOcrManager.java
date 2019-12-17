@@ -50,6 +50,7 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
     OcrWarnings warnings =  new OcrWarnings();
     
     HashMap<String, OcrFileLines> lines = new HashMap();
+    private boolean beenCleaned;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -65,7 +66,6 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
                 lines.put(line.id, line);
             }
         }
-        
         
         moveLinesFromAccountDirectToManager();
         createScheduler("storeocrprocessor", "20 17,3,5 * * *", OcrProcessor.class);
@@ -96,7 +96,7 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
     @Override
     public void setAccountId(String id, String password) {
         if(!password.equals("fdsafdasfbvdsert")) {
-            //001188671
+            //001188671 
             return;
         }
         
@@ -124,6 +124,9 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
     }
 
     private void checkForPaymentsInternal(boolean doFailedTransfers) {
+        //This is temp and should be removed.
+        cleanDuplicateOrders();
+
         try {
             ocrManager.scanOcrFiles();
             List<OcrFileLines> lines = getAllTransactions();
@@ -173,6 +176,37 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
             saveLines(newlines);
 
             saveObject(account);
+        }catch(Exception e) {
+            messageManager.sendErrorNotification("Outer ocr scanning exception occured", e);
+            logPrintException(e);
+        }
+    }
+    
+    private void cleanDuplicateOrders() {
+        if(beenCleaned) {
+            return;
+        }
+        beenCleaned = true;
+        try {
+            ocrManager.scanOcrFiles();
+            List<OcrFileLines> lines = getAllTransactions();
+            for(OcrFileLines line : lines) {
+                AccountingDetails details = invoiceManager.getAccountingDetails();
+                
+                if(details.kidSize != line.getKid().trim().length()) {
+                    continue;
+                }
+                
+                Order toMatch = orderManager.getOrderByKid(line.getKid());
+                
+                if(toMatch != null && toMatch.hasTransaction(line.getOcrLineId())) {
+                    logPrint("Duplicate ocr registration done for order: " + toMatch.incrementOrderId);
+                    toMatch.removeDuplicateTransactions(line.getOcrLineId());
+                    line.setMatchOnOrderId(toMatch.incrementOrderId);
+                    line.setBeenTransferred();
+                    orderManager.saveOrder(toMatch);
+                }
+            }
         }catch(Exception e) {
             messageManager.sendErrorNotification("Outer ocr scanning exception occured", e);
             logPrintException(e);

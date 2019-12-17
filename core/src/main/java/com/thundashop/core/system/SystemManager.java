@@ -205,6 +205,7 @@ public class SystemManager extends ManagerBase implements ISystemManager {
         return result;
     }
     
+    @Override
     public String getCustomerIdForStoreId(String storeId) {
         GetShopSystem system = systems.values()
                 .stream()

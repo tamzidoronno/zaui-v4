@@ -121,6 +121,8 @@ public class CustomerTicketManager extends ManagerBase implements ICustomerTicke
         copy.id = null;
         copy.ticketToken = new BigInteger(130, random).toString(32);
         copy.belongsToStore = storeId;
+        copy.connectedToTicketId = originalTicket.id;
+        
         copy.userId = systemManager.getCustomerIdForStoreId(storeId);
         ticketManager.saveTicketDirect(copy);
         

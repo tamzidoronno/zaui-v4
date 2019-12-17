@@ -30,6 +30,9 @@ public interface ISystemManager {
     public void saveSystem(GetShopSystem system);
     
     @Administrator
+    public String getCustomerIdForStoreId(String storeId);
+    
+    @Administrator
     public List<GetShopSystem> getSystemsForCompany(String companyId);
     
     @Administrator

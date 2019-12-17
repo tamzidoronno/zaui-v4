@@ -103,6 +103,8 @@ class GetShopInbox extends \MarketingApplication implements \Application {
                     $this->includefile("customerstats");
                 } else if($this->getCurrentTab() == "statistics") {
                     $this->includefile("statistics");
+                } else if($this->getCurrentTab() == "inprogress") {
+                    $this->includefile("inprogress");
                 } else if($this->getCurrentTab() == "search") {
                     $this->includefile("searchTickets");
                 } else {
@@ -313,6 +315,13 @@ class GetShopInbox extends \MarketingApplication implements \Application {
         return $result;
     }
 
+    public function getSetupTickets() {
+        $filter = new \core_ticket_TicketFilter();
+        $filter->type = "SETUP";
+        return $this->getApi()->getTicketManager()->getAllTickets($filter);
+    }
+    
+    
     public function getCurrentTab() {
         if (!isset($_SESSION['ns_f1706b4c_f779_4eb7_aec3_ee08f182e090_current_view'])) {
             return "yourcases";
@@ -343,6 +352,10 @@ class GetShopInbox extends \MarketingApplication implements \Application {
 
     public function getTicketSearchResult() {
         return $this->getApi()->getTicketManager()->searchTicket($_POST['data']['keyword']);
+    }
+
+    public function getInProgressTickets() {
+        
     }
 
 }

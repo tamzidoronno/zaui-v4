@@ -64,6 +64,7 @@ public class Ticket extends DataCommon {
     public String replyToPhone;
     public String replyToPrefix;
     public String replyToEmail;
+    public String connectedToTicketId = "";
     
     public Date getAddonInvoiceDate() {
         if (!currentState.equals(TicketState.COMPLETED)) {

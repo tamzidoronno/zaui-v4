@@ -1,0 +1,82 @@
+<br><br><br><br>
+
+<div style='margin:auto'>
+    <center>
+<?php
+/* @var $this ns_f1706b4c_f779_4eb7_aec3_ee08f182e090\GetShopInbox */
+
+$ticks = $this->getSetupTickets();
+
+$predefinedTicktes = array();
+$stores = array();
+foreach($ticks as $tick) {
+    if(!isset($stores[$tick->belongsToStore])) {
+        $stores[$tick->belongsToStore] = array();
+    }
+    if($tick->currentState != "COMPLETED") {
+        $stores[$tick->belongsToStore][$tick->connectedToTicketId] = $tick;
+    }
+    
+    if($tick->currentState == "INITIAL") {
+        $predefinedTicktes[$tick->id] = $tick;
+    }
+}
+
+$users = array();
+foreach($stores as $storeId => $tickets) {
+    $userId = $this->getApi()->getSystemManager()->getCustomerIdForStoreId($storeId);
+    $user = $this->getApi()->getUserManager()->getUserById($userId);
+    $users[$storeId] = $user;
+}
+
+
+echo "<table cellspacing='0' cellpadding='0' >";
+echo "<tr>";
+echo "<th></th>";
+foreach($predefinedTicktes as $predefined) {
+    echo "<th class='rotate'><div><span>" . $predefined->title . "</span></div></th>";
+}
+echo "</tr>";
+
+foreach($stores as $storeId => $ticketArray) {
+    if(!$storeId) {
+        continue;
+    }
+    
+    $name = isset($users[$storeId]->fullName) ? $users[$storeId]->fullName : "N/A";
+    echo "<tR>";
+    echo "<td style='text-align:left;'>" . $name . "</td>";
+    foreach($predefinedTicktes as $predefined) {
+        if(isset($ticketArray[$predefined->id])) {
+            echo "<td style=' width: 39px;cursor:pointer;' onclick=\"window.open('/getshop.php?page=ticketview&ticketId=".$ticketArray[$predefined->id]->id."','_fdafsda');\"><i class='fa fa-close'></i></td>";
+        } else {
+            echo "<td style=' width: 39px;'><i class='fa fa-check' style='color:#DDD;'></i></td>";
+        }
+    }
+    echo "</tr>";
+}
+echo "</table>";
+?>
+    </center>
+</div>
+
+<style>
+    th.rotate {
+  /* Something you can count on */
+  height:140px;
+  white-space: nowrap;
+}
+td { border: solid 1px #ccc; text-align: center; }
+th.rotate > div {
+  transform: 
+    /* Magic Numbers */
+    translate(25px, 51px)
+    /* 45 is really 360 - 45 */
+    rotate(315deg);
+  width: 30px;
+}
+th.rotate > div > span {
+  border-bottom: 1px solid #ccc;
+  padding: 5px 10px;
+}
+</style>

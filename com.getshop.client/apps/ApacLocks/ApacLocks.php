@@ -206,5 +206,9 @@ class ApacLocks extends \MarketingApplication implements \Application {
     public function saveName() {
         $this->getApi()->getGetShopLockSystemManager()->renameLock($_POST['data']['serverid'], $_POST['data']['lockid'], $_POST['data']['name']);
     }
+    
+    public function deleteSlot() {
+        $this->getApi()->getGetShopLockSystemManager()->deleteSlot($_POST['data']['serverid'], $_POST['data']['lockid'], $_POST['data']['slotid']);
+    }
 }
 ?>

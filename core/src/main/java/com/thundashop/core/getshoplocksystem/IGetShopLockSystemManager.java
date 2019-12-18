@@ -195,4 +195,7 @@ public interface IGetShopLockSystemManager {
     
     @Administrator
     public void resyncDatabaseWithLoraGateway(String serverId);
+    
+    @Administrator
+    public void deleteSlot(String serverId, String lockId, int slotId);
 }

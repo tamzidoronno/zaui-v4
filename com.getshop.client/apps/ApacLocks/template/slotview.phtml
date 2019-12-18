@@ -58,6 +58,13 @@ if ($slot->belongsToGroupId) {
             }
             ?>    
             <div class="slotActions">
+                <?
+                if (\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isGetShopUser()) {
+                    ?>
+                        <div class="gs_shop_small_icon" serverid="<? echo $_POST['data']['serverid']; ?>" lockid="<? echo $_POST['data']['lockid']; ?>" slotid="<? echo $slot->slotId; ?>" gsclick="deleteSlot" title="Resend code to lock"><i class="fa fa-trash"></i></div>
+                    <?
+                }
+                ?>
                 <div class="gs_shop_small_icon" serverid="<? echo $_POST['data']['serverid']; ?>" lockid="<? echo $_POST['data']['lockid']; ?>" slotid="<? echo $slot->slotId; ?>" gsclick="markCodeForResend" title="Resend code to lock"><i class="fa fa-upload"></i></div>
                 <div class="gs_shop_small_icon" serverid="<? echo $_POST['data']['serverid']; ?>" lockid="<? echo $_POST['data']['lockid']; ?>" slotid="<? echo $slot->slotId; ?>" gsclick="markCodeAsSent" title="Mark code as transferred to lock"><i class="fa fa-check"></i></div>
                 

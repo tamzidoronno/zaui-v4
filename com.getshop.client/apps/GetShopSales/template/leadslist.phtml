@@ -61,6 +61,7 @@ $loggedonuser = $this->getApi()->getUserManager()->getLoggedOnUser();
     echo "<th>Lcks</th>";
     echo "<th>Entr.</th>";
     echo "<th>Value</th>";
+    echo "<th>Lsns</th>";
     echo "<th>Offers sent</th>";
     echo "<th>State</th>";
     echo "<th>Followup</th>";
@@ -71,6 +72,7 @@ $loggedonuser = $this->getApi()->getUserManager()->getLoggedOnUser();
     $totalEnt = 0;
     $totalLocks = 0;
     $totalRooms = 0;
+    $totallicense = 0;
     
     foreach($leads as $lead) {
         if($filter->mineonly) {
@@ -108,6 +110,7 @@ $loggedonuser = $this->getApi()->getUserManager()->getLoggedOnUser();
         echo "<td class='editcell'  contenteditable='true' align='center' gsname='locks'>".$lead->locks."</td>";
         echo "<td class='editcell'  contenteditable='true' align='center' gsname='entrances'>".$lead->entrances."</td>";
         echo "<td class='editcell'  contenteditable='true' align='center' gsname='value'>".$lead->value."</td>";
+        echo "<td class='editcell'  contenteditable='true' align='center' gsname='value'>".$lead->license."</td>";
         echo "<td class='editcell'  contenteditable='true' align='center' gsname='state'>".$offersent."</td>";
         echo "<td>";
         echo "<select class='gsniceselect1' gsname='state'>";
@@ -125,6 +128,7 @@ $loggedonuser = $this->getApi()->getUserManager()->getLoggedOnUser();
         echo "</tr>";
         
         $totalvalue += $lead->value;
+        $totallicense += $lead->license;
         $totalEnt += $lead->entrances;
         $totalLocks += $lead->locks;
         $totalRooms += $lead->rooms;
@@ -141,6 +145,7 @@ $loggedonuser = $this->getApi()->getUserManager()->getLoggedOnUser();
     echo "<td align='center'>$totalLocks</td>";
     echo "<td align='center'>$totalEnt</td>";
     echo "<td align='center'>$totalvalue</td>";
+    echo "<td align='center'>$totallicense</td>";
     echo "<td></td>";
     echo "<td></td>";
     echo "<td></td>";

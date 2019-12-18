@@ -1,9 +1,32 @@
 app.GetShopPriceModel = {
     init : function() {
         $(document).on('keyup','.GetShopPriceModel .inputvalue',app.GetShopPriceModel.calculate);
+        $(document).on('keyup','.GetShopPriceModel .searchlead',app.GetShopPriceModel.searchLead);
         $(document).on('click','.GetShopPriceModel .inputvalue',app.GetShopPriceModel.calculate);
+        $(document).on('click','.GetShopPriceModel .connecttolead',app.GetShopPriceModel.connectToLead);
     },
-    
+    connectToLead : function() {
+        var event = thundashop.Ajax.createEvent('','connectToLead', $(this), {
+            "leadid" : $(this).attr('leadid')
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.leadlist').html("");
+        });
+    },
+    searchLead : function() {
+        if(typeof(app.GetShopPriceModel.timeout) !== "undefined") {
+            clearTimeout(app.GetShopPriceModel.timeout);
+        }
+        var btn = $(this);
+        app.GetShopPriceModel.timeout = setTimeout(function() {
+            var event = thundashop.Ajax.createEvent('','searchLead',btn,{
+                "keyword" : btn.val()
+            });
+            thundashop.Ajax.postWithCallBack(event, function(res) {
+                $('.leadlist').html(res);
+            });
+        }, "500");
+    },
     calculate : function() {
         var data = {
             'rooms' : parseInt($('.rooms').val()),

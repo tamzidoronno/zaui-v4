@@ -134,7 +134,17 @@ $getshoptraining = $getshoptraining ? 'checked="true"' : "";
     }
     ?>
 </div>
-
+<?php
+if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
+    ?>
+    <center>
+        <h1>Connect offer to lead</h1>
+        <input class='gsniceinput1 searchlead' gstype='submitenter'>
+        <div class='leadlist'></div>
+    </center>
+    <?php
+}
+?>
 
 
 <style>

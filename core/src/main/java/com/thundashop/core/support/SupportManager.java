@@ -9,6 +9,7 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.SupportDatabase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.getshop.data.Lead;
 import com.thundashop.core.getshoplock.GetShopLogFetcherStarter;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.storemanager.StoreManager;
@@ -63,6 +64,7 @@ public class SupportManager extends ManagerBase implements ISupportManager {
     private List<SupportCase> allSupportCases = new ArrayList();
     private Date lastUpdatedAllStores;
     private ServerStatusList serverStatusList = null;
+    private HashMap<String, GetShopLead> leads = new HashMap();
     
     
     @Override
@@ -78,6 +80,10 @@ public class SupportManager extends ManagerBase implements ISupportManager {
             }
             if(dataCommon instanceof SupportStore) {
                 mySupportStores = (SupportStore)dataCommon;
+            }
+            if(dataCommon instanceof GetShopLead) {
+                GetShopLead lead = (GetShopLead)dataCommon;
+                leads.put(lead.id, lead);
             }
         }
     }
@@ -541,6 +547,53 @@ public class SupportManager extends ManagerBase implements ISupportManager {
         }
         
         return serverStatusList;
+    }
+
+    @Override
+    public void createLead(String name, String email, String prefix, String phone) {
+        GetShopLead lead = new GetShopLead();
+        lead.name = name;
+        lead.email = email;
+        lead.prefix = prefix;
+        lead.phone = phone;
+        lead.createdByUser = getSession().currentUser.id;
+        lead.state = LeadState.INTERESTED;
+        saveLead(lead);
+    }
+
+    @Override
+    public List<GetShopLead> getLeads(GetShopLeadsFilter filter) {
+        List<GetShopLead> result = new ArrayList();
+        if(filter == null) {
+            return new ArrayList(leads.values());
+        } else {
+            for(GetShopLead l : leads.values()) {
+                if(filter.name != null && !filter.name.isEmpty()) {
+                    if(l.name != null && l.name.toLowerCase().contains(filter.name)) {
+                        result.add(l);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public void saveLead(GetShopLead lead) {
+        saveObject(lead);
+        leads.put(lead.id, lead);
+    }
+
+    @Override
+    public void deleteLead(String id) {
+        GetShopLead lead = leads.get(id);
+        deleteObject(lead);
+        leads.remove(id);
+    }
+
+    @Override
+    public GetShopLead getLead(String leadId) {
+        return leads.get(leadId);
     }
 
     

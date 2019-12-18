@@ -1,0 +1,161 @@
+<?php
+ /* @var $this \ns_514d1d25_ea8b_4872_b010_e282c3d3db3e\GetShopSales */
+
+$states = array();
+$states[''] = "All";
+$states['INTERESTED'] = "Intersted";
+$states['NOTINTERESTED'] = "Not interested";
+$states['WON'] = "WON";
+
+
+$filter = $this->getFilter();
+$mineonly = $filter->mineonly ? "CHECKED" : "";
+$needFollowUp = $filter->needFollowUp ? "CHECKED" : "";
+
+$loggedonuser = $this->getApi()->getUserManager()->getLoggedOnUser();
+?>
+<br>
+
+<span class='shop_button savetablebutton' style='position:fixed; top:200px; right:0px;display:none;'>Save table</span>
+
+<div style='max-width:1600px; margin:auto;' gstype="form" method="createNewLead">
+    <h1>Create a lead</h1>
+    <div>
+        <input class="gsniceinput1" placeholder="Name" gsname="name">
+        <input class="gsniceinput1" placeholder="Email" gsname="email">
+        <input class="gsniceinput1" placeholder="Prefix" gsname="prefix">
+        <input class="gsniceinput1" placeholder="Phone" gsname="phone">
+        <span class="shop_button" gstype="submit">Create a new lead</span>
+    </div>
+</div>
+<div gstype='form' method='updateFilter' style='max-width:1600px; margin:auto;'>
+    <h1>Leads</h1>
+    <input type='checkbox' gsname='mineonly' <?php echo $mineonly; ?>> Show only my leads<br>
+    <input type='checkbox' gsname='needFollowUp' <?php echo $needFollowUp; ?>> Show only leads needing follow-up<br>
+    <select class='gsniceselect1' gsname='state'>
+       <?php
+       foreach($states as $state => $name) {
+           $selected = ($filter->state == $state) ? "SELECTED" : "";
+           echo "<option value='$state' $selected>$name</option>";
+       }
+       ?>
+    </select>
+    <span class='shop_button' gstype='submit'>Update filter</span>
+</div>
+
+<div class='leadslist' cellspacing='0' cellpadding='0'>
+    <?php
+    $leads = $this->getApi()->getSupportManager()->getLeads(null);
+    $users = $this->getApi()->getUserManager()->getAllUsers();
+    $users = $this->indexList($users);
+
+    echo "<table width='100%' cellspacing='0' cellpadding='0'>";
+    echo "<tr>";
+    echo "<th>When</th>";
+    echo "<th>Created by</th>";
+    echo "<th width='200'>Lead name</th>";
+    echo "<th>Email</th>";
+    echo "<th>Prefix</th>";
+    echo "<th>Phone</th>";
+    echo "<th>Rms</th>";
+    echo "<th>Lcks</th>";
+    echo "<th>Entr.</th>";
+    echo "<th>Value</th>";
+    echo "<th>Offers sent</th>";
+    echo "<th>State</th>";
+    echo "<th>Followup</th>";
+    echo "<th>Commment</th>";
+    echo "</tr>";
+
+    $totalvalue = 0;
+    $totalEnt = 0;
+    $totalLocks = 0;
+    $totalRooms = 0;
+    
+    foreach($leads as $lead) {
+        if($filter->mineonly) {
+            if($lead->createdByUser != $loggedonuser->id) {
+                continue;
+            }
+        }
+        if($filter->needFollowUp) {
+            if($lead->state != "INTERESTED") {
+                continue;
+            }
+            if($lead->followUpDate && time() < strtotime($lead->followUpDate)) {
+                continue;
+            }
+        }
+        
+        if($filter->state) {
+            if($filter->state != $lead->state) {
+                continue;
+            }
+        }
+        
+        /* @var $lead core_support_GetShopLead */
+        $followup = $lead->followUpDate ? date("d.m.Y", strtotime($lead->followUpDate)) : "";
+        $offersent = $lead->offerSent ? date("d.m.Y", strtotime($lead->offerSent)) : "";
+        $followup = "<input class='gsniceinput1 followupdate' value='$followup' style='width:80px;' gsname='followupdate'>";
+        echo "<tr class='leadrow' leadid='".$lead->id."'>";
+        echo "<td>".date("d.m.Y", strtotime($lead->rowCreatedDate))."</td>";
+        echo "<td class='editcell'>".@$users[$lead->createdByUser]->fullName."</td>";
+        echo "<td class='editcell'  contenteditable='true' gsname='name'>".$lead->name."</td>";
+        echo "<td class='editcell'  contenteditable='true' gsname='email'>".$lead->email."</td>";
+        echo "<td class='editcell'  contenteditable='true' align='center' gsname='prefix'>".$lead->prefix."</td>";
+        echo "<td class='editcell'  contenteditable='true' align='center' gsname='phone'>".$lead->phone."</td>";
+        echo "<td class='editcell'  contenteditable='true' align='center' gsname='rooms'>".$lead->rooms."</td>";
+        echo "<td class='editcell'  contenteditable='true' align='center' gsname='locks'>".$lead->locks."</td>";
+        echo "<td class='editcell'  contenteditable='true' align='center' gsname='entrances'>".$lead->entrances."</td>";
+        echo "<td class='editcell'  contenteditable='true' align='center' gsname='value'>".$lead->value."</td>";
+        echo "<td class='editcell'  contenteditable='true' align='center' gsname='state'>".$offersent."</td>";
+        echo "<td>";
+        echo "<select class='gsniceselect1' gsname='state'>";
+        foreach($states as $state => $name) {
+            if(!$state) {
+                continue;
+            }
+            $selected = $state == $lead->state ? "SELECTED" : "";
+            echo "<option value='$state' $selected>$name</option>";
+        }
+        echo "</select>";
+        echo "</td>";
+        echo "<td align='center'>".$followup."</td>";
+        echo "<td class='editcell'  contenteditable='true' width='30%' gsname='comment'>".$lead->comment."</td>";
+        echo "</tr>";
+        
+        $totalvalue += $lead->value;
+        $totalEnt += $lead->entrances;
+        $totalLocks += $lead->locks;
+        $totalRooms += $lead->rooms;
+    }
+    
+    echo "<tr>";
+    echo "<td></td>";
+    echo "<td></td>";
+    echo "<td></td>";
+    echo "<td></td>";
+    echo "<td></td>";
+    echo "<td></td>";
+    echo "<td align='center'>$totalRooms</td>";
+    echo "<td align='center'>$totalLocks</td>";
+    echo "<td align='center'>$totalEnt</td>";
+    echo "<td align='center'>$totalvalue</td>";
+    echo "<td></td>";
+    echo "<td></td>";
+    echo "<td></td>";
+    echo "<td></td>";
+    echo "</tr>";
+    
+    echo "</table>";
+    ?>
+</div>
+
+<script>
+    $('.followupdate').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true,
+        onSelect : function(dateText) {
+            $(this).closest('td').addClass('modified');
+            app.GetShopSales.markModified();
+        }
+    });
+</script>

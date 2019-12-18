@@ -825,6 +825,12 @@ class PageFactory {
         $row->addColumn('2a608d02-15d8-422b-9089-3082dc7e9123', "3bf0215f-9ff3-468a-ac1e-20019c8c0190");
         $this->pages['inventory'] = $page;
         
+        $page = new \ModulePage("sales", "getshop");
+        $row = $page->createRow();
+        $row->ignoreTopRow = true;
+        $row->addColumn('514d1d25-ea8b-4872-b010-e282c3d3db3e', "a271f180-1cf6-4a41-b87b-ee38d753d344");
+        $this->pages['sales'] = $page;
+        
         $page = new \ModulePage("ticketview", "getshop");
         $row = $page->createRow(true);
         $row->addColumn("f5e525cc-f11e-4611-93bb-1afacd9aade5", "c4eb8022-f405-11e8-8eb2-f2801f1b9fd1");

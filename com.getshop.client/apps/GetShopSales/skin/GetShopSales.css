@@ -1,0 +1,28 @@
+.leadslist { margin: auto; max-width: 1600px; margin-top: 50px; }
+.leadslist tr:hover { background-color:#efefef; }
+.leadslist tr:hover i { display:inline-block; } 
+.leadslist tr i { display:none; cursor:pointer; }
+
+.leadslist .modified { background-color:pink; }
+.leadslist {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.leadslist td, .leadslist th {
+  border: 1px solid #ddd;
+  padding: 2px;
+}
+
+.leadslist tr:nth-child(even){background-color: #f2f2f2;}
+
+.leadslist tr:hover {background-color: #ddd;}
+
+.leadslist th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}

@@ -26,6 +26,27 @@ class GetShopPriceModel extends \WebshopApplication implements \Application {
             $link .= "&" . $key . "=" . $var;
         }
     }
+    
+    public function searchLead() {
+        $filter = new \core_support_GetShopLeadsFilter();
+        $filter->name = $_POST['data']['keyword'];
+        $leads = $this->getApi()->getSupportManager()->getLeads($filter);
+        echo "<table style='width:600px;'>";
+        echo "<tr>";
+        echo "<th align='left'>Date</th>";
+        echo "<th align='left'>Name</th>";
+        echo "<th>Connect</th>";
+        echo "</tr>";
+        
+        foreach($leads as $lead) {
+            echo "<tr>";
+            echo "<td>" . date("d.m.Y", strtotime($lead->rowCreatedDate)) . "</td>";
+            echo "<td>" . $lead->name . "</td>";
+            echo "<td align='center'><span class='shop_button connecttolead' leadid='".$lead->id."'>Connect</span></td>";
+            echo "</tr>";
+        }
+        echo "</table>";
+    }
 
     public function sendOffer() {
         ob_start();
@@ -194,6 +215,20 @@ class GetShopPriceModel extends \WebshopApplication implements \Application {
         return $priceMatrix;
     }
 
+    public function connectToLead() {
+        $matrix = $this->genereatePriceMatrix();
+        $lead = $this->getApi()->getSupportManager()->getLead($_POST['data']['leadid']);
+        
+        $lead->rooms = $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['rooms'];
+        $lead->locks = $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['locks'];
+        $lead->entrances = $_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['entrancelocks'];
+        $lead->value = $matrix['totalSetupCost'];
+        $lead->license = $matrix['totalMonthly'];
+        $lead->currency = $this->getCurrency();
+        $lead->offerSent = $this->convertToJavaDate(time());
+        $this->getApi()->getSupportManager()->saveLead($lead);
+    }
+    
     public function getNames() {
         $names = array();
         $names['totalSetupCost'] = "Total startup cost";
@@ -217,20 +252,15 @@ class GetShopPriceModel extends \WebshopApplication implements \Application {
         return $names;
     }
     
+    
+    
     public function getPriceMatrix() {
         $appname = get_class($this);
         if (strpos($appname, "\\")) {
             $appname = substr($appname, 0, strpos($appname, "\\"));
         }
         
-        $currency = "usd";
-        if ($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['currency'] === "2") {
-            $currency = "nok";
-        }
-        
-        if ($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['currency'] === "3") {
-            $currency = "eur";
-        }
+        $currency = $this->getCurrency();
         
         $content = file_get_contents('../app/' . $appname ."/prices_".$currency.".json");
         
@@ -244,6 +274,18 @@ class GetShopPriceModel extends \WebshopApplication implements \Application {
         }
         
         return $priceObject;
+    }
+
+    public function getCurrency() {
+        $currency = "usd";
+        if ($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['currency'] === "2") {
+            $currency = "nok";
+        }
+        
+        if ($_SESSION['ns_94c0992f_85d5_4a63_a30c_685ee0f8b17e_calcdata']['currency'] === "3") {
+            $currency = "eur";
+        }
+        return $currency;
     }
 
 }

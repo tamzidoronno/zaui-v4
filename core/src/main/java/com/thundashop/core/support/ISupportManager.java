@@ -47,4 +47,19 @@ public interface ISupportManager {
     public void updateFeatureListEntry(String entryId, FeatureListEntryText text, String title, String language);
     @Administrator
     public ServerStatusList getServerStatusList();
+    
+    @Administrator
+    public void createLead(String name, String email, String prefix, String phone);
+    
+    @Administrator
+    public List<GetShopLead> getLeads(GetShopLeadsFilter filter);
+    
+    @Administrator
+    public void saveLead(GetShopLead lead);
+    
+    @Administrator
+    public GetShopLead getLead(String leadId);
+    
+    @Administrator
+    public void deleteLead(String id);
 }

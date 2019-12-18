@@ -213,5 +213,9 @@ public class UserSlot implements Serializable {
             code.addedDate = date;
         }
     }
+    
+    void resetSlot() {
+        code = null;
+    }
 
 }

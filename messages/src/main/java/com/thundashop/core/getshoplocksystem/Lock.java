@@ -289,4 +289,9 @@ public class Lock {
     void markSlotInUse(int slotId) {
         userSlots.get(slotId).inUse = true;
     }
+
+    void deleteSlot(int slotId) {
+        userSlots.get(slotId).reaseFromGroup();
+        userSlots.get(slotId).resetSlot();
+    }
 }

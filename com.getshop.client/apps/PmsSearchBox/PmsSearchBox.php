@@ -15,6 +15,10 @@ class PmsSearchBox extends \MarketingApplication implements \Application {
         $this->includefile("searchbox");
     }
     
+    public function sendMessagesOverview() {
+        $this->includefile("sendmessages");
+    }
+    
     public function resetAutoAssignedStatusForCheckinsToday() {
         $this->getApi()->getPmsManager()->resetCheckingAutoAssignedStatus($this->getSelectedMultilevelDomainName());
         $this->runProcessor();
@@ -34,6 +38,36 @@ class PmsSearchBox extends \MarketingApplication implements \Application {
     public function quickfilterselection() {
         $pms = new \ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking();
         $pms->quickfilterselection();
+    }
+    
+    public function sendMassMessages() {
+        $type = $_POST['data']['type'];
+        $msg = $_POST['data']['message'];
+        $title = $_POST['data']['title'];
+        if(!$msg) {
+            return;
+        }
+        if($type == "sms" || $type == "both") {
+            foreach($_POST['data']['phonenumbers'] as $phonenumbers) {
+                if(!$phonenumbers['prefix'] || !$phonenumbers['phone']) {
+                    continue;
+                }
+                $prefix = $phonenumbers['prefix'];
+                $phone = $phonenumbers['phone'];
+                $roomid = $phonenumbers['roomid'];
+                $this->getApi()->getPmsManager()->sendSmsOnRoom($this->getSelectedMultilevelDomainName(), $prefix, $phone, $msg, $roomid);
+            }
+        }
+        if($type == "email" || $type == "both") {
+            foreach($_POST['data']['emails'] as $emails) {
+                if(!$emails['email']) {
+                    continue;
+                }
+                $email = $emails['email'];
+                $roomid = $emails['roomid'];
+                $this->getApi()->getPmsManager()->sendMessageOnRoom($this->getSelectedMultilevelDomainName(), $email, $title, $msg, $roomid);
+            }
+        }
     }
     
     public function doAdvanceSearch() {

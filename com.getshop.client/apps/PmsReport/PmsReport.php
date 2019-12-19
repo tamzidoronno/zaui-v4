@@ -89,6 +89,8 @@ class PmsReport extends \MarketingApplication implements \Application {
             $this->includefile("geographical_report");
         } else if($selectedFilter->type == "accounting_report") {
             $this->includefile("accounting_report");
+        } else if($selectedFilter->type == "customer_report") {
+            $this->includefile("customer_report");
         } else if(strstr($selectedFilter->type, "coverage")) {
             $this->printCoverageReport();
         } else {
@@ -1056,5 +1058,114 @@ class PmsReport extends \MarketingApplication implements \Application {
         echo "<h1 style='text-align:center;'>" . $user->fullName  . " (" . date("d.m.Y", strtotime($filter->startDate)) . " - " . date("d.m.Y", strtotime($filter->endDate)) . ")</h1>";
     }
 
+    /**
+     * 
+     * @param \core_pmsmanager_PmsCustomerReport $report
+     * @return string
+     */
+    public function createCustmerReportMatrix($report, $html) {
+        $products = $this->getApi()->getProductManager()->getAllProducts();
+        
+        $productsInUse = array();
+        foreach($report->customers as $customer) {
+            foreach($customer->productValues as $prodId => $val) {
+                $productsInUse[$prodId] = "";
+            }
+        }
+        $productsInUse = array_keys($productsInUse);
+        
+        $header = array();
+        $header[] = "Customer";
+        $header[] = "Nights";
+        $header[] = "Totalt slept";
+        foreach($products as $prod) {
+            if(!in_array($prod->id,$productsInUse)) {
+                continue;
+            }
+            $header[] = $prod->name;
+            if(!$html) {
+                $header[] = "Count";
+            }
+        }
+        $header[] = "Total";
+        
+        $rows = array();
+        $rows[] = $header;
+        
+        $totalProducts = array();
+        $totalProductsCount = array();
+        $totalNights = 0;
+        $totalSlept = 0;
+        
+        foreach($report->customers as $customer) {
+            $totalNights += $customer->numberOfNights;
+            $totalSlept += $customer->totalSlept;
+            
+            $row = array();
+            $row[] = $customer->fullName;
+            $row[] = $customer->numberOfNights;
+            $row[] = round($customer->totalSlept,2);
+            foreach($products as $prod) {
+                if(!in_array($prod->id,$productsInUse)) {
+                    continue;
+                }
+                $amount = isset($customer->productValues->{$prod->id}) ? $customer->productValues->{$prod->id} : 0;
+                $count = isset($customer->productCount->{$prod->id}) ? $customer->productCount->{$prod->id} : 0;
+                
+                @$totalProducts[$prod->id] += $amount;
+                @$totalProductsCount[$prod->id] += $count;
+                
+                if($html) {
+                    if($amount) {
+                        $row[] = round($amount,2);
+                    } else {
+                        $row[] = "0";
+                    }
+                } else {
+                    if(!$amount) {
+                        $amount = 0.0;
+                    }
+                    $row[] = $amount;
+                    $row[] = $count;
+                }
+            }
+            $row[] = round($customer->total,2);
+            $rows[] = $row;
+        }
+        
+        $totalRow = array();
+        $totalRow[] = "Total";
+        $totalRow[] = $totalNights;
+        $totalRow[] = round($totalSlept,2);
+        $totalAll = 0;
+        foreach($products as $prod) {
+            if(!in_array($prod->id,$productsInUse)) {
+                continue;
+            }
+            $amount = $totalProducts[$prod->id];
+            $totalAll += $amount;
+            $totalRow[] = round($amount,2);
+            if(!$html) {
+                $totalRow[] = "";
+            }
+
+        }
+        $totalRow[] = round($totalAll,2);
+        $rows[] = $totalRow;
+        
+        
+        return $rows;
+    }
+    
+    public function downloadCustomerReportToExcel() {
+        $selectedFilter = $this->getSelectedFilter();
+        $filter = new \core_pmsmanager_PmsCustomerReportFilter();
+        $filter->start = $this->convertToJavaDate(strtotime($selectedFilter->start));
+        $filter->end = $this->convertToJavaDate(strtotime($selectedFilter->end));
+        $filter->includeTaxex = $selectedFilter->priceIncTaxes;
+        $report = $this->getApi()->getPmsCoverageAndIncomeReportManager()->getCustomerReport($this->getSelectedMultilevelDomainName(), $filter);
+        $matrix = $this->createCustmerReportMatrix($report, false);
+        echo json_encode($matrix);
+    }
 }
 ?>

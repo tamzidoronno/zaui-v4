@@ -1,0 +1,44 @@
+<?php
+/* @var $this ns_39fd9a07_94ea_4297_b6e8_01e052e3b8b9\PmsReport */
+
+$selectedFilter = $this->getSelectedFilter();
+
+$filter = new core_pmsmanager_PmsCustomerReportFilter();
+$filter->start = $this->convertToJavaDate(strtotime($selectedFilter->start));
+$filter->end = $this->convertToJavaDate(strtotime($selectedFilter->end));
+$filter->includeTaxex = $selectedFilter->priceIncTaxes;
+
+$report = $this->getApi()->getPmsCoverageAndIncomeReportManager()->getCustomerReport($this->getSelectedMultilevelDomainName(), $filter);
+
+$matrix = $this->createCustmerReportMatrix($report, true);
+
+echo "<div style='margin: auto;text-align:left; cursor:pointer; position:absolute; right: 0px; padding: 3px; border-bottom: solid 1px #bbb; padding-left: 20px; padding-right: 20px;   background-color: #efefef; border-left:solid 1px #bbb; border-bottom-left-radius: 3px;top:0px;'>";
+echo "<span gs_downloadExcelReport='downloadCustomerReportToExcel' gs_fileName='incomereport'>Download this report to excel</span>";
+echo "</div>";
+
+
+echo "<div class='newincomereportview'>";
+echo "<div class='innernewincomereport'>";
+echo "<div style='overflow:auto;'>";
+$first = true;
+foreach($matrix as $row) {
+    $columns = sizeof($row);
+    echo "<div class='incomereportrow'>";
+    $firstCol = "firstcol";
+    foreach($row as $cell) {
+        if($first) {
+            echo "<span class='$firstCol column first'>$cell</span>";
+        } else {
+            echo "<span class='$firstCol column'>$cell</span>";
+        }
+        $firstCol = "";
+    }
+    echo "</div>";
+    $first = false;
+}
+echo "</div>";
+echo "</div>";
+?>
+<script>
+    $('.innernewincomereport').css('width','<?php echo ($columns*150); ?>px');
+</script>

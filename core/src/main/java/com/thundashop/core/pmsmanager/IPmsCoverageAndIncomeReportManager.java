@@ -44,4 +44,8 @@ public interface IPmsCoverageAndIncomeReportManager {
     
     @Administrator
     public PmsSegment getSegmentForRoom(String roomId);
+    
+    @Administrator
+    public PmsCustomerReport getCustomerReport(PmsCustomerReportFilter filter);
+    
 }

@@ -43,4 +43,5 @@
     padding-left: 3px; padding-right: 3px; box-sizing: border-box;
 }
 .PmsReport .newincomereportview .column.first { text-align: center;display:inline-block; word-wrap: break-word; height: 40px; font-weight: bold; text-transform: uppercase; }
+.PmsReport .newincomereportview .column.firstcol { text-align: left; }
 .PmsReport .top30list { display:none; }

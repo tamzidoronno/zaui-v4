@@ -17,9 +17,11 @@ import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -440,6 +442,136 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
         booking.segmentId = segmentId;
         pmsManager.saveBooking(booking);
         return bookingsTested;
+    }
+
+    @Override
+    public PmsCustomerReport getCustomerReport(PmsCustomerReportFilter filter) {
+        PmsCustomerReport result = new PmsCustomerReport();
+        
+        DayIncomeFilter dayIncomeFilter = new DayIncomeFilter();
+        dayIncomeFilter.start = filter.start;
+        dayIncomeFilter.end = filter.end;
+        dayIncomeFilter.excludedOldOrders = false;
+        dayIncomeFilter.ignoreHourOfDay = true;
+        
+        HashMap<String,Order> orders = getAllOrders();
+        HashMap<String,CartItem> cartItems = mapCartItems(orders);
+        
+        
+        gsTiming("Before get day income");
+        List<DayIncome> toinclude = orderManager.getDayIncomesIgnoreConfig(dayIncomeFilter);
+        
+        HashMap<String, User> users = userManager.getAllUsersMap();
+        HashMap<String, Integer> numberOfNigthsPerUser = new HashMap();
+        HashMap<String, BigDecimal> totalValuePerUser = new HashMap();
+        HashMap<String, BigDecimal> totalValueSlept = new HashMap();
+        
+        //HashMap<Userid, HashMap<ProductId, Amount>>
+        HashMap<String, HashMap<String, BigDecimal>> totalValuePerUserPerProduct = new HashMap();
+        //HashMap<Userid, HashMap<ProductId, Count>>
+        HashMap<String, HashMap<String, Integer>> totalCountPerUserPerProduct = new HashMap();
+        
+        for(DayIncome income : toinclude) {
+            for(DayEntry entry : income.dayEntries) {
+                if(!entry.isActualIncome || entry.isOffsetRecord) {
+                    continue;
+                }
+                CartItem item = cartItems.get(entry.cartItemId);
+                Order ord = orders.get(entry.orderId);
+                
+                String userId = ord.userId;
+                
+                BigDecimal amount = entry.amount;
+                if(!filter.includeTaxex) {
+                    amount = entry.amountExTax;
+                }
+                Integer count = entry.count;
+                amount = amount.multiply(new BigDecimal(-1));
+                
+                BigDecimal totalValue = totalValuePerUser.get(userId);
+                BigDecimal valueSlept = totalValueSlept.get(userId);
+                Integer nights = numberOfNigthsPerUser.get(userId);
+                
+                if(nights == null) { nights = 0; }
+                if(totalValue == null) { totalValue = new BigDecimal(0); }
+                if(valueSlept == null) { valueSlept = new BigDecimal(0); }
+                
+                if(item.priceMatrix != null && !item.priceMatrix.isEmpty()) {
+                   nights++; 
+                   count = 1;
+                   numberOfNigthsPerUser.put(userId, nights);
+                   valueSlept = valueSlept.add(amount);
+                }
+                
+                totalValue = totalValue.add(amount);
+                totalValuePerUser.put(userId, totalValue);
+                totalValueSlept.put(userId, valueSlept);
+
+                updateProductMapValue(totalValuePerUserPerProduct, userId, entry, amount);
+                updateProductCountValue(totalCountPerUserPerProduct, userId, entry, count);
+            }
+        }
+        
+        for(String userId : numberOfNigthsPerUser.keySet()) {
+            User usr = users.get(userId);
+            
+            PmsCustomerReportEntry customerEntry = new PmsCustomerReportEntry();
+            customerEntry.userId = userId;
+            customerEntry.total = totalValuePerUser.get(userId).doubleValue();
+            customerEntry.totalSlept = totalValueSlept.get(userId).doubleValue();
+            customerEntry.numberOfNights = numberOfNigthsPerUser.get(userId);
+            customerEntry.productValues = totalValuePerUserPerProduct.get(userId);
+            customerEntry.productCount = totalCountPerUserPerProduct.get(userId);
+            if(usr != null) {
+                customerEntry.fullName = usr.fullName;
+            }
+            result.customers.add(customerEntry);
+        }
+        
+        result.sortCustomers();
+        return result;
+    }
+
+    private void updateProductMapValue(HashMap<String, HashMap<String, BigDecimal>> totalValuePerUserPerProduct, String userId, DayEntry entry, BigDecimal amount) {
+        HashMap<String, BigDecimal> userProductValueMap = totalValuePerUserPerProduct.get(userId);
+        if(userProductValueMap == null) { userProductValueMap = new HashMap(); }
+        BigDecimal totalProductValue = userProductValueMap.get(entry.productId);
+        if(totalProductValue == null) { totalProductValue = new BigDecimal(0); }
+        totalProductValue = totalProductValue.add(amount);
+        userProductValueMap.put(entry.productId, totalProductValue);
+        totalValuePerUserPerProduct.put(userId, userProductValueMap);
+    }
+    
+
+    private void updateProductCountValue(HashMap<String, HashMap<String, Integer>> totalProductCountPerUser, String userId, DayEntry entry, Integer count) {
+        HashMap<String, Integer> userProductValueMap = totalProductCountPerUser.get(userId);
+        if(userProductValueMap == null) { userProductValueMap = new HashMap(); }
+        Integer totalProductValue = userProductValueMap.get(entry.productId);
+        if(totalProductValue == null) { totalProductValue = 0; }
+        totalProductValue += count;
+        userProductValueMap.put(entry.productId, totalProductValue);
+        totalProductCountPerUser.put(userId, userProductValueMap);
+        
+    }
+    
+    
+    private HashMap<String, Order> getAllOrders() {
+        HashMap<String, Order> result = new HashMap();
+        List<Order> allOrders = orderManager.getAllOrders();
+        for(Order ord : allOrders) {
+            result.put(ord.id, ord);
+        }
+        return result;
+    }
+
+    private HashMap<String, CartItem> mapCartItems(HashMap<String, Order> orders) {
+        HashMap<String, CartItem> result = new HashMap();
+        for(Order ord : orders.values()) {
+            for(CartItem item : ord.getCartItems()) {
+                result.put(item.getCartItemId(), item);
+            }
+        }
+        return result;
     }
 
 

@@ -32,6 +32,7 @@ $chnls = $pmssearchbox->getChannels();
                 <b>Income report:</b> All money earned until now.<br>
                 <b>Stay / Geographical report:</b> A report displaying where in the world the guests are from<br>
                 <b>Cleaning report:</b> Reports from the cleaning staff<br>
+                <b>Customer report:</b> A report display all customers and how often they have staid in your hotel, figures are taken from the income report.<br>
             </div>
         </div>
     </div><br><br>
@@ -40,6 +41,7 @@ $chnls = $pmssearchbox->getChannels();
     <div style='height: 38px; border-bottom: solid 1px #bbb;'>
         <span type='coverage' class='pmsbutton tab <?php if($filter->type == "coverage") {echo "selected";}?>'><i class='fa fa-line-chart'></i> Coverage</span>
         <span type='incomereport' class='pmsbutton tab <?php if($filter->type == "incomereport") {echo "selected";}?>'><i class='fa fa-money'></i> Income report</span>
+        <span type='customer_report' class='pmsbutton tab <?php if($filter->type == "customer_report") {echo "selected";}?>'><i class='fa fa-suitcase'></i> Customer report</span>
         <span type='geographical_report' class='pmsbutton tab <?php if($filter->type == "geographical_report") {echo "selected";}?>'><i class='fa fa-language'></i> Stay / Geographical report</span>
         <span type='cleaning_report' class='pmsbutton tab <?php if($filter->type == "cleaning_report") {echo "selected";}?>'><i class='fa fa-paint-brush'></i> Cleaning report</span>
     </div>

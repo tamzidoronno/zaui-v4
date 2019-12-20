@@ -14,6 +14,7 @@ echo "What server do you want to sync from?"
 echo "3 = Server 3 ( First server ever created )";
 echo "4 = Server 4 ( Created: 8 june 2017 )";
 echo "5 = Server 5 ( Created: 19 aug 2018 )";
+echo "6 = Server 6 ( Created: 19 aug 2019 )";
 read serverQuestion;
 
 IFS=';'
@@ -25,6 +26,8 @@ elif [ $serverQuestion = "4" ]; then
         SERVER="10.0.4.1"
 elif [ $serverQuestion = "5" ]; then
         SERVER="10.0.5.1"
+elif [ $serverQuestion = "6" ]; then
+        SERVER="10.0.6.1"
 else
         echo "Invalid server setup";
 fi;

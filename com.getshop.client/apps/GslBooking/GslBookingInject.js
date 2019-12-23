@@ -1529,6 +1529,10 @@ function getshop_removeGuest(e) {
     try {
         if(getshop_avoiddoubletap(e)) { return; }
         var translation = getshop_getBookingTranslations();
+        
+        if($(this).closest('.guestRows').find('.guestentry').length === 1) {
+            return;
+        }
 
         var removeGuest = confirm(translation['sureremoveguest']);
         if (removeGuest === true) {

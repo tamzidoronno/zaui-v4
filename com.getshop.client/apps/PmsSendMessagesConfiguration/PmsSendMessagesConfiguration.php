@@ -22,6 +22,13 @@ class PmsSendMessagesConfiguration extends \WebshopApplication implements \Appli
         return "PmsSendMessagesConfiguration";
     }
     
+    public function createMessagePreview() {
+        $message = $_POST['data']['text'];
+        $key = $_POST['data']['key'];
+        $text = $this->getApi()->getPmsNotificationManager()->createPreview($this->getSelectedMultilevelDomainName(), $key, $message);
+        echo nl2br($text);
+    }
+    
     public function savepaymentlinksetup() {
         $paymentProductConfig = $this->getApi()->getPmsInvoiceManager()->getPaymentLinkConfig($this->getSelectedMultilevelDomainName());
         $paymentProductConfig->webAdress = $_POST['data']['webadress'];

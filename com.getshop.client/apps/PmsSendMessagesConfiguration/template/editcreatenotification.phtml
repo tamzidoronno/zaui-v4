@@ -74,7 +74,6 @@ $deliverytypes['admin'] = "Admin";
         {orderid}, 
         {postCode},
         {contact_prefix},
-        {personalMessage},
         {roomlist},
         {bookingid},
         {bookinginformation},
@@ -95,7 +94,7 @@ $deliverytypes['admin'] = "Admin";
             {roomType}, 
             {roomName}
         </span>
-        .<br>
+        <br>
     </div>
     
     <div class='headingtext'>Content</div>
@@ -103,6 +102,8 @@ $deliverytypes['admin'] = "Admin";
     <div style='text-align: right; padding-top: 5px;'>
         <span class='shop_button updatemessage' msgid='<?php echo $msg->id; ?>'>Update message</span>
     </div>
+    <span style='float:left; color:#bbb; font-size: 18px;'>Template preview</span><br>
+    <div class="previewarea">Preview area, type some text above and a formatted message will be previewed below.</div>
     
     <div class='languageselectionoptions'>
         <div class='headingtext'>Filter for language</div>

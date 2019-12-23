@@ -87,11 +87,19 @@ app.PmsSendMessagesConfiguration = {
         var data = {
             "id" : $(this).attr('msgid'),
             "title" : $('input[name="msgtitle"]').val(),
+            "dayoftimetimer" : $('input[name="dayoftimetimer"]').val(),
             "content" : $('textarea[name="msgcontent"]').val(),
             "type" : $("input[name='deliverytype']:checked").val(),
             "key" : $("select[name='typeofmessage']").val(),
             "ismanual" : $("input[name='ismanual']").is(':checked'),
         };
+        
+        if(data.key.startsWith('room_timed_') && !data.dayoftimetimer) {
+            alert('Please make sure the time of day field is set.');
+            $('input[name="dayoftimetimer"]').css('border','solid 1px red');
+            return;
+        }
+        
         var languages = [];
         $('.languageselectionbox').each(function() {
             if($(this).is(':checked')) {
@@ -123,10 +131,14 @@ app.PmsSendMessagesConfiguration = {
     },
     updateRoomSpecificCodes : function() {
         var typeofmsg = $('select[name="typeofmessage"]').val();
+        $('.timerbox').hide();
         if(typeofmsg.startsWith('room')) {
             $('.roomspecificvariables').show();
         } else {
             $('.roomspecificvariables').hide();
+        }
+        if(typeofmsg.startsWith("room_timed_")) {
+            $('.timerbox').show();
         }
     },
     updatPrefixSelection : function() {

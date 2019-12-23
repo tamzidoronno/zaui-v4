@@ -57,6 +57,9 @@ public class PmsManagerProcessor {
         checkTimer("sendRecieptsOnCompletedPayments");
         try { autoMarkOrdersAsPaid(); }catch(Exception e) { manager.logPrintException(e); }
         checkTimer("autoMarkOrdersAsPaid");
+        try { processTimedMessage(false); }catch(Exception e) { manager.logPrintException(e); }
+        try { processTimedMessage(true); }catch(Exception e) { manager.logPrintException(e); }
+        checkTimer("processed timed messages");
     }
     
     public void hourlyProcessor() {
@@ -1406,6 +1409,54 @@ public class PmsManagerProcessor {
                     User usr = manager.userManager.getUserById(booking.userId);
                     if(usr.preferredPaymentType != null && usr.preferredPaymentType.equals("70ace3f0-3981-11e3-aa6e-0800200c9a66") || booking.isInvoice()) {
                         manager.pmsInvoiceManager.autoCreateOrderForBookingAndRoom(booking.id, "70ace3f0-3981-11e3-aa6e-0800200c9a66");
+                    }
+                }
+            }
+        }
+    }
+
+    private void processTimedMessage(boolean checkout) {
+        List<PmsNotificationMessage> msgs = manager.getNotificationMessages();
+        Calendar cal = Calendar.getInstance();
+        List<PmsBooking> bookings = getAllConfirmedNotDeleted(true);
+        for(PmsNotificationMessage msg : msgs) {
+            boolean isMatch = msg.key.startsWith("room_timed_message"); 
+            if(checkout) {
+                isMatch = msg.key.startsWith("room_timed_checkout_message"); 
+            }
+            if(isMatch) {
+                String[] timer = msg.timeofday.split(":");
+                cal.set(Calendar.HOUR_OF_DAY, new Integer(timer[0]));
+                cal.set(Calendar.MINUTE, new Integer(timer[1]));
+                Date timeInTimezone = manager.getStore().convertToTimeZone(cal.getTime());
+                if(new Date().after(timeInTimezone)) {
+                    if(manager.hasProcessedTimedMessage(msg.key, timeInTimezone)) {
+                        continue;
+                    }
+                    String keyToCheck = msg.key + "_" + msg.timeofday + "_" + msg.type;
+                    for(PmsBooking booking : bookings) {
+                        boolean save = false;
+                        for(PmsBookingRooms room : booking.rooms) {
+                            if(room.notificationsSent.contains(keyToCheck)) {
+                                continue;
+                            }
+                            if(checkout) {
+                                if(!room.checkingOutAtDay(new Date())) {
+                                    continue;
+                                }
+                            } else {
+                                if(!room.checkingInAtDay(new Date())) {
+                                    continue;
+                                }
+                            }
+                            booking = manager.finalize(booking);
+                            save = true;
+                            manager.doNotificationFromProcessor(msg.key, booking, room);
+                            room.notificationsSent.add(keyToCheck);               
+                        }
+                        if(save) {
+                            manager.saveBooking(booking);
+                        }
                     }
                 }
             }

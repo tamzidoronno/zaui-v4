@@ -21,6 +21,7 @@ public class PmsNotificationMessage extends DataCommon {
     public List<String> prefixes = new ArrayList();
     public List<String> roomTypes = new ArrayList();
     public String key;
+    public String timeofday = "";
     public boolean isDefault = false;
     public boolean isManual = false;
 

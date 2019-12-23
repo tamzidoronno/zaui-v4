@@ -95,7 +95,7 @@
 .PmsNewBooking20 .eventaddedtoguest { color:green; }
 .PmsNewBooking20 .addguesttoconferencepanel { position:absolute; right:0px; border: solid 1px; display:none; background-color:#fff; width: 600px; z-index:3; }
 .PmsNewBooking20 .guestsuggestionrow { position:relative; }
-.PmsNewBooking20 .prefixinput { width: 30; margin-right: 4px; text-align: center; }
+.PmsNewBooking20 .prefixinput { width: 30px; margin-right: 4px; text-align: center; }
 .PmsNewBooking20 .phoneinput { width: 120px; margin-right: 10px; }
 .PmsNewBooking20 .roomfooterarea { font-size: 14px; background-color:#fafcfd; color:#000; padding: 5px; }
 .PmsNewBooking20 .addtoexistingbox { margin: auto; width: 500px; }

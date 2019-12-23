@@ -54,6 +54,19 @@ $deliverytypes['admin'] = "Admin";
             }
             ?>
         </select>
+        
+        <?php
+        $timeofday = "12:00";
+        if($msg->timeofday) {
+            $timeofday = $msg->timeofday;
+        }
+        ?>
+        
+    <div class='timerbox' style='display:none; margin-top: 20px;'>
+        <span style='color:#bbb;font-size:10px;'>Specify time of day to send the code</span><br>
+        <input type='txt' class='gsniceinput1' style='width:50px' value='<?php echo $timeofday; ?>' name='dayoftimetimer'>
+    </div>
+        
     </div>
     <br>
     <div class='messagetitle'>
@@ -96,7 +109,7 @@ $deliverytypes['admin'] = "Admin";
         </span>
         <br>
     </div>
-    
+
     <div class='headingtext'>Content</div>
     <textarea class='availablemessages' name='msgcontent'><?php echo $msg->content; ?></textarea>
     <div style='text-align: right; padding-top: 5px;'>

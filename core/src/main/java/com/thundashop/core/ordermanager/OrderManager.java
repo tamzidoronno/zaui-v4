@@ -4299,6 +4299,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         saveOrder(orderToPay);
         
         GdsPaymentAction paymentAction = new GdsPaymentAction();
+        paymentAction.orderId = orderId;
         paymentAction.amount = (int)(amount * 100);
         paymentAction.action = GdsPaymentAction.Actions.STARTPAYMENT;
         GetShopDevice device = gdsManager.getDeviceByToken(tokenId);
@@ -4345,6 +4346,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         Gson gson = new Gson();
         
+        Order toPay = orderToPay;
+        
+        if(response.getOrderId() != null && !response.getOrderId().isEmpty()) {
+            toPay = getOrderDirect(response.getOrderId());
+        }
+        
         if(response.paymentSuccess()) {
             terminalMessages.add("completed");
             markOrderInProgressAsPaid();
@@ -4352,8 +4359,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             terminalMessages.add("payment failed");
         }
         
-        orderToPay.terminalResponses.put(new Date().getTime(), response);
-        saveOrder(orderToPay);
+        toPay.terminalResponses.put(new Date().getTime(), response);
+        saveOrder(toPay);
         orderToPay = null;
     }
 

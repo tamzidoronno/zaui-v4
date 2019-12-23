@@ -26,12 +26,11 @@ public class ProcessPaymentMessage extends GetShopIOTCommon implements MessagePr
         logPrint("Processing payment message");
         try {
             if(msg instanceof GdsPaymentAction) {
-                if(getOperator().nets == null) {
+                if(getOperator().getPaymentOperator() == null) {
                     logPrint("Initializing payment terminal");
-                    getOperator().nets = new GetShopNetsApp(getOperator());
-                    getOperator().nets.initialize();
+                    getOperator().getPaymentOperator().initialize();
                     while(true) {
-                        if(getOperator().nets.isInitialized()) {
+                        if(getOperator().getPaymentOperator().isInitialized()) {
                             break;
                         }
                         logPrint("Waiting for terminal to get ready");
@@ -42,11 +41,11 @@ public class ProcessPaymentMessage extends GetShopIOTCommon implements MessagePr
                 switch(paymentAction.action) {
                     case 1:
                         logPrint("Starting payment");
-                        getOperator().nets.startTransaction(paymentAction.amount);
+                        getOperator().getPaymentOperator().startTransaction(paymentAction.amount, paymentAction.orderId);
                     break;
                     case 2:
                         logPrint("Cancelling payment");
-                        getOperator().nets.cancelTransaction();
+                        getOperator().getPaymentOperator().cancelTransaction();
                         break;
                     default:
                         logPrint("action: " + paymentAction.action + " not implemented yet");

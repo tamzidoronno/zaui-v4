@@ -9,6 +9,7 @@ import com.thundashop.core.gsd.GdsAccessDenied;
 import com.thundashop.core.gsd.GdsPaymentAction;
 import com.thundashop.core.gsd.GetShopDeviceMessage;
 import getshop.nets.GetShopNetsApp;
+import getshop.verifone.VerifoneApp;
 import getshopiotserver.processors.ProcessAccessDenied;
 import getshopiotserver.processors.ProcessPaymentMessage;
 import java.io.BufferedReader;
@@ -35,7 +36,7 @@ public class GetShopIOTOperator extends GetShopIOTCommon {
 
     private List<String> configsSent = new ArrayList();
             
-    public GetShopNetsApp nets = null;
+    private PaymentOperator paymentOperator = null;
     
     private boolean isProductionMode = true;
     private String debugConnectionAddr ="http://www.3.0.local.getshop.com/";
@@ -47,6 +48,20 @@ public class GetShopIOTOperator extends GetShopIOTCommon {
         while(true) {
             doLongPull();
         }
+    }
+    
+    public PaymentOperator getPaymentOperator() {
+        if(paymentOperator == null) {
+            if(isVerifone()) {
+                paymentOperator = new VerifoneApp(this);
+                paymentOperator.initialize();
+            } else {
+                paymentOperator = new GetShopNetsApp(this);
+                paymentOperator.initialize();
+            }
+        }
+
+        return paymentOperator;
     }
     
     private void doLongPull() {
@@ -256,6 +271,17 @@ public class GetShopIOTOperator extends GetShopIOTCommon {
         } catch (IOException ex) {
             logPrintException(ex);
         }
+    }
+
+    public void setPaymentOpertor(GetShopNetsApp operator) {
+        this.paymentOperator = operator;
+    }
+
+    private boolean isVerifone() {
+        if(getSetupMessage().paymentterminal != null && getSetupMessage().paymentterminal.equalsIgnoreCase("verifone")) {
+            return true;
+        }
+        return false;
     }
 
 }

@@ -15,4 +15,5 @@ public class SetupMessage {
     public String printerType = ""; //customk80
     public String paymentterminal = ""; //verifone,ingenico
     public String type = ""; //kiosk-herman,pos
+    public String paymentterminalip = ""; //Ip adress to paymentterminal
 }

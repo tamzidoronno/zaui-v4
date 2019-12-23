@@ -15,6 +15,7 @@ public class TerminalResponse {
      * Unique operation id to have an asynchronous link between requests and responses
      */
     private String uuid = "";
+    private String orderId = "";
 
     /**
      * This parameter contains the complete local mode reply from the terminal in raw format.
@@ -170,6 +171,14 @@ public class TerminalResponse {
         return this;
     }
 
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
+    }
+    
+    public String getOrderId() {
+        return this.orderId;
+    }
+    
     public String getResultData() {
         return resultData;
     }

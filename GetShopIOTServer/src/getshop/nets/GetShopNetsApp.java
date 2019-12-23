@@ -5,6 +5,7 @@ import eu.nets.baxi.client.LocalModeEventArgs;
 import java.util.Scanner;
 import com.thundashop.core.gsd.TerminalResponse;
 import getshopiotserver.GetShopIOTOperator;
+import getshopiotserver.PaymentOperator;
 
 /**
  * Created by mcamp on 14.03.2017.
@@ -12,7 +13,7 @@ import getshopiotserver.GetShopIOTOperator;
  * This is the main JavaFX application class for the Sample Application. It loads the UI of the demo app, initializes
  * the BAXI Java library and shows the main API calls.
  */
-public class GetShopNetsApp {
+public class GetShopNetsApp implements PaymentOperator {
     private GetShopNetsController controller;
     private final GetShopIOTOperator operator;
 
@@ -24,12 +25,13 @@ public class GetShopNetsApp {
     
     
     public static void main(String[] args) throws Exception {
-//        GetShopNetsApp app = new GetShopNetsApp();
+//        GetShopNetsApp app = new GetShopNetsApp(new GetShopIOTOperator());
 //        app.start();
         
     }
     
     private boolean isStarted = false;
+    private String orderId;
 
     public GetShopNetsApp(GetShopIOTOperator operator) {
         this.operator = operator;
@@ -83,7 +85,9 @@ public class GetShopNetsApp {
     }
     
     public void printToScreen(String text) {
-         operator.sendMessage("OrderManager", "paymentText", operator.getToken(), text, null,null, null);
+        if(operator != null) {
+             operator.sendMessage("OrderManager", "paymentText", operator.getToken(), text, null,null, null);
+        }
     }
 
     public void transanctionCompletedStatus(LocalModeEventArgs args) {
@@ -135,12 +139,18 @@ public class GetShopNetsApp {
             return;
         }
         
-         operator.sendMessage("OrderManager", "paymentResponse", operator.getToken(), response, null,null, null);
+        response.setOrderId(orderId);
+        
+        if(operator != null) {
+             operator.sendMessage("OrderManager", "paymentResponse", operator.getToken(), response, null,null, null);
+        }
     }
 
-    public void startTransaction(Integer amount) {
+    @Override
+    public void startTransaction(Integer amount, String orderId) {
         controller.totalAmount = amount;
         controller.transferAmount();
+        this.orderId = orderId;
     }
 
     public void cancelTransaction() {

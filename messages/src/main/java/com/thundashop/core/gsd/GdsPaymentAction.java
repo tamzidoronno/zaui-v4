@@ -18,4 +18,5 @@ public class GdsPaymentAction extends GetShopDeviceMessage {
     
     public Integer action = 0;
     public Integer amount = 0;
+    public String orderId = "";
 }

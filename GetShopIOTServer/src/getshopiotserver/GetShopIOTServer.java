@@ -1,5 +1,7 @@
 package getshopiotserver;
 
+import getshop.nets.GetShopNetsApp;
+
 public class GetShopIOTServer {
 
     public static void main(String[] args) {

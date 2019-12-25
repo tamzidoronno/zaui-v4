@@ -6,6 +6,7 @@
 #include "CodeHandler.h"
 #include "Logging.h"
 #include "ExternalInputReader.h"
+#include <avr/wdt.h>
 
 #include <util/atomic.h>
 
@@ -39,6 +40,9 @@ bool foundData = false;
 unsigned char bufferForWiegand[16];
 unsigned char bufferForCommunication[16];
 
+const char signature [] = "NickGammon";
+char * p = (char *) malloc (sizeof (signature));
+
 unsigned int getDeviceId() {
 	unsigned char buf[16];
 	dataStorage.getCode(5500, buf);
@@ -58,6 +62,17 @@ unsigned int getDeviceId() {
 	return atoi(retVal);
 }
 
+bool checkIfColdStart() {
+  if (strcmp (p, signature) == 0) { // signature is in RAM this was reset
+    return false;
+  }
+  else {  // signature not in RAM this was a power on
+    // add the signature to be retained in memory during reset
+    memcpy (p, signature, sizeof signature);  // copy signature into RAM
+    return true;
+  }
+}
+
 void setDeviceIdToLoraChip() {
 	String address = "AT+ADDRESS=";
 	address = address + getDeviceId();
@@ -75,7 +90,7 @@ void saveDeviceId(char* msg) {
 
 	dataStorage.writeCode(5500, data);
 	setDeviceIdToLoraChip();
-	communication.writeEncrypted("CID", 3);
+	communication.writeEncrypted("CID", 3, true);
 }
 
 void initLora() {
@@ -100,6 +115,8 @@ void initLora() {
 	delay(200);
 	Serial.print("AT+PARAMETER=10,7,1,7\r\n");
 	delay(200);
+
+	wdt_reset();
 }
 
 void setMillis(unsigned long ms)
@@ -112,6 +129,8 @@ void setMillis(unsigned long ms)
 
 void setup()
 {
+	wdt_enable(WDTO_4S);
+
 	Serial.begin(115200);
 
 	dataStorage.setupDataStorageBus();
@@ -120,7 +139,13 @@ void setup()
 	logging.init();
 	codeHandler.setup();
 
-	logging.addLog("Started", 7, true);
+	wdt_reset();
+
+	if (checkIfColdStart()) {
+		logging.addLog("Started:N", 9, true);
+	} else {
+		logging.addLog("Started:W", 9, true);
+	}
 
 	pinMode(PD6, INPUT);
 	digitalWrite(PD6, HIGH);
@@ -161,7 +186,10 @@ void loop()
 //	digitalWrite(14, HIGH);
 //	delay(2000);
 
+	wdt_reset();
+
 	delay(1);
+
 	communication.check();
 	keypadReader.checkWiegand();
 	codeHandler.check();
@@ -178,6 +206,7 @@ void loop()
 
 	if (communication.isDataAvailable()) {
 		communication.getData(bufferForCommunication);
+
 
 		if (bufferForCommunication[0] == 'C' && bufferForCommunication[1] == 'I' && bufferForCommunication[2] == 'D') {
 			saveDeviceId(bufferForCommunication);
@@ -224,5 +253,4 @@ void loop()
 	}
 
 	logging.runSendCheck(&communication);
-
 }

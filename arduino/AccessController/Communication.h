@@ -9,13 +9,13 @@ class Communication {
 		void Communication::sendEncrypted(String msgToSend);
 		Communication(byte* key, byte* ciphertext, Clock* clock);
 		bool Communication::isDataAvailable();
-		void Communication::writeEncrypted(char* msgToSend, unsigned int size);
+		void Communication::writeEncrypted(char* msgToSend, unsigned int size, bool encrypt);
 		void Communication::getData(unsigned char* buffer);
 		void Communication::check();
 
 	private:
 		Clock* _clock;
-		bool Communication::checksum(unsigned char* buffer);
+		bool Communication::checksum(unsigned char* buffer, unsigned char checksum);
 		void Communication::printByteArray(byte inArray[], bool lineFeed);
 		void Communication::encryptAndSend(byte* msgToSend);
 		int Communication::checkIfTimeIsNewer(unsigned char *buffer);

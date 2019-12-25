@@ -56,10 +56,10 @@ int Communication::checkIfTimeIsNewer(unsigned char *buffer) {
  * We check the checksum to make sure that the decrypted
  * package is a valid package.
  */
-bool Communication::checksum(unsigned char *buffer) {
+bool Communication::checksum(unsigned char *buffer, unsigned char checksum) {
 	unsigned long total = 0;
 
-	for (int i=0; i<15; i++) {
+	for (int i=0; i<16; i++) {
 		total += buffer[i];
 	}
 
@@ -67,7 +67,9 @@ bool Communication::checksum(unsigned char *buffer) {
 	int max = y * 256;
 	int diff = total - max;
 
-	return (int)buffer[15] == diff;
+	bool ret = checksum == diff;
+
+	return ret;
 }
 
 void Communication::check() {
@@ -90,12 +92,24 @@ void Communication::check() {
 			buffer[(i-10)] = data[i];
 		}
 
-		aes128.decryptBlock(decrypted, buffer);
+		if ((byte)buffer[0] == 'G' && (byte)buffer[1] == 'I' && (byte)buffer[2] == 'D') {
+			unsigned long gidfordevice = 1000000001;
+			String msgToSend = "AT+SEND=1,14,GID:";
+			char atbuf[10];
+			ltoa(gidfordevice, atbuf,10);
+			msgToSend.concat(atbuf);
+			msgToSend += "\r\n";
+			Serial.println(msgToSend);
+			delay(200);
+			return;
+		}
 
-		if (!checksum(decrypted)) {
+		if (!checksum(buffer, data[26])) {
 			this->dataAvailable = false;
 			return;
 		}
+
+		aes128.decryptBlock(decrypted, buffer);
 
 		int resultOfTimeCheck = checkIfTimeIsNewer(decrypted);
 
@@ -141,16 +155,42 @@ void Communication::getData(unsigned char* buffer) {
 	};
 }
 
-void Communication::writeEncrypted(char *msgToSend, volatile unsigned int length) {
-	volatile unsigned int gatewayAddress = 1;
+void Communication::writeEncrypted(char *msgToSend, volatile unsigned int length, bool encrypt) {
 
-	Serial.print("AT+SEND=1,");
-	Serial.print(length);
+	unsigned char encrypted[16], buf[16];
+    int packages = (length / 16);
+    if ((length % 16) != 0) {
+    	packages = packages + 1;
+    }
+    int totalLength = packages*16;
+
+    Serial.print("AT+SEND=1,");
+	Serial.print(totalLength);
 	Serial.print(",");
 
-	for (int i=0; i<length; i++) {
-		Serial.print(msgToSend[i]);
-	}
+    for (int i=0; i<packages;i++) {
+    	for (int j=0; j<16;j++) {
+    		int k = j + (16*i);
+    		if (k > (length-1)) {
+    			buf[j] = 0xff;
+    		} else {
+    			buf[j] = msgToSend[k];
+    		}
+    	}
+
+    	aes128.encryptBlock(encrypted, buf);
+
+		volatile unsigned int gatewayAddress = 1;
+
+		for (int g=0; g<16; g++) {
+			if (encrypt) {
+				Serial.print((char)encrypted[g]);
+			} else {
+				Serial.print((char)buf[g]);
+			}
+		}
+    }
+
 	Serial.print("\r\n");
 
 }

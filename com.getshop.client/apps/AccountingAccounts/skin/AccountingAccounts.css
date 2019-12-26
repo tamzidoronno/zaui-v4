@@ -1,8 +1,11 @@
 .AccountingAccounts .createAccountBox {
     border-top: solid 1px #DDD;
-    margin-top: 50px;
     margin-bottom: 50px;
     padding-top: 50px;
+}
+
+.AccountingAccounts .accountinfohelper {
+    display:none;
 }
 
 .AccountingAccounts .createAccountBox span {
@@ -25,7 +28,7 @@
 
 
 .AccountingAccounts .col.accountindesc {
-    width: calc(100% - 800px);
+    width: calc(100% - 1100px);
 }
 
 .AccountingAccounts .col.accountindesc input {

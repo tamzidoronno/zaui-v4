@@ -1,16 +1,91 @@
 <?
 /* @var $this ns_e005f6e5_221c_4b02_9b65_327a63a0af3b\AccountingAccounts */
 $accounts = $this->getApi()->getProductManager()->getAccountingAccounts();
+$taxes = $this->getApi()->getProductManager()->getTaxes();
 ?>
+
+
+<table width='100%'>
+    <tr>
+        <td valign='top' width='33.3%'>
+            <h1>Create a new account</h1>
+            <div class='createAccountBox' gstype='form' method='createAccountingAccoutn'>
+                <span>Accounting: </span><input class='gsniceinput1' gsname='accountnumber'/>
+                <br/><span>Description: </span><input class='gsniceinput1' gsname='accountdescription'/>
+                <br/><span>Type: </span>
+                <select gsname="type" class="gsniceselect1" style="width: 199px; margin-left: -3px;">
+                    <option value="">Normal</option>
+                    <option value="fee">Fee</option>
+                </select>
+                <br/> <span>Tax group: </span>
+                <select gsname="taxgroup" class="gsniceselect1" style="width: 199px; margin-left: -3px;">
+                    <?php
+                    foreach($taxes as $tax) {
+                        echo "<option value='" . $tax->groupNumber . "'>" . $tax->taxRate . "% " . $tax->description . "</option>";
+                    }
+                    ?>
+                </select>
+                <br/> 
+                <br/> 
+                <br/><div gstype='submit' class='shop_button'>Create account</div>
+            </div>
+        </td>
+        <td valign='top' gstype='form' method='saveTaxGroups' width='33.3%'>
+            <h1>Tax groups</h1>
+            <div style='border-top: solid 1px #DDD; padding-top:20px;'>
+                <?php
+                $taxes = $this->getApi()->getProductManager()->getTaxes();
+                echo "<table>";
+                echo "<tr>";
+                echo "<th align='left'>Group</th>";
+                echo "<th align='left'>Tax</th>";
+                echo "<th align='left'>Accounting tax id</th>";
+                echo "<th align='left'>Description</th>";
+                echo "</tr>";
+                foreach($taxes as $tax) {
+                    echo "<tr>";
+                    echo "<td><input type='txt' class='gsniceinput1' value='" . $tax->groupNumber . "' disabled='' style='width:30px;'></td>";
+                    echo "<td><input type='txt' class='gsniceinput1' value='" . $tax->taxRate . "' style='width:30px;' gsname='".$tax->id."_rate'></td>";
+                    echo "<td><input type='txt' class='gsniceinput1' value='" . $tax->accountingTaxGroupId . "' gsname='".$tax->id."_accountingTaxGroupId'></td>";
+                    echo "<td><input type='txt' class='gsniceinput1' value='" . $tax->description . "' gsname='".$tax->id."_description'></td>";
+                    echo "</tr>";
+                }
+                echo "</table>";
+                echo "<span class='shop_button' gstype='submit' style='width:517px; box-sizing: border-box; margin-top: 10px;'>Save tax groups</span>";
+                ?>
+            </div>
+        </td>
+        <td valign='top' width='33.3%'>
+            <h1>Acccomodation account</h1>
+            <div style='border-top: solid 1px #DDD; padding-top:20px;' gstype='form' method='saveAccomodationAccount'>
+                Please choose the account you want to use for accomodation<br>
+                <select class='gsniceselect1' style='width:100%; margin-top: 10px;' gsname='accountid'>
+                    <option value=''>Not set yet</option>
+                    <?php
+                    foreach($accounts as $account) {
+                        $selected = $account->isAccomodation ? "SELECTED" : "";
+                        echo "<option value='".$account->id."' $selected>" . $account->accountNumber . " (" . $account->description . ")" . "</option>";
+                    }
+                    ?>
+                </select>
+                <span class='shop_button' style='width:100%; box-sizing: border-box; margin-top: 10px;' gstype='submit'>Save accomodation account</span>
+            </div>
+        </td>
+
+</tr>
+    </table>
+
+
 <div class="distinctAccounts" gstype="form" method="saveAccountingDescription">
     
-    <h2><? echo $this->__f("Accounts"); ?></h2>
+    <h2><? echo $this->__f("Accounts added"); ?></h2>
     <?
     
     echo "<div class='row_description'>";
         echo "<div class='col accountingid'>".$this->__f("Account name")."</div>";
         echo "<div class='col accountindesc'>".$this->__f("Description")."</div>";
         echo "<div class='col taxcode'>".$this->__f("Tax Code")."</div>";
+        echo "<div class='col accounttaxcode'>".$this->__f("Accounting tax code")."</div>";
         echo "<div class='col subaccountid'>".$this->__f("Sub Account Id")."</div>";
         echo "<div class='col subaccountsegment'>".$this->__f("Sub Account Segment")."</div>";
     echo "</div>";
@@ -19,6 +94,7 @@ $accounts = $this->getApi()->getProductManager()->getAccountingAccounts();
         $accountName = $account->accountNumber;
         $accountDescription = $account->description;
         $accountTaxGroup = $account->taxgroup;
+        $gsTaxGroup = $account->getShopTaxGroup;
         $subaccountid = $account->subaccountid;
         $subaccountvalue = $account->subaccountvalue;
         
@@ -29,25 +105,75 @@ $accounts = $this->getApi()->getProductManager()->getAccountingAccounts();
             }
             echo "<i class='gs_shop_small_icon fa fa-trash' gs_confirm='Are you sure?' gsclick='deleteAccount' accountid='$accountName'></i> $accountName</div>";
             echo "<div class='col accountindesc'><input gsname='description_$accountName' class='gsniceinput1' value='$accountDescription'></div>";
-            echo "<div class='col taxcode'><input gsname='taxcode_$accountName' class='gsniceinput1' value='$accountTaxGroup'></div>";
+            echo "<div class='col taxcode'>";
+            echo "<select gsname='gstaxcode_$accountName' class='gsniceselect1' style='height:35px'>";
+            echo "<option value='-1'>Not set yet</option>";
+            foreach($taxes as $tax) {
+                $selected = $tax->groupNumber == $gsTaxGroup ? "SELECTED" : "";
+                echo "<option value='".$tax->groupNumber."' $selected>"  . $tax->taxRate . "% " . $tax->description . "</option>";
+            }
+            echo "</select>";
+            echo "</div>";
+            echo "<div class='col subaccountid'><input gsname='taxcode_$accountName' class='gsniceinput1' value='$accountTaxGroup'></div>";
             echo "<div class='col subaccountid'><input gsname='subaccountid_$accountName' class='gsniceinput1' value='$subaccountid'></div>";
             echo "<div class='col subaccountvalue'><input gsname='subaccountvalue_$accountName' class='gsniceinput1' value='$subaccountvalue'></div>";
         echo "</div>";
     }
     ?>
     <br/>
-    <div class="shop_button" gstype="submit"><? echo $this->__f("Save descriptions"); ?></div>
+    <div class="shop_button" gstype="submit"><? echo $this->__f("Save accounts"); ?></div>
 </div>
 
-<div class='createAccountBox' gstype='form' method='createAccountingAccoutn'>
-    <span>Account number: </span><input class='gsniceinput1' gsname='accountnumber'/>
-    <br/><span>Description: </span><input class='gsniceinput1' gsname='accountdescription'/>
-    <br/><span>Type: </span>
-    <select gsname="type" class="gsniceselect1" style="width: 199px; margin-left: -3px;">
-        <option value="">Normal</option>
-        <option value="fee">Fee</option>
-    </select>
-    <br/> 
-    <br/> 
-    <br/><div gstype='submit' class='shop_button'>Create account</div>
+
+<div class='shop_button' style='float:right;' onclick="$('.accountinfohelper').slideDown();">Upload account information</div>
+
+<?php
+$postedText = "";
+if(isset($_POST['data']['accountsdata'])) {
+    $postedText = $_POST['data']['accountsdata'];
+}
+
+if($this->accounts) {
+    if(sizeof($this->errorMessages) > 0) {
+        echo "<h1>Error while trying to upload accounting details:</h1>";
+        foreach($this->errorMessages as $errorMsg) {
+            echo $errorMsg . "<br>";
+        }
+    }
+    
+    echo "<h1>Verify your accounts</h1>";
+    echo "<table>";
+    echo "<tr>";
+    echo "<th align='left'>Account</th>";
+    echo "<th align='left'>Description</th>";
+    echo "<th align='left'>Taxcode</th>";
+    echo "</tr>";
+    
+    $line = 0;
+    foreach($this->accounts as $row) {
+        echo "<tr>";
+        echo "<td>$line</td>";
+        echo "<td>" . $row[0] . "</td>";
+        echo "<td>" . $row[1] . "</td>";
+        echo "<td>" . $row[2] . "</td>";
+        echo "</tr>";
+        $line++;
+    }
+    echo "</table>";
+    if(sizeof($this->errorMessages) == 0) {
+        echo "<span class='shop_button' gstype='clicksubmit' method='completeImport'>Its ok import it</span>";
+    }
+    echo "<br>";
+    echo "<br>";
+    echo "<br>";
+    echo "<br>";
+}
+?>
+
+<div class='uploadaccountinformation accountinfohelper' gstype='form' method='uploadAccounts'>
+    Copy paste your csv file into the field below, format : "account;Description;taxcode"<br>
+    <textarea style="width:100%; height: 600px" gsname="accountsdata"><?php echo $postedText; ?></textarea>
+    <div style="text-align: right">
+        <span class="shop_button" gstype="submit">Upload form</span>
+    </div>
 </div>

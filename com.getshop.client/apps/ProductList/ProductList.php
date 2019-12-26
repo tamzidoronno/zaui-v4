@@ -2,6 +2,8 @@
 namespace ns_0c6398b0_c301_481a_b4e7_faea0376e822;
 
 class ProductList extends \MarketingApplication implements \Application {
+    public $createProductError;
+    
     public function getDescription() {
         
     }
@@ -67,7 +69,15 @@ class ProductList extends \MarketingApplication implements \Application {
     }
     
     public function createNewProduct() {
-        $product = $this->getApi()->getProductManager()->createProduct();
+        $account = 0;
+        if($_POST['data']['account']) {
+            $account = $_POST['data']['account'];
+        }
+        $product = $this->getApi()->getProductManager()->createProductWithAccount($account);
+        if(!$product) {
+            echo "<div style='background-color:red; font-size:20px; text-align:center;margin: 10px;padding: 10px; color:#fff;'>Failed to create a new product, make sure the account you are trying to create a product on is correct set up.</div>";
+            return;
+        }
         $product->name = $_POST['data']['name'];
         $this->getApi()->getProductManager()->saveProduct($product);
         $_SESSION['ns_c282cfba_2873_46fd_876b_c44269eb0dfb_searchword'] = $product->name;

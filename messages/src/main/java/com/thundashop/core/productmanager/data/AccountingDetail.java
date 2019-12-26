@@ -11,12 +11,14 @@ import com.thundashop.core.common.DataCommon;
  *
  * @author ktonder
  */
-public class AccountingDetail  extends DataCommon {
+public class AccountingDetail  extends DataCommon implements Comparable<AccountingDetail> {
     public int accountNumber = 0;
     public int taxgroup = -1;
+    public int getShopTaxGroup = -1;
     public String description = "";
     public String subaccountid = "";
     public String subaccountvalue = "";
+    public boolean isAccomodation = false;
 
     /**
      * The different types are following:
@@ -25,4 +27,17 @@ public class AccountingDetail  extends DataCommon {
      * fee = Accounts with type fee will be displayed where its possible to register payments.
      */
     public String type = "";
+    
+    @Override
+    public int compareTo(AccountingDetail u) {
+      if (getCreatedAccount() == null || u.getCreatedAccount() == null) {
+        return 0;
+      }
+      return getCreatedAccount().compareTo(u.getCreatedAccount());
+    }
+
+    private Integer getCreatedAccount() {
+        return accountNumber;
+    }
+    
 }

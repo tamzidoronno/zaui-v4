@@ -8,6 +8,7 @@ import com.getshop.scope.GetShopSessionScope;
 import com.google.gson.Gson;
 import com.ibm.icu.util.Calendar;
 import com.thundashop.core.appmanager.data.Application;
+import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FrameworkConfig;
@@ -23,6 +24,7 @@ import com.thundashop.core.gsd.GetShopDevice;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.pagemanager.GetShopModules;
+import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.storemanager.data.KeyData;
 import com.thundashop.core.storemanager.data.ModuleHomePages;
 import com.thundashop.core.storemanager.data.SlaveStore;
@@ -92,6 +94,10 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     @Autowired
     public WebManager webManager;
     
+    @Autowired
+    public GetShopSessionScope getShopSessionScope;
+    
+    
     private HashMap<String, KeyData> keyDataStore = new HashMap();
     
     private HashMap<String, RemoteServerMetaData> backupInfo = new HashMap();
@@ -111,6 +117,26 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         initialize();
     }
 
+    public List<BookingEngine> getBookingEngines() {
+        List<String> names = getMultiLevelNames();
+        List<BookingEngine> result = new ArrayList();
+        for(String name : names) {
+            result.add(getShopSessionScope.getNamedSessionBean(name, BookingEngine.class));
+        }
+        
+        return result;
+    }
+
+    public List<PmsManager> getPmsManagers() {
+        List<String> names = getMultiLevelNames();
+        List<PmsManager> result = new ArrayList();
+        for(String name : names) {
+            result.add(getShopSessionScope.getNamedSessionBean(name, PmsManager.class));
+        }
+        
+        return result;
+    }
+    
     /**
      * PikTime is the time when getshop decided to go full product is king style.
      * The time where customers ruled getshop is over and getshop drives the development.

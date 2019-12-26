@@ -1,6 +1,8 @@
 package com.thundashop.core.productmanager;
 
 import com.getshop.scope.GetShopSession;
+import com.thundashop.core.bookingengine.BookingEngine;
+import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FilterOptions;
@@ -9,6 +11,7 @@ import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
+import com.thundashop.core.pos.PosManager;
 import com.thundashop.core.productmanager.data.AccountingDetail;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductAccountingInformation;
@@ -19,6 +22,7 @@ import com.thundashop.core.productmanager.data.ProductLight;
 import com.thundashop.core.productmanager.data.ProductList;
 import com.thundashop.core.productmanager.data.SearchResult;
 import com.thundashop.core.productmanager.data.TaxGroup;
+import com.thundashop.core.storemanager.StoreManager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -51,6 +55,13 @@ public class ProductManager extends AProductManager implements IProductManager {
     
     @Autowired
     private OrderManager orderManager;
+    
+    @Autowired
+    private StoreManager storeManager;
+    
+    @Autowired
+    private PosManager posManager;
+    
 
     @Override
     public Product saveProduct(Product product) throws ErrorException {
@@ -121,6 +132,41 @@ public class ProductManager extends AProductManager implements IProductManager {
         
         return finalize(product);
     }
+    
+    @Override
+    public Product createProductWithAccount(Integer accountNumber) throws ErrorException {
+        
+        AccountingDetail account = getAccountingDetail(accountNumber);
+        if(account == null && posManager.hasLockedPeriods()) {
+            return null;
+        }
+        
+        if(account != null && account.getShopTaxGroup < 0) {
+            return null;
+        }
+        
+        Product product = new Product();
+        product.storeId = storeId;
+        product.id = UUID.randomUUID().toString();
+        
+        product.pageId = pageManager.createPageFromTemplatePage("ecommerce_product_template_1").id;
+        
+        
+        if(account != null) {
+            ProductAccountingInformation info = new ProductAccountingInformation();
+            info.accountingNumber = account.accountNumber + "";
+            info.taxGroupNumber = account.getShopTaxGroup;
+
+            product.taxgroup = account.getShopTaxGroup;
+            product.taxGroupObject = getTaxGroup(account.getShopTaxGroup);
+            product.accountingConfig.add(info);
+        }
+        
+        saveProduct(product);
+        
+        return finalize(product);
+    }
+    
 
     @Override
     public ArrayList<Product> getRandomProducts(Integer fetchSize, String ignoreProductId) throws ErrorException {
@@ -502,6 +548,11 @@ public class ProductManager extends AProductManager implements IProductManager {
 
     @Override
     public void saveAccountingDetail(AccountingDetail detail) {
+        AccountingDetail exsisting = getAccountingDetail(detail.accountNumber);
+        if(exsisting != null && exsisting.getShopTaxGroup != detail.getShopTaxGroup) {
+            TaxGroup tax = getTaxGroup(detail.getShopTaxGroup);
+            detail.taxgroup = tax.accountingTaxGroupId;
+        }
         super.saveAccountingDetail(detail); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -650,5 +701,65 @@ public class ProductManager extends AProductManager implements IProductManager {
         return getProductLists();
     }
 
+    @Override
+    public void doubleCheckAndCorrectAccounts() {
+        List<TaxGroup> taxes = getTaxes();
+        super.doubleCheckAndCorrectAccounts(taxes);
+    }
     
+    @Override
+    public void setAccomodationAccount(String accountId) {
+        AccountingDetail accomodationAccount = null;
+        List<AccountingDetail> accounts = getAccountingAccounts();
+        for(AccountingDetail detail : accounts) {
+            if(detail.isAccomodation) {
+                detail.isAccomodation = false;
+                saveAccountingDetail(detail);
+            }
+            
+            if(detail.id.equals(accountId)) {
+                if(detail.getShopTaxGroup > -1) {
+                    detail.isAccomodation = true;
+                    saveAccountingDetail(detail);
+                    accomodationAccount = detail;
+                }
+            }
+        }
+        updateAllBookingTypesWithAccountingAccount();
+    }
+    
+    @Override
+    public void updateAllBookingTypesWithAccountingAccount() {
+        AccountingDetail accomodationAccount = null;
+        List<AccountingDetail> accounts = getAccountingAccounts();
+        for(AccountingDetail detail : accounts) {
+            if(detail.isAccomodation) {
+                accomodationAccount = detail;
+            }
+        }
+        if(accomodationAccount == null) {
+            return;
+        }
+        
+        List<BookingEngine> bengines = storeManager.getBookingEngines();
+        for(BookingEngine engine : bengines) {
+            List<BookingItemType> types = engine.getBookingItemTypes();
+            for(BookingItemType type : types) {
+                Product prod = getProduct(type.productId);
+                for(ProductAccountingInformation check : prod.accountingConfig) {
+                    if(check.accountingNumber == null || check.accountingNumber.isEmpty() || !check.accountingNumber.equals(accomodationAccount.accountNumber+"")) {
+                        check.accountingNumber = accomodationAccount.accountNumber + "";
+                        saveProduct(prod);
+                    }
+                }
+                if(prod.accountingConfig.isEmpty()) {
+                    ProductAccountingInformation check = new ProductAccountingInformation();
+                    check.accountingNumber = accomodationAccount.accountNumber + "";
+                    check.taxGroupNumber = accomodationAccount.getShopTaxGroup;
+                    prod.accountingConfig.add(check);
+                    saveProduct(prod);
+                }
+            }
+        }
+    }
 }

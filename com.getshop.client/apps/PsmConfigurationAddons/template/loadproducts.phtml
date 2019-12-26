@@ -1,5 +1,6 @@
 <?php
  /* @var $this \ns_c5a4b5bf_365c_48d1_aeef_480c62edd897\PsmConfigurationAddons */
+$accounts = $this->getApi()->getProductManager()->getAccountingAccounts();
 $products = $this->getApi()->getProductManager()->getAllProducts();
 $types = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
@@ -17,182 +18,210 @@ foreach($config->addonConfiguration as $item) {
     $addonItems[$item->productId] = $item;
 }
 
+
+$name = "";
+if(isset($_POST['data']['productname'])) {
+    $name = $_POST['data']['productname'];
+}
+if($this->createProductError) {
+    echo "<div style='background-color:red; font-size:20px; text-align:center;margin: 10px;padding: 10px; color:#fff;'>" . $this->createProductError . "</div>";
+}
+
 ?>
+<br>
 <div gstype='form' method='createProduct'>
-    <input type='text' class='gsniceinput1' gsname='productname'>
+    <select class='gsniceselect1' gsname='account'>
+        <option value=''>Unspecified account</option>
+        <?php
+        foreach($accounts as $account) {
+            echo "<option value='".$account->accountNumber."'>" . $account->accountNumber . " (" . $account->description . ")" . "</option>";
+        }
+        ?>
+    </select>
+    <input type='text' class='gsniceinput1' gsname='productname' value='<?php echo $name; ?>'>
     <input type='button' style='padding: 9px;' value='Create a new product' gstype='submit'>
 </div>
 <br>
-<table cellspacing="0" cellpadding="0">
-    <tr>
-        <th style="width:300px;text-align:left" valign="bottom">
-            Addon name</th>
-        <th class="rotate"><div><span>Daily addon</span></div></th>
-        <th class="rotate"><div><span>Inc tax</span></div></th>
-        <th class="rotate"><div><span>Ex taxes</span></div></th>
-        <th class="rotate"><div><span>Tax</span></div></th>
-        <th class="rotate"><div><span>Per guest</span></div></th>
-        <th class="rotate"><div><span>Non refundable</span></div></th>
-        <th class="rotate"><div><span>Included in room price</span></div></th>
-        <th class="rotate"><div><span>Always add</span></div></th>
-        <th class="rotate"><div><span>Unique on order</span></div></th>
-        <th ></th>
-        <?php
-        foreach($types as $type) {
-            echo "<th class='rotate'><div><span>" . $type->name . "</span></div></th>";
-        }
-        ?>
-        <th ></th>
-        <?php
-        foreach($types as $type) {
-            echo "<th class='rotate'><div><span>" . $type->name . "</span></div></th>";
-        }
-        ?>
-    </tr>
-       
-    <tr>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <?php
-            echo "<td colspan='".sizeof($types)."' class='includeinroom' style='border-bottom: solid 1px #ccc; padding: 3px;'>Included</td>";
-        ?>
-        <td></td>
-        <?php
-            echo "<td colspan='".sizeof($types)."' class='sellonroom' style='border-bottom: solid 1px #ccc; padding: 3px;'>Possible to buy while booking</td>";
-        ?>
-    </tr>
-    
-    
-    <?php foreach($products as $product) {
-        /* @var $addonItem core_pmsmanager_PmsBookingAddonItem */ 
-        if(!isset($addonItems[$product->id])) {
-            continue;
-        }
-        $addonItem = $addonItems[$product->id];
-        $selectedDaily = $addonItem->isSingle ? "" : "CHECKED";
-        $includedInRoomPrice = array_values($addonItem->includedInBookingItemTypes);
-        $displayInBookingProcess = array_values($addonItem->displayInBookingProcess);
-        $perGuest = $addonItem->dependsOnGuestCount ? "CHECKED" : "";
-        $noRefundable = $addonItem->noRefundable ? "CHECKED" : "";
-        $isIncludedInRoomPrice = $addonItem->isIncludedInRoomPrice ? "CHECKED" : "";
-        $alwaysAddAddon = $addonItem->alwaysAddAddon ? "CHECKED" : "";
-        $isUniqueOnOrder = $addonItem->isUniqueOnOrder ? "CHECKED" : "";
-        $states = $this->getFactory()->getLanguageReadable();
-        $deactivated = $product->deactivated ? "style='color:#afafaf;'" : "";
-        $color = $product->deactivated ? "#afafaf;'" : "green";
-    ?>
-    <tr class='settingsForProduct' <?php echo $deactivated; ?> productid='<?php echo $product->id; ?>' productincid="<?php echo $product->incrementalProductId; ?>">
-        <td style="width:300px;text-align: left;position:relative;">
-            <i class="fa fa-info-circle loadExtendedProductInformation" style="color:<?php echo $color; ?>; cursor:pointer;"></i>
-            <i class="fa fa-language" style="color:<?php echo $color; ?>; cursor:pointer;" aria-hidden="true" title='Description / Translation' gss_method="submitToInfoBox" method="loadTranslationText" gsname="id" gsvalue="<?php echo $product->id; ?>"></i>
-            <i class='fa fa-edit changeproductname' productid='<?php echo $product->id; ?>' style="color:<?php echo $color; ?>; cursor:pointer;"></i>
-            <?
-            if ($addonItem->groupAddonType) {
+
+<div style='overflow:auto;'>
+    <div class='widthsizer'>
+        <table cellspacing="0" cellpadding="0">
+            <tr>
+                <th valign='bottom'>Addon name</th>
+                <th class="rotate"><div><span>Account</span></div></th>
+                <th class="rotate"><div><span>Daily addon</span></div></th>
+                <th class="rotate"><div><span>Inc tax</span></div></th>
+                <th class="rotate"><div><span>Ex taxes</span></div></th>
+                <th class="rotate"><div><span>Tax</span></div></th>
+                <th class="rotate"><div><span>Per guest</span></div></th>
+                <th class="rotate"><div><span>Non refundable</span></div></th>
+                <th class="rotate"><div><span>Included in room price</span></div></th>
+                <th class="rotate"><div><span>Always add</span></div></th>
+                <th class="rotate"><div><span>Unique on order</span></div></th>
+                <th ></th>
+                <?php
+                foreach($types as $type) {
+                    echo "<th class='rotate'><div><span>" . $type->name . "</span></div></th>";
+                }
                 ?>
-                <i class='fa fa-chain editgroupaddon' productid='<?php echo $product->id; ?>' style="color:<?php echo $color; ?>; cursor:pointer;"></i>
-                <?
-            }
+                <th ></th>
+                <?php
+                foreach($types as $type) {
+                    echo "<th class='rotate'><div><span>" . $type->name . "</span></div></th>";
+                }
+                ?>
+            </tr>
+
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <?php
+                    echo "<td colspan='".sizeof($types)."' class='includeinroom' style='border-bottom: solid 1px #ccc; padding: 3px;'>Included</td>";
+                ?>
+                <td></td>
+                <?php
+                    echo "<td colspan='".sizeof($types)."' class='sellonroom' style='border-bottom: solid 1px #ccc; padding: 3px;'>Possible to buy while booking</td>";
+                ?>
+            </tr>
+
+
+            <?php foreach($products as $product) {
+                /* @var $addonItem core_pmsmanager_PmsBookingAddonItem */ 
+                if(!isset($addonItems[$product->id])) {
+                    continue;
+                }
+                $addonItem = $addonItems[$product->id];
+                $selectedDaily = $addonItem->isSingle ? "" : "CHECKED";
+                $includedInRoomPrice = array_values($addonItem->includedInBookingItemTypes);
+                $displayInBookingProcess = array_values($addonItem->displayInBookingProcess);
+                $perGuest = $addonItem->dependsOnGuestCount ? "CHECKED" : "";
+                $noRefundable = $addonItem->noRefundable ? "CHECKED" : "";
+                $isIncludedInRoomPrice = $addonItem->isIncludedInRoomPrice ? "CHECKED" : "";
+                $alwaysAddAddon = $addonItem->alwaysAddAddon ? "CHECKED" : "";
+                $isUniqueOnOrder = $addonItem->isUniqueOnOrder ? "CHECKED" : "";
+                $states = $this->getFactory()->getLanguageReadable();
+                $deactivated = $product->deactivated ? "style='color:#afafaf;'" : "";
+                $color = $product->deactivated ? "#afafaf;'" : "green";
             ?>
-                
-            <?php echo "<span class='productnamecontainer'>" . $product->name . "</span>";
-            $translationcount = 0;
-            $translations = "";
-            foreach($addonItem->translationStrings as $key => $val) {
-                if(stristr($key, "_descriptionWeb") && trim($val)) {
-                    if(!json_decode($val)) {
-                        continue;
+            <tr class='settingsForProduct' <?php echo $deactivated; ?> productid='<?php echo $product->id; ?>' productincid="<?php echo $product->incrementalProductId; ?>">
+                <td style="width:300px;text-align: left;position:relative;">
+                    <i class="fa fa-info-circle loadExtendedProductInformation" style="color:<?php echo $color; ?>; cursor:pointer;"></i>
+                    <i class="fa fa-language" style="color:<?php echo $color; ?>; cursor:pointer;" aria-hidden="true" title='Description / Translation' gss_method="submitToInfoBox" method="loadTranslationText" gsname="id" gsvalue="<?php echo $product->id; ?>"></i>
+                    <i class='fa fa-edit changeproductname' productid='<?php echo $product->id; ?>' style="color:<?php echo $color; ?>; cursor:pointer;"></i>
+                    <?
+                    if ($addonItem->groupAddonType) {
+                        ?>
+                        <i class='fa fa-chain editgroupaddon' productid='<?php echo $product->id; ?>' style="color:<?php echo $color; ?>; cursor:pointer;"></i>
+                        <?
                     }
-                    $translationcount++;
-                    $translations .= $states[str_replace("_descriptionWeb", "", $key)] . " : " . json_decode($val) . "<br>";
+                    ?>
+
+                    <?php echo "<span class='productnamecontainer'>" . $product->name . "</span>";
+                    $translationcount = 0;
+                    $translations = "";
+                    foreach($addonItem->translationStrings as $key => $val) {
+                        if(stristr($key, "_descriptionWeb") && trim($val)) {
+                            if(!json_decode($val)) {
+                                continue;
+                            }
+                            $translationcount++;
+                            $translations .= $states[str_replace("_descriptionWeb", "", $key)] . " : " . json_decode($val) . "<br>";
+                        }
+                    }
+
+                    if($addonItem->descriptionWeb) {
+                        $translationcount = "<span title='$translations'>(" . $translationcount .")</span>";
+                    } else {
+                        $translationcount = "";
+                    }
+                    echo " <span style='color:#bbb; font-weight:bold;'>" . $addonItem->descriptionWeb . " $translationcount</span>"; ?>
+                    <?php 
+                    if($addonItem->bookingicon) {
+                        echo "<i class='fa fa-".$addonItem->bookingicon."' style='float:right; color:#bbb; padding-right: 5px;'></i>";
+                    }
+                    if($addonItem->count > 1) {
+                        echo "(max: " . $addonItem->count . ") ";
+                    }
+                    if(sizeof($addonItem->onlyForBookingItems) > 0) {
+                        echo "(limited to " . sizeof($addonItem->onlyForBookingItems) . " rooms) ";
+                    }
+                    ?>
+                    <span class="extendedinformation"></span>
+
+                </td>
+                <td><?php echo $prod->accountingAccount; ?></td>
+                <?php
+                $productPrice = round($product->price);
+                if($product->percentagePrice > 0) { $productPrice = $product->percentagePrice."%"; }
+                ?>
+                <td><input type="checkbox" <?php echo $selectedDaily; ?> gsname='daily'></td>
+                <td><input type="txt" style="width:50px" value='<?php echo $productPrice; ?>' gsname='price'></td>
+                <?php
+                $productPrice = round($product->priceExTaxes);
+                if($product->percentagePrice > 0) { $productPrice = "N/A"; }
+                ?>
+                <td><?php echo $productPrice; ?></td>
+                <td style="text-align: left;">
+                    <select gsname='taxgroup'>
+                    <?php
+                    foreach($taxgroups as $group) {
+                        if($group->taxRate >= 0) {
+                            $selectedTax = ($product->taxGroupObject->groupNumber == $group->groupNumber) ? "SELECTED" : "";
+                            echo "<option value='".$group->groupNumber."' $selectedTax>" . $group->taxRate . "%</option>";
+                        }
+                    }
+                    ?>
+                    </select></td>
+                <td><input type="checkbox" gsname='perguest' <?php echo $perGuest; ?>></td>
+                <td><input type="checkbox" gsname='nonrefundable' <?php echo $noRefundable; ?>></td>
+                <td><input type='checkbox' gsname='isIncludedInRoomPrice' <?php echo $isIncludedInRoomPrice; ?>></td>
+                <td><input type='checkbox' gsname='alwaysAddAddon' <?php echo $alwaysAddAddon; ?>></td>
+                <td><input type='checkbox' gsname='isUniqueOnOrder' <?php echo $isUniqueOnOrder; ?>></td>
+                <td></td>
+                <?php
+                foreach($types as $type) {
+                    $selected = "";
+                    if(in_array($type->id, $includedInRoomPrice)) {
+                        $selected = "CHECKED";
+                    }
+                    echo "<td class='rotate includeinroom'><div><span><input type='checkbox' $selected gsname='includeinroom_".$type->id."'></span></div></td>";
                 }
-            }
-            
-            if($addonItem->descriptionWeb) {
-                $translationcount = "<span title='$translations'>(" . $translationcount .")</span>";
-            } else {
-                $translationcount = "";
-            }
-            echo " <span style='color:#bbb; font-weight:bold;'>" . $addonItem->descriptionWeb . " $translationcount</span>"; ?>
-            <?php 
-            if($addonItem->bookingicon) {
-                echo "<i class='fa fa-".$addonItem->bookingicon."' style='float:right; color:#bbb; padding-right: 5px;'></i>";
-            }
-            if($addonItem->count > 1) {
-                echo "(max: " . $addonItem->count . ") ";
-            }
-            if(sizeof($addonItem->onlyForBookingItems) > 0) {
-                echo "(limited to " . sizeof($addonItem->onlyForBookingItems) . " rooms) ";
-            }
-            ?>
-            <span class="extendedinformation"></span>
-            
-        </td>
-        <?php
-        $productPrice = round($product->price);
-        if($product->percentagePrice > 0) { $productPrice = $product->percentagePrice."%"; }
-        ?>
-        <td><input type="checkbox" <?php echo $selectedDaily; ?> gsname='daily'></td>
-        <td><input type="txt" style="width:50px" value='<?php echo $productPrice; ?>' gsname='price'></td>
-        <?php
-        $productPrice = round($product->priceExTaxes);
-        if($product->percentagePrice > 0) { $productPrice = "N/A"; }
-        ?>
-        <td><?php echo $productPrice; ?></td>
-        <td style="text-align: left;">
-            <select gsname='taxgroup'>
-            <?php
-            foreach($taxgroups as $group) {
-                if($group->taxRate >= 0) {
-                    $selectedTax = ($product->taxGroupObject->groupNumber == $group->groupNumber) ? "SELECTED" : "";
-                    echo "<option value='".$group->groupNumber."' $selectedTax>" . $group->taxRate . "%</option>";
+                ?>
+                <td></td>
+                <?php
+                foreach($types as $type) {
+                    $selected = "";
+                    if(in_array($type->id, $displayInBookingProcess)) {
+                        $selected = "CHECKED";
+                    }
+                    echo "<td class='rotate sellonroom'><div><span><input type='checkbox' gsname='sellonroom_".$type->id."' $selected></span></div></td>";
                 }
-            }
-            ?>
-            </select></td>
-        <td><input type="checkbox" gsname='perguest' <?php echo $perGuest; ?>></td>
-        <td><input type="checkbox" gsname='nonrefundable' <?php echo $noRefundable; ?>></td>
-        <td><input type='checkbox' gsname='isIncludedInRoomPrice' <?php echo $isIncludedInRoomPrice; ?>></td>
-        <td><input type='checkbox' gsname='alwaysAddAddon' <?php echo $alwaysAddAddon; ?>></td>
-        <td><input type='checkbox' gsname='isUniqueOnOrder' <?php echo $isUniqueOnOrder; ?>></td>
-        <td></td>
-        <?php
-        foreach($types as $type) {
-            $selected = "";
-            if(in_array($type->id, $includedInRoomPrice)) {
-                $selected = "CHECKED";
-            }
-            echo "<td class='rotate includeinroom'><div><span><input type='checkbox' $selected gsname='includeinroom_".$type->id."'></span></div></td>";
-        }
-        ?>
-        <td></td>
-        <?php
-        foreach($types as $type) {
-            $selected = "";
-            if(in_array($type->id, $displayInBookingProcess)) {
-                $selected = "CHECKED";
-            }
-            echo "<td class='rotate sellonroom'><div><span><input type='checkbox' gsname='sellonroom_".$type->id."' $selected></span></div></td>";
-        }
-        ?>
-    </tr>
-    <? } ?>
-    <tr>
-        <td colspan='200' style='padding:0px; background-color:#096709;'>
-            <div style='margin-bottom: 10px; padding: 10px; border-top: solid 1px #ccc;'>
-                <input type='button' value='Save settings' class='doSaveSettings'>
-            </div>
-        </td>
-    </tr>
-</table>
+                ?>
+            </tr>
+            <? } ?>
+            <tr>
+                <td colspan='200' style='padding:0px; background-color:#096709;'>
+                    <div style='margin-bottom: 10px; padding: 10px; border-top: solid 1px #ccc;'>
+                        <input type='button' value='Save settings' class='doSaveSettings'>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+<script>
+    var numberofcols = $('.settingsForProduct').first().find('td').length;
+    $('.widthsizer').css('width','1950px');
+</script>
 
 <div class='includeinroom' style='padding:5px;'>When active the types with this color will be included in the room price.</div>
 <div class='sellonroom' style='padding:5px;'>When active the types with this color will be possible to buy while booking.</div>

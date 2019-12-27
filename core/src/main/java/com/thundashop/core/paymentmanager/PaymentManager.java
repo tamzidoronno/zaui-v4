@@ -227,6 +227,7 @@ public class PaymentManager extends ManagerBase implements IPaymentManager {
         
         saveObject(config);
         generalConfig = config;
+        autoCorrectPaymentMethods();
     }
 
     @Override
@@ -264,4 +265,45 @@ public class PaymentManager extends ManagerBase implements IPaymentManager {
         return true;
     }
     
+    
+    public void autoCorrectPaymentMethods() {
+        GeneralPaymentConfig generalconfig = getGeneralPaymentConfig();
+        for(StorePaymentConfig config : storePaymentConfig.values()) {
+            
+            boolean save = false;
+            if(!generalconfig.interimPostPaidAccount.isEmpty() && (config.offsetAccountingId_accrude == null || config.offsetAccountingId_accrude.isEmpty())) {
+                config.offsetAccountingId_accrude = generalconfig.interimPostPaidAccount;
+                save = true;
+            }
+            
+            if(!generalconfig.interimPrePaidAccount.isEmpty() && (config.offsetAccountingId_prepayment == null || config.offsetAccountingId_prepayment.isEmpty())) {
+                if(isPostPaymentMethodOnly(config)) {
+                    config.offsetAccountingId_prepayment = generalconfig.interimPostPaidAccount;
+                } else {
+                    config.offsetAccountingId_prepayment = generalconfig.interimPrePaidAccount;
+                }
+                save = true;
+            }
+            
+            if(config.paymentAppId.equals("70ace3f0-3981-11e3-aa6e-0800200c9a66")) {
+                if(!generalconfig.paidPostingAccount.isEmpty() && (config.userCustomerNumberPaid == null || config.userCustomerNumberPaid.isEmpty())) {
+                    config.userCustomerNumberPaid = generalconfig.paidPostingAccount;
+                    save = true;
+                }
+            }
+            if(save) {
+                saveStorePaymentConfiguration(config);
+            }
+        }
+    }
+
+    private boolean isPostPaymentMethodOnly(StorePaymentConfig config) {
+        List<String> postpaymentmethods = new ArrayList();
+        postpaymentmethods.add("60f2f24e-ad41-4054-ba65-3a8a02ce0190"); //Accrued
+        postpaymentmethods.add("eeab4306-3221-47ba-853b-2847057f3453"); //correction
+        postpaymentmethods.add("6e930536-eca4-4742-9712-bf2042c8cf86"); //Guestbill
+        postpaymentmethods.add("cbe3bb0f-e54d-4896-8c70-e08a0d6e55ba"); //Samlefaktura
+        
+        return postpaymentmethods.contains(config.paymentAppId);
+    }
 }

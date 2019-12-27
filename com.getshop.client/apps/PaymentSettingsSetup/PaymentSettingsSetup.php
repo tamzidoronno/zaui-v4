@@ -24,7 +24,12 @@ class PaymentSettingsSetup extends \WebshopApplication implements \Application {
    }
     
     public function activateApp() {
-        $this->getApi()->getStoreApplicationPool()->activateApplication($_POST['data']['id']);
+        $lockedPeriods = $this->getApi()->getPosManager()->hasLockedPeriods();
+        if($lockedPeriods) {
+            $this->getApi()->getStoreApplicationPool()->activatePaymentApplication($_POST['data']['id'], $_POST['data']['prompt']);
+        } else {
+            $this->getApi()->getStoreApplicationPool()->activateApplication($_POST['data']['id']);
+        }
     }
 
     public function saveDefaultPaymentMethod() {
@@ -38,6 +43,7 @@ class PaymentSettingsSetup extends \WebshopApplication implements \Application {
         $ecomsettings = $this->getFactory()->getApplicationPool()->createInstace($ecom);
         $ecomsettings->setConfigurationSetting("paymentLinkMethod", $_POST['data']['paymentLinkMethod']);
     }
+    
     
     public function render() {
         $this->includefile("printapplications");

@@ -15,6 +15,8 @@ import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.Setting;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.pagemanager.GetShopModules;
+import com.thundashop.core.paymentmanager.PaymentManager;
+import com.thundashop.core.paymentmanager.StorePaymentConfig;
 import com.thundashop.core.storemanager.data.SettingsRow;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -56,6 +58,9 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
     
     @Autowired
     private StoreApplicationInstancePool instancePool;
+    
+    @Autowired
+    private PaymentManager paymentManager;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -456,6 +461,19 @@ public class StoreApplicationPool extends ManagerBase implements IStoreApplicati
         namespace = namespace.replace("ns_", "");
         namespace = namespace.replace("_", "-");
         return getApplication(namespace);
+    }
+
+    @Override
+    public void activatePaymentApplication(String applicationId, String account) {
+        activateApplication(applicationId);
+        StorePaymentConfig paymentappconfig = paymentManager.getStorePaymentConfiguration(applicationId);
+        if(paymentappconfig == null) {
+            paymentappconfig = new StorePaymentConfig();
+            paymentappconfig.paymentAppId = applicationId;
+        }
+        paymentappconfig.userCustomerNumber = account;
+        paymentManager.saveStorePaymentConfiguration(paymentappconfig);
+        paymentManager.autoCorrectPaymentMethods();
     }
 
 

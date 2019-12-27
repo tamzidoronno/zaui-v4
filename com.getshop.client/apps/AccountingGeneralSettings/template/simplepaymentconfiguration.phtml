@@ -1,0 +1,79 @@
+<?php
+/* @var $this ns_c3f32e06_365b_4c7f_995a_79012b9ea0fe\AccountingGeneralSettings */
+$generalconfig = $this->getApi()->getPaymentManager()->getGeneralPaymentConfig();
+$interimprepaid = "";
+$interimpostpaid = "";
+$paidaccount = "";
+if($generalconfig->interimPostPaidAccount >= 0) {
+    $interimpostpaid = $generalconfig->interimPostPaidAccount;
+}
+if($generalconfig->interimPrePaidAccount >= 0) {
+    $interimprepaid = $generalconfig->interimPrePaidAccount;
+}
+if($generalconfig->paidPostingAccount >= 0) {
+    $paidaccount = $generalconfig->paidPostingAccount;
+}
+?>
+<div class='' method='saveaccountingsettings' gstype='form'>
+    <table>
+        <tr>
+            <td>
+                Interim<br>prepaid account<br>
+                <input class='gsniceinput1' placeholder='Example: 2900' gsname='interimprepaid' value='<?php echo $interimprepaid; ?>'>
+            </td>
+            <td>
+                Interim<br> postpaid / accrued account<br>
+                <input class='gsniceinput1' placeholder='Example: 1530' gsname='interimpostpaid' value='<?php echo $interimpostpaid; ?>'>
+            </td>
+            <td>
+                <bR>
+                Paid account<br>
+                <input class='gsniceinput1' placeholder='Example: 1920' gsname='paidaccount' value='<?php echo $paidaccount; ?>'>
+            </td>
+        </tr>
+    </table>
+    <br>
+    <u>Definitions:</u><br>
+    <b>Interim</b>: An interim account is an account used to temporarily hold a transaction before it is transferred to a permanent account.<bR> * It is common business practice to use an interim account when a business transaction is split into two steps due to timing of the activity.<br>
+    <b>Interim postpaid / accrued account</b>: The transaction is handled after the stay has been completed<br>
+    <b>Prepaid</b>: The transaction is handled before the stay <br>
+    <b>Paid account</b>: The account the transaction is posted upon payment has been recieved (been used for invoices only)<br>
+    <br>
+    <h2>Payment methods</h2>
+    <?php
+    $data = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
+    foreach($data as $app) {
+        $config = $this->getApi()->getPaymentManager()->getStorePaymentConfiguration($app->id);
+        $app->accountUserId = $config ? $config->userCustomerNumber : "Not set";
+        $app->customernumberpaid = $config ? $config->userCustomerNumberPaid : "";
+        $app->description  = $config && isset($config->accountingDescription) ? $config->accountingDescription : "";
+        $app->offsetAccountingId_accrude  = $config && isset($config->offsetAccountingId_accrude) ? $config->offsetAccountingId_accrude : "";
+        $app->offsetAccountingId_prepayment  = $config && isset($config->offsetAccountingId_prepayment) ? $config->offsetAccountingId_prepayment : "";
+    }
+
+    echo "<table>";
+    echo "<tr>";
+    echo "<th align='left'>Payment method</th>";
+    echo "<th align='left'>Description</th>";
+    echo "<th>Posting<br>account</th>";
+    echo "<th>Paid<br>account</th>";
+    echo "<th>Interim<br>Postpaid</th>";
+    echo "<th>Interim<br>Prepaid</th>";
+    foreach($data as $app) {
+        echo "<tr>";
+        echo "<td>" . $app->appName . "</td>";
+        echo "<td><input type='txt' class='gsniceinput1' value='".$app->description ."' gsname='description_".$app->id."'></td>";
+        echo "<td><input type='txt' class='gsniceinput1' value='".$app->accountUserId ."' style='width:60px;' gsname='account_".$app->id."'></td>";
+        echo "<td><input type='txt' class='gsniceinput1' value='".$app->customernumberpaid ."' style='width:60px' disabled></td>";
+        echo "<td><input type='txt' class='gsniceinput1' value='".$app->offsetAccountingId_accrude ."' style='width:60px' disabled></td>";
+        echo "<td><input type='txt' class='gsniceinput1' value='".$app->offsetAccountingId_prepayment ."' style='width:60px' disabled></td>";
+        echo "</tr>";
+    }
+    echo "</table>";
+?>
+<span class='shop_button' gstype='submit'>Save settings</span>
+</div>
+<bR>
+<bR>
+<hr>
+<br>

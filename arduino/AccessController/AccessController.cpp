@@ -10,6 +10,7 @@
 
 #include <util/atomic.h>
 
+void(* resetAfterDeviceIdSet) (void) = 0;//declare reset function at address 0
 
 #define disk1 0x50
 
@@ -89,8 +90,7 @@ void saveDeviceId(char* msg) {
 	};
 
 	dataStorage.writeCode(5500, data);
-	setDeviceIdToLoraChip();
-	communication.writeEncrypted("CID", 3, true);
+//	setDeviceIdToLoraChip();
 }
 
 void initLora() {
@@ -99,22 +99,22 @@ void initLora() {
 	pinMode(PB5, OUTPUT);
 
 	digitalWrite(PB5, HIGH);
-	delay(500);
+	delay(100);
 	digitalWrite(PB5, LOW);
-	delay(500);
+	delay(100);
 
 	digitalWrite(PB5, HIGH);
-	delay(500);
+	delay(100);
 	setDeviceIdToLoraChip();
-	delay(200);
+	delay(100);
 	Serial.print("AT+NETWORKID=5\r\n");
-	delay(200);
+	delay(100);
 	Serial.print("AT+MODE=0\r\n");
-	delay(200);
+	delay(100);
 	Serial.print("AT+BAND=868500000\r\n");
-	delay(200);
+	delay(100);
 	Serial.print("AT+PARAMETER=10,7,1,7\r\n");
-	delay(200);
+	delay(100);
 
 	wdt_reset();
 }
@@ -151,6 +151,7 @@ void setup()
 	digitalWrite(PD6, HIGH);
 
 	pinMode(16, OUTPUT); // Strike
+	pinMode(PD5, OUTPUT); // CP LIGHT
 }
 
 void toggleLight() {
@@ -165,7 +166,7 @@ void toggleLight() {
 }
 
 void aliveDebugLight() {
-	if (cycles > 30000) {
+	if (cycles > 300) {
 		toggleLight();
 	}
 	cycles++;
@@ -173,7 +174,7 @@ void aliveDebugLight() {
 
 void loop()
 {
-
+//	aliveDebugLight();
 //	pinMode(15, OUTPUT);
 //	DIGITALWRITE(15, LOW);
 //	DELAY(2000);
@@ -207,9 +208,17 @@ void loop()
 	if (communication.isDataAvailable()) {
 		communication.getData(bufferForCommunication);
 
+		if (bufferForCommunication[0] == 'P' && bufferForCommunication[1] == 'I' && bufferForCommunication[2] == 'N' && bufferForCommunication[3] == 'G') {
+			logging.addLog("PONG", 4, true);
+			return;
+		}
 
 		if (bufferForCommunication[0] == 'C' && bufferForCommunication[1] == 'I' && bufferForCommunication[2] == 'D') {
 			saveDeviceId(bufferForCommunication);
+			setDeviceIdToLoraChip();
+			delay(500);
+			communication.writeEncrypted("CHANGEDCID", 10, true);
+			delay(500);
 			return;
 		}
 

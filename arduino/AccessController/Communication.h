@@ -16,6 +16,7 @@ class Communication {
 	private:
 		Clock* _clock;
 		bool Communication::checksum(unsigned char* buffer, unsigned char checksum);
+		void Communication::debugDataArray(unsigned char* data, int size);
 		void Communication::printByteArray(byte inArray[], bool lineFeed);
 		void Communication::encryptAndSend(byte* msgToSend);
 		int Communication::checkIfTimeIsNewer(unsigned char *buffer);
@@ -23,6 +24,7 @@ class Communication {
 		byte* ciphertext;
 		static volatile unsigned char *readData;
 		volatile bool dataAvailable;
+		volatile int dataCounter = 0;
 		volatile unsigned char data[17];
 		volatile unsigned char buffer[16];
 		volatile byte decrypted[16];

@@ -73,15 +73,35 @@ bool Communication::checksum(unsigned char *buffer, unsigned char checksum) {
 }
 
 void Communication::check() {
+	unsigned char data[34], tmpbuf[34];
 
 	if (Serial.available()) {
 		this->dataAvailable = true;
 		aes128.setKey(this->key, aes128.keySize());
-		unsigned char data[34];
+
+		char lastRead = 0x00;
+		char readBuffer[1];
 		unsigned char buffer[16];
 		byte decrypted[16];
 
-		Serial.readBytesUntil('\n', data, 34);
+		while(Serial.available()) {
+			Serial.readBytes(readBuffer, 1);
+
+			if (dataCounter < 34) {
+				tmpbuf[dataCounter] = (unsigned char)readBuffer[0];
+			}
+
+			if (((unsigned char)readBuffer[0] == 0x0A && lastRead == 0x0D)) {
+				memcpy(data, tmpbuf, 34);
+				memset(tmpbuf, 0, sizeof(tmpbuf));
+				dataCounter = 0;
+				break;
+			}
+
+			lastRead = (unsigned char)readBuffer[0];
+
+			dataCounter++;
+		}
 
 		if (data[1] == 'O' && data[2] == 'K') {
 			this->dataAvailable = false;
@@ -105,6 +125,7 @@ void Communication::check() {
 		}
 
 		if (!checksum(buffer, data[26])) {
+//			this->debugDataArray(buffer, 16);
 			this->dataAvailable = false;
 			return;
 		}
@@ -143,6 +164,22 @@ void Communication::check() {
 	}
 }
 
+void Communication::debugDataArray(unsigned char* data, int size) {
+	Serial.print("Start: ");
+
+	for (int i=0; i<size; i++) {
+		Serial.print(data[i], HEX);
+		Serial.print(' ');
+	}
+
+	Serial.print(" DONE");
+	delay(200);
+
+	while(Serial.available()) {
+		Serial.read();
+	}
+}
+
 bool Communication::isDataAvailable() {
 	return this->dataAvailable;
 }
@@ -164,9 +201,9 @@ void Communication::writeEncrypted(char *msgToSend, volatile unsigned int length
     }
     int totalLength = packages*16;
 
-    Serial.print("AT+SEND=1,");
-	Serial.print(totalLength);
-	Serial.print(",");
+    unsigned char allData[totalLength];
+
+
 
     for (int i=0; i<packages;i++) {
     	for (int j=0; j<16;j++) {
@@ -184,11 +221,19 @@ void Communication::writeEncrypted(char *msgToSend, volatile unsigned int length
 
 		for (int g=0; g<16; g++) {
 			if (encrypt) {
-				Serial.print((char)encrypted[g]);
+				allData[g + (i*16)] = encrypted[g];
 			} else {
-				Serial.print((char)buf[g]);
+				allData[g + (i*16)] = buf[g];
 			}
 		}
+    }
+
+    Serial.print("AT+SEND=1,");
+   	Serial.print(totalLength);
+   	Serial.print(",");
+
+    for (int i=0; i<totalLength;i++) {
+    	Serial.print((char)allData[i]);
     }
 
 	Serial.print("\r\n");

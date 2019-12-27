@@ -21,6 +21,7 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include "DataStorage.h"
+#include <avr/wdt.h>
 
 #define eeprom1 0x54
 #define WRITE_CNT 5
@@ -123,10 +124,12 @@ void DataStorage::resetAll() {
 
 	for (unsigned int i=0; i<=2000; i++) {
 		writeCode(i, blank);
+		wdt_reset();
 	}
 
 	for (unsigned int i=5000; i<=5100; i++) {
 		writeCode(i, blank);
+		wdt_reset();
 	}
 
 	writeCode(5050, blank);
@@ -134,6 +137,7 @@ void DataStorage::resetAll() {
 	delay(1000);
 
 	digitalWrite(PB5, HIGH);
+
 
 }
 

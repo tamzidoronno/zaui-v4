@@ -214,7 +214,7 @@ void Logging::sendLogLine(Communication* comminucation, unsigned char* meta, uns
 
 	longPackage[25] = 'L';
 
-	comminucation->writeEncrypted(longPackage, 26);
+	comminucation->writeEncrypted(longPackage, 26, true);
 }
 
 bool Logging::handleAckMessage(unsigned char* msg) {

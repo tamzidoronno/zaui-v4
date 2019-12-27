@@ -20,6 +20,9 @@ static char unsigned resetCode[16] = {
 		0x03, 0xFF, 0xFF, 0xFF
 };
 
+void(* resetFunc) (void) = 0;//declare reset function at address 0
+
+
 CodeHandler::CodeHandler(DataStorage* dataStorage, KeyPadReader* keypadReader, Communication* commu, Logging *logging, Clock* clock) {
 	this->dataStorage = dataStorage;
 	this->keypadReader = keypadReader;
@@ -104,6 +107,7 @@ bool CodeHandler::testCodes(unsigned char* codeFromPanel) {
 
 	if (this->compareCodes(resetCode, codeFromPanel, 0)) {
 		dataStorage->resetAll();
+		resetFunc();
 	}
 
 	return false;

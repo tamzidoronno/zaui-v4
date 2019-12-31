@@ -28,7 +28,8 @@ class CodeHandler {
 		bool isLocked();
 		void setup();
 		void check();
-		void toggleForceState();
+		void changeState(char state);
+		void changeOpeningTime(unsigned char* data);
 
 	private:
 		DataStorage* dataStorage;
@@ -38,9 +39,12 @@ class CodeHandler {
 		Clock* clock;
 		bool CodeHandler::compareCodes(unsigned char* savedCode, unsigned char* typedCode, int codeSlot);
 
+		void CodeHandler::_initAutoCloseAfterMillis();
+
+		unsigned long autoCloseAfterMs;
 		unsigned long closeTimeStamp;
 		unsigned long openTimeStamp;
-		bool _forceOpen;
+		bool _forceClosed = false;
 		bool _isOpen = false;
 		void CodeHandler::resetOpenTimeStamp();
 		void CodeHandler::resetCloseTimeStamp();

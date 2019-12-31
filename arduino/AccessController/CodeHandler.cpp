@@ -29,10 +29,26 @@ CodeHandler::CodeHandler(DataStorage* dataStorage, KeyPadReader* keypadReader, C
 	this->communication = commu;
 	this->logging = logging;
 	this->clock = clock;
-	this->_forceOpen = false;
+	this->_forceClosed = false;
 	this->resetCloseTimeStamp();
 	this->resetOpenTimeStamp();
 	this->_isOpen = false;
+}
+
+void CodeHandler::_initAutoCloseAfterMillis() {
+	unsigned char data[16];
+
+	dataStorage->getCode(903, data);
+
+	if (data[0] != 0x44) {
+		autoCloseAfterMs = 5000;
+		return;
+	}
+
+	autoCloseAfterMs = data[1];
+	autoCloseAfterMs = autoCloseAfterMs * 256 + data[2];
+	autoCloseAfterMs = autoCloseAfterMs * 256 + data[3];
+	autoCloseAfterMs = autoCloseAfterMs * 256 + data[4];
 }
 
 void CodeHandler::setup() {
@@ -43,6 +59,8 @@ void CodeHandler::setup() {
 	digitalWrite(PD5, HIGH);
 	digitalWrite(engineRelay, LOW);
 	digitalWrite(strikeRelay, LOW);
+
+	this->_initAutoCloseAfterMillis();
 }
 
 void CodeHandler::resetOpenTimeStamp() {
@@ -85,7 +103,15 @@ bool CodeHandler::compareCodes(unsigned char* savedCode, unsigned char* typedCod
 bool CodeHandler::testCodes(unsigned char* codeFromPanel) {
 	unsigned char buffer[16];
 
-	for (unsigned int i=0; i<=2000; i++) {
+	Serial.print(codeFromPanel[15], HEX);
+	Serial.print("\r\n");
+
+	if (!this->isLocked() && codeFromPanel[15] == 0x0A) {
+		this->lock(0);
+		return false;
+	}
+
+	for (unsigned int i=1; i<=800; i++) {
 
 		dataStorage->getCode(i, buffer);
 
@@ -145,7 +171,11 @@ void CodeHandler::lock(unsigned int triggeredBySlot) {
  	 	 	 	 	 if triggeredBySlot = 32767, then its triggered by exit button (inside)
  */
 void CodeHandler::unlock(unsigned int triggeredBySlot) {
-	this->setCloseTimeStamp(millis() + 5000);
+	if (this->_forceClosed) {
+		return;
+	}
+
+	this->setCloseTimeStamp(millis() + autoCloseAfterMs);
 
 	this->internalUnlock();
 
@@ -170,6 +200,10 @@ void CodeHandler::unlock(unsigned int triggeredBySlot) {
 }
 
 void CodeHandler::internalUnlock() {
+	if (_forceClosed) {
+		return;
+	}
+
 	this->_isOpen = true;
 	this->resetOpenTimeStamp();
 	digitalWrite(strikeRelay, HIGH);
@@ -199,14 +233,43 @@ void CodeHandler::triggerDoorAutomation() {
 	digitalWrite(engineRelay, LOW);
 }
 
-void CodeHandler::toggleForceState() {
+void CodeHandler::changeState(char state) {
 
-	if (this->_forceOpen) {
+	if (state == 'N') {
+		this->_forceClosed = false;
 		this->lock(0);
-	} else {
-		this->internalUnlock();
-		this->logging->addLog("FORCEDOPEN", 10, true);
+		this->logging->addLog("STATE:N", 7, true);
 	}
 
-	this->_forceOpen = !this->_forceOpen;
+	if (state == 'U') {
+		this->_forceClosed = false;
+		this->internalUnlock();
+		this->logging->addLog("STATE:U", 7, true);
+	}
+
+	if (state == 'L') {
+		this->_forceClosed = true;
+		this->lock(0);
+		this->logging->addLog("STATE:L", 7, true);
+	}
+}
+
+void CodeHandler::changeOpeningTime(unsigned char* data) {
+
+	unsigned char buf[5];
+	buf[0] = 0x44;
+	buf[1] = data[4];
+	buf[2] = data[5];
+	buf[3] = data[6];
+	buf[4] = data[7];
+
+	dataStorage->writeCode(903, buf);
+	delay(100);
+
+	autoCloseAfterMs = data[4];
+	autoCloseAfterMs = autoCloseAfterMs * 256 + data[5];
+	autoCloseAfterMs = autoCloseAfterMs * 256 + data[6];
+	autoCloseAfterMs = autoCloseAfterMs * 256 + data[7];
+
+	this->logging->addLog("SET:AUTIME", 10, true);
 }

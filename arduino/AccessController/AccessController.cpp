@@ -16,15 +16,13 @@ void(* resetAfterDeviceIdSet) (void) = 0;//declare reset function at address 0
 
 int cycles = 0;
 
-byte key[16] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F};
-byte ciphertext[16] = {0xE0, 0xC4, 0xE0, 0xD8, 0x6A, 0x7B, 0x04, 0x30, 0xD8, 0xCD, 0xB7, 0x80, 0x70, 0xB4, 0xC5, 0x5A};
 
 Clock clock;
 
 DataStorage dataStorage;
 
 Logging logging(&dataStorage, &clock);
-Communication communication(key, ciphertext, &clock);
+Communication communication(&clock, &dataStorage);
 
 KeyPadReader keypadReaderObj(&clock);
 KeyPadReader& keypadReader = keypadReaderObj;
@@ -46,7 +44,7 @@ char * p = (char *) malloc (sizeof (signature));
 
 unsigned int getDeviceId() {
 	unsigned char buf[16];
-	dataStorage.getCode(5500, buf);
+	dataStorage.getCode(902, buf);
 
 	if (buf[0] != 0x44) {
 		return 65000;
@@ -81,7 +79,7 @@ void setDeviceIdToLoraChip() {
 	Serial.print(address);
 }
 
-void saveDeviceId(char* msg) {
+void saveDeviceId(unsigned char* msg) {
 	unsigned char data[16] = {
 			0x44, msg[4], msg[5], msg[6],
 			msg[7], msg[8], 0x00, 0xFF,
@@ -89,7 +87,7 @@ void saveDeviceId(char* msg) {
 			0xFF, 0xFF, 0xFF, 0xFF
 	};
 
-	dataStorage.writeCode(5500, data);
+	dataStorage.writeCode(902, data);
 //	setDeviceIdToLoraChip();
 }
 
@@ -135,6 +133,7 @@ void setup()
 
 	dataStorage.setupDataStorageBus();
 	initLora();
+	communication.setup();
 	keypadReader.setupWiegand();
 	logging.init();
 	codeHandler.setup();
@@ -216,9 +215,8 @@ void loop()
 		if (bufferForCommunication[0] == 'C' && bufferForCommunication[1] == 'I' && bufferForCommunication[2] == 'D') {
 			saveDeviceId(bufferForCommunication);
 			setDeviceIdToLoraChip();
-			delay(500);
-			communication.writeEncrypted("CHANGEDCID", 10, true);
-			delay(500);
+			communication.initializeEncryption();
+			resetAfterDeviceIdSet();
 			return;
 		}
 
@@ -255,8 +253,45 @@ void loop()
 			return;
 		}
 
-		if (bufferForCommunication[0] == 'F' && bufferForCommunication[1] == 'O' && bufferForCommunication[2] == 'R') {
-			codeHandler.toggleForceState();
+		// CHANGES THE STATE OF THE LOCK
+		if (bufferForCommunication[0] == 'S' && bufferForCommunication[1] == ':' && bufferForCommunication[2] == 'S') {
+			codeHandler.changeState(bufferForCommunication[4]);
+			return;
+		}
+
+		// SETS THE AUTO CLOSE TIME
+		if (bufferForCommunication[0] == 'S' && bufferForCommunication[1] == ':' && bufferForCommunication[2] == 'A') {
+			codeHandler.changeOpeningTime(bufferForCommunication);
+			return;
+		}
+
+		// SETS THE AUTO CLOSE TIME
+		if (bufferForCommunication[0] == 'S' && bufferForCommunication[1] == ':' && bufferForCommunication[2] == 'D') {
+			dataStorage.deleteAllCodes();
+			logging.addLog("ACODEDEL", 8, true);
+			return;
+		}
+
+		// SETS THE GID
+		if (bufferForCommunication[0] == 'S' && bufferForCommunication[1] == ':' && bufferForCommunication[2] == 'G') {
+			dataStorage.writeCode(904, bufferForCommunication);
+			logging.addLog("GIDCHANGED", 10, true);
+			return;
+		}
+
+		// SETS ENCRYPTIONKEY
+		if (bufferForCommunication[0] == 'S' && bufferForCommunication[1] == 'C') {
+			bool codeUpdated = communication.setEncryptionKey(bufferForCommunication);
+			if (!codeUpdated) {
+				logging.addLog("ENC:SET:2", 9, true);
+			} else {
+				if (bufferForCommunication[2] == 0x01) {
+					logging.addLog("ENC:SET:1", 9, true);
+				}
+				if (bufferForCommunication[2] == 0x02) {
+					logging.addLog("ENC:SET:2", 9, true);
+				}
+			}
 			return;
 		}
 	}

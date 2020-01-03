@@ -146,7 +146,6 @@ class PmsRestrictions extends \WebshopApplication implements \Application {
         $timePeriodeType[2] = "Min stay";
         $timePeriodeType[3] = "Max stay";
         $timePeriodeType[4] = "Deny same day booking";
-        $timePeriodeType[6] = "Force confirmation same day booking";
         
         $prefix = "Repeats";
         $type = $data->timePeriodeType;

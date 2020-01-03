@@ -69,6 +69,7 @@ class InvoicePayment extends \PaymentApplication implements \Application{
         $this->setConfigurationSetting("phoneNumber", $_POST['phoneNumber']);
         $this->setConfigurationSetting("logo", $_POST['logo']);
         $this->setConfigurationSetting("useSingleRoomTypes", $_POST['useSingleRoomTypes']);
+        $this->setConfigurationSetting("unpaidinvoicetext", $_POST['unpaidinvoicetext']);
     }
     
     public function renderPaymentOption() {

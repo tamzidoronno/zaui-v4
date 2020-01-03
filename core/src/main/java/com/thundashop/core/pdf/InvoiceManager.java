@@ -126,6 +126,7 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
             details.logo = settings.getSetting("logo");
             details.bankName = settings.getSetting("");
             details.phoneNumber = settings.getSetting("phoneNumber");
+            details.unpaidinvoicetext = settings.getSetting("unpaidinvoicetext");
             String kidSize = settings.getSetting("kidSize");
             if(kidSize != null && !kidSize.isEmpty()) {
                 details.kidSize = new Integer(kidSize);

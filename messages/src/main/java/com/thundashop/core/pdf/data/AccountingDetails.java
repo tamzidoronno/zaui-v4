@@ -31,6 +31,7 @@ public class AccountingDetails implements Serializable {
     public String logo = "";
     public String phoneNumber;
     public String language = "";
+    public String unpaidinvoicetext = "";
 
     public boolean isTypeOne() {
         if (type == null || type.isEmpty() || type.equals("type1"))

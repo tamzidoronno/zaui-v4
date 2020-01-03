@@ -463,12 +463,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     booking.channel = cop.channel;
                 }
             }
-            PmsUserDiscount userDiscount = pmsInvoiceManager.getUserDiscountByCouponCode(booking.couponCode);
-            if(userDiscount != null) {
-                if(userManager.doesUserExsist(userDiscount.userId)) {
-                    booking.userId = userDiscount.userId;
-                }
-            }
         }
 
         if (booking.couponCode != null && booking.couponCode.contains(":")) {

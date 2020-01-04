@@ -1,7 +1,30 @@
 <div class="workareaheader">
-    <? echo $this->__f("GetShop"); ?>
+    <? echo $this->__f("Systems for customer"); ?>
 </div>
+<div style='margin: 20px;'>
+<?php
+/* @var $this \ns_a22fa681_6882_4869_8add_b1cc9c7b661b\GetShopCompanySettings */
+    $company = $this->getSelectedCompany();
 
-Please select a menu entry to the left
+    ?>
+    <h1>Systems created for this customer</h1>
+    <?php
+    if ($company) {
+        $systems = (array)$this->getApi()->getSystemManager()->getSystemsForCompany($company->id);
+        foreach ($systems as $system) {
+            ?>
+            <div class="submenuentry taboperation systemrow" tab='systemview' value='<? echo $system->id; ?>'><? echo $system->systemName; ?></div>
+            <?
+        }
+        if(sizeof($systems) == 0) {
+            echo "No systems has been created for this customer yet, create one below.";
+        }
+    }
+    ?>
 
-
+    <h1>Create a new system</h1>
+    <?php
+    $creator = new ns_6fc2b3f8_d6fa_4f70_9062_56179a701119\GetShopStoreCreator();
+    $creator->render();
+    ?>
+</div>

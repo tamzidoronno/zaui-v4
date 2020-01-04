@@ -43,10 +43,21 @@ class GetShopStoreCreator extends \MarketingApplication implements \Application 
         return json_decode($content);
     }
     
+    /**
+     * 
+     * @return \core_getshop_data_CreatedStoreData
+     */
     public function create() {
         if (!$_POST['data']['name']) {
             $obj = $this->getStdErrorObject(); // Get a default error message
             $obj->fields->errorMessage = "Your name can not be blank"; // The message you wish to display in the gserrorfield
+            $obj->gsfield->name = 1; // Will highlight the field that has gsname "hours"
+            $this->doError($obj); // Code will stop here.
+        }
+        
+        if (!$_POST['data']['systemname']) {
+            $obj = $this->getStdErrorObject(); // Get a default error message
+            $obj->fields->errorMessage = "System name can not be blank"; // The message you wish to display in the gserrorfield
             $obj->gsfield->name = 1; // Will highlight the field that has gsname "hours"
             $this->doError($obj); // Code will stop here.
         }
@@ -103,8 +114,8 @@ class GetShopStoreCreator extends \MarketingApplication implements \Application 
         $startData->currency = $_POST['data']['currency'];
         $startData->country = $_POST['data']['country'];
         $startData->timeZone = $_POST['data']['timezone'];
-        $startData->cluster = 6;
-        $this->newStoreAddress = $this->getApi()->getGetShop()->createNewStore($startData);
+        $startData->cluster = $_POST['data']['cluster'];
+        return $this->getApi()->getGetShop()->createNewStore($startData);
     }
     
     public function saveSettings() {

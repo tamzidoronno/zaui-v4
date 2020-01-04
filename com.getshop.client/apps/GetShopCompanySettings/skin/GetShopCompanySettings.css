@@ -14,6 +14,27 @@
     border-bottom: solid 1px #DDD;
 }
 
+.GetShopCompanySettings .systemrow:hover {
+    font-weight: bold;
+}
+
+.GetShopCompanySettings .systemrow {
+    border: solid 1px #bbb;
+    font-size: 16px;
+    padding: 5px;
+    margin-bottom: 3px;
+    cursor:pointer;
+}
+.GetShopCompanySettings .creatorrow {
+    margin-bottom: 10px;
+}
+
+.GetShopCompanySettings .label {
+    width: 30%;
+    display:inline-block;
+    font-size: 16px;
+}
+
 .GetShopCompanySettings .workarea,
 .GetShopCompanySettings .rightmenu {
     display: inline-block;
@@ -26,6 +47,9 @@
     color: #FFF;
     text-align: center;
     min-height: calc(100% - 86px);
+    display:none;
+    position:fixed;
+    right:0px;
 }
 
 .GetShopCompanySettings .rightmenu .entry {
@@ -49,7 +73,7 @@
 }
 
 .GetShopCompanySettings .workarea {
-    width: calc(100% - 100px);
+    width: 100%;
     box-sizing: border-box;
     height: 300px;
 }

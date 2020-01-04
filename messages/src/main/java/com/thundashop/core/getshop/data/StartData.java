@@ -24,5 +24,6 @@ public class StartData {
     public String prefix = "";
     public String currency = "";
     public String country = "";
+    public String systemName = "";
     public int cluster = 0;
 }

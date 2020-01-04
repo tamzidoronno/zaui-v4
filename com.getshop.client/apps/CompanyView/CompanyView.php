@@ -69,11 +69,19 @@ class CompanyView extends \MarketingApplication implements \Application {
     }
     
     public function getSelectedCompany() {
-        if (!$this->selectedCompany) {
+        if (!$this->selectedCompany && isset($_SESSION['ns_2f62f832_5adb_407f_a88e_208248117017_selectedcompany'])) {
             $this->selectedCompany = $this->getApi()->getUserManager()->getCompany($_SESSION['ns_2f62f832_5adb_407f_a88e_208248117017_selectedcompany']);
         }
         
         return $this->selectedCompany;
+    }
+    
+    public function createCompany() {
+        $name = $_POST['data']['companyname'];
+        $vat = $_POST['data']['vatnumber'];
+        $user = $this->getApi()->getUserManager()->createCompany($vat, $name);
+        $_SESSION['ns_2f62f832_5adb_407f_a88e_208248117017_selectedcompany'] = $user->mainCompanyId;
+        return $user;
     }
     
     public function gsAlsoUpdate() {

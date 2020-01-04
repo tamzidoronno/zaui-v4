@@ -307,8 +307,19 @@ include('commonforallmodules.php');
         if (count($modules) > 1 && $isLoggedInEditorOrAdministrator || (count($modules) == 1 && $modules[0]->id != "cms")) {
             $activeModule = null;
             echo "<div class='gs_framework_modules'>";
-
+            
+            $gsadminmenues = array();
+            $gsadminmenues[] = "salespoint";
+            $gsadminmenues[] = "settings";
+            $gsadminmenues[] = "account";
+            $gsadminmenues[] = "invoice";            
+            
             foreach ($modules as $module) {
+                
+                if($factory->getStore()->id == "13442b34-31e5-424c-bb23-a396b7aeb8ca" && !in_array($module->id, $gsadminmenues)) {
+                    continue;
+                }
+                
                 $moduleActiveClass = $factory->getPage()->javapage->getshopModule == $module->id ? "active" : "";
                 $activeModule = $factory->getPage()->javapage->getshopModule == $module->id ? $module : $activeModule;
                 if (!$activeModule && $module->id == "cms") {
@@ -331,6 +342,10 @@ include('commonforallmodules.php');
                 } else {
                     echo "<a class='gs_ignorenavigate' href='/?changeGetShopModule=$module->id&scopeid=$scopeId'><div class='gs_framework_module $moduleActiveClass'>$icon $module->name</div></a>";
                 }
+            }
+            
+            if($factory->getStore()->id == "13442b34-31e5-424c-bb23-a396b7aeb8ca") {
+                echo "<a class='gs_ignorenavigate' href='/getshop.php?page=inbox&gs_getshopmodule='><div class='gs_framework_module active'><i class='fa fa-group'></i><br>Getshop support</div></a>";
             }
             
             $logoutText = $factory->__f("Logout");

@@ -12,6 +12,10 @@ $invoke = $this->invokeJavascriptFunctionAfterActions;
 if(isset($extraArgs['invokeJavascriptFunctionAfterActions'])) {
     $invoke = $extraArgs['invokeJavascriptFunctionAfterActions'];
 }
+$createCompanyCallback = "app.GetShopQuickUser.userCreated";
+if(isset($extraArgs['createCompanyBtnCallback'])) {
+    $createCompanyCallback = $extraArgs['createCompanyBtnCallback'];
+}
 ?>
 
 <div class="change_user_form" invokeJavascriptFunctionAfterActions='<? echo $invoke; ?>' >
@@ -100,7 +104,7 @@ if(isset($extraArgs['invokeJavascriptFunctionAfterActions'])) {
                 <?php if(!isset($this->extraArgs['avoidCloseButton']) || $this->extraArgs['avoidCloseButton'] != "true") { ?>
                     <div class="shop_button show_change_user"><i class="fa fa-close"></i> <? echo $this->__f("Close"); ?></div>
                 <?php } ?>
-                <div gs_callback="app.GetShopQuickUser.userCreated" gstype="submit" class="shop_button"><i class="fa fa-building"></i> <? echo $this->__f("Create"); ?></div>
+                <div gs_callback="<?php echo $createCompanyCallback; ?>" gstype="submit" class="shop_button"><i class="fa fa-building"></i> <? echo $this->__f("Create"); ?></div>
             </div>
         </div>
     </div>

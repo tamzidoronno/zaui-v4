@@ -27,6 +27,7 @@ import com.thundashop.core.common.Settings;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.getshop.data.CreatedStoreData;
 import com.thundashop.core.getshop.data.DibsAutoCollectData;
 import com.thundashop.core.getshop.data.EhfComplientCompany;
 import com.thundashop.core.getshop.data.GetshopStore;
@@ -843,7 +844,7 @@ public class GetShop extends ManagerBase implements IGetShop {
     }
 
     @Override
-    public String createNewStore(StartData startData) {
+    public CreatedStoreData createNewStore(StartData startData) {
         int nextStoreId = storePool.incrementStoreCounter();
         
         String newAddress = nextStoreId + ".getshop.com";
@@ -855,6 +856,7 @@ public class GetShop extends ManagerBase implements IGetShop {
             newAddress = nextStoreId+"gc"+startData.cluster+".getshop.com";
         }
         
+        CreatedStoreData newStore = new CreatedStoreData();
         try {
             // 7d89917f-c2de-4108-a9d6-33ba78f62c16 = http://bookingtemplate.getshop.com
             String newStoreId = UUID.randomUUID().toString();
@@ -873,13 +875,17 @@ public class GetShop extends ManagerBase implements IGetShop {
                     Logger.getLogger(GetShop.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
+            newStore.newStoreId = newStoreId;
+            
         } catch (UnknownHostException ex) {
             ex.printStackTrace();
         } catch (ErrorException ex) {
             throw ex;
         }
         
-        return newAddress;
+        newStore.url = newAddress;
+        
+        return newStore;
     }
 
     private Setting createStoreSetting(String key, StartData startData) {

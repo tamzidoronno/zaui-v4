@@ -37,8 +37,24 @@ class GetShopCompanySettings extends \MarketingApplication implements \Applicati
         $this->getApi()->getDirectorManager()->syncFromOld();
     }
     
+    public function create() {
+        $creator = new \ns_6fc2b3f8_d6fa_4f70_9062_56179a701119\GetShopStoreCreator();
+        $data = $creator->create();
+        
+        $company = $this->getSelectedCompany();
+        $system = $this->getApi()->getSystemManager()->createSystem($_POST['data']['systemname'], $company->id);
+        $system->remoteStoreId = $data->newStoreId;
+        $system->webAddresses = $data->url;
+        $system->productId = $_POST['data']['productId'];
+        $system->serverVpnIpAddress = "10.0." . $_POST['data']['cluster'] . ".33";
+        $this->getApi()->getSystemManager()->saveSystem($system);
+        
+        $_SESSION['ns_a22fa681_6882_4869_8add_b1cc9c7b661b_systemid'] = $system->id;
+        $_SESSION['ns_a22fa681_6882_4869_8add_b1cc9c7b661b_tab'] = "systemview";
+    }
+    
     public function getSelectedTab() {
-        if (!isset($_SESSION['ns_a22fa681_6882_4869_8add_b1cc9c7b661b_tab'])) {
+        if (!isset($_SESSION['ns_a22fa681_6882_4869_8add_b1cc9c7b661b_tab']) || !$_SESSION['ns_a22fa681_6882_4869_8add_b1cc9c7b661b_tab']) {
             return "getshopdetails";
         }
         

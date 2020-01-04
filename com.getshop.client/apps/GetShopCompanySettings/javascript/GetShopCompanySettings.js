@@ -1,6 +1,6 @@
 app.GetShopCompanySettings = {
     init: function() {
-        $(document).on('click', '.GetShopCompanySettings .rightmenu .taboperation', app.GetShopCompanySettings.selectMenu);
+        $(document).on('click', '.GetShopCompanySettings .taboperation', app.GetShopCompanySettings.selectMenu);
         $(document).on('keyup', '.GetShopCompanySettings .searchForCustomer', app.GetShopCompanySettings.searchForCustomer);
     },
 

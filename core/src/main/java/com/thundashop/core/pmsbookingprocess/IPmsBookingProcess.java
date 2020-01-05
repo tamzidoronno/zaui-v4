@@ -8,7 +8,9 @@ package com.thundashop.core.pmsbookingprocess;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
+import com.thundashop.core.pmsmanager.PmsPricing;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -47,8 +49,14 @@ public interface IPmsBookingProcess {
     public boolean hasPrintCodeSupportOnTerminal();
     public boolean printCodeOnTerminal(String roomId, String phoneNumber, Integer terminalId);
     public void quickChangeGuestCountForRoom(String roomId, int guestCount);
+    public HashMap<Integer, Double> getPricesForRoom(Date start, Date end, String itemId);
+    
     @Administrator
     public String addBookingItemType(String bookingId, String type, Date start, Date end, String guestInfoFromRoom);
+    
+    @Administrator
+    public String addBookingItem(String bookingId, String type, Date start, Date end, String guestInfoFromRoom, String bookingItemId);
+    
     @Administrator
     public void simpleCompleteCurrentBooking();
     

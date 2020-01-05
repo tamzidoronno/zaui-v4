@@ -6,10 +6,7 @@ if(isset($_POST['data']['roomid']) && $_POST['data']['roomid']) {
 }
 
 $start = date("d.m.Y", strtotime($_POST['data']['start']));
-$end = date("d.m.Y", strtotime($_POST['data']['end']));
-if($end == $start) {
-    $end = date("d.m.Y", strtotime($_POST['data']['end'])+86400);
-}
+$end = date("d.m.Y", strtotime($_POST['data']['end'])+86400);
 
 if($booking) {
     foreach($booking->rooms as $tmpRoom) {
@@ -79,7 +76,19 @@ if($_POST['data']['isclosed'] && $_POST['data']['isclosed'] == "true") {
         <td valign='top' width='50%' style='padding: 10px;border-left: solid 1px #bbb; '>
             <?php
             if(!$booking) {
+                $itemId = $_POST['data']['bookingitemid'];
+                $nights = $this->getNumberOfNights($start, $end);
+                $prices = $this->getPricesForRoom($start, $end, $itemId);
                 echo "This room is not assigned to anyone yet.";
+                echo "<div style='margin-top: 20px;'>";
+                echo "<span class='shop_button startbookingprocess' style='width:100%; box-sizing:border-box; background-color:green;' start='$start' end='$end' itemid='$itemId'>Book it</span>";
+                echo "<br>";
+                echo "<br>";
+                echo "<div>Number of nights: " . $nights . "</div>";
+                foreach($prices as $guest => $avgPrice) {
+                    echo "<div>Total cost for $guest guests : " . $avgPrice * $nights . "</div>"; 
+                }
+                echo "</div>";
             } else {
                 $user = $this->getApi()->getUserManager()->getUserById($booking->userId);
                 echo "<div style='text-align:center;padding-bottom: 10px; margin-bottom: 10px;'>" . $user->fullName . "</div>";

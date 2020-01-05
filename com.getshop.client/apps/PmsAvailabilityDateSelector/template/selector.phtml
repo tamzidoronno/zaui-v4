@@ -3,9 +3,15 @@
 $app = new \ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability();
 $types = $app->getTypes();
 $cats = $app->getCategoryFilter();
+$time = strtotime("01.02.2020");
 ?>
 
-<span class="shop_button" style="float:left;" onclick="$('.PmsAvailabilityDateSelector .addeventform').show();">Add event</span>
+<span style='float:left'>
+    <span class="shop_button" onclick="$('.PmsAvailabilityDateSelector .addeventform').show();">Add event</span>
+    <?php if($time > time()) { ?>
+        <span style='font-size: 16px; color:green;'><i class='fa fa-info-circle'></i> Beta: You can now book and look up prices from availability, drag on area you want to book.</span>
+    <?php } ?>
+</span>
 <span class="addeventform" gstype='form' method="addevent">
     <input class="gsniceinput1" gsname="startdate" placeholder="start" style="width:80px;">
     <input class="gsniceinput1" gsname="endate" placeholder="end" style="width:80px;">

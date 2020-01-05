@@ -9991,6 +9991,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void simpleCompleteCurrentBooking() {
         PmsBooking currentBooking = getCurrentBooking();
+        
+                
+        for(PmsBookingRooms room : currentBooking.rooms) {
+            if(room.preferredBookingItemId == null || room.preferredBookingItemId.isEmpty()) {
+                room.bookingItemId = "";
+            }
+        }
+        
         checkIfNeedToBeAssignedToRoomWithSpecialAddons(currentBooking);
         List<String> roomInWaiting = new ArrayList();
         for(PmsBookingRooms room : currentBooking.rooms) {

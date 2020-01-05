@@ -141,6 +141,9 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         
         echo "<script>";
 //        echo "app.PmsNewBooking20.setLastPage();";
+        if(isset($_GET['proceedtonew'])) {
+            echo "app.PmsNewBooking20.doGoToStep(\"newcustomer\");";
+        }
         echo "</script>";
     }
     

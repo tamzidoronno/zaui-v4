@@ -249,6 +249,21 @@
 .PmsAvailability .bookername .fullname {
     display: none;
 }
+
+.PmsAvailability .isfloating {
+    color:#bbb;
+    cursor:pointer;
+}
+.PmsAvailability .adjustguestcount {
+    cursor:pointer;
+}
+
+.PmsAvailability .ispinned {
+    color:#000;
+    cursor:pointer;
+    font-weight: bold;
+}
+
 .PmsAvailability .hatched {
     background: repeating-linear-gradient(
         45deg,
@@ -256,6 +271,34 @@
         #606dbc 10px,
         #465298 10px,
         #465298 20px
+    );
+}
+.PmsAvailability .selectedforbookingarea {
+    position: fixed;
+    width: 500px;
+    top: 10px;
+    left: 50%;
+    margin-left: -250px;
+    background-color:#f5f8fa;
+    font-size: 16px;
+    display:none;
+    z-index:6;
+    padding: 10px;
+    box-shadow:0px 2px 15px rgba(0,0,0,0.3);
+}
+
+.PmsAvailability .selectedforbookingarea th {
+    color: #777;
+    font-weight: normal;
+}
+
+.PmsAvailability .selectedforbooking {
+    background: repeating-linear-gradient(
+        45deg,
+        #0bd03e,
+        #0bd03e 10px,
+        #3e85a2 10px,
+        #3e85a2 20px
     );
 }
 

@@ -1,5 +1,6 @@
 app.PmsAvailability = {
     gstoppbbooked : false,
+    timeoutonguestadjustment : null,
     isMarking : 0,
     startMarkingElement : null,
     init: function() {
@@ -12,7 +13,102 @@ app.PmsAvailability = {
         $(document).on('click', '.PmsAvailability .displaywatinglist', this.showWaitinglistList);
         $(document).on('click', '.PmsAvailability .otherevents', this.loadEvent);
         $(document).on('click', '.PmsAvailability .prioritizeRoom', this.prioritizeRoom);
+        $(document).on('click', '.PmsAvailability .startbookingprocess', this.startbookingprocess);
+        $(document).on('click', '.PmsAvailability .closeselectedforbookingwindow', this.stopbookingprocess);
+        $(document).on('click', '.PmsAvailability .removeselectedroom', this.removeselectedroom);
+        $(document).on('click', '.PmsAvailability .highlightspecificroom', this.highlightspecificroom);
+        $(document).on('click', '.PmsAvailability .adjustguestcount', this.adjustguestcount);
 //        $(document).on('click', '.PmsAvailability .contains_booking', this.showMenuBox);
+    },
+    adjustguestcount : function() {
+        var type = $(this).attr('type');
+        var btn = $(this);
+        var count = parseInt($(this).closest('tr').find('.guestcount').text());
+        if(type == "increase") {
+            count++;
+        } else {
+            count--;
+        }
+        if(count <= 0) {
+            count = 1;
+        }
+        $(this).closest('tr').find('.guestcount').text(count);
+        
+        if(app.PmsAvailability.timeoutonguestadjustment != null) {
+            clearTimeout(app.PmsAvailability.timeoutonguestadjustment);
+        }
+        
+        app.PmsAvailability.timeoutonguestadjustment = setTimeout(function() {
+            var guestcounter = {};
+            $('.selectedroom').each(function() {
+                guestcounter[$(this).attr('roomid')] = $(this).find('.guestcount').text()
+            });
+             var event = thundashop.Ajax.createEvent('','updateGuestCounter',btn, {
+                 "guestcounter" : guestcounter
+             });
+            thundashop.Ajax.postWithCallBack(event, function(res) {
+                $('.selectedforbookingarea').html(res);
+            });
+        }, "1000");
+        
+    },
+    highlightspecificroom : function() {
+        var roomid = $(this).closest('tr').attr('roomid');
+        var btn = $(this);
+        var event = thundashop.Ajax.createEvent('','highlightRoom',$(this), {
+            "roomid" : roomid
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            res = JSON.parse(res);
+            btn.removeClass('ispinned');
+            btn.removeClass('isfloating');
+            
+            if(res.success === "true") {
+                btn.addClass('ispinned');
+            } else {
+                btn.addClass('isfloating');
+            }
+        });
+    },
+    removeselectedroom : function() {
+        var roomid = $(this).closest('tr').attr('roomid');
+        var event = thundashop.Ajax.createEvent('','removeSelectedRoom',$(this), {
+            "roomid" : roomid
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.selectedforbookingarea').html(res);
+            if($('.selectedroom').length == 0) {
+                app.PmsAvailability.stopbookingprocess();
+            }
+        });
+        $('.selectedforbooking[selectedpmsbookingroomid="'+roomid+'"]').removeClass('selectedforbooking');
+    },
+    stopbookingprocess : function() {
+        $('.selectedforbookingarea').html("");
+        $('.selectedforbookingarea').fadeOut();
+        $('.selectedforbooking').removeClass('selectedforbooking');
+    },
+    startbookingprocess : function() {
+        var btn = $(this);
+        
+        var first = $('.selectedforbooking').length == 0;
+        $('.PmsAvailability .hatched').addClass('selectedforbooking');
+        $('.PmsAvailability .hatched').addClass('tmpselectedforbooking');
+        $('.PmsAvailability .hatched').removeClass('hatched');
+        app.PmsAvailability.closeCloseRoomDialog();
+        var event = thundashop.Ajax.createEvent('','addToMarkedForBookingArea',$(this), {
+            "start" : btn.attr('start'),
+            "end" : btn.attr('end'),
+            "itemid" : btn.attr('itemid'),
+            "first" : first
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            res = JSON.parse(res);
+            $('.selectedforbookingarea').html(res.content);
+            $('.PmsAvailability .selectedforbookingarea').fadeIn();
+            $('.tmpselectedforbooking').attr('selectedpmsbookingroomid',res.roomid);
+            $('.tmpselectedforbooking').removeClass('tmpselectedforbooking');
+        });
     },
     prioritizeRoom : function() {
         var row = $(this).closest('tr');
@@ -104,6 +200,14 @@ app.PmsAvailability = {
         }
         
         app.PmsAvailability.isMarking = false;
+        var target = $(event.target);
+        if(target.closest('.col_outer').hasClass('selectedforbooking')) {
+            var roomId = target.closest('.col_outer').attr('selectedpmsbookingroomid');
+            $('.removeselectedroom[roomid="'+roomId+'"]').click();
+            $('.hatched').removeClass('hatched');
+            return;
+        }
+        
         var modal = $('.closemodalarea');
         modal.css('left', event.clientX-100);
         modal.css('top', event.clientY+20);
@@ -137,6 +241,9 @@ app.PmsAvailability = {
             modal.html(res);
             modal.show();
             modal.draggable();
+            if($('.selectedforbooking').length > 0) {
+                $('.PmsAvailability .startbookingprocess').click();
+            }
         });
     },
     

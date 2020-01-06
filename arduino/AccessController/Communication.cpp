@@ -38,7 +38,6 @@ void Communication::initializeEncryption() {
 
 	if (useStoredKey) {
 		this->_dataStorage->getCode(905, this->key);
-		this->debugDataArray(this->key, 16);
 	}
 
 	aes128.setKey(this->key, aes128.keySize());
@@ -182,7 +181,7 @@ void Communication::sendGid() {
 void Communication::check() {
 	char readBuffer[1];
 
-	if (Serial.available()) {
+	while (Serial.available()) {
 		Serial.readBytes(readBuffer, 1);
 		this->shiftSerialBufferLeft();
 		this->serialDataBuffer[26] = readBuffer[0];

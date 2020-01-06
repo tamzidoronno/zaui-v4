@@ -10,9 +10,6 @@
 #include "Communication.h";
 #include "Arduino.h"
 
-#define strikeRelay 14
-#define engineRelay 15
-
 static char unsigned resetCode[16] = {
 		0x00, 0x00, 0x00, 0x00,
 		0x01, 0x02, 0x03, 0x01,
@@ -23,13 +20,14 @@ static char unsigned resetCode[16] = {
 void(* resetFunc) (void) = 0;//declare reset function at address 0
 
 
-CodeHandler::CodeHandler(DataStorage* dataStorage, KeyPadReader* keypadReader, Communication* commu, Logging *logging, Clock* clock) {
+CodeHandler::CodeHandler(DataStorage* dataStorage, CodeReader* keypadReader, Communication* commu, Logging *logging, Clock* clock, ActionHandler* actionHandler) {
 	this->dataStorage = dataStorage;
 	this->keypadReader = keypadReader;
 	this->communication = commu;
 	this->logging = logging;
 	this->clock = clock;
 	this->_forceClosed = false;
+	this->actionHandler = actionHandler;
 	this->resetCloseTimeStamp();
 	this->resetOpenTimeStamp();
 	this->_isOpen = false;
@@ -52,14 +50,7 @@ void CodeHandler::_initAutoCloseAfterMillis() {
 }
 
 void CodeHandler::setup() {
-	pinMode(engineRelay, OUTPUT); // Engine
-	pinMode(strikeRelay, OUTPUT); // Strike
-	pinMode(PD5, OUTPUT); // CP LIGHT
-
-	digitalWrite(PD5, HIGH);
-	digitalWrite(engineRelay, LOW);
-	digitalWrite(strikeRelay, LOW);
-
+	this->actionHandler->setup();
 	this->_initAutoCloseAfterMillis();
 }
 
@@ -126,7 +117,7 @@ bool CodeHandler::testCodes(unsigned char* codeFromPanel) {
 			return true;
 		}
 
-		if (keypadReader->checkWiegand()) {
+		if (keypadReader->check()) {
 			break;
 		}
 	}
@@ -157,21 +148,27 @@ void CodeHandler::check() {
  */
 void CodeHandler::lock(unsigned int triggeredBySlot) {
 	this->resetCloseTimeStamp();
-
-	digitalWrite(strikeRelay, LOW);
-	digitalWrite(PD5, HIGH);
-
+	this->actionHandler->lock();
 	this->logging->addLog("D:LOCKED", 8, true);
 	this->_isOpen = false;
 }
 
 /**
+ * This function is also failsafe for retriggering the unlock functionallity.
+ *
+ * If the door is asked to unlock while the door is open it will just trigger the door automation logic.
+ *
  * triggeredBySlot = user slot code used for opening.
  	 	 	 	 	 if triggeredBySlot = 0, then its triggered by system.
  	 	 	 	 	 if triggeredBySlot = 32767, then its triggered by exit button (inside)
  */
 void CodeHandler::unlock(unsigned int triggeredBySlot) {
 	if (this->_forceClosed) {
+		return;
+	}
+
+	if (!this->isLocked()) {
+		this->triggerDoorAutomation();
 		return;
 	}
 
@@ -206,8 +203,7 @@ void CodeHandler::internalUnlock() {
 
 	this->_isOpen = true;
 	this->resetOpenTimeStamp();
-	digitalWrite(strikeRelay, HIGH);
-	digitalWrite(PD5, LOW);
+	this->actionHandler->unlock();
 }
 
 void CodeHandler::setCloseTimeStamp(unsigned long tstamp) {
@@ -227,10 +223,14 @@ void CodeHandler::triggerDoorAutomation() {
 		return;
 	}
 
-	delay(200);
-	digitalWrite(engineRelay, HIGH);
-	delay(100);
-	digitalWrite(engineRelay, LOW);
+	bool retriggerCheck = (millis() - this->lastTriggeredDoorAutomation) < 500;
+
+	if (retriggerCheck) {
+		return;
+	}
+
+	this->lastTriggeredDoorAutomation = millis();
+	this->actionHandler->triggerDoorAutomation();
 }
 
 void CodeHandler::changeState(char state) {

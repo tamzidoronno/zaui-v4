@@ -7,6 +7,7 @@
 #include "WiegandNG.h"
 #include "Communication.h"
 #include "KeypadReader.h"
+#include "CodeReader.h"
 #include <avr/io.h>
 
 volatile unsigned char *KeyPadReader::_codeBuffer[26];
@@ -17,13 +18,17 @@ volatile bool KeyPadReader::_dataAvailable;
 WiegandNG wg;
 
 
-KeyPadReader::KeyPadReader(Clock* clock) {
+KeyPadReader::KeyPadReader(Clock* clock){
 	_dataAvailable = false;
 	_clock = clock;
 }
 
 void KeyPadReader::clear() {
 	wg.clear();
+}
+
+void KeyPadReader::setCodeHandler(CodeHandler* codeHandler) {
+	this->_codeHandler = codeHandler;
 }
 
 void KeyPadReader::shiftright()
@@ -67,6 +72,14 @@ void KeyPadReader::clearBuffer() {
 	}
 }
 
+void KeyPadReader::setup() {
+	pinMode(_innerButtonPin, OUTPUT);
+	pinMode(_outerButtonOutside, OUTPUT);
+	digitalWrite(_innerButtonPin, HIGH);
+	digitalWrite(_outerButtonOutside, HIGH);
+	this->setupWiegand();
+}
+
 void KeyPadReader::setupWiegand() {
 	wg.begin(3, 2, 48, 15);
 }
@@ -87,6 +100,11 @@ bool KeyPadReader::isAvailable() {
 	return _dataAvailable;
 }
 
+bool KeyPadReader::check() {
+	this->checkExternalButtons();
+	return this->checkWiegand();
+}
+
 bool KeyPadReader::checkWiegand() {
 	if(wg.available()) {
 		wg.pause();				// pause Wiegand pin interrupts
@@ -99,6 +117,16 @@ bool KeyPadReader::checkWiegand() {
 	}
 
 	return false;
+}
+
+void KeyPadReader::checkExternalButtons() {
+	if (digitalRead(_innerButtonPin) == LOW) {
+		this->_codeHandler->unlock(32767);
+	}
+
+	if (digitalRead(_outerButtonOutside) == LOW) {
+		this->_codeHandler->triggerDoorAutomation();
+	}
 }
 
 void KeyPadReader::stop() {

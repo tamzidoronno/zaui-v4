@@ -32,6 +32,8 @@
 
 int pagesize = 16;
 
+void(* restartAfterResteCompleted) (void) = 0;//declare reset function at address 0
+
 // Contstructor
 DataStorage::DataStorage() {
 }
@@ -54,6 +56,7 @@ void DataStorage::writeEEPROMPage(unsigned int eeaddress, unsigned char* data)
 void DataStorage::setupDataStorageBus() {
 	Wire.begin();
 	Wire.setClock(400000);
+ // this->resetAll();
 }
 
 void DataStorage::readEEPROM(int deviceaddress, unsigned int eeaddress, unsigned char* data, unsigned int num_chars) {
@@ -112,7 +115,6 @@ void DataStorage::writeCode(unsigned int slot, unsigned char* str_data) {
 }
 
 void DataStorage::resetAll() {
-	digitalWrite(PB5, LOW);
 
 	unsigned char blank[16] = {
 		0xFF, 0xFF, 0xFF, 0xFF,
@@ -150,7 +152,7 @@ void DataStorage::resetAll() {
 
 	delay(1000);
 
-	digitalWrite(PB5, HIGH);
+	restartAfterResteCompleted();
 }
 
 void DataStorage::deleteAllLogs() {
@@ -187,4 +189,3 @@ void DataStorage::deleteAllCodes() {
 		wdt_reset();
 	}
 }
-

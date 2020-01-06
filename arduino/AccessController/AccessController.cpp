@@ -2,11 +2,15 @@
 
 #include "Communication.h"
 #include "KeypadReader.h"
+#include "GS8015KeyReader.h"
 #include "DataStorage.h"
+#include "ApacActionHandler.h"
+#include "GS8015ActionHandler.h"
 #include "CodeHandler.h"
 #include "Logging.h"
 #include "ExternalInputReader.h"
 #include <avr/wdt.h>
+
 
 #include <util/atomic.h>
 
@@ -14,8 +18,14 @@ void(* resetAfterDeviceIdSet) (void) = 0;//declare reset function at address 0
 
 #define disk1 0x50
 
-int cycles = 0;
+/**
+ * The different type of supported lock types are as following
+ * 1 : Wiegand Reader
+ * 2 : GS8015 Numeric Input Reader.
+ */
+#define LOCKTYPE 1
 
+int cycles = 0;
 
 Clock clock;
 
@@ -24,10 +34,21 @@ DataStorage dataStorage;
 Logging logging(&dataStorage, &clock);
 Communication communication(&clock, &dataStorage);
 
-KeyPadReader keypadReaderObj(&clock);
-KeyPadReader& keypadReader = keypadReaderObj;
+// Readers
+#if(LOCKTYPE == 1)
+	int resetLoraChipPin = PB5;
+	KeyPadReader readerObj(&clock);
+	KeyPadReader& keypadReader = readerObj;
+	ApacActionHandler actionHandlerObj;
+#else
+	int resetLoraChipPin = -1;
+	GS8015KeyReader readerObj(&clock);
+	GS8015KeyReader& keypadReader = readerObj;
+	GS8015ActionHandler actionHandlerObj;
+#endif
 
-CodeHandler codeHandler(&dataStorage, &keypadReader, &communication, &logging, &clock);
+
+CodeHandler codeHandler(&dataStorage, &keypadReader, &communication, &logging, &clock, &actionHandlerObj);
 
 ExternalInputReader externalReader(&clock, &logging, &codeHandler);
 
@@ -39,7 +60,7 @@ bool foundData = false;
 unsigned char bufferForWiegand[16];
 unsigned char bufferForCommunication[16];
 
-const char signature [] = "NickGammon";
+const char signature [] = "GetShop";
 char * p = (char *) malloc (sizeof (signature));
 
 unsigned int getDeviceId() {
@@ -91,28 +112,41 @@ void saveDeviceId(unsigned char* msg) {
 //	setDeviceIdToLoraChip();
 }
 
+
+void toggleLight() {
+	if (lighstat == LOW) {
+		lighstat = HIGH;
+	} else {
+		lighstat = LOW;
+	}
+
+	cycles = 0;
+	digitalWrite(PD5, lighstat);
+}
+
 void initLora() {
 	// Set reset of LoraChip to be high.
 
-	pinMode(PB5, OUTPUT);
+	if (resetLoraChipPin > 0) {
+		pinMode(resetLoraChipPin, OUTPUT);
+		delay(500);
+		digitalWrite(resetLoraChipPin, LOW);
+		delay(500);
+		digitalWrite(resetLoraChipPin, HIGH);
+	}
 
-	digitalWrite(PB5, HIGH);
-	delay(100);
-	digitalWrite(PB5, LOW);
-	delay(100);
 
-	digitalWrite(PB5, HIGH);
-	delay(100);
+	delay(500);
 	setDeviceIdToLoraChip();
-	delay(100);
+	delay(500);
 	Serial.print("AT+NETWORKID=5\r\n");
-	delay(100);
+	delay(500);
 	Serial.print("AT+MODE=0\r\n");
-	delay(100);
+	delay(500);
 	Serial.print("AT+BAND=868500000\r\n");
-	delay(100);
+	delay(500);
 	Serial.print("AT+PARAMETER=10,7,1,7\r\n");
-	delay(100);
+	delay(500);
 
 	wdt_reset();
 }
@@ -127,6 +161,8 @@ void setMillis(unsigned long ms)
 
 void setup()
 {
+	keypadReader.setCodeHandler(&codeHandler);
+
 	wdt_enable(WDTO_4S);
 
 	Serial.begin(115200);
@@ -134,35 +170,20 @@ void setup()
 	dataStorage.setupDataStorageBus();
 	initLora();
 	communication.setup();
-	keypadReader.setupWiegand();
+	keypadReader.setup();
 	logging.init();
 	codeHandler.setup();
+	actionHandlerObj.setup();
 
 	wdt_reset();
-
+  
 	if (checkIfColdStart()) {
 		logging.addLog("Started:N", 9, true);
 	} else {
 		logging.addLog("Started:W", 9, true);
 	}
-
-	pinMode(PD6, INPUT);
-	digitalWrite(PD6, HIGH);
-
-	pinMode(16, OUTPUT); // Strike
-	pinMode(PD5, OUTPUT); // CP LIGHT
 }
 
-void toggleLight() {
-	if (lighstat == LOW) {
-		lighstat = HIGH;
-	} else {
-		lighstat = LOW;
-	}
-
-	cycles = 0;
-	digitalWrite(PD5, lighstat);
-}
 
 void aliveDebugLight() {
 	if (cycles > 300) {
@@ -173,25 +194,15 @@ void aliveDebugLight() {
 
 void loop()
 {
-//	aliveDebugLight();
-//	pinMode(15, OUTPUT);
-//	DIGITALWRITE(15, LOW);
-//	DELAY(2000);
-//	DIGITALWRITE(15, HIGH);
-//	DELAY(2000);
 
-//	pinMode(14, OUTPUT);
-//	digitalWrite(14, LOW);
-//	delay(2000);
-//	digitalWrite(14, HIGH);
-//	delay(2000);
-
-	wdt_reset();
+	//aliveDebugLight();
 
 	delay(1);
 
+	wdt_reset();
+
 	communication.check();
-	keypadReader.checkWiegand();
+	keypadReader.check();
 	codeHandler.check();
 	externalReader.checkButtons();
 	externalReader.checkAlarms();

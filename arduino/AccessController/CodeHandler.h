@@ -11,14 +11,15 @@
 #define CodeHandler_h
 
 #include "DataStorage.h";
-#include "KeypadReader.h";
+#include "CodeReader.h";
 #include "Communication.h";
+#include "ActionHandler.h"
 #include "Logging.h";
 #include "Clock.h";
 
 class CodeHandler {
 	public:
-		CodeHandler(DataStorage* dataStorage, KeyPadReader* keypadReader, Communication* com, Logging* logging, Clock* clock);
+		CodeHandler(DataStorage* dataStorage, CodeReader* keypadReader, Communication* com, Logging* logging, Clock* clock, ActionHandler* actionHandler);
 		bool CodeHandler::testCodes(unsigned char* codeFromPanel);
 		void setCloseTimeStamp(unsigned long tstamp);
 		void setOpenTimeStamp(unsigned long tstamp);
@@ -31,16 +32,19 @@ class CodeHandler {
 		void changeState(char state);
 		void changeOpeningTime(unsigned char* data);
 
+
 	private:
 		DataStorage* dataStorage;
-		KeyPadReader* keypadReader;
+		CodeReader* keypadReader;
 		Communication* communication;
+		ActionHandler* actionHandler;
 		Logging* logging;
 		Clock* clock;
 		bool CodeHandler::compareCodes(unsigned char* savedCode, unsigned char* typedCode, int codeSlot);
 
 		void CodeHandler::_initAutoCloseAfterMillis();
 
+		unsigned long lastTriggeredDoorAutomation = 0;
 		unsigned long autoCloseAfterMs;
 		unsigned long closeTimeStamp;
 		unsigned long openTimeStamp;

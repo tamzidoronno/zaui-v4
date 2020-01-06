@@ -499,6 +499,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         if (data instanceof LockGroup) {
             syncGroup((LockGroup)data, true);
         }
+        super.saveObject(data);
     }
     
     @Override

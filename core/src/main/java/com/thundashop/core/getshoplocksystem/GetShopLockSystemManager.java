@@ -90,6 +90,11 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
                 server.setManger(this);
                 lockServers.put(iData.id, server);
             }
+            if (iData instanceof SerosLockSystem) {
+                SerosLockSystem server = (SerosLockSystem)iData;                
+                server.setManger(this);
+                lockServers.put(iData.id, server);
+            }
             if (iData instanceof AccessGroupUserAccess) {
                 AccessGroupUserAccess access = (AccessGroupUserAccess)iData;                
                 users.put(access.id, access);
@@ -132,6 +137,10 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         
         if (type.equals("getshoploragateway")) {
             createGetShopLoraGateway(hostname, userName, password, givenName, token);
+        }
+        
+        if (type.equals("seroslocksystem")) {
+            createSerosLockServer(hostname, userName, password, givenName, token);
         }
     }   
 
@@ -267,6 +276,12 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         
         for (String serverId : servers.keySet()) {
             LockServer server = getLockServer(serverId);
+            
+            if (!server.useSlotConcept()) {
+                server.setLockstoGroup(groupId, servers.get(serverId));
+                continue;
+            }
+            
             for (String lockId : servers.get(serverId)) {
                 Lock lock = server.getLock(lockId);
                 addLockToGroup(group, server, lock);
@@ -274,7 +289,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         }
         
         rebuildGroupMatrix(group);
-        syncGroup(group);
+        syncGroup(group, false);
     }
 
     @Override
@@ -318,6 +333,11 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
     private void checkIfEnoughSlotsOnAllLocks(Map<String, List<String>> servers, LockGroup group) throws ErrorException {
         for (String serverId : servers.keySet()) {
             LockServer server = getLockServer(serverId);
+            
+            if (!server.useSlotConcept()) {
+                continue;
+            }
+            
             List<String> lockIds = servers.get(serverId);
             for (String lockId : lockIds) {
                 Lock lock = server.getLock(lockId);
@@ -386,8 +406,13 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         }
     }
 
-    private void syncGroup(LockGroup group) {
+    private void syncGroup(LockGroup group, boolean light) {
         getLockServers().stream().forEach(server -> {
+            
+            if (light && server.useSlotConcept()) {
+                return;
+            }
+            
             server.syncGroup(group);
         });
     }
@@ -467,6 +492,13 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         saveObject(group);
         
         return slot.code;
+    }
+
+    @Override
+    public void saveObject(DataCommon data) throws ErrorException {
+        if (data instanceof LockGroup) {
+            syncGroup((LockGroup)data, true);
+        }
     }
     
     @Override
@@ -1116,5 +1148,13 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
             Lock lock = server.getLock(lockId);
             lock.deleteSlot(slotId);
         }
+    }
+
+    private void createSerosLockServer(String hostname, String userName, String password, String givenName, String token) {
+        SerosLockSystem server = new SerosLockSystem();
+        server.setDetails(hostname, userName, password, givenName, token);
+        server.setManger(this);
+        saveObject(server);
+        lockServers.put(server.id, server);
     }
 }

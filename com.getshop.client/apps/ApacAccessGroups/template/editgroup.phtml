@@ -69,7 +69,8 @@ $servers = $this->getServers();
     
    
 <?
-if (count($group->groupLockCodes)) {
+
+if ($group->groupLockCodes) {
 ?>
     <div class='codes'>
         <h2>Codes and slots</h2>

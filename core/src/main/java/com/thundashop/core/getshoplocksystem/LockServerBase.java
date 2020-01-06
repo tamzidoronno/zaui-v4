@@ -343,4 +343,37 @@ public abstract class LockServerBase extends DataCommon {
         return token;
     }
     
+    /**
+     * Override this if you want to only use the access groups.
+     * 
+     * @return 
+     */
+    public boolean useSlotConcept() {
+        return true;
+    }
+    
+    /**
+     * This function will be called only if the useSlotConcept is returning false.
+     * 
+     * Override this method in order to keep track of what locks are connected to what lockgroups
+     * 
+     * @param groupId
+     * @param lockIds 
+     */
+    public void setLockstoGroup(String groupId, List<String> lockIds) {
+    }
+    
+    
+    /**
+     * This function will be called only if the useSlotConcept is returning true.
+     * 
+     * Override this method in order return the locks connected to a group.
+     * 
+     * @param groupId
+     * @param lockIds 
+     */
+    
+    public List<String> getLocksForGroup(String groupId) {
+        return new ArrayList();
+    }
 }

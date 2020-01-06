@@ -168,7 +168,8 @@ public class SerosLockSystem extends LockServerBase implements LockServer {
 
     public String getHtml(String action, String extras) {
         String systemToken = "0688a225-25a2-4f92-b291-a135ef005baf";
-        String url = "http://" + hostname + "/scripts/api.php?action=" + action + "&systemtoken=" + systemToken + "&customertoken=" + token;
+        
+        String url = "https://" + hostname + "/scripts/api.php?action=" + action + "&systemtoken=" + systemToken + "&customertoken=" + token;
         if (!extras.isEmpty()) {
             url += extras;
         }

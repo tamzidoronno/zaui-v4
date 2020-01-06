@@ -204,7 +204,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         LockServer server = lockServers.get(serverId);
         
         if (server != null) {
-            if (!hasCachedBuild(serverId, lockId)) {
+            if (oldLoraServersExists() && !hasCachedBuild(serverId, lockId)) {
                 getCodesInUse(serverId, lockId);
             }
             Lock lock = server.getLock(lockId);
@@ -1157,5 +1157,20 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         server.setManger(this);
         saveObject(server);
         lockServers.put(server.id, server);
+    }
+
+    private boolean oldLoraServersExists() {
+        boolean result = lockServers.values()
+                .stream()
+                .filter(o -> {
+                    boolean test = o instanceof GetShopLoraServer;
+                    return test;
+                })
+                .count() > 0;
+        
+        if (result ) {
+            System.out.println("Thhere are ");
+        }
+        return result;
     }
 }

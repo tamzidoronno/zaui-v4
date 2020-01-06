@@ -15,4 +15,8 @@ public class GeneralPaymentConfig extends DataCommon {
     public Integer accountingCustomerOffset = 0; 
     public Integer accountingerOrderIdPrefix = 0;
     public String postingDate = "";
+    
+    public String interimPrePaidAccount = "";
+    public String interimPostPaidAccount = ""; //Accrude payments.
+    public String paidPostingAccount = "";
 }

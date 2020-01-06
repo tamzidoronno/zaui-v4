@@ -40,8 +40,17 @@ ksort($activities);
 $numberOfLines = sizeof($activities);
 
 
-
+$found = false;
 if(sizeof((array)$lines->lines) > 0) {
+    foreach($lines->lines as $line) {
+        /* @var $line core_pmsmanager_PmsActivityLine */
+        foreach($line->entry as $entry) {
+            $found = true;
+        }
+    }
+}
+
+if($found) {
     echo "<div style='background-color:red;padding: 10px; color:#fff;'>";
     echo "<div style='margin-top: 10px; margin-bottom: 10px; font-weight:bold;' >Events happening in this periode</div>";
     echo "<center>";

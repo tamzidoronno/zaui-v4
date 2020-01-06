@@ -22,6 +22,13 @@ class PmsSendMessagesConfiguration extends \WebshopApplication implements \Appli
         return "PmsSendMessagesConfiguration";
     }
     
+    public function createMessagePreview() {
+        $message = $_POST['data']['text'];
+        $key = $_POST['data']['key'];
+        $text = $this->getApi()->getPmsNotificationManager()->createPreview($this->getSelectedMultilevelDomainName(), $key, $message);
+        echo nl2br($text);
+    }
+    
     public function savepaymentlinksetup() {
         $paymentProductConfig = $this->getApi()->getPmsInvoiceManager()->getPaymentLinkConfig($this->getSelectedMultilevelDomainName());
         $paymentProductConfig->webAdress = $_POST['data']['webadress'];
@@ -96,6 +103,7 @@ class PmsSendMessagesConfiguration extends \WebshopApplication implements \Appli
         $msg->prefixes = $_POST['data']['prefixes'];
         $msg->roomTypes = $_POST['data']['roomtypes'];
         $msg->isManual = $_POST['data']['ismanual'] == "true";
+        $msg->timeofday = $_POST['data']['dayoftimetimer'];
         
         $this->getApi()->getPmsNotificationManager()->saveMessage($this->getSelectedMultilevelDomainName(), $msg);
     }
@@ -543,6 +551,8 @@ class PmsSendMessagesConfiguration extends \WebshopApplication implements \Appli
         $notifications['room_ended_24_hours_'.$langauge] = "Booking ended 1 day ago";
         $notifications['room_ended_48_hours_'.$langauge] = "Booking ended two days ago";
         $notifications['room_cancelled_'.$langauge] = "Room has been cancelled (ignored if booked by ota)";
+        $notifications['room_timed_message_'.$langauge] = "Timed checkin message (sent to guests at a given time of your choice)";
+        $notifications['room_timed_checkout_message_'.$langauge] = "Timed checkout message (sent to guests at a given time of your choice)";
         $notifications['sendreciept_'.$langauge] = "When sending a receipt";
         $notifications['sendinvoice_'.$langauge] = "When sending an invoice";
         $notifications['warnfirstordernotpaid_'.$langauge] = "If order has not been paid for.";
@@ -558,6 +568,9 @@ class PmsSendMessagesConfiguration extends \WebshopApplication implements \Appli
         $notifications['booking_paymentmissing_'.$langauge] = "When payment is missing (autosending)";
         $notifications['booking_sendpaymentlink_'.$langauge] = "Sending the payment link (manually sending)";
         $notifications['booking_unabletochargecard_'.$langauge] = "Not able to charge card";
+        
+        asort($notifications);
+        
         return $notifications;
     }
 

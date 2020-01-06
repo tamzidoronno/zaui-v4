@@ -369,7 +369,9 @@ public abstract class AProductManager extends ManagerBase {
     }
     
     public List<AccountingDetail> getAccountingAccounts() {
-        return new ArrayList(accountingAccountDetails.values());
+        ArrayList result = new ArrayList(accountingAccountDetails.values());
+        Collections.sort(result);
+        return result;
     }
     
     public void saveAccountingDetail(AccountingDetail detail) {
@@ -394,6 +396,38 @@ public abstract class AProductManager extends ManagerBase {
         
         if (product.additionalTaxGroupObjects.size() == groups.size()) {
             product.additionalTaxGroupObjects = groups;
+        }
+    }
+
+    void doubleCheckAndCorrectAccounts(List<TaxGroup> taxlist) {
+        
+        HashMap<Integer, TaxGroup> taxesByAccounting = new HashMap();
+        for(TaxGroup tax : taxlist) {
+            taxesByAccounting.put(tax.accountingTaxGroupId, tax);
+        }
+        
+        
+        HashMap<Integer, TaxGroup> taxesByGetShop = new HashMap();
+        for(TaxGroup tax : taxlist) {
+            taxesByGetShop.put(tax.groupNumber, tax);
+        }
+        
+        for(AccountingDetail detail : accountingAccountDetails.values()) {
+            if(detail.getShopTaxGroup == -1 && detail.taxgroup > -1) {
+                TaxGroup tax = taxesByAccounting.get(detail.taxgroup);
+                if(tax != null) {
+                    detail.getShopTaxGroup = tax.groupNumber;
+                    saveAccountingDetail(detail);
+                }
+            }
+            if(detail.getShopTaxGroup >= 0 && detail.taxgroup == -1) {
+                TaxGroup tax = taxesByGetShop.get(detail.getShopTaxGroup);
+                if(tax != null) {
+                    detail.taxgroup = tax.accountingTaxGroupId;
+                    saveAccountingDetail(detail);
+                }
+                
+            }
         }
     }
 }

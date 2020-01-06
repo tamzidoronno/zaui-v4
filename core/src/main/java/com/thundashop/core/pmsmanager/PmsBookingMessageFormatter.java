@@ -27,9 +27,10 @@ class PmsBookingMessageFormatter {
         if(message == null) {
             return "";
         }
+
         Date start = null;
         Date end = null;
-            
+        
         if(room.date != null && room.date.start != null) {
             start = productManager.getStore().convertToTimeZone(room.date.start);
         }
@@ -72,17 +73,24 @@ class PmsBookingMessageFormatter {
              BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
              if(type != null) {
                 message = message.replace("{roomType}", type.name);
-             } else if(type != null) {
-                message = message.replace("{roomType}", "");
-             } else {
-                 
              }
+        }
+        
+        if(room.pmsBookingRoomId.equals("dummyroom")) {
+            message = message.replace("{roomName}", "101");
         }
         
         if(room.bookingItemId != null && !room.bookingItemId.trim().isEmpty()) {
             message = message.replace("{roomName}", bookingEngine.getBookingItem(room.bookingItemId).bookingItemName);
         } else {
-            message = message.replace("{roomName}", "unknown");
+            message = message.replace("{roomName}", "");
+        }
+        
+
+        
+        if(room.pmsBookingRoomId != null && room.pmsBookingRoomId.equals("dummyroom")) {
+           message = message.replace("{roomType}", "Double room");
+           message = message.replace("{roomName}", "100");
         }
         
         return message;
@@ -125,6 +133,26 @@ class PmsBookingMessageFormatter {
             if(user.prefix != null) { message = message.replace("{contact_prefix}", user.prefix); }
             if(user.cellPhone != null) { message = message.replace("{contact_phone}", user.cellPhone); }
             if(user.emailAddress != null) { message = message.replace("{contact_email}", user.emailAddress); }
+        }
+        
+        if(booking.id.equals("dummybooking")) {
+            message = message.replace("{contact_name}", "John Downson");
+            message = message.replace("{userid}", "d493387f-fb89-4547-a841-fe2d22848f90");
+            message = message.replace("{contact_prefix}", "1");
+            message = message.replace("{contact_phone}", "32552112323");
+            message = message.replace("{contact_email}", "john@dowson.com");
+
+            message = message.replace("{name}", "John Downson");
+            message = message.replace("{email}", "john@dowson.com");
+            message = message.replace("{prefix}", "1");
+            message = message.replace("{phone}", "32552112323");
+            
+            message = message.replace("{address}", "Karl johans gate 1");
+            message = message.replace("{postCode}", "0001");
+            message = message.replace("{city}", "Oslo");
+            message = message.replace("{orderid}", "100101");
+            message = message.replace("{paymentlink}", "https://www.link.payment");
+            
         }
         
         return message;
@@ -337,6 +365,12 @@ class PmsBookingMessageFormatter {
         message = message.replace("{roomlist2}", getRoomList2(booking, bookingEngine));
         message = message.replace("{roomlist3}", getRoomList3(booking, bookingEngine));
         message = formatSpecifics(message, booking);
+        
+        
+        if(booking.id.equals("dummybooking")) {
+            message = message.replace("{referenceNumber}", "12321");
+        }
+        
         return message;
     }
     
@@ -458,8 +492,15 @@ class PmsBookingMessageFormatter {
                 end = productManager.getStore().convertToTimeZone(room.date.end);
             }
             
+            String typeName = "";
+            if(type != null) {
+                typeName = type.name;
+            }
+            if(booking.id.equals("dummybooking")) { typeName = "Double room"; }
+            
+            
             list += "<div class='roominfo' style='margin-top: 10px; margin-bottom: 10px;'>"; 
-            list += "   <div class='roomname' style='font-weight: bold; padding-bottom: 10px;'>" + type.name + " ( " + slf.format(start) + " - " + slf.format(end) + " )"+ "</div>";
+            list += "   <div class='roomname' style='font-weight: bold; padding-bottom: 10px;'>" + typeName + " ( " + slf.format(start) + " - " + slf.format(end) + " )"+ "</div>";
             for (PmsGuests guest : room.guests) {
                 String text = guest.name;
                 String phone = "";
@@ -496,7 +537,12 @@ class PmsBookingMessageFormatter {
         
         for (PmsBookingRooms room : booking.getActiveRooms()) {
             BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
+            String typeName = "";
+            if(type != null) {
+                typeName = type.name;
+            }
             
+            if(booking.id.equals("dummybooking")) { typeName = "Double room"; }
             
             Date start = null;
             Date end = null;
@@ -508,7 +554,7 @@ class PmsBookingMessageFormatter {
                 end = productManager.getStore().convertToTimeZone(room.date.end);
             }
             
-            list +=  type.name + " ( " + slf.format(start) + " - " + slf.format(end) + " )"+ "\n";
+            list +=  typeName + " ( " + slf.format(start) + " - " + slf.format(end) + " )"+ "\n";
         }
         
         return list;

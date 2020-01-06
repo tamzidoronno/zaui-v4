@@ -2,6 +2,8 @@
 namespace ns_c5a4b5bf_365c_48d1_aeef_480c62edd897;
 
 class PsmConfigurationAddons extends \WebshopApplication implements \Application {
+    public $createProductError = "";
+    
     public function getDescription() {
         
     }
@@ -85,28 +87,36 @@ class PsmConfigurationAddons extends \WebshopApplication implements \Application
     }
     
     public function createProduct() {
-        $product = $this->getApi()->getProductManager()->createProduct();
-        $product->name = $_POST['data']['productname'];
-        $product->tag = "addon";
-        $product = $this->getApi()->getProductManager()->saveProduct($product);
-        $notifications = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
-        
-        $conf = new \core_pmsmanager_PmsBookingAddonItem();
-        $found = false;
-        foreach($notifications->addonConfiguration as $tmpaddon) {
-            if($tmpaddon->productId == $product->id) {
-                $conf = $tmpaddon;
-                $found = true;
-            }
+        $account = 0;
+        if($_POST['data']['account']) {
+            $account = $_POST['data']['account'];
         }
-        if(!$found) {
-            $notifications->addonConfiguration->{-100000} = $conf;
-        }
-            
-        $conf->productId = $product->id;
-        $conf->isSingle = true;
+        $product = $this->getApi()->getProductManager()->createProductWithAccount($account);
+        if($product) {
+            $product->name = $_POST['data']['productname'];
+            $product->tag = "addon";
+            $product = $this->getApi()->getProductManager()->saveProduct($product);
+            $notifications = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
 
-        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $notifications);        
+            $conf = new \core_pmsmanager_PmsBookingAddonItem();
+            $found = false;
+            foreach($notifications->addonConfiguration as $tmpaddon) {
+                if($tmpaddon->productId == $product->id) {
+                    $conf = $tmpaddon;
+                    $found = true;
+                }
+            }
+            if(!$found) {
+                $notifications->addonConfiguration->{-100000} = $conf;
+            }
+
+            $conf->productId = $product->id;
+            $conf->isSingle = true;
+
+            $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $notifications);        
+        } else {
+            $this->createProductError = "Failed to create a new product, make sure the account you are trying to create a product on is correct set up.";
+        }
     }
     
     

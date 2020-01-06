@@ -38,6 +38,7 @@ import com.thundashop.core.pmsmanager.PmsGuests;
 import com.thundashop.core.pmsmanager.PmsInvoiceManager;
 import com.thundashop.core.pmsmanager.PmsInvoiceManagerNew;
 import com.thundashop.core.pmsmanager.PmsManager;
+import com.thundashop.core.pmsmanager.PmsPricing;
 import com.thundashop.core.pmsmanager.PmsUserDiscount;
 import com.thundashop.core.pmsmanager.TimeRepeaterData;
 import com.thundashop.core.pos.PosManager;
@@ -1878,5 +1879,40 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             logPrintException(ex);
         }
         return result;
+    }
+
+    @Override
+    public HashMap<Integer, Double> getPricesForRoom(Date start, Date end, String itemId) {
+        HashMap<Integer,Double> result = new HashMap();
+        BookingItem item = bookingEngine.getBookingItem(itemId);
+        BookingItemType type = bookingEngine.getBookingItemType(item.bookingItemTypeId);
+        Double price = pmsManager.getPriceForRoomWhenBooking(start, end, item.bookingItemTypeId);
+        PmsPricing priceobject = pmsManager.getPrices(start, end);
+        HashMap<Integer, Double> derivedPrices = priceobject.derivedPrices.get(type.id);
+        Double additionalPrice = 0.0;
+        for(int i = 1; i <= type.size; i++) {
+            if(derivedPrices != null && derivedPrices.containsKey(i)) {
+                additionalPrice += derivedPrices.get(i);
+            }
+            result.put(i, price + additionalPrice);
+        }
+        
+        return result;
+    }
+
+    @Override
+    public String addBookingItem(String bookingId, String type, Date start, Date end, String guestInfoFromRoom, String bookingItemId) {
+        start = pmsManager.getConfigurationSecure().getDefaultStart(start);
+        end = pmsManager.getConfigurationSecure().getDefaultEnd(end);
+        
+        String roomId = addBookingItemType(bookingId, type, start, end, guestInfoFromRoom);
+        
+        PmsBooking booking = pmsManager.getBooking(bookingId);
+        PmsBookingRooms room = booking.getRoom(roomId);
+        room.bookingItemId = bookingItemId;
+        
+        pmsManager.saveBooking(booking);
+        
+        return roomId;
     }
 }

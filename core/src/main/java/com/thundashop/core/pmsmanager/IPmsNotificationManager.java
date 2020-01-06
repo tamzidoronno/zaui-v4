@@ -36,4 +36,8 @@ public interface IPmsNotificationManager {
 
     @Administrator
     public PmsNotificationMessage getSpecificMessage(String key, PmsBooking booking, PmsBookingRooms room, String type, String prefix);
+    
+    @Administrator
+    public String createPreview(String key, String message);
+    
 }

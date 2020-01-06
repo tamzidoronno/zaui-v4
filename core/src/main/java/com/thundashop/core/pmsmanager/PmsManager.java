@@ -132,6 +132,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private String phoneToSend;
     private String prefixToSend;
     private List<Order> tmpOrderList;
+    private HashMap<String, Date> lastProcessedTimedMessage = new HashMap();
     private boolean warnedAboutAutoassigning = false;
 
     private HashMap<String, PmsBookingFilter> savedFilters = new HashMap();
@@ -164,6 +165,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Autowired
     InvoiceManager invoiceManager;
+
+    @Autowired
+    PmsNotificationManager pmsNotificationManager;
 
     @Autowired
     ProductManager productManager;
@@ -218,9 +222,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Autowired
     public PmsCoverageAndIncomeReportManager pmsCoverageAndIncomeReportManager;
-    
-    @Autowired
-    private PmsNotificationManager pmsNotificationManager;
     
     @Autowired
     private PosManager posManager;
@@ -460,12 +461,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     booking.couponCode = "";
                 } else if (cop.channel != null && !cop.channel.isEmpty()) {
                     booking.channel = cop.channel;
-                }
-            }
-            PmsUserDiscount userDiscount = pmsInvoiceManager.getUserDiscountByCouponCode(booking.couponCode);
-            if(userDiscount != null) {
-                if(userManager.doesUserExsist(userDiscount.userId)) {
-                    booking.userId = userDiscount.userId;
                 }
             }
         }
@@ -9996,6 +9991,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void simpleCompleteCurrentBooking() {
         PmsBooking currentBooking = getCurrentBooking();
+        
+                
+        for(PmsBookingRooms room : currentBooking.rooms) {
+            if(room.preferredBookingItemId == null || room.preferredBookingItemId.isEmpty()) {
+                room.bookingItemId = "";
+            }
+        }
+        
         checkIfNeedToBeAssignedToRoomWithSpecialAddons(currentBooking);
         List<String> roomInWaiting = new ArrayList();
         for(PmsBookingRooms room : currentBooking.rooms) {
@@ -10983,6 +10986,21 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         changeDates(pmsBookingRoomId, booking.id, room.date.start, cal.getTime());
         resetDoorLockCode(room);
         processor();
+    }
+
+    public List<PmsNotificationMessage> getNotificationMessages() {
+        return pmsNotificationManager.getAllMessages();
+    }
+
+    boolean hasProcessedTimedMessage(String key, Date timeInTimezone) {
+        if(lastProcessedTimedMessage.containsKey(key)) {
+            Date lastProcessedMsg = lastProcessedTimedMessage.get(key);
+            if(PmsBookingRooms.isSameDayStatic(lastProcessedMsg, timeInTimezone)) {
+                return true;
+            }
+        }
+        lastProcessedTimedMessage.put(key, timeInTimezone);
+        return false;
     }
     
 }

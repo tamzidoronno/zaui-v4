@@ -1529,6 +1529,10 @@ function getshop_removeGuest(e) {
     try {
         if(getshop_avoiddoubletap(e)) { return; }
         var translation = getshop_getBookingTranslations();
+        
+        if($(this).closest('.guestRows').find('.guestentry').length === 1) {
+            return;
+        }
 
         var removeGuest = confirm(translation['sureremoveguest']);
         if (removeGuest === true) {
@@ -1550,7 +1554,6 @@ function getshop_setDatePicker() {
         var discountCode = $('#coupon_input');
         var endDate = new Date();
         endDate.setTime(endDate.getTime() + (86400*1000)); 
-        console.log('setting datepicker');
         var hash = window.location.hash.substr(1);
         var result = hash.split('&').reduce(function (result, item) {
             var parts = item.split('=');

@@ -1498,5 +1498,10 @@ public class PosManager extends ManagerBase implements IPosManager {
                 .map(o -> o.getCount())
                 .collect(Collectors.summingInt(Integer::intValue));
     }
+
+    @Override
+    public boolean hasLockedPeriods() {
+        return !zReports.isEmpty();
+    }
   
 }

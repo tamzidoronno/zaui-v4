@@ -130,8 +130,18 @@ class ModulePageMenu {
                 $this->printHorizantalMenu($user, $store);
             }
 
+            $gsadminmenues = array();
+            $gsadminmenues[] = "salespoint";
+            $gsadminmenues[] = "settings";
+            $gsadminmenues[] = "account";
+            $gsadminmenues[] = "invoice";
+            
             echo "<div class='inner_header_top_menu_gs'>Modules</div>";
+            
             foreach ($modules as $module) {
+                if($factory->getStore()->id == "13442b34-31e5-424c-bb23-a396b7aeb8ca" && !in_array($module->id, $gsadminmenues)) {
+                    continue;
+                }
                 $moduleActiveClass = $factory->getPage()->javapage->getshopModule == $module->id ? "active" : "";
                 $activeModule = $factory->getPage()->javapage->getshopModule == $module->id ? $module : $activeModule;
                 if (!$activeModule && $module->id == "cms") {
@@ -162,6 +172,10 @@ class ModulePageMenu {
                 $this->printSupportMenuIcon();
             }
                     
+            if($factory->getStore()->id == "13442b34-31e5-424c-bb23-a396b7aeb8ca") {
+                echo "<a class='gs_ignorenavigate' href='/getshop.php?page=inbox&gs_getshopmodule='><div class='gs_framework_module active'><i class='fa fa-group'></i><br>Getshop support</div></a>";
+            }
+            
             echo "<a class='gs_ignorenavigate' href='/logout.php?goBackToHome=true'><div class='gs_framework_module'><i class='gsicon-user-lock'></i> <div>Sign out</div></div></a>";
         echo "</div>";
         $text = $printPageMenuInModulesMenu ? "Menu" : "Modules";
@@ -302,12 +316,13 @@ class ModulePageMenu {
             return;
         
         $factory = IocContainer::getFactorySingelton();
-        
-        echo "<span id='opensupportcenter' href='/getshopsupport.php' target='_blank'>";
-            echo "<div class='gs_framework_module modulechangericoncontainer' id='opensupportcases' style='position:relative;'><i class='fa fa-question'></i>";
-                echo "<div class='support'>".$factory->__f("I Need Help")."</div>";
-            echo "</div>";
-        echo "</span>";
+        if($factory->getStore()->id != "13442b34-31e5-424c-bb23-a396b7aeb8ca") {
+            echo "<span id='opensupportcenter' href='/getshopsupport.php' target='_blank'>";
+                echo "<div class='gs_framework_module modulechangericoncontainer' id='opensupportcases' style='position:relative;'><i class='fa fa-question'></i>";
+                    echo "<div class='support'>".$factory->__f("I Need Help")."</div>";
+                echo "</div>";
+            echo "</span>";
+        }
         
         ?>
         <script>

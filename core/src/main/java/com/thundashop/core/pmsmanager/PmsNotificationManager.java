@@ -854,4 +854,59 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         this.paymentRequestId = prid;
     }
 
+    @Override
+    public String createPreview(String key, String message) {
+        PmsBooking booking = new PmsBooking();
+        booking.id = "dummybooking";
+        
+        PmsBookingRooms room = new PmsBookingRooms();
+        room.code = "1234";
+        room.date.start = new Date();
+        room.date.end = new Date();
+        room.pmsBookingRoomId = "dummyroom";
+        
+        room.guests = new ArrayList();
+        PmsGuests guest = new PmsGuests();
+        guest.prefix = "1";
+        guest.email = "homealone@doe.com";
+        guest.name = "Home Alone Kevin";
+        guest.phone = "43242341123";
+        room.guests.add(guest);
+        
+        guest = new PmsGuests();
+        guest.prefix = "49";
+        guest.email = "clark@doe.com";
+        guest.name = "Clark Kent";
+        guest.phone = "123123333";
+        room.guests.add(guest);
+        
+        booking.rooms.add(room);
+        
+        room = new PmsBookingRooms();
+        room.code = "2234";
+        room.date.start = new Date();
+        room.date.end = new Date();
+        room.pmsBookingRoomId = "dummyroom";
+        
+        room.guests = new ArrayList();
+        guest = new PmsGuests();
+        guest.prefix = "1";
+        guest.email = "June@doe.com";
+        guest.name = "June Galwik";
+        guest.phone = "1234322333";
+        room.guests.add(guest);
+        
+        guest = new PmsGuests();
+        guest.prefix = "49";
+        guest.email = "jane@doe.com";
+        guest.name = "Jane Witson";
+        guest.phone = "122234213";
+        room.guests.add(guest);
+        
+        booking.rooms.add(room);
+        
+        
+        return formatMessage(message, booking, room, key, "email");
+    }
+
 }

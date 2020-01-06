@@ -21,6 +21,10 @@
         $activated = array_merge($activated, $activatedDebtCollectors);
     }
     
+    
+    $lockedPeriods = $this->getApi()->getPosManager()->hasLockedPeriods();
+    $promptAccount = $lockedPeriods ? "gs_prompt='You need to specify an account for this payment application to be activated, please contact your accountant to get information on what account to post this transactions on'" : "";
+    
     $res = array();
     foreach($activated as $active) {
         $res[] = $active->id;
@@ -52,10 +56,10 @@
                     continue;
                 }
                 if(method_exists($instance, "getName")) {
-                    if($i == 0 && stristr($instance->getName(), "paymentmethod")) {
+                    if($i == 0 && stristr($instance->applicationSettings->appName, "PaymentMethod")) {
                         continue;
                     }
-                    if($i == 1 && !stristr($instance->getName(), "paymentmethod")) {
+                    if($i == 1 && !stristr($instance->applicationSettings->appName, "PaymentMethod")) {
                         continue;
                     }
 
@@ -65,7 +69,7 @@
                     if(in_array($app->id, $res)) {
                         echo "<div class='footer deactivate' gstype='clicksubmit' gsvalue='".$app->id."' method='deactivateApp' gsname='id'>Deactivate</div>";
                     } else {
-                        echo "<div class='footer' gstype='clicksubmit' gsvalue='".$app->id."' method='activateApp' gsname='id'>Activate</div>";
+                        echo "<div class='footer' gstype='clicksubmit' gsvalue='".$app->id."' method='activateApp' gsname='id' $promptAccount>Activate</div>";
                     }
                     echo "</span>";
                 }

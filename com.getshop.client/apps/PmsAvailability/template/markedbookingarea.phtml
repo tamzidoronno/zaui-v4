@@ -1,0 +1,55 @@
+<div>
+    <i class='fa fa-close closeselectedforbookingwindow bookinghighlightcolor' style='float:right; cursor:pointer;'></i>
+    
+    Below is a list of all rooms marked ready for booking.<bR>You can choose more rooms by drag and drop another room the same way you added the first one.
+    <div style='border-bottom: solid 1px #bbb; margin: 10px;'></div>
+<?php
+/* @var $this ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability */
+$currentBooking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+$types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+$types = $this->indexList($types);
+$items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedMultilevelDomainName());
+$items = $this->indexList($items);
+
+echo "<table width='100%'>";
+echo "<tr>";
+echo "<th align='left'>In</th>";
+echo "<th align='left'>Out</th>";
+echo "<th align='left'>Type</th>";
+echo "<th align='left'>Price</th>";
+echo "<th align='left'>Guests</th>";
+echo "<th align='left'>Room</th>";
+echo "</tr>";
+
+foreach($currentBooking->rooms as $room) {
+    echo "<tr class='selectedroom' roomid='".$room->pmsBookingRoomId."'>";
+    echo "<td><i class='fa fa-trash-o bookinghighlightcolor removeselectedroom' roomid='".$room->pmsBookingRoomId."' style='cursor:pointer;'></i> " . date("d/m", strtotime($room->date->start)) . "</td>";
+    echo "<td>" . date("d/m", strtotime($room->date->end)) . "</td>";
+    echo "<td>" . $types[$room->bookingItemTypeId]->name . "</td>";
+    echo "<td>" . $room->totalCost . "</td>";
+    echo "<td><i class='fa fa-minus-circle adjustguestcount bookinghighlightcolor' type='decrease'></i> <span class='guestcount'>" . $room->numberOfGuests . "</span> <i type='increase' class='fa fa-plus-circle adjustguestcount bookinghighlightcolor'></i></td>";
+    echo "<td>";
+    $itemName = $room->bookingItemId ? $items[$room->bookingItemId]->bookingItemName : "N/A";
+    $class = "ispinned";
+    if($room->preferredBookingItemId != $room->bookingItemId) {
+        $class = "isfloating";
+    } 
+    echo "<span class='highlightspecificroom $class' roomid='".$room->pmsBookingRoomId."'>$itemName</span>";
+    echo "</td>";
+    echo "</tr>";
+}
+
+echo "</table>";
+?>
+<div style='border-bottom: solid 1px #bbb; margin: 10px;'></div>
+<?php
+echo "<div style='text-align:left; padding-right:10px;'>";
+echo "<span style='float:right;'>Total " . $currentBooking->totalPrice . "</span>";
+echo "<span style='font-size:13px;'>PS: All rooms are default in floating mode!<br>If you want to assign the specific room click on the gray room to highlight it.</span>";
+echo "</div>";
+?>
+<div style='border-bottom: solid 1px #bbb; margin: 10px;'></div>
+<a href='/pms.php?page=048e2e10-1be3-4d77-a235-4b47e3ebfaab&proceedtonew=test'>
+    <span class='shop_button' style=' width:100%;box-sizing: border-box;'>Proceed</span>
+</a>
+</div>

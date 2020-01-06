@@ -274,12 +274,27 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         $rowCount = 0;
         $guests = 0;
         $nightscount = 0;
+        $addonscount = array();
+        
+        $products = $this->getApi()->getProductManager()->getAllProductsLight();
+        $products = $this->indexList($products);
+        
         foreach($data as $row ){
             $rowCount++;
             $guests += $row->numberOfGuests;
             $nightscount += $row->numberOfNights;
+            foreach($row->addons as $addon) {
+                if(!isset($addonscount[$addon->productId])) {
+                    $addonscount[$addon->productId] = 0;
+                }
+                $addonscount[$addon->productId] += $addon->count;
+            }
         }
-        echo "<div style='text-align:center;padding: 10px;'>Row count: $rowCount, Guest count: $guests, nights: $nightscount</div>";
+        echo "<div style='text-align:center;padding: 10px;'>Row count: $rowCount, Guest count: $guests, nights: $nightscount";
+        foreach($addonscount as $productId => $val) {
+            echo "<div>" . $products[$productId]->name . " - " . $val . "</div>";
+        }
+        echo "</div>";
         
         $filter = $this->getSelectedFilter();
         

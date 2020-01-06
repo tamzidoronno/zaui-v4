@@ -18,6 +18,14 @@ class PmsAvailability extends \MarketingApplication implements \Application {
     public function loadEventData() {
         $this->includefile("eventseditarea");
     }
+    
+    public function updateGuestCounter() {
+        foreach($_POST['data']['guestcounter'] as $roomId => $guestCount) {
+            $this->getApi()->getPmsBookingProcess()->changeGuestCountForRoom($this->getSelectedMultilevelDomainName(), $roomId, $guestCount);
+        }
+        
+        $this->includefile("markedbookingarea");
+    }
 
     public function prioritizeroom() {
         $roomId = $_POST['data']['roomid'];
@@ -81,7 +89,59 @@ class PmsAvailability extends \MarketingApplication implements \Application {
         $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $config);
     }
     
+    public function removeSelectedRoom() {
+        $roomId = $_POST['data']['roomid'];
+        $this->getApi()->getPmsBookingProcess()->removeRoom($this->getSelectedMultilevelDomainName(), $roomId);
+        $this->includefile("markedbookingarea");
+    }
     
+    public function highlightRoom() {
+        $roomId = $_POST['data']['roomid'];
+        $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+        $highlighted = "false";
+        foreach($booking->rooms as $room) {
+            if($room->pmsBookingRoomId != $roomId) {
+                continue;
+            }
+            if($room->preferredBookingItemId == $room->bookingItemId) {
+                $room->preferredBookingItemId = "";
+            } else {
+                $room->preferredBookingItemId = $room->bookingItemId;
+                $highlighted = "true";
+            }
+        }
+        
+        $this->getApi()->getPmsManager()->setBooking($this->getSelectedMultilevelDomainName(), $booking);
+        
+        $result = array();
+        $result['success'] = $highlighted;
+        echo json_encode($result);
+    }
+    
+    public function addToMarkedForBookingArea() {
+        if($_POST['data']['first'] == "true") {
+            $this->getApi()->getPmsManager()->startBooking($this->getSelectedMultilevelDomainName());
+        }
+        
+        $itemid = $_POST['data']['itemid'];
+        $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $itemid);
+        $start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
+        $end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
+        
+        $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+        
+        $roomId = $this->getApi()->getPmsBookingProcess()->addBookingItem($this->getSelectedMultilevelDomainName(), $booking->id, $item->bookingItemTypeId, $start, $end, null, $itemid);
+
+        ob_start();
+        $this->includefile("markedbookingarea");
+        $data = ob_get_contents();
+        ob_clean();
+        
+        $result = array();
+        $result['roomid'] = $roomId;
+        $result['content'] = $data;
+        echo json_encode($result);
+    }
     
     public function render() {
         if($_SERVER['PHP_SELF'] == "/json.php" || isset($_SESSION['firstloadpage'])) {
@@ -505,6 +565,19 @@ class PmsAvailability extends \MarketingApplication implements \Application {
         }
         $this->activityPrinted[$id] = true;
         return false;
+    }
+
+    public function getNumberOfNights($start, $end) {
+        $date1 = new \DateTime($start);
+        $date2 = new \DateTime($end);
+
+        // this calculates the diff between two dates, which is the number of nights
+        $numberOfNights= $date2->diff($date1)->format("%a"); 
+        return $numberOfNights;
+    }
+
+    public function getPricesForRoom($start, $end, $itemId) {
+        return $this->getApi()->getPmsBookingProcess()->getPricesForRoom($this->getSelectedMultilevelDomainName(), $this->convertToJavaDate(strtotime($start)), $this->convertToJavaDate(strtotime($end)), $itemId);
     }
 
 }

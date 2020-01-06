@@ -7,6 +7,9 @@ app.CompanyView = {
     userSaved: function(res) {
         thundashop.Ajax.reloadApp('2f62f832-5adb-407f-a88e-208248117017', false);
     },
+    companyCreated : function() {
+        window.location.reload();
+    },
     
     changeMenu: function() {
         var data = {

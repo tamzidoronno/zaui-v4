@@ -376,6 +376,9 @@ $isInvoice = $order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200
             <div><? echo $translator->translate("KID").": ".$order->kid; ?></div>
         <?
         }
+        if($invoiceData->accountingDetails->unpaidinvoicetext && stristr($order->payment->paymentType, "InvoicePayment")) {
+            echo "<div><b>" . $invoiceData->accountingDetails->unpaidinvoicetext . "</b></div>";
+        }
         ?>
 
     </div>

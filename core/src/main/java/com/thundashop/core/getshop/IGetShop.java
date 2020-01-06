@@ -9,6 +9,7 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopNotSynchronized;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.databasemanager.data.Credentials;
+import com.thundashop.core.getshop.data.CreatedStoreData;
 import com.thundashop.core.getshop.data.DibsAutoCollectData;
 import com.thundashop.core.getshop.data.GetshopStore;
 import com.thundashop.core.getshop.data.Lead;
@@ -129,7 +130,7 @@ public interface IGetShop {
     public void triggerPullRequest(String storeId);
     
     @GetShopNotSynchronized
-    public String createNewStore(StartData startData);
+    public CreatedStoreData createNewStore(StartData startData);
     
     @Administrator
     public void toggleRemoteEditing();

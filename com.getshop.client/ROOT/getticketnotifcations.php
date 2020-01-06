@@ -3,7 +3,7 @@ include '../loader.php';
 $factory = IocContainer::getFactorySingelton();
 
 $result = $factory->getSystemGetShopApi()->getCustomerTicketManager()->getNiggerFriendlyTicketNotifications($factory->getStore()->id);
-if($result->numberOfUnReadTickets == 0) {
+if(@$result->numberOfUnReadTickets == 0) {
     return;
 }
 ?>

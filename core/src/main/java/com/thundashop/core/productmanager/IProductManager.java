@@ -46,6 +46,15 @@ public interface IProductManager {
      */
     public Product getProductFromApplicationId(String app_uuid) throws ErrorException;
     
+    @Administrator
+    public void doubleCheckAndCorrectAccounts();
+
+    @Administrator
+    public void setAccomodationAccount(String accountId);
+    
+    @Administrator
+    public void updateAllBookingTypesWithAccountingAccount();
+    
     /**
      * Save a product.
      * 
@@ -91,6 +100,9 @@ public interface IProductManager {
      */
     @Editor
     public Product createProduct() throws ErrorException;
+    
+    @Editor
+    public Product createProductWithAccount(Integer accountNumber) throws ErrorException;
         
     /**
      * Returns a random set of products

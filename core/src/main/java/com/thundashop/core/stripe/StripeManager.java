@@ -133,6 +133,10 @@ public class StripeManager extends ManagerBase implements IStripeManager {
 
             Order order = orderManager.getOrder(orderId);
             
+            if(order == null) {
+                return "";
+            }
+            
             User usr = userManager.getUserById(order.userId);
             String email = usr.emailAddress;
             if(email == null || !isValidEmail(email)) {

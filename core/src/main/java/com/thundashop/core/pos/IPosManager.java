@@ -208,4 +208,7 @@ public interface IPosManager {
     public PosTab getTabForPga(String tabId);
     
     public int getProductCountForPgaTab(String tabId);
+    
+    @Administrator
+    public boolean hasLockedPeriods();
 }

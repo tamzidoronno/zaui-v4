@@ -101,7 +101,6 @@ class AccountProducts extends \MarketingApplication implements \Application {
         if (!$this->products) {
             $this->products = $this->getApi()->getProductManager()->getAllProductsIncDeleted();
         }
-        
         return $this->products;   
     }
 

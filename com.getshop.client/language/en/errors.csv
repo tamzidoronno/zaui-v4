@@ -167,6 +167,7 @@
 "1062","Cant create posts as the periode is closed."
 "1063","The order has already been marked as paid."
 "1064","A credit note can not be modified, only marked as paid."
+"1065","Can not create a new product without connecting an account to it"
 
 "1000001","The name attribute is invalid"
 "1000002","The entry you are trying to fecth does not exists."

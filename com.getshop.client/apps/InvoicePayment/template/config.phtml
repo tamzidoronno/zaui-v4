@@ -202,6 +202,15 @@ $useSingleRoomTypes['true'] = "Yes";
             <?php  echo $this->__f("Selected language"); ?>
         </div>
     </div>
+    
+    <div class="textfield gss_setting"  id="unpaidinvoicetext">
+        <span class="title"><?php echo $this->__f("General text on unpaid invoices"); ?></span>
+        <input type="textfield" gs_model='invoicepaymentmodel' gs_model_attr='unpaidinvoicetext' value="<? echo $this->getConfigurationSetting("unpaidinvoicetext"); ?>">
+        <div class="description">
+            <?php  echo $this->__f("A text that should be displayed when an invoice has not been paid"); ?>
+        </div>
+    </div>
+        
     <div class="textfield"  id="language">
         <span class="title"><?php echo $this->__f("Logo"); ?></span>
         <div src="" height="200" alt="Image preview..." id="imageprivew" style='text-align: right;'>

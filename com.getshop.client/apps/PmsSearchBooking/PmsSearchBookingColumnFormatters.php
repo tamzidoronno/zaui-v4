@@ -247,7 +247,7 @@ class PmsSearchBookingColumnFormatters {
         $iconsAdded = array();
         $total = 0;
         foreach($room->addons as $addon) {
-            if($addon->addonType == 1) {
+            if($addon->addonType == 1 && !$plaintext) {
                 continue;
             }
             if(!isset($typesAdded[$addon->productId])) {
@@ -275,7 +275,7 @@ class PmsSearchBookingColumnFormatters {
                 }
                 $acronym = htmlentities($acronym);
                 $acronym = "(".strtoupper($acronym) .")";
-                if(isset($iconsAdded[$addon->productId]) && $iconsAdded[$addon->productId]) {
+                if(!$plaintext && isset($iconsAdded[$addon->productId]) && $iconsAdded[$addon->productId]) {
                     $acronym = "<i class='fa fa-" . $iconsAdded[$addon->productId] . "'></i>";
                 }
                 if($plaintext) {

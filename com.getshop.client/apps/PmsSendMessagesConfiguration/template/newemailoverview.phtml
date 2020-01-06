@@ -53,6 +53,9 @@ foreach($msgs as $msg) {
     echo "</div>";
     echo "<div class='footer'>";
     echo $notifications[$msg->key."_"] . " (" . $msg->type . ")";
+    if($msg->timeofday) {
+        echo ", sent at " . $msg->timeofday;
+    }
     echo "<div class='optionspreview ".$msg->type."'>";
     if(sizeof($msg->prefixes) != 0 || sizeof($msg->languages) != 0) {
         $this->printLanguagesSelected($msg);

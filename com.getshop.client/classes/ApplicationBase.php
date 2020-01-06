@@ -776,7 +776,7 @@ class ApplicationBase extends FactoryBase {
         $obj->version = 2;
         $obj->appName = @$this->getApplicationSettings()->appName;
         
-        if (!isset($this->getApplicationSettings()->appName) && isset($_POST['core']['appid'])) {
+        if (!isset($this->getApplicationSettings()->appName) && isset($_POST['core']['appid']) && $_POST['core']['appid']) {
             $arr = explode("\\", $_POST['core']['appid']);
             $obj->appName = $arr[1];
         }

@@ -18,3 +18,11 @@
 .PmsSendMessagesConfiguration .messageboxnew .optionspreview.sms { top: 5px; }
 .PmsSendMessagesConfiguration .messageboxnew .content { border-top: solid 1px #bbb; border-bottom: solid 1px #bbb; padding: 10px; background-color:#fff; }
 .PmsSendMessagesConfiguration .loadeditevent { overflow:auto; position: fixed; z-index:3;width: 100%; height: 100%; background-color:rgba(0,0,0,0.5); left:0px; top: 0px; display:none; }
+.PmsSendMessagesConfiguration .previewarea {
+    background-color: #efefef;
+    padding: 10px;
+    border: solid 1px #bbb;
+    margin: 10px;
+    max-height: 300px;
+    overflow: auto;
+}

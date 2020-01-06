@@ -246,7 +246,7 @@ class PmsRoomConfiguration extends \WebshopApplication implements \Application {
         $this->getApi()->getProductManager()->saveProduct($product);
         
         $this->getApi()->getBookingEngine()->changeDepartmentOnType($this->getSelectedMultilevelDomainName(), $type->id, $_POST['data']['department']);
-        
+        $this->getApi()->getProductManager()->updateAllBookingTypesWithAccountingAccount();
     }
     
     public function changeIcon() {
@@ -288,6 +288,7 @@ class PmsRoomConfiguration extends \WebshopApplication implements \Application {
         $this->getApi()->getProductManager()->saveProduct($product);
         $type->productId = $product->id;
         $this->getApi()->getBookingEngine()->updateBookingItemType($this->getSelectedMultilevelDomainName(), $type);
+        $this->getApi()->getProductManager()->updateAllBookingTypesWithAccountingAccount();
     }
     
     public function deleteImage() {

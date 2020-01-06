@@ -32,6 +32,9 @@ public class OrderTransaction implements Serializable {
     public String accountingDetailId = "";
     
     public boolean isReferenceId(String refId) {
+        if(refId.isEmpty()) {
+            return false;
+        }
         return refId.equals(refId);
     }
     

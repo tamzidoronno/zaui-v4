@@ -60,6 +60,14 @@ public interface IStoreApplicationPool {
      * @param applicationId
      */
     @Administrator
+    public void activatePaymentApplication(String applicationId, String account);
+
+    /**
+     * Activate an application.
+     *
+     * @param applicationId
+     */
+    @Administrator
     public HashMap<String, List<SettingsRow>> getPaymentSettingsApplication();
 
     /**

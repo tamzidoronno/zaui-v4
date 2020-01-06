@@ -2716,7 +2716,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             priceRange = new HashMap();
         }
         if (priceRange == null) {
-            return result;
+            priceRange = new HashMap();
+            priceRange.put("default", 0.0);
         }
 
         Double defaultPrice = priceRange.get("default");

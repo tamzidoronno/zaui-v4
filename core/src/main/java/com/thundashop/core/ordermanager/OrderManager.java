@@ -3692,10 +3692,20 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .filter(o -> !oldOrder.orderTransactions.contains(o))
                 .collect(Collectors.toList());
         
-        for (OrderTransaction transsaction : newTransactions) {
-            if (transsaction.date.before(closedDate)) {
-                resetOrder(oldOrder, order);
-                throw new ErrorException(1053);
+        boolean isGetShop = false;
+        if(getSession() != null && getSession().currentUser != null) {
+            User loggedOnUser = getSession().currentUser;
+            if(loggedOnUser.emailAddress != null && loggedOnUser.emailAddress.endsWith("@getshop.com")) {
+                isGetShop = true;
+            }
+        }
+        
+        if(!isGetShop) {
+            for (OrderTransaction transsaction : newTransactions) {
+                if (transsaction.date.before(closedDate)) {
+                    resetOrder(oldOrder, order);
+                    throw new ErrorException(1053);
+                }
             }
         }
     }

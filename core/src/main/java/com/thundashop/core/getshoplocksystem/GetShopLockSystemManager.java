@@ -204,7 +204,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         LockServer server = lockServers.get(serverId);
         
         if (server != null) {
-            if (oldLoraServersExists() && !hasCachedBuild(serverId, lockId)) {
+            if (!hasCachedBuild(serverId, lockId)) {
                 getCodesInUse(serverId, lockId);
             }
             Lock lock = server.getLock(lockId);

@@ -73,6 +73,8 @@ public class WilhelmsenHouse implements AccountingInterface {
                 accountingId = 11072; // Expedia customer id.
             } else if (order.payment != null && order.payment.paymentType.equals("ns_d79569c6_ff6a_4ab5_8820_add42ae71170\\BookingComCollectPayments")) {
                 accountingId = 19982; // Bookingcom.
+            } else if (order.payment != null && order.payment.paymentType.equals("ns_be004408_e969_4dba_9b23_5922b8f1d7e2\\EasyByNets")) {
+                accountingId = 1518; // easy.
             } else if (order.payment != null && order.payment.paymentType.equals("ns_f1c8301d_9900_420a_ad71_98adb44d7475\\Vipps")) {
                 accountingId = 24359; // Vipps customer id.
             } else if (order.payment != null && order.payment.paymentType.equals("ns_d02f8b7a_7395_455d_b754_888d7d701db8\\Dibs")) {

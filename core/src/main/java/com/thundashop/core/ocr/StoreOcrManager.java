@@ -226,7 +226,7 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
 
     private OcrFileLines getMatchedLine(OcrFileLines line) {
         for(OcrFileLines l : lines.values()) {
-            if(l.getKid().equals(line.getKid())) {
+            if(l.getRawLine().equals(line.getRawLine())) {
                 return l;
             }
         }

@@ -156,4 +156,8 @@ public class OcrFileLines extends DataCommon implements Comparable<OcrFileLines>
         setMatchOnOrderId(savedLine.getMatchonOnOrder());
         matchDate = savedLine.getOppgjorsDato();
     }
+    
+    public String getRawLine() {
+        return rawLine;
+    }    
 }

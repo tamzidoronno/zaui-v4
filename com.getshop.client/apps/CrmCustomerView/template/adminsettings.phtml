@@ -47,6 +47,7 @@ $user = $this->getUser();
         <?
         }
         ?>
-        <div class='gs_shop_small_icon' gsclick='regeneratTotpKey' style='width:300px;'><i class='fa fa-refresh'></i> <? echo $this->__f("Regenerate key"); ?></div>
+        <div class='gs_shop_small_icon' gsclick='regeneratTotpKey' style='width:300px;' gs_callback='$(".selectedmenuentry").click();'><i class='fa fa-refresh'></i> <? echo $this->__f("Regenerate key"); ?></div>
+        <div class='gs_shop_small_icon' gsclick='deleteTotp' style='width:300px;' gs_callback='$(".selectedmenuentry").click();'><i class='fa fa-refresh'></i> <? echo $this->__f("Delete key"); ?></div>
     </div>
 </div>

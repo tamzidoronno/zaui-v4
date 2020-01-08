@@ -2,33 +2,53 @@
 
 #include "Communication.h"
 #include "KeypadReader.h"
+#include "GS8015KeyReader.h"
 #include "DataStorage.h"
+#include "ApacActionHandler.h"
+#include "GS8015ActionHandler.h"
 #include "CodeHandler.h"
 #include "Logging.h"
 #include "ExternalInputReader.h"
 #include <avr/wdt.h>
 
+
 #include <util/atomic.h>
 
+void(* resetAfterDeviceIdSet) (void) = 0;//declare reset function at address 0
 
 #define disk1 0x50
 
-int cycles = 0;
+/**
+ * The different type of supported lock types are as following
+ * 1 : Wiegand Reader
+ * 2 : GS8015 Numeric Input Reader.
+ */
+#define LOCKTYPE 1
 
-byte key[16] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F};
-byte ciphertext[16] = {0xE0, 0xC4, 0xE0, 0xD8, 0x6A, 0x7B, 0x04, 0x30, 0xD8, 0xCD, 0xB7, 0x80, 0x70, 0xB4, 0xC5, 0x5A};
+int cycles = 0;
 
 Clock clock;
 
 DataStorage dataStorage;
 
 Logging logging(&dataStorage, &clock);
-Communication communication(key, ciphertext, &clock);
+Communication communication(&clock, &dataStorage);
 
-KeyPadReader keypadReaderObj(&clock);
-KeyPadReader& keypadReader = keypadReaderObj;
+// Readers
+#if(LOCKTYPE == 1)
+	int resetLoraChipPin = PB5;
+	KeyPadReader readerObj(&clock);
+	KeyPadReader& keypadReader = readerObj;
+	ApacActionHandler actionHandlerObj;
+#else
+	int resetLoraChipPin = -1;
+	GS8015KeyReader readerObj(&clock);
+	GS8015KeyReader& keypadReader = readerObj;
+	GS8015ActionHandler actionHandlerObj;
+#endif
 
-CodeHandler codeHandler(&dataStorage, &keypadReader, &communication, &logging, &clock);
+
+CodeHandler codeHandler(&dataStorage, &keypadReader, &communication, &logging, &clock, &actionHandlerObj);
 
 ExternalInputReader externalReader(&clock, &logging, &codeHandler);
 
@@ -40,12 +60,12 @@ bool foundData = false;
 unsigned char bufferForWiegand[16];
 unsigned char bufferForCommunication[16];
 
-const char signature [] = "NickGammon";
+const char signature [] = "GetShop";
 char * p = (char *) malloc (sizeof (signature));
 
 unsigned int getDeviceId() {
 	unsigned char buf[16];
-	dataStorage.getCode(5500, buf);
+	dataStorage.getCode(902, buf);
 
 	if (buf[0] != 0x44) {
 		return 65000;
@@ -80,7 +100,7 @@ void setDeviceIdToLoraChip() {
 	Serial.print(address);
 }
 
-void saveDeviceId(char* msg) {
+void saveDeviceId(unsigned char* msg) {
 	unsigned char data[16] = {
 			0x44, msg[4], msg[5], msg[6],
 			msg[7], msg[8], 0x00, 0xFF,
@@ -88,33 +108,45 @@ void saveDeviceId(char* msg) {
 			0xFF, 0xFF, 0xFF, 0xFF
 	};
 
-	dataStorage.writeCode(5500, data);
-	setDeviceIdToLoraChip();
-	communication.writeEncrypted("CID", 3, true);
+	dataStorage.writeCode(902, data);
+//	setDeviceIdToLoraChip();
+}
+
+
+void toggleLight() {
+	if (lighstat == LOW) {
+		lighstat = HIGH;
+	} else {
+		lighstat = LOW;
+	}
+
+	cycles = 0;
+	digitalWrite(PD5, lighstat);
 }
 
 void initLora() {
 	// Set reset of LoraChip to be high.
 
-	pinMode(PB5, OUTPUT);
+	if (resetLoraChipPin > 0) {
+		pinMode(resetLoraChipPin, OUTPUT);
+		delay(500);
+		digitalWrite(resetLoraChipPin, LOW);
+		delay(500);
+		digitalWrite(resetLoraChipPin, HIGH);
+	}
 
-	digitalWrite(PB5, HIGH);
-	delay(500);
-	digitalWrite(PB5, LOW);
-	delay(500);
 
-	digitalWrite(PB5, HIGH);
 	delay(500);
 	setDeviceIdToLoraChip();
-	delay(200);
+	delay(500);
 	Serial.print("AT+NETWORKID=5\r\n");
-	delay(200);
+	delay(500);
 	Serial.print("AT+MODE=0\r\n");
-	delay(200);
+	delay(500);
 	Serial.print("AT+BAND=868500000\r\n");
-	delay(200);
+	delay(500);
 	Serial.print("AT+PARAMETER=10,7,1,7\r\n");
-	delay(200);
+	delay(500);
 
 	wdt_reset();
 }
@@ -129,43 +161,32 @@ void setMillis(unsigned long ms)
 
 void setup()
 {
+	keypadReader.setCodeHandler(&codeHandler);
+
 	wdt_enable(WDTO_4S);
 
 	Serial.begin(115200);
 
 	dataStorage.setupDataStorageBus();
 	initLora();
-	keypadReader.setupWiegand();
+	communication.setup();
+	keypadReader.setup();
 	logging.init();
 	codeHandler.setup();
+	actionHandlerObj.setup();
 
 	wdt_reset();
-
+  
 	if (checkIfColdStart()) {
 		logging.addLog("Started:N", 9, true);
 	} else {
 		logging.addLog("Started:W", 9, true);
 	}
-
-	pinMode(PD6, INPUT);
-	digitalWrite(PD6, HIGH);
-
-	pinMode(16, OUTPUT); // Strike
 }
 
-void toggleLight() {
-	if (lighstat == LOW) {
-		lighstat = HIGH;
-	} else {
-		lighstat = LOW;
-	}
-
-	cycles = 0;
-	digitalWrite(PD5, lighstat);
-}
 
 void aliveDebugLight() {
-	if (cycles > 30000) {
+	if (cycles > 300) {
 		toggleLight();
 	}
 	cycles++;
@@ -174,24 +195,14 @@ void aliveDebugLight() {
 void loop()
 {
 
-//	pinMode(15, OUTPUT);
-//	DIGITALWRITE(15, LOW);
-//	DELAY(2000);
-//	DIGITALWRITE(15, HIGH);
-//	DELAY(2000);
-
-//	pinMode(14, OUTPUT);
-//	digitalWrite(14, LOW);
-//	delay(2000);
-//	digitalWrite(14, HIGH);
-//	delay(2000);
-
-	wdt_reset();
+	//aliveDebugLight();
 
 	delay(1);
 
+	wdt_reset();
+
 	communication.check();
-	keypadReader.checkWiegand();
+	keypadReader.check();
 	codeHandler.check();
 	externalReader.checkButtons();
 	externalReader.checkAlarms();
@@ -207,9 +218,16 @@ void loop()
 	if (communication.isDataAvailable()) {
 		communication.getData(bufferForCommunication);
 
+		if (bufferForCommunication[0] == 'P' && bufferForCommunication[1] == 'I' && bufferForCommunication[2] == 'N' && bufferForCommunication[3] == 'G') {
+			logging.addLog("PONG", 4, true);
+			return;
+		}
 
 		if (bufferForCommunication[0] == 'C' && bufferForCommunication[1] == 'I' && bufferForCommunication[2] == 'D') {
 			saveDeviceId(bufferForCommunication);
+			setDeviceIdToLoraChip();
+			communication.initializeEncryption();
+			resetAfterDeviceIdSet();
 			return;
 		}
 
@@ -246,8 +264,45 @@ void loop()
 			return;
 		}
 
-		if (bufferForCommunication[0] == 'F' && bufferForCommunication[1] == 'O' && bufferForCommunication[2] == 'R') {
-			codeHandler.toggleForceState();
+		// CHANGES THE STATE OF THE LOCK
+		if (bufferForCommunication[0] == 'S' && bufferForCommunication[1] == ':' && bufferForCommunication[2] == 'S') {
+			codeHandler.changeState(bufferForCommunication[4]);
+			return;
+		}
+
+		// SETS THE AUTO CLOSE TIME
+		if (bufferForCommunication[0] == 'S' && bufferForCommunication[1] == ':' && bufferForCommunication[2] == 'A') {
+			codeHandler.changeOpeningTime(bufferForCommunication);
+			return;
+		}
+
+		// SETS THE AUTO CLOSE TIME
+		if (bufferForCommunication[0] == 'S' && bufferForCommunication[1] == ':' && bufferForCommunication[2] == 'D') {
+			dataStorage.deleteAllCodes();
+			logging.addLog("ACODEDEL", 8, true);
+			return;
+		}
+
+		// SETS THE GID
+		if (bufferForCommunication[0] == 'S' && bufferForCommunication[1] == ':' && bufferForCommunication[2] == 'G') {
+			dataStorage.writeCode(904, bufferForCommunication);
+			logging.addLog("GIDCHANGED", 10, true);
+			return;
+		}
+
+		// SETS ENCRYPTIONKEY
+		if (bufferForCommunication[0] == 'S' && bufferForCommunication[1] == 'C') {
+			bool codeUpdated = communication.setEncryptionKey(bufferForCommunication);
+			if (!codeUpdated) {
+				logging.addLog("ENC:SET:2", 9, true);
+			} else {
+				if (bufferForCommunication[2] == 0x01) {
+					logging.addLog("ENC:SET:1", 9, true);
+				}
+				if (bufferForCommunication[2] == 0x02) {
+					logging.addLog("ENC:SET:2", 9, true);
+				}
+			}
 			return;
 		}
 	}

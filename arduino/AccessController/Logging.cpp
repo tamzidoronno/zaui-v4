@@ -14,23 +14,23 @@
 /**
  * We start logging at dataslot 5000.
  */
-unsigned int loggingStartsAtSlot = 5000;
+unsigned int loggingStartsAtSlot = 800;
 
 /**
  * We reserve 100 slots for data storage
  */
-unsigned int maxLogSlot = 5100;
+unsigned int maxLogSlot = 900;
 
-int timeBetweenEeachCheck = 5;
+int timeBetweenEeachCheck = 5000;
 
 /**
  * We reserve 100 slots for data storage
  */
-unsigned int logLineLevelStoredAt = 5050;
+unsigned int logLineLevelStoredAt = 901;
 
 static unsigned long logLineNumber = 0;
 
-unsigned long nextCheck = 0;
+//unsigned long nextCheck = 0;
 
 Logging::Logging(DataStorage* dataStorage, Clock* clock) {
 	this->_dataStorage = dataStorage;
@@ -47,7 +47,7 @@ Logging::Logging(DataStorage* dataStorage, Clock* clock) {
  *   byte[4-7] = Long byte representation of logline
  */
 void Logging::addLog(char* str, int size, bool shouldAck) {
-	this->shiftAllLogEntries();
+	this->sendDataAsap = true;
 
 	if (logLineNumber > 2000000) {
 		logLineNumber = 0;
@@ -96,11 +96,15 @@ void Logging::addLog(char* str, int size, bool shouldAck) {
 	logMetaData[7] = (logLineNumber >> 16) & 0xFF; // 0x34
 	logMetaData[8] = (logLineNumber >> 24) & 0xFF; // 0x12
 
-	int pageLogLineSlot = loggingStartsAtSlot + 1;
-	_dataStorage->writeCode(loggingStartsAtSlot, logMetaData);
+	int pageLogLineSlot = loggingStartsAtSlot + 1 + currentLogSlot;
+	_dataStorage->writeCode(loggingStartsAtSlot + currentLogSlot, logMetaData);
 	_dataStorage->writeCode(pageLogLineSlot, logLineData);
 
-	nextCheck = 0;
+	currentLogSlot = currentLogSlot + 2;
+
+	if (currentLogSlot > 100) {
+		currentLogSlot = 0;
+	}
 
 	this->writeLogLineToEeprom();
 }
@@ -160,16 +164,29 @@ void Logging::init() {
 }
 
 void Logging::runSendCheck(Communication* communication) {
-	long time = _clock->getTime();
+	long timeSinceLastTransmit = millis() - lastTransmitTimestamp;
 
 	unsigned char metaData[16];
 	unsigned char logLine[16];
 
-	if (time <= nextCheck) {
+	if (timeSinceLastTransmit <= timeBetweenEeachCheck && !sendDataAsap) {
 		return;
 	}
 
-	nextCheck = time + timeBetweenEeachCheck;
+	if (sendDataAsap) {
+		newDataToSend = true;
+		if (timeSinceLastTransmit < 700) {
+			return;
+		}
+	}
+
+	if (!newDataToSend) {
+		return;
+	}
+
+	bool found = false;
+	sendDataAsap = false;
+	this->lastTransmitTimestamp = millis();
 
 	for (int i = loggingStartsAtSlot; i < maxLogSlot; i++) {
 
@@ -180,24 +197,18 @@ void Logging::runSendCheck(Communication* communication) {
 
 		_dataStorage->getCode(i, metaData);
 
-		// Make sure that we dont send any whitespaces back to the server
-
-
 		if (metaData[0] == 0x02) {
 			_dataStorage->getCode(i+1, logLine);
-
-			// Make sure that we dont send any whitespaces back to the server
-//			for (int j=0; j<16; j++) {
-//				if (logLine[j] == 0x00) {
-//					logLine[j] = 0xFF;
-//				}
-//			}
-
+			found = true;
 			this->sendLogLine(communication, metaData, logLine);
 			return;
 		}
 
 		i++;
+	}
+
+	if (!found) {
+		newDataToSend = false;
 	}
 }
 
@@ -218,10 +229,6 @@ void Logging::sendLogLine(Communication* comminucation, unsigned char* meta, uns
 }
 
 bool Logging::handleAckMessage(unsigned char* msg) {
-	unsigned long logLineNumberToAck = msg[4];
-	logLineNumberToAck = logLineNumberToAck * 256 + msg[5];
-	logLineNumberToAck = logLineNumberToAck * 256 + msg[6];
-	logLineNumberToAck = logLineNumberToAck * 256 + msg[7];
 
 	unsigned char metaData[16];
 
@@ -230,12 +237,7 @@ bool Logging::handleAckMessage(unsigned char* msg) {
 	for (int i = loggingStartsAtSlot; i < maxLogSlot; i++) {
 		_dataStorage->getCode(i, metaData);
 
-		unsigned long savedLogLineNumber = metaData[5];
-		savedLogLineNumber = savedLogLineNumber * 256 + metaData[6];
-		savedLogLineNumber = savedLogLineNumber * 256 + metaData[7];
-		savedLogLineNumber = savedLogLineNumber * 256 + metaData[8];
-
-		if (savedLogLineNumber == logLineNumberToAck) {
+		if (msg[4] == metaData[5] && msg[5] == metaData[6] && msg[6] == metaData[7] && msg[7] == metaData[8]) {
 			metaData[0] = 0x03;
 			_dataStorage->writeCode(i, metaData);
 			found = true;
@@ -244,10 +246,8 @@ bool Logging::handleAckMessage(unsigned char* msg) {
 		i++;
 	}
 
-	if (!found) {
-		nextCheck = 4294967290;
-	} else {
-		nextCheck = _clock->getTime() + 2;
+	if (found) {
+		this->sendDataAsap = true;
 	}
 
 	return found;

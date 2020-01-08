@@ -21,8 +21,12 @@ class Logging {
 		bool handleAckMessage(unsigned char* msg);
 
 	private:
+		bool sendDataAsap = false;
+		bool newDataToSend = false;
+		unsigned long lastTransmitTimestamp;
 		Clock* _clock;
 		DataStorage* _dataStorage;
+		int currentLogSlot = 0;
 		void shiftAllLogEntries();
 		void writeLogLineToEeprom();
 		void loadLogLineFromEeprom();

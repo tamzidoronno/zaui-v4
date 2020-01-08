@@ -56,22 +56,26 @@ public class LockGroup extends DataCommon {
             masterSlot.subSlots.clear();
             
             for (LockServer server : servers) {
-                ArrayList<String> lockIds = new ArrayList();
-                
-                for (Lock lock : server.getLocks()) {
-                    List<UserSlot> slots = lock.getAllSlotsAssignedToGroup(id);
-                    if (slots.isEmpty()) {
-                        continue;
+                if (server.useSlotConcept()) {
+                    ArrayList<String> lockIds = new ArrayList();
+
+                    for (Lock lock : server.getLocks()) {
+                        List<UserSlot> slots = lock.getAllSlotsAssignedToGroup(id);
+                        if (slots.isEmpty()) {
+                            continue;
+                        }
+
+                        lockIds.add(lock.id);
+
+                        if (!isInSubSlot(masterSlot.subSlots, slots.get(j))) {
+                            masterSlot.subSlots.add(slots.get(j));
+                        }
                     }
-                    
-                    lockIds.add(lock.id);
-                    
-                    if (!isInSubSlot(masterSlot.subSlots, slots.get(j))) {
-                        masterSlot.subSlots.add(slots.get(j));
-                    }
+
+                    connectedToLocks.put(server.getId(), lockIds);
+                } else {
+                    connectedToLocks.put(server.getId(), server.getLocksForGroup(id));
                 }
-                
-                connectedToLocks.put(server.getId(), lockIds);
             }
             
             groupLockCodes.put(i, masterSlot);
@@ -113,7 +117,9 @@ public class LockGroup extends DataCommon {
     }
 
     private void checkIfAllSlotsHasBeenUpdated(MasterUserSlot masterUserSlot, HashMap<String, LockServer> lockServers) {
-        if (masterUserSlot.subSlots.isEmpty()) {
+        boolean groupConceptOnly = allServersUseGroupBasedConcept(lockServers);
+        
+        if (masterUserSlot.subSlots.isEmpty() && !groupConceptOnly) {
             masterUserSlot.allCodesAdded = false;
             return;
         }
@@ -124,6 +130,11 @@ public class LockGroup extends DataCommon {
         for (UserSlot subSlot : masterUserSlot.subSlots) {
             LockServer server = lockServers.get(subSlot.connectedToServerId);
             if (server != null) {
+                
+                if (!server.useSlotConcept()) {
+                    continue;
+                }
+                
                 Lock lock = server.getLock(subSlot.connectedToLockId);
                 if (lock != null) {
                     UserSlot slot = lock.getUserSlot(subSlot.slotId);
@@ -169,5 +180,16 @@ public class LockGroup extends DataCommon {
         }
         
         return false;
+    }
+
+    private boolean allServersUseGroupBasedConcept(HashMap<String, LockServer> lockServers) {
+        
+        for (LockServer server : lockServers.values()) {
+            if (server.useSlotConcept()) {
+                return false;
+            }
+        }
+        
+        return true;
     }
 }

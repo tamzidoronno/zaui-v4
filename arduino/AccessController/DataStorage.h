@@ -8,6 +8,8 @@ class DataStorage {
 	  void DataStorage::setupDataStorageBus();
 	  void DataStorage::getCode(unsigned int slot, unsigned char* buffer);
 	  void DataStorage::resetAll();
+	  void DataStorage::deleteAllCodes();
+	  void DataStorage::deleteAllLogs();
 	  unsigned int DataStorage::handleCodeMessage(unsigned char* msgFromGateWay);
 
    private:

@@ -154,7 +154,11 @@ class ApacLocks extends \MarketingApplication implements \Application {
     }
 
     public function routing($row) {
-        return join(",", $row->routing);
+        if (isset($row->routing)) {
+            return join(",", $row->routing);
+        }
+        
+        return "";
     }
     
     public function getLock() {

@@ -74,4 +74,10 @@ public interface LockServer {
     public boolean hasAccessLogFeature();
 
     public void deleteLock(String lockId);
+
+    public boolean useSlotConcept();
+
+    public void setLockstoGroup(String groupId, List<String> lockIds);
+
+    public List<String> getLocksForGroup(String id);
 }

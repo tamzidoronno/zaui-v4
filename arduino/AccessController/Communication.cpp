@@ -19,12 +19,28 @@ static volatile unsigned long lastReceivedTimestamp = 0;
 
 volatile unsigned char	*Communication::readData;		// buffer for data retention
 
-Communication::Communication(byte* key, byte* ciphertext, Clock* clock) {
-	this->key = key;
-	this->ciphertext = ciphertext;
+Communication::Communication(Clock* clock, DataStorage* dataStorage) {
 	this->dataAvailable = false;
+	this->_dataStorage = dataStorage;
 	_clock = clock;
 	readData = new unsigned char [16];
+	this->resetSerialBuffer();
+}
+
+void Communication::setup() {
+	this->initializeEncryption();
+}
+
+void Communication::initializeEncryption() {
+	unsigned char buffer[16];
+	this->_dataStorage->getCode(906, buffer);
+	bool useStoredKey = buffer[0] == 0x44;
+
+	if (useStoredKey) {
+		this->_dataStorage->getCode(905, this->key);
+	}
+
+	aes128.setKey(this->key, aes128.keySize());
 }
 
 /**
@@ -72,79 +88,159 @@ bool Communication::checksum(unsigned char *buffer, unsigned char checksum) {
 	return ret;
 }
 
+
+void Communication::resetSerialBuffer() {
+	memset(serialDataBuffer, 0, sizeof(serialDataBuffer));
+	while(Serial.available()) {
+		Serial.read();
+	}
+}
+
+void Communication::shiftSerialBufferLeft() {
+	for (int i=0; i<26; i++) {
+		this->serialDataBuffer[i] = this->serialDataBuffer[i+1];
+	}
+}
+
+void Communication::checkSerialBuffer() {
+	if ((byte)this->serialDataBuffer[24] == 'G' && (byte)this->serialDataBuffer[25] == 'I' && (byte)this->serialDataBuffer[26] == 'D') {
+		this->sendGid();
+		this->resetSerialBuffer();
+	}
+
+	if ((byte)this->serialDataBuffer[0] == '+' && (byte)this->serialDataBuffer[1] == 'R' && (byte)this->serialDataBuffer[2] == 'C' && (byte)this->serialDataBuffer[3] == 'V') {
+		this->decryptData();
+		this->resetSerialBuffer();
+	}
+}
+
+void Communication::decryptData() {
+	unsigned char buffer[16];
+	unsigned char decrypted[16];
+
+	for (int i=10; i<26; i++) {
+		buffer[(i-10)] = this->serialDataBuffer[i];
+	}
+
+	if (!checksum(buffer, this->serialDataBuffer[26])) {
+
+		this->dataAvailable = false;
+		return;
+	}
+
+	aes128.decryptBlock(decrypted, buffer);
+
+	int resultOfTimeCheck = checkIfTimeIsNewer(decrypted);
+
+
+//	if (resultOfTimeCheck == 1) {
+//		this->writeEncrypted("Old package?", 12);
+//		this->dataAvailable = false;
+//		return;
+//	}
+//
+//	if (resultOfTimeCheck == 2) {
+//		this->writeEncrypted("Future package?", 15);
+//		this->dataAvailable = false;
+//		return;
+//	}
+
+
+	_clock->adjustClock(lastReceivedTimestamp);
+
+	for (int i=0; i<16; i++) {
+		this->readData[i] = decrypted[i];
+	}
+
+	this->dataAvailable = true;
+}
+
+void Communication::sendGid() {
+	unsigned char gidBuffer[16];
+	this->_dataStorage->getCode(904, gidBuffer);
+
+	unsigned long gidfordevice = 1000000000;
+
+	if (gidBuffer[0] == 0x43) {
+		unsigned long gidfordevice = gidBuffer[4];
+		gidfordevice = gidfordevice * 256 + gidBuffer[5];
+		gidfordevice = gidfordevice * 256 + gidBuffer[6];
+		gidfordevice = gidfordevice * 256 + gidBuffer[7];
+	}
+
+	String msgToSend = "AT+SEND=1,14,GID:";
+	char atbuf[10];
+	ltoa(gidfordevice, atbuf,10);
+	msgToSend.concat(atbuf);
+	msgToSend += "\r\n";
+	Serial.println(msgToSend);
+	delay(200);
+	return;
+}
+
 void Communication::check() {
+	char readBuffer[1];
 
-	if (Serial.available()) {
-		this->dataAvailable = true;
-		aes128.setKey(this->key, aes128.keySize());
-		unsigned char data[34];
-		unsigned char buffer[16];
-		byte decrypted[16];
+	while (Serial.available()) {
+		Serial.readBytes(readBuffer, 1);
+		this->shiftSerialBufferLeft();
+		this->serialDataBuffer[26] = readBuffer[0];
+		this->checkSerialBuffer();
+	}
+}
 
-		Serial.readBytesUntil('\n', data, 34);
+void Communication::debugDataArray(unsigned char* data, int size) {
+	Serial.print("Start: ");
 
-		if (data[1] == 'O' && data[2] == 'K') {
-			this->dataAvailable = false;
-			return;
-		}
+	for (int i=0; i<size; i++) {
+		Serial.print(data[i], HEX);
+		Serial.print(' ');
+	}
 
-		for (int i=10; i<26; i++) {
-			buffer[(i-10)] = data[i];
-		}
+	Serial.print(" DONE");
+	delay(200);
 
-		if ((byte)buffer[0] == 'G' && (byte)buffer[1] == 'I' && (byte)buffer[2] == 'D') {
-			unsigned long gidfordevice = 1000000001;
-			String msgToSend = "AT+SEND=1,14,GID:";
-			char atbuf[10];
-			ltoa(gidfordevice, atbuf,10);
-			msgToSend.concat(atbuf);
-			msgToSend += "\r\n";
-			Serial.println(msgToSend);
-			delay(200);
-			return;
-		}
-
-		if (!checksum(buffer, data[26])) {
-			this->dataAvailable = false;
-			return;
-		}
-
-		aes128.decryptBlock(decrypted, buffer);
-
-		int resultOfTimeCheck = checkIfTimeIsNewer(decrypted);
-
-		/*
-		if (resultOfTimeCheck == 1) {
-			this->writeEncrypted("Old package?", 12);
-			this->dataAvailable = false;
-			return;
-		}
-
-		if (resultOfTimeCheck == 2) {
-			this->writeEncrypted("Future package?", 15);
-			this->dataAvailable = false;
-			return;
-		}
-		*/
-
-		_clock->adjustClock(lastReceivedTimestamp);
-
-		for (int i=0; i<16; i++) {
-			this->readData[i] = decrypted[i];
-		}
-
-		this->dataAvailable = true;
-
-		while(Serial.available()) {
-			Serial.read();
-		}
-
-		delay(10);
+	while(Serial.available()) {
+		Serial.read();
 	}
 }
 
 bool Communication::isDataAvailable() {
 	return this->dataAvailable;
+}
+
+/**
+ * The new encryptionkey is sent in two messages.
+ *
+ * When the part two has arrived we are ready to say that we can use the new encryption code.
+ */
+bool Communication::setEncryptionKey(unsigned char* comData) {
+	int start = comData[2] == 0x02 ? 8 : 0;
+
+	unsigned char keyToSet[16];
+	this->_dataStorage->getCode(906, keyToSet);
+
+	// We already have an encryption set.
+	if (keyToSet[0] == 0x44) {
+		return false;
+	}
+
+	this->_dataStorage->getCode(905, keyToSet);
+
+	int g = 3;
+	for (int i=start; i < (start+8); i++) {
+		keyToSet[i] = comData[g];
+		g++;
+	}
+
+	this->_dataStorage->writeCode(905, keyToSet);
+
+	if (start == 8) {
+		keyToSet[0] = 0x44;
+		this->_dataStorage->writeCode(906, keyToSet);
+	}
+
+	return true;
 }
 
 void Communication::getData(unsigned char* buffer) {
@@ -164,9 +260,7 @@ void Communication::writeEncrypted(char *msgToSend, volatile unsigned int length
     }
     int totalLength = packages*16;
 
-    Serial.print("AT+SEND=1,");
-	Serial.print(totalLength);
-	Serial.print(",");
+    unsigned char allData[totalLength];
 
     for (int i=0; i<packages;i++) {
     	for (int j=0; j<16;j++) {
@@ -184,11 +278,19 @@ void Communication::writeEncrypted(char *msgToSend, volatile unsigned int length
 
 		for (int g=0; g<16; g++) {
 			if (encrypt) {
-				Serial.print((char)encrypted[g]);
+				allData[g + (i*16)] = encrypted[g];
 			} else {
-				Serial.print((char)buf[g]);
+				allData[g + (i*16)] = buf[g];
 			}
 		}
+    }
+
+    Serial.print("AT+SEND=1,");
+   	Serial.print(totalLength);
+   	Serial.print(",");
+
+    for (int i=0; i<totalLength;i++) {
+    	Serial.print((char)allData[i]);
     }
 
 	Serial.print("\r\n");

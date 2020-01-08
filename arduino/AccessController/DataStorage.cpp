@@ -7,14 +7,18 @@
  *
  *  Following datapages are used:
  *  Codes:
- *  0 <= 2000 : Access Codes
+ *  0 <= 799 : Access Codes
  *
  *  Logging:
- *  5000 <= 5100 : Logs
- *  5050 = Loglinenumber
+ *  800 <= 900 : Logs
  *
  *  Other:
- *  5500 = Device id
+ *  901 = Loglinenumber
+ *  902 = Device id
+ *  903 = AutoClosingTime
+ *  904 = Gid.
+ *  905 = EncryptionKey.
+ *  906 = Is encryptioncode set.
  *
  */
 
@@ -28,14 +32,14 @@
 
 int pagesize = 16;
 
+void(* restartAfterResteCompleted) (void) = 0;//declare reset function at address 0
+
 // Contstructor
 DataStorage::DataStorage() {
 }
 
 void DataStorage::writeEEPROMPage(unsigned int eeaddress, unsigned char* data)
 {
-
-
 	Wire.beginTransmission(eeprom1);
 
 	Wire.write((int)((eeaddress) >> 8));   // MSB
@@ -52,6 +56,7 @@ void DataStorage::writeEEPROMPage(unsigned int eeaddress, unsigned char* data)
 void DataStorage::setupDataStorageBus() {
 	Wire.begin();
 	Wire.setClock(400000);
+ // this->resetAll();
 }
 
 void DataStorage::readEEPROM(int deviceaddress, unsigned int eeaddress, unsigned char* data, unsigned int num_chars) {
@@ -110,7 +115,6 @@ void DataStorage::writeCode(unsigned int slot, unsigned char* str_data) {
 }
 
 void DataStorage::resetAll() {
-	digitalWrite(PB5, LOW);
 
 	unsigned char blank[16] = {
 		0xFF, 0xFF, 0xFF, 0xFF,
@@ -119,25 +123,69 @@ void DataStorage::resetAll() {
 		0xFF, 0xFF, 0xFF, 0xFF
 	};
 
-	unsigned int deviceIdSlot = 5500;
-	writeCode(deviceIdSlot, blank);
+	// Device Id
+	writeCode(901, blank);
+	writeCode(902, blank);
+	writeCode(903, blank);
 
-	for (unsigned int i=0; i<=2000; i++) {
-		writeCode(i, blank);
-		wdt_reset();
-	}
+	// Should we delete this or not, gid encryptionkey etc.. security risk?
+	writeCode(904, blank);
+	writeCode(905, blank);
+	writeCode(906, blank);
 
-	for (unsigned int i=5000; i<=5100; i++) {
-		writeCode(i, blank);
-		wdt_reset();
-	}
 
-	writeCode(5050, blank);
+	// Autoclose millis
+	writeCode(5501, blank);
+
+	deleteAllCodes();
+
+	deleteAllLogs();
+
+	unsigned char defaultCode[16] = {
+		0x01, 0x02, 0x03, 0x04,
+		0x05, 0x06, 0x07, 0xFF,
+		0xFF, 0xFF, 0xFF, 0xFF,
+		0xFF, 0xFF, 0xFF, 0xFF
+	};
+
+	writeCode(1, defaultCode);
 
 	delay(1000);
 
-	digitalWrite(PB5, HIGH);
-
-
+	restartAfterResteCompleted();
 }
 
+void DataStorage::deleteAllLogs() {
+	unsigned char blank[16] = {
+		0x00, 0x00, 0x00, 0x00,
+		0x00, 0x00, 0x00, 0x00,
+		0x00, 0x00, 0x00, 0x00,
+		0x00, 0x00, 0x00, 0x00
+	};
+
+	for (unsigned int i=800; i<=901; i++) {
+		writeCode(i, blank);
+		wdt_reset();
+	}
+}
+
+void DataStorage::deleteAllCodes() {
+	unsigned char blank[16] = {
+		0xFF, 0xFF, 0xFF, 0xFF,
+		0xFF, 0xFF, 0xFF, 0xFF,
+		0xFF, 0xFF, 0xFF, 0xFF,
+		0xFF, 0xFF, 0xFF, 0xFF
+	};
+
+	for (unsigned int i=0; i<=800; i++) {
+		char buf[4];
+		itoa(i, buf, 10);
+
+		blank[1] = buf[0];
+		blank[2] = buf[1];
+		blank[3] = buf[2];
+		blank[4] = buf[3];
+		writeCode(i, blank);
+		wdt_reset();
+	}
+}

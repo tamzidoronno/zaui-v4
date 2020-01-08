@@ -74,6 +74,18 @@ public class BookingValidator {
             BookingTimeLineFlatten ret = new BookingTimeLineFlatten(totalSpotsForType, typeId);
             groupedBookings.get(typeId).stream().forEach(booking -> ret.add(booking));
             List<BookingTimeLine> lines = ret.getTimelines();
+            
+            if (totalSpotsForType == 0) {
+                String bookingId = lines.get(0).bookingIds.get(0);
+                Booking b = allBookings
+                        .stream()
+                        .filter(o -> o.id.equals(bookingId))
+                        .findAny()
+                        .orElse(null);
+
+                continue;
+            }
+            
             lines.forEach(line -> {
                 if (line.count > totalSpotsForType) {
                     line.bookingIds.stream()

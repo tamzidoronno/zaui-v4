@@ -125,7 +125,6 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
 
     private void checkForPaymentsInternal(boolean doFailedTransfers) {
         //This is temp and should be removed.
-        cleanDuplicateOrders();
 
         try {
             ocrManager.scanOcrFiles();
@@ -182,37 +181,6 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
         }
     }
     
-    private void cleanDuplicateOrders() {
-        if(beenCleaned) {
-            return;
-        }
-        beenCleaned = true;
-        try {
-            ocrManager.scanOcrFiles();
-            List<OcrFileLines> lines = getAllTransactions();
-            for(OcrFileLines line : lines) {
-                AccountingDetails details = invoiceManager.getAccountingDetails();
-                
-                if(details.kidSize != line.getKid().trim().length()) {
-                    continue;
-                }
-                
-                Order toMatch = orderManager.getOrderByKid(line.getKid());
-                
-                if(toMatch != null && toMatch.hasTransaction(line.getOcrLineId())) {
-                    logPrint("Duplicate ocr registration done for order: " + toMatch.incrementOrderId);
-                    toMatch.removeDuplicateTransactions(line.getOcrLineId());
-                    line.setMatchOnOrderId(toMatch.incrementOrderId);
-                    line.setBeenTransferred();
-                    orderManager.saveOrder(toMatch);
-                }
-            }
-        }catch(Exception e) {
-            messageManager.sendErrorNotification("Outer ocr scanning exception occured", e);
-            logPrintException(e);
-        }
-    }
-
     @Override
     public String getAccountingId() {
         return account.accountId;

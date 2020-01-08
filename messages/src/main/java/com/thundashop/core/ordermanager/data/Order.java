@@ -1549,6 +1549,9 @@ public class Order extends DataCommon implements Comparable<Order> {
         OrderTransaction original = null;
         List<OrderTransaction> toRemove = new ArrayList();
         for(OrderTransaction transaction : orderTransactions) {
+            if(transaction.transactionType != 2) {
+                continue;
+            }
             if(transaction.isReferenceId(transactionId)) {
                 if(original == null) {
                     original = transaction;

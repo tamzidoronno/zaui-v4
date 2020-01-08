@@ -148,12 +148,7 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
                 Order toMatch = orderManager.getOrderByKid(line.getKid());
                 
                 if(toMatch != null) {
-                    if(toMatch.hasTransaction(line.getOcrLineId())) {
-                        logPrint("Duplicate ocr registration done for order: " + toMatch.incrementOrderId);
-                        toMatch.removeDuplicateTransactions(line.getOcrLineId());
-                        line.setMatchOnOrderId(toMatch.incrementOrderId);
-                        line.setBeenTransferred();
-                    } else {
+                    if(!toMatch.hasTransaction(line.getOcrLineId())) {
                         logPrint("New record found: " + line.getKid());
                         logPrint("found matching order");
                         Date paymentDate = line.getPaymentDate();

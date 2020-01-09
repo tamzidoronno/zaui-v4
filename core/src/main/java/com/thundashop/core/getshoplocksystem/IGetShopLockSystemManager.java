@@ -198,4 +198,7 @@ public interface IGetShopLockSystemManager {
     
     @Administrator
     public void deleteSlot(String serverId, String lockId, int slotId);
+    
+    @Administrator
+    public void changeNameOnGorup(String groupdId, String name);
 }

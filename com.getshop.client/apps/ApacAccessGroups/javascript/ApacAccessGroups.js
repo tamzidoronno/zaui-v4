@@ -31,9 +31,9 @@ app.ApacAccessGroups = {
         
         var data = {
             servers : servers,
-            isvirtual: $(this).closest('.locks').find('.isvirtual:checkbox:checked').val()
+            isvirtual: $(this).closest('.locks').find('.isvirtual:checkbox:checked').val(),
+            groupname: $(this).closest('.locks').find('#groupname').val()
         };
-        
         
         thundashop.Ajax.simplePost(this, "saveGroup", data);
     }

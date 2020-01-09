@@ -210,6 +210,8 @@ class EasyByNets extends \PaymentApplication implements \Application {
                 echo "</script>";
             } else {
                 print_r($result);
+                $msg = json_encode($result) . "<br>Datastring:"  . json_encode($datastring);
+                $this->getApi()->getMessageManager()->sendErrorNotify($msg);
             }
         }
     }
@@ -221,6 +223,11 @@ class EasyByNets extends \PaymentApplication implements \Application {
         $order->amount = $this->totalAmount();
         $order->currency = $this->getCurrency();
         $order->reference = $this->order->incrementOrderId;
+        
+        if(!$order->currency) {
+            $order->currency = "NOK";
+            $this->getApi()->getMessageManager()->sendErrorNotify("Currency is empty, autocorrected");
+        }
         
         $items = array();
         $itemobject = new \stdClass();

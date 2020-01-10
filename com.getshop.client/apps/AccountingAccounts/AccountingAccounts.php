@@ -73,7 +73,7 @@ class AccountingAccounts extends \SystemApplication implements \Application {
             $detail->description = $account[1];
             foreach($taxgroups as $grp) {
                 if($grp->taxRate == $account[2]) {
-                    $detail->taxgroup = $grp->groupNumber;
+                    $detail->getShopTaxGroup = $grp->groupNumber;
                 }
             }
 

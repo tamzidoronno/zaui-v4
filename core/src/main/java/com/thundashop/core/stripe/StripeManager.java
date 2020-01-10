@@ -138,9 +138,12 @@ public class StripeManager extends ManagerBase implements IStripeManager {
             }
             
             User usr = userManager.getUserById(order.userId);
-            String email = usr.emailAddress;
-            if(email == null || !isValidEmail(email)) {
-                email = "no@emailset.com";
+            String email = "";
+            if(usr != null) {
+                email = usr.emailAddress;
+                if(email == null || !isValidEmail(email)) {
+                    email = "no@emailset.com";
+                }
             }
             
             String endpoints = createWebHook(Stripe.apiKey);

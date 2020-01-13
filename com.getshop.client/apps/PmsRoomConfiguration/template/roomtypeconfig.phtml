@@ -32,6 +32,14 @@ $types = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType(
     $rows = array();
     $rowNumber = 0;
     foreach($types as $type) {
+        if(!$type->productId) {
+            echo "<div style='font-size: 30px; font-weight: bold;'>WARNING, NO PRODUCT FOUND ON CATEGORY, AUTOCORRECTING PROBLEM</div>";
+            $product = $this->getApi()->getProductManager()->createProduct();
+            $product->name = $type->name;
+            $this->getApi()->getProductManager()->saveProduct($product);
+            $type->productId = $product->id;
+            $this->getApi()->getBookingEngine()->updateBookingItemType($this->getSelectedMultilevelDomainName(), $type);
+        }
         $product = $this->getApi()->getProductManager()->getProduct($type->productId);
         $additional = $this->getApi()->getPmsManager()->getAdditionalTypeInformationById($this->getSelectedMultilevelDomainName(), $type->id);
         $additional->rowNumber = $rowNumber;

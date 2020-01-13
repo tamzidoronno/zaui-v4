@@ -226,7 +226,6 @@ class EasyByNets extends \PaymentApplication implements \Application {
         
         if(!$order->currency) {
             $order->currency = "NOK";
-            $this->getApi()->getMessageManager()->sendErrorNotify("Currency is empty, autocorrected");
         }
         
         $items = array();

@@ -44,7 +44,7 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
     private ListManager listManager;
     
     private Map<String, ApplicationInstance> applicationInstances;
-    private static Map<String, Map<String, ApplicationInstance>> moduleApplicationInstances = new HashMap<String, Map<String, ApplicationInstance>>();
+    private Map<String, Map<String, ApplicationInstance>> moduleApplicationInstances = new HashMap<String, Map<String, ApplicationInstance>>();
     
     private HashMap<String, Integer> cachedSecurity = new HashMap();
 
@@ -256,9 +256,6 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
 
     private void loadRemoteData() {
         
-        if(!moduleApplicationInstances.isEmpty()) {
-            return;
-        }
         
         modules.getModules().stream().forEach(m -> {
             databaseRemote.getAll("StoreApplicationInstancePool", "all", m.id).forEach(o -> {

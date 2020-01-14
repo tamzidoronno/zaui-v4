@@ -106,7 +106,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     
     private GetShopModules modules = new GetShopModules();
 
-    private static ModuleHomePages moduleHomePages = new ModuleHomePages();
+    private ModuleHomePages moduleHomePages = new ModuleHomePages();
     
     public List<StoreCriticalMessage> messages = new ArrayList(); 
     

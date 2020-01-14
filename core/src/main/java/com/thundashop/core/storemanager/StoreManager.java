@@ -106,7 +106,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     
     private GetShopModules modules = new GetShopModules();
 
-    private ModuleHomePages moduleHomePages = new ModuleHomePages();
+    private static ModuleHomePages moduleHomePages = new ModuleHomePages();
     
     public List<StoreCriticalMessage> messages = new ArrayList(); 
     
@@ -179,13 +179,17 @@ public class StoreManager extends ManagerBase implements IStoreManager {
             }
         }
         
-        modules.getModules().stream().forEach(m -> {
-            databaseRemote.getAll("StoreManager", "all", m.id).forEach(o -> {
-                if (o instanceof ModuleHomePages) {
-                    moduleHomePages = (ModuleHomePages)moduleHomePages;
-                }
+        try {
+            modules.getModules().stream().forEach(m -> {
+                databaseRemote.getAll("StoreManager", "all", m.id).forEach(o -> {
+                    if (o instanceof ModuleHomePages) {
+                        moduleHomePages = (ModuleHomePages)moduleHomePages;
+                    }
+                });
             });
-        });
+        }catch(Exception e) {
+            
+        }
     }
 
     @Override

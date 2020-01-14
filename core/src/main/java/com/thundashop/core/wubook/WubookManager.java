@@ -166,10 +166,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     
     private boolean connectToApi() throws Exception {
         
-        if(true) {
-            return false;
-        }
-        
         if(!isWubookActive()) { return false; }
         
         if(tokenCount < 30 && token != null && !token.isEmpty()) {

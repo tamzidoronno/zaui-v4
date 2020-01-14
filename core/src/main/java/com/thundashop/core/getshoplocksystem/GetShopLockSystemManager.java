@@ -1173,4 +1173,13 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         }
         return result;
     }
+
+    @Override
+    public void changeNameOnGorup(String groupdId, String name) {
+        LockGroup group = getGroup(groupdId);
+        if (group != null) {
+            group.name = name;
+            saveObject(group);
+        }
+    }
 }

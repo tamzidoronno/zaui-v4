@@ -41,7 +41,7 @@ public class PageManager extends ManagerBase implements IPageManager {
 
     HashMap<String, Page> pages = new HashMap();
     HashMap<String, HashMap<String, Page>> modulePages = new HashMap();
-    HashMap<String, CommonPageData> moduleCommonAreas = new HashMap();
+    static HashMap<String, CommonPageData> moduleCommonAreas = new HashMap();
     
     HashMap<String, PageComment> comments = new HashMap();
     CommonPageData commonPageData = new CommonPageData();
@@ -1036,6 +1036,9 @@ public class PageManager extends ManagerBase implements IPageManager {
     }
 
     private void loadCommonData() {
+        if(!moduleCommonAreas.isEmpty()) {
+            return;
+        }
         modules.getModules().stream().forEach(m -> {
             databaseRemote.getAll("PageManager", "all", m.id).forEach(o -> {
                 if (o instanceof Page) {

@@ -107,7 +107,12 @@ public class PageManager extends ManagerBase implements IPageManager {
                 savedCommonPageData = (SavedCommonPageData) obj;
             }
         }
-        loadCommonData();
+        
+        try {
+            loadCommonData();
+        }catch(Exception e) {
+            //Continue loading.
+        }
     }
 
     @Override

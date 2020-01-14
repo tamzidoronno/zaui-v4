@@ -199,6 +199,26 @@ class ApacLocks extends \MarketingApplication implements \Application {
         }
     }
     
+    public function forceRemoveCodesOnSlot() {
+        $lock = $this->getApi()->getGetShopLockSystemManager()->getLock($_POST['data']['serverid'], $_POST['data']['lockid']);
+        foreach ($lock->userSlots as $slot) {
+            if ($slot->code && $slot->code->pinCode) {
+                $this->getApi()->getGetShopLockSystemManager()->forceDeleteSlot($_POST['data']['serverid'], $_POST['data']['lockid'], $slot->slotId);
+            }
+        }
+    }
+    
+    public function markAllCodesChecked() {
+        $lock = $this->getApi()->getGetShopLockSystemManager()->getLock($_POST['data']['serverid'], $_POST['data']['lockid']);
+        foreach ($lock->userSlots as $slot) {
+            if ($slot->code && $slot->code->pinCode) {
+                $this->getApi()->getGetShopLockSystemManager()->markCodeAsUpdatedOnLock($_POST['data']['serverid'], $_POST['data']['lockid'], $slot->slotId);
+                
+                $this->getApi()->getGetShopLockSystemManager()->forceDeleteSlot($_POST['data']['serverid'], $_POST['data']['lockid'], $slot->slotId);
+            }
+        }
+    }
+    
     public function markCodeAsSent() {
         $this->getApi()->getGetShopLockSystemManager()->markCodeAsUpdatedOnLock($_POST['data']['serverid'], $_POST['data']['lockid'], $_POST['data']['slotid']);
     }

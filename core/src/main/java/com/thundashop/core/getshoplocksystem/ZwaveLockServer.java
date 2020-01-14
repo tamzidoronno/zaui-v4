@@ -252,6 +252,14 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
         saveMe();
     }
 
+    public void forceDelete(String lockId, int slotId) {
+        LocstarLock lock = (LocstarLock) getLock(lockId);
+        UserSlot slot = lock.getUserSlot(slotId);
+        
+        ZwaveRemoveCodeThread removeJob = new ZwaveRemoveCodeThread(this, slot, lock, true, storeId);
+        removeJob.directExecute();
+    }
+    
     @Override
     public void markCodeForResending(String lockId, int slotId) {
         super.markCodeForResending(lockId, slotId);

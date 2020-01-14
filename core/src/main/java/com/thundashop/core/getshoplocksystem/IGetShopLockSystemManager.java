@@ -69,6 +69,9 @@ public interface IGetShopLockSystemManager {
     @Administrator
     public void updateZwaveRoute(String serverId, String lockId);
     
+    @Administrator
+    public void forceDeleteSlot(String serverId, String lockId, int slotId);
+    
     /**
      * 
      * 

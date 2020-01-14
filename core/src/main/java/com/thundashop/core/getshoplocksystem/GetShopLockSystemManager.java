@@ -255,6 +255,14 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
             server.markCodeForResending(lockId, slotId);
         }
     }
+    
+    
+
+    @Override
+    public void forceDeleteSlot(String serverId, String lockId, int slotId) {
+        ZwaveLockServer server = (ZwaveLockServer) lockServers.get(serverId);
+        server.forceDelete(lockId, slotId);
+    }    
 
     @Override
     public LockGroup createNewLockGroup(String name, int maxUsersInGroup, Integer codeSize) {
@@ -1182,4 +1190,5 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
             saveObject(group);
         }
     }
+
 }

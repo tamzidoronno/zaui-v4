@@ -182,7 +182,7 @@ public class DatabaseRemote extends StoreComponent {
             java.util.logging.Logger.getLogger(DatabaseRemote.class.getName()).log(Level.WARNING, null, ex);
         }
         
-        return null;
+        return new ArrayList().stream();
     }
 
     /**

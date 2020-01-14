@@ -34,6 +34,11 @@ public class PmsManagerProcessor {
     }
 
     public void doProcessing() {
+        
+        if(true) {
+            return;
+        }
+        
         start = System.currentTimeMillis();
         clearCachedObject();
         checkTimer("Cleared cache");

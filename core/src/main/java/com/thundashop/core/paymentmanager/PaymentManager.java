@@ -47,7 +47,11 @@ public class PaymentManager extends ManagerBase implements IPaymentManager {
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
-        loadDataFromRemoteDatabase();
+        try {
+            loadDataFromRemoteDatabase();
+        }catch(Exception e) {
+            
+        }
         
         for (DataCommon commonData : data.data) {
             if (commonData instanceof PaymentConfiguration) {

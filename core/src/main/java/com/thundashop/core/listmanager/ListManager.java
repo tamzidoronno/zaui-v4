@@ -46,8 +46,8 @@ public class ListManager extends ManagerBase implements IListManager {
      * String = ApplicatoinInstanceId
      * List instide is a list of all menues connected to the app.
      */
-    private Map<String, Map<String, List<Menu>>> moduleMenues = new HashMap();
-    private Map<String, List<Menu>> menues = new HashMap();
+    private static Map<String, Map<String, List<Menu>>> moduleMenues = new HashMap();
+    private static Map<String, List<Menu>> menues = new HashMap();
     
     private GetShopModules modules = new GetShopModules();
     
@@ -107,8 +107,12 @@ public class ListManager extends ManagerBase implements IListManager {
                 addMenu(menu);
             }
         }
-        
-        loadRemoteData();
+        try {
+            loadRemoteData();
+        }catch(Exception e) {
+            
+        }
+            
     }
     
     public List<String> findListIdByEntryId(String id) {
@@ -941,6 +945,9 @@ public class ListManager extends ManagerBase implements IListManager {
     }
     
     private void loadRemoteData() {
+        if(!moduleMenues.isEmpty() && !moduleJsTreeList.isEmpty()) {
+            return;
+        }
         modules.getModules().stream().forEach(m -> {
             databaseRemote.getAll("ListManager", "all", m.id).forEach(o -> {
                 if (o instanceof EntryList) {

@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 public class ContentManager extends ManagerBase implements IContentManager {
     private int id=1002;
 
-    private Map<String, HashMap<String, ContentData>> moduleMemory = new HashMap();
+    private static Map<String, HashMap<String, ContentData>> moduleMemory = new HashMap();
     private HashMap<String, ContentData> memory = new HashMap();
     
     private GetShopModules modules = new GetShopModules();
@@ -45,7 +45,11 @@ public class ContentManager extends ManagerBase implements IContentManager {
             }
         }
         
-        loadRemoteData();
+        try {
+            loadRemoteData();
+        }catch(Exception e) {
+            
+        }
     }
 
     @Override
@@ -170,6 +174,9 @@ public class ContentManager extends ManagerBase implements IContentManager {
     
     
     private void loadRemoteData() {
+        if(!moduleMemory.isEmpty()) {
+            return;
+        }
         modules.getModules().stream().forEach(m -> {
             databaseRemote.getAll("ContentManager", "all", m.id).forEach(o -> {
                 if (o instanceof ContentData) {

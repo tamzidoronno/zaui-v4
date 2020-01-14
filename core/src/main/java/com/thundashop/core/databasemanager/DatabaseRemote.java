@@ -165,9 +165,6 @@ public class DatabaseRemote extends StoreComponent {
     }
 
     public Stream<DataCommon> getAll(String dbName, String storeId, String moduleName) {
-        if(true) {
-            return new ArrayList().stream();
-        }
         try {
             if (GetShopLogHandler.isDeveloper) {
                 connectLocal();

@@ -213,8 +213,6 @@ class ApacLocks extends \MarketingApplication implements \Application {
         foreach ($lock->userSlots as $slot) {
             if ($slot->code && $slot->code->pinCode) {
                 $this->getApi()->getGetShopLockSystemManager()->markCodeAsUpdatedOnLock($_POST['data']['serverid'], $_POST['data']['lockid'], $slot->slotId);
-                
-                $this->getApi()->getGetShopLockSystemManager()->forceDeleteSlot($_POST['data']['serverid'], $_POST['data']['lockid'], $slot->slotId);
             }
         }
     }

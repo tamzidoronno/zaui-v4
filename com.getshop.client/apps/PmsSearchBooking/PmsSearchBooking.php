@@ -248,11 +248,11 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
         ob_start();
 
         echo "<div class='GetShopModuleTableHeader'>";
-        if($this->hasSamleFaktura()) {
-            $pmsBookingRoomView = new \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView();
-            $useNew = $pmsBookingRoomView->shouldUseNewPaymentWindow() ? "usenew" : "";
-            echo "<div style='font-size:20px; color:#bbb;'><i class='fa fa-trash-o clearCheckoutProcess' style='cursor:pointer;' title='Clear checkout process'></i> <span class='totaladdedtocheckout'>0</span> room(s) added to checkout <span class='continuetocheckout $useNew' style='display:none; color:blue; cursor:pointer;'>continue to payment <i class='fa fa-arrow-right'></i></span></div>";
-        }
+        
+        $pmsBookingRoomView = new \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView();
+        $useNew = $pmsBookingRoomView->shouldUseNewPaymentWindow() ? "usenew" : "";
+        echo "<div style='font-size:20px; color:#bbb;'><i class='fa fa-trash-o clearCheckoutProcess' style='cursor:pointer;' title='Clear checkout process'></i> <span class='totaladdedtocheckout'>0</span> room(s) added to checkout <span class='continuetocheckout $useNew' style='display:none; color:blue; cursor:pointer;'>continue to payment <i class='fa fa-arrow-right'></i></span></div>";
+            
         echo "<span  style='float:left;margin-right: 10px;' class='shop_button' gs_downloadExcelReport='downloadBookingListToExcel' gs_fileName='bookinglist'>Download list to excel</span> ";
         echo "<span  style='float:left;margin-right: 10px;' class='shop_button' gs_downloadExcelReport='downloadBookingListToExcelAndGuestInfo' gs_fileName='bookinglist'>Download list to excel + guest information</span> ";
         echo "<input type='txt' class='gsniceinput1 tablefilterinput' placeholder='Do filter on table below by entering a text here'>";

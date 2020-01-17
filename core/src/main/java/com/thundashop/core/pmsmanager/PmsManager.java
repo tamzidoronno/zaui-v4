@@ -619,6 +619,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             booking.segmentId = segment.id;
         }
         setSameAsBookerIfNessesary(booking);
+        calculateCountryFromPhonePrefix(booking);
         saveBooking(booking);
         feedGrafana(booking);
         logPrint("Booking has been completed: " + booking.id);
@@ -626,7 +627,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         User user = userManager.getUserById(booking.userId);
         user.lastBooked = new Date();
         userManager.saveUserSecure(user);
-
         return 0;
     }
 
@@ -9988,6 +9988,26 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         currentBookingId = bookingId;
     }
 
+    private void calculateCountryFromPhonePrefix(PmsBooking booking) {
+        try {
+            if(booking == null || booking.userId == null) {
+                return;
+            }
+            User usr = userManager.getUserById(booking.userId);
+            if(usr == null) {
+                return;
+            }
+            if(usr.prefix != null && usr.prefix.length() > 0) {
+                String code = SmsHandlerAbstract.getCountryCodeOfPhonePrefix(usr.prefix);
+                if(code != null && !code.isEmpty()) {
+                    booking.countryCode = code;
+                }
+            }
+        }catch(Exception e) {
+            logPrintException(e);
+        }
+    }
+    
     @Override
     public void simpleCompleteCurrentBooking() {
         PmsBooking currentBooking = getCurrentBooking();
@@ -10026,6 +10046,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         addDefaultAddons(currentBooking);
         wubookManager.setAvailabilityChanged(currentBooking.getStartDate(), currentBooking.getEndDate());
+        calculateCountryFromPhonePrefix(currentBooking);
         saveBooking(currentBooking);
     }
 

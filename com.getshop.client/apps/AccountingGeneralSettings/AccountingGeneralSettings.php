@@ -93,6 +93,9 @@ class AccountingGeneralSettings extends \MarketingApplication implements \Applic
         $generalconfig->interimPrePaidAccount = $_POST['data']['interimprepaid'];
         $generalconfig->interimPostPaidAccount = $_POST['data']['interimpostpaid'];
         $generalconfig->paidPostingAccount = $_POST['data']['paidaccount'];
+        $generalconfig->agioAccount = $_POST['data']['agioaccount'];
+        $generalconfig->dissAgioAccount = $_POST['data']['disagioaccount'];
+        $generalconfig->conversionAccount = $_POST['data']['conversionAccount'];
         
         $this->getApi()->getPaymentManager()->saveGeneralPaymentConfig($generalconfig);
     }

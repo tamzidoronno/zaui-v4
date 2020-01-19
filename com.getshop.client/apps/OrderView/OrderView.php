@@ -66,7 +66,6 @@ class OrderView extends \MarketingApplication implements \Application {
         
         $typenamespace = explode('\\', $this->getOrder()->payment->paymentType);
         $paymentType = $this->getPaymentMethodName($typenamespace[0]);
-        
         ?>
         <div class='workareaheader'>
             <div class="headertitle">
@@ -105,6 +104,19 @@ class OrderView extends \MarketingApplication implements \Application {
             </script>
             <?
         }
+    }
+    
+    public function registerLoss() {
+        $order = $this->getOrder();
+        $lossList = array();
+        foreach($order->cart->items as $item) {
+            $orderLoss = new \core_ordermanager_data_OrderLoss();
+            $orderLoss->itemId = $item->cartItemId;
+            $orderLoss->count = $_POST['data'][$item->cartItemId]['count'];
+            $orderLoss->amount = $_POST['data'][$item->cartItemId]['price'];
+            $lossList[] = $orderLoss;
+        }
+        $this->getApi()->getOrderManager()->registerLoss($order->id, $lossList);
     }
 
     public function setOrder() {

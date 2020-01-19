@@ -19,6 +19,7 @@
     background-color: #FFF;
 }
 
+.InvoicingOverdueList .duerow.gray .overduedays { color: #bbb; }
 .InvoicingOverdueList .duerow.blue .overduedays { color: blue; }
 .InvoicingOverdueList .duerow.yellow .overduedays { color: #ff6636; }
 .InvoicingOverdueList .duerow.red .overduedays { color: red; }

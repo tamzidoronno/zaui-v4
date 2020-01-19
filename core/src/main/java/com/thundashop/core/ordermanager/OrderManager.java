@@ -54,6 +54,7 @@ import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.OrderManagerSettings;
 import com.thundashop.core.ordermanager.data.OrderFilter;
 import com.thundashop.core.ordermanager.data.OrderLight;
+import com.thundashop.core.ordermanager.data.OrderLoss;
 import com.thundashop.core.ordermanager.data.OrderResult;
 import com.thundashop.core.ordermanager.data.OrderShipmentLogEntry;
 import com.thundashop.core.ordermanager.data.OrderTransaction;
@@ -271,60 +272,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     private Order createCreatditOrder(String orderId, String newReference) throws ErrorException {
-        Order order = getOrderSecure(orderId);
-
-        if (order.createdBasedOnOrderIds != null && !order.createdBasedOnOrderIds.isEmpty()) {
-            addCreditNotesToBookings(order.createdBasedOnOrderIds);
-        }
-        
-        Order credited = order.jsonClone();
-        for(CartItem item : credited.cart.getItems()) {
-            item.setCount(item.getCount() * -1);
-            item.creditPmsAddonsAndPriceMatrix();
-        }
-        
-        credited.incrementOrderId = getNextIncrementalOrderId();
-        credited.isCreditNote = true;
-        credited.status = Order.Status.CREATED;
-        credited.parentOrder = order.id;
-        credited.creditOrderId.clear();
-        credited.orderTransactions.clear();
-        credited.closed = false;
-        credited.transferredToAccountingSystem = false;
-        credited.moveAllTransactionToTodayIfItsBeforeDate(getOrderManagerSettings().closedTilPeriode);
-        if (credited.overrideAccountingDate != null && credited.overrideAccountingDate.before(getOrderManagerSettings().closedTilPeriode)) {
-            credited.overrideAccountingDate = getOrderManagerSettings().closedTilPeriode;
-        }
-        
-        order.creditOrderId.add(credited.id);
-        order.doFinalize();
-        
-        if (!newReference.isEmpty() && order.cart != null) {
-            credited.cart.reference = newReference;
-        }
-
-        saveOrder(credited);
-        saveOrder(order);
-        
-        if (order.status != Order.Status.PAYMENT_COMPLETED) {
-            markAsPaidWithTransactionTypeInternal(order.id, order.getTotalAmount(), new Date(), 1, "unkown", order.getTotalAmountLocalCurrency(), order.getTotalRegisteredAgio());
-            markAsPaidWithTransactionTypeInternal(credited.id, credited.getTotalAmount(), new Date(), 1, "unkown", credited.getTotalAmountLocalCurrency(), credited.getTotalRegisteredAgio());   
-        }
-        
-        revertOrderLinesToPreviouseState(order);
-        
-        List<String> credittedOrders = new ArrayList();
-        credittedOrders.add(credited.id);
-        try {
-            addOrdersToBookings(credittedOrders);
-        }catch(GetShopBeanException ex) {
-            // This will happen if the credit order is invoked within a named bean, 
-            // normally it then comes from the pms manager itself and then the manager
-            // should handle the adding to booking properly itself.
-            return credited;
-        }
-        
-        return credited;
+        return createCreditOrderAndMarkAsPaid(orderId, newReference, true);
     }
     
     @Override
@@ -3553,7 +3501,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         List<Order> retOrders = orders.values()
                 .stream()
                 .filter(o -> o.isInvoice())
-                .filter(o -> o.isOverdue())
+                .filter(o -> !o.isFullyPaid())
                 .collect(Collectors.toList());
         
         retOrders.forEach(o -> o.doFinalize());
@@ -4929,6 +4877,87 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         });
 
         
+    }
+
+    @Override
+    public void registerLoss(String orderId, List<OrderLoss> loss) {
+        
+        Order creditNote = createCreditOrderAndMarkAsPaid(orderId, "", false);
+        for(CartItem item : creditNote.getCartItems()) {
+            for(OrderLoss lossLine : loss) {
+                if(item.getCartItemId().equals(lossLine.itemId)) {
+                    item.setCount(lossLine.count);
+                    item.getProduct().price = lossLine.amount;
+                }
+            }
+        }
+        saveOrderInternal(creditNote);
+        
+        double totalAmount = getTotalAmount(creditNote);
+        
+        Date date = getOrderManagerSettings().closedTilPeriode;
+        if(date == null) {
+            date = new Date();
+        }
+        markAsPaidWithTransactionType(orderId, date, totalAmount, Order.OrderTransactionType.LOSS, orderId);
+        markAsPaid(creditNote.id, date, totalAmount);
+    }
+
+    private Order createCreditOrderAndMarkAsPaid(String orderId, String newReference, boolean markAsPaid) {
+        Order order = getOrderSecure(orderId);
+
+        if (order.createdBasedOnOrderIds != null && !order.createdBasedOnOrderIds.isEmpty()) {
+            addCreditNotesToBookings(order.createdBasedOnOrderIds);
+        }
+        
+        Order credited = order.jsonClone();
+        for(CartItem item : credited.cart.getItems()) {
+            item.setCount(item.getCount() * -1);
+            item.creditPmsAddonsAndPriceMatrix();
+        }
+        
+        credited.incrementOrderId = getNextIncrementalOrderId();
+        credited.isCreditNote = true;
+        credited.status = Order.Status.CREATED;
+        credited.parentOrder = order.id;
+        credited.creditOrderId.clear();
+        credited.orderTransactions.clear();
+        credited.closed = false;
+        credited.transferredToAccountingSystem = false;
+        credited.moveAllTransactionToTodayIfItsBeforeDate(getOrderManagerSettings().closedTilPeriode);
+        if (credited.overrideAccountingDate != null && credited.overrideAccountingDate.before(getOrderManagerSettings().closedTilPeriode)) {
+            credited.overrideAccountingDate = getOrderManagerSettings().closedTilPeriode;
+        }
+        
+        order.creditOrderId.add(credited.id);
+        order.doFinalize();
+        
+        if (!newReference.isEmpty() && order.cart != null) {
+            credited.cart.reference = newReference;
+        }
+
+        saveOrder(credited);
+        saveOrder(order);
+        
+        if (order.status != Order.Status.PAYMENT_COMPLETED && markAsPaid) {
+            markAsPaidWithTransactionTypeInternal(order.id, order.getTotalAmount(), new Date(), 1, "unkown", order.getTotalAmountLocalCurrency(), order.getTotalRegisteredAgio());
+            markAsPaidWithTransactionTypeInternal(credited.id, credited.getTotalAmount(), new Date(), 1, "unkown", credited.getTotalAmountLocalCurrency(), credited.getTotalRegisteredAgio());   
+        }
+        
+        revertOrderLinesToPreviouseState(order);
+        
+        List<String> credittedOrders = new ArrayList();
+        credittedOrders.add(credited.id);
+        try {
+            addOrdersToBookings(credittedOrders);
+        }catch(GetShopBeanException ex) {
+            // This will happen if the credit order is invoked within a named bean, 
+            // normally it then comes from the pms manager itself and then the manager
+            // should handle the adding to booking properly itself.
+            return credited;
+        }
+        
+        return credited;
     }
 
 

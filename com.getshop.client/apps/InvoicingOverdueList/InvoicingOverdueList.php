@@ -71,6 +71,7 @@ class InvoicingOverdueList extends \MarketingApplication implements \Application
                 return $totalGrouped[$i];
             }
         }
+        return 0;
     }
 
     public function getAllInvoices() {

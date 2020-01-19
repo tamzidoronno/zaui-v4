@@ -4,10 +4,19 @@
     vertical-align: top;
 }
 
+.OrderView .totalissame {
+    background-color:green;
+    color:#fff;
+}
+.OrderView .totalisnotsame {
+    background-color:red;
+    color:#fff;
+}
+
 .OrderView .rightmenu {
     margin-top: 50px;
 }
-
+.OrderView .actiontabarea { display:none; }
 .OrderView .leftmenu {
     width: 100px;
     background-color: #23314e;

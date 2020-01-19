@@ -1,0 +1,24 @@
+<?php
+$order = $this->getOrder();
+?>
+<div class="manualregisterpayment">
+
+    <h1><? echo $this->__f("Manually register payment"); ?></h1>
+    <?
+    $now = date('d.m.Y');
+    ?>
+    <div>
+        <span style='display: inline-block; width: 200px;'>Date</span>
+        <span style='display: inline-block; width: 200px;'>Comment</span>
+        <span style='display: inline-block; width: 200px;'>Value</span>
+    </div>
+    <input class="gsniceinput1 manualregisterpaymentdate" value="<? echo $now; ?>"/>
+    <input class="gsniceinput1 manualregisterpaymentcomment"placeholder="<? echo $this->__f('Optional comment'); ?>" />
+    <input class="gsniceinput1 manualregisterpaymentamount" value="<? echo $order->restAmount; ?>" />
+    <div class="shop_button registerpayment">
+        <? 
+        echo $this->__f("Register payment");
+        ?>
+    </div>
+    
+</div>

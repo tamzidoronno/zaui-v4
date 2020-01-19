@@ -1585,6 +1585,7 @@ public class Order extends DataCommon implements Comparable<Order> {
          * If the operatolr manually enter this transaaction.
          */
         public static Integer MANUAL = 3;
+        public static Integer LOSS = 4;
     }
     
     

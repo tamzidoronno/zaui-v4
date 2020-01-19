@@ -5,13 +5,15 @@ $invoices = $this->getOverDueInvoices();
 $total = 0;
 $totalGrouped = array();
 
-$daysGroup = array(14,30,60, 180, 99999);
+$daysGroup = array(0,14,30,60, 180, 99999);
 
 foreach ($invoices as $invoice) {
     $orderAmount = $this->getTotalAmountForOrder($invoice);
-    $total += $orderAmount;
     $days = $this->calculateDaysSince($invoice->dueDate); 
-   
+    if($days >= 0) {
+        $total += $orderAmount;
+    }
+    
     $totalGroupNumber = $this->getGroupNumber($daysGroup, $days);
     if(!isset($totalGrouped[$totalGroupNumber])) {
         $totalGrouped[$totalGroupNumber] = 0;
@@ -60,6 +62,8 @@ foreach ($daysGroup as $days) {
             
                 if ($days == 99999) {
                     echo $this->__f("Overdue more then")." $prev ".$this->__f("days"); 
+                } else if($days == 0) {
+                    echo $this->__f("Not due yet"); 
                 } else {
                     echo $this->__f("Overdue")." $prev - $days ".$this->__f("days"); 
                 }

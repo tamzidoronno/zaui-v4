@@ -1,0 +1,34 @@
+<?
+if ($feeAccounts) {
+    ?>
+    <span style='display: inline-block; width: 200px;'>Type</span>
+    <?
+}
+?>
+    <?
+    if ($order->currency) {
+        ?>
+        <input class="gsniceinput1 localcurrencyvalue" value="" />
+        <input class="gsniceinput1 disaglo" inlocalcurrency="<? echo $totalForOrderInLocalCurrency; ?>" value="" />
+        <?
+    }
+    ?>
+
+<span style='display: inline-block; width: 200px;'>Value in local currency</span>
+<span style='display: inline-block; width: 200px;'>Aglo / Disaglo</span>
+<?
+if ($feeAccounts) {
+    ?>
+    <select class="gsniceselect1 manualregisterpaymenttype">
+        <option value="">Normal</option>
+        <?
+        foreach ($feeAccounts as $account) {
+            ?>
+            <option value="<? echo $account->id; ?>"><? echo $account->accountNumber." - ".$account->description; ?></option>
+            <?
+        }
+        ?>
+    </select>
+    <?
+}
+?>

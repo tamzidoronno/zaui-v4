@@ -16,6 +16,9 @@ app.OrderView = {
         $(document).on('click', '.OrderView .creditorder', app.OrderView.creditOrder);
         $(document).on('click', '.OrderView .deleteorder', app.OrderView.deleteOrder);
         $(document).on('click', '.OrderView .togglespecialinfo', app.OrderView.toggleSpecialInfo);
+        $(document).on('click', '.OrderView .actiontabbtn', app.OrderView.displayActionArea);
+        $(document).on('keyup', '.OrderView .registerlossinput', app.OrderView.calculateNewLossUpdate);
+        $(document).on('click', '.OrderView .doRegisterLoss', app.OrderView.doRegisterLoss);
         
         // CartItem Changes
         $(document).on('change', '.OrderView .cartitem input.product_desc', app.OrderView.cartItemChanged);
@@ -27,6 +30,51 @@ app.OrderView = {
         
         // Payment History
         $(document).on('click', '.OrderView .registerpayment', app.OrderView.registerPayment);
+    },
+    doRegisterLoss : function() {
+        var data = {};
+        $('.registerlossrow').each(function(res) {
+            var itemid = $(this).attr('cartitemid');
+            var itemToAdd = {};
+            itemToAdd.count = $(this).find('[gsname="count"]').val();
+            itemToAdd.price = $(this).find('[gsname="price"]').val();
+            data[itemid] = itemToAdd;
+        });
+        
+        data.orderid = $(this).attr('orderid');
+        
+        var event = thundashop.Ajax.createEvent('','registerLoss',$(this),data);
+        thundashop.Ajax.postWithCallBack(event, function() {
+            window.location.reload();
+        });
+    },
+    
+    calculateNewLossUpdate : function() {
+        var total = 0;
+        $('.registerlossrow').each(function() {
+            total += ($(this).find('[gsname="count"]').val() * $(this).find('[gsname="price"]').val());
+        });
+        var totalToRegister = $('.totaltoregister').text();
+        
+        var diff = totalToRegister - total;
+        diff = Math.round(diff);
+
+        if(diff !== 0) {
+            $('.totalregisterview').addClass('totalisnotsame');
+            $('.totalregisterview').removeClass('totalissame');
+        } else {
+            $('.totalregisterview').addClass('totalissame');
+            $('.totalregisterview').removeClass('totalisnotsame');
+        }
+        $('.totalregisterview').val(total);
+        
+        $('.totalismissing').html(diff);
+    },
+    
+    displayActionArea : function() {
+        var tab = $(this).attr('tab');
+        $('.actiontabarea').hide();
+        $('.actiontabarea[actiontab="'+tab+'"]').show();
     },
     
     localCurrencyValueChanged: function() {

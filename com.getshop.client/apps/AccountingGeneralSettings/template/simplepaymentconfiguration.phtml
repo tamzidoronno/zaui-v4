@@ -6,6 +6,7 @@ $interimpostpaid = "";
 $paidaccount = "";
 $agioaccount = "";
 $conversionAccount = "";
+$disagioaccount = "";
 if($generalconfig->interimPostPaidAccount >= 0) {
     $interimpostpaid = $generalconfig->interimPostPaidAccount;
 }
@@ -20,6 +21,9 @@ if($generalconfig->agioAccount >= 0) {
 }
 if($generalconfig->conversionAccount >= 0) {
     $conversionAccount = $generalconfig->conversionAccount;
+}
+if($generalconfig->dissAgioAccount >= 0) {
+    $disagioaccount = $generalconfig->dissAgioAccount;
 }
 ?>
 <div class='' method='saveaccountingsettings' gstype='form'>
@@ -41,12 +45,16 @@ if($generalconfig->conversionAccount >= 0) {
         </tr>
         <tr>
             <td>
-                Agio<br>currency rounding account<br>
-                <input class='gsniceinput1' gsname='interimprepaid' value='<?php echo $agioaccount; ?>'>
+                Agio<br>currency earning<br>
+                <input class='gsniceinput1' gsname='agioaccount' value='<?php echo $agioaccount; ?>'>
+            </td>
+            <td>
+                Agio<br>currency loss<br>
+                <input class='gsniceinput1' gsname='disagioaccount' value='<?php echo $disagioaccount; ?>'>
             </td>
             <td>
                 Amount<br> rounding account<br>
-                <input class='gsniceinput1' gsname='interimpostpaid' value='<?php echo $conversionAccount; ?>'>
+                <input class='gsniceinput1' gsname='conversionAccount' value='<?php echo $conversionAccount; ?>'>
             </td>
             <td>
             </td>

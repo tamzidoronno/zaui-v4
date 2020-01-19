@@ -19,4 +19,9 @@ public class GeneralPaymentConfig extends DataCommon {
     public String interimPrePaidAccount = "";
     public String interimPostPaidAccount = ""; //Accrude payments.
     public String paidPostingAccount = "";
+    
+    public String agioAccount = "8060"; //Gevinst
+    public String dissAgioAccount = "8160"; //Tap
+    public String conversionAccount = "7746";
+    
 }

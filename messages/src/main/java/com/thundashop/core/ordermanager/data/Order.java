@@ -1589,6 +1589,7 @@ public class Order extends DataCommon implements Comparable<Order> {
         
         public static Integer AGIO = 5;
         public static Integer ROUNDING = 6;
+        public static Integer DISAGIO = 7;
     }
     
     

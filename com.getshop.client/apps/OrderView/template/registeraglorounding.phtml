@@ -3,6 +3,7 @@
 $generalconfig = $this->getApi()->getPaymentManager()->getGeneralPaymentConfig();
 $roundingAccount = $generalconfig->conversionAccount;
 $currencyAccount = $generalconfig->agioAccount;
+$dissAgioAccount = $generalconfig->dissAgioAccount;
 $order = $this->getOrder();
 $restAmount = $order->restAmount;
 
@@ -15,10 +16,18 @@ $restAmount = $order->restAmount;
     <span class='shop_button registerRoundingAgioBtn'>Register rounding (posting to account <?php echo $roundingAccount; ?>)</span>
 </div>
 
-<h1>Register currency loss</h1>
+<h1>Register currency earning</h1>
 <div class='registerRoundingAgioForm'>
     <input type='hidden' gsname='type' value='5'>
     <input type='hidden' gsname='orderid' value='<?php echo $order->id; ?>'>
     <input type='txt' class='gsniceinput1' gsname='amount' value='<?php echo $restAmount; ?>' style='width:40px;'>
-    <span class='shop_button registerRoundingAgioBtn' gstype='submit'>Register currency loss (posting to account <?php echo $currencyAccount; ?>)</span>
+    <span class='shop_button registerRoundingAgioBtn' gstype='submit'>Register currency earning (posting to account <?php echo $currencyAccount; ?>)</span>
+</div>
+
+<h1>Register currency loss</h1>
+<div class='registerRoundingAgioForm'>
+    <input type='hidden' gsname='type' value='7'>
+    <input type='hidden' gsname='orderid' value='<?php echo $order->id; ?>'>
+    <input type='txt' class='gsniceinput1' gsname='amount' value='<?php echo $restAmount; ?>' style='width:40px;'>
+    <span class='shop_button registerRoundingAgioBtn' gstype='submit'>Register currency loss (posting to account <?php echo $dissAgioAccount; ?>)</span>
 </div>

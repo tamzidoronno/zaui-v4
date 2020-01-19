@@ -462,8 +462,8 @@ public class StripeManager extends ManagerBase implements IStripeManager {
     }
 
     private boolean isProdMode() {
-        return true;
-//        return storeManager.isProductMode();
+//        return true;
+        return storeManager.isProductMode();
     }
     
 }

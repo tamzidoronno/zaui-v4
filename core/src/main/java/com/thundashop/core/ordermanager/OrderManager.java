@@ -4970,6 +4970,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if(Order.OrderTransactionType.ROUNDING == transactionType) {
             System.out.println("register rounding to account: " + paymentConfig.conversionAccount);
         }
+        if(Order.OrderTransactionType.DISAGIO == transactionType) {
+            System.out.println("register disagoi to account: " + paymentConfig.dissAgioAccount);
+        }
         
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

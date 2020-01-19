@@ -119,6 +119,13 @@ class OrderView extends \MarketingApplication implements \Application {
         $this->getApi()->getOrderManager()->registerLoss($order->id, $lossList);
     }
 
+    public function registerRoundAgio() {
+        $orderid = $_POST['data']['orderid'];
+        $amount = $_POST['data']['amount'];
+        $type = $_POST['data']['type'];
+        $this->getApi()->getOrderManager()->addSpecialPaymentTransactions($orderid, $amount, $type);
+    }
+    
     public function setOrder() {
         $orderid = null;
         

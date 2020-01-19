@@ -1,34 +1,24 @@
-<?
-if ($feeAccounts) {
-    ?>
-    <span style='display: inline-block; width: 200px;'>Type</span>
-    <?
-}
-?>
-    <?
-    if ($order->currency) {
-        ?>
-        <input class="gsniceinput1 localcurrencyvalue" value="" />
-        <input class="gsniceinput1 disaglo" inlocalcurrency="<? echo $totalForOrderInLocalCurrency; ?>" value="" />
-        <?
-    }
-    ?>
+<?php
+/* @var $this ns_4be8e427_bead_491e_8d9f_7dd16356d8eb\OrderView */
+$generalconfig = $this->getApi()->getPaymentManager()->getGeneralPaymentConfig();
+$roundingAccount = $generalconfig->conversionAccount;
+$currencyAccount = $generalconfig->agioAccount;
+$order = $this->getOrder();
+$restAmount = $order->restAmount;
 
-<span style='display: inline-block; width: 200px;'>Value in local currency</span>
-<span style='display: inline-block; width: 200px;'>Aglo / Disaglo</span>
-<?
-if ($feeAccounts) {
-    ?>
-    <select class="gsniceselect1 manualregisterpaymenttype">
-        <option value="">Normal</option>
-        <?
-        foreach ($feeAccounts as $account) {
-            ?>
-            <option value="<? echo $account->id; ?>"><? echo $account->accountNumber." - ".$account->description; ?></option>
-            <?
-        }
-        ?>
-    </select>
-    <?
-}
 ?>
+<h1>Register rounding</h1>
+<div class='registerRoundingAgioForm'>
+    <input type='hidden' gsname='type' value='6'>
+    <input type='hidden' gsname='orderid' value='<?php echo $order->id; ?>'>
+    <input type='txt' class='gsniceinput1' gsname='amount' value='<?php echo $restAmount; ?>' style='width:40px;'>
+    <span class='shop_button registerRoundingAgioBtn'>Register rounding (posting to account <?php echo $roundingAccount; ?>)</span>
+</div>
+
+<h1>Register currency loss</h1>
+<div class='registerRoundingAgioForm'>
+    <input type='hidden' gsname='type' value='5'>
+    <input type='hidden' gsname='orderid' value='<?php echo $order->id; ?>'>
+    <input type='txt' class='gsniceinput1' gsname='amount' value='<?php echo $restAmount; ?>' style='width:40px;'>
+    <span class='shop_button registerRoundingAgioBtn' gstype='submit'>Register currency loss (posting to account <?php echo $currencyAccount; ?>)</span>
+</div>

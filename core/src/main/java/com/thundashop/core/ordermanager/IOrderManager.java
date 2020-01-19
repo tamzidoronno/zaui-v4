@@ -208,6 +208,9 @@ public interface IOrderManager {
     @Administrator
     public void updateCountForOrderLine(String cartItemId, String orderId, Integer count);
     
+    @Administrator
+    public void addSpecialPaymentTransactions(String orderId, Double amount, Integer transactionType);
+    
     @Editor
     public Order creditOrder(String orderId);
     

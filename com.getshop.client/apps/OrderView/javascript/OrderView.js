@@ -19,6 +19,7 @@ app.OrderView = {
         $(document).on('click', '.OrderView .actiontabbtn', app.OrderView.displayActionArea);
         $(document).on('keyup', '.OrderView .registerlossinput', app.OrderView.calculateNewLossUpdate);
         $(document).on('click', '.OrderView .doRegisterLoss', app.OrderView.doRegisterLoss);
+        $(document).on('click', '.OrderView .registerRoundingAgioBtn', app.OrderView.registerRoundingAgioBtn);
         
         // CartItem Changes
         $(document).on('change', '.OrderView .cartitem input.product_desc', app.OrderView.cartItemChanged);
@@ -30,6 +31,14 @@ app.OrderView = {
         
         // Payment History
         $(document).on('click', '.OrderView .registerpayment', app.OrderView.registerPayment);
+    },
+    registerRoundingAgioBtn : function() {
+        var form = $(this).closest('.registerRoundingAgioForm');
+        var args = thundashop.framework.createGsArgs(form);
+        var event = thundashop.Ajax.createEvent('','registerRoundAgio',$(this), args);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+//            window.location.reload();
+        });
     },
     doRegisterLoss : function() {
         var data = {};

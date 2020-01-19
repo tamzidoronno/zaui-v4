@@ -4,6 +4,8 @@ $generalconfig = $this->getApi()->getPaymentManager()->getGeneralPaymentConfig()
 $interimprepaid = "";
 $interimpostpaid = "";
 $paidaccount = "";
+$agioaccount = "";
+$conversionAccount = "";
 if($generalconfig->interimPostPaidAccount >= 0) {
     $interimpostpaid = $generalconfig->interimPostPaidAccount;
 }
@@ -12,6 +14,12 @@ if($generalconfig->interimPrePaidAccount >= 0) {
 }
 if($generalconfig->paidPostingAccount >= 0) {
     $paidaccount = $generalconfig->paidPostingAccount;
+}
+if($generalconfig->agioAccount >= 0) {
+    $agioaccount = $generalconfig->agioAccount;
+}
+if($generalconfig->conversionAccount >= 0) {
+    $conversionAccount = $generalconfig->conversionAccount;
 }
 ?>
 <div class='' method='saveaccountingsettings' gstype='form'>
@@ -29,6 +37,18 @@ if($generalconfig->paidPostingAccount >= 0) {
                 <bR>
                 Paid account<br>
                 <input class='gsniceinput1' placeholder='Example: 1920' gsname='paidaccount' value='<?php echo $paidaccount; ?>'>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Agio<br>currency rounding account<br>
+                <input class='gsniceinput1' gsname='interimprepaid' value='<?php echo $agioaccount; ?>'>
+            </td>
+            <td>
+                Amount<br> rounding account<br>
+                <input class='gsniceinput1' gsname='interimpostpaid' value='<?php echo $conversionAccount; ?>'>
+            </td>
+            <td>
             </td>
         </tr>
     </table>

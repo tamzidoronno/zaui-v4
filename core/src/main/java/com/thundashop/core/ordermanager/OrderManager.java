@@ -66,6 +66,7 @@ import com.thundashop.core.ordermanager.data.PmiResult;
 import com.thundashop.core.ordermanager.data.SalesStats;
 import com.thundashop.core.ordermanager.data.Statistic;
 import com.thundashop.core.ordermanager.data.VirtualOrder;
+import com.thundashop.core.paymentmanager.GeneralPaymentConfig;
 import com.thundashop.core.paymentmanager.PaymentManager;
 import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.pdf.data.AccountingDetails;
@@ -4958,6 +4959,19 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         return credited;
+    }
+
+    @Override
+    public void addSpecialPaymentTransactions(String orderId, Double amount, Integer transactionType) {
+        GeneralPaymentConfig paymentConfig = paymentManager.getGeneralPaymentConfig();
+        if(Order.OrderTransactionType.AGIO == transactionType) {
+            System.out.println("register agio to account: " + paymentConfig.agioAccount);
+        }
+        if(Order.OrderTransactionType.ROUNDING == transactionType) {
+            System.out.println("register rounding to account: " + paymentConfig.conversionAccount);
+        }
+        
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 

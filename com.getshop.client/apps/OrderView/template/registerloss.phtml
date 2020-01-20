@@ -8,6 +8,12 @@ if($restAmount <= 0) {
     echo "Nothing to register";
     return;
 }
+$earliestdate = $this->getApi()->getOrderManager()->getEarliestPostingDate();
+if($earliestdate) {
+    $earliestdate = date("d.m.Y", strtotime($earliestdate));
+} else {
+    $earliestdate = date("d.m.Y", time());
+}
 ?>
 <div>
     <table>
@@ -35,6 +41,16 @@ if($restAmount <= 0) {
             <td><input type='txt' class='gsniceinput1 totalissame totalregisterview' value='<?php echo $totalRest; ?>' style="width:120px;text-align: center;" disabled></td>
         </tr>
         <tr>
+            <td><div>Register loss on date (earliest date)</div></td>
+            <td></td>
+            <td><input type='txt' class='gsniceinput1 registerLossDate' value='<?php echo $earliestdate; ?>' style='width:120px; text-align: center;'></td>
+        </tr>
+        <tr>
+            <td><div>Comment (optionial)</div></td>
+            <td></td>
+            <td><input type='txt' class='gsniceinput1 optionalcomment' placeholder='comment (optional)' style='width:120px;'></td>
+        </tr>
+        <tr>
             <td><div class='amountmissing'>Total amount missing to register as loss: <span class='totalismissing'>0</span></div></td>
             <td></td>
             <td><span class="shop_button doRegisterLoss" style="width:100%; box-sizing: border-box;" orderid='<?php echo $order->id; ?>'>Register loss</span></td>
@@ -44,3 +60,8 @@ if($restAmount <= 0) {
     echo "";
     ?>
 </div>
+
+
+<script>
+   getshop_loadDatePicker($('.registerLossDate'));
+</script>

@@ -72,6 +72,7 @@ import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.pdf.data.AccountingDetails;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
+import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.pos.PosConference;
 import com.thundashop.core.pos.PosManager;
@@ -4881,7 +4882,18 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     @Override
-    public void registerLoss(String orderId, List<OrderLoss> loss) {
+    public void registerLoss(String orderId, List<OrderLoss> loss, String comment, Date paymentDate) {
+        
+        
+        Date earliestDate = getOrderManagerSettings().closedTilPeriode;
+
+        if(paymentDate.after(new Date()) && !PmsBookingRooms.isSameDayStatic(new Date(), paymentDate)) {
+            return;
+        }
+        
+        if(paymentDate.before(earliestDate) && !PmsBookingRooms.isSameDayStatic(earliestDate, paymentDate)) {
+            return;
+        }
         
         Order creditNote = createCreditOrderAndMarkAsPaid(orderId, "", false);
         for(CartItem item : creditNote.getCartItems()) {
@@ -4895,13 +4907,22 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         saveOrderInternal(creditNote);
         
         double totalAmount = getTotalAmount(creditNote);
-        
-        Date date = getOrderManagerSettings().closedTilPeriode;
-        if(date == null) {
-            date = new Date();
+
+        Order order = getOrder(orderId);
+        if (order != null) {
+            String userId = getSession().currentUser.id;
+            order.registerTransaction(paymentDate, totalAmount, userId, Order.OrderTransactionType.MANUAL, "", comment, null, null, null);
+            if (order.isFullyPaid()) {
+                markAsPaidInternal(order, paymentDate, totalAmount);
+            }
+            saveObject(order);
         }
-        markAsPaidWithTransactionType(orderId, date, totalAmount, Order.OrderTransactionType.LOSS, orderId);
-        markAsPaid(creditNote.id, date, totalAmount);
+        
+    }
+    
+    @Override
+    public Date getEarliestPostingDate() {
+        return getOrderManagerSettings().closedTilPeriode;
     }
 
     private Order createCreditOrderAndMarkAsPaid(String orderId, String newReference, boolean markAsPaid) {
@@ -4962,7 +4983,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     @Override
-    public void addSpecialPaymentTransactions(String orderId, Double amount, Integer transactionType) {
+    public void addSpecialPaymentTransactions(String orderId, Double amount, Integer transactionType, String comment, Date date) {
         GeneralPaymentConfig paymentConfig = paymentManager.getGeneralPaymentConfig();
         if(Order.OrderTransactionType.AGIO == transactionType) {
             System.out.println("register agio to account: " + paymentConfig.agioAccount);

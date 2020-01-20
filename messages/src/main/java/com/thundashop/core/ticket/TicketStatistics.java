@@ -17,4 +17,5 @@ public class TicketStatistics {
     public HashMap<String, TicketStatisticsStore> storeStats = new HashMap();
     public HashMap<String, Integer> ticketcounter = new HashMap();
     public int totalTicket;
+    public int totalReplies = 0;
 }

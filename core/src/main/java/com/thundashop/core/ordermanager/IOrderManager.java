@@ -91,7 +91,10 @@ public interface IOrderManager {
     public void forceSetNewPaymentDate(String orderId, Date date, String password);
     
     @Administrator
-    public void registerLoss(String orderId, List<OrderLoss> loss);
+    public void registerLoss(String orderId, List<OrderLoss> loss, String comment, Date paymentDate);
+    
+    @Administrator
+    public Date getEarliestPostingDate();
     
     @Administrator
     public String getCurrentPaymentOrderId();
@@ -209,7 +212,7 @@ public interface IOrderManager {
     public void updateCountForOrderLine(String cartItemId, String orderId, Integer count);
     
     @Administrator
-    public void addSpecialPaymentTransactions(String orderId, Double amount, Integer transactionType);
+    public void addSpecialPaymentTransactions(String orderId, Double amount, Integer transactionType, String comment, Date date);
     
     @Editor
     public Order creditOrder(String orderId);

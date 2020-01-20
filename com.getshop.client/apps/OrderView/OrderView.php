@@ -116,14 +116,20 @@ class OrderView extends \MarketingApplication implements \Application {
             $orderLoss->amount = $_POST['data'][$item->cartItemId]['price'];
             $lossList[] = $orderLoss;
         }
-        $this->getApi()->getOrderManager()->registerLoss($order->id, $lossList);
+        
+        $comment = $_POST['data']['comment'];
+        $postingDate = $this->convertToJavaDate(strtotime($_POST['data']['postToDate']));
+        $this->getApi()->getOrderManager()->registerLoss($order->id, $lossList, $comment, $postingDate);
     }
 
     public function registerRoundAgio() {
         $orderid = $_POST['data']['orderid'];
         $amount = $_POST['data']['amount'];
         $type = $_POST['data']['type'];
-        $this->getApi()->getOrderManager()->addSpecialPaymentTransactions($orderid, $amount, $type);
+        $comment = $_POST['data']['comment'];
+        $date = $this->convertToJavaDate(strtotime($_POST['data']['date']));
+        
+        $this->getApi()->getOrderManager()->addSpecialPaymentTransactions($orderid, $amount, $type, $comment, $date);
     }
     
     public function setOrder() {

@@ -139,6 +139,20 @@ public class Ticket extends DataCommon {
         }
         return result;
     }
+    
+    Integer getNumberOfReplies(Date start, Date end) {
+        int counter = 0;
+        if(start == null || end == null) {
+            
+        } else {
+            for(Long time : timeSpentAtDate.keySet()) {
+                if(time > start.getTime() && time < end.getTime()) {
+                    counter++;
+                }
+            }
+        }
+        return counter;
+    }
 
     Double getTimeInvoicedInPeriode(Date start, Date end) {
         Double result = 0.0;

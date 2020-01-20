@@ -35,6 +35,7 @@ app.OrderView = {
     registerRoundingAgioBtn : function() {
         var form = $(this).closest('.registerRoundingAgioForm');
         var args = thundashop.framework.createGsArgs(form);
+        args.type = $(this).attr('transactiontype');
         var event = thundashop.Ajax.createEvent('','registerRoundAgio',$(this), args);
         thundashop.Ajax.postWithCallBack(event, function(res) {
 //            window.location.reload();
@@ -50,7 +51,9 @@ app.OrderView = {
             data[itemid] = itemToAdd;
         });
         
+        data.comment = $('.optionalcomment').val();
         data.orderid = $(this).attr('orderid');
+        data.postToDate = $('.registerLossDate').val(); 
         
         var event = thundashop.Ajax.createEvent('','registerLoss',$(this),data);
         thundashop.Ajax.postWithCallBack(event, function() {

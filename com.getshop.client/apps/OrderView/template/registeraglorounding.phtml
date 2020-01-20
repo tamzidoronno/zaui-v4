@@ -6,28 +6,24 @@ $currencyAccount = $generalconfig->agioAccount;
 $dissAgioAccount = $generalconfig->dissAgioAccount;
 $order = $this->getOrder();
 $restAmount = $order->restAmount;
-
+$now = date("d.m.Y", time());
 ?>
 <h1>Register rounding</h1>
 <div class='registerRoundingAgioForm'>
-    <input type='hidden' gsname='type' value='6'>
     <input type='hidden' gsname='orderid' value='<?php echo $order->id; ?>'>
+    
+    <div>
+        <span style='display: inline-block; width: 200px;'>Date</span>
+        <span style='display: inline-block; width: 200px;'>Comment</span>
+        <span style='display: inline-block; width: 200px;'>Value</span>
+    </div>
+    
+    <input class="gsniceinput1 aglodate" gsname='date' value="<? echo $now; ?>" />
+    <input class="gsniceinput1 aglocomment" gsname='comment' placeholder="<? echo $this->__f('Optional comment'); ?>" />
     <input type='txt' class='gsniceinput1' gsname='amount' value='<?php echo $restAmount; ?>' style='width:40px;'>
-    <span class='shop_button registerRoundingAgioBtn'>Register rounding (posting to account <?php echo $roundingAccount; ?>)</span>
-</div>
-
-<h1>Register currency earning</h1>
-<div class='registerRoundingAgioForm'>
-    <input type='hidden' gsname='type' value='5'>
-    <input type='hidden' gsname='orderid' value='<?php echo $order->id; ?>'>
-    <input type='txt' class='gsniceinput1' gsname='amount' value='<?php echo $restAmount; ?>' style='width:40px;'>
-    <span class='shop_button registerRoundingAgioBtn' gstype='submit'>Register currency earning (posting to account <?php echo $currencyAccount; ?>)</span>
-</div>
-
-<h1>Register currency loss</h1>
-<div class='registerRoundingAgioForm'>
-    <input type='hidden' gsname='type' value='7'>
-    <input type='hidden' gsname='orderid' value='<?php echo $order->id; ?>'>
-    <input type='txt' class='gsniceinput1' gsname='amount' value='<?php echo $restAmount; ?>' style='width:40px;'>
-    <span class='shop_button registerRoundingAgioBtn' gstype='submit'>Register currency loss (posting to account <?php echo $dissAgioAccount; ?>)</span>
+    <br>
+    <br>
+    <div style='margin-bottom: 5px;'><span class='shop_button registerRoundingAgioBtn' transactiontype='6' style='width:410px;text-align:left;'>Register rounding <span style='float:right;'>(posting to account <?php echo $roundingAccount; ?>)</span></span></div>
+    <div style='margin-bottom: 5px;'><span class='shop_button registerRoundingAgioBtn' transactiontype='5' style='width:410px;text-align:left;' gstype='submit'>Register currency earning <span style='float:right;'>(posting to account <?php echo $currencyAccount; ?>)</span></span></div>
+    <div style='margin-bottom: 5px;'><span class='shop_button registerRoundingAgioBtn' transactiontype='7' style='width:410px;text-align:left;' gstype='submit'>Register currency loss <span style='float:right;'>(posting to account <?php echo $dissAgioAccount; ?>)</span></span></div>
 </div>

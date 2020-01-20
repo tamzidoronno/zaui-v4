@@ -107,6 +107,7 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
         if($_POST['data']['discounttype'] == "fixedprice") {
             $discount->discountType = 1;
         }
+        $discount->discounts = new \stdClass();
         foreach($_POST['data'] as $index => $val) {
             if(stristr($index, "discount_")) {
                 $room = str_replace("discount_", "", $index);

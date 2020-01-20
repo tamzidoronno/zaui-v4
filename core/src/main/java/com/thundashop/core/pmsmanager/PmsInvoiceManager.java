@@ -431,6 +431,13 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             return price;
         }
         
+        if(booking.userId != null) {
+            PmsUserDiscount discountUser = getDiscountsForUser(booking.userId);
+            if(discountUser != null && discountUser.isActive(room.bookingItemTypeId)) {
+                return price;
+            }
+        }
+        
         PmsPricing plan = pmsManager.getPriceObject(booking.pmsPricingCode);
         int percentages = 0;
         int daysUsed = 0;

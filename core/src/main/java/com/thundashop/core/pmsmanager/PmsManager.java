@@ -10048,6 +10048,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         wubookManager.setAvailabilityChanged(currentBooking.getStartDate(), currentBooking.getEndDate());
         calculateCountryFromPhonePrefix(currentBooking);
         saveBooking(currentBooking);
+        Coupon coupon = getCouponCode(currentBooking);
+        if (coupon != null) {
+            cartManager.subtractTimesLeft(coupon.code);
+            gsTiming("Subsctracted coupons");
+        }
     }
 
     @Override

@@ -4886,28 +4886,42 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             return;
         }
         
+        Order order = getOrder(orderId);
+        
+        if (order == null) {
+            return;
+        }
+        
         Order creditNote = createCreditOrderAndMarkAsPaid(orderId, "", false);
+        
         for(CartItem item : creditNote.getCartItems()) {
             for(OrderLoss lossLine : loss) {
                 if(item.getCartItemId().equals(lossLine.itemId)) {
                     item.setCount(lossLine.count);
                     item.getProduct().price = lossLine.amount;
+                    item.getProduct().priceLocalCurrency = lossLine.amountInLocalCurrency;
                 }
             }
         }
+        
         saveOrderInternal(creditNote);
         
         double totalAmount = getTotalAmount(creditNote);
-
-        Order order = getOrder(orderId);
-        if (order != null) {
-            String userId = getSession().currentUser.id;
-            order.registerTransaction(paymentDate, totalAmount, userId, Order.OrderTransactionType.MANUAL, "", comment, null, null, null);
-            if (order.isFullyPaid()) {
-                markAsPaidInternal(order, paymentDate, totalAmount);
-            }
-            saveObject(order);
+        Double totalAmountInLocalCurrency = null;
+        
+        markAsPaid(creditNote.id, paymentDate, creditNote.getTotalAmount());
+        
+        if (order.currency != null && !order.currency.isEmpty()) {
+            totalAmountInLocalCurrency = getTotalForOrderInLocalCurrencyById(order.id);
         }
+
+        String userId = getSession().currentUser.id;
+        order.registerTransaction(paymentDate, totalAmount, userId, Order.OrderTransactionType.MANUAL, "", comment, totalAmountInLocalCurrency, null, null);
+        if (order.isFullyPaid()) {
+            markAsPaidInternal(order, paymentDate, totalAmount);
+        }
+        
+        saveObject(order);
         
     }
     

@@ -21,6 +21,13 @@ if($earliestdate) {
             <td width="400">Product name</td>
             <td>Count</td>
             <td>Total value</td>
+            <?
+                if ($order->currency) {
+            ?>
+            <td>In local currency</td>
+            <?
+                }
+            ?>
         </tr>
         <?php
         $totalRest = 0;
@@ -30,7 +37,16 @@ if($earliestdate) {
             <tr class="registerlossrow" cartitemid='<?php echo $item->cartItemId; ?>'>
                 <td><?php echo $item->product->name; ?></td>
                 <td><input type='txt' class='gsniceinput1 registerlossinput' gsname='count' value='<?php echo $item->count; ?>' style="width:30px;text-align: center;"></td>
-                <td><input type='txt' class='gsniceinput1 registerlossinput' gsname='price' value='<?php echo $item->product->price * $percentage; ?>' style="width:120px;text-align: center;"></td>
+                <td><input type='txt' class='gsniceinput1 registerlossinput cartitemlineloss' gsname='price' originalprice='<?php echo $item->product->price; ?>' value='<?php echo $item->product->price * $percentage; ?>' style="width:120px;text-align: center;"></td>
+                <?
+                if ($order->currency) {
+                ?>
+                    <td>
+                        <input type='txt' class='gsniceinput1 registerlossinput_local_currency' disabled='true' originalprice='<? echo $item->product->priceLocalCurrency; ?>' gsname='localCurrency' value='<?php echo $item->product->priceLocalCurrency * $percentage; ?>' style="width:120px;text-align: center;">
+                    </td>
+                <?
+                }
+                ?>
             </<tr>
                 <?php
             }

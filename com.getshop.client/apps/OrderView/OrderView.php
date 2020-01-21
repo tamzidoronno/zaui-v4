@@ -114,6 +114,7 @@ class OrderView extends \MarketingApplication implements \Application {
             $orderLoss->itemId = $item->cartItemId;
             $orderLoss->count = $_POST['data'][$item->cartItemId]['count'];
             $orderLoss->amount = $_POST['data'][$item->cartItemId]['price'];
+            $orderLoss->amountInLocalCurrency = isset($_POST['data'][$item->cartItemId]['amountInLocalCurrency']) ? $_POST['data'][$item->cartItemId]['amountInLocalCurrency'] : null;
             $lossList[] = $orderLoss;
         }
         

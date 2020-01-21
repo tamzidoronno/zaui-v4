@@ -3,10 +3,6 @@ $order = $this->getOrder();
 
 $totalForOrderInLocalCurrency = 0;
 
-if(!@$order->currency) {
-    $order->currency = "NOK";
-}
-
 if ($order->currency) {
     $totalForOrderInLocalCurrency = $this->getApi()->getOrderManager()->getTotalForOrderInLocalCurrencyById($order->id);
 }

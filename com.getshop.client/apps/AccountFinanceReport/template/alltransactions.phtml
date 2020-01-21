@@ -4,6 +4,14 @@
 $start = $this->getStart();
 $end = $this->getEnd();
 $dayIncome = $this->getApi()->getOrderManager()->getDayIncomesWithMetaData($start, $end);
+
+$isPaymentRecords = isset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_paymentid']);
+if ($isPaymentRecords) {
+    $dayIncome = $this->getApi()->getOrderManager()->getPaymentRecords($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_paymentid'], $start, $end);
+} else {
+    $dayIncome = $this->getApi()->getOrderManager()->getDayIncomesWithMetaData($start, $end);
+}
+
 ?>
 <div style='margin: 50px;'>
     <div class='row'>
@@ -21,7 +29,7 @@ $dayIncome = $this->getApi()->getOrderManager()->getDayIncomesWithMetaData($star
             if ($entry->accountingNumber != $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_account_all_transactions']) {
                 continue;
             }
-
+        
             ?>
             <div class='row'>
                 <a class='gs_ignorenavigate' href="/invoicing.php?page=orderviewpage&orderid=<? echo $entry->orderId;?>">
@@ -29,7 +37,25 @@ $dayIncome = $this->getApi()->getOrderManager()->getDayIncomesWithMetaData($star
                     <div class='col amount'><? echo $entry->incrementalOrderId; ?></div>
                     <div class='col amount'><? echo round($entry->amount,2); ?></div>
                     <div class='col amount'><? echo round($entry->amountExTax,2); ?></div>
-                    <div class='col name'><? echo $entry->metaData->{"Guest name"}; ?></div>
+                    <div class='col name'><?
+                        if (!$isPaymentRecords) {
+                            echo $entry->metaData->{"Guest name"};  
+                        } else {
+                            $order = $this->getApi()->getOrderManager()->getOrder($entry->orderId);
+                            if ($entry->orderTransactionId) {
+                                foreach ($order->orderTransactions as $itransaction) {
+                                    if ($itransaction->transactionId == $entry->orderTransactionId) {
+                                        echo "<- Registered date: ".date('d.m.Y H:i', strtotime($itransaction->rowCreatedDate));
+                                    }
+                                }
+                            } else {
+                                echo "-> ".$order->cart->address->fullName;
+                            }
+                        }
+                    ?>
+                        
+                    </div>
+                    
                 </a>
             </div>
             <?

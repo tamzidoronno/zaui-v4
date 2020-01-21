@@ -37,8 +37,12 @@ app.OrderView = {
         var args = thundashop.framework.createGsArgs(form);
         args.type = $(this).attr('transactiontype');
         var event = thundashop.Ajax.createEvent('','registerRoundAgio',$(this), args);
+        event['synchron'] = true;
+        
+        var data = app.OrderView.getData(this);
+        
         thundashop.Ajax.postWithCallBack(event, function(res) {
-//            window.location.reload();
+            app.OrderView.rePrintTab(res, 'paymenthistory', data);
         });
     },
     doRegisterLoss : function() {
@@ -203,6 +207,7 @@ app.OrderView = {
         
         var event = thundashop.Ajax.createEvent(null, "addTransactionRecord", $(this), data);
         event['synchron'] = true;
+        
         thundashop.Ajax.post(event, function(res) {
             app.OrderView.rePrintTab(res, 'paymenthistory', data);
         });

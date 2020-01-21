@@ -686,6 +686,9 @@ public class ProductManager extends AProductManager implements IProductManager {
         AccountingDetail res = getAccountingDetail(oldAccountNumber);
         res.accountNumber = accountNumber;
         saveObject(res);
+        
+        accountingAccountDetails.remove(oldAccountNumber);
+        accountingAccountDetails.put(accountNumber, res);
     }
 
     @Override

@@ -1,0 +1,24 @@
+<div gstype='form' style='padding:5px;' method='searchForEvent' gstoarea='.currentconferences'>
+    <input type='text' class='gsniceinput1' style='width:100%;box-sizing: border-box;' placeholder='Search for conference' gsname='keyword' gstype='submitenter'>
+</div>
+<div class='currentconferences'>
+    <?php
+    /* @var $this ns_bf644a39_c932_4e3b_a6c7_f6fd16baa34d\PmsNewBooking20 */
+    $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+
+    foreach($booking->rooms as $room) {
+        foreach($room->guests as $guest) {
+            if($guest->guestId == $_POST['data']['guestid']) {
+                $userId = $booking->userId;
+                $filter = new core_pmsmanager_PmsConferenceEventFilter();
+                $filter->start = $this->convertToJavaDate(strtotime($room->date->start));
+                $filter->end = $this->convertToJavaDate(strtotime($room->date->end));
+                $filter->userId = $booking->userId;
+
+                $events = (array)$this->getApi()->getPmsConferenceManager()->getConferenceEventsByFilter($filter);
+                $this->printEvents($events, $guest->pmsConferenceEventId);
+            }
+        }
+    }
+    ?>
+</div>

@@ -272,8 +272,10 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
         for(DayIncome income : toinclude) {
             for(DayEntry entry : income.dayEntries) {
                 Order order = orderManager.getOrderDirect(entry.orderId);
-                if(!filter.orderIds.contains(order.id) && !filter.ignoreOrderIds.contains(order.id)) {
-                    filter.orderIds.add(order.id);
+                if(order != null) {
+                    if(!filter.orderIds.contains(order.id) && !filter.ignoreOrderIds.contains(order.id)) {
+                        filter.orderIds.add(order.id);
+                    }
                 }
             }
         }
@@ -544,6 +546,9 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
     
 
     private void updateProductCountValue(HashMap<String, HashMap<String, Integer>> totalProductCountPerUser, String userId, DayEntry entry, Integer count) {
+        if(count == null) {
+            return;
+        }
         HashMap<String, Integer> userProductValueMap = totalProductCountPerUser.get(userId);
         if(userProductValueMap == null) { userProductValueMap = new HashMap(); }
         Integer totalProductValue = userProductValueMap.get(entry.productId);

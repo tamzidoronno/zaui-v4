@@ -1,0 +1,215 @@
+<?php
+/* @var $this ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
+$pmsBooking = $this->getPmsBooking();
+$pmsSelectedRoom = $this->getSelectedRoom();
+$user = $this->getUserForBooking();
+$bookingEngineBooking = $this->getBookingEngineBooking();
+
+$extraArgs = array();
+$extraArgs['userid'] = $user->id;
+if($bookingEngineBooking) {
+    $extraArgs['id'] = $bookingEngineBooking->id;
+}
+$extraArgs['roomId'] = $pmsSelectedRoom->pmsBookingRoomId;
+$codes = $this->getApi()->getCartManager()->getCoupons();
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+$segments = $this->getApi()->getPmsCoverageAndIncomeReportManager()->getSegments($this->getSelectedMultilevelDomainName());
+$title = "Avoid autodelete disabled";
+if($pmsBooking->avoidAutoDelete) {
+    $title = "Avoid autodelete done";
+}
+$channelList = $this->getApi()->getPmsManager()->getChannelMatrix($this->getSelectedMultilevelDomainName());
+$formater = new \ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBookingColumnFormatters(null);
+$channelNames = $formater->getChannels();
+
+?>
+<div class='col_box_width_2'>
+    <div class="row odd">
+        <div class="col col1" title="<?php echo $title; ?>"><? echo $this->__f("GetShop booking id"); ?></div>
+        <?php
+        $disabled = stristr($pmsBooking->channel, "wubook_") ? "DISABLED" :"";
+        $style = $disabled ? "color:gray;background-image:none;" : "";
+        ?>
+        <div class="col col2"><? echo $pmsBooking->incrementBookingId; ?>
+            <select class="changechannel gsniceselect1" style="width:50%; float:right;<?php echo $style;?>" <?php echo $disabled; ?> >
+                <?php
+                echo "<option value=''>No source</option>";
+                foreach($channelList as $idx => $channel) {
+                    $name = $channelNames[$idx] ? $channelNames[$idx] : $channel;
+                    $selected = $idx == $pmsBooking->channel ? "SELECTED" : "";
+                    if(stristr($idx, "wubook_")) {
+                        continue;
+                    }
+                    echo "<option value='$idx' $selected>$name</option>";
+                }
+                echo "<option value='getshop_new_source'>Add a new source</option>";
+                ?>
+            </select>
+        </div>
+    </div>
+    <div class="row odd">
+        <div class="col col1"><? echo $this->__f("Discount code / segment"); ?></div>
+        <div class="col col2">
+            
+            <div class='checkifneedupdateprices' style='position:absolute; background-color: #fff; border: solid 1px #bbb;padding: 3px; display:none;'>
+                <div>Update prices as well?</div>
+                <span class='shop_button doChangeDiscount' updateprices='true' style='width:50%;box-sizing: border-box;float:left;background-color:green;'>Yes</span>
+                <span class='shop_button doChangeDiscount' updateprices='false' style='width:50%;box-sizing: border-box;background-color:red;'>No</span>
+            </div>
+            
+            <span class="codeselection">
+                <select class="changediscountcode gsniceselect1" style="width:48%">
+                    <option value="">Not set</option>
+                    <?php
+                    foreach($codes as $code) {
+                        $selected = (strtolower($code->code) == strtolower($pmsBooking->couponCode)) ? "SELECTED" : "";
+                        echo "<option value='".$code->code."' $selected>" . $code->code . "</option>";
+                    }
+                    ?>
+                </select>
+                <select class="changesegment gsniceselect1" style="width:50%; float:right;">
+                    <option value="">Not set</option>
+                    <?php
+                    foreach($segments as $segment) {
+                        $selected = ($segment->id == $pmsBooking->segmentId) ? "SELECTED" : "";
+                        echo "<option value='".$segment->id."' $selected>" . $segment->name . "</option>";
+                    }
+                    ?>
+                </select>
+            </span>
+        </div>    
+    </div>
+
+    <?php
+    if ($pmsBooking->wubookchannelreservationcode) {
+        ?>
+        <div class="row odd">
+            <div class="col col1"><? echo $this->__f("Channel reservation id"); ?></div>
+            <div class="col col2"><? echo $pmsBooking->wubookchannelreservationcode; ?></div>    
+        </div>
+        <?php
+    }
+    if ($pmsBooking->wubookreservationid) {
+        ?>
+        <div class="row odd">
+            <div class="col col1"><? echo $this->__f("Wubook id"); ?></div>
+            <div class="col col2"><? echo $pmsBooking->wubookreservationid . " (<a href='https://wubook.net/bookings/" . $pmsBooking->wubookreservationid . "' target='_new'>Open in wubook</a>)"; ?></div>    
+        </div>
+        <?php
+        }
+    ?>
+
+    <div class="row odd">
+        <div class="col col1"><? echo $this->__f("Room non refundable"); ?></div>
+        <?php
+        if ($pmsSelectedRoom->nonrefundable) {
+            ?>
+            <div class="col col2">Yes, <span style='cursor:pointer;' class='bookinghighlightcolor' gsclick='togglerefundable'>make it refundable</span></div>    
+            <?php
+        } else {
+            ?>
+            <div class="col col2">No, <span style='cursor:pointer;' class='bookinghighlightcolor' gsclick='togglerefundable'>make it non refundable</span></div>    
+            <?php
+        }
+        ?>
+    </div>
+
+    <?php
+    if($config->wubookAutoCharging) {
+    ?>
+        <div class="row odd">
+            <div class="col col1"><? echo $this->__f("Autocharge card"); ?></div>
+            <?php
+            if ($pmsBooking->tryAutoCharge) {
+                ?>
+                <div class="col col2">Yes, <span style='cursor:pointer;' class='bookinghighlightcolor' gsclick='toggleautocharging'>stop autocharging</span></div>    
+                <?php
+            } else {
+                ?>
+                <div class="col col2">No, <span style='cursor:pointer;' class='bookinghighlightcolor' gsclick='toggleautocharging'>retry autocharging</span></div>    
+                <?php
+            }
+            ?>
+        </div>
+    <?php
+    }
+    ?>
+</div>
+    
+<div class='col_box_width_2 second'>
+    <div class="row">
+        <div class="col col1"><? echo $this->__f("Date created"); ?></div>
+        
+        <?php
+        $browser = "";
+        if($pmsBooking->browserUsed) {
+            $browser = "Booked by browser : " . $pmsBooking->browserUsed->name . ", version: " . $pmsBooking->browserUsed->version;
+        }
+        ?>
+        
+        <div class="col col2" title="<?php echo $browser; ?>"><div class='ellipsis'><b><? echo date("d.m.Y H:i", strtotime($pmsBooking->rowCreatedDate)); ?> by 
+            <?php if($pmsBooking->bookedByUserId) { 
+
+                if($pmsBooking->bookedByUserId == "gs_system_scheduler_user") {
+                    ?>
+                    <div class="col col2">OTA</div>    
+                    <?php            
+                } else {
+                    $name = $this->getApi()->getUserManager()->getUserById($pmsBooking->bookedByUserId)->fullName;
+                    if(!$name) { $name = "No name"; }
+                    echo $name; 
+                } 
+            } else {
+                echo $user->fullName;
+            } ?>
+                </b></div>
+        </div>    
+    </div>
+
+    <div class="row odd">
+        <div class="col col1"><span><? echo $this->__f("Booked for"); ?></span></div>
+        <div class="col col2">
+            <?
+            $quser = new \ns_b5e9370e_121f_414d_bda2_74df44010c3b\GetShopQuickUser();
+            $quser->setUser($user);
+            $quser->setExtraArgs($extraArgs);
+            $quser->renderApplication(true, $this);
+            ?>
+        </div>
+    </div>
+
+    <div class="row odd">
+        <div class="col col1"><span><? echo $this->__f("Phone"); ?></span></div>
+        <div class="col col2"><?php echo "+" . $user->prefix . " " . $user->cellPhone; ?></div>
+    </div>
+    <div class="row odd">
+        <div class="col col1"><i class="fa fa-info-circle" title="This email is used to send payment link, invoice and reciepts to"></i> <span><? echo $this->__f("Email (for payments)"); ?></span></div>
+        <div class="col col2 bookinghighlightcolor"><?php echo $user->emailAddress; ?></div>
+    </div>
+
+    <div class="row odd">
+        <div class="col col1"><? echo $this->__f("Adress"); ?></div>
+        <div class="col col2">
+            <?php
+            if (isset($user->address)) {
+                echo $user->address->address . " ";
+                if ($user->address->postCode || $user->address->city ) {
+                    echo " / ".$user->address->postCode . " " . $user->address->city . "<br>";
+                }
+            }
+            ?>
+        </div>
+    </div>
+
+    <div class="row odd" style="display: none">
+        <div class="col col1"><span><? echo $this->__f("Registration information"); ?></span></div>
+        <div class="col col2" onclick='$(".registeredinformation").toggle();' style='cursor:pointer;'>Display registration information</div>
+        <div class='registeredinformation' style='display:none;'>
+            <?php
+            foreach ($pmsBooking->registrationData->resultAdded as $key => $val) {
+                echo "<div>" . $key . " : " . $val . "</div>";
+            }
+            ?>
+        </div>
+    </div>
+</div>

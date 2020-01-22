@@ -101,9 +101,10 @@ class PmsChartOverview extends \MarketingApplication implements \Application {
 
     public function getEconomyReport() {
         $filter = new \core_pmsmanager_PmsBookingFilter();
-        $filter->startDate = $this->convertToJavaDate(time());
-        $filter->endDate = $this->convertToJavaDate(time()+86400);
+        $filter->startDate = $this->convertToJavaDate(strtotime(date("d.m.Y 00:00", time())));
+        $filter->endDate = $this->convertToJavaDate(strtotime(date("d.m.Y 00:00", time()+86400)));
         $filter->includeVirtual = false;
+        
         $stats = $this->getApi()->getPmsManager()->getStatistics($this->getSelectedMultilevelDomainName(), $filter);
         $_SESSION['savedcoveragestats'] = json_encode($stats);
         $res = array();
@@ -167,7 +168,7 @@ class PmsChartOverview extends \MarketingApplication implements \Application {
         $rooms = (array)$this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedMultilevelDomainName(), $filter);
         $tomorrow = 0;
         foreach($rooms as $room) {
-            if(sizeof($room->bookingComments) > 0) {
+            if(sizeof((array)$room->bookingComments) > 0) {
                 $tomorrow++;
             }
         }

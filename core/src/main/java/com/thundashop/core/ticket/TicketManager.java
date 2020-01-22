@@ -794,8 +794,10 @@ public class TicketManager extends ManagerBase implements ITicketManager {
             
             Double timeSpentInPeriode = 0.0;
             Double timeInvoicedInPeriode = 0.0;
+            Integer numberOfReplies = 0;
             if(filter.start != null) {
                 timeSpentInPeriode = ticket.getTimeSpentInPeriode(filter.start, filter.end);
+                numberOfReplies = ticket.getNumberOfReplies(filter.start, filter.end);
             }
             if(filter.start != null) {
                 timeInvoicedInPeriode = ticket.getTimeInvoicedInPeriode(filter.start, filter.end);
@@ -813,6 +815,7 @@ public class TicketManager extends ManagerBase implements ITicketManager {
             }
             storeStats.count++;
             stats.storeStats.put(customerId, storeStats);
+            storeStats.ticketsReplied += numberOfReplies;
             storeStats.name = usr.fullName; 
             storeStats.hoursSpent += timeSpentInPeriode;
             storeStats.hoursInvoiced += timeInvoicedInPeriode;

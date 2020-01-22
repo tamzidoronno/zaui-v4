@@ -10,34 +10,41 @@
     //print_r($stats);
     $sortTable = array();
     foreach($stats->storeStats as $storeId => $count) {
-        $sortTable[$storeId] = $count->count;
+        $sortTable[$storeId] = $count->ticketsReplied;
     }
     arsort($sortTable);
     echo "<table>";
     echo "<tr>";
     echo "<th>Name</th>";
     echo "<th>Tickets</th>";
+    echo "<th>Replies</th>";
     echo "<th>Percentage</th>";
     echo "<th>Spent</th>";
     echo "<th>Invoice</th>";
     echo "<th>Monthly included</th>";
     echo "<th>Additional</th>";
     echo "<th>Real invoice</th>";
+    echo "<th>Replies</th>";
     echo "</tr>";
 
     $totalinvoiced = 0;
     $totalToInvoice = 0;
     $totalSpent = 0;
+    $totalTickets = 0;
+    $totalReplies = 0;
     foreach($sortTable as $storeId => $count) {
         $stat = $stats->storeStats->{$storeId};
+        $totalTickets += $stat->count;
         $totalinvoiced += $stat->hoursInvoiced;
         $totalSpent += $stat->hoursSpent;
         $toInvoice = ($stat->hoursInvoiced-$stat->hoursIncluded-$stat->additonalHours);
         if($toInvoice < 0) { $toInvoice = 0; }
         $totalToInvoice += $toInvoice;
+        $totalReplies += $stat->ticketsReplied;
         echo "<tr>";
         echo "<td>" . $stat->name  . "</td>";
-        echo "<td align='center'>" . $count . "</td>";
+        echo "<td align='center'>" . $stat->count . "</td>";
+        echo "<td align='center'>" . $stat->ticketsReplied . "</td>";
         echo "<td align='center'>" . $stat->percentage . "</td>";
         echo "<td align='center'>" . round($stat->hoursSpent,2) . "</td>";
         echo "<td align='center'>" . round($stat->hoursInvoiced,2) . "</td>";
@@ -49,7 +56,8 @@
     }
     echo "<tR>";
     echo "<td></td>";
-    echo "<td></td>";
+    echo "<td align='center'>$totalTickets</td>";
+    echo "<td align='center'>$totalReplies</td>";
     echo "<td></td>";
     echo "<td align='center'>".round($totalSpent,2)."</td>";
     echo "<td align='center'>".round($totalinvoiced,2)."</td>";

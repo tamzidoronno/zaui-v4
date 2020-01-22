@@ -1562,7 +1562,10 @@ public class Order extends DataCommon implements Comparable<Order> {
         }
         orderTransactions.removeAll(toRemove);
     }
-    
+
+    public boolean isForignCurrency() {
+        return currency != null && !currency.isEmpty();
+    }
     
     public static class Status  {
         public static int CREATED = 1;
@@ -1585,6 +1588,11 @@ public class Order extends DataCommon implements Comparable<Order> {
          * If the operatolr manually enter this transaaction.
          */
         public static Integer MANUAL = 3;
+        public static Integer LOSS = 4;
+        
+        public static Integer AGIO = 5;
+        public static Integer ROUNDING = 6;
+        public static Integer DISAGIO = 7;
     }
     
     

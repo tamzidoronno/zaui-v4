@@ -28,6 +28,7 @@ $totalOrderPaid = 0;
 foreach ($overDueInvoices as $order) {
     $dueDays = $this->calculateDaysSince($order->dueDate);
     $color = "blue";
+    $color = $dueDays < 1 ? "gray" : $color;
     $color = $dueDays > 14 ? "yellow" : $color;
     $color = $dueDays > 30 ? "red" : $color;
     
@@ -41,7 +42,7 @@ foreach ($overDueInvoices as $order) {
     ?>
 
     <div class="duerow  <? echo $color; ?>" duedays='<? echo $dueDays; ?>'>
-        <a href='/invoicing.php?page=orderviewpage&orderid=<? echo $order->id; ?>'>
+        <a href='/invoicing.php?page=orderviewpage&orderid=<? echo $order->id; ?>&tab=paymenthistory' target='_new'>
             <div class="col incrementalOrderId"><? echo $order->incrementOrderId; ?>
                 <?php
                 if($order->internalComment) {

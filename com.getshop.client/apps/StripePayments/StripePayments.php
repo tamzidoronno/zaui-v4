@@ -94,7 +94,7 @@ class StripePayments extends \PaymentApplication implements \Application {
         $key = $this->getConfigurationSetting("pkey");
         $title = $this->getConfigurationSetting("title");
         
-        if(!$this->getApi()->getStoreManager()->isProductMode()) {
+        if(!$this->isProdMode()) {
             $key = "pk_test_4LQngWyMqLjFLNwXEVro6DRL";
         }
         ?>
@@ -173,13 +173,25 @@ class StripePayments extends \PaymentApplication implements \Application {
         } else {
             $content = "";
             $striperesult = json_decode(file_get_contents("php://input"), true);
+            file_put_contents("stripecallback.txt", file_get_contents("php://input"));
             $data = $striperesult['data']['object'];
             $striperesult = array_merge($striperesult, $data);
+            foreach($striperesult as $key => $val) {
+                if(is_numeric($val)) {
+                    continue;
+                }
+                if(is_string($val)) {
+                    continue;
+                }
+                unset($striperesult[$key]);
+            }
+            
             unset($striperesult['data']);
             unset($striperesult['display_items']);
             unset($striperesult['payment_method_types']);
             unset($striperesult['request']);
-
+            
+            
             $orderid = $striperesult['client_reference_id'];
 
             $calling = new \core_stripe_WebhookCallback();
@@ -205,7 +217,7 @@ class StripePayments extends \PaymentApplication implements \Application {
         $key = $this->getConfigurationSetting("pkey");
         $title = $this->getConfigurationSetting("title");
         
-        if(!$this->getApi()->getStoreManager()->isProductMode()) {
+        if(!$this->isProdMode()) {
             $key = "pk_test_4LQngWyMqLjFLNwXEVro6DRL";
         }
        
@@ -248,7 +260,7 @@ class StripePayments extends \PaymentApplication implements \Application {
         $key = $this->getConfigurationSetting("pkey");
         $title = $this->getConfigurationSetting("title");
         
-        if(!$this->getApi()->getStoreManager()->isProductMode()) {
+        if(!$this->isProdMode()) {
             $key = "pk_test_4LQngWyMqLjFLNwXEVro6DRL";
         }
        

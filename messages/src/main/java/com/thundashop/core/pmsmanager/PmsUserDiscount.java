@@ -18,4 +18,19 @@ public class PmsUserDiscount extends DataCommon {
     public String pricePlan = "";
     public String attachedDiscountCode = "";
     public List<String> secondaryAttachedDiscountCodes = new ArrayList();
+    
+    public boolean isActive(String typeId) {
+        if(attachedDiscountCode != null && !attachedDiscountCode.isEmpty()) {
+            return true;
+        }
+        
+        if(attachedDiscountCode == null || attachedDiscountCode.isEmpty()) {
+            if(discounts != null && discounts.containsKey(typeId)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
 }

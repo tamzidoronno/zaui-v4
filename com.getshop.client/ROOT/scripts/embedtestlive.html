@@ -14,15 +14,15 @@
     gsisdevmode = false;
 //    getshop_websockethost = "websocket6.getshop.com";
     $ = jQuery;
-    jQuery(function ($) { 
-        $.getScript("https://20501gc6.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
+    jQuery(function ($) {
+        $.getScript("https://sverre.kronen.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
             $("#bookingprocess").getshopbooking(
-                { 
-                    "endpoint": "https://20501gc6.getshop.com/",
-                    "jsendpoint": "https://20501gc6.getshop.com/",
+                {
+                    "endpoint": "https://sverre.kronen.getshop.com/",
+                    "jsendpoint": "https://sverre.kronen.getshop.com/",
                     "domain" : "default",
                     "language" : "no",
-                    "websocket" : "websocket6.getshop.com"
+                    "websocket" : "websocket5.getshop.com"
                 }
             );
         });
@@ -30,4 +30,4 @@
 </script>
 </body>
 
-
+ 

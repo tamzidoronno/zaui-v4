@@ -20,4 +20,5 @@ public class TicketStatisticsStore {
     public Double hoursInvoiced = 0.0;
     public Integer hoursIncluded = 0;
     public Integer additonalHours = 0;
+    public Integer ticketsReplied = 0;
 }

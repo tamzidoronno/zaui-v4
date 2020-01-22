@@ -39,7 +39,7 @@ public interface IWubookManager {
     @ForceAsync
     public List<WubookBooking> addNewBookingsPastDays(Integer daysback) throws Exception;
     @Administrator
-    public List<WubookBooking> fetchNewBookings() throws Exception;
+    public void fetchNewBookings() throws Exception;
     @Administrator
     public WubookBooking fetchBooking(String rcode) throws Exception;
     @Administrator

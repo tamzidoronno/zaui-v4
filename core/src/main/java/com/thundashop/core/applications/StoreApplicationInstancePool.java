@@ -255,6 +255,8 @@ public class StoreApplicationInstancePool extends ManagerBase implements IStoreA
     }
 
     private void loadRemoteData() {
+        
+        
         modules.getModules().stream().forEach(m -> {
             databaseRemote.getAll("StoreApplicationInstancePool", "all", m.id).forEach(o -> {
                 if (o instanceof ApplicationInstance) {

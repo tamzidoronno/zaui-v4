@@ -45,7 +45,11 @@ public class ContentManager extends ManagerBase implements IContentManager {
             }
         }
         
-        loadRemoteData();
+        try {
+            loadRemoteData();
+        }catch(Exception e) {
+            
+        }
     }
 
     @Override

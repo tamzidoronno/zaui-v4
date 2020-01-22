@@ -146,19 +146,19 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     @Override
     public boolean isPikStore() {
         boolean doPush = false;
-        if(lastCheckedBackups == null) {
-            doPush = true;
-        } else {
-            long diff = System.currentTimeMillis() - lastCheckedBackups.getTime();
-            if(diff > (1000*60*60*6)) {
-                doPush = true;
-            }
-        }
-            
-        if(doPush) {
-            lastCheckedBackups = new Date();
-            doubleCheckTransferServersToBackupSystem();
-        }
+//        if(lastCheckedBackups == null) {
+//            doPush = true;
+//        } else {
+//            long diff = System.currentTimeMillis() - lastCheckedBackups.getTime();
+//            if(diff > (1000*60*60*6)) {
+//                doPush = true;
+//            }
+//        }
+//            
+//        if(doPush) {
+//            lastCheckedBackups = new Date();
+//            doubleCheckTransferServersToBackupSystem();
+//        }
         return getStore().isPikStore();
     }
     
@@ -179,13 +179,17 @@ public class StoreManager extends ManagerBase implements IStoreManager {
             }
         }
         
-        modules.getModules().stream().forEach(m -> {
-            databaseRemote.getAll("StoreManager", "all", m.id).forEach(o -> {
-                if (o instanceof ModuleHomePages) {
-                    moduleHomePages = (ModuleHomePages)moduleHomePages;
-                }
+        try {
+            modules.getModules().stream().forEach(m -> {
+                databaseRemote.getAll("StoreManager", "all", m.id).forEach(o -> {
+                    if (o instanceof ModuleHomePages) {
+                        moduleHomePages = (ModuleHomePages)moduleHomePages;
+                    }
+                });
             });
-        });
+        }catch(Exception e) {
+            
+        }
     }
 
     @Override

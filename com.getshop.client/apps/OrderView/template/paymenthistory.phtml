@@ -24,7 +24,7 @@ if (!count($order->orderTransactions)) {
     echo "</div>";
     foreach ($order->orderTransactions as $paymentLog) {
         $type = "";
-        if ($paymentLog->accountingDetailId) {
+        if (@$paymentLog->accountingDetailId) {
             $accountingDetail = $this->getApi()->getProductManager()->getAccountingDetailById($paymentLog->accountingDetailId);
             $type = $accountingDetail->accountNumber . " - " . $accountingDetail->description;
         }
@@ -34,10 +34,10 @@ if (!count($order->orderTransactions)) {
             
             echo "<div class='amount'>";
                 echo $paymentLog->amount;
-                if ($paymentLog->amountInLocalCurrency) {
+                if (@$paymentLog->amountInLocalCurrency) {
                     echo "<br/> Local: ".$paymentLog->amountInLocalCurrency;
                 }
-                if ($paymentLog->agio) {
+                if (@$paymentLog->agio) {
                     echo "<br/> Agio: ".$paymentLog->agio;
                 }
             echo "</div>";
@@ -45,10 +45,13 @@ if (!count($order->orderTransactions)) {
             echo "<div class='user'>".$user->fullName."</div>";
             echo "<div class='comment'>";
                 echo $type;
+                if($paymentLog->transactionType == 4) {
+                    echo "Registered as loss";
+                }
                 if ($type && $paymentLog->comment) {
                     echo " / ";
                 }
-                echo $paymentLog->comment."</div>";
+                echo @$paymentLog->comment."</div>";
             echo "<div class='addeddate'>".date('d.m.Y H:i', strtotime($paymentLog->rowCreatedDate))."</div>";
         echo "</div>";
     }
@@ -62,69 +65,17 @@ foreach ($accounts as $account) {
     }
 }
 ?>
-
-<div class="manualregisterpayment">
-
-    <h1><? echo $this->__f("Manually register payment"); ?></h1>
-    <?
-    $now = date('d.m.Y');
-    ?>
-    <div>
-        <?
-        if ($feeAccounts) {
-            ?>
-            <span style='display: inline-block; width: 200px;'>Type</span>
-            <?
-        }
-        ?>
-        <span style='display: inline-block; width: 200px;'>Date</span>
-        <span style='display: inline-block; width: 200px;'>Comment</span>
-        <span style='display: inline-block; width: 200px;'>Value</span>
-        <?
-        if ($order->currency) {
-        ?>
-            <span style='display: inline-block; width: 200px;'>Value in local currency</span>
-            <span style='display: inline-block; width: 200px;'>Aglo / Disaglo</span>
-        <?
-        }
-        ?>
-    </div>
-    <?
-    if ($feeAccounts) {
-        ?>
-        <select class="gsniceselect1 manualregisterpaymenttype">
-            <option value="">Normal</option>
-            <?
-            foreach ($feeAccounts as $account) {
-                ?>
-                <option value="<? echo $account->id; ?>"><? echo $account->accountNumber." - ".$account->description; ?></option>
-                <?
-            }
-            ?>
-        </select>
-        <?
-    }
-    ?>
-    <input class="gsniceinput1 manualregisterpaymentdate" value="<? echo $now; ?>"/>
-    <input class="gsniceinput1 manualregisterpaymentcomment" placeholder="<? echo $this->__f('Optional comment'); ?>" />
-    <input class="gsniceinput1 manualregisterpaymentamount" value="<? echo $order->restAmount; ?>" />
-    
-    <?
-    if ($order->currency) {
-        ?>
-        <input class="gsniceinput1 localcurrencyvalue" value="" />
-        <input class="gsniceinput1 disaglo" inlocalcurrency="<? echo $totalForOrderInLocalCurrency; ?>" value="" />
-        <?
-    }
-    ?>
-    <div class="shop_button registerpayment">
-        <? 
-        echo $this->__f("Register payment");
-        ?>
-    </div>
-    
+<div style='margin:10px;'>
+    <span class='shop_button actiontabbtn' tab='registerpayment'>Manually register a payment</span>
+    <span class='shop_button actiontabbtn' tab='registerloss'>Register loss</span>
+    <span class='shop_button actiontabbtn' tab='registeraglorounding'>Register rounding</span>
 </div>
 
+<div class='registerpaymentactionarea' style='margin: 10px;'>
+    <div class='actiontabarea' actiontab='registerloss'><?php $this->includefile("registerloss"); ?></div>
+    <div class='actiontabarea' actiontab='registerpayment'><?php $this->includefile("registerpayment"); ?></div>
+    <div class='actiontabarea' actiontab='registeraglorounding'><?php $this->includefile("registeraglorounding"); ?></div>
+</div>
 <script>
     $('.manualregisterpaymentdate').datepicker({ dateFormat: "dd.mm.yy"});
 </script>

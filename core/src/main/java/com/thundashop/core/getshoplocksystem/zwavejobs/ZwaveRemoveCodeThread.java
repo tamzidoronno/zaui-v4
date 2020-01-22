@@ -28,6 +28,10 @@ public class ZwaveRemoveCodeThread extends ZwaveThread {
         this.slot.isAddedToLock = "unkown";
     }
 
+    public void directExecute() {
+        server.httpLoginRequestZwaveServer(getAddressForRemovingCode());
+    }
+    
     @Override
     public boolean execute(int attempt) {
         waitForEmptyQueue();

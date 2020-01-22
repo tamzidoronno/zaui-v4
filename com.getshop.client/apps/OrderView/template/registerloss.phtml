@@ -1,0 +1,83 @@
+<?php
+/* @var $this ns_4be8e427_bead_491e_8d9f_7dd16356d8eb\OrderView */
+$order = $this->getOrder();
+$restAmount = $order->restAmount;
+$total = $this->getApi()->getOrderManager()->getTotalAmount($order);
+$percentage = ($restAmount / $total);
+if($restAmount <= 0) {
+    echo "Nothing to register";
+    return;
+}
+$earliestdate = $this->getApi()->getOrderManager()->getEarliestPostingDate();
+if($earliestdate) {
+    $earliestdate = date("d.m.Y", strtotime($earliestdate));
+} else {
+    $earliestdate = date("d.m.Y", time());
+}
+?>
+<div>
+    <table>
+        <tr>
+            <td width="400">Product name</td>
+            <td>Count</td>
+            <td>Total value</td>
+            <?
+                if ($order->currency) {
+            ?>
+            <td>In local currency</td>
+            <?
+                }
+            ?>
+        </tr>
+        <?php
+        $totalRest = 0;
+        foreach ($order->cart->items as $item) {
+            $totalRest += ($item->count * ($item->product->price * $percentage));
+            ?>
+            <tr class="registerlossrow" cartitemid='<?php echo $item->cartItemId; ?>'>
+                <td><?php echo $item->product->name; ?></td>
+                <td><input type='txt' class='gsniceinput1 registerlossinput' gsname='count' value='<?php echo $item->count; ?>' style="width:30px;text-align: center;"></td>
+                <td><input type='txt' class='gsniceinput1 registerlossinput cartitemlineloss' gsname='price' originalprice='<?php echo $item->product->price; ?>' value='<?php echo $item->product->price * $percentage; ?>' style="width:120px;text-align: center;"></td>
+                <?
+                if ($order->currency) {
+                ?>
+                    <td>
+                        <input type='txt' class='gsniceinput1 registerlossinput_local_currency' disabled='true' originalprice='<? echo $item->product->priceLocalCurrency; ?>' gsname='localCurrency' value='<?php echo $item->product->priceLocalCurrency * $percentage; ?>' style="width:120px;text-align: center;">
+                    </td>
+                <?
+                }
+                ?>
+            </<tr>
+                <?php
+            }
+            ?>
+        <tr>
+            <td><div>Total unpaid amount: <span class='totaltoregister'><?php echo $restAmount; ?></span></div></td>
+            <td></td>
+            <td><input type='txt' class='gsniceinput1 totalissame totalregisterview' value='<?php echo $totalRest; ?>' style="width:120px;text-align: center;" disabled></td>
+        </tr>
+        <tr>
+            <td><div>Register loss on date (earliest date)</div></td>
+            <td></td>
+            <td><input type='txt' class='gsniceinput1 registerLossDate' value='<?php echo $earliestdate; ?>' style='width:120px; text-align: center;'></td>
+        </tr>
+        <tr>
+            <td><div>Comment (optionial)</div></td>
+            <td></td>
+            <td><input type='txt' class='gsniceinput1 optionalcomment' placeholder='comment (optional)' style='width:120px;'></td>
+        </tr>
+        <tr>
+            <td><div class='amountmissing'>Total amount missing to register as loss: <span class='totalismissing'>0</span></div></td>
+            <td></td>
+            <td><span class="shop_button doRegisterLoss" style="width:100%; box-sizing: border-box;" orderid='<?php echo $order->id; ?>'>Register loss</span></td>
+        </tr>
+    </table>
+    <?php
+    echo "";
+    ?>
+</div>
+
+
+<script>
+   getshop_loadDatePicker($('.registerLossDate'));
+</script>

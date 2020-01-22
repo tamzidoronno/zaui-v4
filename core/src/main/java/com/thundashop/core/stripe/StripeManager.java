@@ -85,7 +85,7 @@ public class StripeManager extends ManagerBase implements IStripeManager {
     public boolean createAndChargeCustomer(String orderId, String token) {
         
         Order order = orderManager.getOrderSecure(orderId);
-        if(storeManager.isProductMode()) {
+        if(isProdMode()) {
             Application stripeApp = storeApplicationPool.getApplication("3d02e22a-b0ae-4173-ab92-892a94b457ae");
             Stripe.apiKey = stripeApp.getSetting("key");
         } else {
@@ -124,7 +124,7 @@ public class StripeManager extends ManagerBase implements IStripeManager {
     public String createSessionForPayment(String orderId, String address) {
         try {
             
-            if(storeManager.isProductMode()) {
+            if(isProdMode()) {
                 Application stripeApp = storeApplicationPool.getApplication("3d02e22a-b0ae-4173-ab92-892a94b457ae");
                 Stripe.apiKey = stripeApp.getSetting("key");
             } else {
@@ -138,9 +138,12 @@ public class StripeManager extends ManagerBase implements IStripeManager {
             }
             
             User usr = userManager.getUserById(order.userId);
-            String email = usr.emailAddress;
-            if(email == null || !isValidEmail(email)) {
-                email = "no@emailset.com";
+            String email = "";
+            if(usr != null) {
+                email = usr.emailAddress;
+                if(email == null || !isValidEmail(email)) {
+                    email = "no@emailset.com";
+                }
             }
             
             String endpoints = createWebHook(Stripe.apiKey);
@@ -206,7 +209,7 @@ public class StripeManager extends ManagerBase implements IStripeManager {
     @Override
     public boolean chargeSofort(String orderId, String source) {
         try {
-            if(storeManager.isProductMode()) {
+            if(isProdMode()) {
                 Application stripeApp = storeApplicationPool.getApplication("3d02e22a-b0ae-4173-ab92-892a94b457ae");
                 Stripe.apiKey = stripeApp.getSetting("key");
             } else {
@@ -250,7 +253,7 @@ public class StripeManager extends ManagerBase implements IStripeManager {
     @Override
     public boolean chargeOrder(String orderId, String cardId) {
         try {
-            if(storeManager.isProductMode()) {
+            if(isProdMode()) {
                 Application stripeApp = storeApplicationPool.getApplication("3d02e22a-b0ae-4173-ab92-892a94b457ae");
                 Stripe.apiKey = stripeApp.getSetting("key");
             } else {
@@ -299,7 +302,7 @@ public class StripeManager extends ManagerBase implements IStripeManager {
     }
     
     public void saveCard(String card, Integer expMonth, Integer expYear) {
-        if(storeManager.isProductMode()) {
+        if(isProdMode()) {
             Application stripeApp = storeApplicationPool.getApplication("3d02e22a-b0ae-4173-ab92-892a94b457ae");
             Stripe.apiKey = stripeApp.getSetting("key");
         } else {
@@ -322,9 +325,10 @@ public class StripeManager extends ManagerBase implements IStripeManager {
         }
     }
     
+    @Override
     public void handleWebhookCallback(WebhookCallback result) {
         
-        if(storeManager.isProductMode()) {
+        if(isProdMode()) {
             Application stripeApp = storeApplicationPool.getApplication("3d02e22a-b0ae-4173-ab92-892a94b457ae");
             Stripe.apiKey = stripeApp.getSetting("key");
         } else {
@@ -437,7 +441,7 @@ public class StripeManager extends ManagerBase implements IStripeManager {
     }
 
     private String getCallBackAddr() {
-        if(!storeManager.isProductMode()) {
+        if(!isProdMode()) {
             return "http://20360.3.0.mdev.getshop.com/callback.php?useapp=stripe";
         }
 
@@ -455,6 +459,11 @@ public class StripeManager extends ManagerBase implements IStripeManager {
         }
         
         return address;
+    }
+
+    private boolean isProdMode() {
+//        return true;
+        return storeManager.isProductMode();
     }
     
 }

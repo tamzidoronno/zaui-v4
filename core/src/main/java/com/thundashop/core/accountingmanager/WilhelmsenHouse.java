@@ -79,6 +79,8 @@ public class WilhelmsenHouse implements AccountingInterface {
                 accountingId = 24359; // Vipps customer id.
             } else if (order.payment != null && order.payment.paymentType.equals("ns_d02f8b7a_7395_455d_b754_888d7d701db8\\Dibs")) {
                 accountingId = 100; // Vipps customer id.
+            } else if (order.payment != null && order.payment.paymentType.equals("ns_4fc1033f_7380_4c0f_83d2_f3b4ad8bbb18\\IZettlePayments")) {
+                accountingId = 1516; // Vipps customer id.
             } else {
                 accountingId = user.customerId; // Kundenr 
             }

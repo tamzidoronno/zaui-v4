@@ -8,6 +8,8 @@ $lock = $this->getLock();
 
 <div class="commandArea">
     <div class="shop_button" gsclick='resendCodes' serverid="<? echo $this->getServer()->id; ?>" lockid="<? echo $lock->id; ?>" title="This function will not make new codes, only mark all as need to be updated.">Resend all codes</div>
+    <div class="shop_button" gsclick='markAllCodesChecked' serverid="<? echo $this->getServer()->id; ?>" lockid="<? echo $lock->id; ?>" title="This function will not make new codes, only mark all as need to be updated.">Mark all codes checked</div>
+    <div class="shop_button" gsclick='forceRemoveCodesOnSlot' serverid="<? echo $this->getServer()->id; ?>" lockid="<? echo $lock->id; ?>" title="This function will not make new codes, only mark all as need to be updated.">Remove all codes on slots</div>
     <?
     if (!$lock->prioritizeLockUpdate) {
     ?>

@@ -66,7 +66,6 @@ class OrderView extends \MarketingApplication implements \Application {
         
         $typenamespace = explode('\\', $this->getOrder()->payment->paymentType);
         $paymentType = $this->getPaymentMethodName($typenamespace[0]);
-        
         ?>
         <div class='workareaheader'>
             <div class="headertitle">
@@ -106,7 +105,36 @@ class OrderView extends \MarketingApplication implements \Application {
             <?
         }
     }
+    
+    public function registerLoss() {
+        $order = $this->getOrder();
+        $lossList = array();
+        foreach($order->cart->items as $item) {
+            $orderLoss = new \core_ordermanager_data_OrderLoss();
+            $orderLoss->itemId = $item->cartItemId;
+            $orderLoss->count = $_POST['data'][$item->cartItemId]['count'];
+            $orderLoss->amount = $_POST['data'][$item->cartItemId]['price'];
+            $orderLoss->amountInLocalCurrency = isset($_POST['data'][$item->cartItemId]['amountInLocalCurrency']) ? $_POST['data'][$item->cartItemId]['amountInLocalCurrency'] : null;
+            $lossList[] = $orderLoss;
+        }
+        
+        $comment = $_POST['data']['comment'];
+        $postingDate = $this->convertToJavaDate(strtotime($_POST['data']['postToDate']));
+        $this->getApi()->getOrderManager()->registerLoss($order->id, $lossList, $comment, $postingDate);
+    }
 
+    public function registerRoundAgio() {
+        $orderid = $_POST['data']['orderid'];
+        $amount = $_POST['data']['amount'];
+        $type = $_POST['data']['type'];
+        $comment = $_POST['data']['comment'];
+        $amountInLocalCurrency = isset($_POST['data']['localCurrency']) ? $_POST['data']['localCurrency'] : null;
+        $date = $this->convertToJavaDate(strtotime($_POST['data']['date']));
+        
+        $this->getApi()->getOrderManager()->addSpecialPaymentTransactions($orderid, $amount, $amountInLocalCurrency, $type, $comment, $date);
+        $this->rePrintTab("paymenthistory");
+    }
+    
     public function setOrder() {
         $orderid = null;
         

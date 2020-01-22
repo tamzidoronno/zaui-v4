@@ -33,6 +33,7 @@ import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.getshopaccounting.OrderUnsettledAmountForAccount;
 import com.thundashop.core.gsd.TerminalResponse;
 import com.thundashop.core.ordermanager.data.AccountingFreePost;
+import com.thundashop.core.ordermanager.data.OrderLoss;
 import com.thundashop.core.ordermanager.data.PmiResult;
 import com.thundashop.core.pdf.data.AccountingDetails;
 import java.util.ArrayList;
@@ -88,6 +89,12 @@ public interface IOrderManager {
     
     @Administrator
     public void forceSetNewPaymentDate(String orderId, Date date, String password);
+    
+    @Administrator
+    public void registerLoss(String orderId, List<OrderLoss> loss, String comment, Date paymentDate);
+    
+    @Administrator
+    public Date getEarliestPostingDate();
     
     @Administrator
     public String getCurrentPaymentOrderId();
@@ -192,6 +199,7 @@ public interface IOrderManager {
     
     /**
      * Fetch all orders for a user.
+     * 
      * @param userId
      * @return
      * @throws ErrorException 
@@ -203,6 +211,9 @@ public interface IOrderManager {
     
     @Administrator
     public void updateCountForOrderLine(String cartItemId, String orderId, Integer count);
+    
+    @Administrator
+    public void addSpecialPaymentTransactions(String orderId, Double amount, Double amountInLocalCurrency, Integer transactionType, String comment, Date date);
     
     @Editor
     public Order creditOrder(String orderId);

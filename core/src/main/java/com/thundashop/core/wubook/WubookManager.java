@@ -112,6 +112,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     Date fetchBookingThreadStarted = null;
     private List<WubookBooking> nextBookings;
     private List<String> bookingCodesToAdd = new ArrayList();
+    private boolean errorNotificationSent = false;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -399,87 +400,95 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     
 
     @Override
-    public List<WubookBooking> fetchNewBookings() throws Exception {
-       
-        if(disableWubook != null) {
-            long diff = new Date().getTime() - disableWubook.getTime();
-            if(diff < (10*60*1000)) {
-                logText("Fetch new booking disabled from : " + disableWubook);
-                return new ArrayList();
+    public void fetchNewBookings() throws Exception {
+       try {
+            if(disableWubook != null) {
+                long diff = new Date().getTime() - disableWubook.getTime();
+                if(diff < (10*60*1000)) {
+                    logText("Fetch new booking disabled from : " + disableWubook);
+                    return;
+                }
             }
-        }
-        
-        if(nextBookings != null) {
-            try {
-                logText("Next bookings found:" + nextBookings.size());
-                checkBookingsToDelete(nextBookings);
-            }catch(Exception e) {
-                messageManager.sendErrorNotification("Failed to double delete bookings", e);
-                logPrintException(e);
-            }
-            nextBookings = null;
-        }
 
-        try {
-            if(!bookingCodesToAdd.isEmpty()) {
-                logText("BookingsCodesToAdd is not empty:" + bookingCodesToAdd.size());
-                for(String code : bookingCodesToAdd) {
-                    WubookBooking booking = fetchBooking(code + "");
-                    addBookingToPms(booking);
-                }
-            }
-        }catch(Exception e) {
-            logPrintException(e);
-            messageManager.sendErrorNotification("Failed to add booking codes", e);
-        }
-        bookingCodesToAdd.clear();
-        
-        connectToApi();
-        PmsConfiguration config = pmsManager.getConfigurationSecure();
-        if(config.wubooklcode == null || config.wubooklcode.isEmpty()) {
-            return new ArrayList();
-        }
-        List<WubookBooking> toReturn = new ArrayList();
-        if(bookingsToAdd != null) {
-            Vector bookings = bookingsToAdd;
-            for(int bookcount = 0; bookcount < bookings.size(); bookcount++) {
-                Hashtable reservation = (Hashtable) bookings.get(bookcount);
-                WubookBooking wubooking = buildBookingResult(reservation);
-                logText("Adding reservation: " + wubooking.reservationCode);
-                if(wubooking.status == 5) {
-                    if(wubooking.wasModified > 0) {
-                        //This is a modified reservation. its not a new booking.
-                        //This happends if the booking has been modified since last time we checked for new bookings.
-                        PmsBooking correlatedBooking = findCorrelatedBooking(wubooking);
-                        if(correlatedBooking != null) {
-                            correlatedBooking.wubookModifiedResId.add(wubooking.reservationCode);
-                            pmsManager.saveBooking(correlatedBooking);
-                        } else {
-                            sendErrorForReservation(wubooking.reservationCode, "Where not able to find correlated booking for modified booking while fetching new bookings.");
-                        }
-                        continue;
-                    }
-                }
+            if(nextBookings != null) {
                 try {
-                    Gson gson = new Gson();
-                    logPrint(gson.toJson(reservation));
+                    logText("Next bookings found:" + nextBookings.size());
+                    checkBookingsToDelete(nextBookings);
                 }catch(Exception e) {
+                    messageManager.sendErrorNotification("Failed to double delete bookings", e);
                     logPrintException(e);
                 }
-                if(!bookingAlreadyExists(wubooking) || wubooking.delete) {
-                    toReturn.add(wubooking);
-                    addBookingToPms(wubooking);
+                nextBookings = null;
+            }
+
+            try {
+                if(!bookingCodesToAdd.isEmpty()) {
+                    logText("BookingsCodesToAdd is not empty:" + bookingCodesToAdd.size());
+                    for(String code : bookingCodesToAdd) {
+                        WubookBooking booking = fetchBooking(code + "");
+                        addBookingToPms(booking);
+                    }
+                }
+            }catch(Exception e) {
+                logPrintException(e);
+                messageManager.sendErrorNotification("Failed to add booking codes", e);
+            }
+            bookingCodesToAdd.clear();
+
+            connectToApi();
+            PmsConfiguration config = pmsManager.getConfigurationSecure();
+            if(config.wubooklcode == null || config.wubooklcode.isEmpty()) {
+                return;
+            }
+            List<WubookBooking> toReturn = new ArrayList();
+            if(bookingsToAdd != null) {
+                Vector bookings = bookingsToAdd;
+                for(int bookcount = 0; bookcount < bookings.size(); bookcount++) {
+                    Hashtable reservation = (Hashtable) bookings.get(bookcount);
+                    WubookBooking wubooking = buildBookingResult(reservation);
+                    logText("Adding reservation: " + wubooking.reservationCode);
+                    if(wubooking.status == 5) {
+                        if(wubooking.wasModified > 0) {
+                            //This is a modified reservation. its not a new booking.
+                            //This happends if the booking has been modified since last time we checked for new bookings.
+                            PmsBooking correlatedBooking = findCorrelatedBooking(wubooking);
+                            if(correlatedBooking != null) {
+                                correlatedBooking.wubookModifiedResId.add(wubooking.reservationCode);
+                                pmsManager.saveBooking(correlatedBooking);
+                            } else {
+                                sendErrorForReservation(wubooking.reservationCode, "Where not able to find correlated booking for modified booking while fetching new bookings.");
+                            }
+                            continue;
+                        }
+                    }
+                    try {
+                        Gson gson = new Gson();
+                        logPrint(gson.toJson(reservation));
+                    }catch(Exception e) {
+                        logPrintException(e);
+                    }
+                    if(!bookingAlreadyExists(wubooking) || wubooking.delete) {
+                        toReturn.add(wubooking);
+                        addBookingToPms(wubooking);
+                    }
                 }
             }
-        }
-        
-        WubookThreadRipper checkNewBookingsThread = new WubookThreadRipper(this, 1);
-        checkNewBookingsThread.setWubookSettings(token, pmsManager.getConfigurationSecure().wubooklcode, client);
-        checkNewBookingsThread.setStoreId(storeId);
-        checkNewBookingsThread.setName("Checking for new bookings wubook: " + storeId);
-        checkNewBookingsThread.start();
-        
-        return toReturn;
+
+            WubookThreadRipper checkNewBookingsThread = new WubookThreadRipper(this, 1);
+            checkNewBookingsThread.setWubookSettings(token, pmsManager.getConfigurationSecure().wubooklcode, client);
+            checkNewBookingsThread.setStoreId(storeId);
+            checkNewBookingsThread.setName("Checking for new bookings wubook: " + storeId);
+            checkNewBookingsThread.start();
+
+            return;
+       }catch(Exception e) {
+           if(!errorNotificationSent) {
+            messageManager.sendErrorNotification("Error in fetchnewbooking.", e);
+            errorNotificationSent = true;
+           }
+           logPrintException(e);
+           throw e;
+       }
     }
 
     private boolean doNotCheckBookings() {

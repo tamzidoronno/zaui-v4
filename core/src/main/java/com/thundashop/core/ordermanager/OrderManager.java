@@ -54,6 +54,7 @@ import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.OrderManagerSettings;
 import com.thundashop.core.ordermanager.data.OrderFilter;
 import com.thundashop.core.ordermanager.data.OrderLight;
+import com.thundashop.core.ordermanager.data.OrderLoss;
 import com.thundashop.core.ordermanager.data.OrderResult;
 import com.thundashop.core.ordermanager.data.OrderShipmentLogEntry;
 import com.thundashop.core.ordermanager.data.OrderTransaction;
@@ -65,11 +66,13 @@ import com.thundashop.core.ordermanager.data.PmiResult;
 import com.thundashop.core.ordermanager.data.SalesStats;
 import com.thundashop.core.ordermanager.data.Statistic;
 import com.thundashop.core.ordermanager.data.VirtualOrder;
+import com.thundashop.core.paymentmanager.GeneralPaymentConfig;
 import com.thundashop.core.paymentmanager.PaymentManager;
 import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.pdf.data.AccountingDetails;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
+import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.pos.PosConference;
 import com.thundashop.core.pos.PosManager;
@@ -271,60 +274,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     private Order createCreatditOrder(String orderId, String newReference) throws ErrorException {
-        Order order = getOrderSecure(orderId);
-
-        if (order.createdBasedOnOrderIds != null && !order.createdBasedOnOrderIds.isEmpty()) {
-            addCreditNotesToBookings(order.createdBasedOnOrderIds);
-        }
-        
-        Order credited = order.jsonClone();
-        for(CartItem item : credited.cart.getItems()) {
-            item.setCount(item.getCount() * -1);
-            item.creditPmsAddonsAndPriceMatrix();
-        }
-        
-        credited.incrementOrderId = getNextIncrementalOrderId();
-        credited.isCreditNote = true;
-        credited.status = Order.Status.CREATED;
-        credited.parentOrder = order.id;
-        credited.creditOrderId.clear();
-        credited.orderTransactions.clear();
-        credited.closed = false;
-        credited.transferredToAccountingSystem = false;
-        credited.moveAllTransactionToTodayIfItsBeforeDate(getOrderManagerSettings().closedTilPeriode);
-        if (credited.overrideAccountingDate != null && credited.overrideAccountingDate.before(getOrderManagerSettings().closedTilPeriode)) {
-            credited.overrideAccountingDate = getOrderManagerSettings().closedTilPeriode;
-        }
-        
-        order.creditOrderId.add(credited.id);
-        order.doFinalize();
-        
-        if (!newReference.isEmpty() && order.cart != null) {
-            credited.cart.reference = newReference;
-        }
-
-        saveOrder(credited);
-        saveOrder(order);
-        
-        if (order.status != Order.Status.PAYMENT_COMPLETED) {
-            markAsPaidWithTransactionTypeInternal(order.id, order.getTotalAmount(), new Date(), 1, "unkown", order.getTotalAmountLocalCurrency(), order.getTotalRegisteredAgio());
-            markAsPaidWithTransactionTypeInternal(credited.id, credited.getTotalAmount(), new Date(), 1, "unkown", credited.getTotalAmountLocalCurrency(), credited.getTotalRegisteredAgio());   
-        }
-        
-        revertOrderLinesToPreviouseState(order);
-        
-        List<String> credittedOrders = new ArrayList();
-        credittedOrders.add(credited.id);
-        try {
-            addOrdersToBookings(credittedOrders);
-        }catch(GetShopBeanException ex) {
-            // This will happen if the credit order is invoked within a named bean, 
-            // normally it then comes from the pms manager itself and then the manager
-            // should handle the adding to booking properly itself.
-            return credited;
-        }
-        
-        return credited;
+        return createCreditOrderAndMarkAsPaid(orderId, newReference, true);
     }
     
     @Override
@@ -3553,7 +3503,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         List<Order> retOrders = orders.values()
                 .stream()
                 .filter(o -> o.isInvoice())
-                .filter(o -> o.isOverdue())
+                .filter(o -> !o.isFullyPaid())
                 .collect(Collectors.toList());
         
         retOrders.forEach(o -> o.doFinalize());
@@ -3692,22 +3642,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .filter(o -> !oldOrder.orderTransactions.contains(o))
                 .collect(Collectors.toList());
         
-        boolean isGetShop = false;
-        if(getSession() != null && getSession().currentUser != null) {
-            User loggedOnUser = getSession().currentUser;
-            if(loggedOnUser.emailAddress != null && loggedOnUser.emailAddress.endsWith("@getshop.com")) {
-                isGetShop = true;
+        for (OrderTransaction transsaction : newTransactions) {
+            if (transsaction.date.before(closedDate)) {
+                resetOrder(oldOrder, order);
+                throw new ErrorException(1053);
             }
         }
-        
-        if(!isGetShop) {
-            for (OrderTransaction transsaction : newTransactions) {
-                if (transsaction.date.before(closedDate)) {
-                    resetOrder(oldOrder, order);
-                    throw new ErrorException(1053);
-                }
-            }
-        }
+
     }
 
     private Date getFirstOrderDate() {
@@ -4929,6 +4870,149 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         });
 
         
+    }
+
+    @Override
+    public void registerLoss(String orderId, List<OrderLoss> loss, String comment, Date paymentDate) {
+        
+        
+        Date earliestDate = getOrderManagerSettings().closedTilPeriode;
+
+        if(paymentDate.after(new Date()) && !PmsBookingRooms.isSameDayStatic(new Date(), paymentDate)) {
+            return;
+        }
+        
+        if(paymentDate.before(earliestDate) && !PmsBookingRooms.isSameDayStatic(earliestDate, paymentDate)) {
+            return;
+        }
+        
+        Order order = getOrder(orderId);
+        
+        if (order == null) {
+            return;
+        }
+        
+        Order creditNote = createCreditOrderAndMarkAsPaid(orderId, "", false);
+        
+        for(CartItem item : creditNote.getCartItems()) {
+            for(OrderLoss lossLine : loss) {
+                if(item.getCartItemId().equals(lossLine.itemId)) {
+                    item.setCount(lossLine.count);
+                    item.getProduct().price = lossLine.amount;
+                    item.getProduct().priceLocalCurrency = lossLine.amountInLocalCurrency;
+                }
+            }
+        }
+        
+        saveOrderInternal(creditNote);
+        
+        double totalAmount = getTotalAmount(creditNote);
+        Double totalAmountInLocalCurrency = null;
+        
+        markAsPaid(creditNote.id, paymentDate, creditNote.getTotalAmount());
+        
+        if (order.currency != null && !order.currency.isEmpty()) {
+            totalAmountInLocalCurrency = getTotalForOrderInLocalCurrencyById(order.id);
+        }
+
+        String userId = getSession().currentUser.id;
+        order.registerTransaction(paymentDate, totalAmount, userId, Order.OrderTransactionType.MANUAL, "", comment, totalAmountInLocalCurrency, null, null);
+        if (order.isFullyPaid()) {
+            markAsPaidInternal(order, paymentDate, totalAmount);
+        }
+        
+        saveObject(order);
+        
+    }
+    
+    @Override
+    public Date getEarliestPostingDate() {
+        return getOrderManagerSettings().closedTilPeriode;
+    }
+
+    private Order createCreditOrderAndMarkAsPaid(String orderId, String newReference, boolean markAsPaid) {
+        Order order = getOrderSecure(orderId);
+
+        if (order.createdBasedOnOrderIds != null && !order.createdBasedOnOrderIds.isEmpty()) {
+            addCreditNotesToBookings(order.createdBasedOnOrderIds);
+        }
+        
+        Order credited = order.jsonClone();
+        for(CartItem item : credited.cart.getItems()) {
+            item.setCount(item.getCount() * -1);
+            item.creditPmsAddonsAndPriceMatrix();
+        }
+        
+        credited.incrementOrderId = getNextIncrementalOrderId();
+        credited.isCreditNote = true;
+        credited.status = Order.Status.CREATED;
+        credited.parentOrder = order.id;
+        credited.creditOrderId.clear();
+        credited.orderTransactions.clear();
+        credited.closed = false;
+        credited.transferredToAccountingSystem = false;
+        credited.moveAllTransactionToTodayIfItsBeforeDate(getOrderManagerSettings().closedTilPeriode);
+        if (credited.overrideAccountingDate != null && credited.overrideAccountingDate.before(getOrderManagerSettings().closedTilPeriode)) {
+            credited.overrideAccountingDate = getOrderManagerSettings().closedTilPeriode;
+        }
+        
+        order.creditOrderId.add(credited.id);
+        order.doFinalize();
+        
+        if (!newReference.isEmpty() && order.cart != null) {
+            credited.cart.reference = newReference;
+        }
+
+        saveOrder(credited);
+        saveOrder(order);
+        
+        if (order.status != Order.Status.PAYMENT_COMPLETED && markAsPaid) {
+            markAsPaidWithTransactionTypeInternal(order.id, order.getTotalAmount(), new Date(), 1, "unkown", order.getTotalAmountLocalCurrency(), order.getTotalRegisteredAgio());
+            markAsPaidWithTransactionTypeInternal(credited.id, credited.getTotalAmount(), new Date(), 1, "unkown", credited.getTotalAmountLocalCurrency(), credited.getTotalRegisteredAgio());   
+        }
+        
+        revertOrderLinesToPreviouseState(order);
+        
+        List<String> credittedOrders = new ArrayList();
+        credittedOrders.add(credited.id);
+        try {
+            addOrdersToBookings(credittedOrders);
+        }catch(GetShopBeanException ex) {
+            // This will happen if the credit order is invoked within a named bean, 
+            // normally it then comes from the pms manager itself and then the manager
+            // should handle the adding to booking properly itself.
+            return credited;
+        }
+        
+        return credited;
+    }
+
+    @Override
+    public void addSpecialPaymentTransactions(String orderId, Double amount, Double amountInLocalCurrency, Integer transactionType, String comment, Date date) {
+        Order order = getOrder(orderId);
+        if (order == null) {
+            return;
+        }
+        
+        GeneralPaymentConfig paymentConfig = paymentManager.getGeneralPaymentConfig();
+        if(Order.OrderTransactionType.AGIO == transactionType) {
+            System.out.println("register agio to account: " + paymentConfig.agioAccount);
+        }
+        if(Order.OrderTransactionType.ROUNDING == transactionType) {
+            AccountingDetail detail = productManager.getAccountingDetail(new Integer(paymentConfig.conversionAccount));
+            if (detail == null) {
+                throw new NullPointerException("Did not find the account");
+            }
+            
+            addOrderTransaction(orderId, amount, comment, date, amountInLocalCurrency, 0D, detail.id);
+            return;
+        }
+        if(Order.OrderTransactionType.DISAGIO == transactionType) {
+            System.out.println("register disagoi to account: " + paymentConfig.dissAgioAccount);
+        }
+        
+        
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 

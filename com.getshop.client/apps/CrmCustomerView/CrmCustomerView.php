@@ -107,6 +107,7 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
         if($_POST['data']['discounttype'] == "fixedprice") {
             $discount->discountType = 1;
         }
+        $discount->discounts = new \stdClass();
         foreach($_POST['data'] as $index => $val) {
             if(stristr($index, "discount_")) {
                 $room = str_replace("discount_", "", $index);
@@ -439,6 +440,12 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
     public function regeneratTotpKey() {
         $user = $this->getUser();
         $this->getApi()->getUserManager()->createGoogleTotpForUser($user->id);
+    }
+    
+    public function deleteTotp() {
+        $user = $this->getUser();
+        $user->totpKey = "";
+        $this->getApi()->getUserManager()->saveUser($user);
     }
     
     public function getDomains() {

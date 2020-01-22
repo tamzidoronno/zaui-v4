@@ -107,8 +107,12 @@ public class ListManager extends ManagerBase implements IListManager {
                 addMenu(menu);
             }
         }
-        
-        loadRemoteData();
+        try {
+            loadRemoteData();
+        }catch(Exception e) {
+            
+        }
+            
     }
     
     public List<String> findListIdByEntryId(String id) {

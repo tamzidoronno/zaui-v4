@@ -146,7 +146,14 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
         $excel = array();
         $start = $this->getStart();
         $end = $this->getEnd();
-        $dayIncome = $this->getApi()->getOrderManager()->getDayIncomesWithMetaData($start, $end);
+        
+        
+        $isPaymentRecords = isset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_paymentid']);
+        if ($isPaymentRecords) {
+            $dayIncome = $this->getApi()->getOrderManager()->getPaymentRecords($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_paymentid'], $start, $end);
+        } else {
+            $dayIncome = $this->getApi()->getOrderManager()->getDayIncomesWithMetaData($start, $end);
+        }
         
         $excel[] = array("Date", "Order id", "Amount inc tax", "Amount ex tax", "Name");
         foreach ($dayIncome as $income) {
@@ -155,6 +162,7 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
                 if ($entry->accountingNumber != $_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_account_all_transactions']) {
                     continue;
                 }
+                
                 $excel[] = array($day, $entry->incrementalOrderId, round($entry->amount,2), round($entry->amountExTax,2), @$entry->metaData->{"Guest name"});
             }
         }

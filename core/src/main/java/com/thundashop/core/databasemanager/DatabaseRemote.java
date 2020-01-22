@@ -165,7 +165,6 @@ public class DatabaseRemote extends StoreComponent {
     }
 
     public Stream<DataCommon> getAll(String dbName, String storeId, String moduleName) {
-        
         try {
             if (GetShopLogHandler.isDeveloper) {
                 connectLocal();
@@ -182,7 +181,7 @@ public class DatabaseRemote extends StoreComponent {
             java.util.logging.Logger.getLogger(DatabaseRemote.class.getName()).log(Level.WARNING, null, ex);
         }
         
-        return null;
+        return new ArrayList().stream();
     }
 
     /**

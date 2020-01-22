@@ -27,18 +27,37 @@ app.OrderView = {
         $(document).on('change', '.OrderView .cartitem input.count', app.OrderView.cartItemChanged);
         $(document).on('change', '.OrderView .cartitem input.price', app.OrderView.cartItemChanged);
         $(document).on('change', '.OrderView .localcurrencyvalue', app.OrderView.localCurrencyValueChanged);
+        $(document).on('change', '.OrderView .cartitemlineloss', app.OrderView.cartitemLineLossChanged);
         
         
         // Payment History
         $(document).on('click', '.OrderView .registerpayment', app.OrderView.registerPayment);
     },
+    
+    cartitemLineLossChanged: function() {
+        var localCurrencyInput = $(this).closest('.registerlossrow').find('.registerlossinput_local_currency');;
+        
+        if (!localCurrencyInput) {
+            return;
+        }
+        
+        var newFactor = $(this).val() / $(this).attr('originalprice');
+        var newLocalCurrencyPrice = localCurrencyInput.attr('originalprice') * newFactor;
+        var toUse = Math.round(newLocalCurrencyPrice * 100) / 100;
+        localCurrencyInput.val(toUse);
+    },
+    
     registerRoundingAgioBtn : function() {
         var form = $(this).closest('.registerRoundingAgioForm');
         var args = thundashop.framework.createGsArgs(form);
         args.type = $(this).attr('transactiontype');
         var event = thundashop.Ajax.createEvent('','registerRoundAgio',$(this), args);
+        event['synchron'] = true;
+        
+        var data = app.OrderView.getData(this);
+        
         thundashop.Ajax.postWithCallBack(event, function(res) {
-//            window.location.reload();
+            app.OrderView.rePrintTab(res, 'paymenthistory', data);
         });
     },
     doRegisterLoss : function() {
@@ -48,6 +67,7 @@ app.OrderView = {
             var itemToAdd = {};
             itemToAdd.count = $(this).find('[gsname="count"]').val();
             itemToAdd.price = $(this).find('[gsname="price"]').val();
+            itemToAdd.amountInLocalCurrency = $(this).find('[gsname="localCurrency"]').val();
             data[itemid] = itemToAdd;
         });
         
@@ -203,6 +223,7 @@ app.OrderView = {
         
         var event = thundashop.Ajax.createEvent(null, "addTransactionRecord", $(this), data);
         event['synchron'] = true;
+        
         thundashop.Ajax.post(event, function(res) {
             app.OrderView.rePrintTab(res, 'paymenthistory', data);
         });

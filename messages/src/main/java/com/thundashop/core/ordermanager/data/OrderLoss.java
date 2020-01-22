@@ -13,4 +13,5 @@ public class OrderLoss {
     public String itemId = "";
     public Integer count = 0;
     public Double amount = 0.0;
+    public Double amountInLocalCurrency = null;
 }

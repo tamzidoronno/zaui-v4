@@ -3642,22 +3642,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .filter(o -> !oldOrder.orderTransactions.contains(o))
                 .collect(Collectors.toList());
         
-        boolean isGetShop = false;
-        if(getSession() != null && getSession().currentUser != null) {
-            User loggedOnUser = getSession().currentUser;
-            if(loggedOnUser.emailAddress != null && loggedOnUser.emailAddress.endsWith("@getshop.com")) {
-                isGetShop = true;
+        for (OrderTransaction transsaction : newTransactions) {
+            if (transsaction.date.before(closedDate)) {
+                resetOrder(oldOrder, order);
+                throw new ErrorException(1053);
             }
         }
-        
-        if(!isGetShop) {
-            for (OrderTransaction transsaction : newTransactions) {
-                if (transsaction.date.before(closedDate)) {
-                    resetOrder(oldOrder, order);
-                    throw new ErrorException(1053);
-                }
-            }
-        }
+
     }
 
     private Date getFirstOrderDate() {
@@ -4895,28 +4886,42 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             return;
         }
         
+        Order order = getOrder(orderId);
+        
+        if (order == null) {
+            return;
+        }
+        
         Order creditNote = createCreditOrderAndMarkAsPaid(orderId, "", false);
+        
         for(CartItem item : creditNote.getCartItems()) {
             for(OrderLoss lossLine : loss) {
                 if(item.getCartItemId().equals(lossLine.itemId)) {
                     item.setCount(lossLine.count);
                     item.getProduct().price = lossLine.amount;
+                    item.getProduct().priceLocalCurrency = lossLine.amountInLocalCurrency;
                 }
             }
         }
+        
         saveOrderInternal(creditNote);
         
         double totalAmount = getTotalAmount(creditNote);
-
-        Order order = getOrder(orderId);
-        if (order != null) {
-            String userId = getSession().currentUser.id;
-            order.registerTransaction(paymentDate, totalAmount, userId, Order.OrderTransactionType.MANUAL, "", comment, null, null, null);
-            if (order.isFullyPaid()) {
-                markAsPaidInternal(order, paymentDate, totalAmount);
-            }
-            saveObject(order);
+        Double totalAmountInLocalCurrency = null;
+        
+        markAsPaid(creditNote.id, paymentDate, creditNote.getTotalAmount());
+        
+        if (order.currency != null && !order.currency.isEmpty()) {
+            totalAmountInLocalCurrency = getTotalForOrderInLocalCurrencyById(order.id);
         }
+
+        String userId = getSession().currentUser.id;
+        order.registerTransaction(paymentDate, totalAmount, userId, Order.OrderTransactionType.MANUAL, "", comment, totalAmountInLocalCurrency, null, null);
+        if (order.isFullyPaid()) {
+            markAsPaidInternal(order, paymentDate, totalAmount);
+        }
+        
+        saveObject(order);
         
     }
     
@@ -4983,17 +4988,29 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     @Override
-    public void addSpecialPaymentTransactions(String orderId, Double amount, Integer transactionType, String comment, Date date) {
+    public void addSpecialPaymentTransactions(String orderId, Double amount, Double amountInLocalCurrency, Integer transactionType, String comment, Date date) {
+        Order order = getOrder(orderId);
+        if (order == null) {
+            return;
+        }
+        
         GeneralPaymentConfig paymentConfig = paymentManager.getGeneralPaymentConfig();
         if(Order.OrderTransactionType.AGIO == transactionType) {
             System.out.println("register agio to account: " + paymentConfig.agioAccount);
         }
         if(Order.OrderTransactionType.ROUNDING == transactionType) {
-            System.out.println("register rounding to account: " + paymentConfig.conversionAccount);
+            AccountingDetail detail = productManager.getAccountingDetail(new Integer(paymentConfig.conversionAccount));
+            if (detail == null) {
+                throw new NullPointerException("Did not find the account");
+            }
+            
+            addOrderTransaction(orderId, amount, comment, date, amountInLocalCurrency, 0D, detail.id);
+            return;
         }
         if(Order.OrderTransactionType.DISAGIO == transactionType) {
             System.out.println("register disagoi to account: " + paymentConfig.dissAgioAccount);
         }
+        
         
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

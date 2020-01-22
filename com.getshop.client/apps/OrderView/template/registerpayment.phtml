@@ -1,5 +1,12 @@
 <?php
 $order = $this->getOrder();
+
+$totalForOrderInLocalCurrency = 0;
+
+if ($order->currency) {
+    $totalForOrderInLocalCurrency = $this->getApi()->getOrderManager()->getTotalForOrderInLocalCurrencyById($order->id);
+}
+
 ?>
 <div class="manualregisterpayment">
 
@@ -11,10 +18,28 @@ $order = $this->getOrder();
         <span style='display: inline-block; width: 200px;'>Date</span>
         <span style='display: inline-block; width: 200px;'>Comment</span>
         <span style='display: inline-block; width: 200px;'>Value</span>
+        <?
+        if ($order->currency) {
+        ?>
+            <span style='display: inline-block; width: 200px;'>Value in local currency</span>
+            <span style='display: inline-block; width: 200px;'>Aglo / Disaglo</span>
+        <?
+        }
+        ?>
     </div>
     <input class="gsniceinput1 manualregisterpaymentdate" value="<? echo $now; ?>"/>
     <input class="gsniceinput1 manualregisterpaymentcomment"placeholder="<? echo $this->__f('Optional comment'); ?>" />
     <input class="gsniceinput1 manualregisterpaymentamount" value="<? echo $order->restAmount; ?>" />
+    
+    <?
+    if ($order->currency) {
+        ?>
+        <input class="gsniceinput1 localcurrencyvalue" value="" />
+        <input class="gsniceinput1 disaglo" inlocalcurrency="<? echo $totalForOrderInLocalCurrency; ?>" value="" />
+        <?
+    }
+    ?>
+        
     <div class="shop_button registerpayment">
         <? 
         echo $this->__f("Register payment");

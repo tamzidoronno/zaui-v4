@@ -199,6 +199,7 @@ public interface IOrderManager {
     
     /**
      * Fetch all orders for a user.
+     * 
      * @param userId
      * @return
      * @throws ErrorException 
@@ -212,7 +213,7 @@ public interface IOrderManager {
     public void updateCountForOrderLine(String cartItemId, String orderId, Integer count);
     
     @Administrator
-    public void addSpecialPaymentTransactions(String orderId, Double amount, Integer transactionType, String comment, Date date);
+    public void addSpecialPaymentTransactions(String orderId, Double amount, Double amountInLocalCurrency, Integer transactionType, String comment, Date date);
     
     @Editor
     public Order creditOrder(String orderId);

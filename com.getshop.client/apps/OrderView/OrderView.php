@@ -114,6 +114,7 @@ class OrderView extends \MarketingApplication implements \Application {
             $orderLoss->itemId = $item->cartItemId;
             $orderLoss->count = $_POST['data'][$item->cartItemId]['count'];
             $orderLoss->amount = $_POST['data'][$item->cartItemId]['price'];
+            $orderLoss->amountInLocalCurrency = isset($_POST['data'][$item->cartItemId]['amountInLocalCurrency']) ? $_POST['data'][$item->cartItemId]['amountInLocalCurrency'] : null;
             $lossList[] = $orderLoss;
         }
         
@@ -127,9 +128,11 @@ class OrderView extends \MarketingApplication implements \Application {
         $amount = $_POST['data']['amount'];
         $type = $_POST['data']['type'];
         $comment = $_POST['data']['comment'];
+        $amountInLocalCurrency = isset($_POST['data']['localCurrency']) ? $_POST['data']['localCurrency'] : null;
         $date = $this->convertToJavaDate(strtotime($_POST['data']['date']));
         
-        $this->getApi()->getOrderManager()->addSpecialPaymentTransactions($orderid, $amount, $type, $comment, $date);
+        $this->getApi()->getOrderManager()->addSpecialPaymentTransactions($orderid, $amount, $amountInLocalCurrency, $type, $comment, $date);
+        $this->rePrintTab("paymenthistory");
     }
     
     public function setOrder() {

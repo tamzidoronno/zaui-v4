@@ -186,7 +186,7 @@ void setup()
 
 
 void aliveDebugLight() {
-	if (cycles > 300) {
+	if (cycles > 200) {
 		toggleLight();
 	}
 	cycles++;
@@ -195,7 +195,7 @@ void aliveDebugLight() {
 void loop()
 {
 
-	//aliveDebugLight();
+//	aliveDebugLight();
 
 	delay(1);
 

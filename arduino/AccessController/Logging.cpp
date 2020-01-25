@@ -21,7 +21,6 @@ unsigned int loggingStartsAtSlot = 800;
  */
 unsigned int maxLogSlot = 900;
 
-int timeBetweenEeachCheck = 15000;
 
 /**
  * We reserve 100 slots for data storage
@@ -47,7 +46,7 @@ Logging::Logging(DataStorage* dataStorage, Clock* clock) {
  *   byte[4-7] = Long byte representation of logline
  */
 void Logging::addLog(char* str, int size, bool shouldAck) {
-	this->sendDataAsap = true;
+	this->newDataToSend = true;
 
 	if (logLineNumber > 2000000) {
 		logLineNumber = 0;
@@ -95,6 +94,8 @@ void Logging::addLog(char* str, int size, bool shouldAck) {
 	logMetaData[7] = (logLineNumber >> 16) & 0xFF; // 0x34
 	logMetaData[8] = (logLineNumber >> 24) & 0xFF; // 0x12
 
+	logMetaData[9] = (unsigned char)1;
+
 	int pageLogLineSlot = loggingStartsAtSlot + 1 + currentLogSlot;
 	_dataStorage->writeCode(loggingStartsAtSlot + currentLogSlot, logMetaData);
 	_dataStorage->writeCode(pageLogLineSlot, logLineData);
@@ -131,14 +132,14 @@ void Logging::shiftAllLogEntries() {
 }
 
 void Logging::writeLogLineToEeprom() {
-	char buf[16] = {
+	unsigned char buf[16] = {
 			0x00, 0x00, 0x00, 0x00,
 			0x00, 0x00, 0x00, 0x00,
 			0x00, 0x00, 0x00, 0x00,
 			0x00, 0x00, 0x00, 0x00
 		};
 
-	ltoa(logLineNumber, buf, 10);
+	ltoa(logLineNumber, (char *)buf, 10);
 
 	buf[15] = 0xAA;
 
@@ -155,7 +156,7 @@ void Logging::loadLogLineFromEeprom() {
 	};
 
 	_dataStorage->getCode(logLineLevelStoredAt, buf);
-	logLineNumber = atol(buf);
+	logLineNumber = atol((char *)buf);
 }
 
 void Logging::init() {
@@ -165,27 +166,12 @@ void Logging::init() {
 void Logging::runSendCheck(Communication* communication) {
 	long timeSinceLastTransmit = millis() - lastTransmitTimestamp;
 
+	if (!newDataToSend || timeSinceLastTransmit < 700) {
+		return;
+	}
+
 	unsigned char metaData[16];
 	unsigned char logLine[16];
-
-	if (timeSinceLastTransmit <= timeBetweenEeachCheck && !sendDataAsap) {
-		return;
-	}
-
-	if (sendDataAsap) {
-		newDataToSend = true;
-		if (timeSinceLastTransmit < 700) {
-			return;
-		}
-	}
-
-	if (!newDataToSend) {
-		return;
-	}
-
-	bool found = false;
-	sendDataAsap = false;
-	this->lastTransmitTimestamp = millis();
 
 	for (int i = loggingStartsAtSlot; i < maxLogSlot; i++) {
 
@@ -197,18 +183,34 @@ void Logging::runSendCheck(Communication* communication) {
 		_dataStorage->getCode(i, metaData);
 
 		if (metaData[0] == 0x02) {
+			int counter = (int)metaData[9];
+
+			if (counter > 5) {
+				i++;
+				continue;
+			}
+
+			int sleepTime = 700 * (counter-1);
+			counter++;
+
+			if (timeSinceLastTransmit < sleepTime) {
+				return;
+			}
+
+			metaData[9] = (unsigned char)counter;
+			_dataStorage->writeCode(i, metaData);
+
 			_dataStorage->getCode(i+1, logLine);
-			found = true;
 			this->sendLogLine(communication, metaData, logLine);
+
 			return;
 		}
 
 		i++;
 	}
 
-	if (!found) {
-		newDataToSend = false;
-	}
+	newDataToSend = false;
+
 }
 
 void Logging::sendLogLine(Communication* comminucation, unsigned char* meta, unsigned char* logline) {
@@ -231,6 +233,7 @@ void Logging::sendLogLine(Communication* comminucation, unsigned char* meta, uns
 	longPackage[30] = meta[8];
 
 	comminucation->writeEncrypted(longPackage, 31, true);
+	this->lastTransmitTimestamp = millis();
 }
 
 bool Logging::handleAckMessage(unsigned char* msg) {
@@ -248,11 +251,17 @@ bool Logging::handleAckMessage(unsigned char* msg) {
 			found = true;
 		}
 
+		int msgSentCounter = (int)metaData[9];
+		if (msgSentCounter > 5) {
+			metaData[9] = (unsigned char)1;
+			_dataStorage->writeCode(i, metaData);
+		}
+
 		i++;
 	}
 
 	if (found) {
-		this->sendDataAsap = true;
+		lastTransmitTimestamp = lastTransmitTimestamp - 700;
 	}
 
 	return found;

@@ -77,7 +77,7 @@ bool Communication::checksum(unsigned char *buffer, unsigned char checksum) {
 
 
 void Communication::resetSerialBuffer() {
-	memset(serialDataBuffer, 0, sizeof(serialDataBuffer));
+	memset((unsigned char *)serialDataBuffer, 0, sizeof(serialDataBuffer));
 	while(Serial.available()) {
 		Serial.read();
 	}

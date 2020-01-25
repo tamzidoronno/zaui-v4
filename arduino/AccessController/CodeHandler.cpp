@@ -199,7 +199,7 @@ void CodeHandler::unlock(unsigned int triggeredBySlot) {
 	buf[8] = buf2[4];
 	buf[9] = buf2[5];
 
-	this->logging->addLog(buf, 10, true);
+	this->logging->addLog((char *)buf, 10, true);
 }
 
 void CodeHandler::internalUnlock() {

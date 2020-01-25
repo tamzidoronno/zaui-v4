@@ -17,11 +17,9 @@ Clock::Clock() {
 }
 
 void Clock::adjustClock(unsigned long tsamp) {
-
-
-	diffSinceStartup = tsamp;
-
-	return true;
+	if (diffSinceStartup == 0) {
+		diffSinceStartup = tsamp;
+	}
 }
 
 unsigned long Clock::getTime() {

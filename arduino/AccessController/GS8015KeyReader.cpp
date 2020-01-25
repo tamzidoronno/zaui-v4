@@ -5,10 +5,9 @@
  *      Author: root
  */
 
-#include "Arduino.h"
-
 #include "GS8015KeyReader.h"
-#include <avr/wdt.h>
+
+#include <Arduino.h>
 
 //Constructor
 GS8015KeyReader::GS8015KeyReader(Clock* clock) {
@@ -20,17 +19,22 @@ void GS8015KeyReader::setCodeHandler(CodeHandler* codeHandler) {
 }
 
 void GS8015KeyReader::setup() {
-	pinMode(this->buzzer, OUTPUT);
+  // Sleep pin reader
+//	  pinMode(17, OUTPUT); digitalWrite(17, LOW);
+
 	pinMode(this->backgroundLightning, OUTPUT);
+	digitalWrite(this->backgroundLightning, LOW);
 
-    pinMode(12, OUTPUT); digitalWrite(12, LOW);
-    pinMode(13, OUTPUT); digitalWrite(13, LOW);
-    pinMode(14, OUTPUT); digitalWrite(14, LOW);
+	pinMode(this->buzzer, OUTPUT);
 
-    digitalWrite(8, HIGH);
-    digitalWrite(9, HIGH);
-    digitalWrite(10, HIGH);
-    digitalWrite(11, HIGH);
+	pinMode(12, OUTPUT); digitalWrite(12, LOW);
+	pinMode(13, OUTPUT); digitalWrite(13, LOW);
+	pinMode(14, OUTPUT); digitalWrite(14, LOW);
+
+	digitalWrite(8, HIGH);
+	digitalWrite(9, HIGH);
+	digitalWrite(10, HIGH);
+	digitalWrite(11, HIGH);
 
 	this->showInitialized();
 }
@@ -92,13 +96,29 @@ void GS8015KeyReader::shiftright()
 	}
 }
 
+void GS8015KeyReader::changeBackgroundColor() {
+	if (currentBackGroundColor == 0) {
+		digitalWrite(5, LOW);
+		digitalWrite(15, LOW);
+		digitalWrite(16, LOW);
+	}
+
+	if (currentBackGroundColor == 1) {
+		digitalWrite(5, HIGH);
+		digitalWrite(15, LOW);
+		digitalWrite(16,  LOW);
+	}
+}
+
 bool GS8015KeyReader::check() {
-	// Turn on/off light
+
+//	// Turn on/off light
+	this->changeBackgroundColor();
+
 	unsigned long timePassedSinceLastPressed = millis() - lastTimeKeyPresse;
-	if (timePassedSinceLastPressed < 10000) {
-		digitalWrite(this->backgroundLightning, HIGH);
-	} else {
-		digitalWrite(this->backgroundLightning, LOW);
+	if (timePassedSinceLastPressed > 10000 && this->currentBackGroundColor != 0) {
+		this->currentBackGroundColor = 0;
+		this->changeBackgroundColor();
 	}
 
 	int keyPressed = 0;
@@ -115,6 +135,9 @@ bool GS8015KeyReader::check() {
 		digitalWrite(i + 11, LOW);
 
 		for (int j=1; j<=4; j++) {
+			if ((j+7) == 10) {
+				continue;
+			}
 			bool found = digitalRead(j+7) == LOW;
 			if (found && keyHoldingIn)
 				return false;
@@ -124,16 +147,19 @@ bool GS8015KeyReader::check() {
 
 				keyPressed = ((j-1)*3)+i;
 
-				digitalWrite(this->backgroundLightning, LOW);
-				digitalWrite(this->buzzer, HIGH);
+				digitalWrite(5, LOW);
+//				digitalWrite(this->buzzer, HIGH);
 				delay(100);
-				digitalWrite(this->buzzer, LOW);
-				digitalWrite(this->backgroundLightning, HIGH);
+//				digitalWrite(this->buzzer, LOW);
+				digitalWrite(5, HIGH);
+
 				lastTimeKeyPresse = millis();
 				keyHoldingIn = true;
 
 				_codeBuffer[0] = keyPressed == 11 ? keyPressed == 0x00 : (byte)keyPressed;
 				_dataAvailable = true;
+				this->currentBackGroundColor = 1;
+				this->changeBackgroundColor();
 				return true;
 			}
 

@@ -15,7 +15,6 @@
 
 AES128 aes128;
 
-static volatile unsigned long lastReceivedTimestamp = 0;
 
 volatile unsigned char	*Communication::readData;		// buffer for data retention
 
@@ -47,25 +46,13 @@ void Communication::initializeEncryption() {
  * We check the timestamp so its not possible to just
  * re-transmit encrypted packages to get access to old codes etc.
  */
-int Communication::checkIfTimeIsNewer(unsigned char *buffer) {
+void Communication::adjustClock(unsigned char *buffer) {
 	unsigned long timestampInPackage = buffer[11];
 	timestampInPackage = timestampInPackage * 256 + buffer[12];
 	timestampInPackage = timestampInPackage * 256 + buffer[13];
 	timestampInPackage = timestampInPackage * 256 + buffer[14];
 
-	if (timestampInPackage <= lastReceivedTimestamp) {
-		return 1;
-	}
-
-	unsigned long diffSinceStartup = this->_clock->diffSinceStartup;
-
-	if (diffSinceStartup != 0 && timestampInPackage > this->_clock->getTime()) {
-		return 2;
-	}
-
-	lastReceivedTimestamp = timestampInPackage;
-
-	return 0;
+	_clock->adjustClock(timestampInPackage);
 }
 
 /**
@@ -130,7 +117,7 @@ void Communication::decryptData() {
 
 	aes128.decryptBlock(decrypted, buffer);
 
-	int resultOfTimeCheck = checkIfTimeIsNewer(decrypted);
+	adjustClock(decrypted);
 
 
 //	if (resultOfTimeCheck == 1) {
@@ -146,7 +133,7 @@ void Communication::decryptData() {
 //	}
 
 
-	_clock->adjustClock(lastReceivedTimestamp);
+
 
 	for (int i=0; i<16; i++) {
 		this->readData[i] = decrypted[i];

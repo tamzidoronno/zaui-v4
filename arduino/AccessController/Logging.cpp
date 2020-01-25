@@ -21,7 +21,7 @@ unsigned int loggingStartsAtSlot = 800;
  */
 unsigned int maxLogSlot = 900;
 
-int timeBetweenEeachCheck = 5000;
+int timeBetweenEeachCheck = 15000;
 
 /**
  * We reserve 100 slots for data storage
@@ -83,13 +83,12 @@ void Logging::addLog(char* str, int size, bool shouldAck) {
 		logLineData[j] = str[j];
 	}
 
-	char timeStamp[4];
-	_clock->getTimeChar(timeStamp);
+	long time = _clock->getTime();
 
-	logMetaData[1] = timeStamp[0];
-	logMetaData[2] = timeStamp[1];
-	logMetaData[3] = timeStamp[2];
-	logMetaData[4] = timeStamp[3];
+	logMetaData[1] = time & 0xFF; // 0x78
+	logMetaData[2] = (time >> 8) & 0xFF; // 0x56
+	logMetaData[3] = (time >> 16) & 0xFF; // 0x34
+	logMetaData[4] = (time >> 24) & 0xFF; // 0x12
 
 	logMetaData[5] = logLineNumber & 0xFF; // 0x78
 	logMetaData[6] = (logLineNumber >> 8) & 0xFF; // 0x56
@@ -213,7 +212,7 @@ void Logging::runSendCheck(Communication* communication) {
 }
 
 void Logging::sendLogLine(Communication* comminucation, unsigned char* meta, unsigned char* logline) {
-	char longPackage[26];
+	char longPackage[31];
 
 	for (int i=0;i<9;i++) {
 		longPackage[i] = meta[i];
@@ -223,9 +222,15 @@ void Logging::sendLogLine(Communication* comminucation, unsigned char* meta, uns
 		longPackage[i+9] = logline[i];
 	}
 
-	longPackage[25] = 'L';
+	longPackage[26] = 'L';
 
-	comminucation->writeEncrypted(longPackage, 26, true);
+	// Add timestamp to package two as well to ensure encryption.
+	longPackage[27] = meta[5];
+	longPackage[28] = meta[6];
+	longPackage[29] = meta[7];
+	longPackage[30] = meta[8];
+
+	comminucation->writeEncrypted(longPackage, 31, true);
 }
 
 bool Logging::handleAckMessage(unsigned char* msg) {

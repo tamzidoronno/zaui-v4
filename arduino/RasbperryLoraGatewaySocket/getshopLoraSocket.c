@@ -9,10 +9,22 @@
 #include <errno.h>
 #include <arpa/inet.h> 
 
+#include <signal.h>
 #include <errno.h>
 #include <fcntl.h> 
 #include <termios.h>
+#include <stdlib.h>
+#include <signal.h>
 
+
+int childProcessPid = 0;
+
+void sigquit(int);
+
+void sigquit(int signo) {
+   printf("My DADDY has Killed me!!!\n");
+   exit(0);
+}
 
 int set_interface_attribs(int fd, int speed)
 {
@@ -71,6 +83,11 @@ int numPlaces (int n) {
     return 1 + numPlaces (n / 10);
 }
 
+void choppy( char *s ) {
+	while(*s && *s != '\n' && *s != '\r') s++;
+	    *s = 0;
+}
+
 int checkBuf(unsigned char* buf) {
     for (int i=0; i<256; i++) {
 
@@ -80,15 +97,17 @@ int checkBuf(unsigned char* buf) {
 	   for (int j=0; j<totalLength; j++) {
                buf[j] = buf[i+j];
 	   }
-	   printf("Its OK\n");
-           return totalLength;
+	   printf("From chip  : OK\n");
+           return 0;
        }
 
        int maxSize = 252 -7 -4;
        if (i <= maxSize && buf[i] == '+' && buf[i+1] == 'R' && buf[i+2] == 'C' && buf[i+3] == 'V') {
             maxSize = maxSize - 7 - 4;
             unsigned char fromBuf[10];
+            unsigned char buf3[10];
             memset(fromBuf, 0, sizeof fromBuf);
+            memset(buf3, 0, sizeof buf3);
 	    
             for (int j=0; j<7; j++) {
                if (buf[i+j+5] == ',') {
@@ -127,13 +146,14 @@ int checkBuf(unsigned char* buf) {
                 buf[j] = buf[i+j];
 	    }
 
-            printf("Total data: %02x %s\n", buf, buf);
+            printf("From device: id=%i, bytes:%i, totallength:%i, data: ", deviceId, datasize, totalLength, buf);
+
             return totalLength;
        }
     }
 
 
-    return 0;
+    return -1;
 }
 
 int main(int argc, char *argv[])
@@ -149,22 +169,15 @@ int main(int argc, char *argv[])
     }
     /*baudrate 115200, 8 bits, no parity, 1 stop bit */
     set_interface_attribs(fd, B115200);
-    //set_mincount(fd, 0);                /* set to pure timed read */
-
-    /* simple output */
-    wlen = write(fd, "Hello!\n", 7);
-    if (wlen != 7) {
-        printf("Error from write: %d, %d\n", wlen, errno);
-    }
-    tcdrain(fd);    /* delay for output */
 
     int sockfd = 0, n = 0;
     char recvBuff[1024];
     struct sockaddr_in serv_addr; 
 
-    if(argc != 2)
+
+    if(argc != 3)
     {
-        printf("\n Usage: %s <ip of server> \n",argv[0]);
+        printf("\n Usage: %s <ip of server> <token> \n",argv[0]);
         return 1;
     } 
 
@@ -192,52 +205,114 @@ int main(int argc, char *argv[])
        return 1;
     } 
 
-    write(sockfd, "token:481c9a46-4f34-41c9-bf27-f77896c8062c\r\n", 44 );
+    char str[80];
+    strcpy(str, "token:");
+    strcat(str, argv[2]);
+    strcat(str, "\r\n");
+    int writeSuccess = write(sockfd, str, 44 );
+    if (writeSuccess < 0) {
+	    exit(0);
+    }
 
-    if (fork() == 0) {
-        printf("Child should listen for messages from serial port %d\n", 2); 
-        unsigned char buf2[256];
-        
-	do {
-            unsigned char buf[80];
-            int rdlen;
+    printf("Connected successfully\n", writeSuccess);
+
+    int childProcess = fork();
+    if (childProcess == 0) {
+	signal(SIGQUIT, SIG_DFL);
+        int aliveProcess = fork();
+	if (aliveProcess != 0) {
+	    signal(SIGQUIT, SIG_DFL);
+	    do {
+	       sleep(60);
+               printf("Checking if we still have communication with server\n");
+               int writtenBytes = send(sockfd, "A\r\n", 3, MSG_NOSIGNAL);
+	       if (writtenBytes < 0) {
+                   printf("Disconnected from server\n");
+	           kill(childProcessPid, SIGQUIT);
+	    	   _exit(0);
+	       }
+	    } while(1);
+	} else {
+	    signal(SIGQUIT, SIG_DFL);
+            printf("Listening for messages from /dev/ttyAMA0\n"); 
+            unsigned char buf2[256];
+            
+	    do {
+                unsigned char buf[80];
+                int rdlen;
     
-            rdlen = read(fd, buf, 1);
-            if (rdlen > 0) {
-	        for (int g=0; g<255; g++) {
-                    buf2[g] = buf2[g+1];
-                }
+                rdlen = read(fd, buf, 1);
+                if (rdlen > 0) {
+	            for (int g=0; g<255; g++) {
+                        buf2[g] = buf2[g+1];
+                    }
 
-		buf2[255] = buf[0];
-		int totalLength = checkBuf(buf2);
-		if (totalLength > 0) {
-                    write(sockfd, buf2, totalLength );
-                    memset(buf2, 0, sizeof buf2);
-                }
-            } else if (rdlen < 0) {
-                printf("Error from read: %d: %s\n", rdlen, strerror(errno));
-            } else {  /* rdlen == 0 */
-                printf("Timeout from read\n");
-            }               
-            /* repeat read to get full message */
-        } while (1);
+	    	buf2[255] = buf[0];
+	    	int totalLength = checkBuf(buf2);
+	    	if (totalLength == 0) {
+                        memset(buf2, 0, sizeof buf2);
+	    	}
+
+	    	if (totalLength > 0) {
+	                for (int ii = 0; ii < totalLength; ii++) {
+	    		if (buf2[ii] != '\n' && buf2[ii] != '\r' && buf2[ii] != '\0') {
+	                        printf("%c", buf2[ii]);
+	    		}
+	                }
+
+	    	    printf(" | ");
+	                for (int ii = 0; ii < totalLength; ii++) {
+	                    printf( "%2x ", buf2[ii]);
+	                }
+
+	                printf("\n");
+                        int writtenBytes = send(sockfd, buf2, totalLength, MSG_NOSIGNAL);
+	    	    if (writtenBytes < 0) {
+                        printf("Disconnected from server\n");
+	    		kill(childProcessPid, SIGQUIT);
+	    		_exit(0);
+	    	    }
+                        memset(buf2, 0, sizeof buf2);
+                    }
+                } else if (rdlen < 0) {
+                    printf("Error from read: %d: %s\n", rdlen, strerror(errno));
+                } else {  /* rdlen == 0 */
+                    printf("Timeout from read\n");
+                }               
+                /* repeat read to get full message */
+            } while (1);
+	}
 
     } else {
+        printf("Listening for messages from socket\n");
+	childProcessPid = childProcess;
         do {
-            printf("Parent is lisetening for messages from socket= %d\n", 1); 
             memset(recvBuff, 0, sizeof recvBuff);
-            while ( (n = read(sockfd, recvBuff, sizeof(recvBuff)-1)) > 0)
-            {
-             
-
-	    write(fd, recvBuff, n);
-	    printf("Sent command to device, lenght: %i\n", n);
+            while ( (n = read(sockfd, recvBuff, sizeof(recvBuff)-1)) > 0) {
+	        write(fd, recvBuff, n);
                 recvBuff[n] = 0;
-                if(fputs(recvBuff, stdout) == EOF)
-                {
-                    printf("\n Error : Fputs error\n");
+	        printf("From server: " , recvBuff);
+
+                for (int ii = 0; ii < n; ii++) {
+                    if (recvBuff[ii] != '\n' && recvBuff[ii] != '\r' && recvBuff[ii] != '\0') {
+                        printf("%c", recvBuff[ii]);
+                    }
                 }
+
+		printf(" | ");
+
+                for (int ii = 0; ii < n; ii++) {
+                    if (recvBuff[ii] != '\n' && recvBuff[ii] != '\r' && recvBuff[ii] != '\0') {
+	                printf( "%2x ", recvBuff[ii]);
+                    }
+                }
+
+                printf("\n");
             } 
+
+	    if(n == 0) {
+	        sleep(1);
+	    }
 
             if(n < 0)
             {

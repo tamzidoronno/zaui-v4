@@ -97,10 +97,16 @@ bool CodeHandler::testCodes(unsigned char* codeFromPanel) {
 	Serial.print(codeFromPanel[15], HEX);
 	Serial.print("\r\n");
 
-	if (!this->isLocked() && codeFromPanel[15] == 0x0A) {
-		this->lock(0);
-		return false;
+	if (!this->isLocked() && codeFromPanel[15] == 0x0A && codeFromPanel[14] == 0x01 && codeFromPanel[13] == 0x0A) {
+		this->resetCloseTimeStamp();
+    this->changeState('U');
+    return false;
 	}
+
+  if (!this->isLocked() && codeFromPanel[15] == 0x0A && codeFromPanel[14] == 0x02 && codeFromPanel[13] == 0x0A) {
+   this->changeState('N');
+    return false;
+  }
 
 	for (unsigned int i=1; i<=800; i++) {
 
@@ -193,7 +199,7 @@ void CodeHandler::unlock(unsigned int triggeredBySlot) {
 	buf[8] = buf2[4];
 	buf[9] = buf2[5];
 
-	this->logging->addLog(buf, 10, true);
+	this->logging->addLog((char *)buf, 10, true);
 }
 
 void CodeHandler::internalUnlock() {

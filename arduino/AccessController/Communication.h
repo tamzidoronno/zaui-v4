@@ -24,7 +24,7 @@ class Communication {
 		void Communication::debugDataArray(unsigned char* data, int size);
 		void Communication::printByteArray(byte inArray[], bool lineFeed);
 		void Communication::encryptAndSend(byte* msgToSend);
-		int Communication::checkIfTimeIsNewer(unsigned char *buffer);
+		void Communication::adjustClock(unsigned char *buffer);
 
 		void Communication::resetSerialBuffer();
 		void Communication::shiftSerialBufferLeft();

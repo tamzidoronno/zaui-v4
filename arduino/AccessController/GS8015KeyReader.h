@@ -33,10 +33,15 @@ class GS8015KeyReader : public CodeReader {
 		volatile unsigned char * _tmpCodeBuffer[26];
 		void showInitialized();
 		void shiftright();
+		void changeBackgroundColor();
+
+		// Blue
 		int backgroundLightning = 5;
 		int buzzer = 4;
 		unsigned long lastTimeKeyPresse = 0;
 		bool keyHoldingIn = false;
+
+		int currentBackGroundColor = 0;
 
 };
 

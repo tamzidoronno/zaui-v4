@@ -21,8 +21,7 @@ class Logging {
 		bool handleAckMessage(unsigned char* msg);
 
 	private:
-		bool sendDataAsap = false;
-		bool newDataToSend = false;
+		bool newDataToSend = true;
 		unsigned long lastTransmitTimestamp;
 		Clock* _clock;
 		DataStorage* _dataStorage;

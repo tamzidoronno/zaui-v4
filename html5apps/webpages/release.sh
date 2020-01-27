@@ -27,6 +27,7 @@ if [ -d "$DIR" ]; then
 
 	echo "Uploading package";
 	scp package.tar.gz naxa@10.0.4.50:.
+	rm -rf package.tar.gz
 
 	ssh naxa@10.0.4.50 "./release.sh $1"
 else

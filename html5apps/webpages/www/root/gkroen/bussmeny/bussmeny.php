@@ -17,6 +17,6 @@ class bussmeny extends PageCommon {
     public $subpageof = "resturant";
     public $hiddenFromMenu = false;
     
-    public $menuEntries = array('en' => "Bussmeny", "no" => "Bussmeny");
-    public $menuLargeDesc = array('en' => "Vi kan sette sammen en meny til ditt reisefølge.", "no" => "Vi kan sette sammen en meny til ditt reisefølge.");
+    public $menuEntries = array('en' => "Bus menu", "no" => "Bussmeny");
+    public $menuLargeDesc = array('en' => "Traveling as a group, or having a function? We can put together a menu if you would like something thats not currently on our menu.", "no" => "Vi kan sette sammen en meny til ditt reisefølge.");
 }

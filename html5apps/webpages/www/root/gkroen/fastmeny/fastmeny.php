@@ -19,5 +19,5 @@ class fastmeny extends PageCommon {
     public $menuSequence = -1;
     
     public $menuEntries = array('en' => "Menu", "no" => "Fast Meny");
-    public $menuLargeDesc = array('en' => "A pos suitable to sell more then just rooms.", "no" => "Her finner du informasjon om hva som «står på tavla» akkurat nå. Menyen varierer gjennom året.");
+    public $menuLargeDesc = array('en' => "Here you find our current menu, this may change during the year.", "no" => "Her finner du informasjon om hva som «står på tavla» akkurat nå. Menyen varierer gjennom året.");
 }

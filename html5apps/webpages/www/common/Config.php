@@ -12,5 +12,5 @@
  * @author ktonder
  */
 class Config {
-    public static $domain = "ba10";
+    public static $domain = "xprosjekt";
 }

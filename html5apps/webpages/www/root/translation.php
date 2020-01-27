@@ -16,6 +16,10 @@ $router = new PageRouter();
         <?php
         $keys = $contentManager->getAllKeysForPage($router->getCurrentPageName());
         foreach ($keys as $key) {
+            $lang = $router->getCurrentPage()->getCurrentLanguage();
+            if($lang != DomainConfig::$defaultLang) {
+                $key .= "_" .  $lang;
+            }
             echo "<div class='areaentry' keyid='$key'>".$key."</div>";
         }
         

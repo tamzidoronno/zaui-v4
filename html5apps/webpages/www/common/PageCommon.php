@@ -16,25 +16,34 @@ class PageCommon {
     
     private $currentLanguage = "no";
     
+    private $languagesSupported = ["en","no"];
+    
     public $canNavigateTo = true;
     
     public $menuSequence = 0;
     
     public function getMenuName() {
-        return $this->menuEntries[$this->currentLanguage];
+        return $this->menuEntries[$this->getCurrentLanguage()];
     }
     
     public function getLargeMenuText() {
         if (isset($this->menuLargeDesc)) {
-            return $this->menuLargeDesc[$this->currentLanguage];
+            return $this->menuLargeDesc[$this->getCurrentLanguage()];
         } 
         
         return "";
     }
     
+    public function getCurrentLanguage() {
+        if(isset($_SESSION['language'])) {
+            return $_SESSION['language'];
+        }
+        return $this->currentLanguage;
+    }
+    
     public function getDescription() {
         if (isset($this->description)) {
-            return $this->description[$this->currentLanguage];
+            return $this->description[$this->getCurrentLanguage()];
         } 
         return "";
     }

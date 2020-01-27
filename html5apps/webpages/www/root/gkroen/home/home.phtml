@@ -109,7 +109,7 @@
                     "jsendpoint": "https://gkroen.getshop.com/",
                     "domain" : "default",
                     "nextPage" : "/index.php?page=booking",
-                    "language" : "no" 
+                    "language" : "<?php echo $this->getCurrentPage()->getCurrentLanguage(); ?>" 
                 }
             );
         });

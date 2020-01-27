@@ -19,7 +19,17 @@ class ContentManager extends PluginBase {
     
     private function renderInner($name, $commonPage=false) {
         $database = new Database();
+        
+        if(isset($_SESSION['language'])) {
+            $origname = $name;
+            $name .= "_" . $_SESSION['language'];
+        }
+        
         $data = $database->get($name, get_class($this));
+        if(!$data) {
+            $data = $database->get($origname, get_class($this));
+        }
+        
         
         echo "<div class='contentarea'>";
         

@@ -18,5 +18,5 @@ class buffet extends PageCommon {
     public $hiddenFromMenu = false;
     
     public $menuEntries = array('en' => "Buffet/ Koldtbord", "no" => "Buffet/ Koldtbord");
-    public $menuLargeDesc = array('en' => "A pos suitable to sell more then just rooms.", "no" => "På G – Kroen kan man velge form og innhold på bevertningen etter eget ønske.");
+    public $menuLargeDesc = array('en' => "", "no" => "På G – Kroen kan man velge form og innhold på bevertningen etter eget ønske.");
 }

@@ -18,5 +18,5 @@ class selskapsmeny extends PageCommon {
     public $hiddenFromMenu = false;
     
     public $menuEntries = array('en' => "Menu", "no" => "Selskaps Meny");
-    public $menuLargeDesc = array('en' => "A pos suitable to sell more then just rooms.", "no" => "Alle hovedretter serveres med ferske grønnsaker. Du velger potetvariant.");
+    public $menuLargeDesc = array('en' => "All mains are served with fresh produce, and you can choose between potaotes and fries.", "no" => "Alle hovedretter serveres med ferske grønnsaker. Du velger potetvariant.");
 }

@@ -8,4 +8,8 @@
 
 class DomainConfig {
     static $password = "4324fvdasf24234";
+        static $languagesSupported = array(
+        "no" => "Norsk"
+    );
+    static $defaultLang = "no";
 }

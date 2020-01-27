@@ -5,8 +5,16 @@ include '../common/autoloader.php';
 $router = new PageRouter();
 $menuHelper = new MenuHelper();
 
+$origLanguage = DomainConfig::$defaultLang;
 if (isset($_GET['tokenpass'])) {
     $_SESSION['tokenpass'] = $_GET['tokenpass'];
+}
+if (isset($_GET['language'])) {
+    $_SESSION['language'] = $_GET['language'];
+ 
+   if($_SESSION['language'] == $origLanguage) {
+        unset($_SESSION['language']);
+    }
 }
 ?>  
 <!DOCTYPE html>

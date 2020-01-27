@@ -30,6 +30,16 @@ class MenuHelper {
                 echo "</a>";
             }
         }
+        
+        $languages = (array)DomainConfig::$languagesSupported;
+        if(sizeof($languages) > 0) {
+            echo "<span class='languageselection'>";
+            foreach($languages as $lang => $text) {
+                echo "<a href='?language=$lang'>$text</a> ";
+            }
+            echo "</span>";
+        }
+        
     }
 
     public function printSubPages($pages, $page) {

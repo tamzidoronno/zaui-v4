@@ -28,6 +28,8 @@ body[pageid="home"] .body {
     color: #FFF;
 }
 
+.languageselection { position:absolute; right: 10px; top: 10px; }
+
 .header_inner, 
 .contentrow .row_inner, 
 .footer_row .footer_inner {
@@ -52,6 +54,7 @@ body[pageid="home"] .body {
 
 .menu {
     margin-top: 40px;
+    position:inherit !important;
 }
 
 

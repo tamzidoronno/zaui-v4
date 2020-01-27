@@ -18,5 +18,5 @@ class catering extends PageCommon {
     public $hiddenFromMenu = false;
     
     public $menuEntries = array('en' => "Catering", "no" => "Catering");
-    public $menuLargeDesc = array('en' => "Vi kan levere alt av mat til ditt selskap. Ta kontakt for tilbud.", "no" => "Vi kan levere alt av mat til ditt selskap. Ta kontakt for tilbud.");
+    public $menuLargeDesc = array('en' => "We offer take-away and catering. Please contact us for more information.", "no" => "Vi kan levere alt av mat til ditt selskap. Ta kontakt for tilbud.");
 }

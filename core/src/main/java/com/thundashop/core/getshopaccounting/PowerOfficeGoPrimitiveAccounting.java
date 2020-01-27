@@ -22,8 +22,10 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Component;
 import com.powerofficego.data.SalesOrderTransfer;
+import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.productmanager.data.AccountingDetail;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -34,6 +36,9 @@ import java.util.stream.Collectors;
 public class PowerOfficeGoPrimitiveAccounting extends AccountingSystemBase {
 
     private String token;
+    
+    @Autowired
+    MessageManager messageManager;
 
     @Override
     public List<SavedOrderFile> createFiles(List<Order> orders, Date start, Date end) {
@@ -174,6 +179,7 @@ public class PowerOfficeGoPrimitiveAccounting extends AccountingSystemBase {
                     if(detail == null) {
                         logPrint("nullpointer occurded when it should not.");
                         addToLog("nullpointer occurded when it should not on account: " + toAdd.accountNumber);
+                        messageManager.sendErrorNotify("Null exception, acount does not exists on account: " + toAdd.accountNumber);
                     }
                     toAdd.vatCode = detail.taxgroup + "";
                 } else {

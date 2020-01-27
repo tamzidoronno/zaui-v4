@@ -18,19 +18,9 @@
 
 <div class="contentrow row_2"> 
     <div class="row_inner">
-        <div class="col col_1 col_size_3 mobilebox">
+        <div class="col col_1 col_size_1 mobilebox">
             <?php
                 ContentManager::render("row2_col_1");
-            ?>
-        </div>
-        <div class="col col_2 col_size_3 mobilebox">
-            <?php
-                ContentManager::render("row2_col_2");
-            ?>
-        </div>
-        <div class="col col_3 col_size_3 mobilebox">
-            <?php
-                ContentManager::render("row2_col_3");
             ?>
         </div>
     </div>
@@ -56,19 +46,86 @@
     </div>
 </div>
 
-<div class="contentrow row_4"> 
+
+<div class="contentrow row_3"> 
     <div class="row_inner">
-        <?php
-            ContentManager::render("row_4");
-        ?>
-        
+        <div onclick="showGallary();" class="col col_2 col_size_2 mobilebox">
+            <div class="mainimage"><img src="jvcinvest/images/Bolig1.jpg"/></div>
+            <div class="thumbs">
+                <img class="thumb" src="jvcinvest/images/Bolig2.jpg"/>
+                <img class="thumb" src="jvcinvest/images/Bolig3.jpg"/>
+                <img class="thumb" src="jvcinvest/images/Bolig4.jpg"/>
+                <img class="thumb" src="jvcinvest/images/Bolig5.jpg"/>
+                <img class="thumb" src="jvcinvest/images/Bolig6.jpg"/>
+                <img class="thumb" src="jvcinvest/images/Bolig8.jpg"/>
+                <img class="thumb" src="jvcinvest/images/Bolig7.jpg"/>
+            </div>
+        </div>  
+        <div class="col col_1 col_size_2 mobilebox">
+            <?php
+                ContentManager::render("row40_col_1");
+            ?>
+        </div>
+
     </div>
 </div>
-    <img src="/jvcinvest/images/test.png" style="width:100%;">
+
+
+<a name="contactus"></a>
+
+<div class="contactus contentrow row_4">
+    <div class="row_inner">
+    <form id='myForm' action="index.php#contactus" method="POST">
+        <?php
+            ContentManager::render("c_contactus_top2");
+        ?>
+        <input type='textfield' style='width: calc(100% - 295px);' name='name'/>
+        <br/> 
+        <?php
+            ContentManager::render("c_contactus_email");
+        ?>
+        <input type='textfield' style='width: calc(100% - 295px);' name='email'/>
+        <br/> 
+        <?php
+            ContentManager::render("c_contactus_phone");
+        ?>
+        <input type='textfield' style='width: calc(100% - 295px);' name='phone'/>
+
+        <br/>
+        <?php
+            ContentManager::render("c_contactus_message");
+        ?>
+        <br/>
+        <textarea  name='content' style='border: solid 1px; box-sizing: border-box; width: calc(100% - 250px); border: solid 1px #DDD; height: 200px; '></textarea>
+
+        <?php
+        $contactUs = new home();
+        $sent = $contactUs->sendEmail();
+        if ($sent) {
+            ?>
+            <div class='sentsuccessmessage'>
+                <?php
+                    ContentManager::render("contactus_sentsuccess");
+                ?>
+            </div>
+            <?php
+        }
+
+        $pluginBase = new PluginBase();
+        $isLoggedIn = $pluginBase->isLoggedIn();
+        $onClick = !$isLoggedIn ? 'document.getElementById("myForm").submit();' : "";
+        ?>
+        <div onclick='<?php echo $onClick; ?>' style='margin-left: 20px; box-sizing: border-box; width: calc(100% - 250px); margin: 0 auto;' class='button sendbutton'><?php ContentManager::render("c_send_message"); ?></div>
+    </form>
+    </div>
+</div>
+
 
 <script>
        $('.slider').sss({slideShow : true});
 </script>
+
+<div id="pswp" class="pswp"></div>
 
 <script>
     gsisdevmode = false;
@@ -87,4 +144,36 @@
             );
         });
     });
+</script>
+
+<script>
+    function showGallary() {
+        var pswpElement = document.querySelectorAll('.pswp')[0];
+
+        // build items array
+        var items = [
+            { src: 'jvcinvest/images/Bolig1.jpg', w: 1200, h: 900 },
+            { src: 'jvcinvest/images/Bolig2.jpg', w: 1200, h: 900 },
+            { src: 'jvcinvest/images/Bolig3.jpg', w: 1200, h: 900 },
+            { src: 'jvcinvest/images/Bolig4.jpg', w: 1200, h: 900 },
+            { src: 'jvcinvest/images/Bolig5.jpg', w: 1200, h: 900 },
+            { src: 'jvcinvest/images/Bolig6.jpg', w: 1200, h: 900 },
+            { src: 'jvcinvest/images/Bolig7.jpg', w: 1200, h: 900 },
+            { src: 'jvcinvest/images/Bolig8.jpg', w: 1200, h: 900 }
+        ];
+
+        // define options (if needed)
+        var options = {
+            // optionName: 'option value'
+            // for example:
+            index: 0 // start at first slide
+        };
+
+        // Initializes and opens PhotoSwipe
+        var gallery = new PhotoSwipe( pswpElement, PhotoSwipeUI_Default, items, options);
+        gallery.init();
+    }
+    
+    
+    
 </script>

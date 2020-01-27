@@ -15,7 +15,7 @@ class rooms extends PageCommon {
     public $title = "Rooms";
     public $title_rewrite = "rooms";
     public $subpageof = "";
-    public $hiddenFromMenu = false;
+    public $hiddenFromMenu = true;
     
     public $menuEntries = array('en' => "Rooms", "no" => "Våre Rom");
 }

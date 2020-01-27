@@ -1,0 +1,148 @@
+<div class='addonsArea'>
+<?php
+/* @var $this ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
+$addons = $this->getPmsBookingRoom()->addons;
+
+if(sizeof($addons) == 0) {
+    ?>
+    <div class="kaipal infobox">
+        <div class="image sad"></div>
+        <div class="textbox">
+            <div class="header"><? echo $this->__f("No addons added yet"); ?></div>
+            <div class="text">
+                <?
+                echo "<div>" . $this->__f("Hi, we do not have any addons added to this room yet.") . "</div>";
+                echo "<div>" . $this->__f("Addons are an excelent way to charge more, for example parking, dinner, extra bed, etc.") . "</div>";
+                ?>    
+                <div class="buttonarea">
+                    <div class="buttonareaheader"><? echo $this->__f("What would you like to do?"); ?></div>
+                    <div class="shop_button addaddonsbutton"><? echo $this->__f("Add addon"); ?></div>
+                    <div class='addAddonsArea'>
+                        <i class='fa fa-angle-up' style='position: absolute;top: -10px;right: 45px;color:#bbb;'></i>
+                        <div class='addAddonsAreaInner'></div>
+                    </div>
+                </div>
+                
+
+            </div>
+        </div>
+    </div>
+    <?php
+} else {
+    ?>
+    <div class="kaipal infobox">
+        <div class="image talking"></div>
+        <div class="textbox">
+            <div class="text">
+                <div class="buttonarea">
+                    <div class="buttonareaheader"><? echo $this->__f("What would you like to do?"); ?></div>
+                    <div class="shop_button addaddonsbutton"><? echo $this->__f("Add more addons"); ?></div>
+                    <div class="shop_button removeselectedaddons"><i class='fa fa-trash-o'></i> <? echo $this->__f("Remove selected addons"); ?></div>
+                    <div class='addAddonsArea'>
+                        <i class='fa fa-angle-up' style='position: absolute;top: -10px;right: 45px;color:#bbb;'></i>
+                        <div class='addAddonsAreaInner'></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php
+}
+
+if(sizeof($addons) > 0) {
+    ?>
+    <div class='editaddonpanel' style='display:none;'></div>
+    <h3>Addons added</h3>
+    <div class='row headercol'>
+        <div class='col col-1'></div><div class='col col-2'>Name</div><div class='col col-3'>Count</div><div class='col col-4'>Total</div>
+        <div class='col col-2'>Included in room</div>
+    </div>
+
+    <?php
+    $productAddonPrinted = array();
+     foreach($addons as $addon) {
+        if(in_array($addon->productId, $productAddonPrinted)) {
+            continue;
+        }
+        $addonsCount = 0;
+        $addonsTotal = 0;
+        foreach($addons as $addon2) {
+            if($addon2->productId != $addon->productId) {
+                continue;
+            }
+            $addonsCount += $addon2->count;
+            $addonsTotal += ($addon2->count * $addon2->price);
+        }
+        echo "<div class='row' productId='".$addon->productId."'>";
+        echo "<div class='col col-1'><i class='fa fa-square-o toggleRemoveAddonCheckBox forGroup'></i></div>";
+        
+        $name = $this->getApi()->getProductManager()->getProduct($addon->productId)->name;
+        
+        echo "<div class='col col-2'>".$name."</div>";
+        echo "<div class='col col-3'>".$addonsCount."</div>";
+        echo "<div class='col col-4'>".$addonsTotal."</div>";
+        echo "<div class='col col-4'></div>";
+        echo "</div>";
+        $productAddonPrinted[] = $addon->productId;
+        $counter = 0;
+        foreach($addons as $addonRow) {
+            if($addon->productId != $addonRow->productId) {
+                continue;
+            }
+            $percentagePrice = $addon->percentagePrice > 0 ? "(" . $addon->percentagePrice . "%)" : "";
+            $disabledPricing = $addon->percentagePrice > 0 ? "DISABLED" : "";
+            echo "<div style='font-size:20px;' class='addonitemrow' addonid='".$addonRow->addonId."'>";
+            echo "<div class='col col-1'><i class='fa fa-square-o toggleRemoveAddonCheckBox' style='margin-top:5px;' productId='".$addon->productId."' addonid='".$addonRow->addonId."'></i></div>";
+            echo "<div class='col col-2'><input type='text' class='gsniceinput1' gsname='date' value='".date("d.m.Y", strtotime($addonRow->date))."' $disabledPricing></div>";
+            echo "<div class='col col-3'><input type='text' class='gsniceinput1' gsname='count' value='".$addonRow->count."' style='width:20px;' $disabledPricing></div>";
+            echo "<div class='col col-4'><input type='text' class='gsniceinput1' gsname='price' value='".$addonRow->price."' style='width:40px;' $disabledPricing></div>";
+            echo "<div class='col col-5'>";
+            $checked = "";
+            if($addonRow->isIncludedInRoomPrice) {
+                $checked = "CHECKED";
+            }
+                echo "<input type='checkbox' gsname='includedinroomprice' $checked $disabledPricing>";
+            echo $percentagePrice;
+            echo "</div>";
+            if($counter == 0 || $addonRow->isUniqueOnOrder) {
+                echo "<div class='col col-6'><input type='text' class='gsniceinput1' gsname='name' value='".$addonRow->name."' style='width:220px;'></div>";
+            }
+            
+            echo "</div>";
+            $counter++;
+        }
+     }
+     echo "<div style='text-align:right; padding: 10px;'>";
+     echo "<span class='shop_button saveaddons'>Save addons</span>";
+     echo "</div>";
+}
+?>
+
+<span gstype='clicksubmit' gscached='true' gsname="id" gsvalue="<?php echo $this->bookingEngineBooking->id; ?>" method="reloadAddons"  gstoarea=".addonsArea" id='reloadaddonsarea'></span>
+</div>
+<style>
+    .PmsBookingGroupRoomView .addons .col { width: 18% !important; }
+    .PmsBookingGroupRoomView .addons .row {
+        font-size: 20px;
+    }
+    .PmsBookingGroupRoomView .addons .col-1,
+    .PmsBookingGroupRoomView .addons .col-5 { width: 20px !important; }
+    .PmsBookingGroupRoomView .addons .col-4 { width: 90px !important; }
+    
+    .PmsBookingGroupRoomView .removeselectedaddons {
+    background-color: red;
+    display: block;
+    width: 241px;
+    float: left;
+    margin-right: 10px;
+}
+    .PmsBookingGroupRoomView .addAddonsArea {
+    position: absolute;
+    background: #c7f7f9;
+    z-index: 1;
+    width: 400px;
+    border: solid 1px #bbb;
+    margin-top: 5px;
+    display: none;
+}
+</style>

@@ -1,5 +1,5 @@
 <?php
-/* @var $this \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
+/* @var $this ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
 $logs = $this->getLogEntries();
 $printed = false;
 
@@ -37,8 +37,7 @@ $notifications['booking_paymentmissing'] = "When payment is missing (autosending
 $notifications['booking_sendpaymentlink'] = "Sending the payment link (manually sending)";
 $notifications['booking_unabletochargecard'] = "Not able to charge card";
 
-
-foreach($logs as $log) {
+foreach((array)$logs as $log) {
     $type = $log->logType;
     $messageForm = "";
     if(stristr($log->logType, "_email")) { $messageForm = "email"; }

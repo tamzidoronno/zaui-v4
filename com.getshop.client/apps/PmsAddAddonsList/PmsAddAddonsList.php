@@ -22,10 +22,16 @@ class PmsAddAddonsList extends \WebshopApplication implements \Application {
     }
     
     public function addAdvancedAddons() {
-        $app = new \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView();
-        $app->setData();
-        $selectedRoom = $app->getSelectedRoom();
-        $booking = $app->getPmsBooking();
+        $pmsBookingGroupView = new \ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView();
+        if($pmsBookingGroupView->useNew()) {
+            $selectedRoom = $pmsBookingGroupView->getPmsBookingRoom();
+            $booking = $pmsBookingGroupView->getPmsBooking();
+        } else {
+            $app = new \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView();
+            $app->setData();
+            $selectedRoom = $app->getSelectedRoom();
+            $booking = $app->getPmsBooking();
+        }
         
         $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
         $addonToUse = null;

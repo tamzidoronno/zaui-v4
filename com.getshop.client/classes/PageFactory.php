@@ -167,6 +167,7 @@ class PageFactory {
         $page->addExtraApplications('9a6ea395-8dc9-4f27-99c5-87ccc6b5793d');
         $page->addExtraApplications('2e51d163-8ed2-4c9a-a420-02c47b1f7d67');
         $page->addExtraApplications('bce90759-5488-442b-b46c-a6585f353cfe');    
+        $page->addExtraApplications('3e2bc00a-4d7c-44f4-a1ea-4b1b953d8c01');    
         
         // HOME
         $page = new \ModulePage("home", "pms");

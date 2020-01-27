@@ -1,0 +1,94 @@
+<?php
+/* @var $this ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
+$booking = $this->getPmsBooking();
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+$room = $this->getPmsBookingRoom();
+$cleaningInterval = $room->intervalCleaning;
+$intervalCleaningDate = $room->date->cleaningDate;
+$roomLog = $this->getSelectedRoomLog();
+if(!$cleaningInterval) {
+    $cleaningInterval = $config->cleaningInterval;
+}
+$cleaninglog = array();
+if($room->bookingItemId) {
+    $cleaninglog = $this->getApi()->getPmsManager()->getCleaningHistoryForItem($this->getSelectedMultilevelDomainName(), $room->bookingItemId);
+//    echo "<pre>";
+//    print_r($cleaninglog);
+//    echo "</pre>";
+}
+?>
+<br>
+<div class="isnotactive">
+    <div class="kaipal infobox">
+        <div class="image talking"></div>
+        <div class="textbox" style='height:70px;'>
+            <div class="text">
+                <?
+                echo $this->__f("This cleaning section gives you the oportunity to communicate with the cleaning personell by entering a text in the area below. The message will be displayed in the getshop.express area.");
+                ?>    
+            </div>
+        </div>
+    </div>
+</div>
+
+<table width='100%'>
+    <tr>
+        <td valign='top' width='50%' style='padding-right:50px;'>
+            <h3>Actions</h3>
+            <div gstype='form' method='setCleaningComment'>
+                <input type='hidden' gsname='roomid' value='<?php echo $room->pmsBookingRoomId; ?>'>
+                <textarea style='width:100%;height:100px;overflow: hidden; box-sizing: border-box; padding: 5px;' gsname='comment'><?php echo $room->cleaningComment; ?></textarea>
+                <span class='shop_button' style='float:right;width:250px;' gstype='submit'>Set message to cleaning staff</span>
+                <div style='clear:both;'></div>
+            </div>
+            <br>
+            <div style='text-align:right;' gstype='form' method='setCleaningInterval'>
+                <input type='hidden' gsname='roomid' value='<?php echo $room->pmsBookingRoomId; ?>'>
+                <input type='text' class='gsniceinput1' style='width:30px;text-align: center;' value='<?php echo $cleaningInterval; ?>' gsname='interval'> 
+                <span class='shop_button' style='width:200px;' gstype='submit'>Set cleaning interval</span>
+            </div>
+            <br>
+            <div style='text-align:right;' gstype='form' method='setCleaningDate'>
+                <input type='hidden' gsname='roomid' value='<?php echo $room->pmsBookingRoomId; ?>'>
+                <input type='text' class='gsniceinput1' style='width:80px;text-align: center' value='<?php echo date("d.m.Y", strtotime($intervalCleaningDate)); ?>' gsname='date'> 
+                <span class='shop_button' style='width:170px; float:right;' gstype='submit'>Set start date for cleaning</span>
+            </div>
+            <br>
+            <div>
+                <span class='shop_button' style='width:270px; float:right; margin-bottom:2px;margin-left:5px;' gsclick='markRoomCleanedWithoutLogging' roomid='<?php echo $room->pmsBookingRoomId; ?>'>Mark room as clean without logging</span> 
+                <span class='shop_button' style='width:250px; float:right;' gsclick='markRoomCleanedWithLogging' roomid='<?php echo $room->pmsBookingRoomId; ?>'>Mark room as clean with logging</span>
+            </div>
+            <br>
+            <br>
+            <br>
+            <h3>Cleaning history for this guest</h3>
+            <?php
+            foreach($roomLog as $log) {
+                if($log->logType == "cleaning") {
+                    echo date("d.m.Y H:i", strtotime($log->rowCreatedDate)) . " : " . $log->logText . "<br>";
+                }
+            }
+            ?>
+        </td>
+        <td valign='top' width='50%'>
+            <h3>Cleaning log for room</h3>
+            <?php
+            if(!$room->bookingItemId) {
+                echo "No room has been specified selected for this guest yet.";
+            } else {
+                $i = 0;
+                foreach($cleaninglog as $log) {
+                    if($log->cleaned) {
+                        echo date("d.m.Y H:i", strtotime($log->date)) . " : room cleaned by " . $log->name . "<br>";
+                    } else {
+                        echo date("d.m.Y H:i", strtotime($log->date)) . " : room marked dirty by " . $log->name . "<br>";
+                    }
+                    $i++;
+                    if($i > 15) {
+                        break;
+                    }
+                }
+            }
+            ?>
+        </td>
+</table>

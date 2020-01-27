@@ -32,7 +32,7 @@ app.PmsAddAddonsList = {
             });
         } else {
             thundashop.Ajax.postWithCallBack(event, function(res){
-                app.PmsBookingRoomView.refresh();
+                thundashop.framework.reloadOverLayType2();
             });
         }
     },
@@ -43,9 +43,11 @@ app.PmsAddAddonsList = {
     addAddonsToRoom : function() {
         $('.addaddonrows.step1').hide();
         $('.addaddonrows.step2').show();
+        
         var event = thundashop.Ajax.createEvent('','loadSecondAddAddonsStep',$(this), {
             "productId" : $(this).attr('productid'),
-            "quickadd" : $(this).attr('quickadd')
+            "quickadd" : $(this).attr('quickadd'),
+            "roomid" : $(this).attr('roomid')
         });
         thundashop.Ajax.postWithCallBack(event, function(res) {
             $('.addaddonrows.step2').html(res);

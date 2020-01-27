@@ -25,6 +25,9 @@ public interface IPmsInvoiceManager {
     public void creditOrder(String bookingId, String orderId);
     
     @Administrator
+    public Double getUnpaidAmountOnBooking(String bookingId);
+    
+    @Administrator
     public void clearOrder(String bookingId, String orderId);
 
     @Administrator

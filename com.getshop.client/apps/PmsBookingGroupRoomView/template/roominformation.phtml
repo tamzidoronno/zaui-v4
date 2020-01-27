@@ -1,0 +1,109 @@
+<?php
+/* @var $this ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
+$menu = array();
+$menu['guests'] = "Guests";
+$menu['stay'] = "Stay";
+$menu['addons'] = "Addons";
+$menu['accesscode'] = "Access code";
+$menu['messages'] = "Messages";
+$menu['cleaning'] = "Cleaning";
+$menu['payments'] = "Payments";
+$menu['confirmation'] = "Confirmation";
+
+
+$icons = array();
+$icons['guests'] = "users";
+$icons['stay'] = "suitcase";
+$icons['addons'] = "plus";
+$icons['accesscode'] = "eye";
+$icons['messages'] = "inbox";
+$icons['cleaning'] = "paint-brush";
+$icons['payments'] = "money";
+$icons['confirmation'] = "money";
+
+
+$selected = "guests";
+if(isset($_POST['data']['subsection'])) {
+    $selected = $_POST['data']['subsection'];
+}
+
+$first = true;
+echo "<div class='menurow'>";
+foreach($menu as $id => $val) {
+    $hide = "";
+    if($id == "confirmation") {
+        $hide = "display:none;";
+    }
+    $select = ($selected == $id) ? "selected" : "";
+    $firstClass = $first ? "first" : "";
+    echo "<span class='menubutton $select $firstClass' subsection='$id' style='$hide'>";
+    echo "<span ><div><i class='fa fa-" . $icons[$id] . "'></i></div></span>";
+    echo "<div>$val</div></span>";
+    $first = false;
+}
+echo "</div>";
+?>
+
+
+
+<?php
+
+$pmsSelectedRoom = $this->getPmsBookingRoom();
+if($pmsSelectedRoom->addedToWaitingList) {
+    echo "<div class='isdeletedinformation'>";
+    echo "This room is added to the waiting list rooms, <a style='color:#be99d7; cursor:pointer;' gstype='clicksubmit' gsname='id' gsvalue='".$pmsSelectedRoom->pmsBookingRoomId."' method='removeFromWaitingList'>try adding this room.</a>";
+    echo "<span style='float:right; background-color:red; color:#be99d7; padding-left:5px; padding-right: 5px; cursor:pointer;' gstype='clicksubmit' gsname='id' gsvalue='".$pmsSelectedRoom->pmsBookingRoomId."' method='deleteWaitingListRoom'>Delete from waiting list</span>";
+    if($pmsSelectedRoom->prioritizeInWaitingList) {
+        echo " This rooms is proritized, <span style='color:#be99d7;cursor:pointer;' gsclick='togglePriorityRoom' roomid='".$pmsSelectedRoom->pmsBookingRoomId."'>deactivate prioritization</span>";
+    } else {
+        echo " <span style='color:#be99d7;cursor:pointer;' gsclick='togglePriorityRoom' roomid='".$pmsSelectedRoom->pmsBookingRoomId."'>prioritize</span>";
+    }
+    echo "</div>";
+} else if($pmsSelectedRoom->deleted) {
+    echo "<div class='isdeletedinformation'>";
+    echo "This room has been cancelled / deleted, <span gsclick='deleteRoom' roomid='".$pmsSelectedRoom->pmsBookingRoomId."'  style='color:#be99d7;cursor:pointer;'>try to undelete it</span>.";
+    if($pmsSelectedRoom->overbooking) {
+        echo "<span gsclick='removeFromOverBookingList' roomid='".$pmsSelectedRoom->pmsBookingRoomId."' style='float:right; color:#be99d7;cursor:pointer;' gs_confirm='Warning, this will not readd the booking, just remove it from the list, use undelete it to make sure it is readded.'>remove it from overbooking list</span>.";
+    }
+    echo "</div>";
+} 
+
+
+if(in_array($selected,array_keys($menu))) {
+    echo "<div class='$selected' style='background-color:#fff;'>";
+    echo "<div style='padding: 20px;'>";
+    $this->includefile($selected);
+    echo "<div style='clear:both;'></div>";
+    echo "</div>";
+    echo "</div>";
+}
+
+
+
+?>
+
+<style>
+    .PmsBookingGroupRoomView .menurow { background-color: #dce1e0; }
+    .PmsBookingGroupRoomView .menubutton { 
+        height: 60px;border-top: solid 2px #dce1e0;
+        margin-right: 0px; text-transform: uppercase; width:150px;
+        border-right: solid 2px #d7dbda;
+        color:#626664;
+        padding: 4px; background-color:#dce1e0; text-align: center;padding-top: 10px; padding-bottom: 10px;
+        cursor:pointer;box-sizing: border-box;border-bottom: 0px;  display:inline-block;}
+    .PmsBookingGroupRoomView .menubutton.selected { border-top: solid 2px #53b689;background-color:#fff; color:#4a9979; }
+    
+    .PmsBookingGroupRoomView .insideheader {
+        padding: 0px;
+        margin: 0px;
+        padding: 10px;
+        padding-left: 0px;
+        border-bottom: solid 1px #eceef0;
+        margin-bottom: 10px;
+        font-size: 20px;
+        font-weight: bold;
+        position: relative;
+        text-transform: uppercase;
+    }
+    
+</style>

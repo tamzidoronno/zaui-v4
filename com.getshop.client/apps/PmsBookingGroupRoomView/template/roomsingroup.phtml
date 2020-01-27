@@ -1,0 +1,45 @@
+<?php
+/* @var $this ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
+
+$booking = $this->getPmsBooking();
+$selectedRoom = $this->getPmsBookingRoom();
+
+$types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+$types = $this->indexList($types);
+
+$items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedMultilevelDomainName());
+$items = $this->indexList($items);
+
+foreach($booking->rooms as $room) {
+    $selected = $selectedRoom->pmsBookingRoomId == $room->pmsBookingRoomId ? "selected" : "";
+    echo "<div class='roomgroupbox changeRoomByEvent $selected' roomid='".$room->pmsBookingRoomId."'>";
+    echo "<div>";
+    echo "<b>" . $types[$room->bookingItemTypeId]->name . "</b>";
+    if($room->bookingItemId) {
+        echo "<span style='float:right;'>" . $items[$room->bookingItemId]->bookingItemName . "</span>";
+    } else {
+        echo "<span style='float:right; color:#8c2626;'>floating</span>";
+    }
+    echo "</div>";
+    foreach($room->guests as $guest) {
+        echo "&nbsp;&nbsp;&nbsp;" . $guest->name . "<br>";
+    }
+    echo "<div style='color:#8c2626;'>".date("d/m H:i", strtotime($room->date->start)) . " - " . date("d/m H:i", strtotime($room->date->end));
+    echo "<span style='float:right;'>" . $room->unpaidAmount  . "/" . $room->totalCost. "</span>";
+    echo "</div>";
+    echo "</div>";
+}
+
+?>
+
+<style>
+    .roomgroupbox { background-color:#fff;font-size:12px; padding: 6px; cursor:pointer; border-left: 3px #fff;border-bottom: solid 1px #dce1e0; }
+    .roomgroupbox.selected { border-left: solid 6px #53b689;  }
+    .roomgroupbox:hover { border-bottom: solid 1px; }
+</style>
+
+<script>
+    if(lastScrollTopPosition) {
+        $('.roomsingroupinformation').scrollTop(lastScrollTopPosition);
+    }
+</script>

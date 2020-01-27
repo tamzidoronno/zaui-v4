@@ -1154,6 +1154,12 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return autoCreateOrderForBookingAndRoomInternal(roomBookingId, paymentMethod, start, end);
     }
 
+    @Override
+    public Double getUnpaidAmountOnBooking(String bookingId) {
+        PmsBooking booking = pmsManager.getBooking(bookingId);
+        return booking.getUnpaidAmount();
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0; 

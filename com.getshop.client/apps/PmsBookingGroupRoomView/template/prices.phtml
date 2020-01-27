@@ -1,10 +1,10 @@
 <?
-/* @var $this \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
+/* @var $this ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
 $pmsBooking = $this->getPmsBooking();
-$savedRoom = $this->getSelectedRoom();
-$room = $this->getTmpSelectedRoom($savedRoom->pmsBookingRoomId);
-$types = $this->getTypes();
-$items = $this->getItems();
+$savedRoom = $this->getPmsBookingRoom();
+$room = $savedRoom;
+$types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+$items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedMultilevelDomainName());
 
 $start = $room->date->start;
 $end = $room->date->end;
@@ -14,7 +14,7 @@ uksort($priceMatrix, array('ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailabil
 
 
 ?>
-
+<span class='savePriceButton shop_button'>Save prices</span>
 <div class="item_prices">
     <div class='pricecontainerbox'>
         <div class="stayheader">Daily prices <i class='fa fa-edit bookinghighlightcolor' style='float:right;cursor:pointer;font-size:20px;' onclick='$(".masseditpricesbox").toggle()'></i></div>
@@ -59,6 +59,7 @@ uksort($priceMatrix, array('ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailabil
         </div>
     </div>
 </div>
+<span class='savePriceButton shop_button'>Save prices</span>
     
 <script>
 $('.masseditpricestay').on('change', function() {
@@ -71,3 +72,35 @@ $('.setnewdates').on('click',function() {
     app.PmsBookingRoomView.updateAvailability();
 });
 </script>
+
+
+<style>
+.PmsBookingGroupRoomView .savePriceButton { width: 100%; box-sizing: border-box; margin-top: 5px; margin-bottom: 5px;display:none; }
+.PmsBookingGroupRoomView .roomandcats, .PmsBookingGroupRoomView .pricesview, .PmsBookingGroupRoomView .stayperiodecontainer {
+    width: calc(33% - 4px);
+    display: inline-block;
+    box-sizing: border-box;
+    padding-left: 10px;
+    padding-right: 10px;
+    float:left;
+}
+.PmsBookingGroupRoomView .changedatespanel,
+.PmsBookingGroupRoomView .splistayoptions {
+    display:none;
+}
+.PmsBookingGroupRoomView .stayheader {
+    border-bottom: solid 1px #e9ebed;
+    text-transform: uppercase;
+    font-weight: bold;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+.PmsBookingGroupRoomView .masseditpricesbox {
+    border: solid 1px #bbb;
+    padding: 10px;
+    background-color: #fff;
+    z-index: 2;
+    position:absolute;
+}
+.PmsBookingGroupRoomView .unitprice_changed { width: 60px; float:right; text-align: center; }
+</style>

@@ -1,0 +1,214 @@
+
+<?
+/* @var $this ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
+$pmsBooking = $this->getPmsBooking();
+$pmsSelectedRoom = $this->getPmsBookingRoom();
+$sendmsgconfig = new ns_624fa4ac_9b27_4166_9fc3_5c1d1831b56b\PmsSendMessagesConfiguration();
+$langs = $sendmsgconfig->getLanguageCodes();
+$hasConferences = sizeof($this->getApi()->getPmsConferenceManager()->getAllItem("-1")) > 0;
+
+$guestcount = (int)$pmsSelectedRoom->numberOfGuests;
+$numberofguests = (int)sizeof($pmsSelectedRoom->guests);
+if($guestcount > $numberofguests) {
+    for($i = $numberofguests; $i < $guestcount; $i++) {
+        $pmsSelectedRoom->guests[] = new core_pmsmanager_PmsGuests();
+//        echo $i;
+    }
+}
+?>
+<div class="bookinginformation">
+<div class="guestinfo">
+    <div class='countrylanguagebox'>
+        <div class='secondarytextcolor'><? echo $this->__f("Language"); ?></div>
+        <select class="gsniceselect1" id='roomlanguage'>
+            <?php
+            foreach($langs as $lang => $name) {
+                $selected = $this->getLanguage($pmsSelectedRoom, $pmsBooking) == $lang ? "SELECTED" : "";
+                echo "<option value='$lang' $selected>" . $name . "</option>";
+            }
+            ?>
+        </select>
+    </div>
+    
+    <div class='countrylanguagebox'>
+        <div class='secondarytextcolor'><? echo $this->__f("Country"); ?></div>
+        <select gsname="countryCode" class="gsniceselect1" id='countrycodeselection'>
+            <?php
+            $genothersettings = new ns_afbe1ef5_6c62_45c7_a5a0_fd16d380d7cb\GeneralSettingsOther();
+            $countries = $genothersettings->getCountryCodes();
+            $curCountryCode = $this->getCountryCode($pmsSelectedRoom, $pmsBooking);
+            foreach($countries as $code => $country) {
+                $selected = $this->getCountryCode($pmsSelectedRoom, $pmsBooking) == $code ? "SELECTED" : "";
+                echo "<option value='$code' $selected>$country</option>";
+            }
+            ?>
+        </select>
+    </div>
+    <br>
+    <br>
+    <br>
+    <div class='insideheader'>
+        <? echo $this->__f("GUESTS"); ?>
+        <div class="gs_shop_small_icon add_more_guests" title='<? echo $this->__f("Add new guest"); ?>'><i class="fa fa-plus"></i></div>
+    </div>
+    <div class="guest_row header">
+        <div class="guest_col guest_col1">
+            <b><? echo $this->__f("Name"); ?></b>
+        </div>
+
+        <div class="guest_col guest_col2">
+            <b><? echo $this->__f("Email"); ?></b>
+        </div>
+
+        <div class="guest_col guest_col3">
+            <b><? echo $this->__f("Phone"); ?></b>
+        </div>
+
+        <div class="guest_col guest_col4"></div>
+    </div>
+
+    <div  class="guest_row row_template" style='display: none' guestid=''>
+        <div class="guest_col guest_col1">
+            <input type="hidden" temp_gsname="guestinfo_guestid" class="gsniceinput1 guestidfield" value=""/>
+            <input temp_gsname="guestinfo_name" class="gsniceinput1" searchtype='name'  value="" placeholder='<? echo $this->__f("Name"); ?>'/>
+        </div>
+
+        <div class="guest_col guest_col2">
+            <input temp_gsname="guestinfo_email" class="gsniceinput1" searchtype='email'  value="" placeholder='<? echo $this->__f("Email"); ?>'/>
+        </div>
+
+        <div class="guest_col guest_col3">
+            <input  temp_gsname="guestinfo_prefix" class="gsniceinput1 prefix" value="<?php echo $this->getDefaultPrefix(); ?> "/> - <input class="gsniceinput1 cellnumber" searchtype='phone'   temp_gsname="guestinfo_phone"  value="" placeholder='<? echo $this->__f("Phone"); ?>'/>
+        </div>
+
+        <div class="guest_col guest_col4">
+            <div class="gs_shop_small_icon toggleDisabledGuest" title='Is this guest disabled?'><i class='fa fa-wheelchair'></i></div>
+            <div class="gs_shop_small_icon remove_guest"><i class="fa fa-close"></i></div>
+        </div>
+        <span style='font-size: 12px; margin-left: 12px; cursor:pointer;' class='bookinghighlightcolor selectsameasbooker'>
+            same as booker
+        </span>
+        <div style='font-size: 12px; margin-left: 12px; cursor:pointer;' class='searchsuggestions'></div>
+        <?
+        if($hasConferences) {
+            echo "<div class='guestconferenceinformation'>";
+            $this->printConnectedConferenceEventToGuest(null);
+            echo "</div>";
+            echo "<div class='addguesttoconferencepanel'></div>";
+        }
+        ?>
+    </div>
+
+    <?
+    $room = $pmsSelectedRoom;
+    $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $room->bookingItemTypeId);
+    $roomType = $type->name;
+    $roomName = $room->item ? $room->item->bookingItemName : "Floating";
+
+    $i = 0;
+    echo "<div class='guestinforows'>";
+    foreach ($room->guests as $guest) {
+        $i++;
+        $isDisabled = $guest->isDisabled ? "isdisabled" : "";
+        ?>
+        <div class="guest_row" counter='<? echo $i; ?>' guestid='<?php echo $guest->guestId; ?>'>
+            
+            <div class="guest_col guest_col1">
+                <input type="hidden" gsname="guestinfo_<? echo $i; ?>_guestid" class="gsniceinput1 prefix" value="<? echo $guest->guestId; ?>"/>
+                <input gsname="guestinfo_<? echo $i; ?>_name" class="gsniceinput1" searchtype='name' value="<? echo $guest->name; ?>"/>
+            </div>
+
+            <div class="guest_col guest_col2">
+                <input gsname="guestinfo_<? echo $i; ?>_email" class="gsniceinput1" searchtype='email' value="<? echo $guest->email; ?>"/>
+            </div>
+
+            <div class="guest_col guest_col3">
+                <?php
+                $prefix = $guest->prefix;
+                if(!$prefix) {
+                    $prefix = $this->getDefaultPrefix();
+                }
+                ?>
+                <input  gsname="guestinfo_<? echo $i; ?>_prefix" class="gsniceinput1 prefix" value="<? echo $prefix; ?>"/> - <input class="gsniceinput1 cellnumber"  searchtype='phone'  gsname="guestinfo_<? echo $i; ?>_phone"  value="<? echo $guest->phone; ?>"/>
+            </div>
+
+            <div class="guest_col guest_col4">      
+                <div class="gs_shop_small_icon toggleDisabledGuest <?php echo $isDisabled; ?>" title='Is this guest disabled?'><i class='fa fa-wheelchair'></i></div>
+                <div class="gs_shop_small_icon remove_guest"><i class="fa fa-close"></i></div>
+            </div>
+            <span style='font-size: 12px; margin-left: 12px; cursor:pointer;' class='bookinghighlightcolor selectsameasbooker'>
+                same as booker
+            </span>
+            <div style='font-size: 12px; margin-left: 12px; cursor:pointer;' class='searchsuggestions'></div>
+            <?
+            if($hasConferences) {
+                echo "<div class='guestconferenceinformation'>";
+                $this->printConnectedConferenceEventToGuest($guest);
+                echo "</div>";
+                echo "<div class='addguesttoconferencepanel'></div>";
+            }
+            ?>
+        </div>
+        <?php
+    }
+    echo "</div>";
+    ?>
+    <span style='float:left; margin-top: 10px;'><input type="checkbox" gsname='updateaddonscount' checked> Update addons count as well</span>
+    <div style='text-align:right;padding-top:10px;'><span class='shop_button saveguestinformation'>Save guest information</div>
+</div>
+
+</div>
+<style>
+    .show_edit_user,.show_change_user { float:right; margin-left: 5px; }
+    
+    
+.PmsBookingGroupRoomView .bookinginformation .guest_col {
+    display: inline-block;
+    padding-right: 10px;
+    font-size: 13px;
+    padding-left: 10px;
+    padding-top: 5px;
+    box-sizing: border-box;
+}
+
+.PmsBookingGroupRoomView .bookinginformation .guest_col input {
+    width: 100%;
+    box-sizing: border-box;
+} 
+
+.PmsBookingGroupRoomView .bookinginformation .guest_col .gsniceinput1.prefix {
+    width:50px;
+}
+
+.PmsBookingGroupRoomView .bookinginformation .guest_col .gsniceinput1.cellnumber {
+    width: calc(100% - 61px);
+}
+
+.PmsBookingGroupRoomView .isdisabled {
+    background:green;
+    color:#fff;
+}
+
+.PmsBookingGroupRoomView .payment_process_started {
+    padding: 20px;
+}
+
+.PmsBookingGroupRoomView .bookinginformation .guest_col1 { width: calc(100% - 850px); }
+.PmsBookingGroupRoomView .bookinginformation .guest_col2 { width: 260px; }
+.PmsBookingGroupRoomView .bookinginformation .guest_col3 { width: 200px; }
+.PmsBookingGroupRoomView .bookinginformation .guest_col4 { width: 100px; }
+.PmsBookingGroupRoomView .bookinginformation .guest_col5 { width: 225px; }
+.PmsBookingGroupRoomView .countrylanguagebox {
+    display: inline-block;
+    width: 45%;
+}
+    .PmsBookingGroupRoomView .insideheader .gs_shop_small_icon {
+    background: #86c330;
+    background-color: #86c330;
+    bottom: 5px;
+    float: right;
+    border-radius: 3px;
+    color: #FFF;
+    border: solid 0px;
+}
+</style>

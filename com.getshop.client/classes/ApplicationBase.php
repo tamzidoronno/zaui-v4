@@ -242,12 +242,13 @@ class ApplicationBase extends FactoryBase {
         $this->renderApplication(true);
     }
 
-    public function renderApplication($appNotAddedToPage=false, $fromApplication=false) {
+    public function renderApplication($appNotAddedToPage=false, $fromApplication=false, $fastRender = false) {
         $changeable = '';
         $appSettingsId = $this->getApplicationSettings() ? $this->getApplicationSettings()->id : "";
         $id = isset($this->configuration) ? $this->configuration->id : "";
         $callbackInstance = "";
         $normalId = "";
+        
         
         if ($appNotAddedToPage) {
             $id = get_class($this);
@@ -277,13 +278,13 @@ class ApplicationBase extends FactoryBase {
             $_SESSION['cachedClasses'][$fromId] = $fromId;
             $_SESSION['cachedClasses'][$id] = $id;
         }
-        
+
         if(!isset($_SESSION['cachedClasses'])) {
             $_SESSION['cachedClasses'] = array();
         }
 
         echo "<div $callbackInstance appid='$id' ".$this->getExtraAttributesToAppArea()." app='" . $className . "' class='app $changeable " . $className . "' appid2='$normalId' appsettingsid='$appSettingsId'>";
-        if($this->isEditorMode() && !$this->getFactory()->isMobile()) {
+        if(!$fastRender && $this->isEditorMode() && !$this->getFactory()->isMobile()) {
             echo "<div class='mask'><div class='inner'>".$this->__f("Click to delete")."</div></div>";
             echo "<div class='order_mask'>";
 
@@ -291,7 +292,7 @@ class ApplicationBase extends FactoryBase {
         }
         
         echo "<div class='applicationinner'>";
-        if($this->isEditorMode() && !$changeable && !$this->getFactory()->isMobile()) {
+        if(!$fastRender && $this->isEditorMode() && !$changeable && !$this->getFactory()->isMobile()) {
             if($this->hasWriteAccess()) {
                 echo "<div class='application_settings inline gs_icon'><i class='fa fa-cog' style='font-size:18px;'></i></div>";
             }

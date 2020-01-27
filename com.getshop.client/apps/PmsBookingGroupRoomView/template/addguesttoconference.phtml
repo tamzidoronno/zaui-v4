@@ -3,8 +3,8 @@
 </div>
 <div class='currentconferences'>
     <?php
-    /* @var $this ns_bf644a39_c932_4e3b_a6c7_f6fd16baa34d\PmsNewBooking20 */
-    $booking = $this->getApi()->getPmsManager()->getCurrentBooking($this->getSelectedMultilevelDomainName());
+    /* @var $this ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
+    $booking = $this->getPmsBooking();
 
     foreach($booking->rooms as $room) {
         foreach($room->guests as $guest) {
@@ -16,7 +16,7 @@
                 $filter->userId = $booking->userId;
 
                 $events = (array)$this->getApi()->getPmsConferenceManager()->getConferenceEventsByFilter($filter);
-                $this->printEvents($events, $guest->pmsConferenceEventId);
+                $this->printEvents($events, @$guest->pmsConferenceEventId);
             }
         }
     }

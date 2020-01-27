@@ -65,6 +65,7 @@ if($config->bookingTag) {
 <!DOCTYPE html>
 <html pageid="<? echo $page->getId(); ?>" module="pms">
     <head>
+        <script>isFirstLoading = true;</script>
         <title><? echo $title; ?></title>
         <link rel="stylesheet" href="/icomoon/style.css?<? echo calculateCacheName(); ?>">
         <link rel="stylesheet" href="/skin/default/getshop.css?<? echo calculateCacheName(); ?>">

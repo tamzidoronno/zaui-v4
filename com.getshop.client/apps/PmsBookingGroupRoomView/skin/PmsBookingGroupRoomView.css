@@ -1,0 +1,118 @@
+.PmsBookingGroupRoomView .movetotype .bookingitem {
+    border: solid 1px transparent;
+    display: inline-block;
+    padding: 3px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+    line-height: 25px;
+    margin-right: 2px;
+    border-radius: 2px;
+    margin-bottom: 2px;
+}
+.PmsBookingGroupRoomView .movetotype {
+    border-bottom: solid 1px #DDD;
+    margin-top: 10px;
+    position: relative;
+    vertical-align: top;
+    padding-bottom: 8px;
+}
+.PmsBookingGroupRoomView .movetotype .headername {
+    display: inline-block;
+    left: 0px;
+    top: 5px;
+    color: #444;
+    width: 200px;
+    vertical-align: top;
+}
+
+.PmsBookingGroupRoomView .movetotype .itemselector {
+    display: inline-block;
+    width: calc(100% - 204px);
+}
+.PmsBookingGroupRoomView .updater {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    background-color: rgba(0,0,0,0.5);
+    text-align: center;
+    padding: 30px;
+    color: #FFF;
+}
+
+.PmsBookingGroupRoomView .canNotUse {
+    background: #b6ced9;
+    cursor: not-allowed;
+}
+
+.PmsBookingGroupRoomView .canUse {
+    background: #82ca35;
+    color: #FFF;
+    cursor: pointer;
+}
+
+.PmsBookingGroupRoomView .gs_selected {
+    background: #23314e;
+    color: #FFF;
+}
+
+.PmsBookingGroupRoomView .bookerinformation .row { margin-top: 8px; }
+
+.PmsBookingGroupRoomView .itemview_inner .explenation .expcolorouter {
+    display: inline-block;
+    width: 100%;
+    margin-top: 10px;
+    vertical-align: top;
+    padding-right: 10px;
+    box-sizing: border-box;
+}
+
+.PmsBookingGroupRoomView .itemview_inner .explenation .expcolor {
+    font-size: 13px;hrm
+    font-weight: normal;
+    line-height: 15px;
+    vertical-align: top;
+    padding-top: 5px;
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    border-radius: 15px;
+    box-sizing: border-box;
+    border: solid 1px #DDD;
+}  
+.PmsBookingGroupRoomView .accesscode .code {
+    color: #87caf0;
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+.PmsBookingGroupRoomView .accesscode .shop_button { margin: 2px; }
+
+
+.PmsBookingGroupRoomView .isdisabled {
+    background:green;
+    color:#fff;
+}
+
+.PmsBookingGroupRoomView .whyoutofsync {
+    display:none;
+    padding: 10px;
+}
+
+
+.PmsBookingGroupRoomView .unpaidamountwarning { 
+    border-bottom: solid 1px;
+    background-color: #ff0000;
+    padding: 10px;
+    color: #fff;
+    height: 35px;
+    font-size: 24px;
+}
+.PmsBookingGroupRoomView .isdeletedinformation { background-color:#271b1b; color:#fff; padding: 5px; padding-left: 10px; }
+.PmsBookingGroupRoomView .change_user_form,
+.PmsBookingGroupRoomView .edit_details_of_user
+{ right: 50px; margin-top: 20px; }

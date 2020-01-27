@@ -1,0 +1,156 @@
+<?
+/* @var $this ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
+$savedRoom = $this->getPmsBookingRoom();
+$hasAcessControl = $this->getApi()->getPmsManager()->hasLockSystemActive($this->getSelectedMultilevelDomainName());
+
+$types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+$types = $this->indexList($types);
+$items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedMultilevelDomainName());
+$items = $this->indexList($items);
+
+$selectedType = $types[$savedRoom->bookingItemTypeId];
+$selectedItem = null;
+if($savedRoom->bookingItemId) {
+    $selectedItem = $items[$savedRoom->bookingItemId];
+}
+$room = $savedRoom;
+
+$warnAboutUnchanges = "";
+
+$startDate = strtotime($room->date->start);
+$endDate = strtotime($room->date->end);
+
+$booking = $this->getPmsBooking();
+$validSelection = $this->isValidSelection($room);
+
+if(!isset($room->tmpModified) || !$validSelection) {
+    $warnAboutUnchanges = "display:none;";
+}
+
+if(stristr($booking->channel, "wubook_")) {
+    echo "<div style='padding: 10px; background-color:red; color:white;'>";
+    if(!$booking->ignoreWubook) {
+        echo "Be careful doing changes in this area. The booking is connected to an OTA and should be changed by them. They can be overwritten and in worse case cenario cause overbooking, read more about overbookings <a href='https://system.getshop.com/double_booking_error.html' target='_fsdaf' style='color:cyan;'>here</a>.";
+        echo "<span style='float:right;cursor:pointer; color:#c5c5f7;' gsclick='ignorechannelmanager'>ignore future updates from channel manager</span>";
+    } else {
+        echo "This booking has been taken out from the channel manager, future updates from the OTA will not be affected, read more about overbookings <a href='https://system.getshop.com/double_booking_error.html' target='_fsdaf' style='color:cyan;'>here</a>.";
+        echo "<span style='float:right;cursor:pointer; color:#c5c5f7;' gsclick='ignorechannelmanager'>cancel ignore</span>";
+    }
+    echo "</div>";
+}
+
+?>
+
+<div style="border: solid 1px; text-align: right;background-color:red; color:#fff;<?php echo $warnAboutUnchanges; ?>" class="warningchangesonroom"><span style='float:left; margin-top: 8px;margin-left:8px;'>You have modified this room and need to save it to be completed</span> <span class="shop_button savetmproom" roomid='<?php echo $room->pmsBookingRoomId; ?>'>save changes on room</span></div>
+<div class="outerstay">
+    <div class='itemview_inner stayperiodecontainer'>
+        <div class="stayheader">Stay periode</div>
+        <div class='changedatesinformation'>
+            <div class='checkinheadertext secondarytextcolor'>Check-in</div>
+            <div class='datepresentation' onclick='app.PmsBookingGroupRoomView.showChangeDatePanel("checkin")'><? echo date("d M Y", $startDate); ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<? echo date("H:i", $startDate); ?></div>
+            <div class='checkinheadertext secondarytextcolor'>Check-out</div>
+            <div class='datepresentation' onclick='app.PmsBookingGroupRoomView.showChangeDatePanel("checkout")'><? echo date("d M Y", $endDate); ?>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<? echo date("H:i", $endDate); ?></div>
+            
+            <?php
+            if(isset($room->warningText)) {
+                echo "<div style='font-weight:bold; color:red;'><i>" . $room->warningText . "</i></div>";
+            }
+            ?>
+            <div class='bookinghighlightcolor'
+                 onclick='app.PmsBookingGroupRoomView.showChangeDatePanel("")'
+                 style='width:100%;margin-top:5px;box-sizing: border-box;cursor:pointer;margin-bottom: 10px;margin-top: 23px; margin-bottom: 5px;'><i class='fa fa-refresh'></i> Change dates</div>
+                 
+            <?php
+            if($this->isStartingToday($room) && !$room->checkedin) {
+                echo "<span class='checkinguest bookinghighlightcolor checkincheckoutbutton checkingsplitstaybtns'><i class='fa fa-sign-in'></i> Check in guest</span>";
+            } else if($room->checkedin && !$room->checkedout) {
+                echo "<span class='checkoutguest bookinghighlightcolor checkincheckoutbutton checkingsplitstaybtns'><i class='fa fa-sign-out'></i> Check out guest</span>";
+            } else if($this->isEndedToday($room)) {
+                echo "<span class='bookinghighlightcolor reinstatestay checkingsplitstaybtns'><i class='fa fa-refresh'></i> Reinstate stay</span>";
+            } else if($room->checkedin && $room->checkedout) {
+                echo "<span class='checkoutguest bookinghighlightcolor checkincheckoutbutton checkingsplitstaybtns'><i class='fa fa-refresh'></i> Undo checkout</span>";
+            }
+            echo "<div style='margin-top: 5px;' class='checkingsplitstaybtns'><i class='fa fa-arrows-h bookinghighlightcolor'></i> <span class='bookinghighlightcolor splitstaybutton' style='margin-top: 5px;box-sizing:border-box;' onclick='$(this).hide();$(\".PmsBookingGroupRoomView .splistayoptions\").slideDown();'>Split stay</span></div>";
+            ?>
+            <div class='splistayoptions' gstype='form' method='splitStay'>
+                <div>Specify split time</div>
+                <input type="hidden" class="gsniceinput1 splitstaydate" value="<?php echo $room->pmsBookingRoomId; ?>" gsname="roomid">
+                <input type="txt" class="gsniceinput1 splitstaydate" value="<?php echo date("d.m.Y"); ?>" gsname="date">
+                <input type="txt" class="gsniceinput1" value="<?php echo date("H:i"); ?>" gsname="time" style="width:60px;">
+                <span class="shop_button" gstype='submit'>Split stay</span>
+            </div>
+        </div>
+        <div class='changedatespanel'>
+            Check-in<br>
+            <input type="textfield" class="gsniceinput1 startdate" gsname="start" value="<? echo date("d.m.Y", $startDate); ?>"/>
+            <input type="textfield" class="gsniceinput1 starttime time starttime" gsname="startTime" value="<? echo date("H:i", $startDate); ?>"/><br><br>
+            Check-out<br>
+            <input type="textfield" class="gsniceinput1 enddate" gsname="end" value="<? echo date("d.m.Y", $endDate); ?>"/> 
+
+            <input type="textfield" class="gsniceinput1 endtime time endtime" gsname="endTime" value="<? echo date("H:i", $endDate); ?>"/> 
+            <?php
+            if(isset($room->warningText)) {
+                echo "<div style='font-weight:bold; color:red;'><i>" . $room->warningText . "</i></div>";
+            }
+            ?>
+            <div>
+                <span class='shop_button changedates' style='width:100%;margin-top:5px;box-sizing: border-box;'>Change dates</span>
+            </div>
+        </div>
+    </div>
+
+    <div class='itemview_inner roomandcats'>
+        <div class="stayheader">Room & categories</div>
+
+        <?
+        echo "<div style='margin-bottom: 10px;margin-top:30px;'><span class='secondarytextcolor'>" . $this->__f("Selected category").":</span> ".$selectedType->name . "</div>";
+        echo "<div style='margin-bottom: 10px;'><span class='secondarytextcolor'>".$this->__f("Selected room").":</span> ";
+        if ($selectedItem) {
+            echo $selectedItem->bookingItemName;
+        } else {
+            echo $this->__f("Floating");
+        }
+        echo "</div>";
+        $isClean = $selectedItem && $this->getApi()->getPmsManager()->isClean($this->getSelectedMultilevelDomainName(), $selectedItem->id);
+        if($isClean) {
+            echo "<div style='color:green'><i class='fa fa-check'></i> Room is clean</div>";
+        } else {
+            echo "<div class='secondarytextcolor'>Room is <b style='color:#000000'>not</b> clean</div>";
+        }
+        if(!$validSelection) {
+            echo "<div class='notvalidselection'>This room selection is not valid.</div>";
+        }
+
+        ?>
+        <br/>
+        <div class="showroomstoselect bookinghighlightcolor" style='cursor:pointer;margin-bottom: 5px;'><i class='fa fa-refresh'></i> <? echo $this->__f("Change room or category"); ?></div>
+        <?php if(!$savedRoom->deleted && !$savedRoom->addedToWaitingList) { ?>
+           <div class='bookinghighlightcolor'  style='cursor:pointer; margin-bottom: 5px;' gsclick='cancelRoom' gs_confirm="Are you sure you want to cancel this room?" roomid='<?php echo $this->getPmsBookingRoom()->pmsBookingRoomId ; ?>'><i class='fa fa-stop-circle-o'></i> Cancel this room</div>
+           <div class='bookinghighlightcolor'  style='cursor:pointer;' gsclick='moveToWaitingList' gs_confirm="Are you sure you want to move this room to waiting list?" roomid='<?php echo $this->getPmsBookingRoom()->pmsBookingRoomId ; ?>' style='bottom:-27px;background-color:#b2bf22;'><i class='fa fa-share'></i> Move to waiting list</div>
+        <?php } ?>
+    </div>
+
+    <div class='itemview_inner pricesview'>
+        <? $this->includefile("prices"); ?>
+    </div>
+</div>
+<div class="itemview_inner roomstoselect" style="display: none;"></div>
+<div style="border: solid 1px; text-align: right;background-color:red; color:#fff; <?php echo $warnAboutUnchanges; ?>" class="warningchangesonroom"><span style='float:left; margin-top: 8px;margin-left:8px;'>You have modified this room and need to save it to be completed</span> <span class="shop_button savetmproom" roomid='<?php echo $room->pmsBookingRoomId; ?>'>save changes on room</span></div>
+
+
+<script>
+    getshop_loadDatePicker($('.PmsBookingGroupRoomView .startdate'), { jump : 0, dependant : $('.PmsBookingGroupRoomView .enddate'), shouldbelowest : true  });    
+    getshop_loadDatePicker($('.PmsBookingGroupRoomView .enddate'), { jump : 0, dependant : $('.PmsBookingGroupRoomView .startdate'), shouldbehighest : true });    
+    getshop_loadDatePicker($('.PmsBookingGroupRoomView .splitstaydate'), { dependant : $('.enddate'), jump : 1 });    
+</script>
+
+<style>
+    .PmsBookingGroupRoomView .startdate,
+    .PmsBookingGroupRoomView .splitstaydate { width: 80px; }
+    .PmsBookingGroupRoomView .enddate { width: 80px; }
+    .PmsBookingGroupRoomView .starttime { width: 40px; }
+    .PmsBookingGroupRoomView .endtime { width: 40px; }
+    .PmsBookingGroupRoomView .changedates { width: 180px !important; }
+    .PmsBookingGroupRoomView .datepresentation { cursor:pointer; }
+    .PmsBookingGroupRoomView .checkingsplitstaybtns { cursor:pointer; }
+</style>

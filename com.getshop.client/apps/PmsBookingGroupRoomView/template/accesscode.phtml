@@ -1,0 +1,261 @@
+<?
+/* @var $this ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
+$room = $this->getPmsBookingRoom();
+$bookingEngineBooking = $this->getBookingEngineBooking();
+$isActive = strtotime($bookingEngineBooking->startDate) <= time();
+$isEnded = strtotime($bookingEngineBooking->endDate) <= time();
+
+$blockSureMessage = $this->__f("Are you sure you want to block this guest?");
+
+$isSameDayStart = date('Y-m-d', strtotime($bookingEngineBooking->startDate)) <= date('Y-m-d', time());
+$isClean = $this->getApi()->getPmsManager()->isClean($this->getSelectedMultilevelDomainName(), $room->bookingItemId);
+$isPaid = $this->getApi()->getPmsInvoiceManager()->isRoomPaidFor($this->getSelectedMultilevelDomainName(), $room->pmsBookingRoomId) || $room->forceAccess;
+
+$diff = strtotime(date('Y-m-d', strtotime($bookingEngineBooking->startDate))) - strtotime(date('Y-m-d', time()));
+
+$daysToArrival = ceil($diff / (60 * 60 * 24));
+
+$hasAcessControl = $this->getApi()->getPmsManager()->hasLockSystemActive($this->getSelectedMultilevelDomainName());
+
+$printers = $this->getPrinters();
+
+if ($isEnded) {
+    ?>
+    <div class="successinfo">
+        <?
+        echo $this->__f("Code is no longer active because the booking has ended.");
+        ?>
+    </div>
+    <?
+    return;
+}
+
+// All ok, guest has access
+if ($room->blocked) {
+    ?>
+    <div class="kaipal infobox">
+        <div class="image danger"></div>
+        <div class="textbox">
+            <div class="header" style="color: red;"><? echo $this->__f("The room has been blocked"); ?></div>
+            <div class="text">
+                <?
+                echo $this->__f("You have asked me to close the room and I have done so.");
+                ?>
+                
+                <div class="buttonarea">
+                    <div class="buttonareaheader"><? echo $this->__f("What do you want me to do?"); ?></div>
+                    <div class="shop_button" gsclick="unBlockRoom" roomid='<?php echo $this->getPmsBookingRoom()->pmsBookingRoomId; ?>' synchron="true" gs_callback="app.PmsBookingGroupRoomView.accessCodeTabUpdated"><? echo $this->__f("Grant access to guest again"); ?></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?
+    return;
+}
+
+if ($room->code && $room->addedToArx) {
+    $prefix = $room->guests[0]->prefix;
+    $phone = $room->guests[0]->phone;
+    $email = $room->guests[0]->email;
+    ?>
+
+    <div class="kaipal infobox">
+        <div class="image happy"></div>
+        <div class="textbox">
+            <div class="header" style="color: green;"><? echo $this->__f("Guest has successfully checked in"); ?></div>
+            <div class="text">
+                
+                <div style="margin-bottom: 30px;">
+                    <? 
+                    echo $this->__f("I have generated the following code for this guest and sent it to him/her by sms and email");
+                    ?>
+                </div>
+                <div class="code"> 
+                   <?
+                   echo $room->code;
+                   ?>
+                </div>
+               
+                <div class="buttonarea">
+                    <div style='position: absolute;
+                            background-color: rgb(255, 255, 255);
+                            z-index: 2;
+                            display:none;
+                            padding: 10px;
+                            border: solid 1px #bbb;
+                            margin-top: 62px;
+                            margin-left: 10px;' class='resendcodeform' gstype='form' method='resendCodeForRoom'>
+                        <input type='text' class='gsniceinput1' style='width:30px;' value='<?php echo $prefix; ?>' gsname='prefix'>
+                        <input type='text' class='gsniceinput1' style='width:80px;' value='<?php echo $phone; ?>' gsname='phone'>
+                        <input type='hidden' class='gsniceinput1' style='width:80px;' value='<?php echo $this->getPmsBookingRoom()->pmsBookingRoomId; ?>' gsname='roomid'>
+                        <input type='text' class='gsniceinput1' style='width:200px;' value='<?php echo $email; ?>' gsname='email'>
+                        <span class='shop_button' gstype='submit' gs_callback="app.PmsBookingGroupRoomView.accessCodeTabUpdated" synchron="true" >Resend code</span>
+                    </div>
+                    
+                    <div class="buttonareaheader"><? echo $this->__f("What do you want me to do?"); ?></div>
+                    <div class="shop_button" gsclick="blockAccessToRoom" roomid='<?php echo $this->getPmsBookingRoom()->pmsBookingRoomId; ?>' gs_confirm='<? echo $blockSureMessage; ?>' synchron="true" gs_callback="app.PmsBookingGroupRoomView.accessCodeTabUpdated"><? echo $this->__f("Block access"); ?></div>
+                    <div class="shop_button" onclick='$(".resendcodeform").slideDown();'><? echo $this->__f("Resend code"); ?></div>
+                    <div class="shop_button" gsclick="renewCodeForRoom" roomid='<?php echo $this->getPmsBookingRoom()->pmsBookingRoomId; ?>' synchron="true" gs_callback="app.PmsBookingGroupRoomView.accessCodeTabUpdated" style='float:right;'><? echo $this->__f("Regenerate code"); ?></div>
+                    <?
+                    if (count($printers)) {
+                        foreach ($printers as $printer) {
+                            ?>
+                                <div class='shop_button' gsclick='printCode' roomid='<?php echo $this->getPmsBookingRoom()->pmsBookingRoomId; ?>' cashpointid='<? echo $printer->id; ?>'><? echo $this->__f("Print code")." - ".$printer->name; ?></div>
+                            <?
+                        }
+                    }
+                    ?>
+                    
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <?
+    return;
+}
+
+// Guest is not arriving today.
+if(!$hasAcessControl) {
+    $this->includefile("noaccesscontrolsetup");
+    return;
+}
+
+if (!$isSameDayStart) {
+    ?>
+    
+    <div class="kaipal infobox">
+        <div class="image talking"></div>
+        <div class="textbox">
+            <div class="header"><? echo $this->__f("Guest is not arriving today"); ?></div>
+            <div class="text">
+                <?
+                echo $this->__f("I will not grant acess to this guest as he/she is not arriving today.");
+                echo "<br/><br/>".$this->__f("Guest is arriving in")." $daysToArrival ".$this->__f("days time");
+                ?>    
+                <div class="buttonarea">
+                    <div class="buttonareaheader"><? echo $this->__f("What do you want me to do?"); ?></div>
+                    <?php
+                    if(!$room->forceAccess) {
+                    ?>
+                        <div class="shop_button" gsclick="forceAccessRegardlessOfPayment" roomid='<?php echo $this->getPmsBookingRoom()->pmsBookingRoomId; ?>' synchron="true" gs_callback="app.PmsBookingGroupRoomView.accessCodeTabUpdated"><? echo $this->__f("Force access regardless of payment"); ?></div>
+                    <?php } else {
+                        ?>
+                        * Access has been forced, and the code will be sent regardless of payment at the day of arrival.<br>
+                        <div class="shop_button" gsclick="ungrantPayment" roomid='<?php echo $this->getPmsBookingRoom()->pmsBookingRoomId; ?>' synchron="true" gs_callback="app.PmsBookingGroupRoomView.accessCodeTabUpdated"><? echo $this->__f("Ungrant access regardless of payment"); ?></div>
+                        <?
+                    } ?>  
+                </div>
+            </div>
+        </div>
+    </div>
+    <?
+    
+    return;
+}
+
+if ($isPaid && $isClean) {
+    ?>
+    <div class="kaipal infobox">
+        <div class="image happy"></div>
+        <div class="textbox">
+            <div class="header" style="color: green"><? echo $this->__f("All well! Ready to send code this guest"); ?></div>
+            <div class="text">
+                <?
+                echo $this->__f("I have found a clean room and confirmed that the guest has paid for the stay. As soon as the guest checkin-time has passed I will send him/her the code by SMS and email.");
+                
+                if ($room->forceAccess) {
+                    echo "<br/><br/><i class='fa fa-warning'></i> ".$this->__f("This room has been forced access regardless of payment!");
+                }
+                ?>
+
+                <div class="buttonarea">
+                    <div class="buttonareaheader"><? echo $this->__f("Do you want me to do something else?"); ?></div>
+                    <div class="shop_button" gsclick="blockAccessToRoom" roomid='<?php echo $this->getPmsBookingRoom()->pmsBookingRoomId; ?>' gs_confirm='<? echo $blockSureMessage; ?>' synchron="true" gs_callback="app.PmsBookingGroupRoomView.accessCodeTabUpdated"><? echo $this->__f("Block access"); ?></div>
+                    <div class="shop_button" gsclick="markRoomDirty" roomid='<?php echo $this->getPmsBookingRoom()->pmsBookingRoomId; ?>' synchron="true" gs_callback="app.PmsBookingGroupRoomView.accessCodeTabUpdated"><? echo $this->__f("Mark room as dirty"); ?></div>
+                    <?
+                    if ($room->forceAccess) {
+                    ?>
+                    <div class="shop_button" gsclick="ungrantPayment" roomid='<?php echo $this->getPmsBookingRoom()->pmsBookingRoomId; ?>' synchron="true" gs_callback="app.PmsBookingGroupRoomView.accessCodeTabUpdated"><? echo $this->__f("Ungrant access regardless of payment"); ?></div>
+                    <?
+                    }
+                    ?>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <?
+}
+
+if (!$isPaid && $isClean) {
+    ?>
+    <div class="kaipal infobox">
+        <div class="image sad"></div>
+        <div class="textbox">
+            <div class="header"><? echo $this->__f("Payment missing"); ?></div>
+            <div class="text">
+                <?
+                echo $this->__f("I am not able to send accesscode to this guest because the room has not yet been paid.");
+                ?>    
+
+              
+                <div class="buttonarea">
+                    <div class="buttonareaheader"><? echo $this->__f("What do you want me to do?"); ?></div>
+                    <div class="shop_button" gsclick="retrySendingCode" roomid='<?php echo $this->getPmsBookingRoom()->pmsBookingRoomId; ?>' synchron="true" gs_callback="app.PmsBookingGroupRoomView.accessCodeTabUpdated"><? echo $this->__f("Try again"); ?></div>
+                    <div class="shop_button" gsclick="forceAccessRegardlessOfPayment" roomid='<?php echo $this->getPmsBookingRoom()->pmsBookingRoomId; ?>' synchron="true" gs_callback="app.PmsBookingGroupRoomView.accessCodeTabUpdated" style='float:right'><? echo $this->__f("Force access regardless of payment"); ?></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <?
+}
+
+if ($isPaid && !$isClean) {
+    ?>
+    <div class="kaipal infobox">
+        <div class="image talking"></div>
+        <div class="textbox">
+            <div class="header"><? echo $this->__f("Waiting for the room to be cleaned"); ?></div>
+            <div class="text">
+                <?
+                echo $this->__f("I am just waiting for the cleaningstaff to clean the room, once its I will be able to provide this room to this guest.");
+                ?>    
+
+                <div class="buttonarea">
+                    <div class="buttonareaheader"><? echo $this->__f("Do you want me to do something about this?"); ?></div>
+                    <div class="shop_button" roomid='<?php echo $this->getPmsBookingRoom()->pmsBookingRoomId; ?>' gsclick="markRoomCleaned"  synchron="true" gs_callback="app.PmsBookingGroupRoomView.accessCodeTabUpdated"><? echo $this->__f("Mark room as clean"); ?></div>
+                    <div class="shop_button" roomid='<?php echo $this->getPmsBookingRoom()->pmsBookingRoomId; ?>' gsclick="markRoomCleanedwithoutlog"  synchron="true" gs_callback="app.PmsBookingGroupRoomView.accessCodeTabUpdated"><? echo $this->__f("Mark room as clean (without logging to reports)"); ?></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <?
+}
+
+if (!$isPaid && !$isClean) {
+     ?>
+    <div class="kaipal infobox">
+        <div class="image talking"></div>
+        <div class="textbox">
+            <div class="header"><? echo $this->__f("Waiting for the room to be cleaned"); ?></div>
+            <div class="text">
+                <?
+                echo $this->__f("The room is not clean and the guest has not paid");
+                ?>    
+
+                <div class="buttonarea">
+                    <div class="buttonareaheader"><? echo $this->__f("Do you want me to do something about this?"); ?></div>
+                    <div class="shop_button" roomid='<?php echo $this->getPmsBookingRoom()->pmsBookingRoomId; ?>'  gsclick="markRoomCleaned"  synchron="true" gs_callback="app.PmsBookingGroupRoomView.accessCodeTabUpdated"><? echo $this->__f("Mark room as clean"); ?></div>
+                    <div class="shop_button" roomid='<?php echo $this->getPmsBookingRoom()->pmsBookingRoomId; ?>'  gsclick="markRoomCleanedwithoutlog"  synchron="true" gs_callback="app.PmsBookingGroupRoomView.accessCodeTabUpdated"><? echo $this->__f("Mark room as clean (without logging to reports)"); ?></div>
+                    <div class="shop_button" roomid='<?php echo $this->getPmsBookingRoom()->pmsBookingRoomId; ?>'  gsclick="forceAccessRegardlessOfPayment" synchron="true" gs_callback="app.PmsBookingGroupRoomView.accessCodeTabUpdated"><? echo $this->__f("Force access regardless of payment"); ?></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?
+}
+?>
+

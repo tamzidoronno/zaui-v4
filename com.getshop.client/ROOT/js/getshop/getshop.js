@@ -52,6 +52,7 @@ thundashop.common = {
         if($('.gsoverlay2').is(":visible")) {
             $('.gsoverlay2').click();
         }
+        window.location.hash = "";
    },
    closeOverLays : function(e) {
        if(e.keyCode === 27) {
@@ -739,7 +740,6 @@ thundashop.Ajax = {
         retevent.core = {}
         
         retevent.gs_getshopmodule = $('html').attr('module');
-        
         if(typeof(fromDomElement) === "string") {
             retevent.core.appid = fromDomElement;
             retevent.core.appid2 = $(fromDomElement).closest('.app').attr('appid2');
@@ -903,6 +903,7 @@ getshop = {
             
             $('.gsoverlay1 .gsoverlayinner .content').html("");
             getshop.loadApps();
+            window.location.hash = "";
         } 
        
         if ($(target.target).hasClass('gsoverlay2')) {
@@ -917,6 +918,7 @@ getshop = {
             $('.gsoverlay2 .gsoverlayinner .content').html("");
             getshop.loadApps();
             $('html, body').css({ overflow: 'auto'});
+            window.location.hash = "";
         }
     }
 }
@@ -966,6 +968,7 @@ getshop.Table = {
         }
 
         if ($(e.target).hasClass('loadContentInOverlay') || $(e.target).closest('.loadContentInOverlay').length > 0) {
+            window.location.hash = "";
             getshop.Table.loadTableContentOverlay(e, $(this));
             return;
         }
@@ -1019,9 +1022,22 @@ getshop.Table = {
         }, true);
     },
     
+    loadAppInOverlay : function(app, method, data) {
+        var event = thundashop.Ajax.createEvent(null, method, app, data);
+        event['synchron'] = true;
+        latestOverLayLoadingEvent = event;
+        getshop.showOverlay("2");
+        thundashop.Ajax.post(event, function (res) {
+            latestOverLayLoadingEvent.data.getshop_resetlistmode = "false";
+            $('.gsoverlay2 .gsoverlayinner .content').html(res);
+            $('.gsoverlay2 .gsoverlayinner').prepend('<i class="fa fa-close closemodal"></i>');
+        });
+    },
+    
     loadTableContentOverlay: function (e, btn) {
         $('html, body').css({ overflow: 'hidden', height: '100%'});
-        
+        window.location.href.split('#')[0];
+
         var table = btn.closest('.GetShopModuleTable');
         var identifier = table.attr('identifier');
         var functioname = table.attr('method');
@@ -1044,7 +1060,7 @@ getshop.Table = {
         if(base.hasClass('activeroom')) {
             data['getshop_resetlistmode'] = "true";
         }
-
+        
         var event = thundashop.Ajax.createEvent(null, table.attr('method'), btn, data);
         event['synchron'] = true;
         latestOverLayLoadingEvent = event;
@@ -1071,7 +1087,6 @@ thundashop.Namespace.Register("thundashop.framework");
 thundashop.framework = {
     init: function() {
         $(document).on('click', '*[gstype="form"] *[gstype="submit"]',  thundashop.framework.submitFromEvent);
-        
         $(document).on('change', '*[gstype="changesubmit"]',  function(e) {
              if ($(this).attr('method')) {
                 thundashop.framework.submitElement(e);
@@ -1262,9 +1277,12 @@ thundashop.framework = {
             return;
         }
         
-        $('.gs_loading_spinner').addClass('active');
-        
+        var loadingview = setTimeout(function() {
+            $('.gs_loading_spinner').addClass('active');
+        }, "1000");
+
         thundashop.Ajax.post(latestOverLayLoadingEvent, function(res) {
+            clearTimeout(loadingview);
             $('.gsoverlay2 .gsoverlayinner .content').html(res);
             $('.gsoverlay2 .gsoverlayinner').prepend('<i class="fa fa-close closemodal"></i>');
             isloadingoverlaytype2 = false;
@@ -1466,6 +1484,14 @@ function getshop_loadDatePicker(target, options) {
                if(day < 10) { day = "0" + day; }
                options.dependant.val(day + "." + month + "." + moment(date).get('year'));
             };
+            
+            if(options.shouldbelowest && diff < 0) {
+                options.dependant.val($(target).val());
+            }
+            if(options.shouldbehighest && diff > 0) {
+                options.dependant.val($(target).val());
+            }
+            
         };
     }
     $(target).datepicker(arguments);

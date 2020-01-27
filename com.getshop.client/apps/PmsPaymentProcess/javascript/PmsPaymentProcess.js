@@ -1,3 +1,4 @@
+useNewGroupBookingView = false;
 app.PmsPaymentProcess = {
     init: function() {
         $(document).on('click', '.PmsPaymentProcess .setrooms', this.setRoomsSelected);
@@ -290,7 +291,9 @@ app.PmsPaymentProcess = {
     },
     
     overlayClosed: function() {
-        if (app && app.PmsBookingRoomView) {
+        if(useNewGroupBookingView && app && app.PmsBookingRoomView) {
+            thundashop.framework.reloadOverLayType2();
+        } else if (app && app.PmsBookingRoomView) {
             app.PmsBookingRoomView.refresh();
         }
         

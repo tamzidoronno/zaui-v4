@@ -31,6 +31,8 @@ if(isset($_SESSION['quickaddaddons'])) {
     foreach($products as $prod) {
         $newproducts[$prod->name] = $prod;
     }
+    
+    $roomid = $_POST['data']['roomid'];
     ksort($newproducts);
     
     foreach($newproducts as $product) {
@@ -45,7 +47,7 @@ if(isset($_SESSION['quickaddaddons'])) {
         }
         $found = true;
         echo "<div class='addonsrow'>" . $product->name;
-        echo "<span class='shop_button addAddonsToRoom' productid='".$product->id."' quickadd='$quickadd'>Add</span>";
+        echo "<span class='shop_button addAddonsToRoom' productid='".$product->id."' quickadd='$quickadd' roomid='$roomid'>Add</span>";
         echo "</div>";
     }
     if(!$found) {

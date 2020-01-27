@@ -1,0 +1,114 @@
+<?php
+/* @var $this ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
+$pmsBooking = $this->getPmsBooking();
+$pmsBookingRoom = $this->getPmsBookingRoom();
+
+if($pmsBookingRoom->unpaidAmount > 0.1) {
+    echo "<div class='unpaidamountwarning'><i class='fa fa-warning'></i> For this room there is a total of " . $pmsBookingRoom->unpaidAmount ." which not yet has been paid";
+    echo "<div class='shop_button startpaymentprocessbtn' isgroup='yes' roomid='".$pmsBookingRoom->pmsBookingRoomId."' style='background-color: #86c330; color: #FFF; vertical-align: top;border-radius: 3px; border: solid 0px; float:right;'>Start payment process</div>";
+    echo "</div>";
+} else {
+    $summary = $this->getApi()->getPmsManager()->getSummaryWithoutAccrued($this->getSelectedMultilevelDomainName(), $pmsBooking->id, $pmsBookingRoom->pmsBookingRoomId);
+    $found = false;
+    foreach ($summary->rows as $row) {
+        if ($row->count == 0) {
+            continue;
+        } 
+        $found = true;
+    }
+    
+    if($found) {
+        echo "<div class='unpaidamountwarning'><i class='fa fa-warning'></i> This booking is out of sync with the accounting information.";
+        echo "<div class='shop_button' onclick='$(\".whyoutofsync\").toggle()' style='background-color: #86c330; color: #FFF; vertical-align: top;border-radius: 3px; border: solid 0px; float:right;'>Show me why</div>";
+        echo "</div>";
+        echo "<div class='whyoutofsync'>";
+        echo "<b>Here is the problem</b><br>";
+        foreach ($summary->rows as $row) {
+            if ($row->count == 0) {
+                continue;
+            } 
+            
+            $product = $this->getApi()->getProductManager()->getProduct($row->createOrderOnProductId);
+            
+            echo "At " . $row->date . " you need to create an order for " . $product->name . " for a total of " . $row->priceToCreateOrders . "<br>";
+        }
+        
+        echo "<br><b>Why is this happening?</b><br>";
+        echo "The answer is simple. The guest books and pay for a stay and everything is registered into the accounting module. This data can not be modified later on and thus correction orders are needed to be created. An example, a guest books for a stay on monday and are sendt a reciept for the monday. Then he decides to move the stay ahead to Tuesday. He now have a reciept for Monday but a stay for Tuesday. A correction is needed.";
+        echo "<br><br><b>How do I solve this?</b><br>";
+        echo "There are two ways to correct data that is out of sync.<br>";
+        echo "1. Credit the original order and create a new one that is correct.<br>";
+        echo "2. Create a new order by starting a payment process that has the differences included (an order with a total amount of 0).";
+        echo "<div class='shop_button startpaymentprocessbtn' isgroup='yes' roomid='".$pmsBookingRoom->pmsBookingRoomId."' style='background-color: #86c330; color: #FFF; vertical-align: top;border-radius: 3px; border: solid 0px; float:right;'>Start payment process</div>";
+        echo "</div>";
+    }
+}
+
+$willbedeleted = $this->getApi()->getPmsManager()->willAutoDelete($this->getSelectedMultilevelDomainName(), $pmsBooking->id);
+if($willbedeleted) {
+    $start = strtotime($pmsBooking->completedDate);
+    $start = $start+(60*90);
+    echo "<div class='unpaidamountwarning' style='font-size: 18px;'><i class='fa fa-warning'></i> This booking has been booked online and not yet paid, will be autodeleted at " . date("d.m.Y H:i", $start). ".";
+    echo "<span class='shop_button' style='float:right;' gsclick='cancelautodeletion' roomid='".$pmsBookingRoom->pmsBookingRoomId."'>Cancel autodeletion</span>";
+    echo "</div>";
+}
+
+
+?>
+<div>
+    <div class='groupheaderinformation boxed'>
+        <h2>Group information</h2>
+        <?php $this->includefile("groupinformation"); ?>
+    </div>
+
+    <div class='bookerinformation boxed'>
+        <h2>Booker information</h2>
+        <?php 
+        if(isset($_SESSION['cachedbooking'][$pmsBooking->id])) {
+            echo $_SESSION['cachedbooking'][$pmsBooking->id];
+        } else {
+            ob_start();
+            $this->includefile("bookerinfo"); 
+            $content = ob_get_contents();
+            ob_clean();
+            if(!isset($_SESSION['cachedbooking'])) {
+                $_SESSION['cachedbooking'] = array();
+            }
+            $_SESSION['cachedbooking'][$pmsBooking->id] = $content;
+            echo $content;
+        }
+        ?>
+    </div>
+
+    <div class='groupheaderinformation boxed'>
+        <h2>Rooms in group</h2>
+        <div class='roomsingroupinformation'>
+            <?php $this->includefile("roomsingroup"); ?>
+        </div>
+        <div class='bookinghighlightcolor' style='width:100%;box-sizing: border-box;margin-top: 3px;text-align: center;'>Add another room</div>
+
+    </div>
+
+    <div class='bookerinformation boxed'>
+        <?php $this->includefile("roominformation"); ?>
+    </div>
+    <div style='clear:both;'></div>
+</div>
+
+<style>
+    .PmsBookingGroupRoomView .roomsingroupinformation { overflow: auto;max-height: 500px;}
+    .PmsBookingGroupRoomView .boxed { min-height: 290px; box-shadow: 0px 2px 15px rgba(0,0,0,0.3); margin: 10px; box-sizing: border-box; background-color:#fff; display:inline-block; padding: 10px; float:left; }
+    .PmsBookingGroupRoomView .groupheaderinformation { width: 300px;   }
+    .PmsBookingGroupRoomView .bookerinformation { width: calc(100% - 350px); min-height: 290px; }
+    .gsoverlayinner { background-color:#e0ebee; }
+    .PmsBookingGroupRoomView h2 { margin-top: 0px; border-bottom: solid 1px #bbb; padding-bottom: 2px; color:#000; }
+    .PmsBookingGroupRoomView h2.nomargin { margin: 0px; }
+    .gsoverlay2 .gsoverlayinner, .gsoverlay1 .gsoverlayinner { width: 95%; }
+</style>
+
+
+<script>
+    if(!window.location.hash) {
+        history.pushState(latestOverLayLoadingEvent, "page 2", "#roomid="+latestOverLayLoadingEvent.data.id + "&subsection=guests");
+    }   
+</script>

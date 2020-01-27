@@ -1,7 +1,7 @@
 <?php
-/* @var $this ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView */
+/* @var $this ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
 $pmsBooking = $this->getPmsBooking();
-$pmsSelectedRoom = $this->getSelectedRoom();
+$pmsSelectedRoom = $this->getPmsBookingRoom();
 $user = $this->getUserForBooking();
 $bookingEngineBooking = $this->getBookingEngineBooking();
 
@@ -21,7 +21,6 @@ if($pmsBooking->avoidAutoDelete) {
 $channelList = $this->getApi()->getPmsManager()->getChannelMatrix($this->getSelectedMultilevelDomainName());
 $formater = new \ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBookingColumnFormatters(null);
 $channelNames = $formater->getChannels();
-
 ?>
 <div class='col_box_width_2'>
     <div class="row odd">
@@ -80,40 +79,53 @@ $channelNames = $formater->getChannels();
         </div>    
     </div>
 
-    <?php
-    if ($pmsBooking->wubookchannelreservationcode) {
-        ?>
-        <div class="row odd">
-            <div class="col col1"><? echo $this->__f("Channel reservation id"); ?></div>
-            <div class="col col2"><? echo $pmsBooking->wubookchannelreservationcode; ?></div>    
-        </div>
-        <?php
-    }
-    if ($pmsBooking->wubookreservationid) {
-        ?>
-        <div class="row odd">
-            <div class="col col1"><? echo $this->__f("Wubook id"); ?></div>
-            <div class="col col2"><? echo $pmsBooking->wubookreservationid . " (<a href='https://wubook.net/bookings/" . $pmsBooking->wubookreservationid . "' target='_new'>Open in wubook</a>)"; ?></div>    
-        </div>
-        <?php
-        }
-    ?>
+    <div class="row odd">
+        <div class="col col1"><? echo $this->__f("Channel reservation ids"); ?></div>
+        <div class="col col2"><? echo $pmsBooking->wubookchannelreservationcode ? $pmsBooking->wubookchannelreservationcode . "/" . $pmsBooking->wubookreservationid : "N/A"; ?></div>    
+    </div>
 
     <div class="row odd">
         <div class="col col1"><? echo $this->__f("Room non refundable"); ?></div>
         <?php
         if ($pmsSelectedRoom->nonrefundable) {
             ?>
-            <div class="col col2">Yes, <span style='cursor:pointer;' class='bookinghighlightcolor' gsclick='togglerefundable'>make it refundable</span></div>    
+            <div class="col col2">Yes, <span style='cursor:pointer;' class='bookinghighlightcolor' roomid='<?php echo $pmsSelectedRoom->pmsBookingRoomId; ?>' gsclick='togglerefundable'>make it refundable</span></div>    
             <?php
         } else {
             ?>
-            <div class="col col2">No, <span style='cursor:pointer;' class='bookinghighlightcolor' gsclick='togglerefundable'>make it non refundable</span></div>    
+            <div class="col col2">No, <span style='cursor:pointer;' class='bookinghighlightcolor' roomid='<?php echo $pmsSelectedRoom->pmsBookingRoomId; ?>' gsclick='togglerefundable'>make it non refundable</span></div>    
             <?php
         }
         ?>
     </div>
+    
+    <div class="row odd">
+        <div class="col col1"><? 
+        echo "<i class='fa fa-edit bookinghighlightcolor adduserdescription' style='cursor:pointer;'></i> ";
+        echo $this->__f("Pinned comment"); 
+        
+        ?></div>
+        <div class="col col2"><? 
+        if($user->description) {
+            echo "<i class='fa fa-trash-o' style='cursor:pointer;' gsclick='deleteUserDescription' roomid='".$pmsSelectedRoom->pmsBookingRoomId."'></i> ";
+        }
+        echo $user->description; ?></div>    
+    </div>    
 
+    <div class="row odd">
+        <div class="col col1"><? 
+        echo " <i class='fa fa-edit bookinghighlightcolor addordernote' style='cursor:pointer;'></i> ";
+        echo $this->__f("Order note");
+        ?></div>
+        <div class="col col2"><? 
+        if($pmsBooking->invoiceNote) {
+            echo "<i class='fa fa-trash-o' style='cursor:pointer;' gsclick='deleteInvoiceNote' roomid='".$pmsSelectedRoom->pmsBookingRoomId."'></i> ";
+        }
+
+        echo $pmsBooking->invoiceNote; ?>
+        </div>    
+    </div>
+    
     <?php
     if($config->wubookAutoCharging) {
     ?>
@@ -163,17 +175,22 @@ $channelNames = $formater->getChannels();
                 echo $user->fullName;
             } ?>
                 </b></div>
-        </div>    
+        </div>  
     </div>
 
     <div class="row odd">
-        <div class="col col1"><span><? echo $this->__f("Booked for"); ?></span></div>
+        <div class="col col1"><span><? echo $this->__f("Booked for"); ?></span> (
+            <span class='bookinghighlightcolor' style='cursor:pointer;'  onclick='$(".change_user_form").hide();$(".edit_details_of_user").toggle();'>edit</span> or 
+            <span class='bookinghighlightcolor' style='cursor:pointer;' onclick='$(".edit_details_of_user").hide();$(".change_user_form").toggle();'>change</span>)</div>
         <div class="col col2">
             <?
+            $extraArgs = array();
+            $extraArgs['invokeJavascriptFunctionAfterActions'] = "app.PmsBookingGroupRoomView.refresh";
+            $extraArgs['roomid'] = $pmsSelectedRoom->pmsBookingRoomId;
             $quser = new \ns_b5e9370e_121f_414d_bda2_74df44010c3b\GetShopQuickUser();
             $quser->setUser($user);
             $quser->setExtraArgs($extraArgs);
-            $quser->renderApplication(true, $this);
+            $quser->renderApplication(true, $this, true);
             ?>
         </div>
     </div>
@@ -183,7 +200,7 @@ $channelNames = $formater->getChannels();
         <div class="col col2"><?php echo "+" . $user->prefix . " " . $user->cellPhone; ?></div>
     </div>
     <div class="row odd">
-        <div class="col col1"><i class="fa fa-info-circle" title="This email is used to send payment link, invoice and reciepts to"></i> <span><? echo $this->__f("Email (for payments)"); ?></span></div>
+        <div class="col col1"><span><? echo $this->__f("Email (for payments)"); ?></span></div>
         <div class="col col2 bookinghighlightcolor"><?php echo $user->emailAddress; ?></div>
     </div>
 
@@ -212,4 +229,73 @@ $channelNames = $formater->getChannels();
             ?>
         </div>
     </div>
+    <div style='clear:both;'></div>
+    <div class='commentarea'>
+        <div class='commentsheader'>Comments - <span class='bookinghighlightcolor' style='cursor:pointer;' onclick='$(".PmsBookingGroupRoomView .addcommentarea").toggle();$(".addcommenttobooking").focus();'>add comment</span> - 
+            <span class='bookinghighlightcolor' style='cursor:pointer;' onclick='$(".notforroom").show();$(".hiddencomment").show();'>show all comments (<?php echo sizeof((array)$pmsBooking->comments); ?></span>)</div>
+        <?php
+        $counter = 0;
+        foreach($pmsBooking->comments as $time => $comment) {
+            /* @var $comment core_pmsmanager_PmsBookingComment */
+            $notForRoom = "";
+            
+            $hiddenclass = $counter >= 3 ? "hiddencomment" : "";
+            $deletedClass = "";
+            
+            if($comment->deleted) {
+                $hiddenclass = "hiddencomment";
+                $deletedClass = "deletedcomment";
+            } else if($comment->pmsBookingRoomId) {
+                if($comment->pmsBookingRoomId != $this->getSelectedRoomId()) {
+                    $notForRoom = "notforroom";
+                } else {
+                    $notForRoom = "forroom";
+                    $counter++;
+                }
+            } else {
+                $counter++;
+            }
+            
+            $user = $this->getApi()->getUserManager()->getUserById($comment->userId);
+            echo "<div class='$notForRoom $hiddenclass $deletedClass commentrow' roomid='".$pmsSelectedRoom->pmsBookingRoomId."' commentid='".$comment->commentId."'>";
+            echo "<span class='commenttime'>";
+            echo "<i class='fa fa-trash-o' gsclick='deleteComment' style='cursor:pointer;' gs_confirm='Are you sure?' roomid='".$pmsSelectedRoom->pmsBookingRoomId."' commentid='".$comment->commentId."'></i> ";
+            echo "<i class='fa fa-edit editcomment' style='cursor:pointer'></i> " . date("d.m.y h:i", $time/1000) . "</span>";
+            echo "<span class='commenttext'>" . $comment->comment . "</span>";
+            echo "<span class='commentby'>" . $user->fullName . "</span>";
+            echo "</div>";
+        }
+        ?>
+    </div>
+    <div class='addcommentarea' gstype='form' method='addComment'>
+        <input type='hidden' gsname='roomid' value='<?php echo $pmsSelectedRoom->pmsBookingRoomId; ?>'>
+        <textarea class='addcommenttobooking' gsname='comment'></textarea>
+        <span class='shop_button addcommentbtn' gstype='submit' gsvalue='group' style='float:right;'>Add to group</span>
+        <span class='shop_button addcommentbtn' gstype='submit' gsvalue='room'>Add to room</span>
+    </div>
+    
+    <span class='shop_button savecomment'>Save comment</span>
 </div>
+
+
+<style>
+    .PmsBookingGroupRoomView .notforroom { display:none; }
+    .PmsBookingGroupRoomView .savecomment { display:none; }
+    .PmsBookingGroupRoomView .hiddencomment { display:none; }
+    .PmsBookingGroupRoomView .forroom { color:#bb2d2d; }
+    .PmsBookingGroupRoomView .deletedcomment { text-decoration: line-through; }
+    .PmsBookingGroupRoomView .addcommentarea { margin-top: 10px;display:none; }
+    .PmsBookingGroupRoomView .addcommentbtn { width:45%; box-sizing: border-box; float:left;}
+    .PmsBookingGroupRoomView .addcommenttobooking { width:100%; box-sizing: border-box; height: 80px; }
+    .PmsBookingGroupRoomView .commentsheader { text-align: left;  margin-top: 10px; color:#777; }
+    .PmsBookingGroupRoomView .commentarea { padding-left: 10px; font-size: 12px; }
+    .PmsBookingGroupRoomView .commentby { float:right; color:#bbb; }
+    .PmsBookingGroupRoomView .commenttime { color:#bbb; width: 120px; display:inline-block; }
+    .PmsBookingGroupRoomView .bookerinformation .col { width: 40%; display:inline-block; }
+    .PmsBookingGroupRoomView .bookerinformation .col_box_width_2 { width: 50%; display:inline-block; float:left; }
+    .PmsBookingGroupRoomView .col1 {     width: 190px; line-height: 20px; padding-left: 10px; box-sizing: border-box;color: #777; }
+    .PmsBookingGroupRoomView { font-size: 15px; }
+    .PmsBookingGroupRoomView .show_edit_user, .PmsBookingGroupRoomView .show_change_user, .PmsBookingGroupRoomView .bookinghighlightcolor { color: #4da6cb; }
+    .PmsBookingGroupRoomView .edit_user_btn { display:none; }
+    .PmsBookingGroupRoomView .commenttext { width: calc(100% - 250px );display: inline-block;  white-space: nowrap;  overflow: hidden;  text-overflow: ellipsis: }
+</style>

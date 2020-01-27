@@ -194,10 +194,5 @@ body[pageid="home"] .footer_row {
         padding-left: 10px;
         padding-right: 10px;
     }
-    .mobilebox {
-        border: solid 1px #efefef;
-        padding: 10px;
-        border-radius: 3px;
-        margin-bottom: 10px;
-    }
+   
 }

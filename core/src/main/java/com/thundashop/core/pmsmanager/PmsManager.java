@@ -1327,6 +1327,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             logPrint("Tried to save an invalid configuration object");
             return;
         }
+        for(Integer key : notifications.addonConfiguration.keySet()) {
+            PmsBookingAddonItem item = notifications.addonConfiguration.get(key);
+            if(!item.addonType.equals(key)) {
+                System.out.println("Key is out of sync");
+                if(notifications.addonConfiguration.containsKey(item.addonType)) {
+                    //This needs to be moved.
+                    PmsBookingAddonItem alreadyThere = notifications.addonConfiguration.get(item.addonType);
+                    notifications.addonConfiguration.put(key, alreadyThere);
+                    alreadyThere.addonType = key;
+                }
+                notifications.addonConfiguration.put(item.addonType, item);
+            }
+        }
         this.configuration = notifications;
         notifications.finalize();
         saveObject(notifications);

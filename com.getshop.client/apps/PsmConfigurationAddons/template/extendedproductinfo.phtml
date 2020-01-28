@@ -29,6 +29,9 @@ $rangetype[2] = "On booking";
         Count (max selection) <input type="txt" class="settings" gsname="count" value="<?php echo $addonItem->count; ?>">
     </div>
     <div class="extendedinforow">
+        Default breakfast product<br>(used to connect to booking.com, etc) <input type="checkbox" class="settings" gsname="defaultbreakfast" <?php echo $addonItem->addonType == 1 ? "CHECKED" : ""; ?>>
+    </div> 
+    <div class="extendedinforow">
         <input type="button" class="settings" value="Hide" style="width:256px" onclick="$(this).closest('.settingsForProduct').find('.extendedinformation').toggle();">
     </div>
     <br/>

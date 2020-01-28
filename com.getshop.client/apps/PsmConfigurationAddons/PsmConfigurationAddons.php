@@ -222,12 +222,16 @@ class PsmConfigurationAddons extends \WebshopApplication implements \Application
             if($addon->productId != $_POST['data']['productId']) {
                 continue;
             }
+            /* @var $addon core_pmsmanager_PmsBookingAddonItem */
             $addon->onlyForBookingItems = $_POST['data']['onlyForItems'];
             $addon->descriptionWeb = $_POST['data']['descriptionWeb'];
             $addon->bookingicon = $_POST['data']['bookingicon'];
             $addon->count = $_POST['data']['count'];
             $addon->channelManagerAddonText = $_POST['data']['channelManagerAddonText'];
             $addon->groupAddonType = $_POST['data']['groupaddon'];
+            if($_POST['data']['defaultbreakfast'] == "true") {
+                $addon->addonType = 1;
+            }
         }
         $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $config);
     }

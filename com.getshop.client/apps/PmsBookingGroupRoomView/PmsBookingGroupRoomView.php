@@ -49,6 +49,8 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
     }
     
     public function render() {
+        $this->displayToggleNew();
+        
         echo "<div class='room_view_outer' usenewpayment='true'>";
         $this->includefile("main");
         echo "</div>";
@@ -1002,6 +1004,9 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
     }
 
     public function useNew() {
+        if(isset($_SESSION['newbookingviewtoggled']) && $_SESSION['newbookingviewtoggled']) {
+            return true;
+        }
         return false;
     }
 
@@ -1017,6 +1022,13 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         $this->clearCache();
     }
     
+    public function removenewversion() {
+        unset($_SESSION['newbookingviewtoggled']);
+    }
+
+    public function displayToggleNew() {
+        echo "<div style='background-color:green; color:#fff;text-align:center;cursor:pointer; padding: 5px;' gsclick='removenewversion' gs_callback='app.PmsBookingGroupRoomView.refresh'>Toggle old version</div>";
+    }
 
 }
 ?>

@@ -460,6 +460,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     }
     
     public function render() {
+        $this->showNewVersionText();
         echo "<div class='room_view_outer' usenewpayment='".$this->shouldUseNewPaymentWindow()."'>";
             if(isset($_POST['data']['getshop_resetlistmode']) && $_POST['data']['getshop_resetlistmode'] == "true") {
                 $this->removeGroupList();
@@ -2504,6 +2505,18 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
             return true;
         }
         return false;
+    }
+
+    public function showNewVersionText() {
+        $user = $this->getApi()->getUserManager()->getLoggedOnUser();
+        if(!stristr($user->emailAddress, "@getshop.com")) {
+            return;
+        }
+        echo "<div style='background-color:green; color:#fff;text-align:center; padding: 5px;'>A new version of this view is available <span gsclick='toggleNewView' style='cursor:pointer; color:blue;'>here</a>.</div>";
+    }
+    
+    public function toggleNewView() {
+        $_SESSION['newbookingviewtoggled'] = true;
     }
 
 }

@@ -21,6 +21,24 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         $this->clearCache();
     }
     
+    public function searchForGuest() {
+        $guest = new \core_pmsmanager_PmsGuests();
+        switch($_POST['data']['type']) {
+            case "name": 
+                $guest->name = $_POST['data']['keyword'];
+                break;
+            case "phone": 
+                $guest->phone = $_POST['data']['keyword'];
+                break;
+            case "email": 
+                $guest->email = $_POST['data']['keyword'];
+                break;
+        }
+        $suggestions = $this->getApi()->getPmsManager()->findRelatedGuests($this->getSelectedMultilevelDomainName(), $guest);
+        $newbooking = new \ns_bf644a39_c932_4e3b_a6c7_f6fd16baa34d\PmsNewBooking20();
+        $newbooking->printSuggestions($suggestions);
+    }
+    
     public function checkinoutguest() {
         $roomid = $this->getPmsBookingRoom()->pmsBookingRoomId;
         $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $roomid);
@@ -46,6 +64,10 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         $end = $this->convertToJavaDate(strtotime($_POST['data']['enddate'] . " " . $_POST['data']['endtime']));
         $this->getApi()->getPmsManager()->changeDates($this->getSelectedMultilevelDomainName(), $roomId, $bookingId, $start, $end);
         $this->clearCache();
+    }
+    
+    public function toggleCreditHistory() {
+        $_SESSION['pmsshowcredithistory'] = (isset($_SESSION['pmsshowcredithistory']) && $_SESSION['pmsshowcredithistory']) ? false : true;
     }
     
     public function render() {

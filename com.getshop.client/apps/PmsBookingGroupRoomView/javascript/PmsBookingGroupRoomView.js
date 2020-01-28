@@ -36,9 +36,47 @@ app.PmsBookingGroupRoomView = {
         $(document).on('click', '.PmsBookingGroupRoomView .adduserdescription', this.changeUserDescription);
         $(document).on('click', '.PmsBookingGroupRoomView .addordernote', this.addOrderNote);
         $(document).on('click', '.PmsBookingGroupRoomView .opengroup', this.openGroup);
+        $(document).on('click', '.PmsBookingGroupRoomView .addsuggestionarrow', this.addSuggestedRow);
+        $(document).on('click', '.PmsBookingGroupRoomView .showPreviewFixOrder', this.showPreviewFixOrder);
+        $(document).on('keyup', '.PmsBookingGroupRoomView [searchtype]', this.searchGuests);
         $(document).on('change', '.PmsBookingGroupRoomView .changediscountcode', this.changeCouponCode);
         $(document).on('change', '.PmsBookingGroupRoomView .changesegment', this.changeSegment);
         $(document).on('change', '.PmsBookingGroupRoomView .changechannel', this.changeChannel)
+    },
+    
+    showPreviewFixOrder: function() {
+        thundashop.framework.loadAppInOverLay("af54ced1-4e2d-444f-b733-897c1542b5a8", "3", {
+            orderId: $(this).attr('orderid'),
+            bookingid : $(this).attr('bookingid'),
+            state: 'prewviewfixorder'
+        });
+    },
+    
+    addSuggestedRow : function() {
+        var row = $(this).closest('.guest_row');
+        var suggestionrow = $(this).closest('.guestsuggestionrow');
+        var counter = row.attr('counter');
+        row.find('[gsname="guestinfo_'+counter+'_name"]').val(suggestionrow.find('.guestsuggestionname').text());
+        row.find('[gsname="guestinfo_'+counter+'_email"]').val(suggestionrow.find('.guestsuggestionemail').text());
+        row.find('[gsname="guestinfo_'+counter+'_prefix"]').val(suggestionrow.find('.guestsuggestionphoneprefix').text());
+        row.find('[gsname="guestinfo_'+counter+'_phone"]').val(suggestionrow.find('.guestsuggestionphonenumber').text());
+        $(this).closest('.searchsuggestions').html('');
+    },
+    searchGuests : function() {
+        if(typeof(app.PmsBookingRoomView.searchguesttimeout) !== "undefined") {
+            clearTimeout(app.PmsBookingRoomView.searchguesttimeout);
+        }
+        
+        var row = $(this).closest('.guest_row');
+        var keyword = $(this).val();
+        row.find('.selectsameasbooker').hide();
+        var type = $(this).attr('searchtype');
+        app.PmsBookingRoomView.searchguesttimeout = setTimeout(function() {
+            var searchEvent = thundashop.Ajax.createEvent('','searchForGuest',row, {"keyword" : keyword, "type" : type});
+            thundashop.Ajax.postWithCallBack(searchEvent, function(res) {
+                row.find('.searchsuggestions').html(res);
+            });
+        }, "300");
     },
      openGroup : function() {
         thundashop.common.closeModal();

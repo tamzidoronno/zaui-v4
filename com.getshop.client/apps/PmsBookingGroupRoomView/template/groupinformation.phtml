@@ -17,16 +17,19 @@ echo "<div>Total unpaid for group <span style='float:right;'>" . $unpaid . "</sp
 if($booking->createOrderAfterStay) {
     echo "Undo pay after stay";
 } else {
-    echo "Pay after stay";
+    echo "Pay after stay for all group";
 }
 ?>
 </div>
 <div class='shop_button startpaymentprocessbtn' style='width:45%;box-sizing: border-box;background-color:#86c330;border-radius:3px;float:right;font-size:12px;line-height: 14px; padding-top: 6px;'>Start payment process</div>
 <div style='clear:both;'></div>
 <?php
-echo "<div class='otheroptions'><a target='_new' bookingid='".$booking->id."' style='cursor:pointer;' class='opengroup bookinghighlightcolor'>open in group view</a></div>";
+echo "<div class='otheroptions'><a target='_new' bookingid='".$booking->id."' style='cursor:pointer;' class='opengroup bookinghighlightcolor'>open in group view</a>";
+echo "</div>";
 echo "<div class='otheroptions'><a target='_new' href='/pms.php?page=0da68de9-da08-4b60-9652-3ac456da2627&groupview=$booking->id' style='cursor:pointer;' class='opengroup bookinghighlightcolor'>open in availability</a></div> ";
-echo "<div class='otheroptions'><a target='_new' href='/pms.php?page=afe687b7-219e-4396-9e7b-2848f5ed034d&groupview=$booking->id' style='cursor:pointer;' class='opengroup bookinghighlightcolor'>open in report</a></div>";
+echo "<div class='otheroptions'>";
+echo "<a target='_new' href='/pms.php?page=afe687b7-219e-4396-9e7b-2848f5ed034d&groupview=$booking->id' style='cursor:pointer;' class='opengroup bookinghighlightcolor'>open in report</a>";
+echo "</div>";
 ?>
 <style>
     .PmsBookingGroupRoomView .otheroptions { text-align: center; margin-top: 10px; }

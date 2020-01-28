@@ -25,6 +25,29 @@
     vertical-align: top;
 }
 
+
+.PmsBookingGroupRoomView .guestsuggestionname {
+    display: inline-block;
+    width: 35%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.PmsBookingGroupRoomView .guestsuggestionemail {
+    display: inline-block;
+    width: 35%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.PmsBookingGroupRoomView .guestsuggestionphone {
+    display: inline-block;
+    width: 20%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .PmsBookingGroupRoomView .movetotype .itemselector {
     display: inline-block;
     width: calc(100% - 204px);

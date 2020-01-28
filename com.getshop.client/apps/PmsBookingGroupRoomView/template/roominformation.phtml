@@ -9,6 +9,7 @@ $menu['messages'] = "Messages";
 $menu['cleaning'] = "Cleaning";
 $menu['payments'] = "Payments";
 $menu['confirmation'] = "Confirmation";
+$menu['log'] = "Log";
 
 
 $icons = array();
@@ -20,6 +21,7 @@ $icons['messages'] = "inbox";
 $icons['cleaning'] = "paint-brush";
 $icons['payments'] = "money";
 $icons['confirmation'] = "money";
+$icons['log'] = "money";
 
 
 $selected = "guests";
@@ -32,6 +34,9 @@ echo "<div class='menurow'>";
 foreach($menu as $id => $val) {
     $hide = "";
     if($id == "confirmation") {
+        $hide = "display:none;";
+    }
+    if($id == "log") {
         $hide = "display:none;";
     }
     $select = ($selected == $id) ? "selected" : "";

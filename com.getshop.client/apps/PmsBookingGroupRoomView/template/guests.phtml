@@ -5,7 +5,7 @@ $pmsBooking = $this->getPmsBooking();
 $pmsSelectedRoom = $this->getPmsBookingRoom();
 $sendmsgconfig = new ns_624fa4ac_9b27_4166_9fc3_5c1d1831b56b\PmsSendMessagesConfiguration();
 $langs = $sendmsgconfig->getLanguageCodes();
-$hasConferences = sizeof($this->getApi()->getPmsConferenceManager()->getAllItem("-1")) > 0;
+$hasConferences = sizeof((array)$this->getApi()->getPmsConferenceManager()->getAllItem("-1")) > 0;
 
 $guestcount = (int)$pmsSelectedRoom->numberOfGuests;
 $numberofguests = (int)sizeof($pmsSelectedRoom->guests);

@@ -1,0 +1,16 @@
+<?
+/* @var $this ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
+$pmsBooking = $this->getPmsBooking();
+$pmsSelectedRoom = $this->getPmsBookingRoom();
+$booking = $this->getBookingEngineBooking();
+$filter = new \core_pmsmanager_PmsLog();
+$filter->bookingId = $pmsBooking->id;
+$filter->roomId = $pmsSelectedRoom->pmsBookingRoomId;
+$filter->includeAll = true;
+
+$logentries = $this->getApi()->getPmsManager()->getLogEntries($this->getSelectedMultilevelDomainName(), $filter);
+
+$arrays = array_chunk($logentries, 2000);
+$this->setLogEntries($logentries);
+$this->includefile("logentries");
+?>

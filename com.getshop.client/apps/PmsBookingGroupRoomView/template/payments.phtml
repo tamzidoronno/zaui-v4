@@ -7,7 +7,7 @@ $extraOrders = $this->getApi()->getPmsManager()->getExtraOrderIds($this->getSele
 $summary = $this->getApi()->getPmsManager()->getSummary($this->getSelectedMultilevelDomainName(), $pmsBooking->id, $room->pmsBookingRoomId);
 $summaryWithoutAccrued = $this->getApi()->getPmsManager()->getSummaryWithoutAccrued($this->getSelectedMultilevelDomainName(), $pmsBooking->id, $room->pmsBookingRoomId);
 
-$showCredittedHistory = false;
+$showCredittedHistory = (isset($_SESSION['pmsshowcredithistory']) && $_SESSION['pmsshowcredithistory']) ? true : false;
 $showAllOrders = false;
 
 
@@ -181,7 +181,6 @@ $payAfterStay = $room->createOrdersOnZReport && !($needToCreateOrdersFor <= 1 &&
                 </div>
             </div>
                 <?php
-                
                 if ($order->createdBasedOnCorrectionFromOrderIds && $showCredittedHistory) {
                     foreach ($order->createdBasedOnCorrectionFromOrderIds as $innerOrderId) {
                         $order = $this->getApi()->getOrderManager()->getOrder($innerOrderId);

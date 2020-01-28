@@ -35,10 +35,10 @@ $channelNames = $formater->getChannels();
                        style='position: absolute;left: 215px;font-size: 22px;cursor:pointer;top: -1px;color: #8cd8f6;'></i>
                     <input type="text" class="gsniceinput1 enddate" gstype="submitenter" placeholder="End date" gsname="end">
                 </span>
-                <span class="shop_button searchforfreeroomsbutton" gstype="submit">Search</span>
+                <span class="shop_button searchforfreeroomsbuttonfromrooms" gstype="submit">Search</span>
             </div>
             <div style='text-align: left;padding:10px;padding-left:20px;height:200px;'>
-                <select class='addcouponcode' style='width:240px;'>
+                <select class='addcouponcode' style='width:240px;' gsname='couponcode' id="couponcode">
                     <?php
                     $this->printCouponCodes($booking);
                     ?>
@@ -109,7 +109,7 @@ $channelNames = $formater->getChannels();
                 date.add(1, 'days');
                 $('.PmsNewBooking20 .enddate').val(date.format('DD.MM.YYYY'));
             }
-            $('.searchforfreeroomsbutton').click();
+            $('.searchforfreeroomsbuttonfromrooms').click();
         }
     });
     $('.PmsNewBooking20 .enddate').datepicker({dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true, firstDay: 1,
@@ -122,7 +122,7 @@ $channelNames = $formater->getChannels();
                 date.add(-1, 'days');
                 $('.PmsNewBooking20 .startdate').val(date.format('DD.MM.YYYY'));
             }
-            $('.searchforfreeroomsbutton').click();
+            $('.searchforfreeroomsbuttonfromrooms').click();
         }
     });
     $('.PmsNewBooking20 .startconferencedate').datepicker({dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true, firstDay: 1,

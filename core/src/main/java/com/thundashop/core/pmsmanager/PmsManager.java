@@ -2964,7 +2964,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         guest.prefix = storeManager.getPrefix();
         room.guests.add(guest);
         setPriceOnRoom(room, true, booking);
-
         List<PmsBookingRooms> toAdd = new ArrayList();
         toAdd.add(room);
 
@@ -2986,7 +2985,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         addDefaultAddonsToRooms(toAdd);
-
+        addDiscountAddons(room, booking);
         saveBooking(booking);
 
         logEntry(typeToAdd.name + " added to booking " + " time: " + convertToStandardTime(start) + " " + convertToStandardTime(end), bookingId, null);

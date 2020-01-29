@@ -4965,6 +4965,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
         saveOrder(credited);
         saveOrder(order);
+        cleanOrder(credited.id, "fdasf345345345!mnm!");
         
         if (order.status != Order.Status.PAYMENT_COMPLETED && markAsPaid) {
             markAsPaidWithTransactionTypeInternal(order.id, order.getTotalAmount(), new Date(), 1, "unkown", order.getTotalAmountLocalCurrency(), order.getTotalRegisteredAgio());
@@ -4987,6 +4988,26 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return credited;
     }
 
+    @Override
+    public void cleanOrder(String orderId, String password) {
+        if(!password.equals("fdasf345345345!mnm!")) {
+            return;
+        }
+        boolean failed = false;
+        Order order = getOrder(orderId);
+        for(CartItem item : order.getCartItems()) {
+            item.recalculatePriceMatrixAndAddons();
+            Double diff = item.getDiffForFromMeta();
+            if(diff != 0.0) {
+                failed = true;
+            }
+        }
+        
+        if(failed) {
+            messageManager.sendErrorNotification("Failed to clean order:" + order.incrementOrderId, null);
+        }
+    }
+    
     @Override
     public void addSpecialPaymentTransactions(String orderId, Double amount, Double amountInLocalCurrency, Integer transactionType, String comment, Date date) {
         Order order = getOrder(orderId);

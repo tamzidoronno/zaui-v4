@@ -459,6 +459,28 @@ public class CartItem implements Serializable, Cloneable {
         return itemsAdded;
     }
     
+    public void recalculatePriceMatrixAndAddons() {
+        Double amount = getProduct().price * count;
+        if(priceMatrix != null) {
+            int matrixSize = priceMatrix.size();
+            if(matrixSize > 0) {
+                Double avgPrice = amount / matrixSize;
+                List<String> keys = new ArrayList(priceMatrix.keySet());
+                for(String key : keys) {
+                    priceMatrix.put(key, avgPrice);
+                }
+            }
+        }
+        
+        if(itemsAdded != null && !itemsAdded.isEmpty()) {
+            Double avgPrice = amount / itemsAdded.size();
+            for(PmsBookingAddonItem item : itemsAdded) {
+                item.count = 1;
+                item.price = avgPrice;
+            }
+        }
+    }
+    
     public boolean correctIncorrectCalculation() {
         double total = getTotalAmount();
         double totalOnMeta = getTotalOnMeta();

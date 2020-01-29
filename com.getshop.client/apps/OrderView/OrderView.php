@@ -31,6 +31,11 @@ class OrderView extends \MarketingApplication implements \Application {
         return "OrderView";
     }
     
+    public function cleanOrder() {
+        $orderId =$_POST['data']['orderId'];
+        $password =$_POST['data']['password'];
+        $this->getApi()->getOrderManager()->cleanOrder($orderId, $password);
+    }
     
     public function saveInternalCommentOnOrder() {
         $this->setOrder();

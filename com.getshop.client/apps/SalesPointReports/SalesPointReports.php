@@ -198,8 +198,13 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
         $paymentAppId = str_replace("_", "-", $paymentAppId);
         $app = $this->getApi()->getStoreApplicationPool()->getApplication($paymentAppId);
         $instance = $this->getFactory()->getApplicationPool()->createInstace($app);
-        $name = $instance->getName();
-        $this->cachedPaymentNames[$paymentNameSpaceId] = $name;
+        if($instance) {
+            $name = $instance->getName();
+            $this->cachedPaymentNames[$paymentNameSpaceId] = $name;
+        } else {
+          echo "Instance on app: ". $app->id . " does not exists (" . $paymentNameSpaceId . ")"; 
+          exit(0);
+        }
         return $name;
     }
 

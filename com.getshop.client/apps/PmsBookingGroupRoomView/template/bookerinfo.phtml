@@ -237,7 +237,9 @@ $channelNames = $formater->getChannels();
             <span class='bookinghighlightcolor' style='cursor:pointer;' onclick='$(".notforroom").show();$(".hiddencomment").show();'>show all comments (<?php echo sizeof((array)$pmsBooking->comments); ?></span>)</div>
         <?php
         $counter = 0;
-        foreach($pmsBooking->comments as $time => $comment) {
+        $comments = (array)$pmsBooking->comments;
+        krsort($comments);
+        foreach($comments as $time => $comment) {
             /* @var $comment core_pmsmanager_PmsBookingComment */
             $notForRoom = "";
             

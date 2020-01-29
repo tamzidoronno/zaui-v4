@@ -38,12 +38,23 @@ app.PmsBookingGroupRoomView = {
         $(document).on('click', '.PmsBookingGroupRoomView .opengroup', this.openGroup);
         $(document).on('click', '.PmsBookingGroupRoomView .addsuggestionarrow', this.addSuggestedRow);
         $(document).on('click', '.PmsBookingGroupRoomView .showPreviewFixOrder', this.showPreviewFixOrder);
+        $(document).on('click', '.PmsBookingGroupRoomView .addanotherroomtogroup', this.loadAddGroup);
         $(document).on('keyup', '.PmsBookingGroupRoomView [searchtype]', this.searchGuests);
         $(document).on('change', '.PmsBookingGroupRoomView .changediscountcode', this.changeCouponCode);
         $(document).on('change', '.PmsBookingGroupRoomView .changesegment', this.changeSegment);
         $(document).on('change', '.PmsBookingGroupRoomView .changechannel', this.changeChannel)
     },
-    
+    loadAddGroup : function() {
+        $('.addanotherroompopup').show();
+        var event = thundashop.Ajax.createEvent('','loadCategoryAvailability',$(this), {
+            "start" : $(this).attr('start'),
+            "end" : $(this).attr('end'),
+            "roomid" : app.PmsBookingGroupRoomView.getRoomId()
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.addanotherroompopup').html(res);
+        });
+    },
     showPreviewFixOrder: function() {
         thundashop.framework.loadAppInOverLay("af54ced1-4e2d-444f-b733-897c1542b5a8", "3", {
             orderId: $(this).attr('orderid'),
@@ -387,6 +398,7 @@ app.PmsBookingGroupRoomView = {
             "starttime" : $('.PmsBookingGroupRoomView .changedatespanel .starttime').val(),
             "enddate" : $('.PmsBookingGroupRoomView .changedatespanel .enddate').val(),
             "endtime" : $('.PmsBookingGroupRoomView .changedatespanel .endtime').val(),
+            "roomtypeanditem" : $('.PmsBookingGroupRoomView .changedatespanel .roomtypeanditem').val(),
             "roomid" : app.PmsBookingGroupRoomView.getRoomId()
         });
         thundashop.Ajax.postWithCallBack(event, function() {
@@ -402,6 +414,21 @@ app.PmsBookingGroupRoomView = {
         if(type === "checkout") {
             $('.changedatespanel .enddate').focus();
         }
+    },
+    validateStayPeriode : function(res) {
+        var data = {
+            "startdate" : $('.PmsBookingGroupRoomView .changedatespanel .startdate').val(),
+            "starttime" : $('.PmsBookingGroupRoomView .changedatespanel .starttime').val(),
+            "enddate" : $('.PmsBookingGroupRoomView .changedatespanel .enddate').val(),
+            "endtime" : $('.PmsBookingGroupRoomView .changedatespanel .endtime').val(),
+            "roomtypeanditem" : $('.PmsBookingGroupRoomView .changedatespanel .roomtypeanditem').val(),
+            "roomid" : app.PmsBookingGroupRoomView.getRoomId()
+        };
+        
+        var event = thundashop.Ajax.createEvent('','canChangeStay', $('.PmsBookingGroupRoomView'),data);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.warningstayperiode').html(res);
+        });
     },
     removeGuestToConference : function(res) {
         var guestid = $(this).closest('.guest_row').attr('guestid');

@@ -644,6 +644,9 @@ public class BookingEngineNew extends GetShopSessionBeanNamed implements IBookin
         
         
         BookingItem bookingItem = getBookingItem(itemId);
+        BookingItemType type = getBookingItemType(itemId);
+        if(type != null) { itemId = ""; }
+        
         if (bookingItem == null && !itemId.isEmpty()) {
             throw new BookingEngineException("Can not change to a bookingItem that does not exists");
         }
@@ -654,6 +657,9 @@ public class BookingEngineNew extends GetShopSessionBeanNamed implements IBookin
             booking.endDate = end;
             if (bookingItem != null) {
                 booking.bookingItemTypeId = bookingItem.bookingItemTypeId;
+            }
+            if(type != null) {
+                booking.bookingItemTypeId = type.id;
             }
             validateBooking(booking);
             saveObject(booking);

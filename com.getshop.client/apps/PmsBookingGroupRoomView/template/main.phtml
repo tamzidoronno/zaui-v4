@@ -83,10 +83,18 @@ if($willbedeleted) {
     <div class='groupheaderinformation boxed'>
         <h2>Rooms in group</h2>
         <div class='roomsingroupinformation'>
-            <?php $this->includefile("roomsingroup"); ?>
+            <?php 
+            $this->includefile("roomsingroup"); 
+            $start = date("d.m.Y", time());
+            $end = date("d.m.Y", time()+86400);
+            ?>
         </div>
-        <div class='bookinghighlightcolor' style='width:100%;box-sizing: border-box;margin-top: 3px;text-align: center;'>Add another room</div>
-
+        <div class='bookinghighlightcolor addanotherroomtogroup' style='width:100%;box-sizing: border-box;margin-top: 3px;text-align: center; cursor:pointer;'
+             start='<?php echo $start; ?>' 
+             end='<?php echo $end; ?>' 
+             style='float:right; margin-right: 5px; background-color:green;' 
+             bookingId='<?php echo $this->getPmsBooking()->id; ?>'>Add another room</div>
+        <div class='addanotherroompopup' gstype='form' method='addAnotherRoom'></div>
     </div>
 
     <div class='bookerinformation boxed'>

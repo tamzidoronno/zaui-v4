@@ -14,6 +14,94 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         return "PmsBookingGroupRoomView";
     }
 
+    public function loadCategoryAvailability() {
+        $this->includefile("roomsavailable");
+    }
+    
+    public function canChangeStay() {
+        
+        
+        $roomId = $this->getPmsBookingRoom()->pmsBookingRoomId;
+        $bookingId = $this->getPmsBooking()->id;
+        $start = $this->convertToJavaDate(strtotime($_POST['data']['startdate'] . " " . $_POST['data']['starttime']));
+        $end = $this->convertToJavaDate(strtotime($_POST['data']['enddate'] . " " . $_POST['data']['endtime']));
+        
+        $roomtypeanditem = $_POST['data']['roomtypeanditem'];
+        $roomtypeanditem = explode("_", $roomtypeanditem);
+        
+        $bookingsToAdd = array();
+        $booking = new \core_bookingengine_data_Booking();
+        $booking->startDate = $start;
+        $booking->endDate = $end;
+        $booking->bookingItemId = $roomtypeanditem[1];
+        $booking->bookingItemTypeId = $roomtypeanditem[0];
+        $bookingsToAdd[] =$booking;
+        
+        if(strtotime($booking->startDate) > strtotime($booking->endDate)) {
+            echo "<i class='fa fa-warning'></i> The stay is starting after its ending.";
+            return;
+        }
+        
+        $engine = $this->getSelectedMultilevelDomainName();
+        
+        $canAdd = true;
+        if($this->getPmsBookingRoom()->bookingId) {
+            $items = (array)$this->getApi()->getBookingEngine()->getAvailbleItemsWithBookingConsideredAndShuffling($engine, $booking->bookingItemTypeId, $booking->startDate, $booking->endDate, $this->getPmsBookingRoom()->bookingId);
+            if(sizeof($items) == 0) {
+                $canAdd = false;
+            }
+            if($booking->bookingItemId) {
+                $found = false;
+                foreach($items as $item) {
+                    if($item->id == $booking->bookingItemId) {
+                        $found = true;
+                    }
+                }
+                if(!$found) { $canAdd = false; }
+            }
+        }
+        if(!$canAdd) {
+            echo "<i class='fa fa-warning'></i> ";
+            if($booking->bookingItemId) {
+                $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $booking->bookingItemId);
+                echo "Room " . $item->bookingItemName . " is not available in the time span " . date("d.m.Y H:i", strtotime($start)) . " - " . date("d.m.Y H:i", strtotime($end));
+            } else {
+                $category = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $booking->bookingItemTypeId);
+                echo "Category " . $category->name . " is not available in the time span " . date("d.m.Y H:i", strtotime($start)) . " - " . date("d.m.Y H:i", strtotime($end));
+            }
+        }
+    }
+    
+    public function addAnotherRoom() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        $start = $this->convertToJavaDate(strtotime($_POST['data']['start'] . " " . $config->defaultStart));
+        $end = $this->convertToJavaDate(strtotime($_POST['data']['end'] . " " . $config->defaultEnd));
+        $bookingId =  $this->getPmsBooking()->id;
+        $type = $_POST['data']['type'];
+        if(!$type) {
+            return;
+        }
+        $gs_multilevel_name = $this->getSelectedMultilevelDomainName();
+        $count = $_POST['data']['count'];
+        $newRoom = "";
+        for($i = 0; $i < $count; $i++) {
+            $newRoom = $this->getApi()->getPmsManager()->addBookingItemType($gs_multilevel_name, $bookingId, $type, $start, $end, null);
+        }
+        echo $newRoom;
+    }
+    
+    public function printAvailableRoomsFromCategory($start, $end) {
+        $start = $this->convertToJavaDate(strtotime($start));
+        $end = $this->convertToJavaDate(strtotime($end));
+        $categories = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
+        echo "<option value=''>Choose a category</option>";
+        foreach($categories as $cat) {
+            $number = $this->getApi()->getBookingEngine()->getNumberOfAvailable($this->getSelectedMultilevelDomainName(), $cat->id, $start, $end);
+            echo "<option value='" . $cat->id . "'>" . $cat->name . " ($number available)</option>";
+        }
+    }
+    
+    
     public function splitStay() {
         $roomId = $_POST['data']['roomid'];
         $splitTime = $this->convertToJavaDate(strtotime($_POST['data']['date'] . " " . $_POST['data']['time']));
@@ -57,12 +145,37 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         $this->clearCache();
     }
     
+    public function ignorechannelmanager() {
+        $booking = $this->getPmsBooking();
+        $booking->ignoreWubook = !$booking->ignoreWubook;
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+        if($booking->ignoreWubook) {
+            $this->getApi()->getPmsManager()->logEntry($this->getSelectedMultilevelDomainName(), "Ignore update from channel manager", $booking->id, null);
+        } else {
+            $this->getApi()->getPmsManager()->logEntry($this->getSelectedMultilevelDomainName(), "cancelled - ignore update from channel manager", $booking->id, null);
+        }
+    }
+    
     public function updateStayTime() {
+        $catsanditems = $_POST['data']['roomtypeanditem'];
+        $catsanditems = explode("_", $catsanditems);
+        $typeId = $catsanditems[0];
+        $itemId = $catsanditems[1];
+        
         $roomId = $this->getPmsBookingRoom()->pmsBookingRoomId;
         $bookingId = $this->getPmsBooking()->id;
         $start = $this->convertToJavaDate(strtotime($_POST['data']['startdate'] . " " . $_POST['data']['starttime']));
         $end = $this->convertToJavaDate(strtotime($_POST['data']['enddate'] . " " . $_POST['data']['endtime']));
-        $this->getApi()->getPmsManager()->changeDates($this->getSelectedMultilevelDomainName(), $roomId, $bookingId, $start, $end);
+        
+        $room = $this->getPmsBookingRoom();
+        if($room->bookingItemId != $itemId || $room->bookingItemTypeId != $typeId) {
+            if(!$itemId) {
+                $itemId = $typeId;
+            }
+            $this->getApi()->getPmsManager()->setBookingItemAndDate($this->getSelectedMultilevelDomainName(), $roomId, $itemId, false, $start, $end);
+        } else {
+            $this->getApi()->getPmsManager()->changeDates($this->getSelectedMultilevelDomainName(), $roomId, $bookingId, $start, $end);
+        }
         $this->clearCache();
     }
     

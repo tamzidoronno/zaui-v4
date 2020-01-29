@@ -31,7 +31,7 @@ if(stristr($booking->channel, "wubook_")) {
     echo "<div style='padding: 10px; background-color:red; color:white;'>";
     if(!$booking->ignoreWubook) {
         echo "Be careful doing changes in this area. The booking is connected to an OTA and should be changed by them. They can be overwritten and in worse case cenario cause overbooking, read more about overbookings <a href='https://system.getshop.com/double_booking_error.html' target='_fsdaf' style='color:cyan;'>here</a>.";
-        echo "<span style='float:right;cursor:pointer; color:#c5c5f7;' gsclick='ignorechannelmanager'>ignore future updates from channel manager</span>";
+        echo "<span style='float:right;cursor:pointer; color:#c5c5f7;' gsclick='ignorechannelmanager' roomid='".$room->pmsBookingRoomId."'>ignore future updates from channel manager</span>";
     } else {
         echo "This booking has been taken out from the channel manager, future updates from the OTA will not be affected, read more about overbookings <a href='https://system.getshop.com/double_booking_error.html' target='_fsdaf' style='color:cyan;'>here</a>.";
         echo "<span style='float:right;cursor:pointer; color:#c5c5f7;' gsclick='ignorechannelmanager'>cancel ignore</span>";
@@ -81,10 +81,35 @@ if(stristr($booking->channel, "wubook_")) {
             </div>
         </div>
         <div class='changedatespanel'>
-            Check-in<br>
+            <div class='checkinheadertext secondarytextcolor'>Room</div>
+            <?php
+            echo "<select class='gsniceselect1 roomtypeanditem'>";
+            foreach($types as $category) {
+                echo '<optgroup label="'.$category->name.'">';
+                $selected = "";
+                if($category->id == $room->bookingItemTypeId && !$room->bookingItemId) {
+                    $selected = "SELECTED";
+                }
+                                
+                echo "<option value='".$category->id . "_' $selected>Floating ".$category->name."</option>";
+                foreach($items as $item) {
+                    if($item->bookingItemTypeId != $category->id) { continue; }
+                    $selected = "";
+                    if($item->id == $room->bookingItemId) {
+                        $selected = "SELECTED";
+                    }
+                    echo "<option value='". $category->id . "_" . $item->id ."' $selected>" . $item->bookingItemName . "</option>";
+                }
+                echo "</optgroup>";
+            }
+            echo "</select>";
+            ?>            
+            <br>
+            <br>
+            <div class='checkinheadertext secondarytextcolor'>Check-in</div>
             <input type="textfield" class="gsniceinput1 startdate" gsname="start" value="<? echo date("d.m.Y", $startDate); ?>"/>
             <input type="textfield" class="gsniceinput1 starttime time starttime" gsname="startTime" value="<? echo date("H:i", $startDate); ?>"/><br><br>
-            Check-out<br>
+            <div class='checkinheadertext secondarytextcolor'>Check-out</div>
             <input type="textfield" class="gsniceinput1 enddate" gsname="end" value="<? echo date("d.m.Y", $endDate); ?>"/> 
 
             <input type="textfield" class="gsniceinput1 endtime time endtime" gsname="endTime" value="<? echo date("H:i", $endDate); ?>"/> 
@@ -94,6 +119,7 @@ if(stristr($booking->channel, "wubook_")) {
             }
             ?>
             <div>
+                <div class='warningstayperiode'></div>
                 <span class='shop_button changedates' style='width:100%;margin-top:5px;box-sizing: border-box;'>Change dates</span>
             </div>
         </div>
@@ -139,8 +165,21 @@ if(stristr($booking->channel, "wubook_")) {
 
 
 <script>
-    getshop_loadDatePicker($('.PmsBookingGroupRoomView .startdate'), { jump : 0, dependant : $('.PmsBookingGroupRoomView .enddate'), shouldbelowest : true  });    
-    getshop_loadDatePicker($('.PmsBookingGroupRoomView .enddate'), { jump : 0, dependant : $('.PmsBookingGroupRoomView .startdate'), shouldbehighest : true });    
+    getshop_loadDatePicker($('.PmsBookingGroupRoomView .startdate'), { jump : 0, dependant : $('.PmsBookingGroupRoomView .enddate'),
+        shouldbelowest : true, 
+        onSelect : function() { 
+            app.PmsBookingGroupRoomView.validateStayPeriode();
+        }
+    });    
+    getshop_loadDatePicker($('.PmsBookingGroupRoomView .enddate'), { jump : 0, dependant : $('.PmsBookingGroupRoomView .startdate'), shouldbehighest : true,
+        onSelect : function() { 
+            app.PmsBookingGroupRoomView.validateStayPeriode();
+        }
+    });
+    
+    $('.roomtypeanditem').on('change', function() { app.PmsBookingGroupRoomView.validateStayPeriode(); });
+    $('.starttime').on('keyup', function() { app.PmsBookingGroupRoomView.validateStayPeriode(); });
+    $('.endtime').on('keyup', function() { app.PmsBookingGroupRoomView.validateStayPeriode(); });
     getshop_loadDatePicker($('.PmsBookingGroupRoomView .splitstaydate'), { dependant : $('.enddate'), jump : 1 });    
 </script>
 

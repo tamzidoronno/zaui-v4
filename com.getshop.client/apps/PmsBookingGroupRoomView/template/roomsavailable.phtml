@@ -1,0 +1,27 @@
+<?php
+/* @var $this ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
+$start = date("d.m.Y", strtotime($this->getPmsBookingRoom()->date->start));
+$end = date("d.m.Y", strtotime($this->getPmsBookingRoom()->date->end));
+?>
+     <i class='fa fa-close' style='cursor:pointer; float:right;' onclick='$(".addanotherroompopup").slideUp()'></i>
+    Start:
+    <input type='txt' gsname='start' class='gsniceinput1' style='width:100%; box-sizing: border-box;' value='<?php echo $start; ?>'>
+    End:
+    <input type='txt' gsname='end' class='gsniceinput1' style='width:100%; box-sizing: border-box;' value='<?php echo $end; ?>'>
+    Category:
+    <select class='gsniceselect1' style='width:100%; box-sizing: border-box;' gsname='type'>
+        <?php $this->printAvailableRoomsFromCategory($start, $end); ?>
+    </select>
+    
+    <div>
+    Number of rooms:
+    </div>
+    <input class='gsniceinput1' gsname='count' style='width: 30px; text-align: center;' value='1'>
+    <input type='hidden' gsname='roomid' value='<?php echo $this->getPmsBookingRoom()->pmsBookingRoomId; ?>'>
+    <span class='shop_button' gstype='submit' style='float:right;'>Add room(s)</span>
+    <script>
+        var startinput = $('.PmsBookingGroupRoomView .addanotherroompopup input[gsname="start"]');
+        var endinput = $('.PmsBookingGroupRoomView .addanotherroompopup input[gsname="end"]');
+        getshop_loadDatePicker(startinput, { dependant : $('[gsname="endate"]'), jump : 1 });
+        getshop_loadDatePicker(endinput, { dependant : $('[gsname="endate"]'), jump : -1 });
+    </script>

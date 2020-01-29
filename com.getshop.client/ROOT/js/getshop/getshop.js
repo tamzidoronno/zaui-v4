@@ -1491,7 +1491,9 @@ function getshop_loadDatePicker(target, options) {
             if(options.shouldbehighest && diff > 0) {
                 options.dependant.val($(target).val());
             }
-            
+            if(typeof(options.onSelect) !== "undefined") {
+                options.onSelect(dateText);
+            }
         };
     }
     $(target).datepicker(arguments);

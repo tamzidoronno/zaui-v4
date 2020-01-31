@@ -1,1 +1,1 @@
-{"token":"c16e5c6d-2352-4169-b52d-1bfb583a0edb","address":"http://corner.3.0.local.getshop.com/","printerType":"","paymentterminal":"verifone","type":"","paymentterminalip":"10.200.1.34"}
+{"token":"c16e5c6d-2352-4169-b52d-1bfb583a0eda","address":"http://corner.3.0.local.getshop.com/","printerType":"","paymentterminal":"nets","type":"","paymentterminalip":"10.200.1.34"}

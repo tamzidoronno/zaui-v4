@@ -1,5 +1,6 @@
 package getshop.nets;
 
+import com.google.gson.Gson;
 import eu.nets.baxi.client.*;
 import eu.nets.baxi.ef.BaxiEF;
 import eu.nets.baxi.ef.BaxiEFEventListener;
@@ -421,6 +422,8 @@ public class GetShopNetsController {
 
             int result = baxi.transferAmount(args);
             LOG.info("The transfer amount operation result: " + result);
+            Gson gson = new Gson();
+            LOG.info(gson.toJson(args));
 
         } else {
             //Something wrong happends here.

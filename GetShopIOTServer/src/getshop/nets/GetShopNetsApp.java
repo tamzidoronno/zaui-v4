@@ -40,6 +40,18 @@ public class GetShopNetsApp implements PaymentOperator {
     public void initialize() {
         controller = new GetShopNetsController(this);
         controller.openBaxi();
+        while(true) {
+            if(isInitialized()) {
+                break;
+            }
+            System.out.println("Waiting for terminal to get ready");
+            try {
+                Thread.sleep(1000);
+            }catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+        
     } 
 
     public void start() throws Exception {
@@ -148,6 +160,7 @@ public class GetShopNetsApp implements PaymentOperator {
 
     @Override
     public void startTransaction(Integer amount, String orderId) {
+        System.out.println("Starting transaction on amount: " + amount + " for order: " + orderId);
         controller.totalAmount = amount;
         controller.transferAmount();
         this.orderId = orderId;

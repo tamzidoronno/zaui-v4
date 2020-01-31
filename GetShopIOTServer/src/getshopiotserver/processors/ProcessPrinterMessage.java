@@ -12,6 +12,9 @@ import getshopiotserver.GetShopIOTCommon;
 import getshopiotserver.MessageProcessorInterface;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -38,21 +41,40 @@ public class ProcessPrinterMessage extends GetShopIOTCommon implements MessagePr
 
     private void printMessage(DirectPrintMessage directPrintMessage) throws IOException {
         logPrint("Printing receipt...");
-        
-        File dir = new File("/dev/usb");
-        File[] directoryListing = dir.listFiles();
-        if (directoryListing != null) {
-          for (File child : directoryListing) {
-            // Do something with child
-            if (child.getName().contains("lp")) {
-                Files.write(
-                child.toPath(), 
-                Base64.getDecoder().decode(directPrintMessage.content), 
-                StandardOpenOption.APPEND);    
+        if(true) {
+            printToSocket("192.168.1.100", 9100, directPrintMessage.content);
+        } else {
+            File dir = new File("/dev/usb");
+            File[] directoryListing = dir.listFiles(); 
+            if (directoryListing != null) {
+              for (File child : directoryListing) {
+                // Do something with child
+                if (child.getName().contains("lp")) {
+                    Files.write(
+                    child.toPath(), 
+                    Base64.getDecoder().decode(directPrintMessage.content), 
+                    StandardOpenOption.APPEND);    
+                }
+              }
             }
-          }
+        }        
+    }
+
+    private void printToSocket(String ip, int port, String message) {
+        try{
+            byte[] res = Base64.getDecoder().decode(message);
+            message = new String(res);
+            System.out.println("############### MESSAGE #################");
+            System.out.println("############### MESSAGE END #################");
+            Socket sock= new Socket(ip, port);
+            PrintWriter writer= new PrintWriter(sock.getOutputStream());
+            writer.println(message);
+            writer.close();
+            sock.close();
+        } catch(IOException ex) {
+            ex.printStackTrace();
         }
-        
+
     }
     
 }

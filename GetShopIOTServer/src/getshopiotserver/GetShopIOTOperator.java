@@ -45,6 +45,9 @@ public class GetShopIOTOperator extends GetShopIOTCommon {
     public void run() {
         logPrint("Ready to recieve instructions from " +getAddress() +  ", with token: " + getToken());
         setStartupConfigs();
+        if(getPaymentOperator() != null) {
+            getPaymentOperator().initialize();
+        }
         while(true) {
             doLongPull();
         }
@@ -55,7 +58,8 @@ public class GetShopIOTOperator extends GetShopIOTCommon {
             if(isVerifone()) {
                 paymentOperator = new VerifoneApp(this);
                 paymentOperator.initialize();
-            } else {
+            }
+            if(isNets()) {
                 paymentOperator = new GetShopNetsApp(this);
                 paymentOperator.initialize();
             }
@@ -68,6 +72,7 @@ public class GetShopIOTOperator extends GetShopIOTCommon {
         
         Gson gson = new Gson();
         try {
+            System.out.println("Reading message");
             String msg = readFromPullService();
             if(msg != null && !msg.isEmpty()) {
                 List<GetShopDeviceMessage> result = new ArrayList();
@@ -279,6 +284,13 @@ public class GetShopIOTOperator extends GetShopIOTCommon {
 
     private boolean isVerifone() {
         if(getSetupMessage().paymentterminal != null && getSetupMessage().paymentterminal.equalsIgnoreCase("verifone")) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isNets() {
+        if(getSetupMessage().paymentterminal != null && getSetupMessage().paymentterminal.equalsIgnoreCase("nets")) {
             return true;
         }
         return false;

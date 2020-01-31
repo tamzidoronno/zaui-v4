@@ -26,17 +26,6 @@ public class ProcessPaymentMessage extends GetShopIOTCommon implements MessagePr
         logPrint("Processing payment message");
         try {
             if(msg instanceof GdsPaymentAction) {
-                if(getOperator().getPaymentOperator() == null) {
-                    logPrint("Initializing payment terminal");
-                    getOperator().getPaymentOperator().initialize();
-                    while(true) {
-                        if(getOperator().getPaymentOperator().isInitialized()) {
-                            break;
-                        }
-                        logPrint("Waiting for terminal to get ready");
-                        Thread.sleep(1000);
-                    }
-                }
                 GdsPaymentAction paymentAction = (GdsPaymentAction) msg;
                 switch(paymentAction.action) {
                     case 1:

@@ -28,20 +28,14 @@ foreach($booking->rooms as $room) {
     foreach($room->guests as $guest) {
         echo "&nbsp;&nbsp;&nbsp;" . $guest->name . "<br>";
     }
-    echo "<div style='color:#8c2626;'>".date("d/m H:i", strtotime($room->date->start)) . " - " . date("d/m H:i", strtotime($room->date->end));
-    echo "<span style='float:right;'>" . $room->unpaidAmount  . "/" . $room->totalCost. "</span>";
+    echo "<div style='color:#8c2626;'><span class='dates'>".date("d/m H:i", strtotime($room->date->start)) . " - " . date("d/m H:i", strtotime($room->date->end)) . "</span>";
+    echo "<span class='unpaidindicator'>" . $room->unpaidAmount  . "/" . $room->totalCost. "</span>";
     echo "</div>";
     echo "</div>";
 }
 
 ?>
 
-<style>
-    .roomgroupbox { background-color:#fff;font-size:12px; padding: 6px; cursor:pointer; border-left: 3px #fff;border-bottom: solid 1px #dce1e0; }
-    .roomgroupbox.selected { border-left: solid 6px #53b689;  }
-    .roomgroupbox:hover { border-bottom: solid 1px; }
-    .roomisdeleted { color:red; }
-</style>
 
 <script>
     if(lastScrollTopPosition) {

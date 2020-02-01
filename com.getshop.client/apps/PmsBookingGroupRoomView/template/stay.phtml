@@ -182,14 +182,3 @@ if(stristr($booking->channel, "wubook_")) {
     $('.endtime').on('keyup', function() { app.PmsBookingGroupRoomView.validateStayPeriode(); });
     getshop_loadDatePicker($('.PmsBookingGroupRoomView .splitstaydate'), { dependant : $('.enddate'), jump : 1 });    
 </script>
-
-<style>
-    .PmsBookingGroupRoomView .startdate,
-    .PmsBookingGroupRoomView .splitstaydate { width: 80px; }
-    .PmsBookingGroupRoomView .enddate { width: 80px; }
-    .PmsBookingGroupRoomView .starttime { width: 40px; }
-    .PmsBookingGroupRoomView .endtime { width: 40px; }
-    .PmsBookingGroupRoomView .changedates { width: 180px !important; }
-    .PmsBookingGroupRoomView .datepresentation { cursor:pointer; }
-    .PmsBookingGroupRoomView .checkingsplitstaybtns { cursor:pointer; }
-</style>

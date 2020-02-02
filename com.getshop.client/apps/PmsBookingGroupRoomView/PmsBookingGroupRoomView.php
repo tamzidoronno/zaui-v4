@@ -15,6 +15,36 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         
     }
 
+    public function translateNotSendPaymentLinkReason($reason) {
+        $reasons = array();
+        /*
+         if(!config.autoSendPaymentReminder) {
+            return 0; //Not configure to send.
+            return 1; //Booking is deleted
+            return 2; //No active rooms.
+            return 3; //Registrered by administrator
+            return 4; //Already sent
+            return 5; //Everything is paid for
+                return 6; //Prepaid by ota
+            return 7; //Booking has started.
+         * 
+         */
+        $reasons[0] = "payment links has not been configured yet, go to settings -> global settings to configure the payment link system";
+        $reasons[1] = "the booking has been deleted";
+        $reasons[2] = "there are not rooms added to this booking to require payment on";
+        $reasons[3] = "booked by a receptionist / hotellier.";
+        $reasons[4] = "the payment link has already been sent";
+        $reasons[5] = "everything is paid for.";
+        $reasons[6] = "its already been paid for by the OTA";
+        $reasons[7] = "the booking has already started.";
+        $reasons[8] = "we are waiting for the booking to be automatically charged, if not charged in 10 minutes payment link is sent.";
+        $reasons[9] = "payment link is not sent in the morning, its intrusive.";
+        $reasons[10] = "booking will be deleted in 30 minutes.";
+        $reasons[11] = "we are waiting 30 minutes for payment to be completed, payment link is sent after that.";
+        $reasons[12] = "access has been forced.";
+        $reasons[13] = "It have an order which is a prepaid order by ota.";
+        return $reasons[$reason];
+    }
     
     public function getName() {
         return "PmsBookingGroupRoomView";
@@ -195,6 +225,9 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         echo "<div class='room_view_outer' usenewpayment='true'>";
         $this->includefile("main");
         echo "</div>";
+        echo "<style>";
+        echo ".gsoverlay2 .gsoverlayinner, .gsoverlay1 .gsoverlayinner { width: 95%; }";
+        echo "</style>";
     }
     
     public function showItemView() {

@@ -913,6 +913,8 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             booking.paymentType = usr.preferredPaymentType;
             if(discount.supportInvoiceAfter) {
                 booking.payLater = true;
+                booking.createOrderAfterStay = true;
+                booking.avoidAutoDelete = true;
             } else {
                 pmsInvoiceManager.autoCreateOrderForBookingAndRoom(booking.id, booking.paymentType);
             }

@@ -628,6 +628,9 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         echo "<optgroup label='Other discount codes'>";
         echo "<option value=''>Choose a discount code</option>";
         foreach($couponcodes as $code) {
+            if($code->timesLeft == 0) {
+                continue;
+            }
             if(in_array($code->code, $alreadyAdded)) {
                 continue;
             }

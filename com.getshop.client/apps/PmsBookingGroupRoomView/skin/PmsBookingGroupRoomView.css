@@ -253,7 +253,6 @@ border: solid 0px;
     .gsoverlayinner { background-color:#e0ebee; }
     .PmsBookingGroupRoomView h2 { margin-top: 0px; border-bottom: solid 1px #bbb; padding-bottom: 2px; color:#000; }
     .PmsBookingGroupRoomView h2.nomargin { margin: 0px; }
-    .gsoverlay2 .gsoverlayinner, .gsoverlay1 .gsoverlayinner { width: 95%; }
     .PmsBookingGroupRoomView .sendmessagetext {
     width: 100%;
     height: 100px;

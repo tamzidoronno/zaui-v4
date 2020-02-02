@@ -20,6 +20,12 @@ $room = $booking->rooms[0];
     <? echo "Amount: ".$total; ?>
 </div>
 <div class='col button'>
-    <div class='gs_shop_small_icon' gs_show_modal='booking_room_view' bookingid="<? echo $booking->id; ?>" roomid="<? echo $room->pmsBookingRoomId; ?>"><? echo $this->__f("Open booking"); ?></div>
+    <?php
+    $pmsapp = new ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView();
+    if($pmsapp->useNew()) { ?>
+        <div class='gs_shop_small_icon' <?php echo $pmsapp->displayPopUpAttributes($room); ?> ><? echo $this->__f("Open booking"); ?></div>
+    <?php } else { ?>
+        <div class='gs_shop_small_icon' gs_show_modal='booking_room_view' bookingid="<? echo $booking->id; ?>" roomid="<? echo $room->pmsBookingRoomId; ?>"><? echo $this->__f("Open booking"); ?></div>
+    <? } ?>
     <div class='gs_shop_small_icon markorderasbillable' orderid='<? echo $order->id; ?>' bookingid="<? echo $booking->id; ?>" roomid="<? echo $room->pmsBookingRoomId; ?>"><? echo $this->__f("Bill booking.com"); ?></div>
 </div>

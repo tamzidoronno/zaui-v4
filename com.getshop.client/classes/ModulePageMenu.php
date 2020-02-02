@@ -281,8 +281,13 @@ class ModulePageMenu {
             $useraccess = (array)$user->salesPointPageAccess;
         }
         ?>
-        <div class="menuentries horizontal">
-                <div class="entries">
+        <div class='mobilemenubtn' onclick='$(".pmsmenuentries").show();$(".gsarea[area=\"header\"] .mobilemenubtn").hide();'>
+            <i class='fa fa-bars'></i>
+            Menu
+        </div>
+        
+        <div class="pmsmenuentries horizontal">
+                <div class="pmsentries">
                     <? foreach ($menuEntries as $entry) {
                         if(!empty($useraccess)) {
                             if(!in_array($entry->getPageId(),$useraccess)) {
@@ -299,7 +304,7 @@ class ModulePageMenu {
                         if($entry->getPageId() == "a90a9031-b67d-4d98-b034-f8c201a8f496") {
                             if(stristr($user->emailAddress, "@getshop.com") || in_array("monthlypaymentlinks",$pluginpages)) {
                                 echo "<span class='gss_dropdownmenu'>";
-                                echo "<a href='/pms.php?page=monthlypaymentlinks'><div class='subentry'>Monthly payment link</div></a>";
+                                echo "<a href='/pms.php?page=monthlypaymentlinks'><div class='pmssubentry'>Monthly payment link</div></a>";
                                 echo "</span>";
                             }
                         }

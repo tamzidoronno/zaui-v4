@@ -164,7 +164,9 @@
     margin-top: 5px;
     display: none;
 }
+.PmsBookingGroupRoomView .craeteconference { cursor:pointer; }
 .PmsBookingGroupRoomView .notforroom { display:none; }
+.PmsBookingGroupRoomView .createconferencepanel { display:none; position:absolute; background-color:#fff; padding: 10px; border: solid 1px #bbb;z-index: 1; }
 .PmsBookingGroupRoomView .savecomment { display:none; }
 .PmsBookingGroupRoomView .hiddencomment { display:none; }
 .PmsBookingGroupRoomView .forroom { color:#bb2d2d; }
@@ -178,12 +180,13 @@
 .PmsBookingGroupRoomView .commenttime { color:#bbb; width: 120px; display:inline-block; }
 .PmsBookingGroupRoomView .bookerinformation .col { width: 40%; display:inline-block; }
 .PmsBookingGroupRoomView .bookerinformation .col_box_width_2 { width: 50%; display:inline-block; float:left; }
-.PmsBookingGroupRoomView .col1 {     width: 190px; line-height: 20px; padding-left: 10px; box-sizing: border-box;color: #777; }
+/*.PmsBookingGroupRoomView .col1 {     width: 190px; line-height: 20px; padding-left: 10px; box-sizing: border-box;color: #777; }*/
 .PmsBookingGroupRoomView { font-size: 15px; }
 .PmsBookingGroupRoomView .show_edit_user, .PmsBookingGroupRoomView .show_change_user, .PmsBookingGroupRoomView .bookinghighlightcolor { color: #4da6cb; }
 .PmsBookingGroupRoomView .edit_user_btn { display:none; }
 .PmsBookingGroupRoomView .commenttext { width: calc(100% - 250px );display: inline-block;  white-space: nowrap;  overflow: hidden;  text-overflow: ellipsis: }
-.PmsBookingGroupRoomView .otheroptions { text-align: center; margin-top: 10px; }
+.PmsBookingGroupRoomView .otheroptions { text-align: center; margin-top: 5px; }
+.PmsBookingGroupRoomView .openconference { cursor:pointer; }
 .show_edit_user,.show_change_user { float:right; margin-left: 5px; }
     
 .PmsBookingGroupRoomView .bookinginformation .guest_col {

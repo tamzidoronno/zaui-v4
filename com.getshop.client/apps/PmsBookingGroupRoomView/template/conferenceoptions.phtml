@@ -1,0 +1,83 @@
+<?php
+/* @var $this ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
+
+$eventId = $this->getSelectedEventId();
+if(!$eventId) {
+    echo "<div style='font-size: 20px; margin: 40px;'>";
+    echo "No events created for this event yet. Please click on 'Add another event' at the right hand side.";
+    echo "</div>";
+    return;
+}
+
+$menu = array();
+$menu['conference_overview'] = "Overview";
+$menu['conference_activities'] = "Activities";
+
+
+$icons = array();
+$icons['conference_overview'] = "info-circle";
+$icons['conference_activities'] = "play-circle-o";
+
+
+$selected = "guests";
+if(isset($_POST['data']['subsection'])) {
+    $selected = $_POST['data']['subsection'];
+}
+
+$first = true;
+echo "<div class='menurow'>";
+foreach($menu as $id => $val) {
+    $hide = "";
+    if($id == "confirmation") {
+        $hide = "display:none;";
+    }
+    if($id == "log") {
+        $hide = "display:none;";
+    }
+    $select = ($selected == $id) ? "selected" : "";
+    $firstClass = $first ? "first" : "";
+    echo "<span class='menubutton $select $firstClass' subsection='$id' style='$hide'>";
+    echo "<span ><div><i class='fa fa-" . $icons[$id] . "'></i></div></span>";
+    echo "<div>$val</div></span>";
+    $first = false;
+}
+echo "</div>";
+?>
+
+
+
+<?php
+
+$pmsSelectedRoom = $this->getPmsBookingRoom();
+if($pmsSelectedRoom->addedToWaitingList) {
+    echo "<div class='isdeletedinformation'>";
+    echo "This room is added to the waiting list rooms, <a style='color:#be99d7; cursor:pointer;' gstype='clicksubmit' gsname='id' gsvalue='".$pmsSelectedRoom->pmsBookingRoomId."' method='removeFromWaitingList'>try adding this room.</a>";
+    echo "<span style='float:right; background-color:red; color:#be99d7; padding-left:5px; padding-right: 5px; cursor:pointer;' gstype='clicksubmit' gsname='id' gsvalue='".$pmsSelectedRoom->pmsBookingRoomId."' method='deleteWaitingListRoom'>Delete from waiting list</span>";
+    if($pmsSelectedRoom->prioritizeInWaitingList) {
+        echo " This rooms is proritized, <span style='color:#be99d7;cursor:pointer;' gsclick='togglePriorityRoom' roomid='".$pmsSelectedRoom->pmsBookingRoomId."'>deactivate prioritization</span>";
+    } else {
+        echo " <span style='color:#be99d7;cursor:pointer;' gsclick='togglePriorityRoom' roomid='".$pmsSelectedRoom->pmsBookingRoomId."'>prioritize</span>";
+    }
+    echo "</div>";
+} else if($pmsSelectedRoom->deleted) {
+    echo "<div class='isdeletedinformation'>";
+    echo "This room has been cancelled / deleted, <span gsclick='deleteRoom' roomid='".$pmsSelectedRoom->pmsBookingRoomId."'  style='color:#be99d7;cursor:pointer;'>try to undelete it</span>.";
+    if($pmsSelectedRoom->overbooking) {
+        echo "<span gsclick='removeFromOverBookingList' roomid='".$pmsSelectedRoom->pmsBookingRoomId."' style='float:right; color:#be99d7;cursor:pointer;' gs_confirm='Warning, this will not readd the booking, just remove it from the list, use undelete it to make sure it is readded.'>remove it from overbooking list</span>.";
+    }
+    echo "</div>";
+} 
+
+
+if(in_array($selected,array_keys($menu))) {
+    echo "<div class='$selected' style='background-color:#fff;'>";
+    echo "<div style='padding: 20px;'>";
+    $this->includefile($selected);
+    echo "<div style='clear:both;'></div>";
+    echo "</div>";
+    echo "</div>";
+}
+
+
+
+?>

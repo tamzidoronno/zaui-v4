@@ -105,6 +105,7 @@ public class PmsConfiguration extends DataCommon {
     /* other configurations */
     public boolean avoidSendingBookingConfigurationsToOTA = false;
     public boolean sendToBookerIfGuestIsEmpty = false;
+    public boolean conferenceSystemActive = false;
     public boolean needConfirmation = false;
     public boolean needToAgreeOnContract = false;
     public boolean exposeUnsecureBookings = false;

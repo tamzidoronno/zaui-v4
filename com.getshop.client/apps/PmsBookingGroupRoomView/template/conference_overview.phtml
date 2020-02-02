@@ -1,0 +1,95 @@
+<?php
+/* @var $this ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
+$conference = $this->getConference();
+
+$event = $this->getApi()->getPmsConferenceManager()->getConferenceEvent($this->getSelectedEventId());
+
+$items = $this->getEventItems();
+
+?>
+
+
+<div class='event_info' eventid='<? echo $event->id; ?>' gstype='form' method='updateEvent'>
+    <input type='hidden' value='<?php echo $event->id; ?>' gsname='eventid'>
+    <div class='row'>
+        <div class='col col1'>
+            <?
+            echo $this->__f("Event name"); 
+            ?>
+        </div>
+        
+        <div class='col col2'>
+            <input gsname='title' class='gsniceinput1' value='<? echo $event->title; ?>'/>  
+        </div>
+    </div>
+    
+    <div class='row'>
+        <div class='col col1'>
+            <?
+            echo $this->__f("Location"); 
+            ?>
+        </div>
+        
+        <div class='col col2'>
+            <select gsname='pmsConferenceItemId' class='gsniceselect1'>
+                <?
+                foreach ($items as $item) {
+                    $selected = $item->id == $event->pmsConferenceItemId ? "selected='true'" : "";
+                    ?>
+                    <option <? echo $selected; ?> value='<? echo $item->id; ?>'><? echo $item->name; ?></option>
+                    <?
+                }
+                ?>
+            </select>
+        </div>
+    </div>
+    
+    <div class='row'>
+        <div class='col col1'>
+            <?
+            echo $this->__f("Date"); 
+            ?>
+        </div>
+        
+        <div class='col col2'>
+            <input gsname='date' class='gsniceinput1' value='<? echo $event->from ? date('d.m.Y',strtotime($event->from)) : date('d.m.Y',strtotime('today')); ?>'/>  
+        </div>
+    </div>
+    
+    <div class='row'>
+        <div class='col col1'>
+            <?
+            echo $this->__f("Start time"); 
+            ?>
+        </div>
+        
+        <div class='col col2'>
+            <input gsname='starttime' class='gsniceinput1' value='<? echo $event->from ? date('H:i',strtotime($event->from)) : "08:00"; ?>'/>  
+        </div>
+    </div>
+    
+    <div class='row'>
+        <div class='col col1'>
+            <?
+            echo $this->__f("End time"); 
+            ?>
+        </div>
+        
+        <div class='col col2'>
+            <input gsname='endtime' class='gsniceinput1' value='<? echo $event->to ? date('H:i',strtotime($event->to)) : "16:00"; ?>'/>  
+        </div>
+    </div>
+    
+    <div class='row'>
+        <div class='col col1'>
+        </div>
+        
+        <div class='col col2'>
+            <span class='shop_button' gstype='submit'>Update event</span>
+        </div>
+    </div>
+    <span style='float:right; background-color:red;' gsclick='deleteEvent' 
+          gs_confirm="Are you sure you want to delete this event?"
+          gs_callback="app.PmsBookingGroupRoomView.eventDeleted"
+          eventid='<?php echo $this->getSelectedEventId(); ?>' roomid='<?php echo $this->getSelectedRoomId(); ?>' class='shop_button'>Delete event</span>
+</div>

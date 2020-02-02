@@ -5,17 +5,23 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
    
     private $pmsBooking;
     private $pmsBookingRoom;
+    private $conference;
+    private $events;
+    private $eventItems;
+    private $eventEntries;
+    private $config;
     
     public function getDescription() {
         
     }
 
+    
     public function getName() {
         return "PmsBookingGroupRoomView";
     }
 
     public function loadCategoryAvailability() {
-        $this->includefile("roomsavailable");
+        $this->includefile("roomsavailable");        
     }
     
     public function canChangeStay() {
@@ -1139,6 +1145,11 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
     }
 
     public function useNew() {
+//        return false;
+        if($this->getPmsConfiguration()->conferenceSystemActive) {
+            return true;
+        }
+        
         if(isset($_SESSION['newbookingviewtoggled']) && $_SESSION['newbookingviewtoggled']) {
             return true;
         }
@@ -1162,7 +1173,208 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
     }
 
     public function displayToggleNew() {
-        echo "<div style='background-color:green; color:#fff;text-align:center;cursor:pointer; padding: 5px;' gsclick='removenewversion' gs_callback='app.PmsBookingGroupRoomView.refresh'>Toggle old version</div>";
+        $config = $this->getPmsConfiguration();
+        if(!$config->conferenceSystemActive) {
+            echo "<div style='background-color:green; color:#fff;text-align:center;cursor:pointer; padding: 5px;' gsclick='removenewversion' gs_callback='window.location.reload();'>Toggle old version</div>";
+        }
+    }
+
+    public function getConference() {
+        if(!$this->conference) {
+            $this->conference = $this->getApi()->getPmsConferenceManager()->getConference($this->getPmsBooking()->conferenceId);
+        }
+        return $this->conference;
+    }
+    
+    /**
+     * 
+     * @return \core_pmsmanager_PmsConferenceEvent[]
+     */
+    public function getEvents() {
+        if(!$this->events) {
+            $this->events = $this->getApi()->getPmsConferenceManager()->getConferenceEvents($this->getConference()->id);
+        }
+        return $this->events;
+    }
+
+    public function deleteEvent() {
+        $_SESSION['pmsconferenceeventdeleted'] = $this->getSelectedEventId();
+        $this->getApi()->getPmsConferenceManager()->deleteConferenceEvent($this->getSelectedEventId());
+    }
+    
+    public function saveConferenceTitle() {
+        $conference = $this->getApi()->getPmsConferenceManager()->getConference($_POST['data']['conferenceid']);
+        $conference->meetingTitle = $_POST['data']['title'];
+        $this->getApi()->getPmsConferenceManager()->saveConference($conference);
+    }
+    
+    public function addNewEvent() {
+        $conference = $this->getConference()->id;
+        
+        $event = new \core_pmsmanager_PmsConferenceEvent();
+        $event->title = $_POST['data']['title'];
+        $event->pmsConferenceId = $this->getConference()->id;
+        $event->pmsConferenceItemId = $_POST['data']['pmsConferenceItemId'];
+        $event->from = $this->convertToJavaDate(strtotime($_POST['data']['date']." ".$_POST['data']['starttime']));
+        $event->to = $this->convertToJavaDate(strtotime($_POST['data']['date']." ".$_POST['data']['endtime']));
+        
+        $eventId = $this->getApi()->getPmsConferenceManager()->createConferenceEvent($event);
+        echo $eventId;
+    }
+    
+    public function updateEvent() {
+        $event = $this->getSelectedEvent();
+        $event->title = $_POST['data']['title'];
+        $event->pmsConferenceId = $this->getConference()->id;
+        $event->pmsConferenceItemId = $_POST['data']['pmsConferenceItemId'];
+        $event->from = $this->convertToJavaDate(strtotime($_POST['data']['date']." ".$_POST['data']['starttime']));
+        $event->to = $this->convertToJavaDate(strtotime($_POST['data']['date']." ".$_POST['data']['endtime']));
+
+        $this->getApi()->getPmsConferenceManager()->saveConferenceEvent($event);
+    }
+    
+    public function getSelectedEventId() {
+        if(isset($_POST['data']['eventid']) && $_POST['data']['eventid']) {
+            return $_POST['data']['eventid'];
+        }
+        $events = (array)$this->getEvents();
+        if(sizeof($events) > 0) {
+            return $this->getEvents()[0]->id;
+        } else {
+            return null;
+        }
+    }
+    
+    public function deleteConference() {
+        $this->getApi()->getPmsConferenceManager()->deleteConference($this->getPmsBooking()->conferenceId);
+        $booking = $this->getPmsBooking();
+        $booking->conferenceId = "";
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+    }
+    
+    public function saveEventActivities() {
+        $event = $this->getSelectedEvent();
+        foreach ($_POST['data']['activites'] as $activity) {
+            $existing = $this->getExistingEntry($activity['activityid']);
+            $existing->pmsEventId = $event->id;
+            $existing->conferenceId = $this->getConference()->id;
+            $existing->count = $activity['count'];
+            $existing->text = $activity['text'];
+            $existing->extendedText = $activity['extendedText'];
+            $existing->from = $this->convertToJavaDate(strtotime($_POST['data']['date']." ".$activity['from']));
+            if($activity['to']) {
+                $existing->to = $this->convertToJavaDate(strtotime($_POST['data']['date']." ".$activity['to']));
+            } else {
+                $existing->to = null;
+            }
+            
+            $this->getApi()->getPmsConferenceManager()->saveEventEntry($existing);
+        }
+    }
+
+    /**
+     * 
+     * @return \core_pmsmanager_PmsConferenceItem[]
+     */
+    public function getEventItems() {
+        if(!$this->eventItems) {
+            $this->eventItems = $this->getApi()->getPmsConferenceManager()->getAllItem("-1");
+        }
+        
+        return $this->indexList($this->eventItems);
+    }
+
+    public function loadAddEvent() {
+        $this->includefile("addeventpanel");
+    }
+    
+    /**
+     * 
+     * @return \core_pmsmanager_PmsConferenceEvent
+     */
+    public function getSelectedEvent() {
+        $events = $this->getEvents();
+        foreach($events as $event) {
+            if($event->id == $this->getSelectedEventId()) {
+                return $event;
+            }
+        }
+        return null;
+    }
+
+    public function getExistingEntry($activityId) {
+        $activities = $this->getActivities();
+        
+        foreach($activities as $activity) {
+            if($activity->id == $activityId) {
+                return $activity;
+            }
+        }
+        return new \core_pmsmanager_PmsConferenceEventEntry();
+    }
+
+    public function createNewConference() {
+        $conference = new \core_pmsmanager_PmsConference();
+        $conference->meetingTitle = $_POST['data']['title'];
+        $conference->forUser = $this->getPmsBooking()->userId;
+        $conf = $this->getApi()->getPmsConferenceManager()->saveConference($conference);
+        $booking = $this->getPmsBooking();
+        $booking->conferenceId = $conf->id;
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+    }
+    
+    public function connectToConference() {
+        $booking = $this->getPmsBooking();
+        $booking->conferenceId = $_POST['data']['conferenceid'];
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+    }
+    
+    public function findConference() {
+        $filter = new \core_pmsmanager_PmsConferenceFilter();
+        $filter->title = $_POST['data']['keyword'];
+        $conferences = $this->getApi()->getPmsConferenceManager()->getAllConferences($filter);
+        foreach($conferences as $conf) {
+            echo "<div>" . $conf->meetingTitle . " (<span style='cursor:pointer;' class='bookinghighlightcolor'"
+                    . " gs_callback='app.PmsBookingGroupRoomView.conferenceSelected'"
+                    . " gsclick='connectToConference' roomid='".$this->getSelectedRoomId()."' conferenceid='".$conf->id."'>select</span>)</div>";
+        }
+    }
+    
+    /**
+     * 
+     * @return \core_pmsmanager_PmsConferenceEventEntry[]
+     */
+    public function getActivities() {
+        if($this->eventEntries == null) {
+            $this->eventEntries = $this->getApi()->getPmsConferenceManager()->getEventEntries($this->getSelectedEventId());
+        }
+        return (array)$this->eventEntries;
+        
+    }
+
+    public function isConferenceView() {
+        if(isset($_POST['data']['mainarea']) && $_POST['data']['mainarea'] == "conference") {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @return \core_pmsmanager_PmsConfiguration
+     */
+    public function getPmsConfiguration() {
+          if($this->config == null) {
+            $this->config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        }
+        return $this->config;
+    }
+
+    public function displayPopUpAttributes($room, $roomId = null) {
+        if($roomId != null) {
+            return "method='loadBooking' gs_show_overlay='booking_room_view' id='".$roomId."' ";
+        } else {
+            return "method='loadBooking' gs_show_overlay='booking_room_view' id='".$room->pmsBookingRoomId. "' ";
+        }
     }
 
 }

@@ -2512,7 +2512,7 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
         if(!stristr($user->emailAddress, "@getshop.com")) {
             return;
         }
-        echo "<div style='background-color:green; color:#fff;text-align:center; padding: 5px;'>A new version of this view is available <span gsclick='toggleNewView' style='cursor:pointer; color:blue;'>here</a>.</div>";
+        echo "<div style='background-color:green; color:#fff;text-align:center; padding: 5px;'>A new version of this view is available <span gsclick='toggleNewView' style='cursor:pointer; color:blue;' gs_callback='window.location.reload();'>here</a>.</div>";
     }
     
     public function toggleNewView() {

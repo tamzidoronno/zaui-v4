@@ -29,7 +29,7 @@ foreach($booking->rooms as $room) {
         echo "&nbsp;&nbsp;&nbsp;" . $guest->name . "<br>";
     }
     echo "<div style='color:#8c2626;'><span class='dates'>".date("d/m H:i", strtotime($room->date->start)) . " - " . date("d/m H:i", strtotime($room->date->end)) . "</span>";
-    echo "<span class='unpaidindicator'>" . $room->unpaidAmount  . "/" . $room->totalCost. "</span>";
+    echo "<span class='unpaidindicator'>" . round($room->unpaidAmount,2)  . "/" . round($room->totalCost,2). "</span>";
     echo "</div>";
     echo "</div>";
 }

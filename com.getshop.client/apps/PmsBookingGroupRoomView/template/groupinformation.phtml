@@ -3,8 +3,11 @@
 
 $booking = $this->getPmsBooking();
 $unpaid = $this->getApi()->getPmsInvoiceManager()->getUnpaidAmountOnBooking($this->getSelectedMultilevelDomainName(), $booking->id);
+$unpaid = round($unpaid, 2);
+$config = $this->getPmsConfiguration();
+
     echo "<div>Number of rooms in booking " . "<span style='float:right;'>" .  sizeof($booking->rooms) . "</span></div>";
-echo "<div>Total for group <span style='float:right;'>" . $booking->totalPrice . "</span></div>";
+echo "<div>Total for group <span style='float:right;'>" . round($booking->totalPrice,2) . "</span></div>";
 echo "<div>Total unpaid for group <span style='float:right;'>" . $unpaid . "</span></div>";
 ?>
 <bR>
@@ -27,6 +30,36 @@ if($booking->createOrderAfterStay) {
 echo "<div class='otheroptions'><a target='_new' bookingid='".$booking->id."' style='cursor:pointer;' class='opengroup bookinghighlightcolor'>open in group view</a>";
 echo "</div>";
 echo "<div class='otheroptions'><a target='_new' href='/pms.php?page=0da68de9-da08-4b60-9652-3ac456da2627&groupview=$booking->id' style='cursor:pointer;' class='opengroup bookinghighlightcolor'>open in availability</a></div> ";
+if($config->conferenceSystemActive) {
+    echo "<div class='otheroptions'>";
+    if($booking->conferenceId) {
+        if($this->isConferenceView()) {
+            echo "<a class='bookinghighlightcolor openconference'>list rooms</a>";
+        } else {
+            echo "<a class='bookinghighlightcolor openconference'>open conference</a>";
+        }
+    } else {
+        echo "<a class='bookinghighlightcolor craeteconference'>create conference</a>";
+        ?>
+    <div class='createconferencepanel'>
+        Create a new conference:<br>
+        <div gstype='form' method='createNewConference'>
+            <input type='hidden' gsname='roomid' value='<?php echo $this->getSelectedRoomId(); ?>'>
+            <input type='txt' class='gsniceinput1' gsname='title' placeholder='Conference title'>
+            <span class='shop_button' gstype='submit' gs_callback='app.PmsBookingGroupRoomView.conferenceSelected'>Create conference</span>
+        </div>
+        <bR>
+        <div>
+            Or connect to an existing conference:<br>
+            <input type='txt' class='gsniceinput1 searchconferencetitle' placeholder='Conference title'>
+            <div class='searchconferencearea'></div>
+        </div>
+
+    </div>
+    <?php
+    }
+    echo "</div>";
+}
 echo "<div class='otheroptions'>";
 echo "<a target='_new' href='/pms.php?page=afe687b7-219e-4396-9e7b-2848f5ed034d&groupview=$booking->id' style='cursor:pointer;' class='opengroup bookinghighlightcolor'>open in report</a>";
 echo "</div>";

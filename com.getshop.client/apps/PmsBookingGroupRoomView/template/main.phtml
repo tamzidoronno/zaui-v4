@@ -9,11 +9,16 @@ if($pmsBookingRoom->unpaidAmount > 0.1) {
     echo "</div>";
 } else {
     $summary = $this->getApi()->getPmsManager()->getSummaryWithoutAccrued($this->getSelectedMultilevelDomainName(), $pmsBooking->id, $pmsBookingRoom->pmsBookingRoomId);
+    
+    
     $found = false;
     foreach ($summary->rows as $row) {
         if ($row->count == 0) {
             continue;
         } 
+        if($row->priceToCreateOrders < 0.1 && $row->priceToCreateOrders > -0.1) {
+            continue;
+        }
         $found = true;
     }
     
@@ -52,8 +57,6 @@ if($willbedeleted) {
     echo "<span class='shop_button' style='float:right;' gsclick='cancelautodeletion' roomid='".$pmsBookingRoom->pmsBookingRoomId."'>Cancel autodeletion</span>";
     echo "</div>";
 }
-
-
 ?>
 <div>
     <div class='groupheaderinformation boxed'>
@@ -80,33 +83,88 @@ if($willbedeleted) {
         ?>
     </div>
 
-    <div class='groupheaderinformation boxed'>
-        <h2>Rooms in group</h2>
-        <div class='roomsingroupinformation'>
-            <?php 
-            $this->includefile("roomsingroup"); 
-            $start = date("d.m.Y", time());
-            $end = date("d.m.Y", time()+86400);
-            ?>
+    <?php
+    $flipToConference = "";
+    if(isset($_POST['data']['mainarea']) && $_POST['data']['mainarea'] == "conference") {
+       $flipToConference = "fliptoconference";
+    }
+    ?>
+<div style='clear:both;'></div>
+    <div class='flip-card <?php echo $flipToConference; ?>'>
+        <div class='flip-card-inner'>
+            <div class='groupandroominformation flip-card-front'>
+                <?php if(!$flipToConference) { ?>
+                    <div class='groupheaderinformation boxed'>
+                        <h2>Rooms in group</h2>
+                        <div class='roomsingroupinformation'>
+                            <?php 
+                            $this->includefile("roomsingroup"); 
+                            $start = date("d.m.Y", time());
+                            $end = date("d.m.Y", time()+86400);
+                            ?>
+                        </div>
+                        <div class='bookinghighlightcolor addanotherroomtogroup' style='width:100%;box-sizing: border-box;margin-top: 3px;text-align: center; cursor:pointer;'
+                             start='<?php echo $start; ?>' 
+                             end='<?php echo $end; ?>' 
+                             style='float:right; margin-right: 5px; background-color:green;' 
+                             bookingId='<?php echo $this->getPmsBooking()->id; ?>'>Add another room</div>
+                        <div class='addanotherroompopup' gstype='form' method='addAnotherRoom'></div>
+                    </div>
+
+                    <div class='bookerinformation boxed'>
+                        <?php $this->includefile("roominformation"); ?>
+                    </div>
+                <? } ?>
+                <div style='clear:both;'></div>
+            </div>
+            <div class='conferenceinformation flip-card-back'>
+                <?php $this->includefile("conferences");  ?>
+                <div style='clear:both;'></div>
+            </div>
+            
         </div>
-        <div class='bookinghighlightcolor addanotherroomtogroup' style='width:100%;box-sizing: border-box;margin-top: 3px;text-align: center; cursor:pointer;'
-             start='<?php echo $start; ?>' 
-             end='<?php echo $end; ?>' 
-             style='float:right; margin-right: 5px; background-color:green;' 
-             bookingId='<?php echo $this->getPmsBooking()->id; ?>'>Add another room</div>
-        <div class='addanotherroompopup' gstype='form' method='addAnotherRoom'></div>
     </div>
-
-    <div class='bookerinformation boxed'>
-        <?php $this->includefile("roominformation"); ?>
-    </div>
-    <div style='clear:both;'></div>
 </div>
-
-
-
+<div style='clear:both;'></div>
 <script>
     if(!window.location.hash) {
         history.pushState(latestOverLayLoadingEvent, "page 2", "#roomid="+latestOverLayLoadingEvent.data.id + "&subsection=guests");
     }   
 </script>
+
+<style>
+.flip-card {
+  background-color: transparent;
+  perspective: 1000px;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  min-height: 500px;
+  transition: transform 1s;
+  transform-style: preserve-3d;
+}
+
+.fliptoconference .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front, .flip-card-back {
+  position: absolute;
+  width: 100%;
+  min-height: 500px;
+  backface-visibility: hidden;
+}
+
+
+.flip-card-back {
+  background-color: #fff;
+  transform: rotateY(180deg);
+}
+
+.flip-card-front {
+      background-color: #fff;
+
+}
+</style>

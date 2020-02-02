@@ -11,6 +11,7 @@
     border-bottom: solid 1px #bbb;
     border-top: solid 1px #bbb;
 }
+
 .PmsSearchBooking .GetShopModuleTableHeader .tablefilterinput { width: 400px; }
 .PmsSearchBooking .headercol.col_state .fa { font-size:13px !important; }
 
@@ -219,4 +220,9 @@
         width: calc(100% - 670px);
     }
     .PmsSearchBooking .GetShopModuleTable .col_room { width: 90px; overflow:hidden;}
+    
+    .GetShopModuleTable .langaugeandtypeindicator { display:none; }
+    .PmsSearchBooking .GetShopModuleTable .guestname, .PmsSearchBooking .GetShopModuleTable .guestphone, .PmsSearchBooking .GetShopModuleTable .guestemail { width: 100%; }
 }
+
+

@@ -1,0 +1,30 @@
+<?php
+/* @var $this ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
+$selectedEvent = $this->getSelectedEventId();
+?>
+<div class='groupheaderinformation boxed'>
+    <h2>Events
+    
+        <i class='fa fa-trash-o' 
+           gs_callback='app.PmsBookingGroupRoomView.conferenceDeleted'
+           style='float:right; cursor:pointer;' gsclick='deleteConference' roomid='<?php echo $this->getSelectedRoomId(); ?>' gs_confirm='Are you sure you want to delete this conference?'></i>
+    </h2>
+    
+    <span gstype='form' method='saveConferenceTitle'>
+        <input type='hidden' gsname='conferenceid' value='<?php echo $this->getConference()->id; ?>'>
+        <input type="txt" class='gsniceinput1 saveconferencetitle' gsname='title' value='<?php echo $this->getConference()->meetingTitle; ?>' style='width:100%; margin-bottom: 3px;box-sizing: border-box;'>
+        <span class='shop_button saveconferencetitlebutton' gstype='submit' style='width:100%; box-sizing: border-box;display:none;'>Save title</span>
+    </span>
+    <div class='roomsingroupinformation'>
+        <?php
+        $this->includefile("eventsinconference");
+        ?>
+    </div>
+    <div class='bookinghighlightcolor addanotherevent' style='width:100%;box-sizing: border-box;margin-top: 3px;text-align: center; cursor:pointer;'
+         style='float:right; margin-right: 5px; background-color:green;' >Add another event</div>
+    <div class='addanotherroompopup' gstype='form' method='addAnotherRoom'></div>
+</div>
+
+<div class='bookerinformation boxed'>
+    <?php $this->includefile("conferenceoptions"); ?>
+</div>

@@ -141,21 +141,29 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
     }
 
     @Override
-    public boolean saveConferenceEvent(PmsConferenceEvent event) {
-        
+    public String createConferenceEvent(PmsConferenceEvent event) {
         if (event.pmsConferenceId == null || event.pmsConferenceId.isEmpty()) {
-            return false;
+            return null;
         }
         
         if(!canAddEvent(event)) {
-            return false;
+            return null;
         }
         
         logDiff(event.pmsConferenceId, event);
         saveObject(event);
         conferenceEvents.put(event.id, event);
         conferenceUpdated(getConference(event.pmsConferenceId));
-        return true;
+        return event.id;
+    }
+    
+    @Override
+    public boolean saveConferenceEvent(PmsConferenceEvent event) {
+        String eventId = createConferenceEvent(event);
+        if(eventId != null) {
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -444,6 +452,10 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
         ArrayList<PmsConference> retList = new ArrayList(conferences.values());
         
         if(filter != null) {
+            if(filter.title != null && !filter.title.isEmpty()) {
+                retList.removeIf(o -> !o.meetingTitle.toLowerCase().contains(filter.title));
+            }
+            
             if (filter.onlyNoneExpiredEvents) {
                 retList.removeIf(o -> eventHasExpired(o));
             }

@@ -59,6 +59,14 @@ if(stristr($user->emailAddress, "@getshop.com")) {
     </div>
     <div class='container'>
         <span class='option'>
+            <input type='checkbox' gsname='conferenceSystemActive' <?php if($config->conferenceSystemActive) { echo "CHECKED"; } ?>>
+        </span>
+        <span class='title'>
+            Activate new conference system.
+        </span>
+    </div>
+    <div class='container'>
+        <span class='option'>
             <input type='text' class='gsniceinput1' gsname='hourOfDayToStartBoarding' value='<?php echo $config->hourOfDayToStartBoarding; ?>' style='width: 50px; text-align: center;'>
         </span>
         <span class='title'>

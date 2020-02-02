@@ -16,6 +16,10 @@ if($booking) {
     }
 }
 
+
+$groupBooking = new ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView();
+
+
 $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedMultilevelDomainName());
 $categories = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
 
@@ -47,8 +51,12 @@ if($_POST['data']['isclosed'] && $_POST['data']['isclosed'] == "true") {
         <td valign='top' width='50%' style='padding: 10px;'>
             <?php
             if($booking) {
+                if($groupBooking->useNew()) {
                 ?>
-                <span class="shop_button" style='width:100%;box-sizing:border-box;margin-top:5px;' gs_show_modal='booking_room_view' onclick="app.PmsAvailability.closeCloseRoomDialog();" bookingid='<?php echo $booking->id; ?>'  roomid="<?php echo $_POST['data']['roomid']; ?>">Open booking</span>
+                    <span class="shop_button" style='width:100%;box-sizing:border-box;margin-top:5px;' method='loadBooking' gs_show_overlay='booking_room_view' onclick="app.PmsAvailability.closeCloseRoomDialog();" bookingid='<?php echo $booking->id; ?>'  id="<?php echo $_POST['data']['roomid']; ?>">Open booking</span>
+                <?php } else { ?>
+                    <span class="shop_button" style='width:100%;box-sizing:border-box;margin-top:5px;' gs_show_modal='booking_room_view' onclick="app.PmsAvailability.closeCloseRoomDialog();" bookingid='<?php echo $booking->id; ?>'  roomid="<?php echo $_POST['data']['roomid']; ?>">Open booking</span>
+                <? } ?>
                 <span class="shop_button" style='width:100%;box-sizing:border-box;margin-top:5px;background-color:red;' gstype='clicksubmit' method="deleteroom" gsvalue="<?php echo $_POST['data']['roomid']; ?>" gsname='roomid'><i class='fa fa-trash-o'></i> Delete booking</span>
                 <span class="shop_button" style='width:100%;box-sizing:border-box;margin-top:5px;background-color:brown;' gstype='clicksubmit' method="addToWaitingList" gsvalue="<?php echo $_POST['data']['roomid']; ?>" gsname='roomid'> Add to waitinglist</span>
                 <?php

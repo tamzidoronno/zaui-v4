@@ -117,6 +117,24 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
             $this->includefile("nobookingsyet");
             return;
         }
+        
+        ?>
+        <script>
+        var hash = window.location.hash;
+        if(hash.indexOf('#roomid') >= 0) {
+            var roomid = hash.substr(hash.indexOf("#roomid")+8);
+            if(roomid.indexOf("&") > 0) {
+                roomid = roomid.substr(0,roomid.indexOf("&"));
+            }
+            var section = hash.substr(hash.indexOf("&subsection")+12);
+            if(section.indexOf("&") > 0) {
+                section = section.substr(0,section.indexOf("&"));
+            }
+            getshop.Table.loadAppInOverlay($('.PmsSearchBooking'), "PmsManager_getSimpleRooms", {id : roomid, subsection : section});
+        }
+        isFirstLoading = false;
+        </script>
+        <?php
         return $this->renderDataTable();
     }
     
@@ -133,12 +151,18 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
     }
 
     public function PmsManager_getSimpleRooms() {
-        
-        $roomView = new \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView();
-        $roomView->removeGroupView();
-        $roomView->setRoomId($_POST['data']['id']);
-        $roomView->renderApplication(true, $this);
-        
+        $pmsBookingGroupView = new \ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView();
+        if($pmsBookingGroupView->useNew()) {
+            $pmsBookingGroupView->setRoomId($_POST['data']['id']);
+            $pmsBookingGroupView->renderApplication(true, $this, true);
+            echo "<script>useNewGroupBookingView = true;</script>";
+        } else {
+            $roomView = new \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView();
+            $roomView->removeGroupView();
+            $roomView->setRoomId($_POST['data']['id']);
+            $roomView->renderApplication(true, $this);
+            echo "<script>useNewGroupBookingView = false;</script>";
+        }
     }
     
     public function PmsManager_getSimpleRoomsForGroup() {

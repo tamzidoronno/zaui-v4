@@ -23,6 +23,8 @@
     "loggedonas" : "Logget på som ",
     "adults" : "Voksne",
     "children" : "Barn",
+    "travellingBusiness" : "Jeg reiser i firmasammenheng",
+    "offersAccept" : "Send meg gjerne tilbud i fremtiden",
     "agebelow" : "Under {age} år",
     "cancelpayment" : "Avbryt betalingsprocessen",
     "checkin_checkout" : "Innsjekk / Utsjekk",

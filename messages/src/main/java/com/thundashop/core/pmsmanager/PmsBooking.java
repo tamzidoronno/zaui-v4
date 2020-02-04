@@ -126,6 +126,8 @@ public class PmsBooking extends DataCommon {
     public boolean isExpediaCollect = false;
     public boolean isBookingComVirtual = false;
     public boolean isPrePaid = false;
+    public boolean agreedToSpam = false;
+    public boolean travellingBusiness = false;
     
     public Double getTotalPrice() {
         return totalPrice;

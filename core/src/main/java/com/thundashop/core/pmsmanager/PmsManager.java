@@ -626,6 +626,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         User user = userManager.getUserById(booking.userId);
         user.lastBooked = new Date();
+        
+        if(booking.agreedToSpam) {
+            user.agreeToSpam = true;
+        }
+        
         userManager.saveUserSecure(user);
         return 0;
     }
@@ -10085,6 +10090,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (coupon != null) {
             cartManager.subtractTimesLeft(coupon.code);
             gsTiming("Subsctracted coupons");
+        }
+        
+        if(currentBooking.agreedToSpam) {
+            User usr = userManager.getUserById(currentBooking.userId);
+            usr.agreeToSpam = true;
+            usr.agreeToSpamDate = new Date();
+            userManager.saveUserSecure(usr);
         }
     }
 

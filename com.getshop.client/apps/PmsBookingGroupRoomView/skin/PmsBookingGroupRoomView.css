@@ -223,7 +223,7 @@
 .PmsBookingGroupRoomView .bookinginformation .guest_col1 { width: calc(100% - 850px); }
 .PmsBookingGroupRoomView .bookinginformation .guest_col2 { width: 260px; }
 .PmsBookingGroupRoomView .bookinginformation .guest_col3 { width: 200px; }
-.PmsBookingGroupRoomView .bookinginformation .guest_col4 { width: 100px; }
+.PmsBookingGroupRoomView .bookinginformation .guest_col4 { width: 135px; }
 .PmsBookingGroupRoomView .bookinginformation .guest_col5 { width: 225px; }
 .PmsBookingGroupRoomView .countrylanguagebox {
     display: inline-block;

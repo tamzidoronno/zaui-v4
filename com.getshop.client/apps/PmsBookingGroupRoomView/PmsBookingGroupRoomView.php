@@ -15,6 +15,18 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         
     }
 
+    public function addToBlockList() {
+        $room = $this->getPmsBookingRoom();
+        foreach($room->guests as $guest) {
+            if($guest->guestId == $_POST['data']['guestid']) {
+                $block = new \core_pmsmanager_PmsBlockedUser();
+                $block->email = $guest->email;
+                $block->phone = $guest->phone;
+                $this->getApi()->getPmsManager()->addToBlockList($this->getSelectedMultilevelDomainName(), $block);
+            }
+        }
+    }
+    
     public function translateNotSendPaymentLinkReason($reason) {
         $reasons = array();
         /*

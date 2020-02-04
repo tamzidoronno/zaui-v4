@@ -99,12 +99,34 @@ class PmsRestrictions extends \WebshopApplication implements \Application {
         $this->getApi()->getWubookManager()->doUpdateMinStay($this->getSelectedMultilevelDomainName());
     }
     
+    public function deleteBlockedUser() {
+        $this->getApi()->getPmsManager()->removeFromBlockList($this->getSelectedMultilevelDomainName(), $_POST['data']['blockeid']);
+    }
+    
+    public function addtoblocklist() {
+        $block = new \core_pmsmanager_PmsBlockedUser();
+        $block->email = $_POST['data']['email'];
+        $block->phone = $_POST['data']['phone'];
+        $this->getApi()->getPmsManager()->addToBlockList($this->getSelectedMultilevelDomainName(), $block);
+    }
+    
     public function render() {
         echo "<br>";
+        echo '<table width="100%">';
+        echo '<tr>';
+        echo '<td valign="top" width="50%">';
         echo "<div class='section'>";
         $this->includefile("createrestriction");
         $this->printRestrictions();
         echo "</div>";
+        echo '</td>';
+        echo '<td valign="top">';
+        echo "<div class='section'>";
+        $this->includefile("blocklist");
+        echo "</div>";
+        echo '</td>';
+        echo '</tr>';
+        echo '</table>';
         $this->includefile("wubookrestrictions");
     }
     
@@ -136,7 +158,7 @@ class PmsRestrictions extends \WebshopApplication implements \Application {
                 }
             }
             $this->getApi()->getWubookManager()->addRestriction($this->getSelectedMultilevelDomainName(), $restriction);
-        }        
+        }
     }
     
     

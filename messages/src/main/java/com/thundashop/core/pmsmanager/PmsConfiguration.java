@@ -93,6 +93,7 @@ public class PmsConfiguration extends DataCommon {
     public HashMap<Integer, PmsBudget> budget = new HashMap();
     public boolean sendMessagesRegardlessOfPayments = false;
     public List<TimeRepeaterData> closedOfPeriode = new ArrayList();
+    public List<PmsBlockedUser> blockedUsers = new ArrayList();
     
     public HashMap<String, String> contracts = new HashMap();
     public String fireinstructions = "";

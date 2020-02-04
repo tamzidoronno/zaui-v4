@@ -32,6 +32,7 @@ app.PmsBookingGroupRoomView = {
         $(document).on('click', '.PmsBookingGroupRoomView .showOrderSummary', this.showOrderSummary);
         $(document).on('click', '.PmsBookingGroupRoomView .row_payment_status_line .toggle_action_menu', this.toggleActionMenu);
         $(document).on('click', '.PmsBookingGroupRoomView .toggleDisabledGuest', this.toggleDisabledGuest);
+        $(document).on('click', '.PmsBookingGroupRoomView .addToBlockList', this.addToBlockList);
         $(document).on('click', '.PmsBookingGroupRoomView .doChangeDiscount', this.doChangeCouponCode);
         $(document).on('click', '.PmsBookingGroupRoomView .editcomment', this.startEditComment);
         $(document).on('click', '.PmsBookingGroupRoomView .savecomment', this.saveComment);
@@ -59,7 +60,21 @@ app.PmsBookingGroupRoomView = {
     loadCreateConferencePanel : function() {
         $('.createconferencepanel').slideDown();
     },
-    
+    addToBlockList : function() {
+        var confirmed = confirm("Are you sure you want to block this user, he can't book in the future after this?");
+        if(!confirmed) {
+            return;
+        }
+        var btn = $(this);
+        var event = thundashop.Ajax.createEvent('','addToBlockList', $(this), {
+            "guestid" : btn.closest('.guest_row').attr('guestid'),
+            "roomid" : app.PmsBookingGroupRoomView.getRoomId()
+        });
+        
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            thundashop.common.Alert("Success","Added to blocklist, look into PMS->Settings->Restrictions for blocklist", false);
+        });
+    },
     searchConference : function() {
         var value = $(this).val();
         var event = thundashop.Ajax.createEvent('','findConference', $(this), {

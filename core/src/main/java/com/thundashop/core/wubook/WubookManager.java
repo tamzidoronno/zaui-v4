@@ -400,7 +400,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     
 
     @Override
-    public void fetchNewBookings() throws Exception {
+    public void fetchNewBookings() {
        try {
             if(disableWubook != null) {
                 long diff = new Date().getTime() - disableWubook.getTime();
@@ -487,7 +487,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             errorNotificationSent = true;
            }
            logPrintException(e);
-           throw e;
        }
     }
 
@@ -1868,19 +1867,28 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     }
 
     @Override
-    public String updateShortAvailability() throws Exception {
-        if(updateAvailability()) {
-            return "";
+    public String updateShortAvailability() {
+        try {
+            if(updateAvailability()) {
+                return "";
+            }
+            if(availabilityHasBeenChanged == null) {
+                return "";
+            }
+
+            if(availabiltyyHasBeenChangedEnd != null && availabiltyyHasBeenChangedStart != null) {
+                updatePricesBetweenDates(availabiltyyHasBeenChangedStart, availabiltyyHasBeenChangedEnd);
+            }
+
+            return sparseUpdateAvailabilityInternal();
+        }catch(Exception e) {
+            if(!errorNotificationSent) {
+                messageManager.sendErrorNotification("Failed to handle update new bookings", e);
+                logPrintException(e);
+                errorNotificationSent = true;
+            }
         }
-        if(availabilityHasBeenChanged == null) {
-            return "";
-        }
-        
-        if(availabiltyyHasBeenChangedEnd != null && availabiltyyHasBeenChangedStart != null) {
-            updatePricesBetweenDates(availabiltyyHasBeenChangedStart, availabiltyyHasBeenChangedEnd);
-        }
-        
-        return sparseUpdateAvailabilityInternal();
+        return "";
     }
 
     public void logText(String string) {

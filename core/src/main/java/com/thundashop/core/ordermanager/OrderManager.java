@@ -4902,9 +4902,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                     item.setCount(count);
                     item.getProduct().price = lossLine.amount;
                     item.getProduct().priceLocalCurrency = lossLine.amountInLocalCurrency;
+                    item.recalculatePriceMatrixAndAddons();
                 }
             }
         }
+        
+        removeEmptyCartItems(creditNote);
         
         saveOrderInternal(creditNote);
         
@@ -4928,6 +4931,17 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         saveObject(order);
         
+    }
+
+    private void removeEmptyCartItems(Order order) {
+        List<CartItem> itemsToRemove = order.getCartItems()
+                .stream()
+                .filter(o -> o.getCount() == 0)
+                .collect(Collectors.toList());
+        
+        itemsToRemove.stream().forEach(item -> {
+            order.cart.removeItem(item.getCartItemId());
+        });
     }
     
     @Override

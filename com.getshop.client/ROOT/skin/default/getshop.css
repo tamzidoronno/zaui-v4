@@ -418,3 +418,12 @@ a {
 
 .getshop_box_1.blue { background-color: #0024e2; }
 .getshop_box_1.red{ background-color: #ff3600; }
+
+
+.pmsmenuentries .entry { display:inline-block; }
+.gsarea[area="header"] .mobilemenubtn { display: none; }
+@media only all and (max-width: 800px) {
+    .pmsmenuentries { display: none; }
+    .gsarea[area="header"] .mobilemenubtn .fa-bars { font-size: 50px; margin-top: 5px;}
+    .gsarea[area="header"] .mobilemenubtn { display:inline-block; color:#fff; height: 20px;height: 76px; width: 76px; text-align: center; cursor:pointer; }
+}

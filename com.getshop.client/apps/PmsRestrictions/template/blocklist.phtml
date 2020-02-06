@@ -1,0 +1,20 @@
+<div gstype='form' method='addtoblocklist'>
+    <input type='txt' class='gsniceinput1' placeholder='Email' gsname='email'>
+    <input type='txt' class='gsniceinput1' placeholder='Phone' gsname='phone'>
+    <span class='shop_button' gstype='submit'>Add to blocklist</span>
+</div>
+<?php
+/* @var $this ns_7db21d0e_6636_4dd3_a767_48b06932416c\PmsRestrictions */
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+echo "<table>";
+foreach($config->blockedUsers as $blockedUser) {
+    echo "<tr>";
+    echo "<td><i class='fa fa-trash-o' style='cursor:pointer;' gsclick='deleteBlockedUser' blockeid='".$blockedUser->id."'></i></td>";
+    echo "<td>" . date("d.m.Y H:i", strtotime($blockedUser->phone)) . "</td>";
+    echo "<td> " . $blockedUser->email . "</td>";
+    echo "<td>" . $blockedUser->phone . "</td>";
+    echo "<td>Added by " . $this->getApi()->getUserManager()->getUserById($blockedUser->addedByUser)->fullName . "</td>";
+    echo "</tr>";
+}
+echo "</table>";
+?>

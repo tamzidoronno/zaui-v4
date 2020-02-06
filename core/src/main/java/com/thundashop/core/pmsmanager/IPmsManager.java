@@ -112,6 +112,12 @@ public interface IPmsManager {
     public List<SimpleInventory> getSimpleInventoryList(String roomName);
     
     @Administrator
+    public void addToBlockList(PmsBlockedUser block);
+    
+    @Administrator
+    public void removeFromBlockList(String blockedId);
+    
+    @Administrator
     public List<PmsRoomSimple> getRoomsToSwap(String roomId, String moveToType);
     
     @Administrator

@@ -139,3 +139,345 @@
 .PmsBookingGroupRoomView .change_user_form,
 .PmsBookingGroupRoomView .edit_details_of_user
 { right: 50px; margin-top: 20px; }
+
+.PmsBookingGroupRoomView .addons .col { width: 18% !important; }
+    .PmsBookingGroupRoomView .addons .row {
+        font-size: 20px;
+    }
+    .PmsBookingGroupRoomView .addons .col-1,
+    .PmsBookingGroupRoomView .addons .col-5 { width: 20px !important; }
+    .PmsBookingGroupRoomView .addons .col-4 { width: 90px !important; }
+    
+    .PmsBookingGroupRoomView .removeselectedaddons {
+    background-color: red;
+    display: block;
+    width: 241px;
+    float: left;
+    margin-right: 10px;
+}
+    .PmsBookingGroupRoomView .addAddonsArea {
+    position: absolute;
+    background: #c7f7f9;
+    z-index: 1;
+    width: 400px;
+    border: solid 1px #bbb;
+    margin-top: 5px;
+    display: none;
+}
+.PmsBookingGroupRoomView .craeteconference { cursor:pointer; }
+.PmsBookingGroupRoomView .notforroom { display:none; }
+.PmsBookingGroupRoomView .createconferencepanel { display:none; position:absolute; background-color:#fff; padding: 10px; border: solid 1px #bbb;z-index: 1; }
+.PmsBookingGroupRoomView .savecomment { display:none; }
+.PmsBookingGroupRoomView .hiddencomment { display:none; }
+.PmsBookingGroupRoomView .forroom { color:#bb2d2d; }
+.PmsBookingGroupRoomView .deletedcomment { text-decoration: line-through; }
+.PmsBookingGroupRoomView .addcommentarea { margin-top: 10px;display:none; }
+.PmsBookingGroupRoomView .addcommentbtn { width:45%; box-sizing: border-box; float:left;}
+.PmsBookingGroupRoomView .addcommenttobooking { width:100%; box-sizing: border-box; height: 80px; }
+.PmsBookingGroupRoomView .commentsheader { text-align: left;  margin-top: 10px; color:#777; }
+.PmsBookingGroupRoomView .commentarea { padding-left: 10px; font-size: 12px; }
+.PmsBookingGroupRoomView .commentby { float:right; color:#bbb; }
+.PmsBookingGroupRoomView .commenttime { color:#bbb; width: 120px; display:inline-block; }
+.PmsBookingGroupRoomView .bookerinformation .col { width: 40%; display:inline-block; }
+.PmsBookingGroupRoomView .bookerinformation .col_box_width_2 { width: 50%; display:inline-block; float:left; }
+/*.PmsBookingGroupRoomView .col1 {     width: 190px; line-height: 20px; padding-left: 10px; box-sizing: border-box;color: #777; }*/
+.PmsBookingGroupRoomView { font-size: 15px; }
+.PmsBookingGroupRoomView .show_edit_user, .PmsBookingGroupRoomView .show_change_user, .PmsBookingGroupRoomView .bookinghighlightcolor { color: #4da6cb; }
+.PmsBookingGroupRoomView .edit_user_btn { display:none; }
+.PmsBookingGroupRoomView .commenttext { width: calc(100% - 250px );display: inline-block;  white-space: nowrap;  overflow: hidden;  text-overflow: ellipsis: }
+.PmsBookingGroupRoomView .otheroptions { text-align: center; margin-top: 5px; }
+.PmsBookingGroupRoomView .openconference { cursor:pointer; }
+.show_edit_user,.show_change_user { float:right; margin-left: 5px; }
+    
+.PmsBookingGroupRoomView .bookinginformation .guest_col {
+    display: inline-block;
+    padding-right: 10px;
+    font-size: 13px;
+    padding-left: 10px;
+    padding-top: 5px;
+    box-sizing: border-box;
+}
+
+.PmsBookingGroupRoomView .bookinginformation .guest_col input {
+    width: 100%;
+    box-sizing: border-box;
+} 
+
+.PmsBookingGroupRoomView .bookinginformation .guest_col .gsniceinput1.prefix {
+    width:50px;
+}
+
+.PmsBookingGroupRoomView .bookinginformation .guest_col .gsniceinput1.cellnumber {
+    width: calc(100% - 61px);
+}
+
+.PmsBookingGroupRoomView .isdisabled {
+    background:green;
+    color:#fff;
+}
+
+.PmsBookingGroupRoomView .payment_process_started {
+    padding: 20px;
+}
+
+.PmsBookingGroupRoomView .bookinginformation .guest_col1 { width: calc(100% - 850px); }
+.PmsBookingGroupRoomView .bookinginformation .guest_col2 { width: 260px; }
+.PmsBookingGroupRoomView .bookinginformation .guest_col3 { width: 200px; }
+.PmsBookingGroupRoomView .bookinginformation .guest_col4 { width: 135px; }
+.PmsBookingGroupRoomView .bookinginformation .guest_col5 { width: 225px; }
+.PmsBookingGroupRoomView .countrylanguagebox {
+    display: inline-block;
+    width: 45%;
+}
+.PmsBookingGroupRoomView .insideheader .gs_shop_small_icon {
+background: #86c330;
+background-color: #86c330;
+bottom: 5px;
+float: right;
+border-radius: 3px;
+color: #FFF;
+border: solid 0px;
+}
+
+.PmsBookingGroupRoomView .messagelogentry {
+    border: solid 1px #ddd;
+    padding: 10px;
+    margin: 10px;
+}
+.PmsBookingGroupRoomView .messagelogfooter { text-align: right; color:#aaa; border-top: solid 1px;  padding-top: 5px; margin-top: 10px;}
+
+.PmsBookingGroupRoomView .roomsingroupinformation { overflow: auto;max-height: 500px;}
+    .PmsBookingGroupRoomView .boxed { min-height: 290px; box-shadow: 0px 2px 15px rgba(0,0,0,0.3); margin: 10px; box-sizing: border-box; background-color:#fff; display:inline-block; padding: 10px; float:left; }
+    .PmsBookingGroupRoomView .groupheaderinformation { width: 300px;   }
+    .PmsBookingGroupRoomView .bookerinformation { width: calc(100% - 350px); min-height: 290px; }
+    .gsoverlayinner { background-color:#e0ebee; }
+    .PmsBookingGroupRoomView h2 { margin-top: 0px; border-bottom: solid 1px #bbb; padding-bottom: 2px; color:#000; }
+    .PmsBookingGroupRoomView h2.nomargin { margin: 0px; }
+    .PmsBookingGroupRoomView .sendmessagetext {
+    width: 100%;
+    height: 100px;
+    border: solid 1px #ddd;
+    overflow: hidden;
+}
+.row_payment_status_line_expanded  { border-top: 0px !important; padding:0px !important;}
+.row_payment_status_line_expanded  .col_guestname { width: 120px; }
+.row_payment_status_line_expanded .col { font-size: 10px !important; color:#251212; }
+
+.PmsBookingGroupRoomView .insideheader .gs_shop_small_icon {
+    background: #86c330;
+    background-color: #86c330;
+    bottom: 5px;
+    float: right;
+    border-radius: 3px;
+    color: #FFF;
+    border: solid 0px;
+}
+
+
+
+.PmsBookingGroupRoomView .row_payment_status_line.notok {
+    color: red;
+}
+
+.PmsBookingGroupRoomView .row_payment_status_line.allok {
+    color: green;
+}
+
+.PmsBookingGroupRoomView .row_payment_status_line .col_productname {
+    width: calc(100% - 670px);
+}
+.PmsBookingGroupRoomView .row_payment_status_line .col_productname.longwidth {
+    width: calc(100% - 500px);
+}
+.PmsBookingGroupRoomView .row_payment_status_line .col_paymenttype {
+    width: 150px;
+}
+.PmsBookingGroupRoomView .row_payment_status_line .col_action {
+    width: 150px;
+}
+.PmsBookingGroupRoomView .row_payment_status_line .col_paymentdate {
+    width: 150px;
+}
+.PmsBookingGroupRoomView .row_payment_status_line .col_date {
+    width: 130px;
+}
+
+.PmsBookingGroupRoomView .row_payment_status_line .col_balance {
+    width: 100px;
+}
+
+.PmsBookingGroupRoomView .row_payment_status_line .col_value {
+    width: 125px;
+}
+
+.PmsBookingGroupRoomView .row_payment_status_line .col_product {
+    width: calc(100% - 570px);
+}
+
+.PmsBookingGroupRoomView .row_payment_status_line .col_paid {
+    width: 80px;
+    text-align: right;
+}
+
+.PmsBookingGroupRoomView .row_payment_status_line .col_remaining.large,
+.PmsBookingGroupRoomView .row_payment_status_line .col_paid.large {
+    width: 130px;
+}
+
+.PmsBookingGroupRoomView .row_payment_status_line .col_remaining {
+    width: 100px;
+    text-align: right;
+}
+
+.PmsBookingGroupRoomView .row_payment_status_line .col_status {
+    width: 20px !important;
+}
+
+.PmsBookingGroupRoomView .row_payment_status_line .col_orderid {
+    width: 75px;
+}
+
+.PmsBookingGroupRoomView .row_payment_status_line .col_amount {
+    width: 90px;
+}
+
+.PmsBookingGroupRoomView .row_payment_status_line .col {
+    display: inline-block;
+    font-size: 14px;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+.PmsBookingGroupRoomView .row_payment_status_line.header .col {
+    vertical-align: bottom;
+}
+
+.PmsBookingGroupRoomView .row_payment_status_line.oddrow {
+    background-color: #fafcfd;
+}
+
+.PmsBookingGroupRoomView .row_payment_status_line {
+    border-top: solid 1px #DDD;
+    font-size: 16px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    color:#7c8a8f;
+    font-weight: bold;
+}
+
+.PmsBookingGroupRoomView .row_payment_status_line.header {
+    font-weight: bold;
+    color:#000;
+}
+
+.PmsBookingGroupRoomView .row_payment_status_line.header {
+    border-top: solid 0px;
+    border-bottom: solid 2px #25374f;
+}
+
+.PmsBookingGroupRoomView .ordermenu {
+    position: absolute;
+    background-color: #FFF;
+    width: 250px;
+    border: solid 1px #DDD;
+    border-bottom: solid 0px;
+    display: none;
+    right: 10px;
+    box-shadow: 5px 5px 5px rgba(0,0,0,0.5);
+    z-index: 1;
+}
+.PmsBookingGroupRoomView .ordermenu .entry:hover {
+    background-color: #EFEFEF;
+}
+.PmsBookingGroupRoomView .ordermenu .entry {
+    padding: 5px;
+    border-bottom: solid 1px #DDD;
+    cursor: pointer;
+}
+.PmsBookingGroupRoomView .savePriceButton { width: 100%; box-sizing: border-box; margin-top: 5px; margin-bottom: 5px;display:none; }
+.PmsBookingGroupRoomView .roomandcats, .PmsBookingGroupRoomView .pricesview, .PmsBookingGroupRoomView .stayperiodecontainer {
+    width: calc(33% - 4px);
+    display: inline-block;
+    box-sizing: border-box;
+    padding-left: 10px;
+    padding-right: 10px;
+    float:left;
+}
+.PmsBookingGroupRoomView .changedatespanel,
+.PmsBookingGroupRoomView .splistayoptions {
+    display:none;
+}
+.PmsBookingGroupRoomView .stayheader {
+    border-bottom: solid 1px #e9ebed;
+    text-transform: uppercase;
+    font-weight: bold;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+.PmsBookingGroupRoomView .masseditpricesbox {
+    border: solid 1px #bbb;
+    padding: 10px;
+    background-color: #fff;
+    z-index: 2;
+    position:absolute;
+}
+.PmsBookingGroupRoomView .unitprice_changed { width: 60px; float:right; text-align: center; }
+.PmsBookingGroupRoomView .menurow { background-color: #dce1e0; }
+.PmsBookingGroupRoomView .menubutton { 
+    height: 60px;border-top: solid 2px #dce1e0;
+    margin-right: 0px; text-transform: uppercase; width:150px;
+    border-right: solid 2px #d7dbda;
+    color:#626664;
+    padding: 4px; background-color:#dce1e0; text-align: center;padding-top: 10px; padding-bottom: 10px;
+    cursor:pointer;box-sizing: border-box;border-bottom: 0px;  display:inline-block;}
+.PmsBookingGroupRoomView .menubutton.selected { border-top: solid 2px #53b689;background-color:#fff; color:#4a9979; }
+
+.PmsBookingGroupRoomView .insideheader {
+    padding: 0px;
+    margin: 0px;
+    padding: 10px;
+    padding-left: 0px;
+    border-bottom: solid 1px #eceef0;
+    margin-bottom: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    position: relative;
+    text-transform: uppercase;
+}
+.roomgroupbox { background-color:#fff;font-size:12px; padding: 6px; cursor:pointer; border-left: 3px #fff;border-bottom: solid 1px #dce1e0; }
+.roomgroupbox.selected { border-left: solid 6px #53b689;  }
+.roomgroupbox:hover { border-bottom: solid 1px; }
+.roomisdeleted { color:red; }
+    
+.PmsBookingGroupRoomView .startdate,
+.PmsBookingGroupRoomView .splitstaydate { width: 80px; }
+.PmsBookingGroupRoomView .enddate { width: 80px; }
+.PmsBookingGroupRoomView .starttime { width: 40px; }
+.PmsBookingGroupRoomView .endtime { width: 40px; }
+.PmsBookingGroupRoomView .changedates { width: 180px !important; }
+.PmsBookingGroupRoomView .datepresentation { cursor:pointer; }
+.PmsBookingGroupRoomView .checkingsplitstaybtns { cursor:pointer; }
+.PmsBookingGroupRoomView .roomgroupbox .unpaidindicator { float:right; }
+
+@media only all and (max-width: 1350px) {
+    .PmsBookingGroupRoomView .unpaidamountwarning { font-size: 20px; }
+    .PmsBookingGroupRoomView .groupheaderinformation { width: 180px; }
+    .PmsBookingGroupRoomView .bookerinformation { width: calc(100% - 220px); }
+    .PmsBookingGroupRoomView .groupheaderinformation h2,
+    .PmsBookingGroupRoomView .bookerinformation h2 {font-size : 16px; }
+    .PmsBookingGroupRoomView .menubutton { width: 95px; font-size: 12px; }
+    .PmsBookingGroupRoomView { font-size: 12px !important; }
+    .gsoverlay2 .gsoverlayinner, .gsoverlay1 .gsoverlayinner { width: 100%; }
+    .gsoverlayinner .closemodal { right: -6px;top: -49px;}
+    .PmsBookingGroupRoomView .bookerinformation .col { width: 49%; }
+    .PmsBookingGroupRoomView .bookinginformation .guest_col1 { width: calc(100% - 570px); }
+    .PmsBookingGroupRoomView .roomgroupbox .unpaidindicator { text-align: right; display:block; width: 100%; float:none; }
+    .PmsBookingGroupRoomView .roomgroupbox .dates { display:block; width: 100%;  }
+    .PmsBookingGroupRoomView .row_payment_status_line .col { width: 68px; }
+    .PmsBookingGroupRoomView .row_payment_status_line .col_date,
+    .PmsBookingGroupRoomView .row_payment_status_line .col_payment_date { width: 135px; }
+    .PmsBookingGroupRoomView .row_payment_status_line .col_productname { width: calc(100% - 500px)}
+    .PmsBookingGroupRoomView .groupheaderinformation .startpaymentprocessbtn,
+    .PmsBookingGroupRoomView .groupheaderinformation .toggleafterstaybtn { height: 55px !important; }
+}
+

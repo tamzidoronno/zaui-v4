@@ -27,6 +27,8 @@
     "remove" : "Ta bort",
     "removeguest" : "Ta bort gäst",
     "discountcode" : "Rabattkupong?",
+    "offersAccept" : "Skicka mig specialerbjudanden i framtiden",
+    "travellingBusiness" : "Jag reser för affärer",
     "logout" : "Logga ut",
     "signinbutton" : "Logga in",
     "inLuckAvailable" : "Ditt val!",

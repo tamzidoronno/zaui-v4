@@ -73,6 +73,8 @@ public class WubookThreadRipper extends Thread {
                 manager.fetchBookingThreadIsRunning = false;
             }
             return;
+        } else {
+            manager.logText("Started thread fetch new bookings");
         }
         manager.fetchBookingThreadStarted = new Date();
         manager.fetchBookingThreadIsRunning = true;

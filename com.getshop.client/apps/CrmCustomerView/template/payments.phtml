@@ -24,12 +24,7 @@ if(sizeof($orders) == 0) {
     </div>
     <?php
 } else {
-    $ids = array();
-    foreach($orders as $order) {
-        $ids[] = $order->id;
-    }
-    $orderlist = new \ns_9a6ea395_8dc9_4f27_99c5_87ccc6b5793d\EcommerceOrderList();
-    $orderlist->setOrderIds($ids);
-    $orderlist->renderApplication(true, $this);
+    $list = new \ns_9a6ea395_8dc9_4f27_99c5_87ccc6b5793d\EcommerceOrderList();
+    $list->printOrderTable($orders);
 }
 ?>

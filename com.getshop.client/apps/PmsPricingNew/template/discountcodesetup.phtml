@@ -57,6 +57,8 @@ $discountTypes["FIXEDDISCOUNTSTAY"] = "Fixed discount on stay";
             for($i = 1; $i <= $maxcount; $i++) {
                 echo "<span class='pricespacer'><input type='txt' class='gsniceinput1 allguestsetter' guest='$i' value='' style='width:50px;padding: 2px;' placeholder='Guest $i'></span>";
             }
+            
+            
             echo "</div>";
             echo "<div style='clear: both;'></div>";
 
@@ -74,6 +76,10 @@ $discountTypes["FIXEDDISCOUNTSTAY"] = "Fixed discount on stay";
                     echo "<input type='txt' class='gsniceinput1 categoryguestsetter' guest='$i' gsname='".$type->id."_$i' value='$amount' style='width:50px;padding: 2px;'>";
                     echo "</span>";
                 }
+                if($type->size == 0) {
+                    echo "<b>0 guests allowed on this category<br>please correct under  settings->rooms</b>";
+                }
+                
                 echo "<div style='clear: both;'></div>";
                 $first=false;
             }

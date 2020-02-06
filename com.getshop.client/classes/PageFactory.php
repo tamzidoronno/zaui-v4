@@ -160,6 +160,7 @@ class PageFactory {
         $row->addColumn("961efe75-e13b-4c9a-a0ce-8d3906b4bd73", "5a1d4939-65d6-4d18-a60a-b2cc616e03ec");
         $this->pages['a90a9031-b67d-4d98-b034-f8c201a8f496'] = $page;
         
+        $page->addExtraApplications('3e2bc00a-4d7c-44f4-a1ea-4b1b953d8c01');    
         $page->addExtraApplications('f8cc5247-85bf-4504-b4f3-b39937bd9955');
         $page->addExtraApplications('b5e9370e-121f-414d-bda2-74df44010c3b');
         $page->addExtraApplications('28886d7d-91d6-409a-a455-9351a426bed5');
@@ -188,6 +189,7 @@ class PageFactory {
         // AVAILABILITY
         $page = new \ModulePage("0da68de9-da08-4b60-9652-3ac456da2627", "pms");
         $page->addExtraApplications('961efe75-e13b-4c9a-a0ce-8d3906b4bd73');    
+        $page->addExtraApplications('3e2bc00a-4d7c-44f4-a1ea-4b1b953d8c01');    
         $row = $page->createRow();
         $row->addText("Availability");
         $row->addColumn("a5599ed1-60be-43f4-85a6-a09d5318638f", "cf33e9b4-9fb8-42f8-b831-f6ba0e2a67ac");
@@ -229,6 +231,7 @@ class PageFactory {
         $page = new \ModulePage("afe687b7-219e-4396-9e7b-2848f5ed034d", "pms");
         
         //Booking apps.
+        $page->addExtraApplications('3e2bc00a-4d7c-44f4-a1ea-4b1b953d8c01');    
         $page->addExtraApplications('f8cc5247-85bf-4504-b4f3-b39937bd9955');
         $page->addExtraApplications('b5e9370e-121f-414d-bda2-74df44010c3b');
         $page->addExtraApplications('28886d7d-91d6-409a-a455-9351a426bed5');
@@ -263,6 +266,7 @@ class PageFactory {
         
         // GROUP BOOKING
         $page = new \ModulePage("groupbooking", "pms");
+        $page->addExtraApplications('3e2bc00a-4d7c-44f4-a1ea-4b1b953d8c01');    
         $page->addExtraApplications('f8cc5247-85bf-4504-b4f3-b39937bd9955');
         $page->addExtraApplications('b5e9370e-121f-414d-bda2-74df44010c3b');
         $page->addExtraApplications('28886d7d-91d6-409a-a455-9351a426bed5');
@@ -295,6 +299,7 @@ class PageFactory {
         $this->pages['4f66aad0-08a0-466c-9b4c-71337c1e00b7'] = $page;   
         
         $page = new \ModulePage("checklist", "pms");
+        $page->addExtraApplications('3e2bc00a-4d7c-44f4-a1ea-4b1b953d8c01');    
         $page->addExtraApplications('f8cc5247-85bf-4504-b4f3-b39937bd9955');
         $page->addExtraApplications('b5e9370e-121f-414d-bda2-74df44010c3b');
         $page->addExtraApplications('28886d7d-91d6-409a-a455-9351a426bed5');
@@ -418,6 +423,12 @@ class PageFactory {
         $page->createRow()->addColumn("f8cc5247-85bf-4504-b4f3-b39937bd9955", "0a7bd783-97d7-4e4f-a092-4023d94e4f02");
         $this->pages['booking_room_view'] = $page;   
         
+        // MODAL
+        $page = new \ModulePage("booking_room_view_new", "pms");
+        $page->setLeftMenu(\ModulePageMenu::getPmsLeftMenu());
+        $page->createRow()->addColumn("3e2bc00a-4d7c-44f4-a1ea-4b1b953d8c01", "0a7bd783-97d7-4e4f-a092-4023d94e4f04");
+        $this->pages['booking_room_view_new'] = $page;   
+        
         $page->addExtraApplications('f8cc5247-85bf-4504-b4f3-b39937bd9955');
         $page->addExtraApplications('b5e9370e-121f-414d-bda2-74df44010c3b');
         $page->addExtraApplications('28886d7d-91d6-409a-a455-9351a426bed5');
@@ -510,6 +521,7 @@ class PageFactory {
         $row = $page->createRow();
         $row->addColumn("c20ea6e2-bc0b-4fe1-b92a-0c73b67aead7", "c565d07f-51bb-46ee-b006-6bf42940fcaf");
         
+        $page->addExtraApplications('3e2bc00a-4d7c-44f4-a1ea-4b1b953d8c01');    
         $page->addExtraApplications('f8cc5247-85bf-4504-b4f3-b39937bd9955');
         $page->addExtraApplications('b5e9370e-121f-414d-bda2-74df44010c3b');
         $page->addExtraApplications('28886d7d-91d6-409a-a455-9351a426bed5');

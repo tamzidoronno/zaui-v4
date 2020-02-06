@@ -106,7 +106,7 @@ $payAfterStay = $room->createOrdersOnZReport && !($needToCreateOrdersFor <= 1 &&
         <div class="col col_date"> Created </div>
         <div class="col col_productname"> Payment Type </div>
         <div class="col col_value"> Amount </div>
-        <div class="col col_value odd"> Payment Date </div>
+        <div class="col col_value odd col_payment_date"> Payment Date </div>
         <div class="col col_orderid odd"> Order id</div>
     </div>
     <?
@@ -124,7 +124,7 @@ $payAfterStay = $room->createOrdersOnZReport && !($needToCreateOrdersFor <= 1 &&
                     <div class="col col_date"> <? echo date('d.m.Y h:i', strtotime($order->rowCreatedDate)); ?> </div>
                     <div class="col col_productname"> <? echo $this->getPaymentType($order); ?></div>
                     <div class="col col_value"> <? echo $totalForOrder; ?></div>
-                    <div class="col col_value odd"> <? echo $paymentDate; ?></div>
+                    <div class="col col_value  col_payment_date odd"> <? echo $paymentDate; ?></div>
                     <div class="col col_orderid odd"> 
                         <? 
                         if ($order->closed) {
@@ -422,141 +422,3 @@ $payAfterStay = $room->createOrdersOnZReport && !($needToCreateOrdersFor <= 1 &&
 <br/>
 <br/>
 
-
-<style>
-    .row_payment_status_line_expanded  { border-top: 0px !important; padding:0px !important;}
-    .row_payment_status_line_expanded  .col_guestname { width: 120px; }
-    .row_payment_status_line_expanded .col { font-size: 10px !important; color:#251212; }
-    
-    .PmsBookingGroupRoomView .insideheader .gs_shop_small_icon {
-        background: #86c330;
-        background-color: #86c330;
-        bottom: 5px;
-        float: right;
-        border-radius: 3px;
-        color: #FFF;
-        border: solid 0px;
-    }
-    
-
-
-    .PmsBookingGroupRoomView .row_payment_status_line.notok {
-        color: red;
-    }
-
-    .PmsBookingGroupRoomView .row_payment_status_line.allok {
-        color: green;
-    }
-
-    .PmsBookingGroupRoomView .row_payment_status_line .col_productname {
-        width: calc(100% - 670px);
-    }
-    .PmsBookingGroupRoomView .row_payment_status_line .col_productname.longwidth {
-        width: calc(100% - 500px);
-    }
-    .PmsBookingGroupRoomView .row_payment_status_line .col_paymenttype {
-        width: 150px;
-    }
-    .PmsBookingGroupRoomView .row_payment_status_line .col_action {
-        width: 150px;
-    }
-    .PmsBookingGroupRoomView .row_payment_status_line .col_paymentdate {
-        width: 150px;
-    }
-    .PmsBookingGroupRoomView .row_payment_status_line .col_date {
-        width: 130px;
-    }
-
-    .PmsBookingGroupRoomView .row_payment_status_line .col_balance {
-        width: 100px;
-    }
-
-    .PmsBookingGroupRoomView .row_payment_status_line .col_value {
-        width: 125px;
-    }
-
-    .PmsBookingGroupRoomView .row_payment_status_line .col_product {
-        width: calc(100% - 570px);
-    }
-
-    .PmsBookingGroupRoomView .row_payment_status_line .col_paid {
-        width: 80px;
-        text-align: right;
-    }
-
-    .PmsBookingGroupRoomView .row_payment_status_line .col_remaining.large,
-    .PmsBookingGroupRoomView .row_payment_status_line .col_paid.large {
-        width: 130px;
-    }
-
-    .PmsBookingGroupRoomView .row_payment_status_line .col_remaining {
-        width: 100px;
-        text-align: right;
-    }
-
-    .PmsBookingGroupRoomView .row_payment_status_line .col_status {
-        width: 20px !important;
-    }
-
-    .PmsBookingGroupRoomView .row_payment_status_line .col_orderid {
-        width: 75px;
-    }
-
-    .PmsBookingGroupRoomView .row_payment_status_line .col_amount {
-        width: 90px;
-    }
-
-    .PmsBookingGroupRoomView .row_payment_status_line .col {
-        display: inline-block;
-        font-size: 14px;
-        padding: 5px;
-        box-sizing: border-box;
-    }
-
-    .PmsBookingGroupRoomView .row_payment_status_line.header .col {
-        vertical-align: bottom;
-    }
-
-    .PmsBookingGroupRoomView .row_payment_status_line.oddrow {
-        background-color: #fafcfd;
-    }
-
-    .PmsBookingGroupRoomView .row_payment_status_line {
-        border-top: solid 1px #DDD;
-        font-size: 16px;
-        padding-top: 5px;
-        padding-bottom: 5px;
-        color:#7c8a8f;
-        font-weight: bold;
-    }
-
-    .PmsBookingGroupRoomView .row_payment_status_line.header {
-        font-weight: bold;
-        color:#000;
-    }
-
-    .PmsBookingGroupRoomView .row_payment_status_line.header {
-        border-top: solid 0px;
-        border-bottom: solid 2px #25374f;
-    }
-
-    .PmsBookingGroupRoomView .ordermenu {
-        position: absolute;
-        background-color: #FFF;
-        width: 250px;
-        border: solid 1px #DDD;
-        border-bottom: solid 0px;
-        display: none;
-        right: 10px;
-        box-shadow: 5px 5px 5px rgba(0,0,0,0.5);
-        z-index: 1;
-    }
-    .PmsBookingGroupRoomView .ordermenu .entry:hover {
-    background-color: #EFEFEF;
-}
-.PmsBookingGroupRoomView .ordermenu .entry {
-    padding: 5px;
-    border-bottom: solid 1px #DDD;
-    cursor: pointer;
-}
-</style>

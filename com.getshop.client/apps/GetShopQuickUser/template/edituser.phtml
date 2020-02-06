@@ -103,6 +103,24 @@ if(isset($extraArgs['invokeJavascriptFunctionAfterActions'])) {
 
             </div>
         </div>
+        <div class='row'>
+            <div class='col col1'>Agreed to campaigns</div>
+            <div class='col col2'>
+                <select class="gsniceselect1" gsname='agreeToSpam'>
+                    <?php
+                    $agreed = array();
+                    $agreed["false"] = "No";
+                    $agreed["true"] = "Yes";
+                    
+                    foreach($agreed as $val => $name) {
+                        $selected = ($val == "true" && $user->agreeToSpam) ? "SELECTED" : "";
+                        echo "<option value='$val' $selected>$name</option>";
+                    }
+                    ?>
+                </select>
+
+            </div>
+        </div>
 
         <?php
         if ($this->hasAccountingTransfer()) {

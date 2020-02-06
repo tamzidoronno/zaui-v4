@@ -68,7 +68,12 @@
                                 echo "<i class='fa fa-file-pdf-o' style='cursor:pointer' title='Download order $incId' orderid='".$ordId."' onclick='window.open(\"/scripts/downloadInvoice.php?orderId=".$ordId."&incrementalOrderId=".$incId."\");'></i> ";
                             }
                         }
-                        echo "<i class='fa fa-edit' gs_show_modal='booking_room_view' roomid='$roomIncluded' bookingid='".$booking->id."' style='cursor:pointer' title='Open booking' ></i> ";
+                        $pmsapp = new ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView();
+                        if($pmsapp->useNew()) {
+                            echo "<i class='fa fa-edit' ".$pmsapp->displayPopUpAttributes($room, $roomIncluded)." style='cursor:pointer' title='Open booking' ></i> ";
+                        } else {
+                            echo "<i class='fa fa-edit' gs_show_modal='booking_room_view' roomid='$roomIncluded' bookingid='".$booking->id."' style='cursor:pointer' title='Open booking' ></i> ";
+                        }
                         echo $room->guests[0]->name . "<br>";
                         echo "</td>";
                         echo "<td valign='top'>";
@@ -158,7 +163,12 @@
                                         echo "<i class='fa fa-file-pdf-o' style='cursor:pointer' title='Download order $incId' orderid='".$ordId."' onclick='window.open(\"/scripts/downloadInvoice.php?orderId=".$ordId."&incrementalOrderId=".$incId."\");'></i> ";
                                     }
                                 }
-                                echo "<i class='fa fa-edit' gs_show_modal='booking_room_view' roomid='".$room->pmsBookingRoomId."' bookingid='".@$booking->id."' style='cursor:pointer' title='Open booking' ></i> ";
+                                $pmsapp = new ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView();
+                                if($pmsapp->useNew()) {
+                                    echo "<i class='fa fa-edit' ".$pmsapp->displayPopUpAttributes($room, $roomIncluded)." style='cursor:pointer' title='Open booking' ></i> ";
+                                } else {
+                                    echo "<i class='fa fa-edit' gs_show_modal='booking_room_view' roomid='".$room->pmsBookingRoomId."' bookingid='".@$booking->id."' style='cursor:pointer' title='Open booking' ></i> ";
+                                }
                                 
                                 echo $room->guests[0]->name . "</td>";
                                 echo "<td>" . round($val) . "</td>";

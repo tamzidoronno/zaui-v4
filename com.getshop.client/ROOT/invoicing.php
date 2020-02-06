@@ -11,6 +11,7 @@ $pageFactory->addExtraApplicationsNoneInstance('486009b1-3748-4ab6-aa1b-95a4d5e2
 
 // PMS VIEW
 $pageFactory->addExtraApplicationsNoneInstance('f8cc5247-85bf-4504-b4f3-b39937bd9955');    
+$pageFactory->addExtraApplicationsNoneInstance('3e2bc00a-4d7c-44f4-a1ea-4b1b953d8c01');    
 $pageFactory->addExtraApplicationsNoneInstance('b5e9370e-121f-414d-bda2-74df44010c3b');
 $pageFactory->addExtraApplicationsNoneInstance('28886d7d-91d6-409a-a455-9351a426bed5');
 $pageFactory->addExtraApplicationsNoneInstance('b72ec093-caa2-4bd8-9f32-e826e335894e');

@@ -28,4 +28,13 @@ public class StartBookingResult {
         }
         return res;
     }
+
+    boolean hasAvailableRooms() {
+        for(BookingProcessRooms room : rooms) {
+            if(room.availableRooms > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

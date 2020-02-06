@@ -207,7 +207,40 @@ class EcommerceOrderList extends \MarketingApplication implements \Application {
         $ret .= $row->incrementOrderId;
         return $ret;
     }
-
+    
+    public function printOrderTable($orders) {
+        $filterOptions = new \core_common_FilterOptions();
+        
+        if ($this->orderIds) {
+            if (!$filterOptions->extra) {
+                $filterOptions->extra = new \stdClass();
+            }
+            
+            $filterOptions->extra->orderids = implode(",", $this->orderIds);
+        }
+  
+        $args = array($filterOptions);
+        
+        $attributes = array(
+            array('id', 'gs_hidden', 'id'),
+            array('incrementOrderId', 'ORDER ID', 'incrementOrderId', 'formatIncrementOrderId'),
+            array('rowCreatedDate', 'CREATED', 'rowCreatedDate', 'formatRowCreatedDate'),
+            array('paymentDate', 'PAYMENT DATE', null, 'formatPaymentDate'),
+            array('transferredToAccounting', '<span title="Transferred to accounting">TFA</span>', null, 'formatTransferredToAccounting'),
+            array('user', 'CUSTOMER', null, 'formatUser'),
+            array('shipmentdate', 'REQUEST DATE', null, 'formatShipmentDate'),
+            array('payment', 'PAYMENT', null, 'formatPaymentType'),
+            array('inctaxes', 'INC TAXES', null, 'formatIncTaxes'),
+            array('extaxes', 'EX TAXES', null, 'formatExTaxes'),
+            array('state', 'OPTIONS', null, 'formatState')
+        );
+        
+        $table = new \GetShopModuleTable($this, 'OrderManager', 'getOrdersFiltered', null, $attributes);
+        $table->avoidAutoExpanding();
+        $table->setData($orders);
+        $table->render();
+    }
+    
     public function printTable() {
         $filterOptions = new \core_common_FilterOptions();
         

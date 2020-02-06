@@ -90,7 +90,13 @@ if(sizeof($waitingList) > 0) {
             echo $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $room->bookingTypeId)->name;
         }
         echo "</td>";
-        echo "<td style='padding: 5px; color:blue; cursor:pointer;' class='readdfromworkspace' roomid='".$room->pmsRoomId."' bookingid='".$room->bookingId."' gs_show_modal='booking_room_view'>Open</td>";
+        
+        $pmsapp = new ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView();
+        if($pmsapp->useNew()) {
+            echo "<td style='padding: 5px; color:blue; cursor:pointer;' class='readdfromworkspace' onclick='$(\".pmsavailabilitywaitinglist\").hide()' method='loadBooking' id='".$room->pmsRoomId."' bookingid='".$room->bookingId."' gs_show_overlay='booking_room_view'>Open</td>";
+        } else {
+            echo "<td style='padding: 5px; color:blue; cursor:pointer;' class='readdfromworkspace' roomid='".$room->pmsRoomId."' bookingid='".$room->bookingId."' gs_show_modal='booking_room_view'>Open</td>";
+        }
         echo "<td style='padding: 5px; color:blue; cursor:pointer; text-align:center;' roomid='".$room->pmsRoomId."' class='prioritizeRoom'>Prioritize</td>";
         echo "</tr>";
     }

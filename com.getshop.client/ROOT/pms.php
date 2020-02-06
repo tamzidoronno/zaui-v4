@@ -65,6 +65,8 @@ if($config->bookingTag) {
 <!DOCTYPE html>
 <html pageid="<? echo $page->getId(); ?>" module="pms">
     <head>
+        <meta name="viewport" content="width=1024">
+
         <script>isFirstLoading = true;</script>
         <title><? echo $title; ?></title>
         <link rel="stylesheet" href="/icomoon/style.css?<? echo calculateCacheName(); ?>">

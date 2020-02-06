@@ -95,7 +95,7 @@ class PmsSearchBookingColumnFormatters {
                 if($guest->phone) { $vistorText .= "<div class='guestphone'>+" . $guest->prefix . $guest->phone . "</div>"; }
                 $vistorText .= "<br>";
             }
-            $vistorText .= "<span style='color:#bbb;padding-left:10px'>Speaking ".  strtolower($this->printLanguage($room->language));
+            $vistorText .= "<span style='color:#bbb;padding-left:10px' class='langaugeandtypeindicator'>Speaking ".  strtolower($this->printLanguage($room->language));
             if($room->segmentName) {
                 $vistorText .= ", - " . strtolower($room->segmentName);
             }

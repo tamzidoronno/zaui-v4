@@ -360,6 +360,13 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
             }
         }
         
+        if(booking.travellingBusiness) {
+            PmsSegment segment = getBusinessSegment();
+            if(segment != null) {
+                return segment;
+            }
+        }
+        
         for(PmsSegment segment : segments.values()) {
             if(segment.types.isEmpty()) {
                 continue;
@@ -577,6 +584,15 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
             }
         }
         return result;
+    }
+
+    private PmsSegment getBusinessSegment() {
+        for(PmsSegment segment : segments.values()) {
+            if(segment.code != null && segment.code.equals("business")) {
+                return segment;
+            }
+        }
+        return null;
     }
 
 

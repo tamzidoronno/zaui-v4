@@ -24,4 +24,6 @@ public class PmsConferenceFilter {
      * specified in this variable.
      */
     public List<String> userIds = new ArrayList();
+    
+    public String title = "";
 }

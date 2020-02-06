@@ -81,5 +81,10 @@ $_SESSION['firstloadpage'] = true;
             getshop.documentLoaded();
         });
     </script>
+    <style>
+        .pmsmenuentries .entry { display:inline-block; }
+        .mobilemenubtn { display:none; }
+    </style>
+
 </html>
 

@@ -14,6 +14,12 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
         return "SalesPointReports";
     }
 
+    public function loadBooking() {
+        $pmsBookingGroupView = new \ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView();
+        $pmsBookingGroupView->setRoomId($_POST['data']['id']);
+        $pmsBookingGroupView->renderApplication(true, $this, true);
+    }
+    
     public function showSalesReport() {
         $_SESSION['ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7_activetab'] = "salesreport";
         $this->includefile("salesreport");

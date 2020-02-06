@@ -24,6 +24,12 @@ class PmsReport extends \MarketingApplication implements \Application {
         return $addonsResult;
     }
     
+    public function loadBooking() {
+        $pmsBookingGroupView = new \ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView();
+        $pmsBookingGroupView->setRoomId($_POST['data']['id']);
+        $pmsBookingGroupView->renderApplication(true, $this, true);
+    }
+    
     public function loadDayIncomeReportEntry() {
         $this->includefile("dayincomereport");
     }

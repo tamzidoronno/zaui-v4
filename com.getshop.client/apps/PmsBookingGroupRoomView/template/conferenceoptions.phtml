@@ -1,27 +1,24 @@
 <?php
 /* @var $this ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
+
+$eventId = $this->getSelectedEventId();
+if(!$eventId) {
+    echo "<div style='font-size: 20px; margin: 40px;'>";
+    echo "No events created for this event yet. Please click on 'Add another event' at the right hand side.";
+    echo "</div>";
+    return;
+}
+
 $menu = array();
-$menu['guests'] = "Guests";
-$menu['stay'] = "Stay";
-$menu['addons'] = "Addons";
-$menu['accesscode'] = "Access code";
-$menu['messages'] = "Messages";
-$menu['cleaning'] = "Cleaning";
-$menu['payments'] = "Payments";
-$menu['confirmation'] = "Confirmation";
-$menu['log'] = "Log";
+$menu['conference_overview'] = "Overview";
+$menu['conference_activities'] = "Activities";
+$menu['conference_timeline'] = "Timeline";
 
 
 $icons = array();
-$icons['guests'] = "users";
-$icons['stay'] = "suitcase";
-$icons['addons'] = "plus";
-$icons['accesscode'] = "eye";
-$icons['messages'] = "inbox";
-$icons['cleaning'] = "paint-brush";
-$icons['payments'] = "money";
-$icons['confirmation'] = "money";
-$icons['log'] = "money";
+$icons['conference_overview'] = "info-circle";
+$icons['conference_activities'] = "play-circle-o";
+$icons['conference_timeline'] = "play-circle-o";
 
 
 $selected = "guests";

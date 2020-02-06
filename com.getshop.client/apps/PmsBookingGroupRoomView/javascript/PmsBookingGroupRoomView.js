@@ -1,8 +1,10 @@
 lastScrollTopPosition = null;
 
 app.PmsBookingGroupRoomView = {
+    timeoutsearchconference : null,
     init : function() {
         $(document).on('click', '.PmsBookingGroupRoomView .changeRoomByEvent', this.changeRoom);
+        $(document).on('click', '.PmsBookingGroupRoomView .changeEventOnConference', this.changeConference);
         $(document).on('click', '.PmsBookingGroupRoomView .menubutton', this.changeSubType);
         $(document).on('click', '.PmsBookingGroupRoomView .saveguestinformation', this.saveGuestInformation);
         $(document).on('click', '.PmsBookingGroupRoomView .bookinginformation .remove_guest', this.removeGuest);
@@ -30,6 +32,7 @@ app.PmsBookingGroupRoomView = {
         $(document).on('click', '.PmsBookingGroupRoomView .showOrderSummary', this.showOrderSummary);
         $(document).on('click', '.PmsBookingGroupRoomView .row_payment_status_line .toggle_action_menu', this.toggleActionMenu);
         $(document).on('click', '.PmsBookingGroupRoomView .toggleDisabledGuest', this.toggleDisabledGuest);
+        $(document).on('click', '.PmsBookingGroupRoomView .addToBlockList', this.addToBlockList);
         $(document).on('click', '.PmsBookingGroupRoomView .doChangeDiscount', this.doChangeCouponCode);
         $(document).on('click', '.PmsBookingGroupRoomView .editcomment', this.startEditComment);
         $(document).on('click', '.PmsBookingGroupRoomView .savecomment', this.saveComment);
@@ -39,10 +42,144 @@ app.PmsBookingGroupRoomView = {
         $(document).on('click', '.PmsBookingGroupRoomView .addsuggestionarrow', this.addSuggestedRow);
         $(document).on('click', '.PmsBookingGroupRoomView .showPreviewFixOrder', this.showPreviewFixOrder);
         $(document).on('click', '.PmsBookingGroupRoomView .addanotherroomtogroup', this.loadAddGroup);
+        $(document).on('click', '.PmsBookingGroupRoomView .addanotherevent', this.loadAddEvent);
+        $(document).on('click', '.PmsBookingGroupRoomView .openconference', this.toggleConference);
+        $(document).on('click', '.PmsBookingGroupRoomView .conference_activities .addExtraActivity', this.addExtraActivity);
+        $(document).on('click', '.PmsBookingGroupRoomView .conference_activities .saveActivities', this.saveActivities);
+        $(document).on('click', '.PmsBookingGroupRoomView .conference_activities .deleteactivity', this.deleteActivity);
+        $(document).on('click', '.PmsBookingGroupRoomView .conference_activities .deleteEvent', this.deleteEvent);
+        $(document).on('click', '.PmsBookingGroupRoomView .saveconferencetitle', this.saveEventTitle);
+        $(document).on('click', '.PmsBookingGroupRoomView .craeteconference', this.loadCreateConferencePanel);
+        
         $(document).on('keyup', '.PmsBookingGroupRoomView [searchtype]', this.searchGuests);
+        $(document).on('keyup', '.PmsBookingGroupRoomView .searchconferencetitle', this.searchConference);
         $(document).on('change', '.PmsBookingGroupRoomView .changediscountcode', this.changeCouponCode);
         $(document).on('change', '.PmsBookingGroupRoomView .changesegment', this.changeSegment);
         $(document).on('change', '.PmsBookingGroupRoomView .changechannel', this.changeChannel)
+    },
+    loadCreateConferencePanel : function() {
+        $('.createconferencepanel').slideDown();
+    },
+    addToBlockList : function() {
+        var confirmed = confirm("Are you sure you want to block this user, he can't book in the future after this?");
+        if(!confirmed) {
+            return;
+        }
+        var btn = $(this);
+        var event = thundashop.Ajax.createEvent('','addToBlockList', $(this), {
+            "guestid" : btn.closest('.guest_row').attr('guestid'),
+            "roomid" : app.PmsBookingGroupRoomView.getRoomId()
+        });
+        
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            thundashop.common.Alert("Success","Added to blocklist, look into PMS->Settings->Restrictions for blocklist", false);
+        });
+    },
+    searchConference : function() {
+        var value = $(this).val();
+        var event = thundashop.Ajax.createEvent('','findConference', $(this), {
+            "keyword" : value,
+            "roomid" : app.PmsBookingGroupRoomView.getRoomId()
+        });
+        if(app.PmsBookingGroupRoomView.timeoutsearchconference != null) {
+            clearTimeout(app.PmsBookingGroupRoomView.timeoutsearchconference);
+        }
+        app.PmsBookingGroupRoomView.timeoutsearchconference = setTimeout(function() {
+            thundashop.Ajax.postWithCallBack(event, function(res) {
+                $('.searchconferencearea').html(res);
+            });
+        }, "500");
+    },
+    conferenceDeleted : function() {
+        app.PmsBookingGroupRoomView.toggleMainArea("rooms");
+    },
+    conferenceSelected : function(roomId) {
+        app.PmsBookingGroupRoomView.toggleMainArea("conference");
+        $('.createconferencepanel').fadeOut();
+    },
+    
+    saveEventTitle : function() {
+        $('.saveconferencetitlebutton').show();
+    },
+    deleteEvent: function() {
+        var me = this;
+        var res = confirm("Are you sure you want to delete this?");
+        
+        if (res) {
+            thundashop.Ajax.simplePost(me, 'deleteEvent', {
+                confid : $(this).closest('.outarea').attr('confid'),
+                eventid : $(this).attr('eventid')
+            });
+            
+            $(this).closest('.row').remove();
+        }
+    },
+    saveActivities: function() {
+        
+        var activities = [];
+        
+        $('.activity').each(function() {
+            if ($(this).hasClass('template')) {
+                return;
+            }
+            
+            var activity = {
+                activityid : $(this).attr('activityid'),
+                text: $(this).find('[gsname="text"] input').val(),
+                to: $(this).find('[gsname="to"] input').val(),
+                from: $(this).find('[gsname="from"] input').val(),
+                count: $(this).find('[gsname="count"] input').val(),
+                extendedText: $(this).find('[gsname="extendedText"]').val(),
+            }
+            
+            activities.push(activity);
+        });
+        
+        var event = thundashop.Ajax.createEvent('','saveEventActivities',$(this), {
+            "activites" : activities,
+            "roomid" : app.PmsBookingGroupRoomView.getRoomId(),
+            "eventid" : latestOverLayLoadingEvent.data.eventid
+        });
+        thundashop.Ajax.postWithCallBack(event, function() {
+            app.PmsBookingGroupRoomView.refresh()
+        });
+    },
+    deleteActivity: function() {
+        $(this).closest('.activity.row').remove();
+    },
+    
+    addExtraActivity: function() {
+        var theapp = $(this).closest('.app');
+        
+        var toAdd = $(theapp.find('.template.activity')[0]).clone()[0];
+        $(toAdd).removeClass('template');
+        
+        theapp.find('.activities').append(toAdd);
+    },
+    
+    toggleConference : function() {
+        
+        if( $(".flip-card").hasClass('fliptoconference')) {
+            app.PmsBookingGroupRoomView.toggleMainArea("rooms");
+        } else {
+            app.PmsBookingGroupRoomView.toggleMainArea("conference");
+        }
+    },
+    toggleMainArea : function(type) {
+        if(type == "rooms") {
+            $(".flip-card").removeClass("fliptoconference");
+            latestOverLayLoadingEvent.data.mainarea = "rooms";
+            latestOverLayLoadingEvent.data.subsection = "guests";
+            history.pushState(latestOverLayLoadingEvent, "page 2", "#roomid="+latestOverLayLoadingEvent.data.id + "&mainarea=rooms&subsection=guests");
+        } else {
+            $(".flip-card").addClass("fliptoconference");
+            latestOverLayLoadingEvent.data.mainarea = "conference";
+            latestOverLayLoadingEvent.data.subsection = "conference_overview";
+            history.pushState(latestOverLayLoadingEvent, "page 2", "#roomid="+latestOverLayLoadingEvent.data.id + "&mainarea=conference&subsection=conference_overview");
+        }
+        setTimeout(function() {
+            app.PmsBookingGroupRoomView.refresh();
+        }, "1000");
     },
     loadAddGroup : function() {
         $('.addanotherroompopup').show();
@@ -54,6 +191,23 @@ app.PmsBookingGroupRoomView = {
         thundashop.Ajax.postWithCallBack(event, function(res) {
             $('.addanotherroompopup').html(res);
         });
+    },
+    eventDeleted : function() {
+        latestOverLayLoadingEvent.data.eventid = "";
+        app.PmsBookingGroupRoomView.refresh();
+    },
+    loadAddEvent : function() {
+        $('.addanotherroompopup').show();
+        var event = thundashop.Ajax.createEvent('','loadAddEvent',$(this), {
+            "roomid" : app.PmsBookingGroupRoomView.getRoomId(),
+            "eventid" : app.PmsBookingGroupRoomView.getEventId()
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.addanotherroompopup').html(res);
+        });
+    },
+    getEventId : function() {
+        return latestOverLayLoadingEvent.data.eventid;
     },
     showPreviewFixOrder: function() {
         thundashop.framework.loadAppInOverLay("af54ced1-4e2d-444f-b733-897c1542b5a8", "3", {
@@ -158,6 +312,14 @@ app.PmsBookingGroupRoomView = {
         thundashop.Ajax.postWithCallBack(event, function() {
             thundashop.framework.reloadOverLayType1or2();
         });
+    },
+    eventAdded : function(res) {
+        if(!res) {
+            alert('Failed to create event');
+        } else {
+            latestOverLayLoadingEvent.data.eventid = res.trim();
+            app.PmsBookingGroupRoomView.refresh();
+        }
     },
     changeSegment : function() {
         var newSegment = $(this).val();
@@ -540,6 +702,14 @@ app.PmsBookingGroupRoomView = {
            latestOverLayLoadingEvent.data.subsection = "guests";
        }
        history.pushState(latestOverLayLoadingEvent, "page 2", "#roomid="+latestOverLayLoadingEvent.data.id + "&subsection="+latestOverLayLoadingEvent.data.subsection);
+    },
+    changeConference : function() {
+        latestOverLayLoadingEvent.data.eventid = $(this).attr('eventid');
+       thundashop.framework.reloadOverLayType2();
+       if(!latestOverLayLoadingEvent.data.subsection) {
+           latestOverLayLoadingEvent.data.subsection = "guests";
+       }
+       history.pushState(latestOverLayLoadingEvent, "page 2", "#roomid="+latestOverLayLoadingEvent.data.id + "&subsection="+latestOverLayLoadingEvent.data.subsection+"&confereceventid=" +latestOverLayLoadingEvent.data.eventid);
     },
     changeSubType : function() {
        latestOverLayLoadingEvent.data.subsection = $(this).attr('subsection');

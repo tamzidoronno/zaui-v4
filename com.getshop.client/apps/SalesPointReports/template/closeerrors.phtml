@@ -36,9 +36,18 @@ if ($closeResult->canClose) {
             foreach ($closeResult->bookingsWithNoneSegments as $bookingId) {
                 $pmsBooking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedMultilevelDomainName(), $bookingId);
                 echo "<div>".$pmsBooking->incrementBookingId ." - ";
-                ?>
-                <div gs_show_modal="booking_room_view" onclick="app.PmsAvailability.closeCloseRoomDialog();" bookingid="<? echo $bookingId; ?>" roomid="<? echo $pmsBooking->rooms[0]->pmsBookingRoomId; ?>" class="gs_shop_small_icon"><? echo $this->__f("Open"); ?></div>
-                <?
+                
+                $pmsapp = new ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView();
+                if($pmsapp->useNew()) {
+                    ?>
+                    <div  onclick="app.PmsAvailability.closeCloseRoomDialog();" <?php echo $pmsapp->displayPopUpAttributes($room, $roomIncluded); ?> class="gs_shop_small_icon"><? echo $this->__f("Open"); ?></div>
+                    <?
+                } else {
+                    ?>
+                    <div gs_show_modal="booking_room_view" onclick="app.PmsAvailability.closeCloseRoomDialog();" bookingid="<? echo $bookingId; ?>" roomid="<? echo $pmsBooking->rooms[0]->pmsBookingRoomId; ?>" class="gs_shop_small_icon"><? echo $this->__f("Open"); ?></div>
+                    <?
+                }
+                
                 echo "</div>";
             }
             ?>

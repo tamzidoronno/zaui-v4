@@ -1,0 +1,99 @@
+<?
+/* @var $this ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
+$conference = $this->getConference();
+$event = $this->getApi()->getPmsConferenceManager()->getConferenceEvent($this->getSelectedEventId());
+
+$activities = $this->getActivities();
+$items = $this->getApi()->getPmsConferenceManager()->getAllItem("-1");
+?>
+
+
+<div class='activity row template' activityid=''>
+    <div class='col col0 col_to_hide'><i class='fa fa-trash gs_shop_small_icon deleteactivity'></i></div>
+    <div class='col col1 ' gsname='text'><span class='head_text'><? echo $this->__f("Title"); ?></span><input class='gsniceinput1' value=''></div>
+    <div class='col col2 ' gsname='from'><span class='head_text'><? echo $this->__f("From"); ?><input class='gsniceinput1' value=''></div>
+    <div class='col col3 ' gsname='to'><span class='head_text'><? echo $this->__f("To"); ?><input class='gsniceinput1' value=''></div>
+    <div class='col col4 ' gsname='count'><span class='head_text'><? echo $this->__f("Guests"); ?><input class='gsniceinput1' value=''></div>
+    <div class='col col5 '><span class='head_text'><? echo $this->__f("Extra description"); ?>
+        <textarea gsname='extendedText'></textarea>
+    </div>
+</div>
+
+<div class='activities'>
+    <?
+    foreach ($activities as $activity) {
+        ?>
+    <div class='activity row' activityid='<? echo $activity->id; ?>'>
+        <div class='col col0 col_to_hide'><i class='fa fa-trash gs_shop_small_icon deleteactivity'></i></div>
+        <div class='col col1 ' gsname='text'><span class='head_text'><? echo $this->__f("Title"); ?></span><input class='gsniceinput1' value='<? echo $activity->text; ?>'></div>
+        <div class='col col2 ' gsname='from'><span class='head_text'><? echo $this->__f("From"); ?><input class='gsniceinput1' value='<? echo date('H:i', strtotime($activity->from)); ?>'></div>
+        <div class='col col3 ' gsname='to'><span class='head_text'><? echo $this->__f("To"); ?><input class='gsniceinput1' value='<? echo $activity->to ? date('H:i', strtotime($activity->to)) : ""; ?>'></div>
+        <div class='col col4 ' gsname='count'><span class='head_text'><? echo $this->__f("Guests"); ?><input class='gsniceinput1' value='<? echo $activity->count; ?>'></div>
+        <div class='col col5 '><span class='head_text'><? echo $this->__f("Extra description"); ?><textarea gsname='extendedText'><?php echo $activity->extendedText; ?></textarea></div>
+    </div>
+        <?
+    }
+    ?>
+</div>
+
+
+<div class='shop_button addExtraActivity'><i class='fa fa-plus'></i> <? echo $this->__f("Add activity"); ?></div>
+<div class='shop_button saveActivities'><i class='fa fa-save'></i> <? echo $this->__f("Save activities"); ?></div>
+
+<style>
+    .conference_activities .row {
+        padding-top: 5px;
+        border-bottom: solid 1px #DDD;
+        padding-bottom: 3px;
+    }
+    .conference_activities .row .col {
+        display: inline-block;
+        vertical-align: top;
+        font-size: 16px;
+    }
+
+    .conference_activities .row.header .col {font-weight: bold;}
+
+    .conference_activities .row .col.col0 { margin-top: -3px; width: 50px; margin-left: 5px; padding-top: 20px; }
+    .conference_activities .row .col.col1 { width: 150px; }
+    .conference_activities .row .col.col2 { width: 150px; }
+    .conference_activities .row .col.col3 { width: 250px; overflow: hidden; margin-right: 20px; text-overflow: ellipsis;}
+    .conference_activities .row .col.col4 { width: 150px; }
+    .conference_activities .activity .col2 input,
+    .conference_activities .activity .col4 input, 
+    .conference_activities .activity .col3 input {
+        width: 50px;
+    }
+    .conference_activities .activity textarea {
+        min-width: 550px;
+        height: 60px;
+        margin-bottom: 20px;
+        border: solid 1px #DDD;
+        padding: 10px;
+    }
+    .conference_activities .head_text {
+    display: grid;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.conference_activities .row_to_hide {
+    width: 100%;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.conference_activities .template {
+    display: none;
+}
+.conference_activities .activity .col1 {
+    width: 220px !important;
+}
+
+.conference_activities .activity .col2, .conference_activities .activity .col4, .conference_activities .activity .col3 {
+    width: 93px !important;
+    margin-right: 0px !important;
+}
+
+</style>
+    

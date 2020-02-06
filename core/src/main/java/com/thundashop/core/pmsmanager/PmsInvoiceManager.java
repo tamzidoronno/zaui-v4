@@ -1280,7 +1280,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             }
         }
         
-        if(booking.hasForcedAccessedRooms()) {
+        if(booking.hasForcedAccessedRooms() || booking.createOrderAfterStay) {
             //If access has been forced, do not send payment links
             return 12;
         }

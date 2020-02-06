@@ -1208,7 +1208,9 @@ function getshop_saveBookerInformation() {
         "profileType" : type,
         "fields" : fields,
         "ordertext" : ordertext,
-        "agreeToTerms" : $('#agreeTerms').is(':checked')
+        "agreeToTerms" : $('#agreeTerms').is(':checked'),
+        "offersAccept" : $('#offersAccept').is(':checked'),
+        "travellingBusiness" : $('#travellingBusiness').is(':checked'),
     };
     var dfr = $.Deferred();
     

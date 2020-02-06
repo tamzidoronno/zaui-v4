@@ -146,6 +146,20 @@ $channelNames = $formater->getChannels();
     <?php
     }
     ?>
+
+    <?php
+    $autosend = $this->getApi()->getPmsInvoiceManager()->autoSendPaymentLink($this->getSelectedMultilevelDomainName(), $pmsBooking->id);
+    echo "<div style='margin-top: 3px;float:left;'>";
+    if($autosend) {
+        $date = $this->getApi()->getPmsInvoiceManager()->getPaymentLinkSendingDate($this->getSelectedMultilevelDomainName(), $pmsBooking->id);
+        $date = date("d.m.Y", strtotime($date));
+        echo "* A payment link will automatically be sent to the guest at " . $date;
+    } else {
+        $reason = $this->getApi()->getPmsInvoiceManager()->getReasonForNotSendingPaymentLink($this->getSelectedMultilevelDomainName(), $pmsBooking->id);
+        echo "<i class='fa fa-warning bookinghighlightcolor'></i> No payment link will be sent, " . $this->translateNotSendPaymentLinkReason($reason);
+    }
+    echo "</div>";
+    ?>    
 </div>
     
 <div class='col_box_width_2 second'>
@@ -261,6 +275,10 @@ $channelNames = $formater->getChannels();
             }
             
             $user = $this->getApi()->getUserManager()->getUserById($comment->userId);
+            if(!$user) {
+                $user = new core_usermanager_data_User();
+            }
+            
             echo "<div class='$notForRoom $hiddenclass $deletedClass commentrow' roomid='".$pmsSelectedRoom->pmsBookingRoomId."' commentid='".$comment->commentId."'>";
             echo "<span class='commenttime'>";
             echo "<i class='fa fa-trash-o' gsclick='deleteComment' style='cursor:pointer;' gs_confirm='Are you sure?' roomid='".$pmsSelectedRoom->pmsBookingRoomId."' commentid='".$comment->commentId."'></i> ";
@@ -280,26 +298,3 @@ $channelNames = $formater->getChannels();
     
     <span class='shop_button savecomment'>Save comment</span>
 </div>
-
-
-<style>
-    .PmsBookingGroupRoomView .notforroom { display:none; }
-    .PmsBookingGroupRoomView .savecomment { display:none; }
-    .PmsBookingGroupRoomView .hiddencomment { display:none; }
-    .PmsBookingGroupRoomView .forroom { color:#bb2d2d; }
-    .PmsBookingGroupRoomView .deletedcomment { text-decoration: line-through; }
-    .PmsBookingGroupRoomView .addcommentarea { margin-top: 10px;display:none; }
-    .PmsBookingGroupRoomView .addcommentbtn { width:45%; box-sizing: border-box; float:left;}
-    .PmsBookingGroupRoomView .addcommenttobooking { width:100%; box-sizing: border-box; height: 80px; }
-    .PmsBookingGroupRoomView .commentsheader { text-align: left;  margin-top: 10px; color:#777; }
-    .PmsBookingGroupRoomView .commentarea { padding-left: 10px; font-size: 12px; }
-    .PmsBookingGroupRoomView .commentby { float:right; color:#bbb; }
-    .PmsBookingGroupRoomView .commenttime { color:#bbb; width: 120px; display:inline-block; }
-    .PmsBookingGroupRoomView .bookerinformation .col { width: 40%; display:inline-block; }
-    .PmsBookingGroupRoomView .bookerinformation .col_box_width_2 { width: 50%; display:inline-block; float:left; }
-    .PmsBookingGroupRoomView .col1 {     width: 190px; line-height: 20px; padding-left: 10px; box-sizing: border-box;color: #777; }
-    .PmsBookingGroupRoomView { font-size: 15px; }
-    .PmsBookingGroupRoomView .show_edit_user, .PmsBookingGroupRoomView .show_change_user, .PmsBookingGroupRoomView .bookinghighlightcolor { color: #4da6cb; }
-    .PmsBookingGroupRoomView .edit_user_btn { display:none; }
-    .PmsBookingGroupRoomView .commenttext { width: calc(100% - 250px );display: inline-block;  white-space: nowrap;  overflow: hidden;  text-overflow: ellipsis: }
-</style>

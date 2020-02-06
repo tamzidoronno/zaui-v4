@@ -37,7 +37,7 @@ $chnls = $pmssearchbox->getChannels();
         </div>
     </div><br><br>
     
-    
+
     <div style='height: 38px; border-bottom: solid 1px #bbb;'>
         <span type='coverage' class='pmsbutton tab <?php if($filter->type == "coverage") {echo "selected";}?>'><i class='fa fa-line-chart'></i> Coverage</span>
         <span type='incomereport' class='pmsbutton tab <?php if($filter->type == "incomereport") {echo "selected";}?>'><i class='fa fa-money'></i> Income report</span>
@@ -46,6 +46,8 @@ $chnls = $pmssearchbox->getChannels();
         <span type='cleaning_report' class='pmsbutton tab <?php if($filter->type == "cleaning_report") {echo "selected";}?>'><i class='fa fa-paint-brush'></i> Cleaning report</span>
     </div>
     <div gstype="form" method="setReportFilter">
+        <span class='shop_button filterbycustomerbutton' style="right: 10px;top: 30px; float:right;">Filter by customers</span> 
+        <span class='shop_button filterbydiscountcodes' style="margin-right: 10px;right: 170px;top: 30px; float:right;" onclick='$(".PmsReport .discountcodeselection").toggle();'>Filter by discount codes</span>
     <table>
         <input type="hidden" id="coverageview" value="<?php echo $filter->type; ?>" gsname='type'>
         <tr>
@@ -99,8 +101,6 @@ $chnls = $pmssearchbox->getChannels();
             </td>
         </tr>
     </table>
-        <span class='shop_button filterbycustomerbutton' style="position: absolute;right: 10px;top: 30px;">Filter by customers</span> 
-        <span class='shop_button filterbydiscountcodes' style="margin-right: 10px;position: absolute;right: 170px;top: 30px;" onclick='$(".PmsReport .discountcodeselection").toggle();'>Filter by discount codes</span>
         <span class='discountcodeselection'>
             <?php
             $codes = $this->getApi()->getCartManager()->getCoupons();

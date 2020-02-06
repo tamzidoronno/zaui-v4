@@ -283,11 +283,11 @@ thundashop.Ajax = {
         $(document).on('click','*[gs_downloadExcelReport]', thundashop.Ajax.createExcelFile);
         $(document).on('click','*[gs_downloadPlainText]', thundashop.Ajax.createPlainTextFile);
         $(document).on('click','*[gs_show_modal]', thundashop.Ajax.showModal);
+        $(document).on('click','*[gs_show_overlay]', thundashop.Ajax.showOverlay);
         $(document).on('click','*[gs_close_modal]', thundashop.Ajax.closeModal);
         $(document).on('click','*[gstype="downloadpdf"]', thundashop.Ajax.downloadPdf);
         $(document).on('click','*[gstype="numpad"]', thundashop.Ajax.showGetShopNumpad);
     },
-    
     showGetShopNumpad: function() {
         getshopnumpad.show(this);
     },
@@ -373,7 +373,7 @@ thundashop.Ajax = {
         if ($(app).attr('gs_getvariables')) {
             data.gs_getvariables = $(app).attr('gs_getvariables');
         }
-        
+                
         thundashop.Ajax.simplePost(app, "", data, firstLoad);
     },
     
@@ -415,7 +415,30 @@ thundashop.Ajax = {
             });
         });
     },
-    
+    showOverlay : function() {
+         $('html, body').css({ overflow: 'hidden', height: '100%'});
+        window.location.href.split('#')[0];
+
+        var data = {};
+        $(this).each(function() {
+            $.each(this.attributes, function() {
+              // this.attributes is not a plain object, but an array
+              // of attribute nodes, which contain both the name and value
+              if(this.specified) {
+                data[this.name] = this.value;
+              }
+            });
+          });
+        var event = thundashop.Ajax.createEvent(null, $(this).attr('method'), $(this), data);
+        event['synchron'] = true;
+        latestOverLayLoadingEvent = event;
+        getshop.showOverlay("2");
+        thundashop.Ajax.post(event, function (res) {
+            latestOverLayLoadingEvent.data.getshop_resetlistmode = "false";
+            $('.gsoverlay2 .gsoverlayinner .content').html(res);
+            $('.gsoverlay2 .gsoverlayinner').prepend('<i class="fa fa-close closemodal"></i>');
+        });
+    },
     createExcelFile: function() {
         var method = $(this).attr('gs_downloadExcelReport');
         var filename = $(this).attr('gs_fileName');

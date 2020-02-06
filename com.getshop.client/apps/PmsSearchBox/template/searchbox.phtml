@@ -40,7 +40,7 @@ if($filter->groupByBooking) {
             echo $this->__f("To");
             ?>
         </div>
-        <input class="gsniceinput1" id="enddate" value="<? echo date("d.m.Y", strtotime($filter->endDate)); ?>" gsname='to'/>
+        <input class="gsniceinput1" id="enddate" value="<? echo date("d.m.Y", strtotime($filter->endDate)+86400); ?>" gsname='to'/>
         <i class="gsicon-calendar-text"></i>
     </div>
 
@@ -140,6 +140,7 @@ if($filter->groupByBooking) {
         <span class="top-row-icon sendmessagesbox" title='Send messages' style='margin-left: 25px;'><i class="fa fa-inbox" style='right:37px;'></i></span>
         <span class="top-row-icon" gsclick="runProcessor" title='Run processor'><i class="fa fa-cube"></i></span>
         <span class="top-row-icon" gsclick="resetAutoAssignedStatusForCheckinsToday" title='Reset auto assigned status' style='margin-left: 25px;'><i style="right: -20px;" class="fa fa-magic"></i></span>
+        <span class="top-row-icon" gs_downloadexcelreport="downloadOptInUsers" gs_filename="spamusers" title='Download users that has agreed to campains to excel' style='margin-left: 25px;'><i style="right: -50px;" class="fa fa-share"></i></span>
     </div>
     
     <div class="sendmessageoverviewbox"></div>
@@ -188,6 +189,9 @@ if($filter->groupByBooking) {
 
 
 <script>
+    getshop_loadDatePicker($('#startdate'), { dependant : $('#enddate'), jump : 1 });    
+    getshop_loadDatePicker($('#enddate'), { dependant : $('#startdate'), jump : -1 });
+/*
     $('#startdate').datepicker({ dateFormat: "dd.mm.yy",  changeMonth: true, changeYear: true, showButtonPanel: true,
         onSelect: function(dateText) {
             $('.PmsNewBooking [gsname="numberOfRooms"]').val(0);
@@ -214,6 +218,8 @@ if($filter->groupByBooking) {
             }
         }
     });
+     * 
+ */
     $(document).on('click', '.PmsNewBooking .gsicon-calendar-text', function() {
         $(this).closest('div').find('input').focus();
     });

@@ -84,6 +84,10 @@ class GetShopQuickUser extends \SystemApplication implements \Application {
         $user->relationship = $_POST['data']['relationship'];
         $user->defaultDueDate = $_POST['data']['defaultDueDate'];
         $user->preferredPaymentType = $_POST['data']['preferredpaymenttype'];
+        $user->agreeToSpam = $_POST['data']['agreeToSpam'] == "true";
+        if($user->agreeToSpam && !$user->agreeToSpamDate) {
+            $user->agreeToSpamDate = $this->convertToJavaDate(time());
+        }
         if(!isset($_POST['data']['avoidsaving'])) {
             $this->getApi()->getUserManager()->saveUser($user);
         }

@@ -78,7 +78,13 @@ foreach ($res as $unsettledBooking) {
                             </div>
 
                             <div class='col col6'>
-                                <div class="gs_shop_small_icon fa fa-bed" gs_show_modal="booking_room_view" bookingid="<? echo $unsettledBooking->booking->id; ?>" roomid="<? echo $room->pmsBookingRoomId; ?>"></div>
+                            <?php
+                            $pmsapp = new ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView();
+                            if($pmsapp->useNew()) { ?>
+                                <div class='gs_shop_small_icon fa fa-bed' <?php echo $pmsapp->displayPopUpAttributes($room); ?> ><? echo $this->__f("Open booking"); ?></div>
+                            <?php } else { ?>
+                                <div class='gs_shop_small_icon fa fa-bed' gs_show_modal='booking_room_view' bookingid="<? echo $booking->id; ?>" roomid="<? echo $room->pmsBookingRoomId; ?>"><? echo $this->__f("Open booking"); ?></div>
+                            <? } ?>
                             </div>
 
                             <div class='col col7'>

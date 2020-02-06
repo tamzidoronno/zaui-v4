@@ -1,0 +1,39 @@
+<?php
+/* @var $this ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
+$conference = $this->getConference();
+$date = date("d.m.Y");
+$items = $this->getEventItems();
+?>
+
+<div class='' gstype='form' method='addNewEvent' gs_callback="app.PmsBookingGroupRoomView.eventAdded">
+    Title:<br>
+    <input type='txt' class='gsniceinput1' value='' gsname='title' style='width:100%;box-sizing: border-box'>
+    <div>
+        <br>
+        When:<br>
+        <input type='txt' class='gsniceinput1' value='<?php echo $date; ?>' gsname='date' style='width: 80px'>
+        <input type='txt' class='gsniceinput1' value='08:00' gsname='starttime' style='width: 40px'>
+        <input type='txt' class='gsniceinput1' value='16:00' gsname='endtime' style='width: 40px'>
+        <input type='hidden' class='gsniceinput1' value='<?php echo $this->getConference()->id; ?>' gsname='conferenceid'>
+        <input type='hidden' class='gsniceinput1' value='<?php echo $this->getPmsBookingRoom()->pmsBookingRoomId; ?>' gsname='roomid'>
+    </div>
+    <div>
+        <br>
+        Connect to item:<br>
+        <select gsname='pmsConferenceItemId' class='gsniceselect1'>
+            <?php
+            foreach($items as $item) {
+                echo "<option value='" . $item->id . "'>";
+                echo $item->name;
+                if($item->toItemId) {
+                    echo "(" . $items[$item->toItemId]->name . ")";
+                }
+                echo "</option>";
+            }
+            ?>
+        </select>
+    </div>
+    <span class='shop_button' gstype='submit' style='width:100%; box-sizing: border-box; margin-top: 5px;'  gs_callback="app.PmsBookingGroupRoomView.eventAdded">Create event</span>
+</div>
+
+<script>getshop_loadDatePicker($("[gsname='date']"), {});</script>

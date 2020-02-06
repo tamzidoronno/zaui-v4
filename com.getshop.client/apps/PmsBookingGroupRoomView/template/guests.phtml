@@ -82,6 +82,7 @@ if($guestcount > $numberofguests) {
         </div>
 
         <div class="guest_col guest_col4">
+            <div class="addToBlockList" title='Add to blocklist'><i class='fa fa-close'></i></div>
             <div class="gs_shop_small_icon toggleDisabledGuest" title='Is this guest disabled?'><i class='fa fa-wheelchair'></i></div>
             <div class="gs_shop_small_icon remove_guest"><i class="fa fa-close"></i></div>
         </div>
@@ -133,8 +134,9 @@ if($guestcount > $numberofguests) {
             </div>
 
             <div class="guest_col guest_col4">      
+            <div class="gs_shop_small_icon addToBlockList" title='Add to blocklist'><i class='fa fa-stop-circle-o'></i></div>
                 <div class="gs_shop_small_icon toggleDisabledGuest <?php echo $isDisabled; ?>" title='Is this guest disabled?'><i class='fa fa-wheelchair'></i></div>
-                <div class="gs_shop_small_icon remove_guest"><i class="fa fa-close"></i></div>
+                <div class="gs_shop_small_icon remove_guest" title='Remove'><i class="fa fa-close"></i></div>
             </div>
             <span style='font-size: 12px; margin-left: 12px; cursor:pointer;' class='bookinghighlightcolor selectsameasbooker'>
                 same as booker
@@ -158,57 +160,3 @@ if($guestcount > $numberofguests) {
 </div>
 
 </div>
-<style>
-    .show_edit_user,.show_change_user { float:right; margin-left: 5px; }
-    
-    
-.PmsBookingGroupRoomView .bookinginformation .guest_col {
-    display: inline-block;
-    padding-right: 10px;
-    font-size: 13px;
-    padding-left: 10px;
-    padding-top: 5px;
-    box-sizing: border-box;
-}
-
-.PmsBookingGroupRoomView .bookinginformation .guest_col input {
-    width: 100%;
-    box-sizing: border-box;
-} 
-
-.PmsBookingGroupRoomView .bookinginformation .guest_col .gsniceinput1.prefix {
-    width:50px;
-}
-
-.PmsBookingGroupRoomView .bookinginformation .guest_col .gsniceinput1.cellnumber {
-    width: calc(100% - 61px);
-}
-
-.PmsBookingGroupRoomView .isdisabled {
-    background:green;
-    color:#fff;
-}
-
-.PmsBookingGroupRoomView .payment_process_started {
-    padding: 20px;
-}
-
-.PmsBookingGroupRoomView .bookinginformation .guest_col1 { width: calc(100% - 850px); }
-.PmsBookingGroupRoomView .bookinginformation .guest_col2 { width: 260px; }
-.PmsBookingGroupRoomView .bookinginformation .guest_col3 { width: 200px; }
-.PmsBookingGroupRoomView .bookinginformation .guest_col4 { width: 100px; }
-.PmsBookingGroupRoomView .bookinginformation .guest_col5 { width: 225px; }
-.PmsBookingGroupRoomView .countrylanguagebox {
-    display: inline-block;
-    width: 45%;
-}
-    .PmsBookingGroupRoomView .insideheader .gs_shop_small_icon {
-    background: #86c330;
-    background-color: #86c330;
-    bottom: 5px;
-    float: right;
-    border-radius: 3px;
-    color: #FFF;
-    border: solid 0px;
-}
-</style>

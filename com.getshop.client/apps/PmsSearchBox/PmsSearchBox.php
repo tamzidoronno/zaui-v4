@@ -130,6 +130,38 @@ class PmsSearchBox extends \MarketingApplication implements \Application {
         }
     }
     
+    public function downloadOptInUsers() {
+        $pms = new \ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking();
+        $filter = $pms->getSelectedFilter();
+        $rooms = $this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedMultilevelDomainName(), $filter);
+        $userIds = array();
+        foreach($rooms as $room) {
+            $userIds[$room->userId] = 1;
+        }
+        
+        $rows = array();
+        $header = array();
+        $header[] = "Name";
+        $header[] = "Email";
+        $header[] = "Prefix";
+        $header[] = "Phone";
+        
+        $rows[] = $header;
+        
+        foreach($userIds as $usrId => $val) {
+            $user = $this->getApi()->getUserManager()->getUserById($usrId);
+            if($user->agreeToSpam) {
+                $row = array();
+                $row[] = $user->fullName;
+                $row[] = $user->emailAddress;
+                $row[] = $user->prefix;
+                $row[] = $user->cellPhone;
+                $rows[] = $row;
+            }
+        }
+        echo json_encode($rows);
+    }
+    
     public function displayOtherSelection() {
         $this->includefile("otherselection");
     }

@@ -2653,7 +2653,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         try {
             xml = generator.generateXml(storeManager.isProductMode());
         } catch (ErrorException ex) {
-            messageManager.sendErrorNotification("There was an error while validating the EHF, please investigate. <br/>OrderId: " + orderId, ex);
+            messageManager.sendErrorNotification("There was an error while validating the EHF, please investigate. <br/>OrderId: " + order.incrementOrderId + " (" + orderId + ")", ex);
             return "failed";
         }
         
@@ -4897,7 +4897,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         for(CartItem item : creditNote.getCartItems()) {
             for(OrderLoss lossLine : loss) {
                 if(item.getCartItemId().equals(lossLine.itemId)) {
-                    item.setCount(lossLine.count);
+                    int count = lossLine.count;
+                    if(count > 0) { count *= -1; }
+                    item.setCount(count);
                     item.getProduct().price = lossLine.amount;
                     item.getProduct().priceLocalCurrency = lossLine.amountInLocalCurrency;
                 }
@@ -4908,15 +4910,18 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         double totalAmount = getTotalAmount(creditNote);
         Double totalAmountInLocalCurrency = null;
+        Double totalAmountInLocalCurrencyToMarkOnOriginal = null;
+        double toMarkOnOriginal = totalAmount * -1;
         
         markAsPaid(creditNote.id, paymentDate, creditNote.getTotalAmount());
         
         if (order.currency != null && !order.currency.isEmpty()) {
-            totalAmountInLocalCurrency = getTotalForOrderInLocalCurrencyById(order.id);
+            totalAmountInLocalCurrency = getTotalForOrderInLocalCurrencyById(creditNote.id);
+            totalAmountInLocalCurrencyToMarkOnOriginal = totalAmountInLocalCurrency * -1;
         }
 
         String userId = getSession().currentUser.id;
-        order.registerTransaction(paymentDate, totalAmount, userId, Order.OrderTransactionType.MANUAL, "", comment, totalAmountInLocalCurrency, null, null);
+        order.registerTransaction(paymentDate, toMarkOnOriginal, userId, Order.OrderTransactionType.MANUAL, "", comment, totalAmountInLocalCurrencyToMarkOnOriginal, null, null);
         if (order.isFullyPaid()) {
             markAsPaidInternal(order, paymentDate, totalAmount);
         }
@@ -4965,7 +4970,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
         saveOrder(credited);
         saveOrder(order);
-        cleanOrder(credited.id, "fdasf345345345!mnm!");
+//        cleanOrder(credited.id, "fdasf345345345!mnm!");
         
         if (order.status != Order.Status.PAYMENT_COMPLETED && markAsPaid) {
             markAsPaidWithTransactionTypeInternal(order.id, order.getTotalAmount(), new Date(), 1, "unkown", order.getTotalAmountLocalCurrency(), order.getTotalRegisteredAgio());

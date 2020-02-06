@@ -65,12 +65,12 @@ $curdate = date("d.m.Y", time());
     <h3>Include only this categories</h3>
     * PS: Category filter is in beta and might not work.<br>Please give us feedback if it does not work.<bR><bR>
     <?php
-    $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+    $types = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
     foreach($types as $type) {
         echo "<div><input type='checkbox' gsname='category_".$type->id."'>" . $type->name . "</div>";
     }
     ?>
-    
+
     <input type='button' style='padding:9px;float:right;' value='Create restriction' gstype='submit'>
 </span>
 

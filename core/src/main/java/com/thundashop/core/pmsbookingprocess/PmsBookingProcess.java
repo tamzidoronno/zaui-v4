@@ -34,11 +34,13 @@ import com.thundashop.core.pmsmanager.PmsBookingDateRange;
 import com.thundashop.core.pmsmanager.PmsBookingFilter;
 import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.pmsmanager.PmsConfiguration;
+import com.thundashop.core.pmsmanager.PmsCoverageAndIncomeReportManager;
 import com.thundashop.core.pmsmanager.PmsGuests;
 import com.thundashop.core.pmsmanager.PmsInvoiceManager;
 import com.thundashop.core.pmsmanager.PmsInvoiceManagerNew;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.pmsmanager.PmsPricing;
+import com.thundashop.core.pmsmanager.PmsSegment;
 import com.thundashop.core.pmsmanager.PmsUserDiscount;
 import com.thundashop.core.pmsmanager.TimeRepeaterData;
 import com.thundashop.core.pos.PosManager;
@@ -93,6 +95,9 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     
     @Autowired
     CartManager cartManager;
+    
+    @Autowired
+    PmsCoverageAndIncomeReportManager pmsCoverageAndIncomeReportManager;
     
     @Autowired
     UserManager userManager;
@@ -261,6 +266,10 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         checkIfCouponIsValid(result, arg);
         checkForRestrictions(result, arg);
         addAddonsIncluded(result,arg);
+        
+        if(result.hasAvailableRooms()) {
+            result.errorMessage = "";
+        }
         
         return result;
     }
@@ -783,6 +792,8 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         booking.registrationData.profileType = bookerInfo.profileType;
         booking.agreedToTermsAndConditions = bookerInfo.agreeToTerms;
         booking.invoiceNote = bookerInfo.ordertext;
+        booking.agreedToSpam = bookerInfo.offersAccept;
+        booking.travellingBusiness = bookerInfo.travellingBusiness;
         
         try {
             pmsManager.setBooking(booking);
@@ -913,6 +924,8 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             booking.paymentType = usr.preferredPaymentType;
             if(discount.supportInvoiceAfter) {
                 booking.payLater = true;
+                booking.createOrderAfterStay = true;
+                booking.avoidAutoDelete = true;
             } else {
                 pmsInvoiceManager.autoCreateOrderForBookingAndRoom(booking.id, booking.paymentType);
             }

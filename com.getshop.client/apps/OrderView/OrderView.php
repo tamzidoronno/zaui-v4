@@ -12,7 +12,7 @@ class OrderView extends \MarketingApplication implements \Application {
     public function getDescription() {
         
     }
-
+    
     public function updateCurrencyOnOrder() {
         $order = $this->getOrder();
         $order->currency = $_POST['data']['currency'];

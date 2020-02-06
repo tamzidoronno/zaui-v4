@@ -626,6 +626,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         User user = userManager.getUserById(booking.userId);
         user.lastBooked = new Date();
+        
+        if(booking.agreedToSpam) {
+            user.agreeToSpam = true;
+        }
+        
         userManager.saveUserSecure(user);
         return 0;
     }
@@ -3594,6 +3599,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         TimeRepeater repeater = new TimeRepeater();
         for (TimeRepeaterData res : openingshours) {
+            if(res.categories != null) {
+                if(!res.containsCategory(itemType)) {
+                    continue;
+                }
+            }
             LinkedList<TimeRepeaterDateRange> ranges = repeater.generateRange(res);
             for (TimeRepeaterDateRange range : ranges) {
                 if (range.isBetweenTime(new Date())) {
@@ -5576,6 +5586,26 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     public PmsBooking doCompleteBooking(PmsBooking booking) {
+        
+        
+        boolean isBlocked = checkIfBlocked(booking);
+        if(isBlocked) {
+            
+            String message = "";
+            for(PmsBookingRooms room : booking.rooms) {
+                message = "Room date : " + room.date.start + " - " + room.date.end + "<br>";
+                for(PmsGuests guest : room.guests) {
+                    message = "Guest: " + guest.name + " - " + guest.email + " - " + guest.phone + "<br>";
+                }
+            }
+            message += "<bR>";
+            message += "Total cost: " + booking.getTotalPrice() + "<br>";
+            message += "For more information, look into PMS->Settings->Restrictions";
+            
+            messageManager.sendMessageToStoreOwner(message, "A booking has been blocked");
+            return null;
+        }
+        
         String rawBooking = "";
         if (booking != null) {
             Gson gson = new Gson();
@@ -10086,6 +10116,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             cartManager.subtractTimesLeft(coupon.code);
             gsTiming("Subsctracted coupons");
         }
+        
+        if(currentBooking.agreedToSpam) {
+            User usr = userManager.getUserById(currentBooking.userId);
+            usr.agreeToSpam = true;
+            usr.agreeToSpamDate = new Date();
+            userManager.saveUserSecure(usr);
+        }
     }
 
     @Override
@@ -11060,6 +11097,77 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         lastProcessedTimedMessage.put(key, timeInTimezone);
         return false;
+    }
+
+    @Override
+    public void addToBlockList(PmsBlockedUser block) {
+        PmsConfiguration config = getConfigurationSecure();
+        block.addedByUser = getSession().currentUser.id;
+        block.addedWhen = new Date();
+        config.blockedUsers.add(block);
+        saveConfiguration(config);
+    }
+
+    @Override
+    public void removeFromBlockList(String blockedId) {
+        PmsConfiguration config = getConfigurationSecure();
+        List<PmsBlockedUser> newList = new ArrayList();
+        for(PmsBlockedUser block : config.blockedUsers) {
+            if(block.id.equals(blockedId)) {
+                continue;
+            }
+            newList.add(block);
+        }
+        config.blockedUsers = newList;
+        saveConfiguration(config);
+    }
+
+    private boolean checkIfBlocked(PmsBooking booking) {
+        
+        List<PmsBlockedUser> blocks = getConfigurationSecure().blockedUsers;
+        boolean blocked = false;
+        for(PmsBookingRooms room : booking.rooms) {
+            for(PmsGuests guest : room.guests) {
+                String phone = guest.phone;
+                String email = guest.email;
+                
+                //Check if blocks on phone
+                if(phone != null) {
+                    String numbers = phone.replaceAll("\\D+","");
+                    if(numbers != null && !numbers.trim().isEmpty()) {
+                        for(PmsBlockedUser blockeduser : blocks) {
+                            String number = blockeduser.getPhoneNumber();
+                            if(number.equals(phone)) {
+                                blocked = true;
+                            }
+                        }
+                    }
+                }
+                
+                //Check if blocks on email
+                if(email != null) {
+                    email = email.replaceAll("\\s+","");
+                    if(email != null && !email.isEmpty()) {
+                        for(PmsBlockedUser blockeduser : blocks) {
+                            String blockedEmail = blockeduser.getEmail();
+                            if(email.toLowerCase().equals(blockedEmail.toLowerCase())) {
+                                blocked = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        if(blocked) {
+            for(PmsBookingRooms r : booking.rooms) {
+                r.blocked = true;
+                logEntry("Room block by blockedlist", booking.id, r.pmsBookingRoomId);
+            }
+            saveBooking(booking);
+        }
+        
+        return blocked;
     }
     
 }

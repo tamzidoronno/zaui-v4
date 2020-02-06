@@ -33,6 +33,7 @@ public class PmsBooking extends DataCommon {
     public String browserLanguage = "";
     public String userId = "";
     public String bookedByUserId = "";
+    public String conferenceId = "";
     public Integer state = 0;
     public List<String> orderIds = new ArrayList();
     public List<String> suggestedUserIds = new ArrayList();
@@ -125,6 +126,8 @@ public class PmsBooking extends DataCommon {
     public boolean isExpediaCollect = false;
     public boolean isBookingComVirtual = false;
     public boolean isPrePaid = false;
+    public boolean agreedToSpam = false;
+    public boolean travellingBusiness = false;
     
     public Double getTotalPrice() {
         return totalPrice;

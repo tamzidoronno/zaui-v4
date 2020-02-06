@@ -68,6 +68,8 @@
     "agreetotermserrormessage" : "* Howdy, you forgot to agree to terms and conditions.",
     "invalidguestinformation" : "* All fields needs to be filled in correctly before you continue.",
     "agreeTerms" : "I agree to the term and conditions",
+    "offersAccept" : "Please send me special offers in the future",
+    "travellingBusiness" : "I am travelling for business",
     "readTerms" : "Read the terms and conditions",
     "downloadTerms" : "Download the terms and conditions",
     "roomExample1" : "Room 1 - Double Room",

@@ -764,7 +764,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         return null;
     }
 
-    private String encryptPassword(String password) throws ErrorException {
+    public String encryptPassword(String password) throws ErrorException {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hash = digest.digest(password.getBytes("UTF-8"));

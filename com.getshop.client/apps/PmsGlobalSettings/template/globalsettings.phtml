@@ -277,10 +277,43 @@ if(stristr($user->emailAddress, "@getshop.com")) {
         <input type='button' style='padding: 9px; width:200px; cursor:pointer;' value='save' gstype='submit'>
     </div>
  
+    <hr>
+    <h1>Remote access</h1>
+    <div>
+        <?
+        $tokens = $this->getApi()->getGetShopCentral()->getTokens();
+
+        foreach ($tokens as $token) {
+            echo "Name: ".$token->description;
+            echo "<br/> Systemid: ".$this->getFactory()->getStore()->id;
+            echo "<br/> Secret Key: ".$token->accessToken;
+            echo "<hr/>";
+            
+        }
+        ?>
+    </div>
+    <div gstype='form'method='createNewRemoteAccess'>
+        <div class="container">
+            <span class="option">
+                <input type="text" class="gsniceinput1" gsname="name" value="" placeholder="name" style="width: 250px;">
+            </span>
+            <span class="title">
+                Create new access to remote system.
+            </span>
+        
+            <br/>
+            <br/>
+            <br/>
+            <div style='text-align: right;'>
+                <input type='button' style='padding: 9px; width:200px; cursor:pointer;' value='Create new' gstype='submit'>
+            </div>
+        </div>
+
+    </div>
+    <?
+    
+    ?>
 </div>
-
-
-
 
 
 

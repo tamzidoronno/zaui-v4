@@ -10,12 +10,14 @@ import com.getshop.scope.GetShopSessionScope;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
-import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;
+import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.external.ExternalCartItem;
 import com.thundashop.core.external.ExternalEndOfDayTransaction;
+import com.thundashop.core.external.ExternalPosAccess;
 import com.thundashop.core.pmsmanager.PmsBookingFilter;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.productmanager.ProductManager;
@@ -28,6 +30,7 @@ import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +55,17 @@ public class ExternalPosManager extends ManagerBase implements IExternalPosManag
     @Autowired
     private UserManager userManager;
     
-            
+    public HashMap<String, ExternalPosAccess> externalAccess = new HashMap();
+
+    @Override
+    public void dataFromDatabase(DataRetreived data) {
+        for (DataCommon iData : data.data) {
+            if (iData instanceof  ExternalPosAccess) {
+                externalAccess.put(iData.id, (ExternalPosAccess)iData);
+            }
+        }
+    }
+    
     @Override
     public boolean hasAccess(String token) {
         if (token == null || token.isEmpty()) {
@@ -249,5 +262,70 @@ public class ExternalPosManager extends ManagerBase implements IExternalPosManag
         transaction.cashPointId = getCashPoint(token).id;
         
         saveObject(transaction);
+    }
+
+    @Override
+    public void requestAccess(String providerIdToken, String token) {
+        if (providerIdToken == null) {
+            throw new ErrorException(26);
+        }
+        
+        if (getExternalReferenceByToken(token) != null) {
+            return;
+        }
+        // GetShop Pos System
+        if (providerIdToken.equals("d0c03687-c52a-45d6-9956-b536cafc3f04")) {
+            ExternalPosAccess newAccess = new ExternalPosAccess();
+            newAccess.accessToken = token;
+            saveObject(newAccess);
+            externalAccess.put(newAccess.id, newAccess);
+        }
+    }
+
+    @Override
+    public void grantAccessToExternalPos(String id) {
+        ExternalPosAccess ref = externalAccess.get(id);
+        if (ref != null) {
+            ref.confirmedDate = new Date();
+            ref.confirmedBy = getSession().currentUser.id;
+            ref.confirmed = true;
+            saveObject(ref);
+        }
+    }
+
+    @Override
+    public void rejectAccess(String id) {
+        ExternalPosAccess ref = externalAccess.remove(id);
+        
+        if (ref != null) {
+            deleteObject(ref);
+        }
+        
+    }
+
+    @Override
+    public String isExternalAccessConfirmed(String token) {
+        ExternalPosAccess ref = getExternalReferenceByToken(token);
+        if (ref == null) {
+            return "rejected";
+        }
+        
+        return ref.confirmed ? "true" : "false";
+    }
+
+    private ExternalPosAccess getExternalReferenceByToken(String token) {
+        return externalAccess.values()
+                .stream()
+                .filter(o -> o.accessToken != null && o.accessToken.equals(token))
+                .findAny()
+                .orElse(null);
+    }
+
+    @Override
+    public List<ExternalPosAccess> getUnconfirmedAccesses() {
+        return externalAccess.values()
+                .stream()
+                .filter(o -> !o.confirmed)
+                .collect(Collectors.toList());
     }
 }

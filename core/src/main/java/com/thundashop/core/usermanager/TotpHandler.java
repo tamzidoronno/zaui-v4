@@ -101,7 +101,7 @@ public class TotpHandler {
         return retUsers;
     }
     
-    private User getUserByUserNameAndPassword(String username, String encryptedPassword) {
+    public User getUserByUserNameAndPassword(String username, String encryptedPassword) {
         loadUsers();
         
         for (User user : users) {

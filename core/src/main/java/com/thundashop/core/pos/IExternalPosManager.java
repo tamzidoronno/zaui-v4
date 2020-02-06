@@ -5,11 +5,14 @@
  */
 package com.thundashop.core.pos;
 
+import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.external.ExternalCartItem;
+import com.thundashop.core.external.ExternalPosAccess;
 import com.thundashop.core.external.ExternalPosProduct;
 import com.thundashop.core.external.ExternalRoom;
 import java.util.List;
+import javax.xml.ws.soap.Addressing;
 
 /**
  *

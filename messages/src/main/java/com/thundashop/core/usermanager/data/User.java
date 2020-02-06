@@ -98,6 +98,8 @@ public class User extends DataCommon implements Comparable<User> {
     public boolean deactivated = false;
     public boolean merged = false;
     
+    public String externalTokenId = "";
+    
     public void cleanWhiteSpaces() {
         cleanWhiteSpace(cellPhone);
         cleanWhiteSpace(emailAddressToInvoice);

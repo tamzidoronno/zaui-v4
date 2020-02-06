@@ -9,12 +9,9 @@ import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.ForceAsync;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
-import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import org.apache.xmlrpc.XmlRpcException;
-
 
 /**
  * Wubook management system.<br>
@@ -109,6 +106,6 @@ public interface IWubookManager {
     public void fetchBookingFromCallback(String rcode) throws Exception;
     
     @Administrator
-    public String updatePricesBetweenDates(Date now, Date end) throws XmlRpcException, Exception;
+    public String updatePricesBetweenDates(Date now, Date end) throws Exception;
     
 }

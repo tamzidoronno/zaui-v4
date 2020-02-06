@@ -5036,5 +5036,15 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public void forceSaveOrder(Order order, String password) {
+        if (password == null || !password.equals("a9sdfa90sfdu823984512oiu3hnkqwdiu<sahaiwuheaowierhq2io3uh2qio3uh4æ2)")) {
+            return;
+        }
+        
+        super.saveObject(order);
+        orders.put(order.id, order);
+    }
+
 
 }

@@ -574,4 +574,7 @@ public interface IOrderManager {
     
     @Administrator
     public void transferToNewFReport();
+    
+    @Administrator
+    public void forceSaveOrder(Order order, String password);
 }

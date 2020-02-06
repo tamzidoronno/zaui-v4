@@ -3,6 +3,8 @@
 $order = $this->getOrder();
 $totalForOrderInLocalCurrency = 0;
 
+$loggedOnUser = $this->getApi()->getUserManager()->getLoggedOnUser();
+
 if ($order->currency) {
     $totalForOrderInLocalCurrency = $this->getApi()->getOrderManager()->getTotalForOrderInLocalCurrencyById($order->id);
 }
@@ -69,7 +71,10 @@ foreach ($accounts as $account) {
     <span class='shop_button actiontabbtn' tab='registerpayment'>Manually register a payment</span>
     <span class='shop_button actiontabbtn' tab='registerloss'>Register loss</span>
     <span class='shop_button actiontabbtn' tab='registeraglorounding'>Register rounding</span>
-    <span class='shop_button cleanorder' orderid='<?php echo $order->id; ?>' style='float:right;'>Clean items/matrix on order</span>
+    <?php if(stristr($loggedOnUser->emailAddress, "@getshop.com")) { ?>
+        <span class='shop_button cleanorder' orderid='<?php echo $order->id; ?>' style='float:right;'>Clean items/matrix on order</span>
+        <span class='shop_button openorder' orderid='<?php echo $order->id; ?>' style='float:right; margin-right: 10px;' gs_prompt="Password">Open order</span>
+    <?php } ?>
 </div>
 
 <div class='registerpaymentactionarea' style='margin: 10px;'>

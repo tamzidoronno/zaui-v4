@@ -11,6 +11,7 @@ $items = $this->getEventItems();
 
 <div class='event_info' eventid='<? echo $event->id; ?>' gstype='form' method='updateEvent'>
     <input type='hidden' value='<?php echo $event->id; ?>' gsname='eventid'>
+    <input type='hidden' value='<?php echo $this->getSelectedRoomId(); ?>' gsname='roomid'>
     <div class='row'>
         <div class='col col1'>
             <?
@@ -93,3 +94,7 @@ $items = $this->getEventItems();
           gs_callback="app.PmsBookingGroupRoomView.eventDeleted"
           eventid='<?php echo $this->getSelectedEventId(); ?>' roomid='<?php echo $this->getSelectedRoomId(); ?>' class='shop_button'>Delete event</span>
 </div>
+
+<script>
+    getshop_loadDatePicker($('[gsname="date"]'), {});
+</script>

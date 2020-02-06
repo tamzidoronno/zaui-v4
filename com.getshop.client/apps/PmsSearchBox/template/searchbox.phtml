@@ -40,7 +40,7 @@ if($filter->groupByBooking) {
             echo $this->__f("To");
             ?>
         </div>
-        <input class="gsniceinput1" id="enddate" value="<? echo date("d.m.Y", strtotime($filter->endDate)); ?>" gsname='to'/>
+        <input class="gsniceinput1" id="enddate" value="<? echo date("d.m.Y", strtotime($filter->endDate)+86400); ?>" gsname='to'/>
         <i class="gsicon-calendar-text"></i>
     </div>
 
@@ -189,6 +189,9 @@ if($filter->groupByBooking) {
 
 
 <script>
+    getshop_loadDatePicker($('#startdate'), { dependant : $('#enddate'), jump : 1 });    
+    getshop_loadDatePicker($('#enddate'), { dependant : $('#startdate'), jump : -1 });
+/*
     $('#startdate').datepicker({ dateFormat: "dd.mm.yy",  changeMonth: true, changeYear: true, showButtonPanel: true,
         onSelect: function(dateText) {
             $('.PmsNewBooking [gsname="numberOfRooms"]').val(0);
@@ -215,6 +218,8 @@ if($filter->groupByBooking) {
             }
         }
     });
+     * 
+ */
     $(document).on('click', '.PmsNewBooking .gsicon-calendar-text', function() {
         $(this).closest('div').find('input').focus();
     });

@@ -166,7 +166,7 @@ class PmsCrm extends \WebshopApplication implements \Application {
             array('id', 'gs_hidden', 'id'),
             array('rowCreatedDate', 'CREATED', null, 'formatRowCreatedDate'),
             array('fullname', 'NAME', 'fullName', 'formatFullName'),
-            array('email', 'EMAIL', 'emailAddress'),
+            array('email', 'EMAIL', null, 'formatEmail'),
             array('callPhone', 'PHONE', 'cellPhone'),
             array('company', 'COMPANY', null, 'formatCompany'),
             array('lastBooked', 'LastBooked', null, 'formatLastedBooked'),
@@ -181,6 +181,10 @@ class PmsCrm extends \WebshopApplication implements \Application {
         $table = new \GetShopModuleTable($this, 'UserManager', 'getAllUsersFiltered', $args, $attributes);
         $table->setData($data);
         $table->renderPagedTable();
+    }
+    
+    public function formatEmail($row) {
+        return htmlentities($row->emailAddress);
     }
     
 }

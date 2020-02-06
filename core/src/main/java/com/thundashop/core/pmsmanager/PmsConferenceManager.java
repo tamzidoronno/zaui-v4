@@ -276,6 +276,7 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
     public List<PmsConference> getAllConferences(PmsConferenceFilter filter) {
         ArrayList<PmsConference> result = getFilterResult(filter);
         result.sort(Comparator.comparing(a -> a.meetingTitle));
+        
         return result;
     }
 
@@ -315,6 +316,13 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
             result = allEvents;
         }
         
+        
+        for(PmsConferenceEvent event : result) {
+            PmsConference conf = getConference(event.pmsConferenceId);
+            if(conf != null) {
+                event.meetingTitle = conf.meetingTitle;
+            }
+        }
         
         return result;
     }

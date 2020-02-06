@@ -267,6 +267,10 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         checkForRestrictions(result, arg);
         addAddonsIncluded(result,arg);
         
+        if(result.hasAvailableRooms()) {
+            result.errorMessage = "";
+        }
+        
         return result;
     }
 

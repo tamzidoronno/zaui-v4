@@ -1,0 +1,136 @@
+<?php
+
+/* 
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+/* @var $this ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
+$start = date("d.m.Y");
+$end = date("d.m.Y", time()+(86400*30));
+
+$items = $this->getApi()->getPmsConferenceManager()->getAllItem("-1");
+$items = $this->indexList($items);
+$multiplicator = 3600*24;
+?>
+<div gstype='form' method='updateTimelineDates'>
+    <input type='txt' class='gsniceinput1' gsname='start' value='<?php echo $start; ?>' style='width:80px;'>
+    <input type='txt' class='gsniceinput1' gsname='end' value='<?php echo $end; ?>' style='width:80px;'>
+    <div class='shop_button' gstype='submit'>Update date range</div>
+</div>
+
+<br><bR>
+
+<div class='hoursarea'>
+    <span class='hoursdescheader'>Room</span>
+<?php
+$starttime = strtotime($start);
+echo "<span class='hoursinheader'>";
+while(true) {
+    echo "<span class='hoursheader' start='".$starttime."' end='".($starttime + $multiplicator)."'>" . date("H:i", $starttime) . "</span>";
+    $starttime += $multiplicator;
+    if($starttime >= date(strtotime($end))) {
+        break;
+    }
+}
+echo "</span>";
+?>
+</div>
+<div class='itemsarea'>
+    <?php
+    
+    foreach($items as $item) {
+        echo "<div class='itemrow'>";
+        echo "<span class='itemname'>";
+        if($item->toItemId) {
+            echo $items[$item->toItemId]->name . " - ";
+        }
+        echo $item->name; 
+        echo "</span>";
+        echo "<span class='eventsinitem'>";
+        $filter = new core_pmsmanager_PmsConferenceEventFilter();
+        $filter->start = $this->convertToJavaDate(strtotime($start));
+        $filter->end = $this->convertToJavaDate(strtotime($end));
+        $filter->itemIds = array();
+        $filter->itemIds[] = $item->id;
+        $events = (array)$this->getApi()->getPmsConferenceManager()->getConferenceEventsByFilter($filter);
+        echo "<span class='eventsarea'>";
+        foreach($events as $event) {
+            echo "<span class='evententry' start='".strtotime($event->from)."' end='".strtotime($event->to)."'>".$event->meetingTitle."</span>";
+        }
+        echo "</span>";
+        echo "</span>";
+        echo "</div>";
+    }
+    ?>
+</div>
+
+<script>
+    getshop_loadDatePicker($('[gsname="start"]'), { dependant : $('[gsname="end"]'), jump: 1 });
+    getshop_loadDatePicker($('[gsname="end"]'), { dependant : $('[gsname="start"]'), jump: -1 });
+</script>
+
+<style>
+    .hoursdescheader { display:inline-block; width: 200px; }
+    .itemsarea { border: solid 1px #bbb; }
+    .hoursinheader { position:relative;}
+    .evententry { border: solid 1px; position:absolute; width: 0px;border-radius: 3px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-top: 2px;
+        color:#4a9979;
+        height: 16px;
+        font-size: 12px;
+        text-align: center;
+        background-color:green;
+        color:#fff;
+        z-index: 2;
+    }
+    
+    .itemrow { position:relative; border-bottom: solid 1px #bbb; }
+    .itemname { display:block; width: 200px; border-right: solid 1px #bbb;
+        white-space: nowrap;
+        box-sizing: border-box;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding-left: 5px;
+    }
+    .hoursheader { position:absolute; font-size: 10px; width: 1px; border-left: solid 1px #bbb; text-align: center; }
+    .eventsarea { position:relative; }
+</style>
+
+<script>
+    var msspan = <?php echo (strtotime($end) - strtotime($start)); ?>;
+    var width = $('.itemrow').width() - 200;
+    var mswidth = (width/msspan);
+    var start = <?php echo strtotime($start); ?>;
+    var end = <?php echo strtotime($end); ?>;
+    var height = $('.itemsarea').height();
+    
+    $('.evententry').each(function(res) {
+        var eventstart = $(this).attr('start');
+        var eventend = $(this).attr('end');
+        var length = eventend - eventstart;
+        var width = length * mswidth;
+        var diff = eventstart - start;
+        var left = (diff * mswidth)+200;
+        
+        $(this).css('left', left+"px");
+        $(this).css('width', width+"px");
+    });
+    
+    $('.hoursheader').each(function() {
+        var hourstart = $(this).attr('start');
+        var hoursend = $(this).attr('end');
+        var diff = hourstart - start;
+        var left = (diff * mswidth);
+        var length = hoursend - hourstart;
+        var width = length * mswidth;
+        $(this).css('left', left+"px");
+        $(this).css('height',height+"px");
+        $(this).css('width',width+"px");
+    });
+    
+</script>

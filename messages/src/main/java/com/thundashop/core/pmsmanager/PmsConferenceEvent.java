@@ -9,6 +9,7 @@ import com.thundashop.core.common.DataCommon;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.mongodb.morphia.annotations.Transient;
 
 /**
  *
@@ -29,6 +30,9 @@ public class PmsConferenceEvent extends DataCommon {
     String title = "";
     
     public List<PmsGuests> additionalGuests = new ArrayList();
+    
+    @Transient
+    String meetingTitle;
 
     boolean betweenTime(Date start, Date end) {
         if(from.after(start) && from.before(end)) {

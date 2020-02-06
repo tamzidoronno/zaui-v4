@@ -475,7 +475,11 @@ public class CartItem implements Serializable, Cloneable {
         if(itemsAdded != null && !itemsAdded.isEmpty()) {
             Double avgPrice = amount / itemsAdded.size();
             for(PmsBookingAddonItem item : itemsAdded) {
-                item.count = 1;
+                if(item.count > 1) {
+                    item.count = 1;
+                } else {
+                    item.count = -1;
+                }
                 item.price = avgPrice;
             }
         }

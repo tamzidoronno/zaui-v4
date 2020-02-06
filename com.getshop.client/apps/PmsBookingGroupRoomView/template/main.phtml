@@ -67,8 +67,8 @@ if($willbedeleted) {
     <div class='bookerinformation boxed'>
         <h2>Booker information</h2>
         <?php 
-        if(isset($_SESSION['cachedbooking'][$pmsBooking->id])) {
-            echo $_SESSION['cachedbooking'][$pmsBooking->id];
+        if(isset($_SESSION['cachedbooking'][$this->getSelectedRoomId()])) {
+            echo $_SESSION['cachedbooking'][$this->getSelectedRoomId()];
         } else {
             ob_start();
             $this->includefile("bookerinfo"); 
@@ -77,7 +77,7 @@ if($willbedeleted) {
             if(!isset($_SESSION['cachedbooking'])) {
                 $_SESSION['cachedbooking'] = array();
             }
-            $_SESSION['cachedbooking'][$pmsBooking->id] = $content;
+            $_SESSION['cachedbooking'][$this->getSelectedRoomId()] = $content;
             echo $content;
         }
         ?>

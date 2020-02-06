@@ -319,7 +319,13 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
 
     public function updatePrices() {
         $room = $this->getPmsBookingRoom();
-        $this->getApi()->getPmsManager()->updatePriceMatrixOnRoom($this->getSelectedMultilevelDomainName(), $room->pmsBookingRoomId, $_POST['data']['prices']);
+        
+        $prices = $_POST['data']['prices'];
+        foreach($prices as $key => $val) {
+            $prices[$key] = str_replace(",", ".", $val);
+        }
+        
+        $this->getApi()->getPmsManager()->updatePriceMatrixOnRoom($this->getSelectedMultilevelDomainName(), $room->pmsBookingRoomId, $prices);
         $this->clearCache();
     }
     
@@ -1122,7 +1128,7 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
     }
 
     public function clearCache() {
-        unset($_SESSION['cachedbooking'][$this->pmsBooking->id]);
+        unset($_SESSION['cachedbooking'][$this->getSelectedRoomId()]);
         $this->pmsBooking = null;
         $this->pmsBookingRoom = null;
     }
@@ -1274,7 +1280,6 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         $event->pmsConferenceItemId = $_POST['data']['pmsConferenceItemId'];
         $event->from = $this->convertToJavaDate(strtotime($_POST['data']['date']." ".$_POST['data']['starttime']));
         $event->to = $this->convertToJavaDate(strtotime($_POST['data']['date']." ".$_POST['data']['endtime']));
-
         $this->getApi()->getPmsConferenceManager()->saveConferenceEvent($event);
     }
     

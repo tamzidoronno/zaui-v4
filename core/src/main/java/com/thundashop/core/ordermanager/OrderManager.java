@@ -338,12 +338,31 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             
         }
         
+//        printOrdersThatHasWrongCreditNotes();
+
         // This function can be removed upon any release after 16 aug 2019
         cleanupEmptyAddonIds();
         
         createScheduler("ordercapturecheckprocessor", "2,7,12,17,22,27,32,37,42,47,52,57 * * * *", CheckOrdersNotCaptured.class);
         if(storeId.equals("c444ff66-8df2-4cbb-8bbe-dc1587ea00b7")) {
             checkChargeAfterDate();
+        }
+    }
+
+    private void printOrdersThatHasWrongCreditNotes() {
+        for (Order order : orders.values()) {
+            if (order.isCreditNote) {
+                continue;
+            }
+            
+            boolean isParentOrderPositive = getTotalAmount(order) > 0;
+            
+            List<Order> creditNotes = getCreditNotesForOrder(order.id);
+            for (Order creditNote : creditNotes) {
+                if (getTotalAmount(creditNote) > 0 && isParentOrderPositive) {
+                    System.out.println("A creditnote with positive amount ? " + creditNote.incrementOrderId + " | parent: " + order.incrementOrderId);
+                }
+            }
         }
     }
 

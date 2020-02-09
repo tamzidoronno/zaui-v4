@@ -96,9 +96,8 @@ public class JavaApiBuilder {
             content += "          } catch (Exception ex) { \n";
             content += "              System.out.println(\"Got content: \" + result);\n";
             content += "              ex.printStackTrace();\n";
+            content += "              throw ex;\n";
             content += "          }\n";
-            
-            content += "          return null;\r\n";
         }
         return content;
     }

@@ -246,19 +246,12 @@ public class SerosLockSystem extends LockServerBase implements LockServer {
     }
 
     private void addLocksMissingInKey(LockGroup group, SerosApiKey apiKey, Integer slot) {
-        
-        if (group == null || group.id == null) {
+     
+        if (locksInGroup.containsKey(group.id)) {
             return;
         }
         
-        if (locksInGroup == null) {
-            locksInGroup = new HashMap();
-        }
-        
         for (String lockIdInGroup : locksInGroup.get(group.id)) {
-            if (lockIdInGroup == null) {
-                continue;
-            }
             if (!apiKey.lastReceivedSerosKey.lockIds.contains(lockIdInGroup)) {
                 doRequest(group.id, slot, "addLockToKey", "&keyId="+apiKey.lastReceivedSerosKey.id+"&lockId="+lockIdInGroup);
             }

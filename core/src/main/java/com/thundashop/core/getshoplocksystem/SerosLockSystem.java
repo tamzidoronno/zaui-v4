@@ -7,6 +7,7 @@ package com.thundashop.core.getshoplocksystem;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.thundashop.core.common.AppContext;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
@@ -46,7 +47,9 @@ public class SerosLockSystem extends LockServerBase implements LockServer {
 
         for (Integer slot : masterUserSlots.keySet()) {
             MasterUserSlot masterUserSlot = masterUserSlots.get(slot);
-
+            if (masterUserSlot == null) {
+                continue;
+            }
             internalSyncGroup(group, masterUserSlot, slot);
         }
     }
@@ -288,6 +291,12 @@ public class SerosLockSystem extends LockServerBase implements LockServer {
     }
 
     private void doRequest(String lockGroupId, Integer slot, String action, String extra) {
+        
+        if (AppContext.devMode) {
+            System.out.println("Request towards seros lock system has been disabled in dev mode");
+            return;
+        }
+        
         String res = getHtml(action, extra);
         
         Gson gson = new Gson();

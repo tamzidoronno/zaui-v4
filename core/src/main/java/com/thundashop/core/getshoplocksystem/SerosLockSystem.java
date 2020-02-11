@@ -247,7 +247,7 @@ public class SerosLockSystem extends LockServerBase implements LockServer {
 
     private void addLocksMissingInKey(LockGroup group, SerosApiKey apiKey, Integer slot) {
      
-        if (locksInGroup.containsKey(group.id)) {
+        if (!locksInGroup.containsKey(group.id)) {
             return;
         }
         

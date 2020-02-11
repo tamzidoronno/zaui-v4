@@ -251,6 +251,10 @@ public class SerosLockSystem extends LockServerBase implements LockServer {
             return;
         }
         
+        if (locksInGroup == null) {
+            locksInGroup = new HashMap();
+        }
+        
         for (String lockIdInGroup : locksInGroup.get(group.id)) {
             if (!apiKey.lastReceivedSerosKey.lockIds.contains(lockIdInGroup)) {
                 doRequest(group.id, slot, "addLockToKey", "&keyId="+apiKey.lastReceivedSerosKey.id+"&lockId="+lockIdInGroup);

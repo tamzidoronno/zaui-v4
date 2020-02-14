@@ -16,9 +16,17 @@ app.PmsSendMessagesConfiguration = {
         $(document).on('change', '.PmsSendMessagesConfiguration select[name="typeofmessage"]', app.PmsSendMessagesConfiguration.updateRoomSpecificCodes);
         $(document).on('change', '.PmsSendMessagesConfiguration .filterbykeytype', app.PmsSendMessagesConfiguration.filterByKey);
         $(document).on('click', "input[name='deliverytype']", app.PmsSendMessagesConfiguration.updateBySelection);
+        $(document).on('click', ".PmsSendMessagesConfiguration .toggleSendMessagesRegardlessOfPayment", app.PmsSendMessagesConfiguration.toggleSendMessagesRegardlessOfPayment);
         $(document).on('keyup', ".PmsSendMessagesConfiguration .availablemessages", app.PmsSendMessagesConfiguration.displayPreview);
     },
-    
+    toggleSendMessagesRegardlessOfPayment : function() {
+        var event = thundashop.Ajax.createEvent('','toggleSendMessagesRegardlessOfPayment', $(this), {
+            "checked" : $(this).is(':checked')
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            window.location.reload();
+        });
+    },
     displayPreview : function() {
         if(typeof(app.PmsSendMessagesConfiguration.timeoutpreview) !== "undefined") {
             clearTimeout(app.PmsSendMessagesConfiguration.timeoutpreview);

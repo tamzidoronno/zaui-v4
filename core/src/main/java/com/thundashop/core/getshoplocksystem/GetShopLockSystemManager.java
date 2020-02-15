@@ -277,6 +277,8 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
 
     @Override
     public void setLocksToGroup(String groupId, Map<String, List<String>> servers) {
+        servers.keySet().removeIf(o -> o == null || o.isEmpty());
+        
         LockGroup group = getFinalizedGroups().get(groupId);
         
         releaseSlotsNotConnectedToGroup(group, servers);
@@ -342,7 +344,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         for (String serverId : servers.keySet()) {
             LockServer server = getLockServer(serverId);
             
-            if (!server.useSlotConcept()) {
+            if (server != null && !server.useSlotConcept()) {
                 continue;
             }
             

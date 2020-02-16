@@ -35,7 +35,7 @@ public class OrderTransaction implements Serializable {
         if(refId.isEmpty()) {
             return false;
         }
-        return refId.equals(refId);
+        return refId.equals(this.refId);
     }
     
     @Override

@@ -41,7 +41,7 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-public class WebManagerSSL implements IWebManager {
+public class WebManagerSSLUnsafe implements IWebManager {
     
     private final String USER_AGENT = "Mozilla/5.0";
     private HashMap<String, String> latestResponseHeader = new HashMap();
@@ -104,13 +104,13 @@ public class WebManagerSSL implements IWebManager {
             encoding = "UTF-8";
         }
         
-//        SSLContext ctx = SSLContext.getInstance("TLS");
-//        ctx.init(new KeyManager[0], new TrustManager[] {new DefaultTrustManager()}, new SecureRandom());
+        SSLContext ctx = SSLContext.getInstance("TLS");
+        ctx.init(new KeyManager[0], new TrustManager[] {new DefaultTrustManager()}, new SecureRandom());
 
         URL urlObj = new URL(null, url, new sun.net.www.protocol.https.Handler());
 
         HttpsURLConnection connection = (HttpsURLConnection) urlObj.openConnection();
-//        connection.setSSLSocketFactory(ctx.getSocketFactory());
+        connection.setSSLSocketFactory(ctx.getSocketFactory());
                 
         connection.setHostnameVerifier(new HostnameVerifier() {
             @Override

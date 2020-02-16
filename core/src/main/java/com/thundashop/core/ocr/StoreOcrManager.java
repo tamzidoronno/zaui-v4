@@ -152,12 +152,13 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
                         logPrint("New record found: " + line.getKid());
                         logPrint("found matching order");
                         Date paymentDate = line.getPaymentDate();
-                        orderManager.markAsPaidWithTransactionType(toMatch.id, paymentDate, line.getAmountInDouble(), Order.OrderTransactionType.OCR, line.getOcrLineId());
+                        orderManager.markAsPaidWithTransactionType(toMatch.id, paymentDate, line.getAmountInDouble(), Order.OrderTransactionType.OCR, line.getOcrLineId(), "Automatically by OCR / Nets");
                         line.setMatchOnOrderId(toMatch.incrementOrderId);
                         line.setBeenTransferred();
                         logPrint("did match done");
                     }
                 } else {
+                    line.setBeenTransferred();
                     if(!warnings.hasId(line.getOcrLineId())) {
                         logPrint("Did not find correct order to match this for");
                         messageManager.sendErrorNotification("failed to match ocr line: " + line.toString(), null);

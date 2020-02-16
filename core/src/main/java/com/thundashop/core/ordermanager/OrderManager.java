@@ -415,7 +415,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public void markAsPaid(String orderId, Date date, Double amount) {
-        markAsPaidWithTransactionType(orderId, date, amount, 1, "unkown");
+        markAsPaidWithTransactionType(orderId, date, amount, 1, "unkown", "");
     }
     
     public void markAsPaidInternal(Order order, Date date, Double amount) {
@@ -1867,7 +1867,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public void sendRecieptWithText(String orderId, String email, String subject, String text) {
         Order order = getOrder(orderId);
         if (order != null) {
-            messageManager.sendInvoiceForOrder(orderId, email, subject, text);
             order.closed = true;
             order.payment.transactionLog.put(System.currentTimeMillis(), "Invoice or receipt sent to " + email);
 
@@ -1877,7 +1876,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             logentry.date = new Date();
             
             order.shipmentLog.add(logentry);
+            
+            order.forcedOpen = false;
             saveObject(order);
+            
+            messageManager.sendInvoiceForOrder(orderId, email, subject, text);
         }
     }
 
@@ -2859,23 +2862,25 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return null;
     }
 
-    public void markAsPaidWithTransactionType(String orderId, Date date, Double amount, int transactiontype, String refId) {
-        markAsPaidWithTransactionTypeInternal(orderId, amount, date, transactiontype, refId, null, null);
+    public void markAsPaidWithTransactionType(String orderId, Date date, Double amount, int transactiontype, String refId, String comment) {
+        markAsPaidWithTransactionTypeInternal(orderId, amount, date, transactiontype, refId, null, null, comment);
     }
 
-    private void markAsPaidWithTransactionTypeInternal(String orderId, Double amount, Date date, int transactiontype, String refId, Double amountInLocalCurrency, Double agio) throws ErrorException {
+    private void markAsPaidWithTransactionTypeInternal(String orderId, Double amount, Date date, int transactiontype, String refId, Double amountInLocalCurrency, Double agio, String comment) throws ErrorException {
         Order order = orders.get(orderId);
         if(amount != null && amount != 0.0) {
             String userId = "";
             if(getSession() != null && getSession().currentUser != null) {
                 userId = getSession().currentUser.id;
             }
-            order.registerTransaction(date, amount, userId, transactiontype, refId, "", amountInLocalCurrency, agio, "");
+            order.registerTransaction(date, amount, userId, transactiontype, refId, comment, amountInLocalCurrency, agio, "");
             feedGrafanaPaymentAmount(amount);
+            
             if(order.isFullyPaid() || order.isCreditNote) {
                 markAsPaidInternal(order, date,amount);
-                saveOrder(order);
             }
+            
+            saveOrder(order);
         } else {
             markAsPaidInternal(order, date,amount);
             saveOrder(order);
@@ -4939,7 +4944,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if (order.currency != null && !order.currency.isEmpty()) {
             totalAmountInLocalCurrency = getTotalForOrderInLocalCurrencyById(creditNote.id);
             totalAmountInLocalCurrencyToMarkOnOriginal = totalAmountInLocalCurrency * -1;
-            markAsPaidWithTransactionTypeInternal(creditNote.id,  creditNote.getTotalAmount(), paymentDate, Order.OrderTransactionType.LOSS, "", totalAmountInLocalCurrencyToMarkOnOriginal, null);
+            markAsPaidWithTransactionTypeInternal(creditNote.id,  creditNote.getTotalAmount(), paymentDate, Order.OrderTransactionType.LOSS, "", totalAmountInLocalCurrencyToMarkOnOriginal, null, "Registered Loss");
         } else {
             markAsPaid(creditNote.id, paymentDate, creditNote.getTotalAmount());
         }
@@ -5008,8 +5013,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 //        cleanOrder(credited.id, "fdasf345345345!mnm!");
         
         if (order.status != Order.Status.PAYMENT_COMPLETED && markAsPaid) {
-            markAsPaidWithTransactionTypeInternal(order.id, order.getTotalAmount(), new Date(), 1, "unkown", order.getTotalAmountLocalCurrency(), order.getTotalRegisteredAgio());
-            markAsPaidWithTransactionTypeInternal(credited.id, credited.getTotalAmount(), new Date(), 1, "unkown", credited.getTotalAmountLocalCurrency(), credited.getTotalRegisteredAgio());   
+            markAsPaidWithTransactionTypeInternal(order.id, order.getTotalAmount(), new Date(), 1, "unkown", order.getTotalAmountLocalCurrency(), order.getTotalRegisteredAgio(), "Creditted");
+            markAsPaidWithTransactionTypeInternal(credited.id, credited.getTotalAmount(), new Date(), 1, "unkown", credited.getTotalAmountLocalCurrency(), credited.getTotalRegisteredAgio(), "Creditted");   
         }
         
         revertOrderLinesToPreviouseState(order);

@@ -8,7 +8,7 @@ $summary = $this->getApi()->getPmsManager()->getSummary($this->getSelectedMultil
 $summaryWithoutAccrued = $this->getApi()->getPmsManager()->getSummaryWithoutAccrued($this->getSelectedMultilevelDomainName(), $pmsBooking->id, $room->pmsBookingRoomId);
 
 $showCredittedHistory = (isset($_SESSION['pmsshowcredithistory']) && $_SESSION['pmsshowcredithistory']) ? true : false;
-$showAllOrders = false;
+$showAllOrders = (isset($_SESSION['showallorders']) && $_SESSION['showallorders']) ? true : false;
 
 
 $orderMissing = 0;

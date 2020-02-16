@@ -18,6 +18,12 @@ class PmsSendMessagesConfiguration extends \WebshopApplication implements \Appli
         $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $config);
     }
     
+    public function toggleSendMessagesRegardlessOfPayment() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        $config->sendMessagesRegardlessOfPayments = $_POST['data']['checked'] == "true";
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $config);
+    }
+    
     public function getName() {
         return "PmsSendMessagesConfiguration";
     }
@@ -528,17 +534,18 @@ class PmsSendMessagesConfiguration extends \WebshopApplication implements \Appli
     
     public function getNotifications($langauge, $hasArx, $hasEventCalendar) {
         $notificationSettings = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());        
+        $afterpayment = $notificationSettings->sendMessagesRegardlessOfPayments ? " (even if not paid)" : " (only when paid)";
         $notifications = array();
         $notifications['room_starting_0_hours_'.$langauge] = "Booking is started.";
         $notifications['room_morning_message_'.$langauge] = "Greeting message sent in the morning same day check in (sent at 07:00) to guests.";
-        $notifications['room_starting_4_hours_'.$langauge] = "Booking starting in 4 hours";
-        $notifications['room_starting_12_hours_'.$langauge] = "Booking starting in 12 hours";
-        $notifications['room_starting_24_hours_'.$langauge] = "Booking starting in 1 day";
-        $notifications['room_starting_48_hours_'.$langauge] = "Booking starting in 2 days";
-        $notifications['room_started_4_hours_'.$langauge] = "Booking started 4 hours ago";
-        $notifications['room_started_12_hours_'.$langauge] = "Booking started 12 hours ago";
-        $notifications['room_started_24_hours_'.$langauge] = "Booking started 24 hours ago";
-        $notifications['room_started_48_hours_'.$langauge] = "Booking started 48 hours ago";
+        $notifications['room_starting_4_hours_'.$langauge] = "Booking starting in 4 hours $afterpayment";
+        $notifications['room_starting_12_hours_'.$langauge] = "Booking starting in 12 hours $afterpayment";
+        $notifications['room_starting_24_hours_'.$langauge] = "Booking starting in 1 day $afterpayment";
+        $notifications['room_starting_48_hours_'.$langauge] = "Booking starting in 2 days $afterpayment";
+        $notifications['room_started_4_hours_'.$langauge] = "Booking started 4 hours ago $afterpayment";
+        $notifications['room_started_12_hours_'.$langauge] = "Booking started 12 hours ago $afterpayment";
+        $notifications['room_started_24_hours_'.$langauge] = "Booking started 24 hours ago $afterpayment";
+        $notifications['room_started_48_hours_'.$langauge] = "Booking started 48 hours ago $afterpayment";
         $notifications['room_changed_'.$langauge] = "Room has been changed while stay is started";
         $notifications['room_resendcode_'.$langauge] = "When resending a code to the guest";
         $notifications['room_dooropenedfirsttime_'.$langauge] = "When guest opens the door";
@@ -547,9 +554,9 @@ class PmsSendMessagesConfiguration extends \WebshopApplication implements \Appli
         $notifications['booking_completed_ota_'.$langauge] = "Booking has been completed by OTA (overrides standard complete message)";
         $notifications['booking_completed_payed_ota_'.$langauge] = "Booking has been completed and charged by OTA (overrides standard both ota and completed message)";
         $notifications['booking_notconfirmed_'.$langauge] = "Booking has been rejected";
-        $notifications['room_ended_0_hours_'.$langauge] = "Booking has ended.";
-        $notifications['room_ended_24_hours_'.$langauge] = "Booking ended 1 day ago";
-        $notifications['room_ended_48_hours_'.$langauge] = "Booking ended two days ago";
+        $notifications['room_ended_0_hours_'.$langauge] = "Booking has ended $afterpayment.";
+        $notifications['room_ended_24_hours_'.$langauge] = "Booking ended 1 day ago $afterpayment";
+        $notifications['room_ended_48_hours_'.$langauge] = "Booking ended two days ago $afterpayment";
         $notifications['room_cancelled_'.$langauge] = "Room has been cancelled (ignored if booked by ota)";
         $notifications['room_timed_message_'.$langauge] = "Timed checkin message (sent to guests at a given time of your choice)";
         $notifications['room_timed_checkout_message_'.$langauge] = "Timed checkout message (sent to guests at a given time of your choice)";

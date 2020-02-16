@@ -1011,6 +1011,14 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         $this->getApi()->getPmsManager()->toggleAutoCreateOrders($this->getSelectedMultilevelDomainName(), $booking->id, $selectedRoom->pmsBookingRoomId);
         $this->clearCache();
     }
+    
+    public function toggleAllOrders() {
+        $showAllOrders = isset($_SESSION['showallorders']) && $_SESSION['showallorders'];
+        $_SESSION['showallorders'] = !$showAllOrders;
+        $_SESSION['pmsshowcredithistory'] = !$showAllOrders;
+
+    }
+    
     public function resendCodeForRoom() {
         $room = $this->getPmsBookingRoom();
         $roomId = $room->pmsBookingRoomId;

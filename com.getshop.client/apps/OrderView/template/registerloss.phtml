@@ -14,6 +14,20 @@ if($earliestdate) {
 } else {
     $earliestdate = date("d.m.Y", time());
 }
+
+$percentageCurrency = 0;
+if ($order->currency) {
+    $totalInLocal = $this->getApi()->getOrderManager()->getTotalForOrderInLocalCurrencyById($order->id);
+    $paidInLocalCurrency = 0;
+    foreach ($order->orderTransactions as $transaction) {
+        $paidInLocalCurrency += $transaction->amountInLocalCurrency;
+    }
+    $restAmountLocalCurrency = $totalInLocal - $paidInLocalCurrency;
+    
+    $percentageCurrency = $restAmountLocalCurrency / $totalInLocal;
+}
+
+echo $percentage;
 ?>
 <div>
     <table>
@@ -42,7 +56,7 @@ if($earliestdate) {
                 if ($order->currency) {
                 ?>
                     <td>
-                        <input type='txt' class='gsniceinput1 registerlossinput_local_currency' disabled='true' originalprice='<? echo $item->product->priceLocalCurrency; ?>' gsname='localCurrency' value='<?php echo $item->product->priceLocalCurrency * $percentage; ?>' style="width:120px;text-align: center;">
+                        <input type='txt' class='gsniceinput1 registerlossinput_local_currency' disabled='true' originalprice='<? echo $item->product->priceLocalCurrency; ?>' gsname='localCurrency' value='<?php echo $item->product->priceLocalCurrency * $percentageCurrency; ?>' style="width:120px;text-align: center;">
                     </td>
                 <?
                 }

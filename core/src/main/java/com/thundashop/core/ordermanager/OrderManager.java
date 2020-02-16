@@ -4935,11 +4935,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Double totalAmountInLocalCurrencyToMarkOnOriginal = null;
         double toMarkOnOriginal = totalAmount * -1;
         
-        markAsPaid(creditNote.id, paymentDate, creditNote.getTotalAmount());
         
         if (order.currency != null && !order.currency.isEmpty()) {
             totalAmountInLocalCurrency = getTotalForOrderInLocalCurrencyById(creditNote.id);
             totalAmountInLocalCurrencyToMarkOnOriginal = totalAmountInLocalCurrency * -1;
+            markAsPaidWithTransactionTypeInternal(creditNote.id,  creditNote.getTotalAmount(), paymentDate, Order.OrderTransactionType.LOSS, "", totalAmountInLocalCurrencyToMarkOnOriginal, null);
+        } else {
+            markAsPaid(creditNote.id, paymentDate, creditNote.getTotalAmount());
         }
 
         String userId = getSession().currentUser.id;

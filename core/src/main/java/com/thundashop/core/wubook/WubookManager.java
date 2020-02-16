@@ -2441,7 +2441,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         saveObject(lastAvailability);
     }
 
-    public String updatePricesBetweenDates(Date now, Date end) throws XmlRpcException, Exception {
+    public String updatePricesBetweenDates(Date now, Date end) throws Exception {
         if(!connectToApi()) {
             return "Not able to connect";
         }

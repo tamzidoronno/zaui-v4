@@ -79,6 +79,18 @@ $order = $this->getOrder();
         </div>
     </div>
 </div>
+<div class="row_account">
+    <div class="col col1">
+        <?
+        echo $this->__f("Excluded from f-report");
+        ?>
+    </div>
+    <div class="col col2">
+        <?
+        echo $order->excludeFromFReport ? "Yes" : "No";
+        ?>
+    </div>
+</div>
 
 <div class="row_account">
     <div class="col col1">

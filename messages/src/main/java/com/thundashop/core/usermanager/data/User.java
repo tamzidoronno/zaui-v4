@@ -100,6 +100,8 @@ public class User extends DataCommon implements Comparable<User> {
     public boolean agreeToSpam = false;
     public Date agreeToSpamDate = null;
     
+    public String externalTokenId = "";
+    
     public void cleanWhiteSpaces() {
         cleanWhiteSpace(cellPhone);
         cleanWhiteSpace(emailAddressToInvoice);

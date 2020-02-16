@@ -338,12 +338,31 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             
         }
         
+//        printOrdersThatHasWrongCreditNotes();
+
         // This function can be removed upon any release after 16 aug 2019
         cleanupEmptyAddonIds();
         
         createScheduler("ordercapturecheckprocessor", "2,7,12,17,22,27,32,37,42,47,52,57 * * * *", CheckOrdersNotCaptured.class);
         if(storeId.equals("c444ff66-8df2-4cbb-8bbe-dc1587ea00b7")) {
             checkChargeAfterDate();
+        }
+    }
+
+    private void printOrdersThatHasWrongCreditNotes() {
+        for (Order order : orders.values()) {
+            if (order.isCreditNote) {
+                continue;
+            }
+            
+            boolean isParentOrderPositive = getTotalAmount(order) > 0;
+            
+            List<Order> creditNotes = getCreditNotesForOrder(order.id);
+            for (Order creditNote : creditNotes) {
+                if (getTotalAmount(creditNote) > 0 && isParentOrderPositive) {
+                    System.out.println("A creditnote with positive amount ? " + creditNote.incrementOrderId + " | parent: " + order.incrementOrderId);
+                }
+            }
         }
     }
 
@@ -4902,9 +4921,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                     item.setCount(count);
                     item.getProduct().price = lossLine.amount;
                     item.getProduct().priceLocalCurrency = lossLine.amountInLocalCurrency;
+                    item.recalculatePriceMatrixAndAddons();
                 }
             }
         }
+        
+        removeEmptyCartItems(creditNote);
         
         saveOrderInternal(creditNote);
         
@@ -4928,6 +4950,17 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         saveObject(order);
         
+    }
+
+    private void removeEmptyCartItems(Order order) {
+        List<CartItem> itemsToRemove = order.getCartItems()
+                .stream()
+                .filter(o -> o.getCount() == 0)
+                .collect(Collectors.toList());
+        
+        itemsToRemove.stream().forEach(item -> {
+            order.cart.removeItem(item.getCartItemId());
+        });
     }
     
     @Override
@@ -5039,6 +5072,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void forceSaveOrder(Order order, String password) {
+        if (password == null || !password.equals("a9sdfa90sfdu823984512oiu3hnkqwdiu<sahaiwuheaowierhq2io3uh2qio3uh4æ2)")) {
+            return;
+        }
+        
+        super.saveObject(order);
+        orders.put(order.id, order);
     }
 
 

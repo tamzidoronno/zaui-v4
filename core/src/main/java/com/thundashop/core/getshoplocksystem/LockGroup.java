@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -117,6 +118,8 @@ public class LockGroup extends DataCommon {
     }
 
     private void checkIfAllSlotsHasBeenUpdated(MasterUserSlot masterUserSlot, HashMap<String, LockServer> lockServers) {
+        
+        
         boolean groupConceptOnly = allServersUseGroupBasedConcept(lockServers);
         
         if (masterUserSlot.subSlots.isEmpty() && !groupConceptOnly) {
@@ -183,8 +186,18 @@ public class LockGroup extends DataCommon {
     }
 
     private boolean allServersUseGroupBasedConcept(HashMap<String, LockServer> lockServers) {
+        List<LockServer> lockServersConnectedToThisGroup = lockServers.values()
+                .stream()
+                .filter(o -> { 
+                    return connectedToLocks.get(o.getId()) != null && !connectedToLocks.get(o.getId()).isEmpty();
+                })
+                .collect(Collectors.toList());
         
-        for (LockServer server : lockServers.values()) {
+        if (lockServersConnectedToThisGroup.isEmpty()) {
+            return false;
+        }
+        
+        for (LockServer server : lockServersConnectedToThisGroup) {
             if (server.useSlotConcept()) {
                 return false;
             }

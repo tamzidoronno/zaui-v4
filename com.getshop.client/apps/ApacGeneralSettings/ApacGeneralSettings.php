@@ -77,44 +77,6 @@ class ApacGeneralSettings extends \MarketingApplication implements \Application 
         $codeSize = $this->getApi()->getGetShopLockSystemManager()->getCodeSize();
         $newMasterGroup = $this->getApi()->getGetShopLockSystemManager()->createNewLockGroup("Master Codes", 5, $codeSize);
         
-        foreach ($items as $item) {
-            $lock = null;
-            $setGroup = array();
-            $lockConfig = $this->getLockByItem($item, $lockservers, $domainName, $allLocks);
-            $lock = $lockConfig[0];
-            $lockServer = $lockConfig[1];
-            if (!$lock)
-                continue;
-            
-            $lockGroup = $this->getApi()->getGetShopLockSystemManager()->createNewLockGroup($item->bookingItemName, 15, $codeSize);
-            
-            $matchingLock = $this->getMatchingLock($lock, $lockServer, $newLockServers); 
-            $setGroup = array();
-            $setGroup[$matchingLock->connectedToServerId] = array();
-            $setGroup[$matchingLock->connectedToServerId][] = $matchingLock->id;
-            foreach ($newLockServers as $newLockServer) {
-                if ($newLockServer->className == "com.thundashop.core.getshoplocksystem.GetShopLockBoxServer") {
-                    foreach ($newLockServer->locks as $extraLock) {
-                        $setGroup[$newLockServer->id][] = $extraLock->id;
-                    }
-                }
-            }
-            $this->getApi()->getGetShopLockSystemManager()->setLocksToGroup($lockGroup->id, $setGroup);
-            
-            $item->lockGroupId = $lockGroup->id;
-            $this->getApi()->getBookingEngine()->saveBookingItem($domainName, $item);
-            $lockGroup = $this->getApi()->getGetShopLockSystemManager()->getGroup($lockGroup->id);
-            
-            for ($i=6;$i<=20;$i++) {
-                $code = $lock->codes->{$i};
-                $this->getApi()->getGetShopLockSystemManager()->changeCode($lockGroup->id, ($i-5), $code->code, "");
-                if ($code->addedToLock) {
-                    $this->markCodeAsAdded($lockGroup, ($i-5));
-                }
-            }
-        }
-        
-        
         // Connect all locks to mastergroup
         $setGroup = array();
         foreach ($items as $item) {
@@ -174,7 +136,45 @@ class ApacGeneralSettings extends \MarketingApplication implements \Application 
             for ($i=1;$i<=5;$i++) {
                 $code = $lock->codes->{$i};
                 if ($code->addedToLock && isset($lock->zwaveid)) {
-                    $this->getApi()->getGetShopLockSystemManager()->markCodeAsUpdatedOnLock($matchingLock->connectedToServerId, $matchingLock->id, ($i+15));
+                    $this->getApi()->getGetShopLockSystemManager()->markCodeAsUpdatedOnLock($matchingLock->connectedToServerId, $matchingLock->id, ($i));
+                }
+            }
+        }
+        
+        // SET USER 
+        foreach ($items as $item) {
+            $lock = null;
+            $setGroup = array();
+            $lockConfig = $this->getLockByItem($item, $lockservers, $domainName, $allLocks);
+            $lock = $lockConfig[0];
+            $lockServer = $lockConfig[1];
+            if (!$lock)
+                continue;
+            
+            $lockGroup = $this->getApi()->getGetShopLockSystemManager()->createNewLockGroup($item->bookingItemName, 15, $codeSize);
+            
+            $matchingLock = $this->getMatchingLock($lock, $lockServer, $newLockServers); 
+            $setGroup = array();
+            $setGroup[$matchingLock->connectedToServerId] = array();
+            $setGroup[$matchingLock->connectedToServerId][] = $matchingLock->id;
+            foreach ($newLockServers as $newLockServer) {
+                if ($newLockServer->className == "com.thundashop.core.getshoplocksystem.GetShopLockBoxServer") {
+                    foreach ($newLockServer->locks as $extraLock) {
+                        $setGroup[$newLockServer->id][] = $extraLock->id;
+                    }
+                }
+            }
+            $this->getApi()->getGetShopLockSystemManager()->setLocksToGroup($lockGroup->id, $setGroup);
+            
+            $item->lockGroupId = $lockGroup->id;
+            $this->getApi()->getBookingEngine()->saveBookingItem($domainName, $item);
+            $lockGroup = $this->getApi()->getGetShopLockSystemManager()->getGroup($lockGroup->id);
+            
+            for ($i=1;$i<=15;$i++) {
+                $code = $lock->codes->{$i+5};
+                $this->getApi()->getGetShopLockSystemManager()->changeCode($lockGroup->id, ($i), $code->code, "");
+                if ($code->addedToLock) {
+                    $this->markCodeAsAdded($lockGroup, ($i));
                 }
             }
         }

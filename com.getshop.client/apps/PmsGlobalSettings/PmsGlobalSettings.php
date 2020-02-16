@@ -35,6 +35,9 @@ class PmsGlobalSettings extends \WebshopApplication implements \Application {
         $this->getApi()->getPmsManager()->deleteAllBookings($this->getSelectedMultilevelDomainName(), $_POST['data']['prompt']);
     }
 
+    public function createNewRemoteAccess() {
+        $this->getApi()->getGetShopCentral()->createNewAccessToken($_POST['data']['name']);
+    }
   
 }
 ?>

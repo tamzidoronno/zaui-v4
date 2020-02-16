@@ -9,6 +9,7 @@ import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.bookingengine.data.RegistrationRules;
 import com.thundashop.core.bookingengine.data.RegistrationRulesField;
 import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.usermanager.UserManager;
@@ -20,6 +21,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.UUID;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +48,9 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
     
     @Autowired
     PmsCoverageReportManager pmsCoverageReportManager;
+    
+    @Autowired
+    MessageManager messageManager;
     
     @Override
     public List<PmsMobileReport> getReport(Date start, Date end, String compareTo, boolean excludeClosedRooms) {
@@ -499,6 +504,37 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
         }
         
         return result;
+    }
+
+    @Override
+    public void requestPriceMyHotelRoom(PMHRContent content) {
+        User usr = new User();
+        usr.id = "pricemyhotelroom";
+        usr.fullName = "Price my hotel room";
+        usr.type = 100;
+        usr.emailAddress = "getshop@pmhr.se";
+        userManager.saveUser(usr);
+        
+        String pswd = UUID.randomUUID().toString();
+        
+        userManager.updatePassword(usr.id, "", pswd);
+        
+        String message = "Request from GetShop customer<br>";
+        message += "Name: " + content.name + "<bR>";
+        message += "Email: " + content.email + "<bR>";
+        message += "Prefix: " + content.prefix + "<bR>";
+        message += "Phone: " + content.phone + "<bR>";
+        
+        message += "<br>";
+        message += "Api username: " + usr.emailAddress + "<bR>";
+        message += "Api password: " + pswd;
+        
+        messageManager.sendMail("henrik@pmhr.se", "", "Request for a free trial", message, "noreply@getshop.com", "noreply@getshop.com");
+        messageManager.sendMail("mats@pmhr.se", "", "Request for a free trial", message, "noreply@getshop.com", "noreply@getshop.com");
+        
+        PmsConfiguration config = pmsManager.getConfigurationSecure();
+        config.requestForPmhr = true;
+        pmsManager.saveConfiguration(config);
     }
     
 }

@@ -29,14 +29,16 @@ public class PmsBookingPaymentDiffer {
     private final PmsManager pmsManager;
     private List<String> roomProductIds = new ArrayList();
     private final SimpleDateFormat sdf;
+    private final String language;
 
-    public PmsBookingPaymentDiffer(List<Order> orders, PmsBooking booking, PmsBookingRooms room, PmsManager pmsManager) {
+    public PmsBookingPaymentDiffer(List<Order> orders, PmsBooking booking, PmsBookingRooms room, PmsManager pmsManager, String language) {
         this.orders = orders.stream()
                 .filter(o -> o != null)
                 .collect(Collectors.toList());
         this.booking = booking;
         this.room = room;
         this.pmsManager = pmsManager;
+        this.language = language;
         this.sdf = new SimpleDateFormat("dd-MM-yyyy");
         this.orders.stream()
                 .forEach(o -> {
@@ -407,10 +409,22 @@ public class PmsBookingPaymentDiffer {
         if (roomAddonsGroupedByDay.get(date) == null)
             return "";
         
+        
         String text = "";
         for(PmsBookingAddonItem tmpItm : roomAddonsGroupedByDay.get(date)) {
             if(tmpItm.getKey().equals(key) && tmpItm.getName() != null && tmpItm.getName().length() > 0) {
                 text = tmpItm.getName();
+                
+                try {
+                    if(tmpItm.nameIsSameAsTranslation(text)) {
+                        String translatedName = tmpItm.getTranslationsByKey("name", this.language);
+                        if(translatedName != null && !translatedName.isEmpty()) {
+                            text = translatedName;
+                        }
+                    }
+                }catch(Exception e) {
+                    //We ignore this.
+                }
             }
         }
         

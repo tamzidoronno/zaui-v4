@@ -1,5 +1,6 @@
 package com.thundashop.core.pmsmanager;
 
+import com.google.gson.Gson;
 import com.thundashop.core.common.Translation;
 import com.thundashop.core.common.TranslationHandler;
 import com.thundashop.core.productmanager.data.Product;
@@ -30,6 +31,24 @@ public class PmsBookingAddonItem extends TranslationHandler implements Serializa
     boolean isGroupAddon() {
         if(groupAddonSettings != null && groupAddonSettings.groupProductIds != null && !groupAddonSettings.groupProductIds.isEmpty()) {
             return true;
+        }
+        return false;
+    }
+
+    boolean isOverridden() {
+        return overrideName != null && !overrideName.isEmpty();
+    }
+
+    boolean nameIsSameAsTranslation(String text) {
+        HashMap<String, String> translations = getTranslations();
+        Gson gson = new Gson();
+        for(String key : translations.keySet()) {
+            if(key.endsWith("_name")) {
+                String toCheck = gson.fromJson(translations.get(key), String.class).trim();
+                if(text.trim().equals(toCheck)) {
+                    return true;
+                }
+            }
         }
         return false;
     }

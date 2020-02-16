@@ -14,6 +14,21 @@ class PmsPricingNew extends \WebshopApplication implements \Application {
         $this->saveDiscountCode();
     }
     
+    public function ignorePMHR() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        $config->ignorePmhr = true;
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $config);
+    }
+    
+    public function requestPriceMyHotelRoom() {
+        $data = new \core_pmsmanager_PMHRContent();
+        $data->prefix = $_POST['data']['prefix'];
+        $data->name = $_POST['data']['name'];
+        $data->phone = $_POST['data']['phone'];
+        $data->email = $_POST['data']['email'];
+        $this->getApi()->getPmsReportManager()->requestPriceMyHotelRoom($this->getSelectedMultilevelDomainName(), $data);
+    }
+    
     public function loadAdvancedPricePlan() {
         $this->includefile("priceyieldpanel");
     }

@@ -22,8 +22,8 @@ $pricetypes[5] = "Per hour";
 $pricetypes[6] = "Per seconds";
 $pricetypes[7] = "Progressive";
 $pricetypes[8] = "Interval pricing";
-
 $priceCodes = (array)$this->getApi()->getPmsManager()->getpriceCodes($this->getSelectedName());
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
 ?>
 <div style='height:50px;'></div>
 <div style=" margin-bottom: 20px; padding-bottom: 20px; display:none;">
@@ -61,6 +61,47 @@ $priceCodes = (array)$this->getApi()->getPmsManager()->getpriceCodes($this->getS
         ?>
     </div>
 </div>
+<?php if(false && !$config->requestForPmhr && !$config->ignorePmhr) { ?>
+<div style="text-align: center;">
+    <span class="shop_button" onclick="$('.ratestrategybanner').slideDown();">Improve your rate strategy using price my hotel room</span>
+    <div style="width: 600px; display:none; margin: auto; text-align: left; font-size: 14px; border: solid 1px #bbb; background-color:#fff; padding: 10px; margin-top: 20px;" class="ratestrategybanner">
+        Price my hotel room is a pricing tool to help you increase your revenue. By allowing price my hotel room to fetch rates and occupancy you will be able to take advantage of the following.
+        <ul>
+            <li>Automatically change prices based on occupancy (if you want to)</li>
+            <li>Track your competitors and make sure your prices are competitive. Example: always be 10 under a specific competitor</li>
+            <li>Keep track on sudden changes in the marked and stay ahead of them by having the correct price</li>
+            <li>An average customer of increase their revenue by more than 10%</li>
+            <li>Save a lot of time managing your rates</li>
+            <li>Decrease prices on other room categories when sold out on a specific room category.</li>
+        </ul>
+        <?php
+        $config = $this->getApi()->getStoreManager()->getMyStore()->configuration;
+       
+        ?>
+        <div style='border-bottom: solid 1px #bbb; text-align: center; margin: 10px;padding-bottom: 10px;'>Fill in the form below to request a one month free trial</div>
+        <span gstype="form" method="requestPriceMyHotelRoom">
+            <div>
+                <span style="width: 124px; display:inline-block;">Your name</span>
+                <span style="width: 199px; display:inline-block;">Email</span>
+                <span>Phone number</span>
+            </div>
+            <input type="txt" placeholder="Name" class="gsniceinput1" style="width:100px;" gsname='name'>
+            <input type="txt" placeholder="Email" class="gsniceinput1" value="<?php echo $config->emailAdress; ?>" gsname='email'>
+            <input type="txt" placeholder="Prefix" class="gsniceinput1" style="width:20px;" value="<?php echo $config->defaultPrefix; ?>" gsname='prefix'>
+            <input type="txt" placeholder="Phone" class="gsniceinput1" value="<?php echo $config->phoneNumber; ?>" gsname='phone'>
+            <bR>
+            <bR>
+            <span class="shop_button" style="width:100%; box-sizing: border-box;" gstype="submit">Request a one month free trial now no strings attached</span>
+            <br>
+            <br>
+            <center>OR</center>
+            <br>
+            <span class="shop_button" style="width:100%; box-sizing: border-box;" gsclick='ignorePMHR'>I dont want to try out this feature</span>
+        </span>
+    </div>
+</div>
+<bR>
+<?php } ?>
 
 <table width='100%'>
     <tr>

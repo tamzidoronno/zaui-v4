@@ -23,6 +23,9 @@ public class PmsConfiguration extends DataCommon {
     @Transient
     private boolean isPikStore = false;
     
+    boolean requestForPmhr = false;
+    boolean ignorePmhr = false;
+    
     void setTimeZone(Store store) {
         this.store = store;
     }

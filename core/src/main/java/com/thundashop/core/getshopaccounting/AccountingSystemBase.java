@@ -22,6 +22,7 @@ import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.webmanager.WebManager;
+import com.thundashop.core.webmanager.WebManagerSSLUnsafe;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -62,6 +63,9 @@ public abstract class AccountingSystemBase extends ManagerBase {
     
     @Autowired
     public WebManager webManager;
+    
+    @Autowired
+    public WebManagerSSLUnsafe webManagerSSL;
     
     @Autowired
     public StoreManager storeManager;

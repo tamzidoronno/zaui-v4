@@ -97,7 +97,7 @@ public class PowerOfficeGoPrimitiveAccounting extends AccountingSystemBase {
         try {
             Gson gson = new Gson();
             String auth = "e5fdab3b-97b5-4041-bddb-5b2a48ccee1c:" + getConfig("password");
-            String res = webManager.htmlPostBasicAuth("https://go.poweroffice.net/OAuth/Token", "grant_type=client_credentials", false, "UTF-8", auth);
+            String res = webManagerSSL.htmlPostBasicAuth("https://go.poweroffice.net/OAuth/Token", "grant_type=client_credentials", false, "UTF-8", auth);
             AccessToken atoken = gson.fromJson(res, AccessToken.class);
             token = atoken.access_token;
             return atoken.access_token;
@@ -118,7 +118,7 @@ public class PowerOfficeGoPrimitiveAccounting extends AccountingSystemBase {
         Gson gson = new Gson();
         String data = gson.toJson(transferObject);
         try {
-            String result = webManager.htmlPostBasicAuth(endpoint, data, true, "ISO-8859-1", token, "Bearer", false, "POST");
+            String result = webManagerSSL.htmlPostBasicAuth(endpoint, data, true, "ISO-8859-1", token, "Bearer", false, "POST");
             ApiOrderTransferResponse resp = gson.fromJson(result, ApiOrderTransferResponse.class);
             if(resp.success) {
                 addToLog("Sucesfully uploaded data");

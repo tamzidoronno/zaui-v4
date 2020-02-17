@@ -55,6 +55,9 @@ if (isset($_POST['password']))
 if (isset($_POST['verificationcode']))
     $verificationcode = $_POST['verificationcode'];
 
+if (!$factory->getApi()->getStoreManager()->isProductMode()) {
+    $verificationcode = 123456;
+}
 if ($verificationcode && $username && $password) {
     $instance->totpLoginProcess($username, $password, $verificationcode);
 }

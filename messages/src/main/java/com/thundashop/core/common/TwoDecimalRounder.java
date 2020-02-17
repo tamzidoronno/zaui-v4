@@ -18,11 +18,20 @@ public class TwoDecimalRounder {
     public static BigDecimal roundTwoDecimals(double value, int precision) {
         String format = getFormat(precision);
         
-        DecimalFormat df = new DecimalFormat(format);
-        df.setRoundingMode(RoundingMode.CEILING);
-        String twoDec = df.format(value);
+        if (Double.isInfinite(value) || Double.isNaN(value)) {
+            return BigDecimal.ZERO;
+        }
         
-        return new BigDecimal(twoDec);
+        try {
+            DecimalFormat df = new DecimalFormat(format);
+            df.setRoundingMode(RoundingMode.CEILING);
+            String twoDec = df.format(value);            
+            return new BigDecimal(twoDec);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return BigDecimal.ZERO;
+        }
+        
     }
 
     private static String getFormat(int precision) {

@@ -5,6 +5,7 @@ $pms = new \ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking();
 
 $types = $this->getSearchTypes();
 $filter = $pms->getSelectedFilter();
+
 $searchWord = $filter ? $filter->searchWord : "";
 $bookingItems = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
 $activeDelete = "";
@@ -40,7 +41,7 @@ if($filter->groupByBooking) {
             echo $this->__f("To");
             ?>
         </div>
-        <input class="gsniceinput1" id="enddate" value="<? echo date("d.m.Y", strtotime($filter->endDate)+86400); ?>" gsname='to'/>
+        <input class="gsniceinput1" id="enddate" value="<? echo date("d.m.Y", strtotime($filter->endDate)); ?>" gsname='to'/>
         <i class="gsicon-calendar-text"></i>
     </div>
 

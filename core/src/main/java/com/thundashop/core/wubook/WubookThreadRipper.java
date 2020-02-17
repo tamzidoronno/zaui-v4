@@ -66,6 +66,7 @@ public class WubookThreadRipper extends Thread {
     public void fetchNewBookings() {
         if(manager.fetchBookingThreadIsRunning) {
             manager.logText("A thread already running for fetchnewbooking");
+            manager.logPrint("A thread already running for fetchnewbooking");
             Calendar cal = Calendar.getInstance();
             long diff = System.currentTimeMillis() - manager.fetchBookingThreadStarted.getTime();
             diff = diff / 10000;
@@ -75,6 +76,7 @@ public class WubookThreadRipper extends Thread {
             return;
         } else {
             manager.logText("Started thread fetch new bookings");
+            manager.logPrint("Started thread fetch new bookings");
         }
         manager.fetchBookingThreadStarted = new Date();
         manager.fetchBookingThreadIsRunning = true;

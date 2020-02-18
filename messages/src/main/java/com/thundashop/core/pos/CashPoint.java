@@ -37,6 +37,8 @@ public class CashPoint extends DataCommon {
      */
     public boolean isMaster = false;
     
+    public boolean ignoreHotelErrors = false;
+    
     /**
      * If this is set the cashpoint is allowed to post 
      * to the RemoteCashPointApi with the access token.

@@ -91,6 +91,7 @@ $warehouses = $this->getApi()->getWareHouseManager()->getWareHouses();
     if (!$cashPoint->token) {
     ?>
         Is master: <input type='checkbox' gsname='isMaster' <? echo $cashPoint->isMaster ? 'checked="true"' : ''; ?>/>
+        <br/>Ignore hotel errors: <input type='checkbox' gsname='ignoreHotelErrors' <? echo $cashPoint->ignoreHotelErrors ? 'checked="true"' : ''; ?>/>
     <?
     }
     ?>

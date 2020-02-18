@@ -29,6 +29,7 @@ public class OcrFileLines extends DataCommon implements Comparable<OcrFileLines>
     private String matchDate = "";
     private String kid = "";
     private String orcLineId = UUID.randomUUID().toString();
+    public boolean hasBeenTriedTransfered = true;
     
     public String getOcrLineId() {
         return orcLineId;
@@ -117,7 +118,7 @@ public class OcrFileLines extends DataCommon implements Comparable<OcrFileLines>
         matchOnOrderId = orderId;
     }
 
-    private String getOppgjorsDato() {
+    public String getOppgjorsDato() {
         return rawLine.substring(15,21);
     }
 

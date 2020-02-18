@@ -21,6 +21,9 @@ public interface IPmsReportManager {
     public List<PmsMobileRoomCoverage> getRoomCoverage(Date start, Date end);
     
     @Administrator
+    public void requestPriceMyHotelRoom(PMHRContent content);
+    
+    @Administrator
     public List<PmsMobileUsage> getUsage(Date start, Date end);
     
     @Administrator

@@ -2508,10 +2508,6 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     }
 
     public function showNewVersionText() {
-        $user = $this->getApi()->getUserManager()->getLoggedOnUser();
-        if(!stristr($user->emailAddress, "@getshop.com")) {
-            return;
-        }
         echo "<div style='background-color:green; color:#fff;text-align:center; padding: 5px;'>A new version of this view is available <span gsclick='toggleNewView' style='cursor:pointer; color:blue;' gs_callback='window.location.reload();'>here</a>.</div>";
     }
     

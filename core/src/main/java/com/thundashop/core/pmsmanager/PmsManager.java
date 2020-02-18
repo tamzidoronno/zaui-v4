@@ -1091,6 +1091,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             logPrintException(e);
         }
         
+        try {
+            checkTranslationOnAddons(booking);
+        }catch(Exception e) {
+            logPrintException(e);
+        }
+        
         saveObject(booking);
         bookingUpdated(booking.id, "modified", null);
     }
@@ -4434,7 +4440,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         toReturn.percentagePrice = addonConfig.percentagePrice;
         toReturn.groupAddonType = addonConfig.groupAddonType;
         toReturn.groupAddonSettings = addonConfig.groupAddonSettings;
-
+        
         if (addonConfig.price != null && addonConfig.price > 0) {
             toReturn.price = addonConfig.price;
             toReturn.priceExTaxes = addonConfig.priceExTaxes;
@@ -9951,7 +9957,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             .filter(o -> o != null)
             .collect(Collectors.toList());
 
-        PmsBookingPaymentDiffer differ = new PmsBookingPaymentDiffer(orders, booking, room, this);
+        PmsBookingPaymentDiffer differ = new PmsBookingPaymentDiffer(orders, booking, room, this, invoiceManager.getAccountingDetails().language);
         PmsRoomPaymentSummary summary = differ.getSummary();
         
         return summary;
@@ -9984,7 +9990,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<PmsRoomPaymentSummary> summaryList = new ArrayList();
         
         for (PmsBookingRooms room : booking.rooms) {
-            PmsBookingPaymentDiffer differ = new PmsBookingPaymentDiffer(orders, booking, room, this);
+            PmsBookingPaymentDiffer differ = new PmsBookingPaymentDiffer(orders, booking, room, this, invoiceManager.getAccountingDetails().language);
             PmsRoomPaymentSummary summary = differ.getSummary();
             summaryList.add(summary);
         }
@@ -10656,7 +10662,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 .collect(Collectors.toList());
         }
         
-        PmsBookingPaymentDiffer differ = new PmsBookingPaymentDiffer(orders, booking, room, this);
+        PmsBookingPaymentDiffer differ = new PmsBookingPaymentDiffer(orders, booking, room, this, invoiceManager.getAccountingDetails().language);
         PmsRoomPaymentSummary summary = differ.getSummary();
         
         return summary;
@@ -11168,6 +11174,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         return blocked;
+    }
+    
+    private void checkTranslationOnAddons(PmsBooking booking) {
+        for(PmsBookingRooms room : booking.rooms) {
+            for(PmsBookingAddonItem item : room.addons) {
+                if(item.productId != null && !item.productId.isEmpty()) {
+                    item.setTranslationStrings(getAddonByProductId(item.productId).getTranslations());
+                }
+            }
+        }
     }
     
 }

@@ -458,6 +458,10 @@ class PmsSearchBooking extends \MarketingApplication implements \Application {
 
     public function clearFilter() {
         unset($_SESSION['pmfilter'][$this->getSelectedMultilevelDomainName()]);
+        
+        unset($_SESSION['lastsorttypeasc']);
+        unset($_SESSION['lastsorttype']);
+        unset($_SESSION['lastsorttypeasc']);
     }
     
      

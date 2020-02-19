@@ -23,6 +23,7 @@ public class OcrFile extends DataCommon {
         String avtaleId = "";
         for(String line : lines) {
             OcrFileLines ocrline = new OcrFileLines(line);
+            ocrline.hasBeenTriedTransfered = false;
             if(ocrline.getTjenesteKode().equals("09") && ocrline.getRecordType().equals("20")) {
                 avtaleId = ocrline.getAvtaleId();
             }

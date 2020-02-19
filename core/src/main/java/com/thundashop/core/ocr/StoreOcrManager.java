@@ -152,7 +152,19 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
                         logPrint("New record found: " + line.getKid());
                         logPrint("found matching order");
                         Date paymentDate = line.getPaymentDate();
-                        orderManager.markAsPaidWithTransactionType(toMatch.id, paymentDate, line.getAmountInDouble(), Order.OrderTransactionType.OCR, line.getOcrLineId(), "Automatically by OCR / Nets");
+                        logPrint("Date: " + paymentDate + " | "  + line.getOppgjorsDato() +  " | " + line.getRawLine());
+                        try {
+                            orderManager.markAsPaidWithTransactionType(toMatch.id, paymentDate, line.getAmountInDouble(), Order.OrderTransactionType.OCR, line.getOcrLineId(), "Automatically by OCR / Nets");
+                            if (line.hasBeenTriedTransfered) {
+                                messageManager.sendErrorNotify("Reconnected transaction to order " + toMatch.incrementOrderId + ", amount : " + line.getAmountInDouble() + " (Payment date: " + paymentDate + ")");
+                            }
+                        } catch (ErrorException ex) {
+                            if (ex.code == 1053) {
+                                messageManager.sendErrorNotify("Tried to import an record for order " + toMatch.incrementOrderId + " that was within a closed periode.. (Payment date: " + paymentDate + ")");
+                            } else {
+                                throw ex;
+                            }
+                        }
                         line.setMatchOnOrderId(toMatch.incrementOrderId);
                         line.setBeenTransferred();
                         logPrint("did match done");
@@ -166,6 +178,8 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
                         saveObject(warnings);
                     }
                 }
+                
+                line.hasBeenTriedTransfered = true;
             }
 
             saveLines(newlines);

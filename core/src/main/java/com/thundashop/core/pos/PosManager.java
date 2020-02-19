@@ -898,6 +898,8 @@ public class PosManager extends ManagerBase implements IPosManager {
     public CanCloseZReport canCreateZReport(String pmsBookingMultilevelName, String cashPointId) {
         boolean autoClose = orderManager.getOrderManagerSettings().autoCloseFinancialDataWhenCreatingZReport;
         
+        CashPoint cashPoint = getCashPoint(cashPointId);
+        
         CanCloseZReport canClose = new CanCloseZReport();
         
         canClose.uncompletedOrders = orderManager.getAllOrders()
@@ -922,33 +924,36 @@ public class PosManager extends ManagerBase implements IPosManager {
                 .filter(o -> o != null && o.errorMsg != null && !o.errorMsg.isEmpty())
                 .count();
         
-        PmsManager pmsManager = scope.getNamedSessionBean(pmsBookingMultilevelName, PmsManager.class);
-        
-        List<PmsBooking> bookingsInPeriode = pmsManager.getBookingsWithUnsettledAmountBetween(start, end);
-        List<PmsBookingRooms> roomsInPeriode = bookingsInPeriode
-                .stream()
-                .flatMap(o -> o.rooms.stream())
-                .filter(o -> o.date.within(start, end))
-                .filter(o -> o.unsettledAmount > 0.0001 || o.unsettledAmount < -0.0001)
-                .collect(Collectors.toList());
-        
-        canClose.roomsWithProblems = roomsInPeriode.stream()
-                .filter(o -> !o.createOrdersOnZReport)
-                .collect(Collectors.toList());
-        
-        
-        boolean anyRoomsNeedAutoCreationOfOrders = roomsInPeriode.stream()
-                .filter(o -> o.createOrdersOnZReport)
-                .count() != 0;
-        
-        if (anyRoomsNeedAutoCreationOfOrders && !checkIfAccruedPaymentActivatedAndConfigured()) {
-            canClose.canClose = false;
-            canClose.accuredPaymentMethodNotActivatedOrConfiguredImproperly = true;
-        }
+        if (cashPoint == null || !cashPoint.ignoreHotelErrors) {
+            PmsManager pmsManager = scope.getNamedSessionBean(pmsBookingMultilevelName, PmsManager.class);
 
-        checkIfBookingsWithNoneSegments(canClose, pmsManager.getAllBookings(null));
-                
-        canClose.roomsWithProblems.removeIf(room -> noUnsettledAmountInPast(room, pmsManager));
+            List<PmsBooking> bookingsInPeriode = pmsManager.getBookingsWithUnsettledAmountBetween(start, end);
+            List<PmsBookingRooms> roomsInPeriode = bookingsInPeriode
+                    .stream()
+                    .flatMap(o -> o.rooms.stream())
+                    .filter(o -> o.date.within(start, end))
+                    .filter(o -> o.unsettledAmount > 0.0001 || o.unsettledAmount < -0.0001)
+                    .collect(Collectors.toList());
+
+
+            canClose.roomsWithProblems = roomsInPeriode.stream()
+                    .filter(o -> !o.createOrdersOnZReport)
+                    .collect(Collectors.toList());
+
+
+            boolean anyRoomsNeedAutoCreationOfOrders = roomsInPeriode.stream()
+                    .filter(o -> o.createOrdersOnZReport)
+                    .count() != 0;
+
+            if (anyRoomsNeedAutoCreationOfOrders && !checkIfAccruedPaymentActivatedAndConfigured()) {
+                canClose.canClose = false;
+                canClose.accuredPaymentMethodNotActivatedOrConfiguredImproperly = true;
+            }
+
+            checkIfBookingsWithNoneSegments(canClose, pmsManager.getAllBookings(null));
+
+            canClose.roomsWithProblems.removeIf(room -> noUnsettledAmountInPast(room, pmsManager));
+        } 
         
         canClose.finalize();
         return canClose;

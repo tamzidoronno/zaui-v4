@@ -18,7 +18,7 @@ app.PmsSearchBox = {
         $(document).on('click','.PmsSearchBox .sendmessagesbox',app.PmsSearchBox.showSendMessages);
         $(document).on('click','.PmsSearchBox .togglerow',app.PmsSearchBox.toggleRow);
         $(document).on('click','.PmsSearchBox .sendmessagebtn',app.PmsSearchBox.sendMessage);
-        if(getshop.pms.is_touch_device()) {
+        if(getshop.pms && getshop.pms.is_touch_device()) {
             $(document).on('click','.PmsSearchBox .displaydailydatepicker',app.PmsSearchBox.displayDailyRangePicker);
         } else {
             $(document).on('mouseover','.PmsSearchBox .displaydailydatepicker',app.PmsSearchBox.displayDailyRangePicker);

@@ -3718,6 +3718,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         Map<String, List<DayEntry>> groupedEntries = dayEntries.stream()
                 .flatMap(dayEntry -> dayEntry.dayEntries.stream())
+                .filter(dayEntry -> dayEntry.accountingNumber != null)
                 .filter(dayEntry -> dayEntry.accountingNumber.equals(accountNumber))
                 .collect(Collectors.groupingBy(DayEntry::getOrderId));
      
@@ -4178,6 +4179,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     private void addBalance(List<DayIncome> res, AccountingBalance balance, boolean incTaxes) {
         Map<String, List<DayEntry>> groupedByAccountNumber = res.stream()
                 .flatMap(o -> o.dayEntries.stream())
+                .filter(o -> o.accountingNumber != null)
                 .collect(Collectors.groupingBy(o -> o.accountingNumber));
         
         for (String accountNumber : groupedByAccountNumber.keySet()) {

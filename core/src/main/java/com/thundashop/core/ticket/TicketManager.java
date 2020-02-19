@@ -389,10 +389,11 @@ public class TicketManager extends ManagerBase implements ITicketManager {
             if (content.addedByGetShop && ticket.replyToEmail != null && !ticket.replyToEmail.isEmpty()) {
                 String message = "";
                 message += "Title:"  + ticket.title + "<br><br>";
-                message += "Reply:"  + content.content + "<br>";
+                message += "This email can not be replied to, if you reply to this ticket by email it will automatically be discarded. To reply to this ticket, log on to your ticket system and reply from there.<br>";
+                message += "<br><br>Reply:"  + content.content + "<br>";
                 message += "Please log into GetShop to reply find your ticket.";
                 
-                messageManager.sendMail(ticket.replyToEmail, ticket.replyToEmail, "There has been added a new repsonse to your ticket: " + ticket.incrementalId , message, "post@getshop.com", "GetShop");
+                messageManager.sendMail(ticket.replyToEmail, ticket.replyToEmail, "There has been added a new response to your ticket: " + ticket.incrementalId , message, "post@getshop.com", "GetShop");
             } else {
                 messageManager.sendMail("support@getshop.com", "GetShop Support", "Customer has added a new content to the ticket: " + ticket.incrementalId, content.content, "post@getshop.com", "GetShop");
                 String title = "New content added to ticket " + ticket.incrementalId + " ( State: " + ticket.urgency + " ) ";

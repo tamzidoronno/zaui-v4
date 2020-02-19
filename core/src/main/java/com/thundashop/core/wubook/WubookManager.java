@@ -911,9 +911,8 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             } else if(booking.delete) {
                 newbooking = findCorrelatedBooking(booking);
                 if(newbooking == null) {
-                    sendErrorForReservation(booking.reservationCode, "Could not find deleted booking for a modification on reservation");
                     return "Did not find booking to delete.";
-                } else {
+                } else { 
                     if(newbooking.ignoreWubook) {
                         pmsManager.logEntry("Booking modified, but ignored due to force ignore (delete).", newbooking.id, null);
                         return "";

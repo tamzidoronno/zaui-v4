@@ -30,6 +30,7 @@ import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.webmanager.WebManager;
+import com.thundashop.core.webmanager.WebManagerSSLUnsafe;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -91,7 +92,7 @@ public class AccountingManager extends ManagerBase implements IAccountingManager
     GetShopSessionScope getShopSessionScope;
     
     @Autowired
-    WebManager webManager;
+    WebManagerSSLUnsafe webManager;
     
     @Autowired
     FrameworkConfig frameworkConfig;

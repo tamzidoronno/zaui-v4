@@ -924,7 +924,7 @@ public class PosManager extends ManagerBase implements IPosManager {
                 .filter(o -> o != null && o.errorMsg != null && !o.errorMsg.isEmpty())
                 .count();
         
-        if (!cashPoint.ignoreHotelErrors) {
+        if (cashPoint == null || !cashPoint.ignoreHotelErrors) {
             PmsManager pmsManager = scope.getNamedSessionBean(pmsBookingMultilevelName, PmsManager.class);
 
             List<PmsBooking> bookingsInPeriode = pmsManager.getBookingsWithUnsettledAmountBetween(start, end);

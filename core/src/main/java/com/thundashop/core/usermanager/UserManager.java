@@ -113,6 +113,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     private TotpHandler totpHandler;
     private Date lastSaved;
     
+    private boolean hasBeenNotifiedAboutFailedApiUserLogin = false;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -289,7 +290,16 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             password = encryptPassword(password);
         }
         
-        return logonEncrypted(username, password, false);
+        User user = logonEncrypted(username, password, false);
+        
+        if (user == null && internalApiUser != null && internalApiUser.username != null && internalApiUser.username.equals(username)) {
+            if (!this.hasBeenNotifiedAboutFailedApiUserLogin) {
+                this.hasBeenNotifiedAboutFailedApiUserLogin = true;
+                messageManager.sendErrorNotify("Failed to logon api user");
+            }
+        }
+        
+        return user;
     }
     
     @Override

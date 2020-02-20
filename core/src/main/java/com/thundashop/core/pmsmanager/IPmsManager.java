@@ -449,6 +449,7 @@ public interface IPmsManager {
     public void changeInvoiceDate(String roomId, Date newDate);
     
     @Administrator
+    @ForceAsync
     public void checkIfGuestHasArrived() throws Exception;
     
     @Administrator

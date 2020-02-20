@@ -46,6 +46,7 @@ import com.thundashop.core.getshopaccounting.DayIncomeReport;
 import com.thundashop.core.getshoplock.GetShopDeviceLog;
 import com.thundashop.core.getshoplock.GetShopLockManager;
 import com.thundashop.core.getshoplocksystem.AccessEvent;
+import com.thundashop.core.getshoplocksystem.AccessHistoryResult;
 import com.thundashop.core.getshoplocksystem.GetShopLockSystemManager;
 import com.thundashop.core.getshoplocksystem.LockCode;
 import com.thundashop.core.getshoplocksystem.LockGroup;
@@ -9146,25 +9147,27 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void checkIfGuestHasArrivedApac() {
-        List<AccessEvent> events = getShopLockSystemManager.getAccessEvents(); 
+        Date end = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(end);
+        cal.add(Calendar.HOUR_OF_DAY, -4);
+        Date start = cal.getTime();
         
-            events.stream()
-                .forEach(event -> {
-                    for (PmsBooking booking : bookings.values()) {
-                        for (PmsBookingRooms room : booking.rooms) {
-                            if (!room.isStarted() || room.isEnded() || room.checkedin) {
-                                continue;
-                            }
-                            if (room.bookingItemId != null && room.codeObject != null) {
-                                BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
-                                if (item != null && item.lockGroupId.equals(event.groupId) && event.date.after(room.date.start) && event.date.before(room.date.end)) {
-                                    logEntry("Marking room as arrived", booking.id, item.id, room.pmsBookingRoomId, "markedarrived");
-                                    markGuestArrivedInternal(booking, room);
-                                }
-                            }
-                        }
+        for (PmsBooking booking : bookings.values()) {
+            for (PmsBookingRooms room : booking.rooms) {
+                if (!room.isStarted() || room.isEnded() || room.checkedin) {
+                    continue;
+                }
+                if (room.bookingItemId != null && room.codeObject != null) {
+                    BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
+                    List<AccessHistoryResult> events = getShopLockSystemManager.getAccessHistory(item.lockGroupId, start, new Date(), room.codeObject.slotId); 
+                    if(!events.isEmpty()) {
+                        logEntry("Marking room as arrived", booking.id, item.id, room.pmsBookingRoomId, "markedarrived");
+                        markGuestArrivedInternal(booking, room);
                     }
-                });
+                }
+            }
+        }
     }
 
     @Override

@@ -10,6 +10,8 @@ foreach($config->addonConfiguration as $item) {
 $rangetype = array();
 $rangetype[1] = "On stay";
 $rangetype[2] = "On booking";
+
+$defaultTypes = $this->getDefaultTypes();
 ?>
 <div class='saveExtendedInformationForm'>
     <div style='text-align: right'>
@@ -29,7 +31,16 @@ $rangetype[2] = "On booking";
         Count (max selection) <input type="txt" class="settings" gsname="count" value="<?php echo $addonItem->count; ?>">
     </div>
     <div class="extendedinforow">
-        Default breakfast product<br>(used to connect to booking.com, etc) <input type="checkbox" class="settings" gsname="defaultbreakfast" <?php echo $addonItem->addonType == 1 ? "CHECKED" : ""; ?>>
+        <?php
+        echo "<select style='float:right;' gsname='producttype'>";
+        echo "<option value='".$addonItem->addonType."'>No product type</option>";
+        foreach($defaultTypes as $id => $type) {
+            $checked = ($addonItem->addonType == $id) ? "SELECTED" : "";
+            echo "<option value='$id' $checked>$type</option>";
+        }
+        echo "</select>";
+        ?>
+        Product type<br>(breakfast used to connect to booking.com, etc) 
     </div> 
     <div class="extendedinforow">
         <input type="button" class="settings" value="Hide" style="width:256px" onclick="$(this).closest('.settingsForProduct').find('.extendedinformation').toggle();">

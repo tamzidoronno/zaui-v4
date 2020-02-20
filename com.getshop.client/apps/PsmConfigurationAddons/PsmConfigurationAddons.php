@@ -8,6 +8,19 @@ class PsmConfigurationAddons extends \WebshopApplication implements \Application
         
     }
     
+    public function getDefaultTypes() {
+        $types = array();
+        $types[1] = "Breakfast";
+        $types[2] = "Parking";
+        $types[3] = "Late checkout";
+        $types[4] = "Early checkin";
+        $types[5] = "Extra bed";
+        $types[6] = "Cancellation";
+        $types[7] = "Extra child bed";
+        
+        return $types;
+    }
+    
     public function loadExtendedProductInfo() {
         $this->includefile("extendedproductinfo");
     }
@@ -229,9 +242,7 @@ class PsmConfigurationAddons extends \WebshopApplication implements \Application
             $addon->count = $_POST['data']['count'];
             $addon->channelManagerAddonText = $_POST['data']['channelManagerAddonText'];
             $addon->groupAddonType = $_POST['data']['groupaddon'];
-            if($_POST['data']['defaultbreakfast'] == "true") {
-                $addon->addonType = 1;
-            }
+            $addon->addonType = $_POST['data']['producttype'];
         }
         $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $config);
     }

@@ -109,6 +109,7 @@ public class Cart extends DataCommon {
         shippingCost = 0;
         coupon = null;
         couponCost = null;
+        overrideDate = null;
         items.clear();
     }
 

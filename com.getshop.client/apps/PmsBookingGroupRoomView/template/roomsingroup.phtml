@@ -11,6 +11,9 @@ $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelected
 $items = $this->indexList($items);
 
 foreach($booking->rooms as $room) {
+    if($room->bookingItemTypeId == "gspmsconference") {
+        continue;
+    }
     $deleted = $room->deleted ? "roomisdeleted" : "";
     $selected = $selectedRoom->pmsBookingRoomId == $room->pmsBookingRoomId ? "selected" : "";
     echo "<div class='roomgroupbox changeRoomByEvent $selected $deleted' roomid='".$room->pmsBookingRoomId."'>";

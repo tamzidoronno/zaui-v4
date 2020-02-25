@@ -423,6 +423,24 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         exit(0);
     }
     
+    public function updateTimelineDates() {
+        $_SESSION['timelinestart'] = $_POST['data']['start'];
+        $_SESSION['timelinesend'] = $_POST['data']['end'];
+    }
+    
+    public function getTimeLineStart() {
+        if(isset($_SESSION['timelinestart'])) {
+            return $_SESSION['timelinestart'];
+        }
+        return date("01.m.Y");
+    }
+    public function getTimeLineEnd() {
+        if(isset($_SESSION['timelinesend'])) {
+            return $_SESSION['timelinesend'];
+        }
+        return date("t.m.Y");
+    }
+    
     public function saveOrderNote() { 
        $booking = $this->getPmsBooking();
         $booking->invoiceNote = $_POST['data']['comment'];
@@ -1271,7 +1289,7 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         $conference = $this->getConference()->id;
         
         $event = new \core_pmsmanager_PmsConferenceEvent();
-        $event->title = $_POST['data']['title'];
+        $event->name = $_POST['data']['title'];
         $event->pmsConferenceId = $this->getConference()->id;
         $event->pmsConferenceItemId = $_POST['data']['pmsConferenceItemId'];
         $event->from = $this->convertToJavaDate(strtotime($_POST['data']['date']." ".$_POST['data']['starttime']));
@@ -1283,7 +1301,7 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
     
     public function updateEvent() {
         $event = $this->getSelectedEvent();
-        $event->title = $_POST['data']['title'];
+        $event->name = $_POST['data']['name'];
         $event->pmsConferenceId = $this->getConference()->id;
         $event->pmsConferenceItemId = $_POST['data']['pmsConferenceItemId'];
         $event->from = $this->convertToJavaDate(strtotime($_POST['data']['date']." ".$_POST['data']['starttime']));

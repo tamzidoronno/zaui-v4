@@ -43,7 +43,7 @@ class AccountingGeneralSettings extends \MarketingApplication implements \Applic
         $data = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
         foreach($data as $app) {
             $config = $this->getApi()->getPaymentManager()->getStorePaymentConfiguration($app->id);
-            $app->accountUserId = $config ? $config->userCustomerNumber : "Not set";
+            $app->accountUserId = $config ? $config->userCustomerNumber : "";
             $app->customernumberpaid = $config ? $config->userCustomerNumberPaid : "";
             $app->description  = $config && isset($config->accountingDescription) ? $config->accountingDescription : "";
             $app->offsetAccountingId_accrude  = $config && isset($config->offsetAccountingId_accrude) ? $config->offsetAccountingId_accrude : "";

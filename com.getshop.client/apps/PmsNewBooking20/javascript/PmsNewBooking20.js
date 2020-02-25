@@ -26,6 +26,28 @@ app.PmsNewBooking20 = {
         $(document).on('change','.PmsNewBooking20 .addcouponcodecheckavail', app.PmsNewBooking20.changedDiscountCode);
         $(document).on('click','.PmsNewBooking20 .increasedecreasecount', app.PmsNewBooking20.incraseDecreaseCounter);
         $(document).on('click','.PmsNewBooking20 .resetBooking', app.PmsNewBooking20.resetBooking);
+        $(document).on('keyup','.PmsNewBooking20 .createConferenceName', app.PmsNewBooking20.createConferenceName);
+        $(document).on('click','.PmsNewBooking20 .createConference', app.PmsNewBooking20.createConference);
+    },
+    
+    createConferenceName : function(event) {
+        if(event.keyCode === 13) {
+            app.PmsNewBooking20.createConference();
+        }
+    },
+    createConference : function() {
+        var name = $('.PmsNewBooking20 .createConferenceName').val();
+        var date = $('#startnewconferencedate').val();
+        var time = $('#startnewconferencetime').val();
+        var data = {
+            "name" : name,
+            "time" : time,
+            "date" : date
+        };
+        var event = thundashop.Ajax.createEvent('','createConference',$('.PmsNewBooking20 .createConferenceName'), data);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            window.location.href="/pms.php?page=a90a9031-b67d-4d98-b034-f8c201a8f496#roomid=" + res;
+        });
     },
     changedDiscountCode : function() {
         if($('.searchbookingrow').is(':visible')) {

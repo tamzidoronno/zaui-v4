@@ -44,6 +44,9 @@ public interface IPmsConferenceManager {
     public String createConferenceEvent(PmsConferenceEvent event);
     
     @Administrator
+    public String createConference(String engine, Date date, String name);
+    
+    @Administrator
     public void deleteConferenceEvent(String id);
     @Administrator
     public List<PmsConferenceEvent> getConferenceEvents(String confernceId);

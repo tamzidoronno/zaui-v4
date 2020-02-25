@@ -69,7 +69,11 @@ $numberOfLines = sizeof($activities);
                         if(stristr($activity, "blocked")) { $typecategory = "blocked"; }
                         if(stristr($activity, "overbooking")) { $typecategory = "overbooking"; }
                         if(stristr($activity, "closed")) { $typecategory = "closedoffhotel"; }
-                        $sourceId = "sourceid='".$entry->sourceId."'";
+                        if($entry->sourceId && $typecategory == "conference") {
+                            $sourceId = "sourceid='".$entry->sourceId."' id='".$entry->sourceId."' gs_show_overlay='booking_room_view' method='loadBooking'";
+                        } else {
+                            $sourceId = "sourceid='".$entry->sourceId."'";
+                        }
                     }
                     ?>
                    <div <?php echo $bookingId; ?> roomid="" class="<?php echo $hasBooking . " " . $typecategory; ?> timeline_col1 col col_width col_data first_in_row last_in_row <?php echo $displayWaitinglist; ?>" <?php echo $sourceId; ?>>

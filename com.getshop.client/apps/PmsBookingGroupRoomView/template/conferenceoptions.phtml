@@ -50,25 +50,6 @@ echo "</div>";
 
 <?php
 
-$pmsSelectedRoom = $this->getPmsBookingRoom();
-if($pmsSelectedRoom->addedToWaitingList) {
-    echo "<div class='isdeletedinformation'>";
-    echo "This room is added to the waiting list rooms, <a style='color:#be99d7; cursor:pointer;' gstype='clicksubmit' gsname='id' gsvalue='".$pmsSelectedRoom->pmsBookingRoomId."' method='removeFromWaitingList'>try adding this room.</a>";
-    echo "<span style='float:right; background-color:red; color:#be99d7; padding-left:5px; padding-right: 5px; cursor:pointer;' gstype='clicksubmit' gsname='id' gsvalue='".$pmsSelectedRoom->pmsBookingRoomId."' method='deleteWaitingListRoom'>Delete from waiting list</span>";
-    if($pmsSelectedRoom->prioritizeInWaitingList) {
-        echo " This rooms is proritized, <span style='color:#be99d7;cursor:pointer;' gsclick='togglePriorityRoom' roomid='".$pmsSelectedRoom->pmsBookingRoomId."'>deactivate prioritization</span>";
-    } else {
-        echo " <span style='color:#be99d7;cursor:pointer;' gsclick='togglePriorityRoom' roomid='".$pmsSelectedRoom->pmsBookingRoomId."'>prioritize</span>";
-    }
-    echo "</div>";
-} else if($pmsSelectedRoom->deleted) {
-    echo "<div class='isdeletedinformation'>";
-    echo "This room has been cancelled / deleted, <span gsclick='deleteRoom' roomid='".$pmsSelectedRoom->pmsBookingRoomId."'  style='color:#be99d7;cursor:pointer;'>try to undelete it</span>.";
-    if($pmsSelectedRoom->overbooking) {
-        echo "<span gsclick='removeFromOverBookingList' roomid='".$pmsSelectedRoom->pmsBookingRoomId."' style='float:right; color:#be99d7;cursor:pointer;' gs_confirm='Warning, this will not readd the booking, just remove it from the list, use undelete it to make sure it is readded.'>remove it from overbooking list</span>.";
-    }
-    echo "</div>";
-} 
 
 
 if(in_array($selected,array_keys($menu))) {

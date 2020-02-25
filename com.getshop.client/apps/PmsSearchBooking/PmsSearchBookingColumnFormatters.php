@@ -158,6 +158,8 @@ class PmsSearchBookingColumnFormatters {
         } else if ($room->progressState == "notpaid") {
             $waiting = $this->pmsSearchBooking->__f("Room not paid");
             $text = "<span title='$waiting'><i class='gsicon-bag-dollar' style='color: red'></i></span>";
+        } else if ($room->progressState == "conference") {
+            $text = "<center><span title='Conference'><i class='fa fa-suitcase' style='color: #82cdf3'></i></span></center>";
         } else if ($room->progressState == "overbook") {
             $waiting = $this->pmsSearchBooking->__f("Rooms has been overbooked");
             $text = "<span title='Room is overbooked'><i class='fa fa-book' style='color: red'></i></span>";
@@ -197,8 +199,11 @@ class PmsSearchBookingColumnFormatters {
         
         $date = \GetShopModuleTable::formatDate($room->regDate);
         $date = "<div class='rowdate1'>".date("d.m.y", strtotime($room->regDate))."</div> <div class='rowdate2'>".date("H:i", strtotime($room->regDate))."</div>";
-        if(!$room->bookingEngineId) {
-            $date .= "<i class='fa fa-warning dontExpand' title='Booking not added to booking engine' gstype='clicksubmit' method='tryAddToBookingEngine' gsname='id' gsvalue='".$room->pmsRoomId."'></i>";
+
+        if($room->bookingTypeId != "gspmsconference") {
+            if(!$room->bookingEngineId) {
+                $date .= "<i class='fa fa-warning dontExpand' title='Booking not added to booking engine' gstype='clicksubmit' method='tryAddToBookingEngine' gsname='id' gsvalue='".$room->pmsRoomId."'></i>";
+            }
         }
         return $date;
     }

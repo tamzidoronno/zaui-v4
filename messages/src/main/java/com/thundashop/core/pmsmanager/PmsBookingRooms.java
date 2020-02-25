@@ -1048,4 +1048,8 @@ public class PmsBookingRooms implements Serializable {
         
         return unsettledAmountIncAccrued > 0.01 || unsettledAmountIncAccrued < -0.01;
     }
+
+    boolean isPmsConferenceRoom() {
+        return (bookingItemTypeId != null && bookingItemTypeId.equals("gspmsconference"));
+    }
 }

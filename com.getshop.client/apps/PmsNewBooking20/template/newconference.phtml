@@ -1,0 +1,21 @@
+<div class='steptitle'>Create a new conference</div>
+
+<?php
+$date = date("d.m.Y");
+/* @var $this \ns_bf644a39_c932_4e3b_a6c7_f6fd16baa34d\PmsNewBooking20 */
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+$defaultStart = $config->defaultStart;
+?>
+
+<span>
+    <div style='margin-bottom: 10px;'>
+        <input class='gsniceinput1' value='<?php echo $date; ?>' id='startnewconferencedate' style='width:80px;'>
+        <input class='gsniceinput1' value='<?php echo $defaultStart; ?>' id='startnewconferencetime' style='width:40px;'>
+        <input class='gsniceinput1 createConferenceName' placeholder='Name of conference'>
+    </div>
+    <span class='shop_button createConference' style='width: 285px; border-radius: 3px;'>Create conference</span>
+</span>
+
+<script>
+    getshop_loadDatePicker($('#startnewconferencedate'), {});
+</script>

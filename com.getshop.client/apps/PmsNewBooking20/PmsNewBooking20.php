@@ -14,6 +14,13 @@ class PmsNewBooking20 extends \WebshopApplication implements \Application {
         $this->includefile("searchcustomerresult");
     }
     
+    public function createConference() {
+        $date = $_POST['data']['date'] . " " . $_POST['data']['time'];
+        $name = $_POST['data']['name'];
+        $date = $this->convertToJavaDate(strtotime($date));
+        echo $this->getApi()->getPmsConferenceManager()->createConference($this->getSelectedMultilevelDomainName(), $date, $name);
+    }
+    
     public function loadConferenceEvents() {
         $this->includefile("addguesttoconference");
     }

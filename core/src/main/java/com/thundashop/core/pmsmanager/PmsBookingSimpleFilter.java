@@ -50,6 +50,16 @@ public class PmsBookingSimpleFilter {
             this.manager.logPrint("max limit of 200 increased.");
         }
         
+        //Add conference rooms
+        for(PmsBooking booking : bookings) {
+            for(PmsBookingRooms room : booking.rooms) {
+                if(room.bookingItemTypeId != null && room.bookingItemTypeId.equals("gspmsconference")) {
+                    result.add(convertRoom(room, booking));
+                }
+            }
+        }
+        
+        
         this.manager.gsTiming("before sorting list");
         sortList(result, filter.sorting);
         if(filter.groupByBooking) { 
@@ -251,6 +261,17 @@ public class PmsBookingSimpleFilter {
         }
         if(room.prioritizeInWaitingList) {
             simple.progressState = "prioritized";
+        }
+        
+        if(room.isPmsConferenceRoom()) {
+            simple.progressState = "conference";
+            if(booking.conferenceId != null && !booking.conferenceId.isEmpty()) {
+                simple.guest = new ArrayList();
+                PmsConference conference = manager.pmsConferenceManager.getConference(booking.conferenceId);
+                PmsGuests guest = new PmsGuests();
+                guest.name = conference.meetingTitle;
+                simple.guest.add(guest);
+            }
         }
         
         simple.checkedIn = room.checkedin;

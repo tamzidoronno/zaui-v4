@@ -1100,6 +1100,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         saveObject(booking);
         bookingUpdated(booking.id, "modified", null);
+        
+        if(booking.conferenceId != null && !booking.conferenceId.isEmpty()) {
+            PmsConference conference = pmsConferenceManager.getConference(booking.conferenceId);
+            if(conference.forUser != null && !conference.forUser.equals(booking.userId)) {
+                conference.forUser = booking.userId;
+                pmsConferenceManager.saveConference(conference);
+            }
+        }
+        
     }
 
     @Override
@@ -5592,6 +5601,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return result;
     }
 
+    public void completeConferenceBooking() {
+        PmsBooking booking = getCurrentBooking();
+        booking.avoidAutoDelete = true;
+        booking.sessionId = "";
+        booking.completedDate = new Date();
+        booking.userId = getSession().currentUser.id;
+        booking.confirmed = true;
+        booking.confirmedDate = new Date();
+        
+        saveBooking(booking);
+    }
+    
     public PmsBooking doCompleteBooking(PmsBooking booking) {
         
         
@@ -10455,6 +10476,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if(l.entry.isEmpty()) {
                 continue;
             }
+            
             result.lines.put(key, activites.get(key));
         }
             
@@ -10605,7 +10627,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for(PmsConferenceEventEntry event : events) {
             if(event.to == null || event.to.before(start)) { continue; }
             if(event.from == null || event.from.after(end)) { continue; }
-            List<PmsActivityEntry> activityEntries = createActivityEntries(event.from, event.to, event.meetingTitle, event.conferenceId);
+            
+            PmsBooking booking = getconferenceBooking(event.conferenceId);
+            String sourceId = "";
+            if(booking != null) { sourceId = booking.getPmsConferenceRoomId(); }
+            List<PmsActivityEntry> activityEntries = createActivityEntries(event.from, event.to, event.meetingTitle, sourceId);
             for(int i = 0; i < 20; i++) {
                 PmsActivityLine trytoaddtoline = result.get("conference" + i);
                 if(trytoaddtoline.canAdd(activityEntries)) {
@@ -11187,6 +11213,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         }
+    }
+
+    private PmsBooking getconferenceBooking(String conferenceId) {
+        for(PmsBooking booking : bookings.values()) {
+            if(booking.conferenceId != null && booking.conferenceId.equals(conferenceId)) {
+                return booking;
+            }
+        }
+        return null;
     }
     
 }

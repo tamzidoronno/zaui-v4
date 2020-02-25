@@ -7,12 +7,25 @@
  */
 
 /* @var $this ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
-$start = date("d.m.Y");
-$end = date("d.m.Y", time()+(86400*30));
+$start = $this->getTimeLineStart();
+$end = $this->getTimeLineEnd();
+
+$diff = strtotime($end) - strtotime($start);
 
 $items = $this->getApi()->getPmsConferenceManager()->getAllItem("-1");
 $items = $this->indexList($items);
 $multiplicator = 3600*24;
+$dateheader = "days";
+
+if($diff <= 86400*3) {
+    $multiplicator = 3600*4;
+    $dateheader = "datehours";
+} 
+if($diff <= 86400) {
+    $multiplicator = 3600;
+    $dateheader = "hours";
+}
+
 ?>
 <div gstype='form' method='updateTimelineDates'>
     <input type='txt' class='gsniceinput1' gsname='start' value='<?php echo $start; ?>' style='width:80px;'>
@@ -23,12 +36,22 @@ $multiplicator = 3600*24;
 <br><bR>
 
 <div class='hoursarea'>
-    <span class='hoursdescheader'>Room</span>
+    <span class='hoursdescheader'></span>
 <?php
 $starttime = strtotime($start);
 echo "<span class='hoursinheader'>";
 while(true) {
-    echo "<span class='hoursheader' start='".$starttime."' end='".($starttime + $multiplicator)."'>" . date("H:i", $starttime) . "</span>";
+    $dateheadertext = date("d.m.Y", $starttime);
+    if($dateheader == "hours") {
+        $dateheadertext = date("H:i", $starttime);
+    }
+    if($dateheader == "datehours") {
+        $dateheadertext = date("d.m H:i", $starttime);
+    }
+    if($dateheader == "days") {
+        $dateheadertext = date("d.m", $starttime);
+    }
+    echo "<span class='hoursheader' start='".$starttime."' end='".($starttime + $multiplicator)."'>" . $dateheadertext . "</span>";
     $starttime += $multiplicator;
     if($starttime >= date(strtotime($end))) {
         break;
@@ -57,7 +80,8 @@ echo "</span>";
         $events = (array)$this->getApi()->getPmsConferenceManager()->getConferenceEventsByFilter($filter);
         echo "<span class='eventsarea'>";
         foreach($events as $event) {
-            echo "<span class='evententry' start='".strtotime($event->from)."' end='".strtotime($event->to)."'>".$event->meetingTitle."</span>";
+            $betweendate = date("H:i", strtotime($event->from)) . " - " . date("H:i", strtotime($event->to));
+            echo "<span class='evententry' start='".strtotime($event->from)."' end='".strtotime($event->to)."' title='".$event->name." ($betweendate)'>".$event->name."</span>";
         }
         echo "</span>";
         echo "</span>";
@@ -72,32 +96,37 @@ echo "</span>";
 </script>
 
 <style>
+    .hoursarea { border-top: solid 1px #bbb; border-left: solid 1px #bbb; border-right: solid 1px #bbb;}
     .hoursdescheader { display:inline-block; width: 200px; }
     .itemsarea { border: solid 1px #bbb; }
     .hoursinheader { position:relative;}
-    .evententry { border: solid 1px; position:absolute; width: 0px;border-radius: 3px;
+    .eventsinitem { position:absolute; top: 0px; }
+    .evententry { position:absolute; width: 0px;border-radius: 3px;
         white-space: nowrap;
         overflow: hidden;
+        padding-left: 3px; padding-right: 3px;
         text-overflow: ellipsis;
         margin-top: 2px;
         color:#4a9979;
         height: 16px;
-        font-size: 12px;
+        box-sizing: border-box;
+        font-size: 10px;
         text-align: center;
         background-color:green;
         color:#fff;
         z-index: 2;
+        line-height: 16px;
     }
     
     .itemrow { position:relative; border-bottom: solid 1px #bbb; }
-    .itemname { display:block; width: 200px; border-right: solid 1px #bbb;
+    .itemname { display:block; width: 200px;
         white-space: nowrap;
         box-sizing: border-box;
         overflow: hidden;
         text-overflow: ellipsis;
         padding-left: 5px;
     }
-    .hoursheader { position:absolute; font-size: 10px; width: 1px; border-left: solid 1px #bbb; text-align: center; }
+    .hoursheader { position:absolute; font-size: 10px; width: 1px; border-left: solid 1px #bbb; text-align: center; padding-top: 3px; }
     .eventsarea { position:relative; }
 </style>
 
@@ -107,7 +136,7 @@ echo "</span>";
     var mswidth = (width/msspan);
     var start = <?php echo strtotime($start); ?>;
     var end = <?php echo strtotime($end); ?>;
-    var height = $('.itemsarea').height();
+    var height = $('.itemsarea').height() + 20;
     
     $('.evententry').each(function(res) {
         var eventstart = $(this).attr('start');

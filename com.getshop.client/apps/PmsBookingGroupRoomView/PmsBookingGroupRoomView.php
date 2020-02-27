@@ -15,6 +15,18 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         
     }
 
+    public function removeFromOverBookingList() {
+        $room = $this->getPmsBookingRoom();
+        $booking = $this->getPmsBooking();
+        foreach($booking->rooms as $r) {
+            if($room->pmsBookingRoomId == $r->pmsBookingRoomId) {
+                $room->overbooking = false;
+            }
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+        $this->clearCache();
+    }
+    
     public function addToBlockList() {
         $room = $this->getPmsBookingRoom();
         foreach($room->guests as $guest) {

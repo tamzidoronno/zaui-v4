@@ -48,5 +48,18 @@ public class Coupon extends DataCommon {
             dailyPriceAmountByType.put(type.id+"_1", (double)amount);
         }
     }
+    
+    public void checkAmount() {
+        if(type.equals(CouponType.FIXEDPRICE)) {
+            if(!dailyPriceAmountByType.isEmpty()) {
+                for(String key : dailyPriceAmountByType.keySet()) {
+                    if(key.equals("_1")) {
+                        this.amount = dailyPriceAmountByType.get(key).intValue();
+                    }
+                    break;
+                }
+            }
+        }
+    }
 
 }

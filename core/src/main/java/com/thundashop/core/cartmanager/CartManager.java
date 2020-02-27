@@ -215,7 +215,11 @@ public class CartManager extends ManagerBase implements ICartManager {
 
     @Override
     public List<Coupon> getCoupons() {
-        return new ArrayList(coupons.values());
+        ArrayList<Coupon> couponslist = new ArrayList(coupons.values());
+        for(Coupon coupon : couponslist) {
+            coupon.checkAmount();
+        }
+        return couponslist;
     }
 
     @Override

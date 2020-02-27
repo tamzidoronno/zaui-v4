@@ -142,8 +142,6 @@ $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSele
     <h2>Room map</h2>
     <div gstype="form" method="updateRoomData">
     <?php
-        $otas = $this->getApi()->getWubookManager()->getOtas($this->getSelectedMultilevelDomainName());
-        $data = $this->getApi()->getWubookManager()->getWubookRoomData($this->getSelectedMultilevelDomainName());
         $items = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
         $roommap = array();
         $items = $this->indexList($items);
@@ -157,7 +155,7 @@ $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSele
             if($ota->channel == 2) { echo "Booking.com"; }
             echo  " (" . $ota->id . ")";
             echo "</th>";
-            $roommap[$ota->id] = $this->getApi()->getWubookManager()->getRoomRates($this->getSelectedMultilevelDomainName(), $ota->id, $ota->channel);
+//            $roommap[$ota->id] = $this->getApi()->getWubookManager()->getRoomRates($this->getSelectedMultilevelDomainName(), $ota->id, $ota->channel);
         }
         echo "</tr>";
 

@@ -159,7 +159,9 @@ public class PmsBookingSimpleFilter {
         simple.orderIds = booking.orderIds;
         for(String ordId : booking.orderIds) {
             Order ord = manager.orderManager.getOrderDirect(ordId);
-            simple.incrementOrderIds.add(ord.incrementOrderId);
+            if(ord != null) {
+                simple.incrementOrderIds.add(ord.incrementOrderId);
+            }
         }
         
         simple.channel = booking.channel;

@@ -50,7 +50,7 @@ public class Coupon extends DataCommon {
     }
     
     public void checkAmount() {
-        if(type.equals(CouponType.FIXEDPRICE)) {
+        if(type != null && type.equals(CouponType.FIXEDPRICE)) {
             if(!dailyPriceAmountByType.isEmpty()) {
                 for(String key : dailyPriceAmountByType.keySet()) {
                     if(key.equals("_1")) {

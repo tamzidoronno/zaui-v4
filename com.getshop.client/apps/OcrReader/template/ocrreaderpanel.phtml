@@ -23,7 +23,15 @@ $details = $this->getApi()->getInvoiceManager()->getAccountingDetails();
                         ?>
                         <div class="buttonarea">
                             <div class="buttonareaheader"><? echo $this->__f("Do you have an account at nets, IT HAS TO BE EXACTLY 9 DIGITS!"); ?></div>
-                            <div class="shop_button dosetaccountingid"><? echo $this->__f("Set up account (enter avtaleid)"); ?></div>
+                            <span gstype='form' method='setupocr'>
+                                Password:<br>
+                                <input type='txt' class='gsniceinput1' placeholder='Password' gsname='password'><br>
+                                Avtaleid:<br>
+                                <input type='txt' class='gsniceinput1' placeholder='Avtaleid 9 digit exact' gsname='avtaleid'><br>
+                                Kid size:<br>
+                                <input type='txt' class='gsniceinput1' placeholder='Kid size' value='10' gsname='kidsize'><br>
+                                <div class="shop_button" gstype='submit'><? echo $this->__f("Set up account"); ?></div>
+                            </span>
                         </div>
                     </div>
                 </div>

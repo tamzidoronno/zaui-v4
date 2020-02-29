@@ -22,6 +22,7 @@ $confdate = $conference->conferenceDate ? date('d.m.Y', strtotime($conference->c
         <div class="roomgroupbox changeEventOnConference <? echo $selected; ?>" eventid="overview">
             <span style="display: inline-block; width: 150px;"> Conference Date</span><span class="dates"><? echo $confdate; ?></span>
             <br/><span style="display: inline-block; width: 150px;"> Number of attendees</span><span class="dates"><? echo $conference->attendeeCount; ?></span>
+            <br/><span style="display: inline-block; width: 150px;"> Price </span><span totalrow_for_event_id='overview' class="dates"><? echo $this->getApi()->getPmsConferenceManager()->getTotalPriceForCartItems($conference->id, "overview"); ?></span>
         </div>    
     </div>
 

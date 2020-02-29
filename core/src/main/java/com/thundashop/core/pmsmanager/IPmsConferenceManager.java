@@ -87,5 +87,20 @@ public interface IPmsConferenceManager {
     public List<ConferenceDiffLog> getDiffLog(String conferenceId);
     
     @Administrator
-    public void addCartItemsToConference(String confernceId, List<CartItem> cartItems);
+    public void addCartItemsToConference(String confernceId, String eventId, List<CartItem> cartItems);
+    
+    @Administrator
+    public List<CartItem> getCartItems(String conferenceId, String eventId);
+    
+    @Administrator
+    public void removeCartItemFromConference(String conferenceId, String cartItemId);
+    
+    @Administrator
+    public void updateCartItem(String conferenceId, CartItem cartItem);
+    
+    @Administrator
+    public CartItem getCartItem(String conferenceId, String cartItemId);
+    
+    @Administrator
+    public Double getTotalPriceForCartItems(String conferenceId, String eventId);
 }

@@ -1,1 +1,66 @@
-asdfadf
+<?
+/* @var $this \ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
+$eventId = $this->getSelectedEventId();
+$booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $_POST['data']['id']);
+$itemsAdded = $this->getApi()->getPmsConferenceManager()->getCartItems($booking->conferenceId, $eventId);
+
+if (!is_array($itemsAdded)) {
+    $itemsAdded = array();
+}
+?>
+
+<div style="font-size: 0px;">
+    <div style="width: 50%; text-align: center; font-size: 15px; display: inline-block;  border-right: solid 1px #DDD; box-sizing: border-box; vertical-align: top;">
+        <h2>Items added (not paid)</h2>
+        <div style="text-align: left;">
+            <?
+            if(!count($itemsAdded)) {
+                echo "No products added";
+            } else {
+                ?>
+                <div>
+                    <div class="cartitem_added_product_header cartitem_added_product_name"><? echo $this->__f("Product name"); ?></div>
+                    <div class="cartitem_added_product_header cartitem_added_product_count"><? echo $this->__f("Count"); ?></div>
+                    <div class="cartitem_added_product_header cartitem_added_product_price"><? echo $this->__f("Price"); ?></div>
+                </div>
+                <?
+                foreach ($itemsAdded as $cartItem) {
+                    ?>
+                    <div  class='cart_item_row' style="margin-bottom: 6px;" gstype="form" method="updateCartItemForPosTab">
+                        <input type='hidden' value='<?php echo $eventId; ?>' gsname='eventid'>
+                        <input type='hidden' value='<?php echo $_POST['data']['id']; ?>' gsname='roomid'>
+                        <input type='hidden' value='<?php echo $cartItem->cartItemId; ?>' gsname='cartitemid'>
+                        <i class="gs_shop_small_icon fa fa-trash" gstype="submit" gsvalue="delete"></i>
+                        <input class="gsniceinput1 cartitem_added_product cartitem_added_product_name" value="<? echo $cartItem->product->name; ?>" gsname="name" />
+                        <input class="gsniceinput1 cartitem_added_product cartitem_added_product_count" value="<? echo $cartItem->count; ?>" gsname="count" />
+                        <input class="gsniceinput1 cartitem_added_product cartitem_added_product_price" value="<? echo $cartItem->product->price; ?>" gsname="price" />
+                        <i synchron='true' gs_callback='app.PmsBookingGroupRoomView.cartItemRowSaved' class="gs_shop_small_icon savebotton fa fa-save" gstype="submit" gsvalue="save" style="display: none;"></i>
+                    </div>
+                    <?
+                }
+                
+                ?>
+                <div class='total_cart_item_row'>
+                    Total
+                    <span totalrow_for_event_id='<? echo $eventId; ?>'><? echo $this->getApi()->getPmsConferenceManager()->getTotalPriceForCartItems($booking->conferenceId, $eventId); ?></span>
+                </div>
+                <?
+            }
+            
+            ?>
+        </div>
+    </div>
+
+    <div style="width: 50%; text-align: center; font-size: 15px; display: inline-block; box-sizing: border-box; border-left: solid 1px #DDD; margin-left: -1px; vertical-align: top;">
+        <h2>Add a new item</h2>
+        <div gstype="form" method="searchForProducts">
+            <input type="hidden" gsname="id" value="<? echo $_POST['data']['id']; ?>"/>
+            <input type="hidden" gsname="eventid" value="<? echo $eventId; ?>"/>
+            Search for products: <input synchron="true" gs_callback="app.PmsBookingGroupRoomView.handlePosSearchProductResult" gstype="submitenter" class="gsniceinput1" gsname="searchword"/>
+        </div>
+        
+        <div class="productsearchresult">
+            
+        </div>
+    </div>    
+</div>

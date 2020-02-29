@@ -1,0 +1,52 @@
+<?
+/* @var $this \ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
+$eventId = $this->getSelectedEventId();
+$booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $_POST['data']['id']);
+$conference = $this->getApi()->getPmsConferenceManager()->getConference($booking->conferenceId);
+
+$searchResult = $this->getApi()->getProductManager()->search($_POST['data']['searchword'], 250, 1);
+
+if (!count($searchResult->products)) {
+    echo "<br/>";
+    echo "<i class='fa fa-warning'></i> No products found";
+    return;
+}
+?>
+
+<style>
+    .col_search_product {
+        display: inline-block;
+        padding: 5px;
+    }
+    
+    .col_prod_search_1 {
+        width: calc(100% - 130px);
+    }
+    
+    .col_prod_search_2 {
+        width: 100px;
+        text-align: right;
+    }
+    
+    .product_search_row {
+        border-bottom: solid 1px #DDD;
+    }
+</style>
+    
+
+<div style="text-align: left;">
+    <?
+    foreach ($searchResult->products as $product) {
+        ?>
+        <div class="product_search_row">
+            <div class="col_search_product col_prod_search_1">
+                <? echo $product->name; ?>
+            </div>
+            <div class="col_search_product col_prod_search_2">
+                <span class="gs_shop_small_icon" gsclick="addProductToEvent" productid="<? echo $product->id; ?>" id="<? echo $_POST['data']['id']; ?>" eventid="<? echo $eventId; ?>"> Add </span>
+            </div>
+        </div>
+        <?
+    }
+    ?>
+</div>

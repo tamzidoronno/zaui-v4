@@ -71,6 +71,10 @@ public class CartItem implements Serializable, Cloneable {
      */
     public String conferenceId = "";
     
+    /**
+     */
+    public String conferenceEventId = "";
+    
     public CartItem() {
     }
     

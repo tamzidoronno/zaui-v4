@@ -22,6 +22,8 @@ foreach($events as $event) {
     } else {
         echo "<div style='color:#8c2626;'><span class='dates'>".date("d/m H:i", strtotime($event->from)) . " - " . date("d/m H:i", strtotime($event->to)) . "</span></div>";
     }
+    $price = $this->getApi()->getPmsConferenceManager()->getTotalPriceForCartItems($this->getConference()->id, $event->id);
+    echo "<div><b> Price: </b><span totalrow_for_event_id='".$event->id."'>$price</span></div>";
     foreach($items as $item) {
         if($item->id == $event->pmsConferenceItemId) {
             echo "<div class='itemid'>" . $item->name;

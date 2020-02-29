@@ -16,6 +16,7 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.dbbackupmanager.DBBackupManager;
 import com.thundashop.core.pos.PosConference;
 import com.thundashop.core.pos.PosManager;
+import com.thundashop.core.pos.PosTab;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import com.thundashop.core.storemanager.StoreManager;
@@ -25,8 +26,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -585,7 +584,7 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
     }
 
     @Override
-    public void addCartItemsToConference(String confernceId, List<CartItem> cartItems) {
+    public void addCartItemsToConference(String confernceId, String eventId, List<CartItem> cartItems) {
         PmsConference conference = getConference(confernceId);
         
         if (conference == null) {
@@ -614,6 +613,8 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
                 productManager.saveProduct(item.getProduct());
             }
             
+            item.conferenceId = confernceId;
+            item.conferenceEventId = eventId;
             posManager.addToTab(tabId, item);
         });
     }
@@ -649,5 +650,83 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
         booking.conferenceId = conference.id;
         
         return room.pmsBookingRoomId;
+    }
+
+    private PosTab getTabForConference(String conferenceId) {
+        PmsConference conference = getConference(conferenceId);
+        if (conference == null) {
+            return null;
+        }
+        
+        PosConference posConference = posManager.getPosConference(conference.id);
+        
+        if (posConference == null) {
+            return null;
+        }
+        
+        return posManager.getTab(posConference.tabId);
+    }
+    
+    @Override
+    public List<CartItem> getCartItems(String conferenceId, String eventId) {
+        PosTab tab = getTabForConference(conferenceId);
+        
+        if (tab == null) {
+            return new ArrayList();
+        }
+        
+        List<CartItem> retList = tab.cartItems.stream()
+                .filter(o -> o.conferenceEventId != null && o.conferenceEventId.equals(eventId))
+                .collect(Collectors.toList());
+        
+        retList.sort((CartItem item1, CartItem item2) -> {
+            return item1.getProductId().compareTo(item2.getProductId());
+        });
+        
+        return retList;
+    }
+
+    @Override
+    public void removeCartItemFromConference(String conferenceId, String cartItemId) {
+        PosTab tab = getTabForConference(conferenceId);
+        
+        if (tab != null) {
+            tab.cartItems.removeIf(o -> o.getCartItemId().equals(cartItemId));
+            posManager.saveObject(tab);
+        }        
+    }
+
+    @Override
+    public void updateCartItem(String conferenceId, CartItem cartItem) {
+        PosTab tab = getTabForConference(conferenceId);
+        
+        if (tab != null && cartItem != null) {
+            removeCartItemFromConference(conferenceId, cartItem.getCartItemId());
+            
+            List<CartItem> cartItems = new ArrayList();
+            cartItems.add(cartItem);
+            
+            addCartItemsToConference(conferenceId, cartItem.conferenceEventId, cartItems);
+        }
+    }
+
+    @Override
+    public CartItem getCartItem(String conferenceId, String cartItemId) {
+        PosTab tab = getTabForConference(conferenceId);
+        
+        if (tab != null && cartItemId != null) {
+            return tab.getCartItem(cartItemId);
+        }
+        
+        return null;
+    }
+
+    @Override
+    public Double getTotalPriceForCartItems(String conferenceId, String eventId) {
+        List<CartItem> items = getCartItems(conferenceId, eventId);
+        
+        return items.stream()
+                .mapToDouble(o -> o.getTotalAmount())
+                .sum();
     }
 }

@@ -25,6 +25,8 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -614,6 +616,37 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
             
             posManager.addToTab(tabId, item);
         });
+    }
         
+
+    public String createConference(String engine, Date date, String name) {
+        PmsManager pmsManager = getShopSpringScope.getNamedSessionBean(engine, PmsManager.class);
+        pmsManager.startBooking();
+        
+        PmsBooking booking = pmsManager.getCurrentBooking();
+        
+        PmsBookingRooms room = new PmsBookingRooms();
+        room.bookingItemTypeId = "gspmsconference";
+        room.date.start = date;
+        room.date.end = date;
+        room.deleted = true;
+        room.deletedDate = new Date();
+        booking.rooms.add(room);
+        
+        try {
+            pmsManager.setBooking(booking);
+        } catch (Exception ex) {
+            logPrintException(ex);
+        }
+        
+        pmsManager.completeConferenceBooking();
+        
+        PmsConference conference = new PmsConference();
+        conference.meetingTitle = name;
+        saveConference(conference);
+        
+        booking.conferenceId = conference.id;
+        
+        return room.pmsBookingRoomId;
     }
 }

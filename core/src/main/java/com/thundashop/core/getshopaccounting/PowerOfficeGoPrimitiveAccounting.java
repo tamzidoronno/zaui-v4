@@ -97,7 +97,7 @@ public class PowerOfficeGoPrimitiveAccounting extends AccountingSystemBase {
         try {
             Gson gson = new Gson();
             String auth = "e5fdab3b-97b5-4041-bddb-5b2a48ccee1c:" + getConfig("password");
-            String res = webManagerSSL.htmlPostBasicAuth("https://go.poweroffice.net/OAuth/Token", "grant_type=client_credentials", false, "UTF-8", auth);
+            String res = webManagerSSL.htmlPostBasicAuth("https://api.poweroffice.net/OAuth/Token", "grant_type=client_credentials", false, "UTF-8", auth);
             AccessToken atoken = gson.fromJson(res, AccessToken.class);
             token = atoken.access_token;
             return atoken.access_token;

@@ -159,7 +159,7 @@ if($this->createProductError) {
                     <span class="extendedinformation"></span>
 
                 </td>
-                <td><?php echo $prod->accountingAccount; ?></td>
+                <td><?php echo $product->accountingAccount; ?></td>
                 <?php
                 $productPrice = round($product->price);
                 if($product->percentagePrice > 0) { $productPrice = $product->percentagePrice."%"; }

@@ -46,6 +46,7 @@ import com.thundashop.core.getshopaccounting.DayIncomeReport;
 import com.thundashop.core.getshoplock.GetShopDeviceLog;
 import com.thundashop.core.getshoplock.GetShopLockManager;
 import com.thundashop.core.getshoplocksystem.AccessEvent;
+import com.thundashop.core.getshoplocksystem.AccessHistoryResult;
 import com.thundashop.core.getshoplocksystem.GetShopLockSystemManager;
 import com.thundashop.core.getshoplocksystem.LockCode;
 import com.thundashop.core.getshoplocksystem.LockGroup;
@@ -1100,6 +1101,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         saveObject(booking);
         bookingUpdated(booking.id, "modified", null);
+        
+        if(booking.conferenceId != null && !booking.conferenceId.isEmpty()) {
+            PmsConference conference = pmsConferenceManager.getConference(booking.conferenceId);
+            if(conference.forUser != null && !conference.forUser.equals(booking.userId)) {
+                conference.forUser = booking.userId;
+                pmsConferenceManager.saveConference(conference);
+            }
+        }
+        
     }
 
     @Override
@@ -5592,6 +5602,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return result;
     }
 
+    public void completeConferenceBooking() {
+        PmsBooking booking = getCurrentBooking();
+        booking.avoidAutoDelete = true;
+        booking.sessionId = "";
+        booking.completedDate = new Date();
+        booking.userId = getSession().currentUser.id;
+        booking.confirmed = true;
+        booking.confirmedDate = new Date();
+        
+        saveBooking(booking);
+    }
+    
     public PmsBooking doCompleteBooking(PmsBooking booking) {
         
         
@@ -9160,25 +9182,27 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void checkIfGuestHasArrivedApac() {
-        List<AccessEvent> events = getShopLockSystemManager.getAccessEvents(); 
+        Date end = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(end);
+        cal.add(Calendar.HOUR_OF_DAY, -4);
+        Date start = cal.getTime();
         
-            events.stream()
-                .forEach(event -> {
-                    for (PmsBooking booking : bookings.values()) {
-                        for (PmsBookingRooms room : booking.rooms) {
-                            if (!room.isStarted() || room.isEnded() || room.checkedin) {
-                                continue;
-                            }
-                            if (room.bookingItemId != null && room.codeObject != null) {
-                                BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
-                                if (item != null && item.lockGroupId.equals(event.groupId) && event.date.after(room.date.start) && event.date.before(room.date.end)) {
-                                    logEntry("Marking room as arrived", booking.id, item.id, room.pmsBookingRoomId, "markedarrived");
-                                    markGuestArrivedInternal(booking, room);
-                                }
-                            }
-                        }
+        for (PmsBooking booking : bookings.values()) {
+            for (PmsBookingRooms room : booking.rooms) {
+                if (!room.isStarted() || room.isEnded() || room.checkedin) {
+                    continue;
+                }
+                if (room.bookingItemId != null && room.codeObject != null) {
+                    BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
+                    List<AccessHistoryResult> events = getShopLockSystemManager.getAccessHistory(item.lockGroupId, start, new Date(), room.codeObject.slotId); 
+                    if(!events.isEmpty()) {
+                        logEntry("Marking room as arrived", booking.id, item.id, room.pmsBookingRoomId, "markedarrived");
+                        markGuestArrivedInternal(booking, room);
                     }
-                });
+                }
+            }
+        }
     }
 
     @Override
@@ -10466,6 +10490,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if(l.entry.isEmpty()) {
                 continue;
             }
+            
             result.lines.put(key, activites.get(key));
         }
             
@@ -10616,7 +10641,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for(PmsConferenceEventEntry event : events) {
             if(event.to == null || event.to.before(start)) { continue; }
             if(event.from == null || event.from.after(end)) { continue; }
-            List<PmsActivityEntry> activityEntries = createActivityEntries(event.from, event.to, event.meetingTitle, event.conferenceId);
+            
+            PmsBooking booking = getconferenceBooking(event.conferenceId);
+            String sourceId = "";
+            if(booking != null) { sourceId = booking.getPmsConferenceRoomId(); }
+            List<PmsActivityEntry> activityEntries = createActivityEntries(event.from, event.to, event.meetingTitle, sourceId);
             for(int i = 0; i < 20; i++) {
                 PmsActivityLine trytoaddtoline = result.get("conference" + i);
                 if(trytoaddtoline.canAdd(activityEntries)) {
@@ -11201,6 +11230,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         }
+    }
+
+    private PmsBooking getconferenceBooking(String conferenceId) {
+        for(PmsBooking booking : bookings.values()) {
+            if(booking.conferenceId != null && booking.conferenceId.equals(conferenceId)) {
+                return booking;
+            }
+        }
+        return null;
     }
     
 }

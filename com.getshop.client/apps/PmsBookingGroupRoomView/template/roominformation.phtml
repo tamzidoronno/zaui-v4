@@ -29,6 +29,14 @@ if(isset($_POST['data']['subsection'])) {
     $selected = $_POST['data']['subsection'];
 }
 
+$pmsSelectedRoom = $this->getPmsBookingRoom();
+if($pmsSelectedRoom->bookingItemTypeId == "gspmsconference") {
+    echo "<div style='font-size: 22px; padding: 20px;'>";
+    echo "You are currently browsing a conference.<br>You can either add events to it by clicking on the 'open conference' link or add sleepover rooms in the left hand side.";
+    echo "</div>";
+    return;
+}
+
 $first = true;
 echo "<div class='menurow'>";
 foreach($menu as $id => $val) {
@@ -53,7 +61,6 @@ echo "</div>";
 
 <?php
 
-$pmsSelectedRoom = $this->getPmsBookingRoom();
 if($pmsSelectedRoom->addedToWaitingList) {
     echo "<div class='isdeletedinformation'>";
     echo "This room is added to the waiting list rooms, <a style='color:#be99d7; cursor:pointer;' gstype='clicksubmit' gsname='id' gsvalue='".$pmsSelectedRoom->pmsBookingRoomId."' method='removeFromWaitingList'>try adding this room.</a>";

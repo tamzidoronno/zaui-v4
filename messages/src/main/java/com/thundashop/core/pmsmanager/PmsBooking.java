@@ -797,6 +797,16 @@ public class PmsBooking extends DataCommon {
         return (paymentType != null && "70ace3f0-3981-11e3-aa6e-0800200c9a66".equals(paymentType));
     }
 
+    String getPmsConferenceRoomId() {
+        String roomId = "";
+        for(PmsBookingRooms room : rooms) {
+            if(room.isPmsConferenceRoom()) {
+                return room.pmsBookingRoomId;
+            }
+        }
+        return roomId;
+    }
+
     public static class PriceType {
         public static Integer daily = 1;
         public static Integer monthly = 2;

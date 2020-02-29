@@ -1,20 +1,35 @@
 <?php
 /* @var $this ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
 $selectedEvent = $this->getSelectedEventId();
+
+$booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $_POST['data']['id']);
+$conference = $this->getApi()->getPmsConferenceManager()->getConference($booking->conferenceId);
+$confdate = $conference->conferenceDate ? date('d.m.Y', strtotime($conference->conferenceDate)) : "";
 ?>
 <div class='groupheaderinformation boxed'>
-    <h2>Events
+    <div class="event_header_information">
+        <div class="event_header_title"><?php echo $this->getConference()->meetingTitle; ?></div>
     
         <i class='fa fa-trash-o' 
            gs_callback='app.PmsBookingGroupRoomView.conferenceDeleted'
-           style='float:right; cursor:pointer;' gsclick='deleteConference' roomid='<?php echo $this->getSelectedRoomId(); ?>' gs_confirm='Are you sure you want to delete this conference?'></i>
-    </h2>
+           style='position: absolute; right: 10px; top: 3px;' gsclick='deleteConference' roomid='<?php echo $this->getSelectedRoomId(); ?>' gs_confirm='Are you sure you want to delete this conference?'></i>
+    </div>
     
-    <span gstype='form' method='saveConferenceTitle'>
-        <input type='hidden' gsname='conferenceid' value='<?php echo $this->getConference()->id; ?>'>
-        <input type="txt" class='gsniceinput1 saveconferencetitle' gsname='title' value='<?php echo $this->getConference()->meetingTitle; ?>' style='width:100%; margin-bottom: 3px;box-sizing: border-box;'>
-        <span class='shop_button saveconferencetitlebutton' gstype='submit' style='width:100%; box-sizing: border-box;display:none;'>Save title</span>
-    </span>
+    <?
+    $selected = $selectedEvent == "overview" ? "selected" : "";
+    ?>
+    <div class="roomsingroupinformation">
+        <div class="roomgroupbox changeEventOnConference <? echo $selected; ?>" eventid="overview">
+            <span style="display: inline-block; width: 150px;"> Conference Date</span><span class="dates"><? echo $confdate; ?></span>
+            <br/><span style="display: inline-block; width: 150px;"> Number of attendees</span><span class="dates"><? echo $conference->attendeeCount; ?></span>
+        </div>    
+    </div>
+
+    <br/>
+    <div class="event_header_information">
+        <div class="event_header_title">Events</div>
+    </div>
+    
     <div class='roomsingroupinformation'>
         <?php
         $this->includefile("eventsinconference");
@@ -26,5 +41,9 @@ $selectedEvent = $this->getSelectedEventId();
 </div>
 
 <div class='bookerinformation boxed'>
-    <?php $this->includefile("conferenceoptions"); ?>
+    <?php 
+    
+    $this->includefile("conferenceoptions"); 
+    
+    ?>
 </div>

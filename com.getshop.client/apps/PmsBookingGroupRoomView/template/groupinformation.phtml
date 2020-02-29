@@ -41,20 +41,23 @@ if($config->conferenceSystemActive) {
     } else {
         echo "<a class='bookinghighlightcolor craeteconference'>create conference</a>";
         ?>
-    <div class='createconferencepanel'>
-        Create a new conference:<br>
+    <div class='createconferencepanel' style='text-align: left;'>
+        <h3>Create a new conference:</h3>
         <div gstype='form' method='createNewConference'>
             <input type='hidden' gsname='roomid' value='<?php echo $this->getSelectedRoomId(); ?>'>
-            <input type='txt' class='gsniceinput1' gsname='title' placeholder='Conference title'>
-            <span class='shop_button' gstype='submit' gs_callback='app.PmsBookingGroupRoomView.conferenceSelected'>Create conference</span>
+            <span style='display: inline-block; width: 80px;'>Title:</span> <input type='txt' class='gsniceinput1' gsname='title' placeholder=''>
+            <br/><span style='display: inline-block; width: 80px;'>Date:</span> <input type='txt' class='gsniceinput1' gsname='conferencedate' placeholder=''>
+            <br/><br/><span class='shop_button' gstype='submit' gs_callback='app.PmsBookingGroupRoomView.conferenceSelected'>Create conference</span>
         </div>
-        <bR>
         <div>
-            Or connect to an existing conference:<br>
+            <h4>Or connect to an existing conference:</h4>
             <input type='txt' class='gsniceinput1 searchconferencetitle' placeholder='Conference title'>
             <div class='searchconferencearea'></div>
         </div>
-
+        
+        <script>
+            getshop_loadDatePicker($('[gsname="conferencedate"]'), {});
+        </script>
     </div>
     <?php
     }

@@ -82,6 +82,42 @@ $items = $this->getEventItems();
     </div>
     
     <div class='row'>
+        <div class='col col1' style="vertical-align: top;">
+            <?
+            echo $this->__f("Number of attendees"); 
+            ?>
+        </div>
+        
+        <div class='col col2'>
+            <?
+            $active = $event->attendeeCount !== null ? "override_active" : "override_not_active";
+            ?>
+            <div class="attendeecount_overridden <? echo $active; ?>">
+                <input gsname='attendeeCount' class='gsniceinput1' value='<? echo $event->attendeeCount; ?>'/>  
+            </div>
+
+            <div class='attendeecount <? echo $active; ?>'>
+                <? echo $conference->attendeeCount; ?>
+                <br/> <span class='overrideattendeescount' style='color: #4da6cb; cursor: pointer;'> Click to override for event</span>
+            </div>
+            
+        </div>
+    </div>
+    
+    <div class='row'>
+        <div class='col col1' style="vertical-align: top;">
+            <?
+            echo $this->__f("Detailed description for event"); 
+            ?>
+        </div>
+        
+        <div class='col col2'>
+            <textarea gsname="description" style="border: solid 1px #DDD; width: 100%; height: 300px;"><? echo $event->description; ?></textarea>
+            
+        </div>
+    </div>
+    
+    <div class='row'>
         <div class='col col1'>
         </div>
         

@@ -1,0 +1,35 @@
+<?
+/* @var $this ns_dbe8930f_05d9_44f7_b399_4e683389f5cc\PmsConferenceList */
+
+$filter = new \core_pmsmanager_PmsConferenceFilter();
+
+// TODO - Make filter of list to date range.
+$conferenceBooking = $this->getApi()->getPmsManager()->getConferenceBookings($this->getSelectedMultilevelDomainName(), $filter);
+
+if (!is_array($conferenceBooking)) {
+    $conferenceBooking = array();
+}
+
+if (!count($conferenceBooking)) {
+    ?>
+    <div class="no_conferences">
+        <? echo $this->__f("No conferences availble to see with the given criterias"); ?>
+    </div>
+    <?
+    return;
+} 
+?>
+
+<div class="conferencelist_outer">
+    <h2>Your conferences</h2>
+    <?
+    foreach ($conferenceBooking as $conferenceBooking) {
+        $room = $this->getRoomFromBooking($conferenceBooking);
+        ?>
+        <div>
+            
+        </div>
+        <?
+    }
+    ?>
+</div>

@@ -642,6 +642,7 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
         pmsManager.completeConferenceBooking();
         
         PmsConference conference = new PmsConference();
+        conference.conferenceDate = date;
         conference.meetingTitle = name;
         saveConference(conference);
         

@@ -1,9 +1,18 @@
 <?php
 /* @var $this ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
 
-
 $events = (array)$this->getEvents();
 $items = $this->getEventItems();
+
+if (!count($events)) {
+    ?>
+<div style="font-style: italic; text-align: center; padding: 5px;"> 
+    No events created yet
+</div>
+    
+    <?
+    
+}
 
 foreach($events as $event) {
     $selected = $event->id == $this->getSelectedEventId() ? "selected" : "";

@@ -50,6 +50,7 @@ app.PmsBookingGroupRoomView = {
         $(document).on('click', '.PmsBookingGroupRoomView .conference_activities .deleteEvent', this.deleteEvent);
         $(document).on('click', '.PmsBookingGroupRoomView .saveconferencetitle', this.saveEventTitle);
         $(document).on('click', '.PmsBookingGroupRoomView .craeteconference', this.loadCreateConferencePanel);
+        $(document).on('click', '.PmsBookingGroupRoomView .overrideattendeescount', this.overrideAttendeesCount);
         
         $(document).on('keyup', '.PmsBookingGroupRoomView [searchtype]', this.searchGuests);
         $(document).on('keyup', '.PmsBookingGroupRoomView .searchconferencetitle', this.searchConference);
@@ -57,8 +58,19 @@ app.PmsBookingGroupRoomView = {
         $(document).on('change', '.PmsBookingGroupRoomView .changesegment', this.changeSegment);
         $(document).on('change', '.PmsBookingGroupRoomView .changechannel', this.changeChannel)
     },
+    
+    overrideAttendeesCount: function() {
+        $(this).closest('.col').find('.attendeecount').addClass('override_active');
+        $(this).closest('.col').find('.attendeecount').removeClass('override_not_active');
+        $(this).closest('.col').find('.attendeecount_overridden').removeClass('override_not_active');
+    },
+    
     loadCreateConferencePanel : function() {
-        $('.createconferencepanel').slideDown();
+        if ($('.createconferencepanel').is(':visible')) {
+            $('.createconferencepanel').slideUp();
+        } else {
+            $('.createconferencepanel').slideDown();
+        }
     },
     addToBlockList : function() {
         var confirmed = confirm("Are you sure you want to block this user, he can't book in the future after this?");

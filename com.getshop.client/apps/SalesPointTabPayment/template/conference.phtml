@@ -4,8 +4,8 @@ function ns_11234b3f_452e_42ce_ab52_88426fc48f8d_sortByDate($a, $b) {
     return strtotime($a->expiryDate) - strtotime($b->expiryDate);
 }
 
-$conferences = $this->getApi()->getPosManager()->getPosConferences();
-usort($conferences, 'ns_11234b3f_452e_42ce_ab52_88426fc48f8d_sortByDate');
+$conferenceBooking = $this->getApi()->getPosManager()->getPosConferences();
+usort($conferenceBooking, 'ns_11234b3f_452e_42ce_ab52_88426fc48f8d_sortByDate');
 ?>
 <div style='margin: 20px;'>
     
@@ -18,7 +18,7 @@ usort($conferences, 'ns_11234b3f_452e_42ce_ab52_88426fc48f8d_sortByDate');
 </div>
 <?
 $i = 0;
-foreach ($conferences as $conference) {
+foreach ($conferenceBooking as $conference) {
     if (time() - strtotime($conference->expiryDate) >= 3 * 86400) {
         continue;
     }

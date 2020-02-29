@@ -23,6 +23,13 @@ public class PmsConferenceEvent extends DataCommon {
     public Date to = null;
     public String userId = "";
     public Integer status = 0;
+    public String description = "";
+    
+    /**
+     * If this is set then use it, otherwise use the count from the 
+     * PmsConference.java
+     */
+    public Integer attendeeCount = null;
     
     /**
      * This is always the conference name.

@@ -1318,6 +1318,9 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         $event->pmsConferenceItemId = $_POST['data']['pmsConferenceItemId'];
         $event->from = $this->convertToJavaDate(strtotime($_POST['data']['date']." ".$_POST['data']['starttime']));
         $event->to = $this->convertToJavaDate(strtotime($_POST['data']['date']." ".$_POST['data']['endtime']));
+        $event->attendeeCount = $_POST['data']['attendeeCount'];
+        $event->description = $_POST['data']['description'];
+        
         $this->getApi()->getPmsConferenceManager()->saveConferenceEvent($event);
     }
     
@@ -1327,9 +1330,9 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         }
         $events = (array)$this->getEvents();
         if(sizeof($events) > 0) {
-            return $this->getEvents()[0]->id;
+            return $this->getEvents()[0]->id;            
         } else {
-            return null;
+            return "overview";
         }
     }
     
@@ -1405,6 +1408,7 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         $conference = new \core_pmsmanager_PmsConference();
         $conference->meetingTitle = $_POST['data']['title'];
         $conference->forUser = $this->getPmsBooking()->userId;
+        $conference->conferenceDate = $this->convertToJavaDate(strtotime($_POST['data']['conferencedate']));
         $conf = $this->getApi()->getPmsConferenceManager()->saveConference($conference);
         $booking = $this->getPmsBooking();
         $booking->conferenceId = $conf->id;
@@ -1465,5 +1469,18 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         }
     }
 
+    
+    public function saveConferenceData() {
+        $conference = $this->getApi()->getPmsConferenceManager()->getConference($_POST['data']['conferenceid']);
+        $conference->meetingTitle = $_POST['data']['title'];
+        $conference->conferenceDate = $this->convertToJavaDate(strtotime($_POST['data']['conferencedate']));
+        $conference->contactName = $_POST['data']['contact_name'];
+        $conference->contactEmail = $_POST['data']['contact_email'];
+        $conference->contactPhone = $_POST['data']['contact_phone'];
+        $conference->attendeeCount = $_POST['data']['attendeeCount'];
+        $conference->state = $_POST['data']['state'];
+        
+        $this->getApi()->getPmsConferenceManager()->saveConference($conference);
+    }
 }
 ?>

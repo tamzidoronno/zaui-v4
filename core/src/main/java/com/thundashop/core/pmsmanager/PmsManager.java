@@ -11232,13 +11232,23 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
     }
 
-    private PmsBooking getconferenceBooking(String conferenceId) {
+    @Override
+    public PmsBooking getconferenceBooking(String conferenceId) {
         for(PmsBooking booking : bookings.values()) {
             if(booking.conferenceId != null && booking.conferenceId.equals(conferenceId)) {
                 return booking;
             }
         }
         return null;
+    }
+
+    @Override
+    public List<PmsBooking> getConferenceBookings(PmsConferenceFilter filter) {
+        return pmsConferenceManager.getAllConferences(filter)
+                .stream()
+                .map(o -> getconferenceBooking(o.id))
+                .filter(o -> o != null)
+                .collect(Collectors.toList());
     }
     
 }

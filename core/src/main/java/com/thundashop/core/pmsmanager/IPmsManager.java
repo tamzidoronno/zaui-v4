@@ -698,4 +698,10 @@ public interface IPmsManager {
     
     @Administrator
     public void moveAllOnUserToUser(String tomainuser, String secondaryuser);
+    
+    @Administrator
+    public List<PmsBooking> getConferenceBookings(PmsConferenceFilter filter);
+    
+    @Administrator
+    public PmsBooking getconferenceBooking(String conferenceId);
 }

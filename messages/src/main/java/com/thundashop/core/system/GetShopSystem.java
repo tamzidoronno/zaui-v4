@@ -2,7 +2,10 @@ package com.thundashop.core.system;
 
 
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.productmanager.data.TaxGroup;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -35,6 +38,7 @@ public class GetShopSystem extends DataCommon {
      */
     public Date invoicedTo;
     
+    public List<TaxGroup> taxGroupsFromSystem = new ArrayList();
     /**
      * When the invoicedTo has passed, how many months should be 
      * craeted new orders for.

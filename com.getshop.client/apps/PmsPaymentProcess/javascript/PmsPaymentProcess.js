@@ -366,7 +366,7 @@ app.PmsPaymentProcess = {
         var data = {
             rooms : rooms
         };
-                
+        
         var event = thundashop.Ajax.createEvent(null, "createOrder", this, data);
         thundashop.Ajax.post(event);
     }

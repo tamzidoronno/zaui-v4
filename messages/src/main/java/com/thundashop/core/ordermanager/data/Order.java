@@ -209,6 +209,8 @@ public class Order extends DataCommon implements Comparable<Order> {
     public Date correctedAtTime = null;
     public TreeSet<String> createdBasedOnCorrectionFromOrderIds = new TreeSet();
     public String originalUserBeforeMerge = "";
+
+    public String terminalReceiptText = "";
     
     public Order jsonClone() {
         Order orderNew = jsonCloneLight();

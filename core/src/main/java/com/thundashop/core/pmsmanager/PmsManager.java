@@ -64,6 +64,7 @@ import com.thundashop.core.pmseventmanager.PmsEventManager;
 import com.thundashop.core.pos.PosManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.productmanager.data.TaxGroup;
 import com.thundashop.core.webmanager.WebManager;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.stripe.StripeManager;
@@ -6297,6 +6298,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public String addCartItemToRoom(CartItem item, String pmsBookingRoomId, String addedBy) {
 
         Product product = item.getProduct();
+        
+        TaxGroup taxGroup = productManager.getTaxGroup(product.taxgroup);
+        
+        if (taxGroup == null) {
+            throw new NullPointerException("Failed to set correct tax group to cartItem");
+        }
+        
+        if (productManager.getProduct(product.id) == null) {
+            productManager.saveProduct(product);
+        }
 
         PmsBookingAddonItem addon = new PmsBookingAddonItem();
         addon.productId = product.id;
@@ -6308,6 +6319,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         addon.variations = product.variationCombinations;
         addon.date = item.getStartingDate();
         addon.addedBy = addedBy;
+        
+        addon.taxGroupNumber = taxGroup.groupNumber;
+        
         if (addon.date == null) {
             addon.date = new Date();
         }
@@ -11180,7 +11194,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for(PmsBookingRooms room : booking.rooms) {
             for(PmsBookingAddonItem item : room.addons) {
                 if(item.productId != null && !item.productId.isEmpty()) {
-                    item.setTranslationStrings(getAddonByProductId(item.productId).getTranslations());
+                    PmsBookingAddonItem addon = getAddonByProductId(item.productId);
+                    if (addon != null) {
+                        item.setTranslationStrings(addon.getTranslations());
+                    }
                 }
             }
         }

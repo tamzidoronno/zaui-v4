@@ -5,6 +5,7 @@
  */
 package com.thundashop.core.pmsmanager;
 
+import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.ConferenceDiffLog;
 import com.thundashop.core.common.GetShopApi;
@@ -81,4 +82,7 @@ public interface IPmsConferenceManager {
     
     @Administrator
     public List<ConferenceDiffLog> getDiffLog(String conferenceId);
+    
+    @Administrator
+    public void addCartItemsToConference(String confernceId, List<CartItem> cartItems);
 }

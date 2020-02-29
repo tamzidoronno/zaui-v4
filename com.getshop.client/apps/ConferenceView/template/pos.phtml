@@ -37,6 +37,9 @@ if ($tab->cartItems) {
         
     <?
     $orders = $this->getApi()->getOrderManager()->getAutoCreatedOrdersForConference($conference->id);
+    if (!$orders || !is_array($orders)) {
+        $orders = array();
+    }
     ?>
     <div class="row">
         <div class="col col1"><? echo $this->__f("Orderid"); ?></div>

@@ -40,6 +40,7 @@ import com.thundashop.core.giftcard.GiftCardManager;
 import com.thundashop.core.gsd.GdsManager;
 import com.thundashop.core.gsd.GdsPaymentAction;
 import com.thundashop.core.gsd.GetShopDevice;
+import com.thundashop.core.gsd.TerminalReceiptText;
 import com.thundashop.core.gsd.TerminalResponse;
 import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.listmanager.data.TreeNode;
@@ -4321,6 +4322,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if(tokenInUse == null || !tokenId.equals(tokenInUse)) {
             return;
         }
+        
+        if (response.isAdministrativeTask()) {
+            System.out.println("Received an adminsitrative task: " + response);
+            return;
+        }
+
         Gson gson = new Gson();
         
         Order toPay = orderToPay;
@@ -5091,6 +5098,20 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         super.saveObject(order);
         orders.put(order.id, order);
+    }
+
+    @Override
+    public void receiptText(String token, TerminalReceiptText terminalReceiptText) {
+        if (orderToPay != null) {
+            orderToPay.terminalReceiptText = terminalReceiptText.text.replace("<br>", "\n");
+            orderToPay.terminalReceiptText = orderToPay.terminalReceiptText.replace("<br />", "");
+            saveObject(orderToPay);
+        }
+    }
+
+    @Override
+    public void cancelIntegratedPaymentProcess(String token) {
+        System.out.println("Should have canceled the order to pay.");
     }
 
 

@@ -7,13 +7,17 @@ import com.mongodb.BasicDBObject;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
-import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.ConferenceDiffLog;
+import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.dbbackupmanager.DBBackupManager;
+import com.thundashop.core.pos.PosConference;
 import com.thundashop.core.pos.PosManager;
+import com.thundashop.core.productmanager.ProductManager;
+import com.thundashop.core.productmanager.data.TaxGroup;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.UserManager;
 import java.util.ArrayList;
@@ -46,6 +50,9 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
     
     @Autowired
     private PosManager posManager;
+    
+    @Autowired
+    private ProductManager productManager;
     
     HashMap<String, PmsConferenceItem> items = new HashMap();
     HashMap<String, PmsConference> conferences = new HashMap();
@@ -573,5 +580,40 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
             }
         }catch(Exception e) {
         }
+    }
+
+    @Override
+    public void addCartItemsToConference(String confernceId, List<CartItem> cartItems) {
+        PmsConference conference = getConference(confernceId);
+        
+        if (conference == null) {
+            return;   
+        }
+        
+        PosConference posConference = posManager.getPosConference(confernceId);
+        
+        if (posConference == null) {
+            posManager.updatePosConference(posConference.id);
+            posConference = posManager.getPosConference(posConference.id);
+        }
+        
+        final String tabId = posConference.tabId;
+        
+        cartItems.stream().forEach(item -> {
+            TaxGroup taxGroup = productManager.getTaxGroup(item.getProduct().taxgroup);
+            
+            if (taxGroup == null) {
+                throw new NullPointerException("Not able to find the gived taxgroupobject for the taxid");
+            }
+            
+            item.getProduct().taxGroupObject = taxGroup;
+            
+            if (productManager.getProduct(item.getProductId()) == null) {
+                productManager.saveProduct(item.getProduct());
+            }
+            
+            posManager.addToTab(tabId, item);
+        });
+        
     }
 }

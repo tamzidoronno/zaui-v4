@@ -1,0 +1,37 @@
+<?php
+/* @var $this \ns_f1706b4c_f779_4eb7_aec3_ee08f182e090\GetShopInbox */
+$users = $this->getApi()->getUserManager()->getAllUsers();
+$users = $this->indexList($users);
+
+?>
+<div style='margin: 10px;'>
+    <div gstype='form' method='createNewGroup'>
+        <input type='txt' class='gsniceinput1' placeholder='Name of group' gsname='groupname'>
+        <span class='shop_button' gstype='submit'>Create group</span>
+    </div>
+    
+    <h1>Groups created</h1>
+    
+    <?php
+    $groups = $this->getApi()->getTicketManager()->getSupportGroups();
+    foreach($groups as $group) {
+        echo "<div>";
+        echo "<h2><i class='fa fa-trash-o' gsclick='deleteGroup' groupid='".$group->id."'></i> " . $group->name . " </h2>";
+        echo "<div class='usersassigned' gstype='form' method='updateSupportGroup'>";
+        echo "<textarea style='width: 800px; height: 100px;' gsname='description'>" . $group->description . "</textarea>";
+        echo "<input type='hidden' gsname='groupid' value='" . $group->id. "'>";
+        foreach($users as $user) {
+            if($user->type < 100) { continue; }
+            if(!$user->fullName) { continue; }
+            
+            $checked = in_array($user->id, (array)$group->users) ? "CHECKED" : "";
+            
+            echo "<div><input type='checkbox' $checked gsname='user_".$user->id."'>" . $user->fullName . "</div>";
+        }
+        echo "<span class='shop_button' gstype='submit'>Save</span>";
+        echo "</div>";
+        
+        echo "</div>";
+    }
+    ?>
+</div>

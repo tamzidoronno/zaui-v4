@@ -11,6 +11,21 @@ class GetShopInbox extends \MarketingApplication implements \Application {
         
     }
     
+    public function updateSupportGroup() {
+        $group = $this->getApi()->getTicketManager()->getSupportGroup($_POST['data']['groupid']);
+        $group->description = $_POST['data']['description'];
+        
+        $users = $this->getApi()->getUserManager()->getAllUsers();
+        $added = array();
+        foreach($users as $user) {
+            if(isset($_POST['data']['user_'.$user->id]) && $_POST['data']['user_'.$user->id] == "true") {
+                $added[] = $user->id;
+            }
+        }
+        $group->users = $added;
+        $this->getApi()->getTicketManager()->saveSupportGroup($group);
+    }
+    
     public function getAllTypes() {
         $types = array();
         $types[0] = "Undefined";
@@ -107,12 +122,22 @@ class GetShopInbox extends \MarketingApplication implements \Application {
                     $this->includefile("inprogress");
                 } else if($this->getCurrentTab() == "search") {
                     $this->includefile("searchTickets");
+                } else if($this->getCurrentTab() == "settings") {
+                    $this->includefile("settings");
                 } else {
                     $this->includefile("ticketlist");
                 }
                 
             echo "</div>";
         echo "</div>";
+    }
+    
+    public function deleteGroup() {
+        $this->getApi()->getTicketManager()->deleteGroup($_POST['data']['groupid']);
+    }
+    
+    public function createNewGroup() {
+        $this->getApi()->getTicketManager()->createSupportGroup($_POST['data']['groupname']);
     }
     
     public function searchTickets() {

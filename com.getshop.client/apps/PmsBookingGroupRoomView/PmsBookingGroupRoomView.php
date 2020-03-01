@@ -14,6 +14,10 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
     public function getDescription() {
         
     }
+    
+    public function searchForProducts() {
+        $this->includefile("conference_productsearchresult");
+    }
 
     public function removeFromOverBookingList() {
         $room = $this->getPmsBookingRoom();
@@ -1318,6 +1322,9 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         $event->pmsConferenceItemId = $_POST['data']['pmsConferenceItemId'];
         $event->from = $this->convertToJavaDate(strtotime($_POST['data']['date']." ".$_POST['data']['starttime']));
         $event->to = $this->convertToJavaDate(strtotime($_POST['data']['date']." ".$_POST['data']['endtime']));
+        $event->attendeeCount = $_POST['data']['attendeeCount'];
+        $event->description = $_POST['data']['description'];
+        
         $this->getApi()->getPmsConferenceManager()->saveConferenceEvent($event);
     }
     
@@ -1327,9 +1334,9 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         }
         $events = (array)$this->getEvents();
         if(sizeof($events) > 0) {
-            return $this->getEvents()[0]->id;
+            return $this->getEvents()[0]->id;            
         } else {
-            return null;
+            return "overview";
         }
     }
     
@@ -1405,6 +1412,7 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         $conference = new \core_pmsmanager_PmsConference();
         $conference->meetingTitle = $_POST['data']['title'];
         $conference->forUser = $this->getPmsBooking()->userId;
+        $conference->conferenceDate = $this->convertToJavaDate(strtotime($_POST['data']['conferencedate']));
         $conf = $this->getApi()->getPmsConferenceManager()->saveConference($conference);
         $booking = $this->getPmsBooking();
         $booking->conferenceId = $conf->id;
@@ -1465,5 +1473,50 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         }
     }
 
+    
+    public function saveConferenceData() {
+        $conference = $this->getApi()->getPmsConferenceManager()->getConference($_POST['data']['conferenceid']);
+        $conference->meetingTitle = $_POST['data']['title'];
+        $conference->conferenceDate = $this->convertToJavaDate(strtotime($_POST['data']['conferencedate']));
+        $conference->contactName = $_POST['data']['contact_name'];
+        $conference->contactEmail = $_POST['data']['contact_email'];
+        $conference->contactPhone = $_POST['data']['contact_phone'];
+        $conference->attendeeCount = $_POST['data']['attendeeCount'];
+        $conference->state = $_POST['data']['state'];
+        
+        $this->getApi()->getPmsConferenceManager()->saveConference($conference);
+    }
+    
+    public function addProductToEvent() {
+        $eventId = $this->getSelectedEventId();
+        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $_POST['data']['id']);
+
+        $cartItem = new \core_cartmanager_data_CartItem();
+        $cartItem->product = $this->getApi()->getProductManager()->getProduct($_POST['data']['productid']);
+        $cartItem->count = 1;
+        
+        $cartItems = array();
+        $cartItems[] = $cartItem;
+        
+        $this->getApi()->getPmsConferenceManager()->addCartItemsToConference($booking->conferenceId, $eventId, $cartItems);
+    }
+    
+    public function updateCartItemForPosTab() {
+        $eventId = $this->getSelectedEventId();
+        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $_POST['data']['roomid']);
+        
+        if ($_POST['data']['submit'] == "delete") {
+            $this->getApi()->getPmsConferenceManager()->removeCartItemFromConference($booking->conferenceId, $_POST['data']['cartitemid']);
+        } else {
+            $cartItem = $this->getApi()->getPmsConferenceManager()->getCartItem($booking->conferenceId, $_POST['data']['cartitemid']);
+            $cartItem->count = $_POST['data']['count'];
+            $cartItem->product->price = $_POST['data']['price'];
+            $cartItem->product->name = $_POST['data']['name'];
+            $this->getApi()->getPmsConferenceManager()->updateCartItem($booking->conferenceId, $cartItem);
+        }
+        
+        echo $this->getApi()->getPmsConferenceManager()->getTotalPriceForCartItems($booking->conferenceId, $eventId);
+    }
+    
 }
 ?>

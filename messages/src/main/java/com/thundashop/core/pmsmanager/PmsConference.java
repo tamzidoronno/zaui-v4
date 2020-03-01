@@ -1,6 +1,7 @@
 package com.thundashop.core.pmsmanager;
 
 import com.thundashop.core.common.DataCommon;
+import java.util.Date;
 
 public class PmsConference extends DataCommon {
     public String meetingTitle = "";
@@ -9,4 +10,13 @@ public class PmsConference extends DataCommon {
     public String createdByUserId = "";
     public String forUser = "";
     public String memo = "";
+    public Date conferenceDate = null;
+    
+    public String contactName = "";
+    public String contactEmail = "";
+    public String contactPhone = "";
+    
+    public int attendeeCount = 0;
+    
+    public String state = "";
 }

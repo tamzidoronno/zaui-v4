@@ -2,6 +2,9 @@
 /* @var $this ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
 $conference = $this->getConference();
 $date = date("d.m.Y");
+if ($conference->conferenceDate) {
+    $date = date("d.m.Y", strtotime($conference->conferenceDate));
+}
 $items = $this->getEventItems();
 ?>
 

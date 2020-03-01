@@ -1,0 +1,58 @@
+<?
+/* @var $this \ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
+$booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $_POST['data']['id']);
+$conference = $this->getApi()->getPmsConferenceManager()->getConference($booking->conferenceId);
+$confdate = $conference->conferenceDate ? date('d.m.Y', strtotime($conference->conferenceDate)) : "";
+?>
+<h2>Conference</h2>
+
+<div gstype="form" method="saveConferenceData">
+    <input type="hidden" value="<? echo $_POST['data']['id']; ?>" gsname="id"/>
+    <input type="hidden" value="<? echo $conference->id; ?>" gsname="conferenceid"/>
+    <span class="col_conf_overview col_conf_1">Conference title</span>
+    <input class="gsniceinput1" value="<? echo $conference->meetingTitle; ?>"  gsname="title">
+
+    <br/>
+    <span class="col_conf_overview col_conf_1">Conference date</span>
+    <input id="selectConferenceData" class="gsniceinput1 hasDatepicker" value="<? echo $confdate; ?>" gsname="conferencedate">
+
+    <br/>
+    <span class="col_conf_overview col_conf_1">Number of attendees</span>
+    <input id="selectConferenceData" class="gsniceinput1 hasDatepicker" value="<? echo $conference->attendeeCount; ?>" gsname="attendeeCount">
+
+    <br/>
+    <span class="col_conf_overview col_conf_1">State</span>
+
+    <select class="gsniceselect1" gsname="state">
+        <?
+        $selected = !$conference->state ? "selected='true'" : "";
+        ?>
+        <option value="" <? echo $selected; ?>> Unkown </option>
+
+        <?
+        $selected = $conference->state == "confirmed" ? "selected='true'" : "";
+        ?>
+        <option value="confirmed" <? echo $selected; ?>> Confirmed </option>
+    </select>
+
+
+    <br/>
+
+    <h3>Contact details</h3>
+    <span class="col_conf_overview col_conf_1">Name</span>
+    <input id="selectConferenceData" class="gsniceinput1 hasDatepicker" value="<? echo $conference->contactName; ?>" gsname="contact_name">
+
+    <br/><span class="col_conf_overview col_conf_1">Email</span>
+    <input id="selectConferenceData" class="gsniceinput1 hasDatepicker" value="<? echo $conference->contactEmail; ?>" gsname="contact_email">
+
+    <br/><span class="col_conf_overview col_conf_1">Phone</span>
+    <input id="selectConferenceData" class="gsniceinput1 hasDatepicker" value="<? echo $conference->contactPhone; ?>" gsname="contact_phone">
+
+    <br/>
+    <br/>
+    <div class="shop_button" gstype="submit">Save</div>
+</div>
+
+<script>
+    getshop_loadDatePicker($('[gsname="conferencedate"]'), {});
+</script>

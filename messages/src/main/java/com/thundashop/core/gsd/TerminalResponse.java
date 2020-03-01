@@ -159,6 +159,11 @@ public class TerminalResponse {
      * 0 == Payment failed, 1 == Payment OK
      */
     private int paymentStatus = 0;
+    
+    /**
+     * Should be set to true if this response is a result of an adminsitive task
+     */
+    private boolean administrativeTask = false;
 
     // region boilerplate
 
@@ -474,5 +479,13 @@ public class TerminalResponse {
 
     public boolean paymentSuccess() {
         return paymentStatus == 1;
+    }
+
+    public void setIsAdministrativeTask() {
+        this.administrativeTask = true;
+    }
+    
+    public boolean isAdministrativeTask() {
+        return this.administrativeTask;
     }
 }

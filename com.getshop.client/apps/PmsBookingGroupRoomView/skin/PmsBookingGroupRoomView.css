@@ -444,6 +444,53 @@ border: solid 0px;
     position: relative;
     text-transform: uppercase;
 }
+
+.PmsBookingGroupRoomView .col_conf_1 {
+    width: 150px;
+    display: inline-block;
+}
+.PmsBookingGroupRoomView .event_header_information {
+    position: relative;
+}
+.PmsBookingGroupRoomView .event_header_information .event_header_title {
+    font-weight: bold;
+    border-bottom: solid 1px #DDD;
+    text-align: center;
+}
+
+.PmsBookingGroupRoomView .attendeecount_overridden.override_not_active {
+    display: none;
+}
+
+.PmsBookingGroupRoomView .attendeecount.override_active {
+    display: none;
+}
+
+.PmsBookingGroupRoomView .cartitem_added_product_name {
+    width: calc(100% - 230px);
+}
+
+.PmsBookingGroupRoomView .cartitem_added_product_count {
+    width: 50px;
+    text-align: center;
+}
+
+.PmsBookingGroupRoomView .total_cart_item_row {
+    font-size: 30px;
+    padding-top: 30px;
+}
+
+.PmsBookingGroupRoomView .cartitem_added_product_header {
+    display: inline-block;
+    font-weight: bold;
+    padding: 10px;
+}
+
+.PmsBookingGroupRoomView .cartitem_added_product_price {
+    width: 50px;
+    text-align: center;
+}
+
 .roomgroupbox { background-color:#fff;font-size:12px; padding: 6px; cursor:pointer; border-left: 3px #fff;border-bottom: solid 1px #dce1e0; }
 .roomgroupbox.selected { border-left: solid 6px #53b689;  }
 .roomgroupbox:hover { border-bottom: solid 1px; }

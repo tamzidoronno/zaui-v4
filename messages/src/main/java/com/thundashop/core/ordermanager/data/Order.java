@@ -209,6 +209,8 @@ public class Order extends DataCommon implements Comparable<Order> {
     public Date correctedAtTime = null;
     public TreeSet<String> createdBasedOnCorrectionFromOrderIds = new TreeSet();
     public String originalUserBeforeMerge = "";
+
+    public String terminalReceiptText = "";
     
     public Order jsonClone() {
         Order orderNew = jsonCloneLight();
@@ -1230,6 +1232,49 @@ public class Order extends DataCommon implements Comparable<Order> {
                     return true;
                 }
             }
+        }
+        
+        return false;
+    }
+    
+    /**
+     * this function will return true if there are any items in the pricematrix
+     * that will validate the closed periode of the accounting.
+     * 
+     * @param oldOrder
+     * @param closedDate
+     * @return 
+     */
+    public boolean needToStopDueToIllegalChangeNormalItems(Order oldOrder, Date closedDate) {
+        if (cart == null) {
+            return false;
+        }
+        
+        List<CartItem> itemsToCheck = cart.getItems().stream()
+                .filter(item -> item.accountingDate != null) 
+                .collect(Collectors.toList());
+        
+        for (CartItem item : itemsToCheck) {
+            
+            Date date = item.accountingDate;
+
+            if (date.equals(closedDate) || date.after(closedDate)) {
+                continue;
+            }
+
+            if (oldOrder == null) {
+                return true;
+            }
+
+            Double oldValue = oldOrder.cart.getCartItem(item.getCartItemId()).getTotalAmount();
+            
+            BigDecimal oldPriceForDate = TwoDecimalRounder.roundTwoDecimals(oldValue, 2);
+            BigDecimal currentPrice = TwoDecimalRounder.roundTwoDecimals(item.getTotalAmount(), 2);
+
+            if (oldPriceForDate.compareTo(currentPrice) != 0) {
+                return true;
+            }
+
         }
         
         return false;

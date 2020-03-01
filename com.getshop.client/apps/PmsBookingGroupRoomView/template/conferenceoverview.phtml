@@ -1,0 +1,62 @@
+<?
+/* @var $this \ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
+$booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $_POST['data']['id']);
+$conference = $this->getApi()->getPmsConferenceManager()->getConference($booking->conferenceId);
+$confdate = $conference->conferenceDate ? date('d.m.Y', strtotime($conference->conferenceDate)) : "";
+
+$selected = "confdetails";
+if(isset($_POST['data']['subsection'])) {
+    $selected = $_POST['data']['subsection'];
+}
+
+$menu = array();
+$menu['conference_overview'] = "Details";
+$menu['conference_pos'] = "Pos";
+
+
+$icons = array();
+$icons['conference_overview'] = "info-circle";
+$icons['conference_pos'] = "money";
+
+
+
+$selected = "conference_overview";
+if(isset($_POST['data']['subsection'])) {
+    $selected = $_POST['data']['subsection'];
+}
+
+$first = true;
+echo "<div class='menurow'>";
+foreach($menu as $id => $val) {
+    $hide = "";
+    if($id == "confirmation") {
+        $hide = "display:none;";
+    }
+    if($id == "log") {
+        $hide = "display:none;";
+    }
+    $select = ($selected == $id) ? "selected" : "";
+    $firstClass = $first ? "first" : "";
+    echo "<span class='menubutton $select $firstClass' subsection='$id' style='$hide'>";
+    echo "<span ><div><i class='fa fa-" . $icons[$id] . "'></i></div></span>";
+    echo "<div>$val</div></span>";
+    $first = false;
+}
+echo "</div>";
+?>
+
+
+<div class="conference_overview" style="background-color:#fff;">
+    <div style="padding: 20px;">
+        <?
+        if ($_POST['data']['subsection'] == 'conference_overview') {
+            $this->includefile("conference_details");
+        }
+        if ($_POST['data']['subsection'] == 'conference_pos') {
+            $this->includefile("conference_pos");
+        }
+        ?>
+
+    </div>
+
+</div>

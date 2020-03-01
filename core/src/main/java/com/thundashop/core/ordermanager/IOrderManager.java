@@ -16,26 +16,27 @@ import com.thundashop.core.getshopaccounting.DayEntry;
 import com.thundashop.core.getshopaccounting.DayIncome;
 import com.thundashop.core.getshopaccounting.DiffReport;
 import com.thundashop.core.getshopaccounting.DoublePostAccountingTransfer;
+import com.thundashop.core.getshopaccounting.OrderUnsettledAmountForAccount;
+import com.thundashop.core.gsd.TerminalReceiptText;
+import com.thundashop.core.gsd.TerminalResponse;
+import com.thundashop.core.ordermanager.data.AccountingFreePost;
 import com.thundashop.core.ordermanager.data.CartItemDates;
 import com.thundashop.core.ordermanager.data.ClosedOrderPeriode;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.OrderFilter;
 import com.thundashop.core.ordermanager.data.OrderLight;
+import com.thundashop.core.ordermanager.data.OrderLoss;
 import com.thundashop.core.ordermanager.data.OrderManagerSettings;
 import com.thundashop.core.ordermanager.data.OrderResult;
 import com.thundashop.core.ordermanager.data.OrderTransaction;
 import com.thundashop.core.ordermanager.data.OrderTransactionDTO;
 import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.PaymentTerminalInformation;
+import com.thundashop.core.ordermanager.data.PmiResult;
 import com.thundashop.core.ordermanager.data.SalesStats;
 import com.thundashop.core.ordermanager.data.Statistic;
-import com.thundashop.core.usermanager.data.Address;
-import com.thundashop.core.getshopaccounting.OrderUnsettledAmountForAccount;
-import com.thundashop.core.gsd.TerminalResponse;
-import com.thundashop.core.ordermanager.data.AccountingFreePost;
-import com.thundashop.core.ordermanager.data.OrderLoss;
-import com.thundashop.core.ordermanager.data.PmiResult;
 import com.thundashop.core.pdf.data.AccountingDetails;
+import com.thundashop.core.usermanager.data.Address;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -577,4 +578,11 @@ public interface IOrderManager {
     
     @Administrator
     public void forceSaveOrder(Order order, String password);
+
+    @Administrator
+    public void setConnectedToAGetShopCentral(Boolean connectedToAGetShopCentral);
+    
+    public void receiptText(String token, TerminalReceiptText terminalReceiptText);
+    
+    public void cancelIntegratedPaymentProcess(String token);
 }

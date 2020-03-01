@@ -118,8 +118,12 @@ if($config->bookingTag) {
         
         <div area="header" class="gsarea">
             <?
+            $storeObject = $factory->getStore();
+            if ($config->conferenceSystemActive) {
+                $storeObject->pmsConferenceActivated = true;
+            }
             $menu = $page->getMenu("pms");
-            $menu->renderTop($user, false, $factory->getStore());
+            $menu->renderTop($user, false, $storeObject);
             ?>
         </div>
         

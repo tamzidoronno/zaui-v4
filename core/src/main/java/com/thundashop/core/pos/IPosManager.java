@@ -211,4 +211,7 @@ public interface IPosManager {
     
     @Administrator
     public boolean hasLockedPeriods();
+    
+    @Editor
+    public List<ZReportConferenceSummary> getSummaryListForConferences();
 }

@@ -9,7 +9,7 @@ package com.thundashop.core.ordermanager.data;
  *
  * @author ktonder
  */
-public abstract class PaymentTerminalInformation {
+public class PaymentTerminalInformation {
     public String paymentType;
     public String cardInfo = "";
     public int sessionNumber;

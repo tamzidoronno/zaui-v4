@@ -354,10 +354,19 @@ class ModulePage {
     public function getTopMenuPms() {
         $menu = new \ModulePageMenu("pms");
         $menu->entries[] = new ModulePageMenuItem("Dashboard", "home", "gsicon-gs-dashboard");
-        $menu->entries[] = new ModulePageMenuItem("Bookings", "a90a9031-b67d-4d98-b034-f8c201a8f496", "gsicon-gs-booking");
+        
+        $booking = new ModulePageMenuItem("Bookings", "a90a9031-b67d-4d98-b034-f8c201a8f496", "gsicon-gs-booking");
+        $booking->addSubEntry(new ModulePageMenuItem("Monthly payment link", "monthlypaymentlinks", "gsicon-gs-booking", "monthlypaymentlinks", true));
+        
+        $menu->entries[] = $booking;
         $menu->entries[] = new ModulePageMenuItem("New", "048e2e10-1be3-4d77-a235-4b47e3ebfaab", "gsicon-gs-new");
         $menu->entries[] = new ModulePageMenuItem("Availability", "0da68de9-da08-4b60-9652-3ac456da2627", "gsicon-gs-availability");
-        $menu->entries[] = new ModulePageMenuItem("Reports", "afe687b7-219e-4396-9e7b-2848f5ed034d", "gsicon-gs-reports");
+        
+        $reports = new ModulePageMenuItem("Reports", "afe687b7-219e-4396-9e7b-2848f5ed034d", "gsicon-gs-reports");
+        $reports->addSubEntry(new ModulePageMenuItem("List of conference", "conferencelist", "gsicon-gs-reports", "conferencelist"));
+        $reports->addSubEntry(new ModulePageMenuItem("End of day report", "endofdayreport", "gsicon-gs-reports"));
+        $menu->entries[] = $reports;
+        
         $menu->entries[] = new ModulePageMenuItem("Prices", "394bb905-8448-45c1-8910-e9a60f8aebc5", "gsicon-gs-prices");
         $menu->entries[] = new ModulePageMenuItem("Cleaning", "e03b19de-d1bf-4d1c-ac40-8c100ef53366", "gsicon-gs-cleaning");
         $menu->entries[] = new ModulePageMenuItem("CRM", "4f66aad0-08a0-466c-9b4c-71337c1e00b7", "gsicon-users");

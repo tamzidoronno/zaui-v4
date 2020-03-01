@@ -13,10 +13,18 @@ if ($closeResult->canClose) {
         echo "You have not activated the accrude payment method, please activate it and make sure its correctly configured before continueing";
     }
     
+    if (!is_array($closeResult->bookingsWithProblems)) {
+        $closeResult->bookingsWithProblems = array();
+    }
+    
     if (count($closeResult->bookingsWithProblems)) {
     ?>
         <h2><? echo $this->__("Can not close due to the following problem(s)"); ?></h2>
     <?
+    }
+    
+    if (!is_array($closeResult->bookingsWithNoneSegments)) {
+        $closeResult->bookingsWithNoneSegments = array();
     }
     
     if (count($closeResult->bookingsWithNoneSegments)) {
@@ -65,6 +73,7 @@ if ($closeResult->canClose) {
     
     if (count($closeResult->roomsWithProblems)) {
         ?>
+        <h2><? echo $this->__("Please check the payment for the following bookings. If you want to charge them later you can activate pay after stay"); ?></h2>
         <div class="row error_row">
             <div class="rooms">
             <?

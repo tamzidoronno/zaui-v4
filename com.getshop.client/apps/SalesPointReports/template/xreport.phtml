@@ -9,7 +9,15 @@ if ($this->isCurrentZReportASavedReport()) {
     echo "</div>";
 }
 
-if (!$report->orderIds || !count($report->orderIds)) {
+$ordersToShow = !(!$report->orderIds || !count($report->orderIds));
+
+$conferencesToCreateFor = $this->getApi()->getPosManager()->getSummaryListForConferences();
+$conferencesToShow = false;
+if ($conferencesToCreateFor) {
+    $conferencesToShow = true;
+}
+
+if (!$ordersToShow && !$conferencesToShow) {
     echo "<div class='nofound'>";
     echo $this->__f("No transactions found");
     echo "</div>";
@@ -35,7 +43,11 @@ if(sizeof($report->orderIds) > 10000) {
 }
 
 
-$orders = $this->getApi()->getOrderManager()->getOrders($report->orderIds, 1, 99999);
+$orders = array();
+if ($ordersToShow) {
+    $orders = $this->getApi()->getOrderManager()->getOrders($report->orderIds, 1, 99999);
+}
+
 $totalForPaymentMethods = array();
 $ordersGrouped = array();
 
@@ -117,6 +129,29 @@ foreach ($ordersGrouped as $paymentType => $orders) {
         echo "<h2> Total: ".$total."</h2>";
     echo "</div>";
 }
+
+if ($conferencesToShow) {
+    echo "<div class='paymentrow'>";
+    echo "<h2>The following adjustments has been made to conferences</h2>";
+    
+    $totalForPaymentMethods["Conferences"] = 0;
+    
+    foreach ($conferencesToCreateFor as $conferenceData) {
+        echo "<div class='orderline'>";
+            echo "<a href='#'>";
+
+                echo "<div class='col orderid'>".date('d.m.Y', strtotime($conferenceData->pmsConference->conferenceDate))."</div>";
+                echo "<div class='col date'>".$conferenceData->pmsConference->meetingTitle."</div>";
+                echo "<div class='col name'></div>";
+                echo "<div class='col type'></div>";
+                echo "<div class='col totalfororder'>".$conferenceData->total."</div>";
+            echo "</a>";
+        echo "</div>";
+        
+        $totalForPaymentMethods["Conferences"] += $conferenceData->total;
+    }
+    echo "</div>";
+}
 ?>
 
 <div class="paymentrow summary">
@@ -178,6 +213,9 @@ foreach ($ordersGrouped as $paymentType => $orders) {
 
 $orders = $this->getApi()->getOrderManager()->getUnpaidOrderIdsThatAreIllegalWhenClosingPeriode();
 
+if (!is_array($orders)) {
+    $orders = array();
+}
 if (count($orders)) {
     ?>
     <div style="padding: 50px;">

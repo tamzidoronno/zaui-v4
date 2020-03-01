@@ -1,15 +1,12 @@
 package com.thundashop.core.apigenerator;
 
-import com.getshop.scope.GetShopSessionBeanNamed;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.Editor;
-import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopLogHandler;
-import com.thundashop.core.common.ManagerSubBase;
 import java.io.BufferedReader;
-    import java.io.BufferedWriter;
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.File;
@@ -70,6 +67,7 @@ public class GenerateApi {
         
         if (pathToCore == null && pathToMessages == null) {
             core = new File("../core/");
+            
             messages = new File("../messages/");
         } else {
             core = new File(pathToCore);

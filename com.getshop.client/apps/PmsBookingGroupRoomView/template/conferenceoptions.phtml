@@ -9,17 +9,23 @@ if(!$eventId) {
     return;
 }
 
+if ($eventId == "overview") {
+    $this->includefile("conferenceoverview");
+    return;
+}
+
 $menu = array();
 $menu['conference_overview'] = "Overview";
 $menu['conference_activities'] = "Activities";
 $menu['conference_timeline'] = "Timeline";
+$menu['conference_pos'] = "Pos";
 
 
 $icons = array();
 $icons['conference_overview'] = "info-circle";
 $icons['conference_activities'] = "play-circle-o";
 $icons['conference_timeline'] = "play-circle-o";
-
+$icons['conference_pos'] = "money";
 
 $selected = "guests";
 if(isset($_POST['data']['subsection'])) {

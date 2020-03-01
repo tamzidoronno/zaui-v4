@@ -17,7 +17,7 @@ public class PmsConferenceEventEntry extends DataCommon {
     public Date from;
     public Date to;
     public String text;
-    public Integer count = 0;
+    public Integer count = null;
     public String extendedText = "";
     public String pmsEventId = "";
     

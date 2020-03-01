@@ -15,11 +15,16 @@ class ModulePageMenuItem {
     private $name;
     private $pageId;
     private $icon;
+    private $subEntries = array();
+    private $pluginPage;
+    private $shouldPluginPageBeVisibleForGetShopAdminsWhenDeactived = false;
     
-    function __construct($name, $pageId, $icon) {
+    function __construct($name, $pageId, $icon, $pluginPage=null, $shouldPluginPageBeVisibleForGetShopAdminsWhenDeactived=false) {
         $this->name = $name;
         $this->pageId = $pageId;
         $this->icon = $icon;
+        $this->pluginPage = $pluginPage;
+        $this->shouldPluginPageBeVisibleForGetShopAdminsWhenDeactived = $shouldPluginPageBeVisibleForGetShopAdminsWhenDeactived;
     }
 
     function getName() {
@@ -35,4 +40,19 @@ class ModulePageMenuItem {
     }
 
 
+    function addSubEntry($entry) {
+        $this->subEntries[] = $entry;
+    }
+    
+    function getSubEntries() {
+        return $this->subEntries;
+    }
+    
+    function getPluginPageName() {
+        return $this->pluginPage;
+    }
+    
+    function shouldPluginPageBeVisibleForGetShopAdminsWhenDeactived() {
+        return $this->shouldPluginPageBeVisibleForGetShopAdminsWhenDeactived;
+    }
 }

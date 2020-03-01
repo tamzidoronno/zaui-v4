@@ -58,6 +58,12 @@ public class CartItem implements Serializable, Cloneable {
     public String addedByGetShopModule = "";
     public String pmsBookingId = "";
     
+    /**
+     * Use this date instead of the order.rowCreatedDate 
+     * if this has been set.
+     */
+    public Date accountingDate;
+    
     public String wareHouseId = "";
     private List<ProductPriceOverride> overridePriceHistory = new ArrayList();
     
@@ -70,6 +76,10 @@ public class CartItem implements Serializable, Cloneable {
      * Indicates what conference this item was connected to previouse.
      */
     public String conferenceId = "";
+    
+    /**
+     */
+    public String conferenceEventId = "";
     
     public CartItem() {
     }

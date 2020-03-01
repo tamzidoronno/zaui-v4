@@ -3,6 +3,7 @@
 $conference = $this->getConference();
 $event = $this->getApi()->getPmsConferenceManager()->getConferenceEvent($this->getSelectedEventId());
 
+$countForEvent = $event->attendeeCount !== null ? $event->attendeeCount : $conference->attendeeCount;
 $activities = $this->getActivities();
 $items = $this->getApi()->getPmsConferenceManager()->getAllItem("-1");
 ?>
@@ -13,7 +14,23 @@ $items = $this->getApi()->getPmsConferenceManager()->getAllItem("-1");
     <div class='col col1 ' gsname='text'><span class='head_text'><? echo $this->__f("Title"); ?></span><input class='gsniceinput1' value=''></div>
     <div class='col col2 ' gsname='from'><span class='head_text'><? echo $this->__f("From"); ?><input class='gsniceinput1' value=''></div>
     <div class='col col3 ' gsname='to'><span class='head_text'><? echo $this->__f("To"); ?><input class='gsniceinput1' value=''></div>
-    <div class='col col4 ' gsname='count'><span class='head_text'><? echo $this->__f("Guests"); ?><input class='gsniceinput1' value=''></div>
+    <div class='col col4 ' gsname='count'>
+        
+        <?
+            $active = "override_not_active";
+        ?>
+        <span class='head_text'><? echo $this->__f("Attendeecount"); ?>
+            
+        <div class="attendeecount_overridden <? echo $active; ?>">
+            <input gsname='attendeeCount' class='gsniceinput1' value=''/>  
+        </div>
+
+        <div class='attendeecount <? echo $active; ?>'>
+            <? echo $countForEvent; ?>
+            <br/> <span class='overrideattendeescount' style='color: #4da6cb; cursor: pointer;'> Click to override for event</span>
+        </div>
+            
+    </div>
     <div class='col col5 '><span class='head_text'><? echo $this->__f("Extra description"); ?>
         <textarea gsname='extendedText'></textarea>
     </div>
@@ -28,7 +45,22 @@ $items = $this->getApi()->getPmsConferenceManager()->getAllItem("-1");
         <div class='col col1 ' gsname='text'><span class='head_text'><? echo $this->__f("Title"); ?></span><input class='gsniceinput1' value='<? echo $activity->text; ?>'></div>
         <div class='col col2 ' gsname='from'><span class='head_text'><? echo $this->__f("From"); ?><input class='gsniceinput1' value='<? echo date('H:i', strtotime($activity->from)); ?>'></div>
         <div class='col col3 ' gsname='to'><span class='head_text'><? echo $this->__f("To"); ?><input class='gsniceinput1' value='<? echo $activity->to ? date('H:i', strtotime($activity->to)) : ""; ?>'></div>
-        <div class='col col4 ' gsname='count'><span class='head_text'><? echo $this->__f("Guests"); ?><input class='gsniceinput1' value='<? echo $activity->count; ?>'></div>
+        
+        <div class='col col4 ' gsname='count'>
+            <?
+            $active = $activity->count !== null ? "override_active" : "override_not_active";
+            ?>
+            <span class='head_text'><? echo $this->__f("Attendeecount"); ?>
+
+            <div class="attendeecount_overridden <? echo $active; ?>">
+                <input gsname='attendeeCount' class='gsniceinput1' value='<? echo $activity->count; ?>'/>  
+            </div>
+
+            <div class='attendeecount <? echo $active; ?>'>
+                <? echo $countForEvent; ?>
+                <br/> <span class='overrideattendeescount' style='color: #4da6cb; cursor: pointer;'> Click to override for activity</span>
+            </div>
+        </div>
         <div class='col col5 '><span class='head_text'><? echo $this->__f("Extra description"); ?><textarea gsname='extendedText'><?php echo $activity->extendedText; ?></textarea></div>
     </div>
         <?

@@ -1,0 +1,14 @@
+.PmsConferenceList .no_conferences {
+    font-size: 20px;
+    text-align: center;
+    margin: 0 auto;
+    width: 500px;
+    background-color: #FFF;
+    padding: 50px;
+    margin-top: 50px;
+}
+
+.PmsConferenceList .conferencelist_outer {
+    margin: 0 auto;
+    max-width: 1024px;
+}

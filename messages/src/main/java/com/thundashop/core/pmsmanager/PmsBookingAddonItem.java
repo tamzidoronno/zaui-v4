@@ -16,6 +16,7 @@ import java.util.UUID;
 import org.mongodb.morphia.annotations.Transient;
 
 public class PmsBookingAddonItem extends TranslationHandler implements Serializable {
+    
 
     public void finalize() {
         if(overrideName != null && !overrideName.isEmpty()) {
@@ -94,6 +95,7 @@ public class PmsBookingAddonItem extends TranslationHandler implements Serializa
     public boolean atEndOfStay;
     public boolean isUniqueOnOrder = false;
     public String referenceId = "";
+    public Integer taxGroupNumber = null;
     
     
     Map<String, String> variations = new HashMap();

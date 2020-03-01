@@ -17,6 +17,7 @@ import com.thundashop.core.pos.PosManager;
 import com.thundashop.core.pos.PosTab;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.productmanager.data.TaxGroup;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.User;
 import java.text.ParseException;
@@ -231,6 +232,8 @@ public class PmsInvoiceManagerNew {
                 prod.name = orderText;
             }
             
+            setTaxGroupToProduct(referenceId, roomData, prod);
+            
             item.setCount(getCount(days));
             
             setMetaData(item, roomId);
@@ -260,6 +263,29 @@ public class PmsInvoiceManagerNew {
                 addonItem.isIncludedInRoomPrice = d.includedInRoomPrice;
                 item.itemsAdded.add(addonItem);
             });
+        }
+    }
+
+    private void setTaxGroupToProduct(String referenceId, PmsOrderCreateRow roomData, Product prod) {
+        if (referenceId != null && !referenceId.isEmpty()) {
+            PmsBooking booking = pmsManager.getBookingFromRoom(roomData.roomId);
+            if (booking != null) {
+                PmsBookingRooms pmsRoom = booking.getRoom(roomData.roomId);
+                if (pmsRoom != null) {
+                    PmsBookingAddonItem addon = pmsRoom.addons.stream()
+                            .filter(o -> referenceId.equals(o.addonId))
+                            .findAny()
+                            .orElse(null);
+                    
+                    if (addon != null && addon.taxGroupNumber != null) {
+                        TaxGroup taxGroup = productManager.getTaxGroup(addon.taxGroupNumber);
+                        if (taxGroup != null) {
+                            prod.taxGroupObject = taxGroup;
+                            prod.taxgroup = addon.taxGroupNumber;
+                        }
+                    }
+                }
+            }
         }
     }
 

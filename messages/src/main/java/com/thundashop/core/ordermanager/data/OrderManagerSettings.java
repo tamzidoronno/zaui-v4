@@ -36,6 +36,10 @@ public class OrderManagerSettings extends DataCommon {
      */
     public int whatHourOfDayStartADay = 0;
     
+    /**
+     * Is system connected to a centra?
+     */
+    public boolean connectedToAGetShopCentral = false;
     
     /**
      * If this is activated the system will automatically closes yesterdays data so 

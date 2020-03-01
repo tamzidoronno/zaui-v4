@@ -1,9 +1,18 @@
 <?php
 /* @var $this ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
 
-
 $events = (array)$this->getEvents();
 $items = $this->getEventItems();
+
+if (!count($events)) {
+    ?>
+<div style="font-style: italic; text-align: center; padding: 5px;"> 
+    No events created yet
+</div>
+    
+    <?
+    
+}
 
 foreach($events as $event) {
     $selected = $event->id == $this->getSelectedEventId() ? "selected" : "";
@@ -13,6 +22,8 @@ foreach($events as $event) {
     } else {
         echo "<div style='color:#8c2626;'><span class='dates'>".date("d/m H:i", strtotime($event->from)) . " - " . date("d/m H:i", strtotime($event->to)) . "</span></div>";
     }
+    $price = $this->getApi()->getPmsConferenceManager()->getTotalPriceForCartItems($this->getConference()->id, $event->id);
+    echo "<div><b> Price: </b><span totalrow_for_event_id='".$event->id."'>$price</span></div>";
     foreach($items as $item) {
         if($item->id == $event->pmsConferenceItemId) {
             echo "<div class='itemid'>" . $item->name;

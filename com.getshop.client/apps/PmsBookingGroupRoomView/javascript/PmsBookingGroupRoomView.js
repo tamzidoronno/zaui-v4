@@ -50,15 +50,41 @@ app.PmsBookingGroupRoomView = {
         $(document).on('click', '.PmsBookingGroupRoomView .conference_activities .deleteEvent', this.deleteEvent);
         $(document).on('click', '.PmsBookingGroupRoomView .saveconferencetitle', this.saveEventTitle);
         $(document).on('click', '.PmsBookingGroupRoomView .craeteconference', this.loadCreateConferencePanel);
+        $(document).on('click', '.PmsBookingGroupRoomView .overrideattendeescount', this.overrideAttendeesCount);
         
         $(document).on('keyup', '.PmsBookingGroupRoomView [searchtype]', this.searchGuests);
         $(document).on('keyup', '.PmsBookingGroupRoomView .searchconferencetitle', this.searchConference);
         $(document).on('change', '.PmsBookingGroupRoomView .changediscountcode', this.changeCouponCode);
         $(document).on('change', '.PmsBookingGroupRoomView .changesegment', this.changeSegment);
         $(document).on('change', '.PmsBookingGroupRoomView .changechannel', this.changeChannel)
+        $(document).on('change', '.PmsBookingGroupRoomView .cartitem_added_product', this.saveCartItemRow)
     },
+    
+    cartItemRowSaved: function(res, from) {
+        var eventId = $(from).closest('.cart_item_row').find('[gsname="eventid"]').val();
+        $('[totalrow_for_event_id="'+eventId+'"]').html(res);
+    },
+    
+    saveCartItemRow: function() {
+        $(this).closest('.cart_item_row').find('.savebotton').click();
+    },
+    
+    handlePosSearchProductResult: function(res) {
+        $('.PmsBookingGroupRoomView .productsearchresult').html(res);
+    },
+    
+    overrideAttendeesCount: function() {
+        $(this).closest('.col').find('.attendeecount').addClass('override_active');
+        $(this).closest('.col').find('.attendeecount').removeClass('override_not_active');
+        $(this).closest('.col').find('.attendeecount_overridden').removeClass('override_not_active');
+    },
+    
     loadCreateConferencePanel : function() {
-        $('.createconferencepanel').slideDown();
+        if ($('.createconferencepanel').is(':visible')) {
+            $('.createconferencepanel').slideUp();
+        } else {
+            $('.createconferencepanel').slideDown();
+        }
     },
     addToBlockList : function() {
         var confirmed = confirm("Are you sure you want to block this user, he can't book in the future after this?");

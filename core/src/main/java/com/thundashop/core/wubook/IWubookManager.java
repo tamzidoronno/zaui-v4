@@ -35,8 +35,9 @@ public interface IWubookManager {
     @Administrator
     @ForceAsync
     public List<WubookBooking> addNewBookingsPastDays(Integer daysback) throws Exception;
-    @Administrator
+
     public void fetchNewBookings();
+    
     @Administrator
     public WubookBooking fetchBooking(String rcode) throws Exception;
     @Administrator
@@ -45,8 +46,9 @@ public interface IWubookManager {
     public void addBooking(String rcode) throws Exception;
     @Administrator
     public boolean updateAvailabilityFromButton() throws Exception;
-    @Administrator
+
     public String updateShortAvailability();
+    
     @Administrator
     public String markNoShow(String rcode) throws Exception;
     @Administrator

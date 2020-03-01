@@ -298,24 +298,45 @@ class ModulePageMenu {
                         if($entry->getPageId() == "getshopsupport") {
                             continue;
                         }
-                        $hassubs = $entry->getPageId() == "a90a9031-b67d-4d98-b034-f8c201a8f496" || $entry->getPageId() == "afe687b7-219e-4396-9e7b-2848f5ed034d" ? "hassubentries" : "";
-                        ?>
-                        <div class="entry <?php echo $hassubs; ?>"><a href="?page=<? echo $entry->getPageId(); ?>&gs_getshopmodule=<? echo \PageFactory::getGetShopModule(); ?>"><div><i class="fa <? echo $entry->getIcon(); ?>"></i>  <? echo $entry->getName(); ?> </div></a>
-                        <?php
-                        if($entry->getPageId() == "afe687b7-219e-4396-9e7b-2848f5ed034d" && isset($store->pmsConferenceActivated)) {
-                            echo "<span class='gss_dropdownmenu'>";
-                            echo "<a href='/pms.php?page=conferencelist'><div class='pmssubentry'>Conference list</div></a>";
-                            echo "</span>";
+                        
+                        $subEntries = $entry->getSubEntries();
+                        
+                        $activeSubEntries = array();
+                        foreach ($subEntries as $subEntry) {
+                            if ($subEntry->shouldPluginPageBeVisibleForGetShopAdminsWhenDeactived() && stristr($user->emailAddress, "@getshop.com")) {
+                                $activeSubEntries[] = $subEntry;
+                                continue;
+                            }
+                            
+                            if ($subEntry->getPluginPageName() != null && !in_array($subEntry->getPluginPageName(),$pluginpages)) {
+                                continue;
+                            }
+                            
+                            $activeSubEntries[] = $subEntry;
                         }
                         
-                        if($entry->getPageId() == "a90a9031-b67d-4d98-b034-f8c201a8f496") {
-                            if(stristr($user->emailAddress, "@getshop.com") || in_array("monthlypaymentlinks",$pluginpages)) {
-                                echo "<span class='gss_dropdownmenu'>";
-                                echo "<a href='/pms.php?page=monthlypaymentlinks'><div class='pmssubentry'>Monthly payment link</div></a>";
-                                echo "</span>";
-                            }
-                        }
+                        $hassubs =  count($activeSubEntries) ? "hassubentries" : false;
+
                         ?>
+                        <div class="entry <?php echo $hassubs; ?>">
+                            <a href="?page=<? echo $entry->getPageId(); ?>&gs_getshopmodule=<? echo \PageFactory::getGetShopModule(); ?>"><div><i class="fa <? echo $entry->getIcon(); ?>"></i>  <? echo $entry->getName(); ?> </div></a>
+                            <?php
+                            if ($hassubs) {
+                                echo "<div class='gss_dropdownmenu'>";
+                            }
+                            
+                                foreach ($activeSubEntries as $subEntry) {
+                                    echo "<span>";
+                                        $subPageId = $subEntry->getPageId();
+                                        $subPageName = $subEntry->getName();
+                                        echo "<a href='/pms.php?page=$subPageId'><div class='pmssubentry'>$subPageName</div></a>";
+                                    echo "</span>";
+                                }
+
+                            if ($hassubs) {
+                                echo "</div>";
+                            }
+                            ?>
                         </div>
                     <?php } ?>
                 </div>

@@ -729,4 +729,36 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
                 .mapToDouble(o -> o.getTotalAmount())
                 .sum();
     }
+
+    public PmsConference getConferenceDirectFromDB(String pmsConferenceId) {
+        BasicDBObject query = new BasicDBObject();
+        query.put("_id", pmsConferenceId);
+        
+        DataCommon retObject = database.query(getClass().getSimpleName(), storeId, query)
+                .stream()
+                .findAny()
+                .orElse(null);
+        
+        if (retObject != null) {
+            return (PmsConference)retObject;
+        }
+        
+        return null;
+    }
+
+    public PmsConferenceEvent getConferenceEventDirectFromDB(String eventId) {
+        BasicDBObject query = new BasicDBObject();
+        query.put("_id", eventId);
+        
+        DataCommon retObject = database.query(getClass().getSimpleName(), storeId, query)
+                .stream()
+                .findAny()
+                .orElse(null);
+        
+        if (retObject != null) {
+            return (PmsConferenceEvent)retObject;
+        }
+        
+        return null;
+    }
 }

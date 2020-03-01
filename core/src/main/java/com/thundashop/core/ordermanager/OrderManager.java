@@ -3285,6 +3285,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             throw new ErrorException(1053);
         }
         
+        if (order.needToStopDueToIllegalChangeNormalItems(oldOrder, closedDate) && !order.forcedOpen) {
+            resetOrder(oldOrder, order);
+            throw new ErrorException(1053);
+        }
+        
         if(order.isAlreadyPaidAndDifferentStatus(oldOrder)) {
             logPrint("Tried to revert an order with a different payment status, incid: " + order.incrementOrderId);
             resetOrder(oldOrder, order);
@@ -3389,6 +3394,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         if (order.needToStopDueToIllegalChangePaymentDate(null, closedDate) && !order.forcedOpen) {
+            return true;
+        }
+        
+        if (order.needToStopDueToIllegalChangeNormalItems(null, closedDate) && !order.forcedOpen) {
             return true;
         }
         
@@ -5112,6 +5121,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Override
     public void cancelIntegratedPaymentProcess(String token) {
         System.out.println("Should have canceled the order to pay.");
+    }
+
+    @Override
+    public void setConnectedToAGetShopCentral(Boolean connectedToAGetShopCentral) {
+        OrderManagerSettings settings = getOrderManagerSettings();
+        getOrderManagerSettings().connectedToAGetShopCentral = connectedToAGetShopCentral;
+        saveObject(settings);   
     }
 
 

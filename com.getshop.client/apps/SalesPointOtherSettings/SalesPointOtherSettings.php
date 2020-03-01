@@ -16,6 +16,10 @@ class SalesPointOtherSettings extends \MarketingApplication implements \Applicat
     
     public function saveSettings() {
         $this->getApi()->getOrderManager()->changeAutoClosePeriodesOnZRepport($_POST['data']['autoclose']);
+
+        if (isset($_POST['data']['connectedToAGetShopCentral'])) {
+            $this->getApi()->getOrderManager()->setConnectedToAGetShopCentral($_POST['data']['connectedToAGetShopCentral']);
+        }
     }
 }
 ?>

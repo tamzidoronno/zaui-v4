@@ -17,6 +17,25 @@ $settings = $this->getApi()->getOrderManager()->getOrderManagerSettings();
                 <option value="false" <? echo !$settings->autoCloseFinancialDataWhenCreatingZReport ? "selected='true'" : ""; ?>><? echo $this->__f("No"); ?></option>
             </select>
         </div>
+        
+        <?
+        if (strstr(ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->emailAddress, "@getshop.com")) {
+            ?>
+        <br/>
+        <br/>
+            <div class="title">
+                <? echo $this->__f("System is connnected to a central."); ?>
+            </div>
+
+            <div class="value">
+                <select class="gsniceselect1" gsname="connectedToAGetShopCentral">
+                    <option value="true" <? echo $settings->connectedToAGetShopCentral ? "selected='true'" : ""; ?>><? echo $this->__f("Yes"); ?></option>
+                    <option value="false" <? echo !$settings->connectedToAGetShopCentral ? "selected='true'" : ""; ?>><? echo $this->__f("No"); ?></option>
+                </select>
+            </div>
+            <?
+        }
+        ?>
     </div>
     
     <div class="settingsrow">

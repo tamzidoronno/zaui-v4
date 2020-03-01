@@ -206,6 +206,24 @@ class PageFactory {
         $page->addExtraApplications('bce90759-5488-442b-b46c-a6585f353cfe');    
         $page->addExtraApplications('e8fedc44-b227-400b-8f4d-52d52e58ecfe');    
         
+        // endofdayreport
+        $page = new \ModulePage("endofdayreport", "pms");
+        $page->addExtraApplications('961efe75-e13b-4c9a-a0ce-8d3906b4bd73');    
+        $page->addExtraApplications('3e2bc00a-4d7c-44f4-a1ea-4b1b953d8c01');    
+        $row = $page->createRow(true);
+        
+        $row->addColumn("c20ea6e2-bc0b-4fe1-b92a-0c73b67aead7", "c20ea6e2-bc0b-4fe1-b92a-0c73b67aead7");
+
+        $this->pages['endofdayreport'] = $page;   
+        
+        $page->addExtraApplications('f8cc5247-85bf-4504-b4f3-b39937bd9955');
+        $page->addExtraApplications('b5e9370e-121f-414d-bda2-74df44010c3b');
+        $page->addExtraApplications('b72ec093-caa2-4bd8-9f32-e826e335894e');
+        $page->addExtraApplications('9a6ea395-8dc9-4f27-99c5-87ccc6b5793d');
+        $page->addExtraApplications('2e51d163-8ed2-4c9a-a420-02c47b1f7d67');
+        $page->addExtraApplications('bce90759-5488-442b-b46c-a6585f353cfe');    
+        $page->addExtraApplications('e8fedc44-b227-400b-8f4d-52d52e58ecfe');    
+        
         // ConferenceList
         $page = new \ModulePage("conferencelist", "pms");
         $page->addExtraApplications('961efe75-e13b-4c9a-a0ce-8d3906b4bd73');    

@@ -364,7 +364,7 @@ class ModulePage {
         
         $reports = new ModulePageMenuItem("Reports", "afe687b7-219e-4396-9e7b-2848f5ed034d", "gsicon-gs-reports");
         $reports->addSubEntry(new ModulePageMenuItem("List of conference", "conferencelist", "gsicon-gs-reports", "conferencelist"));
-        $reports->addSubEntry(new ModulePageMenuItem("End of day report", "afe687b7-219e-4396-9e7b-2848f5ed034d", "gsicon-gs-reports"));
+        $reports->addSubEntry(new ModulePageMenuItem("End of day report", "endofdayreport", "gsicon-gs-reports"));
         $menu->entries[] = $reports;
         
         $menu->entries[] = new ModulePageMenuItem("Prices", "394bb905-8448-45c1-8910-e9a60f8aebc5", "gsicon-gs-prices");

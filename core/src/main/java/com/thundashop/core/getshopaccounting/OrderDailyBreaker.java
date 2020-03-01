@@ -322,7 +322,7 @@ public class OrderDailyBreaker {
             entry.amountExTax = TwoDecimalRounder.roundTwoDecimals(item.getTotalEx(), precision);
         }
         
-        entry.date = order.rowCreatedDate;
+        entry.date = getNormalCartItemAccountingDate(order, item);
         
         if (order.overrideAccountingDate != null)
             entry.date = calculateDate(order.overrideAccountingDate, entry);
@@ -912,6 +912,13 @@ public class OrderDailyBreaker {
         }
         
         return "";
+    }
+
+    private Date getNormalCartItemAccountingDate(Order order, CartItem item) {
+        if (item.accountingDate != null)
+            return item.accountingDate;
+        
+        return order.rowCreatedDate;
     }
 
 }

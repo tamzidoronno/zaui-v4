@@ -578,6 +578,9 @@ public interface IOrderManager {
     
     @Administrator
     public void forceSaveOrder(Order order, String password);
+
+    @Administrator
+    public void setConnectedToAGetShopCentral(Boolean connectedToAGetShopCentral);
     
     public void receiptText(String token, TerminalReceiptText terminalReceiptText);
     

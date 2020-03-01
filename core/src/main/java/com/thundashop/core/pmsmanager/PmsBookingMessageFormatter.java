@@ -454,7 +454,6 @@ class PmsBookingMessageFormatter {
         
         SimpleDateFormat slf = new SimpleDateFormat("dd.MM.YY");
         
-        HashMap<String, Integer> productCounter = new HashMap();
         HashMap<String, String> productName = new HashMap();
         
         String lang = booking.language;
@@ -462,6 +461,7 @@ class PmsBookingMessageFormatter {
         if(lang != null && lang.equalsIgnoreCase("no")) { lang = "nb_NO"; }
         
         for (PmsBookingRooms room : booking.getActiveRooms()) {
+            HashMap<String, Integer> productCounter = new HashMap();
             BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
             
             for(PmsBookingAddonItem item : room.addons) {

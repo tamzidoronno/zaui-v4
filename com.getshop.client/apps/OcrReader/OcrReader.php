@@ -34,5 +34,16 @@ class OcrReader extends \WebshopApplication implements \Application {
         $result = $this->getApi()->getGetShopAccountingManager()->createBankTransferFile();
         echo $result;
     }
+    
+    public function setupocr() {
+        $id = $_POST['data']['avtaleid'];
+        $password = $_POST['data']['password'];
+        $this->getApi()->getStoreOcrManager()->setAccountId($id, $password);
+        
+        $app = $this->getApi()->getStoreApplicationPool()->getApplication("70ace3f0-3981-11e3-aa6e-0800200c9a66");
+        $invoiceapp = $this->getFactory()->getApplicationPool()->createInstace($app);
+        $invoiceapp->setConfigurationSetting("kidSize", $_POST['data']['kidsize']);
+        $invoiceapp->setConfigurationSetting("defaultKidMethod", "orderid");
+    }
 }
 ?>

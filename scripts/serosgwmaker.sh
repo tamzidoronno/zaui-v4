@@ -18,6 +18,7 @@ echo "10 = 1010sls6.getshop.com - 10.200.1.216 - Jarvsoberg syclepark - Lora Gat
 echo "11 = 1011sls6.getshop.com - 10.200.1.222 - Fru Skjold Hotell Mosjøen - Lora 1";
 echo "12 = 1012sls6.getshop.com - 10.200.1.170 - GetShop Gamleveien 7 - Lora 1";
 echo "13 = 1013sls6.getshop.com - 10.200.1.186 - Lilland Bryggerihotell - Lora Gateway";
+echo "14 = 1014sls6.getshop.com - 10.200.1.226 - Torgarhaugen - Lora Gateway";
 read serverQuestion;
 
 if [ $serverQuestion = "1" ]; then
@@ -85,6 +86,11 @@ elif [ $serverQuestion = "13" ]; then
 	SSID="Lilland_Hotell"
 	WIFIPASS=""
 	VPN="lilland_hotel_lora_hoved"
+elif [ $serverQuestion = "14" ]; then
+	TOKEN="de5f5ef1-ad64-46a0-a3b4-1024baf907a1"
+	SSID=""
+	WIFIPASS=""
+	VPN="torgarhaugen_lora_1"
 else 
 	echo "Invalid selection";
 fi;

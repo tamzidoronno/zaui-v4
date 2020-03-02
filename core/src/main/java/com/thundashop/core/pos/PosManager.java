@@ -357,6 +357,7 @@ public class PosManager extends ManagerBase implements IPosManager {
 
             giftCardManager.getGiftCardsCreatedByOrderId(order.id).stream()
                     .forEach(giftCard -> {
+                        try { Thread.sleep(2000); }catch(Exception e) {}
                         giftCardManager.printGiftCard(cashPointDeviceId, giftCard.id);
                     });
         }

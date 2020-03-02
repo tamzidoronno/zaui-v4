@@ -253,6 +253,15 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
     }
 
     @Override
+    public void deleteObject(DataCommon data) throws ErrorException {
+        if (data instanceof PmsConferenceEvent) {
+            conferenceUpdated(getConference(((PmsConferenceEvent)data).pmsConferenceId));
+        }
+        
+        super.deleteObject(data); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
     public PmsConferenceEventEntry getEventEntry(String eventEntryId) {
         return conferenceEventEntries.get(eventEntryId);
     }

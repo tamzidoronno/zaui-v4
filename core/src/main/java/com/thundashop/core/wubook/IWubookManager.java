@@ -36,6 +36,7 @@ public interface IWubookManager {
     @ForceAsync
     public List<WubookBooking> addNewBookingsPastDays(Integer daysback) throws Exception;
 
+    @Administrator
     public void fetchNewBookings();
     
     @Administrator
@@ -47,6 +48,7 @@ public interface IWubookManager {
     @Administrator
     public boolean updateAvailabilityFromButton() throws Exception;
 
+    @Administrator
     public String updateShortAvailability();
     
     @Administrator

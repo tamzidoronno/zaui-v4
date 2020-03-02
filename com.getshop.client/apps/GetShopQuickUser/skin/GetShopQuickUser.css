@@ -17,6 +17,7 @@ html {
     display: none;
     min-height: 150px;
 }
+.GetShopQuickUser .additionalDescription { width: 100%; height: 80px; }
 .GetShopQuickUser .edit_details_directprint {
     z-index: 1;
     background-color: #FFF;

@@ -71,6 +71,15 @@ $user = $this->getUser();
                         </div>
                     </div>
 
+                    <div class="row">
+                        <div class="col col1">
+                            <? echo $this->__f("Additional information"); ?><br>
+                        </div>
+                        <div class="col col2">
+                            <textarea class="gsniceinput1" gsname="additionalDescription" style='width: 100%;height: 80px;'><? echo $user->additionalDescription; ?></textarea>
+                        </div>
+                    </div>
+
                     <div class='header'><? echo $this->__f("Address"); ?></div>
                     <div class="row">
                         <div class="col col1">

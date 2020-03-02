@@ -85,6 +85,7 @@ class GetShopQuickUser extends \SystemApplication implements \Application {
         $user->defaultDueDate = $_POST['data']['defaultDueDate'];
         $user->preferredPaymentType = $_POST['data']['preferredpaymenttype'];
         $user->agreeToSpam = $_POST['data']['agreeToSpam'] == "true";
+        $user->additionalDescription = $_POST['data']['additionalDescription'];
         if($user->agreeToSpam && !$user->agreeToSpamDate) {
             $user->agreeToSpamDate = $this->convertToJavaDate(time());
         }

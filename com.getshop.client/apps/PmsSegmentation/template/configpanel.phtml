@@ -25,6 +25,7 @@
 <?php
 $segments = $this->getApi()->getPmsCoverageAndIncomeReportManager()->getSegments($this->getSelectedMultilevelDomainName());
 
+$config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
 $attributes = array(
     array('id', 'gs_hidden', 'id'),
     array('code', 'Code', 'code'),

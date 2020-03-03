@@ -2,6 +2,7 @@ package com.thundashop.core.pmsmanager;
 
 import com.thundashop.core.common.DataCommon;
 import java.util.Date;
+import org.mongodb.morphia.annotations.Transient;
 
 public class PmsConference extends DataCommon {
     public String meetingTitle = "";

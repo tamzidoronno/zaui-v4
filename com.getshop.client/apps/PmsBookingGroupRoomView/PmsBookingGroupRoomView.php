@@ -17,8 +17,8 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
     
     public function getConfirmationContent() {
         $msgs = $this->getApi()->getPmsNotificationManager()->getAllMessages($this->getSelectedMultilevelDomainName());
-        
-        foreach($msgs as $conf) {
+         
+       foreach($msgs as $conf) {
             if($conf->id == $_POST['data']['type']) {
                 echo $conf->content;
             }

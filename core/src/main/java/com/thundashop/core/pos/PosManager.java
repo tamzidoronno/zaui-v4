@@ -429,14 +429,24 @@ public class PosManager extends ManagerBase implements IPosManager {
 
     @Override
     public void createZReport(String cashPointId) {
-        autoCreateOrders(cashPointId);
+        List<String> autoCreatedOrders = autoCreateOrders(cashPointId);
         List<String> orderdIdsFromConfernceSystem = autoCreateOrdersForConferenceTabs(cashPointId);
 
+        boolean connectedToCentral = orderManager.getOrderManagerSettings().connectedToAGetShopCentral;
+        
         ZReport report = getZReport("", cashPointId);
         report.createdByUserId = getSession().currentUser.id;
         report.cashPointId = cashPointId;
         report.orderIds.addAll(orderdIdsFromConfernceSystem);
+        report.orderIds.addAll(autoCreatedOrders);
 
+        if (connectedToCentral) {
+            report.orderIds.stream()
+                .forEach(orderId -> {
+                    orderManager.closeOrder(orderId, "Added to zreport.");
+                });
+        }
+        
         report.totalAmount = getTotalAmountForZReport(report);
 
         saveObject(report);
@@ -1085,22 +1095,39 @@ public class PosManager extends ManagerBase implements IPosManager {
                 .sum();
     }
 
-    private void autoCreateOrders(String cashPointId) {
+    private List<String> autoCreateOrders(String cashPointId) {
         Date start = getDateWithOffset(getPreviouseZReportDate(cashPointId), -1);
         Date end = getDateWithOffset(new Date(), 0);
-
+        
+        /**
+         * When its connected to the getshop central we also do accrude payments for future booking to make a forcast.
+         */
+        boolean connectedToCentral = orderManager.getOrderManagerSettings().connectedToAGetShopCentral;
+        
         PmsManager pmsManager = scope.getNamedSessionBean(getEngineName(), PmsManager.class);
 
         List<PmsBookingRooms> roomsNeedToCreateOrdersFor = pmsManager.getAllBookingsFlat()
                 .stream()
                 .flatMap(o -> o.rooms.stream())
-                .filter(o -> o.createOrdersOnZReport)
+                .filter(o -> connectedToCentral || o.createOrdersOnZReport)
                 .filter(o -> o.hasUnsettledAmountIncAccrued())
-                .filter(o -> o.date.start.before(end) || o.date.start.equals(end))
+                .filter(o -> {
+                    
+                    if (connectedToCentral)
+                        return true;
+                    
+                    return o.date.start.before(end) || o.date.start.equals(end);
+                })
                 .collect(Collectors.toList());
 
-        roomsNeedToCreateOrdersFor.stream().forEach(o -> createOrder(o));
+        List<String> retList = new ArrayList();
+        
+        roomsNeedToCreateOrdersFor.stream().forEach(o -> {
+            String orderId = createOrder(o);
+            retList.add(orderId);
+        });
 
+        return retList;
     }
 
     private String getEngineName() {
@@ -1670,6 +1697,7 @@ public class PosManager extends ManagerBase implements IPosManager {
             cache.markDirty(posConference.pmsConferenceId, posConference.tabId);
             saveObject(cache);   
         }
+        
         if (data instanceof PosTab) {
             PosConference posConference = getPosConferenceByTabId(data.id);
             if (posConference != null) {
@@ -1703,6 +1731,23 @@ public class PosManager extends ManagerBase implements IPosManager {
         }
         
         return simpleDateFormatter.format(getDateForConfernce(pmsConferenceId, conferenceEventId));
+    }
+
+    @Override
+    public List<ZReport> getReportNotTransferredToCentral() {
+        return zReports.values()
+                .stream()
+                .filter(o -> !o.transferredToCentral)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void markZReportAsTransferredToCentral(String zreportId) {
+        ZReport report = zReports.get(zreportId);
+        if (report != null) {
+            report.transferredToCentral = true;
+            saveObject(report);
+        }
     }
 
 }

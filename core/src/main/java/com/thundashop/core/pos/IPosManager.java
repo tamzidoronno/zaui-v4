@@ -214,4 +214,10 @@ public interface IPosManager {
     
     @Editor
     public List<ZReportConferenceSummary> getSummaryListForConferences();
+    
+    @Administrator
+    public List<ZReport> getReportNotTransferredToCentral();
+    
+    @Administrator
+    public void markZReportAsTransferredToCentral(String zreportId);
 }

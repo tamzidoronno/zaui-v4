@@ -31,11 +31,17 @@ public class ProcessPaymentMessage extends GetShopIOTCommon implements MessagePr
                     case 1:
                         logPrint("Starting payment");
                         getOperator().getPaymentOperator().startTransaction(paymentAction.amount, paymentAction.orderId);
-                    break;
+                        break;
                     case 2:
                         logPrint("Cancelling payment");
                         getOperator().getPaymentOperator().cancelTransaction();
                         break;
+                        
+                    case 3:
+                        logPrint("End of day report");
+                        getOperator().getPaymentOperator().adminEndOfDay(paymentAction.orderId);
+                        break;
+                        
                     default:
                         logPrint("action: " + paymentAction.action + " not implemented yet");
                         break;

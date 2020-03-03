@@ -15,4 +15,6 @@ public interface PaymentOperator {
     public void startTransaction(Integer amount, String orderId);
     public void cancelTransaction();
     public boolean isInitialized();
+
+    public void adminEndOfDay(String uuid);
 }

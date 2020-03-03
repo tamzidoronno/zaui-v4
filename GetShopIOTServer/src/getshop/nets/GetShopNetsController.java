@@ -118,7 +118,7 @@ public class GetShopNetsController {
          */
         @Override
         public void OnPrintText(final PrintTextEventArgs evt) {
-//           System.out.println("print text: " + evt.getPrintText());
+            netsApp.sendReceiptText(evt);
         }
 
         /**
@@ -330,6 +330,8 @@ public class GetShopNetsController {
         if (baxi != null) { result = baxi.administration(administrationArgs); }
 
         if (result == 0) {
+            netsApp.printToScreen("Administration operation failed with methodRejectCode = " + baxi.getMethodRejectCode());
+            netsApp.cancelIntegratedPaymentProcess();
             LOG.severe("Administration operation failed with methodRejectCode = " + baxi.getMethodRejectCode());
         }
 
@@ -343,16 +345,19 @@ public class GetShopNetsController {
     public void adminEndOfDay() {
         doAdministration(0x3130);
     }
+    
+    public void zReport() {
+        doAdministration(0x3137);
+    }
 
     public void adminLastReceipt() {
         doAdministration(0x313C);
     }
 
 
-    public void transferAmount() {
+    public void transferAmount(String myOperation) {
         if (totalAmount != 0) {
 
-            String myOperation = "Purchase"; // we hardcode the "Purchase" operation.
             String amount2 ="0"; // we do not have amount 2
             String amount3 ="0"; // we do not have amount 3
 

@@ -5,18 +5,15 @@
  */
 package getshopiotserver.processors;
 
-import com.thundashop.core.gsd.DevicePrintMessage;
 import com.thundashop.core.gsd.DirectPrintMessage;
 import com.thundashop.core.gsd.GetShopDeviceMessage;
 import getshopiotserver.GetShopIOTCommon;
 import getshopiotserver.MessageProcessorInterface;
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.Base64;
 import java.util.logging.Level;
@@ -40,10 +37,13 @@ public class ProcessPrinterMessage extends GetShopIOTCommon implements MessagePr
     }
 
     private void printMessage(DirectPrintMessage directPrintMessage) throws IOException {
-        logPrint("Printing receipt...");
+        
         if(true) {
-            printToSocket("192.168.1.100", 9100, directPrintMessage.content);
+            logPrint("Printing socket...");
+            printToSocket("192.168.10.10", 9100, directPrintMessage.content);
+            logPrint("Printing socket done...");
         } else {
+            logPrint("Printing usb...");
             File dir = new File("/dev/usb");
             File[] directoryListing = dir.listFiles(); 
             if (directoryListing != null) {
@@ -71,8 +71,14 @@ public class ProcessPrinterMessage extends GetShopIOTCommon implements MessagePr
             writer.println(message);
             writer.close();
             sock.close();
+            
+            // Sleep as we wait for the printer to be finished printing.
+            int sleepTime = 1000 + message.length();
+            Thread.sleep(sleepTime);
         } catch(IOException ex) {
             ex.printStackTrace();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ProcessPrinterMessage.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }

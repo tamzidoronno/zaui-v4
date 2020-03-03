@@ -38,6 +38,11 @@ echo "<select class='gsniceselect1 confirmationEmailTemplate' style='width:100%;
 $selected = null;
 foreach($confirmationmessages as $conf) {
     $sel = "";
+    
+    if($conf->type != "email") {
+        continue;
+    }
+    
     if($hasLanguage) {
         if(in_array($booking->language, $conf->languages)) { $selected = $conf; $sel = "SELECTED"; }
     } else {

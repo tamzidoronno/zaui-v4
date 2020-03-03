@@ -58,8 +58,12 @@ app.PmsBookingGroupRoomView = {
         $(document).on('change', '.PmsBookingGroupRoomView .changesegment', this.changeSegment);
         $(document).on('change', '.PmsBookingGroupRoomView .changechannel', this.changeChannel)
         $(document).on('change', '.PmsBookingGroupRoomView .cartitem_added_product', this.saveCartItemRow)
+        $(document).on('change', '.PmsBookingGroupRoomView .confirmationEmailTemplate', this.changeConfirmationEmailContent)
     },
-    
+    changeConfirmationEmailContent : function() {
+        var event = thundashop.Ajax.createEvent('','getConfirmationContent',$(this), { type : $(this).val() });
+        thundashop.Ajax.postWithCallBack(event, function(res) { $('[gsname="confirmationemailcontent"]').val(res); });
+    },
     cartItemRowSaved: function(res, from) {
         var eventId = $(from).closest('.cart_item_row').find('[gsname="eventid"]').val();
         $('[totalrow_for_event_id="'+eventId+'"]').html(res);

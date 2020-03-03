@@ -15,6 +15,23 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         
     }
     
+    public function getConfirmationContent() {
+        $msgs = $this->getApi()->getPmsNotificationManager()->getAllMessages($this->getSelectedMultilevelDomainName());
+        
+        foreach($msgs as $conf) {
+            if($conf->id == $_POST['data']['type']) {
+                echo $conf->content;
+            }
+        }
+    }
+    
+    public function toggleAutosendPaymentLink() {
+        $booking = $this->getPmsBooking();
+        $booking->autoSendPaymentLink = !$booking->autoSendPaymentLink;
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+        $this->clearCache();
+    }
+    
     public function searchForProducts() {
         $this->includefile("conference_productsearchresult");
     }

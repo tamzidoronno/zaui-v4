@@ -125,6 +125,23 @@ public interface ITicketManager {
     @Administrator
     public void markTicketAsUnread(String ticketId);
     
+    @Administrator
+    public List<SupportGroup> getSupportGroups();
+    
+    @Administrator
+    public SupportGroup createSupportGroup(String name);
+    
+    @Administrator
+    public SupportGroup getSupportGroup(String id);
+    
+    @Administrator
+    public void saveSupportGroup(SupportGroup group);
+    
+    @Administrator
+    public void deleteGroup(String id);
+    
+    @Administrator
+    public void sendTicketToGroup(String ticketId, String groupId);
     
     @Administrator
     @ForceAsync

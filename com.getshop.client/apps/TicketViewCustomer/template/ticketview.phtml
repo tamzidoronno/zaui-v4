@@ -104,7 +104,15 @@ if ($this->isGetShop()) {
         ?>
         
         <div>
-            <?php if ($this->isGetShop()) { ?>
+            <?php if ($this->isGetShop()) { 
+            $groups = $this->getApi()->getTicketManager()->getSupportGroups();
+            echo "<span style='float:right;'>";
+            foreach($groups as $group) {
+                echo "<span class='shop_button' style='margin: 2px;' gsclick='assignTicketToGroup' ticketid='".$ticket->id."' groupid='".$group->id."'>" . $group->name . "</span>";
+            }
+            echo "</span>";
+            ?>
+            
             <input type="hidden" value="0" id="secondsused" gsname="secondsused"> <span class='cleartexttime'></span> spent on this case.
                 
             <?php } ?>
@@ -129,17 +137,23 @@ if ($this->isGetShop()) {
             echo "<div class='shop_button' style='float:right;' gsclick='ignorehideticket' ticketid='".$ticket->id."'>Ignore/hide this ticket</div>";
         }
         
-        $types = $this->getTypes();
-        echo "<div style='margin-top:5px;'>";
-        foreach($types as $type => $typename) {
-        ?>
-            <div class='shop_button' gstype='submit' gsvalue="<?php echo $type; ?>">
-                <?
-                echo $typename;
-                ?>
-            </div>
-        <?php }
-        echo "</div>";
+        if($this->isGetShop()) {
+            $types = $this->getTypes();
+            echo "<div style='margin-top:5px;'>";
+            foreach($types as $type => $typename) {
+            ?>
+                <div class='shop_button' gstype='submit' gsvalue="<?php echo $type; ?>">
+                    <?
+                    echo $typename;
+                    ?>
+                </div>
+            <?php }
+            echo "</div>";
+        } else {
+            ?>
+            <div class='shop_button' gstype='submit' gsvalue="support">Reply</div>
+            <?php
+        }
         ?>
     </div>
     <?

@@ -51,6 +51,8 @@ public class TicketManager extends ManagerBase implements ITicketManager {
     public HashMap<String, TicketUserPushover> pushOverUsers = new HashMap();
     public HashMap<String, UnreadTickets> unreadTickets = new HashMap();
 
+    public HashMap<String, SupportGroup> supportGroups = new HashMap();
+    
     @Autowired
     public UserManager userManager;
 
@@ -71,6 +73,9 @@ public class TicketManager extends ManagerBase implements ITicketManager {
             }
             if (inData instanceof TicketLight) {
                 lightTickets.put(inData.id, (TicketLight) inData);
+            }
+            if (inData instanceof SupportGroup) {
+                supportGroups.put(inData.id, (SupportGroup) inData);
             }
             if (inData instanceof UnreadTickets) {
                 unreadTickets.put(((UnreadTickets) inData).ticketId, (UnreadTickets) inData);
@@ -650,6 +655,10 @@ public class TicketManager extends ManagerBase implements ITicketManager {
     }
 
     private void addNotificationContent(String ticketId, String textContent) {
+        addNotificationContent(ticketId, textContent, true);
+    }
+
+    private void addNotificationContent(String ticketId, String textContent, boolean silent) {
         TicketContent content = new TicketContent();
         content.addedByGetShop = true;
         content.content = textContent;
@@ -664,9 +673,9 @@ public class TicketManager extends ManagerBase implements ITicketManager {
             content.isReadByInboxHandler = false;
         }
 
-        addTicketContentInternal(ticketId, content, true);
+        addTicketContentInternal(ticketId, content, silent);
     }
-
+    
     public void reOpenTicket(String id) {
         Ticket ticket = tickets.get(id);
         if (ticket != null && !ticket.transferredToAccounting) {
@@ -1105,6 +1114,54 @@ public class TicketManager extends ManagerBase implements ITicketManager {
         }
         
         return new ArrayList(results.values());
+    }
+
+    @Override
+    public List<SupportGroup> getSupportGroups() {
+        return new ArrayList(supportGroups.values());
+    }
+
+    @Override
+    public SupportGroup createSupportGroup(String name) {
+        SupportGroup group = new SupportGroup();
+        group.name = name;
+        saveObject(group);
+        supportGroups.put(group.id, group);
+        return group;
+    }
+
+    @Override
+    public void saveSupportGroup(SupportGroup group) {
+        saveObject(group);
+        supportGroups.put(group.id, group);
+    }
+
+    @Override
+    public void deleteGroup(String id) {
+        SupportGroup data = getSupportGroup(id);
+        deleteObject(data);
+        supportGroups.remove(id);
+    }
+
+    @Override
+    public void sendTicketToGroup(String ticketId, String groupId) {
+        SupportGroup group = getSupportGroup(groupId);
+        Integer number = group.users.size();
+        if(number > 0) {
+            double random = Math.random();
+            random *= number;
+            int userSlot = (int)random;
+            String userId = group.users.get(userSlot);
+            assignTicketToUser(ticketId, userId);
+        }
+        
+        addNotificationContent(ticketId, group.description, false);
+        
+    }
+
+    @Override
+    public SupportGroup getSupportGroup(String id) {
+        return supportGroups.get(id);
     }
 
 }

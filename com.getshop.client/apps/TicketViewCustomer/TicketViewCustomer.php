@@ -15,6 +15,11 @@ class TicketViewCustomer extends \MarketingApplication implements \Application {
         $this->markTicketAsReadByGetShopUser();
     }
     
+    public function assignTicketToGroup() {
+         $this->getApi()->getTicketManager()->sendTicketToGroup($_POST['data']['ticketid'], $_POST['data']['groupid']);
+         $_GET['ticketId'] = $_POST['data']['ticketid'];
+    }
+    
     public function fileUploaded() {
         $this->setGetVariables();
         

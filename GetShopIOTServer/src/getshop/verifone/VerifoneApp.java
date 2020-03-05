@@ -466,5 +466,15 @@ public class VerifoneApp implements PaymentOperator {
         }
     }
 
+    @Override
+    public String getName() {
+        return "VERIFONE";
+    }
+
+    @Override
+    public void start() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     
 }

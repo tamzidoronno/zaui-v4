@@ -1,6 +1,7 @@
 package getshopiotserver;
 
 import getshop.nets.GetShopNetsApp;
+import getshop.nets.GetShopNetsController;
 
 public class GetShopIOTServer {
 
@@ -15,6 +16,7 @@ public class GetShopIOTServer {
                 reader.readConfiguration();
                 reader.setup();
             }
+            reader.getPaymentOperator();
             reader.start();
         }catch(Exception e) {
             e.printStackTrace();

@@ -14,7 +14,7 @@ import getshopiotserver.PaymentOperator;
  * the BAXI Java library and shows the main API calls.
  */
 public class GetShopNetsApp implements PaymentOperator {
-    private GetShopNetsController controller;
+    public GetShopNetsController controller;
     private final GetShopIOTOperator operator;
 
     public static final int RESULT_FINANCIAL_TRANSACTION_OK = 0;        // : Financial transaction OK, accumulator updated
@@ -25,9 +25,8 @@ public class GetShopNetsApp implements PaymentOperator {
     
     
     public static void main(String[] args) throws Exception {
-//        GetShopNetsApp app = new GetShopNetsApp(new GetShopIOTOperator());
-//        app.start();
-        
+        GetShopNetsApp app = new GetShopNetsApp(new GetShopIOTOperator());
+        app.start();
     }
     
     private boolean isStarted = false;
@@ -54,7 +53,7 @@ public class GetShopNetsApp implements PaymentOperator {
         
     } 
 
-    public void start() throws Exception {
+    public void start() {
         controller = new GetShopNetsController(this);
 
         
@@ -172,6 +171,11 @@ public class GetShopNetsApp implements PaymentOperator {
 
     public boolean isInitialized() {
         return isStarted;
+    }
+
+    @Override
+    public String getName() {
+        return "NETS/BAXI";
     }
     
 }

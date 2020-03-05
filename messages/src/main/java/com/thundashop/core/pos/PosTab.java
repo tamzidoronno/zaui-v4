@@ -52,4 +52,12 @@ public class PosTab extends DataCommon {
                 .findAny()
                 .orElse(null);
     }
+
+    Double getTotalAmount() {
+        Double total = 0.0;
+        for(CartItem item : cartItems) {
+            total += item.getTotalAmount();
+        }
+        return total;
+    }
 }

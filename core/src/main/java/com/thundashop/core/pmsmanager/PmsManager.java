@@ -229,7 +229,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public PmsCoverageAndIncomeReportManager pmsCoverageAndIncomeReportManager;
     
     @Autowired
-    private PosManager posManager;
+    public PosManager posManager;
     
     @Autowired
     private ChecklistManager checkListManager;

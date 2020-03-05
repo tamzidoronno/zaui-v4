@@ -33,6 +33,8 @@ if (!count($conferenceBooking)) {
     <?
     $conferences = array();
     $roomsInConference = array();
+    $totalForBooking = array();
+    $unpaidForConference = array();
     foreach ($conferenceBooking as $conferenceBooking) {
         $conferences[$conferenceBooking->conferenceId] = $conferenceBooking->rooms[0]->pmsBookingRoomId;
         $counter = 0;
@@ -43,6 +45,10 @@ if (!count($conferenceBooking)) {
             $counter++;
         }
         $roomsInConference[$conferenceBooking->conferenceId] = $counter;
+        $totalForBooking[$conferenceBooking->conferenceId] = $conferenceBooking->totalPrice;
+        $unpaidForConference[$conferenceBooking->conferenceId] = $conferenceBooking->unsettled;
+        
+        $unpaidForConference[$conferenceBooking->conferenceId] += $this->getApi()->getPosManager()->getUnpaidAmountForConference($conferenceBooking->conferenceId);
     }
     
     echo "<table width='100%' id='conferencelist'>";
@@ -53,8 +59,10 @@ if (!count($conferenceBooking)) {
     echo "<th align='left'>For who</th>";
     echo "<th align='center'>State</th>";
     echo "<th>Antendees</th>";
-    echo "<th align='left'>Price</th>";
+    echo "<th align='left'>Tab total</th>";
+    echo "<th align='left'>Booking total</th>";
     echo "<th align='left'>Rooms</th>";
+    echo "<th align='left'>Unpaid</th>";
     echo "</tr>";
     
     $conferenceList = array();
@@ -83,7 +91,9 @@ if (!count($conferenceBooking)) {
         echo "<td align='center'>".$conference->attendeeCount."</td>";
         $price = $this->getApi()->getPmsConferenceManager()->getTotalPriceForCartItems($conferenceId, "overview");
         echo "<td align='center'>".$price."</td>";
+        echo "<td align='center'>".$totalForBooking[$conferenceId]."</td>";
         echo "<td align='center'>".$roomsInConference[$conferenceId]."</td>";
+        echo "<td align='center'>".$unpaidForConference[$conferenceId]."</td>";
         echo "</tr>";
     }
     echo "</table>";

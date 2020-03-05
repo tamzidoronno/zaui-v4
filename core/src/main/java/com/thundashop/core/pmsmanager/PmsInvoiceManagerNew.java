@@ -181,6 +181,10 @@ public class PmsInvoiceManagerNew {
         if (room.bookingItemId != null && !room.bookingItemId.isEmpty()) {
             BookingItem bookingItem = pmsManager.bookingEngine.getBookingItem(room.bookingItemId);
             item.getProduct().additionalMetaData = bookingItem.bookingItemName;
+            item.getProduct().pmsData.put("guestcount", ""+room.guests.size());
+            item.getProduct().pmsData.put("segment", ""+booking.segmentId);
+            item.getProduct().pmsData.put("bookingItemTypeId", ""+room.bookingItemTypeId);
+            item.getProduct().pmsData.put("channel", ""+booking.channel);
         }
     }
 
@@ -193,7 +197,6 @@ public class PmsInvoiceManagerNew {
         if (room.guests.size() > 0) {
             item.getProduct().metaData = room.guests.get(0).name;
         }
-        
     }
 
     public void setDates(CartItem item, String roomId) {

@@ -163,6 +163,9 @@ public class Product extends DataCommon implements Comparable<Product>  {
     
     public String metaData = "";
     public String additionalMetaData = "";
+    
+    public HashMap<String, String> pmsData = new HashMap();
+    
     /* This we need i case we need to track down more data later on (used for bookings) */
     public String externalReferenceId = "";
     public boolean isNotRecurring = false;

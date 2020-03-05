@@ -217,4 +217,10 @@ public interface IPosManager {
     
     @Editor
     public Double getUnpaidAmountForConference(String conferenceId);
+
+    @Administrator
+    public List<ZReport> getReportNotTransferredToCentral();
+    
+    @Administrator
+    public void markZReportAsTransferredToCentral(String zreportId);
 }

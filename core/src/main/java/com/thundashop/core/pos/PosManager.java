@@ -49,6 +49,8 @@ import com.thundashop.core.productmanager.data.ProductPriceOverride;
 import com.thundashop.core.productmanager.data.ProductPriceOverrideType;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -428,14 +430,24 @@ public class PosManager extends ManagerBase implements IPosManager {
 
     @Override
     public void createZReport(String cashPointId) {
-        autoCreateOrders(cashPointId);
+        List<String> autoCreatedOrders = autoCreateOrders(cashPointId);
         List<String> orderdIdsFromConfernceSystem = autoCreateOrdersForConferenceTabs(cashPointId);
 
+        boolean connectedToCentral = orderManager.getOrderManagerSettings().connectedToAGetShopCentral;
+        
         ZReport report = getZReport("", cashPointId);
         report.createdByUserId = getSession().currentUser.id;
         report.cashPointId = cashPointId;
         report.orderIds.addAll(orderdIdsFromConfernceSystem);
+        report.orderIds.addAll(autoCreatedOrders);
 
+        if (connectedToCentral) {
+            report.orderIds.stream()
+                .forEach(orderId -> {
+                    orderManager.closeOrder(orderId, "Added to zreport.");
+                });
+        }
+        
         report.totalAmount = getTotalAmountForZReport(report);
 
         saveObject(report);
@@ -1084,22 +1096,39 @@ public class PosManager extends ManagerBase implements IPosManager {
                 .sum();
     }
 
-    private void autoCreateOrders(String cashPointId) {
+    private List<String> autoCreateOrders(String cashPointId) {
         Date start = getDateWithOffset(getPreviouseZReportDate(cashPointId), -1);
         Date end = getDateWithOffset(new Date(), 0);
-
+        
+        /**
+         * When its connected to the getshop central we also do accrude payments for future booking to make a forcast.
+         */
+        boolean connectedToCentral = orderManager.getOrderManagerSettings().connectedToAGetShopCentral;
+        
         PmsManager pmsManager = scope.getNamedSessionBean(getEngineName(), PmsManager.class);
 
         List<PmsBookingRooms> roomsNeedToCreateOrdersFor = pmsManager.getAllBookingsFlat()
                 .stream()
                 .flatMap(o -> o.rooms.stream())
-                .filter(o -> o.createOrdersOnZReport)
+                .filter(o -> connectedToCentral || o.createOrdersOnZReport)
                 .filter(o -> o.hasUnsettledAmountIncAccrued())
-                .filter(o -> o.date.start.before(end) || o.date.start.equals(end))
+                .filter(o -> {
+                    
+                    if (connectedToCentral)
+                        return true;
+                    
+                    return o.date.start.before(end) || o.date.start.equals(end);
+                })
                 .collect(Collectors.toList());
 
-        roomsNeedToCreateOrdersFor.stream().forEach(o -> createOrder(o));
+        List<String> retList = new ArrayList();
+        
+        roomsNeedToCreateOrdersFor.stream().forEach(o -> {
+            String orderId = createOrder(o);
+            retList.add(orderId);
+        });
 
+        return retList;
     }
 
     private String getEngineName() {
@@ -1309,6 +1338,16 @@ public class PosManager extends ManagerBase implements IPosManager {
             conf.tabId = createNewTab(pmsConference.meetingTitle);
         }
 
+        List<String> eventIdsInConference = pmsConferenceManager.getConferenceEvents(confId)
+                .stream()
+                .map(o -> o.id)
+                .collect(Collectors.toList());
+        
+        eventIdsInConference.add("");
+        
+        PosTab tab = getTab(conf.tabId);
+        tab.cartItems.removeIf(item -> item.conferenceEventId != null && !eventIdsInConference.contains(item.conferenceEventId));
+        
         saveObject(conf);
         conferences.put(conf.id, conf);
     }
@@ -1453,12 +1492,12 @@ public class PosManager extends ManagerBase implements IPosManager {
 
         Map<String, List<CartItem>> cartItemsFromOrdersGrouped = autoCreatedOrders.stream()
                 .flatMap(o -> o.getCartItems().stream())
-                .collect(Collectors.groupingBy(o -> o.conferenceEventId));
+                .collect(Collectors.groupingBy(o -> o.conferenceEventId + "_____" + getDateForConfernceFormatted(pmsConferenceId, o.conferenceEventId, o)));
 
         Map<String, List<CartItem>> allProductIdsFromTabGrouped = tab.cartItems
                 .stream()
                 .distinct()
-                .collect(Collectors.groupingBy(o -> o.conferenceEventId));
+                .collect(Collectors.groupingBy(o -> o.conferenceEventId + "_____" + getDateForConfernceFormatted(pmsConferenceId, o.conferenceEventId, null)));
 
         List<String> allGroups = new ArrayList(cartItemsFromOrdersGrouped.keySet());
         allGroups.addAll(allProductIdsFromTabGrouped.keySet());
@@ -1467,19 +1506,25 @@ public class PosManager extends ManagerBase implements IPosManager {
         
         List<CartItem> retList = new ArrayList();
         
-        for (String eventId : allGroups) {
+        for (String eventIdKey : allGroups) {
             
             List<CartItem> cartItemsFromOrders = new ArrayList();
             List<CartItem> allCartItemsFromTab = new ArrayList();
             
-            if (cartItemsFromOrdersGrouped.get(eventId) != null) {
-                cartItemsFromOrders = cartItemsFromOrdersGrouped.get(eventId);
+            if (cartItemsFromOrdersGrouped.get(eventIdKey) != null) {
+                cartItemsFromOrders = cartItemsFromOrdersGrouped.get(eventIdKey);
             }
             
-            if (allProductIdsFromTabGrouped.get(eventId) != null) {
-                allCartItemsFromTab = allProductIdsFromTabGrouped.get(eventId);
+            if (allProductIdsFromTabGrouped.get(eventIdKey) != null) {
+                allCartItemsFromTab = allProductIdsFromTabGrouped.get(eventIdKey);
             }
             
+            String[] splittedEventKey = eventIdKey.split("_____");
+            String eventId = splittedEventKey[0];
+            String dateKey = splittedEventKey[1];
+            
+            SimpleDateFormat simpleDateFormatter = new SimpleDateFormat("dd.MM.yyyy");
+
             List<String> allProductIdsFromOrder = cartItemsFromOrders.stream()
                     .map(o -> o.getProductId())
                     .distinct()
@@ -1496,10 +1541,10 @@ public class PosManager extends ManagerBase implements IPosManager {
             allProductsIds = allProductsIds.stream().distinct().collect(Collectors.toList());
 
             for (String productId : allProductsIds) {
-                int countInTab = getCountInCartItems(tab.cartItems, productId, eventId);
+                int countInTab = getCountInCartItems(allCartItemsFromTab, productId, eventId);
                 int countInOrders = getCountInCartItems(cartItemsFromOrders, productId, eventId);
 
-                BigDecimal totalFromTab = getTotalInCartItems(tab.cartItems, productId, eventId);
+                BigDecimal totalFromTab = getTotalInCartItems(allCartItemsFromTab, productId, eventId);
                 BigDecimal totalFromOrder = getTotalInCartItems(cartItemsFromOrders, productId, eventId);
                 BigDecimal toCreateOrderFor = totalFromTab.subtract(totalFromOrder);
 
@@ -1513,7 +1558,12 @@ public class PosManager extends ManagerBase implements IPosManager {
                     item.setProduct(productManager.getProduct(productId).clone());
                     item.setCount(countToCreateFor);
                     item.getProduct().price = toCreateOrderFor.doubleValue() / (double) countToCreateFor;
-                    item.accountingDate = getDateForConfernce(pmsConferenceId, eventId);
+                    try {
+                        item.accountingDate = simpleDateFormatter.parse(dateKey);
+                    } catch (ParseException ex) {
+                        throw new NullPointerException("There should always be a date available for items added to a conference.");
+                    }
+                    
                     item.conferenceEventId = eventId;
                     retList.add(item);
                 }
@@ -1648,6 +1698,13 @@ public class PosManager extends ManagerBase implements IPosManager {
     }
 
     private void dirtyTabs(DataCommon data) {
+        if (data instanceof PosConference) {
+            PosConference posConference = (PosConference)data;
+            PosConferenceCache cache = getPosConferenceCache();
+            cache.markDirty(posConference.pmsConferenceId, posConference.tabId);
+            saveObject(cache);   
+        }
+        
         if (data instanceof PosTab) {
             PosConference posConference = getPosConferenceByTabId(data.id);
             if (posConference != null) {
@@ -1671,6 +1728,33 @@ public class PosManager extends ManagerBase implements IPosManager {
         }
         
         return event.from;
+    }
+
+    private String getDateForConfernceFormatted(String pmsConferenceId, String conferenceEventId, CartItem cartItem) {
+        SimpleDateFormat simpleDateFormatter = new SimpleDateFormat("dd.MM.yyyy");
+        
+        if (cartItem != null && cartItem.accountingDate != null) {
+            return simpleDateFormatter.format(cartItem.accountingDate);    
+        }
+        
+        return simpleDateFormatter.format(getDateForConfernce(pmsConferenceId, conferenceEventId));
+    }
+
+    @Override
+    public List<ZReport> getReportNotTransferredToCentral() {
+        return zReports.values()
+                .stream()
+                .filter(o -> !o.transferredToCentral)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public void markZReportAsTransferredToCentral(String zreportId) {
+        ZReport report = zReports.get(zreportId);
+        if (report != null) {
+            report.transferredToCentral = true;
+            saveObject(report);
+        }
     }
 
 }

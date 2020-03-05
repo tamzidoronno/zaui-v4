@@ -1,9 +1,10 @@
 package getshop.nets;
 
-import com.google.gson.Gson;
+import com.thundashop.core.gsd.TerminalReceiptText;
 import eu.nets.baxi.client.LocalModeEventArgs;
 import java.util.Scanner;
 import com.thundashop.core.gsd.TerminalResponse;
+import eu.nets.baxi.client.PrintTextEventArgs;
 import getshopiotserver.GetShopIOTOperator;
 import getshopiotserver.PaymentOperator;
 
@@ -29,7 +30,7 @@ public class GetShopNetsApp implements PaymentOperator {
         app.start();
     }
     
-    private boolean isStarted = false;
+    private boolean isInitialized = false;
     private String orderId;
 
     public GetShopNetsApp(GetShopIOTOperator operator) {
@@ -78,7 +79,13 @@ public class GetShopNetsApp implements PaymentOperator {
                     System.out.println("Amount");
                     int amount = sc.nextInt();
                     controller.totalAmount = amount;
-                    controller.transferAmount();
+                    if (amount < 0) {
+                        controller.totalAmount = amount * -1;
+                        controller.transferAmount("Return of Goods");
+                    } else {
+                        controller.transferAmount("Purchase");
+                    }
+                    
                     break;
                 case 4:
                     controller.doAdministration(0x3132);
@@ -102,9 +109,7 @@ public class GetShopNetsApp implements PaymentOperator {
     }
 
     public void transanctionCompletedStatus(LocalModeEventArgs args) {
-        
-        
-         TerminalResponse response = new TerminalResponse()
+        TerminalResponse response = new TerminalResponse()
             .setAccountType(args.getAccountType())
             .setAcquirerMerchantID(args.getAcquirerMerchantID())
             .setApplicationEffectiveData(args.getAED())
@@ -133,11 +138,14 @@ public class GetShopNetsApp implements PaymentOperator {
             .setTerminalStatusInformation(args.getTSI())
             .setTerminalVerificationResult(args.getTVR())
             .setVerificationMethod(args.getVerificationMethod());
-         System.out.println(response.toString());
+            System.out.println(response.toString());
          
             switch(args.getResult()) {
-            case RESULT_FINANCIAL_TRANSACTION_OK:
             case RESULT_ADMINISTRATIVE_TRANSACTION_OK:
+                response.setIsAdministrativeTask();
+                break;
+                
+            case RESULT_FINANCIAL_TRANSACTION_OK:
             case RESULT_TRANSACTION_IS_LOYALTY:
                 response.setPaymentResult(1);
                 break;
@@ -145,9 +153,8 @@ public class GetShopNetsApp implements PaymentOperator {
                 response.setPaymentResult(0);
          }
             
-        if(!isStarted && response.paymentSuccess()) {
-            isStarted = true;
-            return;
+        if(!isInitialized && response.isAdministrativeTask()) {
+            isInitialized = true;
         }
         
         response.setOrderId(orderId);
@@ -155,22 +162,50 @@ public class GetShopNetsApp implements PaymentOperator {
         if(operator != null) {
              operator.sendMessage("OrderManager", "paymentResponse", operator.getToken(), response, null,null, null);
         }
+        
+        this.orderId = null;
     }
 
     @Override
     public void startTransaction(Integer amount, String orderId) {
         System.out.println("Starting transaction on amount: " + amount + " for order: " + orderId);
+        
         controller.totalAmount = amount;
-        controller.transferAmount();
+        if (amount < 0) {
+            controller.totalAmount = amount * -1;
+            controller.transferAmount("Return of Goods");
+        } else {
+            controller.transferAmount("Purchase");
+        }
         this.orderId = orderId;
     }
 
     public void cancelTransaction() {
+        this.orderId = null;
         controller.doAdministration(0x3132);
     }
 
     public boolean isInitialized() {
-        return isStarted;
+        return isInitialized;
+    }
+
+    @Override
+    public void adminEndOfDay(String uuid) {
+        orderId = uuid;
+        controller.zReport();
+    }
+
+    public void sendReceiptText(PrintTextEventArgs evt) {
+        if(operator != null) {
+            TerminalReceiptText receipt = new TerminalReceiptText();
+            receipt.orderId = orderId;
+            receipt.text = evt.getPrintText().replace("\n", "<br>");
+            operator.sendMessage("OrderManager", "receiptText", operator.getToken(), receipt, null,null, null);
+        }
+    }
+
+    void cancelIntegratedPaymentProcess() {
+        operator.sendMessage("OrderManager", "cancelIntegratedPaymentProcess", operator.getToken(), null, null, null, null);
     }
 
     @Override

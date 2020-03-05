@@ -16,6 +16,6 @@ public interface PaymentOperator {
     public void cancelTransaction();
     public boolean isInitialized();
     public String getName();
-
     public void start();
+    public void adminEndOfDay(String uuid);
 }

@@ -90,6 +90,11 @@ public class VerifoneApp implements PaymentOperator {
         System.out.println("Action performed: " + e);
         printToScreen("Action performed: " + e);
     }
+    
+    @Override
+    public String getName() {
+        return "VERIFONE";
+    }
 
     void getPayPointEvent(PayPointEvent event) {
         System.out.println("Get paypoint event: " + event);
@@ -467,14 +472,14 @@ public class VerifoneApp implements PaymentOperator {
     }
 
     @Override
-    public String getName() {
-        return "VERIFONE";
+    public void adminEndOfDay(String uuid) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void start() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+}
 
     
-}

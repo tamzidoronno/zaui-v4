@@ -36,22 +36,22 @@ public class GetShopIOTOperator extends GetShopIOTCommon {
 
     private List<String> configsSent = new ArrayList();
             
-    private PaymentOperator paymentOperator = null;
+    public PaymentOperator paymentOperator = null;
     
     private boolean isProductionMode = true;
     private String debugConnectionAddr ="http://www.3.0.local.getshop.com/";
     private String debugLongPullAddr ="http://lomcamping.3.0.local.getshop.com/";
     
+    
+    
     public void run() {
         logPrint("Ready to recieve instructions from " +getAddress() +  ", with token: " + getToken());
         setStartupConfigs();
-        if(getPaymentOperator() != null) {
-            getPaymentOperator().initialize();
-        }
         while(true) {
             doLongPull();
         }
     }
+    
     
     public PaymentOperator getPaymentOperator() {
         if(paymentOperator == null) {

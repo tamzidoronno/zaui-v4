@@ -199,7 +199,8 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
     @Override
     public PmsConference getConference(String conferenceId) {
         checkIfDateIsCorrectOnConferences();
-        return conferences.get(conferenceId);
+        PmsConference conference = conferences.get(conferenceId);
+        return conference;
     }
 
     @Override
@@ -488,6 +489,10 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
             if (!filter.userIds.isEmpty()) {
                 retList.removeIf(o -> !filter.userIds.contains(o.forUser));
             }
+            
+            if(filter.start != null && filter.end != null) {
+                retList.removeIf(o -> isNotWithin(o, filter.start, filter.end));
+            }
         }
         
         return retList;
@@ -769,5 +774,13 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
         }
         
         return null;
+    }
+
+    private boolean isNotWithin(PmsConference o, Date start, Date end) {
+        if(o.conferenceDate == null) {
+            return false;
+        }
+        
+        return o.conferenceDate.before(start) || o.conferenceDate.after(end);
     }
 }

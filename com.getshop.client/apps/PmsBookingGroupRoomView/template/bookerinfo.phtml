@@ -154,9 +154,13 @@ $channelNames = $formater->getChannels();
         $date = $this->getApi()->getPmsInvoiceManager()->getPaymentLinkSendingDate($this->getSelectedMultilevelDomainName(), $pmsBooking->id);
         $date = date("d.m.Y", strtotime($date));
         echo "* A payment link will automatically be sent to the guest at " . $date;
+        echo " <span class='bookinghighlightcolor' gsclick='toggleAutosendPaymentLink' style='cursor:pointer;' roomid='".$pmsSelectedRoom->pmsBookingRoomId."'>stop autosending</span>";
     } else {
         $reason = $this->getApi()->getPmsInvoiceManager()->getReasonForNotSendingPaymentLink($this->getSelectedMultilevelDomainName(), $pmsBooking->id);
         echo "<i class='fa fa-warning bookinghighlightcolor'></i> No payment link will be sent, " . $this->translateNotSendPaymentLinkReason($reason);
+        if($reason == 3) {
+            echo " <span class='bookinghighlightcolor' gsclick='toggleAutosendPaymentLink' style='cursor:pointer;' roomid='".$pmsSelectedRoom->pmsBookingRoomId."'>force autosending</span>";
+        }
     }
     echo "</div>";
     ?>    

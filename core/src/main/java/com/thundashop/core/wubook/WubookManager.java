@@ -888,7 +888,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             if(booking.modifiedReservation.size() > 0 && !booking.delete) {
                 newbooking = findCorrelatedBooking(booking);
                 if(newbooking == null) {
-                    sendErrorForReservation(booking.reservationCode, "Could not find existing booking for a modification on reservation");
+//                    sendErrorForReservation(booking.reservationCode, "Could not find existing booking for a modification on reservation");
                 } else {
                     if(newbooking.ignoreWubook) {
                         pmsManager.logEntry("Booking modified, but ignored due to force ignore.", newbooking.id, null);

@@ -142,6 +142,8 @@ $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSele
     <h2>Room map</h2>
     <div gstype="form" method="updateRoomData">
     <?php
+        $otas = $this->getApi()->getWubookManager()->getOtas($this->getSelectedMultilevelDomainName());
+        $data = $this->getApi()->getWubookManager()->getWubookRoomData($this->getSelectedMultilevelDomainName());
         $items = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
         $roommap = array();
         $items = $this->indexList($items);
@@ -149,14 +151,6 @@ $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSele
         echo "<tr bgcolor='#efefef'>";
          echo "<th align='left'>GetShop room category</th>";
         echo "<th align='center' width='10'>Room id (wubook)</th>";
-        foreach($otas as $ota) {
-            echo "<th>";
-            if($ota->channel == 1) { echo "Expedia"; }
-            if($ota->channel == 2) { echo "Booking.com"; }
-            echo  " (" . $ota->id . ")";
-            echo "</th>";
-//            $roommap[$ota->id] = $this->getApi()->getWubookManager()->getRoomRates($this->getSelectedMultilevelDomainName(), $ota->id, $ota->channel);
-        }
         echo "</tr>";
 
         foreach($data as $id => $rdata) {
@@ -179,23 +173,6 @@ $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSele
             }
             echo "</td>";
             
-            foreach($otas as $ota) {
-                echo "<td align='center'>";
-                if(isset($roommap[$ota->id])) {
-                    $map = $roommap[$ota->id];
-                    $mapped = false;
-                    foreach($map as $room) {
-                        if(stristr($rdata->virtualWubookRoomIds, $room->wubookRoomId) || $room->wubookRoomId == $rdata->wubookroomid) {
-                            echo $room->name . " (" . $room->id . ")";
-                            $mapped = true;
-                        }
-                    }
-                    if(!$mapped) {
-                        echo "<b style='color:red;'>Not mapped</b>";
-                    }
-                }
-                echo "</td>";
-            }
             echo "</tr>";
         }
         echo "<tr bgcolor='#efefef'>";

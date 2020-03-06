@@ -274,6 +274,8 @@ public class PmsBookingSimpleFilter {
                 guest.name = conference.meetingTitle;
                 simple.guest.add(guest);
             }
+            simple.totalCost = manager.pmsConferenceManager.getTotalPriceForCartItems(booking.conferenceId, "overview");
+            simple.totalUnpaidAmount = manager.posManager.getUnpaidAmountForConference(booking.conferenceId);
         }
         
         simple.checkedIn = room.checkedin;

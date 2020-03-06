@@ -2,6 +2,8 @@
 /* @var $this ns_dbe8930f_05d9_44f7_b399_4e683389f5cc\PmsConferenceList */
 
 $filter = new \core_pmsmanager_PmsConferenceFilter();
+$filter->start = $this->getStartDate();
+$filter->end = $this->getEndDate();
 
 // TODO - Make filter of list to date range.
 $conferenceBooking = $this->getApi()->getPmsManager()->getConferenceBookings($this->getSelectedMultilevelDomainName(), $filter);
@@ -20,16 +22,107 @@ if (!count($conferenceBooking)) {
 } 
 ?>
 
+<div style='margin-top: 20px; text-align: center;' method='updateDateRange' gstype='form'>
+    <input type='txt' class='gsniceinput1' value='<?php echo date("d.m.Y", strtotime($filter->start)); ?>' style='width:80px;' gsname='start'>
+    <input type='txt' class='gsniceinput1' value='<?php echo date("d.m.Y", strtotime($filter->end)); ?>' style='width:80px;' gsname='end'>
+    <span class='shop_button' gstype='submit'>Load conferences for periode</span>
+</div>
+
 <div class="conferencelist_outer">
     <h2>Your conferences</h2>
     <?
+    $conferences = array();
+    $roomsInConference = array();
+    $totalForBooking = array();
+    $unpaidForConference = array();
     foreach ($conferenceBooking as $conferenceBooking) {
-        $room = $this->getRoomFromBooking($conferenceBooking);
-        ?>
-        <div>
-            
-        </div>
-        <?
+        $conferences[$conferenceBooking->conferenceId] = $conferenceBooking->rooms[0]->pmsBookingRoomId;
+        $counter = 0;
+        foreach($conferenceBooking->rooms as $room) {
+            if($room->deleted) {
+                continue;
+            }
+            $counter++;
+        }
+        $roomsInConference[$conferenceBooking->conferenceId] = $counter;
+        $totalForBooking[$conferenceBooking->conferenceId] = $conferenceBooking->totalPrice;
+        $unpaidForConference[$conferenceBooking->conferenceId] = $conferenceBooking->unsettled;
+        
+        $unpaidForConference[$conferenceBooking->conferenceId] += $this->getApi()->getPosManager()->getUnpaidAmountForConference($conferenceBooking->conferenceId);
     }
+    
+    echo "<table width='100%' id='conferencelist'>";
+    
+    echo "<tr>";
+    echo "<th align='left'>Date</th>";
+    echo "<th align='left'>Conference name</th>";
+    echo "<th align='left'>For who</th>";
+    echo "<th align='center'>State</th>";
+    echo "<th>Antendees</th>";
+    echo "<th align='left'>Tab total</th>";
+    echo "<th align='left'>Booking total</th>";
+    echo "<th align='left'>Rooms</th>";
+    echo "<th align='left'>Unpaid</th>";
+    echo "</tr>";
+    
+    $conferenceList = array();
+    foreach($conferences as $conferenceId => $roomId) {
+        $conferenceList[$conferenceId] = $this->getApi()->getPmsConferenceManager()->getConference($conferenceId);
+    }
+    
+    
+    $sorted = array();
+    foreach($conferences as $conferenceId => $roomId) {
+        $conference = $conferenceList[$conferenceId];
+        $sorted[$conferenceId] = strtotime($conference->conferenceDate);
+    }
+    asort($sorted);
+    
+    foreach($sorted as $conferenceId => $time) {
+        $roomId = $conferences[$conferenceId];
+        $conference = $conferenceList[$conferenceId];
+        $user = $this->getApi()->getUserManager()->getUserById($conference->forUser);
+        echo "<tr method='loadBooking' gs_show_overlay='booking_room_view' id='$roomId' style='cursor:pointer' title='Open conference'>";
+        echo "<td>".date("d.m.Y", strtotime($conference->conferenceDate))."</td>";
+        echo "<td>".$conference->meetingTitle."</td>";
+        echo "<td>".$user->fullName."</td>";
+        $state = $conference->state ? $conference->state : "";
+        echo "<td align='center'>".$state."</td>";
+        echo "<td align='center'>".$conference->attendeeCount."</td>";
+        $price = $this->getApi()->getPmsConferenceManager()->getTotalPriceForCartItems($conferenceId, "overview");
+        echo "<td align='center'>".$price."</td>";
+        echo "<td align='center'>".$totalForBooking[$conferenceId]."</td>";
+        echo "<td align='center'>".$roomsInConference[$conferenceId]."</td>";
+        echo "<td align='center'>".$unpaidForConference[$conferenceId]."</td>";
+        echo "</tr>";
+    }
+    echo "</table>";
     ?>
 </div>
+
+
+<style>
+#conferencelist {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+#conferencelist td, #conferencelist th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+#conferencelist tr:nth-child(even){background-color: #f2f2f2;}
+#conferencelist tr:hover {background-color: #ddd;}
+#conferencelist th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4CAF50;
+    color: white;
+}
+</style>
+
+<script>
+    getshop_loadDatePicker($('[gsname="start"]'), { dependant : $('[gsname="end"]'), jump : 7 });    
+    getshop_loadDatePicker($('[gsname="end"]'), { dependant : $('[gsname="start"]'), jump : -7 });
+</script>

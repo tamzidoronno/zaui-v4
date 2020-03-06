@@ -359,6 +359,7 @@ public class PosManager extends ManagerBase implements IPosManager {
 
             giftCardManager.getGiftCardsCreatedByOrderId(order.id).stream()
                     .forEach(giftCard -> {
+                        try { Thread.sleep(2000); }catch(Exception e) {}
                         giftCardManager.printGiftCard(cashPointDeviceId, giftCard.id);
                     });
         }
@@ -1472,6 +1473,12 @@ public class PosManager extends ManagerBase implements IPosManager {
         return retMap;
     }
 
+    public Double getUnpaidAmountForConference(String conferenceId) {
+        PosConference conf = getPosConference(conferenceId);
+        PosTab tab = getTab(conf.tabId);
+        return tab.getTotalAmount();
+    }
+    
     private List<CartItem> getConferenceDiffCartItems(String pmsConferenceId, String tabId) {
         List<Order> autoCreatedOrders = orderManager.getAutoCreatedOrdersForConference(pmsConferenceId);
         List<CartItem> cartItemsInDifference = getDiff(autoCreatedOrders, getTab(tabId), pmsConferenceId);

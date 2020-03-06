@@ -215,6 +215,9 @@ public interface IPosManager {
     @Editor
     public List<ZReportConferenceSummary> getSummaryListForConferences();
     
+    @Editor
+    public Double getUnpaidAmountForConference(String conferenceId);
+
     @Administrator
     public List<ZReport> getReportNotTransferredToCentral();
     

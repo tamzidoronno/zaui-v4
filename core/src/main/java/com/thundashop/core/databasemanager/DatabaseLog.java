@@ -423,6 +423,9 @@ public class DatabaseLog extends StoreComponent {
     }
 
     public void save(String database, String collection, DataCommon data) {
+        if(true) {
+            return;
+        }
         
         if (data instanceof VirtualOrder) {
             return;

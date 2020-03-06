@@ -289,6 +289,7 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
         $user->address->city = $_POST['data']['address_city'];
         $user->address->postCode = $_POST['data']['address_postcode'];
         $user->address->co = $_POST['data']['address_co'];
+        $user->additionalDescription = $_POST['data']['additionalDescription'];
         
         
         $company = $user->companyObject;

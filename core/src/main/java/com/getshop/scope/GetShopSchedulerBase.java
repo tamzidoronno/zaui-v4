@@ -29,7 +29,7 @@ import org.springframework.context.ApplicationContext;
  */
 public abstract class GetShopSchedulerBase implements Runnable {
     private GetShopApi api;
-    private final String sessionId = UUID.randomUUID().toString();
+    private String sessionId = UUID.randomUUID().toString();
     private boolean loggedOn = false;
     private Scheduler scheduler;
     private String password;
@@ -90,7 +90,18 @@ public abstract class GetShopSchedulerBase implements Runnable {
         if (this.api != null) {
             boolean isLoggedIn = this.api.getUserManager().isLoggedIn();
             if (!isLoggedIn) {
-                this.api.getUserManager().logOn(username, password);
+                System.out.println("GetShopSchedulerBase | reconnecting and logging in again : " + storeId + " | " + webAddress);
+                sessionId = UUID.randomUUID().toString();
+                this.api = new GetShopApi(25554, "localhost", sessionId, webAddress);
+                try {
+                    User user = this.api.getUserManager().logOn(username, password);
+                    if (user == null) {
+                        System.out.println("GetShopSchedulerBase | tried to login but was not able to log in again : " + storeId + " | " + webAddress);
+                    }
+                } catch (Exception ex) {
+                    System.out.println("GetShopSchedulerBase | Failed to login with execption : " + storeId + " | " + webAddress);
+                    ex.printStackTrace();
+                }
             }
         }
         
@@ -98,6 +109,9 @@ public abstract class GetShopSchedulerBase implements Runnable {
             this.api = new GetShopApi(25554, "localhost", sessionId, webAddress);
             User user = this.api.getUserManager().logOn(username, password);
             this.loggedOn = true;
+            if (user == null) {
+                System.out.println("GetShopSchedulerBase | not able to login? why? : " + storeId + " | " + webAddress);
+            }
         }
     
         return this.api;

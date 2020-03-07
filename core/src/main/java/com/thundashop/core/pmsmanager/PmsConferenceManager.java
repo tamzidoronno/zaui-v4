@@ -429,6 +429,12 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
             if(entry.inTime(filter)) {
                 PmsConferenceEvent event = getConferenceEvent(entry.pmsEventId);
                 
+                if(filter.pmsConferenceId != null && !filter.pmsConferenceId.isEmpty()) {
+                    if(!filter.pmsConferenceId.equals(event.pmsConferenceId)) {
+                        continue;
+                    }
+                }
+                
                 if(!filter.itemIds.isEmpty() && !filter.itemIds.contains(event.pmsConferenceItemId)) {
                     continue;
                 }

@@ -18,5 +18,6 @@ public class PmsConferenceEventFilter {
     public Date start;
     public Date end;
     public String keyword;
+    public String pmsConferenceId = "";
     public List<String> itemIds = new ArrayList();
 }

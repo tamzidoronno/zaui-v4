@@ -1475,8 +1475,11 @@ public class PosManager extends ManagerBase implements IPosManager {
 
     public Double getUnpaidAmountForConference(String conferenceId) {
         PosConference conf = getPosConference(conferenceId);
-        PosTab tab = getTab(conf.tabId);
-        return tab.getTotalAmount();
+        if(conf != null) {
+            PosTab tab = getTab(conf.tabId);
+            return tab.getTotalAmount();
+        } 
+        return 0.0;
     }
     
     private List<CartItem> getConferenceDiffCartItems(String pmsConferenceId, String tabId) {

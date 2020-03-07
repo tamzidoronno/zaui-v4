@@ -45,3 +45,9 @@ $loggedOnUser = $this->getApi()->getUserManager()->getLoggedOnUser();
 
 
 <div class='headerspacer'></div>
+
+
+<script>
+    getshop_loadDatePicker($('.startdate'), { dependant : $('.enddate'), jump :1 });    
+    getshop_loadDatePicker($('.enddate'), { dependant : $('.startdate'), jump : -1 });
+</script>

@@ -32,6 +32,10 @@ public class PmsConferenceEventEntry extends DataCommon {
 
     boolean inTime(PmsConferenceEventFilter filter) {
         try {
+            if(filter.start == null || filter.end == null) {
+                return true;
+            }
+            
             if(from == null) {
                 return false;
             }

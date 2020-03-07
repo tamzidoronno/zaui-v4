@@ -380,6 +380,7 @@ class PmsConference extends \WebshopApplication implements \Application {
         if(isset($_GET['conferenceid'])) { $this->includefile("conferencereport"); }
         if($id == "eventreport") { $this->includefile("eventreport"); }
         if($id == "report") { $this->includefile("allreport"); }
+        if($id == "conferencereports") { $this->includefile("conferencereports"); }
     }
 
     public function getStatuses() {
@@ -389,6 +390,10 @@ class PmsConference extends \WebshopApplication implements \Application {
         $status[2] = "Not confirmed";
         $status[3] = "Rejected";
         return $status;
+    }
+
+    public function getConference($conferenceId) {
+        return $this->getApi()->getPmsConferenceManager()->getConference($conferenceId);
     }
 
 }

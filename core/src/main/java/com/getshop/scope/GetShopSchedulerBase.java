@@ -95,8 +95,11 @@ public abstract class GetShopSchedulerBase implements Runnable {
                 this.api = new GetShopApi(25554, "localhost", sessionId, webAddress);
                 try {
                     User user = this.api.getUserManager().logOn(username, password);
+                    
                     if (user == null) {
                         System.out.println("GetShopSchedulerBase | tried to login but was not able to log in again : " + storeId + " | " + webAddress);
+                    } else {
+                        System.out.println("GetShopSchedulerBase | logged in with user : " + storeId + " | " + webAddress  + " | " + user);
                     }
                 } catch (Exception ex) {
                     System.out.println("GetShopSchedulerBase | Failed to login with execption : " + storeId + " | " + webAddress);

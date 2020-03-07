@@ -59,7 +59,6 @@ if (!count($conferenceBooking)) {
     echo "<th align='left'>For who</th>";
     echo "<th align='center'>State</th>";
     echo "<th>Antendees</th>";
-    echo "<th align='left'>Tab total</th>";
     echo "<th align='left'>Booking total</th>";
     echo "<th align='left'>Rooms</th>";
     echo "<th align='left'>Unpaid</th>";
@@ -89,8 +88,6 @@ if (!count($conferenceBooking)) {
         $state = $conference->state ? $conference->state : "";
         echo "<td align='center'>".$state."</td>";
         echo "<td align='center'>".$conference->attendeeCount."</td>";
-        $price = $this->getApi()->getPmsConferenceManager()->getTotalPriceForCartItems($conferenceId, "overview");
-        echo "<td align='center'>".$price."</td>";
         echo "<td align='center'>".$totalForBooking[$conferenceId]."</td>";
         echo "<td align='center'>".$roomsInConference[$conferenceId]."</td>";
         echo "<td align='center'>".$unpaidForConference[$conferenceId]."</td>";

@@ -55,6 +55,7 @@ class PmsSearchBookingColumnFormatters {
             $vistorText .= "<i class='fa fa-usd' title='Non refundable'></i> ";
         }
         if(trim($comments)) {
+            $comments = htmlentities($comments);
             $vistorText .= "<i class='fa fa-comment' title='$comments'></i> ";
         }
         

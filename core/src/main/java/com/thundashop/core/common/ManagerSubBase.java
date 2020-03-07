@@ -443,10 +443,10 @@ public class ManagerSubBase {
             if (userManager == null)
                 return;
             
-            User user = userManager.getInternalApiUser();
-            
             if (storePool.getStore(storeId) == null)
                 return;
+            
+            User user = userManager.getInternalApiUser();
             
             String webAddress = storePool.getStore(storeId).getDefaultWebAddress();
 

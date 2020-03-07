@@ -1643,7 +1643,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         return false;
     }
 
-    public User getInternalApiUser() {
+    public synchronized User getInternalApiUser() {
         if (internalApiUser == null) {
             this.internalApiUserPassword = UUID.randomUUID().toString();
             

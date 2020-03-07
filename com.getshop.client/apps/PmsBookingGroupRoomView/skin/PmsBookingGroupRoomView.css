@@ -184,7 +184,7 @@
 .PmsBookingGroupRoomView { font-size: 15px; }
 .PmsBookingGroupRoomView .show_edit_user, .PmsBookingGroupRoomView .show_change_user, .PmsBookingGroupRoomView .bookinghighlightcolor { color: #4da6cb; }
 .PmsBookingGroupRoomView .edit_user_btn { display:none; }
-.PmsBookingGroupRoomView .commenttext { width: calc(100% - 250px );display: inline-block;  white-space: nowrap;  overflow: hidden;  text-overflow: ellipsis: }
+.PmsBookingGroupRoomView .commenttext { width: calc(100% - 250px );display: inline-block;   overflow: hidden;  text-overflow: ellipsis: }
 .PmsBookingGroupRoomView .otheroptions { text-align: center; margin-top: 5px; }
 .PmsBookingGroupRoomView .openconference { cursor:pointer; }
 .show_edit_user,.show_change_user { float:right; margin-left: 5px; }

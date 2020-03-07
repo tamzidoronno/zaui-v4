@@ -25,6 +25,15 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         }
     }
     
+    public function createCompany() {
+        $name = $_POST['data']['companyname'];
+        $vat = $_POST['data']['vatnumber'];
+        $bookingId = $this->getPmsBooking()->id;
+        
+        $this->getApi()->getPmsManager()->createNewUserOnBooking($this->getSelectedMultilevelDomainName(),$bookingId, $name, $vat);
+        $this->clearCache();
+    }
+
     public function toggleAutosendPaymentLink() {
         $booking = $this->getPmsBooking();
         $booking->autoSendPaymentLink = !$booking->autoSendPaymentLink;
@@ -1285,7 +1294,7 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
     public function displayToggleNew() {
         $config = $this->getPmsConfiguration();
         if(!$config->conferenceSystemActive) {
-            echo "<div style='background-color:green; color:#fff;text-align:center;cursor:pointer; padding: 5px;' gsclick='removenewversion' gs_callback='window.location.reload();'>Toggle old version</div>";
+            echo "<div style='background-color:green; color:#fff;text-align:center;cursor:pointer; padding: 5px;' gsclick='removenewversion' gs_callback='window.location.reload();'>(This view is in BETA MODE - if you find errors please inform us about it) - Toggle old version</div>";
         }
     }
 

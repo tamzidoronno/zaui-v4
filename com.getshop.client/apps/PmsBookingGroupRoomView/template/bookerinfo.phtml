@@ -287,7 +287,7 @@ $channelNames = $formater->getChannels();
             echo "<span class='commenttime'>";
             echo "<i class='fa fa-trash-o' gsclick='deleteComment' style='cursor:pointer;' gs_confirm='Are you sure?' roomid='".$pmsSelectedRoom->pmsBookingRoomId."' commentid='".$comment->commentId."'></i> ";
             echo "<i class='fa fa-edit editcomment' style='cursor:pointer'></i> " . date("d.m.y h:i", $time/1000) . "</span>";
-            echo "<span class='commenttext'>" . $comment->comment . "</span>";
+            echo "<span class='commenttext' title='".htmlentities($comment->comment)."'>" . htmlentities($comment->comment) . "</span>";
             echo "<span class='commentby'>" . $user->fullName . "</span>";
             echo "</div>";
         }

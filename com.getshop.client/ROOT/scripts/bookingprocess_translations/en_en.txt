@@ -9,6 +9,7 @@
     "room" : "Room",
     "commenttitle" : "Any comments?",
     "nights" : "night(s)",
+    "validDiscountCodes" : "Active campaigns",
     "paylater" : "Pay later",
     "noroomselected" : "No room has been selected, please select one below",
     "paymentexplanation" : "Please insert card below and follow the instructions. After payment has been completed you will recieve a code for your room after check in time {time}.",

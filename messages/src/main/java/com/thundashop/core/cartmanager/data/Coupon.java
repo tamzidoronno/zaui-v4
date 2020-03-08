@@ -30,6 +30,11 @@ public class Coupon extends DataCommon {
     public String priceCode = "default";
     public int minDays = 0;
     public int maxDays = 0;
+    
+    public boolean activeCampaign = false;
+    public boolean presentCampaignOnFrontPage = false;
+    public HashMap<String, String> campaignTitle = new HashMap();
+    public HashMap<String, String> campaignDescription = new HashMap();
 
     public boolean containsAddonProductToInclude(String productId) {
         if(addonsToInclude == null) {

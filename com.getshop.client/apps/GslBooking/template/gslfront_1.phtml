@@ -163,6 +163,12 @@
                         </div>
                     </div>
                 </div>
+                <div class="packages_supported">
+                    <h3><span gstype='bookingtranslation' gstranslationfield='validDiscountCodes'></span></h3>
+                    <div class="packages_supported_inner">
+                    </div>
+                </div>
+                
                 <h3><span gstype='bookingtranslation' gstranslationfield='guestInfo'></span></h3>
                 <span gstype='bookingtranslation' gstranslationfield='correctEmailforGuest'></span>
                 <div class="roomentryframe">
@@ -422,6 +428,14 @@
                     var loading = getshop_setBookingTranslation();
                     loading.done(function () {
                         getshop_setDatePicker();
+                        
+                        //Go to second page.
+//                        $('#search_rooms').click();
+//                        setTimeout(function() {
+//                            $('.productentrybox[roomid="8523eb25-9a17-428d-be55-cd1bfcf9243e"]').find('.numberof_rooms[guests="1"]').val(1);
+//                            $('.productentrybox[roomid="8523eb25-9a17-428d-be55-cd1bfcf9243e"]').find('.numberof_rooms[guests="1"]').change();
+//                            $('.continuetoguestinformationbtn').click();
+//                        }, "500");
                     });
                 });
             });

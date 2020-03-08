@@ -31,6 +31,11 @@ function load_getBookingTranslations() {
         "url": getshop_endpoint + "/scripts/bookingprocess_translation.php?language="+lang,
         success: function (res) {
             getshop_translationMatrixLoaded = res;
+            if(typeof(getshop_overridetranslation) === "object") {
+                for(var key in getshop_overridetranslation) {
+                    getshop_translationMatrixLoaded[key] = getshop_overridetranslation[key];
+                }
+            }
             def.resolve(res);
         }
     });    
@@ -633,6 +638,31 @@ function getshop_loadAddonsAndGuestSumaryView() {
     });
 }
 
+function getshop_loadCampaigns(res) {
+    $('.packages_supported').hide();
+    if(typeof(res.campaigns) === "undefined" || res.campaigns.length === 0) {
+        return;
+    }
+    var translation = getshop_getBookingTranslations();
+    
+    $('.packages_supported').show();
+    
+     $('.packages_supported_inner').find('.campaignrow').remove();
+    for(var key in res.campaigns) {
+        var campaign = res.campaigns[key];
+        var row = $('<div class="campaignrow"></div>');
+        var text = translation['add'];
+        
+        if(campaign.selected) { text = translation['remove']; }
+        
+        row.append($('<span class="addCampaignButton gsl_button selectcampaign" bookingcode="'+campaign.couponCode+'">'+text+'</span>'));
+        row.append($("<span class='campaign_title'>" + campaign.title+"</span>"));
+        row.append($("<span class='campaign_description'>" + campaign.description+"</span>"));
+        
+        $('.packages_supported_inner').append(row);
+    }
+}
+
 function getshop_loadAddonsAndGuestSummaryByResult(res) {
     $('.addonprinted').remove();
     var template = $('.addonsentry #addon');
@@ -682,6 +712,7 @@ function getshop_loadAddonsAndGuestSummaryByResult(res) {
     getshop_loadTextualSummary(res);
     getshop_loadBookerInformation(res);
     getshop_loadLoggedOn(res);
+    getshop_loadCampaigns(res);
 }
 
 function getshop_loadLoggedOn(res) {
@@ -1527,6 +1558,30 @@ function getshop_addRemoveAddon(e) {
     }catch(e) { getshop_handleException(e); }
 }
 
+function getshop_addRemoveCampaign(e) {
+    try {
+        if(getshop_avoiddoubletap(e)) { return; }
+        
+        var btn = $(this);
+          
+        var text = btn.html();
+
+        if(btn.hasClass('fa')) {
+            btn.addClass('fa-spin');
+        } else {
+            btn.html('<i class="fa fa-spin fa-spinner"></i>');
+        }
+        
+        var code = btn.attr('bookingcode');
+        var client = getshop_getWebSocketClient();
+        var campaignSet = client.PmsBookingProcess.setCampaignCode(getshop_domainname, code);
+        campaignSet.done(function(res) {
+            getshop_loadAddonsAndGuestSummaryByResult(res);
+        });
+        
+    }catch(e) { getshop_handleException(e); }
+}
+
 function getshop_removeGuest(e) {
     try {
         if(getshop_avoiddoubletap(e)) { return; }
@@ -2298,6 +2353,7 @@ $(document).on('touchend click', '.GslBooking .roomheading .guestaddonicon', get
 $(document).on('touchend click', '.GslBooking .guestentry .removeguest', getshop_removeGuest);
 $(document).on('touchend click', '.GslBooking .continuetoguestinformationbtn', getshop_continueToSummary);
 $(document).on('touchend click', '.GslBooking .addButton', getshop_addRemoveAddon);
+$(document).on('touchend click', '.GslBooking .addCampaignButton', getshop_addRemoveCampaign);
 $(document).on('touchend click', '.GslBooking .removeselectedroom', getshop_removeGroupedRooms);
 $(document).on('touchend click', '.GslBooking .gslfront_1 .trychangingdate', getshop_tryChangingDate);
 $(document).on('touchend click', '.GslBooking [gsname="ischild"]', getshop_changeChildSettings);
@@ -2363,11 +2419,6 @@ getshop_WebSocketClient = {
         getshop_WebSocketClient.listeners.push(listenObject);
    }
 };
-
-
-
-
-
 
 
 
@@ -3100,6 +3151,17 @@ GetShopApiWebSocketEmbeddedBooking.PmsBookingProcess.prototype = {
         return this.communication.send(data, gs_silent);
     },
 
+    'setCampaignCode' : function(multilevelname, code, gs_silent, gs_dont_persist) {
+        var data = {
+            args : {
+                code : JSON.stringify(code),
+            },
+            method: 'setCampaignCode',
+            multiLevelName: multilevelname,
+            interfaceName: 'core.pmsbookingprocess.IPmsBookingProcess',
+        };
+        return this.communication.send(data, gs_silent, gs_dont_persist);
+    },
     'setGuestInformation' : function(multilevelname, bookerInfo, gs_silent) {
         var data = {
             args : {

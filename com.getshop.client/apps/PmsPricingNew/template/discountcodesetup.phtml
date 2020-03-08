@@ -260,9 +260,61 @@ $discountTypes["FIXEDDISCOUNTSTAY"] = "Fixed discount on stay";
             echo "<input type='checkbox' title='Include in room price'  gsname='".$addon->productId . "_includedinroomprice' $inroomprice> ";
             echo $addon->name  . "<span style='float:right;'>" . $addon->price . "</span> ". "<br>";
         }
+        echo "</div>";
         ?>
     </span>
-    <div style='clear:both;'></div>
+    <div style="clear:both;"></div>
+    <br>
+    
+    <?php
+    $campaignChecked = $coupon->activeCampaign ? "CHECKED" : ""; 
+    ?>
+    <input type="checkbox" gsname="iscampaign" <?php echo $campaignChecked; ?>>Activate as campaign (possible to choose in the booking engine)
+    <div style="border-bottom: solid 1px #bbb;margin-top: 5px; margin-bottom: 5px;"></div>
+    <div class="activatedcampaigntable">
+        <table width="100%">
+            <tr>
+                <td valign="top" width="50%">
+                    <?php
+                    $languages = $this->getFactory()->getLanguageCodes();
+                    $languages[] = $this->getFactory()->getSelectedLanguage();
+                    $states = $this->getFactory()->getLanguageReadable();
+                    foreach($languages as $lang) {
+                        $title = "";
+                        $desc = "";
+                        if(isset($coupon->campaignTitle->{$lang})) {
+                            $title = $coupon->campaignTitle->{$lang};
+                        }
+                        if(isset($coupon->campaignDescription->{$lang})) {
+                            $desc = $coupon->campaignDescription->{$lang};
+                        }
+                       echo "<div>Title and description in ".$states[$lang]."</div>";
+                        echo "<input type='txt' class='gsniceinput1' placeholder='Title' style='margin-bottom: 4px;' gsname='campaigntitle_$lang' value='$title'><br>";
+                        echo "<input type='txt' class='gsniceinput1' placeholder='Description' style='width: 500px;' gsname='campaigndescription_$lang' value='$desc'><br>";
+                        echo "<br>";
+                    }
+                    $frontPageChecked = $coupon->presentCampaignOnFrontPage ? "CHECKED" : ""; 
+                    ?>
+                    <!--<input type='checkbox' gsname='presentonfrontpage' <?php echo $frontPageChecked; ?>> Present on frontpage-->
+                </td>
+                <td valign="top">
+                    A campaign is a special system where you can customize packages or special deals to offer in you booking engine.<br>
+                    It will be shown in step 2 and online if it a valid discount system.<br><br>
+                    Examples on package:<br>
+                    <ul>
+                        <li>Get a meal for only 200 NOK extra, (configured by adding meal addon for 200)</li>
+                        <li>Get breakfast included in your stay when staying for more than 3 days</li>
+                        <li>Late checkout for only 200 extra?</li>
+                        <li>Summer campaign, 10% discount for juni</li>
+                        <li>Be creative</li>
+                    </ul>
+                    <div>
+                        <b>PS: A guest can only choose one campaign at a time.</b>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
 </div>
 
 <style>
@@ -396,4 +448,3 @@ $('.discountsystemeditpanel .pricetypeselection').each(function() {
     if($(this).is(':visible')) { $(this).change(); }
 });
 </script>
-

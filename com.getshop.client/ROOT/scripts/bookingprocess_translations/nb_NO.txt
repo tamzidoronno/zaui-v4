@@ -6,6 +6,7 @@
     "rooms" : "Rom",
     "configureroom" : "Konfigurer rom",
     "back" : "Tilbake",
+    "validDiscountCodes" : "Aktive kampanjer",
     "min_days" : "Du må booke for et minimum av {arg} døgn.",
     "max_days" : "Du kan kun booke for et maksimum av {arg} døgn.",
     "outsideperiode" : "Du prøver å booke i en periode som ikke er gyldig, velg en annen periode.",

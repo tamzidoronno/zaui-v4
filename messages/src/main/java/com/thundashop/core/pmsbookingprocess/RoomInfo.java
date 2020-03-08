@@ -1,5 +1,6 @@
 package com.thundashop.core.pmsbookingprocess;
 
+import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -23,5 +24,9 @@ public class RoomInfo {
      * Value = List of different options.
      */
     public List<GroupAddonItem> availableGuestOptionAddons = new ArrayList();
+
+    int getNumberOfDays() {
+        return PmsBookingRooms.getNumberOfDays(start, end);
+    }
 
 }

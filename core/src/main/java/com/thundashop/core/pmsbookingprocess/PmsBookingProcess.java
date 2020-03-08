@@ -753,6 +753,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         addTextualSummary(result);
         addLoggedOnInformation(result);
         addGroupAddons(result);
+        addActiveCampaigns(result);
         validateFields(result);
         return result;
     }
@@ -1189,6 +1190,9 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         
         return generateSummary();
     }
+    
+    
+    
 
     private Double getPriceForRoom(BookingProcessRooms bookingProcessRoom, Date start, Date end, int numberofguests, String discountcode) {
             PmsBookingRooms room = new PmsBookingRooms();
@@ -1908,5 +1912,56 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         pmsManager.saveBooking(booking);
         
         return roomId;
+    }
+
+    private void addActiveCampaigns(GuestAddonsSummary result) {
+        List<Coupon> coupons = cartManager.getCoupons();
+        PmsBooking currentBooking = pmsManager.getCurrentBooking();
+        
+        result.campaigns = new ArrayList();
+        for(Coupon coupon : coupons) {
+            if(!coupon.activeCampaign) {
+                continue;
+            }
+            
+            boolean isValid = false;
+            for(RoomInfo info : result.rooms) {
+                BookingItemType bookingItemType = bookingEngine.getBookingItemType(info.bookingItemTypeId);
+                if(cartManager.couponIsValid(new Date(), coupon.code, info.start,info.end, bookingItemType.productId, info.getNumberOfDays())) {
+                    isValid = true;
+                }
+            }
+            
+            if(isValid) {
+                String language = getSession().language;
+                ActiveCampaigns campaign = new ActiveCampaigns();
+                campaign.couponCode = coupon.code;
+                campaign.description = coupon.campaignDescription.get(language);
+                campaign.title = coupon.campaignTitle.get(language);
+                if(campaign.couponCode.equals(currentBooking.couponCode)) {
+                    campaign.selected = true;
+                }
+                result.campaigns.add(campaign);
+            }
+        }
+    }
+
+    @Override
+    public GuestAddonsSummary setCampaignCode(String code) {
+        PmsBooking currentBooking = pmsManager.getCurrentBooking();
+        for(PmsBookingRooms room : currentBooking.rooms) {
+            room.addons.clear();
+        }
+        if(currentBooking.couponCode != null && currentBooking.couponCode.equals(code)) {
+            currentBooking.couponCode = "";
+        } else {
+            currentBooking.couponCode = code;
+        }
+        try {
+            pmsManager.setBooking(currentBooking);
+        }catch(Exception e) {
+            logPrintException(e);
+        }
+        return generateSummary();
     }
 }

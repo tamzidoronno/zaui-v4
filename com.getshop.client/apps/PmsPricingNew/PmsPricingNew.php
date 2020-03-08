@@ -503,6 +503,7 @@ class PmsPricingNew extends \WebshopApplication implements \Application {
         $this->addRepeatingDates();
         $this->saveDiscountInformation();
         $this->saveCouponPrices();
+        $this->saveCampaingSettings();
     }
 
     public function saveDiscountInformation() {
@@ -538,6 +539,24 @@ class PmsPricingNew extends \WebshopApplication implements \Application {
         } else {
             $coupon->amount = $_POST['data']['otherpriceamount'];
         }
+        $this->getApi()->getCartManager()->addCoupon($coupon);
+    }
+
+    public function saveCampaingSettings() {
+        $coupon = $this->getApi()->getCartManager()->getCouponById($_POST['data']['couponid']);
+        $languages = $this->getFactory()->getLanguageCodes();
+        $languages[] = $this->getFactory()->getSelectedLanguage();
+        
+        $desc = array();
+        $title = array();
+        foreach($languages as $lang) {
+            $title[$lang] = $_POST['data']['campaigntitle_'.$lang];
+            $desc[$lang] = $_POST['data']['campaigndescription_'.$lang];
+        }
+        $coupon->campaignDescription = $desc;
+        $coupon->campaignTitle = $title;
+        $coupon->activeCampaign = $_POST['data']['iscampaign'] == "true";
+        $coupon->presentCampaignOnFrontPage = $_POST['data']['presentonfrontpage'] == "true";
         $this->getApi()->getCartManager()->addCoupon($coupon);
     }
 

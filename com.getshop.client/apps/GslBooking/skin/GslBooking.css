@@ -425,6 +425,20 @@ Error      : #de5353; red
 .GslBooking .gslfront_1 .overview_addons .addButton.added_addon{background-color:#96deff;}
 .GslBooking .gslfront_1 .overview_addons .addButton.added_addon:hover{background-color:#aae0f9;}
 .GslBooking .gslfront_1 .overview_addons .addButton:hover{background-color:#7bbdd3;}
+
+.GslBooking .gslfront_1 .packages_supported { margin-bottom: 10px; }
+.GslBooking .gslfront_1 .packages_supported_inner {margin-top:12px;border: 2px solid #94ccdf;padding: 10px; position:relative;}
+.GslBooking .gslfront_1 .packages_supported_inner .addonprinted {position:relative; }
+.GslBooking .gslfront_1 .packages_supported_inner .addCampaignButton{padding: 4px 0;background-color:#6cadc2;}
+.GslBooking .gslfront_1 .packages_supported_inner .addCampaignButton.added_addon{background-color:#96deff;}
+.GslBooking .gslfront_1 .packages_supported_inner .addCampaignButton.added_addon:hover{background-color:#aae0f9;}
+.GslBooking .gslfront_1 .packages_supported_inner .addBuaddCampaignButtontton:hover{background-color:#7bbdd3;}
+.GslBooking .gslfront_1 .packages_supported_inner .selectcampaign {position:absolute; right: 10px; width: 15%; }
+.GslBooking .gslfront_1 .packages_supported_inner .campaign_title {display:block; font-weight: bold; line-height: 30px; }
+.GslBooking .gslfront_1 .packages_supported_inner .campaignrow {box-shadow: inset 0px -1px 0px 0px #ddd; display:block; padding-bottom: 10px; margin-bottom: 10px; }
+.GslBooking .gslfront_1 .packages_supported_inner .campaignrow:last-child { box-shadow: 0 0 0; }
+
+
 .GslBooking .secondary_text { font-size: 14px;letter-spacing: 1px;padding-left: 20px;}
 
 .GslBooking .gslfront_1 .mobilecheckinheading span, .GslBooking .gslfront_1 .mobilecheckoutheading span{position:absolute;}
@@ -801,7 +815,7 @@ Error      : #de5353; red
         -moz-box-shadow: 0px 0px 0px 1px #ddd;
         box-shadow: 0px 0px 0px 1px #ddd;
     }
-    .GslBooking .removeallselectedroomsbtn { float:left; margin-left: 10px; }
+    .GslBooking .removeallselectedroomsbtn { float:left; margin-left: 10px; } 
 }
 
 /*End of gslfront 1*/

@@ -368,7 +368,7 @@ public class StorePool {
     }
 
     private Integer getNextIncrementalStoreId() {
-        int start = 1000;
+        int start = 1000000;
         for (Store store : stores.values()) {
             if (store.incrementalStoreId != null && store.incrementalStoreId.intValue() > start) {
                 start = store.incrementalStoreId.intValue();

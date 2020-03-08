@@ -1,6 +1,16 @@
 <?
 include '../loader.php';
+
 $factory = IocContainer::getFactorySingelton();
+
+if (isset($_GET['refcode'])) {
+    $user = $factory->getApi()->getUserManager()->logonUsingRefNumber($_GET['refcode']);
+    
+    if ($user) {
+        ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::setLoggedOn($user);
+    }
+}
+
 $instance = new \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login();
 $instance->preProcess();
 

@@ -96,6 +96,7 @@ public class PmsBookingAddonItem extends TranslationHandler implements Serializa
     public boolean isUniqueOnOrder = false;
     public String referenceId = "";
     public Integer taxGroupNumber = null;
+    public String departmentRemoteId = "";
     
     
     Map<String, String> variations = new HashMap();

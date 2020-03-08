@@ -326,4 +326,13 @@ public class GdsManager extends ManagerBase implements IGdsManager {
     public GetShopDevice getDevice(String deviceId) {
         return devices.get(deviceId);
     }
+
+    public void sendMessageToGetShopCentral(GetShopCentralMessage shopCentralMessage) {
+        devices.values()
+                .stream()
+                .filter(o -> o.type != null && o.type.equals("getshop_central"))
+                .forEach(dev -> {
+                    sendMessageToDevice(dev.id, shopCentralMessage);
+                });
+    }
 }

@@ -22,6 +22,7 @@ import com.thundashop.core.getshopaccounting.DayIncome;
 import com.thundashop.core.getshopaccounting.GetShopAccountingManager;
 import com.thundashop.core.giftcard.GiftCardManager;
 import com.thundashop.core.gsd.GdsManager;
+import com.thundashop.core.gsd.GetShopCentralMessage;
 import com.thundashop.core.gsd.KitchenPrintMessage;
 import com.thundashop.core.gsd.RoomReceipt;
 import com.thundashop.core.ordermanager.OrderManager;
@@ -53,6 +54,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -359,7 +361,6 @@ public class PosManager extends ManagerBase implements IPosManager {
 
             giftCardManager.getGiftCardsCreatedByOrderId(order.id).stream()
                     .forEach(giftCard -> {
-                        try { Thread.sleep(2000); }catch(Exception e) {}
                         giftCardManager.printGiftCard(cashPointDeviceId, giftCard.id);
                     });
         }
@@ -440,7 +441,15 @@ public class PosManager extends ManagerBase implements IPosManager {
         report.cashPointId = cashPointId;
         report.orderIds.addAll(orderdIdsFromConfernceSystem);
         report.orderIds.addAll(autoCreatedOrders);
+        report.orderIds.addAll(getAllInvoicesToBeTransferred());
 
+        report.retransmittedOrderIds = orderManager.getOrdersToTransferToCentral();
+
+        orderManager.unmarkRetransmitToCentral(report.retransmittedOrderIds);
+        
+        orderManager.markAsTransferredToCentral(report.orderIds);
+        orderManager.markAsTransferredToCentral(report.retransmittedOrderIds);
+        
         if (connectedToCentral) {
             report.orderIds.stream()
                 .forEach(orderId -> {
@@ -458,6 +467,7 @@ public class PosManager extends ManagerBase implements IPosManager {
         }
 
         getShopAccountingManager.transferAllDaysThatCanBeTransferred();
+        gdsManager.sendMessageToGetShopCentral(new GetShopCentralMessage("NEW_ZREPORT_CREATED"));
     }
 
     /**
@@ -1113,10 +1123,6 @@ public class PosManager extends ManagerBase implements IPosManager {
                 .filter(o -> connectedToCentral || o.createOrdersOnZReport)
                 .filter(o -> o.hasUnsettledAmountIncAccrued())
                 .filter(o -> {
-                    
-                    if (connectedToCentral)
-                        return true;
-                    
                     return o.date.start.before(end) || o.date.start.equals(end);
                 })
                 .collect(Collectors.toList());
@@ -1344,6 +1350,7 @@ public class PosManager extends ManagerBase implements IPosManager {
                 .collect(Collectors.toList());
         
         eventIdsInConference.add("");
+        eventIdsInConference.add("overview");
         
         PosTab tab = getTab(conf.tabId);
         tab.cartItems.removeIf(item -> item.conferenceEventId != null && !eventIdsInConference.contains(item.conferenceEventId));
@@ -1487,99 +1494,157 @@ public class PosManager extends ManagerBase implements IPosManager {
         List<CartItem> cartItemsInDifference = getDiff(autoCreatedOrders, getTab(tabId), pmsConferenceId);
         return cartItemsInDifference;
     }
+    
+    private String createKey(CartItem o, String pmsConferenceId) {
+        String key = o.conferenceEventId;
+        
+        if (o.conferenceEventId == null || o.conferenceEventId.trim().isEmpty()) {
+            key = "overview";
+        }
+        
+        key += "_____";
+        key += getDateForConfernceFormatted(pmsConferenceId, o.conferenceEventId, o);
+        key += "_____";
+        key += o.departmentRemoteId;
+        
+        return key;
+    }
 
     private List<CartItem> getDiff(List<Order> autoCreatedOrders, PosTab tab, String pmsConferenceId) {
         if (tab == null) {
             tab = new PosTab();
         }
 
-        Map<String, List<CartItem>> cartItemsFromOrdersGrouped = autoCreatedOrders.stream()
+        Map<String, List<CartItem>> cartItemsFromOrdersGroupedByDay = autoCreatedOrders.stream()
                 .flatMap(o -> o.getCartItems().stream())
-                .collect(Collectors.groupingBy(o -> o.conferenceEventId + "_____" + getDateForConfernceFormatted(pmsConferenceId, o.conferenceEventId, o)));
+                .collect(Collectors.groupingBy(o -> createKey(o, pmsConferenceId)));
 
-        Map<String, List<CartItem>> allProductIdsFromTabGrouped = tab.cartItems
+        Map<String, List<CartItem>> allProductIdsFromTabGroupedByDay = tab.cartItems
                 .stream()
                 .distinct()
-                .collect(Collectors.groupingBy(o -> o.conferenceEventId + "_____" + getDateForConfernceFormatted(pmsConferenceId, o.conferenceEventId, null)));
+                .collect(Collectors.groupingBy(o -> createKey(o, pmsConferenceId)));
 
-        List<String> allGroups = new ArrayList(cartItemsFromOrdersGrouped.keySet());
-        allGroups.addAll(allProductIdsFromTabGrouped.keySet());
+        List<String> allGroups = new ArrayList(cartItemsFromOrdersGroupedByDay.keySet());
+        allGroups.addAll(allProductIdsFromTabGroupedByDay.keySet());
 
         allGroups = allGroups.stream().distinct().collect(Collectors.toList());
         
         List<CartItem> retList = new ArrayList();
         
+        SimpleDateFormat simpleDateFormatter = new SimpleDateFormat("dd.MM.yyyy");
+        
         for (String eventIdKey : allGroups) {
-            
-            List<CartItem> cartItemsFromOrders = new ArrayList();
-            List<CartItem> allCartItemsFromTab = new ArrayList();
-            
-            if (cartItemsFromOrdersGrouped.get(eventIdKey) != null) {
-                cartItemsFromOrders = cartItemsFromOrdersGrouped.get(eventIdKey);
-            }
-            
-            if (allProductIdsFromTabGrouped.get(eventIdKey) != null) {
-                allCartItemsFromTab = allProductIdsFromTabGrouped.get(eventIdKey);
-            }
+            System.out.println(eventIdKey);
             
             String[] splittedEventKey = eventIdKey.split("_____");
             String eventId = splittedEventKey[0];
             String dateKey = splittedEventKey[1];
+            String departmentId = ""; 
             
-            SimpleDateFormat simpleDateFormatter = new SimpleDateFormat("dd.MM.yyyy");
-
-            List<String> allProductIdsFromOrder = cartItemsFromOrders.stream()
-                    .map(o -> o.getProductId())
-                    .distinct()
-                    .collect(Collectors.toList());
+            if (splittedEventKey.length > 2) {
+                departmentId = splittedEventKey[2];
+            }
             
-            List<String> allProductIdsFromTab = allCartItemsFromTab.stream()
-                    .map(o -> o.getProductId())
-                    .distinct()
-                    .collect(Collectors.toList());
-
-            List<String> allProductsIds = new ArrayList();
-            allProductsIds.addAll(allProductIdsFromOrder);
-            allProductsIds.addAll(allProductIdsFromTab);
-            allProductsIds = allProductsIds.stream().distinct().collect(Collectors.toList());
-
-            for (String productId : allProductsIds) {
-                int countInTab = getCountInCartItems(allCartItemsFromTab, productId, eventId);
-                int countInOrders = getCountInCartItems(cartItemsFromOrders, productId, eventId);
-
-                BigDecimal totalFromTab = getTotalInCartItems(allCartItemsFromTab, productId, eventId);
-                BigDecimal totalFromOrder = getTotalInCartItems(cartItemsFromOrders, productId, eventId);
-                BigDecimal toCreateOrderFor = totalFromTab.subtract(totalFromOrder);
-
-                int countToCreateFor = countInTab - countInOrders;
-                if (!toCreateOrderFor.equals(BigDecimal.ZERO)) {
-                    if (countToCreateFor == 0) {
-                        countToCreateFor = 1;
-                    }
-
-                    CartItem item = new CartItem();
-                    item.setProduct(productManager.getProduct(productId).clone());
-                    item.setCount(countToCreateFor);
-                    item.getProduct().price = toCreateOrderFor.doubleValue() / (double) countToCreateFor;
-                    try {
-                        item.accountingDate = simpleDateFormatter.parse(dateKey);
-                    } catch (ParseException ex) {
-                        throw new NullPointerException("There should always be a date available for items added to a conference.");
-                    }
-                    
-                    item.conferenceEventId = eventId;
-                    retList.add(item);
+            Map<Integer, List<CartItem>> cartItemsFromOrdersGroupedByTaxGroup = new HashMap();
+            Map<Integer, List<CartItem>> allCartItemsFromTabGroupedByTaxGroup = new HashMap();
+            
+            if (cartItemsFromOrdersGroupedByDay.get(eventIdKey) != null) {
+                cartItemsFromOrdersGroupedByTaxGroup = cartItemsFromOrdersGroupedByDay.get(eventIdKey)
+                        .stream()
+                        .collect(Collectors.groupingBy(o -> { 
+                            return new Integer(o.getProduct().taxgroup); 
+                        }
+                        ));
+            }
+            
+            if (allProductIdsFromTabGroupedByDay.get(eventIdKey) != null) {
+                allCartItemsFromTabGroupedByTaxGroup = allProductIdsFromTabGroupedByDay.get(eventIdKey)
+                        .stream()
+                        .collect(Collectors.groupingBy(o -> { 
+                            return new Integer(o.getProduct().taxgroup); 
+                        }
+                        ));
+            }
+            
+            List<Integer> allTaxGroups = new ArrayList(cartItemsFromOrdersGroupedByTaxGroup.keySet());
+            allTaxGroups.addAll(allCartItemsFromTabGroupedByTaxGroup.keySet());
+            allTaxGroups = allTaxGroups.stream().distinct().collect(Collectors.toList());
+            
+            for (Integer taxGroup : allTaxGroups) {
+            
+                List<String> allProductIdsFromOrder = new ArrayList();
+                List<CartItem> cartItemsFromOrders = new ArrayList();
+                if (cartItemsFromOrdersGroupedByTaxGroup.get(taxGroup) != null) {
+                    cartItemsFromOrders = cartItemsFromOrdersGroupedByTaxGroup.get(taxGroup);
+                    allProductIdsFromOrder = cartItemsFromOrders.stream()
+                        .filter(o -> o.getProduct().taxgroup == taxGroup)
+                        .map(o -> o.getProductId())
+                        .distinct()
+                        .collect(Collectors.toList());
                 }
+
+                List<String> allProductIdsFromTab = new ArrayList();
+                
+                List<CartItem> allCartItemsFromTab = new ArrayList();
+                
+                if (allCartItemsFromTabGroupedByTaxGroup.get(taxGroup) != null) {
+                    allCartItemsFromTab = allCartItemsFromTabGroupedByTaxGroup.get(taxGroup);
+                    allProductIdsFromTab = allCartItemsFromTab.stream()
+                            .filter(o -> o.getProduct().taxgroup == taxGroup)
+                            .map(o -> o.getProductId())
+                            .distinct()
+                            .collect(Collectors.toList());
+                }
+                
+                List<String> allProductsIds = new ArrayList();
+                allProductsIds.addAll(allProductIdsFromOrder);
+                allProductsIds.addAll(allProductIdsFromTab);
+                allProductsIds = allProductsIds.stream().distinct().collect(Collectors.toList());
+
+                for (String productId : allProductsIds) {
+                    int countInTab = getCountInCartItems(allCartItemsFromTab, productId, eventId, departmentId);
+                    int countInOrders = getCountInCartItems(cartItemsFromOrders, productId, eventId, departmentId);
+
+                    BigDecimal totalFromTab = getTotalInCartItems(allCartItemsFromTab, productId, eventId, departmentId);
+                    BigDecimal totalFromOrder = getTotalInCartItems(cartItemsFromOrders, productId, eventId, departmentId);
+                    BigDecimal toCreateOrderFor = totalFromTab.subtract(totalFromOrder);
+
+                    System.out.println("Total from tab: " + totalFromTab + " | "  + totalFromOrder + " | " + toCreateOrderFor + " | " + taxGroup + " | " + productId);
+                    int countToCreateFor = countInTab - countInOrders;
+                    if (!toCreateOrderFor.equals(BigDecimal.ZERO)) {
+                        if (countToCreateFor == 0) {
+                            countToCreateFor = 1;
+                        }
+
+                        CartItem item = new CartItem();
+                        item.setProduct(productManager.getProduct(productId).clone());
+                        item.setCount(countToCreateFor);
+                        item.getProduct().price = toCreateOrderFor.doubleValue() / (double) countToCreateFor;
+                        try {
+                            item.accountingDate = simpleDateFormatter.parse(dateKey);
+                        } catch (ParseException ex) {
+                            throw new NullPointerException("There should always be a date available for items added to a conference.");
+                        }
+
+                        item.getProduct().taxgroup = taxGroup;
+                        item.getProduct().taxGroupObject = productManager.getTaxGroup(item.getProduct().taxgroup);
+                        item.conferenceEventId = eventId;
+                        item.departmentRemoteId = departmentId;
+                        retList.add(item);
+                    }
+                }
+
             }
         }
 
         return retList;
     }
 
-    private BigDecimal getTotalInCartItems(List<CartItem> cartItemsFromOrders, String productId, String eventId) {
+    private BigDecimal getTotalInCartItems(List<CartItem> cartItemsFromOrders, String productId, String eventId, String departmentId) {
         return cartItemsFromOrders.stream()
                 .filter(o -> eventId.equals(o.conferenceEventId))
                 .filter(o -> o.getProductId().equals(productId))
+                .filter(o -> departmentId.equals(o.departmentRemoteId))
                 .map(o -> {
                     if (o.overridePriceIncTaxes != null && o.overridePriceIncTaxes != 0D) {
                         return o.getTotalAmountRoundedWithTwoDecimalsOverride(2);
@@ -1590,9 +1655,10 @@ public class PosManager extends ManagerBase implements IPosManager {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    private int getCountInCartItems(List<CartItem> cartItems, String productId, String eventId) {
+    private int getCountInCartItems(List<CartItem> cartItems, String productId, String eventId, String departmentId) {
         return cartItems.stream()
                 .filter(o -> eventId.equals(o.conferenceEventId))
+                .filter(o -> departmentId.equals(o.departmentRemoteId))
                 .filter(o -> o.getProductId().equals(productId))
                 .mapToInt(o -> o.getCount())
                 .sum();
@@ -1758,6 +1824,15 @@ public class PosManager extends ManagerBase implements IPosManager {
             report.transferredToCentral = true;
             saveObject(report);
         }
+    }
+
+    private List<String> getAllInvoicesToBeTransferred() {
+        return orderManager.getAllOrders()
+                .stream()
+                .filter(o -> !o.transferredToCentral)
+                .filter(o -> o.isInvoice())
+                .map(o -> o.id)
+                .collect(Collectors.toList());
     }
 
 }

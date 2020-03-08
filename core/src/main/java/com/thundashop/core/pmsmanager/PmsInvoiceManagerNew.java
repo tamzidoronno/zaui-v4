@@ -235,7 +235,7 @@ public class PmsInvoiceManagerNew {
                 prod.name = orderText;
             }
             
-            setTaxGroupToProduct(referenceId, roomData, prod);
+            PmsBookingAddonItem addonByReferenceId = setTaxGroupToProduct(referenceId, roomData, prod, item);
             
             item.setCount(getCount(days));
             
@@ -263,13 +263,18 @@ public class PmsInvoiceManagerNew {
                 } catch (ParseException ex) {
                     Logger.getLogger(PmsInvoiceManagerNew.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                
+                if (addonByReferenceId != null) {
+                    addonItem.date = addonByReferenceId.date;
+                }
+                
                 addonItem.isIncludedInRoomPrice = d.includedInRoomPrice;
                 item.itemsAdded.add(addonItem);
             });
         }
     }
 
-    private void setTaxGroupToProduct(String referenceId, PmsOrderCreateRow roomData, Product prod) {
+    private PmsBookingAddonItem setTaxGroupToProduct(String referenceId, PmsOrderCreateRow roomData, Product prod, CartItem item) {
         if (referenceId != null && !referenceId.isEmpty()) {
             PmsBooking booking = pmsManager.getBookingFromRoom(roomData.roomId);
             if (booking != null) {
@@ -280,6 +285,10 @@ public class PmsInvoiceManagerNew {
                             .findAny()
                             .orElse(null);
                     
+                    if (addon != null && addon.departmentRemoteId != null) {
+                        item.departmentRemoteId = addon.departmentRemoteId;
+                    }
+                    
                     if (addon != null && addon.taxGroupNumber != null) {
                         TaxGroup taxGroup = productManager.getTaxGroup(addon.taxGroupNumber);
                         if (taxGroup != null) {
@@ -287,9 +296,13 @@ public class PmsInvoiceManagerNew {
                             prod.taxgroup = addon.taxGroupNumber;
                         }
                     }
+                    
+                    return addon;
                 }
             }
         }
+        
+        return null;
     }
 
     private List<CartItem> addConferenceCartItems(PmsOrderCreateRow roomData) {

@@ -741,7 +741,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         logonEncrypted(refCode, user.password, false);
         
         user.referenceKey = UUID.randomUUID().toString();
-        saveUser(user);
+        saveUserSecure(user);
         
         return user;
     }

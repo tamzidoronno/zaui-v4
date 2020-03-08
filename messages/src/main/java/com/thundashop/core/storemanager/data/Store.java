@@ -30,6 +30,7 @@ public class Store extends DataCommon {
     public String favicon = "";
     public String masterStoreId = "";
     public List<String> acceptedSlaveIds = new ArrayList();
+    public Integer incrementalStoreId = null;
     
     /**
      * If this is set the it will default to this 

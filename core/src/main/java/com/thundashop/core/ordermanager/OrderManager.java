@@ -3234,13 +3234,19 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         checkAndResetOrderByClosedPeriodeDate(data);
+        
+        if (data instanceof Order) {
+            if (((Order)data).transferredToCentral) {
+                ((Order)data).retransmitToCentral = true;
+            }
+        }
+        
         super.saveObject(data); //To change body of generated methods, choose Tools | Templates.
         
         if (data instanceof Order) {
             updateStock((Order)data);
         }
-        
-        
+
     }
 
     private void checkAndResetOrderByClosedPeriodeDate(DataCommon data) {
@@ -5130,5 +5136,30 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         saveObject(settings);   
     }
 
+    public List<String> getOrdersToTransferToCentral() {
+        return orders.values()
+                .stream()
+                .filter(o -> o.retransmitToCentral)
+                .map(o -> o.id)
+                .collect(Collectors.toList());
+    }
+    
+    public void unmarkRetransmitToCentral(List<String> orderIds) {
+        orderIds.stream()
+            .map(o -> getOrderSecure(o))
+            .forEach(order -> {
+                order.retransmitToCentral = false;
+                super.saveObject(order);
+            });
+    }
+
+    public void markAsTransferredToCentral(List<String> orderIds) {
+        orderIds.stream()
+            .map(o -> getOrderSecure(o))
+            .forEach(order -> {
+                order.transferredToCentral = true;
+                super.saveObject(order);
+            });
+    }
 
 }

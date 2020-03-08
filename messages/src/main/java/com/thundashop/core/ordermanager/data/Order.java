@@ -34,16 +34,16 @@ import java.util.Map;
 import java.util.TreeSet;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.mongodb.morphia.annotations.Transient;
 
 /**
  *
- * @author ktonder
+ * @author ktonder = fa
  */
 public class Order extends DataCommon implements Comparable<Order> {
     public Boolean triedTransferredToAccountingSystem = false;
     public Boolean transferredToAccountingSystem = false;
+    public boolean retransmitToCentral = false;
     public Date transferredToCreditor = null;
     
     public HashMap<Long, TerminalResponse> terminalResponses = new HashMap();
@@ -211,6 +211,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public String originalUserBeforeMerge = "";
 
     public String terminalReceiptText = "";
+    public boolean transferredToCentral = false;
     
     public Order jsonClone() {
         Order orderNew = jsonCloneLight();

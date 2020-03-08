@@ -288,7 +288,9 @@ if(stristr($user->emailAddress, "@getshop.com")) {
     <hr>
     <h1>Remote access</h1>
     <div>
+        <h2>Incremental store id: <? echo $this->getApi()->getStoreManager()->getMyStore()->incrementalStoreId; ?></h2>
         <?
+       
         $tokens = $this->getApi()->getGetShopCentral()->getTokens();
 
         foreach ($tokens as $token) {

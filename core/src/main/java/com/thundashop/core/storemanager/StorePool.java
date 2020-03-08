@@ -63,12 +63,31 @@ public class StorePool {
                 counter = (StoreCounter) dataCommon;
             }
         }
+        
+        stores.values()
+            .stream()
+            .filter(o -> o.incrementalStoreId == null)
+            .forEach(store -> {
+                if (store != null) {
+                    saveStore(store);
+                }
+            });
     }
    
     public synchronized Store getStoreByWebaddress(String webAddress) throws ErrorException {
         Store store = null;
 
+        Integer incStoreIdFromWebAddr = null;
+        
+        if (webAddress != null && webAddress.contains("pms")) {
+            String[] splitted = webAddress.split("pms");
+            try { incStoreIdFromWebAddr = Integer.parseInt(splitted[0]); } catch (Exception ex) {}
+        }
+        
         for (Store istore : stores.values()) {
+            if (incStoreIdFromWebAddr != null && istore.incrementalStoreId != null && istore.incrementalStoreId.equals(incStoreIdFromWebAddr)) {
+                return istore;
+            }
             if (istore.webAddress != null && istore.webAddress.equalsIgnoreCase(webAddress)) {
                 store = istore;
             }
@@ -201,6 +220,11 @@ public class StorePool {
 
     public synchronized void saveStore(Store store) throws ErrorException {
         store.storeId = "all";
+        
+        if (store.incrementalStoreId == null) {
+            store.incrementalStoreId = getNextIncrementalStoreId();
+        }
+        
         stores.put(store.id, store);
         database.save(store, credentials);
     }
@@ -341,5 +365,17 @@ public class StorePool {
         }
 
         return null;
+    }
+
+    private Integer getNextIncrementalStoreId() {
+        int start = 1000;
+        for (Store store : stores.values()) {
+            if (store.incrementalStoreId != null && store.incrementalStoreId.intValue() > start) {
+                start = store.incrementalStoreId.intValue();
+            }
+        }
+        
+        start++;
+        return start;
     }
 }

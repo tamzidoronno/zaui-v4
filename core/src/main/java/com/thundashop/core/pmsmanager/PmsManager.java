@@ -6353,6 +6353,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         addon.variations = product.variationCombinations;
         addon.date = item.getStartingDate();
         addon.addedBy = addedBy;
+        addon.departmentRemoteId = item.departmentRemoteId;
         
         addon.taxGroupNumber = taxGroup.groupNumber;
         

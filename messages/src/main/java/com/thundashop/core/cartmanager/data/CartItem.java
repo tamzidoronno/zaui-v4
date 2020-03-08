@@ -58,6 +58,8 @@ public class CartItem implements Serializable, Cloneable {
     public String addedByGetShopModule = "";
     public String pmsBookingId = "";
     
+    public String departmentRemoteId = "";
+    
     /**
      * Use this date instead of the order.rowCreatedDate 
      * if this has been set.

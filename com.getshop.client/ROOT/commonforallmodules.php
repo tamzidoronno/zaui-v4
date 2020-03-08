@@ -21,8 +21,11 @@ if($useCache) {
 }
 
 
+$_SESSION['hasoverdueinvoices'] = false;
+
 if($fetched && $fetched != "null" && $fetched != "[]") {
-    echo "<div style='background-color:red; text-align:center; color:#fff;padding: 10px; font-size: 16px;position:fixed;bottom: 0px;width:100%;z-index:1000; cursor:pointer;' onclick=\"$(this).hide()\">";
+    $_SESSION['hasoverdueinvoices'] = true;
+    echo "<div class='warnsystemshutdownduebills' style='background-color:red; text-align:center; color:#fff;padding: 10px; font-size: 16px;position:fixed;bottom: 0px;width:100%;z-index:1000; cursor:pointer;' onclick=\"$(this).hide()\">";
     $fetched = json_decode($fetched);
     $ids = array();
     foreach($fetched as $f) {

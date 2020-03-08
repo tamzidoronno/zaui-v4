@@ -80,8 +80,12 @@ echo "</span>";
         $events = (array)$this->getApi()->getPmsConferenceManager()->getConferenceEventsByFilter($filter);
         echo "<span class='eventsarea'>";
         foreach($events as $event) {
+            $thisConference = "";
+            if($event->pmsConferenceId == $this->getPmsBooking()->conferenceId) {
+                $thisConference = "thisconferenceevententry";
+            }
             $betweendate = date("H:i", strtotime($event->from)) . " - " . date("H:i", strtotime($event->to));
-            echo "<span class='evententry' start='".strtotime($event->from)."' end='".strtotime($event->to)."' title='".$event->name." ($betweendate)'>".$event->name."</span>";
+            echo "<span class='evententry $thisConference' start='".strtotime($event->from)."' end='".strtotime($event->to)."' title='".$event->name." ($betweendate)'>".$event->name."</span>";
         }
         echo "</span>";
         echo "</span>";
@@ -100,6 +104,7 @@ echo "</span>";
     .hoursdescheader { display:inline-block; width: 200px; }
     .itemsarea { border: solid 1px #bbb; }
     .hoursinheader { position:relative;}
+    .thisconferenceevententry { background-color: #332020 !important; }
     .eventsinitem { position:absolute; top: 0px; }
     .evententry { position:absolute; width: 0px;border-radius: 3px;
         white-space: nowrap;
@@ -119,7 +124,8 @@ echo "</span>";
     }
     
     .itemrow { position:relative; border-bottom: solid 1px #bbb; }
-    .itemname { display:block; width: 200px;
+    .itemname { 
+        display:block; width: 200px;
         white-space: nowrap;
         box-sizing: border-box;
         overflow: hidden;

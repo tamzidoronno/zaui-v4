@@ -17,8 +17,9 @@ if ($eventId == "overview") {
 $menu = array();
 $menu['conference_overview'] = "Overview";
 $menu['conference_activities'] = "Activities";
-$menu['conference_timeline'] = "Timeline";
 $menu['conference_pos'] = "Pos";
+$menu['conference_timeline'] = "Timeline";
+$menu['conference_report'] = "Report";
 
 
 $icons = array();
@@ -26,6 +27,7 @@ $icons['conference_overview'] = "info-circle";
 $icons['conference_activities'] = "play-circle-o";
 $icons['conference_timeline'] = "play-circle-o";
 $icons['conference_pos'] = "money";
+$icons['conference_report'] = "file-pdf-o";
 
 $selected = "guests";
 if(isset($_POST['data']['subsection'])) {
@@ -42,9 +44,14 @@ foreach($menu as $id => $val) {
     if($id == "log") {
         $hide = "display:none;";
     }
+    $right = "";
+    if($id == "conference_timeline") {
+        $right = "style='float:right;'";
+    }
+    
     $select = ($selected == $id) ? "selected" : "";
     $firstClass = $first ? "first" : "";
-    echo "<span class='menubutton $select $firstClass' subsection='$id' style='$hide'>";
+    echo "<span $right class='menubutton $select $firstClass' subsection='$id' style='$hide'>";
     echo "<span ><div><i class='fa fa-" . $icons[$id] . "'></i></div></span>";
     echo "<div>$val</div></span>";
     $first = false;
@@ -70,3 +77,19 @@ if(in_array($selected,array_keys($menu))) {
 
 
 ?>
+<style>
+.dateheader {
+    border: solid 1px #bbb;
+    text-align: center;
+    font-weight: bold;
+    background-color: #efefef;
+    margin: 10px;
+    padding: 10px;
+    
+}
+.eventheader {
+    margin-top: 10px;
+    font-weight: bold;
+    padding-bottom: 10px;
+}
+</style>

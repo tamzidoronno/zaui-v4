@@ -109,6 +109,9 @@ if ($room->code && $room->addedToArx) {
                 </div>
 
             </div>
+        <?php
+        $this->includefile("accesslog");
+        ?>
         </div>
     </div>
     <?
@@ -153,7 +156,6 @@ if (!$isSameDayStart) {
     
     return;
 }
-
 if ($isPaid && $isClean) {
     ?>
     <div class="kaipal infobox">
@@ -258,4 +260,3 @@ if (!$isPaid && !$isClean) {
     <?
 }
 ?>
-

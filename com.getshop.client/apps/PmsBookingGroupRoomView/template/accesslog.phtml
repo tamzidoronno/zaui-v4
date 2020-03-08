@@ -1,0 +1,46 @@
+
+<?
+
+/* @var $this \ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
+$room = $this->getPmsBookingRoom();
+if (!$room->bookingItemId) {
+    return;
+}
+
+$item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $room->bookingItemId);
+if (!$item->lockGroupId) {
+    return;
+}
+
+if (!$room->codeObject && !count($room->codeObjectHistory)) {
+    echo "Code not used";
+    return;
+}
+
+$startDate = $room->date->start;
+$endDate = $room->date->end;
+$results = array();
+
+if (!$room->codeObject) {
+    foreach ($room->codeObjectHistory as $codeObject) {
+        $results2 = $this->getApi()->getGetShopLockSystemManager()->getAccessHistory($item->lockGroupId, $startDate, $endDate, $codeObject->slotId);
+        $results = array_merge($results2, $results);
+    }
+} else {
+    $results = $this->getApi()->getGetShopLockSystemManager()->getAccessHistory($item->lockGroupId, $startDate, $endDate, $room->codeObject->slotId);
+}
+
+?>
+<div class="header"><? echo $this->__f("Access log"); ?></div>
+<div class="text">
+    <?
+    if (!count($results)) {
+        echo $this->__f("The guest has not used his code yet.");
+    } else {
+        foreach ($results as $result) {
+            $time = date('d.m.Y H:i', strtotime($result->time));
+            echo "<div>The guest accessed $result->doorName at $time</div>";
+        }
+    }
+    ?>
+</div>

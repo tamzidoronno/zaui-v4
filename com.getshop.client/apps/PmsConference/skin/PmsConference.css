@@ -65,6 +65,8 @@
 .PmsConference .headerspacer { height: 50px; }
 
 @media print {
+    .warnsystemshutdownduebills,
+    .gsarea[area="header"] { display:none; }
     .reportfilter { display:none; }
     .dateheader { border: solid 0px !important; background-color: none !important; }
     .printheader { display:block !important; }

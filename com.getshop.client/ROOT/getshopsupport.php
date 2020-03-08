@@ -21,7 +21,6 @@ if(isset($_GET['page']) && $_GET['page'] == "a90a9031-b67d-4d98-b034-f8c201a8f49
 $user = $factory->getApi()->getUserManager()->getLoggedOnUser();
 
 $_SESSION['firstloadpage'] = true;
-
 ?>
 <html pageid="<? echo $page->getId(); ?>" module="getshopsupport">
     <head>
@@ -82,7 +81,18 @@ $_SESSION['firstloadpage'] = true;
             ?>
 
             <div class="gs_body_inner">
-                <? $page->renderPage(); ?>
+
+            <?php
+            if($_SESSION['hasoverdueinvoices']) {
+                echo "<center><br><br><br><br>";
+                echo "<div style='font-size:20px;'>";
+                echo "Support center has been disabled due to overdue invoices.";
+                echo "</div>";
+                echo "</center>";
+            } else {
+                $page->renderPage();
+            }
+            ?>
             </div>
 
         </div>

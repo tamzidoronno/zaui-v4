@@ -1,0 +1,111 @@
+
+<?php
+/* @var $this \ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
+
+$filter = new core_pmsmanager_PmsConferenceEventFilter();
+$filter->start = null;
+$filter->end = null;
+$filter->itemIds = array();
+$filter->pmsConferenceId = $this->getPmsBooking()->conferenceId;
+$conference = $this->getConference();
+$events = $this->getEvents();
+$conferenceItems = $this->getApi()->getPmsConferenceManager()->getAllItem("-1");
+$conferenceItems = $this->indexList($conferenceItems);
+
+$currentDate = "";
+$firstDate = true;
+?>
+
+<div class='eventreportarea'>
+    <?php
+
+    echo "<table width='100%' class='texttable' cellspacing='0' cellpadding='0'>";
+
+    echo "<tr>";
+    echo "<th valign='top' align='left'>From</th>";
+    echo "<th valign='top' align='left'>To</th>";
+    echo "<th valign='top' align='left'>Text</th>";
+    echo "<th valign='top' align='left'>Extended text</th>";
+    echo "<th valign='top' align='center'>Count</th>";
+    echo "<th valign='top' align='left'>Room</th>";
+    echo "</tr>";
+
+    foreach($events as $event) {
+        $date = date("d.m.Y", strtotime($event->from));
+        
+        $from = "";
+        if($event->from) {
+            $from = date("H:i", strtotime($event->from)); 
+        }
+        $to = "";
+        if($event->to) { $to = date("H:i", strtotime($event->to)); }
+
+        
+        if($date != $currentDate) {
+            $currentDate = $date;
+            if(!$firstDate) {
+                echo "<tr><td colspan='20'><br><br></td></tr>";
+            }
+            $firstDate = false;
+            echo "<tr><td colspan='20' class='dateheader'>$date</td></tr>";
+        }
+        
+        $count = $event->attendeeCount;
+        if(!$count) {
+            $count = $conference->attendeeCount;
+        }
+        
+        echo "<tr style='font-weight:bold;'>";
+        echo "<td>$from</td>";
+        echo "<td>$to</td>";
+        echo "<td>".$event->name."</td>";
+        echo "<td>".$event->description."</td>";
+        echo "<td align='center'>".$count."</td>";
+        $name = $conferenceItems[$event->pmsConferenceItemId]->name;
+        echo "<td>".$name."</td>";
+        echo "</tr>";
+        
+        
+        $eventEntries = (array) $this->getApi()->getPmsConferenceManager()->getEventEntries($event->id);
+        foreach($eventEntries as $eventEntry) {
+
+            $from = "";
+            $gray = "";
+            if($eventEntry->from) {
+                $from = date("H:i", strtotime($eventEntry->from)); 
+                if(strtotime($eventEntry->from) < (time()+600)) {
+                    $gray = "style='color:gray'";
+                }
+            }
+            $to = "";
+            if($eventEntry->to) { $to = date("H:i", strtotime($eventEntry->to)); }
+            $text = $eventEntry->text;
+            $count = $eventEntry->count;
+            if(!$count) {
+                $count = $conference->attendeeCount;
+            }
+            
+            echo "<tr $gray>";
+            echo "<td valign='top'>$from</td>";
+            echo "<td valign='top'>$to</td>";
+            echo "<td valign='top'>".$eventEntry->text."</td>";
+            echo "<td valign='top'>" . nl2br($eventEntry->extendedText) . "</td>";
+            echo "<td valign='top' align='center'>$count</td>";
+            echo "<td valign='top' class='openevent' eventid='".$eventEntry->pmsEventId."'></td>";
+            echo "</tr>";
+        }
+    }
+    echo "</table>";
+    ?>
+</div>
+
+<script>
+    getshop_loadDatePicker($('.startdate'), { dependant : $('.enddate') });    
+    getshop_loadDatePicker($('.enddate'), { dependant : $('.startdate') });
+    setInterval(function() {
+        if(app.PmsConference.disableAutoReload) {
+            return;
+        }
+        document.location.reload();
+    }, "600000");
+</script>

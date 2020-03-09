@@ -144,7 +144,11 @@ class PmsRoomConfiguration extends \WebshopApplication implements \Application {
         $i = 1;
         foreach($_POST['data']['sortlist'] as $typeid) {
             $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $typeid);
-            $type->order = $i;
+            if($_POST['data']['sortingtype'] == "availability") {
+                $type->orderAvailability = $i;
+            } else {
+                $type->order = $i;
+            }
             $this->getApi()->getBookingEngine()->updateBookingItemType($this->getSelectedMultilevelDomainName(), $type);
             $i++;
        }
@@ -152,6 +156,10 @@ class PmsRoomConfiguration extends \WebshopApplication implements \Application {
     
     public function loadSortingTypes() {
         $this->includefile("typesorting");
+    }
+    
+    public function loadSortingTypesAvailability() {
+        $this->includefile("typesortingavailability");
     }
     
     public function loadSortingItems() {

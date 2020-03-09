@@ -6,12 +6,17 @@ app.PmsRoomConfiguration = {
         $(document).on('click', '.PmsRoomConfiguration .setdefaultimg', app.PmsRoomConfiguration.selectDefaultImage);
         $(document).on('click', '.PmsRoomConfiguration .changeicon', app.PmsRoomConfiguration.changeIcon);
         $(document).on('click', '.PmsRoomConfiguration .opentypesorting', app.PmsRoomConfiguration.opentypesorting);
+        $(document).on('click', '.PmsRoomConfiguration .opentypesortingavailability', app.PmsRoomConfiguration.opentypesortingavailability);
         $(document).on('click', '.PmsRoomConfiguration .openitemsorting', app.PmsRoomConfiguration.openitemsorting);
         $(document).on('click', '.PmsRoomConfiguration .savetypesorting', app.PmsRoomConfiguration.savetypesorting);
         $(document).on('click', '.PmsRoomConfiguration .saveitemsorting', app.PmsRoomConfiguration.saveitemsorting);
      },
     opentypesorting : function() {
         var event = thundashop.Ajax.createEvent('','loadSortingTypes', $(this), {});
+        getshop.pms.showInformationBox(event, "Sorting");
+    },
+    opentypesortingavailability : function() {
+        var event = thundashop.Ajax.createEvent('','loadSortingTypesAvailability', $(this), {});
         getshop.pms.showInformationBox(event, "Sorting");
     },
     openitemsorting : function() {
@@ -42,6 +47,12 @@ app.PmsRoomConfiguration = {
         var data = {
             "sortlist" : result
         }
+        
+        data.sortingtype = "booking";
+        if($(this).attr('sortingtype') && $(this).attr('sortingtype') == "availability") {
+            data.sortingtype = "availability";
+        }
+        
         thundashop.Ajax.simplePost($(this), 'setNewTypeSorting', data);
         getshop.pms.hideInformationBox();
     },

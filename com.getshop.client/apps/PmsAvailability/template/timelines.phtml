@@ -13,6 +13,22 @@ if($sorting == "room") {
     $allInOne = true;
 }
 
+$needSortingTypes = false;
+foreach($types as $type) {
+    if($type->orderAvailability > 0) {
+        $needSortingTypes = true;
+    }
+}
+
+if($needSortingTypes) {
+    $sortedtypes = array();
+    foreach($types as $type) {
+        $sortedtypes[$type->orderAvailability] = $type;
+    }
+    ksort($sortedtypes);
+    $types = $this->indexList($sortedtypes);
+}
+
 
 $typecounter = array();
 foreach($types as $type) {

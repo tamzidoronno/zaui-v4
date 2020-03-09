@@ -61,6 +61,7 @@ public class BookingItemType extends DataCommon {
     public TimeRepeaterData openingHours;
     public HashMap<String, TimeRepeaterData> openingHoursData = new HashMap();
     public Integer order = 0;
+    public Integer orderAvailability = 0;
     @Translation
     public String description = "";
     public HashMap<String, String> descriptionTranslations = new HashMap();

@@ -99,7 +99,7 @@ public abstract class GetShopSchedulerBase implements Runnable {
                     if (user == null) {
                         System.out.println("GetShopSchedulerBase | tried to login but was not able to log in again : " + storeId + " | " + webAddress);
                     } else {
-                        System.out.println("GetShopSchedulerBase | logged in with user : " + storeId + " | " + webAddress  + " | " + user);
+                        System.out.println("GetShopSchedulerBase | logged in with user on store : " + storeId + " | " + webAddress  + " | User print: " + user + " | User id: " + user.id + " | type : " + user.type );
                     }
                 } catch (Exception ex) {
                     System.out.println("GetShopSchedulerBase | Failed to login with execption : " + storeId + " | " + webAddress);

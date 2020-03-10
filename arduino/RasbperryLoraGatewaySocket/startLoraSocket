@@ -1,0 +1,6 @@
+#!/bin/bash
+while :
+do
+	/storage/getshopLoraSocket 10.0.6.63
+	sleep 1
+done

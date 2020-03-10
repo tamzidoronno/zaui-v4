@@ -17,7 +17,11 @@ $.fn.CategoryGallery = function(data) {
         area.append(buttonRow);
         area.append(descriptionArea);
         area.append(imageRow);
+        buttonRow.hide();
         var end = 0;
+        var imageCount = 0;
+        
+        var optimzedImages = [];
         
         for(var k in res.entries) {
             var entry = res.entries[k];
@@ -36,6 +40,11 @@ $.fn.CategoryGallery = function(data) {
             }
             buttonRow.append(button);
             
+            var imagesToLoad = [];
+            for(var imgKey in entry.images) {
+                imagesToLoad.push(entry.images[imgKey].fileId);
+            }
+            
             var description = $('<div class="gs_category_description"  categoryid="'+entry.categoryId+'"></div>');
             description.html(entry.description);
             descriptionArea.append(description);
@@ -45,8 +54,10 @@ $.fn.CategoryGallery = function(data) {
                 var img = entry.images[ik];
                 var imgId = img.fileId;
                 
-                
-                imageRow.append('<span class="gs_grid-item" imgid="'+imgId+'"><img src="'+ getshop_endpoint + "/displayImage.php?id="+imgId+'&width=600"></span>');
+                if(imagesToLoad.indexOf(imgId) >= 0) {
+                    imageCount++;
+                    imageRow.append('<span class="gs_grid-item gs_grid-item-hidden" imgid="'+imgId+'"><img src="'+ gteshop_endpoint + "/displayImage.php?id="+imgId+'&width=600"></span>');
+                }
                 ids.push(imgId);
                 end++;
             }
@@ -54,8 +65,22 @@ $.fn.CategoryGallery = function(data) {
             button.attr('ids', idsString);
         }
         imageRow.attr('end', end);
+        area.prepend("<div class='gs_loadinggallery'><span class='loader'></span> Loading <span class='fakeimagecounter'>0</span>/"+imageCount+" images</div>");
+
+        var fakeCounter = 0;
+        setInterval(function() {
+            if(fakeCounter === imageCount) {
+                return;
+            }
+            $('.fakeimagecounter').html(fakeCounter);
+            fakeCounter++;
+        }, "500");
+        
         
         imageRow.imagesLoaded(function () {
+            buttonRow.show();
+            $('.gs_grid-item-hidden').removeClass('gs_grid-item-hidden');
+            $('.gs_loadinggallery').hide();
             $(function() {
             setTimeout(function() {
                 var width = $(window).width();

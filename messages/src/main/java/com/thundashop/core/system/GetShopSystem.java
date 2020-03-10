@@ -17,7 +17,7 @@ import java.util.List;
  *
  * @author ktonder
  */
-public class GetShopSystem extends DataCommon {
+public class GetShopSystem extends DataCommon implements Comparable<GetShopSystem> {
     public String systemName = "";
     public String serverVpnIpAddress = "";
     public String webAddresses = "";
@@ -53,5 +53,19 @@ public class GetShopSystem extends DataCommon {
             return false;
         
         return activeTo.after(invoicedTo) || invoicedTo.after(activeTo);
+    }
+    
+    
+    
+      @Override
+    public int compareTo(GetShopSystem u) {
+      if (getCreatedOn() == null || u.getCreatedOn() == null) {
+        return -1;
+      }
+      return getCreatedOn().compareTo(u.getCreatedOn());
+    }
+
+    private Date getCreatedOn() {
+        return activeFrom;
     }
 }

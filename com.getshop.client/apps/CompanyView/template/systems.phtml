@@ -1,0 +1,52 @@
+<?php
+/* @var $this ns_2f62f832_5adb_407f_a88e_208248117017\CompanyView */
+
+$systems = $this->getApi()->getSystemManager()->getAllSystems();
+echo "Number of systems: " . sizeof($systems) . "<bR>";
+echo "<div style='padding: 20px;'>";
+$counter = 0;
+$products = $this->getApi()->getProductManager()->getAllProducts();
+$products = $this->indexList($products);
+$companies = $this->getApi()->getUserManager()->getAllCompanies();
+$companies = $this->indexList($companies);
+
+$productsToInclude = array();
+$productsToInclude[] = "0d862998-a6ce-4c90-b161-95f5a4d10d99";
+$productsToInclude[] = "7316f0ad-3ac9-485e-8a11-0b1b487efd36";
+
+echo "<table width='100%' id='systemslist'>";
+$total = 0;
+foreach($systems as $system) {
+    if($system->activeTo) {
+        continue;
+    }
+    if(!in_array($system->productId, $productsToInclude)) {
+        continue;
+    }
+    
+    $counter++;
+    $price = $system->monthlyPrice;
+    if($companies[$system->companyId]->currency == "EUR") {
+        $price = $system->monthlyPrice * 10;
+    }
+    $red = $price == 0 ? "style='background-color:red;'" : "";
+    $total += $price;
+    echo "<tr $red>";
+    echo "<td>" . date("d.m.Y", strtotime($system->activeFrom)) . "</td>";
+    echo "<td>" . $system->webAddresses . "</td>";
+    echo "<td>" . $price . "</td>";
+    echo "<td>" . $products[$system->productId]->name. "</td>";
+    echo "<td>" . $companies[$system->companyId]->name. "</td>";
+    echo "<td>" . $companies[$system->companyId]->currency. "</td>";
+    echo "</tr>";
+    
+}
+echo "</table>";
+echo "</div>";
+echo "<div style='text-align:center;'>";
+echo "Number of systems in list: " . $counter . ", total: " . $total;
+echo "</div>";
+echo "<bR>";
+echo "<bR>";
+echo "<bR>";
+?>

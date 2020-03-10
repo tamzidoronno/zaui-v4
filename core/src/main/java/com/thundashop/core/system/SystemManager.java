@@ -21,6 +21,7 @@ import com.thundashop.core.usermanager.data.User;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -276,6 +277,15 @@ public class SystemManager extends ManagerBase implements ISystemManager {
             system.companyId = user.companyObject.id;
             saveObject(system);
         }
+    }
+
+    @Override
+    public List<GetShopSystem> getAllSystems() {
+        ArrayList<GetShopSystem> allsystems = new ArrayList(systems.values());
+        
+        Collections.sort(allsystems);
+        
+        return allsystems;
     }
         
 }

@@ -32,7 +32,11 @@ if (!count($order->orderTransactions)) {
         }
         $user = $this->getApi()->getUserManager()->getUserById($paymentLog->userId);
         echo "<div class='shipmentlogline'>";
-            echo "<div class='date'>".date('d.m.Y H:i', strtotime($paymentLog->date))."</div>";
+            echo "<div class='date'>";
+            if(stristr($loggedOnUser->emailAddress, "@getshop.com")) {
+                echo "<i class='fa fa-trash-o deleteOrderTransaction' style='cursor:pointer;' transactionid='".$paymentLog->transactionId."'></i> ";
+            }
+            echo date('d.m.Y H:i', strtotime($paymentLog->date))."</div>";
             
             echo "<div class='amount'>";
                 echo $paymentLog->amount;

@@ -22,6 +22,7 @@ app.OrderView = {
         $(document).on('click', '.OrderView .registerRoundingAgioBtn', app.OrderView.registerRoundingAgioBtn);
         $(document).on('click', '.OrderView .cleanorder', app.OrderView.cleanOrder);
         $(document).on('click', '.OrderView .openorder', app.OrderView.openOrder);
+        $(document).on('click', '.OrderView .deleteOrderTransaction', app.OrderView.deleteOrderTransaction);
         
         // CartItem Changes
         $(document).on('change', '.OrderView .cartitem input.product_desc', app.OrderView.cartItemChanged);
@@ -100,6 +101,19 @@ app.OrderView = {
             if(res == "D") {
                 alert('closed');
             }
+        });
+    },
+    deleteOrderTransaction : function() {
+        var data = {
+            "transactionid" : $(this).attr('transactionid')
+        };
+        
+        var password = prompt("Password");
+        data.password = password;
+        
+        var event = thundashop.Ajax.createEvent('','deleteTransaction', $(this), data);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            window.location.reload();
         });
     },
     doRegisterLoss : function() {

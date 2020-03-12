@@ -13,6 +13,10 @@ class OrderView extends \MarketingApplication implements \Application {
         
     }
     
+    public function deleteTransaction() {
+        $this->getApi()->getOrderManager()->deleteOrderTransaction($_POST['data']['transactionid'],$_POST['data']['password']);
+    }
+    
     public function updateCurrencyOnOrder() {
         $order = $this->getOrder();
         $order->currency = $_POST['data']['currency'];

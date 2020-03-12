@@ -5162,4 +5162,26 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             });
     }
 
+    @Override
+    public void deleteOrderTransaction(String transactionId, String password) {
+        if(!password.equals("fdsaf34234cc")) {
+            return;
+        }
+        
+        
+        for(Order order : orders.values()) {
+            OrderTransaction toRemove = null;
+            for(OrderTransaction transaction : order.orderTransactions) {
+                if(transaction.transactionId.equals(transactionId)) {
+                    toRemove = transaction;
+                }
+            }
+            if(toRemove != null) {
+                order.orderTransactions.remove(toRemove);
+                saveObject(order);
+                return;
+            }
+        }
+    }
+
 }

@@ -341,8 +341,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
 //        printOrdersThatHasWrongCreditNotes();
 
-        // This function can be removed upon any release after 16 aug 2019
-        cleanupEmptyAddonIds();
+        // This function can be removed upon any release after 26 mar 202
+        cleanupFalseNegativesOrderTransaction();
         
         createScheduler("ordercapturecheckprocessor", "2,7,12,17,22,27,32,37,42,47,52,57 * * * *", CheckOrdersNotCaptured.class);
         if(storeId.equals("c444ff66-8df2-4cbb-8bbe-dc1587ea00b7")) {
@@ -4702,23 +4702,25 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return storeId.equals("13442b34-31e5-424c-bb23-a396b7aeb8ca");
     }
 
-    private void cleanupEmptyAddonIds() {
+    private void cleanupFalseNegativesOrderTransaction() {
         List<Order> incrementalOrderIds = new ArrayList();            
         
         for (Order order : orders.values()) {
             if (order != null) {
-                for (CartItem item : order.getCartItems()) {
-                    if (item.itemsAdded != null && !item.itemsAdded.isEmpty()) {
-                        for (PmsBookingAddonItem aitem : item.itemsAdded) {
-                            if (aitem.addonId == null || aitem.addonId.isEmpty()) {
-                                aitem.addonId = UUID.randomUUID().toString();
-                                if (!incrementalOrderIds.contains(order.incrementOrderId)) {
-                                    incrementalOrderIds.add(order);
-                                }
-                            }
-                        }
-                    }
+                if (order.orderTransactions != null && !order.orderTransactions.isEmpty()) {
+                    List<OrderTransaction> transactionsProblems = order.orderTransactions.stream()
+                            .filter(o -> o.amountInLocalCurrency != null && o.amountInLocalCurrency > 0 && o.amount < 0)
+                            .collect(Collectors.toList());
+                    
+                    if (!transactionsProblems.isEmpty()) {
+                        transactionsProblems.stream()
+                            .forEach(t -> {
+                                t.amountInLocalCurrency *= -1;
+                            });
 
+                        saveObject(order);
+//                        System.out.println("Found problem with order: " + order.incrementOrderId);
+                    }
                 }
             }
         }

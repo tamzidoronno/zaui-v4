@@ -4948,7 +4948,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             for(OrderLoss lossLine : loss) {
                 if(item.getCartItemId().equals(lossLine.itemId)) {
                     int count = lossLine.count;
-                    if(count > 0) { count *= -1; }
+                    count *= -1;
                     item.setCount(count);
                     item.getProduct().price = lossLine.amount;
                     item.getProduct().priceLocalCurrency = lossLine.amountInLocalCurrency;
@@ -4969,14 +4969,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         if (order.currency != null && !order.currency.isEmpty()) {
             totalAmountInLocalCurrency = getTotalForOrderInLocalCurrencyById(creditNote.id);
-            totalAmountInLocalCurrencyToMarkOnOriginal = totalAmountInLocalCurrency * -1;
+            totalAmountInLocalCurrencyToMarkOnOriginal = totalAmountInLocalCurrency;
             markAsPaidWithTransactionTypeInternal(creditNote.id,  creditNote.getTotalAmount(), paymentDate, Order.OrderTransactionType.LOSS, "", totalAmountInLocalCurrencyToMarkOnOriginal, null, "Registered Loss");
         } else {
             markAsPaid(creditNote.id, paymentDate, creditNote.getTotalAmount());
         }
 
         String userId = getSession().currentUser.id;
-        order.registerTransaction(paymentDate, toMarkOnOriginal, userId, Order.OrderTransactionType.MANUAL, "", comment, totalAmountInLocalCurrencyToMarkOnOriginal, null, null);
+        order.registerTransaction(paymentDate, toMarkOnOriginal, userId, Order.OrderTransactionType.MANUAL, "", comment, (totalAmountInLocalCurrencyToMarkOnOriginal * -1), null, null);
         if (order.isFullyPaid()) {
             markAsPaidInternal(order, paymentDate, totalAmount);
         }

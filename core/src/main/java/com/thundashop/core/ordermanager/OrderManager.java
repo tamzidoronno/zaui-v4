@@ -2990,6 +2990,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             return a.start.compareTo(b.start);
         });
         
+        detectAndSaveDaysThatAreOpenInBetweenSet(newlyBrokenIncome, filter);
+        
         return newlyBrokenIncome;
     }
 
@@ -5183,6 +5185,35 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 saveObject(order);
                 return;
             }
+        }
+    }
+
+    private void detectAndSaveDaysThatAreOpenInBetweenSet(List<DayIncome> newlyBrokenIncome, DayIncomeFilter filter) {
+        Date latestCloseDate = new Date(0);
+        Date firstDate = new Date(Long.MAX_VALUE);
+        
+        for (DayIncome income : newlyBrokenIncome) {
+            if (!income.isFinal) {
+                continue;
+            }
+            
+            if (latestCloseDate.before(income.end)) {
+                latestCloseDate = income.end;
+            }
+            
+            if (income.start.before(firstDate)) {
+                firstDate = income.start;
+            }
+        }
+        
+        final Date toCheck = latestCloseDate;
+        
+        List<DayIncome> incomes = newlyBrokenIncome.stream()
+                .filter(o -> !o.isFinal && o.end.before(toCheck))
+                .collect(Collectors.toList());
+        
+        for (DayIncome inc : incomes) {
+            inc.isFinal = true;
         }
     }
 

@@ -19,6 +19,69 @@ app.PmsPaymentProcess = {
         $(document).on('change', '.PmsPaymentProcess .sendtobookerdropdown', this.changeSendToRecipient);  
         $(document).on('click', '.PmsPaymentProcess .sendrequestbutton', this.sendRequest);  
         $(document).on('keyup', '.PmsPaymentProcess #messagetosend', this.checkIfPaymentLinkVariableIsFound);  
+        $(document).on('change', '.PmsPaymentProcess .searchforaddonvalue', this.searchForAddons);  
+        $(document).on('click', '.PmsPaymentProcess .searchforaddonsbutton', this.searchForAddons);  
+        $(document).on('click', '.PmsPaymentProcess .addextraaddons', this.addExtraAddons);  
+    },
+    
+    addExtraAddons: function() {
+        var productid = $(this).closest('.cartitemline').attr('createorderonproductid');
+        var count = $(this).closest('.cartitemline').find('.item_count').val();
+        var name = $(this).closest('.cartitemline').find('.textOnOrder').val();
+        var price =  $(this).closest('.cartitemline').find('.item_price').val();
+        
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        var yyyy = today.getFullYear();
+
+        today = dd + '-' + mm + '-' + yyyy;
+
+        var roomDiv = $('.PmsPaymentProcess .extra_summary [roomid="virtual"]');
+        
+        var cartItemRow = $("<div/>");
+        cartItemRow.addClass('row');
+        cartItemRow.addClass('cartitemline');
+        cartItemRow.attr('date', today);
+        cartItemRow.attr('createorderonproductid', productid);
+        cartItemRow.attr('isaccomocation', 'false');
+        cartItemRow.attr('includedinroomprice', 'false');
+        
+        cartItemRow.append("<div class='col' style='margin-right: 10px; width: 20px; padding-top: 5px;'><input class='row_checkbox' style='font-size: 20px; height: 20px; width: 20px;' type='checkbox' checked='true'/></div>");
+        cartItemRow.append("<div class='col date' style='vertical-align: top;'>"+today+"</div>");
+        cartItemRow.append("<div class='col count' style='vertical-align: top;'><input class='gsniceinput1 item_count' orgcount='"+count+"' value='"+count+"'/> x </div>");
+        cartItemRow.append("<div class='col price' style='vertical-align: top;'><input class='gsniceinput1 item_price' orgvalue='"+price+"' value='"+price+"'/></div>");
+                                
+        
+        var productName = $("<div class='col productname' style='vertical-align: top;line-height: 36px;'></div>");
+        productName.append("<input class='gsniceinput1 textOnOrder' type='hidden' orgvalue='"+name+"' value='"+name+"'/>");
+        productName.append("<input class='gsniceinput1 addonId' type='hidden' orgvalue='' value=''/>");
+        productName.append(name);
+        
+        cartItemRow.append(productName);
+        
+        roomDiv.append(cartItemRow);
+
+        $('.extra_div_outer').show();
+        $('.PmsPaymentProcess .searchforaddonvalue').val("");
+        $('.PmsPaymentProcess .searchforaddonsarea').hide();
+        
+        app.PmsPaymentProcess.updateTotalValue();
+    },
+    
+    searchForAddons: function() {
+        var event = thundashop.Ajax.createEvent(null, "searchForAddons", this, {
+            searchvalue : $('.PmsPaymentProcess .searchforaddonvalue').val()
+        });
+        
+        event['synchron'] = true;
+        
+        $('.PmsPaymentProcess .searchforaddonsarea').show();
+        $('.PmsPaymentProcess .searchforaddonsarea').html('fa fa-spin fa-spinner');
+        
+        thundashop.Ajax.post(event, function(res) {
+            $('.PmsPaymentProcess .searchforaddonsarea').html(res);
+        });
     },
     
     updateOrder: function() {

@@ -255,6 +255,38 @@ if ($hasConferences) {
 
 ?>
 
+<div class='sub_header extra_div_outer' style='display: none;'>
+    <? echo $this->__f("Added extra, NOTE: This will NOT be connected to any rooms."); ?>
+</div>
+
+<div class="cart_room_summary extra_summary extra_div_outer" style='display: none;'>
+    <div class='room' roomid='virtual'></div>
+    
+    <div class="row totalrow" style='font-weight:bold;'>
+        <div class="col totaltext">
+            <?
+            echo $this->__f("Total to be charged").": ";
+            ?>
+        </div>
+        <div class="col totalval">
+            -
+        </div>
+        / Original total for selected rows:
+        <div class="col totalvalforselect">
+            -
+        </div>
+    </div>
+</div>
+
+
+<div>
+    <h2>Add extra addons</h2>
+    <input class="gsniceinput1 searchforaddonvalue"/><div class="shop_button searchforaddonsbutton">Search</div>
+    <div class="searchforaddonsarea">
+        
+    </div>
+    
+</div>
 <br/>
 <div class='buttonarea'>
     <div class='shop_button' gsclick='gotopaymentselection' style='background-color:#81cff3;-webkit-box-shadow:none; box-shadow:none; color:#000 !important;'><i class='fa fa-caret-left'></i> <? echo $this->__f("Back"); ?></div>

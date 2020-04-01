@@ -11,6 +11,7 @@ class PmsChartOverview extends \MarketingApplication implements \Application {
     }
 
     public function render() {
+        $this->includefile("criticalinfo");
         $this->includefile("warningnotsetupyet");
         $this->includeFile("overview");
     }

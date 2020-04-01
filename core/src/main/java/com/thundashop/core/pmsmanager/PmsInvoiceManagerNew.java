@@ -58,9 +58,13 @@ public class PmsInvoiceManagerNew {
         Map<String, List<CartItem>> tabItemsAdded = new HashMap();
         
         for (PmsOrderCreateRow roomData : rows) {
-            if (roomData.roomId != null && !roomData.roomId.isEmpty()) {
+            if (roomData.roomId != null && !roomData.roomId.isEmpty() && !roomData.roomId.equals("virtual")) {
                 addAccomodationToCart(roomData);
                 addAddonsToCart(roomData);    
+            }
+            
+            if (roomData.roomId != null && !roomData.roomId.isEmpty() && roomData.roomId.equals("virtual")) {
+                addCartItemsNotConnectedToARoom(roomData);
             }
             
             if (roomData.conferenceId != null && !roomData.conferenceId.isEmpty()) {
@@ -75,6 +79,11 @@ public class PmsInvoiceManagerNew {
         }
         
         User user = pmsManager.userManager.getUserById(userId);
+        
+        if (userId.equals("false")) {
+            user = pmsManager.getSession().currentUser;
+        }
+        
         Address address = user != null ? user.address : null;
         
         Order order = orderManager.createOrder(address);
@@ -354,5 +363,14 @@ public class PmsInvoiceManagerNew {
             }
         }
         return "";
+    }
+
+    private void addCartItemsNotConnectedToARoom(PmsOrderCreateRow roomData) {
+        for (PmsOrderCreateRowItemLine itemLine : roomData.items) {
+            CartItem item = cartManager.addProductItem(itemLine.createOrderOnProductId, itemLine.count);
+            item.getProduct().price = itemLine.price;
+            item.getProduct().name = itemLine.textOnOrder;
+        }
+        
     }
 }

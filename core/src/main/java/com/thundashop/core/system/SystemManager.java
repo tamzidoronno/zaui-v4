@@ -197,7 +197,7 @@ public class SystemManager extends ManagerBase implements ISystemManager {
                     int days = Days.daysBetween(new LocalDate(order.getDueDate()), new LocalDate()).getDays();
                     toAdd.daysDue = days;
                     toAdd.incrementOrderId = order.incrementOrderId;
-                    if(toAdd.daysDue > 2 && toAdd.paidRest > 0) {
+                    if(toAdd.daysDue > 4 && toAdd.paidRest > 0) {
                         result.add(toAdd);
                     }
                 }

@@ -221,3 +221,15 @@
     top: 5px;
     right: 5px;
 }
+
+.PmsPaymentProcess .pmspaymentprocessaddaddonrow {
+    border-bottom: solid 1px #DDD;
+    
+}
+
+.PmsPaymentProcess .pmspaymentprocessaddaddonrow .pmspaymentprocessaddaddoncol_1 {
+    width: calc(100% - 300px);
+}
+.PmsPaymentProcess .pmspaymentprocessaddaddonrow .pmspaymentprocessaddaddoncol {
+    display: inline-block;
+}

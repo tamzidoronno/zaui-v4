@@ -341,8 +341,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
 //        printOrdersThatHasWrongCreditNotes();
 
-        // This function can be removed upon any release after 16 aug 2019
-        cleanupEmptyAddonIds();
+        // This function can be removed upon any release after 26 mar 202
+        cleanupFalseNegativesOrderTransaction();
         
         createScheduler("ordercapturecheckprocessor", "2,7,12,17,22,27,32,37,42,47,52,57 * * * *", CheckOrdersNotCaptured.class);
         if(storeId.equals("c444ff66-8df2-4cbb-8bbe-dc1587ea00b7")) {
@@ -2990,6 +2990,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             return a.start.compareTo(b.start);
         });
         
+        detectAndSaveDaysThatAreOpenInBetweenSet(newlyBrokenIncome, filter);
+        
         return newlyBrokenIncome;
     }
 
@@ -4702,23 +4704,25 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return storeId.equals("13442b34-31e5-424c-bb23-a396b7aeb8ca");
     }
 
-    private void cleanupEmptyAddonIds() {
+    private void cleanupFalseNegativesOrderTransaction() {
         List<Order> incrementalOrderIds = new ArrayList();            
         
         for (Order order : orders.values()) {
             if (order != null) {
-                for (CartItem item : order.getCartItems()) {
-                    if (item.itemsAdded != null && !item.itemsAdded.isEmpty()) {
-                        for (PmsBookingAddonItem aitem : item.itemsAdded) {
-                            if (aitem.addonId == null || aitem.addonId.isEmpty()) {
-                                aitem.addonId = UUID.randomUUID().toString();
-                                if (!incrementalOrderIds.contains(order.incrementOrderId)) {
-                                    incrementalOrderIds.add(order);
-                                }
-                            }
-                        }
-                    }
+                if (order.orderTransactions != null && !order.orderTransactions.isEmpty()) {
+                    List<OrderTransaction> transactionsProblems = order.orderTransactions.stream()
+                            .filter(o -> o.amountInLocalCurrency != null && o.amountInLocalCurrency > 0 && o.amount < 0)
+                            .collect(Collectors.toList());
+                    
+                    if (!transactionsProblems.isEmpty()) {
+                        transactionsProblems.stream()
+                            .forEach(t -> {
+                                t.amountInLocalCurrency *= -1;
+                            });
 
+                        saveObject(order);
+//                        System.out.println("Found problem with order: " + order.incrementOrderId);
+                    }
                 }
             }
         }
@@ -4946,7 +4950,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             for(OrderLoss lossLine : loss) {
                 if(item.getCartItemId().equals(lossLine.itemId)) {
                     int count = lossLine.count;
-                    if(count > 0) { count *= -1; }
+                    count *= -1;
                     item.setCount(count);
                     item.getProduct().price = lossLine.amount;
                     item.getProduct().priceLocalCurrency = lossLine.amountInLocalCurrency;
@@ -4967,14 +4971,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         if (order.currency != null && !order.currency.isEmpty()) {
             totalAmountInLocalCurrency = getTotalForOrderInLocalCurrencyById(creditNote.id);
-            totalAmountInLocalCurrencyToMarkOnOriginal = totalAmountInLocalCurrency * -1;
+            totalAmountInLocalCurrencyToMarkOnOriginal = totalAmountInLocalCurrency;
             markAsPaidWithTransactionTypeInternal(creditNote.id,  creditNote.getTotalAmount(), paymentDate, Order.OrderTransactionType.LOSS, "", totalAmountInLocalCurrencyToMarkOnOriginal, null, "Registered Loss");
         } else {
             markAsPaid(creditNote.id, paymentDate, creditNote.getTotalAmount());
         }
 
         String userId = getSession().currentUser.id;
-        order.registerTransaction(paymentDate, toMarkOnOriginal, userId, Order.OrderTransactionType.MANUAL, "", comment, totalAmountInLocalCurrencyToMarkOnOriginal, null, null);
+        order.registerTransaction(paymentDate, toMarkOnOriginal, userId, Order.OrderTransactionType.MANUAL, "", comment, (totalAmountInLocalCurrencyToMarkOnOriginal * -1), null, null);
         if (order.isFullyPaid()) {
             markAsPaidInternal(order, paymentDate, totalAmount);
         }
@@ -5181,6 +5185,35 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 saveObject(order);
                 return;
             }
+        }
+    }
+
+    private void detectAndSaveDaysThatAreOpenInBetweenSet(List<DayIncome> newlyBrokenIncome, DayIncomeFilter filter) {
+        Date latestCloseDate = new Date(0);
+        Date firstDate = new Date(Long.MAX_VALUE);
+        
+        for (DayIncome income : newlyBrokenIncome) {
+            if (!income.isFinal) {
+                continue;
+            }
+            
+            if (latestCloseDate.before(income.end)) {
+                latestCloseDate = income.end;
+            }
+            
+            if (income.start.before(firstDate)) {
+                firstDate = income.start;
+            }
+        }
+        
+        final Date toCheck = latestCloseDate;
+        
+        List<DayIncome> incomes = newlyBrokenIncome.stream()
+                .filter(o -> !o.isFinal && o.end.before(toCheck))
+                .collect(Collectors.toList());
+        
+        for (DayIncome inc : incomes) {
+            inc.isFinal = true;
         }
     }
 

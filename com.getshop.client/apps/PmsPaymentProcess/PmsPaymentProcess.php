@@ -106,6 +106,11 @@ class PmsPaymentProcess extends \MarketingApplication implements \Application {
      * @return \core_pmsmanager_PmsBooking[]
      */
     public function getSelectedBookings() {
+        
+        if (!isset($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_roomids']) || !$_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_roomids'] || !is_array($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_roomids'])) {
+            return array();
+        }
+        
         if (!count($this->pmsBookings)) {
             foreach ($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_roomids'] as $pmsBookingRoomId) {
                 $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $pmsBookingRoomId);
@@ -228,7 +233,6 @@ class PmsPaymentProcess extends \MarketingApplication implements \Application {
             return;
         }
         
-      
         $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_state'] = 'select_rooms';
     }
 
@@ -264,6 +268,11 @@ class PmsPaymentProcess extends \MarketingApplication implements \Application {
     
     public function checkIfShouldSkipRoomSelection() {
         $totalRooms = 0;
+        
+        if (count($this->getSelectedBookings()) == 0) {
+            $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_state'] = 'bookings_summary';
+            return true;
+        }
         
         foreach ($this->getSelectedBookings() as $booking) {
             $totalRooms += count($booking->rooms);
@@ -314,6 +323,10 @@ class PmsPaymentProcess extends \MarketingApplication implements \Application {
     
     public function updateOrder() {
         $this->getApi()->getPmsManager()->updateOrderDetails($this->getSelectedMultilevelDomainName(), $_POST['data']['bookingid'], $_POST['data']['orderid'], false);
+    }
+    
+    public function searchForAddons() {
+        $this->includefile("searchforaddons");
     }
 }
 ?>

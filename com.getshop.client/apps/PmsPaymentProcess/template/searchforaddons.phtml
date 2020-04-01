@@ -1,0 +1,40 @@
+<?
+/* @var $this \ns_af54ced1_4e2d_444f_b733_897c1542b5a8\PmsPaymentProcess */
+$data = $this->getApi()->getProductManager()->search($_POST['data']['searchvalue'], 1000, 1);
+
+if (!$data->products) {
+    echo "<br/>";
+    echo "No addons found";
+    return;
+}
+//echo "<prE>";
+//print_r($products);
+//echo "</pre>";
+echo "<br/>";
+echo "<br/>";
+?>
+<div style='font-weight: bold;'>
+    <span style='display: inline-block; width: 80px;'>Count</span> 
+    <span style='display: inline-block; width: 80px;'>Price</span> 
+    <span>Description</span> 
+</div>
+<?
+foreach ($data->products as $product) {
+    $date = date('d-m-Y');
+    $name = $product->name;
+    ?>
+    
+    <div class='row cartitemline' date='<? echo $date; ?>' createorderonproductid="<? echo $product->id; ?>" isaccomocation="false" includedinroomprice="false">    
+        <div class='col count' style='vertical-align: top; width: 80px;'><input style='width: 47px;' class='gsniceinput1 item_count' orgcount='<? echo $row->count; ?>' value='1'/> x </div>
+        <div class='col price' style='vertical-align: top; width: 80px;'><input style='width: 47px;' class='gsniceinput1 item_price' orgvalue='<? echo round($row->priceToCreateOrders, 2); ?>' value='<? echo round($product->price, 2); ?>'/></div>
+        <div class='col productname' style='vertical-align: top;line-height: 36px;'>
+            <input class='gsniceinput1 textOnOrder' orgvalue='<? echo $name; ?>' value='<? echo $name; ?>'/>
+            <input class='gsniceinput1 addonId' type='hidden' orgvalue='' value=''/>
+        </div>
+        <div class='col addbutton'>
+            <div class="shop_button addextraaddons">Add</div>
+        </div>
+    </div>
+    <?
+}
+?>

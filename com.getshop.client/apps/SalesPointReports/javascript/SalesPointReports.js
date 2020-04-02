@@ -34,7 +34,7 @@ app.SalesPointReports = {
         event['synchron'] = true;
         var me = this;
         thundashop.Ajax.postWithCallBack(event, function(res) {
-            $(me).closest('.taxcorrectionrow').hide();
+            $(me).closest('.taxcorrectionrow').remove();
             
             var allClosed = true;
             

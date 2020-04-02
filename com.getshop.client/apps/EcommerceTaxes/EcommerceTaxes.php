@@ -32,5 +32,15 @@ class EcommerceTaxes extends \WebshopApplication implements \Application {
         
         $this->getApi()->getProductManager()->setTaxes($result);
     }
+    
+    public function addOverrideTaxGroup() {
+        $start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
+        $end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
+        $this->getApi()->getProductManager()->addOverrideTaxGroup($_POST['data']['taxgroupnumber'], $start, $end, $_POST['data']['overridegroup']);
+    }
+    
+    public function removeOverrideTaxGroup() {
+        $this->getApi()->getProductManager()->removeOverrideTaxGroup($_POST['data']['taxgroupnumber'], $_POST['data']['overridegroupid']);
+    }
 }
 ?>

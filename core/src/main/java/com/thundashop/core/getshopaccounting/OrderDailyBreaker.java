@@ -37,17 +37,17 @@ import java.util.stream.Collectors;
  * @author ktonder
  */
 public class OrderDailyBreaker {
-    private final PaymentManager paymentManager;
-    private final List<DayIncome> dayIncomes;
-    private final List<Order> ordersToBreak;
-    private final ProductManager productManager;
+    private PaymentManager paymentManager;
+    private List<DayIncome> dayIncomes;
+    private List<Order> ordersToBreak;
+    private ProductManager productManager;
     private int whatHourOfDayStartADay = 0;
     private List<DayEntry> orderDayEntries;
-    private final List<String> errors = new ArrayList();
-    private final int precision = 10;
-    private final DayIncomeFilter filter;
+    private List<String> errors = new ArrayList();
+    private int precision = 10;
+    private DayIncomeFilter filter;
     private List<AccountingFreePost> freePosts = new ArrayList();
-    private final StoreOcrManager storeOcrManager;
+    private StoreOcrManager storeOcrManager;
     
     public OrderDailyBreaker(List<Order> ordersToBreak, DayIncomeFilter filter, PaymentManager paymentManager, ProductManager productManager, int whatHourOfDayStartADayorderManager, List<AccountingFreePost> freePosts, StoreOcrManager storeOcrManager) {
         this.dayIncomes = new ArrayList();
@@ -61,6 +61,10 @@ public class OrderDailyBreaker {
         correctStartAndEndTime();
         createEmptyDays();
     }
+
+    public OrderDailyBreaker() {
+    }
+    
 
     private void correctStartAndEndTime() {
         filter.start = calculateStartTimeForDate(filter.start);
@@ -242,7 +246,7 @@ public class OrderDailyBreaker {
 
     private List<DayEntry> createEntriesOfPriceMatrix(Order order, CartItem item) {
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
             List<DayEntry> entries = new ArrayList();
 
             for (String dateString : item.priceMatrix.keySet()) {
@@ -256,7 +260,7 @@ public class OrderDailyBreaker {
                 entry.amount = TwoDecimalRounder.roundTwoDecimals(item.priceMatrix.get(dateString), precision);
                 entry.amountExTax = TwoDecimalRounder.roundTwoDecimals(item.getPriceMatrixWithoutTax(dateString), precision);
                 
-                entry.date = sdf.parse(dateString+" 09:00:00");
+                entry.date = sdf.parse(dateString);
                 
                 if (order.overrideAccountingDate != null)
                     entry.date = calculateDate(order.overrideAccountingDate, entry);
@@ -873,10 +877,14 @@ public class OrderDailyBreaker {
     }
 
     private Date calculateDate(Date overrideAccountingDate, DayEntry entry) {
-        if (entry.date.before(overrideAccountingDate))
+        return calculateDateInternal(entry.date, overrideAccountingDate);
+    }
+
+    public Date calculateDateInternal(Date date, Date overrideAccountingDate) {
+        if (date.before(overrideAccountingDate))
             return overrideAccountingDate;
         
-        return entry.date;
+        return date;
     }
 
     private void addFreePost(AccountingFreePost o) {
@@ -914,7 +922,7 @@ public class OrderDailyBreaker {
         return "";
     }
 
-    private Date getNormalCartItemAccountingDate(Order order, CartItem item) {
+    public Date getNormalCartItemAccountingDate(Order order, CartItem item) {
         if (item.accountingDate != null)
             return item.accountingDate;
         

@@ -14,6 +14,7 @@ import com.thundashop.core.productmanager.data.ProductPriceOverrideType;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -808,6 +809,35 @@ public class CartItem implements Serializable, Cloneable {
                 priceMatrix.put(date, priceMatrix.get(date)*-1);
             }
         }
+    }
+
+    public void removeRowsNotConnectedToDate(List<Date> dates) {
+        if (itemsAdded != null) {
+            itemsAdded.removeIf(o -> {
+                return !dates.contains(o.date);
+            });
+            
+            count = itemsAdded.size();
+        }
+        
+        if (priceMatrix != null) {
+            priceMatrix.keySet().removeIf(o -> {
+                try {
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+                    Date toCheck = sdf.parse(o);
+                    boolean found = dates.contains(toCheck);
+                    return !found;
+                } catch (ParseException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
+            
+            count = priceMatrix.size();
+        }
+    }
+
+    public void resetCartItemId() {
+        cartItemId = UUID.randomUUID().toString();
     }
 
 

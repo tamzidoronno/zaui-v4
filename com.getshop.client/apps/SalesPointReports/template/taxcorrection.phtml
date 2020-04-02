@@ -1,0 +1,62 @@
+<?
+/* @var $this ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7\SalesPointReports */
+$correctionValues = $this->getApi()->getOrderManager()->getOrdersNeedToBeCorrectedOverrideTaxes();
+$taxes = $this->getApi()->getProductManager()->getTaxes();
+$totals = array();
+
+if (!$correctionValues || !is_array($correctionValues) || !count($correctionValues)) {
+    echo "<h2>No problems detected</h2>";
+    return;
+}
+?>
+<div class="row taxcorrectionrow tax_row_header">
+    <div class="col col_1">Order</div>
+    <?
+    foreach ($taxes as $tax) {
+        echo "<div class='col col_tax'>".$tax->taxRate."%</div>";
+    }
+    ?>
+</div>
+<?
+foreach ($correctionValues as $correction) {
+    $order = $this->getApi()->getOrderManager()->getOrder($correction->orderId);
+    ?>
+    <div class="row taxcorrectionrow">
+        <div class="col col_1"><? echo $order->incrementOrderId; ?></div>
+        <?
+        foreach ($taxes as $tax) {
+            $found = false;
+            foreach ($correction->values as $value) {
+                if ($value->taxGroupNumber == $tax->groupNumber) {
+                    $diff = ($value->shouldBeValue - $value->originalValue );
+                    echo "<div class='col col_tax'>".$diff."</div>";
+                    $found = true;
+                    $totals[$tax->groupNumber] += $diff;
+                }
+            }
+            
+            if (!$found) {
+                echo "<div class='col col_tax'>-</div>";
+            }
+        }
+
+        ?>
+        <div class="col col_1 fixcol" orderid="<? echo $order->id; ?>"></div>
+    </div>
+    <?
+}
+?>
+
+<div class="row taxcorrectionrow tax_row_footer">
+    <div class="col col_1">Diff</div>
+    <?
+    foreach ($taxes as $tax) {
+        echo "<div class='col col_tax'>".$totals[$tax->groupNumber]."</div>";
+    }
+    ?>
+</div>
+
+<br/>
+<div class="shop_button dotaxcorrection">
+    Do correction
+</div>

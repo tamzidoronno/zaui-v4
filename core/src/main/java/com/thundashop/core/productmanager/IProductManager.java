@@ -17,6 +17,7 @@ import com.thundashop.core.productmanager.data.ProductList;
 import com.thundashop.core.productmanager.data.SearchResult;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -255,6 +256,9 @@ public interface IProductManager {
     public void setProductDynamicPrice(String productId, int count);
     
     @Administrator
+    public void addOverrideTaxGroup(Integer groupNumber, Date start, Date end, Integer overrideGroupNumber);
+    
+    @Administrator
     public void saveCategory(ProductCategory categories);
     @Administrator
     public void deleteCategory(String categoryId);
@@ -300,5 +304,9 @@ public interface IProductManager {
     @Administrator
     public void changeAccountingNumber(int oldAccountNumber, int accountNumber);
    
+    @Administrator
+    public void removeOverrideTaxGroup(int taxGroupNumber, String id);
+   
     public List<ProductList> getProductListsForPga();
+    
 }

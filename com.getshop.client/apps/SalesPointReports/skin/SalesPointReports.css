@@ -195,3 +195,11 @@
 .SalesPointReports .stockreport .row .col2 {
     background-color: #FFF;
 }
+
+.SalesPointReports .taxcorrectionrow { 
+    border-bottom: solid 1px #DDD;
+}
+
+.SalesPointReports .taxcorrectionrow .col { display: inline-block; }
+.SalesPointReports .taxcorrectionrow .col_1 { width: 100px; }
+.SalesPointReports .taxcorrectionrow .col_tax{ width: 100px; }

@@ -28,6 +28,7 @@ import com.thundashop.core.ordermanager.data.OrderLight;
 import com.thundashop.core.ordermanager.data.OrderLoss;
 import com.thundashop.core.ordermanager.data.OrderManagerSettings;
 import com.thundashop.core.ordermanager.data.OrderResult;
+import com.thundashop.core.ordermanager.data.OrderTaxCorrectionResult;
 import com.thundashop.core.ordermanager.data.OrderTransaction;
 import com.thundashop.core.ordermanager.data.OrderTransactionDTO;
 import com.thundashop.core.ordermanager.data.Payment;
@@ -588,4 +589,10 @@ public interface IOrderManager {
     public void receiptText(String token, TerminalReceiptText terminalReceiptText);
     
     public void cancelIntegratedPaymentProcess(String token);
+    
+    @Administrator
+    public List<OrderTaxCorrectionResult> getOrdersNeedToBeCorrectedOverrideTaxes();
+    
+    @Administrator
+    public void correctOrderWithTaxProblem(String orderId);
 }

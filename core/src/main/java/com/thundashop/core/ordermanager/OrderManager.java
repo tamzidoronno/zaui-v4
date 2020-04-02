@@ -5369,7 +5369,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 }
             }
             
-            if (!result.values.isEmpty()) {
+            if (result.values.size() > 1) {
                 retList.add(result);
             }
         }

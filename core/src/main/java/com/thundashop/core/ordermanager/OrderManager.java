@@ -52,12 +52,14 @@ import com.thundashop.core.ordermanager.data.CartItemDates;
 import com.thundashop.core.ordermanager.data.ClosedOrderPeriode;
 import com.thundashop.core.ordermanager.data.EhfSentLog;
 import com.thundashop.core.ordermanager.data.Order;
-import com.thundashop.core.ordermanager.data.OrderManagerSettings;
 import com.thundashop.core.ordermanager.data.OrderFilter;
 import com.thundashop.core.ordermanager.data.OrderLight;
 import com.thundashop.core.ordermanager.data.OrderLoss;
+import com.thundashop.core.ordermanager.data.OrderManagerSettings;
 import com.thundashop.core.ordermanager.data.OrderResult;
 import com.thundashop.core.ordermanager.data.OrderShipmentLogEntry;
+import com.thundashop.core.ordermanager.data.OrderTaxCorrectionResult;
+import com.thundashop.core.ordermanager.data.OrderTaxCorrectionResultValue;
 import com.thundashop.core.ordermanager.data.OrderTransaction;
 import com.thundashop.core.ordermanager.data.OrderTransactionDTO;
 import com.thundashop.core.ordermanager.data.OrdersToAutoSend;
@@ -77,10 +79,10 @@ import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.pos.PosConference;
 import com.thundashop.core.pos.PosManager;
-import com.thundashop.core.printmanager.ReceiptGenerator;
 import com.thundashop.core.printmanager.PrintJob;
 import com.thundashop.core.printmanager.PrintManager;
 import com.thundashop.core.printmanager.Printer;
+import com.thundashop.core.printmanager.ReceiptGenerator;
 import com.thundashop.core.printmanager.StorePrintManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.AccountingDetail;
@@ -98,6 +100,8 @@ import com.thundashop.core.verifonemanager.VerifoneFeedback;
 import com.thundashop.core.warehousemanager.WareHouseManager;
 import com.thundashop.core.webmanager.WebManager;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Consumer;
@@ -763,10 +767,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Override
     public void saveOrder(Order order) throws ErrorException {
-        
         boolean isPaid = order.isPaid();
         boolean isNotified = order.isNotified();
         boolean isPaymentLinkType = order.isPaymentLinkType();
+        
+        if (!order.closed && !order.isCreditNote) {
+            correctOrderCartItems(order);
+        }
         
         if(isPaid && !isNotified && isPaymentLinkType) {
             order.payment.transactionLog.put(System.currentTimeMillis(), "Marking order for autosending");
@@ -5217,4 +5224,192 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
     }
 
+    /**
+     * If dryRun = true, the system function will return true/false if the if the order needs to be corrected
+     * 
+     * @param order
+     * @param dryRun
+     * @return 
+     */
+    private boolean correctOrderCartItems(Order order) {
+        List<CartItem> useCartItems = new ArrayList();
+        
+        for (CartItem cartItem : order.getCartItems()) {
+            List<CartItem> splittedCartItems = splitCartItemsBasedOnTaxGroups(order, cartItem);
+            useCartItems.addAll(splittedCartItems);
+        }
+        
+        order.cart.clear();
+        order.cart.addCartItems(useCartItems);
+        
+        return false;
+    }
+
+    private List<CartItem> splitCartItemsBasedOnTaxGroups(Order order, CartItem cartItem) {
+        try {
+            List<Date> datesForCartItem = getDatesForCartItem(order, cartItem);
+            
+            Map<Integer, List<Date>> groupedByTaxGroupNumber = datesForCartItem.stream().collect(Collectors.groupingBy(o -> {
+                Integer taxGroupNumber = getTaxGroupByDate(cartItem, o);
+                return taxGroupNumber;
+            }));
+            
+            ArrayList<CartItem> retListe = new ArrayList();
+            
+            
+            if (groupedByTaxGroupNumber.size() == 1) {
+                Integer groupNumberToUse = groupedByTaxGroupNumber.keySet().iterator().next();
+                cartItem.getProduct().taxgroup = groupNumberToUse;
+                cartItem.getProduct().taxGroupObject = productManager.getTaxGroup(groupNumberToUse);
+                cartItem.getProduct().doFinalize();
+                retListe.add(cartItem);
+                return retListe;
+            }
+            
+            Gson gson = new Gson();
+            
+            for (Integer groupNumber : groupedByTaxGroupNumber.keySet()) {
+                CartItem item = gson.fromJson(gson.toJson(cartItem), CartItem.class);
+                item.getProduct().taxgroup = groupNumber;
+                item.getProduct().taxGroupObject = productManager.getTaxGroup(groupNumber);
+                item.removeRowsNotConnectedToDate(groupedByTaxGroupNumber.get(groupNumber));
+                item.resetCartItemId();
+                item.recalculatePriceMatrixAndAddons();
+                item.getProduct().doFinalize();
+                retListe.add(item);
+            }
+            
+            return retListe;
+        } catch (ParseException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    private List<Date> getDatesForCartItem(Order order, CartItem cartItem) throws ParseException {
+        OrderDailyBreaker dailyBreak = new OrderDailyBreaker();
+        
+        List<Date> dates = new ArrayList();
+        if (cartItem.isPriceMatrixItem()) {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            for (String dateString : cartItem.priceMatrix.keySet()) {
+                Date date = sdf.parse(dateString);
+                dates.add(date);
+            }
+        } else if(cartItem.isPmsAddons()) {
+            for (PmsBookingAddonItem pmsAddon : cartItem.itemsAdded) {
+                Date date = pmsAddon.date;
+                dates.add(date);
+            }
+        } else {
+            Date date = dailyBreak.getNormalCartItemAccountingDate(order, cartItem);
+            dates.add(date);
+        }
+        
+        return dates;
+    }
+
+    private Integer getTaxGroupByDate(CartItem cartItem, Date o) {
+        TaxGroup taxGroup = productManager.getTaxGroup(cartItem.getProductId(), cartItem.getProduct().taxgroup, o);
+        return taxGroup.groupNumber;
+    }
+
+    @Override
+    public List<OrderTaxCorrectionResult> getOrdersNeedToBeCorrectedOverrideTaxes() {
+        List<Order> toCheck = orders.values()
+                .stream()
+                .filter(o -> !o.isCreditNote && o.creditOrderId.isEmpty())
+                .filter(o -> o.createByManager != null && o.createByManager.equals("PmsDailyOrderGeneration"))
+                .collect(Collectors.toList());
+        
+        List<OrderTaxCorrectionResult> retList = new ArrayList();
+        for (Order order : toCheck) {
+            Order cloned = order.jsonClone();
+            correctOrderCartItems(cloned);
+            
+            Map<TaxGroup, BigDecimal> clonedTaxes = cloned.getTaxesRoundedWithTwoDecimals(2);
+            Map<TaxGroup, BigDecimal> originalTaxes = order.getTaxesRoundedWithTwoDecimals(2);
+            
+            Set<Integer> keys = clonedTaxes.keySet().stream()
+                    .map(o -> o.groupNumber)
+                    .collect(Collectors.toSet());
+            
+            keys.addAll(originalTaxes.keySet().stream().map(o -> o.groupNumber).collect(Collectors.toSet()));
+            
+            OrderTaxCorrectionResult result = new OrderTaxCorrectionResult();
+            result.orderId = order.id;
+            
+            for (Integer key : keys) {
+                BigDecimal clonedTaxValue = null;
+                BigDecimal oringinalTaxValue = null;
+                
+                for (TaxGroup iKey : clonedTaxes.keySet()) {
+                    if (iKey.groupNumber == (int)key) {
+                         clonedTaxValue = clonedTaxes.get(iKey);
+                    }
+                }
+                
+                for (TaxGroup iKey : originalTaxes.keySet()) {
+                    if (iKey.groupNumber == (int)key) {
+                         oringinalTaxValue = originalTaxes.get(iKey);
+                    }
+                }
+                
+                boolean isLeftNull = clonedTaxValue == null && oringinalTaxValue != null;
+                boolean isRightNull = oringinalTaxValue == null && clonedTaxValue != null;
+                
+                if (isLeftNull || isRightNull || !clonedTaxValue.equals(oringinalTaxValue)) {
+                    OrderTaxCorrectionResultValue value = new OrderTaxCorrectionResultValue();
+                    value.taxGroupNumber = key;
+                    value.originalValue = oringinalTaxValue != null ? oringinalTaxValue : BigDecimal.ZERO;
+                    value.shouldBeValue = clonedTaxValue != null ? clonedTaxValue : BigDecimal.ZERO;
+                    boolean bothZero = value.shouldBeValue.equals(BigDecimal.ZERO) && value.originalValue.equals(BigDecimal.ZERO);
+                    if (!bothZero) {
+                        result.values.add(value);
+                    }
+                }
+            }
+            
+            if (!result.values.isEmpty()) {
+                retList.add(result);
+            }
+        }
+        
+        return retList;
+    }
+
+    @Override
+    public void correctOrderWithTaxProblem(String orderId) {
+        Order originalOrder = getOrder(orderId);
+        
+        if (originalOrder == null) {
+            return;
+        }
+        
+        if (!originalOrder.closed) {
+            correctOrderCartItems(originalOrder);
+            saveObjectDirect(originalOrder);
+            return;
+        }
+        
+        Order creditNote = creditOrder(orderId);
+        Order cloned = originalOrder.jsonClone();
+
+        correctOrderCartItems(cloned);
+        cloned.incrementOrderId = getNextIncrementalOrderId();
+        cloned.id = "";
+        
+        if (getOrderManagerSettings().closedTilPeriode != null) {
+            creditNote.overrideAccountingDate = getOrderManagerSettings().closedTilPeriode;
+            cloned.overrideAccountingDate = getOrderManagerSettings().closedTilPeriode;
+        }
+        
+        saveOrder(creditNote);
+        saveOrder(cloned);
+        
+        markAsPaid(creditNote.id, new Date(), getTotalAmount(creditNote));
+        markAsPaid(cloned.id, new Date(), getTotalAmount(cloned));
+        
+        addOrderToBooking(cloned);
+    }
+   
 }

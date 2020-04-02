@@ -11,3 +11,5 @@
 
 .EcommerceTaxes .col4 input,
 .EcommerceTaxes .col4 { width: 100px; box-sizing: border-box; text-align: center; vertical-align: top; }
+
+.EcommerceTaxes .addoverridetaxbox { display: none; padding: 20px;}

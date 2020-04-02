@@ -21,6 +21,11 @@ $cashPoint = $this->getApi()->getPosManager()->getCashPoint($this->getSelectedCa
             Sales
         </div>
     
+        <div class='entry all' tab='taxcorrection'>
+            <i class='fa fa-percent'></i>
+            Tax Correction
+        </div>
+    
         <?
         if (@$cashPoint->isMaster) {
             ?>

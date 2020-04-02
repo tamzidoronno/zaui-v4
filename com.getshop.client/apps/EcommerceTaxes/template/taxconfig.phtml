@@ -37,16 +37,54 @@ $numberOfGroups = 5;
         <?
         for ($i=1;$i<=$numberOfGroups;$i++) {
             $arrId = $i-1;
+            $taxGroupObjectI = $taxes[$arrId];
             $groupTax = isset($taxes[$arrId]) ? $taxes[$arrId]->taxRate : "";
             $accountinTaxCode = isset($taxes[$arrId]) ? $taxes[$arrId]->accountingTaxAccount : "";
             $description = isset($taxes[$arrId]) ? $taxes[$arrId]->description : "";
             $default = $i == 1 ? " (". $this->__f("Default").")" : "";
         ?>
             <div class="textfield gss_setting" id="title">
-                <div class="col1 col title"><?php echo $this->__("Taxgroup") . " $i ". $default; ?></div>
+                <div class="col1 col title">
+                    <i class='gs_shop_small_icon fa fa-plus addtaxgroup'></i>
+                    <?php echo $this->__("Taxgroup") . " $i ". $default; ?>
+                </div>
                 <div class="col2 col"><input class='gsniceinput1' type="textfield" gs_model="taxmodel" gsname="group<? echo $arrId; ?>" value="<? echo $groupTax; ?>"></div>
                 <div class="col3 col"><input class='gsniceinput1' type="textfield" gs_model="taxmodel" gsname="accounttaxcode<? echo $arrId; ?>" value="<? echo $accountinTaxCode; ?>"></div>
                 <div class="col4 col"><input class='gsniceinput1' type="textfield" gs_model="taxmodel" gsname="description<? echo $arrId; ?>" value="<? echo $description; ?>"></div>
+                
+                <div>
+                    <?
+                    foreach ($taxGroupObjectI->overrideTaxGroups as $override) {
+                        $overrideTaxGroup = $taxes[$override->groupNumber];
+                        ?>
+                        <div>
+                            <i class='fa fa-trash' gs_confirm='Are you sure?' gsclick='removeOverrideTaxGroup' taxgroupnumber='<? echo $arrId; ?>' overridegroupid='<? echo $override->id; ?>'></i> Use taxgroup <? echo ($overrideTaxGroup->groupNumber + 1). " ( $overrideTaxGroup->taxRate% ) in periode: ". date('d.m.Y', strtotime($override->start)). " - ".date('d.m.Y', strtotime($override->end)); ?>
+                        </div>
+                        <?
+                    }
+                    ?>
+                </div>
+                
+                <div class="addoverridetaxbox">
+                    <h3>Override tax</h3>
+                    <div gstype='form' method='addOverrideTaxGroup'>
+                        <input type='hidden' gsname='taxgroupnumber' value='<? echo $arrId; ?>' />
+                        <span style='width: 200px; display: inline-block;'> Start (included ) </span> <input class='gsniceinput1 hasdatepicker' gsname='start'/> 
+                        <br/><span style='width: 200px; display: inline-block;'> End (included) </span> <input class='gsniceinput1 hasdatepicker' gsname='end'/> 
+                        <br/><span style='width: 200px; display: overridegroup-block;'> Group </span> 
+                        <select class='gsniceselect1' gsname='overridegroup'>
+                            <?
+                            for ($j=1;$j<=$numberOfGroups;$j++) {
+                                ?>
+                                <option value='<? echo ($j-1); ?>'>Taxgroup <? echo $j; ?></option>
+                                <?
+                            }
+                            ?>
+                        </select>
+                        <br/>
+                        <div class='shop_button' gstype='submit'>Add override</div>
+                    </div>
+                </div>
             </div>
         <?
         }
@@ -57,3 +95,7 @@ $numberOfGroups = 5;
         </div>
     </div>
 </div>
+
+<script>
+    $('.hasdatepicker').datepicker({ dateFormat: "dd.mm.yy"});
+</script>

@@ -9,6 +9,7 @@ import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.pdf.data.AccountingDetails;
 import com.thundashop.core.productmanager.data.AccountingDetail;
+import com.thundashop.core.productmanager.data.OverrideTaxGroup;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductCategory;
 import com.thundashop.core.productmanager.data.ProductConfiguration;
@@ -101,9 +102,28 @@ public abstract class AProductManager extends ManagerBase {
             product.variations = null;
         }
         
+        TaxGroup taxGroup = getTaxGroupAbstract(product.taxgroup);
+        addOverrideTaxGroup(taxGroup, product);
+        
+        for (TaxGroup additionalTaxGroup : product.additionalTaxGroupObjects) {
+            addOverrideTaxGroup(additionalTaxGroup, product);
+        }
+        
 //        updateTranslation(product);
         return product;
     }
+
+    private void addOverrideTaxGroup(TaxGroup taxGroup, Product product) {
+        if (taxGroup != null && taxGroup.overrideTaxGroups != null && !taxGroup.overrideTaxGroups.isEmpty()) {
+            for (OverrideTaxGroup overrideTaxGroup : taxGroup.overrideTaxGroups) {
+                if (!containsTaxGroup(overrideTaxGroup, product)) {
+                    product.additionalTaxGroupObjects.add(getTaxGroupAbstract(overrideTaxGroup.groupNumber));
+                }
+            }   
+        }
+    }
+    
+    public abstract TaxGroup getTaxGroupAbstract(int taxGroupNumber);
 
     private void setOriginalPriceIfNull(Product product) {
         if (product.original_price == null) {
@@ -429,5 +449,20 @@ public abstract class AProductManager extends ManagerBase {
                 
             }
         }
+    }
+
+    private boolean containsTaxGroup(OverrideTaxGroup overrideTaxGroup, Product product) {
+        
+        if (overrideTaxGroup.groupNumber == product.taxgroup) {
+            return true;
+        }
+        
+        for (TaxGroup add : product.additionalTaxGroupObjects) {
+            if (add.groupNumber == overrideTaxGroup.groupNumber) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 }

@@ -13,6 +13,7 @@ import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.pos.PosManager;
 import com.thundashop.core.productmanager.data.AccountingDetail;
+import com.thundashop.core.productmanager.data.OverrideTaxGroup;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductAccountingInformation;
 import com.thundashop.core.productmanager.data.ProductCategory;
@@ -26,10 +27,12 @@ import com.thundashop.core.storemanager.StoreManager;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -315,6 +318,7 @@ public class ProductManager extends AProductManager implements IProductManager {
             if (accountingCodeChangedFromNull(grp, oldGroups)) {
                 orderManager.updateOrdersWithNewAccountingTaxCode(grp);
             }
+            setOriginalValues(grp, oldGroups);
             saveObject(grp);
         }
     }
@@ -762,6 +766,55 @@ public class ProductManager extends AProductManager implements IProductManager {
                     prod.accountingConfig.add(check);
                     saveProduct(prod);
                 }
+            }
+        }
+    }
+
+    public TaxGroup getTaxGroup(String productId, int taxgroup, Date o) {
+        TaxGroup taxGroup = getTaxGroup(taxgroup);
+        
+        taxGroup.addTestGroup();
+        
+        for (OverrideTaxGroup overTaxGroup : taxGroup.overrideTaxGroups) {
+            long startL = overTaxGroup.start.getTime();
+            long endL = overTaxGroup.end.getTime() + TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS);
+            long toCheck = o.getTime();
+            if (startL <= toCheck && endL > toCheck) {
+                return getTaxGroup(overTaxGroup.groupNumber);
+            }
+        }
+        
+        return taxGroup;
+    }
+
+    @Override
+    public void addOverrideTaxGroup(Integer groupNumber, Date start, Date end, Integer overrideGroupNumber) {
+        TaxGroup taxGroup = getTaxGroup(groupNumber);
+        
+        if (taxGroup != null) {
+            taxGroup.addOverrideGroup(start, end, overrideGroupNumber);
+            saveObject(taxGroup);
+        }
+    }
+
+    @Override
+    public void removeOverrideTaxGroup(int taxGroupNumber, String id) {
+        TaxGroup group = getTaxGroup(taxGroupNumber);
+        if (group != null) {
+            group.overrideTaxGroups.removeIf(o -> o.id.equals(id));
+            saveObject(group);
+        }
+    }
+
+    @Override
+    public TaxGroup getTaxGroupAbstract(int taxGroupNumber) {
+        return getTaxGroup(taxGroupNumber);
+    }
+
+    private void setOriginalValues(TaxGroup grp, List<TaxGroup> oldGroups) {
+        for (TaxGroup taxGroup : oldGroups) {
+            if (taxGroup.groupNumber == grp.groupNumber) {
+                grp.overrideTaxGroups = taxGroup.overrideTaxGroups;
             }
         }
     }

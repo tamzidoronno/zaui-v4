@@ -201,6 +201,13 @@ app.PmsSendMessagesConfiguration = {
         if(!$(e.target).hasClass('loadeditevent') && !$(e.target).hasClass('fa-close')) {
             return;
         }
+        
+        var mouseX = e.clientX+20;
+        if( $(window).outerWidth() <= mouseX ){
+            return true;
+        }
+
+
         $('.PmsSendMessagesConfiguration .loadeditevent').hide();
         $('.PmsSendMessagesConfiguration .loadeditevent').html('');
             $("body").css("overflow", "auto");
@@ -227,3 +234,20 @@ app.PmsSendMessagesConfiguration = {
 };
 
 app.PmsSendMessagesConfiguration.init();
+
+$.fn.hasScroll = function(axis){
+    var overflow = this.css("overflow"),
+        overflowAxis;
+
+    if(typeof axis == "undefined" || axis == "y") overflowAxis = this.css("overflow-y");
+    else overflowAxis = this.css("overflow-x");
+
+    var bShouldScroll = this.get(0).scrollHeight > this.innerHeight();
+
+    var bAllowedScroll = (overflow == "auto" || overflow == "visible") ||
+                         (overflowAxis == "auto" || overflowAxis == "visible");
+
+    var bOverrideScroll = overflow == "scroll" || overflowAxis == "scroll";
+
+    return (bShouldScroll && bAllowedScroll) || bOverrideScroll;
+};

@@ -5234,6 +5234,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     private boolean correctOrderCartItems(Order order) {
         List<CartItem> useCartItems = new ArrayList();
         
+        boolean hasNullTaxGroups = order.getCartItems().stream()
+                .map(o -> productManager.getTaxGroup(o.getProduct().taxgroup))
+                .filter(o -> o == null)
+                .count() > 0;
+        
+        if (hasNullTaxGroups) {
+            System.out.println("Skipping order: " + order.incrementOrderId + " as hit has products without taxes");
+            return false;
+        }
+                
         for (CartItem cartItem : order.getCartItems()) {
             List<CartItem> splittedCartItems = splitCartItemsBasedOnTaxGroups(order, cartItem);
             useCartItems.addAll(splittedCartItems);
@@ -5319,6 +5329,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .stream()
                 .filter(o -> !o.isCreditNote && o.creditOrderId.isEmpty())
                 .filter(o -> o.createByManager != null && o.createByManager.equals("PmsDailyOrderGeneration"))
+                .filter(o -> o.rowCreatedDate.getTime() > 1543536000000L)
                 .collect(Collectors.toList());
         
         List<OrderTaxCorrectionResult> retList = new ArrayList();

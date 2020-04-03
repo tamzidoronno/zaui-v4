@@ -5399,6 +5399,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         cloned.incrementOrderId = getNextIncrementalOrderId();
         cloned.id = "";
         
+        if (cloned.isInvoice() && !cloned.kid.isEmpty()) {
+            cloned.kid = "";
+            generateKid(cloned);
+        }
+
         if (getOrderManagerSettings().closedTilPeriode != null) {
             creditNote.overrideAccountingDate = getOrderManagerSettings().closedTilPeriode;
             cloned.overrideAccountingDate = getOrderManagerSettings().closedTilPeriode;

@@ -5380,6 +5380,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Override
     public void correctOrderWithTaxProblem(String orderId) {
         Order originalOrder = getOrder(orderId);
+        boolean isPaid = originalOrder.isFullyPaid();
         
         if (originalOrder == null) {
             return;
@@ -5406,8 +5407,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         saveOrder(creditNote);
         saveOrder(cloned);
         
-        markAsPaid(creditNote.id, new Date(), getTotalAmount(creditNote));
-        markAsPaid(cloned.id, new Date(), getTotalAmount(cloned));
+        if (isPaid) {
+            markAsPaid(creditNote.id, new Date(), getTotalAmount(creditNote));
+            markAsPaid(cloned.id, new Date(), getTotalAmount(cloned));
+        }
         
         addOrderToBooking(cloned);
     }

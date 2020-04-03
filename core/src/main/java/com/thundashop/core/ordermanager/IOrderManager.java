@@ -595,4 +595,7 @@ public interface IOrderManager {
     
     @Administrator
     public void correctOrderWithTaxProblem(String orderId);
+    
+    @Administrator
+    public void correctProblemsWithCorrection(String password);
 }

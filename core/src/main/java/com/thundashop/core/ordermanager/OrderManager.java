@@ -5414,5 +5414,66 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         addOrderToBooking(cloned);
     }
+
+    @Override
+    public void correctProblemsWithCorrection(String password) {
+        
+        if (password == null || !password.equals("asd9f92asdfasdfaw4r5154jnhasjdkfnasfd")) {
+            return;
+        }
+        
+        Map<String, List<Order>> clonedOrders = orders.values()
+                .stream()
+                .collect(Collectors.groupingBy(o -> o.secretId));
+        
+        for (String secretId : clonedOrders.keySet()) {
+            List<Order> sameOrders = clonedOrders.get(secretId);
+            if (sameOrders.size() != 3)
+                continue;
+            
+            Order originalOrder = sameOrders.stream()
+                    .filter(o -> !o.isCreditNote && o.isPaidWhenCreditted())
+                    .findAny()
+                    .orElse(null);
+            
+            Order creditNoteMarkedAsPaid = sameOrders.stream()
+                    .filter(o -> o.isCreditNote && o.isPaidWhenCreditted())
+                    .findAny()
+                    .orElse(null);
+            
+            if (originalOrder == null || creditNoteMarkedAsPaid == null) {
+                continue;
+            }
+            
+            Order adjustedOrder = sameOrders.stream()
+                    .filter(o -> !o.equals(originalOrder) && !o.equals(creditNoteMarkedAsPaid))
+                    .findAny()
+                    .orElse(null);
+            
+            if (adjustedOrder.isInvoice() && !adjustedOrder.kid.isEmpty()) {
+                adjustedOrder.kid = "";
+                generateKid(adjustedOrder);
+                saveObject(adjustedOrder);
+            }
+            
+            if (adjustedOrder.status == 7 && creditNoteMarkedAsPaid.orderTransactions.size() == 2) {
+                
+                creditNoteMarkedAsPaid.orderTransactions
+                        .removeIf(o -> !o.comment.equals("Creditted"));
+                
+                saveObject(creditNoteMarkedAsPaid);
+                
+                BigDecimal amountVatOriginal = originalOrder.getTotalAmountVatRoundedTwoDecimals(2);
+                BigDecimal amountVatAdjust = adjustedOrder.getTotalAmountVatRoundedTwoDecimals(2);
+                
+                if (!amountVatAdjust.equals(amountVatOriginal)) {
+                    adjustedOrder.status = Order.Status.CREATED;
+                    adjustedOrder.orderTransactions.clear();
+                    saveObject(adjustedOrder);
+                    System.out.println("Adjusted order: " + adjustedOrder.incrementOrderId);
+                }
+            }
+        }
+    }
    
 }

@@ -117,7 +117,10 @@ public abstract class AProductManager extends ManagerBase {
         if (taxGroup != null && taxGroup.overrideTaxGroups != null && !taxGroup.overrideTaxGroups.isEmpty()) {
             for (OverrideTaxGroup overrideTaxGroup : taxGroup.overrideTaxGroups) {
                 if (!containsTaxGroup(overrideTaxGroup, product)) {
-                    product.additionalTaxGroupObjects.add(getTaxGroupAbstract(overrideTaxGroup.groupNumber));
+                    TaxGroup toAdd = getTaxGroupAbstract(overrideTaxGroup.groupNumber);
+                    if (toAdd != null) {
+                        product.additionalTaxGroupObjects.add(toAdd);
+                    }
                 }
             }   
         }

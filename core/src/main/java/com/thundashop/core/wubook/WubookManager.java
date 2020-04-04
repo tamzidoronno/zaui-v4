@@ -113,6 +113,27 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     private List<WubookBooking> nextBookings;
     private List<String> bookingCodesToAdd = new ArrayList();
     private boolean errorNotificationSent = false;
+    private Date lastPulledWubook = new Date();
+
+    
+    public void checkIfLastPulledIsOk() {
+        if(!isWubookActive()) {
+            return;
+        }
+        
+        if(errorNotificationSent) {
+            return;
+        }
+        
+        Date now = new Date();
+        long diff = now.getTime() - lastPulledWubook.getTime();
+        long minutes = diff / 1000 / 60;
+        logPrint("minutes without: " + minutes + "(" + diff + ")");
+        if(minutes > 5) {
+            messageManager.sendErrorNotificationToEmail("post@getshop.com", "Fetch new booking not run i 5 minutes.", null);
+            errorNotificationSent = true;
+        }
+    }
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -185,6 +206,10 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement(pmsManager.getConfigurationSecure().wubookpassword);
         params.addElement("823y8vcuzntzo_o201");
         Vector result = executeClient("acquire_token", params);
+        
+        if(result == null) {
+            return false;
+        }
         
         Integer response = (Integer) result.get(0);
         token = (String) result.get(1);
@@ -435,7 +460,12 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             }
             bookingCodesToAdd.clear();
 
-            connectToApi();
+            if(!connectToApi()) {
+                return;
+            }
+            
+            lastPulledWubook = new Date();
+            
             PmsConfiguration config = pmsManager.getConfigurationSecure();
             if(config.wubooklcode == null || config.wubooklcode.isEmpty()) {
                 return;

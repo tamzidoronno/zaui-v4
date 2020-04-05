@@ -20,6 +20,7 @@
     "sameasguest" : "Same as guest",
     "loggedonas" : "Logged on as ",
     "min_days" : "You have to book for a minimum of {arg} days.",
+    "min_guests" : "For the selected periode you will have to book for atleast {arg} guests for each room.",
     "max_days" : "You have to book for a maximum of {arg} days.",
     "outsideperiode" : "The selected time periode is restricted for this selection, please choose a different one.",
     "adults" : "Adults",

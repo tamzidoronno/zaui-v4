@@ -38,8 +38,11 @@ app.PmsRestrictions = {
             $('.whenstaying').show();
         }
         
-        if(val === "2" || val === "3") {
+        if(val === "2" || val === "3" || val === "9") {
             $('.mindays').show();
+        }
+        if(val === "9") {
+            $('.mindays').attr('placeholder','guests');
         }
         
     }

@@ -25,6 +25,7 @@ public class TimeRepeaterData implements Serializable {
         public static Integer forceConfirmationSameDay = 6;
         public static Integer noCheckIn = 7;
         public static Integer noCheckOut = 8;
+        public static Integer minGuests = 9;
     }
     
     Integer repeatPeride = TimeRepeaterData.RepeatPeriodeTypes.daily;

@@ -30,6 +30,9 @@ Error      : #de5353; red
 .GslBooking .removeallselectedroomsbtn { background-color:red !important; }
 .GslBooking .getshop_specialerrormsg { color:red; margin-top: 10px; }
 .GslBooking .paymentmethodselection #paymentmethodselection { padding: 5px; width: 100%; box-sizing: border-box; }
+.GslBooking .getshop_disabled_row { color:#bbb; }
+.GslBooking .getshop_disabled_row select { pointer-events: none; color:#bbb; background-color:#bbb; }
+
 #warningstartyesterday {  text-align: center; padding: 10px; color:red; font-weight: bold; display:none; }
 .GslBooking .terminalpaymentprocess {  
     position: fixed;

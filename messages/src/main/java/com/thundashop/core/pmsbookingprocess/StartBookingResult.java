@@ -17,6 +17,7 @@ public class StartBookingResult {
     String prefilledContactUser = "";
     String bookingId = "";
     public String errorMessage = "";
+    public boolean hasAvailableRooms = false;
 
     public List<RoomsSelected> getRoomsSelected() {
         List<RoomsSelected> res = new ArrayList();

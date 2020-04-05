@@ -9,6 +9,7 @@ public class BookingProcessRooms {
     public HashMap<Integer, Double> pricesByGuests = new HashMap();
     public Integer availableRooms = 0;
     public Integer maxGuests = 0;
+    public Integer minGuests = 1;
     public String description = "";
     public String name = "";
     public String id = "";

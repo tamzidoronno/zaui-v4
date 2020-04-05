@@ -8,6 +8,7 @@
     "back" : "Tilbake",
     "validDiscountCodes" : "Aktive kampanjer",
     "min_days" : "Du må booke for et minimum av {arg} døgn.",
+    "min_guests" : "I denne perioden må du booke for minimum {arg} gjester per rom.",
     "max_days" : "Du kan kun booke for et maksimum av {arg} døgn.",
     "outsideperiode" : "Du prøver å booke i en periode som ikke er gyldig, velg en annen periode.",
     "commenttitle" : "Noen bemerkninger / kommentarer?",

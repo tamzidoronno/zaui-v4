@@ -2037,7 +2037,7 @@ function getshop_searchRooms(e) {
             gslbookingcurresult = res;
             sessionStorage.setItem('gslcurrentbooking', JSON.stringify(gslbookingcurresult));
             $('.noroomsfound').hide();
-            if(!res || (parseInt(res.totalRooms) === 0)) {
+            if(!res || !res.hasAvailableRooms) {
                 $('.noroomsfound').show();
                 $('.GslBooking .hide').hide();
             } else {
@@ -2050,6 +2050,10 @@ function getshop_searchRooms(e) {
             if(res.errorMessage) {
                 var errorstring = res.errorMessage.split(":");
                 $('.noroomsfound').show();
+                $('.noroomsfounderrormessage').show();
+                if(res.hasAvailableRooms) {
+                    $('.noroomsfounderrormessage').hide();
+                }
                 var text = translation[errorstring[0]];
                 text = text.replace(errorstring[1], errorstring[2]);
                 $('.noroomsfound').append('<div class="getshop_specialerrormsg">' + text + "</div>");
@@ -2092,6 +2096,7 @@ function getshop_searchRooms(e) {
                     currency = "NOK";
                 }
                 for (var guest in room.pricesByGuests) {
+                    
                     var numberofrooms = '';
                     var index = 1;
                     var multipleGuests = ' ' + translation['numberofguests'].toLowerCase();
@@ -2107,7 +2112,13 @@ function getshop_searchRooms(e) {
                     roomBox.find('.guestselection').show();
                     if(numberofrooms) {
                         numberofrooms = "<option value='0' data-price='0'>0</option>" +  numberofrooms;
-                        productentry = $('<tr class="productentry_itemlist"><td><i class="gsicon-gs-user"></i> x ' + user_icon + ''+ multipleGuests + '</td><td>' + getshop_printPrice(room.pricesByGuests[guest]) + ',-</td><td style="float:right;padding-right:10px;"><div class="select-wrapper"><select class="numberof_rooms" guests="'+guest+'">' + numberofrooms + '</select></div></td></tr>');
+                        
+                        var disabled = "";
+                        if(guest < room.minGuests) {
+                            disabled = "getshop_disabled_row";
+                        }
+                        
+                        productentry = $('<tr class="productentry_itemlist '+ disabled + '"><td><i class="gsicon-gs-user"></i> x ' + user_icon + ''+ multipleGuests + '</td><td>' + getshop_printPrice(room.pricesByGuests[guest]) + ',-</td><td style="float:right;padding-right:10px;"><div class="select-wrapper"><select class="numberof_rooms" guests="'+guest+'">' + numberofrooms + '</select></div></td></tr>');
                         productentry.find('.numberof_rooms').val(room.roomsSelectedByGuests[guest]);
                     } else {
                         roomBox.find('.guestselection').hide();

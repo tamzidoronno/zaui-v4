@@ -42,7 +42,9 @@ import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.pmsmanager.PmsPricing;
 import com.thundashop.core.pmsmanager.PmsSegment;
 import com.thundashop.core.pmsmanager.PmsUserDiscount;
+import com.thundashop.core.pmsmanager.TimeRepeater;
 import com.thundashop.core.pmsmanager.TimeRepeaterData;
+import com.thundashop.core.pmsmanager.TimeRepeaterDateRange;
 import com.thundashop.core.pos.PosManager;
 import com.thundashop.core.printmanager.PrintJob;
 import com.thundashop.core.productmanager.ProductManager;
@@ -59,6 +61,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -267,9 +270,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         checkForRestrictions(result, arg);
         addAddonsIncluded(result,arg);
         
-        if(result.hasAvailableRooms()) {
-            result.errorMessage = "";
-        }
+        result.hasAvailableRooms = result.hasAvailableRooms();
         
         return result;
     }
@@ -1799,6 +1800,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         boolean remove = false;
         List<String> types = new ArrayList();
         for(BookingProcessRooms r : result.rooms) {
+            r.minGuests = getMinGuestsCount(r, arg, result);
             if (pmsManager.isRestricted(r.id, arg.start, arg.end, TimeRepeaterData.TimePeriodeType.min_stay)) {
                 remove = true;
                 result.errorMessage = "min_days:{arg}:" + pmsManager.getLatestRestrictionTime();
@@ -1963,5 +1965,29 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             logPrintException(e);
         }
         return generateSummary();
+    }
+
+    private Integer getMinGuestsCount(BookingProcessRooms r, StartBooking arg, StartBookingResult result) {
+        try {
+            List<TimeRepeaterData> mingueststimes = bookingEngine.getOpeningHoursWithType(r.id, TimeRepeaterData.TimePeriodeType.minGuests);
+
+            TimeRepeater repeater = new TimeRepeater();
+            for (TimeRepeaterData res : mingueststimes) {
+                LinkedList<TimeRepeaterDateRange> ranges = repeater.generateRange(res);
+                if(!res.containsCategory(r.id)) {
+                    continue;
+                }
+                for (TimeRepeaterDateRange range : ranges) {
+                    if(range.isBetweenTime(arg.start)) {
+                        Integer minguests = new Integer(res.timePeriodeTypeAttribute);
+                        result.errorMessage = "min_guests:{arg}:" + minguests;
+                        return minguests;
+                    }
+                }
+            }
+        }catch(Exception e) {
+            logPrintException(e);
+        }
+        return 1;
     }
 }

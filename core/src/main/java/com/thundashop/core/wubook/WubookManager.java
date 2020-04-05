@@ -128,7 +128,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         Date now = new Date();
         long diff = now.getTime() - lastPulledWubook.getTime();
         long minutes = diff / 1000 / 60;
-        logPrint("minutes without: " + minutes + "(" + diff + ")");
         if(minutes > 5) {
             messageManager.sendErrorNotificationToEmail("post@getshop.com", "Fetch new booking not run i 5 minutes.", null);
             errorNotificationSent = true;

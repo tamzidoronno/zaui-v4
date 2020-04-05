@@ -160,4 +160,6 @@ public interface IGetShop {
     
     @Administrator
     public List<String> unitsTryingToRecover();
+    
+    public List<String> getWebAddressesForNewUseTaxes(String password);
 }

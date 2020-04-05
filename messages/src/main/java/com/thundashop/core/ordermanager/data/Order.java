@@ -1612,6 +1612,12 @@ public class Order extends DataCommon implements Comparable<Order> {
     public boolean isForignCurrency() {
         return currency != null && !currency.isEmpty();
     }
+
+    public boolean isPaidWhenCreditted() {
+        return orderTransactions.stream()
+                .filter(o -> o.comment.equals("Creditted"))
+                .count() > 0;
+    }
     
     public static class Status  {
         public static int CREATED = 1;

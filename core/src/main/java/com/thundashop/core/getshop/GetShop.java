@@ -44,6 +44,7 @@ import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.pdf.InvoiceManager;
+import com.thundashop.core.productmanager.data.TaxGroup;
 import com.thundashop.core.socket.GsonUTCDateAdapter;
 import com.thundashop.core.start.Runner;
 import com.thundashop.core.storemanager.StoreManager;
@@ -1223,5 +1224,36 @@ public class GetShop extends ManagerBase implements IGetShop {
     public void recoveryCompleted(String id) {
         String msg = "Restore has been completed on ip" + recoveryIps.get(id) + ", please send a new backup pen.";
         messageManager.sendErrorNotification(msg, null);
+    }
+
+    @Override
+    public List<String> getWebAddressesForNewUseTaxes(String password) {
+        if (password == null || !password.equals("as9df209384u129834123o4ij")) {
+            return new ArrayList();
+        }
+        
+        BasicDBObject query = new BasicDBObject();
+        query.put("className", "com.thundashop.core.storemanager.data.Store");
+        
+        List<String> retList = new ArrayList();
+        database.query("StoreManager", "all", query)
+            .stream()
+            .map( o -> (Store)o)
+            .forEach(store -> {
+                BasicDBObject taxQuery = new BasicDBObject();
+                taxQuery.put("className", "com.thundashop.core.productmanager.data.TaxGroup");
+                
+                boolean usesIt = database.query("ProductManager", store.id, taxQuery)
+                        .stream()
+                        .map(t -> (TaxGroup)t)
+                        .filter(t -> t.overrideTaxGroups != null && !t.overrideTaxGroups.isEmpty())
+                        .count() > 0;
+                
+                if (usesIt) {
+                    retList.add(store.webAddressPrimary);
+                }
+            });
+        
+        return retList;
     }
 }

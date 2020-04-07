@@ -251,6 +251,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private PmsBooking includeAlways = null;
     private Integer daysInRestrioction;
     public boolean hasCheckedForUndeletion = false;
+    private List<PmsBookingAddonItem> cachedAvailableAddons;
+    private Date cachedAvailableAddonsLastCached;
     
 
     @Autowired
@@ -1077,11 +1079,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public void saveBooking(PmsBooking booking) throws ErrorException {
         
         checkIfSegmentIsClosed(booking);
-        
+       
         if (booking.id == null || booking.id.isEmpty()) {
             throw new ErrorException(1000015);
         }
-
+ 
         bookings.put(booking.id, booking);
 
         try {
@@ -5581,6 +5583,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public List<PmsBookingAddonItem> getAddonsAvailable() {
+        if(cachedAvailableAddonsLastCached != null) {
+            long diff = System.currentTimeMillis() - cachedAvailableAddonsLastCached.getTime();
+            if(diff < 1000) {
+                return cachedAvailableAddons;
+            }
+        }
+        
         HashMap<Integer, PmsBookingAddonItem> addons = getConfigurationSecure().addonConfiguration;
         List<PmsBookingAddonItem> result = new ArrayList();
         for (PmsBookingAddonItem item : addons.values()) {
@@ -5593,6 +5602,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         }
+        
         
         Collections.sort(result, new Comparator<PmsBookingAddonItem>() {
             public int compare(PmsBookingAddonItem s1, PmsBookingAddonItem s2) {
@@ -5610,6 +5620,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 
             }
         });
+        
+        cachedAvailableAddons = result;
+        cachedAvailableAddonsLastCached = new Date();
         
         return result;
     }

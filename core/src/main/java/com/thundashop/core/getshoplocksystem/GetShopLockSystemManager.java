@@ -24,6 +24,7 @@ import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.webmanager.WebManager;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -757,11 +758,29 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
     }
 
     @Override
+    public void addTransactionHistorySeros(String tokenId, String lockId, Date timeStamp, String keyId, int userSlot) {
+        lockServers.values().stream()
+            .forEach(server -> {
+                if(server instanceof SerosLockSystem) {
+                    SerosLockSystem casted = (SerosLockSystem)server;
+                    casted.addTransactionHistorySeros(tokenId, lockId, keyId, timeStamp, userSlot);
+                } else {
+                    server.addTransactionHistory(tokenId, lockId, timeStamp, userSlot);
+                }
+            });
+    }
+
+    @Override
     public List<AccessHistoryResult> getAccessHistory(String groupId, Date start, Date end, int groupSlotId) {
         LockGroup group = getGroup(groupId);
         
         List<AccessHistoryResult> history = new ArrayList();
         Map<String, List<Integer>> groupedLocksAndSlots = new HashMap();
+        
+        List<String> locks = new ArrayList();
+        for(List<String> connected : group.connectedToLocks.values()) {
+            locks.addAll(connected);
+        }
         
         if (group != null) {
             MasterUserSlot masterUserSlot = group.getGroupLockCodes().get(groupSlotId);
@@ -776,14 +795,21 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
             }
         }
         
-        for (String lockId : groupedLocksAndSlots.keySet()) {
+        for (String lockId : locks) {
             BasicDBObject query = new BasicDBObject();
             DBObject dateQuery = BasicDBObjectBuilder.start("$gte", start).add("$lte", end).get();
                 
             query.put("className", AccessHistory.class.getCanonicalName());
             query.put("accessTime", dateQuery);
             query.put("lockId", lockId);
-            query.put("userSlot", new BasicDBObject("$in", groupedLocksAndSlots.get(lockId)));
+            
+            List<Integer> userSlots = groupedLocksAndSlots.get(lockId);
+            if(userSlots == null) {
+                userSlots = new ArrayList();
+                userSlots.add(groupSlotId);
+            }
+            
+            query.put("userSlot", new BasicDBObject("$in", userSlots));
 //        
             List<AccessHistoryResult> hist = database.query(getClass().getSimpleName(), getStoreId(), query).stream()
                 .map(o -> (AccessHistory)o)
@@ -792,6 +818,12 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
             
             history.addAll(hist);
         }
+        
+        Collections.sort(history, new Comparator<AccessHistoryResult>() {
+            public int compare(AccessHistoryResult o1, AccessHistoryResult o2) {
+                return o2.time.compareTo(o1.time);
+            }
+          });
         
         return history;
     }

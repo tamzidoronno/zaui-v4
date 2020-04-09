@@ -158,6 +158,8 @@ public interface IGetShopLockSystemManager {
     
     public void addTransactionHistory(String tokenId, String lockId, Date timeStamp, int userSlot);
     
+    public void addTransactionHistorySeros(String tokenId, String lockId, Date timeStamp, String keyId, int userSlot);
+    
     public void addTransactionEntranceDoor(String serverId, String lockId, int code);
     
     public void addTransactionEntranceDoorByToken(String tokenId, int lockIncrementalId, int code);

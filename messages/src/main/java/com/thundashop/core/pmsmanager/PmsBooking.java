@@ -813,6 +813,18 @@ public class PmsBooking extends DataCommon {
         return roomId;
     }
 
+    Iterable<PmsBookingRooms> getActiveRoomsIncNonRefundable() {
+
+        List<PmsBookingRooms> result = new ArrayList();
+        for(PmsBookingRooms room : rooms) {
+            if(room.isDeleted() && !room.nonrefundable && !nonrefundable) {
+                continue;
+            }
+            result.add(room);
+        }
+        return result;
+    }
+
     public static class PriceType {
         public static Integer daily = 1;
         public static Integer monthly = 2;

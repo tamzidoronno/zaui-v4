@@ -3,6 +3,28 @@ $quickadd = "false";
 if(isset($_SESSION['quickaddaddons'])) {
     $quickadd = "true";
 }
+if(!isset($_POST['data']['roomid'])) {
+    $app = new \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView();
+    $app->setData();
+    $selectedRoom = $app->getSelectedRoom();
+    $_POST['data']['roomid'] = $selectedRoom->pmsBookingRoomId;
+}
+$roomid = $_POST['data']['roomid'];
+
+$booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $roomid);
+foreach($booking->rooms as $r) {
+    if($r->pmsBookingRoomId == $roomid) {
+        $room = $r;
+    }
+}
+
+if($room->deletedByChannelManagerForModification) {
+    echo "<div style='margin: 40px;font-size: 20px;'>";
+    echo "This room has been deleted by the channel manager and because of that you can not add addons this this room. Choose a different room in this group.";
+    echo "</div>";
+    return;
+}
+
 ?>
 <center>
     <h3>Addons possible to add to this room</h3>
@@ -32,7 +54,7 @@ if(isset($_SESSION['quickaddaddons'])) {
         $newproducts[$prod->name] = $prod;
     }
     
-    $roomid = $_POST['data']['roomid'];
+    
     ksort($newproducts);
     
     foreach($newproducts as $product) {

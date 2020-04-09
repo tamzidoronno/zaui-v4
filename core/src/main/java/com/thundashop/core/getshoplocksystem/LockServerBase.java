@@ -276,6 +276,16 @@ public abstract class LockServerBase extends DataCommon {
         history.serverId = getId();
         getShopLockSystemManager.saveObject(history);
     }
+    
+    public void addAccessHistorySeros(String lockId, int slotId, Date time, String code) {
+        AccessHistory history = new AccessHistory();
+        history.lockId = lockId;
+        history.userSlot = slotId;
+        history.code = code;
+        history.accessTime = time;
+        history.serverId = getId();
+        getShopLockSystemManager.saveObject(history);
+    }
 
     private String getCodeForSlot(Date time, int slotId, String lockId) {
         Lock lock = getLock(lockId);

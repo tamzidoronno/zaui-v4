@@ -136,7 +136,18 @@ public class SerosLockSystem extends LockServerBase implements LockServer {
 
     @Override
     public void addTransactionHistory(String tokenId, String lockId, Date accessTime, int userSlot) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    
+    void addTransactionHistorySeros(String tokenId, String lockId, String keyId, Date accessTime, int userSlot) {
+        if (checkToken(tokenId))
+            return;
+        
+        //LockId == serosKeyId
+        SerosApiKey apiKey = getSerosApiKeyById(keyId);
+        if (apiKey != null) {
+            addAccessHistorySeros(lockId, apiKey.getShopSlotNumber, accessTime, apiKey.lastReceivedSerosKey.code + "");
+        }
     }
 
     @Override
@@ -320,5 +331,15 @@ public class SerosLockSystem extends LockServerBase implements LockServer {
             serosKeys.put(apiKey.lastReceivedSerosKey.id, apiKey);
             save();    
         }        
+    }
+
+    private SerosApiKey getSerosApiKeyById(String lockId) {
+        for(String id : serosKeys.keySet()) {
+            SerosApiKey k = serosKeys.get(id);
+            if(k.serosKeyId.equals(lockId)) {
+                return k;
+            }
+        }
+        return null;
     }
 }

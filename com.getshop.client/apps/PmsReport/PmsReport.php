@@ -267,6 +267,9 @@ class PmsReport extends \MarketingApplication implements \Application {
     }
     
     public function printCoverageReport() {
+        echo "<center>";
+        echo "09.04.2020 - Important information, non refundable rooms are now included into the TOTAL figure in the report.<br><br>";
+        echo "</center>";
         $date = date("d-m-Y", time());
         echo "<span style='    color: #000;
     cursor: pointer;

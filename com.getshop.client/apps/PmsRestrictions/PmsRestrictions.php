@@ -178,6 +178,7 @@ class PmsRestrictions extends \WebshopApplication implements \Application {
         if($type == 6) { $prefix = "Force confirmation same day booking"; }
         if($type == 7) { $prefix = "No check in"; }
         if($type == 8) { $prefix = "No check out"; }
+        if($type == 9) { $prefix = "Minimum number of guests when booking in booking engine". " (" . $data->timePeriodeTypeAttribute ." guests)"; }
         
         if($data->repeatPeride == "0") {
             $text = $prefix . " " . " daily";
@@ -217,7 +218,7 @@ class PmsRestrictions extends \WebshopApplication implements \Application {
                 $text = $prefix . " " . "montly same date in month";
             }
         }
-
+        
         $text .= " " . " between " .date("d.m.Y", strtotime($data->firstEvent->start)) . " and " . date("d.m.Y", strtotime($data->endingAt));
         if($type == 4 || $type == 6) {
             $text .= ", time between: " . date("H:i", strtotime($data->firstEvent->start)) . " - " . date("H:i", strtotime($data->firstEvent->end));

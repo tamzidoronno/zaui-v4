@@ -57,6 +57,8 @@ public class PmsManagerProcessor {
         checkTimer("sendRecieptsOnCompletedPayments");
         try { autoMarkOrdersAsPaid(); }catch(Exception e) { manager.logPrintException(e); }
         checkTimer("autoMarkOrdersAsPaid");
+        try { manager.wubookManager.checkIfLastPulledIsOk(); }catch(Exception e) { manager.logPrintException(e); }
+        checkTimer("checkIfWubookrunning");
         try { processTimedMessage(false); }catch(Exception e) { manager.logPrintException(e); }
         try { processTimedMessage(true); }catch(Exception e) { manager.logPrintException(e); }
         checkTimer("processed timed messages");

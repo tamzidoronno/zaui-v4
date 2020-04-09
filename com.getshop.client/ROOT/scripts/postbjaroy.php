@@ -10,7 +10,7 @@ $res = json_decode($entityBody, true);
 
 $failed = false;
 
-$booking = $factory->getApi()->getPmsManager()->startBooking("hybelhotell");
+$booking = $factory->getApi()->getPmsManager()->startBooking($_GET['channel']);
 
 if(!$res['innflyttingsdato'] || !$res['utflyttingsdato']) {
     $failed = "Ugyldig dato, datoen kan ikke være blank.";
@@ -67,9 +67,21 @@ $room->date->start = $manager->convertToJavaDate($start);
 $room->date->end = $manager->convertToJavaDate($end);
 if($res['type'] == "hybel15") {
     $room->bookingItemTypeId = "c86f3095-2bd0-4833-a96d-207a406a667d";
-} else {
+}
+if($res['type'] == "hybel") {
     $room->bookingItemTypeId = "49052ae4-0859-4173-8406-11c499a7f5fe";
 }
+if($res['type'] == "hybelmedbad") {
+    $room->bookingItemTypeId = "00376ea4-e580-4ea0-8935-8f0dbe31d6c8";
+}
+
+$type = $factory->getApi()->getBookingEngine()->getBookingItemType($_GET['channel'], $room->bookingItemTypeId);
+
+if(!$type) {
+    echo "Type filed is invalid, it should be one of the following: hybel15,hybel,hybelmedbad";
+    return;
+}
+
 
 if($res["privatnavn"]) {
     $guest = new core_pmsmanager_PmsGuests();
@@ -87,8 +99,8 @@ $booking->rooms = array();
 $booking->rooms[] = $room;
 
 if(!$failed) {
-    $factory->getApi()->getPmsManager()->setBooking("hybelhotell", $booking);
-    $booking = $factory->getApi()->getPmsManager()->completeCurrentBooking("hybelhotell");
+    $factory->getApi()->getPmsManager()->setBooking($_GET['channel'], $booking);
+    $booking = $factory->getApi()->getPmsManager()->completeCurrentBooking($_GET['channel']);
 }
 
 if(!$booking) {

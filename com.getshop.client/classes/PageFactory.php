@@ -56,6 +56,9 @@ class PageFactory {
         if ($moduleId == "getshop") {
             $this->createGetShopPages();
         }
+        if ($moduleId == "pga") {
+            $this->createPgaPages();
+        }
         $this->productionMode = $this->getApi()->getStoreManager()->isProductMode();
     }
 
@@ -66,7 +69,7 @@ class PageFactory {
         if (!$pageId) {
             $pageId = "home";
         }
-        
+                
         $page = $this->pages[$pageId];
         $page->createApplicationInstances();
         $page->setModuleId();
@@ -954,6 +957,40 @@ class PageFactory {
         $page->addExtraApplications('b5e9370e-121f-414d-bda2-74df44010c3b');
         $row->addColumn("66e0c307-5a6d-4c16-8ed6-5204d63d5675", "z2a1x427-6182-45d2-b11d-18f152d2b1d1");
         $this->pages['new'] = $page;
+        
+    }
+
+    public function createPgaPages() {
+        $page = new \ModulePage("home", "pga");
+        $row = $page->createRow();
+        $row->ignoreTopRow = true;
+        $row->addColumn("2f998ecd-72e2-4b44-8529-cc8d6e5b2d15", "1f998ecd-72e2-4b44-8529-cc8d6e5b2d15");
+        $this->pages['home'] = $page;
+        
+        $page = new \ModulePage("conference", "pga");
+        $row = $page->createRow();
+        $row->ignoreTopRow = true;
+        $row->addColumn("b01782d0-5181-4b12-bec8-ee2e844bcae5", "1f998ecd-72e2-4b44-8529-cc8d6e5b2d12");
+        $this->pages['conference'] = $page;
+        
+        $page = new \ModulePage("rooms", "pga");
+        $row = $page->createRow();
+        $row->ignoreTopRow = true;
+        $row->addColumn("96ee60e7-4f5d-4084-a2c7-ac6aa7e53bc0", "1f998ecd-72e2-4b44-8529-cc8d6e5b2d13");
+        $this->pages['rooms'] = $page;
+        
+        
+        $page = new \ModulePage("billing", "pga");
+        $row = $page->createRow();
+        $row->ignoreTopRow = true;
+        $row->addColumn("d049425e-1718-48a0-b61b-950492638a14", "1f998ecd-72e2-4b44-8529-cc8d6e5b2d14");
+        $this->pages['billing'] = $page;
+        
+        $page = new \ModulePage("updateguestinformation", "pga");
+        $row = $page->createRow();
+        $row->ignoreTopRow = true;
+        $row->addColumn("d8ac717e-8e03-4b59-a2c3-e61b064a21c2", "1f998ecd-72e2-4b44-8529-cc8d6e5b2d19");
+        $this->pages['updateguestinformation'] = $page;
         
     }
 

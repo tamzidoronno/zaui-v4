@@ -1,0 +1,97 @@
+<?
+/* @var $this ns_2f998ecd_72e2_4b44_8529_cc8d6e5b2d15\PgaDashboard */
+$user = $this->getApi()->getPgaManager()->getUser($this->getSelectedMultilevelDomainName(), $_GET['token']);
+$booking = $this->getBooking();
+$rooms = $booking->rooms;
+$conference = $this->getConference();
+$total = $this->getTotalUnpaid();
+?>
+
+<div>
+    <div class='box'>
+        <i class='fa fa-user fa'></i>
+    </div>
+    <div class='namearea'>
+        <? 
+        echo $user->fullName;
+        ?>
+        <div class='date'>
+            <?
+            echo date('D, M d Y');
+            ?>
+        </div>
+    </div>
+</div>
+
+<?
+if ($total) {
+?>
+    <div class="warning">
+        <i class="fa fa-warning"></i>
+        <?
+        echo $this->__f("You have an unpaid amount");
+        ?>
+        <br/><? echo ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($total); ?>
+        <br/>
+        <a href="/pga.php?page=billing&token=<? echo $_GET['token']; ?>"><div class="shop_button"><? echo $this->__f("Go to billing"); ?></div></a>
+    </div>
+<?
+}
+?>
+
+<div class='gs_row'>
+    <div class='gs_box_1'>
+        <span class='box_label'><? echo $this->__f("Created date"); ?></span> <i class='fa fa-calendar'></i> <? echo date("d.m.Y H:i", date(strtotime($booking->rowCreatedDate))); ?>
+        <br/>
+        <span class='box_label'><? echo $this->__f("Booking id"); ?></span> <i class='fa fa-ticket'></i>
+        <?
+        echo $booking->incrementBookingId; 
+        ?>
+        
+    </div>
+</div>
+
+<div class='gs_row'>
+    <?
+    if ($rooms) {
+        ?>
+        <a href='/pga.php?page=rooms&token=<? echo $_GET['token']; ?>'>
+            <div class='gs_box_2'>
+                <div class='head'>
+                    <i class='fa fa-bed'></i> <? echo $this->__f("Rooms"); ?>
+                </div>
+                <div class='content'>
+                    <div class="c100 p75 big center">
+                        <span><?  echo count($rooms); ?></span>
+                        <div class="slice"><div class="bar"></div><div class="fill"></div></div>
+                    </div>    
+                </div>
+
+            </div>
+        </a>
+        <?
+    }
+    ?>
+    
+    <?
+    if ($conference) {
+        ?>
+        <a href="/pga.php?page=conference&token=<? echo $_GET['token']; ?>">
+            <div class='gs_box_2'>
+                <div class='head'>
+                    <i class='fa fa-bullhorn'></i> <? echo $this->__f("Conference"); ?>
+                </div>
+                <div class='content'>
+                    <?
+                    $app = new ns_b01782d0_5181_4b12_bec8_ee2e844bcae5\PgaConferenceView();
+                    $app->renderApplication();
+                    ?>
+                </div>
+
+            </div>
+        </a>
+        <?
+    }
+    ?>
+</div>
+

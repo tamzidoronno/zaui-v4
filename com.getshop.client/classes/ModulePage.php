@@ -76,6 +76,10 @@ class ModulePage {
             return $this->getGetShopMenu();
         }
         
+        if ($this->module == "pga") {
+            return $this->getPgaMenu();
+        }
+        
     }
 
     /**
@@ -459,6 +463,12 @@ class ModulePage {
         $menu->entries[] = new ModulePageMenuItem("Event report", "eventreport", "fa-pie-chart");
         $menu->entries[] = new ModulePageMenuItem("List", "list", "fa-list");
         $menu->entries[] = new ModulePageMenuItem("Report", "report", "fa-line-chart");
+        return $menu;
+    }
+
+    public function getPgaMenu() {
+        $menu = new \ModulePageMenu("pmsconference");
+        $menu->entries[] = new ModulePageMenuItem("New", "new", "gsicon-gs-new");
         return $menu;
     }
 

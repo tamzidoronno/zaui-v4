@@ -855,5 +855,9 @@ class ApplicationBase extends FactoryBase {
     public function disableGsTypes() {
         return false;
     }
+    
+    public function setPage($page) {
+        $this->page = $page;
+    }
 }
 ?>

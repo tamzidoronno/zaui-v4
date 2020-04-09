@@ -1,0 +1,167 @@
+.PgaRoomsList .box {
+    border: solid 2px #DDD;
+    width: 60px;
+    text-align: center;
+    font-size: 30px;
+    padding: 13px;
+    display: inline-block;
+}
+
+.PgaRoomsList .namearea {
+    vertical-align: top;
+    display: inline-block;
+    font-size: 30px;
+    padding-left: 20px;
+    font-weight: bold;
+}
+
+.PgaRoomsList .namearea .date {
+    font-weight: normal;
+    font-size: 18px;
+    color: #666;
+}
+
+.PgaRoomsList .informationbox {
+    padding: 20px;
+    font-size: 26px;
+    color: green;
+}
+
+.PgaRoomsList .room {
+    margin-bottom: 50px;
+    max-width: 700px;
+    -webkit-box-shadow: 0px 0px 13px -2px rgba(0,0,0,0.58);
+    -moz-box-shadow: 0px 0px 13px -2px rgba(0,0,0,0.58);
+    box-shadow: 0px 0px 13px -2px rgba(0,0,0,0.58);
+    margin-top: 50px;
+    margin-bottom: 100px;
+    border-radius: 5px;
+}
+
+.PgaRoomsList .room .room_header {
+    padding: 20px;
+    padding-bottom: 5px;
+    border-bottom: solid 1px #DDD;
+    position: relative;
+    font-weight: bold;
+    color: #182f49;
+    padding-bottom: 15px;
+    background-color: #FFF;
+    border-radius: 5px 5px 0px 0px;
+}
+
+.PgaRoomsList .room .room_header .date {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    text-align: right;
+}
+
+.PgaRoomsList .guests .guest {
+    padding-left: 20px;
+    padding-right: 20px;
+    
+    border-bottom: solid 1px #DDD;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    background-color: #FFF;
+}
+
+.PgaRoomsList .guests .guest i {
+    width: 50px;
+    text-align: center;
+}
+.PgaRoomsList .guests .guest .col {
+    display: inline-block;
+}
+
+.PgaRoomsList .roomdetails {
+    background: #FFF;
+    border-bottom: solid 1px #DDD;
+    padding: 20px;
+    position: relative;
+}
+
+.PgaRoomsList .value,
+.PgaRoomsList .label {
+    display: inline-block;
+}
+
+.PgaRoomsList .roomprice {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    font-weight: bold;
+    color: green;
+}
+
+.PgaRoomsList .buttons {
+    border-radius: 0px 0px 5px 5px;
+    font-size: 0px;
+}
+
+.PgaRoomsList .button {
+    font-size: 20px;
+    text-align: center;
+    display: inline-block;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    cursor: pointer;
+
+    background: rgb(245,246,251);
+    background: -moz-linear-gradient(180deg, rgba(245,246,251,1) 0%, rgba(230,230,230,1) 100%);
+    background: -webkit-linear-gradient(180deg, rgba(245,246,251,1) 0%, rgba(230,230,230,1) 100%);
+    background: linear-gradient(180deg, rgba(245,246,251,1) 0%, rgba(230,230,230,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#f5f6fb",endColorstr="#e6e6e6",GradientType=1);
+/*    color: #FFF;
+    background: rgb(29,59,93);
+    background: -moz-linear-gradient(180deg, rgba(29,59,93,1) 0%, rgba(24,47,73,1) 100%);
+    background: -webkit-linear-gradient(180deg, rgba(29,59,93,1) 0%, rgba(24,47,73,1) 100%);
+    background: linear-gradient(180deg, rgba(29,59,93,1) 0%, rgba(24,47,73,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#1d3b5d",endColorstr="#182f49",GradientType=1);*/
+    
+}
+
+.PgaRoomsList .button.green {
+    background: rgb(114,255,128);
+    background: -moz-linear-gradient(180deg, rgba(114,255,128,1) 0%, rgba(63,186,28,1) 100%);
+    background: -webkit-linear-gradient(180deg, rgba(114,255,128,1) 0%, rgba(63,186,28,1) 100%);
+    background: linear-gradient(180deg, rgba(114,255,128,1) 0%, rgba(63,186,28,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#72ff80",endColorstr="#3fba1c",GradientType=1);
+    color: #333;
+}
+
+.PgaRoomsList .button.orange {
+    background: rgb(255,168,45);
+    background: -moz-linear-gradient(180deg, rgba(255,168,45,1) 0%, rgba(230,138,8,1) 50%);
+    background: -webkit-linear-gradient(180deg, rgba(255,168,45,1) 0%, rgba(230,138,8,1) 50%);
+    background: linear-gradient(180deg, rgba(255,168,45,1) 0%, rgba(230,138,8,1) 50%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ffa82d",endColorstr="#e68a08",GradientType=1);
+    color: #FFF;
+}
+
+.PgaRoomsList .accesscode {
+    text-align: center;
+    padding: 10px;
+    font-size: 25px;
+    border-bottom: solid 1px #DDD;
+}
+
+.PgaRoomsList .accesscode .description {
+    font-size: 15px;
+    font-style: italic;
+    font-weight: bold;
+}
+.PgaRoomsList .accesscode.active {
+    background-color: green;
+    color: #FFF;
+    
+}
+
+.PgaRoomsList .roomnumber {
+    background-color: #e4ffaf;
+    text-align: center;
+    padding: 10px;
+    font-weight: bold;
+}

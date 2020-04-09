@@ -1,0 +1,124 @@
+<?
+/* @var $this ns_d049425e_1718_48a0_b61b_950492638a14\PgaBilling */
+$booking = $this->getBooking();
+$user = $this->getApi()->getPgaManager()->getUser($this->getSelectedMultilevelDomainName(), $_GET['token']);
+//echo $booking->bookedByUserId;
+$summaries = $this->getPaymentSummaries();
+$totalUnpaidForEverything = $this->getTotalUnpaid();
+?>
+
+<div>
+    <div class='box'>
+        <i class='fa fa-user fa'></i>
+    </div>
+    <div class='namearea'>
+        <? 
+        echo $user->fullName;
+        ?>
+        <div class='date'>
+            <?
+            echo date('D, M d Y');
+            ?>
+        </div>
+    </div>
+</div>
+
+
+<?
+
+if (!$totalUnpaidForEverything) {
+    ?>
+    <div class="allpaid">
+        <i class="fa fa-check"></i> <? echo $this->__f("All good, everything is paid"); ?>
+    </div>
+    <?
+} else {
+    ?>
+    <a href='/pr.php?id=<? echo $booking->id; ?>' target='_pmspayment'>
+        <div class="needToPay">
+            <i class="fa fa-warning"></i> <? echo $this->__f("You have an unsettled amount of")." ".ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($totalUnpaidForEverything); ?>
+
+            <br/>
+            <br/>
+            <div class="shop_button"><? echo $this->__f("Click here to pay for all rooms"); ?></div>
+        </div>
+    </a>
+    <?
+}
+foreach ($summaries as $summary) {
+    $room = null;
+    
+    foreach ($booking->rooms as $iroom) {
+        if ($iroom->pmsBookingRoomId == $summary->pmsBookingRoomId) {
+            $room = $iroom;
+        }
+    }
+    
+    $bookingItem = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $room->bookingItemId);
+    echo "<div class='room_to_pay'>";
+        echo "<div class='roomnumber'>".$this->__f("Room number").": "; 
+        echo $bookingItem ? $bookingItem->bookingItemName : $this->__f("Not yet available");
+        echo "</div>";
+        foreach ($summary->rows as $row) {
+            if (!$row->isAccomocation) {
+                continue;
+            }
+
+            $accomotdationtotal += $row->priceToCreateOrders * $row->count;
+        }
+
+        if ($accomotdationtotal) {
+            ?>
+            <div class="cartitemrow">
+                <div class="productame"><? echo $this->__f("Accomodation"); ?></div>
+                <div class="price"><? echo ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($accomotdationtotal); ?></div>
+            </div>
+            <?
+        }
+
+        $grouped = array();
+
+        foreach ($summary->rows as $row) {
+            if ($row->isAccomocation) {
+                continue;
+            }
+
+            $product = $this->getApi()->getProductManager()->getProduct($row->createOrderOnProductId);
+            $key = $row->createOrderOnProductId."<->|_|<->".$row->addonId."<->|_|<->".$row->textOnOrder;
+            $grouped[$key][] = $row;
+        }
+
+        foreach ($grouped as $key => $rows) {
+            $total = 0;
+            foreach ($rows as $row) {
+                $total += $row->priceToCreateOrders * $row->count;
+            }
+
+            $args = explode("<->|_|<->", $key);
+            $productId = $args[0];
+            $addonId = $args[1];
+            $overrideTex = $args[2];
+            $product = $this->getApi()->getProductManager()->getProduct($productId);
+            ?>
+            <div class="cartitemrow">
+                <div class="productame"><? echo $overrideTex ? $overrideTex : $product->name; ?></div>
+                <div class="price"><? echo ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($total); ?></div>
+            </div>
+            <?
+        }
+        ?>
+        <div class="cartitemrow totalrow">
+            <div class="productame"><? echo $this->__f("Total"); ?></div>
+            <div class="price"><? echo ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($summary->total); ?></div>
+        </div>
+        
+        <a href='/pr.php?id=<? echo $summary->pmsBookingRoomId; ?>' target='_pmspayment'>
+            <div class="needToPay">
+                <div class="shop_button"><? echo $this->__f("Click here to pay this room"); ?></div>
+            </div>
+        </a>
+        <?
+    echo "</div>";
+}
+
+?>

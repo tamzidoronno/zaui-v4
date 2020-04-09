@@ -1,0 +1,104 @@
+<?
+/* @var $this ns_96ee60e7_4f5d_4084_a2c7_ac6aa7e53bc0\PgaRoomsList */
+$booking = $this->getBooking();
+$user = $this->getApi()->getPgaManager()->getUser($this->getSelectedMultilevelDomainName(), $_GET['token']);
+$rooms = $booking->rooms;
+?>
+
+<div>
+    <div class='box'>
+        <i class='fa fa-user fa'></i>
+    </div>
+    <div class='namearea'>
+        <? 
+        echo $user->fullName;
+        ?>
+        <div class='date'>
+            <?
+            echo date('D, M d Y');
+            ?>
+        </div>
+    </div>
+</div>
+
+<div>
+    <?
+    $i = 0;
+    foreach ($rooms as $room) {
+        if ($room->deleted)
+            continue;
+        $i++;
+        ?>
+        <div class="room">
+            <div class="room_header"><? echo $this->__f("Room")." $i"; ?>
+                <div class="date">
+                    <i class="fa fa-calendar"></i>
+                    <?
+                    echo date('d.m.Y', strtotime($room->date->start))." - ".date('d.m.Y', strtotime($room->date->end));
+                    ?>
+                    <br/> <i class='fa fa-moon-o'></i> <? echo count((array)$room->priceMatrix)." ".$this->__f("Nights"); ?>
+                </div>  
+                <div>
+                    <? echo $this->getApi()->getPgaManager()->getBookingItemTypeName($this->getSelectedMultilevelDomainName(), $room->bookingItemTypeId); ?>
+                </div>
+            </div>
+            
+            <div class="roomnumber">
+                <? 
+                echo $this->__f("Room number").": ";
+                $bookingItem = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $room->bookingItemId);
+                echo $bookingItem ? $bookingItem->bookingItemName : $this->__f("Not yet available");
+                ?>
+            </div>
+            <div class='accesscode <? echo $room->codeObject ? "active" : "not_active"?>'>
+                <i class='fa fa-key'></i>
+                
+                <?
+                if ($room->codeObject) {
+                    echo $this->__f("Access code")." ".$room->codeObject->pinCode; 
+                    echo "<div class='description'>".$this->__f("Use this code to access the room")."</div>";
+                } else { 
+                    echo $this->__f("Access code");
+                    echo "<div class='description'>".$this->__f("You will be able to see your access code here when the room is available for use")."</div>";
+                }
+                ?>
+            </div>
+            <div class="roomdetails">
+                
+            
+                
+                <div>
+                    <div class="label"><? echo $this->__f("Guests"); ?></div>
+                    <div class="value"><? echo count($room->guests); ?></div>    
+                </div>
+                
+                <div class='roomprice'>
+                    <div class="label"><? echo $this->__f("Price"); ?></div>
+                    <div class="value"><? echo ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::formatPrice($room->totalCost); ?></div>    
+                </div>
+            </div>
+            
+            <div class="guests">
+                <?
+                $j = 0;
+                foreach ($room->guests as $guest) {
+                    $j++;
+                    ?>
+                    <div class="guest">
+                        <div class="guestname"><i class="fa fa-user"></i><?echo $guest->name ? $guest->name : $this->__f("Not yet set"); ?></div>
+                        <div class="phone"><i class="fa fa-envelope"></i> <? echo $guest->name ? $guest->email : $this->__f("Not yet set"); ?></div>
+                        <div class="email"><i class="fa fa-phone"></i> <? echo $guest->name ? $guest->phone : $this->__f("Not yet set"); ?></div>
+                    </div>
+                    <?
+                }
+                ?>  
+            </div>
+        
+            <div class='buttons'>
+                <div token="<? echo $_GET['token']; ?>" roomnumber=<? echo $i; ?> roomid="<? echo $room->pmsBookingRoomId; ?>" gs_show_modal="updateguestinformation" class='button ' style='border-right: solid 1px #EEE; border-radius: 0px 0px 5px 5px;'><i class='fa fa-edit'></i> <? echo $this->__f("Update guest information"); ?> <i class='fa fa-arrow-right'></i></div>
+            </div>
+        </div>
+        <?
+    }
+    ?>
+</div>

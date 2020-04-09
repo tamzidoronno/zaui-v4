@@ -1106,7 +1106,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return result;
     }
 
-    private boolean startImpersonationOfSystemScheduler() {
+    public boolean startImpersonationOfSystemScheduler() {
         boolean startedImpersonation = false;
         try {
             // Start impersonation
@@ -1123,7 +1123,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return startedImpersonation;
     }
 
-    private void stopImpersonation() {
+    public void stopImpersonation() {
         try {
             userManager.cancelImpersonating();
             getSession().currentUser = null;
@@ -3658,6 +3658,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         
         deleteOrCreditExistingOrders(booking, room);
+        saveBookingWithImpersonate(booking);
         // If room = null then the order will be created for the booking, otherwise it will be created for the room itself.
         String orderId = createOrderWithPaymentMethod(booking, room, paymentMethod, start, end);
         
@@ -3701,7 +3702,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return true;
     }
 
-    private void deleteOrCreditExistingOrders(PmsBooking booking, PmsBookingRooms room) throws ErrorException {
+    public void deleteOrCreditExistingOrders(PmsBooking booking, PmsBookingRooms room) throws ErrorException {
         boolean startedImpersonation = startImpersonationOfSystemScheduler();
                         
         List<String> orderIdsToRemove = new ArrayList();
@@ -3739,8 +3740,15 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             
         
         booking.orderIds.removeAll(orderIdsToRemove);
-        pmsManager.saveBooking(booking);
         
+        if (startedImpersonation) {
+            stopImpersonation();
+        }
+    }
+    
+    public void saveBookingWithImpersonate(PmsBooking booking) {
+        boolean startedImpersonation = startImpersonationOfSystemScheduler();
+        pmsManager.saveBooking(booking);
         if (startedImpersonation) {
             stopImpersonation();
         }

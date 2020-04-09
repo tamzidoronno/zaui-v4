@@ -1,0 +1,55 @@
+<?
+/* @var $this ns_b01782d0_5181_4b12_bec8_ee2e844bcae5\PgaConferenceView */
+$booking = $this->getBooking();
+$conference = $this->getConference();
+$events = $this->getApi()->getPgaManager()->getEvents($this->getSelectedMultilevelDomainName(), $_GET['token']);
+
+if (!$conference) {
+    ?>
+    <div>
+        <div><? echo $this->__f("You are not attending to any conference."); ?> </div>
+    </div>
+    <?  
+    return;
+}
+?>
+
+<div class="conference_header">
+    <span class='box_label'><? echo $this->__f("Title"); ?></span> <i class='fa fa-bullhorn'></i> <? echo $conference->meetingTitle; ?>
+    <br/><span class='box_label'><? echo $this->__f("Date"); ?></span> <i class='fa fa-calendar'></i> <? echo date("d.m.Y", date(strtotime($conference->conferenceDate))); ?>
+    <br/><span class='box_label'><? echo $this->__f("Attendees"); ?></span><i class='fa fa-users'></i> <? echo $conference->attendeeCount; ?>
+</div>
+
+<div class="conference_program">
+    <div class='programtitle'><? echo $this->__f("Program"); ?></div>    
+    <? 
+    foreach ($events as $event) {
+        
+    ?>  
+        <div class='eventrow'>
+            <span class='box_label'>
+                <i class='fa fa-bullseye'></i> <? echo $event->name; ?>
+            </span>
+            <div class='event_date'>
+                <? 
+                echo date('d.m.Y H:i', strtotime($event->from))." - ".date('H:i', strtotime($event->to));
+                ?>
+            </div>
+            <?
+            if ($event->description) {
+            ?>
+                <div class='event_description'>
+                    <?
+                        echo nl2br($event->description);
+                    ?>
+                </div>
+            <?
+            }
+            ?>
+        </div>
+    <?
+//    echo "<pre>"; print_r($event);
+    }
+    ?>
+    
+</div>

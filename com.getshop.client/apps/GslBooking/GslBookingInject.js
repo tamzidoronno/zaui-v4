@@ -693,7 +693,11 @@ function getshop_loadAddonsAndGuestSummaryByResult(res) {
             entry.attr('productid', item.productId);
             entry.addClass('addonprinted');
             entry.find('.icon').html(fontawesomeicon);
-            entry.find('.text').html(item.name);
+            var itemname = item.name;
+            if(item.descriptionWeb) {
+                itemname = item.descriptionWeb;
+            }
+            entry.find('.text').html(itemname);
             entry.find('.price').html(getshop_printPrice(item.price));
             if(item.isAdded) {
                 entry.find('.addButton').addClass('added_addon').html(translation['remove']);

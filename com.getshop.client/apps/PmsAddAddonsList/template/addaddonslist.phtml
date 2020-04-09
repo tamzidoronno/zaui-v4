@@ -3,7 +3,12 @@ $quickadd = "false";
 if(isset($_SESSION['quickaddaddons'])) {
     $quickadd = "true";
 }
-
+if(!isset($_POST['data']['roomid'])) {
+    $app = new \ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView();
+    $app->setData();
+    $selectedRoom = $app->getSelectedRoom();
+    $_POST['data']['roomid'] = $selectedRoom->pmsBookingRoomId;
+}
 $roomid = $_POST['data']['roomid'];
 
 $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $roomid);

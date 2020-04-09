@@ -537,13 +537,21 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             for(PmsBookingAddonItem item : addons) {
                 AddonItem toAddAddon = new AddonItem();
                 toAddAddon.setAddon(item);
-                String translation = item.getTranslationsByKey("descriptionWeb", curLang);
+                String translation = item.getTranslationsByKey("name", curLang);
                 if(translation != null && !translation.isEmpty()) {
                     toAddAddon.name = translation;
                 }
                 if(toAddAddon.name == null || toAddAddon.name.isEmpty() && productManager.getProduct(item.productId) != null) {
                     toAddAddon.name = productManager.getProduct(item.productId).name;
                 }
+                
+                translation = item.getTranslationsByKey("descriptionWeb", curLang);
+                if(translation != null && !translation.isEmpty()) {
+                    toAddAddon.descriptionWeb = translation;
+                } else {
+                    toAddAddon.descriptionWeb = "";
+                }
+                
                 toAddAddon.icon = item.bookingicon;
                 checkIsAddedToRoom(toAddAddon, room, item);
                 if(!item.displayInBookingProcess.isEmpty() && !item.displayInBookingProcess.contains(room.bookingItemTypeId)) {
@@ -556,7 +564,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                     returnroom.addonsAvailable.put(toAddAddon.productId, toAddAddon);
                 }
             }
-            
+            System.out.println("-------------");
             result.rooms.add(returnroom);
         }
     }

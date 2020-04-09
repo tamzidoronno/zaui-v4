@@ -79,21 +79,13 @@ foreach($list as $room) {
     if(count($addons) > 0) {
         echo "<tr>";
         echo "<td></td>";
-        echo "<td colspan='99' bgcolor='#efefef'>";
+        echo "<td colspan='99' style='height:10px;background-color:#fff;border-bottom: solid 1px #efefef;'>";
         foreach($room->addons as $addon) {
             echo "<div>" . date("d.m.Y", strtotime($addon->date)) . " : " . $addon->count . " x " . $addon->name . "</div>";
         }
         echo "</td>";
         echo "</tr>";
     }
-    echo "<tr>";
-    echo "<td></td>";
-    echo "<td colspan='99' style='height:10px;background-color:#fff;border-bottom: solid 1px #efefef;'>";
-    foreach($room->addons as $addon) {
-        echo "<div>" . date("d.m.Y", strtotime($addon->date)) . " : " . $addon->count . " x " . $addon->name . "</div>";
-    }
-    echo "</td>";
-    echo "</tr>";
 }
 echo "</table>";
 ?>

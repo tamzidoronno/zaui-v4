@@ -2602,7 +2602,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<PmsBooking> result = new LinkedList();
         for (PmsBooking booking : finalized) {
             boolean add = false;
-            for (PmsBookingRooms room : booking.getActiveRooms()) {
+            for (PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
                 if (room.bookingItemTypeId != null && typeFilter.contains(room.bookingItemTypeId)) {
                     add = true;
                 }
@@ -9083,7 +9083,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         gsTiming("done searching");
-
+        
         removeInactive(filter, result);
 
         List<PmsBooking> finalized = finalizeList(result);
@@ -9095,7 +9095,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         finalized = filterByUnpaid(finalized, filter);
         if (unsettled) {
             finalized = filterByUnsettledAmounts(finalized);
-        }
+        }        
         gsTiming("done finalizing new list");
         return finalized;
     }

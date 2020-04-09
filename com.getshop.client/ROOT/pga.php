@@ -22,7 +22,7 @@ $title = $page->getTitle();
 <!DOCTYPE html>
 <html pageid="<? echo $page->getId(); ?>" module="pga">
     <head>
-        <meta name="viewport" content="width=1024">
+        <meta name='viewport' content='width=device-width, initial-scale=1, user-scalable=no' />
 
         <script>isFirstLoading = true;</script>
         <title><? echo $title; ?></title>

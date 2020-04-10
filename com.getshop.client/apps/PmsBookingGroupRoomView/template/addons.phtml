@@ -61,6 +61,7 @@ if(sizeof($addons) > 0) {
     <?php
     $productAddonPrinted = array();
      foreach($addons as $addon) {
+         echo "<div class='addontobeadded'>";
         if(in_array($addon->productId, $productAddonPrinted)) {
             continue;
         }
@@ -81,7 +82,7 @@ if(sizeof($addons) > 0) {
         echo "<div class='col col-2'>".$name."</div>";
         echo "<div class='col col-3'>".$addonsCount."</div>";
         echo "<div class='col col-4'>".$addonsTotal."</div>";
-        echo "<div class='col col-4'></div>";
+        echo "<div class='col col-4'><input type='checkbox' class='markAllIncluded'></input></div>";
         echo "</div>";
         $productAddonPrinted[] = $addon->productId;
         $counter = 0;
@@ -111,6 +112,7 @@ if(sizeof($addons) > 0) {
             echo "</div>";
             $counter++;
         }
+        echo "</div>";
      }
      echo "<div style='text-align:right; padding: 10px;'>";
      echo "<span class='shop_button saveaddons'>Save addons</span>";

@@ -51,6 +51,7 @@ app.PmsBookingGroupRoomView = {
         $(document).on('click', '.PmsBookingGroupRoomView .saveconferencetitle', this.saveEventTitle);
         $(document).on('click', '.PmsBookingGroupRoomView .craeteconference', this.loadCreateConferencePanel);
         $(document).on('click', '.PmsBookingGroupRoomView .overrideattendeescount', this.overrideAttendeesCount);
+        $(document).on('click', '.PmsBookingGroupRoomView .markAllIncluded', this.markAllIncluded);
         
         $(document).on('keyup', '.PmsBookingGroupRoomView [searchtype]', this.searchGuests);
         $(document).on('keyup', '.PmsBookingGroupRoomView .searchconferencetitle', this.searchConference);
@@ -60,6 +61,20 @@ app.PmsBookingGroupRoomView = {
         $(document).on('change', '.PmsBookingGroupRoomView .cartitem_added_product', this.saveCartItemRow)
         $(document).on('change', '.PmsBookingGroupRoomView .confirmationEmailTemplate', this.changeConfirmationEmailContent)
     },
+    markAllIncluded : function() {
+        var checked = $(this).is(':checked');
+        var inputs = $(this).closest('.addontobeadded').find('[gsname="includedinroomprice"]');
+        console.log(inputs);
+        inputs.each(function() {
+            var input = $(this);
+            if(checked) {
+                input.attr('checked',true);
+            } else {
+                input.attr('checked',null);
+            }
+        });
+    },
+    
     changeConfirmationEmailContent : function() {
         var event = thundashop.Ajax.createEvent('','getConfirmationContent',$(this), { type : $(this).val() });
         thundashop.Ajax.postWithCallBack(event, function(res) { $('[gsname="confirmationemailcontent"]').val(res); });

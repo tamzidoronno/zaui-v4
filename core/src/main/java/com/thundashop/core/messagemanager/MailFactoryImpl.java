@@ -14,6 +14,7 @@ import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.Setting;
 import com.thundashop.core.common.StoreComponent;
 import com.thundashop.core.databasemanager.Database;
+import com.thundashop.core.storemanager.StoreManager;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,6 +24,7 @@ import java.util.Properties;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
+import javax.mail.AuthenticationFailedException;
 import javax.mail.BodyPart;
 import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
@@ -54,7 +56,7 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
 
     @Autowired
     private StoreApplicationPool storeApplicationPool;
-    
+
     @Autowired
     private Database database; 
     
@@ -338,6 +340,11 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
                 delivered = true;
                 break;
             } catch (Exception ex) {
+                if(ex instanceof AuthenticationFailedException) {
+                    GetShopLogHandler.logPrintStatic("Authentication error on email", storeId);
+                    GetShopLogHandler.authenticationError.add(storeId);
+                    break;
+                }
                 updateMailStatus("failed");
                 GetShopLogHandler.logPrintStatic("Was not able to send email on try: " + i + "( message: " + from + " - " + to + " " + subject + content + "", storeId);
                 GetShopLogHandler.logStack(ex, storeId);
@@ -355,6 +362,8 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
             }catch(Exception e) {
                 e.printStackTrace();
             }
+        } else {
+            GetShopLogHandler.authenticationError.remove(storeId);
         }
         
         if (delete && !files.isEmpty()) {

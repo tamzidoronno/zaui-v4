@@ -16,6 +16,11 @@ class Mail extends \MarketingApplication implements \Application {
         
     }
     
+    public function testSendEmail() {
+        $to = $_POST['data']['email'];
+        $this->getApi()->getMessageManager()->sendMail($to, $to, "Test email", "This is a test email.", $to, $to);
+    }
+    
     public function preProcess() {
         
     }

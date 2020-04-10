@@ -12,6 +12,7 @@ import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FrameworkConfig;
+import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
@@ -859,5 +860,10 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     @Override
     public String getSelectedCurrency() {
         return getCurrency();
+    }
+
+    @Override
+    public boolean hasEmailErrors() {
+        return GetShopLogHandler.authenticationError.contains(storeId);
     }
 }

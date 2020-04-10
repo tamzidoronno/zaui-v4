@@ -19,11 +19,16 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 class PmsBookingMessageFormatter { 
+    
+    public PmsBookingMessageFormatter(PmsInvoiceManager invoiceManager) {
+        this.invoiceManager = invoiceManager;
+    }
+    
 
     private ProductManager productManager;
     private PmsInvoiceManager invoiceManager;
     private PmsConfiguration config;
-    public String formatRoomData(String message, PmsBookingRooms room, BookingEngine bookingEngine) {
+    public String formatRoomData(String message, PmsBookingRooms room, BookingEngine bookingEngine, PmsGuests guest) {
         if(message == null) {
             return "";
         }
@@ -62,8 +67,15 @@ class PmsBookingMessageFormatter {
         if(room.date != null && end != null) {
             message = message.replace("{checkout_time}", new SimpleDateFormat("H:").format(end) + endMinute);
         }
-        if(room.guests != null && !room.guests.isEmpty()) {
-            PmsGuests guest = room.guests.get(0);
+        if(room.date != null && end != null) {
+            String link = invoiceManager.getPaymentLinkConfig().webAdress + "/something";
+            message = message.replace("{passportdetailslink}", link);
+        }
+        if(room.guests != null && !room.guests.isEmpty() && guest == null) {
+            guest = room.guests.get(0);
+        }
+        
+        if(guest != null) {
             if(guest.name != null && !guest.name.isEmpty()) {
                 message = message.replace("{name}", guest.name);
             }
@@ -152,6 +164,7 @@ class PmsBookingMessageFormatter {
             message = message.replace("{city}", "Oslo");
             message = message.replace("{orderid}", "100101");
             message = message.replace("{paymentlink}", "https://www.link.payment");
+            message = message.replace("{passportdetailslink}", "https://www.link.passport");
             
         }
         

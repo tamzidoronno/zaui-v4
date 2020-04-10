@@ -64,7 +64,6 @@ app.PmsBookingGroupRoomView = {
     markAllIncluded : function() {
         var checked = $(this).is(':checked');
         var inputs = $(this).closest('.addontobeadded').find('[gsname="includedinroomprice"]');
-        console.log(inputs);
         inputs.each(function() {
             var input = $(this);
             if(checked) {

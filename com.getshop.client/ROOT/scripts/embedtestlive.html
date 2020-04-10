@@ -14,20 +14,21 @@
     </div>
 <script>
     gsisdevmode = false;
-//    getshop_websockethost = "websocket6.getshop.com";
+    getshop_websockethost = "websocket5.getshop.com";
 
     var translations = {};
     translations['validDiscountCodes'] = "Militær eller student?";
 
     $ = jQuery;
     jQuery(function ($) {
-        $.getScript("https://renahotell.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
+        $.getScript("https://sverre.kronen.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
             $("#bookingprocess").getshopbooking(
                 {
-                    "endpoint": "https://renahotell.getshop.com/",
-                    "jsendpoint": "https://renahotell.getshop.com/",
+                    "endpoint": "https://sverre.kronen.getshop.com/",
+                    "jsendpoint": "https://sverre.kronen.getshop.com/",
                     "domain" : "default",
                     "language" : "no",
+                    "websocket" : "websocket5.getshop.com",
                     "translation" : translations
                 }
             );

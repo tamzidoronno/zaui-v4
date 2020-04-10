@@ -56,7 +56,7 @@ $deliverytypes['admin'] = "Admin";
         </select>
         
         <?php
-        $timeofday = "12:00";
+        $timeofday = "";
         if($msg->timeofday) {
             $timeofday = $msg->timeofday;
         }
@@ -90,6 +90,7 @@ $deliverytypes['admin'] = "Admin";
         {roomlist},
         {bookingid},
         {bookinginformation},
+        {passportdetailslink},
         {extrafield},
         {userid},
         {roomDescription},

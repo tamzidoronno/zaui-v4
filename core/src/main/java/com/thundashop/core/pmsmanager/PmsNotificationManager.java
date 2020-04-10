@@ -215,13 +215,10 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         List<String> emailRecipients = new ArrayList();
         PmsNotificationMessage message = getSpecificMessage(key, booking, room, "email", null);
         if(message != null) {
-            String title = formatMessage(message.title, booking, room, key, "email");
-            String content = formatMessage(message.content, booking, room, key, "email");
-            content = wrapContentOnMessage(content);
             if(key.startsWith("room_")) {
-                emailRecipients.addAll(sendEmail(key, booking, room, "room", title, content));
+                emailRecipients.addAll(sendEmail(key, booking, room, "room", message));
             } else {
-                emailRecipients.addAll(sendEmail(key, booking, room, "booker",  title, content));
+                emailRecipients.addAll(sendEmail(key, booking, room, "booker", message));
             }
             
             String roomId = null;
@@ -230,15 +227,6 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
             }
 
             if(!emailRecipients.isEmpty()) {
-                String logText = title + "<bR>" + content + "<div>Sent to: ";
-                for(String sent : emailRecipients) {
-                    logText += sent + ",";
-                }
-                logText += "</div>";
-                if(booking != null) {
-                    pmsManager.logEntry(logText, booking.id, null, roomId, key + "_email");
-                }
-                
                 if(orderIdToSend != null && !orderIdToSend.isEmpty()) {
                     for(String email : emailRecipients) {
                         logToOrder(key, email, orderIdToSend);
@@ -356,19 +344,19 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         if(pmsBookingRoomId != null) {
             room = booking.getRoom(pmsBookingRoomId);
         }
-        msg.content = formatMessage(msg.content, booking, room, msg.key, msg.type);
-        msg.title = formatMessage(msg.title, booking, room, msg.key, msg.type);
+        msg.content = formatMessage(msg.content, booking, room, msg.key, msg.type, null);
+        msg.title = formatMessage(msg.title, booking, room, msg.key, msg.type, null);
         return msg;
     }
     
-    private String formatMessage(String message, PmsBooking booking, PmsBookingRooms room, String key, String type) {
+    private String formatMessage(String message, PmsBooking booking, PmsBookingRooms room, String key, String type, PmsGuests guest) {
         if(booking == null) {
             booking = new PmsBooking();
         }
         if (message != null) {
             message = message.trim();
         }
-        PmsBookingMessageFormatter formater = new PmsBookingMessageFormatter();
+        PmsBookingMessageFormatter formater = new PmsBookingMessageFormatter(pmsInvoiceManager);
         formater.setProductManager(productManager);
         formater.setConfig(pmsManager.getConfigurationSecure());
 
@@ -378,7 +366,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         }
 
         if (room != null) {
-            message = formater.formatRoomData(message, room, bookingEngine);
+            message = formater.formatRoomData(message, room, bookingEngine, guest);
             try {
                 PmsAdditionalItemInformation addinfo = pmsManager.getAdditionalInfo(room.bookingItemId);
                 message = message.replace("{roomDescription}", addinfo.textMessageDescription);
@@ -497,7 +485,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         paymentRequestId = null;
     }
 
-    private List<String> sendEmail(String key, PmsBooking booking, PmsBookingRooms room, String type, String title, String content) {
+    private List<String> sendEmail(String key, PmsBooking booking, PmsBookingRooms room, String type, PmsNotificationMessage message) {
         List<String> recipients = getEmailRecipients(booking, room, type, key);
         
         AccountingDetails details = invoiceManager.getAccountingDetails();
@@ -521,7 +509,31 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         }
 
         for(String email : recipients) {
+            
+            PmsGuests guest = null;
+            
+            if(email.startsWith("pmsguest_")) {
+                for(PmsGuests g : room.guests) {
+                    if(email.contains(g.guestId)) {
+                        guest = g;
+                        email = g.email;
+                    }
+                }
+            }
+            
+            String title = formatMessage(message.title, booking, room, key, "email", guest);
+            String content = formatMessage(message.content, booking, room, key, "email", guest);
+            content = wrapContentOnMessage(content);
+
+            
             messageManager.sendMailWithAttachments(email, email, title, content, getFromEmail(), getFromName(), attachments);
+            String logText = title + "<bR>" + content + "<div>Sent to: " + email;
+            logText += "</div>";
+            String roomId = "";
+            if(room != null) { roomId = room.pmsBookingRoomId; }
+            if(booking != null) {
+                pmsManager.logEntry(logText, booking.id, null, roomId, key + "_email");
+            }
         }
         
         return recipients;
@@ -559,7 +571,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         for(PmsGuests guest : recipients) {
             PmsNotificationMessage message = getSpecificMessage(key, booking, room, "sms", guest.prefix);
             if(message != null) {
-                String content = formatMessage(message.content, booking, room, key, "sms");
+                String content = formatMessage(message.content, booking, room, key, "sms", guest);
                 if (guest.prefix != null && (guest.prefix.equals("47") || guest.prefix.equals("+47"))) {
                     messageManager.sendSms("sveve", guest.phone, content, guest.prefix, configuration.smsName);
                 } else {
@@ -609,7 +621,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
             
             for(PmsGuests guest : room.guests) {
                 if(guest != null && guest.email != null && guest.email.contains("@")) {
-                    recipients.add(guest.email);
+                    recipients.add("pmsguest_" + guest.guestId);
                 } else if(!sentToBooker) {
                     User user = userManager.getUserById(booking.userId);
                     recipients.add(user.emailAddress);
@@ -705,7 +717,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         key = checkIfNeedOverride(key, booking, room, "admin");
         PmsNotificationMessage message = getSpecificMessage(key, booking, room, "admin", null);
         if(message != null) {
-            String content = formatMessage(message.content, booking, room,key,"admin");
+            String content = formatMessage(message.content, booking, room,key,"admin", null);
             String email = storeManager.getMyStore().configuration.emailAdress;
             String phone = storeManager.getMyStore().configuration.phoneNumber;
             String prefix = storeManager.getMyStore().configuration.defaultPrefix + "";
@@ -804,7 +816,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
 
     private String wrapContentOnMessage(String message) {
         if(message != null) {
-            PmsBookingMessageFormatter formater = new PmsBookingMessageFormatter();
+            PmsBookingMessageFormatter formater = new PmsBookingMessageFormatter(pmsInvoiceManager);
             if (message != null) {
                 if (message.contains("http") && !message.contains("<a")) {
                     message = formater.formatHtml(message);
@@ -906,7 +918,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         booking.rooms.add(room);
         
         
-        return formatMessage(message, booking, room, key, "email");
+        return formatMessage(message, booking, room, key, "email", guest);
     }
 
 }

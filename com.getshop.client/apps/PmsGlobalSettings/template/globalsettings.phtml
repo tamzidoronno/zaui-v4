@@ -183,6 +183,15 @@ if(stristr($user->emailAddress, "@getshop.com")) {
     </div>
     <div class='container'>
         <span class='option'>
+            <input type='text' class='gsniceinput1' gsname='autosendPassportQuestion' value='<?php echo $config->autosendPassportQuestion; ?>' style='width: 50px; text-align: center;'>
+        </span>
+        <span class='title'>
+            Passport validation<br>
+            If you need to force passport validation on foreign guests, you can send them a question number of days ahead of stay to ask the to fill in passport details (-1 means disabled).
+        </span>
+    </div>
+    <div class='container'>
+        <span class='option'>
             <input type='checkbox' gsname='autoSendPaymentReminder' <?php if($config->autoSendPaymentReminder) { echo "CHECKED"; } ?>>
         </span>
         <span class='title'>

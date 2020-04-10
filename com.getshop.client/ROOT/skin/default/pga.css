@@ -1,0 +1,161 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Apr 5, 2020, 8:46:49 AM
+    Author     : ktonder
+*/
+
+@import url('https://fonts.googleapis.com/css?family=Baloo+2&display=swap');
+
+body {
+    font-family: 'Baloo 2', cursive !important;
+}
+
+.gs_body_inner,
+.gs_area_menu {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.gs_body_inner {
+    background-color: #f5f6fb;
+    position: fixed;
+    top: 0px;
+    bottom: 0px;
+    right: 0px;
+    left: 100px;
+    font-size: 20px;
+    padding: 75px;
+    overflow-y: auto;
+    border-left: solid 1px #DDD;
+}
+
+.gs_area_menu {
+    background-color: #f5f6fb;
+    position: fixed;
+    left: 0px;
+    bottom: 0px;
+    top: 0px;
+    width: 100px;
+    z-index: 1;
+    
+}
+
+.gs_area_menu .menuitem {
+    color: #333;
+}
+
+.mobilemenu i {
+    font-size: 25px;
+    line-height: 25px;
+}
+
+.mobilemenu {
+    position: fixed;
+    right: 20px;
+    top: 20px;
+    display: none;
+    padding: 10px;
+    padding-bottom: 0px;
+    
+    z-index: 10;
+    background-color: #FFF;
+    border: solid 2px #333;
+}
+
+.gs_area_menu.hidden {
+    display: block;
+}
+
+.gs_row {
+}
+
+.gs_row .gs_box_1 {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #FFF;
+    border: solid 1px #DDD;
+    max-width: 700px;
+    box-sizing: border-box;
+}
+
+.gs_row .gs_box_2 {
+    width: 500px;
+    background-color: #FFF;
+    width: 100%;
+    
+    margin-top: 50px;
+    box-sizing: border-box;
+    border: solid 1px #DDD;
+    max-width: 700px;
+    box-sizing: border-box;
+}
+
+.gs_row .gs_box_2 .head {
+    font-size: 30px;
+    text-align: center;
+    padding: 10px;
+    background-color: #f5f6fb;
+}
+
+.gs_row .gs_box_2 .head span {
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.gs_row .gs_box_2 .content {
+    padding: 30px;
+}
+
+@media only screen and (max-width: 1200px) {
+    .gsoverlayinner {
+        width: 99% !important;
+    }
+    
+    .closemodal {
+        right: 0px !important;
+        top: 0px !important;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .gs_body_inner {
+        left: 0px;
+        padding-bottom: 120px !important;
+    }
+
+    .mobilemenu {
+        /*display: none;*/
+    }
+    
+    .gs_area_menu.hidden {
+        bottom: 0px;
+        left: 0px;
+        top: inherit;
+        right: 0px;
+    }
+    
+    .gs_area_menu {
+        width: 100%;
+        font-size: 0px;
+        box-sizing: border-box;
+    }
+    
+    .gs_area_menu .menuitem  {
+        width: 25%;
+        display: inline-block;
+        box-sizing: border-box;
+        border-top: solid 1px #DDD;
+    }
+    
+    .gs_area_menu .menuitem.active {
+        border-left: 0px !important;
+        border-bottom: solid 5px green !important;
+    }
+    .gs_body_inner {
+        padding: 20px;
+    }
+}

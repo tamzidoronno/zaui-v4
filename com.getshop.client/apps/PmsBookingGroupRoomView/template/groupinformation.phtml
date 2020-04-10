@@ -41,29 +41,36 @@ if($config->conferenceSystemActive) {
     } else {
         echo "<a class='bookinghighlightcolor craeteconference'>create conference</a>";
         ?>
-    <div class='createconferencepanel' style='text-align: left;'>
-        <h3>Create a new conference:</h3>
-        <div gstype='form' method='createNewConference'>
-            <input type='hidden' gsname='roomid' value='<?php echo $this->getSelectedRoomId(); ?>'>
-            <span style='display: inline-block; width: 80px;'>Title:</span> <input type='txt' class='gsniceinput1' gsname='title' placeholder=''>
-            <br/><span style='display: inline-block; width: 80px;'>Date:</span> <input type='txt' class='gsniceinput1' gsname='conferencedate' placeholder=''>
-            <br/><br/><span class='shop_button' gstype='submit' gs_callback='app.PmsBookingGroupRoomView.conferenceSelected'>Create conference</span>
+        <div class='createconferencepanel' style='text-align: left;'>
+            <h3>Create a new conference:</h3>
+            <div gstype='form' method='createNewConference'>
+                <input type='hidden' gsname='roomid' value='<?php echo $this->getSelectedRoomId(); ?>'>
+                <span style='display: inline-block; width: 80px;'>Title:</span> <input type='txt' class='gsniceinput1' gsname='title' placeholder=''>
+                <br/><span style='display: inline-block; width: 80px;'>Date:</span> <input type='txt' class='gsniceinput1' gsname='conferencedate' placeholder=''>
+                <br/><br/><span class='shop_button' gstype='submit' gs_callback='app.PmsBookingGroupRoomView.conferenceSelected'>Create conference</span>
+            </div>
+            <div>
+                <h4>Or connect to an existing conference:</h4>
+                <input type='txt' class='gsniceinput1 searchconferencetitle' placeholder='Conference title'>
+                <div class='searchconferencearea'></div>
+            </div>
+
+            <script>
+                getshop_loadDatePicker($('[gsname="conferencedate"]'), {});
+            </script>
         </div>
-        <div>
-            <h4>Or connect to an existing conference:</h4>
-            <input type='txt' class='gsniceinput1 searchconferencetitle' placeholder='Conference title'>
-            <div class='searchconferencearea'></div>
-        </div>
-        
-        <script>
-            getshop_loadDatePicker($('[gsname="conferencedate"]'), {});
-        </script>
-    </div>
+
     <?php
     }
+    
     echo "</div>";
 }
 echo "<div class='otheroptions'>";
 echo "<a target='_new' href='/pms.php?page=afe687b7-219e-4396-9e7b-2848f5ed034d&groupview=$booking->id' style='cursor:pointer;' class='opengroup bookinghighlightcolor'>open in report</a>";
 echo "</div>";
+if ($this->isPgaSupportActivated()) {
+    echo "<div class='otheroptions'>";
+    echo "<a href='/pga.php?token=$booking->token' target='_pga' class='bookinghighlightcolor'>PGA</a>";
+    echo "</div>";
+}
 ?>

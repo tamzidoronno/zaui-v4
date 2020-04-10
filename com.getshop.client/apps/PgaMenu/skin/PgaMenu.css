@@ -1,0 +1,37 @@
+.PgaMenu .menuitem {
+    text-align: center;
+    font-size: 15px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    position: relative;
+}
+
+.PgaMenu .menuitem i {
+    display: block;
+    font-size: 20px;
+}
+
+
+.PgaMenu .menuitem.active {
+    border-left: solid 5px green;
+    color: #333;
+    border-right: solid 1px #f5f6fb;
+    margin-right: -1px;
+    border-top: solid 1px #DDD;
+    border-bottom: solid 1px #DDD;
+}
+
+.PgaMenu .menuicon {
+    font-size: 20px;
+    text-align: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.PgaMenu .fa-warning {
+    position: absolute;
+    z-index: 1;
+    color: red;
+    left: 25px;
+    top: 10px;
+}

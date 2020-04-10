@@ -220,9 +220,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     WebManager webManager;
     
     @Autowired
-    private PgaManager pgaManager;
-
-    @Autowired
     private GdsManager gdsManager;
     
     @Autowired
@@ -9288,39 +9285,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Override
     public void generatePgaAccess(String pmsBookingId, String pmsBookingRoomId) {
-        PmsBooking booking = getBooking(pmsBookingId);
-        if (booking == null) {
-            throw new RuntimeException("Did not find the Pms Booking for the requested PGA access");
-        }
-        
-        PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
-        
-        if (room == null) {
-            throw new RuntimeException("Did not find the PMS Room for the requested PGA access");
-        }
-        
-        room.pgaAccessToken = pgaManager.createAccessToken(pmsBookingId, pmsBookingRoomId);
-        saveBooking(booking);
+        throw new RuntimeException("This function is no longer in use, using token instead for bookings and rooms");
     }
 
     @Override
     public void removePgaAccess(String pmsBookingId, String pmsBookingRoomId) {
-        long time = System.currentTimeMillis();
-        pgaManager.removeAccessToken(pmsBookingId, pmsBookingRoomId);
-        
-        PmsBooking booking = getBooking(pmsBookingId);
-        if (booking == null) {
-            throw new RuntimeException("Did not find the Pms Booking for the requested PGA access");
-        }
-        
-        PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
-        
-        if (room == null) {
-            throw new RuntimeException("Did not find the PMS Room for the requested PGA access");
-        }
-        
-        room.pgaAccessToken = "";
-        saveBooking(booking);
+        throw new RuntimeException("This function is no longer in use, using token instead for bookings and rooms");
     }
 
     private BookingItem getBestBookingItem(List<BookingItem> items) {

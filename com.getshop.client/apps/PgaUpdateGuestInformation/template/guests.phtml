@@ -1,0 +1,81 @@
+<?
+/* @var $this ns_d8ac717e_8e03_4b59_a2c3_e61b064a21c2\PgaUpdateGuestInformation */
+
+$token = $this->getModalVariable("token");
+$booking = $this->getApi()->getPgaManager()->getBooking($this->getSelectedMultilevelDomainName(), $token);
+$rooms = $this->getApi()->getPgaManager()->getRooms($this->getSelectedMultilevelDomainName(), $token);
+$room = null;
+foreach ($rooms as $iroom) {
+    if ($iroom->pmsBookingRoomId == $this->getModalVariable("roomid")) {
+        $room = $iroom;
+    }
+}
+?>
+<div class="guestinformation" gstype="form" method="saveGuestInformation">
+    <div class="guest_head_text"><? echo $this->__f("Room")." ".$this->getModalVariable("roomnumber"); ?></div>
+   
+<?
+    if ($booking->forceGuestsPassportVerification) {
+        ?>
+        <div class='identificationinformation'>
+            <div class='title'><? echo $this->__f("Please identify yourself"); ?></div>
+            <div class='description'><? echo $this->__f("We are required by local regulation to acquire identification of our guests, please verify the fields below. The data will be deleted according to local regulations"); ?></div>
+        </div>
+        <?
+    }
+    
+    $i = 0;
+    foreach ($room->guests as $guest) {
+        $i++;
+        ?>
+        <input value="<? echo $guest->guestId; ?>" gsname="<? echo "guestid_$i"; ?>" type="hidden"/>
+        <div class="guestcount"><? echo $this->__f("Guest").": ".$i; ?></div>
+        <div class="guestinforow">
+            <div>
+                <label><? echo $this->__f("Name"); ?></label>
+                <input class="gsniceinput1" value="<? echo $guest->name; ?>" gsname="name_<? echo $i; ?>"/>
+            </div>
+
+            <div>
+                <label><? echo $this->__f("Email"); ?></label>
+                <input class="gsniceinput1" value="<? echo $guest->email; ?>" gsname="email_<? echo $i; ?>"/>
+            </div>
+
+            <div>
+                <label><? echo $this->__f("Phone prefix"); ?></label>
+                <input class="gsniceinput1" value="<? echo $guest->prefix; ?>" gsname="prefix_<? echo $i; ?>"/>
+            </div>
+
+            <div>
+                <label><? echo $this->__f("Phone number"); ?></label>
+                <input class="gsniceinput1" value="<? echo $guest->phone; ?>" gsname="phone_<? echo $i; ?>"/>
+            </div>
+            <?
+            if ($booking->forceGuestsPassportVerification) {
+                
+                ?>
+                <div>
+                    <label><? echo $this->__f("Passport id"); ?></label>
+                    <input class="gsniceinput1" value="<? echo $guest->passportId; ?>" gsname="passportid_<? echo $i; ?>"/>
+                </div>
+                <?
+            }
+            ?>
+        </div>
+        <?
+    }
+?>
+    <br/>
+    
+    <div class='gserrorfield' id='errorMessage'></div>
+    
+    <?
+    if ($this->getModalVariable("hasnext")) {
+    ?>
+        <div class="button" gs_callback='app.PgaConferenceView.guestinfromationUpdated' gstype="submit"><? echo $this->__f("Next room");?></div>
+    <?
+    } else {
+    ?>
+        <div class="button" gs_callback='app.PgaConferenceView.guestinfromationUpdated' gstype="submit"><? echo $this->__f("Save");?></div>
+    <? } ?>
+</div>

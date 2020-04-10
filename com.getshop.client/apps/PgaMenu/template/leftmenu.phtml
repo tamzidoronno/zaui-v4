@@ -1,0 +1,50 @@
+<?
+/* @var $this ns_752aee89_0abc_43cf_9067_5aeadfe07cc1\PgaMenu */
+$booking = $this->getBooking();
+$conference = $this->getConference();
+$rooms = $booking->rooms;
+$page = $this->getPage();
+$total = $this->getTotalUnpaid();
+?>
+
+<div>
+    <a href="/pga.php?page=home&token=<? echo $_GET['token']; ?>">
+        <div class='menuitem <? echo $page->getId() == "home" ? "active" : ""; ?>'><i class='fa fa-dashboard'></i> <? echo $this->__f("Dashboard"); ?></div>    
+    </a>
+    
+    <?
+//    if ($conference) {
+        ?>
+        <a href="/pga.php?page=conference&token=<? echo $_GET['token']; ?>">
+            <div class='menuitem <? echo $page->getId() == "conference" ? "active" : ""; ?>'><i class='fa fa-hacker-news'></i> <? echo $this->__f("Conference"); ?></div>
+        </a>
+        <?
+//    }
+    ?>
+    
+    <?
+    if ($rooms) {
+        ?>
+        <a href="/pga.php?page=rooms&token=<? echo $_GET['token']; ?>">
+            <div class='menuitem <? echo $page->getId() == "rooms" ? "active" : ""; ?>'><i class='fa fa-bed'></i> <? echo $this->__f("Rooms"); ?></div>
+        </a>
+        <?
+    }
+    ?>
+    
+    <a href="/pga.php?page=billing&token=<? echo $_GET['token']; ?>">
+        <div class='menuitem <? echo $page->getId() == "billing" ? "active" : ""; ?>'>
+            <?
+            if ($total) {
+                ?>
+              <i class='fa fa-warning'></i>
+            <?
+            }
+            ?>
+            <i class='fa fa-money'></i> <? echo $this->__f("Billing"); ?>
+        
+        </div>
+    </a>
+    
+    
+</div>

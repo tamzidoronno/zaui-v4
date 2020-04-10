@@ -16,7 +16,7 @@ public class PmsGuests implements Serializable {
     public boolean isChild = false;
     public boolean isDisabled = false;
     public List<String> pmsConferenceEventIds = new ArrayList();
-    
+    public String passportId;
     
     /**
      * If the guests has the possibility

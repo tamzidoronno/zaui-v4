@@ -335,4 +335,22 @@ public class GdsManager extends ManagerBase implements IGdsManager {
                     sendMessageToDevice(dev.id, shopCentralMessage);
                 });
     }
+    
+    public void createCentralDevice(String token) {
+        GetShopDevice device = devices.values()
+                .stream()
+                .filter(o -> o.type != null && o.type.equals("getshop_central"))
+                .filter(o -> o.token != null && o.token.equals(token))
+                .findAny()
+                .orElse(null);
+        
+        if (device == null) {
+            device = new GetShopDevice();
+            device.type = "getshop_central";
+            device.token = token;
+            device.name = "GetShop Central";
+            saveObject(device);
+            devices.put(device.id, device);
+        }
+    }
 }

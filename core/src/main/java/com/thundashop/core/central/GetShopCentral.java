@@ -9,6 +9,7 @@ import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.gsd.GdsManager;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
@@ -31,6 +32,9 @@ public class GetShopCentral extends ManagerBase implements IGetShopCentral {
     @Autowired
     private UserManager userManager;
 
+    @Autowired
+    private GdsManager gdsManager;
+    
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon iData : data.data) {
@@ -67,6 +71,8 @@ public class GetShopCentral extends ManagerBase implements IGetShopCentral {
         if (!isValidAccessToken(token)) {
             return "access_denied";
         }
+        
+        gdsManager.createCentralDevice(token);
         
         user.referenceKey = UUID.randomUUID().toString();
         userManager.saveUserSecure(user);

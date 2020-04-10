@@ -14,6 +14,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Stream;
 import org.mongodb.morphia.annotations.Transient;
 
@@ -49,6 +50,7 @@ public class PmsBooking extends DataCommon {
     public boolean avoidCreateInvoice = false;
     public boolean createOrderAfterStay = false;
     public boolean testReservation = false;
+    public boolean forceGuestsPassportVerification = false;
     public PmsRepeatingData lastRepeatingData = null;
     public String invoiceNote = "";
     public Integer dueDays;
@@ -111,6 +113,9 @@ public class PmsBooking extends DataCommon {
     
     @Transient
     boolean isAddedToEventList;
+       
+    @Administrator
+    public String token = UUID.randomUUID().toString();
     
     /**
      * If this is set to true it will not show up

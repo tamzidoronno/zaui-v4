@@ -1,0 +1,45 @@
+.PgaConferenceView .event_date {
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.PgaConferenceView .event_description {
+    background-color: #EFEFEF;
+    padding: 20px;
+}
+
+.PgaConferenceView .eventrow {
+    margin-top: 20px;
+}
+
+.PgaConferenceView .programtitle {
+    border-bottom: solid 1px #DDD;
+    font-weight: bold;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.gs_page_area[gs_page_content_id="conference"] .eventrow {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.gs_page_area[gs_page_content_id="conference"] .programtitle {
+    padding-left: 20px;
+    margin-top: 50px;
+}
+.gs_page_area[gs_page_content_id="home"] .conference_program {
+    margin-top: 50px;
+}
+.gs_page_area[gs_page_content_id="conference"] .conference_header {
+    background-color: #FFF;
+    border: solid 1px #DDD;
+    padding: 20px;
+}
+
+.gs_page_area[gs_page_content_id="conference"] .conference_program {
+    margin-top: 20px;
+}
+.gs_page_area[gs_page_content_id="conference"] .conference_header .box_label {
+    width: 130px;
+    display: inline-block;
+}

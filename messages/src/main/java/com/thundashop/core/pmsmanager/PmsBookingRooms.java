@@ -5,6 +5,7 @@ import com.thundashop.core.annotations.ExcludePersonalInformation;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
+import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.getshoplocksystem.LockCode;
@@ -123,7 +124,10 @@ public class PmsBookingRooms implements Serializable {
      */
     public boolean createOrdersOnZReport = false;
     
-    public String pgaAccessToken;
+       
+    @Administrator
+    public String token = UUID.randomUUID().toString();
+    
     public boolean loggedGetCode = false;
     public boolean loggedDeletedCode = false;
     public String language = "";

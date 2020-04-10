@@ -5,11 +5,15 @@
  */
 package com.thundashop.core.pga;
 
-import com.thundashop.core.cartmanager.data.Cart;
-import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
-import java.util.Date;
+import com.thundashop.core.pmsmanager.PmsBooking;
+import com.thundashop.core.pmsmanager.PmsBookingRooms;
+import com.thundashop.core.pmsmanager.PmsConference;
+import com.thundashop.core.pmsmanager.PmsConferenceEvent;
+import com.thundashop.core.pmsmanager.PmsRoomPaymentSummary;
+import com.thundashop.core.usermanager.data.User;
+import java.util.List;
 
 /**
  *
@@ -18,26 +22,12 @@ import java.util.Date;
 @GetShopApi
 @GetShopMultiLayerSession
 public interface IPgaManager {
-    public boolean checkLogin(String token);
-    public boolean isLoggedIn();
-    
-    public PgaResult changeCheckoutDate(Date newDate);
-    public PgaRoom getMyRoom();
-    
-    @Administrator
-    public void saveSettings(PgaSettings pgaSettings);
-    
-    public PgaSettings getSettings();
-    
-    public PgaResult buyLateCheckout();
-    
-    public PgaResult buyExtraCleaning(Date date);
-    
-    public Cart getUnpaidCartItems();
-    
-    public void sendPaymentLink(String email, String prefix, String phone);
-    
-    public boolean loginByItem(String bookingItemId, int pincode);
-    
-    public void logout();
+    public PmsConference getConference(String token);
+    public List<PmsBookingRooms> getRooms(String token);
+    public PmsBooking getBooking(String token);
+    public User getUser(String token);
+    public List<PmsConferenceEvent> getEvents(String token);
+    public String getBookingItemTypeName(String bookingItemTypeId);
+    public void updateGuests(String token, PgaBooking booking);
+    public List<PmsRoomPaymentSummary> getSummaries(String token);
 }

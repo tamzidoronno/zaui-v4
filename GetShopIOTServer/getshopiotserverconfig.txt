@@ -1,1 +1,1 @@
-{"token":"123456789","address":"http://gkroen.pos.local.getshop.com/","printerType":"","paymentterminal":"nets","type":"","paymentterminalip":"10.200.1.34"}
+{"token":"68822edb-dbcc-4af6-950c-60867cf88904","address":"https://bergstaden.getshop.com/","printerType":"","paymentterminal":"verifone","type":"","paymentterminalip":"192.168.0.62","printerip":"1.2.3.4","printerPort":9001}

@@ -1545,6 +1545,11 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
     }
 
     public function isPgaSupportActivated() {
+        // Letting bergstaden test it.
+        if ($this->getFactory()->getStore()->id == "1ed4ab1f-c726-4364-bf04-8dcddb2fb2b1") {
+            return true;
+        }
+        
         return \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isGetShopUser();
     }
 

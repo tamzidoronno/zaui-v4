@@ -82,6 +82,7 @@ public class PmsInvoiceManagerNew {
         
         if (userId.equals("false")) {
             user = pmsManager.getSession().currentUser;
+            userId = user.id;
         }
         
         Address address = user != null ? user.address : null;

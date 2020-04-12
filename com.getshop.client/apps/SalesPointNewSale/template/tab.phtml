@@ -178,7 +178,7 @@ foreach ($cartItems as $item) {
     foreach ($methods as $paymentId) {
         $name = $tabSales->getNameOfPaymentMethod($paymentId);
         ?>
-        <span class="gs_shop_small_icon outpaymentmethod" gs_show_modal="paymentmodal" paymentmethodid="<? echo $paymentId; ?>" tabid='<? echo $tab->id; ?>'>
+        <span class="gs_shop_small_icon outpaymentmethod" paymentfirstload='true' gs_show_modal="paymentmodal" paymentmethodid="<? echo $paymentId; ?>" tabid='<? echo $tab->id; ?>'>
             <?
             echo $name;
             ?>            
@@ -205,7 +205,7 @@ foreach ($cartItems as $item) {
         } else {
             ?>
             
-            <span class="gs_shop_small_icon outpaymentmethod" gs_show_modal="paymentmodal" paymentmethodid="conference" tabid='<? echo $tab->id; ?>'>
+            <span class="gs_shop_small_icon outpaymentmethod" paymentfirstload='true' gs_show_modal="paymentmodal" paymentmethodid="conference" tabid='<? echo $tab->id; ?>'>
             <?
                 echo $this->__f("Conference");
             ?>            

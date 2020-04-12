@@ -4322,8 +4322,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
     
     public void markOrderInProgressAsPaid() {
-        double paidAmount = orderToPay.getTotalAmount() + orderToPay.cashWithdrawal;
-        markAsPaid(orderToPay.id, new Date(), paidAmount);
+        if (orderToPay != null) {
+            double paidAmount = orderToPay.getTotalAmount() + orderToPay.cashWithdrawal;
+            markAsPaid(orderToPay.id, new Date(), paidAmount);    
+        }
+        
     }
 
     @Override
@@ -4365,6 +4368,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             markOrderInProgressAsPaid();
         } else {
             terminalMessages.add("payment failed");
+        }
+        
+        if (toPay == null) {
+            return;
         }
         
         toPay.terminalResponses.put(new Date().getTime(), response);
@@ -5142,9 +5149,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public void setConnectedToAGetShopCentral(Boolean connectedToAGetShopCentral) {
-        OrderManagerSettings settings = getOrderManagerSettings();
-        getOrderManagerSettings().connectedToAGetShopCentral = connectedToAGetShopCentral;
-        saveObject(settings);   
+        // Checkinf if its connected trough GetShopCentral.hasBeenConnectedToCentral();
     }
 
     public List<String> getOrdersToTransferToCentral() {

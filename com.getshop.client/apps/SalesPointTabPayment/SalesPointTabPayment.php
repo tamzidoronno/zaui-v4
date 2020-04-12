@@ -73,6 +73,8 @@ class SalesPointTabPayment extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\Sale
             return null;
         }
         
+        $tabId = trim($tabId);
+        
         $this->tab = $this->getApi()->getPosManager()->getTab($tabId);
         return $this->tab;
     }
@@ -193,13 +195,25 @@ class SalesPointTabPayment extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\Sale
         }
     }
 
+    private function isIntegratedOrder() {
+        $order = $this->getCurrentOrder();
+        return $order != null && $order->payment->paymentType == "ns_8edb700e_b486_47ac_a05f_c61967a734b1\\IntegratedPaymentTerminal";
+    }
     public function startVerifonePaymentProcess() {
-        $deviceId = $this->getCurrentTerminalId();
-        $_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_complete_payment_state'] = "in_progress";
-        $this->getApi()->getVerifoneManager()->chargeOrder($this->getCurrentOrder()->id, $deviceId, false);
+        if ($this->isIntegratedOrder()) {
+            $_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_complete_payment_state'] = "in_progress";
+            $orderId = $this->getCurrentOrder()->id;
+            $this->getApi()->getOrderManager()->chargeOrder($orderId, $this->getTokenForIntegratedTerminal());    
+        } else {
+            $deviceId = $this->getCurrentTerminalId();
+            $_SESSION['ns_11234b3f_452e_42ce_ab52_88426fc48f8d_complete_payment_state'] = "in_progress";
+            $this->getApi()->getVerifoneManager()->chargeOrder($this->getCurrentOrder()->id, $deviceId, false);
+        }
     }
 
     public function getLastTerminalMessage($isVerifone = true) {
+        $isVerifone = !$this->isIntegratedOrder();
+        
         if($isVerifone) {
             $messages = $this->getApi()->getVerifoneManager()->getTerminalMessages();
             $this->getApi()->getVerifoneManager()->clearMessages();
@@ -245,8 +259,13 @@ class SalesPointTabPayment extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\Sale
     }
     
     public function cancelVerifonePayment() {
-        $deviceId = $this->getCurrentTerminalId();
-        $this->getApi()->getVerifoneManager()->cancelPaymentProcess($deviceId);
+        if ($this->isIntegratedOrder()) {
+            $this->getApi()->getOrderManager()->cancelPaymentProcess($this->getTokenForIntegratedTerminal());
+        } else {
+            $deviceId = $this->getCurrentTerminalId();
+            $this->getApi()->getVerifoneManager()->cancelPaymentProcess($deviceId);
+        }
+        
         die();
     }
 
@@ -417,7 +436,8 @@ class SalesPointTabPayment extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\Sale
             'cbe3bb0f-e54d-4896-8c70-e08a0d6e55ba',
             '70ace3f0-3981-11e3-aa6e-0800200c9a66',
             'a263b749-abcd-4812-b052-e20eccb69aa5',
-            '8650475d-ebc6-4dfb-86c3-eba4a8aba979');
+            '8650475d-ebc6-4dfb-86c3-eba4a8aba979',
+            '8edb700e-b486-47ac-a05f-c61967a734b1');
         
         $retVal = array();
         foreach ($validOptions as $id) {
@@ -440,5 +460,26 @@ class SalesPointTabPayment extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\Sale
         $this->cancelCurrentOrder();
         
     }
+
+    public function getTokenForIntegratedTerminal() {
+        $app = $this->getApi()->getStoreApplicationPool()->getApplication('8edb700e-b486-47ac-a05f-c61967a734b1');
+        if (!$app) {
+            echo "DID NOT FIND TOKEN FOR INTEGRATED TERMINAL";
+            return "";
+        }
+        
+        foreach ($app->settings as $key => $val) {
+            
+            $startsWithToken = substr( $key, 0, 5 ) === "token";
+            if ($startsWithToken && $val->value) {
+                return $val->value;
+            }
+        }
+        
+        echo "DID NOT FIND TOKEN FOR INTEGRATED TERMINAL";
+        return "";
+//        return "481adb94-248a-4f86-ae81-a85771fbd45d";
+    }
+
 }
 ?>

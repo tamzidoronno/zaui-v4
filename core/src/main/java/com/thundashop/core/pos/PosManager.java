@@ -12,6 +12,7 @@ import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;
+import com.thundashop.core.central.GetShopCentral;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FilterOptions;
@@ -115,6 +116,9 @@ public class PosManager extends ManagerBase implements IPosManager {
     @Autowired
     private PmsConferenceManager pmsConferenceManager;
 
+    @Autowired
+    private GetShopCentral central;
+    
     /**
      * Never access this variable directly! Always go trough the getSettings
      * function!
@@ -395,6 +399,7 @@ public class PosManager extends ManagerBase implements IPosManager {
                 .collect(Collectors.toList());
 
         report.orderIds = orderIds;
+        report.createdWhileConnectedToCentral = central.hasBeenConnectedToCentral();
 
         return report;
     }
@@ -434,7 +439,7 @@ public class PosManager extends ManagerBase implements IPosManager {
         List<String> autoCreatedOrders = autoCreateOrders(cashPointId);
         List<String> orderdIdsFromConfernceSystem = autoCreateOrdersForConferenceTabs(cashPointId);
 
-        boolean connectedToCentral = orderManager.getOrderManagerSettings().connectedToAGetShopCentral;
+        boolean connectedToCentral = central.hasBeenConnectedToCentral();
         
         ZReport report = getZReport("", cashPointId);
         report.createdByUserId = getSession().currentUser.id;
@@ -967,7 +972,7 @@ public class PosManager extends ManagerBase implements IPosManager {
 
         List<DayIncome> incomes = orderManager.getDayIncomes(start, end);
 
-        if (!orderManager.getOrderManagerSettings().connectedToAGetShopCentral) {
+        if (!central.hasBeenConnectedToCentral()) {
             canClose.fReportErrorCount = incomes.stream()
                     .filter(o -> o != null && o.errorMsg != null && !o.errorMsg.isEmpty())
                     .count();
@@ -1113,7 +1118,7 @@ public class PosManager extends ManagerBase implements IPosManager {
         /**
          * When its connected to the getshop central we also do accrude payments for future booking to make a forcast.
          */
-        boolean connectedToCentral = orderManager.getOrderManagerSettings().connectedToAGetShopCentral;
+        boolean connectedToCentral = central.hasBeenConnectedToCentral();
         
         PmsManager pmsManager = scope.getNamedSessionBean(getEngineName(), PmsManager.class);
 
@@ -1440,7 +1445,7 @@ public class PosManager extends ManagerBase implements IPosManager {
         boolean isActive = storeApplicationPool.isActivated(accuredPayment);
 
         // We need to have a payment method in order to autocreate orders
-        if (!isActive && orderManager.getOrderManagerSettings().connectedToAGetShopCentral) {
+        if (!isActive && central.hasBeenConnectedToCentral()) {
             storeApplicationPool.activateApplication("60f2f24e-ad41-4054-ba65-3a8a02ce0190");
             isActive = true;
         }
@@ -1813,7 +1818,7 @@ public class PosManager extends ManagerBase implements IPosManager {
     public List<ZReport> getReportNotTransferredToCentral() {
         return zReports.values()
                 .stream()
-                .filter(o -> !o.transferredToCentral)
+                .filter(o -> !o.transferredToCentral && o.createdWhileConnectedToCentral)
                 .collect(Collectors.toList());
     }
 
@@ -1833,6 +1838,23 @@ public class PosManager extends ManagerBase implements IPosManager {
                 .filter(o -> o.isInvoice())
                 .map(o -> o.id)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void markAllRoomsWithProblemsForPayAfterStay(String multilevelName, String cashPointId) {
+        CanCloseZReport res = canCreateZReport(multilevelName, cashPointId);
+        res.roomsWithProblems.stream()
+                .forEach(room -> {
+                    if (room.createOrdersOnZReport) {
+                        return;
+                    }
+                    
+                    PmsManager pmsManager = scope.getNamedSessionBean(multilevelName, PmsManager.class);
+                    PmsBooking booking = pmsManager.getBookingFromRoom(room.pmsBookingRoomId);
+                    if (booking != null) {
+                        pmsManager.toggleAutoCreateOrders(booking.id, room.pmsBookingRoomId);
+                    }
+                });
     }
 
 }

@@ -223,4 +223,7 @@ public interface IPosManager {
     
     @Administrator
     public void markZReportAsTransferredToCentral(String zreportId);
+    
+    @Administrator
+    public void markAllRoomsWithProblemsForPayAfterStay(String multilevelName, String cashPointId);
 }

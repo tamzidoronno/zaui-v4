@@ -88,6 +88,9 @@ if ($closeResult->canClose) {
                 echo '<div><i class="gs_shop_small_icon fa fa-edit" '.'gs_show_modal="booking_room_view" onclick="app.PmsAvailability.closeCloseRoomDialog();" bookingid="'.$pmsBooking->id.'" roomid="'.$pmsSelectedRoom->pmsBookingRoomId.'"'.'title='.$this->__f("Open booking").'></i> '."$firstGuest->name / Amount: $unsettledRoom - ($start - $end)</div>";
             }
             ?>
+                <br/>
+                <br/>
+                <div class='shop_button' gsclick='markAllRoomsWithProblemForPayAfterStay'><? echo $this->__f("Mark all for pay after stay"); ?></div>
             </div>
         </div>        
         <?

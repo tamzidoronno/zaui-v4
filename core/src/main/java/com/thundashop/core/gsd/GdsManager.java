@@ -336,6 +336,14 @@ public class GdsManager extends ManagerBase implements IGdsManager {
                 });
     }
     
+    public GetShopDevice getCentralDevice() {
+        return devices.values()
+                .stream()
+                .filter(o -> o.type != null && o.type.equals("getshop_central"))
+                .findAny()
+                .orElse(null);
+    }
+    
     public void createCentralDevice(String token) {
         GetShopDevice device = devices.values()
                 .stream()

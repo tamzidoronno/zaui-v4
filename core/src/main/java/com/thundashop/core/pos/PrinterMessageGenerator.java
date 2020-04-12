@@ -7,6 +7,7 @@ package com.thundashop.core.pos;
 
 import com.braintreegateway.org.apache.commons.codec.binary.Base64;
 import com.google.gson.Gson;
+import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.gsd.*;
 import java.io.BufferedReader;
 import java.io.File;
@@ -142,6 +143,11 @@ public class PrinterMessageGenerator {
             File file = new File(filePath);
             bytesArray = new byte[(int) file.length()];
 
+            if (!file.exists()) {
+                GetShopLogHandler.logPrintStatic("Was not able to print the receipt, did not find the file " + filePath, storeId);
+                return bytesArray;
+            }
+            
             //read file into bytes[]
             fileInputStream = new FileInputStream(file);
             fileInputStream.read(bytesArray);

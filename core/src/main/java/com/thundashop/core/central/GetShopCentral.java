@@ -122,5 +122,9 @@ public class GetShopCentral extends ManagerBase implements IGetShopCentral {
         
         return false;
     }
+
+    public boolean hasBeenConnectedToCentral() {
+        return gdsManager.getCentralDevice() != null;
+    }
     
 }

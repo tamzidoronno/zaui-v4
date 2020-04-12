@@ -23,6 +23,7 @@ public class ZReport extends DataCommon implements Comparable<ZReport> {
     public Date end;
     public double totalAmount;
     public boolean transferredToCentral = false;
+    public boolean createdWhileConnectedToCentral = false;
     
     @Override
     public int compareTo(ZReport o) {

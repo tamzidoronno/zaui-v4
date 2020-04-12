@@ -382,6 +382,11 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
     public function fixTaxCorrection() {
         $this->getApi()->getOrderManager()->correctOrderWithTaxProblem($_POST['data']['orderid']);
     }
+    
+    public function markAllRoomsWithProblemForPayAfterStay() {
+        $cashpoint = $this->getSelectedCashPointId();
+        $this->getApi()->getPosManager()->markAllRoomsWithProblemsForPayAfterStay($this->getSelectedMultilevelDomainName(), $cashpoint);
+    }
 }
 ?>
 

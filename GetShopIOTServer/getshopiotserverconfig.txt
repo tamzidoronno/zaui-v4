@@ -1,1 +1,1 @@
-{"token":"481adb94-248a-4f86-ae81-a85771fbd45d","address":"http://1000002pms.3.0.local.getshop.com/","printerType":"","paymentterminal":"nets","type":"","paymentterminalip":""}
+{"token":"481adb94-248a-4f86-ae81-a85771fbd45d","address":"http://1000002pms.3.0.local.getshop.com/","printerType":"","paymentterminal":"nets","type":"","paymentterminalip":"","printerip":"","printerPort":9001}

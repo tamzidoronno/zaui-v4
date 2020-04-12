@@ -16,4 +16,6 @@ public class SetupMessage {
     public String paymentterminal = ""; //verifone,ingenico
     public String type = ""; //kiosk-herman,pos
     public String paymentterminalip = ""; //Ip adress to paymentterminal
+    public String printerip = ""; //Ip to printer to print to socket.
+    public Integer printerPort = 0; //Port for printer to print to socket // Default 9100
 }

@@ -304,6 +304,8 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
         $company->invoiceAddress->countrycode = $_POST['data']['invoice_countrycode'];
         $this->getApi()->getUserManager()->saveCompany($company);
         $this->getApi()->getUserManager()->saveUser($user);
+        
+        unset($_SESSION['cachedbooking']);
     }
     
     public function connectToUser() {

@@ -37,10 +37,11 @@ public class ProcessPrinterMessage extends GetShopIOTCommon implements MessagePr
     }
 
     private void printMessage(DirectPrintMessage directPrintMessage) throws IOException {
-        
-        if(true) {
-            logPrint("Printing socket...");
-            printToSocket("192.168.10.10", 9100, directPrintMessage.content);
+        String ip = getOperator().getSetupMessage().printerip;
+        Integer port = getOperator().getSetupMessage().printerPort;
+        if(ip != null && !ip.isEmpty()) {
+            logPrint("Printing socket ip:" + ip + ", port: " + port);
+            printToSocket(ip, port, directPrintMessage.content);
             logPrint("Printing socket done...");
         } else {
             logPrint("Printing usb...");
@@ -64,8 +65,6 @@ public class ProcessPrinterMessage extends GetShopIOTCommon implements MessagePr
         try{
             byte[] res = Base64.getDecoder().decode(message);
             message = new String(res);
-            System.out.println("############### MESSAGE #################");
-            System.out.println("############### MESSAGE END #################");
             Socket sock= new Socket(ip, port);
             PrintWriter writer= new PrintWriter(sock.getOutputStream());
             writer.println(message);

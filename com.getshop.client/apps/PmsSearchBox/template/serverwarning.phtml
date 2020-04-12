@@ -17,4 +17,12 @@ foreach($servers as $server) {
         echo "</div>";
     }
 }
+
+$hasEmailProblem = $this->getApi()->getStoreManager()->hasEmailErrors();
+if($hasEmailProblem) {
+        echo "<div style='font-size:14px; color:red; font-weight:bold; text-align:left'>";
+        echo "<i class='fa fa-inbox'></i> EMAIL ERROR: We are not able to authenticate with your email server, please update your email settings <a href='/settings.php?page=mailsettings' target='_newemailsettings'>here</a>";
+        echo "</div>";
+}
+
 ?>

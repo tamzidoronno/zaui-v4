@@ -546,6 +546,7 @@ class PmsSendMessagesConfiguration extends \WebshopApplication implements \Appli
         $notifications['room_started_12_hours_'.$langauge] = "Booking started 12 hours ago $afterpayment";
         $notifications['room_started_24_hours_'.$langauge] = "Booking started 24 hours ago $afterpayment";
         $notifications['room_started_48_hours_'.$langauge] = "Booking started 48 hours ago $afterpayment";
+        $notifications['room_needpassport_details_'.$langauge] = "Ask for passport details";
         $notifications['room_changed_'.$langauge] = "Room has been changed while stay is started";
         $notifications['room_resendcode_'.$langauge] = "When resending a code to the guest";
         $notifications['room_dooropenedfirsttime_'.$langauge] = "When guest opens the door";

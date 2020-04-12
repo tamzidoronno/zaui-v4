@@ -17,6 +17,7 @@ public class GetShopLogHandler {
     public static boolean isDeveloper = false;
     
     public static List<String> started = new ArrayList();
+    public static List<String> authenticationError = new ArrayList();
     
     public static void logPrintStatic(Object key, String storeId) {
         if (key == null)

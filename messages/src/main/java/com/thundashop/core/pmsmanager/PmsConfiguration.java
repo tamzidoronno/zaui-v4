@@ -117,6 +117,7 @@ public class PmsConfiguration extends DataCommon {
     public boolean avoidRandomRoomAssigning = false;
     public Integer numberOfHoursToExtendLateCheckout = 3;
     public Integer minStay = 1;
+    public Integer autosendPassportQuestion = -1;
     public Integer defaultNumberOfDaysBack = 3;
     private Integer hourOfDayToStartBoarding = 12;
     public boolean supportMoreDates = false;

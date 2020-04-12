@@ -4385,6 +4385,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             return;
         }
         
+        try {
+            orderToPay.payment.transactionLog.put(System.currentTimeMillis(), text);
+            saveOrder(orderToPay);
+        }catch(Exception e) {
+            logPrintException(e);
+        }
+        
         terminalMessages.add(text);
     }
 

@@ -41,6 +41,8 @@ public class PmsManagerProcessor {
         checkTimer("Clear cache 2");
         try { autoMarkBookingsAsPaid(); }catch(Exception e) {manager.logPrintException(e); }
         checkTimer("autoMarkBookingsAsPaid");
+        try { autoSendPassportQuestion(); }catch(Exception e) {manager.logPrintException(e); }
+        checkTimer("autoMarkBookingsAsPaid");
         clearCachedObject(); 
         checkTimer("Clear cache 2");
         try { pingServers(); } catch(Exception e) {}
@@ -1463,6 +1465,55 @@ public class PmsManagerProcessor {
                 }
             }
         }
+    }
+
+    private void autoSendPassportQuestion() {
+        PmsConfiguration config = manager.getConfigurationSecure();
+        if(config.autosendPassportQuestion < 0) {
+            return;
+        }
+        
+        String countryCode = manager.getStore().country;
+        System.out.println(countryCode);
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(manager.getStore().getCurrentTimeInTimeZone());
+        cal.add(Calendar.DAY_OF_YEAR, config.autosendPassportQuestion);
+        Date daysAhead = cal.getTime();
+        
+        String keyToCheck = "room_needpassport_details";
+        
+        List<PmsBooking> bookings = getAllConfirmedNotDeleted(true);
+        for(PmsBooking booking : bookings) {
+            boolean save = false;
+            for(PmsBookingRooms room : booking.getActiveRooms()) {
+                if(room.date.start.getTime() < System.currentTimeMillis()) {
+                    continue;
+                }
+                
+                String roomCountryCode = room.countryCode;
+                
+                if(room.countryCode == null || room.countryCode.isEmpty()) {
+                    roomCountryCode = booking.countryCode;
+                }
+                if(room.notificationsSent.contains(keyToCheck)) {
+                    continue;
+                }
+                if(roomCountryCode == null || roomCountryCode.isEmpty() || roomCountryCode.equalsIgnoreCase(countryCode)) {
+                    continue;
+                }
+                
+                if(room.date.start.getTime() < daysAhead.getTime()) {
+                    manager.doNotificationFromProcessor("room_needpassport_details", booking, room);
+                    room.notificationsSent.add("room_needpassport_details");
+                    save = true;
+                }
+            }
+            if(save) {
+                manager.saveBooking(booking);
+            }
+        }
+        
     }
 
 }

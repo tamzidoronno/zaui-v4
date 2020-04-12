@@ -779,7 +779,9 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         
         List<String> locks = new ArrayList();
         for(List<String> connected : group.connectedToLocks.values()) {
-            locks.addAll(connected);
+            if(connected != null) {
+                locks.addAll(connected);
+            }
         }
         
         if (group != null) {

@@ -1759,7 +1759,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (message != null) {
             message = message.trim();
         }
-        PmsBookingMessageFormatter formater = new PmsBookingMessageFormatter();
+        PmsBookingMessageFormatter formater = new PmsBookingMessageFormatter(pmsInvoiceManager);
         formater.setProductManager(productManager);
         formater.setConfig(getConfigurationSecure());
 
@@ -1769,7 +1769,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         if (room != null) {
-            message = formater.formatRoomData(message, room, bookingEngine);
+            message = formater.formatRoomData(message, room, bookingEngine, guest);
             try {
                 PmsAdditionalItemInformation addinfo = getAdditionalInfo(room.bookingItemId);
                 message = message.replace("{roomDescription}", addinfo.textMessageDescription);
@@ -6934,7 +6934,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (type.equals("email")) {
             if (message != null) {
                 if (message.contains("http") && !message.contains("<a")) {
-                    PmsBookingMessageFormatter formater = new PmsBookingMessageFormatter();
+                    PmsBookingMessageFormatter formater = new PmsBookingMessageFormatter(pmsInvoiceManager);
                     message = formater.formatHtml(message);
                 }
 

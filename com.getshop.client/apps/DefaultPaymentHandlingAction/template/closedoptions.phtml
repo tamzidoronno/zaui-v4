@@ -5,6 +5,7 @@ $cashpoints = (array)$this->getApi()->getGdsManager()->getDevices();
 $canCreditOrder = !$order->isCreditNote && !count($order->creditOrderId);
 $roomid = $_SESSION['PmsBookingRoomView_current_pmsroom_id'];
 $amount = $this->getApi()->getOrderManager()->getTotalAmount($order);
+$booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $roomid);
 
 $hidePayButton = false;
 if($order->payment->paymentType == "ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2\VerifoneTerminal" || $order->payment->paymentType == "ns_8edb700e_b486_47ac_a05f_c61967a734b1\IntegratedPaymentTerminal") {
@@ -79,7 +80,6 @@ if($order->payment->paymentType == "ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2\Veri
     }
     
     if($order->status == 7) {
-        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $roomid);
         $msg = $this->getApi()->getPmsNotificationManager()->getSpecificMessage($this->getSelectedMultilevelDomainName(), "sendreciept", $booking, null, "email", null);
         $user = $this->getApi()->getUserManager()->getUserById($order->userId);
         ?>

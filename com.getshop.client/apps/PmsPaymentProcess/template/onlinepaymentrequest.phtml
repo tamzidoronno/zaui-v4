@@ -94,6 +94,11 @@ if($counter > 0) {
         if($r->unpaidAmount <= 0) {
             continue;
         }
+        
+        if($r->deletedByChannelManagerForModification) {
+            continue;
+        }
+        
         $booker = new stdClass();
         $booker->id = $r->pmsBookingRoomId;
         $booker->amount = $r->unpaidAmount;
@@ -128,11 +133,25 @@ echo "<input type='hidden' id='customersobject' value='" . json_encode($contacts
 
 foreach($fields as $key => $r) {
     $amount = 0;
+    
+    if($r->amount < 0) {
+        echo "<h1>It looks like you are about to do a refund by an online payment gateway?</h1>";
+        echo "You do so by doing the following:<br>";
+        echo "<ul>";
+        echo "<li>Click on the create button above called 'Advance payment link using ...'</li>";
+        echo "<li>Complete the process</li>";
+        echo "<li>Log on to the payment gateway portal and do the refund</li>";
+        echo "<li>Mark the new order as paid</li>";
+        echo "</ul>";
+        break;
+    }
+    
+    
     $title = "";
     ?>
     <div class='sendrequestbox'>
         <span class='sendpaymentrequesttitle'><?php echo $r->title; ?></span>
-        <span class='sendpaymentrequesttotal'>total: <?php echo $r->amount; ?></span>
+        <span class='sendpaymentrequesttotal'>total:  <?php echo $r->amount; ?></span>
         <div class='sendpaymentrequestsbody'>
             <select class="gsniceselect1 sendtobookerdropdown" style='width:230px;'>
                 <?php

@@ -84,7 +84,7 @@ public interface IOrderManager {
     public void checkForOrdersFailedCollecting();
     
     @Administrator
-    public void deleteOrderTransaction(String transactionId, String password);
+    public void deleteOrderTransaction(String transactionId);
     
     @Administrator
     public void forceDeleteOrder(String orderId, String password);

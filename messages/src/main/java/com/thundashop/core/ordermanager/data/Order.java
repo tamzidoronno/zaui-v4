@@ -1618,6 +1618,14 @@ public class Order extends DataCommon implements Comparable<Order> {
                 .filter(o -> o.comment.equals("Creditted"))
                 .count() > 0;
     }
+
+    public void setCanTransactionsBeDeleted() {
+        if(orderTransactions != null) {
+            for(OrderTransaction t : orderTransactions) {
+                t.setCanBeDeletedFlag();
+            }
+        }
+    }
     
     public static class Status  {
         public static int CREATED = 1;

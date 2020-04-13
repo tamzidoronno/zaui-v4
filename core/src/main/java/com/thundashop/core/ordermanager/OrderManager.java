@@ -1783,7 +1783,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             order.doFinalize();
             generateKid(order);
             String localCurrency = getLocalCurrencyCode();
-            
+            order.setCanTransactionsBeDeleted();
             if (localCurrency.equalsIgnoreCase(order.currency)) {
                 order.currency = null;
             }
@@ -5186,16 +5186,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     @Override
-    public void deleteOrderTransaction(String transactionId, String password) {
-        if(!password.equals("fdsaf34234cc")) {
-            return;
-        }
-        
+    public void deleteOrderTransaction(String transactionId) {
         
         for(Order order : orders.values()) {
             OrderTransaction toRemove = null;
             for(OrderTransaction transaction : order.orderTransactions) {
-                if(transaction.transactionId.equals(transactionId)) {
+                if(transaction.canBeDeleted() && transaction.transactionId.equals(transactionId)) {
                     toRemove = transaction;
                 }
             }

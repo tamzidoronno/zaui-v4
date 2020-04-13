@@ -6,6 +6,7 @@
 package com.thundashop.core.pos;
 
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.ordermanager.data.OrderTransaction;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,14 +17,14 @@ import java.util.List;
  */
 public class ZReport extends DataCommon implements Comparable<ZReport> {
     public List<String> orderIds = new ArrayList();
-    public List<String> retransmittedOrderIds = new ArrayList();
     public String createdByUserId = "";
     public String cashPointId = "";
     public Date start;
     public Date end;
     public double totalAmount;
     public boolean transferredToCentral = false;
-    public boolean createdWhileConnectedToCentral = false;
+    public boolean createdAfterConnectedToACentral = false;
+    public List<String> invoicesWithNewPayments = new ArrayList();
     
     @Override
     public int compareTo(ZReport o) {

@@ -43,7 +43,6 @@ import org.mongodb.morphia.annotations.Transient;
 public class Order extends DataCommon implements Comparable<Order> {
     public Boolean triedTransferredToAccountingSystem = false;
     public Boolean transferredToAccountingSystem = false;
-    public boolean retransmitToCentral = false;
     public Date transferredToCreditor = null;
     
     public HashMap<Long, TerminalResponse> terminalResponses = new HashMap();
@@ -212,6 +211,9 @@ public class Order extends DataCommon implements Comparable<Order> {
 
     public String terminalReceiptText = "";
     public boolean transferredToCentral = false;
+    public boolean createdAfterConnectedToACentral;
+    
+    public String addedToZreport = null;
     
     public Order jsonClone() {
         Order orderNew = jsonCloneLight();
@@ -1082,7 +1084,7 @@ public class Order extends DataCommon implements Comparable<Order> {
         return cal.getTime();
     }
 
-    public void registerTransaction(Date date, Double amount, String userId, Integer transactionType, String refId, String comment, Double amountInLocalCurrency, Double agio, String accountingDetailId) {
+    public void registerTransaction(Date date, Double amount, String userId, Integer transactionType, String refId, String comment, Double amountInLocalCurrency, Double agio, String accountingDetailId, String batchId) {
         OrderTransaction transaction = new OrderTransaction();
         transaction.date = date;
         transaction.amount = amount;
@@ -1092,7 +1094,9 @@ public class Order extends DataCommon implements Comparable<Order> {
         transaction.refId = refId;
         transaction.transactionType = transactionType;
         transaction.comment = comment;
+        transaction.addedToZreport = "";
         transaction.accountingDetailId = accountingDetailId;
+        transaction.batchId = batchId;
         orderTransactions.add(transaction);
     }
 
@@ -1618,6 +1622,14 @@ public class Order extends DataCommon implements Comparable<Order> {
                 .filter(o -> o.comment.equals("Creditted"))
                 .count() > 0;
     }
+
+    public boolean isIntegratedPaymentTerminal() {
+        if(payment != null && payment.paymentType != null && payment.paymentType.toLowerCase().contains("integratedpaymentterminal")) {
+            return true;
+        }
+        
+        return false;
+    }
     
     public static class Status  {
         public static int CREATED = 1;
@@ -1876,5 +1888,9 @@ public class Order extends DataCommon implements Comparable<Order> {
                 
     }
     
-    
+    public boolean hasNewOrderTransactions() {
+        return orderTransactions.stream()
+                .filter(trans -> trans.addedToZreport != null && trans.addedToZreport.isEmpty())
+                .count() > 0;
+    }
 }

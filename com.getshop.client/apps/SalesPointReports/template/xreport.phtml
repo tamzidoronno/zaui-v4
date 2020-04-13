@@ -17,7 +17,9 @@ if ($conferencesToCreateFor) {
     $conferencesToShow = true;
 }
 
-if (!$ordersToShow && !$conferencesToShow) {
+$invoicePaymentsToShow = is_array($report->invoicesWithNewPayments) && count($report->invoicesWithNewPayments);
+
+if (!$ordersToShow && !$conferencesToShow && !$invoicePaymentsToShow) {
     echo "<div class='nofound'>";
     echo $this->__f("No transactions found");
     echo "</div>";
@@ -127,6 +129,42 @@ foreach ($ordersGrouped as $paymentType => $orders) {
 
         $totalForPaymentMethods[$paymentType] = $total;
         echo "<h2> Total: ".$total."</h2>";
+    echo "</div>";
+}
+
+if ($invoicePaymentsToShow) {
+    echo "<div class='paymentrow'>";
+    echo "<h2>New payments registered for invoices</h2>";
+    
+    ?>
+        <div class="orderline">
+            <div class='col orderid'><? echo $this->__f("id"); ?></div>
+            <div class='col date'><? echo $this->__f("Payment Date"); ?></div>
+            <div class='col name'><? echo $this->__f("Employee / customer"); ?></div>
+            <div class='col type'><? echo $this->__f("Payment type"); ?></div>
+            <div class='col totalfororder'><? echo $this->__f("Price"); ?></div>
+        </div>
+    <?
+    foreach ($report->invoicesWithNewPayments as $orderId) {
+        $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+        foreach ($order->orderTransactions as $orderTransaction) {
+            
+            if ($orderTransaction->addedToZreport) {
+                continue;
+            }
+            
+            echo "<div class='orderline'>";
+                echo "<a href='#'>";
+
+                    echo "<div class='col orderid'>".$order->incrementOrderId."</div>";
+                    echo "<div class='col date'>".date('d.m.Y', strtotime($orderTransaction->date))."</div>";
+                    echo "<div class='col name'></div>";
+                    echo "<div class='col type'></div>";
+                    echo "<div class='col totalfororder'>".$orderTransaction->amount."</div>";
+                echo "</a>";
+            echo "</div>";
+        }
+    }
     echo "</div>";
 }
 

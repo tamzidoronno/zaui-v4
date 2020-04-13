@@ -18,6 +18,7 @@ import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.CartTax;
+import com.thundashop.core.central.GetShopCentral;
 import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.department.Department;
@@ -46,6 +47,7 @@ import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.listmanager.data.TreeNode;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.MessageManager;
+import com.thundashop.core.ocr.OcrFileLines;
 import com.thundashop.core.ocr.StoreOcrManager;
 import com.thundashop.core.ordermanager.data.AccountingFreePost;
 import com.thundashop.core.ordermanager.data.CartItemDates;
@@ -79,6 +81,7 @@ import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.pos.PosConference;
 import com.thundashop.core.pos.PosManager;
+import com.thundashop.core.pos.ZReport;
 import com.thundashop.core.printmanager.PrintJob;
 import com.thundashop.core.printmanager.PrintManager;
 import com.thundashop.core.printmanager.Printer;
@@ -226,6 +229,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Autowired
     private GetShopAccountingManager getShopAccountingManager;
+    
+    @Autowired
+    private GetShopCentral central;
     
     private List<String> terminalMessages = new ArrayList();
     private Order orderToPay;
@@ -987,6 +993,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         order.cart = cart.clone();
         order.reference = cart.reference;
         order.overrideAccountingDate = cart.overrideDate;
+        order.createdAfterConnectedToACentral = central.hasBeenConnectedToCentral();
+        order.addedToZreport = "";
         
         //What about orders that is not supposed to be sent, why an address then?
 //        if (order.cart == null || order.cart.address == null) {
@@ -2881,7 +2889,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             if(getSession() != null && getSession().currentUser != null) {
                 userId = getSession().currentUser.id;
             }
-            order.registerTransaction(date, amount, userId, transactiontype, refId, comment, amountInLocalCurrency, agio, "");
+            order.registerTransaction(date, amount, userId, transactiontype, refId, comment, amountInLocalCurrency, agio, "", getBatchId(order, refId));
             feedGrafanaPaymentAmount(amount);
             
             if(order.isFullyPaid() || order.isCreditNote) {
@@ -3243,12 +3251,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         checkAndResetOrderByClosedPeriodeDate(data);
-        
-        if (data instanceof Order) {
-            if (((Order)data).transferredToCentral) {
-                ((Order)data).retransmitToCentral = true;
-            }
-        }
         
         super.saveObject(data); //To change body of generated methods, choose Tools | Templates.
         
@@ -3642,7 +3644,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Order order = getOrder(orderId);
         if (order != null) {
             String userId = getSession().currentUser.id;
-            order.registerTransaction(paymentDate, amount, userId, Order.OrderTransactionType.MANUAL, "", comment, amountInLocalCurrency, agio, accountDetailId);
+            order.registerTransaction(paymentDate, amount, userId, Order.OrderTransactionType.MANUAL, "", comment, amountInLocalCurrency, agio, accountDetailId, getBatchId(order, ""));
             if (order.isFullyPaid()) {
                 markAsPaidInternal(order, paymentDate, amount);
             }
@@ -4999,7 +5001,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
 
         String userId = getSession().currentUser.id;
-        order.registerTransaction(paymentDate, toMarkOnOriginal, userId, Order.OrderTransactionType.MANUAL, "", comment, (totalAmountInLocalCurrencyToMarkOnOriginal * -1), null, null);
+        order.registerTransaction(paymentDate, toMarkOnOriginal, userId, Order.OrderTransactionType.MANUAL, "", comment, (totalAmountInLocalCurrencyToMarkOnOriginal * -1), null, null, getBatchId(order, ""));
         if (order.isFullyPaid()) {
             markAsPaidInternal(order, paymentDate, totalAmount);
         }
@@ -5157,23 +5159,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Override
     public void setConnectedToAGetShopCentral(Boolean connectedToAGetShopCentral) {
         // Checkinf if its connected trough GetShopCentral.hasBeenConnectedToCentral();
-    }
-
-    public List<String> getOrdersToTransferToCentral() {
-        return orders.values()
-                .stream()
-                .filter(o -> o.retransmitToCentral)
-                .map(o -> o.id)
-                .collect(Collectors.toList());
-    }
-    
-    public void unmarkRetransmitToCentral(List<String> orderIds) {
-        orderIds.stream()
-            .map(o -> getOrderSecure(o))
-            .forEach(order -> {
-                order.retransmitToCentral = false;
-                super.saveObject(order);
-            });
     }
 
     public void markAsTransferredToCentral(List<String> orderIds) {
@@ -5502,6 +5487,41 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 }
             }
         }
+    }
+
+    public void closeOrderByZReport(String orderId, ZReport report) {
+        Order order = getOrder(orderId);
+        if (order == null)
+            return;
+        
+        if (central.hasBeenConnectedToCentral()) {    
+            closeOrder(orderId, "Transferred to Z-Report");
+            
+            order.orderTransactions.stream().forEach(o -> {
+                o.transferredToAccounting = true;
+            });
+        }
+        
+        order.orderTransactions.stream().forEach(o -> o.addedToZreport = report.id);
+        order.addedToZreport = report.id;
+        
+        saveObject(order);
+    }
+
+    private String getBatchId(Order order, String refId) {
+        if (!order.isInvoice())
+            return "";
+        
+        if (refId == null || refId.isEmpty())
+            return UUID.randomUUID().toString();
+        
+        OcrFileLines line = storeOcrManager.getOcrFileLine(refId);
+        
+        if (line != null) {
+            return line.getBatchId();
+        }
+        
+        return UUID.randomUUID().toString();
     }
    
 }

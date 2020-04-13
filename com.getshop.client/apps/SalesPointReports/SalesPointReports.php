@@ -115,6 +115,10 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
     }
     
     public function formatDate($date) {
+        if (!$date) {
+            return "N/A";
+        }
+        
         $sortkey = strtotime($date);
         return "<span getshop_sorting='$sortkey'>" . date('d.m.Y H:i:s', strtotime($date)) . "</span>";
     }
@@ -220,6 +224,11 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
           echo "Instance on app: ". $app->id . " does not exists (" . $paymentNameSpaceId . ")"; 
           exit(0);
         }
+        
+        if ($name == "InvoicePayment") {
+            $name = "Invoices";
+        }
+        
         return $name;
     }
 

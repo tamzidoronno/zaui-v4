@@ -63,4 +63,11 @@ public class OrderResult {
         }
         return paymentDate;
     }
+    
+    public boolean isInvoice() {
+        if(paymentType != null && paymentType.toLowerCase().contains("invoice")) {
+            return true;
+        }
+        return false;
+    }
 }

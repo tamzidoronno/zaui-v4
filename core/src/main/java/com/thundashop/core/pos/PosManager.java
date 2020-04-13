@@ -32,6 +32,7 @@ import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.OrderFilter;
 import com.thundashop.core.ordermanager.data.OrderResult;
 import com.thundashop.core.ordermanager.data.OrderTag;
+import com.thundashop.core.ordermanager.data.OrderTransaction;
 import com.thundashop.core.paymentmanager.PaymentManager;
 import com.thundashop.core.paymentmanager.StorePaymentConfig;
 import com.thundashop.core.pdf.InvoiceManager;
@@ -387,21 +388,54 @@ public class PosManager extends ManagerBase implements IPosManager {
         report.start = prevZReportDate;
         report.end = new Date();
 
-        List<String> orderIds = orderManager.getOrdersByFilter(getOrderFilter())
-                .stream()
-                .filter(order -> (order.getMarkedPaidDate() != null && order.getMarkedPaidDate().after(prevZReportDate)))
-                .filter(order -> order.orderId != null && !order.orderId.isEmpty())
-                .filter(order -> order.isConnectedToCashPointId(cashPointId) || (isMasterCashPoint(cashPointId) && order.isConnectedToCashPointId("")))
-                .sorted((OrderResult o1, OrderResult o2) -> {
-                    return o1.paymentDate.compareTo(o2.paymentDate);
-                })
-                .map(order -> order.orderId)
-                .collect(Collectors.toList());
+        List<String> orderIds = new ArrayList();
+        if (central.hasBeenConnectedToCentral()) {
+            orderIds = orderManager.getAllOrders()
+                    .stream()
+                    .filter(o -> o.createdAfterConnectedToACentral && o.addedToZreport != null && o.addedToZreport.isEmpty())
+                    .map(o -> o.id)
+                    .collect(Collectors.toList());
+            
+            removeOrdersPrePaidByOTAAndNotMarkedAsPaid(orderIds);
+            report.invoicesWithNewPayments = getInvoicePayments();
+        } else {
+            orderIds = orderManager.getOrdersByFilter(getOrderFilter())
+                    .stream()
+                    .filter(order -> (order.getMarkedPaidDate() != null && order.getMarkedPaidDate().after(prevZReportDate)))
+                    .filter(order -> order.orderId != null && !order.orderId.isEmpty())
+                    .filter(order -> order.isConnectedToCashPointId(cashPointId) || (isMasterCashPoint(cashPointId) && order.isConnectedToCashPointId("")))
+                    .sorted((OrderResult o1, OrderResult o2) -> {
+                        return o1.paymentDate.compareTo(o2.paymentDate);
+                    })
+                    .map(order -> order.orderId)
+                    .collect(Collectors.toList());
+        }
 
         report.orderIds = orderIds;
-        report.createdWhileConnectedToCentral = central.hasBeenConnectedToCentral();
+        report.createdAfterConnectedToACentral = central.hasBeenConnectedToCentral();
 
         return report;
+    }
+
+    public void removeOrdersPrePaidByOTAAndNotMarkedAsPaid(List<String> orderIds) {
+        // We remove all orders from OTA's that are not yet paid, we dont want them to be locked at this point.
+        orderIds.removeIf(orderId -> {
+            Order order = orderManager.getOrder(orderId);
+            
+            if (order.isPrepaidByOTA() && !order.isPaid()) {
+                return true;
+            }
+            
+            return false;
+        });
+    }
+    
+    public List<String> getInvoicePayments() {
+        return orderManager.getAllOrders().stream()
+                .filter(o -> o.isInvoice() && o.hasNewOrderTransactions())
+                .map(o -> o.id)
+                .collect(Collectors.toList());
+                
     }
 
     @Override
@@ -439,32 +473,21 @@ public class PosManager extends ManagerBase implements IPosManager {
         List<String> autoCreatedOrders = autoCreateOrders(cashPointId);
         List<String> orderdIdsFromConfernceSystem = autoCreateOrdersForConferenceTabs(cashPointId);
 
-        boolean connectedToCentral = central.hasBeenConnectedToCentral();
-        
         ZReport report = getZReport("", cashPointId);
         report.createdByUserId = getSession().currentUser.id;
         report.cashPointId = cashPointId;
         report.orderIds.addAll(orderdIdsFromConfernceSystem);
         report.orderIds.addAll(autoCreatedOrders);
-        report.orderIds.addAll(getAllInvoicesToBeTransferred());
 
-        report.retransmittedOrderIds = orderManager.getOrdersToTransferToCentral();
-
-        orderManager.unmarkRetransmitToCentral(report.retransmittedOrderIds);
-        
         orderManager.markAsTransferredToCentral(report.orderIds);
-        orderManager.markAsTransferredToCentral(report.retransmittedOrderIds);
-        
-        if (connectedToCentral) {
-            report.orderIds.stream()
-                .forEach(orderId -> {
-                    orderManager.closeOrder(orderId, "Added to zreport.");
-                });
-        }
         
         report.totalAmount = getTotalAmountForZReport(report);
 
         saveObject(report);
+        
+        report.orderIds.stream().forEach(orderId -> orderManager.closeOrderByZReport(orderId, report));
+        report.invoicesWithNewPayments.stream().forEach(orderId -> orderManager.closeOrderByZReport(orderId, report));
+
         zReports.put(report.id, report);
 
         if (orderManager.getOrderManagerSettings().autoCloseFinancialDataWhenCreatingZReport && isMasterCashPoint(cashPointId)) {
@@ -958,7 +981,7 @@ public class PosManager extends ManagerBase implements IPosManager {
                 .stream()
                 .filter(o -> !o.isNullOrder() && !o.isAccruedPayment() && !o.isInvoice())
                 .filter(o -> o.status != Order.Status.PAYMENT_COMPLETED)
-                .filter(o -> createdCashPoint(o, cashPointId))
+                .filter(o -> createdCashPoint(o, cashPointId) || o.isIntegratedPaymentTerminal())
                 .collect(Collectors.toList());
 
         canClose.finalize();
@@ -1818,7 +1841,7 @@ public class PosManager extends ManagerBase implements IPosManager {
     public List<ZReport> getReportNotTransferredToCentral() {
         return zReports.values()
                 .stream()
-                .filter(o -> !o.transferredToCentral && o.createdWhileConnectedToCentral)
+                .filter(o -> !o.transferredToCentral && o.createdAfterConnectedToACentral)
                 .collect(Collectors.toList());
     }
 
@@ -1829,15 +1852,6 @@ public class PosManager extends ManagerBase implements IPosManager {
             report.transferredToCentral = true;
             saveObject(report);
         }
-    }
-
-    private List<String> getAllInvoicesToBeTransferred() {
-        return orderManager.getAllOrders()
-                .stream()
-                .filter(o -> !o.transferredToCentral)
-                .filter(o -> o.isInvoice())
-                .map(o -> o.id)
-                .collect(Collectors.toList());
     }
 
     @Override
@@ -1857,4 +1871,5 @@ public class PosManager extends ManagerBase implements IPosManager {
                 });
     }
 
+    
 }

@@ -226,6 +226,12 @@ public class PmsInvoiceManagerNew {
         for (String rowKey : res.keySet()) {
             String[] splitted = rowKey.split(";");
             String productId = splitted[0];
+            Product product = productManager.getProduct(productId);
+            
+            if (product == null) {
+                continue;
+            }
+            
             String refId = "";
             if(splitted.length > 1) {
                 refId = splitted[1];

@@ -20,7 +20,13 @@ public class OrderTransaction implements Serializable {
     public Double agio;
     public String userId;
     public String transactionId = UUID.randomUUID().toString();
-    public Integer transactionType = 1;
+    
+    /**
+     * type 1 = Manuall
+     * type 2 = OCR
+     */
+    public Integer transactionType = 1; 
+    
     public String refId = "";
     public boolean transferredToAccounting = false;
     public Date rowCreatedDate = new Date();
@@ -55,4 +61,10 @@ public class OrderTransaction implements Serializable {
         return hash;
     }
     
+    
+    public boolean canBeDeleted() {
+        return transactionType != null 
+                && !transactionType.equals(Order.OrderTransactionType.OCR) 
+                && !transferredToAccounting;
+    }
 }

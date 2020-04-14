@@ -28,7 +28,7 @@ abstract class Page {
         $this->database =  new Database();
         $this->api = new GetShopApi(25554, "localhost", session_id());
 //        $this->api = new GetShopApi(4224, "clients.getshop.com", session_id());
-        $this->getApi()->getStoreManager()->initializeStore("20361.3.0.local.getshop.com", session_id());
+        $this->getApi()->getStoreManager()->initializeStore("20360.3.0.local.getshop.com", session_id());
     }
 
     public function __f($text) {

@@ -29,6 +29,8 @@ public class OrderTransaction implements Serializable {
     
     public String refId = "";
     public boolean transferredToAccounting = false;
+    public String addedToZreport = null;
+    
     public Date rowCreatedDate = new Date();
     public String comment = "";
     
@@ -39,6 +41,11 @@ public class OrderTransaction implements Serializable {
     public boolean canBeDeleted = false;
     
     public String accountingDetailId = "";
+    
+    /**
+     * All with the same batchId should be grouped together as they are a concatignated payment.
+     */
+    public String batchId = "";
     
     public boolean isReferenceId(String refId) {
         if(refId.isEmpty()) {

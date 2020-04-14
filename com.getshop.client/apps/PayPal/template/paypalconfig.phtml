@@ -4,6 +4,8 @@
 $payPalEmailAddress = $this->getConfigurationSetting("paypalemailaddress");
 $sandbox = $this->getConfigurationSetting("sandbox");
 $testPayPal = $this->getConfigurationSetting("paypaltestaddress");
+$client_production = $this->getConfigurationSetting("client_production");
+$client_sandbox = $this->getConfigurationSetting("client_sandbox");
 ?>
 
 <div class='gss_settings_header'>
@@ -15,7 +17,7 @@ $testPayPal = $this->getConfigurationSetting("paypaltestaddress");
         </div>
         <div class='gss_settings_header_description_inner'>
             <?
-            echo $this->__f("Enter the fields below to activate PayPal for your webshop");
+            echo $this->__f("Enter the fields below to activate PayPal");
             ?>	
         </div>
     </div>	
@@ -24,11 +26,21 @@ $testPayPal = $this->getConfigurationSetting("paypaltestaddress");
 <div class='gss_settings_content'>
 
     <div class="gss_simple_shipping">
-        <div class="textfield gss_setting"  id="paypalemail">
-            <span class="title"><?php echo $this->__f("PayPal email address"); ?></span>
-            <input type="textfield" gs_model='paypalmodel' gs_model_attr='paypalemail' value="<? echo $payPalEmailAddress; ?>">
+        <div class="textfield gss_setting"  id="client_production">
+            <span class="title"><?php echo $this->__f("Client id (production)"); ?></span>
+            <input type="textfield" gs_model='paypalmodel' gs_model_attr='client_production' value="<? echo $client_production; ?>">
             <div class="description">
-                <?php echo $this->__("Should there be a fixed "); ?>
+                <?php echo $this->__("Enter the client id from paypal (production)"); ?>
+            </div>
+        </div>
+    </div>
+
+    <div class="gss_simple_shipping">
+        <div class="textfield gss_setting"  id="client_sandbox">
+            <span class="title"><?php echo $this->__f("Client id (sandbox)"); ?></span>
+            <input type="textfield" gs_model='paypalmodel' gs_model_attr='client_sandbox' value="<? echo $client_sandbox; ?>">
+            <div class="description">
+                <?php echo $this->__("Enter the client id from paypal (sandbox)"); ?>
             </div>
         </div>
     </div>
@@ -41,16 +53,6 @@ $testPayPal = $this->getConfigurationSetting("paypaltestaddress");
         </div>
         <div class="description">
             <?php echo $this->__("Should paypal be used in test mode?"); ?>
-        </div>
-    </div>
-
-    <div class="gss_simple_shipping">
-        <div class="textfield gss_setting"  id="testpaypalemail">
-            <span class="title"><?php echo $this->__f("Test email account"); ?></span>
-            <input type="textfield" gs_model='paypalmodel' gs_model_attr='testpaypalemail' value="<? echo $testPayPal; ?>">
-            <div class="description">
-                <?php echo $this->__("Should there be a fixed "); ?>
-            </div>
         </div>
     </div>
 

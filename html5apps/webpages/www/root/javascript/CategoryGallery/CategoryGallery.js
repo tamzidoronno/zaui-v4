@@ -56,7 +56,7 @@ $.fn.CategoryGallery = function(data) {
                 
                 if(imagesToLoad.indexOf(imgId) >= 0) {
                     imageCount++;
-                    imageRow.append('<span class="gs_grid-item gs_grid-item-hidden" imgid="'+imgId+'"><img src="'+ gteshop_endpoint + "/displayImage.php?id="+imgId+'&width=600"></span>');
+                    imageRow.append('<span class="gs_grid-item gs_grid-item-hidden" imgid="'+imgId+'"><img src="'+ getshop_endpoint + "/displayImage.php?id="+imgId+'&width=600"></span>');
                 }
                 ids.push(imgId);
                 end++;

@@ -34,16 +34,13 @@ $ecomsettings = $this->getFactory()->getApplicationPool()->createInstace($ecom);
 <div gstype='form' method='savePaymentLinkMethod' style="margin-top:5px;">
     <select class="config gsniceselect1" gs_model='ecommercesettings' gsname='paymentLinkMethod' style='height: 36px;'>
         <option value="">Select payment method</option>
-        <? foreach ($onlyPaymentMethods as $key => $method) { 
+        <? 
+        foreach ($onlyPaymentMethods as $key => $method) { 
             $selected = $ecomsettings->getConfigurationSetting("paymentLinkMethod") == $method->id ? "SELECTED" : "";
             
             $instance = $this->getFactory()->getApplicationPool()->createInstace($method);
             if(!$instance->hasPaymentLink()) {
                 continue;
-            }
-            $name = $method->appName;
-            if(method_exists($instance, "getName")) {
-                $name = $instance->getName();
             }
             ?>
             <option value="<? echo $method->id; ?>" <? echo $selected; ?>><? echo $name; ?></option>

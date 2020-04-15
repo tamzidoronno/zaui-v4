@@ -12,6 +12,10 @@ class EasyByNets extends \PaymentApplication implements \Application {
         return "Easy by nets";
     }
 
+    public function printButton() {
+        echo "Easy by nets<div style='margin-top: 5px; font-size: 12px;'>Visa / mastercard / vipps</div>";
+    }
+
     public function render() {
         if ($this->getCurrentOrder()->status != 7) {
             $app = $this->getApi()->getGetShopApplicationPool()->get("d96f955a-0c21-4b1c-97dc-295008ae6e5a");

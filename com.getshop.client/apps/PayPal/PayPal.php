@@ -46,9 +46,6 @@ class PayPal extends \PaymentApplication implements \Application {
         return $actual_link;
     }
 
-    public function renderButton() {
-        $this->preProcess();
-    }
     
     /**
      * Will only be executed if
@@ -157,7 +154,7 @@ class PayPal extends \PaymentApplication implements \Application {
     }
 
     public function printButton() {
-        $this->includefile("paypalbutton");
+        echo "Pay with paypal<div style='margin-top: 5px; font-size: 12px;'>Fast and simple payment</div>";
     }
 
 }

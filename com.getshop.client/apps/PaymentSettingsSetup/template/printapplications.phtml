@@ -13,7 +13,7 @@
 <div class="gss_settings_content">
     <?php
     /* @var $this \ns_f474e3f0_7ef6_4611_9202_9332302a5e38\PaymentSettingsSetup */
-
+    $multiplepaymentmethodsactivated = 0;
     $applications = $this->getApi()->getStoreApplicationPool()->getAvailableApplications();
     $activated = $this->getApi()->getStoreApplicationPool()->getActivatedPaymentApplications();
     $activatedDebtCollectors = $this->getApi()->getStoreApplicationPool()->getActivatedApplications("DebtCollectorApplication");
@@ -26,6 +26,7 @@
     $promptAccount = $lockedPeriods ? "gs_prompt='You need to specify an account for this payment application to be activated, please contact your accountant to get information on what account to post this transactions on'" : "";
     
     $res = array();
+    $paymentsSupportForMultiplePayments = array();
     foreach($activated as $active) {
         $res[] = $active->id;
     }
@@ -67,6 +68,10 @@
                     echo "<div class='header'>" . $instance->getName() . "</div>";
                     echo "<div class='description'>" . $instance->getDescription() . "</div>";
                     if(in_array($app->id, $res)) {
+                        if(method_exists($instance, "printButton")) {
+                            $multiplepaymentmethodsactivated++;
+                            $paymentsSupportForMultiplePayments[$app->id] = $instance->getName();
+                        }
                         echo "<div class='footer deactivate' gstype='clicksubmit' gsvalue='".$app->id."' method='deactivateApp' gsname='id'>Deactivate</div>";
                     } else {
                         echo "<div class='footer' gstype='clicksubmit' gsvalue='".$app->id."' method='activateApp' gsname='id' $promptAccount>Activate</div>";
@@ -80,3 +85,19 @@
     ?>
     <div style='clear:both;'></div>
 </div>
+<?php
+if($multiplepaymentmethodsactivated > 1) {
+    ?><h1>Provide multiple payment methods for customers</h1><?php
+    $multipleids = (array)$this->getApi()->getPaymentManager()->getMultiplePaymentMethods();
+    echo "<span gstype='form' method='saveMultiplePayments'>";
+    foreach($paymentsSupportForMultiplePayments as $id => $name) {
+        $checked = in_array($id, $multipleids) ? "CHECKED" : "";
+        echo "<input type='checkbox' gsname='method_$id' $checked> $name<br>";
+    }
+    echo "<br>";
+    echo "<span class='shop_button' gstype='submit'>Save selection</span>";
+    echo "<br>";
+    echo "<br>";
+    echo "</span>";
+}
+?>

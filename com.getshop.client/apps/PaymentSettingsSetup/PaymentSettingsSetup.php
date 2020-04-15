@@ -10,6 +10,18 @@ class PaymentSettingsSetup extends \WebshopApplication implements \Application {
         return "PaymentSettingsSetup";
     }
     
+    public function saveMultiplePayments() {
+        $ids = array();
+        foreach($_POST['data'] as $id => $val) {
+            if($val != "true") {
+                continue;
+            }
+            $id = str_replace("method_", "", $id);
+            $ids[] = $id;
+        }
+        $this->getApi()->getPaymentManager()->saveMultiplePaymentMethods($ids);
+    }
+    
     public function deactivateApp() {
         $this->getApi()->getStoreApplicationPool()->deactivateApplication($_POST['data']['id']);
     }

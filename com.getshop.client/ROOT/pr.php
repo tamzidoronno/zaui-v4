@@ -16,6 +16,13 @@ if($storeId == "a152b5bd-80b6-417b-b661-c7c522ccf305") { $engine = "demo"; } //F
 if($storeId == "3b647c76-9b41-4c2a-80db-d96212af0789") { $engine = "demo"; } //Fast Hotel Havna
 if($storeId == "e625c003-9754-4d66-8bab-d1452f4d5562") { $engine = "demo"; } //Fast Hotel Lofoten
 
+
+$multipleIds = (array)$factory->getApi()->getPaymentManager()->getMultiplePaymentMethods();
+if(sizeof($multipleIds) > 1 && !isset($_GET['chosenpaymentmethod'])) {
+    include("choosepaymentmethod.php");
+    return;
+}
+
 if (isset($_GET['start']) && isset($_GET['end'])) {
     $javaStart = date('c', strtotime($_GET['start']));
     $javaEnd = date('c', strtotime($_GET['end']));
@@ -26,6 +33,8 @@ if (isset($_GET['start']) && isset($_GET['end'])) {
 
 
 if($orderId) {
+    $factory->getApi()->getOrderManager()->changeOrderType($orderId, $_GET['chosenpaymentmethod']);
+    
     echo "Please wait...";
     header("location:/?changeGetShopModule=cms&page=cart&payorder=". $orderId);
 } else {

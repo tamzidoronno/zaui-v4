@@ -6,6 +6,8 @@
 package com.thundashop.core.paymentmanager;
 
 import com.thundashop.core.common.DataCommon;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -24,4 +26,6 @@ public class GeneralPaymentConfig extends DataCommon {
     public String dissAgioAccount = "8160"; //Tap
     public String conversionAccount = "7746";
     
+    public List<String> multiplePaymentsActive = new ArrayList();
+
 }

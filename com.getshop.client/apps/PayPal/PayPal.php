@@ -56,13 +56,76 @@ class PayPal extends \PaymentApplication implements \Application {
      * on checkout  
      */
     public function preProcess() {
-        $this->includefile("paypalbutton");
+        
+        /* Sandbox test user :
+         * sb-i9hk431446888@personal.example.com / Dm!gg0O#
+         */
+        
+        echo "<center style='margin: 50px;font-size: 40px;'>";
+        echo "Please wait... <br><i class='fa fa-spin fa-spinner'></i>";
+        echo "</center>";
+        
+        $order = $this->getOrder();
+
+        $returnAddress = $this->curPageURL();
+        $orderId = $order->id;
+
+        $sandbox = $this->getConfigurationSetting("sandbox");
+        
+        $testEmailAddress = $this->getConfigurationSetting("paypaltestaddress");
+        $payPalEmail = $this->getConfigurationSetting("paypalemailaddress");
+        
+        if(!$this->getApi()->getStoreManager()->isProductMode()) {
+            $sandbox = "true";
+            $testEmailAddress = "post@getshop.com";
+        }
+
+
+        if (isset($sandbox) && $sandbox == "true") {
+            $url = "https://www.sandbox.paypal.com/cgi-bin/webscr";
+            $seller = $testEmailAddress;
+        } else {
+            $url = "https://www.paypal.com/cgi-bin/webscr";
+            if ($payPalEmail) {
+                $seller = $payPalEmail;
     }
+        }
     
-    public function hasPaymentLink() {
-        return true;
+        if (!isset($seller) || !$seller) {
+            if ($this->isEditorMode()) {
+                echo $this->__f("The paypal account has not been configured correctly. Go to settings and configure it properly");
     }
+            return;
+        }
     
+        $appSettingsId = $this->getApplicationSettings()->id;
+        $callback = $this->curPageURL() . "/callback.php?app=" . $appSettingsId . "&orderid=" . $orderId . "&NO_SHIPPING_OPTION_DETAILS=1";
+        $currency = \ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::fetchCurrencyCode();
+
+        echo "<form action='$url' method='POST' id='paypalform'>";
+
+        //CALLBACK...
+        echo '<INPUT TYPE="hidden" name="charset" value="utf-8">';
+        echo '<input type="hidden" name="notify_url" value="' . $callback . '">';
+        echo '<INPUT TYPE="hidden" NAME="return" value="' . $returnAddress . '">';
+
+        echo '<input type="hidden" name="cmd" value="_cart">';
+        echo '<input type="hidden" name="upload" value="1">';
+        echo '<input type="hidden" name="currency_code" value="' . $currency . '">';
+        echo '<input type="hidden" name="business" value="' . $seller . '">';
+        echo '<input type="hidden" name="amount" value="3">';
+        $price = $this->getApi()->getOrderManager()->getTotalAmount($order);
+        $i = 1;
+        echo '<input type="hidden" name="item_name_' . $i . '" value="Order '.$order->incrementOrderId.'">';
+        echo '<input type="hidden" name="amount_' . $i . '" value="' . $price . '">';
+        echo '<input type="hidden" name="quantity_' . $i . '" value="1">';
+
+        echo "</form>";
+        echo "<script>";
+        echo "$('#paypalform').submit();";
+        echo "</script>";
+    }
+
     /**
      * 
      * Should display you configuration page.
@@ -91,6 +154,10 @@ class PayPal extends \PaymentApplication implements \Application {
         $this->setConfigurationSetting("paypalemailaddress", $_POST['paypalemail']);
         $this->setConfigurationSetting("sandbox", $_POST['issandbox']);
         $this->setConfigurationSetting("paypaltestaddress", $_POST['testpaypalemail']);
+    }
+
+    public function printButton() {
+        $this->includefile("paypalbutton");
     }
 
 }

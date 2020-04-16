@@ -60,7 +60,6 @@
     "private" : "Private",
     "ordertext" : "Text on order",
     "organization" : "Organization",
-    "alreadyGotanAccount" : "Already got an Account?",
     "streetAdress" : "Street adress",
     "zipCode" : "Zip Code",
     "companyName" : "Company name",

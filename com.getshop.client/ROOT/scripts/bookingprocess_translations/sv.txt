@@ -59,7 +59,6 @@
     "private" : "Privat",
     "ordertext" : "Text på beställning",
     "organization" : "Organisation",
-    "alreadyGotanAccount" : "Har redan ett konto?",
     "streetAdress" : "Gatuadress",
     "zipCode" : "Postnummer",
     "companyName" : "Företagsnamn",

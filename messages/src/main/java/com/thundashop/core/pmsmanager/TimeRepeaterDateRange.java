@@ -31,5 +31,15 @@ public class TimeRepeaterDateRange implements Serializable {
     boolean isWithin(Date start, Date end) {
         return this.start.after(start) && this.end.before(end);
     }
+
+    public boolean intercepts(Date start, Date end) {
+        if(containsRange(start, end) || isBetweenTime(start) ||  isBetweenTime(end)) {
+            return true;
+        }
+        if(this.start.after(start) && this.end.before(end)) {
+            return true;
+        }
+        return false;
+   }
     
 }

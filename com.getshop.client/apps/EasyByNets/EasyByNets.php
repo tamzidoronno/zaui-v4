@@ -18,7 +18,7 @@ class EasyByNets extends \PaymentApplication implements \Application {
 
     public function render() {
         if ($this->getCurrentOrder()->status != 7) {
-            $app = $this->getApi()->getGetShopApplicationPool()->get("d96f955a-0c21-4b1c-97dc-295008ae6e5a");
+            $app = $this->getApi()->getGetShopApplicationPool()->get("d96f955a-0c21-4b1cko9-7dc-295008ae6e5a");
             $appInstance = $this->getFactory()->getApplicationPool()->createInstace($app);
             $appInstance->order = $this->order;
             $appInstance->renderStandAlone();

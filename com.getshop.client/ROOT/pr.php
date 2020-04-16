@@ -33,7 +33,7 @@ if (isset($_GET['start']) && isset($_GET['end'])) {
 
 
 if($orderId) {
-    $factory->getApi()->getOrderManager()->changeOrderType($orderId, $_GET['chosenpaymentmethod']);
+    $factory->getApi()->getOrderManager()->changeOrderTypeByCheckout($orderId, $_GET['chosenpaymentmethod']);
     
     echo "Please wait...";
     header("location:/?changeGetShopModule=cms&page=cart&payorder=". $orderId);

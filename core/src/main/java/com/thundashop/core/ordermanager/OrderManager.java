@@ -5519,5 +5519,20 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         return UUID.randomUUID().toString();
     }
+
+    @Override
+    public void changeOrderTypeByCheckout(String orderId, String paymentTypeId) {
+        List<String> ids = paymentManager.getGeneralPaymentConfig().multiplePaymentsActive;
+        if(!ids.contains(paymentTypeId)) {
+            return;
+        }
+        
+        Order order = getOrder(orderId);
+        if(order.closed) {
+            return;
+        }
+        
+        changeOrderType(orderId, paymentTypeId);
+    }
    
 }

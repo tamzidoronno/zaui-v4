@@ -24,7 +24,7 @@ $multipleIds = (array)$factory->getApi()->getPaymentManager()->getMultiplePaymen
         color:#fff;
     }
     .choosebutton {
-        
+        position:relative;
         background-color: #4CAF50; /* Green */
         border: none;
         color: white;

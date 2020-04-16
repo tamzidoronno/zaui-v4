@@ -372,6 +372,8 @@ public interface IOrderManager {
     @Administrator
     public void changeOrderType(String orderId, String paymentTypeId);
     
+    public void changeOrderTypeByCheckout(String orderId, String paymentTypeId);
+    
     @Administrator
     public void sendReciept(String orderId, String email);
     

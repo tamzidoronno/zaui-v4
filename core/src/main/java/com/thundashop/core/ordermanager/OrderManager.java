@@ -2502,6 +2502,19 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
 
     @Override
+    public void deleteOrCreditOrder(String orderId) {
+        Order order = getOrder(orderId);
+        if (order == null)
+            return;
+        
+        if(order.closed && !order.isPaid()) {
+            creditOrder(orderId);
+            return;
+        }
+        deleteOrder(orderId);
+    }
+    
+    @Override
     public void deleteOrder(String orderId) {
         Order order = getOrder(orderId);
         if (order == null)

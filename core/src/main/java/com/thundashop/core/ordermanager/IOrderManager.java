@@ -409,6 +409,9 @@ public interface IOrderManager {
 
     @Administrator
     public void deleteOrder(String orderId);
+
+    @Administrator
+    public void deleteOrCreditOrder(String orderId);
     
     @Administrator
     public String getEhfXml(String orderId);

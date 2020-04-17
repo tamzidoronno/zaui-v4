@@ -1893,4 +1893,10 @@ public class Order extends DataCommon implements Comparable<Order> {
                 .filter(trans -> trans.addedToZreport != null && trans.addedToZreport.isEmpty())
                 .count() > 0;
     }
+
+    public long getIncrementOrderId() {
+        return incrementOrderId;
+    }
+    
+    
 }

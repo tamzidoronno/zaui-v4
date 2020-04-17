@@ -1,4 +1,5 @@
 <?php
+/* @var $this \ns_c7736539_4523_4691_8453_a6aa1e784fc1\PayPal */
 namespace ns_c7736539_4523_4691_8453_a6aa1e784fc1;
 
 $raw_post_data = file_get_contents('php://input');
@@ -70,13 +71,15 @@ if (strcmp($res, "VERIFIED") == 0) {
     $receiver_email = $_POST['receiver_email'];
     $payer_email = $_POST['payer_email'];
     
+    /** @var $order  */
+    $order = $factory->getApi()->getOrderManager()->getOrderWithIdAndPassword($orderid, "gfdsg9o3454835nbsfdg");
+
     /* @var $api \GetShopApi */
     file_put_contents("/tmp/paypalurl", "payment status: ".$payment_status);
-//    if($payment_status  == "Completed") {
-        $password = file_get_contents("../app/ns_c7736539_4523_4691_8453_a6aa1e784fc1/private/password");
-        $password = trim($password);
-        $factory->getApi()->getOrderManager()->setOrderStatus($password, $orderid, $payment_currency, $payment_amount, 4);
-//    }
+    $factory->getApi()->getOrderManager()->markAsPaidWithPassword($order->id, $this->convertToJavaDate(time()), $this->getApi()->getOrderManager()->getTotalAmount($order), "fdsvb4354345345");
+    /* @var $order \core_ordermanager_data_Order */
+    $order->payment->callBackParameters = $_POST;
+    $factory->getApi()->getOrderManager()->saveOrder($order);
     
 } else if (strcmp($res, "INVALID") == 0) {
     // log for manual investigation

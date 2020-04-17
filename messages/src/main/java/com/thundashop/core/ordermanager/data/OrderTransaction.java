@@ -37,6 +37,9 @@ public class OrderTransaction implements Serializable {
     @Transient
     public String orderId = "";
     
+    @Transient
+    public boolean canBeDeleted = false;
+    
     public String accountingDetailId = "";
     
     /**
@@ -73,5 +76,9 @@ public class OrderTransaction implements Serializable {
         return transactionType != null 
                 && !transactionType.equals(Order.OrderTransactionType.OCR) 
                 && !transferredToAccounting;
+    }
+
+    void setCanBeDeletedFlag() {
+        canBeDeleted = canBeDeleted();
     }
 }

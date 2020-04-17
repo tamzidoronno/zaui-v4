@@ -37,4 +37,9 @@ public interface IPaymentManager {
     
     @Administrator
     public void resetAllAccountingConfigurationForUsersAndOrders(String password);
+    
+    @Administrator
+    public void saveMultiplePaymentMethods(List<String> ids);
+    
+    public List<String> getMultiplePaymentMethods();
 }

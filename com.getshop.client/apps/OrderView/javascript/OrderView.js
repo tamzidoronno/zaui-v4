@@ -104,12 +104,16 @@ app.OrderView = {
         });
     },
     deleteOrderTransaction : function() {
+        
+        var confirmed = confirm("Are you sure you want to delete this transaction?");
+        if(!confirmed) {
+            return;
+        }
+        
         var data = {
             "transactionid" : $(this).attr('transactionid')
         };
         
-        var password = prompt("Password");
-        data.password = password;
         
         var event = thundashop.Ajax.createEvent('','deleteTransaction', $(this), data);
         thundashop.Ajax.postWithCallBack(event, function(res) {

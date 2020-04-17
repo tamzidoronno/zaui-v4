@@ -1791,7 +1791,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             order.doFinalize();
             generateKid(order);
             String localCurrency = getLocalCurrencyCode();
-            
+            order.setCanTransactionsBeDeleted();
             if (localCurrency.equalsIgnoreCase(order.currency)) {
                 order.currency = null;
             }
@@ -2501,6 +2501,19 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
     
 
+    @Override
+    public void deleteOrCreditOrder(String orderId) {
+        Order order = getOrder(orderId);
+        if (order == null)
+            return;
+        
+        if(order.closed && !order.isPaid()) {
+            creditOrder(orderId);
+            return;
+        }
+        deleteOrder(orderId);
+    }
+    
     @Override
     public void deleteOrder(String orderId) {
         Order order = getOrder(orderId);
@@ -5169,16 +5182,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     @Override
-    public void deleteOrderTransaction(String transactionId, String password) {
-        if(!password.equals("fdsaf34234cc")) {
-            return;
-        }
-        
+    public void deleteOrderTransaction(String transactionId) {
         
         for(Order order : orders.values()) {
             OrderTransaction toRemove = null;
             for(OrderTransaction transaction : order.orderTransactions) {
-                if(transaction.transactionId.equals(transactionId)) {
+                if(transaction.canBeDeleted() && transaction.transactionId.equals(transactionId)) {
                     toRemove = transaction;
                 }
             }
@@ -5521,6 +5530,21 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         return UUID.randomUUID().toString();
+    }
+
+    @Override
+    public void changeOrderTypeByCheckout(String orderId, String paymentTypeId) {
+        List<String> ids = paymentManager.getGeneralPaymentConfig().multiplePaymentsActive;
+        if(!ids.contains(paymentTypeId)) {
+            return;
+        }
+        
+        Order order = getOrder(orderId);
+        if(order.closed) {
+            return;
+        }
+        
+        changeOrderType(orderId, paymentTypeId);
     }
    
 }

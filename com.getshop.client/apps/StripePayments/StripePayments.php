@@ -205,6 +205,11 @@ class StripePayments extends \PaymentApplication implements \Application {
         }
     }
 
+    
+    public function printButton() {
+        echo "Stripe<div style='margin-top: 5px; font-size: 12px;'>Visa / mastercard / apple and android pay</div>";
+    }
+    
     public function renderNewCheckout() {
         $email = "";
         $currency = \ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::fetchCurrencyCode();

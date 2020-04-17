@@ -18,6 +18,11 @@ class BrainTree extends \PaymentApplication implements \Application {
         return "BrainTree";
     }
     
+    public function isPublicPaymentApp() {
+        return false;
+    }
+
+    
     public function simplePayment() {
         $this->includefile("paymentformsimple");
     }

@@ -117,6 +117,13 @@ public class Order extends DataCommon implements Comparable<Order> {
      */
     public List<String> conferenceIds = new ArrayList();
     
+    public void setCanTransactionsBeDeleted() {
+        if(orderTransactions != null) {
+            for(OrderTransaction t : orderTransactions) {
+                t.setCanBeDeletedFlag();
+            }
+        }
+    }
     
     /**
      * This holds a reference to what conference id the order is autocreated for.
@@ -1897,6 +1904,5 @@ public class Order extends DataCommon implements Comparable<Order> {
     public long getIncrementOrderId() {
         return incrementOrderId;
     }
-    
-    
+      
 }

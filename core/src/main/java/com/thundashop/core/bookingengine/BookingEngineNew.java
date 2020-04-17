@@ -500,11 +500,21 @@ public class BookingEngineNew extends GetShopSessionBeanNamed implements IBookin
         
         List<Booking> bookingsConnectedToItem = bookings.values().stream()
                 .filter(o -> o.bookingItemId != null && o.bookingItemId.equals(id))
+                .filter(o -> o.source != null && o.source.isEmpty())
                 .collect(Collectors.toList());
         
         
         if (!bookingsConnectedToItem.isEmpty() && shouldThrowException()) {
             throw new BookingEngineException("Can not delete a bookingItem when there is bookings connected to it");
+        }
+
+        List<Booking> bookingsThatCanBeDeleted = bookings.values().stream()
+                .filter(o -> o.bookingItemId != null && o.bookingItemId.equals(id))
+                .filter(o -> o.source != null && !o.source.isEmpty())
+                .collect(Collectors.toList());
+        
+        for(Booking b : bookingsThatCanBeDeleted) {
+            deleteBooking(b.id);
         }
         
         BookingItem deleted = items.remove(id);

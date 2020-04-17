@@ -15,7 +15,7 @@ class PayPal extends \PaymentApplication implements \Application {
     }
     
     public function isPublicPaymentApp() {
-        return false;
+        return true;
     }
 
     public function addPaymentMethods() {
@@ -46,12 +46,22 @@ class PayPal extends \PaymentApplication implements \Application {
         return $actual_link;
     }
 
+    
     /**
      * Will only be executed if
      * this payment has been selected
      * on checkout  
      */
     public function preProcess() {
+        
+        /* Sandbox test user :
+         * sb-i9hk431446888@personal.example.com / Dm!gg0O#
+         */
+        
+        echo "<center style='margin: 50px;font-size: 40px;'>";
+        echo "Please wait... <br><i class='fa fa-spin fa-spinner'></i>";
+        echo "</center>";
+        
         $order = $this->getOrder();
 
         $returnAddress = $this->curPageURL();
@@ -61,6 +71,12 @@ class PayPal extends \PaymentApplication implements \Application {
         
         $testEmailAddress = $this->getConfigurationSetting("paypaltestaddress");
         $payPalEmail = $this->getConfigurationSetting("paypalemailaddress");
+        
+        if(!$this->getApi()->getStoreManager()->isProductMode()) {
+            $sandbox = "true";
+            $testEmailAddress = "post@getshop.com";
+        }
+
 
         if (isset($sandbox) && $sandbox == "true") {
             $url = "https://www.sandbox.paypal.com/cgi-bin/webscr";
@@ -69,16 +85,16 @@ class PayPal extends \PaymentApplication implements \Application {
             $url = "https://www.paypal.com/cgi-bin/webscr";
             if ($payPalEmail) {
                 $seller = $payPalEmail;
-            }
+    }
         }
-
+    
         if (!isset($seller) || !$seller) {
             if ($this->isEditorMode()) {
                 echo $this->__f("The paypal account has not been configured correctly. Go to settings and configure it properly");
-            }
+    }
             return;
         }
-
+    
         $appSettingsId = $this->getApplicationSettings()->id;
         $callback = $this->curPageURL() . "/callback.php?app=" . $appSettingsId . "&orderid=" . $orderId . "&NO_SHIPPING_OPTION_DETAILS=1";
         $currency = \ns_9de54ce1_f7a0_4729_b128_b062dc70dcce\ECommerceSettings::fetchCurrencyCode();
@@ -94,33 +110,12 @@ class PayPal extends \PaymentApplication implements \Application {
         echo '<input type="hidden" name="upload" value="1">';
         echo '<input type="hidden" name="currency_code" value="' . $currency . '">';
         echo '<input type="hidden" name="business" value="' . $seller . '">';
+        echo '<input type="hidden" name="amount" value="3">';
+        $price = $this->getApi()->getOrderManager()->getTotalAmount($order);
         $i = 1;
-        foreach ($order->cart->items as $cartItem) {
-            $product = $cartItem->product;
-            $variations = isset($cartItem->variations) ? $cartItem->variations : array();
-            $price = $product->price;
-            $count = $cartItem->count;
-
-            $helpertext = \HelperCart::getVartionsText($cartItem);
-            if ($helpertext) {
-                $helpertext = "(" . $helpertext . ")";
-            }
-
-            echo '<input type="hidden" name="item_name_' . $i . '" value="' . $product->name . ' ' . $helpertext . '">';
-            echo '<input type="hidden" name="amount_' . $i . '" value="' . $price . '">';
-            echo '<input type="hidden" name="quantity_' . $i . '" value="' . $count . '">';
-            $i++;
-        }
-
-        if (isset($order->shipping) && isset($order->shipping->cost) && $order->shipping->cost > 0) {
-            echo '<input type="hidden" name="item_name_' . $i . '" value="' . $this->__w("Shipping cost") . '">';
-            echo '<input type="hidden" name="amount_' . $i . '" value="' . $order->shipping->cost . '">';
-            $i++;
-        }
-
-        if (isset($order->cart->couponCost) && $order->cart->couponCost > 0) {
-            echo '<input type="hidden" name="discount_amount_cart" value="' . $order->cart->couponCost . '">';
-        }
+        echo '<input type="hidden" name="item_name_' . $i . '" value="Order '.$order->incrementOrderId.'">';
+        echo '<input type="hidden" name="amount_' . $i . '" value="' . $price . '">';
+        echo '<input type="hidden" name="quantity_' . $i . '" value="1">';
 
         echo "</form>";
         echo "<script>";
@@ -156,6 +151,10 @@ class PayPal extends \PaymentApplication implements \Application {
         $this->setConfigurationSetting("paypalemailaddress", $_POST['paypalemail']);
         $this->setConfigurationSetting("sandbox", $_POST['issandbox']);
         $this->setConfigurationSetting("paypaltestaddress", $_POST['testpaypalemail']);
+    }
+
+    public function printButton() {
+        echo "Pay with paypal<div style='margin-top: 5px; font-size: 12px;'>Fast and simple payment</div>";
     }
 
 }

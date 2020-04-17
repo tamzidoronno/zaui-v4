@@ -36,6 +36,7 @@ public class PaymentManager extends ManagerBase implements IPaymentManager {
     private HashMap<String, PaymentConfiguration> paymentConfigs = new HashMap();
     private GeneralPaymentConfig generalConfig = new GeneralPaymentConfig();
     
+    
     @Autowired
     private OrderManager orderManager;
     
@@ -309,5 +310,17 @@ public class PaymentManager extends ManagerBase implements IPaymentManager {
         postpaymentmethods.add("cbe3bb0f-e54d-4896-8c70-e08a0d6e55ba"); //Samlefaktura
         
         return postpaymentmethods.contains(config.paymentAppId);
+    }
+
+    @Override
+    public void saveMultiplePaymentMethods(List<String> ids) {
+        GeneralPaymentConfig config = getGeneralPaymentConfig();
+        config.multiplePaymentsActive = ids;
+        saveGeneralPaymentConfig(config);
+    }
+
+    @Override
+    public List<String> getMultiplePaymentMethods() {
+        return getGeneralPaymentConfig().multiplePaymentsActive;
     }
 }

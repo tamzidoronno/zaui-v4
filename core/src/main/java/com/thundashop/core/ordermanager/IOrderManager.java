@@ -84,7 +84,7 @@ public interface IOrderManager {
     public void checkForOrdersFailedCollecting();
     
     @Administrator
-    public void deleteOrderTransaction(String transactionId, String password);
+    public void deleteOrderTransaction(String transactionId);
     
     @Administrator
     public void forceDeleteOrder(String orderId, String password);
@@ -372,6 +372,8 @@ public interface IOrderManager {
     @Administrator
     public void changeOrderType(String orderId, String paymentTypeId);
     
+    public void changeOrderTypeByCheckout(String orderId, String paymentTypeId);
+    
     @Administrator
     public void sendReciept(String orderId, String email);
     
@@ -407,6 +409,9 @@ public interface IOrderManager {
 
     @Administrator
     public void deleteOrder(String orderId);
+
+    @Administrator
+    public void deleteOrCreditOrder(String orderId);
     
     @Administrator
     public String getEhfXml(String orderId);

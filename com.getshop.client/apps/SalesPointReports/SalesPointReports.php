@@ -257,7 +257,7 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
     }
     
     public function deleteOrder() {
-        $this->getApi()->getOrderManager()->deleteOrder($_POST['data']['orderid']);
+        $this->getApi()->getOrderManager()->deleteOrCreditOrder($_POST['data']['orderid']);
     }
 
     public function getSumTotalOfItems($items, $includeTaxes) {

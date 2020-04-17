@@ -179,6 +179,7 @@ class PmsRestrictions extends \WebshopApplication implements \Application {
         if($type == 7) { $prefix = "No check in"; }
         if($type == 8) { $prefix = "No check out"; }
         if($type == 9) { $prefix = "Minimum number of guests when booking in booking engine". " (" . $data->timePeriodeTypeAttribute ." guests)"; }
+        if($type == 10) { $prefix = "Deny pay later button"; }
         
         if($data->repeatPeride == "0") {
             $text = $prefix . " " . " daily";

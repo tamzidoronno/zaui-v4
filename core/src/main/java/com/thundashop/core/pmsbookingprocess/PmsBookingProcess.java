@@ -1807,8 +1807,13 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     private void checkForRestrictions(StartBookingResult result, StartBooking arg) {
         boolean remove = false;
         List<String> types = new ArrayList();
+        
+        boolean denyPayLater = false;
         for(BookingProcessRooms r : result.rooms) {
             r.minGuests = getMinGuestsCount(r, arg, result);
+            if(!denyPayLater) {
+                denyPayLater = denyPayLaterButton(r, arg, result);
+            }
             if (pmsManager.isRestricted(r.id, arg.start, arg.end, TimeRepeaterData.TimePeriodeType.min_stay)) {
                 remove = true;
                 result.errorMessage = "min_days:{arg}:" + pmsManager.getLatestRestrictionTime();
@@ -1820,6 +1825,10 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 types.add(r.id);
             }
         }
+        if(denyPayLater) {
+            result.supportPayLaterButton = false;
+        }
+        
         if(types.size() > 0) {
             removeAllRooms(result, types);
         }
@@ -1986,7 +1995,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                     continue;
                 }
                 for (TimeRepeaterDateRange range : ranges) {
-                    if(range.isBetweenTime(arg.start)) {
+                    if(range.intercepts(arg.start, arg.end)) {
                         Integer minguests = new Integer(res.timePeriodeTypeAttribute);
                         result.errorMessage = "min_guests:{arg}:" + minguests;
                         return minguests;
@@ -1997,5 +2006,27 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             logPrintException(e);
         }
         return 1;
+    }
+    
+    private boolean denyPayLaterButton(BookingProcessRooms r, StartBooking arg, StartBookingResult result) {
+        try {
+            List<TimeRepeaterData> mingueststimes = bookingEngine.getOpeningHoursWithType(r.id, TimeRepeaterData.TimePeriodeType.denyPayLater);
+
+            TimeRepeater repeater = new TimeRepeater();
+            for (TimeRepeaterData res : mingueststimes) {
+                LinkedList<TimeRepeaterDateRange> ranges = repeater.generateRange(res);
+                if(!res.containsCategory(r.id)) {
+                    continue;
+                }
+                for (TimeRepeaterDateRange range : ranges) {
+                    if(range.intercepts(arg.start, arg.end)) {
+                        return true;
+                    }
+                }
+            }
+        }catch(Exception e) {
+            logPrintException(e);
+        }
+        return false;
     }
 }

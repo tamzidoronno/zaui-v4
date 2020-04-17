@@ -26,6 +26,7 @@ public class TimeRepeaterData implements Serializable {
         public static Integer noCheckIn = 7;
         public static Integer noCheckOut = 8;
         public static Integer minGuests = 9;
+        public static Integer denyPayLater = 10;
     }
     
     Integer repeatPeride = TimeRepeaterData.RepeatPeriodeTypes.daily;

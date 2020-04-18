@@ -40,7 +40,7 @@ class PmsAvailabilityDateSelector extends \MarketingApplication implements \Appl
         $res['+1week'] = "+1 week";
         
         $time = time();
-        for($i = 0; $i <= 12; $i++) {
+        for($i = 0; $i <= 18; $i++) {
             $res[date("m-Y", $time)] = date("M Y", $time);
             $time = strtotime("+1 month", $time);
         }

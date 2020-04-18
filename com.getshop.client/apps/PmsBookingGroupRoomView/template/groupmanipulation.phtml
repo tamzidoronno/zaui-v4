@@ -1,0 +1,63 @@
+<?php
+/* @var $this ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
+$menu = array();
+$menu['group_guests'] = "Guests";
+$menu['group_stay'] = "Stay";
+$menu['group_addons'] = "Addons";
+$menu['group_payments'] = "Payments";
+
+
+$icons = array();
+$icons['group_guests'] = "users";
+$icons['group_stay'] = "suitcase";
+$icons['group_addons'] = "plus";
+$icons['group_payments'] = "shopping-bag";
+
+$selected = "group_guests";
+if(isset($_POST['data']['subsection'])) {
+    $selected = $_POST['data']['subsection'];
+}
+
+$pmsSelectedRoom = $this->getPmsBookingRoom();
+if($pmsSelectedRoom->bookingItemTypeId == "gspmsconference") {
+    echo "<div style='font-size: 22px; padding: 20px;'>";
+    echo "You are currently browsing a conference.<br>You can either add events to it by clicking on the 'open conference' link or add sleepover rooms in the left hand side.";
+    echo "</div>";
+    return;
+}
+
+$first = true;
+echo "<div class='menurow'>";
+foreach($menu as $id => $val) {
+    $hide = "";
+    if($id == "confirmation") {
+        $hide = "display:none;";
+    }
+    if($id == "log") {
+        $hide = "display:none;";
+    }
+    $select = ($selected == $id) ? "selected" : "";
+    $firstClass = $first ? "first" : "";
+    echo "<span class='menubutton $select $firstClass' subsection='$id' style='$hide'>";
+    echo "<span ><div><i class='fa fa-" . $icons[$id] . "'></i></div></span>";
+    echo "<div>$val</div></span>";
+    $first = false;
+}
+echo "</div>";
+?>
+
+
+
+<?php
+if(in_array($selected,array_keys($menu))) {
+    echo "<div class='$selected' style='background-color:#fff;'>";
+    echo "<div style='padding: 20px;'>";
+    $this->includefile($selected);
+    echo "<div style='clear:both;'></div>";
+    echo "</div>";
+    echo "</div>";
+}
+
+
+
+?>

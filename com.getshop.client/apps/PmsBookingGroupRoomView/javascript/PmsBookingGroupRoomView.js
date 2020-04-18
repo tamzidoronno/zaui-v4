@@ -52,6 +52,8 @@ app.PmsBookingGroupRoomView = {
         $(document).on('click', '.PmsBookingGroupRoomView .craeteconference', this.loadCreateConferencePanel);
         $(document).on('click', '.PmsBookingGroupRoomView .overrideattendeescount', this.overrideAttendeesCount);
         $(document).on('click', '.PmsBookingGroupRoomView .markAllIncluded', this.markAllIncluded);
+        $(document).on('click', '.PmsBookingGroupRoomView .editGroup', this.changeGroupBookingView);
+        $(document).on('click', '.PmsBookingGroupRoomView .cancelgroupedit', this.cancelGroupEdit);
         
         $(document).on('keyup', '.PmsBookingGroupRoomView [searchtype]', this.searchGuests);
         $(document).on('keyup', '.PmsBookingGroupRoomView .searchconferencetitle', this.searchConference);
@@ -739,8 +741,10 @@ app.PmsBookingGroupRoomView = {
         thundashop.Ajax.simplePost($('.PmsBookingGroupRoomView'), 'saveGuestInformation', args);
     },
     changeRoom : function() {
-        lastScrollTopPosition = $('.roomsingroupinformation').scrollTop();
-        latestOverLayLoadingEvent.data.id = $(this).attr('roomid');
+       lastScrollTopPosition = $('.roomsingroupinformation').scrollTop();
+       latestOverLayLoadingEvent.data.id = $(this).attr('roomid');
+       delete latestOverLayLoadingEvent.data.groupview;
+
        thundashop.framework.reloadOverLayType2();
        if(!latestOverLayLoadingEvent.data.subsection) {
            latestOverLayLoadingEvent.data.subsection = "guests";
@@ -754,6 +758,18 @@ app.PmsBookingGroupRoomView = {
            latestOverLayLoadingEvent.data.subsection = "guests";
        }
        history.pushState(latestOverLayLoadingEvent, "page 2", "#roomid="+latestOverLayLoadingEvent.data.id + "&subsection="+latestOverLayLoadingEvent.data.subsection+"&confereceventid=" +latestOverLayLoadingEvent.data.eventid);
+    },
+    changeGroupBookingView : function() {
+       latestOverLayLoadingEvent.data.groupview = $(this).attr('bookingid');
+        latestOverLayLoadingEvent.data.subsection = "group_guests";
+       thundashop.framework.reloadOverLayType2();
+       history.pushState(latestOverLayLoadingEvent, "page 2", "#roomid="+latestOverLayLoadingEvent.data.id + "&subsection="+latestOverLayLoadingEvent.data.subsection+"&groupview="+ $(this).attr('bookingid'));
+    },
+    cancelGroupEdit : function() {
+       delete latestOverLayLoadingEvent.data.groupview;
+       latestOverLayLoadingEvent.data.subsection = "guests";
+       thundashop.framework.reloadOverLayType2();
+       history.pushState(latestOverLayLoadingEvent, "page 2", "#roomid="+latestOverLayLoadingEvent.data.id + "&subsection="+latestOverLayLoadingEvent.data.subsection);
     },
     changeSubType : function() {
        latestOverLayLoadingEvent.data.subsection = $(this).attr('subsection');

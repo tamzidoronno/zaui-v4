@@ -821,6 +821,55 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         $this->logEntries = $logs;
     }
 
+    public function removeAddons() {
+        $booking = $this->getPmsBooking();
+        $productId = $_POST['data']['productid'];
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        foreach($booking->rooms as $room) {
+            foreach($config->addonConfiguration as $addonItem) {
+                if($addonItem->productId == $productId) {
+                    $this->getApi()->getPmsManager()->addAddonsToBooking($this->getSelectedMultilevelDomainName(), $addonItem->addonType, $room->pmsBookingRoomId, true);
+                    break;
+                }
+            }
+        }
+        $this->currentBooking = null;
+    }
+    
+    public function addAddons() {
+        $booking = $this->getPmsBooking();
+        $productId = $_POST['data']['productid'];
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        foreach($booking->rooms as $room) {
+            foreach($config->addonConfiguration as $addonItem) {
+                if($addonItem->productId == $productId) {
+                    $this->getApi()->getPmsManager()->addAddonsToBookingIgnoreRestriction($this->getSelectedMultilevelDomainName(), $addonItem->addonType, $room->pmsBookingRoomId, false);
+                    break;
+                }
+            }
+        }
+        $this->currentBooking = null;
+    }
+    
+    
+    public function getSummary($summaries, $room) {
+        foreach ($summaries as $summary) {
+            if ($summary->pmsBookingRoomId == $room->pmsBookingRoomId) {
+                return $summary;
+            }
+        }
+        
+        return null;
+    }
+    
+    public function countNumberOfDays($room) {
+        $i = 0;
+        foreach ($room->priceMatrix as $date => $value) {
+            $i++;
+        }
+        return $i;
+    }
+    
     public function getDistinctMonthsAndYears($distinctDates) {
         $distinctList = array();
         foreach ($distinctDates as $date) {
@@ -874,17 +923,40 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         return false;
     }
 
+    
+    public function printGuestRow($guest) {
+        $prefix = $guest->prefix;
+        if(!$prefix) {
+            $prefix = $this->getDefaultPrefix();
+        }
+        echo "<div style='margin-bottom: 2px;' class='guestrow'>";
+        echo "<span class='shop_button removeguestrow' style='margin-right:5px;border-radius:5px;'><i class='fa fa-trash-o'></i></span>";
+        echo "<input type='text' class='gsniceinput1' gsname='name' value='".$guest->name."' style='margin-right: 10px;'>";
+        echo "<input type='text' class='gsniceinput1' gsname='email' value='".$guest->email."' style='margin-right: 10px;'>";
+        echo "<input type='text' class='gsniceinput1' gsname='prefix' value='".$prefix."' style='width: 30px;margin-right: 10px;'>";
+        echo "<input type='text' class='gsniceinput1' gsname='phone' value='".$guest->phone."' style='margin-right: 10px;'>";
+        echo "<input type='hidden' class='gsniceinput1' gsname='guestId' value='".$guest->guestId."'>";
+        echo "</div>";
+    }
+    
     public function setRoomId($id) {
         $this->pmsBooking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $id);
         
+        $setFirst = false;
+        if(!$this->pmsBooking) {
+            $this->pmsBooking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedMultilevelDomainName(), $id);
+            $setFirst = true;
+        }
+        
         foreach($this->pmsBooking->rooms as $room) {
-            if($room->pmsBookingRoomId == $id) {
+            if($room->pmsBookingRoomId == $id || $setFirst) {
                 $this->pmsBookingRoom = $room;
+                break;
             }
         }
     }
       public function getDefaultPrefix() {
-        if($this->defaultPrefix) {
+        if(isset($this->defaultPrefix) && $this->defaultPrefix) {
             return $this->defaultPrefix;
         }
         

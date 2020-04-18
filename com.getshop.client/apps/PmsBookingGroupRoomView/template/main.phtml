@@ -95,24 +95,47 @@ if($willbedeleted) {
             <div class='groupandroominformation flip-card-front'>
                 <?php if(!$flipToConference) { ?>
                     <div class='groupheaderinformation boxed'>
-                        <h2>Rooms in group</h2>
-                        <div class='roomsingroupinformation'>
-                            <?php 
-                            $this->includefile("roomsingroup"); 
-                            $start = date("d.m.Y", time());
-                            $end = date("d.m.Y", time()+86400);
+                        <?php
+                        if(isset($_POST['data']['groupview'])) {
                             ?>
-                        </div>
-                        <div class='bookinghighlightcolor addanotherroomtogroup' style='width:100%;box-sizing: border-box;margin-top: 3px;text-align: center; cursor:pointer;'
-                             start='<?php echo $start; ?>' 
-                             end='<?php echo $end; ?>' 
-                             style='float:right; margin-right: 5px; background-color:green;' 
-                             bookingId='<?php echo $this->getPmsBooking()->id; ?>'>Add another room</div>
-                        <div class='addanotherroompopup' gstype='form' method='addAnotherRoom'></div>
+                            <center>
+                                <h2>Editing in group mode</h2>
+                                <bR>
+                                Do your magic to the right.
+                                <bR>
+                                <bR>
+                                <span class="bookinghighlightcolor cancelgroupedit" style='cursor:pointer;'>Cancel group edit</span>
+                            </center>
+                            <?php
+                        } else {
+                            ?>
+                            <span class='bookinghighlightcolor editGroup' bookingid="<?php echo $pmsBooking->id; ?>" style='margin-top: 5px; text-align: center; cursor:pointer; float:right;'>edit group</span>
+                            <h2>Rooms in group</h2>
+                            <div class='roomsingroupinformation'>
+                                <?php 
+                                $this->includefile("roomsingroup"); 
+                                $start = date("d.m.Y", time());
+                                $end = date("d.m.Y", time()+86400);
+                                ?>
+                            </div>
+                            <div class='bookinghighlightcolor addanotherroomtogroup' style='width:100%;box-sizing: border-box;margin-top: 3px;text-align: center; cursor:pointer;'
+                                 start='<?php echo $start; ?>' 
+                                 end='<?php echo $end; ?>' 
+                                 style='float:right; margin-right: 5px; background-color:green;' 
+                                 bookingId='<?php echo $this->getPmsBooking()->id; ?>'>Add another room</div>
+                            <div class='addanotherroompopup' gstype='form' method='addAnotherRoom'></div>
+                        <?php } ?>
                     </div>
 
                     <div class='bookerinformation boxed'>
-                        <?php $this->includefile("roominformation"); ?>
+                        <?php
+                        if(isset($_POST['data']['groupview'])) {
+                            $this->includefile("groupmanipulation");
+                        } else {
+                            $this->includefile("roominformation");
+                        }
+                        
+                        ?>
                     </div>
                 <? } ?>
                 <div style='clear:both;'></div>

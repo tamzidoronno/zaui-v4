@@ -7,6 +7,46 @@ class PmsAvailabilityDateSelector extends \MarketingApplication implements \Appl
     public function getDescription() {
         
     }
+    
+    public function quickDateSelection() {
+        
+        $app = new \ns_28886d7d_91d6_409a_a455_9351a426bed5\PmsAvailability();
+        
+        $date = $_POST['data']['date'];
+        if($date == "+1day") {
+            $start = $app->getStartDate();
+            $end = $app->getEndDate();
+            $app->setStartDate(date("d.m.Y", strtotime("+1 day", $start)));
+            $app->setEndDate(date("d.m.Y", strtotime("+1 day", $end)));
+        } else if($date == "+1week") {
+            $start = $app->getStartDate();
+            $end = $app->getEndDate();
+            $app->setStartDate(date("d.m.Y", strtotime("+1 week", $start)));
+            $app->setEndDate(date("d.m.Y", strtotime("+1 week", $end)));
+        } else {
+            $dates = explode("-", $date);
+            $month = $dates[0];
+            $year = $dates[1];
+            $start = "01.$month.$year";
+            $end = date("t.m.Y", strtotime($start));
+            $app->setStartDate($start);
+            $app->setEndDate($end);
+        }
+    }
+    
+    public function getQuickDates() {
+        $res = array();
+        $res['+1day'] = "+1 day";
+        $res['+1week'] = "+1 week";
+        
+        $time = time();
+        for($i = 0; $i <= 12; $i++) {
+            $res[date("m-Y", $time)] = date("M Y", $time);
+            $time = strtotime("+1 month", $time);
+        }
+        return $res;
+    }
+    
 
     public function getName() {
         return "PmsAvailabilityDateSelector";

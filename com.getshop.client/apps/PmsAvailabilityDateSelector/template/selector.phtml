@@ -28,6 +28,22 @@ $time = strtotime("01.02.2020");
     getshop_loadDatePicker($('[gsname="endate"]'), { dependant : $('[gsname="startdate"]'), jump : -1 });
 </script>
 
+<?php
+$dates = $this->getQuickDates();
+?>
+
+<div class="gs_headerbox">
+    <div>Quick menu</div>
+     <select id='quickdateselector'>
+        <option value='category'>Quick date selection</option>
+        <?php
+        foreach($dates as $key => $date) {
+            echo "<option value='$key'>$date</option>";
+        }
+        ?>
+    </select>
+</div>
+
 <div class="gs_headerbox">
     <div>
         <?

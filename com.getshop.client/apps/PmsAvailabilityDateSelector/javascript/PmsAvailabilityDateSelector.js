@@ -2,8 +2,16 @@ app.PmsAvailabilityDateSelector = {
     init: function() {
         $(document).on('click', '.PmsAvailabilityDateSelector .gs_headerbox i', app.PmsAvailabilityDateSelector.focusDate);
         $(document).on('click', '.PmsAvailabilityDateSelector .updateavailability', app.PmsAvailabilityDateSelector.changed);
+        $(document).on('change', '.PmsAvailabilityDateSelector #quickdateselector', app.PmsAvailabilityDateSelector.quickChangeDates);
     },
-    
+    quickChangeDates : function() {
+        var data = {
+            "date" : $(this).val()
+        }
+        
+        var event = thundashop.Ajax.createEvent('','quickDateSelection',$(this), data);
+        thundashop.Ajax.post(event);
+    },
     changed: function() {
         var cats = [];
         $('.typesinput').each(function() {

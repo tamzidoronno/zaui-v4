@@ -9,7 +9,6 @@ $extraArgs['userid'] = $user->id;
 
 ?>
 <div class='masseditguests'>
-    <div class="title"><? echo $this->__("GUESTS"); ?></div>
     <?php
 
     foreach($booking->rooms as $room) {
@@ -45,7 +44,7 @@ $extraArgs['userid'] = $user->id;
     }
     ?>
     <div style="text-align:right;">
-        <span class='shop_button updateguestinformation'>Update guest information</span>
+        <span class='shop_button updateguestinformation' bookingid='<?php echo $pmsBooking->id; ?>'>Update guest information</span>
     </div>
 
     <div class="guestrowtemplate">

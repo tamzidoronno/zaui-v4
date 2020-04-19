@@ -1,4 +1,8 @@
-    <div class="massstayaction">
+<?php
+/* @var $this ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
+$pmsBooking = $this->getPmsBooking();
+?>
+<div class="massstayaction">
         <div class='massupdatebox'>
             <div class='header'>Check in / Check out date</div>
             <div class='massupdatedateform'>
@@ -22,6 +26,7 @@
             </div>
         </div>
         <div class='massupdatebox' style='border-right: solid 0px;' gstype='form' method='massUpdateRoomPrice'>
+            <input type='hidden' gsname='roomid' value='<?php echo $pmsBooking->id; ?>'>
             <div class='header'>Pricing</div>
             <div style='text-align: center;margin-bottom:5px;'><input class='gsniceinput1' style='width:80px;' gsname='price'></div>
             <span class='shop_button dopriceupdate' type='start' style='width:170px;' gstype='submit'>Set new room price</span>
@@ -33,6 +38,8 @@
 /* @var $this ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
 $booking = $this->getPmsBooking();
 echo "<div gstype='form' method='updateStayPeriode'>";
+ echo "<input type='hidden' gsname='roomid' value='".$pmsBooking->id."'>";
+
 foreach($booking->rooms as $room) {
     if($room->deleted) { continue; }
     echo "<div class='roomrow' roomid='".$room->pmsBookingRoomId."'>";
@@ -80,13 +87,14 @@ foreach($booking->rooms as $room) {
     echo "<input type='text' class='gsniceinput1 calendarinput roomsenddate' style='width:80px;text-align:center;' value='".date("d.m.Y", strtotime($room->date->end))."' gsname='end_".$room->pmsBookingRoomId."'>";
     echo "<input type='text' class='gsniceinput1 roomsendtime' style='width:40px;text-align:center;' value='".date("H:i", strtotime($room->date->end))."' gsname='endtime_".$room->pmsBookingRoomId."'>";
     echo "</div>";
-    if(isset($this->notChangedError[$room->pmsBookingRoomId])) {
-        echo "<div class='error'>" . $this->notChangedError[$room->pmsBookingRoomId]. "</div>";
+    if(isset($_SESSION['notChangedError'][$room->pmsBookingRoomId])) {
+        echo "<div class='error'>" . $_SESSION['notChangedError'][$room->pmsBookingRoomId]. "</div>";
     }
     echo "</div>";
 }
 echo "<div style='text-align:right;'><span class='shop_button' gstype='submit'>Try to update all stay</span></div>";
 echo "</div>";
+unset($_SESSION['notChangedError']);
 ?>
 
 <style>

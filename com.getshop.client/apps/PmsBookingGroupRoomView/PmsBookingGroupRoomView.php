@@ -15,6 +15,48 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         
     }
     
+    
+    public function updateStayPeriode() {
+        $booking = $this->getPmsBooking();
+        $_SESSION['notChangedError'] = array();
+        foreach($booking->rooms as $room) {
+            $start = $_POST['data']['start_'.$room->pmsBookingRoomId] . " " . $_POST['data']['starttime_'.$room->pmsBookingRoomId];
+            $end = $_POST['data']['end_'.$room->pmsBookingRoomId] . " " . $_POST['data']['endtime_'.$room->pmsBookingRoomId];
+            
+            $start = $this->convertToJavaDate(strtotime($start));
+            $end = $this->convertToJavaDate(strtotime($end));
+            
+            $res = $this->getApi()->getPmsManager()->changeDates($this->getSelectedMultilevelDomainName(), $room->pmsBookingRoomId, $booking->id, $start, $end);
+            if(!$res) {
+                $_SESSION['notChangedError'][$room->pmsBookingRoomId] = "Unable to change date on this room";
+            }
+        }
+        $this->currentBooking = null;
+    }
+    
+    
+    public function massUpdateRoomPrice() {
+        $price = $_POST['data']['price'];
+        $booking = $this->getPmsBooking();
+        foreach($booking->rooms as $room) {
+            foreach($room->priceMatrix as $day => $val) {
+                $room->priceMatrix->{$day} = $price;
+            }
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+        $this->currentBooking = null;
+    }
+    
+    
+    public function massUpdateGuests() {
+        $booking = $this->getPmsBooking();
+        foreach($booking->rooms as $room) {
+            $room->numberOfGuests = sizeof($_POST['data']['guests'][$room->pmsBookingRoomId]);
+            $room->guests = $_POST['data']['guests'][$room->pmsBookingRoomId];
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+    }
+    
     public function getConfirmationContent() {
         $msgs = $this->getApi()->getPmsNotificationManager()->getAllMessages($this->getSelectedMultilevelDomainName());
          

@@ -19,12 +19,6 @@ if(isset($_POST['data']['subsection'])) {
 }
 
 $pmsSelectedRoom = $this->getPmsBookingRoom();
-if($pmsSelectedRoom->bookingItemTypeId == "gspmsconference") {
-    echo "<div style='font-size: 22px; padding: 20px;'>";
-    echo "You are currently browsing a conference.<br>You can either add events to it by clicking on the 'open conference' link or add sleepover rooms in the left hand side.";
-    echo "</div>";
-    return;
-}
 
 $first = true;
 echo "<div class='menurow'>";

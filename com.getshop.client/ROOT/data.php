@@ -65,7 +65,6 @@ if (isset($_POST['event']) && $_POST['event']) {
 }
 
 $appInstance->page = $page;
-
 if (isset($_POST['synchron'])) {
     die();
 }

@@ -1393,7 +1393,7 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         if(isset($_SESSION['newbookingviewtoggled']) && $_SESSION['newbookingviewtoggled']) {
             return true;
         }
-        return false;
+        return true;
     }
 
     public function getSelectedRoomId() {
@@ -1607,7 +1607,10 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
      */
     public function getPmsConfiguration() {
           if($this->config == null) {
+            $start = microtime(true);
             $this->config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+//            echo "Get config: " . ((microtime(true)-$start)*1000) . "<br>";
+            
         }
         return $this->config;
     }

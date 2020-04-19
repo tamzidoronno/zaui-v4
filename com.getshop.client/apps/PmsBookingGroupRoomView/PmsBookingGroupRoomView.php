@@ -10,6 +10,7 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
     private $eventItems;
     private $eventEntries;
     private $config;
+    private $loadingFromReportView;
     
     public function getDescription() {
         
@@ -505,6 +506,12 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         $this->getPmsBooking();
         $this->clearCache();
         exit(0);
+    }
+    
+    public function loadBooking() {
+        $pmsBookingGroupView = new \ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView();
+        $pmsBookingGroupView->setRoomId($_POST['data']['id']);
+        $pmsBookingGroupView->renderApplication(true, $this, true);
     }
     
     public function updateTimelineDates() {
@@ -1665,6 +1672,18 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         }
         
         return \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isGetShopUser();
+    }
+
+    public function listTimeLine() {
+        $this->includefile("conference_timeline");
+    }
+
+    public function loadFromReportView() {
+        $this->loadingFromReportView = true;
+    }
+
+    public function loadingFromReportView() {
+        return $this->loadingFromReportView;
     }
 
 }

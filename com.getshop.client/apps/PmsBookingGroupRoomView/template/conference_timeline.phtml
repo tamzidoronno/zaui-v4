@@ -98,7 +98,10 @@ echo "</span>";
             if(!$this->loadingFromReportView() && $event->pmsConferenceId == $this->getPmsBooking()->conferenceId) {
                 $thisConference = "thisconferenceevententry";
             }
-            $roomid = $conferences[$event->pmsConferenceId];
+            $roomid = "";
+            if(isset($conferences[$event->pmsConferenceId])) {
+                $roomid = $conferences[$event->pmsConferenceId];
+            }
             $betweendate = date("H:i", strtotime($event->from)) . " - " . date("H:i", strtotime($event->to));
             echo "<span method='loadBooking' gs_show_overlay='booking_room_view' id='$roomid' class='evententry $thisConference' start='".strtotime($event->from)."' end='".strtotime($event->to)."' title='".$event->name." ($betweendate)'>".$event->name."</span>";
         }

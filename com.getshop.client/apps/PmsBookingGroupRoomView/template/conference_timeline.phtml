@@ -26,13 +26,26 @@ if($diff <= 86400) {
     $dateheader = "hours";
 }
 
-?>
-<div gstype='form' method='updateTimelineDates'>
-    <input type='txt' class='gsniceinput1' gsname='start' value='<?php echo $start; ?>' style='width:80px;'>
-    <input type='txt' class='gsniceinput1' gsname='end' value='<?php echo $end; ?>' style='width:80px;'>
-    <div class='shop_button' gstype='submit'>Update date range</div>
-</div>
 
+$filter = new \core_pmsmanager_PmsConferenceFilter();
+$filter->start = $this->convertToJavaDate(strtotime($this->getTimeLineStart()));
+$filter->end = $this->convertToJavaDate(strtotime($this->getTimeLineEnd()));
+
+// TODO - Make filter of list to date range.
+$conferenceBooking = $this->getApi()->getPmsManager()->getConferenceBookings($this->getSelectedMultilevelDomainName(), $filter);
+$conferences = array();
+foreach ($conferenceBooking as $conferenceBooking) {
+     $conferences[$conferenceBooking->conferenceId] = $conferenceBooking->rooms[0]->pmsBookingRoomId;
+}
+
+if(!$this->loadingFromReportView()) {
+    ?>
+    <div gstype='form' method='updateTimelineDates'>
+        <input type='txt' class='gsniceinput1' gsname='start' value='<?php echo $start; ?>' style='width:80px;'>
+        <input type='txt' class='gsniceinput1' gsname='end' value='<?php echo $end; ?>' style='width:80px;'>
+        <div class='shop_button' gstype='submit'>Update date range</div>
+    </div>
+<? } ?>
 <br><bR>
 
 <div class='hoursarea'>
@@ -80,12 +93,17 @@ echo "</span>";
         $events = (array)$this->getApi()->getPmsConferenceManager()->getConferenceEventsByFilter($filter);
         echo "<span class='eventsarea'>";
         foreach($events as $event) {
+            /* @var $event core_pmsmanager_PmsConferenceEvent */
             $thisConference = "";
-            if($event->pmsConferenceId == $this->getPmsBooking()->conferenceId) {
+            if(!$this->loadingFromReportView() && $event->pmsConferenceId == $this->getPmsBooking()->conferenceId) {
                 $thisConference = "thisconferenceevententry";
             }
+            $roomid = "";
+            if(isset($conferences[$event->pmsConferenceId])) {
+                $roomid = $conferences[$event->pmsConferenceId];
+            }
             $betweendate = date("H:i", strtotime($event->from)) . " - " . date("H:i", strtotime($event->to));
-            echo "<span class='evententry $thisConference' start='".strtotime($event->from)."' end='".strtotime($event->to)."' title='".$event->name." ($betweendate)'>".$event->name."</span>";
+            echo "<span method='loadBooking' gs_show_overlay='booking_room_view' id='$roomid' class='evententry $thisConference' start='".strtotime($event->from)."' end='".strtotime($event->to)."' title='".$event->name." ($betweendate)'>".$event->name."</span>";
         }
         echo "</span>";
         echo "</span>";
@@ -108,6 +126,7 @@ echo "</span>";
     .eventsinitem { position:absolute; top: 0px; }
     .evententry { position:absolute; width: 0px;border-radius: 3px;
         white-space: nowrap;
+        cursor:pointer;
         overflow: hidden;
         padding-left: 3px; padding-right: 3px;
         text-overflow: ellipsis;
@@ -119,7 +138,7 @@ echo "</span>";
         text-align: center;
         background-color:green;
         color:#fff;
-        z-index: 2;
+        z-index: 1;
         line-height: 16px;
     }
     

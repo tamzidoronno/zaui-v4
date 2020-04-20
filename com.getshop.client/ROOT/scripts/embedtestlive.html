@@ -14,22 +14,17 @@
     </div>
 <script>
     gsisdevmode = false;
-    getshop_websockethost = "websocket5.getshop.com";
-
-    var translations = {};
-    translations['validDiscountCodes'] = "Militær eller student?";
-
+//    getshop_websockethost = "websocket6.getshop.com";
     $ = jQuery;
     jQuery(function ($) {
-        $.getScript("https://sverre.kronen.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
+        $.getScript("https://20505gc6.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
             $("#bookingprocess").getshopbooking(
                 {
-                    "endpoint": "https://sverre.kronen.getshop.com/",
-                    "jsendpoint": "https://sverre.kronen.getshop.com/",
+                    "endpoint": "https://20505gc6.getshop.com/",
+                    "jsendpoint": "https://20505gc6.getshop.com/",
                     "domain" : "default",
                     "language" : "no",
-                    "websocket" : "websocket5.getshop.com",
-                    "translation" : translations
+                    "websocket" : "websocket6.getshop.com"
                 }
             );
         });

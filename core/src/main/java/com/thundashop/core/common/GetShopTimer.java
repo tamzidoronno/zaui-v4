@@ -73,7 +73,7 @@ public class GetShopTimer {
     }
     
     public static void timeEntry(String description, String managerName) {
-        timers.addLogEntry(description, managerName);
+//        timers.addLogEntry(description, managerName);
     }
     
     public static String getPrintedTiming() {

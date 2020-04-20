@@ -1,0 +1,120 @@
+<?php
+/* @var $this ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
+$pmsBooking = $this->getPmsBooking();
+?>
+<div class="massstayaction">
+        <div class='massupdatebox'>
+            <div class='header'>Check in / Check out date</div>
+            <div class='massupdatedateform'>
+                <input type='text' class='gsniceinput1 massupdatestart datecheck' style='width:80px;'> 
+                <input type='text' class='gsniceinput1 massupdatestarttime timecheck' style='width:40px;' value='12:00'> 
+                <span class='shop_button domassupdate' type='start' style='width:170px;'>Change checkin date</span>
+            </div>
+            <div style='margin-top:3px;' class='massupdatedateform'>
+                <input type='text' class='gsniceinput1 massupdateend datecheck' style='width:80px;'> 
+                <input type='text' class='gsniceinput1 massupdateendtime timecheck' style='width:40px;' value='10:00'> 
+                <span class='shop_button domassupdate' type='end' style='width:170px;'>Change checkout date</span>
+            </div>
+        </div>
+        <div class='massupdatebox'>
+            <div class='header'>Extend stay</div>
+            <div class='massupdatedateform'>
+                <div style='text-align: center;margin-bottom:5px;'>
+                    <input type='text' class='gsniceinput1 checkoutdate' style='width:80px;' placeholder='Checkout'> 
+                    <input class='gsniceinput1 extendstaydaysinput' style='width:30px;' placeholder='days'></div>
+                <span class='shop_button doextendstay' type='start' style='width:170px;'>Extend by days</span>
+            </div>
+        </div>
+        <div class='massupdatebox' style='border-right: solid 0px;' gstype='form' method='massUpdateRoomPrice'>
+            <input type='hidden' gsname='roomid' value='<?php echo $pmsBooking->id; ?>'>
+            <div class='header'>Pricing</div>
+            <div style='text-align: center;margin-bottom:5px;'><input class='gsniceinput1' style='width:80px;' gsname='price'></div>
+            <span class='shop_button dopriceupdate' type='start' style='width:170px;' gstype='submit'>Set new room price</span>
+        </div>
+        <div style='clear:both;'></div>
+    </div>
+
+<?php
+/* @var $this ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
+$booking = $this->getPmsBooking();
+echo "<div gstype='form' method='updateStayPeriode'>";
+ echo "<input type='hidden' gsname='roomid' value='".$pmsBooking->id."'>";
+
+foreach($booking->rooms as $room) {
+    if($room->deleted) { continue; }
+    echo "<div class='roomrow' roomid='".$room->pmsBookingRoomId."'>";
+    $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $room->bookingItemTypeId);
+    $start = date("d.m.Y H:i", strtotime($room->date->start));
+    $end = date("d.m.Y H:i", strtotime($room->date->end));
+    $guests = array();
+    foreach($room->guests as $guest) {
+        if($guest->name) {
+            $guests[] = $guest->name;
+        }
+    }
+    $guests = join(", ", $guests);
+    echo "<div class='header'>";
+    echo "<div style='text-align:right;'>";
+    echo "<span style='display:inline-block;float:left; width: 40%; text-align:left;'>";
+    echo "<span style='padding-top: 5px;'>" . $type->name;
+    if($guests) {
+        echo " - " . $guests;
+    } else {
+        echo " - no guest name";
+    }
+    echo "</span>";
+    echo "</span>";
+    
+    $roomPrice = 0;
+    $days = 0;
+    foreach($room->priceMatrix as $price) {
+        $days++;
+        $roomPrice += $price;
+    }
+    
+    echo "<span style=float:left;'>".$room->totalCost. "/" . round($roomPrice/$days). "</span>";
+    
+    if($room->bookingItemId) {
+        $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $room->bookingItemId);
+        echo $item->bookingItemName;
+    } else {
+        echo "floating";
+    }
+    echo " ";
+    
+    echo "<input type='text' class='gsniceinput1 calendarinput roomstartdate' style='width:80px;text-align:center;' value='".date("d.m.Y", strtotime($room->date->start))."' gsname='start_".$room->pmsBookingRoomId."'>";
+    echo "<input type='text' class='gsniceinput1 roomstarttime' style='margin-right: 15px; width:40px;text-align:center;' value='".date("H:i", strtotime($room->date->start))."' gsname='starttime_".$room->pmsBookingRoomId."'>";
+    echo "<input type='text' class='gsniceinput1 calendarinput roomsenddate' style='width:80px;text-align:center;' value='".date("d.m.Y", strtotime($room->date->end))."' gsname='end_".$room->pmsBookingRoomId."'>";
+    echo "<input type='text' class='gsniceinput1 roomsendtime' style='width:40px;text-align:center;' value='".date("H:i", strtotime($room->date->end))."' gsname='endtime_".$room->pmsBookingRoomId."'>";
+    echo "</div>";
+    if(isset($_SESSION['notChangedError'][$room->pmsBookingRoomId])) {
+        echo "<div class='error'>" . $_SESSION['notChangedError'][$room->pmsBookingRoomId]. "</div>";
+    }
+    echo "</div>";
+}
+echo "<div style='text-align:right;'><span class='shop_button' gstype='submit'>Try to update all stay</span></div>";
+echo "</div>";
+unset($_SESSION['notChangedError']);
+?>
+
+<style>
+    .header { font-weight: bold; font-size: 16px; margin-bottom: 5px;padding-left:0px; }
+    .date {
+        float:right;
+    }
+    .rowheader { width: 220px; display:inline-block; font-weight: bold;}
+    .guestrowtemplate { display:none; }
+    .error { color:red; font-size: 12px; font-style: italic; }
+</style>
+
+<script>
+    $('.calendarinput').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+    $('.massupdatestart').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+    $('.massupdateend').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+    $('.checkoutdate').datepicker({ dateFormat: "dd.mm.yy", changeMonth: true, changeYear: true, showButtonPanel: true });
+</script>
+<style>
+    .massstayaction {background-color:#fff; padding: 5px; margin-bottom: 10px; margin-bottom: 30px;  border-bottom: solid 1px #bbb;  margin-bottom: 40px; padding-bottom: 30px; }
+    .massupdatebox {  display:inline-block; padding: 10px; height: 100px; width: 30%; text-align: center; }
+    .massupdatebox .header { text-align: center; }
+</style>

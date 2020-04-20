@@ -1,0 +1,53 @@
+<?php
+/* @var $this ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
+$products = $this->getApi()->getProductManager()->getAllProductsLight();
+$rooms = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+$booking = $this->getPmsBooking();
+$roomProducts = array();
+foreach($rooms as $room) {
+    $roomProducts[] = $room->productId;
+}
+foreach($products as $product) {
+    if(in_array($product->id, $roomProducts)) {
+        continue;
+    }
+    if($product->deactivated) {
+        continue;
+    }
+    
+    $count = 0;
+    foreach($booking->rooms as $room) {
+        foreach($room->addons as $addon) {
+            if($addon->productId == $product->id) {
+                $count += $addon->count;
+            }
+        }
+    }
+    $added = "";
+    if($count > 0) {
+        $added = "<span class='alreadyaddedcount'>$count added</span>";
+    }
+    ?>
+<div class='productrow'>
+    <span class='name'><?php echo $product->name; ?></span>
+    <span class='buttons'>
+        <?php echo $added;
+        
+        if($count == 0) {
+        ?>
+            <span class='shop_button' gsclick='addAddons' productid='<?php echo $product->id; ?>' roomid='<?php echo $booking->id; ?>' >Add addons</span>
+        <? } else { ?>
+            <span class='shop_button' gsclick='removeAddons' productid='<?php echo $product->id; ?>' roomid='<?php echo $booking->id; ?>' style='background-color:red;'>Remove addons</span>
+        <?php } ?>
+    </span>
+    <div style='clear:both;'></div>
+</div>
+    <?php
+}
+
+?>
+<style>
+    .buttons { float:right; }
+    .productrow { margin-bottom: 2px; font-size: 18px; border-bottom: solid 1px #fff; }
+    .productrow:hover { border-bottom: solid 1px #bbb; }
+</style>

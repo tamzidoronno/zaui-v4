@@ -1,0 +1,66 @@
+<?php
+/* @var $this ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
+$pmsBooking = $this->getPmsBooking();
+$booking = $pmsBooking;
+$user = $this->getApi()->getUserManager()->getUserById($pmsBooking->userId);
+
+$extraArgs = array();
+$extraArgs['userid'] = $user->id;
+
+?>
+<div class='masseditguests'>
+    <?php
+
+    foreach($booking->rooms as $room) {
+        if($room->deleted) { continue; }
+        echo "<div class='roomrowouter'>";
+        echo "<div class='roomrow' roomid='".$room->pmsBookingRoomId."'>";
+        $type = $this->getApi()->getBookingEngine()->getBookingItemType($this->getSelectedMultilevelDomainName(), $room->bookingItemTypeId);
+        echo "<div class='header'>";
+        echo $type->name;
+        if($room->bookingItemId) {
+            $item = $this->getApi()->getBookingEngine()->getBookingItem($this->getSelectedMultilevelDomainName(), $room->bookingItemId);
+            echo " (" . $item->bookingItemName . ")";
+        }
+
+        echo "<span class='date'>" . date("d.m.Y H:i", strtotime($room->date->start)) . " - " . date("d.m.Y H:i", strtotime($room->date->end)) . "</span>";
+        echo "</div>";
+        ?>
+        <span class='rowheader' style='margin-right:15px;'>Name <span class='setsameasbooker'>(set same as guest)</span></span>
+        <span class='rowheader' style='width:197px;'>Email</span>
+        <span class='rowheader rowheaderprefix' style='width:62px;'>Prefix</span>
+        <span class='rowheader'>Phone</span>
+        <?php
+        for($i = 0; $i < $room->numberOfGuests; $i++) {
+            $guest = new core_pmsmanager_PmsGuests();
+            if(isset($room->guests[$i])) {
+                $guest = $room->guests[$i];
+            }
+            $this->printGuestRow($guest);
+        }
+        echo "</div>";
+        echo "<span style='color:blue; cursor:pointer;' class='addanotherguest'>Add another guest</span>";
+        echo "</div>";
+    }
+    ?>
+    <div style="text-align:right;">
+        <span class='shop_button updateguestinformation' bookingid='<?php echo $pmsBooking->id; ?>'>Update guest information</span>
+    </div>
+
+    <div class="guestrowtemplate">
+        <?php
+         $guest = new core_pmsmanager_PmsGuests();
+         $this->printGuestRow($guest);
+        ?>
+    </div>
+</div>
+
+<style>
+    .header { font-weight: bold; border-bottom: solid 1px #bbb; font-size: 16px; padding: 10px; margin-bottom: 5px;padding-left:0px; }
+    .date {
+        float:right;
+    }
+    .rowheader { width: 220px; display:inline-block; font-weight: bold;}
+    .roomrowouter { padding-left: 10px; padding-right: 10px; }
+    .guestrowtemplate { display:none; }
+</style>

@@ -10,9 +10,52 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
     private $eventItems;
     private $eventEntries;
     private $config;
+    private $loadingFromReportView;
     
     public function getDescription() {
         
+    }
+    
+    
+    public function updateStayPeriode() {
+        $booking = $this->getPmsBooking();
+        $_SESSION['notChangedError'] = array();
+        foreach($booking->rooms as $room) {
+            $start = $_POST['data']['start_'.$room->pmsBookingRoomId] . " " . $_POST['data']['starttime_'.$room->pmsBookingRoomId];
+            $end = $_POST['data']['end_'.$room->pmsBookingRoomId] . " " . $_POST['data']['endtime_'.$room->pmsBookingRoomId];
+            
+            $start = $this->convertToJavaDate(strtotime($start));
+            $end = $this->convertToJavaDate(strtotime($end));
+            
+            $res = $this->getApi()->getPmsManager()->changeDates($this->getSelectedMultilevelDomainName(), $room->pmsBookingRoomId, $booking->id, $start, $end);
+            if(!$res) {
+                $_SESSION['notChangedError'][$room->pmsBookingRoomId] = "Unable to change date on this room";
+            }
+        }
+        $this->currentBooking = null;
+    }
+    
+    
+    public function massUpdateRoomPrice() {
+        $price = $_POST['data']['price'];
+        $booking = $this->getPmsBooking();
+        foreach($booking->rooms as $room) {
+            foreach($room->priceMatrix as $day => $val) {
+                $room->priceMatrix->{$day} = $price;
+            }
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+        $this->currentBooking = null;
+    }
+    
+    
+    public function massUpdateGuests() {
+        $booking = $this->getPmsBooking();
+        foreach($booking->rooms as $room) {
+            $room->numberOfGuests = sizeof($_POST['data']['guests'][$room->pmsBookingRoomId]);
+            $room->guests = $_POST['data']['guests'][$room->pmsBookingRoomId];
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
     }
     
     public function getConfirmationContent() {
@@ -465,6 +508,12 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         exit(0);
     }
     
+    public function loadBooking() {
+        $pmsBookingGroupView = new \ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView();
+        $pmsBookingGroupView->setRoomId($_POST['data']['id']);
+        $pmsBookingGroupView->renderApplication(true, $this, true);
+    }
+    
     public function updateTimelineDates() {
         $_SESSION['timelinestart'] = $_POST['data']['start'];
         $_SESSION['timelinesend'] = $_POST['data']['end'];
@@ -821,6 +870,55 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         $this->logEntries = $logs;
     }
 
+    public function removeAddons() {
+        $booking = $this->getPmsBooking();
+        $productId = $_POST['data']['productid'];
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        foreach($booking->rooms as $room) {
+            foreach($config->addonConfiguration as $addonItem) {
+                if($addonItem->productId == $productId) {
+                    $this->getApi()->getPmsManager()->addAddonsToBooking($this->getSelectedMultilevelDomainName(), $addonItem->addonType, $room->pmsBookingRoomId, true);
+                    break;
+                }
+            }
+        }
+        $this->currentBooking = null;
+    }
+    
+    public function addAddons() {
+        $booking = $this->getPmsBooking();
+        $productId = $_POST['data']['productid'];
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        foreach($booking->rooms as $room) {
+            foreach($config->addonConfiguration as $addonItem) {
+                if($addonItem->productId == $productId) {
+                    $this->getApi()->getPmsManager()->addAddonsToBookingIgnoreRestriction($this->getSelectedMultilevelDomainName(), $addonItem->addonType, $room->pmsBookingRoomId, false);
+                    break;
+                }
+            }
+        }
+        $this->currentBooking = null;
+    }
+    
+    
+    public function getSummary($summaries, $room) {
+        foreach ($summaries as $summary) {
+            if ($summary->pmsBookingRoomId == $room->pmsBookingRoomId) {
+                return $summary;
+            }
+        }
+        
+        return null;
+    }
+    
+    public function countNumberOfDays($room) {
+        $i = 0;
+        foreach ($room->priceMatrix as $date => $value) {
+            $i++;
+        }
+        return $i;
+    }
+    
     public function getDistinctMonthsAndYears($distinctDates) {
         $distinctList = array();
         foreach ($distinctDates as $date) {
@@ -874,17 +972,40 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         return false;
     }
 
+    
+    public function printGuestRow($guest) {
+        $prefix = $guest->prefix;
+        if(!$prefix) {
+            $prefix = $this->getDefaultPrefix();
+        }
+        echo "<div style='margin-bottom: 2px;' class='guestrow'>";
+        echo "<span class='shop_button removeguestrow' style='margin-right:5px;border-radius:5px;'><i class='fa fa-trash-o'></i></span>";
+        echo "<input type='text' class='gsniceinput1' gsname='name' value='".$guest->name."' style='margin-right: 10px;'>";
+        echo "<input type='text' class='gsniceinput1' gsname='email' value='".$guest->email."' style='margin-right: 10px;'>";
+        echo "<input type='text' class='gsniceinput1' gsname='prefix' value='".$prefix."' style='width: 30px;margin-right: 10px;'>";
+        echo "<input type='text' class='gsniceinput1' gsname='phone' value='".$guest->phone."' style='margin-right: 10px;'>";
+        echo "<input type='hidden' class='gsniceinput1' gsname='guestId' value='".$guest->guestId."'>";
+        echo "</div>";
+    }
+    
     public function setRoomId($id) {
         $this->pmsBooking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $id);
         
+        $setFirst = false;
+        if(!$this->pmsBooking) {
+            $this->pmsBooking = $this->getApi()->getPmsManager()->getBooking($this->getSelectedMultilevelDomainName(), $id);
+            $setFirst = true;
+        }
+        
         foreach($this->pmsBooking->rooms as $room) {
-            if($room->pmsBookingRoomId == $id) {
+            if($room->pmsBookingRoomId == $id || $setFirst) {
                 $this->pmsBookingRoom = $room;
+                break;
             }
         }
     }
       public function getDefaultPrefix() {
-        if($this->defaultPrefix) {
+        if(isset($this->defaultPrefix) && $this->defaultPrefix) {
             return $this->defaultPrefix;
         }
         
@@ -1272,7 +1393,7 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         if(isset($_SESSION['newbookingviewtoggled']) && $_SESSION['newbookingviewtoggled']) {
             return true;
         }
-        return false;
+        return true;
     }
 
     public function getSelectedRoomId() {
@@ -1486,7 +1607,10 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
      */
     public function getPmsConfiguration() {
           if($this->config == null) {
+            $start = microtime(true);
             $this->config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+//            echo "Get config: " . ((microtime(true)-$start)*1000) . "<br>";
+            
         }
         return $this->config;
     }
@@ -1551,6 +1675,18 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         }
         
         return \ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isGetShopUser();
+    }
+
+    public function listTimeLine() {
+        $this->includefile("conference_timeline");
+    }
+
+    public function loadFromReportView() {
+        $this->loadingFromReportView = true;
+    }
+
+    public function loadingFromReportView() {
+        return $this->loadingFromReportView;
     }
 
 }

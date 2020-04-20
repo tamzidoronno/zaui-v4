@@ -194,6 +194,19 @@ app.PmsAvailability = {
         $('.hatched').removeClass('hatched');
         $('.closemodalarea').hide();
     },
+    needAdjustmentTop : function(element) {
+        var elementTop = element.offset().top;
+        var elementBottom = elementTop + element.outerHeight() - $(window).scrollTop();
+        var viewportBottom = $(window).height();
+        return parseInt(elementBottom) - parseInt(viewportBottom)
+    },
+    needAdjustmentRight : function(element) {
+        var elementLeft = element.offset().left;
+        var elementRight = elementLeft + element.outerWidth();
+        var viewportWidth = $(window).width();
+        return parseInt(elementRight) - parseInt(viewportWidth)
+    },
+    
     endMarking : function(event) {
         if(!app.PmsAvailability.isMarking) {
             return;
@@ -244,6 +257,17 @@ app.PmsAvailability = {
             if($('.selectedforbooking').length > 0) {
                 $('.PmsAvailability .startbookingprocess').click();
             }
+            var moveUp = app.PmsAvailability.needAdjustmentTop(modal);
+            if(moveUp > 0) {
+                var newTop = modal.offset().top - moveUp - $(window).scrollTop();
+                modal.css('top',newTop + "px");
+            }
+            var moveRight = app.PmsAvailability.needAdjustmentRight(modal);
+            if(moveRight > 0) {
+                var newLeft = modal.offset().left - moveRight;
+                modal.css('left',newLeft + "px");
+            }
+            
         });
     },
     
@@ -308,15 +332,11 @@ app.PmsAvailability = {
             }
         }
         
-        console.log(cols);
-        console.log("================================");
     },
     onDragLeave : function(event) {
         if ($(event.target).hasClass('fullname')) {
             return;
         };
-        
-        console.log(event.target);
         
         $('.col_outer').removeClass('showdroppossible');
     },
@@ -336,7 +356,6 @@ app.PmsAvailability = {
             newStartDate : app.PmsAvailability.findDragStartDate()
         }
         
-        console.log(data);
         var event = thundashop.Ajax.createEvent(null, "setNewStartDateAndRoomId", event.target, data);
         thundashop.Ajax.post(event);
     },

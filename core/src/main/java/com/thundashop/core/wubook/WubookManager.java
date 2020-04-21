@@ -430,6 +430,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 long diff = new Date().getTime() - disableWubook.getTime();
                 if(diff < (10*60*1000)) {
                     logText("Fetch new booking disabled from : " + disableWubook);
+                    lastPulledWubook = new Date();
                     return;
                 }
             }

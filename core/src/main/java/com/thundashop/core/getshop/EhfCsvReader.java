@@ -26,7 +26,7 @@ public class EhfCsvReader {
     }
     
     private List<String[]> readCsv() throws Exception {
-        List<String> texts = getText("http://hotell.difi.no/download/difi/elma/participants?download");
+        List<String> texts = getText("https://hotell.difi.no/download/difi/elma/participants?download");
         
         BufferedReader br = null;
         String cvsSplitBy = ";";

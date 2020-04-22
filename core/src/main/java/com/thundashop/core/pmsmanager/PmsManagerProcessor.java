@@ -1406,6 +1406,11 @@ public class PmsManagerProcessor {
     }
 
     private void autoCreateInvoice() {
+        
+        if(!manager.getConfigurationSecure().autoCreateInvoices) {
+            return;
+        }
+        
         List<PmsBooking> bookings = getAllConfirmedNotDeleted(true);
         for(PmsBooking booking : bookings) {
             if(booking.isEnded() && booking.createOrderAfterStay) {

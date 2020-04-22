@@ -1406,14 +1406,9 @@ public class PmsManagerProcessor {
     }
 
     private void autoCreateInvoice() {
-        
-        if(!manager.getConfigurationSecure().autoCreateInvoices) {
-            return;
-        }
-        
         List<PmsBooking> bookings = getAllConfirmedNotDeleted(true);
         for(PmsBooking booking : bookings) {
-            if(booking.isEnded() && booking.createOrderAfterStay) {
+            if(booking.isEnded() && booking.createOrderAfterStay && !booking.isEndedOverTwoMonthsAgo()) {
                 if(booking.getUnpaidAmount() > 0.0) {
                     User usr = manager.userManager.getUserById(booking.userId);
                     if(usr.preferredPaymentType != null && usr.preferredPaymentType.equals("70ace3f0-3981-11e3-aa6e-0800200c9a66") || booking.isInvoice()) {

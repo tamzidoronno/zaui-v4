@@ -10,16 +10,43 @@ app.AccountFinanceReport = {
         $(document).on('click', '.AccountFinanceReport .transferalldays', app.AccountFinanceReport.transferAllDays);
         $(document).on('click', '.AccountFinanceReport .issuersum', app.AccountFinanceReport.showDetailedOrderViewForPaymentMethod);
         $(document).on('click', '.AccountFinanceReport .applydiff', app.AccountFinanceReport.applyDiff);
+        $(document).on('click', '.AccountFinanceReport .applyAllDiffs', app.AccountFinanceReport.applyAllDiffs);
     },
     
     applyDiff: function() {
        var password = prompt("Password please");
+       if(!password) {
+           return;
+       }
        var data = {
            'orderid' : $(this).attr('orderid'),
            'password' : password
        };
        
        thundashop.Ajax.simplePost($(this), "applyDiff", data);
+    },
+    
+    applyAllDiffs : function() {
+       var applyallbtn = $(this);
+       var password = prompt("Password please");
+       if(!password) {
+           return;
+       }
+
+       
+       $('.applydiff').each(function() {
+           var applybtn = $(this);
+            var data = {
+                'orderid' : $(this).attr('orderid'),
+                'password' : password
+            };
+            applybtn.addClass('fa-spin');
+            var event = thundashop.Ajax.createEvent('','applyDiff',applyallbtn, data);
+            event.synchron = true;
+            thundashop.Ajax.postWithCallBack(event, function() {
+                applybtn.removeClass('fa-spin');
+            });
+        });
     },
     
     showDetailedOrderViewForPaymentMethod: function() {

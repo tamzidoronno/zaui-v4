@@ -1385,7 +1385,6 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
     }
 
     public function useNew() {
-//        return false;
         if($this->getPmsConfiguration()->conferenceSystemActive) {
             return true;
         }
@@ -1393,8 +1392,8 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         if(isset($_SESSION['newbookingviewtoggled']) && $_SESSION['newbookingviewtoggled']) {
             return true;
         }
-        return true;
-    }
+        return false
+;    }
 
     public function getSelectedRoomId() {
         return $this->getPmsBookingRoom()->pmsBookingRoomId;

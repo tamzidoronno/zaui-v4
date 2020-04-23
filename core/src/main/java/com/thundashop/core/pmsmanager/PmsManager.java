@@ -1090,12 +1090,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         try {
-            calculateUnsettledAmountForRooms(booking);
-        }catch(Exception e) {
-            logPrintException(e);
-        }
-        
-        try {
             checkTranslationOnAddons(booking);
         }catch(Exception e) {
             logPrintException(e);

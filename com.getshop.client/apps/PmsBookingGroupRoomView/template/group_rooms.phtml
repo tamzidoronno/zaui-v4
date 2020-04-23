@@ -7,6 +7,19 @@ $filter->bookingId = $booking->id;
 $filter->includeDeleted = true;
 $rooms = $this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedMultilevelDomainName(), $filter);
 $formatter = new ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBookingColumnFormatters(new \ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking());
+
+$bookingStart = "";
+$bookingEnd = "";
+
+foreach ($booking->rooms as $r) {
+    if (!$bookingStart || strtotime($r->date->start) < $bookingStart) {
+        $bookingStart = strtotime($r->date->start);
+    }
+    if (!$bookingEnd || strtotime($r->date->end) > $bookingEnd) {
+        $bookingEnd = strtotime($r->date->end);
+    }
+}
+
 ?>
 
 <div class='manipulateroomoptions'>
@@ -22,6 +35,49 @@ $formatter = new ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBookingColumnF
     
     <i class='fa fa-caret-down'></i>
 </div>
+
+<div class="addAddonsPanel" style='margin-bottom: 30px;'>
+<?php
+$this->includefile("addaddonstogroup");
+?>    
+</div>
+<div class="moveCategoryPanel" style='margin-bottom: 30px;'>
+    <i class="fa fa-close" style="float:right; cursor:pointer;" onclick="$('.moveCategoryPanel').hide();"></i>
+    <div>Please choose a category you would like to try to move the rooms to</div>
+    <br>
+    <select class='gsniceselect1 movetoroomtype'>
+        <?php
+        $categories = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
+        foreach($categories as $category) {
+            echo "<option value='" . $category->id . "'>" . $category->name . "</option>";
+        }
+        ?>
+    </select>
+    <span class='shop_button startmovecategory'>Try to move</span>
+</div>
+
+<div class="updatepricepanel" style='margin-bottom: 30px;'>
+    <div>
+        <h2>Update all prices for all selected rooms</h2>
+    </div>
+    <div>
+        <span style='width:100px; display:inline-block;'>From date</span>
+        <span style='width:100px; display:inline-block;'>To date</span>
+        <span style='width:154px; display:inline-block;'>Price type</span>
+        <span>Value</span>
+    </div>
+    <input type='txt' class='gsniceinput1' gsname='start' value='<?php echo date("d.m.Y", $bookingStart); ?>' style='width:80px'>
+    <input type='txt' class='gsniceinput1' gsname='end' value='<?php echo date("d.m.Y", $bookingEnd); ?>' style='width:80px'>
+    <select class="gsniceselect1 masseditpricestay" style='width:150px;' gsname='pricetype'>
+        <option value="dayprice">Daily price</option>
+        <option value="start_of_month">Monthly price beginning of month</option>
+        <option value="start_of_stay">Monthly price beginning of stay</option>
+        <option value="wholestay">Total cost for whole stay</option>
+    </select>
+    <input type='txt' class='gsniceinput1' gsname='value' value='100'  style='width:40px'>
+    <span class='shop_button setnewpricebutton'>Set new price</span>
+</div>
+
 
 
 <table style='width:100%;' class='roomtable'>
@@ -56,6 +112,12 @@ $formatter = new ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBookingColumnF
 
 
 <style>
+    .moveCategoryPanel { display:none; }
+    .addAddonsPanel { display:none; }
+    .addonsrow { clear:both; height: 42px; }
+    .addonsrow .shop_button { float:right; margin-left: 3px; }
+    .updatepricepanel { display:none; }
+    .guesticon,.langaugeandtypeindicator { display:none; }
     .roomrows.deleted td { color:red !important; }
     .manipulateroomoptions { margin-bottom: 10px; position: relative; border-bottom: solid 1px #bbb; padding-bottom: 10px;  }
     .unsettledamountwarning { color:red; font-weight: bold; }
@@ -117,3 +179,8 @@ $formatter = new ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBookingColumnF
       }
     
 </style>
+
+<script>
+    getshop_loadDatePicker($("[gsname='start']"), {});
+    getshop_loadDatePicker($("[gsname='end']"), {});
+</script>

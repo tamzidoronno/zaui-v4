@@ -62,6 +62,15 @@ app.PmsBookingGroupRoomView = {
         $(document).on('click', '.PmsBookingGroupRoomView .roomcheckbox', app.PmsBookingGroupRoomView.enableDisableGroupButtons);
         $(document).on('click', '.PmsBookingGroupRoomView .toggleallrooms', app.PmsBookingGroupRoomView.toggleAllRooms);
         $(document).on('click', '.PmsBookingGroupRoomView .groupmaninpualtionbtn', app.PmsBookingGroupRoomView.doAction);
+        $(document).on('click', '.PmsBookingGroupRoomView .setnewpricebutton', app.PmsBookingGroupRoomView.updateAllPrices);
+        $(document).on('click', '.PmsBookingGroupRoomView .updatePricePanelbtn', app.PmsBookingGroupRoomView.updatePricePanelbtn);
+        $(document).on('click', '.PmsBookingGroupRoomView .addAddonsPanelbtn', app.PmsBookingGroupRoomView.showAddAddonsPanel);
+        $(document).on('keyup', '.PmsBookingGroupRoomView .searchaddaddonslist', app.PmsBookingGroupRoomView.searchAddAddonsList);
+        $(document).on('click', '.PmsBookingGroupRoomView .addAddonsToRoom,.PmsBookingGroupRoomView .removeAddonFromRoom', app.PmsBookingGroupRoomView.addAddonsToRoom);
+        $(document).on('click', '.PmsBookingGroupRoomView .setsingleday', app.PmsBookingGroupRoomView.setSingleDayAddons);
+        $(document).on('click', '.PmsBookingGroupRoomView .addAddonsPanelbtn', app.PmsBookingGroupRoomView.showAddAddonsPanel);
+        $(document).on('click', '.PmsBookingGroupRoomView .moveCategoryPanelbtn', app.PmsBookingGroupRoomView.showMoveCategory);
+        $(document).on('click', '.PmsBookingGroupRoomView .startmovecategory', app.PmsBookingGroupRoomView.tryToMoveRoom);
 
         $(document).on('keyup', '.PmsBookingGroupRoomView [searchtype]', this.searchGuests);
         $(document).on('keyup', '.PmsBookingGroupRoomView .searchconferencetitle', this.searchConference);
@@ -71,7 +80,113 @@ app.PmsBookingGroupRoomView = {
         $(document).on('change', '.PmsBookingGroupRoomView .cartitem_added_product', this.saveCartItemRow)
         $(document).on('change', '.PmsBookingGroupRoomView .confirmationEmailTemplate', this.changeConfirmationEmailContent)
     },
+    tryToMoveRoom : function() {
+        var toType = $('.movetoroomtype').val();
+        $('.moveCategoryPanel').hide();
+        var roomsToUpdate = [];
+        $('.roomcheckbox').each(function() {
+            if($(this).is(':checked')) {
+                var roomId = $(this).attr('roomid');
+                $(this).closest('td').attr('spinnerroomid',roomId);
+                $(this).closest('td').html("<i class='fa fa-spin fa-spinner'></i>");
+                roomsToUpdate.push(roomId);
+            }
+        });
+        var updatedCounter = 0;
+        for(var k in roomsToUpdate) {
+            var roomId = roomsToUpdate[k];
+            var event = thundashop.Ajax.createEvent('','changeRoomCategory',$(this),{
+                "roomId" : roomId,
+                "totype" : toType
+            });
+            event.synchron = true;
+            
+            thundashop.Ajax.postWithCallBack(event, function(res) {
+                res = JSON.parse(res);
+                updatedCounter++;
+                if(res.status===1) {
+                    $('[spinnerroomid="'+res.roomid+'"]').html('<i class="fa fa-check"></i>');
+                } else {
+                    $('[spinnerroomid="'+res.roomid+'"]').html('<i class="fa fa-frown-o"></i>');
+                }
+            });
+        }
+        var checkifdonemoving = setInterval(function() {
+            if(updatedCounter === roomsToUpdate.length) {
+                $('.menubutton.selected').click();
+                clearTimeout(checkifdonemoving);
+            }
+        }, "100");
+    },
+    addAddonsToRoom : function() {
+        var form = $('.addAddonsPanel');
+        var args = thundashop.framework.createGsArgs(form);
+        
+        var rooms = [];
+        $('.roomcheckbox').each(function() {
+            if($(this).is(':checked')) {
+                rooms.push($(this).attr('roomid'));
+            }
+        });
+        args.rooms = rooms;
+        args.type = $(this).attr('type');
+        args.productid = $(this).attr('productId');
+        
+        var event = thundashop.Ajax.createEvent('','addAddonsToRoom',$(this), args);
+        thundashop.Ajax.post(event);
+    },
     
+    setSingleDayAddons : function() {
+        if($(this).is(':checked')) {
+            $("[gsname='end']").hide();
+        } else {
+            $("[gsname='end']").show();
+        }
+    },
+    searchAddAddonsList : function() {
+        var val = $(this).val();
+        $('.addonsrow').each(function() {
+            if($(this).text().toLowerCase().indexOf(val.toLowerCase()) !== -1) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+    },
+    updatePricePanelbtn : function() {
+        if($(this).hasClass('disabled')) {
+            return;
+        } 
+        $('.updatepricepanel').slideDown();
+    },
+    showAddAddonsPanel : function() {
+        if($(this).hasClass('disabled')) {
+            return;
+        } 
+        $('.addAddonsPanel').show();
+    },
+    showMoveCategory : function() {
+        if($(this).hasClass('disabled')) {
+            return;
+        } 
+        $('.moveCategoryPanel').show();
+    },
+    updateAllPrices : function() {
+        var form = $('.updatepricepanel');
+        var args = thundashop.framework.createGsArgs(form);
+        
+        var rooms = [];
+        $('.roomcheckbox').each(function() {
+            if($(this).is(':checked')) {
+                rooms.push($(this).attr('roomid'));
+            }
+        });
+        args.rooms = rooms;
+        args.roomid = app.PmsBookingGroupRoomView.getRoomId()
+
+        var event = thundashop.Ajax.createEvent('','updatePriceByDateRange',$(this), args);
+        thundashop.Ajax.post(event);
+    },
     doAction : function() {
         if($(this).hasClass('disabled')) {
             thundashop.common.Alert('Failed','Please select a room first',true);
@@ -134,6 +249,9 @@ app.PmsBookingGroupRoomView = {
         } else {
             $('.groupmaninpualtionbtn').addClass('disabled');
             $('.toggleallrooms').prop('checked',false);
+            $('.updatepricepanel').hide();
+            $('.addAddonsPanel').hide();
+            $('.moveCategoryPanel').hide();
         }
     },
     

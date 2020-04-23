@@ -415,7 +415,8 @@ public class PosManager extends ManagerBase implements IPosManager {
 
         report.orderIds = orderIds;
         report.createdAfterConnectedToACentral = central.hasBeenConnectedToCentral();
-
+        report.roomsThatWillBeAutomaticallyCreatedOrdersFor = getRoomsNeedToCreateOrdersFor();
+                
         return report;
     }
 
@@ -1137,25 +1138,7 @@ public class PosManager extends ManagerBase implements IPosManager {
     }
 
     private List<String> autoCreateOrders(String cashPointId) {
-        Date start = getDateWithOffset(getPreviouseZReportDate(cashPointId), -1);
-        Date end = getDateWithOffset(new Date(), 0);
-        
-        /**
-         * When its connected to the getshop central we also do accrude payments for future booking to make a forcast.
-         */
-        boolean connectedToCentral = central.hasBeenConnectedToCentral();
-        
-        PmsManager pmsManager = scope.getNamedSessionBean(getEngineName(), PmsManager.class);
-
-        List<PmsBookingRooms> roomsNeedToCreateOrdersFor = pmsManager.getAllBookingsFlat()
-                .stream()
-                .flatMap(o -> o.rooms.stream())
-                .filter(o -> connectedToCentral || o.createOrdersOnZReport)
-                .filter(o -> o.hasUnsettledAmountIncAccrued())
-                .filter(o -> {
-                    return o.date.start.before(end) || o.date.start.equals(end);
-                })
-                .collect(Collectors.toList());
+        List<PmsBookingRooms> roomsNeedToCreateOrdersFor = getRoomsNeedToCreateOrdersFor();
 
         List<String> retList = new ArrayList();
         
@@ -1452,14 +1435,21 @@ public class PosManager extends ManagerBase implements IPosManager {
         return conferencesWithUserIds;
     }
 
-    private String createOrderWithPaymentMethod(PmsBooking booking, PmsBookingRooms room, String roomId) {
+    private PmsOrderCreateRow getCreateOrderForRoom(PmsBooking booking, PmsBookingRooms room, PmsManager pmsManager) {
         PmsOrderCreateRow createOrderForRoom = new PmsOrderCreateRow();
-        PmsManager pmsManager = scope.getNamedSessionBean(getEngineName(), PmsManager.class);
 
         PmsRoomPaymentSummary summary = pmsManager.getSummary(booking.id, room.pmsBookingRoomId);
         createOrderForRoom.roomId = room.pmsBookingRoomId;
         createOrderForRoom.items = summary.getCheckoutRows();
-
+        
+        return createOrderForRoom;
+    }
+    
+    private String createOrderWithPaymentMethod(PmsBooking booking, PmsBookingRooms room, String roomId) {
+        PmsManager pmsManager = scope.getNamedSessionBean(getEngineName(), PmsManager.class);
+        
+        PmsOrderCreateRow createOrderForRoom = getCreateOrderForRoom(booking, room, pmsManager);
+        
         List<PmsOrderCreateRow> createOrder = new ArrayList();
         createOrder.add(createOrderForRoom);
 
@@ -1886,6 +1876,29 @@ public class PosManager extends ManagerBase implements IPosManager {
         if (application == null) {
             storeApplicationPool.activateApplication("60f2f24e-ad41-4054-ba65-3a8a02ce0190");
         }
+    }
+
+    private List<PmsBookingRooms> getRoomsNeedToCreateOrdersFor() {
+        Date end = getDateWithOffset(new Date(), 0);
+        
+        /**
+         * When its connected to the getshop central we also do accrude payments for future booking to make a forcast.
+         */
+        boolean connectedToCentral = central.hasBeenConnectedToCentral();
+        
+        PmsManager pmsManager = scope.getNamedSessionBean(getEngineName(), PmsManager.class);
+
+        List<PmsBookingRooms> roomsNeedToCreateOrdersFor = pmsManager.getAllBookingsFlat()
+                .stream()
+                .flatMap(o -> o.rooms.stream())
+                .filter(o -> connectedToCentral || o.createOrdersOnZReport)
+                .filter(o -> o.hasUnsettledAmountIncAccrued())
+                .filter(o -> {
+                    return o.date.start.before(end) || o.date.start.equals(end);
+                })
+                .collect(Collectors.toList());
+
+        return roomsNeedToCreateOrdersFor;
     }
 
     

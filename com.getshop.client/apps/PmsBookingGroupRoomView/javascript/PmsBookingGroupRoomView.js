@@ -59,6 +59,9 @@ app.PmsBookingGroupRoomView = {
         $(document).on('click', '.PmsBookingGroupRoomView .removeguestrow', app.PmsBookingGroupRoomView.removeGuestRow);
         $(document).on('click', '.PmsBookingGroupRoomView .domassupdate', app.PmsBookingGroupRoomView.doMassUpdate);
         $(document).on('click', '.PmsBookingGroupRoomView .doextendstay', app.PmsBookingGroupRoomView.extendStay);
+        $(document).on('click', '.PmsBookingGroupRoomView .roomcheckbox', app.PmsBookingGroupRoomView.enableDisableGroupButtons);
+        $(document).on('click', '.PmsBookingGroupRoomView .toggleallrooms', app.PmsBookingGroupRoomView.toggleAllRooms);
+        $(document).on('click', '.PmsBookingGroupRoomView .groupmaninpualtionbtn', app.PmsBookingGroupRoomView.doAction);
 
         $(document).on('keyup', '.PmsBookingGroupRoomView [searchtype]', this.searchGuests);
         $(document).on('keyup', '.PmsBookingGroupRoomView .searchconferencetitle', this.searchConference);
@@ -68,6 +71,72 @@ app.PmsBookingGroupRoomView = {
         $(document).on('change', '.PmsBookingGroupRoomView .cartitem_added_product', this.saveCartItemRow)
         $(document).on('change', '.PmsBookingGroupRoomView .confirmationEmailTemplate', this.changeConfirmationEmailContent)
     },
+    
+    doAction : function() {
+        if($(this).hasClass('disabled')) {
+            thundashop.common.Alert('Failed','Please select a room first',true);
+            return;
+        }
+        
+        var rooms = [];
+        $('.roomcheckbox').each(function() {
+            if($(this).is(':checked')) {
+                rooms.push($(this).attr('roomid'));
+            }
+        });
+        
+        var type = $(this).attr('type');
+        
+        if($(this).attr('avoidaction') === "true") {
+            return;
+        }
+        
+        var count = 0;
+        if(type === "updateGuestCount") {
+            count = parseInt(prompt("Number of guest", ""));
+            if(!count) {
+                return;
+            }
+        }
+        
+        var event = thundashop.Ajax.createEvent('','doRoomsBookedAction', $(this), {
+            "type" : type,
+            "rooms" : rooms,
+            "count" : count,
+            "roomid" : app.PmsBookingGroupRoomView.getRoomId()
+        });
+        
+        thundashop.Ajax.post(event);
+        
+    },
+    
+    toggleAllRooms : function() {
+        var checked = $(this).is(':checked');
+        if(checked) {
+            $('.roomcheckbox').prop('checked',true);
+        } else {
+            $('.roomcheckbox').prop('checked',false);
+        }
+        app.PmsBookingGroupRoomView.enableDisableGroupButtons();
+    },
+    enableDisableGroupButtons : function() {
+        var disabled = false;
+        
+        $('.roomcheckbox').each(function() {
+            if($(this).is(':checked')) {
+                disabled = true;
+            }
+        });
+        
+        if(disabled) {
+            $('.groupmaninpualtionbtn').removeClass('disabled');
+            $('.toggleallrooms').prop('checked',true);
+        } else {
+            $('.groupmaninpualtionbtn').addClass('disabled');
+            $('.toggleallrooms').prop('checked',false);
+        }
+    },
+    
     extendStay : function() {
         var days = parseInt($('.extendstaydaysinput').val());
         var checkoutday = $('.checkoutdate').val();

@@ -554,7 +554,11 @@ class PmsSendMessagesConfiguration extends \WebshopApplication implements \Appli
         $notifications['booking_completed_'.$langauge] = "Booking has been completed";
         $notifications['booking_completed_ota_'.$langauge] = "Booking has been completed by OTA (overrides standard complete message)";
         $notifications['booking_completed_payed_ota_'.$langauge] = "Booking has been completed and charged by OTA (overrides standard both ota and completed message)";
-        $notifications['booking_notconfirmed_'.$langauge] = "Booking has been rejected";
+        if($this->isBjaroyWhoCantGoAway()) {
+            //This are outdated features that should be removed, but can't because a customer refuses to go away.
+            $notifications['booking_confirmed_'.$langauge] = "Booking has been confirmed";
+            $notifications['booking_notconfirmed_'.$langauge] = "Booking has been rejected";
+        }
         $notifications['room_ended_0_hours_'.$langauge] = "Booking has ended $afterpayment.";
         $notifications['room_ended_24_hours_'.$langauge] = "Booking ended 1 day ago $afterpayment";
         $notifications['room_ended_48_hours_'.$langauge] = "Booking ended two days ago $afterpayment";
@@ -608,6 +612,13 @@ class PmsSendMessagesConfiguration extends \WebshopApplication implements \Appli
         }
         echo "&nbsp;&nbsp;&nbsp;";
         echo "</div>";
+    }
+
+    public function isBjaroyWhoCantGoAway() {
+        $storeid = $this->getFactory()->getStore()->id;
+        if($storeid == "c63cdffc-765b-44b2-9694-3628d53726fa") { return true; }
+        if($storeid == "7b21932d-26ad-40a5-b3b6-c182f5ee4b2f") { return true; }
+        return false;
     }
 
 }

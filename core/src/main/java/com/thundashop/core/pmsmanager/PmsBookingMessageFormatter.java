@@ -10,6 +10,7 @@ import com.thundashop.core.usermanager.data.User;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -109,6 +110,29 @@ class PmsBookingMessageFormatter {
     }
     
     public String formatContactData(String message, User user, PmsGuests guest, PmsBooking booking) {
+        
+        LinkedHashMap<String, String> resultAdded = booking.registrationData.resultAdded;
+        if(!resultAdded.containsKey("name") || resultAdded.get("name") == null) { resultAdded.put("name", ""); }
+        if(!resultAdded.containsKey("email") || resultAdded.get("email") == null) { resultAdded.put("email", ""); }
+        if(!resultAdded.containsKey("prefix") || resultAdded.get("prefix") == null) { resultAdded.put("prefix", ""); }
+        if(!resultAdded.containsKey("phone") || resultAdded.get("phone") == null) { resultAdded.put("phone", ""); }
+        if(!resultAdded.containsKey("userid") || resultAdded.get("userid") == null) { resultAdded.put("userid", ""); }
+        if(!resultAdded.containsKey("name") || resultAdded.get("name") == null) { resultAdded.put("name", ""); }
+        if(!resultAdded.containsKey("email") || resultAdded.get("email") == null) { resultAdded.put("email", ""); }
+        if(!resultAdded.containsKey("prefix") || resultAdded.get("prefix") == null) { resultAdded.put("prefix", ""); }
+        if(!resultAdded.containsKey("phone") || resultAdded.get("phone") == null) { resultAdded.put("phone", ""); }
+        if(!resultAdded.containsKey("user_fullName") || resultAdded.get("user_fullName") == null) { resultAdded.put("user_fullName", ""); }
+        if(!resultAdded.containsKey("user_cellPhone") || resultAdded.get("user_cellPhone") == null) { resultAdded.put("user_cellPhone", ""); }
+        if(!resultAdded.containsKey("user_prefix") || resultAdded.get("user_prefix") == null) { resultAdded.put("user_prefix", ""); }
+        if(!resultAdded.containsKey("user_emailAddress") || resultAdded.get("user_emailAddress") == null) { resultAdded.put("user_emailAddress", ""); }
+        if(!resultAdded.containsKey("address") || resultAdded.get("address") == null) { resultAdded.put("address", ""); }
+        if(!resultAdded.containsKey("postCode") || resultAdded.get("postCode") == null) { resultAdded.put("postCode", ""); }
+        if(!resultAdded.containsKey("city") || resultAdded.get("city") == null) { resultAdded.put("city", ""); }
+        if(!resultAdded.containsKey("contact_name") || resultAdded.get("contact_name") == null) { resultAdded.put("contact_name", ""); }
+        if(!resultAdded.containsKey("contact_prefix") || resultAdded.get("contact_prefix") == null) { resultAdded.put("contact_prefix", ""); }
+        if(!resultAdded.containsKey("contact_phone") || resultAdded.get("contact_phone") == null) { resultAdded.put("contact_phone", ""); }
+        if(!resultAdded.containsKey("contact_email") || resultAdded.get("contact_email") == null) { resultAdded.put("contact_email", ""); }
+        
         if(guest != null) {
             if(guest.name != null) { message = message.replace("{name}", guest.name); }
             if(guest.email != null) { message = message.replace("{email}", guest.email); } 

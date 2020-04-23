@@ -727,57 +727,13 @@ public class BookingEngineNew extends GetShopSessionBeanNamed implements IBookin
     }
     
     @Override
+    public List<BookingTimeLineFlatten> getTimeLinesForItemWithOptimalIngoreErrorsWithTypes(Date start, Date end, List<String> types) {
+        return getTimeLinesForItemWithOptimalInternal(start, end, false, types);
+    }
+    
+    @Override
     public List<BookingTimeLineFlatten> getTimeLinesForItemWithOptimal(Date start, Date end, boolean ignoreErrors) {
-        List<BookingTimeLineFlatten> retList = new ArrayList();        
-        
-        for (String bookingItemTypeId : types.keySet()) {
-            BookingItemAssignerOptimal assigner = getAvailableItemsAssigner(bookingItemTypeId, start, end, null);
-            assigner.disableErrorCheck();
-            List<OptimalBookingTimeLine> availableBookingItems = assigner.getOptimalAssigned();
-            
-            assigner.getLinesOverBooked().stream()
-                    .forEach(overLine -> {
-                        BookingTimeLineFlatten line = new BookingTimeLineFlatten(1, bookingItemTypeId);
-                        line.bookingItemId = null;
-                        line.start = start;
-                        line.end = end;
-                        line.overFlow = true;
-                        overLine.bookings.stream().forEach(b -> {
-                             line.add(b);
-                        });
-                        retList.add(line);
-                    });
-            
-            for (BookingItem item : items.values()) {
-                if (!item.bookingItemTypeId.equals(bookingItemTypeId)) {
-                    continue;
-                }
-                
-                BookingTimeLineFlatten line = new BookingTimeLineFlatten(item.bookingSize, item.bookingItemTypeId);
-                line.bookingItemId = item.id;
-                line.start = start;
-                line.end = end;
-                
-                bookings.values().stream().
-                        filter(o -> o.within(start, end)).
-                        filter(o -> (o.bookingItemId != null && o.bookingItemId.equals(item.id))).
-                        forEach(o -> line.add(o));
-
-
-                for (OptimalBookingTimeLine timeLine : availableBookingItems) {
-                    if (timeLine.bookingItemId.equals(item.id)) {
-                        timeLine.bookings.stream()
-                        .filter(o -> !line.containsBooking(o))
-                        .forEach(o -> line.add(o));
-                    }
-                }
-
-                retList.add(line);
-            }
-        
-        }
-        
-        return retList;
+        return getTimeLinesForItemWithOptimalInternal(start, end, false, null);
     }
     
     private BookingItemAssignerOptimal getAvailableItemsAssigner(String typeId, Date start, Date end, String bookingId) throws BookingEngineException {
@@ -1151,4 +1107,63 @@ public class BookingEngineNew extends GetShopSessionBeanNamed implements IBookin
         }
         return higest;
     }
+
+    private List<BookingTimeLineFlatten> getTimeLinesForItemWithOptimalInternal(Date start, Date end, boolean ignoreErrors, List<String> onlyIncludeTypes) {
+        List<BookingTimeLineFlatten> retList = new ArrayList();        
+        
+        for (String bookingItemTypeId : types.keySet()) {
+            if(onlyIncludeTypes != null && !onlyIncludeTypes.isEmpty() && !onlyIncludeTypes.contains(bookingItemTypeId)) {
+                continue;
+            }
+            
+            BookingItemAssignerOptimal assigner = getAvailableItemsAssigner(bookingItemTypeId, start, end, null);
+            assigner.disableErrorCheck();
+            List<OptimalBookingTimeLine> availableBookingItems = assigner.getOptimalAssigned();
+            
+            assigner.getLinesOverBooked().stream()
+                    .forEach(overLine -> {
+                        BookingTimeLineFlatten line = new BookingTimeLineFlatten(1, bookingItemTypeId);
+                        line.bookingItemId = null;
+                        line.start = start;
+                        line.end = end;
+                        line.overFlow = true;
+                        overLine.bookings.stream().forEach(b -> {
+                             line.add(b);
+                        });
+                        retList.add(line);
+                    });
+            
+            for (BookingItem item : items.values()) {
+                if (!item.bookingItemTypeId.equals(bookingItemTypeId)) {
+                    continue;
+                }
+                
+                BookingTimeLineFlatten line = new BookingTimeLineFlatten(item.bookingSize, item.bookingItemTypeId);
+                line.bookingItemId = item.id;
+                line.start = start;
+                line.end = end;
+                
+                bookings.values().stream().
+                        filter(o -> o.within(start, end)).
+                        filter(o -> (o.bookingItemId != null && o.bookingItemId.equals(item.id))).
+                        forEach(o -> line.add(o));
+
+
+                for (OptimalBookingTimeLine timeLine : availableBookingItems) {
+                    if (timeLine.bookingItemId.equals(item.id)) {
+                        timeLine.bookings.stream()
+                        .filter(o -> !line.containsBooking(o))
+                        .forEach(o -> line.add(o));
+                    }
+                }
+
+                retList.add(line);
+            }
+        
+        }
+        
+        return retList;
+        
+    }
+
 }

@@ -190,6 +190,7 @@ class PmsAvailability extends \MarketingApplication implements \Application {
         $filter->end = $this->convertToJavaDate($this->getEndDate());
         $filter->pmsBookingIds = $this->getPmsBookingFilterIds(); 
         $filter->interval = 60 * 60 * 24;
+        $filter->types = $this->getCategoryFilter();
         return $filter;
     }
 

@@ -1561,4 +1561,9 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed implements IB
                 .map(type -> type.id)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<BookingTimeLineFlatten> getTimeLinesForItemWithOptimalIngoreErrorsWithTypes(Date start, Date end, List<String> types) {
+        return getTimeLinesForItemWithOptimalIngoreErrors(start, end);
+    }
 }

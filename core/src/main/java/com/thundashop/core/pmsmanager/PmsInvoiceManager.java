@@ -1919,6 +1919,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 cal.set(Calendar.HOUR_OF_DAY, 11);
             }
         }
+        cal.set(Calendar.MILLISECOND, 0);
+        cal.set(Calendar.MINUTE, 0);
         return cal.getTime();
         
     }

@@ -1106,7 +1106,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         if(booking.conferenceId != null && !booking.conferenceId.isEmpty()) {
             PmsConference conference = pmsConferenceManager.getConference(booking.conferenceId);
-            if(conference.forUser != null && !conference.forUser.equals(booking.userId)) {
+            if(conference != null && conference.forUser != null && !conference.forUser.equals(booking.userId)) {
                 conference.forUser = booking.userId;
                 pmsConferenceManager.saveConference(conference);
             }

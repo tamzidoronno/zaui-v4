@@ -807,8 +807,16 @@ public class Order extends DataCommon implements Comparable<Order> {
         return null;
     }
     
+    public boolean isOrderFinanciallyRelatedToDatesIgnoreCreationDate(Date start, Date end) {
+        return isFinanciallyConnectedToDates(start, end, false);
+    }
+    
     public boolean isOrderFinanciallyRelatedToDates(Date start, Date end) {
-        if (createdBetween(start, end)) {
+        return isFinanciallyConnectedToDates(start, end, true);
+    }
+
+    private boolean isFinanciallyConnectedToDates(Date start, Date end, boolean includeCreationDate) {
+        if (includeCreationDate && createdBetween(start, end)) {
             return true;
         }
         
@@ -824,19 +832,13 @@ public class Order extends DataCommon implements Comparable<Order> {
         }
         
         if (cart != null) {
-            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
             
             for (CartItem item : cart.getItems()) {
-                if (item.priceMatrix != null) {
-                    for (String date : item.priceMatrix.keySet()) {
-                        try {
-                            Date checkDate = sdf.parse(date);
-                            if (intercepts(checkDate, startTime, endTime)) {
-                                return true;
-                            }
-                        } catch (ParseException ex) {
-                            System.out.println("failed");
-                        }
+                List<Date> datesForItem = item.getDates(overrideAccountingDate, this);
+                
+                for (Date checkDate : datesForItem) {
+                    if (intercepts(checkDate, startTime, endTime)) {
+                        return true;
                     }
                 }
                 
@@ -856,13 +858,6 @@ public class Order extends DataCommon implements Comparable<Order> {
                     return true;
                 }
                 
-                if (item.itemsAdded != null) {
-                    for (PmsBookingAddonItem addon : item.itemsAdded) {
-                        if (intercepts(addon.date, startTime, endTime)) {
-                            return true;
-                        }  
-                    } 
-                }
             }
             
         }

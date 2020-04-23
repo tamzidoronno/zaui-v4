@@ -28,4 +28,7 @@ public interface IGetShopCentral {
     public void createNewAccessToken(String name);
     
     public boolean loginByToken(String token);
+    
+    public boolean isConnectedToACentral();
+    
 }

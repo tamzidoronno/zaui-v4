@@ -392,7 +392,9 @@ public class PosManager extends ManagerBase implements IPosManager {
         if (central.hasBeenConnectedToCentral()) {
             orderIds = orderManager.getAllOrders()
                     .stream()
-                    .filter(o -> o.createdAfterConnectedToACentral && o.addedToZreport != null && o.addedToZreport.isEmpty())
+                    .filter(o -> !o.isNullOrder())
+                    .filter(o -> o.createdAfterConnectedToACentral && (o.addedToZreport == null || o.addedToZreport.isEmpty()))
+                    .filter(o -> o.isOrderFinanciallyRelatedToDatesIgnoreCreationDate(new Date(0), new Date()))
                     .map(o -> o.id)
                     .collect(Collectors.toList());
             
@@ -1157,6 +1159,10 @@ public class PosManager extends ManagerBase implements IPosManager {
 
         List<String> retList = new ArrayList();
         
+        if (!roomsNeedToCreateOrdersFor.isEmpty()) {
+            checkIfAccrudePaymentIsActivated();
+        }
+        
         roomsNeedToCreateOrdersFor.stream().forEach(o -> {
             String orderId = createOrder(o);
             retList.add(orderId);
@@ -1486,7 +1492,11 @@ public class PosManager extends ManagerBase implements IPosManager {
             Order order = createOrder(cartItemsInDifference, accuredPayment, null, cashPointId);
             order.autoCreatedOrderForConferenceId = pmsConferenceId;
             orderManager.saveOrder(order);
-            orderIds.add(order.id);
+            boolean shouldInclude = order.isOrderFinanciallyRelatedToDatesIgnoreCreationDate(new Date(0), new Date());
+            
+            if (shouldInclude) {
+                orderIds.add(order.id);
+            }
         }
 
         PosConferenceCache cache = getPosConferenceCache();
@@ -1869,6 +1879,13 @@ public class PosManager extends ManagerBase implements IPosManager {
                         pmsManager.toggleAutoCreateOrders(booking.id, room.pmsBookingRoomId);
                     }
                 });
+    }
+
+    private void checkIfAccrudePaymentIsActivated() {
+        Application application = storeApplicationPool.getApplication("60f2f24e-ad41-4054-ba65-3a8a02ce0190");
+        if (application == null) {
+            storeApplicationPool.activateApplication("60f2f24e-ad41-4054-ba65-3a8a02ce0190");
+        }
     }
 
     

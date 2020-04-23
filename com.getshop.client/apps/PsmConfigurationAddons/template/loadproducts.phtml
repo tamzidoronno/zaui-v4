@@ -29,7 +29,11 @@ if($this->createProductError) {
 
 ?>
 <br>
+
 <div gstype='form' method='createProduct'>
+    <?
+    if (!$this->getApi()->getGetShopCentral()->isConnectedToACentral()) {
+    ?>
     <select class='gsniceselect1' gsname='account'>
         <option value=''>Unspecified account</option>
         <?php
@@ -38,7 +42,10 @@ if($this->createProductError) {
         }
         ?>
     </select>
-    <input type='text' class='gsniceinput1' gsname='productname' value='<?php echo $name; ?>'>
+    <?
+    }
+    ?>
+    <input type='text' class='gsniceinput1' gsname='productname' value='<?php echo $name; ?>' placeholder="Addon name">
     <input type='button' style='padding: 9px;' value='Create a new product' gstype='submit'>
 </div>
 <br>

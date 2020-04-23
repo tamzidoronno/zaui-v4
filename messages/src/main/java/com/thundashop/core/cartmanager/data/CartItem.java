@@ -7,6 +7,7 @@ package com.thundashop.core.cartmanager.data;
 import com.google.gson.Gson;
 import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.TwoDecimalRounder;
+import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductPriceOverride;
@@ -838,6 +839,49 @@ public class CartItem implements Serializable, Cloneable {
 
     public void resetCartItemId() {
         cartItemId = UUID.randomUUID().toString();
+    }
+
+    public List<Date> getDates(Date overrideAccountingDate, Order order) {
+        List<Date> retList = new ArrayList();
+        
+        if (isPmsAddons()) {
+            for (PmsBookingAddonItem i : itemsAdded) {
+                retList.add(calculateDate(overrideAccountingDate, i.date));
+            }
+        } else if(isPriceMatrixItem()) {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+            for (String dateString : priceMatrix.keySet()) {
+                Date iDate;
+                try {
+                    iDate = sdf.parse(dateString+" 09:00:00");
+                    retList.add(calculateDate(overrideAccountingDate, iDate));
+                } catch (ParseException ex) {
+                    Logger.getLogger(CartItem.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        } else {
+            Date date = getNormalCartItemAccountingDate(order);
+            retList.add(calculateDate(overrideAccountingDate, date));
+        }
+        
+        return retList;
+    }
+    
+    private Date getNormalCartItemAccountingDate(Order order) {
+        if (accountingDate != null)
+            return accountingDate;
+        
+        return order.rowCreatedDate;
+    }
+    
+    private Date calculateDate(Date overrideAccountingDate, Date date) {
+        if (overrideAccountingDate == null)
+            return date;
+        
+        if (date.before(overrideAccountingDate))
+            return overrideAccountingDate;
+        
+        return date;
     }
 
 

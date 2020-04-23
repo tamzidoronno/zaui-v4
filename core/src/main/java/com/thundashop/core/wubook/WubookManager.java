@@ -443,7 +443,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                     messageManager.sendErrorNotification("Failed to double delete bookings", e);
                     logPrintException(e);
                 }
-                nextBookings = null;
+                nextBookings = null; 
             }
 
             try {

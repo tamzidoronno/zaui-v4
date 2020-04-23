@@ -94,8 +94,8 @@ if($config->bookingTag) {
 
     if($config->bookingTag) { echo "<div style='height: 18px;'></div>"; }
 
-     echo "<div style='text-align:center;padding: 5px; background-color:red; color:#fff; font-size: 20px;       '><i class='fa fa-warning'></i> Instructions on how to change the tax from 12% to 6% for a temporary periode can be found ";
-     echo "<a href='https://www.getshop.com/docs/Korrigere-mva-corona.pdf' target='_criticalinfo' style='color:yellow; font-weight:bold;'>here</a>, for questions - please create a ticket.</div>";
+//     echo "<div style='text-align:center;padding: 5px; background-color:red; color:#fff; font-size: 20px;       '><i class='fa fa-warning'></i> Instructions on how to change the tax from 12% to 6% for a temporary periode can be found ";
+//     echo "<a href='https://www.getshop.com/docs/Korrigere-mva-corona.pdf' target='_criticalinfo' style='color:yellow; font-weight:bold;'>here</a>, for questions - please create a ticket.</div>";
 
     if($config->bookingTag) {
         echo "<div style='text-align:center; text-transform:uppercase; background-color:yellow; position:fixed; top: 0px; width:100%;z-index:1;'>";

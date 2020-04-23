@@ -26,7 +26,7 @@ public class EhfCsvReader {
     }
     
     private List<String[]> readCsv() throws Exception {
-        List<String> texts = getText("http://hotell.difi.no/download/difi/elma/participants?download");
+        List<String> texts = getText("https://hotell.difi.no/download/difi/elma/participants?download");
         
         BufferedReader br = null;
         String cvsSplitBy = ";";
@@ -53,13 +53,21 @@ public class EhfCsvReader {
         List<String[]> lines = readCsv();
         List<EhfComplientCompany> retList = new ArrayList();
         boolean firstLine = true;
+        int positionToCheck = 0;
         for (String[] s : lines) {
             if (firstLine) {
+                for (String a : s) {
+                    if (a.trim().toLowerCase().equals("\"ehf_invoice_2_0\"")) {
+                        break;
+                    }
+                    positionToCheck++;
+                }
+                
                 firstLine = false;
                 continue;
             }
             Long vatnumber = Long.parseLong(s[1].replaceAll("\"", ""));
-            boolean canUse = s[6].replaceAll("\"", "").equals("Ja");
+            boolean canUse = s[positionToCheck].replaceAll("\"", "").equals("Ja");
             if (canUse) {
                 EhfComplientCompany ehfComp = new EhfComplientCompany();
                 ehfComp.name = s[2].replaceAll("\"", "");

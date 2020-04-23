@@ -16,7 +16,72 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         
     }
     
-    
+    public function updateGuestCount($booking) {
+        $count = $_POST['data']['count'];
+        foreach($booking->rooms as $room) {
+            if(in_array($room->pmsBookingRoomId, $_POST['data']['rooms'])) {
+                $room->numberOfGuests = $count;
+            }
+        }
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+    }
+
+    public function doRoomsBookedAction() {
+        $action = $_POST['data']['type'];
+        $booking = $this->getPmsBooking();
+        $bookingId = $booking->id;
+        if($action == "delete") {
+            foreach($_POST['data']['rooms'] as $roomid) {
+                $this->getApi()->getPmsManager()->removeFromBooking($this->getSelectedMultilevelDomainName(), $bookingId, $roomid);
+            }
+        } else if($action == "splitunique") {
+            foreach($_POST['data']['rooms'] as $roomId) {
+                $singleroomids = array();
+                $singleroomids[] = $roomId;
+                $this->getApi()->getPmsManager()->splitBooking($this->getSelectedMultilevelDomainName(), $singleroomids);
+            }
+        } else if($action == "split") {
+            $this->getApi()->getPmsManager()->splitBooking($this->getSelectedMultilevelDomainName(), $_POST['data']['rooms']);
+        } else if($action == "updateGuestCount") {
+            $this->updateGuestCount($booking);
+        } else if($action == "singlepayments" || $action == "singlepaymentsnosend") {
+            $this->getApi()->getPmsInvoiceManager()->removeOrderLinesOnOrdersForBooking($this->getSelectedMultilevelDomainName(), $bookingId, $_POST['data']['rooms']);
+            foreach($_POST['data']['rooms'] as $roomid) {
+                $selectedroom = null;
+                foreach($booking->rooms as $room) {
+                    if($room->pmsBookingRoomId == $roomid) {
+                        $selectedroom = $room;
+                        break;
+                    }
+                }
+                
+                if(!$selectedroom) {
+                    return;
+                }
+                
+                /* @var $selectedRoom core_pmsmanager_PmsBookingRooms */
+                $filter = new \core_pmsmanager_NewOrderFilter();
+                $bookingId = $_POST['data']['bookingid'];
+                $filter->endInvoiceAt = $selectedroom->date->end;
+                if(isset($_POST['data']['preview'])) {
+                    $filter->avoidOrderCreation = $_POST['data']['preview'] == "true";
+                }
+                $filter->pmsRoomId = $selectedroom->pmsBookingRoomId;
+                $filter->prepayment = true;
+                $filter->createNewOrder = true;
+
+                $newOrderId = $this->getManager()->createOrder($this->getSelectedMultilevelDomainName(), $bookingId, $filter);
+                if($action != "singlepaymentsnosend") {
+                    $email = $room->guests[0]->email;
+                    $prefix = $room->guests[0]->prefix;
+                    $phone = $room->guests[0]->phone;
+                    $this->getApi()->getPmsManager()->sendPaymentLink($this->getSelectedMultilevelDomainName(), $newOrderId, $bookingId, $email, $prefix, $phone);
+                }
+            }
+        }
+        $this->currentBooking = null;
+    }
+        
     public function updateStayPeriode() {
         $booking = $this->getPmsBooking();
         $_SESSION['notChangedError'] = array();

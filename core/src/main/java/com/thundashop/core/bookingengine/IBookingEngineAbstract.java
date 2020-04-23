@@ -67,6 +67,7 @@ public interface IBookingEngineAbstract {
     public void changeSourceOnBooking(String bookingId, String source);
     public void forceUnassignBookingInfuture();
     public List<BookingTimeLineFlatten> getTimeLinesForItemWithOptimalIngoreErrors(Date start, Date end);
+    public List<BookingTimeLineFlatten> getTimeLinesForItemWithOptimalIngoreErrorsWithTypes(Date start, Date end, List<String> types);
     
     public void setConfirmationRequired(boolean confirmationRequired );
     public List<Booking> getConfirmationList(String bookingItemTypeId);

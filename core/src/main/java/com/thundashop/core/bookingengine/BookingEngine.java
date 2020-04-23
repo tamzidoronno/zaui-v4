@@ -430,6 +430,10 @@ public class BookingEngine extends GetShopSessionBeanNamed implements IBookingEn
     public List<BookingTimeLineFlatten> getTimeLinesForItemWithOptimalIngoreErrors(Date start, Date end) {
         return deepClone(getBookingEngine().getTimeLinesForItemWithOptimalIngoreErrors(start,end));
     }
+    
+    public List<BookingTimeLineFlatten> getTimeLinesForItemWithOptimalIngoreErrorsWithTypes(Date start, Date end, List<String> types) {
+        return deepClone(getBookingEngine().getTimeLinesForItemWithOptimalIngoreErrorsWithTypes(start,end, types));
+    }
 
     @Override
     public boolean canAddBooking(Booking bookingsToAdd) {

@@ -2215,6 +2215,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             PmsBookingFilter bookingfilter = getPmsBookingFilter(filter.selectedDefinedFilter);
             types = bookingfilter.typeFilter;
         }
+        
+        if(filter.types != null && !filter.types.isEmpty()) {
+            types = filter.types;
+        }
+        
         gsTiming("Checking types");
         for (BookingItemType type : bookingEngine.getBookingItemTypes()) {
             if (!types.isEmpty() && !types.contains(type.id)) {
@@ -2228,7 +2233,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<BookingItem> items = bookingEngine.getBookingItems();
         gsTiming("Checking types 3");
 
-        List<BookingTimeLineFlatten> lines = bookingEngine.getTimeLinesForItemWithOptimalIngoreErrors(filter.start, filter.end);
+        List<BookingTimeLineFlatten> lines = bookingEngine.getTimeLinesForItemWithOptimalIngoreErrorsWithTypes(filter.start, filter.end, filter.types);
         
         List<String> bookingIdsForBooking = filter.pmsBookingIds.stream()
                     .map(id -> getBooking(id))               
@@ -2248,7 +2253,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (!types.isEmpty() && !types.contains(item.bookingItemTypeId)) {
                 continue;
             }
-
             BookingTimeLineFlatten line = lines.stream()
                     .filter(li -> li.bookingItemId != null && li.bookingItemId.equals(item.id))
                     .findFirst()
@@ -2274,6 +2278,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private LinkedHashMap<Long, IntervalResultEntry> getTimeLine(BookingTimeLineFlatten line, PmsIntervalFilter filter) throws ErrorException {
+        if(line == null) {
+            System.out.println("ok?");
+        }
         List<BookingTimeLine> timelines = line.getTimelines(filter.interval - 21600, 21600);
         LinkedHashMap<Long, IntervalResultEntry> itemCountLine = new LinkedHashMap();
         for (BookingTimeLine tl : timelines) {

@@ -4,17 +4,18 @@
 $booking = $this->getPmsBooking();
 $filter = new core_pmsmanager_PmsBookingFilter();
 $filter->bookingId = $booking->id;
+$filter->includeDeleted = true;
 $rooms = $this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedMultilevelDomainName(), $filter);
 $formatter = new ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBookingColumnFormatters(new \ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking());
 ?>
 
 <div class='manipulateroomoptions'>
-    <span class='shop_button disabled' type='delete'><i class='fa fa-trash-o'></i> Delete selected rooms</span>
-    <span class='shop_button disabled' type='split'><i class='fa fa-users'></i> Split group</span>
-    <span class='shop_button disabled' type='updateGuestCount'><i class='fa fa-plus-square-o'></i> Update guest count</span>
-    <span class='shop_button disabled updatePricePanelbtn' type='updatepricepanelbtn' avoidaction='true'><i class='fa fa-money'></i> Update prices</span>
-    <span class='shop_button disabled addAddonsPanelbtn' type='addAddon' avoidaction='true'><i class='fa fa-plus-square-o'></i> Add/remove addons</span>
-    <span class='shop_button disabled moveCategoryPanelbtn' type='moveToCategory' avoidaction='true'><i class='fa fa-forward'></i> Move category</span>
+    <span class='groupmaninpualtionbtn shop_button disabled' type='delete'><i class='fa fa-trash-o'></i> Delete selected rooms</span>
+    <span class='groupmaninpualtionbtn shop_button disabled' type='split'><i class='fa fa-users'></i> Split group</span>
+    <span class='groupmaninpualtionbtn shop_button disabled' type='updateGuestCount'><i class='fa fa-plus-square-o'></i> Update guest count</span>
+    <span class='groupmaninpualtionbtn shop_button disabled updatePricePanelbtn' type='updatepricepanelbtn' avoidaction='true'><i class='fa fa-money'></i> Update prices</span>
+    <span class='groupmaninpualtionbtn shop_button disabled addAddonsPanelbtn' type='addAddon' avoidaction='true'><i class='fa fa-plus-square-o'></i> Add/remove addons</span>
+    <span class='groupmaninpualtionbtn shop_button disabled moveCategoryPanelbtn' type='moveToCategory' avoidaction='true'><i class='fa fa-forward'></i> Move category</span>
     
     <span class="shop_button addfromdifferentroom" style="float:right; margin-left: 5px; border-radius: 3px;"><i class='fa fa-arrow-circle-down'></i> Import room</span>
     <span class='shop_button doaddroomtogroup' style="float:right; border-radius: 3px;"><i class='fa fa-plus-circle'></i> Add room</span>
@@ -26,7 +27,7 @@ $formatter = new ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBookingColumnF
 <table style='width:100%;' class='roomtable'>
     <?php
     echo "<tr>";
-    echo "<th width='10'><input type='checkbox' class='roomcheckbox toggleallrooms'></th>";
+    echo "<th width='10'><input type='checkbox' class='toggleallrooms'></th>";
     echo "<th>Check in</th>";
     echo "<th>Check out</th>";
     echo "<th>Guests</th>";
@@ -38,7 +39,7 @@ $formatter = new ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBookingColumnF
     echo "</tr>";
     
     foreach($rooms as $room) {
-        echo "<tr class='roomrows'>";
+        echo "<tr class='roomrows ".$room->progressState."'>";
         echo "<td width='10' align='center'><input type='checkbox' class='roomcheckbox' roomid='".$room->pmsRoomId."'></td>";
         echo "<td align='center'>" . $formatter->formatStartPeriode($room) . "</td>";
         echo "<td align='center'>" . $formatter->formatEndPeriode($room) . "</td>";
@@ -55,9 +56,10 @@ $formatter = new ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBookingColumnF
 
 
 <style>
+    .roomrows.deleted td { color:red !important; }
     .manipulateroomoptions { margin-bottom: 10px; position: relative; border-bottom: solid 1px #bbb; padding-bottom: 10px;  }
     .unsettledamountwarning { color:red; font-weight: bold; }
-    .roomcheckbox { height: 30px; width: 30px; }
+    .roomcheckbox,.toggleallrooms { height: 30px; width: 30px; }
     .roomrows td { position: relative; }
     .quickfunctions { display:none; }
     .flag { display:none !important; }

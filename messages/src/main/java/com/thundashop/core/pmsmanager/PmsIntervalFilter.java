@@ -11,6 +11,7 @@ public class PmsIntervalFilter implements Serializable {
     Integer interval;
     boolean compactMode = false;
     String selectedDefinedFilter = "";
+    public List<String> types = new ArrayList();
     
     /**
      * If there are added any ids to this array the 

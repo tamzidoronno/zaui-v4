@@ -2360,11 +2360,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         WubookRoomData rdata = getWubookRoomData(room.roomId);
         BookingItemType type = bookingEngine.getBookingItemType(rdata.bookingEngineTypeId);
         Product prod = productManager.getProduct(type.productId);
-        TaxGroup tax = prod.taxGroupObject;
-        Double factory = (100 + tax.taxRate) / 100;
         for(Date key : room.priceMatrix.keySet()) {
+            TaxGroup tax = productManager.getTaxGroup(prod.id, prod.taxgroup, key);
+            Double factor = (100 + tax.taxRate) / 100;
             Double current = room.priceMatrix.get(key);
-            current *= factory;
+            current *= factor;
             room.priceMatrix.put(key, current);
         }
     }

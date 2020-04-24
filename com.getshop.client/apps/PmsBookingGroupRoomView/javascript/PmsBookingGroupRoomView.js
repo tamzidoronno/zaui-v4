@@ -71,6 +71,11 @@ app.PmsBookingGroupRoomView = {
         $(document).on('click', '.PmsBookingGroupRoomView .addAddonsPanelbtn', app.PmsBookingGroupRoomView.showAddAddonsPanel);
         $(document).on('click', '.PmsBookingGroupRoomView .moveCategoryPanelbtn', app.PmsBookingGroupRoomView.showMoveCategory);
         $(document).on('click', '.PmsBookingGroupRoomView .startmovecategory', app.PmsBookingGroupRoomView.tryToMoveRoom);
+        $(document).on('change', '.PmsBookingGroupRoomView [gsname="type"]', app.PmsBookingGroupRoomView.checkIfCanAddRoom);
+        $(document).on('change', '.PmsBookingGroupRoomView [gsname="guestInfoOnRoom"]', app.PmsBookingGroupRoomView.checkIfCanAddRoom);
+        $(document).on('keyup', '.PmsBookingGroupRoomView [gsname="count"]', app.PmsBookingGroupRoomView.checkIfCanAddRoom);
+        $(document).on('click', '.PmsBookingGroupRoomView .addfromdifferentroom', app.PmsBookingGroupRoomView.showSearchAreaFindBooking);
+        $(document).on('click', '.PmsBookingGroupRoomView .importroom', app.PmsBookingGroupRoomView.importRoom);
 
         $(document).on('keyup', '.PmsBookingGroupRoomView [searchtype]', this.searchGuests);
         $(document).on('keyup', '.PmsBookingGroupRoomView .searchconferencetitle', this.searchConference);
@@ -79,6 +84,35 @@ app.PmsBookingGroupRoomView = {
         $(document).on('change', '.PmsBookingGroupRoomView .changechannel', this.changeChannel)
         $(document).on('change', '.PmsBookingGroupRoomView .cartitem_added_product', this.saveCartItemRow)
         $(document).on('change', '.PmsBookingGroupRoomView .confirmationEmailTemplate', this.changeConfirmationEmailContent)
+    },
+    showSearchAreaFindBooking : function() {
+        $('.findroomfrombooking').toggle();
+        $('.addroombox').hide();
+    },
+    importRoom : function() {
+        var row = $(this).closest('.row');
+        var event = thundashop.Ajax.createEvent('','addExistingRoomToBooking',$(this), { 
+            "tomoveroomid" : $(this).attr('roomid'),
+            "roomid" : app.PmsBookingGroupRoomView.getRoomId()
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            if(res === "1") {
+                alert('Room has been moved');
+                row.fadeOut();
+            }
+        });
+    },
+    checkIfCanAddRoom : function() {
+        var form = $('.addroombox');
+        var args = thundashop.framework.createGsArgs(form);
+        var event = thundashop.Ajax.createEvent('','checkIfCanAdd', form, args);
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            if(res === "no") {
+                $('.notavailablerooms').show();
+            } else {
+                $('.notavailablerooms').hide();
+            }
+        });
     },
     tryToMoveRoom : function() {
         var toType = $('.movetoroomtype').val();

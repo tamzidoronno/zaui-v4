@@ -16,6 +16,81 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         
     }
     
+    public function addExistingRoomToBooking() {
+        $curbooking = $this->getPmsBooking();
+        $roomId = $_POST['data']['tomoveroomid'];
+        $moved = $this->getApi()->getPmsManager()->moveRoomToBooking($this->getSelectedMultilevelDomainName(), $roomId, $curbooking->id);
+        if($moved) {
+            echo "1";
+        } else {
+            echo "0";
+        }
+    }
+    
+    public function searchbooking() {
+        $keyword = $_POST['data']['keyword'];
+        $filter = new \core_pmsmanager_PmsBookingFilter();
+        $filter->searchWord = $keyword;
+        $rooms = $this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedMultilevelDomainName(), $filter);
+        foreach($rooms as $room) {
+            echo "<div class='row addfromotherroomrow'>";
+            echo "<span class='col owner ellipsis'>" . $room->owner . "</span>";
+            echo "<span class='col start ellipsis'>" . date("d.m.Y H:i", $room->start/1000) . "</span>";
+            echo "<span class='col end ellipsis'>" . date("d.m.Y H:i", $room->end/1000) . "</span>";
+            $guestNames = array();
+            foreach($room->guest as $g) { $guestNames[] = $g->name; }
+            echo "<span class='col guestnames ellipsis'>" . join(",", $guestNames) . "</span>";
+            echo "<span class='col roomtype ellipsis'>" . $room->roomType . "</span>";
+            echo "<span class='col room ellipsis'>" . $room->room . "</span>";
+            echo "<span class='col choose importroom bookinghighlightcolor' roomid='".$room->pmsRoomId."'>Import</span>";
+            echo "</div>";
+        }
+    }
+    
+    public function checkIfCanAdd() {
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        $bookings = array();
+        for($i = 0;$i < $_POST['data']['count'];$i++) {
+            $startTime = $config->defaultStart;
+            $endTime = $config->defaultEnd;
+
+            $start = $this->convertToJavaDate(strtotime($_POST['data']['start']. " " . $startTime));
+            $end = $this->convertToJavaDate(strtotime($_POST['data']['end']. " " . $endTime));            
+            
+            $booking = new \core_bookingengine_data_Booking();
+            $booking->startDate = $start;
+            $booking->endDate = $end;
+            $booking->bookingItemTypeId = $_POST['data']['type'];
+            $bookings[] = $booking;
+        }
+        $canadd = $this->getApi()->getBookingEngine()->canAddBookings($this->getSelectedMultilevelDomainName(), $bookings);
+        if($canadd && sizeof($bookings) > 0) {
+            echo "yes";
+        } else {
+            echo "no";
+        }
+    }
+    
+    public function addRoomToGroup() {
+        $type = $_POST['data']['type'];
+        $count = $_POST['data']['count'];
+        
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        $startTime = $config->defaultStart;
+        $endTime = $config->defaultEnd;
+        
+        $start = $this->convertToJavaDate(strtotime($_POST['data']['start']. " " . $startTime));
+        $end = $this->convertToJavaDate(strtotime($_POST['data']['end']. " " . $endTime));
+        $bookingId = $this->getPmsBooking()->id;
+        $guestInfoRoom = $_POST['data']['guestInfoOnRoom'];
+        
+        
+        for($i = 0; $i < $count; $i++) {
+            $this->getApi()->getPmsManager()->addBookingItemType($this->getSelectedMultilevelDomainName(), $bookingId, $type, $start, $end, $guestInfoRoom);
+        }
+        $this->currentBooking = null;
+    }
+
     public function changeRoomCategory() {
         $newType = $_POST['data']['totype'];
         $roomId = $_POST['data']['roomId'];

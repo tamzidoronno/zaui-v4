@@ -10786,8 +10786,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         fromBooking.rooms.remove(room);
         
         
+        ArrayList<String> orderlist = new ArrayList(fromBooking.orderIds);
+        
         List<String> toRemove = new ArrayList();
-        for(String orderId : fromBooking.orderIds) {
+        for(String orderId : orderlist) {
             Order order = orderManager.getOrder(orderId);
             if(order.containsRoom(room.pmsBookingRoomId)) {
                 toBooking.orderIds.add(order.id);

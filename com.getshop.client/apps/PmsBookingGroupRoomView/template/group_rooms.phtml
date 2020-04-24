@@ -7,9 +7,14 @@ $filter->bookingId = $booking->id;
 $filter->includeDeleted = true;
 $rooms = $this->getApi()->getPmsManager()->getSimpleRooms($this->getSelectedMultilevelDomainName(), $filter);
 $formatter = new ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBookingColumnFormatters(new \ns_961efe75_e13b_4c9a_a0ce_8d3906b4bd73\PmsSearchBooking());
+$types = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
 
 $bookingStart = "";
 $bookingEnd = "";
+
+$start = date("d.m.Y", time());
+$end = date("d.m.Y", strtotime(date("d.m.Y", time()) . " +1 day"));
+
 
 foreach ($booking->rooms as $r) {
     if (!$bookingStart || strtotime($r->date->start) < $bookingStart) {
@@ -31,10 +36,53 @@ foreach ($booking->rooms as $r) {
     <span class='groupmaninpualtionbtn shop_button disabled moveCategoryPanelbtn' type='moveToCategory' avoidaction='true'><i class='fa fa-forward'></i> Move category</span>
     
     <span class="shop_button addfromdifferentroom" style="float:right; margin-left: 5px; border-radius: 3px;"><i class='fa fa-arrow-circle-down'></i> Import room</span>
-    <span class='shop_button doaddroomtogroup' style="float:right; border-radius: 3px;"><i class='fa fa-plus-circle'></i> Add room</span>
+    <span class='shop_button doaddroomtogroup' onclick='$(".addroombox").toggle();$(".findroomfrombooking").hide();' style="float:right; border-radius: 3px;"><i class='fa fa-plus-circle'></i> Add room</span>
     
     <i class='fa fa-caret-down'></i>
+<!--</div>-->
+
+<div style="position:relative">
+    <span class="findroomfrombooking" style="padding:10px;">
+        <div style='text-align:right;margin-bottom: 10px;'><i class='fa fa-close' style='cursor:pointer;' onclick='$(".findroomfrombooking").hide();'></i></div>
+        <input type="txt" class="gsniceinput1" placeholder="Search for booking" style="width:100%;box-sizing: border-box;" gstype='clicksubmit' gsname='keyword' method="searchbooking"  gstoarea=".searcharea">
+        <div class="searcharea" style='margin-top:10px;'><span style='font-size: 16px;'>Search for a booking to add in the box above.</span></div>
+        <div style='text-align: right;'><span  class='shop_button' onclick='$(".menubutton.selected").click();'>Done importing</span></div>
+    </span>
 </div>
+
+<div class='addroombox' style='display:none;margin-bottom:15px;' gstype="form" method="addRoomToGroup">
+    <h3>Add another room to this group</h3>
+    <input type='txt' class='gsniceinput1' value='<?php echo $start; ?>' gsname='start'> 
+    <input type='txt' class='gsniceinput1' value='<?php echo $end; ?>' gsname='end'> 
+    <input type='hidden' gsname='roomid' value='<?php echo $booking->id; ?>'>
+    <select class='gsniceselect1' style='height:38px;' gsname='type'>
+        <?php
+        foreach ($types as $type) {
+            echo "<option value='" . $type->id . "'>" . $type->name . "</option>";
+        }
+        ?>
+    </select>
+    <select class='gsniceselect1' style='height:38px; max-width:200pX;' gsname='guestInfoOnRoom'>
+        <?php
+        echo "<option value=''>No guest information</option>";
+        foreach ($booking->rooms as $room) {
+            $guestInfo = "";
+            if (isset($room->guests[0])) {
+                $guestInfo = $room->guests[0]->name . " - ";
+                $guestInfo .= $room->guests[0]->email . " - ";
+                $guestInfo .= $room->guests[0]->prefix . " - ";
+                $guestInfo .= $room->guests[0]->phone;
+            }
+            echo "<option value='" . $room->pmsBookingRoomId . "'>" . $guestInfo . "</option>";
+        }
+        ?>
+    </select>
+    <input type='txt' class='gsniceinput1' gsname='count' value="1" style="width:30px;"> 
+    <span class='shop_button doaddroomtogroup' gstype="submit">Add room</span>
+    <div class="notavailablerooms">I am sorry, you can not add room using the above selection, there are not enough rooms for that, if adding them they will be added to a waiting queue.</div>
+</div>
+
+
 
 <div class="addAddonsPanel" style='margin-bottom: 30px;'>
 <?php
@@ -112,6 +160,14 @@ $this->includefile("addaddonstogroup");
 
 
 <style>
+    .findroomfrombooking { display:none; }
+    .addfromotherroomrow { border-bottom: solid 1px #fff; padding-bottom: 10px; }
+    .addfromotherroomrow:hover { border-bottom: solid 1px #bbb; padding-bottom: 10px; }
+    .addfromotherroomrow .col { width: 150px !important; }
+    .addfromotherroomrow .owner { width: calc(100% - 900px) !important; }
+    .addfromotherroomrow .room { text-align: center; }
+    .addfromotherroomrow .importroom { text-align: center; cursor:pointer; }
+    .notavailablerooms { display:none; }
     .moveCategoryPanel { display:none; }
     .addAddonsPanel { display:none; }
     .addonsrow { clear:both; height: 42px; }

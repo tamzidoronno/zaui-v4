@@ -54,6 +54,8 @@ public class EhfCsvReader {
         List<EhfComplientCompany> retList = new ArrayList();
         boolean firstLine = true;
         int positionToCheck = 0;
+        int positionToCheck_ehf_3_0 = 0;
+        
         for (String[] s : lines) {
             if (firstLine) {
                 for (String a : s) {
@@ -63,12 +65,22 @@ public class EhfCsvReader {
                     positionToCheck++;
                 }
                 
+                for (String a : s) {
+                    if (a.trim().toLowerCase().equals("\"peppolbis_3_0_billing_01_ubl\"")) {
+                        break;
+                    }
+                    positionToCheck_ehf_3_0++;
+                }
+                
+                
+                
                 firstLine = false;
                 continue;
             }
             Long vatnumber = Long.parseLong(s[1].replaceAll("\"", ""));
             boolean canUse = s[positionToCheck].replaceAll("\"", "").equals("Ja");
-            if (canUse) {
+            boolean canUse30 = s[positionToCheck_ehf_3_0].replaceAll("\"", "").equals("Ja");
+            if (canUse || canUse30) {
                 EhfComplientCompany ehfComp = new EhfComplientCompany();
                 ehfComp.name = s[2].replaceAll("\"", "");
                 ehfComp.vatNumber = vatnumber;

@@ -813,6 +813,8 @@ public class CartItem implements Serializable, Cloneable {
     }
 
     public void removeRowsNotConnectedToDate(List<Date> dates) {
+        boolean prevCountNegative = count < 0;
+        
         if (itemsAdded != null) {
             itemsAdded.removeIf(o -> {
                 return !dates.contains(o.date);
@@ -834,6 +836,10 @@ public class CartItem implements Serializable, Cloneable {
             });
             
             count = priceMatrix.size();
+        }
+        
+        if (prevCountNegative && count > 0) {
+            count *= -1;
         }
     }
 

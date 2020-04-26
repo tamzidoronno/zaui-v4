@@ -66,7 +66,7 @@ app.PmsBookingGroupRoomView = {
         $(document).on('click', '.PmsBookingGroupRoomView .updatePricePanelbtn', app.PmsBookingGroupRoomView.updatePricePanelbtn);
         $(document).on('click', '.PmsBookingGroupRoomView .addAddonsPanelbtn', app.PmsBookingGroupRoomView.showAddAddonsPanel);
         $(document).on('keyup', '.PmsBookingGroupRoomView .searchaddaddonslist', app.PmsBookingGroupRoomView.searchAddAddonsList);
-        $(document).on('click', '.PmsBookingGroupRoomView .addAddonsToRoom,.PmsBookingGroupRoomView .removeAddonFromRoom', app.PmsBookingGroupRoomView.addAddonsToRoom);
+        $(document).on('click', '.PmsBookingGroupRoomView .addaddonstogroupbox .addAddonsToRoom,.PmsBookingGroupRoomView .addaddonstogroupbox .removeAddonFromRoom', app.PmsBookingGroupRoomView.addAddonsToRoom);
         $(document).on('click', '.PmsBookingGroupRoomView .setsingleday', app.PmsBookingGroupRoomView.setSingleDayAddons);
         $(document).on('click', '.PmsBookingGroupRoomView .addAddonsPanelbtn', app.PmsBookingGroupRoomView.showAddAddonsPanel);
         $(document).on('click', '.PmsBookingGroupRoomView .moveCategoryPanelbtn', app.PmsBookingGroupRoomView.showMoveCategory);

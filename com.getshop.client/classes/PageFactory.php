@@ -481,6 +481,14 @@ class PageFactory {
         $page->setLeftMenu(\ModulePageMenu::getPmsLeftMenu());
         $page->createRow()->addColumn("f8cc5247-85bf-4504-b4f3-b39937bd9955", "0a7bd783-97d7-4e4f-a092-4023d94e4f02");
         $this->pages['booking_room_view'] = $page;   
+        $page->addExtraApplications('f8cc5247-85bf-4504-b4f3-b39937bd9955');
+        $page->addExtraApplications('b5e9370e-121f-414d-bda2-74df44010c3b');
+        $page->addExtraApplications('28886d7d-91d6-409a-a455-9351a426bed5');
+        $page->addExtraApplications('b72ec093-caa2-4bd8-9f32-e826e335894e');
+        $page->addExtraApplications('9a6ea395-8dc9-4f27-99c5-87ccc6b5793d');
+        $page->addExtraApplications('961efe75-e13b-4c9a-a0ce-8d3906b4bd73');    
+        $page->addExtraApplications('2e51d163-8ed2-4c9a-a420-02c47b1f7d67');
+        $page->addExtraApplications('bce90759-5488-442b-b46c-a6585f353cfe');    
         
         // MODAL
         $page = new \ModulePage("booking_room_view_new", "pms");

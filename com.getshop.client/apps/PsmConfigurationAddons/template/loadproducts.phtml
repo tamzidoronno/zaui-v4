@@ -1,5 +1,6 @@
 <?php
  /* @var $this \ns_c5a4b5bf_365c_48d1_aeef_480c62edd897\PsmConfigurationAddons */
+$this->getApi()->getPmsManager()->addProductsToAddons($this->getSelectedMultilevelDomainName());
 $accounts = $this->getApi()->getProductManager()->getAccountingAccounts();
 $products = $this->getApi()->getProductManager()->getAllProducts();
 $types = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);

@@ -32,7 +32,7 @@ app.PmsAddAddonsList = {
             });
         } else {
             thundashop.Ajax.postWithCallBack(event, function(res){
-                thundashop.framework.reloadOverLayType2();
+                thundashop.framework.reloadOverLayType1or2();
             });
         }
     },

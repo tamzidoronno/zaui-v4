@@ -10,9 +10,13 @@ $confdate = $conference->conferenceDate ? date('d.m.Y', strtotime($conference->c
     <div class="event_header_information">
         <div class="event_header_title"><?php echo $this->getConference()->meetingTitle; ?></div>
     
-        <i class='fa fa-trash-o' 
+        <i class='fa fa-trash-o' title='Delete conference' 
            gs_callback='app.PmsBookingGroupRoomView.conferenceDeleted'
-           style='position: absolute; right: 10px; top: 3px;cursor:pointer;' gsclick='deleteConference' roomid='<?php echo $this->getSelectedRoomId(); ?>' gs_confirm='Are you sure you want to delete this conference?'></i>
+           style='position: absolute; right: 33px; top: 3px;cursor:pointer;' gsclick='deleteConference' roomid='<?php echo $this->getSelectedRoomId(); ?>' gs_confirm='Are you sure you want to delete this conference?'> | </i>
+    
+        <i class='fa fa-trash-o' title='Delete conference and rooms'
+           gs_callback='app.PmsBookingGroupRoomView.conferenceDeleted'
+           style='position: absolute; right: 0px; top: 3px;cursor:pointer;' gsclick='deleteConferenceAndRoom' roomid='<?php echo $this->getSelectedRoomId(); ?>' gs_confirm='Are you sure you want to delete this conference and all rooms connected to it?'>(+)</i>
     </div>
     
     <?

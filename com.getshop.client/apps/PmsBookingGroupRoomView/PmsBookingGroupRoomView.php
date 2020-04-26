@@ -27,6 +27,12 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         }
     }
     
+    public function deleteConferenceAndRoom() {
+        $booking = $this->getPmsBooking();
+        $this->deleteConference();
+        $this->getApi()->getPmsManager()->deleteBooking($this->getSelectedMultilevelDomainName(), $booking->id);
+    }
+    
     public function searchbooking() {
         $keyword = $_POST['data']['keyword'];
         $filter = new \core_pmsmanager_PmsBookingFilter();

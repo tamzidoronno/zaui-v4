@@ -65,6 +65,7 @@ import com.thundashop.core.pmseventmanager.PmsEventManager;
 import com.thundashop.core.pos.PosManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.productmanager.data.ProductLight;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.data.Store;
@@ -1365,7 +1366,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         for(Integer key : notifications.addonConfiguration.keySet()) {
             PmsBookingAddonItem item = notifications.addonConfiguration.get(key);
             if(item.addonType != null && !item.addonType.equals(key)) {
-                System.out.println("Key is out of sync");
                 if(notifications.addonConfiguration.containsKey(item.addonType)) {
                     //This needs to be moved.
                     PmsBookingAddonItem alreadyThere = notifications.addonConfiguration.get(item.addonType);
@@ -4142,6 +4142,29 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return configuration;
     }
 
+    @Override
+    public void addProductsToAddons() {
+        List<BookingItemType> types = bookingEngine.getBookingItemTypes();
+        List<Product> allProducts = productManager.getAllProductsLight();
+        List<String> containsProducts = new ArrayList();
+        for(PmsBookingAddonItem item : configuration.addonConfiguration.values()) {
+            containsProducts.add(item.productId);
+        }
+        for(BookingItemType type : types) {
+            containsProducts.add(type.productId);
+        }
+        
+        boolean needSave = false;
+        for(Product prod : allProducts) {
+            if(prod!= null && prod.id != null && !containsProducts.contains(prod.id) && prod.name != null) {
+                configuration.addAddonConfiguration(prod);
+                needSave = true;
+            }
+        }
+        
+        if(needSave) { saveConfiguration(configuration); }
+    }
+    
     @Override
     public void markKeyDeliveredForAllEndedRooms() {
         for (PmsBooking booking : bookings.values()) {
@@ -10786,8 +10809,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         fromBooking.rooms.remove(room);
         
         
+        ArrayList<String> orderlist = new ArrayList(fromBooking.orderIds);
+        
         List<String> toRemove = new ArrayList();
-        for(String orderId : fromBooking.orderIds) {
+        for(String orderId : orderlist) {
             Order order = orderManager.getOrder(orderId);
             if(order.containsRoom(room.pmsBookingRoomId)) {
                 toBooking.orderIds.add(order.id);

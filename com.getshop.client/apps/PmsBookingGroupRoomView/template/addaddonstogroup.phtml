@@ -1,0 +1,84 @@
+<?php
+/* @var $this ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
+$booking = $this->getPmsBooking();
+$start = null;
+$end = null;
+
+$quickadd = "false";
+if(isset($_SESSION['quickaddaddons'])) {
+    $quickadd = "true";
+}
+
+foreach($booking->rooms as $room) {
+    if(!$start  || strtotime($room->date->start) < $start) { $start = strtotime($room->date->start); }
+    if(!$end  || strtotime($room->date->end) > $end) { $end = strtotime($room->date->end); }
+}
+?>
+<i class='fa fa-close' style='float:right;cursor:pointer;' onclick='$(".addAddonsPanel").hide();'></i>
+<center>
+    <h3>Addons possible to add to this group</h3>
+</center>
+
+
+<div class="addaddonrows step1 addaddonstogroupbox">
+    <input type='text' class='gsniceinput1 searchaddaddonslist' placeholder='Search addons' style='width:100%; box-sizing: border-box; margin-bottom: 10px;'>
+    
+    <div>
+        <span style='float:right;'>
+            <input type='txt' gsname='start' class='gsniceinput1' value='<?php echo date("d.m.Y", $start); ?>' style='width:80px; text-align: center;'>
+            <input type='txt' gsname='end' class='gsniceinput1' value='<?php echo date("d.m.Y", $end); ?>' style='width:80px; text-align: center;'>
+        </span>
+        <input type='checkbox' class='setsingleday' gsname='singleday'>Single day
+    </div>
+    <div style='clear:both;height: 20px;'></div>
+    <?php
+    /* @var $this ns_7ca01dc3_49e7_4bad_a0f9_4f1eae1199d6\PmsAddonSelection */
+    $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+    $productsToExclude = array();
+    foreach($types as $type) {
+        $productsToExclude[] = $type->productId;
+    }
+    
+    $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+    $addonsConfigList = array();
+    foreach($config->addonConfiguration as $id => $item) {
+        $addonsConfigList[$item->productId] = "";
+    }
+    $addonsConfigList = array_keys($addonsConfigList);
+    
+    
+    $found = false;
+    $products = $this->getApi()->getProductManager()->getAllProducts();
+    $newproducts = array();
+    foreach($products as $prod) {
+        $newproducts[$prod->name] = $prod;
+    }
+    ksort($newproducts);
+    
+    foreach($newproducts as $product) {
+        if($product->deactivated) {
+            continue;
+        }
+        if(in_array($product->id, $productsToExclude)) {
+            continue;
+        }
+        if(!in_array($product->id, $addonsConfigList)) {
+            continue;
+        }
+        $found = true;
+        echo "<div class='addonsrow'>" . $product->name;
+        echo "<span class='shop_button removeAddonFromRoom' style='background-color:red;' productid='".$product->id."' quickadd='$quickadd' type='removeaddon'>Remove</span>";
+        echo "<span class='shop_button addAddonsToRoom' productid='".$product->id."' quickadd='$quickadd' type='addaddon'>Add</span>";
+        echo "</div>";
+    }
+    if(!$found) {
+        echo "<div style='padding: 10px;'>No addons has been created yet<br>Go to settings -> Products / Addons to set up addons.</div>";
+    }
+    ?>
+</div>
+
+
+
+<div class="addaddonrows step2">
+    
+</div>

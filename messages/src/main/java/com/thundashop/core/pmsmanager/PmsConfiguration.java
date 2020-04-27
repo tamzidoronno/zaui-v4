@@ -3,6 +3,7 @@ package com.thundashop.core.pmsmanager;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.pmsbookingprocess.AddonItem;
+import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.storemanager.data.Store;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -77,7 +78,24 @@ public class PmsConfiguration extends DataCommon {
         this.hasDoorLockSystem = hasLockSystemActive;
     }
 
-
+    void addAddonConfiguration(Product prod) {
+        int type = -1;
+        for(PmsBookingAddonItem item : addonConfiguration.values()) {
+            if(item.addonType > type) {
+                type = item.addonType;
+            }
+        }
+        type++;
+        
+        PmsBookingAddonItem item = new PmsBookingAddonItem();
+        item.price = prod.price;
+        item.setName(prod);
+        item.count = 1;
+        item.isSingle = true;
+        item.productId = prod.id;
+        item.addonType = type;
+        addonConfiguration.put(type, item);
+    }
 
     public static class PmsBookingTimeInterval {
         public static Integer HOURLY = 1;

@@ -40,6 +40,9 @@ public interface IPmsManager {
     public void setDefaultAddons(String bookingId);
     
     @Administrator
+    public void addProductsToAddons();
+    
+    @Administrator
     public void markRoomAsCleaned(String itemId);
     
     @Administrator

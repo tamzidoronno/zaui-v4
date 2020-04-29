@@ -3,9 +3,13 @@ package com.thundashop.core.pmsmanager;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItem;
+import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.productmanager.ProductManager;
+import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.productmanager.data.TaxGroup;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
@@ -28,6 +32,7 @@ class PmsStatisticsBuilder {
     private HashMap<String, Integer> cachedSquareMetersForType = new HashMap();
     HashMap<String, PmsAdditionalItemInformation> addiotionalItemInfo = new HashMap();
     private List<Booking> allBookingsInEngine;
+    private final ProductManager productManager;
 
     PmsStatisticsBuilder(List<PmsBooking> bookingsInFilter, 
             boolean pricesExTax, 
@@ -35,8 +40,9 @@ class PmsStatisticsBuilder {
             List<PmsBooking> allBookings, 
             HashMap<String, PmsAdditionalItemInformation> addiotionalItemInfo,
             OrderManager orderManager, 
-            BookingEngine bookingEngine) {
+            BookingEngine bookingEngine, ProductManager productManager) {
         this.bookings = bookingsInFilter;
+        this.productManager = productManager;
         this.userManager = userManager;
         this.pricesExTax = pricesExTax;
         this.allBookings = allBookings;
@@ -63,6 +69,11 @@ class PmsStatisticsBuilder {
         Calendar cal = Calendar.getInstance();
         cal.setTime(filter.startDate);
         List<String> roomsAddedForGuests = new ArrayList();
+        List<BookingItemType> types = bookingEngine.getBookingItemTypes();
+        HashMap<String, BookingItemType> typesmap = new HashMap();
+        for(BookingItemType type : types) {
+            typesmap.put(type.id, type);
+        }
         while(true) {
             invoiceManager.gsTiming("Generating statistcs: " + cal.getTime());
             StatisticsEntry entry = buildStatsEntry(cal);
@@ -134,7 +145,9 @@ class PmsStatisticsBuilder {
 
 
                         if(!pricesExTax) {
-                            price /= 1 + (room.taxes/100);
+                            double tax = getTaxForRoom(room, cal.getTime(), typesmap);
+                            Double factor = (100 + tax) / 100;
+                            price /= factor;
                         }
                         entry.roomsPrice.put(room.pmsBookingRoomId, price); 
                         entry.roomsPriceForecasted.put(room.pmsBookingRoomId, price);
@@ -396,5 +409,14 @@ class PmsStatisticsBuilder {
         
         return count;
     }
+
+    private double getTaxForRoom(PmsBookingRooms room, Date time, HashMap<String, BookingItemType> typesmap) {
+        double tax = 0.0;
+        BookingItemType type = typesmap.get(room.bookingItemTypeId);
+        Product product = productManager.getProductUnfinalized(type.productId);
+        TaxGroup group = productManager.getTaxGroup(type.productId, product.taxgroup, time);
+        return group.taxRate;
+    }
+
     
 }

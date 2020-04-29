@@ -1838,7 +1838,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 new ArrayList(bookings.values()),
                 addiotionalItemInfo,
                 orderManager,
-                bookingEngine);
+                bookingEngine,
+                productManager);
         builder.setBudget(getConfigurationSecure().budget);
 
         int totalRooms = getTotalRoomsBasedOnFilter(filter);
@@ -1887,7 +1888,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 result.moveBilledToTotal();
             }
         }
-
+        
         return result;
     }
 

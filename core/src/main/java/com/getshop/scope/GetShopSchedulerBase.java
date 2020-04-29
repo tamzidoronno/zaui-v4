@@ -90,7 +90,7 @@ public abstract class GetShopSchedulerBase implements Runnable {
         if (this.api != null) {
             boolean isLoggedIn = this.api.getUserManager().isLoggedIn();
             if (!isLoggedIn) {
-                System.out.println("GetShopSchedulerBase | reconnecting and logging in again : " + storeId + " | " + webAddress);
+                System.out.println("GetShopSchedulerBase | reconnecting and logging in again : " + storeId + " | " + webAddress + " | username: " + username + " | password: " + password);
                 sessionId = UUID.randomUUID().toString();
                 this.api = new GetShopApi(25554, "localhost", sessionId, webAddress);
                 try {

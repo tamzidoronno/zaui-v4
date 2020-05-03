@@ -169,9 +169,8 @@ $channelNames = $formater->getChannels();
 <div class='col_box_width_2 second'>
     <div class="row">
         <div class="col col1">
-            <i class='fa fa-book bookinghighlightcolor' title='Display log' onclick='$(".menubutton[subsection=\"log\"]").click();' style='cursor:pointer;'></i>
-            <? echo $this->__f("Date created"); ?></div>
-        
+            <? echo $this->__f("Date created"); ?>
+        <a class='bookinghighlightcolor' onclick='$(".menubutton[subsection=\"log\"]").click();' style='cursor:pointer;'> - show log</a></div>
         <?php
         $browser = "";
         if($pmsBooking->browserUsed) {

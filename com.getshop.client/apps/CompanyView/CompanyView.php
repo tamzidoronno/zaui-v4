@@ -145,7 +145,7 @@ class CompanyView extends \MarketingApplication implements \Application {
         $company->contactPerson = $_POST['data']['contactPerson'];
         $company->reference = $_POST['data']['reference'];
         $company->description = $_POST['data']['description'];
-        
+        $company->toxicCustomer ? $_POST['data']['toxicCustomer'] == "true";
         if (!$company->address) {
             $company->address = new \core_usermanager_data_Address();
         }

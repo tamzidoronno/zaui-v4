@@ -266,7 +266,7 @@ public abstract class LockServerBase extends DataCommon {
     public void markCodeAsUpdatedOnLock(String lockId, int slotId) {
         getLock(lockId).markCodeAsUpdatedOnLock(slotId);
     }
-    
+
     public void addAccessHistory(String lockId, int slotId, Date time) {
         AccessHistory history = new AccessHistory();
         history.lockId = lockId;

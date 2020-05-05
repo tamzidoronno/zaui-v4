@@ -12,6 +12,11 @@ class DefaultPaymentHandlingAction extends \PaymentApplication implements \Appli
     public function getName() {
         return "DefaultPaymentHandlingAction";
     }
+    
+    public function updateInvoiceDate() {
+        $newDate = $this->convertToJavaDate(strtotime($_POST['data']['date']));
+        $this->getApi()->getOrderManager()->changeRowCreatedDateOnOrder($_POST['data']['orderid'], $newDate);
+    }
 
     public function render() {
         $this->includefile("common");

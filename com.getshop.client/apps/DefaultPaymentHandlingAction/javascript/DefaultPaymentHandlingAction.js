@@ -4,6 +4,7 @@ app.DefaultPaymentHandlingAction = {
         $(document).on('click', '.DefaultPaymentHandlingAction .updateOrderNote', app.DefaultPaymentHandlingAction.updateOrderNote);
         $(document).on('click', '.DefaultPaymentHandlingAction .doupdateOrderNote', app.DefaultPaymentHandlingAction.doUpdateOrderNote);
         $(document).on('click', '.DefaultPaymentHandlingAction .updateDueDate', app.DefaultPaymentHandlingAction.updateDueDate);
+        $(document).on('click', '.DefaultPaymentHandlingAction .changeorderdatebutton', app.DefaultPaymentHandlingAction.changeorderdatebutton);
         $(document).on('click', '.DefaultPaymentHandlingAction .sendReceiptWithMessage', app.DefaultPaymentHandlingAction.sendReceiptWithMessage);
     },
     sendReceiptWithMessage : function() {
@@ -34,6 +35,20 @@ app.DefaultPaymentHandlingAction = {
         }
         var event = thundashop.Ajax.createEvent('','updateDueDate',$(this), { 
             "days" : days,
+            "orderid" : $(this).attr('orderid')
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            app.PmsPaymentProcess.refresh();
+        });
+
+    },
+    changeorderdatebutton : function() {
+        var days = prompt("New date");
+        if(!days) {
+            return;
+        }
+        var event = thundashop.Ajax.createEvent('','updateInvoiceDate',$(this), { 
+            "date" : days,
             "orderid" : $(this).attr('orderid')
         });
         thundashop.Ajax.postWithCallBack(event, function(res) {

@@ -5543,5 +5543,19 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         changeOrderType(orderId, paymentTypeId);
     }
+
+    @Override
+    public void changeRowCreatedDateOnOrder(String orderId, Date date) {
+        Order order = getOrder(orderId);
+        if(order.closed) {
+            return;
+        }
+        if(order.realRowCreatedDate == null) {
+            order.realRowCreatedDate = order.rowCreatedDate;
+        }
+        order.rowCreatedDate = date;
+        order.rowCreatedDateChangedByUser = getSession().currentUser.id;
+        saveOrder(order);
+    }
    
 }

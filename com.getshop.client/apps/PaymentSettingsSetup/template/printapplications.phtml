@@ -49,6 +49,9 @@
                 if($app->id == "486009b1-3748-4ab6-aa1b-95a4d5e2d228") {
                     continue;
                 }
+                if($app->id == "bd13472e-87ee-4b8d-a1ae-95fb471cedce") {
+                    continue;
+                }
                 $instance = $this->getFactory()->getApplicationPool()->createInstace($app);
                 if(!method_exists($instance, "isPublicPaymentApp")) {
                     continue;

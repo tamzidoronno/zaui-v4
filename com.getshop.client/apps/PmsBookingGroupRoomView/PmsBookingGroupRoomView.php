@@ -1521,6 +1521,19 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         $this->clearCache();
     }
     
+    public function toggleIsChild() {
+        $booking = $this->getPmsBooking();
+        foreach($booking->rooms as $room) {
+            foreach($room->guests as $guest) {
+                if($guest->guestId == $_POST['data']['guestid']) {
+                    $guest->isChild = !$guest->isChild;
+                }
+            }
+        }
+            
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+    }
+    
     public function markRoomCleanedwithoutlog() {
         $room = $this->getPmsBookingRoom();
         $this->getApi()->getPmsManager()->markRoomAsCleanedWithoutLogging($this->getSelectedMultilevelDomainName(), $room->bookingItemId);
@@ -1529,7 +1542,9 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
     public function togglePayAfterStayForGroup() {
         $booking = $this->getPmsBooking();
         $booking->createOrderAfterStay = !$booking->createOrderAfterStay;
+        $text = $booking->createOrderAfterStay ? " on " : " off";
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+        $this->getApi()->getPmsManager()->logEntry($this->getSelectedMultilevelDomainName(), "Pay after stay toggled to : " . $text, $booking->id, null);
         $this->clearCache();
     }
     

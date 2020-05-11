@@ -102,20 +102,16 @@ class ModulePageMenu {
         $menu = new \ModulePageMenu();
         $menu->entries[] = new ModulePageMenuItem("Messages", "messages", "");
         $menu->entries[] = new ModulePageMenuItem("Payment methods", "paymentmethods", "");
-        $menu->entries[] = new ModulePageMenuItem("Cleaning config", "cleaningconfig", "");
-        $menu->entries[] = new ModulePageMenuItem("Self checkin-in terminals", "selfcheckingterminals", "");
         $menu->entries[] = new ModulePageMenuItem("Products / addons", "productsandaddonsconfig", "");
         $menu->entries[] = new ModulePageMenuItem("Terms and conditions", "termsconfig", "");
         $menu->entries[] = new ModulePageMenuItem("Instruction set", "instructionconfig", "");
         $menu->entries[] = new ModulePageMenuItem("Rooms", "roomsconfig", "");
         $menu->entries[] = new ModulePageMenuItem("Notifications", "notifications", "");
-        $menu->entries[] = new ModulePageMenuItem("Budget", "budget", "");
         $menu->entries[] = new ModulePageMenuItem("GetShop Express", "getshopexpressconfig", "");
         $menu->entries[] = new ModulePageMenuItem("Restrictions", "restrictionsconfig", "");
         $menu->entries[] = new ModulePageMenuItem("Channel manager", "channelmanagerconfig", "");
         $menu->entries[] = new ModulePageMenuItem("Lock setup", "lockconfig", "");
         $menu->entries[] = new ModulePageMenuItem("Global setttings", "globalsettings", "");
-        $menu->entries[] = new ModulePageMenuItem("PGA", "pga", "");
         $menu->entries[] = new ModulePageMenuItem("Segmentation", "segmentation", "");
         return $menu;
     }

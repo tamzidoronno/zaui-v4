@@ -53,6 +53,22 @@ $ecomsettings = $this->getFactory()->getApplicationPool()->createInstace($ecom);
 <h1>Activated payment methods</h1>
 <?php
 foreach($apps as $app) {
+    if($app->id == "3e0e8a59-bb0c-467c-8198-2eceaa1fcc60") {
+        continue;
+    }
+    
+    $instance = $this->getFactory()->getApplicationPool()->createInstace($app);
+    if(method_exists($instance, "renderConfig")) {
+        echo "<span class='shop_button quickchoosepaymentmethod' style='margin-right: 5px;' appid='".$instance->applicationSettings->id."'>" . $instance->getName() . "</span>";
+    }
+}
+echo "<div style='height: 20px;'></div>";
+foreach($apps as $app) {
+    
+    if($app->id == "3e0e8a59-bb0c-467c-8198-2eceaa1fcc60") {
+        continue;
+    }
+
     $instance = $this->getFactory()->getApplicationPool()->createInstace($app);
     if(method_exists($instance, "renderConfig")) {
         echo "<div class='paymentsetupconfig' appid='".$instance->applicationSettings->id."'>";

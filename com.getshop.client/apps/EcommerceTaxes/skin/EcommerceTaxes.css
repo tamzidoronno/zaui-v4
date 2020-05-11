@@ -1,7 +1,7 @@
 
 .EcommerceTaxes .gss_setting { width: 100%; }
 .EcommerceTaxes .col { display: inline-block; }
-.EcommerceTaxes .col1 { width: calc(100% - 320px)}
+.EcommerceTaxes .col1 { width: calc(100% - 520px)}
 
 .EcommerceTaxes .col2 input,
 .EcommerceTaxes .col2 { width: 100px; box-sizing: border-box; text-align: center; vertical-align: top; }

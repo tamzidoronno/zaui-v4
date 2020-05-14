@@ -2110,6 +2110,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             if(toCheck.toLowerCase().contains("** this reservation has been pre-paid")) {
                 return true;
             }
+            if(toCheck.toLowerCase().contains("virtual credit card")) {
+                return true;
+            }
         }catch(Exception e) {
             logPrintException(e);
         }

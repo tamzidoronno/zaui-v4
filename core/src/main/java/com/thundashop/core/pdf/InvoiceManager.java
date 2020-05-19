@@ -4,6 +4,7 @@
  */
 package com.thundashop.core.pdf;
 
+import com.thundashop.core.ordermanager.data.InvoiceListFilter;
 import com.braintreegateway.org.apache.commons.codec.binary.Base64;
 import com.getshop.scope.GetShopSession;
 import com.google.gson.Gson;
@@ -396,6 +397,23 @@ public class InvoiceManager extends ManagerBase implements IInvoiceManager {
             if(ord.isInvoice()) {
                 ord.totalAmount = orderManager.getTotalAmount(ord);
                 orders.add(ord);
+            }
+        }
+        
+        Collections.sort(orders);
+        
+        return orders;
+    }
+
+    @Override
+    public List<Order> getAllInvoicesByFilter(InvoiceListFilter filter) {
+        LinkedList<Order> orders = new LinkedList();
+        for(Order ord : orderManager.getAllOrders()) {
+            if(filter.minIncrementOrderId > 0 && ord.incrementOrderId > filter.minIncrementOrderId) {
+                if(ord.isInvoice()) {
+                    ord.totalAmount = orderManager.getTotalAmount(ord);
+                    orders.add(ord);
+                }
             }
         }
         

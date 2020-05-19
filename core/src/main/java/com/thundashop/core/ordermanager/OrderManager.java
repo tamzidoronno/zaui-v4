@@ -440,7 +440,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         order.status = Order.Status.PAYMENT_COMPLETED;
         order.captured = true;
         
-        String name = "";
+        String name = " uknown";
         if(getSession() != null && getSession().currentUser != null) {
             name = getSession().currentUser.fullName;
             order.markedAsPaidByUserId = getSession().currentUser.id;

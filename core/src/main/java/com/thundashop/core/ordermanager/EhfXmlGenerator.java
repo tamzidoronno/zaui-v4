@@ -257,10 +257,11 @@ public class EhfXmlGenerator {
                 "            </cac:PayeeFinancialAccount>\n" +
                 "       </cac:PaymentMeans>\n";
 
+        BigDecimal totalTaxes =  makePositive(order.getTotalAmountVatRoundedTwoDecimals(calculatePresision));
         xml += "        <cac:TaxTotal>\n"
-                + "                <cbc:TaxAmount currencyID=\"NOK\">" + makePositive(order.getTotalAmountVatRoundedTwoDecimals(calculatePresision)) + "</cbc:TaxAmount>\n";
+                + "                <cbc:TaxAmount currencyID=\"NOK\">" + totalTaxes + "</cbc:TaxAmount>\n";
 
-        xml += generateSubTaxes();
+        xml += generateSubTaxes(totalTaxes);
 
         xml += "        </cac:TaxTotal>\n";
 
@@ -311,7 +312,7 @@ public class EhfXmlGenerator {
             BigDecimal total = item.getTotalExRoundedWithTwoDecimals(2); 
             double count = isCreditNote ? makePositive(item.getCount()) : item.getCount();
             
-            String taxCode = item.getProduct().taxGroupObject.taxRate < 25.0 ? "S" : "HH";
+            String taxCode = item.getProduct().taxGroupObject.taxRate < 25.0 ? "S" : "H";
             
             if (item.getProduct().taxGroupObject.taxRate < 15) {
                 taxCode = "AA";
@@ -418,12 +419,13 @@ public class EhfXmlGenerator {
         return lineText;
     }
 
-    private String generateSubTaxes() {
+    private String generateSubTaxes(BigDecimal totalTaxes) {
         Map<TaxGroup, BigDecimal> taxes = order.getTaxesRoundedWithTwoDecimals(calculatePresision);
         
         Map<TaxGroup, BigDecimal> totals = mergeByPercentToGetTotal(taxes);
         taxes = mergeByPercent(taxes);
         
+        taxes = checkTotalsVat(taxes, totalTaxes);
         
         String xml = "";
         for (TaxGroup group : taxes.keySet()) {
@@ -438,7 +440,7 @@ public class EhfXmlGenerator {
             }
             xml += "                <cac:TaxSubtotal>\n"
                     + "                        <cbc:TaxableAmount currencyID=\"NOK\">" + makePositive(totals.get(group)) + "</cbc:TaxableAmount>\n"
-                    + "                        <cbc:TaxAmount currencyID=\"NOK\">" + makePositive(taxes.get(group)) + "</cbc:TaxAmount>\n"
+                    + "                        <cbc:TaxAmount currencyID=\"NOK\">" + taxes.get(group) + "</cbc:TaxAmount>\n"
                     + "                        <cac:TaxCategory>\n"
                     + "                                <cbc:ID schemeID=\"UNCL5305\">" + taxCode + "</cbc:ID>\n"
                     + "                                <cbc:Percent>" + group.taxRate + "</cbc:Percent>\n"
@@ -538,7 +540,7 @@ public class EhfXmlGenerator {
                 total = total.add(o);
             }
             
-            retSet.put(res.keySet().iterator().next(), total);
+            retSet.put(res.keySet().iterator().next(), makePositive(total));
         }
         
         return retSet;
@@ -584,5 +586,30 @@ public class EhfXmlGenerator {
         } finally {
             writer.close();
         }    
+    }
+
+
+    private Map<TaxGroup, BigDecimal> checkTotalsVat(Map<TaxGroup, BigDecimal> totals, BigDecimal totalTaxes) {
+        BigDecimal totalSum = BigDecimal.ZERO;
+        
+        
+        
+        for (BigDecimal o : totals.values()) {
+            totalSum = totalSum.add(o);
+        }
+        
+        BigDecimal restAmount = totalSum.subtract(totalTaxes);
+        
+        if (totals.size() > 0) {
+            TaxGroup group = totals.keySet().iterator().next();
+            BigDecimal forGroup = totals.get(group);
+            
+            System.out.println("Adjusting for group: " + group.taxRate + " | amount: " + restAmount);
+            
+            forGroup = forGroup.subtract(restAmount);
+            totals.put(group, forGroup);
+        }
+        
+        return totals;
     }
 }

@@ -311,7 +311,12 @@ public class EhfXmlGenerator {
             BigDecimal total = item.getTotalExRoundedWithTwoDecimals(2); 
             double count = isCreditNote ? makePositive(item.getCount()) : item.getCount();
             
-            String taxCode = item.getProduct().taxGroupObject.taxRate < 25.0 ? "AA" : "S";
+            String taxCode = item.getProduct().taxGroupObject.taxRate < 25.0 ? "S" : "HH";
+            
+            if (item.getProduct().taxGroupObject.taxRate < 15) {
+                taxCode = "AA";
+            }
+            
             if (item.getProduct().taxGroupObject.taxRate == 0.0) {
                 taxCode = "Z";
             }

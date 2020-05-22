@@ -422,7 +422,12 @@ public class EhfXmlGenerator {
         
         String xml = "";
         for (TaxGroup group : taxes.keySet()) {
-            String taxCode = group.taxRate < 25.0 ? "AA" : "S";
+            String taxCode = group.taxRate < 25.0 ? "S" : "H";
+            
+            if (group.taxRate < 15) {
+                taxCode = "AA";
+            }
+            
             if (group.taxRate == 0.0) {
                 taxCode = "Z";
             }

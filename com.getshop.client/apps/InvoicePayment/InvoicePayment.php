@@ -143,9 +143,32 @@ class InvoicePayment extends \PaymentApplication implements \Application{
     }
     
     
+    function endsWith($haystack, $needle) {
+        $length = strlen($needle);
+        if ($length == 0) {
+            return true;
+        }
+
+        return (substr($haystack, -$length) === $needle);
+    }
+    
     public function getEhfProblems($order, $user) {
         $ret = array();
   
+        $accountingdetails = $this->getApi()->getInvoiceManager()->getAccountingDetails();
+        $vatnumber = strtolower($accountingdetails->vatNumber);
+
+        if(!$this->endsWith($vatnumber, "mva")) {
+            $ret[] = "In your invoice details you need to set up your vat number to be exactly: 123456789MVA, vat number registered: $vatnumber, missing the MVA postfix";
+        } else {
+            $vatnumber = str_replace("mva", "", $vatnumber);
+            if(!is_numeric($vatnumber) || $vatnumber < 100000000 || $vatnumber > 999999999) {
+                $ret[] = "In your invoice details you need to set up your vat number to be exactly: 123456789MVA, the number need to be exact 9 digits";
+            }
+        }
+        
+        
+        
         if (!$user->fullName) {
             $ret[] = "The name of the customer can not be blank";
         }

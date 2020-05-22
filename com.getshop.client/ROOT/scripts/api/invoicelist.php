@@ -18,7 +18,14 @@ if(isset($_GET['username'])) {
 }
 
 $invoiceingoverduelist = new ns_b7fb195b_8cea_4d7b_922e_dee665940de2\InvoicingOverdueList();
-$list = $invoiceingoverduelist->getAllInvoices();
+
+if(isset($_GET['invoicenumberafter'])) {
+    $filter = new core_ordermanager_data_InvoiceListFilter();
+    $filter->minIncrementOrderId = $_GET['invoicenumberafter'];
+    $list = $invoiceingoverduelist->getApi()->getInvoiceManager()->getAllInvoicesByFilter($filter);
+} else {
+    $list = $invoiceingoverduelist->getAllInvoices();
+}
 
 $rows = array();
 foreach($list as $order) {

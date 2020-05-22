@@ -134,6 +134,7 @@ public class PmsBooking extends DataCommon {
     public boolean isPrePaid = false;
     public boolean agreedToSpam = false;
     public boolean travellingBusiness = false;
+    public int fixedBySystemProcess = 0;
     
     public Double getTotalPrice() {
         return totalPrice;

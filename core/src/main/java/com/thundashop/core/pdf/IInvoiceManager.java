@@ -4,6 +4,7 @@
  */
 package com.thundashop.core.pdf;
 
+import com.thundashop.core.ordermanager.data.InvoiceListFilter;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
@@ -31,5 +32,8 @@ public interface IInvoiceManager {
     
     @Administrator
     public List<Order> getAllInvoices();
+    
+    @Administrator
+    public List<Order> getAllInvoicesByFilter(InvoiceListFilter filter);
     
 }

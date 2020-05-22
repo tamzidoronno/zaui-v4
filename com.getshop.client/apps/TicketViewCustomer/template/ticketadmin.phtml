@@ -6,6 +6,12 @@ $systems = $this->getApi()->getSystemManager()->getSystemsForStore($ticket->belo
 $currentSystem = null;
 $otherSystemsForCustomer = null;
 
+$startTimer = 6;
+$toxicCustomers = $this->getFactory()->getToxicCustomers();
+if(in_array($ticket->belongsToStore, $toxicCustomers)) {
+    $startTimer = 15;
+}
+
 $admins = $this->getApi()->getUserManager()->getUsersByType(100);
 
 if ($systems) {
@@ -54,9 +60,9 @@ if ($systems) {
     <br/>
     <div>
         <h3>Timer</h3>
-        <input type="hidden" value="<?php echo time()-(60*5); ?>" id="startTime">
+        <input type="hidden" value="<?php echo time()-(60*$startTimer); ?>" id="startTime">
         <script>
-                app.TicketViewCustomer.startTime();
+                app.TicketViewCustomer.startTime(<?php echo $startTimer; ?>);
         </script>
         
         <h3>Settings</h3>

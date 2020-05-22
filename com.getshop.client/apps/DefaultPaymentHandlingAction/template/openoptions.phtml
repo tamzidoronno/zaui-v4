@@ -2,10 +2,13 @@
 /* @var $this \ns_486009b1_3748_4ab6_aa1b_95a4d5e2d228\DefaultPaymentHandlingAction */
 $order = $this->getOrder();
 $amount = $this->getApi()->getOrderManager()->getTotalAmount($order);
-
+$isInvoice = false;
 $text = "Mark as paid";
 if($order->payment->paymentType == "ns_92bd796f_758e_4e03_bece_7d2dbfa40d7a\ExpediaPayment" && $amount > 0) {
     $text = "Bill Expedia";
+}
+if($order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200c9a66\InvoicePayment") {
+    $isInvoice = true;
 }
 if($order->payment->paymentType == "ns_d79569c6_ff6a_4ab5_8820_add42ae71170\BookingComCollectPayments" && $amount > 0) {
     $text = "Bill booking.com";
@@ -41,6 +44,10 @@ if($order->payment->paymentType == "ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2\Veri
     <div class='order_action_button showChangePaymentMenu' orderid='<? echo $order->id; ?>' style='position: relative;' >
         <i class='fa fa-chain-broken'></i> 
         <? echo $this->__f("Change payment type"); ?>
+    </div>
+    <div class='order_action_button changeorderdatebutton' orderid='<? echo $order->id; ?>' style='position: relative;' >
+        <i class='fa fa-calendar'></i> 
+        <? echo $this->__f("Change invoice date"); ?>
     </div>
         <div class='order_action_button updateOrderNote' orderid='<? echo $order->id; ?>' style='position: relative;' >
             <i class='fa fa-plus-square-o'></i> 

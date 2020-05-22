@@ -10,7 +10,7 @@ if (!is_array($taxes)) {
 /* @var $this \ns_deab499e_b133_4cb6_a1b2_532018c31d46\Taxes */
 $numberOfGroups = 5;
 ?>
-
+<br>
 <div gstype='form' method='saveTaxes'>
     <div class="gss_settings_header">
         <i class="fa fa-dollar"></i>
@@ -28,7 +28,7 @@ $numberOfGroups = 5;
     <div class='gss_settings_content'>
 
         <div class="textfield gss_setting" id="title">
-            <div class="col1 col title"><?php echo $this->__("Taxgroup") . " $i"; ?></div>
+            <div class="col1 col title"><?php echo $this->__("Taxgroup"); ?></div>
             <div class="col2 col"><? echo $this->__f("Tax rate (%)"); ?></div>
             <div class="col3 col"><? echo $this->__f("Accounting account"); ?></div>
             <div class="col3 col"><? echo $this->__f("Description"); ?></div>
@@ -50,7 +50,7 @@ $numberOfGroups = 5;
                 </div>
                 <div class="col2 col"><input class='gsniceinput1' type="textfield" gs_model="taxmodel" gsname="group<? echo $arrId; ?>" value="<? echo $groupTax; ?>"></div>
                 <div class="col3 col"><input class='gsniceinput1' type="textfield" gs_model="taxmodel" gsname="accounttaxcode<? echo $arrId; ?>" value="<? echo $accountinTaxCode; ?>"></div>
-                <div class="col4 col"><input class='gsniceinput1' type="textfield" gs_model="taxmodel" gsname="description<? echo $arrId; ?>" value="<? echo $description; ?>"></div>
+                <div class="col4 col"><input class='gsniceinput1' type="textfield" gs_model="taxmodel" gsname="description<? echo $arrId; ?>" value="<? echo $description; ?>" style='width:300px; text-align:left;'></div>
                 
                 <div>
                     <?

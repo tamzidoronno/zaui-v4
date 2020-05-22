@@ -37,11 +37,11 @@ if ($canUseEhf) {
             $ehfValitation = $this->getEhfProblems($order, $user);
             $ehfConfigErrors = $this->getApi()->getOrderManager()->isConfiguredForEhf();
 
-            if (count($ehfConfigErrors)) {
+            if (count((array)$ehfConfigErrors)) {
                 echo "<hr>";
                 echo "<b>EHF:</b>";
                 echo "<div>";
-                echo "This ivoice can not be sent by EHF because you have not configured the invoice settings properly.";
+                echo "This invoice can not be sent by EHF because you have not configured the invoice settings properly.";
                 foreach ($ehfConfigErrors as $error) {
                     echo "<div>* $error</div>";
                 }

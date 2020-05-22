@@ -440,7 +440,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         order.status = Order.Status.PAYMENT_COMPLETED;
         order.captured = true;
         
-        String name = "";
+        String name = " uknown";
         if(getSession() != null && getSession().currentUser != null) {
             name = getSession().currentUser.fullName;
             order.markedAsPaidByUserId = getSession().currentUser.id;
@@ -2409,8 +2409,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         for(Order order : orders.values()) {
             if(order.status == Order.Status.NEEDCOLLECTING && order.needCollectingDate != null && !order.warnedNotAbleToCapture && order.incrementOrderId > 0) {
                 if(past.after(order.needCollectingDate)) {
-                    messageManager.sendMessageToStoreOwner("Order failed to be collected in 30 minutes, order id: " + order.incrementOrderId, "Payment warning");
-                    messageManager.sendErrorNotificationToEmail("pal@getshop.com","Order failed to be collected in 30 minutes, order id: " + order.incrementOrderId, null);
+                    messageManager.sendMessageToStoreOwner("Order failed to be collected in 90 minutes, order id: " + order.incrementOrderId, "Payment warning");
+                    messageManager.sendErrorNotificationToEmail("pal@getshop.com","Order failed to be collected in 90 minutes, order id: " + order.incrementOrderId, null);
                     order.warnedNotAbleToCapture = true;
                     saveOrder(order);
                 }
@@ -5542,6 +5542,20 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         changeOrderType(orderId, paymentTypeId);
+    }
+
+    @Override
+    public void changeRowCreatedDateOnOrder(String orderId, Date date) {
+        Order order = getOrder(orderId);
+        if(order.closed) {
+            return;
+        }
+        if(order.realRowCreatedDate == null) {
+            order.realRowCreatedDate = order.rowCreatedDate;
+        }
+        order.rowCreatedDate = date;
+        order.rowCreatedDateChangedByUser = getSession().currentUser.id;
+        saveOrder(order);
     }
    
 }

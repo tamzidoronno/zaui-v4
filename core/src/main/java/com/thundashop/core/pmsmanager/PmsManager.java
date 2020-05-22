@@ -2168,6 +2168,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsManagerProcessor processor = new PmsManagerProcessor(this);
         processor.doProcessing();
         getShopLockSystemManager.pingServers();
+        
+        PmsConfiguration config = getConfigurationSecure();
+        if(!config.checkedForErrorsInBookingComPrepaid) {
+            checkedForErrorsInBookingComPrepaid();
+            config.checkedForErrorsInBookingComPrepaid = true;
+            saveConfiguration(configuration);
+        }
+
     }
 
     void warnArxDown() {
@@ -11277,6 +11285,45 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 .map(o -> getconferenceBooking(o.id))
                 .filter(o -> o != null)
                 .collect(Collectors.toList());
+    }
+
+    public void checkedForErrorsInBookingComPrepaid() {
+        List<PmsBooking> bookings = new ArrayList(this.bookings.values());
+        
+        int found = 0;
+        for(PmsBooking booking : bookings) {
+            if(!booking.isOld(60*24*4)) {
+                if(booking.isPrePaid) {
+                    continue;
+                }
+                if(booking.isOta() && booking.comments != null) {
+                    for(PmsBookingComment comment : booking.comments.values()) {
+                        if(comment.comment == null) {
+                            continue;
+                        }
+                        try {
+                            if(comment.comment.toLowerCase().contains("booking note : payment charge is")) {
+                                booking.isPrePaid = true;
+                                booking.isBookingComVirtual = true;
+                                booking.paymentType = "d79569c6-ff6a-4ab5-8820-add42ae71170";
+                                booking.fixedBySystemProcess = 1122;
+                                saveBooking(booking);
+                                
+                                pmsInvoiceManager.clearOrdersOnBooking(booking);
+                                pmsInvoiceManager.autoCreateOrderForBookingAndRoom(booking.id, "d79569c6-ff6a-4ab5-8820-add42ae71170");
+                                logPrint("Done fixing order: " + booking.incrementBookingId);
+                                found++;
+                            }
+                        }catch(Exception e) {
+                            messageManager.sendErrorNotification("Failed to autocorrect booking: " + booking.incrementBookingId, e);
+                        }
+                    }
+                }
+            }
+        }
+        if(found > 0) {
+            messageManager.sendErrorNotification("Fixed " + found + " bookings that where failed", null);
+        }
     }
     
 }

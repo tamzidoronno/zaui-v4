@@ -87,6 +87,9 @@ public interface IOrderManager {
     public void deleteOrderTransaction(String transactionId);
     
     @Administrator
+    public void changeRowCreatedDateOnOrder(String orderId, Date date);
+    
+    @Administrator
     public void forceDeleteOrder(String orderId, String password);
     
     @Administrator

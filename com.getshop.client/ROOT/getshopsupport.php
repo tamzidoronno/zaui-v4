@@ -11,6 +11,9 @@ if($timezone) {
     date_default_timezone_set($timezone);
 }
 
+$storeId = $factory->getStore()->id;
+$toxicCustomers = $factory->getToxicCustomers();
+
 if(!$factory->getApi()->getUserManager()->isLoggedIn()) {
     header('location:/login.php?redirectto=/pms.php');
     exit(0);
@@ -83,7 +86,23 @@ $_SESSION['firstloadpage'] = true;
             <div class="gs_body_inner">
 
             <?php
-            if($_SESSION['hasoverdueinvoices']) {
+            $isToxicClosed = false;
+            if(in_array($storeId, $toxicCustomers)) {
+                $hour = date("H", time());
+                if((date('N', time()) >= 6)) {
+                   $isToxicClosed = true; 
+                } else if($hour < 9 || $hour > 15) {
+                    $isToxicClosed = true;
+                }
+            }
+            if($isToxicClosed) {
+                echo "<center><br><br><br><br>";
+                echo "<div style='font-size:20px;'>";
+                echo "Our support center is closed<br><br>";
+                echo "Opening hours are Monday to Friday 09:00 - 15:00";
+                echo "</div>";
+                echo "</center>";
+            } else if($_SESSION['hasoverdueinvoices']) {
                 echo "<center><br><br><br><br>";
                 echo "<div style='font-size:20px;'>";
                 echo "Support center has been disabled due to overdue invoices.";

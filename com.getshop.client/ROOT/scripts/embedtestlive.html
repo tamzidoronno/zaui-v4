@@ -14,18 +14,17 @@
     </div>
 <script>
     gsisdevmode = false;
-//    getshop_websockethost = "websocket6.getshop.com";
+//    getshop_websockethost = "websocket5.getshop.com";
     $ = jQuery;
     jQuery(function ($) {
-        $.getScript("https://20505gc6.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
+        $.getScript("https://gaard.kronen.getshop.comj/s/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
             $("#bookingprocess").getshopbooking(
                 {
-                    "endpoint": "https://20505gc6.getshop.com/",
-                    "jsendpoint": "https://20505gc6.getshop.com/",
+                    "endpoint": "https://gaard.kronen.getshop.com/",
+                    "jsendpoint": "https://gaard.kronen.getshop.com/",
                     "domain" : "default",
                     "language" : "no",
-                    "nextPage" : "/booking/",
-                    "websocket" : "websocket6.getshop.com"
+                    "websocket" : "websocket5.getshop.com"
                 }
             );
         });

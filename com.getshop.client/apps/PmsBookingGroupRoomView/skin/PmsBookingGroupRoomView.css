@@ -132,7 +132,7 @@
     background-color: #ff0000;
     padding: 10px;
     color: #fff;
-    height: 35px;
+    min-height: 35px;
     font-size: 24px;
 }
 .PmsBookingGroupRoomView .isdeletedinformation { background-color:#271b1b; color:#fff; padding: 5px; padding-left: 10px; }
@@ -224,7 +224,7 @@
 .PmsBookingGroupRoomView .bookinginformation .guest_col2 { width: 225px; }
 .PmsBookingGroupRoomView .bookinginformation .guest_col3 { width: 200px; }
 .PmsBookingGroupRoomView .bookinginformation .guest_col4 { width: 135px; }
-.PmsBookingGroupRoomView .bookinginformation .guest_col5 { width: 160px; }
+.PmsBookingGroupRoomView .bookinginformation .guest_col5 { width: 165px; }
 .PmsBookingGroupRoomView .countrylanguagebox {
     display: inline-block;
     width: 45%;

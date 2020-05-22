@@ -292,7 +292,7 @@ public class PmsInvoiceManagerNew {
 
     private PmsBookingAddonItem setTaxGroupToProduct(String referenceId, PmsOrderCreateRow roomData, Product prod, CartItem item) {
         if (referenceId != null && !referenceId.isEmpty()) {
-            PmsBooking booking = pmsManager.getBookingFromRoom(roomData.roomId);
+            PmsBooking booking = pmsManager.getBookingFromRoomSecure(roomData.roomId);
             if (booking != null) {
                 PmsBookingRooms pmsRoom = booking.getRoom(roomData.roomId);
                 if (pmsRoom != null) {

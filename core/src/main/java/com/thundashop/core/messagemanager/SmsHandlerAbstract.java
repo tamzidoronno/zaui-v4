@@ -167,6 +167,12 @@ public abstract class SmsHandlerAbstract implements Runnable {
             }
         } catch (NumberParseException e) {
             HashMap<String, String> result = new HashMap();
+            if(prefix.isEmpty()) {
+                prefix = phonePrefix.replace("+", "");
+                prefix = prefix.replace("+", "");
+                prefix = prefix.replace("+", "");
+                prefix = prefix.replace("+", "");
+            }
             result.put("prefix", prefix);
             result.put("phone", phone);
             return result;

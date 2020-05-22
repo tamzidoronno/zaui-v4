@@ -54,7 +54,7 @@ app.TicketViewCustomer = {
         });
     },
     
-    startTime : function() {
+    startTime : function(timer) {
         var time = $('#startTime').val();
         var timeCounter = $('#startTime').val();
         if(typeof(counterTimer) !== "undefined") {
@@ -62,7 +62,7 @@ app.TicketViewCustomer = {
         }
         counterTimer = setInterval(function() {
             timeCounter++;
-            var secondsUsed = (timeCounter - time)+(60*3);
+            var secondsUsed = (timeCounter - time)+(60*timer);
             var minutes = parseInt(secondsUsed / 60);
             var seconds = secondsUsed-(minutes * 60);
             $('#secondsused').val(secondsUsed);

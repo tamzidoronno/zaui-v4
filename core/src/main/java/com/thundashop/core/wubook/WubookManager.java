@@ -2110,6 +2110,12 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             if(toCheck.toLowerCase().contains("** this reservation has been pre-paid")) {
                 return true;
             }
+            if(toCheck.toLowerCase().contains("virtual credit card")) {
+                return true;
+            }
+            if(toCheck.toLowerCase().contains("booking note : payment charge is")) {
+                return true;
+            }
         }catch(Exception e) {
             logPrintException(e);
         }
@@ -2181,6 +2187,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             Gson test = new Gson();
             String toCheck = test.toJson(table);
             if(toCheck.toLowerCase().contains("** this reservation has been pre-paid")) {
+                return true;
+            }
+            if(toCheck.toLowerCase().contains("booking note : payment charge is")) {
                 return true;
             }
         }catch(Exception e) {

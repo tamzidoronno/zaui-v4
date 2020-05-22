@@ -90,8 +90,9 @@ class PmsSearchBookingColumnFormatters {
         $vistorText .= "<img src='/skin/flags/blank.gif' class='flag flag-".strtolower($room->countryCode)."' style='float:left;'/><div class='guestinfo2' getshop_sorting='".$name."'>";
             foreach($room->guest as $guest) {
                 $isDisabled = $guest->isDisabled ? "<i class='fa fa-wheelchair'></i>" : "";
+                $isChild = $guest->isChild ? "<i class='fa fa-child'></i>" : "";
                 
-                $vistorText .= "<div class='guestname'>$isDisabled ".$guest->name."</div>";
+                $vistorText .= "<div class='guestname'>$isDisabled $isChild ".$guest->name."</div>";
                 if($guest->email) { $vistorText .= "<div class='guestemail'>" . $guest->email."</div>"; }
                 if($guest->phone) { $vistorText .= "<div class='guestphone'>+" . $guest->prefix . $guest->phone . "</div>"; }
                 $vistorText .= "<br>";

@@ -1359,5 +1359,11 @@ class Factory extends FactoryBase {
         }
     }
 
+    public function getToxicCustomers() {
+        $toxicCustomers = array();
+        $toxicCustomers[] = "249e4a06-815b-433b-a22e-54f4a1817e00";
+        return $toxicCustomers;
+    }
+
 }
 ?>

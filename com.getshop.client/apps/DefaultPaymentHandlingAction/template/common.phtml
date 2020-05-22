@@ -87,4 +87,10 @@ if (!$order->isCreditNote && count($order->creditOrderId)) {
             </td>
         </tr>
     </table>
+    <?php
+    if($order->realRowCreatedDate) {
+        echo " <i class='fa fa-calendar' style='display: inline-block; width: 30px; text-align: center;'></i>";
+        echo "This order where originally created at " . date("d.m.Y H:i", strtotime($order->realRowCreatedDate));
+    }
+    ?>
 </div>

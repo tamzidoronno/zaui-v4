@@ -8,7 +8,9 @@ $amount = $this->getApi()->getOrderManager()->getTotalAmount($order);
 $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $roomid);
 
 $hidePayButton = false;
-if($order->payment->paymentType == "ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2\VerifoneTerminal" || $order->payment->paymentType == "ns_8edb700e_b486_47ac_a05f_c61967a734b1\IntegratedPaymentTerminal") {
+if($order->payment->paymentType == "ns_6dfcf735_238f_44e1_9086_b2d9bb4fdff2\VerifoneTerminal" ||
+        $order->payment->paymentType == "ns_4aa4888a_4685_4373_bffe_aa6a3005eff1\OtaPayments" ||
+        $order->payment->paymentType == "ns_8edb700e_b486_47ac_a05f_c61967a734b1\IntegratedPaymentTerminal") {
      $hidePayButton = true;
 }
 

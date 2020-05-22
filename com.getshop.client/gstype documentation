@@ -230,5 +230,5 @@ PMHR.SE:
 
 IIZY:
     http://gkroen.3.0.local.getshop.com/scripts/api/invoiceexport.php?id=116516
-    http://gkroen.3.0.local.getshop.com/scripts/api/invoicelist.php
+    http://gkroen.3.0.local.getshop.com/scripts/api/invoicelist.php&invoicenumberafter=12222
     http://gkroen.3.0.local.getshop.com/scripts/api/freport.php?start=01.10.2019&end=31.12.2019

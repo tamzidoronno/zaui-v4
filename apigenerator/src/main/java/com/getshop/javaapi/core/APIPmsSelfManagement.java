@@ -21,7 +21,7 @@ public class APIPmsSelfManagement {
      public JsonElement getAddonsWithDiscountForBooking(String gs_multiLevelName, Object id, Object pmsBookingRoomId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("id",new Gson().toJson(id));
           gs_json_object_data.args.put("pmsBookingRoomId",new Gson().toJson(pmsBookingRoomId));
           gs_json_object_data.method = "getAddonsWithDiscountForBooking";
@@ -39,7 +39,7 @@ public class APIPmsSelfManagement {
      public JsonElement getBookingById(String gs_multiLevelName, Object id)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("id",new Gson().toJson(id));
           gs_json_object_data.method = "getBookingById";
           gs_json_object_data.interfaceName = "core.pmsmanager.IPmsSelfManagement";
@@ -56,7 +56,7 @@ public class APIPmsSelfManagement {
      public JsonElement getOrderById(String gs_multiLevelName, Object id, Object orderId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("id",new Gson().toJson(id));
           gs_json_object_data.args.put("orderId",new Gson().toJson(orderId));
           gs_json_object_data.method = "getOrderById";
@@ -74,7 +74,7 @@ public class APIPmsSelfManagement {
      public void saveAddonSetup(String gs_multiLevelName, Object id, Object addons)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("id",new Gson().toJson(id));
           gs_json_object_data.args.put("addons",new Gson().toJson(addons));
           gs_json_object_data.method = "saveAddonSetup";

@@ -42,6 +42,27 @@ public class APIProductManager {
      * @param page
      * @return
      */
+     public void addOverrideTaxGroup(Object groupNumber, Object start, Object end, Object overrideGroupNumber)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("groupNumber",new Gson().toJson(groupNumber));
+          gs_json_object_data.args.put("start",new Gson().toJson(start));
+          gs_json_object_data.args.put("end",new Gson().toJson(end));
+          gs_json_object_data.args.put("overrideGroupNumber",new Gson().toJson(overrideGroupNumber));
+          gs_json_object_data.method = "addOverrideTaxGroup";
+          gs_json_object_data.interfaceName = "core.productmanager.IProductManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
+     * Returns a list of products for a given searchword,
+     * if blank all products will be returned.
+     *
+     * @param searchWord
+     * @param pageSize
+     * @param page
+     * @return
+     */
      public void changeAccountingNumber(Object oldAccountNumber, Object accountNumber)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
@@ -687,6 +708,25 @@ public class APIProductManager {
           Gson gson = new GsonBuilder().serializeNulls().create();
           JsonElement object = gson.fromJson(result, JsonElement.class);
           return object;
+     }
+
+     /**
+     * Returns a list of products for a given searchword,
+     * if blank all products will be returned.
+     *
+     * @param searchWord
+     * @param pageSize
+     * @param page
+     * @return
+     */
+     public void removeOverrideTaxGroup(Object taxGroupNumber, Object id)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("taxGroupNumber",new Gson().toJson(taxGroupNumber));
+          gs_json_object_data.args.put("id",new Gson().toJson(id));
+          gs_json_object_data.method = "removeOverrideTaxGroup";
+          gs_json_object_data.interfaceName = "core.productmanager.IProductManager";
+          String result = transport.send(gs_json_object_data);
      }
 
      /**

@@ -31,7 +31,7 @@ GS8015ActionHandler::GS8015ActionHandler() {
 
 void GS8015ActionHandler::lock() {
 	digitalWrite(7, HIGH);
-	delay(100);
+	delay(200);
 	digitalWrite(7, LOW);
 }
 
@@ -60,24 +60,19 @@ void GS8015ActionHandler::playTone() {
 void GS8015ActionHandler::setup() {
 	pinMode(6, OUTPUT);
 	pinMode(7, OUTPUT);
+
+  digitalWrite(6, LOW);
+  digitalWrite(7, LOW);
 }
 
 void GS8015ActionHandler::unlock() {
-	bool high = 0;
+  digitalWrite(6, HIGH);
+  delay(200);
+  digitalWrite(6, LOW);
 
-	int MAX_COUNT = sizeof(melody) / 2; // Melody length, for looping.
-
-	for (int i=0; i<MAX_COUNT; i++) {
-	    tone_ = melody[i];
-	    beat = 50;
-
-	    duration = beat * tempo; // Set up timing
-
-	    playTone();
-	    // A pause between notes...
-	    delayMicroseconds(pause);
-	}
-
+  digitalWrite(5, LOW);
+  digitalWrite(15, LOW);
+  digitalWrite(16, HIGH);
 }
 
 void GS8015ActionHandler::triggerDoorAutomation() {

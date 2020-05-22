@@ -94,9 +94,6 @@ bool CodeHandler::compareCodes(unsigned char* savedCode, unsigned char* typedCod
 bool CodeHandler::testCodes(unsigned char* codeFromPanel) {
 	unsigned char buffer[16];
 
-	Serial.print(codeFromPanel[15], HEX);
-	Serial.print("\r\n");
-
 	if (!this->isLocked() && codeFromPanel[15] == 0x0A && codeFromPanel[14] == 0x01 && codeFromPanel[13] == 0x0A) {
 		this->resetCloseTimeStamp();
     this->changeState('U');

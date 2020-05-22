@@ -18,11 +18,59 @@ public class APIPosManager {
      *
      * @author ktonder
      */
+     public void abortPaymentTransaction(Object paymentId, Object forced)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("paymentId",new Gson().toJson(paymentId));
+          gs_json_object_data.args.put("forced",new Gson().toJson(forced));
+          gs_json_object_data.method = "abortPaymentTransaction";
+          gs_json_object_data.interfaceName = "core.pos.IPosManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
      public void activatePaymentMethod(Object posPaymentMethod)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
           gs_json_object_data.args.put("posPaymentMethod",new Gson().toJson(posPaymentMethod));
           gs_json_object_data.method = "activatePaymentMethod";
+          gs_json_object_data.interfaceName = "core.pos.IPosManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
+     public void addCartItemsToConference(Object paymentMethodId, Object pmsConferenceId, Object cartItems, Object cashPointId, Object tabId)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("paymentMethodId",new Gson().toJson(paymentMethodId));
+          gs_json_object_data.args.put("pmsConferenceId",new Gson().toJson(pmsConferenceId));
+          gs_json_object_data.args.put("cartItems",new Gson().toJson(cartItems));
+          gs_json_object_data.args.put("cashPointId",new Gson().toJson(cashPointId));
+          gs_json_object_data.args.put("tabId",new Gson().toJson(tabId));
+          gs_json_object_data.method = "addCartItemsToConference";
+          gs_json_object_data.interfaceName = "core.pos.IPosManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
+     public void addCartItemsToRoom(Object paymentMethodId, Object roomId, Object cartItems, Object cashPointId, Object tabId)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("paymentMethodId",new Gson().toJson(paymentMethodId));
+          gs_json_object_data.args.put("roomId",new Gson().toJson(roomId));
+          gs_json_object_data.args.put("cartItems",new Gson().toJson(cartItems));
+          gs_json_object_data.args.put("cashPointId",new Gson().toJson(cashPointId));
+          gs_json_object_data.args.put("tabId",new Gson().toJson(tabId));
+          gs_json_object_data.method = "addCartItemsToRoom";
           gs_json_object_data.interfaceName = "core.pos.IPosManager";
           String result = transport.send(gs_json_object_data);
      }
@@ -52,6 +100,21 @@ public class APIPosManager {
           gs_json_object_data.args.put("zReportId",new Gson().toJson(zReportId));
           gs_json_object_data.args.put("password",new Gson().toJson(password));
           gs_json_object_data.method = "addOrderIdToZReport";
+          gs_json_object_data.interfaceName = "core.pos.IPosManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
+     public void addTextToChef(Object posId, Object textToChef, Object values)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("posId",new Gson().toJson(posId));
+          gs_json_object_data.args.put("textToChef",new Gson().toJson(textToChef));
+          gs_json_object_data.args.put("values",new Gson().toJson(values));
+          gs_json_object_data.method = "addTextToChef";
           gs_json_object_data.interfaceName = "core.pos.IPosManager";
           String result = transport.send(gs_json_object_data);
      }
@@ -150,7 +213,7 @@ public class APIPosManager {
      *
      * @author ktonder
      */
-     public void completeTransaction(Object tabId, Object orderId, Object cashPointDeviceId, Object kitchenDeviceId, Object paymentMetaData)  throws Exception  {
+     public void completeTransaction(Object tabId, Object orderId, Object cashPointDeviceId, Object kitchenDeviceId, Object paymentMetaData, Object cashPointId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
           gs_json_object_data.args.put("tabId",new Gson().toJson(tabId));
@@ -158,6 +221,7 @@ public class APIPosManager {
           gs_json_object_data.args.put("cashPointDeviceId",new Gson().toJson(cashPointDeviceId));
           gs_json_object_data.args.put("kitchenDeviceId",new Gson().toJson(kitchenDeviceId));
           gs_json_object_data.args.put("paymentMetaData",new Gson().toJson(paymentMetaData));
+          gs_json_object_data.args.put("cashPointId",new Gson().toJson(cashPointId));
           gs_json_object_data.method = "completeTransaction";
           gs_json_object_data.interfaceName = "core.pos.IPosManager";
           String result = transport.send(gs_json_object_data);
@@ -174,6 +238,22 @@ public class APIPosManager {
           gs_json_object_data.method = "createCashPoint";
           gs_json_object_data.interfaceName = "core.pos.IPosManager";
           String result = transport.send(gs_json_object_data);
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
+     public JsonElement createNewGiftCard(Object cashPointId)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("cashPointId",new Gson().toJson(cashPointId));
+          gs_json_object_data.method = "createNewGiftCard";
+          gs_json_object_data.interfaceName = "core.pos.IPosManager";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
      }
 
      /**
@@ -339,10 +419,55 @@ public class APIPosManager {
      *
      * @author ktonder
      */
+     public void doZReport(Object paymentId)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("paymentId",new Gson().toJson(paymentId));
+          gs_json_object_data.method = "doZReport";
+          gs_json_object_data.interfaceName = "core.pos.IPosManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
      public JsonElement getAllTabs()  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
           gs_json_object_data.method = "getAllTabs";
+          gs_json_object_data.interfaceName = "core.pos.IPosManager";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
+     public JsonElement getAvailableConferences(Object paymentId)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("paymentId",new Gson().toJson(paymentId));
+          gs_json_object_data.method = "getAvailableConferences";
+          gs_json_object_data.interfaceName = "core.pos.IPosManager";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
+     public JsonElement getAvailableRooms(Object paymentMethodId)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("paymentMethodId",new Gson().toJson(paymentMethodId));
+          gs_json_object_data.method = "getAvailableRooms";
           gs_json_object_data.interfaceName = "core.pos.IPosManager";
           String result = transport.send(gs_json_object_data);
           Gson gson = new GsonBuilder().serializeNulls().create();
@@ -401,11 +526,59 @@ public class APIPosManager {
      *
      * @author ktonder
      */
+     public JsonElement getGiftCardByCode(Object code)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("code",new Gson().toJson(code));
+          gs_json_object_data.method = "getGiftCardByCode";
+          gs_json_object_data.interfaceName = "core.pos.IPosManager";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
      public JsonElement getOpenZReport(Object cashPointId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
           gs_json_object_data.args.put("cashPointId",new Gson().toJson(cashPointId));
           gs_json_object_data.method = "getOpenZReport";
+          gs_json_object_data.interfaceName = "core.pos.IPosManager";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
+     public JsonElement getPayOnRoomTaxMapping(Object paymentId)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("paymentId",new Gson().toJson(paymentId));
+          gs_json_object_data.method = "getPayOnRoomTaxMapping";
+          gs_json_object_data.interfaceName = "core.pos.IPosManager";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
+     public JsonElement getPaymentMethod(Object paymentMethodId)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("paymentMethodId",new Gson().toJson(paymentMethodId));
+          gs_json_object_data.method = "getPaymentMethod";
           gs_json_object_data.interfaceName = "core.pos.IPosManager";
           String result = transport.send(gs_json_object_data);
           Gson gson = new GsonBuilder().serializeNulls().create();
@@ -511,6 +684,21 @@ public class APIPosManager {
      *
      * @author ktonder
      */
+     public JsonElement getReportsReadyToTransferToCentral()  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.method = "getReportsReadyToTransferToCentral";
+          gs_json_object_data.interfaceName = "core.pos.IPosManager";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
      public JsonElement getSalesReport(Object filter)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
@@ -605,6 +793,37 @@ public class APIPosManager {
      *
      * @author ktonder
      */
+     public JsonElement getTaxGroupsForPayOnRoom(Object paymentId)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("paymentId",new Gson().toJson(paymentId));
+          gs_json_object_data.method = "getTaxGroupsForPayOnRoom";
+          gs_json_object_data.interfaceName = "core.pos.IPosManager";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
+     public JsonElement getTextToChef()  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.method = "getTextToChef";
+          gs_json_object_data.interfaceName = "core.pos.IPosManager";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
      public JsonElement getTotal(Object tabId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
@@ -658,6 +877,22 @@ public class APIPosManager {
           gs_json_object_data.args = new LinkedHashMap();
           gs_json_object_data.args.put("zReportId",new Gson().toJson(zReportId));
           gs_json_object_data.method = "getTotalForZreport";
+          gs_json_object_data.interfaceName = "core.pos.IPosManager";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
+     public JsonElement getTotalUseOfGiftCards(Object tabId)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("tabId",new Gson().toJson(tabId));
+          gs_json_object_data.method = "getTotalUseOfGiftCards";
           gs_json_object_data.interfaceName = "core.pos.IPosManager";
           String result = transport.send(gs_json_object_data);
           Gson gson = new GsonBuilder().serializeNulls().create();
@@ -763,6 +998,22 @@ public class APIPosManager {
      *
      * @author ktonder
      */
+     public JsonElement inProgress(Object paymentId)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("paymentId",new Gson().toJson(paymentId));
+          gs_json_object_data.method = "inProgress";
+          gs_json_object_data.interfaceName = "core.pos.IPosManager";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
      public JsonElement isTabFromConference(Object tabId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
@@ -773,6 +1024,19 @@ public class APIPosManager {
           Gson gson = new GsonBuilder().serializeNulls().create();
           JsonElement object = gson.fromJson(result, JsonElement.class);
           return object;
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
+     public void markZReportTransferredToCentral(Object zReportId)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("zReportId",new Gson().toJson(zReportId));
+          gs_json_object_data.method = "markZReportTransferredToCentral";
+          gs_json_object_data.interfaceName = "core.pos.IPosManager";
+          String result = transport.send(gs_json_object_data);
      }
 
      /**
@@ -836,6 +1100,20 @@ public class APIPosManager {
      *
      * @author ktonder
      */
+     public void printReceipt(Object orderId, Object cashPointId)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("orderId",new Gson().toJson(orderId));
+          gs_json_object_data.args.put("cashPointId",new Gson().toJson(cashPointId));
+          gs_json_object_data.method = "printReceipt";
+          gs_json_object_data.interfaceName = "core.pos.IPosManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
      public void printRoomReceipt(Object gdsDeviceId, Object roomName, Object guestName, Object items)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
@@ -858,6 +1136,20 @@ public class APIPosManager {
           gs_json_object_data.args.put("cartItemId",new Gson().toJson(cartItemId));
           gs_json_object_data.args.put("tabId",new Gson().toJson(tabId));
           gs_json_object_data.method = "removeFromTab";
+          gs_json_object_data.interfaceName = "core.pos.IPosManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
+     public void removeGiftCardFromTab(Object tabId, Object cartItemId)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("tabId",new Gson().toJson(tabId));
+          gs_json_object_data.args.put("cartItemId",new Gson().toJson(cartItemId));
+          gs_json_object_data.method = "removeGiftCardFromTab";
           gs_json_object_data.interfaceName = "core.pos.IPosManager";
           String result = transport.send(gs_json_object_data);
      }
@@ -893,11 +1185,37 @@ public class APIPosManager {
      *
      * @author ktonder
      */
+     public void savePayOnRoomTaxMapping(Object taxMapping)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("taxMapping",new Gson().toJson(taxMapping));
+          gs_json_object_data.method = "savePayOnRoomTaxMapping";
+          gs_json_object_data.interfaceName = "core.pos.IPosManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
      public void saveTable(Object table)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
           gs_json_object_data.args.put("table",new Gson().toJson(table));
           gs_json_object_data.method = "saveTable";
+          gs_json_object_data.interfaceName = "core.pos.IPosManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
+     public void saveTextToChef(Object textToChef)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("textToChef",new Gson().toJson(textToChef));
+          gs_json_object_data.method = "saveTextToChef";
           gs_json_object_data.interfaceName = "core.pos.IPosManager";
           String result = transport.send(gs_json_object_data);
      }
@@ -983,11 +1301,54 @@ public class APIPosManager {
      *
      * @author ktonder
      */
+     public void startIntegratedPaymentProcess(Object orderId, Object paymentId)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("orderId",new Gson().toJson(orderId));
+          gs_json_object_data.args.put("paymentId",new Gson().toJson(paymentId));
+          gs_json_object_data.method = "startIntegratedPaymentProcess";
+          gs_json_object_data.interfaceName = "core.pos.IPosManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
      public void toggleExternalAccess(Object cashPointId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
           gs_json_object_data.args.put("cashPointId",new Gson().toJson(cashPointId));
           gs_json_object_data.method = "toggleExternalAccess";
+          gs_json_object_data.interfaceName = "core.pos.IPosManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
+     public void topupGiftCard(Object tabId, Object code, Object value)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("tabId",new Gson().toJson(tabId));
+          gs_json_object_data.args.put("code",new Gson().toJson(code));
+          gs_json_object_data.args.put("value",new Gson().toJson(value));
+          gs_json_object_data.method = "topupGiftCard";
+          gs_json_object_data.interfaceName = "core.pos.IPosManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
+     public void useGiftCard(Object tabId, Object code)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("tabId",new Gson().toJson(tabId));
+          gs_json_object_data.args.put("code",new Gson().toJson(code));
+          gs_json_object_data.method = "useGiftCard";
           gs_json_object_data.interfaceName = "core.pos.IPosManager";
           String result = transport.send(gs_json_object_data);
      }

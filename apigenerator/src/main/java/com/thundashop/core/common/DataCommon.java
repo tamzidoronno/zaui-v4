@@ -5,8 +5,6 @@
 package com.thundashop.core.common;
 
 import java.io.Serializable;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.util.Calendar;
 import java.util.Date;
 import org.mongodb.morphia.annotations.Entity;

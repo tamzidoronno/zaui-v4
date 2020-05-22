@@ -18,6 +18,21 @@ public class APIPmsConferenceManager {
      *
      * @author boggi
      */
+     public void addCartItemsToConference(Object confernceId, Object eventId, Object cartItems)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("confernceId",new Gson().toJson(confernceId));
+          gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
+          gs_json_object_data.args.put("cartItems",new Gson().toJson(cartItems));
+          gs_json_object_data.method = "addCartItemsToConference";
+          gs_json_object_data.interfaceName = "core.pmsmanager.IPmsConferenceManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
+     *
+     * @author boggi
+     */
      public void addGuestToEvent(Object guestId, Object eventId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
@@ -26,6 +41,40 @@ public class APIPmsConferenceManager {
           gs_json_object_data.method = "addGuestToEvent";
           gs_json_object_data.interfaceName = "core.pmsmanager.IPmsConferenceManager";
           String result = transport.send(gs_json_object_data);
+     }
+
+     /**
+     *
+     * @author boggi
+     */
+     public JsonElement createConference(Object engine, Object date, Object name)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("engine",new Gson().toJson(engine));
+          gs_json_object_data.args.put("date",new Gson().toJson(date));
+          gs_json_object_data.args.put("name",new Gson().toJson(name));
+          gs_json_object_data.method = "createConference";
+          gs_json_object_data.interfaceName = "core.pmsmanager.IPmsConferenceManager";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
+     }
+
+     /**
+     *
+     * @author boggi
+     */
+     public JsonElement createConferenceEvent(Object event)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("event",new Gson().toJson(event));
+          gs_json_object_data.method = "createConferenceEvent";
+          gs_json_object_data.interfaceName = "core.pmsmanager.IPmsConferenceManager";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
      }
 
      /**
@@ -121,6 +170,40 @@ public class APIPmsConferenceManager {
           gs_json_object_data.args = new LinkedHashMap();
           gs_json_object_data.args.put("toItem",new Gson().toJson(toItem));
           gs_json_object_data.method = "getAllItem";
+          gs_json_object_data.interfaceName = "core.pmsmanager.IPmsConferenceManager";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
+     }
+
+     /**
+     *
+     * @author boggi
+     */
+     public JsonElement getCartItem(Object conferenceId, Object cartItemId)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("conferenceId",new Gson().toJson(conferenceId));
+          gs_json_object_data.args.put("cartItemId",new Gson().toJson(cartItemId));
+          gs_json_object_data.method = "getCartItem";
+          gs_json_object_data.interfaceName = "core.pmsmanager.IPmsConferenceManager";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
+     }
+
+     /**
+     *
+     * @author boggi
+     */
+     public JsonElement getCartItems(Object conferenceId, Object eventId)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("conferenceId",new Gson().toJson(conferenceId));
+          gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
+          gs_json_object_data.method = "getCartItems";
           gs_json_object_data.interfaceName = "core.pmsmanager.IPmsConferenceManager";
           String result = transport.send(gs_json_object_data);
           Gson gson = new GsonBuilder().serializeNulls().create();
@@ -293,6 +376,37 @@ public class APIPmsConferenceManager {
      *
      * @author boggi
      */
+     public JsonElement getTotalPriceForCartItems(Object conferenceId, Object eventId)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("conferenceId",new Gson().toJson(conferenceId));
+          gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
+          gs_json_object_data.method = "getTotalPriceForCartItems";
+          gs_json_object_data.interfaceName = "core.pmsmanager.IPmsConferenceManager";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
+     }
+
+     /**
+     *
+     * @author boggi
+     */
+     public void removeCartItemFromConference(Object conferenceId, Object cartItemId)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("conferenceId",new Gson().toJson(conferenceId));
+          gs_json_object_data.args.put("cartItemId",new Gson().toJson(cartItemId));
+          gs_json_object_data.method = "removeCartItemFromConference";
+          gs_json_object_data.interfaceName = "core.pmsmanager.IPmsConferenceManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
+     *
+     * @author boggi
+     */
      public void removeGuestFromEvent(Object guestId, Object eventId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
@@ -378,6 +492,20 @@ public class APIPmsConferenceManager {
           Gson gson = new GsonBuilder().serializeNulls().create();
           JsonElement object = gson.fromJson(result, JsonElement.class);
           return object;
+     }
+
+     /**
+     *
+     * @author boggi
+     */
+     public void updateCartItem(Object conferenceId, Object cartItem)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("conferenceId",new Gson().toJson(conferenceId));
+          gs_json_object_data.args.put("cartItem",new Gson().toJson(cartItem));
+          gs_json_object_data.method = "updateCartItem";
+          gs_json_object_data.interfaceName = "core.pmsmanager.IPmsConferenceManager";
+          String result = transport.send(gs_json_object_data);
      }
 
 }

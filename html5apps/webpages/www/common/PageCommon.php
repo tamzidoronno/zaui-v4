@@ -38,6 +38,12 @@ class PageCommon {
         if(isset($_SESSION['language'])) {
             return $_SESSION['language'];
         }
+        
+        $origLanguage = DomainConfig::$defaultLang;
+        if ($origLanguage) {
+            return $origLanguage;
+        }
+        
         return $this->currentLanguage;
     }
     

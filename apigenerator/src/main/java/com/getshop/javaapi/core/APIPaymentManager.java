@@ -49,6 +49,21 @@ public class APIPaymentManager {
      *
      * @author ktonder
      */
+     public JsonElement getMultiplePaymentMethods()  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.method = "getMultiplePaymentMethods";
+          gs_json_object_data.interfaceName = "core.paymentmanager.IPaymentManager";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
      public JsonElement getStorePaymentConfiguration(Object paymentAppId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
@@ -99,6 +114,19 @@ public class APIPaymentManager {
           gs_json_object_data.args = new LinkedHashMap();
           gs_json_object_data.args.put("config",new Gson().toJson(config));
           gs_json_object_data.method = "saveGeneralPaymentConfig";
+          gs_json_object_data.interfaceName = "core.paymentmanager.IPaymentManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
+     public void saveMultiplePaymentMethods(Object ids)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("ids",new Gson().toJson(ids));
+          gs_json_object_data.method = "saveMultiplePaymentMethods";
           gs_json_object_data.interfaceName = "core.paymentmanager.IPaymentManager";
           String result = transport.send(gs_json_object_data);
      }

@@ -1,11 +1,5 @@
 <?php
 /* Call this file 'hello-world.php' */
-//fclose(STDIN);
-//fclose(STDOUT);
-//fclose(STDERR);
-//$STDIN = fopen('/dev/null', 'r');
-//$STDOUT = fopen('/tmp/test.log', 'wb');
-//$STDERR = fopen('/tmp/error.log', 'wb');
 
 $jsonData = file_get_contents('/tmp/'.$argv[1].'.txt');
 $storeId = $argv[2];
@@ -88,7 +82,7 @@ $printer -> feed(2);
 $printer -> selectPrintMode();
 $printer -> text($padLeft.$printMessage->accountDetails->companyName."\n");
 $printer -> text($padLeft.$printMessage->accountDetails->address."\n");
-$printer -> text($padLeft.$printMessage->accountDetails->postCode."\n");
+$printer -> text($padLeft.$printMessage->accountDetails->postCode." ".$printMessage->accountDetails->city.".\n");
 $printer -> text($padLeft."Orgnr: ".$printMessage->accountDetails->vatNumber."\n");
 $printer -> text($padLeft."Epost: ".$printMessage->accountDetails->contactEmail."\n");
 if (isset($printMessage->accountDetails->phoneNumber)) {
@@ -116,9 +110,8 @@ $printer -> selectPrintMode();
 if ($printMessage->paymentDate) {
 /* Footer */
     $printer -> feed(2);
-    $printer -> setJustification(Printer::JUSTIFY_CENTER);
     $printer -> text("Dato: ".date('d.m.Y H:i:s', strtotime($printMessage->paymentDate)) . "\n");
-    $printer -> text("Betalingsmetode: ".$printMessage->paymentMethod . "\n");
+    $printer -> text($printMessage->paymentMethod . "\n");
 }
 
 /* Cut the receipt and open the cash drawer */

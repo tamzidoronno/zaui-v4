@@ -19,10 +19,10 @@ public class Runner {
         GenerateApi ga2 = new GenerateApi("/source/getshop/pos/core/build/classes/", "/source/getshop/pos/messages/build/classes/", "/source/getshop/pos/core/src/", "pos", "Pos", true);
         ga2.generateJavaApi();
         
-        GenerateApi ga3 = new GenerateApi("/source/getshop/apac/core/build/classes/", "/source/getshop/apac/messages/build/classes/", "/source/getshop/apac/core/src/", "pos", "Seros", true);
+        GenerateApi ga3 = new GenerateApi("/source/getshop/apac/core/build/classes/", "/source/getshop/apac/messages/build/classes/", "/source/getshop/apac/core/src/", "seros", "Seros", true);
         ga3.generateJavaApi();
         
-        GenerateApi ga4 = new GenerateApi("/source/getshop/central/core/build/classes/", "/source/getshop/central/messages/build/classes/", "/source/getshop/central/core/src/", "pos", "Central", true);
+        GenerateApi ga4 = new GenerateApi("/source/getshop/central/core/build/classes/", "/source/getshop/central/messages/build/classes/", "/source/getshop/central/core/src/", "central", "Central", true);
         ga4.generateJavaApi();
     }
 }

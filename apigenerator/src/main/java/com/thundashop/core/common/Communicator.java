@@ -73,6 +73,7 @@ public class Communicator {
             }
             return result;
         } catch(Exception ex) {
+            System.out.println("Failed to communicate with " + host + " on port " + port);
             throw new RuntimeException(ex);
         }
     }

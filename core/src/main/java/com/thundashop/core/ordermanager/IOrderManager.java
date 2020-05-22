@@ -606,4 +606,7 @@ public interface IOrderManager {
     
     @Administrator
     public void correctProblemsWithCorrection(String password);
+    
+    @Administrator
+    public Order creditOrderIgnoreClosedDate(String orderId, String reason);
 }

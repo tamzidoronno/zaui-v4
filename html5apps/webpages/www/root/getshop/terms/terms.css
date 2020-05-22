@@ -35,6 +35,17 @@ and open the template in the editor.
     font-size: 18px;    
 }
 
+.page_row.no_image .page_row_inner {
+    background-image: none;
+    
+}
+
+.page_row.no_image .contentarea {
+    max-width: 100%;
+    border-radius: 0px 0px 0px 0px;
+    background-color: inherit;
+}
+
 .page_row.image_left .page_row_inner {
     background-position: left top;
     background-repeat: no-repeat;

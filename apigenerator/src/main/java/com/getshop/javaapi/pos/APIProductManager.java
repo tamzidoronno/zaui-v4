@@ -441,6 +441,27 @@ public class APIProductManager {
      }
 
      /**
+     * Returns a list of products for a given searchword,
+     * if blank all products will be returned.
+     *
+     * @param searchWord
+     * @param pageSize
+     * @param page
+     * @return
+     */
+     public JsonElement getProductBySku(Object sku)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("sku",new Gson().toJson(sku));
+          gs_json_object_data.method = "getProductBySku";
+          gs_json_object_data.interfaceName = "core.productmanager.IProductManager";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
+     }
+
+     /**
      * Fetch one single product by id
      * If product does not exists, null is returned.
      *
@@ -662,6 +683,24 @@ public class APIProductManager {
      * @param page
      * @return
      */
+     public void saveTaxGroup(Object taxGroup)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("taxGroup",new Gson().toJson(taxGroup));
+          gs_json_object_data.method = "saveTaxGroup";
+          gs_json_object_data.interfaceName = "core.productmanager.IProductManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
+     * Returns a list of products for a given searchword,
+     * if blank all products will be returned.
+     *
+     * @param searchWord
+     * @param pageSize
+     * @param page
+     * @return
+     */
      public JsonElement search(Object searchWord, Object pageSize, Object page)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
@@ -686,6 +725,26 @@ public class APIProductManager {
           gs_json_object_data.args = new LinkedHashMap();
           gs_json_object_data.args.put("group",new Gson().toJson(group));
           gs_json_object_data.method = "setTaxes";
+          gs_json_object_data.interfaceName = "core.productmanager.IProductManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
+     * Returns a list of products for a given searchword,
+     * if blank all products will be returned.
+     *
+     * @param searchWord
+     * @param pageSize
+     * @param page
+     * @return
+     */
+     public void updateTaxGroup(Object taxgroup, Object desc, Object rate)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("taxgroup",new Gson().toJson(taxgroup));
+          gs_json_object_data.args.put("desc",new Gson().toJson(desc));
+          gs_json_object_data.args.put("rate",new Gson().toJson(rate));
+          gs_json_object_data.method = "updateTaxGroup";
           gs_json_object_data.interfaceName = "core.productmanager.IProductManager";
           String result = transport.send(gs_json_object_data);
      }

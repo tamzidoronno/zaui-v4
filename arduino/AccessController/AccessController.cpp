@@ -7,6 +7,7 @@
 #include "ApacActionHandler.h"
 #include "GS8015ActionHandler.h"
 #include "CodeHandler.h"
+#include "SleepHandler.h"
 #include "Logging.h"
 #include "ExternalInputReader.h"
 #include <avr/wdt.h>
@@ -31,18 +32,24 @@ Clock clock;
 
 DataStorage dataStorage;
 
+SleepHandler sleepHandler;
+
 Logging logging(&dataStorage, &clock);
-Communication communication(&clock, &dataStorage);
+Communication communication(&clock, &dataStorage, &sleepHandler);
+
+
 
 // Readers
 #if(LOCKTYPE == 1)
 	int resetLoraChipPin = PB5;
+	bool powerSaveMode = false;
 	KeyPadReader readerObj(&clock);
 	KeyPadReader& keypadReader = readerObj;
 	ApacActionHandler actionHandlerObj;
 #else
 	int resetLoraChipPin = -1;
-	GS8015KeyReader readerObj(&clock);
+	bool powerSaveMode = true;
+	GS8015KeyReader readerObj(&clock, &sleepHandler);
 	GS8015KeyReader& keypadReader = readerObj;
 	GS8015ActionHandler actionHandlerObj;
 #endif
@@ -63,24 +70,6 @@ unsigned char bufferForCommunication[16];
 const char signature [] = "GetShop";
 char * p = (char *) malloc (sizeof (signature));
 
-unsigned int getDeviceId() {
-	unsigned char buf[16];
-	dataStorage.getCode(902, buf);
-
-	if (buf[0] != 0x44) {
-		return 65000;
-	}
-
-	char retVal[6];
-	retVal[0] = buf[1];
-	retVal[1] = buf[2];
-	retVal[2] = buf[3];
-	retVal[3] = buf[4];
-	retVal[4] = buf[5];
-	retVal[5] = buf[6];
-
-	return atoi(retVal);
-}
 
 bool checkIfColdStart() {
   if (strcmp (p, signature) == 0) { // signature is in RAM this was reset
@@ -93,12 +82,6 @@ bool checkIfColdStart() {
   }
 }
 
-void setDeviceIdToLoraChip() {
-	String address = "AT+ADDRESS=";
-	address = address + getDeviceId();
-	address = address + "\r\n";
-	Serial.print(address);
-}
 
 void saveDeviceId(unsigned char* msg) {
 	unsigned char data[16] = {
@@ -124,7 +107,7 @@ void toggleLight() {
 	digitalWrite(PD5, lighstat);
 }
 
-void initLora() {
+void resetLora() {
 	// Set reset of LoraChip to be high.
 
 	if (resetLoraChipPin > 0) {
@@ -134,19 +117,6 @@ void initLora() {
 		delay(500);
 		digitalWrite(resetLoraChipPin, HIGH);
 	}
-
-
-	delay(500);
-	setDeviceIdToLoraChip();
-	delay(500);
-	Serial.print("AT+NETWORKID=5\r\n");
-	delay(500);
-	Serial.print("AT+MODE=0\r\n");
-	delay(500);
-	Serial.print("AT+BAND=868500000\r\n");
-	delay(500);
-	Serial.print("AT+PARAMETER=10,7,1,7\r\n");
-	delay(500);
 
 	wdt_reset();
 }
@@ -161,22 +131,26 @@ void setMillis(unsigned long ms)
 
 void setup()
 {
-	keypadReader.setCodeHandler(&codeHandler);
 
-	wdt_enable(WDTO_4S);
+	wdt_enable(WDTO_8S);
+
+	keypadReader.setCodeHandler(&codeHandler);
 
 	Serial.begin(115200);
 
 	dataStorage.setupDataStorageBus();
-	initLora();
+	resetLora();
+	sleepHandler.wakeupLora();
 	communication.setup();
 	keypadReader.setup();
 	logging.init();
 	codeHandler.setup();
 	actionHandlerObj.setup();
 
+	sleepHandler.initalize(powerSaveMode, &dataStorage);
+
 	wdt_reset();
-  
+
 	if (checkIfColdStart()) {
 		logging.addLog("Started:N", 9, true);
 	} else {
@@ -196,6 +170,12 @@ void loop()
 {
 
 //	aliveDebugLight();
+
+	bool shouldPing = sleepHandler.checkSleep();
+	if (shouldPing) {
+		sleepHandler.wakeupLora();
+		Serial.print("AT+SEND=1,1,Z\r\n");
+	}
 
 	delay(1);
 
@@ -225,7 +205,7 @@ void loop()
 
 		if (bufferForCommunication[0] == 'C' && bufferForCommunication[1] == 'I' && bufferForCommunication[2] == 'D') {
 			saveDeviceId(bufferForCommunication);
-			setDeviceIdToLoraChip();
+			sleepHandler.setDeviceIdToLoraChip();
 			communication.initializeEncryption();
 			resetAfterDeviceIdSet();
 			return;

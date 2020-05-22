@@ -11,6 +11,7 @@ import eu.nets.baxi.log.FileAccess;
 import java.io.*;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -24,37 +25,37 @@ public class GetShopNetsController {
     /**
      * Some logging abilities for debugging purposes.
      */
-    private static  final Logger LOG = Logger.getLogger(GetShopNetsController.class.getName());
+    private final Logger LOG = Logger.getLogger(GetShopNetsController.class.getName());
 
     /**
      * Default operator id for the BAXI operations. This is hardcoded for the demo app purposes.
      */
-    private static final String OPERATOR_ID = "1234";
+    private final String OPERATOR_ID = "1234";
 
     /**
      * The new line terminator string.
      */
-    private static final String NEW_LINE = "\n";
+    private final String NEW_LINE = "\n";
 
     /**
      * A string which can be used to separate events displayed in the same text area.
      */
-    private static final String RESULT_SEPARATOR = "-----------------------" + NEW_LINE;
+    private final String RESULT_SEPARATOR = "-----------------------" + NEW_LINE;
 
     /**
      * The connection status - connected - string.
      */
-    private static final String STATUS_CONNECTED = "Connected";
+    private final String STATUS_CONNECTED = "Connected";
 
     /**
      * The connection status - disconnected - string.
      */
-    private static final String STATUS_DISCONNECTED = "Disconnected";
+    private final String STATUS_DISCONNECTED = "Disconnected";
 
     /**
      * The JBAXI library API interface.
      */
-    private BaxiCtrl baxi;
+    private BaxiEF baxi;
 
 
     /**
@@ -301,12 +302,19 @@ public class GetShopNetsController {
     /**
      * Initializes the BAXI Java library controller. This is the API interface with the JBaxi library.
      */
-    public void openBaxi() {
+    public void openBaxi(int port, String prefix) {
         isItuHandshaking = true;
         baxi = new BaxiEF();
-        ((BaxiEF) baxi).addBaxiEFListener(efListener);
-        int result = baxi.open();
-        LOG.info("Open BAXI status: " + result);
+        baxi.setLogFilePath("/storage/baxlog");
+        baxi.setLogFilePrefix(prefix);
+        baxi.setTraceLevel(4);
+        baxi.setCommunicationDriver("tcpserver");
+        baxi.setSocketListenerPort(port);
+        baxi.addBaxiEFListener(efListener);
+    }
+    
+    public int doOpen() {
+        return baxi.open();
     }
 
 

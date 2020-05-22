@@ -52,6 +52,20 @@ public class APIGetShopLockSystemManager {
      }
 
      /***** End group code stuff *****/
+     public void addTransactionHistorySeros(Object tokenId, Object lockId, Object timeStamp, Object keyId, Object userSlot)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("tokenId",new Gson().toJson(tokenId));
+          gs_json_object_data.args.put("lockId",new Gson().toJson(lockId));
+          gs_json_object_data.args.put("timeStamp",new Gson().toJson(timeStamp));
+          gs_json_object_data.args.put("keyId",new Gson().toJson(keyId));
+          gs_json_object_data.args.put("userSlot",new Gson().toJson(userSlot));
+          gs_json_object_data.method = "addTransactionHistorySeros";
+          gs_json_object_data.interfaceName = "core.getshoplocksystem.IGetShopLockSystemManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /***** End group code stuff *****/
      public JsonElement canShowAccessLog()  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();

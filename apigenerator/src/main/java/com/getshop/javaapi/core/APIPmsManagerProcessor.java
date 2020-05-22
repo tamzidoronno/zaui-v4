@@ -20,7 +20,7 @@ public class APIPmsManagerProcessor {
      public void doProcessing(String gs_multiLevelName)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.method = "doProcessing";
           gs_json_object_data.interfaceName = "core.pmsmanager.IPmsManagerProcessor";
           String result = transport.send(gs_json_object_data);

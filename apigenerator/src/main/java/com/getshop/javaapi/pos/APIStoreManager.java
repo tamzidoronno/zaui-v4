@@ -164,6 +164,23 @@ public class APIStoreManager {
      * @return
      * @throws ErrorException
      */
+     public JsonElement exchangeAccessToken(Object token)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("token",new Gson().toJson(token));
+          gs_json_object_data.method = "exchangeAccessToken";
+          gs_json_object_data.interfaceName = "core.storemanager.IStoreManager";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
+     }
+
+     /**
+     * On registration, generate a new id this store, which will become a part of the hostname.
+     * @return
+     * @throws ErrorException
+     */
      public JsonElement generateStoreId()  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();

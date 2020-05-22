@@ -13,6 +13,5 @@ import com.thundashop.core.gsd.GetShopDeviceMessage;
  */
 public interface MessageProcessorInterface {
     
-    public void processMessage(GetShopDeviceMessage msg);
-    public void setIOTOperator(GetShopIOTOperator operator);
+    public void processMessage(GetShopIOTOperator operator, GetShopDeviceMessage msg);
 }

@@ -15,6 +15,23 @@ public class APIUserManager {
       }
 
      /**
+     * Logon a given user.
+     * @param email The username to use when logging on, an also be the users email.
+     * @param password The password for this user in plain text.
+     * @return
+     * @throws ErrorException
+     */
+     public void addCardToUser(Object userId, Object card)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("userId",new Gson().toJson(userId));
+          gs_json_object_data.args.put("card",new Gson().toJson(card));
+          gs_json_object_data.method = "addCardToUser";
+          gs_json_object_data.interfaceName = "core.usermanager.IUserManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
      * Add a comment to a specific user.
      *
      * @param userId
@@ -403,6 +420,21 @@ public class APIUserManager {
      }
 
      /**
+     * Find all users with a given search criteria.
+     * @param searchCriteria The criteria to search for
+     * @return
+     * @throws ErrorException
+     */
+     public void deactivateAccount(Object userId)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("userId",new Gson().toJson(userId));
+          gs_json_object_data.method = "deactivateAccount";
+          gs_json_object_data.interfaceName = "core.usermanager.IUserManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
      * If an administrator is impersonating a lower user,
      * this function will return true.
      *
@@ -716,6 +748,27 @@ public class APIUserManager {
      }
 
      /**
+     * Create a new user to your webshop.<br>
+     * This will fail if you are trying to create a user which is granted more access then you have yourself.<br>
+     * If no users has been created, then the user object will automatically be set as an administrator.<br>
+     * That is how you create your first user, set the User.type field to 0.
+     * @param user The new user to be created. and the password is sent as plain text.
+     * @return
+     * @throws ErrorException
+     */
+     public JsonElement getCard(Object cardId)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("cardId",new Gson().toJson(cardId));
+          gs_json_object_data.method = "getCard";
+          gs_json_object_data.interfaceName = "core.usermanager.IUserManager";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
+     }
+
+     /**
      * If an administrator is impersonating a lower user,
      * this function will return true.
      *
@@ -831,6 +884,25 @@ public class APIUserManager {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
           gs_json_object_data.method = "getLoggedOnUser";
+          gs_json_object_data.interfaceName = "core.usermanager.IUserManager";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
+     }
+
+     /**
+     * If an administrator is impersonating a lower user,
+     * this function will return true.
+     *
+     * @return
+     * @throws ErrorException
+     */
+     public JsonElement getLogins(Object year)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("year",new Gson().toJson(year));
+          gs_json_object_data.method = "getLogins";
           gs_json_object_data.interfaceName = "core.usermanager.IUserManager";
           String result = transport.send(gs_json_object_data);
           Gson gson = new GsonBuilder().serializeNulls().create();
@@ -1170,6 +1242,26 @@ public class APIUserManager {
           gs_json_object_data.args.put("username",new Gson().toJson(username));
           gs_json_object_data.args.put("password",new Gson().toJson(password));
           gs_json_object_data.method = "logOn";
+          gs_json_object_data.interfaceName = "core.usermanager.IUserManager";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
+     }
+
+     /**
+     * Logon a given user.
+     * @param email The username to use when logging on, an also be the users email.
+     * @param password The password for this user in plain text.
+     * @return
+     * @throws ErrorException
+     */
+     public JsonElement logOnKeepLoggedOnAfterUpdate(Object username, Object password)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("username",new Gson().toJson(username));
+          gs_json_object_data.args.put("password",new Gson().toJson(password));
+          gs_json_object_data.method = "logOnKeepLoggedOnAfterUpdate";
           gs_json_object_data.interfaceName = "core.usermanager.IUserManager";
           String result = transport.send(gs_json_object_data);
           Gson gson = new GsonBuilder().serializeNulls().create();
@@ -1647,6 +1739,23 @@ public class APIUserManager {
           Gson gson = new GsonBuilder().serializeNulls().create();
           JsonElement object = gson.fromJson(result, JsonElement.class);
           return object;
+     }
+
+     /**
+     * Update a given user.<br>
+     * This will fail if you are trying to update a user which is granted more access then you have yourself.
+     * @param user You can not change the password, use updatePassword to change the password.
+     * @return
+     * @throws ErrorException
+     */
+     public void setPasswordDirect(Object userId, Object encryptedPassword)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("userId",new Gson().toJson(userId));
+          gs_json_object_data.args.put("encryptedPassword",new Gson().toJson(encryptedPassword));
+          gs_json_object_data.method = "setPasswordDirect";
+          gs_json_object_data.interfaceName = "core.usermanager.IUserManager";
+          String result = transport.send(gs_json_object_data);
      }
 
      /**

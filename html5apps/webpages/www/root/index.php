@@ -16,6 +16,7 @@ if (isset($_GET['language'])) {
         unset($_SESSION['language']);
     }
 }
+
 ?>  
 <!DOCTYPE html>
 <!--

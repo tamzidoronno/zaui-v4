@@ -160,3 +160,9 @@ com.getshop.printclient/nbproject/build-impl.xml
 com.getshop.printclient/nbproject/genfiles.properties
 com.getshop.printclient/nbproject/project.properties
 
+/GetShopIOTServer/nbproject/private/
+/GetShopIOTServer/build/
+
+iot/getshopiotserverconfig.txt
+iot/baxi.ini
+/GetShopIOTServer/dist/

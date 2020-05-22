@@ -1,114 +1,77 @@
 /*
-  WiFiTelnetToSerial - Example Transparent UART to Telnet Server for esp8266
+  WifiLoraGw | Made by Kai Tønder
 
-  Copyright (c) 2015 Hristo Gochkov. All rights reserved.
-  This file is part of the ESP8266WiFi library for Arduino environment.
-
-  This library is free software; you can redistribute it and/or
-  modify it under the terms of the GNU Lesser General Public
-  License as published by the Free Software Foundation; either
-  version 2.1 of the License, or (at your option) any later version.
-
-  This library is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  Lesser General Public License for more details.
-
-  You should have received a copy of the GNU Lesser General Public
-  License along with this library; if not, write to the Free Software
-  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+  This software is acting as a smarthub between the cloud and the 
+  smart devices.
 */
 #include <ESP8266WiFi.h>
+#include <ESP8266WebServer.h>
 
 #include <algorithm> // std::min
+#include "DataStorage.h"
+#include "WebPages.h"
+#include "Errors.h"
 
 #ifndef STASSID
-#define STASSID "Altibox877070"
-#define STAPSK  "uvfDuRQd"
-#define SERVER_ADDR "192.168.10.128"
 #define SERVER_PORT 4444
 #endif
 
-/*
-    SWAP_PINS:
-   0: use Serial1 for logging (legacy example)
-   1: configure Hardware Serial port on RX:GPIO13 TX:GPIO15
-      and use SoftwareSerial for logging on
-      standard Serial pins RX:GPIO3 and TX:GPIO1
-*/
-
 #define BAUD_SERIAL 115200
-#define BAUD_LOGGER 115200
 #define RXBUFFERSIZE 1024
 
 WiFiClient wifiClient;
 
+ESP8266WebServer webServer(80);
+
 ////////////////////////////////////////////////////////////
-
-
-#define logger (&Serial1)
 
 #define STACK_PROTECTOR  512 // bytes
 
-const char* ssid = STASSID;
-const char* password = STAPSK;
 boolean reconnected = false;
 char data[1024];
 int readBytes = 0;
 
 #define STACK_PROTECTOR  512 // bytes
 
+unsigned long delayUnitil = 0;
 
 void setup() {
-
+  setupErrorLights();
+  
   Serial.begin(BAUD_SERIAL);
+  setupDatastorage();
+  readConfig();
+  //resetDevice();
   Serial.setRxBufferSize(RXBUFFERSIZE);
 
-  logger->begin(BAUD_LOGGER);
-  logger->println("\n\nUsing Serial1 for logging");
-  logger->println(ESP.getFullVersion());
-  logger->printf("Serial baud: %d (8n1: %d KB/s)\n", BAUD_SERIAL, BAUD_SERIAL * 8 / 10 / 1024);
-  logger->printf("Serial receive buffer size: %d bytes\n", RXBUFFERSIZE);
-
-
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, password);
-  logger->print("\nConnecting to ");
-  logger->println(ssid);
-  while (WiFi.status() != WL_CONNECTED) {
-    Serial.print('.');
-    delay(500);
+  delay(1000);
+  if (!isConfigured()) {
+    showScanningWifiLight();
+    scanWifi();
+    WiFi.softAP("Seros Gateway", "");
+    setupWebServer();
+  } else {
+    WiFi.mode(WIFI_STA);
+    WiFi.begin(config.essid, config.password);
   }
-  
-  Serial.println();
-  Serial.print("connected, address=");
-  Serial.println(WiFi.localIP());
-
-  //start server
-  
-  logger->print("Ready! Use 'telnet ");
-  logger->print(WiFi.localIP());
 }
 
-void loop() {
-    if(!wifiClient.connected() ) {
-       if (!wifiClient.connect(SERVER_ADDR, SERVER_PORT)) {
-          delay(5000);
-          return;
-       }
-       reconnected = true;
-    }
+void setupWebServer() {
+  webServer.on("/", std::bind(webPage_home, &webServer));
+  webServer.begin();
+}
 
-    if (reconnected) {
-        wifiClient.write("token:cd0f1acd-17b3-49ec-beca-811839f9a08b\n");
-    }
-
-    // Send data from socket to serial.
-    while (wifiClient.available() && Serial.availableForWrite() > 0) {
-      // working char by char is not very efficient
-      Serial.write(wifiClient.read());
+void handleDataFromWifiSocket() {
+    if (wifiClient.available()) {
+      blinkGreen();
     }
     
+    while (wifiClient.available() && Serial.availableForWrite() > 0) {
+      Serial.write(wifiClient.read());
+    }
+}
+
+void handleDataFromUart() {
     //check UART for data
     size_t maxToTcp = wifiClient.availableForWrite();;
     size_t len = std::min((size_t)Serial.available(), maxToTcp);
@@ -117,18 +80,73 @@ void loop() {
     if (len) {
       uint8_t sbuf[len];
       size_t serial_got = Serial.readBytes(sbuf, len);
-      
-      
-      // if client.availableForWrite() was 0 (congested)
-      // and increased since then,
-      // ensure write space is sufficient:
+    
       if (wifiClient.availableForWrite() >= serial_got) {
-          size_t tcp_sent = wifiClient.write(sbuf, serial_got);
-          if (tcp_sent != len) {
-            logger->printf("len mismatch: available:%zd serial-read:%zd tcp-write:%zd\n", len, serial_got, tcp_sent);
-          }
+          wifiClient.write(sbuf, serial_got);
       }
+      blinkGreen();
+    }
+}
+
+void sendToken() {
+  char tokenToSend[200];
+  tokenToSend[0] = 't';
+  tokenToSend[1] = 'o';
+  tokenToSend[2] = 'k';
+  tokenToSend[3] = 'e';
+  tokenToSend[4] = 'n';
+  tokenToSend[5] = ':';
+
+  int len = sizeof(config.token);
+  for (int i=0; i<len; i++) {
+    tokenToSend[6+i] = config.token[i];  
   }
+
+  tokenToSend[6+len] = '\n';
+  wifiClient.write(tokenToSend);
+}
+
+void handleNormalOperation() {
+    if (delayUnitil > millis()) {
+       return;
+    }
+    checkReset();
+  
+    while (WiFi.status() != WL_CONNECTED) {
+      showWifiNotConnected();
+      delayUnitil = millis() + 500;
+      return;
+    }
+
+    if(!wifiClient.connected() ) {
+       if (!wifiClient.connect(config.address, SERVER_PORT)) {
+          showNotAbleToConnectToServer();
+          delayUnitil = millis() + 500;
+          return;
+       }
+       
+       reconnected = true;
+    }
+
+    showConnected();
+    
+    if (reconnected) {
+        sendToken();
+    }
+
+    handleDataFromWifiSocket();
+    handleDataFromUart();
+    
     reconnected = false;
+}
+
+void loop() {
+    if (!isConfigured()) {
+      showNotInitializedLight();
+      webServer.handleClient();  
+    } else {
+      handleNormalOperation();
+    }
+
     yield();
 }

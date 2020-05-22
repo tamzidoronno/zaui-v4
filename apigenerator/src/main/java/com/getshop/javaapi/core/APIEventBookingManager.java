@@ -21,7 +21,7 @@ public class APIEventBookingManager {
      public void addExternalCertificate(String gs_multiLevelName, Object userId, Object fileId, Object eventId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("userId",new Gson().toJson(userId));
           gs_json_object_data.args.put("fileId",new Gson().toJson(fileId));
           gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
@@ -37,7 +37,7 @@ public class APIEventBookingManager {
      public void addLocationFilter(String gs_multiLevelName, Object locationId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("locationId",new Gson().toJson(locationId));
           gs_json_object_data.method = "addLocationFilter";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -51,7 +51,7 @@ public class APIEventBookingManager {
      public void addManuallyParticipatedEvent(String gs_multiLevelName, Object man)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("man",new Gson().toJson(man));
           gs_json_object_data.method = "addManuallyParticipatedEvent";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -65,7 +65,7 @@ public class APIEventBookingManager {
      public void addPersonalIdToEvent(String gs_multiLevelName, Object eventId, Object userId, Object personalId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
           gs_json_object_data.args.put("userId",new Gson().toJson(userId));
           gs_json_object_data.args.put("personalId",new Gson().toJson(personalId));
@@ -81,7 +81,7 @@ public class APIEventBookingManager {
      public void addTypeFilter(String gs_multiLevelName, Object bookingItemTypeId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("bookingItemTypeId",new Gson().toJson(bookingItemTypeId));
           gs_json_object_data.method = "addTypeFilter";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -95,7 +95,7 @@ public class APIEventBookingManager {
      public void addUserComment(String gs_multiLevelName, Object userId, Object eventId, Object comment)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("userId",new Gson().toJson(userId));
           gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
           gs_json_object_data.args.put("comment",new Gson().toJson(comment));
@@ -111,7 +111,7 @@ public class APIEventBookingManager {
      public void addUserToEvent(String gs_multiLevelName, Object eventId, Object userId, Object silent, Object source)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
           gs_json_object_data.args.put("userId",new Gson().toJson(userId));
           gs_json_object_data.args.put("silent",new Gson().toJson(silent));
@@ -128,7 +128,7 @@ public class APIEventBookingManager {
      public void bookCurrentUserToEvent(String gs_multiLevelName, Object eventId, Object source)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
           gs_json_object_data.args.put("source",new Gson().toJson(source));
           gs_json_object_data.method = "bookCurrentUserToEvent";
@@ -143,7 +143,7 @@ public class APIEventBookingManager {
      public JsonElement canDownloadCertificate(String gs_multiLevelName, Object eventId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
           gs_json_object_data.method = "canDownloadCertificate";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -160,7 +160,7 @@ public class APIEventBookingManager {
      public void cancelEvent(String gs_multiLevelName, Object eventId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
           gs_json_object_data.method = "cancelEvent";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -174,7 +174,7 @@ public class APIEventBookingManager {
      public void checkToSendReminders(String gs_multiLevelName)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.method = "checkToSendReminders";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
           String result = transport.send(gs_json_object_data);
@@ -187,7 +187,7 @@ public class APIEventBookingManager {
      public void clearEventBookingManagerForAllData(String gs_multiLevelName)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.method = "clearEventBookingManagerForAllData";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
           String result = transport.send(gs_json_object_data);
@@ -200,7 +200,7 @@ public class APIEventBookingManager {
      public void clearFilters(String gs_multiLevelName)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.method = "clearFilters";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
           String result = transport.send(gs_json_object_data);
@@ -213,7 +213,7 @@ public class APIEventBookingManager {
      public void clearLocationFilters(String gs_multiLevelName)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.method = "clearLocationFilters";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
           String result = transport.send(gs_json_object_data);
@@ -226,7 +226,7 @@ public class APIEventBookingManager {
      public JsonElement createEvent(String gs_multiLevelName, Object event)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("event",new Gson().toJson(event));
           gs_json_object_data.method = "createEvent";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -243,7 +243,7 @@ public class APIEventBookingManager {
      public JsonElement decodePersonalIds(String gs_multiLevelName, Object eventId, Object privateKey)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
           gs_json_object_data.args.put("privateKey",new Gson().toJson(privateKey));
           gs_json_object_data.method = "decodePersonalIds";
@@ -261,7 +261,7 @@ public class APIEventBookingManager {
      public void deleteCertificate(String gs_multiLevelName, Object certificateId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("certificateId",new Gson().toJson(certificateId));
           gs_json_object_data.method = "deleteCertificate";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -275,7 +275,7 @@ public class APIEventBookingManager {
      public void deleteEvent(String gs_multiLevelName, Object eventId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
           gs_json_object_data.method = "deleteEvent";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -289,7 +289,7 @@ public class APIEventBookingManager {
      public void deleteExternalCertificates(String gs_multiLevelName, Object userId, Object fileId, Object eventId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("userId",new Gson().toJson(userId));
           gs_json_object_data.args.put("fileId",new Gson().toJson(fileId));
           gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
@@ -305,7 +305,7 @@ public class APIEventBookingManager {
      public void deleteInvoiceGroup(String gs_multiLevelName, Object groupId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("groupId",new Gson().toJson(groupId));
           gs_json_object_data.method = "deleteInvoiceGroup";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -319,7 +319,7 @@ public class APIEventBookingManager {
      public void deleteLocation(String gs_multiLevelName, Object locationId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("locationId",new Gson().toJson(locationId));
           gs_json_object_data.method = "deleteLocation";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -333,7 +333,7 @@ public class APIEventBookingManager {
      public void deleteManullyParticipatedEvent(String gs_multiLevelName, Object id)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("id",new Gson().toJson(id));
           gs_json_object_data.method = "deleteManullyParticipatedEvent";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -347,7 +347,7 @@ public class APIEventBookingManager {
      public void deleteReminderTemplate(String gs_multiLevelName, Object templateId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("templateId",new Gson().toJson(templateId));
           gs_json_object_data.method = "deleteReminderTemplate";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -361,7 +361,7 @@ public class APIEventBookingManager {
      public void deleteSubLocation(String gs_multiLevelName, Object subLocationId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("subLocationId",new Gson().toJson(subLocationId));
           gs_json_object_data.method = "deleteSubLocation";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -375,7 +375,7 @@ public class APIEventBookingManager {
      public void deleteUserComment(String gs_multiLevelName, Object userId, Object eventId, Object commentId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("userId",new Gson().toJson(userId));
           gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
           gs_json_object_data.args.put("commentId",new Gson().toJson(commentId));
@@ -391,7 +391,7 @@ public class APIEventBookingManager {
      public JsonElement getActiveLocations(String gs_multiLevelName)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.method = "getActiveLocations";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
           String result = transport.send(gs_json_object_data);
@@ -407,7 +407,7 @@ public class APIEventBookingManager {
      public JsonElement getAllEvents(String gs_multiLevelName)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.method = "getAllEvents";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
           String result = transport.send(gs_json_object_data);
@@ -423,7 +423,7 @@ public class APIEventBookingManager {
      public JsonElement getAllLocations(String gs_multiLevelName)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.method = "getAllLocations";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
           String result = transport.send(gs_json_object_data);
@@ -439,7 +439,7 @@ public class APIEventBookingManager {
      public JsonElement getBookingItemTypeByPageId(String gs_multiLevelName, Object pageId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("pageId",new Gson().toJson(pageId));
           gs_json_object_data.method = "getBookingItemTypeByPageId";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -456,7 +456,7 @@ public class APIEventBookingManager {
      public JsonElement getBookingItemTypes(String gs_multiLevelName)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.method = "getBookingItemTypes";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
           String result = transport.send(gs_json_object_data);
@@ -472,7 +472,7 @@ public class APIEventBookingManager {
      public JsonElement getBookingTypeMetaData(String gs_multiLevelName, Object id)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("id",new Gson().toJson(id));
           gs_json_object_data.method = "getBookingTypeMetaData";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -489,7 +489,7 @@ public class APIEventBookingManager {
      public JsonElement getBookingsByPageId(String gs_multiLevelName, Object pageId, Object showOnlyNew)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("pageId",new Gson().toJson(pageId));
           gs_json_object_data.args.put("showOnlyNew",new Gson().toJson(showOnlyNew));
           gs_json_object_data.method = "getBookingsByPageId";
@@ -507,7 +507,7 @@ public class APIEventBookingManager {
      public JsonElement getCertificate(String gs_multiLevelName, Object certificateId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("certificateId",new Gson().toJson(certificateId));
           gs_json_object_data.method = "getCertificate";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -524,7 +524,7 @@ public class APIEventBookingManager {
      public JsonElement getCertificateForEvent(String gs_multiLevelName, Object eventId, Object userId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
           gs_json_object_data.args.put("userId",new Gson().toJson(userId));
           gs_json_object_data.method = "getCertificateForEvent";
@@ -542,7 +542,7 @@ public class APIEventBookingManager {
      public JsonElement getCertificates(String gs_multiLevelName)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.method = "getCertificates";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
           String result = transport.send(gs_json_object_data);
@@ -558,7 +558,7 @@ public class APIEventBookingManager {
      public JsonElement getCompaniesWhereNoCanditasHasCompletedTests(String gs_multiLevelName, Object testIds)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("testIds",new Gson().toJson(testIds));
           gs_json_object_data.method = "getCompaniesWhereNoCanditasHasCompletedTests";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -575,7 +575,7 @@ public class APIEventBookingManager {
      public JsonElement getEvent(String gs_multiLevelName, Object eventId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
           gs_json_object_data.method = "getEvent";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -592,7 +592,7 @@ public class APIEventBookingManager {
      public JsonElement getEventByPageId(String gs_multiLevelName, Object eventId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
           gs_json_object_data.method = "getEventByPageId";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -609,7 +609,7 @@ public class APIEventBookingManager {
      public JsonElement getEventLog(String gs_multiLevelName, Object eventId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
           gs_json_object_data.method = "getEventLog";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -626,7 +626,7 @@ public class APIEventBookingManager {
      public JsonElement getEventRequest(String gs_multiLevelName, Object id)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("id",new Gson().toJson(id));
           gs_json_object_data.method = "getEventRequest";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -643,7 +643,7 @@ public class APIEventBookingManager {
      public JsonElement getEvents(String gs_multiLevelName)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.method = "getEvents";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
           String result = transport.send(gs_json_object_data);
@@ -659,7 +659,7 @@ public class APIEventBookingManager {
      public JsonElement getEventsByLocation(String gs_multiLevelName, Object locationId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("locationId",new Gson().toJson(locationId));
           gs_json_object_data.method = "getEventsByLocation";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -676,7 +676,7 @@ public class APIEventBookingManager {
      public JsonElement getEventsByType(String gs_multiLevelName, Object eventTypeId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("eventTypeId",new Gson().toJson(eventTypeId));
           gs_json_object_data.method = "getEventsByType";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -693,7 +693,7 @@ public class APIEventBookingManager {
      public JsonElement getEventsForDay(String gs_multiLevelName, Object year, Object month, Object day)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("year",new Gson().toJson(year));
           gs_json_object_data.args.put("month",new Gson().toJson(month));
           gs_json_object_data.args.put("day",new Gson().toJson(day));
@@ -712,7 +712,7 @@ public class APIEventBookingManager {
      public JsonElement getEventsForPdf(String gs_multiLevelName)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.method = "getEventsForPdf";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
           String result = transport.send(gs_json_object_data);
@@ -728,7 +728,7 @@ public class APIEventBookingManager {
      public JsonElement getEventsForUser(String gs_multiLevelName, Object userId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("userId",new Gson().toJson(userId));
           gs_json_object_data.method = "getEventsForUser";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -745,7 +745,7 @@ public class APIEventBookingManager {
      public JsonElement getEventsWhereEndDateBetween(String gs_multiLevelName, Object from, Object to)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("from",new Gson().toJson(from));
           gs_json_object_data.args.put("to",new Gson().toJson(to));
           gs_json_object_data.method = "getEventsWhereEndDateBetween";
@@ -763,7 +763,7 @@ public class APIEventBookingManager {
      public JsonElement getExternalCertificates(String gs_multiLevelName, Object userId, Object eventId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("userId",new Gson().toJson(userId));
           gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
           gs_json_object_data.method = "getExternalCertificates";
@@ -781,7 +781,7 @@ public class APIEventBookingManager {
      public JsonElement getFilteredLocations(String gs_multiLevelName)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.method = "getFilteredLocations";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
           String result = transport.send(gs_json_object_data);
@@ -797,7 +797,7 @@ public class APIEventBookingManager {
      public JsonElement getFromDateTimeFilter(String gs_multiLevelName)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.method = "getFromDateTimeFilter";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
           String result = transport.send(gs_json_object_data);
@@ -813,7 +813,7 @@ public class APIEventBookingManager {
      public JsonElement getInterests(String gs_multiLevelName)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.method = "getInterests";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
           String result = transport.send(gs_json_object_data);
@@ -829,7 +829,7 @@ public class APIEventBookingManager {
      public JsonElement getInvoiceGroup(String gs_multiLevelName, Object groupId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("groupId",new Gson().toJson(groupId));
           gs_json_object_data.method = "getInvoiceGroup";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -846,7 +846,7 @@ public class APIEventBookingManager {
      public JsonElement getInvoiceGroups(String gs_multiLevelName, Object eventId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
           gs_json_object_data.method = "getInvoiceGroups";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -863,7 +863,7 @@ public class APIEventBookingManager {
      public JsonElement getLocation(String gs_multiLevelName, Object locationId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("locationId",new Gson().toJson(locationId));
           gs_json_object_data.method = "getLocation";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -880,7 +880,7 @@ public class APIEventBookingManager {
      public JsonElement getMandatoryCourses(String gs_multiLevelName, Object userId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("userId",new Gson().toJson(userId));
           gs_json_object_data.method = "getMandatoryCourses";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -897,7 +897,7 @@ public class APIEventBookingManager {
      public JsonElement getManuallyAddedEventParticipant(String gs_multiLevelName, Object id)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("id",new Gson().toJson(id));
           gs_json_object_data.method = "getManuallyAddedEventParticipant";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -914,7 +914,7 @@ public class APIEventBookingManager {
      public JsonElement getManuallyAddedEvents(String gs_multiLevelName, Object userId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("userId",new Gson().toJson(userId));
           gs_json_object_data.method = "getManuallyAddedEvents";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -931,7 +931,7 @@ public class APIEventBookingManager {
      public JsonElement getMyEvents(String gs_multiLevelName)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.method = "getMyEvents";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
           String result = transport.send(gs_json_object_data);
@@ -947,7 +947,7 @@ public class APIEventBookingManager {
      public JsonElement getPriceForEventType(String gs_multiLevelName, Object bookingItemTypeId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("bookingItemTypeId",new Gson().toJson(bookingItemTypeId));
           gs_json_object_data.method = "getPriceForEventType";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -964,7 +964,7 @@ public class APIEventBookingManager {
      public JsonElement getPriceForEventTypeAndUserId(String gs_multiLevelName, Object eventId, Object userId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
           gs_json_object_data.args.put("userId",new Gson().toJson(userId));
           gs_json_object_data.method = "getPriceForEventTypeAndUserId";
@@ -982,7 +982,7 @@ public class APIEventBookingManager {
      public JsonElement getReminder(String gs_multiLevelName, Object reminderId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("reminderId",new Gson().toJson(reminderId));
           gs_json_object_data.method = "getReminder";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -999,7 +999,7 @@ public class APIEventBookingManager {
      public JsonElement getReminderTemplate(String gs_multiLevelName, Object id)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("id",new Gson().toJson(id));
           gs_json_object_data.method = "getReminderTemplate";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -1016,7 +1016,7 @@ public class APIEventBookingManager {
      public JsonElement getReminderTemplates(String gs_multiLevelName)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.method = "getReminderTemplates";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
           String result = transport.send(gs_json_object_data);
@@ -1032,7 +1032,7 @@ public class APIEventBookingManager {
      public JsonElement getReminders(String gs_multiLevelName, Object eventId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
           gs_json_object_data.method = "getReminders";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -1049,7 +1049,7 @@ public class APIEventBookingManager {
      public JsonElement getSource(String gs_multiLevelName, Object eventId, Object userId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
           gs_json_object_data.args.put("userId",new Gson().toJson(userId));
           gs_json_object_data.method = "getSource";
@@ -1067,7 +1067,7 @@ public class APIEventBookingManager {
      public JsonElement getStatistic(String gs_multiLevelName, Object startDate, Object stopDate, Object groupIds, Object eventTypeIds)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("startDate",new Gson().toJson(startDate));
           gs_json_object_data.args.put("stopDate",new Gson().toJson(stopDate));
           gs_json_object_data.args.put("groupIds",new Gson().toJson(groupIds));
@@ -1087,7 +1087,7 @@ public class APIEventBookingManager {
      public JsonElement getStatisticGroupedByLocations(String gs_multiLevelName, Object startDate, Object stopDate, Object groupIds, Object eventTypeIds)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("startDate",new Gson().toJson(startDate));
           gs_json_object_data.args.put("stopDate",new Gson().toJson(stopDate));
           gs_json_object_data.args.put("groupIds",new Gson().toJson(groupIds));
@@ -1107,7 +1107,7 @@ public class APIEventBookingManager {
      public JsonElement getToDateTimeFilter(String gs_multiLevelName)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.method = "getToDateTimeFilter";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
           String result = transport.send(gs_json_object_data);
@@ -1123,7 +1123,7 @@ public class APIEventBookingManager {
      public JsonElement getUsersForEvent(String gs_multiLevelName, Object eventId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
           gs_json_object_data.method = "getUsersForEvent";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -1140,7 +1140,7 @@ public class APIEventBookingManager {
      public JsonElement getUsersForEventWaitinglist(String gs_multiLevelName, Object eventId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
           gs_json_object_data.method = "getUsersForEventWaitinglist";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -1157,7 +1157,7 @@ public class APIEventBookingManager {
      public void handleEventRequest(String gs_multiLevelName, Object id, Object accepted)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("id",new Gson().toJson(id));
           gs_json_object_data.args.put("accepted",new Gson().toJson(accepted));
           gs_json_object_data.method = "handleEventRequest";
@@ -1172,7 +1172,7 @@ public class APIEventBookingManager {
      public JsonElement hasCompletedMandatoryEvent(String gs_multiLevelName, Object eventTypeId, Object userId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("eventTypeId",new Gson().toJson(eventTypeId));
           gs_json_object_data.args.put("userId",new Gson().toJson(userId));
           gs_json_object_data.method = "hasCompletedMandatoryEvent";
@@ -1190,7 +1190,7 @@ public class APIEventBookingManager {
      public JsonElement hasForcedMandatoryTest(String gs_multiLevelName, Object eventTypeId, Object userId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("eventTypeId",new Gson().toJson(eventTypeId));
           gs_json_object_data.args.put("userId",new Gson().toJson(userId));
           gs_json_object_data.method = "hasForcedMandatoryTest";
@@ -1208,7 +1208,7 @@ public class APIEventBookingManager {
      public JsonElement isUserSignedUpForEvent(String gs_multiLevelName, Object eventId, Object userId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
           gs_json_object_data.args.put("userId",new Gson().toJson(userId));
           gs_json_object_data.method = "isUserSignedUpForEvent";
@@ -1226,7 +1226,7 @@ public class APIEventBookingManager {
      public JsonElement isWaitingForConfirmation(String gs_multiLevelName, Object eventId, Object userId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
           gs_json_object_data.args.put("userId",new Gson().toJson(userId));
           gs_json_object_data.method = "isWaitingForConfirmation";
@@ -1244,7 +1244,7 @@ public class APIEventBookingManager {
      public void markAsReady(String gs_multiLevelName, Object eventId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
           gs_json_object_data.method = "markAsReady";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -1258,7 +1258,7 @@ public class APIEventBookingManager {
      public void markQuestBackSent(String gs_multiLevelName, Object eventId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
           gs_json_object_data.method = "markQuestBackSent";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -1272,7 +1272,7 @@ public class APIEventBookingManager {
      public void moveUserToEvent(String gs_multiLevelName, Object userId, Object fromEventId, Object toEventId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("userId",new Gson().toJson(userId));
           gs_json_object_data.args.put("fromEventId",new Gson().toJson(fromEventId));
           gs_json_object_data.args.put("toEventId",new Gson().toJson(toEventId));
@@ -1288,7 +1288,7 @@ public class APIEventBookingManager {
      public void registerEventIntrest(String gs_multiLevelName, Object interest)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("interest",new Gson().toJson(interest));
           gs_json_object_data.method = "registerEventIntrest";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -1302,7 +1302,7 @@ public class APIEventBookingManager {
      public void removeInterest(String gs_multiLevelName, Object bookingItemTypeId, Object userId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("bookingItemTypeId",new Gson().toJson(bookingItemTypeId));
           gs_json_object_data.args.put("userId",new Gson().toJson(userId));
           gs_json_object_data.method = "removeInterest";
@@ -1317,7 +1317,7 @@ public class APIEventBookingManager {
      public void removeUserFromEvent(String gs_multiLevelName, Object eventId, Object userId, Object silent)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
           gs_json_object_data.args.put("userId",new Gson().toJson(userId));
           gs_json_object_data.args.put("silent",new Gson().toJson(silent));
@@ -1333,7 +1333,7 @@ public class APIEventBookingManager {
      public void saveBookingTypeMetaData(String gs_multiLevelName, Object bookingItemTypeMetadata)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("bookingItemTypeMetadata",new Gson().toJson(bookingItemTypeMetadata));
           gs_json_object_data.method = "saveBookingTypeMetaData";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -1347,7 +1347,7 @@ public class APIEventBookingManager {
      public void saveCertificate(String gs_multiLevelName, Object certificate)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("certificate",new Gson().toJson(certificate));
           gs_json_object_data.method = "saveCertificate";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -1361,7 +1361,7 @@ public class APIEventBookingManager {
      public void saveEvent(String gs_multiLevelName, Object event)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("event",new Gson().toJson(event));
           gs_json_object_data.method = "saveEvent";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -1375,7 +1375,7 @@ public class APIEventBookingManager {
      public void saveGroupInvoicing(String gs_multiLevelName, Object invoiceGroup)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("invoiceGroup",new Gson().toJson(invoiceGroup));
           gs_json_object_data.method = "saveGroupInvoicing";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -1389,7 +1389,7 @@ public class APIEventBookingManager {
      public void saveLocation(String gs_multiLevelName, Object location)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("location",new Gson().toJson(location));
           gs_json_object_data.method = "saveLocation";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -1403,7 +1403,7 @@ public class APIEventBookingManager {
      public void saveReminderTemplate(String gs_multiLevelName, Object template)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("template",new Gson().toJson(template));
           gs_json_object_data.method = "saveReminderTemplate";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -1417,7 +1417,7 @@ public class APIEventBookingManager {
      public void sendDiplomas(String gs_multiLevelName, Object reminder, Object userid, Object base64)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("reminder",new Gson().toJson(reminder));
           gs_json_object_data.args.put("userid",new Gson().toJson(userid));
           gs_json_object_data.args.put("base64",new Gson().toJson(base64));
@@ -1433,7 +1433,7 @@ public class APIEventBookingManager {
      public void sendReminder(String gs_multiLevelName, Object reminder)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("reminder",new Gson().toJson(reminder));
           gs_json_object_data.method = "sendReminder";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -1447,7 +1447,7 @@ public class APIEventBookingManager {
      public void setForcedMandatoryAccess(String gs_multiLevelName, Object userId, Object bookingItemIds)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("userId",new Gson().toJson(userId));
           gs_json_object_data.args.put("bookingItemIds",new Gson().toJson(bookingItemIds));
           gs_json_object_data.method = "setForcedMandatoryAccess";
@@ -1462,7 +1462,7 @@ public class APIEventBookingManager {
      public void setGroupInvoiceingStatus(String gs_multiLevelName, Object eventId, Object userId, Object groupId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
           gs_json_object_data.args.put("userId",new Gson().toJson(userId));
           gs_json_object_data.args.put("groupId",new Gson().toJson(groupId));
@@ -1478,7 +1478,7 @@ public class APIEventBookingManager {
      public void setParticipationStatus(String gs_multiLevelName, Object eventId, Object userId, Object status)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
           gs_json_object_data.args.put("userId",new Gson().toJson(userId));
           gs_json_object_data.args.put("status",new Gson().toJson(status));
@@ -1494,7 +1494,7 @@ public class APIEventBookingManager {
      public void setTimeFilter(String gs_multiLevelName, Object from, Object to)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("from",new Gson().toJson(from));
           gs_json_object_data.args.put("to",new Gson().toJson(to));
           gs_json_object_data.method = "setTimeFilter";
@@ -1509,7 +1509,7 @@ public class APIEventBookingManager {
      public void startScheduler(String gs_multiLevelName, Object scheduler)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("scheduler",new Gson().toJson(scheduler));
           gs_json_object_data.method = "startScheduler";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -1523,7 +1523,7 @@ public class APIEventBookingManager {
      public void toggleHide(String gs_multiLevelName, Object eventId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
           gs_json_object_data.method = "toggleHide";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -1537,7 +1537,7 @@ public class APIEventBookingManager {
      public void toggleLocked(String gs_multiLevelName, Object eventId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
           gs_json_object_data.method = "toggleLocked";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";
@@ -1551,7 +1551,7 @@ public class APIEventBookingManager {
      public void transferUserFromWaitingToEvent(String gs_multiLevelName, Object userId, Object eventId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("userId",new Gson().toJson(userId));
           gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
           gs_json_object_data.method = "transferUserFromWaitingToEvent";
@@ -1566,7 +1566,7 @@ public class APIEventBookingManager {
      public void unCancelEvent(String gs_multiLevelName, Object eventId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("eventId",new Gson().toJson(eventId));
           gs_json_object_data.method = "unCancelEvent";
           gs_json_object_data.interfaceName = "core.eventbooking.IEventBookingManager";

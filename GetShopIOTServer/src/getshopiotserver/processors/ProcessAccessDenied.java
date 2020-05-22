@@ -9,6 +9,7 @@ import com.thundashop.core.gsd.DevicePrintMessage;
 import com.thundashop.core.gsd.GdsAccessDenied;
 import com.thundashop.core.gsd.GetShopDeviceMessage;
 import getshopiotserver.GetShopIOTCommon;
+import getshopiotserver.GetShopIOTOperator;
 import getshopiotserver.MessageProcessorInterface;
 
 /**
@@ -18,7 +19,7 @@ import getshopiotserver.MessageProcessorInterface;
 public class ProcessAccessDenied extends GetShopIOTCommon implements MessageProcessorInterface {
     
     @Override
-    public void processMessage(GetShopDeviceMessage msg) {
+    public void processMessage(GetShopIOTOperator operator, GetShopDeviceMessage msg) {
         if (!(msg instanceof GdsAccessDenied))
             return;
         

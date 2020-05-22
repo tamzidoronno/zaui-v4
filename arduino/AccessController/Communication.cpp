@@ -18,8 +18,9 @@ AES128 aes128;
 
 volatile unsigned char	*Communication::readData;		// buffer for data retention
 
-Communication::Communication(Clock* clock, DataStorage* dataStorage) {
+Communication::Communication(Clock* clock, DataStorage* dataStorage, SleepHandler* sleepHandler) {
 	this->dataAvailable = false;
+	this->_sleepHandler = sleepHandler;
 	this->_dataStorage = dataStorage;
 	_clock = clock;
 	readData = new unsigned char [16];
@@ -140,6 +141,8 @@ void Communication::decryptData() {
 	}
 
 	this->dataAvailable = true;
+
+	this->_sleepHandler->delaySleepWithMs(10000);
 }
 
 void Communication::sendGid() {
@@ -154,6 +157,8 @@ void Communication::sendGid() {
 		gidfordevice = gidfordevice * 256 + gidBuffer[6];
 		gidfordevice = gidfordevice * 256 + gidBuffer[7];
 	}
+
+	_sleepHandler->wakeupLora();
 
 	String msgToSend = "AT+SEND=1,14,GID:";
 	char atbuf[10];
@@ -271,6 +276,8 @@ void Communication::writeEncrypted(char *msgToSend, volatile unsigned int length
 			}
 		}
     }
+
+    _sleepHandler->wakeupLora();
 
     Serial.print("AT+SEND=1,");
    	Serial.print(totalLength);

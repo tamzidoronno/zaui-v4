@@ -7,6 +7,7 @@ import com.thundashop.core.gsd.TerminalResponse;
 import eu.nets.baxi.client.PrintTextEventArgs;
 import getshopiotserver.GetShopIOTOperator;
 import getshopiotserver.PaymentOperator;
+import getshopiotserver.SetupMessage;
 
 /**
  * Created by mcamp on 14.03.2017.
@@ -24,12 +25,6 @@ public class GetShopNetsApp implements PaymentOperator {
     public static final int RESULT_TRANSACTION_IS_LOYALTY = 3;          // : Transaction is Loyalty Transaction
     public static final int RESULT_UNKNOWN = 99;      
     
-    
-    public static void main(String[] args) throws Exception {
-        GetShopNetsApp app = new GetShopNetsApp(new GetShopIOTOperator());
-        app.start();
-    }
-    
     private boolean isInitialized = false;
     private String orderId;
 
@@ -39,14 +34,19 @@ public class GetShopNetsApp implements PaymentOperator {
 
     public void initialize() {
         controller = new GetShopNetsController(this);
-        controller.openBaxi();
+        SetupMessage config = operator.getConfigurationObject();
+        controller.openBaxi(config.netsHostPort, config.name);
+        
         while(true) {
             if(isInitialized()) {
                 break;
             }
-            System.out.println("Waiting for terminal to get ready");
+            
+            int result = controller.doOpen();
+            System.out.println("Open BAXI status: " + result);
+            System.out.println("Waiting for terminal to get ready, name: " + config.name + ", port: " + config.netsHostPort );
             try {
-                Thread.sleep(1000);
+                Thread.sleep(3000);
             }catch(Exception e) {
                 e.printStackTrace();
             }
@@ -70,7 +70,7 @@ public class GetShopNetsApp implements PaymentOperator {
             int i = sc.nextInt();
             switch(i) {
                 case 1:
-                    controller.openBaxi();
+                    controller.openBaxi(6008, "test");
                     break;
                 case 2:
                     controller.closeBaxi();
@@ -192,7 +192,7 @@ public class GetShopNetsApp implements PaymentOperator {
     @Override
     public void adminEndOfDay(String uuid) {
         orderId = uuid;
-        controller.zReport();
+        controller.adminEndOfDay();
     }
 
     public void sendReceiptText(PrintTextEventArgs evt) {

@@ -1641,7 +1641,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     private boolean isPrePaidOtaPaymentMethod() {
         if(payment != null && payment.paymentType != null && payment.paymentType.toLowerCase().contains("otapayments")) {
             //To use new method, set this to true.
-            return false;
+            return true;
         }
         return false;
     }

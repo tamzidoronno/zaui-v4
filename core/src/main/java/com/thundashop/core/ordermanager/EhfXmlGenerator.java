@@ -111,7 +111,10 @@ public class EhfXmlGenerator {
             taxDate = order.rowCreatedDate;
         }
         
-        xml += "         <cbc:TaxPointDate>" + dateFormatter.format(taxDate) + "</cbc:TaxPointDate>\n";
+        if (!order.isCreditNote) {
+            xml += "         <cbc:TaxPointDate>" + dateFormatter.format(taxDate) + "</cbc:TaxPointDate>\n";
+        }
+        
         xml += "         <cbc:DocumentCurrencyCode listID=\"ISO4217\">" + getCurrentByCode() + "</cbc:DocumentCurrencyCode>\n";
         if (order.invoiceNote != null && !order.invoiceNote.isEmpty()) {
             xml += "         <cbc:AccountingCost>" + order.invoiceNote + "</cbc:AccountingCost>\n";
@@ -259,7 +262,7 @@ public class EhfXmlGenerator {
 
         BigDecimal totalTaxes =  makePositive(order.getTotalAmountVatRoundedTwoDecimals(calculatePresision));
         xml += "        <cac:TaxTotal>\n"
-                + "                <cbc:TaxAmount currencyID=\"NOK\">" + totalTaxes + "</cbc:TaxAmount>\n";
+                + "                <cbc:TaxAmount currencyID=\"NOK\">" + invertCreditNote(totalTaxes) + "</cbc:TaxAmount>\n";
 
         xml += generateSubTaxes(totalTaxes);
 
@@ -272,13 +275,13 @@ public class EhfXmlGenerator {
         
         
         xml += "        <cac:LegalMonetaryTotal>\n"
-                + "                <cbc:LineExtensionAmount currencyID=\"NOK\">" + makePositive(totalExTax) + "</cbc:LineExtensionAmount>\n"
-                + "                <cbc:TaxExclusiveAmount currencyID=\"NOK\">" + makePositive(totalExTax) + "</cbc:TaxExclusiveAmount>\n"
-                + "                <cbc:TaxInclusiveAmount currencyID=\"NOK\">" + makePositive(toPay) + "</cbc:TaxInclusiveAmount>\n"
+                + "                <cbc:LineExtensionAmount currencyID=\"NOK\">" + makePositive(invertCreditNote(totalExTax)) + "</cbc:LineExtensionAmount>\n"
+                + "                <cbc:TaxExclusiveAmount currencyID=\"NOK\">" + makePositive(invertCreditNote(totalExTax)) + "</cbc:TaxExclusiveAmount>\n"
+                + "                <cbc:TaxInclusiveAmount currencyID=\"NOK\">" + makePositive(invertCreditNote(toPay)) + "</cbc:TaxInclusiveAmount>\n"
                 + "                <cbc:ChargeTotalAmount currencyID=\"NOK\">0</cbc:ChargeTotalAmount>\n"
                 + "                <cbc:PrepaidAmount currencyID=\"NOK\">0</cbc:PrepaidAmount>\n"
                 + "                <cbc:PayableRoundingAmount currencyID=\"NOK\">0</cbc:PayableRoundingAmount>\n"
-                + "                <cbc:PayableAmount currencyID=\"NOK\">" + makePositive(toPay) + "</cbc:PayableAmount>\n"
+                + "                <cbc:PayableAmount currencyID=\"NOK\">" + makePositive(invertCreditNote(toPay)) + "</cbc:PayableAmount>\n"
                 + "        </cac:LegalMonetaryTotal>\n";
 
         xml += createInvoiceLines(taxDate);
@@ -339,7 +342,7 @@ public class EhfXmlGenerator {
             xml += "        <cac:"+invoicelinetext+">\n"
                     + "                <cbc:ID>" + i + "</cbc:ID>\n"
                     + "                <cbc:"+invoieqtytext+" unitCode=\"NAR\" unitCodeListID=\"UNECERec20\">" + count + "</cbc:"+invoieqtytext+">\n"
-                    + "                <cbc:LineExtensionAmount currencyID=\"NOK\">" + total + "</cbc:LineExtensionAmount>\n"
+                    + "                <cbc:LineExtensionAmount currencyID=\"NOK\">" + invertCreditNote(total) + "</cbc:LineExtensionAmount>\n"
                     + "                <cbc:AccountingCost>BookingCode001</cbc:AccountingCost>\n"
                     + "                <cac:InvoicePeriod>\n"
                     + "                        <cbc:StartDate>" + dateFormatter.format(startDate) + "</cbc:StartDate>\n"
@@ -439,8 +442,8 @@ public class EhfXmlGenerator {
                 taxCode = "Z";
             }
             xml += "                <cac:TaxSubtotal>\n"
-                    + "                        <cbc:TaxableAmount currencyID=\"NOK\">" + makePositive(totals.get(group)) + "</cbc:TaxableAmount>\n"
-                    + "                        <cbc:TaxAmount currencyID=\"NOK\">" + taxes.get(group) + "</cbc:TaxAmount>\n"
+                    + "                        <cbc:TaxableAmount currencyID=\"NOK\">" + makePositive(invertCreditNote(totals.get(group))) + "</cbc:TaxableAmount>\n"
+                    + "                        <cbc:TaxAmount currencyID=\"NOK\">" + invertCreditNote(taxes.get(group)) + "</cbc:TaxAmount>\n"
                     + "                        <cac:TaxCategory>\n"
                     + "                                <cbc:ID schemeID=\"UNCL5305\">" + taxCode + "</cbc:ID>\n"
                     + "                                <cbc:Percent>" + group.taxRate + "</cbc:Percent>\n"
@@ -611,5 +614,14 @@ public class EhfXmlGenerator {
         }
         
         return totals;
+    }
+
+    private BigDecimal invertCreditNote(BigDecimal in) {
+        
+        if (order.isCreditNote) {
+            return in.multiply(new BigDecimal(-1));
+        }
+        
+        return in;
     }
 }

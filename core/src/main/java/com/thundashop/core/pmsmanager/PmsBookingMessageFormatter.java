@@ -209,8 +209,11 @@ class PmsBookingMessageFormatter {
         for(PmsBookingRooms room : roomsToIterate) {
             String simpleRoom = "";
             if(room.bookingItemTypeId != null && !room.bookingItemTypeId.isEmpty() && !room.bookingItemTypeId.equals("waiting_list")) {
-                simpleRoom += "<td style='font-size:12px;'>" + bookingEngine.getBookingItemType(room.bookingItemTypeId).name + "</td>";
-                rooms += bookingEngine.getBookingItemType(room.bookingItemTypeId).name;
+                BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
+                if(type != null) {
+                    simpleRoom += "<td style='font-size:12px;'>" + bookingEngine.getBookingItemType(room.bookingItemTypeId).name + "</td>";
+                    rooms += bookingEngine.getBookingItemType(room.bookingItemTypeId).name;
+                }
             }
             long diff = 365*60*60*100;
             Date start = null;

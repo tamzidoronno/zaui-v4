@@ -21,6 +21,7 @@ import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.User;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -294,8 +295,19 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
     public List<PmsConference> getAllConferences(PmsConferenceFilter filter) {
         ArrayList<PmsConference> result = getFilterResult(filter);
         result.sort(Comparator.comparing(a -> a.meetingTitle));
-        
+        addConferenceMetaData(result);
         return result;
+    }
+
+    private void addConferenceMetaData(ArrayList<PmsConference> result) {
+        result.stream().forEach(res -> {
+            if (res.forUser != null && !res.forUser.isEmpty()) {
+                User user = userManager.getUserById(res.forUser);
+                if (user != null) {
+                    res.forUserFullName = user.fullName;
+                }
+            }
+        });
     }
 
     @Override

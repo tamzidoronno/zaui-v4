@@ -857,8 +857,6 @@ public class GetShop extends ManagerBase implements IGetShop {
             newAddress = nextStoreId+"gc"+startData.cluster+".getshop.com";
         }
         
-        newAddress = "gaard.kronen.getshop.com";
-        
         CreatedStoreData newStore = new CreatedStoreData();
         try {
             // 7d89917f-c2de-4108-a9d6-33ba78f62c16 = http://bookingtemplate.getshop.com
@@ -871,7 +869,7 @@ public class GetShop extends ManagerBase implements IGetShop {
             } else {
                 
                 try {
-                    GetShopApi remoteApi = new GetShopApi(25554, "10.0."+startData.cluster+".33", UUID.randomUUID().toString(), "main.kronen.getshop.com");
+                    GetShopApi remoteApi = new GetShopApi(25554, "10.0."+startData.cluster+".33", UUID.randomUUID().toString(), "1gc"+startData.cluster+".getshop.com");
 //                    GetShopApi remoteApi = new GetShopApi(25554, "localhost", UUID.randomUUID().toString(), "no.3.0.local.getshop.com");
                     remoteApi.getGetShop().insertNewStore("02983ukjauhsfi8o723h4okiql23h4ro8a9sdhfiq234h90182744hgq2wirh128341234", newAddress, copiedDataObjects, newStoreId, startData);
                 } catch (Exception ex) {

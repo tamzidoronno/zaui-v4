@@ -1569,6 +1569,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed implements IB
 
     @Override
     public List<BookingItemType> getBookingItemTypesIncludeDeleted() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //old customers, should be upgraded to use the new customerlist.
+        return getBookingItemTypes();
     }
 }

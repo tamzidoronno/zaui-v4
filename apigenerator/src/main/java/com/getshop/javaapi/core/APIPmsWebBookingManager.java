@@ -20,7 +20,7 @@ public class APIPmsWebBookingManager {
      public JsonElement getAllRooms(String gs_multiLevelName, Object start, Object end)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("start",new Gson().toJson(start));
           gs_json_object_data.args.put("end",new Gson().toJson(end));
           gs_json_object_data.method = "getAllRooms";

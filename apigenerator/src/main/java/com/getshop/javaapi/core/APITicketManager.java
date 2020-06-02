@@ -167,6 +167,35 @@ public class APITicketManager {
      *
      * @author ktonder
      */
+     public JsonElement createSupportGroup(Object name)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("name",new Gson().toJson(name));
+          gs_json_object_data.method = "createSupportGroup";
+          gs_json_object_data.interfaceName = "core.ticket.ITicketManager";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
+     public void deleteGroup(Object id)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("id",new Gson().toJson(id));
+          gs_json_object_data.method = "deleteGroup";
+          gs_json_object_data.interfaceName = "core.ticket.ITicketManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
      public void deleteSubTask(Object ticketId, Object subTaskId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
@@ -294,6 +323,37 @@ public class APITicketManager {
           gs_json_object_data.args = new LinkedHashMap();
           gs_json_object_data.args.put("filter",new Gson().toJson(filter));
           gs_json_object_data.method = "getStoreStatistics";
+          gs_json_object_data.interfaceName = "core.ticket.ITicketManager";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
+     public JsonElement getSupportGroup(Object id)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("id",new Gson().toJson(id));
+          gs_json_object_data.method = "getSupportGroup";
+          gs_json_object_data.interfaceName = "core.ticket.ITicketManager";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
+     public JsonElement getSupportGroups()  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.method = "getSupportGroups";
           gs_json_object_data.interfaceName = "core.ticket.ITicketManager";
           String result = transport.send(gs_json_object_data);
           Gson gson = new GsonBuilder().serializeNulls().create();
@@ -451,6 +511,19 @@ public class APITicketManager {
      *
      * @author ktonder
      */
+     public void saveSupportGroup(Object group)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("group",new Gson().toJson(group));
+          gs_json_object_data.method = "saveSupportGroup";
+          gs_json_object_data.interfaceName = "core.ticket.ITicketManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
      public void saveTicket(Object ticket)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
@@ -474,6 +547,20 @@ public class APITicketManager {
           Gson gson = new GsonBuilder().serializeNulls().create();
           JsonElement object = gson.fromJson(result, JsonElement.class);
           return object;
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
+     public void sendTicketToGroup(Object ticketId, Object groupId)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("ticketId",new Gson().toJson(ticketId));
+          gs_json_object_data.args.put("groupId",new Gson().toJson(groupId));
+          gs_json_object_data.method = "sendTicketToGroup";
+          gs_json_object_data.interfaceName = "core.ticket.ITicketManager";
+          String result = transport.send(gs_json_object_data);
      }
 
      /**

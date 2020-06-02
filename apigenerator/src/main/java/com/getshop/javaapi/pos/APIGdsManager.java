@@ -31,6 +31,21 @@ public class APIGdsManager {
      *
      * @author ktonder
      */
+     public JsonElement getAllNewIotDevices()  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.method = "getAllNewIotDevices";
+          gs_json_object_data.interfaceName = "core.gsd.IGdsManager";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
      public JsonElement getAllUnits(Object filter)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
@@ -67,6 +82,22 @@ public class APIGdsManager {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
           gs_json_object_data.method = "getDevices";
+          gs_json_object_data.interfaceName = "core.gsd.IGdsManager";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
+     public JsonElement getIotDeviceInformation(Object information)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("information",new Gson().toJson(information));
+          gs_json_object_data.method = "getIotDeviceInformation";
           gs_json_object_data.interfaceName = "core.gsd.IGdsManager";
           String result = transport.send(gs_json_object_data);
           Gson gson = new GsonBuilder().serializeNulls().create();
@@ -158,6 +189,19 @@ public class APIGdsManager {
           gs_json_object_data.args.put("key",new Gson().toJson(key));
           gs_json_object_data.args.put("config",new Gson().toJson(config));
           gs_json_object_data.method = "setGdsConfig";
+          gs_json_object_data.interfaceName = "core.gsd.IGdsManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
+     public void updateIotDevice(Object device)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("device",new Gson().toJson(device));
+          gs_json_object_data.method = "updateIotDevice";
           gs_json_object_data.interfaceName = "core.gsd.IGdsManager";
           String result = transport.send(gs_json_object_data);
      }

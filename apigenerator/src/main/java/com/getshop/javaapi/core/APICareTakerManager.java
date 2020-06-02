@@ -21,7 +21,7 @@ public class APICareTakerManager {
      public void addRepeatingTask(String gs_multiLevelName, Object repeatingData)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("repeatingData",new Gson().toJson(repeatingData));
           gs_json_object_data.method = "addRepeatingTask";
           gs_json_object_data.interfaceName = "core.pmsmanager.ICareTakerManager";
@@ -35,7 +35,7 @@ public class APICareTakerManager {
      public void assignTask(String gs_multiLevelName, Object taskId, Object userId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("taskId",new Gson().toJson(taskId));
           gs_json_object_data.args.put("userId",new Gson().toJson(userId));
           gs_json_object_data.method = "assignTask";
@@ -50,7 +50,7 @@ public class APICareTakerManager {
      public void checkForTasksToCreate(String gs_multiLevelName)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.method = "checkForTasksToCreate";
           gs_json_object_data.interfaceName = "core.pmsmanager.ICareTakerManager";
           String result = transport.send(gs_json_object_data);
@@ -63,7 +63,7 @@ public class APICareTakerManager {
      public void completeTask(String gs_multiLevelName, Object taskId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("taskId",new Gson().toJson(taskId));
           gs_json_object_data.method = "completeTask";
           gs_json_object_data.interfaceName = "core.pmsmanager.ICareTakerManager";
@@ -77,7 +77,7 @@ public class APICareTakerManager {
      public void deleteRepeatingTask(String gs_multiLevelName, Object id)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("id",new Gson().toJson(id));
           gs_json_object_data.method = "deleteRepeatingTask";
           gs_json_object_data.interfaceName = "core.pmsmanager.ICareTakerManager";
@@ -91,7 +91,7 @@ public class APICareTakerManager {
      public JsonElement getCareTakerList(String gs_multiLevelName, Object filter)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("filter",new Gson().toJson(filter));
           gs_json_object_data.method = "getCareTakerList";
           gs_json_object_data.interfaceName = "core.pmsmanager.ICareTakerManager";
@@ -108,7 +108,7 @@ public class APICareTakerManager {
      public JsonElement getCaretakers(String gs_multiLevelName)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.method = "getCaretakers";
           gs_json_object_data.interfaceName = "core.pmsmanager.ICareTakerManager";
           String result = transport.send(gs_json_object_data);
@@ -124,7 +124,7 @@ public class APICareTakerManager {
      public JsonElement getRepeatingTasks(String gs_multiLevelName)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.method = "getRepeatingTasks";
           gs_json_object_data.interfaceName = "core.pmsmanager.ICareTakerManager";
           String result = transport.send(gs_json_object_data);
@@ -140,7 +140,7 @@ public class APICareTakerManager {
      public JsonElement getRoomOverview(String gs_multiLevelName, Object defectsOnly)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("defectsOnly",new Gson().toJson(defectsOnly));
           gs_json_object_data.method = "getRoomOverview";
           gs_json_object_data.interfaceName = "core.pmsmanager.ICareTakerManager";

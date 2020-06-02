@@ -81,4 +81,6 @@ public interface IBookingEngineAbstract {
 
     public Integer getNumberOfAvailableExcludeClose(String itemType, Date start, Date end);
     public List<String> getBookingItemTypesIds();
+    
+    public List<BookingItemType> getBookingItemTypesIncludeDeleted();
 }

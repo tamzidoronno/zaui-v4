@@ -260,6 +260,12 @@ public class Pms {
            return new APIEhfXmlGenerator(transport);
       }
      /**
+      * @return APIGetShopCentral
+      */
+      public APIGetShopCentral getGetShopCentral() {
+           return new APIGetShopCentral(transport);
+      }
+     /**
       * @return APISimpleEventManager
       */
       public APISimpleEventManager getSimpleEventManager() {

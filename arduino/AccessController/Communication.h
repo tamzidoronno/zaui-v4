@@ -4,11 +4,12 @@
 #include "Clock.h";
 #include "Arduino.h";
 #include "DataStorage.h"
+#include "SleepHandler.h"
 
 class Communication {
 	public:
 		void Communication::sendEncrypted(String msgToSend);
-		Communication(Clock* clock, DataStorage* dataStorage);
+		Communication(Clock* clock, DataStorage* dataStorage, SleepHandler* sleepHandler);
 		bool Communication::isDataAvailable();
 		void Communication::writeEncrypted(char* msgToSend, unsigned int size, bool encrypt);
 		void Communication::getData(unsigned char* buffer);
@@ -19,6 +20,7 @@ class Communication {
 
 	private:
 		Clock* _clock;
+		SleepHandler* _sleepHandler;
 		DataStorage* _dataStorage;
 		bool Communication::checksum(unsigned char* buffer, unsigned char checksum);
 		void Communication::debugDataArray(unsigned char* data, int size);

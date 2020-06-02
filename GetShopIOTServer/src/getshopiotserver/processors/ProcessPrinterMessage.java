@@ -8,6 +8,7 @@ package getshopiotserver.processors;
 import com.thundashop.core.gsd.DirectPrintMessage;
 import com.thundashop.core.gsd.GetShopDeviceMessage;
 import getshopiotserver.GetShopIOTCommon;
+import getshopiotserver.GetShopIOTOperator;
 import getshopiotserver.MessageProcessorInterface;
 import java.io.File;
 import java.io.IOException;
@@ -26,19 +27,19 @@ import java.util.logging.Logger;
 public class ProcessPrinterMessage extends GetShopIOTCommon implements MessageProcessorInterface {
     
     @Override
-    public void processMessage(GetShopDeviceMessage msg) {
+    public void processMessage(GetShopIOTOperator operator, GetShopDeviceMessage msg) {
         if (msg instanceof DirectPrintMessage) {
             try {
-                printMessage((DirectPrintMessage)msg);
+                printMessage(operator, (DirectPrintMessage)msg);
             } catch (IOException ex) {
                 logPrintException(ex);
             }
         }
     }
 
-    private void printMessage(DirectPrintMessage directPrintMessage) throws IOException {
-        String ip = getOperator().getSetupMessage().printerip;
-        Integer port = getOperator().getSetupMessage().printerPort;
+    private void printMessage(GetShopIOTOperator operator, DirectPrintMessage directPrintMessage) throws IOException {
+        String ip = operator.getSetupMessage().printerip;
+        Integer port = operator.getSetupMessage().printerPort;
         if(ip != null && !ip.isEmpty()) {
             logPrint("Printing socket ip:" + ip + ", port: " + port);
             printToSocket(ip, port, directPrintMessage.content);

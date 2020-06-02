@@ -119,6 +119,11 @@ public class Order extends DataCommon implements Comparable<Order> {
      */
     public List<String> conferenceIds = new ArrayList();
     
+    /**
+     * If there is given a reason why this creditnote was created.
+     */
+    public String creditReason;
+    
     public void setCanTransactionsBeDeleted() {
         if(orderTransactions != null) {
             for(OrderTransaction t : orderTransactions) {

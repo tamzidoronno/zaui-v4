@@ -18,12 +18,26 @@ public class APIGetShopCentral {
      *
      * @author ktonder
      */
-     public JsonElement getToken(Object username, Object password)  throws Exception  {
+     public JsonElement createNewAccessToken(Object name)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("username",new Gson().toJson(username));
-          gs_json_object_data.args.put("password",new Gson().toJson(password));
-          gs_json_object_data.method = "getToken";
+          gs_json_object_data.args.put("name",new Gson().toJson(name));
+          gs_json_object_data.method = "createNewAccessToken";
+          gs_json_object_data.interfaceName = "core.central.IGetShopCentral";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
+     public JsonElement getTokens()  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.method = "getTokens";
           gs_json_object_data.interfaceName = "core.central.IGetShopCentral";
           String result = transport.send(gs_json_object_data);
           Gson gson = new GsonBuilder().serializeNulls().create();
@@ -46,6 +60,36 @@ public class APIGetShopCentral {
           Gson gson = new GsonBuilder().serializeNulls().create();
           JsonElement object = gson.fromJson(result, JsonElement.class);
           return object;
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
+     public JsonElement loginByToken(Object token)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("token",new Gson().toJson(token));
+          gs_json_object_data.method = "loginByToken";
+          gs_json_object_data.interfaceName = "core.central.IGetShopCentral";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
+     public void setClusterAndStoreIdForCentral(Object storeId, Object cluster)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("storeId",new Gson().toJson(storeId));
+          gs_json_object_data.args.put("cluster",new Gson().toJson(cluster));
+          gs_json_object_data.method = "setClusterAndStoreIdForCentral";
+          gs_json_object_data.interfaceName = "core.central.IGetShopCentral";
+          String result = transport.send(gs_json_object_data);
      }
 
      /**

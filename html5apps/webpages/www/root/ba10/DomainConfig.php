@@ -9,5 +9,5 @@
 class DomainConfig {
     static $password = "bgdtg345gdfsfasfdas";
     static $defaultLang = "no";
-     static $languagesSupported = array("no" => "Norsk");
+    static $languagesSupported = array("no" => "Norsk");
 }

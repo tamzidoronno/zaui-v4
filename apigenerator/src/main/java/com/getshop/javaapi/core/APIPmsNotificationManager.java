@@ -21,7 +21,7 @@ public class APIPmsNotificationManager {
      public JsonElement createPreview(String gs_multiLevelName, Object key, Object message)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("key",new Gson().toJson(key));
           gs_json_object_data.args.put("message",new Gson().toJson(message));
           gs_json_object_data.method = "createPreview";
@@ -39,7 +39,7 @@ public class APIPmsNotificationManager {
      public void deleteMessage(String gs_multiLevelName, Object messageId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("messageId",new Gson().toJson(messageId));
           gs_json_object_data.method = "deleteMessage";
           gs_json_object_data.interfaceName = "core.pmsmanager.IPmsNotificationManager";
@@ -53,7 +53,7 @@ public class APIPmsNotificationManager {
      public JsonElement doFormationOnMessage(String gs_multiLevelName, Object msg, Object bookingId, Object pmsBookingRoomId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("msg",new Gson().toJson(msg));
           gs_json_object_data.args.put("bookingId",new Gson().toJson(bookingId));
           gs_json_object_data.args.put("pmsBookingRoomId",new Gson().toJson(pmsBookingRoomId));
@@ -72,7 +72,7 @@ public class APIPmsNotificationManager {
      public JsonElement getAllMessages(String gs_multiLevelName)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.method = "getAllMessages";
           gs_json_object_data.interfaceName = "core.pmsmanager.IPmsNotificationManager";
           String result = transport.send(gs_json_object_data);
@@ -88,7 +88,7 @@ public class APIPmsNotificationManager {
      public JsonElement getLanguagesForMessage(String gs_multiLevelName, Object key, Object type)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("key",new Gson().toJson(key));
           gs_json_object_data.args.put("type",new Gson().toJson(type));
           gs_json_object_data.method = "getLanguagesForMessage";
@@ -106,7 +106,7 @@ public class APIPmsNotificationManager {
      public JsonElement getMessage(String gs_multiLevelName, Object messageId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("messageId",new Gson().toJson(messageId));
           gs_json_object_data.method = "getMessage";
           gs_json_object_data.interfaceName = "core.pmsmanager.IPmsNotificationManager";
@@ -123,7 +123,7 @@ public class APIPmsNotificationManager {
      public JsonElement getPrefixesForMessage(String gs_multiLevelName, Object key, Object type)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("key",new Gson().toJson(key));
           gs_json_object_data.args.put("type",new Gson().toJson(type));
           gs_json_object_data.method = "getPrefixesForMessage";
@@ -141,7 +141,7 @@ public class APIPmsNotificationManager {
      public JsonElement getSpecificMessage(String gs_multiLevelName, Object key, Object booking, Object room, Object type, Object prefix)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("key",new Gson().toJson(key));
           gs_json_object_data.args.put("booking",new Gson().toJson(booking));
           gs_json_object_data.args.put("room",new Gson().toJson(room));
@@ -162,7 +162,7 @@ public class APIPmsNotificationManager {
      public void saveMessage(String gs_multiLevelName, Object msg)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("msg",new Gson().toJson(msg));
           gs_json_object_data.method = "saveMessage";
           gs_json_object_data.interfaceName = "core.pmsmanager.IPmsNotificationManager";
@@ -176,7 +176,7 @@ public class APIPmsNotificationManager {
      public void sendEmail(String gs_multiLevelName, Object msg, Object email, Object bookingId, Object roomId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("msg",new Gson().toJson(msg));
           gs_json_object_data.args.put("email",new Gson().toJson(email));
           gs_json_object_data.args.put("bookingId",new Gson().toJson(bookingId));

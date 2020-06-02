@@ -14,6 +14,12 @@ public class Central {
            return new APIStoreManager(transport);
       }
      /**
+      * @return APIAccessGroupManager
+      */
+      public APIAccessGroupManager getAccessGroupManager() {
+           return new APIAccessGroupManager(transport);
+      }
+     /**
       * @return APISystemManager
       */
       public APISystemManager getSystemManager() {
@@ -24,6 +30,12 @@ public class Central {
       */
       public APIUserManager getUserManager() {
            return new APIUserManager(transport);
+      }
+     /**
+      * @return APIAccountingManager
+      */
+      public APIAccountingManager getAccountingManager() {
+           return new APIAccountingManager(transport);
       }
      /**
       * @return APIGdsManager

@@ -84,34 +84,6 @@ public class APIExternalPosManager {
      *
      * @author ktonder
      */
-     public JsonElement getUnconfirmedAccesses()  throws Exception  {
-          JsonObject2 gs_json_object_data = new JsonObject2();
-          gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.method = "getUnconfirmedAccesses";
-          gs_json_object_data.interfaceName = "core.pos.IExternalPosManager";
-          String result = transport.send(gs_json_object_data);
-          Gson gson = new GsonBuilder().serializeNulls().create();
-          JsonElement object = gson.fromJson(result, JsonElement.class);
-          return object;
-     }
-
-     /**
-     *
-     * @author ktonder
-     */
-     public void grantAccessToExternalPos(Object id)  throws Exception  {
-          JsonObject2 gs_json_object_data = new JsonObject2();
-          gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("id",new Gson().toJson(id));
-          gs_json_object_data.method = "grantAccessToExternalPos";
-          gs_json_object_data.interfaceName = "core.pos.IExternalPosManager";
-          String result = transport.send(gs_json_object_data);
-     }
-
-     /**
-     *
-     * @author ktonder
-     */
      public JsonElement hasAccess(Object token)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
@@ -128,55 +100,12 @@ public class APIExternalPosManager {
      *
      * @author ktonder
      */
-     public JsonElement isExternalAccessConfirmed(Object token)  throws Exception  {
-          JsonObject2 gs_json_object_data = new JsonObject2();
-          gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("token",new Gson().toJson(token));
-          gs_json_object_data.method = "isExternalAccessConfirmed";
-          gs_json_object_data.interfaceName = "core.pos.IExternalPosManager";
-          String result = transport.send(gs_json_object_data);
-          Gson gson = new GsonBuilder().serializeNulls().create();
-          JsonElement object = gson.fromJson(result, JsonElement.class);
-          return object;
-     }
-
-     /**
-     *
-     * @author ktonder
-     */
-     public void rejectAccess(Object id)  throws Exception  {
-          JsonObject2 gs_json_object_data = new JsonObject2();
-          gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("id",new Gson().toJson(id));
-          gs_json_object_data.method = "rejectAccess";
-          gs_json_object_data.interfaceName = "core.pos.IExternalPosManager";
-          String result = transport.send(gs_json_object_data);
-     }
-
-     /**
-     *
-     * @author ktonder
-     */
      public void removeTransaction(Object token, Object addonId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
           gs_json_object_data.args.put("token",new Gson().toJson(token));
           gs_json_object_data.args.put("addonId",new Gson().toJson(addonId));
           gs_json_object_data.method = "removeTransaction";
-          gs_json_object_data.interfaceName = "core.pos.IExternalPosManager";
-          String result = transport.send(gs_json_object_data);
-     }
-
-     /**
-     *
-     * @author ktonder
-     */
-     public void requestAccess(Object providerIdToken, Object token)  throws Exception  {
-          JsonObject2 gs_json_object_data = new JsonObject2();
-          gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("providerIdToken",new Gson().toJson(providerIdToken));
-          gs_json_object_data.args.put("token",new Gson().toJson(token));
-          gs_json_object_data.method = "requestAccess";
           gs_json_object_data.interfaceName = "core.pos.IExternalPosManager";
           String result = transport.send(gs_json_object_data);
      }

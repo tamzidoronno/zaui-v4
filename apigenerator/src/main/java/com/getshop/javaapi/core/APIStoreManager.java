@@ -347,6 +347,23 @@ public class APIStoreManager {
      * @return
      * @throws ErrorException
      */
+     public JsonElement hasEmailErrors()  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.method = "hasEmailErrors";
+          gs_json_object_data.interfaceName = "core.storemanager.IStoreManager";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
+     }
+
+     /**
+     * Initializing this api. This will identify the webshop and will act as the root for everything in this api.
+     * @param initSessionId The session id to identify to this user.
+     * @return
+     * @throws ErrorException
+     */
      public JsonElement initializeStore(Object webAddress, Object initSessionId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();

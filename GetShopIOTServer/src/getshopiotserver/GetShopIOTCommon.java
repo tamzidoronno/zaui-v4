@@ -19,7 +19,7 @@ import java.util.Date;
  * @author boggi
  */
 public class GetShopIOTCommon extends Thread {
-    GetShopIOTOperator operator = null;
+
     private String address = "";
     private String token = "";
     private SetupMessage setupMessage = null;
@@ -51,14 +51,7 @@ public class GetShopIOTCommon extends Thread {
         return token;
     }
     
-    public void setIOTOperator(GetShopIOTOperator operator) {
-        this.operator = operator;
-    }
-    
-    public GetShopIOTOperator getOperator() {
-        return this.operator;
-    }
-    
+
     public void logPrint(String msg) {
         System.out.println(new Date() + " : " + msg);
     }

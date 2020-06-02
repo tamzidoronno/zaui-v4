@@ -20,7 +20,7 @@ public class APIPmsBookingProcess {
      public JsonElement addAddons(String gs_multiLevelName, Object arg)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("arg",new Gson().toJson(arg));
           gs_json_object_data.method = "addAddons";
           gs_json_object_data.interfaceName = "core.pmsbookingprocess.IPmsBookingProcess";
@@ -36,7 +36,7 @@ public class APIPmsBookingProcess {
      public JsonElement addBookingItem(String gs_multiLevelName, Object bookingId, Object type, Object start, Object end, Object guestInfoFromRoom, Object bookingItemId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("bookingId",new Gson().toJson(bookingId));
           gs_json_object_data.args.put("type",new Gson().toJson(type));
           gs_json_object_data.args.put("start",new Gson().toJson(start));
@@ -57,7 +57,7 @@ public class APIPmsBookingProcess {
      public JsonElement addBookingItemType(String gs_multiLevelName, Object bookingId, Object type, Object start, Object end, Object guestInfoFromRoom)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("bookingId",new Gson().toJson(bookingId));
           gs_json_object_data.args.put("type",new Gson().toJson(type));
           gs_json_object_data.args.put("start",new Gson().toJson(start));
@@ -77,7 +77,7 @@ public class APIPmsBookingProcess {
      public void addTestMessagesToQueue(String gs_multiLevelName, Object message)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("message",new Gson().toJson(message));
           gs_json_object_data.method = "addTestMessagesToQueue";
           gs_json_object_data.interfaceName = "core.pmsbookingprocess.IPmsBookingProcess";
@@ -90,7 +90,7 @@ public class APIPmsBookingProcess {
      public void cancelPaymentProcess(String gs_multiLevelName, Object data)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("data",new Gson().toJson(data));
           gs_json_object_data.method = "cancelPaymentProcess";
           gs_json_object_data.interfaceName = "core.pmsbookingprocess.IPmsBookingProcess";
@@ -103,7 +103,7 @@ public class APIPmsBookingProcess {
      public JsonElement changeDateOnRoom(String gs_multiLevelName, Object arg)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("arg",new Gson().toJson(arg));
           gs_json_object_data.method = "changeDateOnRoom";
           gs_json_object_data.interfaceName = "core.pmsbookingprocess.IPmsBookingProcess";
@@ -119,7 +119,7 @@ public class APIPmsBookingProcess {
      public JsonElement changeGuestCountForRoom(String gs_multiLevelName, Object roomId, Object guestCount)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("roomId",new Gson().toJson(roomId));
           gs_json_object_data.args.put("guestCount",new Gson().toJson(guestCount));
           gs_json_object_data.method = "changeGuestCountForRoom";
@@ -136,7 +136,7 @@ public class APIPmsBookingProcess {
      public JsonElement changeNumberOnType(String gs_multiLevelName, Object change)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("change",new Gson().toJson(change));
           gs_json_object_data.method = "changeNumberOnType";
           gs_json_object_data.interfaceName = "core.pmsbookingprocess.IPmsBookingProcess";
@@ -152,7 +152,7 @@ public class APIPmsBookingProcess {
      public void chargeOrderWithVerifoneTerminal(String gs_multiLevelName, Object orderId, Object terminalId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("orderId",new Gson().toJson(orderId));
           gs_json_object_data.args.put("terminalId",new Gson().toJson(terminalId));
           gs_json_object_data.method = "chargeOrderWithVerifoneTerminal";
@@ -166,7 +166,7 @@ public class APIPmsBookingProcess {
      public JsonElement completeBooking(String gs_multiLevelName, Object input)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("input",new Gson().toJson(input));
           gs_json_object_data.method = "completeBooking";
           gs_json_object_data.interfaceName = "core.pmsbookingprocess.IPmsBookingProcess";
@@ -182,7 +182,7 @@ public class APIPmsBookingProcess {
      public JsonElement completeBookingForTerminal(String gs_multiLevelName, Object input)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("input",new Gson().toJson(input));
           gs_json_object_data.method = "completeBookingForTerminal";
           gs_json_object_data.interfaceName = "core.pmsbookingprocess.IPmsBookingProcess";
@@ -198,7 +198,7 @@ public class APIPmsBookingProcess {
      public JsonElement getAddonsSummary(String gs_multiLevelName, Object arg)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("arg",new Gson().toJson(arg));
           gs_json_object_data.method = "getAddonsSummary";
           gs_json_object_data.interfaceName = "core.pmsbookingprocess.IPmsBookingProcess";
@@ -214,7 +214,7 @@ public class APIPmsBookingProcess {
      public JsonElement getAllCategories(String gs_multiLevelName)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.method = "getAllCategories";
           gs_json_object_data.interfaceName = "core.pmsbookingprocess.IPmsBookingProcess";
           String result = transport.send(gs_json_object_data);
@@ -229,7 +229,7 @@ public class APIPmsBookingProcess {
      public JsonElement getBooking(String gs_multiLevelName, Object pmsBookingId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("pmsBookingId",new Gson().toJson(pmsBookingId));
           gs_json_object_data.method = "getBooking";
           gs_json_object_data.interfaceName = "core.pmsbookingprocess.IPmsBookingProcess";
@@ -245,7 +245,7 @@ public class APIPmsBookingProcess {
      public JsonElement getConfiguration(String gs_multiLevelName)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.method = "getConfiguration";
           gs_json_object_data.interfaceName = "core.pmsbookingprocess.IPmsBookingProcess";
           String result = transport.send(gs_json_object_data);
@@ -260,7 +260,7 @@ public class APIPmsBookingProcess {
      public JsonElement getPricesForRoom(String gs_multiLevelName, Object start, Object end, Object itemId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("start",new Gson().toJson(start));
           gs_json_object_data.args.put("end",new Gson().toJson(end));
           gs_json_object_data.args.put("itemId",new Gson().toJson(itemId));
@@ -278,7 +278,7 @@ public class APIPmsBookingProcess {
      public JsonElement getTerminalMessages(String gs_multiLevelName)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.method = "getTerminalMessages";
           gs_json_object_data.interfaceName = "core.pmsbookingprocess.IPmsBookingProcess";
           String result = transport.send(gs_json_object_data);
@@ -293,7 +293,7 @@ public class APIPmsBookingProcess {
      public JsonElement hasPrintCodeSupportOnTerminal(String gs_multiLevelName)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.method = "hasPrintCodeSupportOnTerminal";
           gs_json_object_data.interfaceName = "core.pmsbookingprocess.IPmsBookingProcess";
           String result = transport.send(gs_json_object_data);
@@ -308,7 +308,7 @@ public class APIPmsBookingProcess {
      public JsonElement logOn(String gs_multiLevelName, Object logindata)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("logindata",new Gson().toJson(logindata));
           gs_json_object_data.method = "logOn";
           gs_json_object_data.interfaceName = "core.pmsbookingprocess.IPmsBookingProcess";
@@ -324,7 +324,7 @@ public class APIPmsBookingProcess {
      public JsonElement logOut(String gs_multiLevelName)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.method = "logOut";
           gs_json_object_data.interfaceName = "core.pmsbookingprocess.IPmsBookingProcess";
           String result = transport.send(gs_json_object_data);
@@ -339,7 +339,7 @@ public class APIPmsBookingProcess {
      public JsonElement printCodeOnTerminal(String gs_multiLevelName, Object roomId, Object phoneNumber, Object terminalId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("roomId",new Gson().toJson(roomId));
           gs_json_object_data.args.put("phoneNumber",new Gson().toJson(phoneNumber));
           gs_json_object_data.args.put("terminalId",new Gson().toJson(terminalId));
@@ -357,7 +357,7 @@ public class APIPmsBookingProcess {
      public void printReciept(String gs_multiLevelName, Object data)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("data",new Gson().toJson(data));
           gs_json_object_data.method = "printReciept";
           gs_json_object_data.interfaceName = "core.pmsbookingprocess.IPmsBookingProcess";
@@ -370,7 +370,7 @@ public class APIPmsBookingProcess {
      public void quickChangeGuestCountForRoom(String gs_multiLevelName, Object roomId, Object guestCount)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("roomId",new Gson().toJson(roomId));
           gs_json_object_data.args.put("guestCount",new Gson().toJson(guestCount));
           gs_json_object_data.method = "quickChangeGuestCountForRoom";
@@ -384,7 +384,7 @@ public class APIPmsBookingProcess {
      public JsonElement removeAddons(String gs_multiLevelName, Object arg)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("arg",new Gson().toJson(arg));
           gs_json_object_data.method = "removeAddons";
           gs_json_object_data.interfaceName = "core.pmsbookingprocess.IPmsBookingProcess";
@@ -400,7 +400,7 @@ public class APIPmsBookingProcess {
      public JsonElement removeGroupedRooms(String gs_multiLevelName, Object arg)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("arg",new Gson().toJson(arg));
           gs_json_object_data.method = "removeGroupedRooms";
           gs_json_object_data.interfaceName = "core.pmsbookingprocess.IPmsBookingProcess";
@@ -416,7 +416,7 @@ public class APIPmsBookingProcess {
      public JsonElement removeRoom(String gs_multiLevelName, Object roomId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("roomId",new Gson().toJson(roomId));
           gs_json_object_data.method = "removeRoom";
           gs_json_object_data.interfaceName = "core.pmsbookingprocess.IPmsBookingProcess";
@@ -432,7 +432,7 @@ public class APIPmsBookingProcess {
      public JsonElement saveGuestInformation(String gs_multiLevelName, Object arg)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("arg",new Gson().toJson(arg));
           gs_json_object_data.method = "saveGuestInformation";
           gs_json_object_data.interfaceName = "core.pmsbookingprocess.IPmsBookingProcess";
@@ -448,7 +448,7 @@ public class APIPmsBookingProcess {
      public void setBookingItemToCurrentBooking(String gs_multiLevelName, Object roomId, Object itemId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("roomId",new Gson().toJson(roomId));
           gs_json_object_data.args.put("itemId",new Gson().toJson(itemId));
           gs_json_object_data.method = "setBookingItemToCurrentBooking";
@@ -459,10 +459,26 @@ public class APIPmsBookingProcess {
      /**
      * Booking process for property management system.<br>
      */
+     public JsonElement setCampaignCode(String gs_multiLevelName, Object code)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
+          gs_json_object_data.args.put("code",new Gson().toJson(code));
+          gs_json_object_data.method = "setCampaignCode";
+          gs_json_object_data.interfaceName = "core.pmsbookingprocess.IPmsBookingProcess";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
+     }
+
+     /**
+     * Booking process for property management system.<br>
+     */
      public JsonElement setGuestInformation(String gs_multiLevelName, Object bookerInfo)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("bookerInfo",new Gson().toJson(bookerInfo));
           gs_json_object_data.method = "setGuestInformation";
           gs_json_object_data.interfaceName = "core.pmsbookingprocess.IPmsBookingProcess";
@@ -478,7 +494,7 @@ public class APIPmsBookingProcess {
      public void simpleCompleteCurrentBooking(String gs_multiLevelName)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.method = "simpleCompleteCurrentBooking";
           gs_json_object_data.interfaceName = "core.pmsbookingprocess.IPmsBookingProcess";
           String result = transport.send(gs_json_object_data);
@@ -490,7 +506,7 @@ public class APIPmsBookingProcess {
      public JsonElement startBooking(String gs_multiLevelName, Object arg)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("arg",new Gson().toJson(arg));
           gs_json_object_data.method = "startBooking";
           gs_json_object_data.interfaceName = "core.pmsbookingprocess.IPmsBookingProcess";
@@ -506,7 +522,7 @@ public class APIPmsBookingProcess {
      public JsonElement startPaymentProcess(String gs_multiLevelName, Object data)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("data",new Gson().toJson(data));
           gs_json_object_data.method = "startPaymentProcess";
           gs_json_object_data.interfaceName = "core.pmsbookingprocess.IPmsBookingProcess";

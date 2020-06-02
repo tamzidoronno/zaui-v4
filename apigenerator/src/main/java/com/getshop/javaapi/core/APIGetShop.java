@@ -365,6 +365,22 @@ public class APIGetShop {
      * Create a new webpage
      * @return
      */
+     public JsonElement getWebAddressesForNewUseTaxes(Object password)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("password",new Gson().toJson(password));
+          gs_json_object_data.method = "getWebAddressesForNewUseTaxes";
+          gs_json_object_data.interfaceName = "core.getshop.IGetShop";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
+     }
+
+     /**
+     * Create a new webpage
+     * @return
+     */
      public void insertNewStore(Object password, Object newAddress, Object storeDatas, Object newStoreId, Object startData)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();

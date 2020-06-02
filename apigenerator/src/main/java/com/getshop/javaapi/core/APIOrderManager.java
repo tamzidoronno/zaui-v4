@@ -110,6 +110,22 @@ public class APIOrderManager {
      }
 
      /**
+     * Will filter out all the orderids that has a correcsponding
+     * paid creditnote.
+     *
+     * @param orderIds
+     * @return
+     */
+     public void cancelIntegratedPaymentProcess(Object token)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("token",new Gson().toJson(token));
+          gs_json_object_data.method = "cancelIntegratedPaymentProcess";
+          gs_json_object_data.interfaceName = "core.ordermanager.IOrderManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
      * This will create a order for a given userId.
      * To avoid fraud, shipment address and etc will only be
      * able to set to the already registered user in the database.
@@ -184,6 +200,23 @@ public class APIOrderManager {
           gs_json_object_data.args.put("orderId",new Gson().toJson(orderId));
           gs_json_object_data.args.put("paymentTypeId",new Gson().toJson(paymentTypeId));
           gs_json_object_data.method = "changeOrderType";
+          gs_json_object_data.interfaceName = "core.ordermanager.IOrderManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
+     * Returns the total amount of sales for a given year. If you year is left blank you
+     * will get the total amount for all years.
+     *
+     * @param year
+     * @return
+     */
+     public void changeOrderTypeByCheckout(Object orderId, Object paymentTypeId)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("orderId",new Gson().toJson(orderId));
+          gs_json_object_data.args.put("paymentTypeId",new Gson().toJson(paymentTypeId));
+          gs_json_object_data.method = "changeOrderTypeByCheckout";
           gs_json_object_data.interfaceName = "core.ordermanager.IOrderManager";
           String result = transport.send(gs_json_object_data);
      }
@@ -404,6 +437,38 @@ public class APIOrderManager {
      }
 
      /**
+     * Will filter out all the orderids that has a correcsponding
+     * paid creditnote.
+     *
+     * @param orderIds
+     * @return
+     */
+     public void correctOrderWithTaxProblem(Object orderId)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("orderId",new Gson().toJson(orderId));
+          gs_json_object_data.method = "correctOrderWithTaxProblem";
+          gs_json_object_data.interfaceName = "core.ordermanager.IOrderManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
+     * Will filter out all the orderids that has a correcsponding
+     * paid creditnote.
+     *
+     * @param orderIds
+     * @return
+     */
+     public void correctProblemsWithCorrection(Object password)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("password",new Gson().toJson(password));
+          gs_json_object_data.method = "correctProblemsWithCorrection";
+          gs_json_object_data.interfaceName = "core.ordermanager.IOrderManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
      * This function is not in use anywhere so it can be deleted at any time.
      *
      * just a function that fixes a problem that we had by resetting orders
@@ -516,6 +581,26 @@ public class APIOrderManager {
      }
 
      /**
+     * Will filter out all the orderids that has a correcsponding
+     * paid creditnote.
+     *
+     * @param orderIds
+     * @return
+     */
+     public JsonElement creditOrderIgnoreClosedDate(Object orderId, Object reason)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("orderId",new Gson().toJson(orderId));
+          gs_json_object_data.args.put("reason",new Gson().toJson(reason));
+          gs_json_object_data.method = "creditOrderIgnoreClosedDate";
+          gs_json_object_data.interfaceName = "core.ordermanager.IOrderManager";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
+     }
+
+     /**
      * This will create a order for a given userId.
      * To avoid fraud, shipment address and etc will only be
      * able to set to the already registered user in the database.
@@ -569,11 +654,43 @@ public class APIOrderManager {
      * @param year
      * @return
      */
+     public void deleteOrCreditOrder(Object orderId)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("orderId",new Gson().toJson(orderId));
+          gs_json_object_data.method = "deleteOrCreditOrder";
+          gs_json_object_data.interfaceName = "core.ordermanager.IOrderManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
+     * Returns the total amount of sales for a given year. If you year is left blank you
+     * will get the total amount for all years.
+     *
+     * @param year
+     * @return
+     */
      public void deleteOrder(Object orderId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
           gs_json_object_data.args.put("orderId",new Gson().toJson(orderId));
           gs_json_object_data.method = "deleteOrder";
+          gs_json_object_data.interfaceName = "core.ordermanager.IOrderManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
+     * This will create a order for a given userId.
+     * To avoid fraud, shipment address and etc will only be
+     * able to set to the already registered user in the database.
+     *
+     * @param userId
+     */
+     public void deleteOrderTransaction(Object transactionId)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("transactionId",new Gson().toJson(transactionId));
+          gs_json_object_data.method = "deleteOrderTransaction";
           gs_json_object_data.interfaceName = "core.ordermanager.IOrderManager";
           String result = transport.send(gs_json_object_data);
      }
@@ -645,6 +762,23 @@ public class APIOrderManager {
           gs_json_object_data.args.put("orderId",new Gson().toJson(orderId));
           gs_json_object_data.args.put("password",new Gson().toJson(password));
           gs_json_object_data.method = "forceDeleteOrder";
+          gs_json_object_data.interfaceName = "core.ordermanager.IOrderManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
+     * Will filter out all the orderids that has a correcsponding
+     * paid creditnote.
+     *
+     * @param orderIds
+     * @return
+     */
+     public void forceSaveOrder(Object order, Object password)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("order",new Gson().toJson(order));
+          gs_json_object_data.args.put("password",new Gson().toJson(password));
+          gs_json_object_data.method = "forceSaveOrder";
           gs_json_object_data.interfaceName = "core.ordermanager.IOrderManager";
           String result = transport.send(gs_json_object_data);
      }
@@ -1407,6 +1541,24 @@ public class APIOrderManager {
           gs_json_object_data.args.put("end",new Gson().toJson(end));
           gs_json_object_data.args.put("statistics",new Gson().toJson(statistics));
           gs_json_object_data.method = "getOrdersFromPeriode";
+          gs_json_object_data.interfaceName = "core.ordermanager.IOrderManager";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
+     }
+
+     /**
+     * Will filter out all the orderids that has a correcsponding
+     * paid creditnote.
+     *
+     * @param orderIds
+     * @return
+     */
+     public JsonElement getOrdersNeedToBeCorrectedOverrideTaxes()  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.method = "getOrdersNeedToBeCorrectedOverrideTaxes";
           gs_json_object_data.interfaceName = "core.ordermanager.IOrderManager";
           String result = transport.send(gs_json_object_data);
           Gson gson = new GsonBuilder().serializeNulls().create();
@@ -2219,6 +2371,23 @@ public class APIOrderManager {
      }
 
      /**
+     * Will filter out all the orderids that has a correcsponding
+     * paid creditnote.
+     *
+     * @param orderIds
+     * @return
+     */
+     public void receiptText(Object token, Object terminalReceiptText)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("token",new Gson().toJson(token));
+          gs_json_object_data.args.put("terminalReceiptText",new Gson().toJson(terminalReceiptText));
+          gs_json_object_data.method = "receiptText";
+          gs_json_object_data.interfaceName = "core.ordermanager.IOrderManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
      * This will create a order for a given userId.
      * To avoid fraud, shipment address and etc will only be
      * able to set to the already registered user in the database.
@@ -2369,6 +2538,22 @@ public class APIOrderManager {
           gs_json_object_data.args.put("subject",new Gson().toJson(subject));
           gs_json_object_data.args.put("text",new Gson().toJson(text));
           gs_json_object_data.method = "sendRecieptWithText";
+          gs_json_object_data.interfaceName = "core.ordermanager.IOrderManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
+     * Will filter out all the orderids that has a correcsponding
+     * paid creditnote.
+     *
+     * @param orderIds
+     * @return
+     */
+     public void setConnectedToAGetShopCentral(Object connectedToAGetShopCentral)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("connectedToAGetShopCentral",new Gson().toJson(connectedToAGetShopCentral));
+          gs_json_object_data.method = "setConnectedToAGetShopCentral";
           gs_json_object_data.interfaceName = "core.ordermanager.IOrderManager";
           String result = transport.send(gs_json_object_data);
      }

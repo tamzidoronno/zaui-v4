@@ -21,7 +21,7 @@ public class APIChecklistManager {
      public JsonElement getErrors(String gs_multiLevelName, Object from, Object to)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("from",new Gson().toJson(from));
           gs_json_object_data.args.put("to",new Gson().toJson(to));
           gs_json_object_data.method = "getErrors";

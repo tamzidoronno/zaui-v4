@@ -8,6 +8,7 @@
 
 #include "CodeHandler.h"
 #include "CodeReader.h"
+#include "SleepHandler.h"
 #include "Clock.h"
 
 #ifndef GS8015KeyReader_h
@@ -15,7 +16,7 @@
 
 class GS8015KeyReader : public CodeReader {
 	public:
-		GS8015KeyReader(Clock* clock);
+		GS8015KeyReader(Clock* clock, SleepHandler* sleepHandler);
 		void setup();
 		void getBuffer(unsigned char* retBuffer);
 		void clearBuffer();
@@ -28,6 +29,7 @@ class GS8015KeyReader : public CodeReader {
 
 	private:
 		CodeHandler* codeHandler;
+		SleepHandler* sleepHandler;
 		volatile bool _dataAvailable;
 		volatile unsigned char * _codeBuffer[26];
 		volatile unsigned char * _tmpCodeBuffer[26];

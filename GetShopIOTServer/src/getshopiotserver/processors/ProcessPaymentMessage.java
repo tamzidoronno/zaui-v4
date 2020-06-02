@@ -17,9 +17,9 @@ import getshopiotserver.MessageProcessorInterface;
  * @author boggi
  */
 public class ProcessPaymentMessage extends GetShopIOTCommon implements MessageProcessorInterface {
-
+ 
     @Override
-    public void processMessage(GetShopDeviceMessage msg) {
+    public void processMessage(GetShopIOTOperator operator, GetShopDeviceMessage msg) {
         if (!(msg instanceof GdsPaymentAction))
             return;
         
@@ -30,16 +30,16 @@ public class ProcessPaymentMessage extends GetShopIOTCommon implements MessagePr
                 switch(paymentAction.action) {
                     case 1:
                         logPrint("Starting payment");
-                        getOperator().getPaymentOperator().startTransaction(paymentAction.amount, paymentAction.orderId);
+                        operator.getPaymentOperator().startTransaction(paymentAction.amount, paymentAction.orderId);
                         break;
                     case 2:
                         logPrint("Cancelling payment");
-                        getOperator().getPaymentOperator().cancelTransaction();
+                        operator.getPaymentOperator().cancelTransaction();
                         break;
                         
                     case 3:
                         logPrint("End of day report");
-                        getOperator().getPaymentOperator().adminEndOfDay(paymentAction.orderId);
+                        operator.getPaymentOperator().adminEndOfDay(paymentAction.orderId);
                         break;
                         
                     default:

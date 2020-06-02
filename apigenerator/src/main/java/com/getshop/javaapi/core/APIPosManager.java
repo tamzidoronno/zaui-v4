@@ -484,11 +484,41 @@ public class APIPosManager {
      *
      * @author ktonder
      */
+     public JsonElement getReportNotTransferredToCentral()  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.method = "getReportNotTransferredToCentral";
+          gs_json_object_data.interfaceName = "core.pos.IPosManager";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
      public JsonElement getSalesReport(Object filter)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
           gs_json_object_data.args.put("filter",new Gson().toJson(filter));
           gs_json_object_data.method = "getSalesReport";
+          gs_json_object_data.interfaceName = "core.pos.IPosManager";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
+     public JsonElement getSummaryListForConferences()  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.method = "getSummaryListForConferences";
           gs_json_object_data.interfaceName = "core.pos.IPosManager";
           String result = transport.send(gs_json_object_data);
           Gson gson = new GsonBuilder().serializeNulls().create();
@@ -642,6 +672,22 @@ public class APIPosManager {
      *
      * @author ktonder
      */
+     public JsonElement getUnpaidAmountForConference(Object conferenceId)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("conferenceId",new Gson().toJson(conferenceId));
+          gs_json_object_data.method = "getUnpaidAmountForConference";
+          gs_json_object_data.interfaceName = "core.pos.IPosManager";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
      public JsonElement getView(Object viewId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
@@ -761,6 +807,33 @@ public class APIPosManager {
           Gson gson = new GsonBuilder().serializeNulls().create();
           JsonElement object = gson.fromJson(result, JsonElement.class);
           return object;
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
+     public void markAllRoomsWithProblemsForPayAfterStay(Object multilevelName, Object cashPointId)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("multilevelName",new Gson().toJson(multilevelName));
+          gs_json_object_data.args.put("cashPointId",new Gson().toJson(cashPointId));
+          gs_json_object_data.method = "markAllRoomsWithProblemsForPayAfterStay";
+          gs_json_object_data.interfaceName = "core.pos.IPosManager";
+          String result = transport.send(gs_json_object_data);
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
+     public void markZReportAsTransferredToCentral(Object zreportId)  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.args.put("zreportId",new Gson().toJson(zreportId));
+          gs_json_object_data.method = "markZReportAsTransferredToCentral";
+          gs_json_object_data.interfaceName = "core.pos.IPosManager";
+          String result = transport.send(gs_json_object_data);
      }
 
      /**

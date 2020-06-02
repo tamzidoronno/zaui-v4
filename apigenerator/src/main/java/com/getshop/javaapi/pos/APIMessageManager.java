@@ -206,22 +206,6 @@ public class APIMessageManager {
      }
 
      /**
-     * Get how many messages a user has sent.
-     *
-     * @param year
-     * @param month
-     * @return
-     */
-     public void sendErrorNotify(Object inText)  throws Exception  {
-          JsonObject2 gs_json_object_data = new JsonObject2();
-          gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("inText",new Gson().toJson(inText));
-          gs_json_object_data.method = "sendErrorNotify";
-          gs_json_object_data.interfaceName = "core.messagemanager.IMessageManager";
-          String result = transport.send(gs_json_object_data);
-     }
-
-     /**
      * Send a mail.
      * @param to The address to send to
      * @param toName The name of the one receiving it.

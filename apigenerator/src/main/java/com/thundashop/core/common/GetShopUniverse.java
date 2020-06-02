@@ -5,10 +5,14 @@
  */
 package com.thundashop.core.common;
 
+import com.getshop.javaapi.central.Central;
 import com.getshop.javaapi.core.Pms;
-import com.getshop.javaapi.pos.Central;
 import com.getshop.javaapi.pos.Pos;
-import com.getshop.javaapi.pos.Seros;
+import com.getshop.javaapi.seros.Seros;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -22,16 +26,24 @@ public class GetShopUniverse {
     private String createdForSystemType = "";
     private String serverIp = null;
     private String host;
-    private String store;
+    private String storeId;
+    private boolean devMode;
 
-    public GetShopUniverse(String serverIp, String store) {
-        this.serverIp = serverIp;
-        this.store = store;
+    public <T> T convert(JsonElement in, Class toClass) {
+        Object res = new Gson().fromJson(in, toClass);
+        
+        if (toClass.isArray()) {
+            List<T> test = Arrays.asList((T[]) res);
+            res = test;
+        }
+        
+        return (T) res;
     }
     
-    public GetShopUniverse(int cluster, String store) {
+    public GetShopUniverse(int cluster, String storeId, boolean devMode) {
         this.cluster = cluster;
-        this.store = store;
+        this.storeId = storeId;
+        this.devMode = devMode;
     }
     
     public Seros getSerosLockSystem() throws Exception {
@@ -43,7 +55,7 @@ public class GetShopUniverse {
         }
         
         Seros api = new Seros(transporter);
-        api.getStoreManager().initializeStore(store, sessionId);
+        api.getStoreManager().initializeStore(storeId, sessionId);
         return api;
     }
     
@@ -56,7 +68,7 @@ public class GetShopUniverse {
         }
         
         Central api = new Central(transporter);
-        api.getStoreManager().initializeStore(store, sessionId);
+        api.getStoreManager().initializeStore(storeId, sessionId);
         return api;
     }
     
@@ -69,7 +81,7 @@ public class GetShopUniverse {
         }
         
         Pos api = new Pos(transporter);
-        api.getStoreManager().initializeStore(store, sessionId);
+        api.getStoreManager().initializeStore(storeId, sessionId);
         return api;
     }
     
@@ -82,14 +94,41 @@ public class GetShopUniverse {
         }
         
         Pms api = new Pms(transporter);
-        api.getStoreManager().initializeStore(store, sessionId);
+        api.getStoreManager().initializeStore(storeId, sessionId);
         return api;
     }
 
+    public SystemCreator getCreator(String systemType) {
+        if (transporter == null) {
+            setTransporter(systemType);
+        }
+        
+        return new SystemCreator(transporter);
+    }
+    
     private void setTransporter(String systemtype) {
         int port = 25554;
         
-        String clusterIp = "10.0."+cluster+".33";
+        String subAddr = "33";
+        
+        if (systemtype.equals("pos")) {
+            subAddr = "43";
+        }
+        
+        if (systemtype.equals("seros")) {
+            subAddr = "63";
+        }
+        
+        if (systemtype.equals("central")) {
+            subAddr = "73";
+        }
+        
+        String clusterIp = "10.0."+cluster+"."+subAddr;
+        
+        if (cluster == 0 || devMode) {
+            clusterIp = "127.0.0.1";
+        }
+        
         
         if (serverIp != null) {
             clusterIp = serverIp;
@@ -115,8 +154,8 @@ public class GetShopUniverse {
         createdForSystemType = systemtype;
     }
 
-    public void initalize(String gkroengetshopcom) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void close() {
+        System.out.println("TODO - HANDLE CLOSE FROM GETSHOP UNIVERSE!");
     }
     
     

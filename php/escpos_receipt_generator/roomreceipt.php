@@ -48,6 +48,11 @@ $printer = new Printer($connector);
 $printer -> setJustification(Printer::JUSTIFY_CENTER);
 
 $receiptText = "ADDED TO ROOM";
+
+if ($printMessage->isConference) {
+    $receiptText = "ADDED TO CONFERENCE";
+}
+
 /* Title of receipt */
 $printer -> setEmphasis(true);
 $printer -> setTextSize(2, 3);
@@ -77,8 +82,20 @@ $printer -> feed();
 
 $printer -> setTextSize(1, 1);
 $printer -> text(new item("_________________________________", ""));
-$printer -> text(new item("Name: ".$printMessage->guestName, ""));
-$printer -> text(new item("Room: ".$printMessage->roomName, ""));
+
+if ($printMessage->isConference) {
+    $printer -> text(new item("Conference: ".$printMessage->guestName, ""));
+} else {
+    $printer -> text(new item("Name: ".$printMessage->guestName, ""));
+}
+
+if ($printMessage->isConference) {
+    $printer -> text(new item("Name: ".$printMessage->roomName, ""));
+} else {
+    $printer -> text(new item("Room: ".$printMessage->roomName, ""));
+}
+
+
 $printer -> text(new item("Date: ".date('d.m.Y H:i:s', strtotime($printMessage->date)), ""));
 
 /* Tax and total */

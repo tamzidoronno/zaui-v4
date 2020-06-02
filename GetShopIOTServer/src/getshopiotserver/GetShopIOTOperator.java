@@ -36,16 +36,28 @@ public class GetShopIOTOperator extends GetShopIOTCommon {
 
     private List<String> configsSent = new ArrayList();
             
-    public PaymentOperator paymentOperator = null;
+    private PaymentOperator paymentOperator = null;
     
     private boolean isProductionMode = true;
     private String debugConnectionAddr ="http://www.3.0.local.getshop.com/";
     private String debugLongPullAddr ="http://lomcamping.3.0.local.getshop.com/";
-    
+
+    public GetShopIOTOperator(String configFile) {
+        this.configFile = configFile;
+    }
     
     
     public void run() {
         logPrint("Ready to recieve instructions from " +getAddress() +  ", with token: " + getToken());
+        
+        boolean setup = setup();
+        
+        if (!setup) {
+            readConfiguration();
+            setup();
+        }
+        
+        getPaymentOperator();
         setStartupConfigs();
         while(true) {
             doLongPull();
@@ -96,7 +108,7 @@ public class GetShopIOTOperator extends GetShopIOTCommon {
         }
     }
 
-    boolean setup() {
+    private boolean setup() {
         String fileName = configFile;
         List<String> list = new ArrayList<>();
 
@@ -128,7 +140,7 @@ public class GetShopIOTOperator extends GetShopIOTCommon {
         return (!getAddress().isEmpty() && !getToken().isEmpty());
     }
 
-    void readConfiguration() {
+    private void readConfiguration() {
         long identificator = (long)(Math.random() * 1000000000);
         logPrint("Im not identified yet, waiting for initial instruction from the GetShop hive, my identification is : " + identificator);
         int i = 0;
@@ -244,8 +256,7 @@ public class GetShopIOTOperator extends GetShopIOTCommon {
         processors.stream().forEach(o -> {
             
             try {
-                o.setIOTOperator(this);
-                o.processMessage((GetShopDeviceMessage)res);
+                o.processMessage(this, (GetShopDeviceMessage)res);
             } catch (Exception ex) {
                 logPrintException(ex);
             }

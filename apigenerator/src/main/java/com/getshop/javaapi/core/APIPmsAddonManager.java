@@ -21,7 +21,7 @@ public class APIPmsAddonManager {
      public void addProductToGroup(String gs_multiLevelName, Object filter)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("filter",new Gson().toJson(filter));
           gs_json_object_data.method = "addProductToGroup";
           gs_json_object_data.interfaceName = "core.pmsmanager.IPmsAddonManager";

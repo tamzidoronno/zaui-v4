@@ -56,6 +56,12 @@ public class Pos {
            return new APIGdsManager(transport);
       }
      /**
+      * @return APIPmsPosManager
+      */
+      public APIPmsPosManager getPmsPosManager() {
+           return new APIPmsPosManager(transport);
+      }
+     /**
       * @return APIPosManager
       */
       public APIPosManager getPosManager() {

@@ -21,7 +21,7 @@ public class APIPmsCoverageAndIncomeReportManager {
      public void deleteSegment(String gs_multiLevelName, Object segmentId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("segmentId",new Gson().toJson(segmentId));
           gs_json_object_data.method = "deleteSegment";
           gs_json_object_data.interfaceName = "core.pmsmanager.IPmsCoverageAndIncomeReportManager";
@@ -35,7 +35,7 @@ public class APIPmsCoverageAndIncomeReportManager {
      public void forceUpdateSegmentsOnBooking(String gs_multiLevelName, Object bookingId, Object segmentId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("bookingId",new Gson().toJson(bookingId));
           gs_json_object_data.args.put("segmentId",new Gson().toJson(segmentId));
           gs_json_object_data.method = "forceUpdateSegmentsOnBooking";
@@ -50,7 +50,7 @@ public class APIPmsCoverageAndIncomeReportManager {
      public JsonElement getCustomerReport(String gs_multiLevelName, Object filter)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("filter",new Gson().toJson(filter));
           gs_json_object_data.method = "getCustomerReport";
           gs_json_object_data.interfaceName = "core.pmsmanager.IPmsCoverageAndIncomeReportManager";
@@ -67,7 +67,7 @@ public class APIPmsCoverageAndIncomeReportManager {
      public JsonElement getSegment(String gs_multiLevelName, Object segmentId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("segmentId",new Gson().toJson(segmentId));
           gs_json_object_data.method = "getSegment";
           gs_json_object_data.interfaceName = "core.pmsmanager.IPmsCoverageAndIncomeReportManager";
@@ -84,7 +84,7 @@ public class APIPmsCoverageAndIncomeReportManager {
      public JsonElement getSegmentForBooking(String gs_multiLevelName, Object bookingId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("bookingId",new Gson().toJson(bookingId));
           gs_json_object_data.method = "getSegmentForBooking";
           gs_json_object_data.interfaceName = "core.pmsmanager.IPmsCoverageAndIncomeReportManager";
@@ -101,7 +101,7 @@ public class APIPmsCoverageAndIncomeReportManager {
      public JsonElement getSegmentForRoom(String gs_multiLevelName, Object roomId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("roomId",new Gson().toJson(roomId));
           gs_json_object_data.method = "getSegmentForRoom";
           gs_json_object_data.interfaceName = "core.pmsmanager.IPmsCoverageAndIncomeReportManager";
@@ -118,7 +118,7 @@ public class APIPmsCoverageAndIncomeReportManager {
      public JsonElement getSegments(String gs_multiLevelName)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.method = "getSegments";
           gs_json_object_data.interfaceName = "core.pmsmanager.IPmsCoverageAndIncomeReportManager";
           String result = transport.send(gs_json_object_data);
@@ -134,7 +134,7 @@ public class APIPmsCoverageAndIncomeReportManager {
      public JsonElement getStatistics(String gs_multiLevelName, Object filter)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("filter",new Gson().toJson(filter));
           gs_json_object_data.method = "getStatistics";
           gs_json_object_data.interfaceName = "core.pmsmanager.IPmsCoverageAndIncomeReportManager";
@@ -151,7 +151,7 @@ public class APIPmsCoverageAndIncomeReportManager {
      public void recalculateSegments(String gs_multiLevelName, Object segmentId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("segmentId",new Gson().toJson(segmentId));
           gs_json_object_data.method = "recalculateSegments";
           gs_json_object_data.interfaceName = "core.pmsmanager.IPmsCoverageAndIncomeReportManager";
@@ -165,7 +165,7 @@ public class APIPmsCoverageAndIncomeReportManager {
      public void saveSegments(String gs_multiLevelName, Object segment)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("segment",new Gson().toJson(segment));
           gs_json_object_data.method = "saveSegments";
           gs_json_object_data.interfaceName = "core.pmsmanager.IPmsCoverageAndIncomeReportManager";

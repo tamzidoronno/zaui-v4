@@ -20,7 +20,7 @@ public class APISmsHistoryManager {
      public void generateSmsUsage(String gs_multiLevelName)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.method = "generateSmsUsage";
           gs_json_object_data.interfaceName = "core.pmsmanager.ISmsHistoryManager";
           String result = transport.send(gs_json_object_data);

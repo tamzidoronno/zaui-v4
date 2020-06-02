@@ -5557,5 +5557,37 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         order.rowCreatedDateChangedByUser = getSession().currentUser.id;
         saveOrder(order);
     }
+    
+    public Order creditOrderIgnoreClosedDate(String orderId, String reason) {
+        Order order = getOrder(orderId);
+        
+        if (order.isCreditNote) {
+            throw new RuntimeException("Cant credit a credinote");
+        }
+        
+        if (!order.creditOrderId.isEmpty()) {
+            throw new RuntimeException("Cant do this as the order is partially creditted");
+        }
+        
+        Date currentlyClosed = getOrderManagerSettings().closedTilPeriode;
+        Date currentlyBankClosed = getOrderManagerSettings().bankAccountClosedToDate;
+        
+        Order creditNote = null;
+        try {
+            getOrderManagerSettings().closedTilPeriode = new Date(1);
+            getOrderManagerSettings().bankAccountClosedToDate = new Date(1);
+            
+            creditNote = creditOrder(orderId);
+            creditNote.creditReason = reason;
+            saveObject(creditNote);
+        } catch (Exception ex) {
+            return null;
+        } finally {
+            getOrderManagerSettings().closedTilPeriode = currentlyClosed;
+            getOrderManagerSettings().bankAccountClosedToDate = currentlyBankClosed;
+        }
+        
+        return creditNote;
+    }
    
 }

@@ -59,7 +59,7 @@ public class JavaApiBuilder {
         content += "          JsonObject2 gs_json_object_data = new JsonObject2();\r\n";
         content += "          gs_json_object_data.args = new LinkedHashMap();\r\n";
         for (String method : args.keySet()) {
-            if(method.equals("multiLevelName")) {
+            if(method.equals("gs_multiLevelName")) {
                 content += "          gs_json_object_data.multiLevelName = " + method + ";\n";
             } else {
                 content += "          gs_json_object_data.args.put(\"" + method + "\",new Gson().toJson(" + method + "));\n";

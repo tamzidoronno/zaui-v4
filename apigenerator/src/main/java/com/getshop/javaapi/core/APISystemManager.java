@@ -64,6 +64,21 @@ public class APISystemManager {
      *
      * @author ktonder
      */
+     public JsonElement getAllSystems()  throws Exception  {
+          JsonObject2 gs_json_object_data = new JsonObject2();
+          gs_json_object_data.args = new LinkedHashMap();
+          gs_json_object_data.method = "getAllSystems";
+          gs_json_object_data.interfaceName = "core.system.ISystemManager";
+          String result = transport.send(gs_json_object_data);
+          Gson gson = new GsonBuilder().serializeNulls().create();
+          JsonElement object = gson.fromJson(result, JsonElement.class);
+          return object;
+     }
+
+     /**
+     *
+     * @author ktonder
+     */
      public JsonElement getCustomerIdForStoreId(Object storeId)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();

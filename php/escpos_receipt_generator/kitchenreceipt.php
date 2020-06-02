@@ -102,7 +102,6 @@ $printer -> setEmphasis(false);
 $printer -> feed(2);
 
 /* Items */
-
 $printer -> setJustification(Printer::JUSTIFY_LEFT);
 $printer -> setEmphasis(false);
 $printer -> selectPrintMode();
@@ -114,8 +113,24 @@ foreach ($items as $item) {
     $printer -> text($item);
 }
 
+
 $printer -> setFont();
 $printer -> setTextSize(1, 1);
+
+if ($printMessage->textToChef) {
+    foreach ($printMessage->textToChef as $textToChef){
+        $text = $textToChef->name.": ";
+        $toImplode = array();
+        foreach ($textToChef->values as $value) {
+            $toImplode[] = $value->text;
+        }
+        
+        $text .= implode(",", $toImplode);
+        
+        $printer -> text(new item($text, ""));
+    }
+}
+
 $printer -> text(new item("_________________________________", ""));
 $printer -> text(new item("By: ".$printMessage->printedBy, ""));
 $printer -> text(new item("Tab: ".$printMessage->tabName, ""));

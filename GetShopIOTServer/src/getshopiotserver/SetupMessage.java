@@ -18,4 +18,6 @@ public class SetupMessage {
     public String paymentterminalip = ""; //Ip adress to paymentterminal
     public String printerip = ""; //Ip to printer to print to socket.
     public Integer printerPort = 0; //Port for printer to print to socket // Default 9100
+    public Integer netsHostPort = 0; // Default port is 6008;
+    public String name = "";
 }

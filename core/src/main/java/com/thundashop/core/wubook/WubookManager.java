@@ -1027,8 +1027,8 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 room.numberOfGuests = r.guest;
                 room.bookingItemTypeId = getTypeFromWubookRoomId(r.roomId);
                 if(room.bookingItemTypeId == null) {
-                    logText("Failed to find room for booking: " + booking.reservationCode);
-                    sendErrorForReservation(booking.reservationCode, "Failed to find room for reservation");
+                    logText("Failed to find room type for booking: " + booking.reservationCode);
+                    sendErrorForReservation(booking.reservationCode, "Failed to find room type for reservation");
                 }
                 pricestoset.put(room.pmsBookingRoomId, r.priceMatrix);
                 PmsGuests guest = new PmsGuests();
@@ -2379,6 +2379,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     private void addTaxesToRoom(WubookBookedRoom room) {
         WubookRoomData rdata = getWubookRoomData(room.roomId);
         BookingItemType type = bookingEngine.getBookingItemType(rdata.bookingEngineTypeId);
+        if(type == null) {
+            return;
+        }
         Product prod = productManager.getProduct(type.productId);
         for(Date key : room.priceMatrix.keySet()) {
             TaxGroup tax = productManager.getTaxGroup(prod.id, prod.taxgroup, key);

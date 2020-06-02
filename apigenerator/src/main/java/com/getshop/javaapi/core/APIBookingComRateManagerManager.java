@@ -20,7 +20,7 @@ public class APIBookingComRateManagerManager {
      public JsonElement getRateManagerConfig(String gs_multiLevelName)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.method = "getRateManagerConfig";
           gs_json_object_data.interfaceName = "core.ratemanager.IBookingComRateManagerManager";
           String result = transport.send(gs_json_object_data);
@@ -35,7 +35,7 @@ public class APIBookingComRateManagerManager {
      public void pushAllBookings(String gs_multiLevelName)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.method = "pushAllBookings";
           gs_json_object_data.interfaceName = "core.ratemanager.IBookingComRateManagerManager";
           String result = transport.send(gs_json_object_data);
@@ -47,7 +47,7 @@ public class APIBookingComRateManagerManager {
      public void pushInventoryList(String gs_multiLevelName)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.method = "pushInventoryList";
           gs_json_object_data.interfaceName = "core.ratemanager.IBookingComRateManagerManager";
           String result = transport.send(gs_json_object_data);
@@ -59,7 +59,7 @@ public class APIBookingComRateManagerManager {
      public void saveRateManagerConfig(String gs_multiLevelName, Object config)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("config",new Gson().toJson(config));
           gs_json_object_data.method = "saveRateManagerConfig";
           gs_json_object_data.interfaceName = "core.ratemanager.IBookingComRateManagerManager";
@@ -72,7 +72,7 @@ public class APIBookingComRateManagerManager {
      public JsonElement updateRate(String gs_multiLevelName, Object start, Object end, Object roomId, Object rate)  throws Exception  {
           JsonObject2 gs_json_object_data = new JsonObject2();
           gs_json_object_data.args = new LinkedHashMap();
-          gs_json_object_data.args.put("gs_multiLevelName",new Gson().toJson(gs_multiLevelName));
+          gs_json_object_data.multiLevelName = gs_multiLevelName;
           gs_json_object_data.args.put("start",new Gson().toJson(start));
           gs_json_object_data.args.put("end",new Gson().toJson(end));
           gs_json_object_data.args.put("roomId",new Gson().toJson(roomId));

@@ -32,7 +32,7 @@ class MenuHelper {
         }
         
         $languages = (array)DomainConfig::$languagesSupported;
-        if(sizeof($languages) > 0) {
+        if(sizeof($languages) > 1) {
             echo "<span class='languageselection'>";
             foreach($languages as $lang => $text) {
                 echo "<a href='?language=$lang'>$text</a> ";

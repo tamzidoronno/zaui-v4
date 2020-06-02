@@ -1042,21 +1042,32 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 room.guests.add(guest);
                 newbooking.addRoom(room);
             }
+            boolean isPrepaidByOta = false;
             if(booking.isExpediaCollect) {
                 checkIfPaymentMethodIsActive("92bd796f-758e-4e03-bece-7d2dbfa40d7a");
                 newbooking.paymentType = "92bd796f-758e-4e03-bece-7d2dbfa40d7a";
                 newbooking.isPrePaid = true;
+                isPrepaidByOta = true;
             }
             if(booking.isBookingComVirtual) {
                 checkIfPaymentMethodIsActive("d79569c6-ff6a-4ab5-8820-add42ae71170");
                 newbooking.paymentType = "d79569c6-ff6a-4ab5-8820-add42ae71170";
                 newbooking.isPrePaid = true;
+                isPrepaidByOta = true;
             }
             if(newbooking.channel.equals("wubook_43")) {
                 checkIfPaymentMethodIsActive("639164bc-37f2-11e6-ac61-9e71128cae77");
                 newbooking.paymentType = "639164bc-37f2-11e6-ac61-9e71128cae77";
                 newbooking.isPrePaid = true;
+                isPrepaidByOta = true;
             }
+            
+            if(useNewPrePaidMethod()) {
+                checkIfPaymentMethodIsActive("4aa4888a-4685-4373-bffe-aa6a3005eff1");
+                newbooking.paymentType = "4aa4888a-4685-4373-bffe-aa6a3005eff1";
+                newbooking.isPrePaid = true;
+            }
+            
             pmsManager.setBooking(newbooking);
             int i = 0;
             for(PmsBookingRooms room : newbooking.getActiveRooms()) {
@@ -2560,6 +2571,18 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             count = pmsManager.getConfigurationSecure().maxNumberForEachCategory.get(bookingEngineTypeId);
         }
         return count;
+    }
+
+    private boolean useNewPrePaidMethod() {
+        Date storeDate = storeManager.getMyStore().rowCreatedDate;
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, 2020);
+        cal.set(Calendar.MONTH, 5);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        if(cal.getTime().before(storeDate)) {
+            return true;
+        }
+        return false;
     }
 
 

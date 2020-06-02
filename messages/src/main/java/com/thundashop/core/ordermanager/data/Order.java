@@ -1164,6 +1164,9 @@ public class Order extends DataCommon implements Comparable<Order> {
         if(isABNB()) {
             return true;
         }
+        if(isPrePaidOtaPaymentMethod()) {
+            return true;
+        }
         return false;
     }
 
@@ -1637,6 +1640,14 @@ public class Order extends DataCommon implements Comparable<Order> {
             return true;
         }
         
+        return false;
+    }
+
+    private boolean isPrePaidOtaPaymentMethod() {
+        if(payment != null && payment.paymentType != null && payment.paymentType.toLowerCase().contains("otapayments")) {
+            //To use new method, set this to true.
+            return true;
+        }
         return false;
     }
     

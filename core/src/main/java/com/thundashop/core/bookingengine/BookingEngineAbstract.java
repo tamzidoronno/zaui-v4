@@ -1566,4 +1566,9 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed implements IB
     public List<BookingTimeLineFlatten> getTimeLinesForItemWithOptimalIngoreErrorsWithTypes(Date start, Date end, List<String> types) {
         return getTimeLinesForItemWithOptimalIngoreErrors(start, end);
     }
+
+    @Override
+    public List<BookingItemType> getBookingItemTypesIncludeDeleted() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

@@ -7,6 +7,7 @@ package com.thundashop.core.bookingengine;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
+import com.mongodb.BasicDBObject;
 import static com.thundashop.core.bookingengine.BookingEngine.useNewEngine;
 import static com.thundashop.core.bookingengine.BookingEngineAbstract.usingNewSystem2;
 import com.thundashop.core.bookingengine.data.Availability;
@@ -70,6 +71,7 @@ public class BookingEngineNew extends GetShopSessionBeanNamed implements IBookin
     private final BookingEngineVerifier verifier = new BookingEngineVerifier();
 
     private Date lastSentErrorNotification = new Date();
+    private List<BookingItemType> allTypesIncludedDeletedSinceStartup;
 
     public BookingEngineNew() {
         setOverrideCollectionName("BookingEngineAbstract");
@@ -1163,6 +1165,33 @@ public class BookingEngineNew extends GetShopSessionBeanNamed implements IBookin
         }
         
         return retList;
+        
+    }
+
+    @Override
+    public List<BookingItemType> getBookingItemTypesIncludeDeleted() {
+        if (allTypesIncludedDeletedSinceStartup != null) {
+            ArrayList<BookingItemType> all = new ArrayList();
+            all.addAll(types.values());
+            all.addAll(allTypesIncludedDeletedSinceStartup);
+            
+            return all.stream()
+                    .distinct()
+                    .collect(Collectors.toList());
+        }
+        
+        BasicDBObject query = new BasicDBObject();
+        
+        query.put("className", BookingItemType.class.getCanonicalName());
+        
+        allTypesIncludedDeletedSinceStartup = database.query("BookingEngineAbstract_"+getSessionBasedName(), storeId, query)
+                .stream()
+                .map( o -> (BookingItemType)o)
+                .collect(Collectors.toList());
+        
+        
+        return allTypesIncludedDeletedSinceStartup.stream()
+                    .collect(Collectors.toList());
         
     }
 

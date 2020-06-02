@@ -147,13 +147,12 @@ public class PmsBookingPaymentDiffer {
     }
 
     private void setProductIdsForRoom() {
-        roomProductIds = pmsManager.bookingEngine.getBookingItemTypesIds()
+        roomProductIds = pmsManager.bookingEngine.getBookingItemTypesIncludeDeleted()
                 .stream()
-                .map(id -> pmsManager.bookingEngine.getBookingItemType(id))
                 .filter(type -> type.productId != null && !type.productId.isEmpty())
                 .map(type -> type.productId)
                 .collect(Collectors.toList());
-                
+        
     }
 
     private HashMap<String, List<String>> getCartItemsIds(PmsBookingAddonItem addonItem) {

@@ -11,22 +11,12 @@ $conferenceBooking = $this->getApi()->getPmsManager()->getConferenceBookings($th
 if (!is_array($conferenceBooking)) {
     $conferenceBooking = array();
 }
-
-if (!count($conferenceBooking)) {
-    ?>
-    <div class="no_conferences">
-        <? echo $this->__f("No conferences availble to see with the given criterias"); ?>
-    </div>
-    <?
-    return;
-} 
 ?>
 
 <div style='margin-top: 20px; text-align: center;' method='updateDateRange' gstype='form'>
     <input type='txt' class='gsniceinput1' value='<?php echo date("d.m.Y", strtotime($filter->start)); ?>' style='width:80px;' gsname='start'>
     <input type='txt' class='gsniceinput1' value='<?php echo date("d.m.Y", strtotime($filter->end)); ?>' style='width:80px;' gsname='end'>
-    <span class='shop_button' gstype='submit' gsvalue='list'>List conferences</span>
-    <span class='shop_button' gstype='submit' gsvalue='timeline'>List conference in timeline</span>
+    <span class='shop_button' gstype='submit'>Load</span>
 </div>
 
     <?

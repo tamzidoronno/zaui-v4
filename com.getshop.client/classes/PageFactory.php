@@ -246,6 +246,25 @@ class PageFactory {
         
         $this->pages['conferencelist'] = $page;   
         
+        // timelinereport
+        $page = new \ModulePage("timelinereport", "pms");
+        $page->addExtraApplications('961efe75-e13b-4c9a-a0ce-8d3906b4bd73');    
+        $page->addExtraApplications('3e2bc00a-4d7c-44f4-a1ea-4b1b953d8c01');    
+        
+        $row = $page->createRow(true);
+        
+        $row->addColumn("dbe8930f-05d9-44f7-b399-4e683389f5cc", "d3e168b2-c10e-4750-a330-527d98906aa8");
+        
+        $page->addExtraApplications('f8cc5247-85bf-4504-b4f3-b39937bd9955');
+        $page->addExtraApplications('b5e9370e-121f-414d-bda2-74df44010c3b');
+        $page->addExtraApplications('b72ec093-caa2-4bd8-9f32-e826e335894e');
+        $page->addExtraApplications('9a6ea395-8dc9-4f27-99c5-87ccc6b5793d');
+        $page->addExtraApplications('2e51d163-8ed2-4c9a-a420-02c47b1f7d67');
+        $page->addExtraApplications('bce90759-5488-442b-b46c-a6585f353cfe');    
+        $page->addExtraApplications('e8fedc44-b227-400b-8f4d-52d52e58ecfe');    
+        
+        $this->pages['timelinereport'] = $page;   
+        
         
         // ConferenceList
         $page = new \ModulePage("conferencereports", "pms");

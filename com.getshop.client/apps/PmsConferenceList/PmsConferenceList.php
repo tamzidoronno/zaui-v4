@@ -11,6 +11,13 @@ class PmsConferenceList extends \MarketingApplication implements \Application {
     }
 
     public function render() {
+        $pageId = $_POST['core']['pageid'];
+        if($pageId == "timelinereport") {
+            $_POST['data']['submit'] = "timeline";
+        } else {
+            $_POST['data']['submit'] = "list";
+        }
+        
         $this->includefile("conferencelist");
     }
     
@@ -30,17 +37,40 @@ class PmsConferenceList extends \MarketingApplication implements \Application {
     }
 
     public function getStartDate() {
-        if(isset($_SESSION['conferencelistperiodestart'])) {
-            return $this->convertToJavaDate(strtotime($_SESSION['conferencelistperiodestart']));
+        if(!isset($_SESSION['firstloadpage'])) {
+            $_SESSION['firstloadpage'] = false;
         }
-        return $this->convertToJavaDate(time());
+        if($_SESSION['firstloadpage']) {
+            unset($_SESSION['conferencelistperiodestart']);
+            unset($_SESSION['conferencelistperiodeend']);
+        }
+        
+        if(isset($_SESSION['conferencelistperiodestart'])) {
+            $time = $this->convertToJavaDate(strtotime($_SESSION['conferencelistperiodestart']));
+        } else {
+            $time = $this->convertToJavaDate(time());
+        }
+        
+        $_SESSION['timelinestart'] = date("d.m.Y", strtotime($time));
+
+        return $time; 
     }
 
     public function getEndDate() {
         if(isset($_SESSION['conferencelistperiodeend'])) {
             return $this->convertToJavaDate(strtotime($_SESSION['conferencelistperiodeend']));
         }
-        return $this->convertToJavaDate(time()+(86400*30));
+        
+        $days = 30;
+        $pageId = $_POST['core']['pageid'];
+        if($pageId == "timelinereport") {
+           $days = 1;
+        }
+
+        
+        $time = $this->convertToJavaDate(time()+(86400*$days));
+        $_SESSION['timelinesend'] = date("d.m.Y", strtotime($time));
+        return $time;
     }
 
 }

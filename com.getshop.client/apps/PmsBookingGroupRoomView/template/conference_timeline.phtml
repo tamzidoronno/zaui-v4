@@ -32,7 +32,7 @@ $filter->start = $this->convertToJavaDate(strtotime($this->getTimeLineStart()));
 $filter->end = $this->convertToJavaDate(strtotime($this->getTimeLineEnd()));
 
 // TODO - Make filter of list to date range.
-$conferenceBooking = $this->getApi()->getPmsManager()->getConferenceBookings($this->getSelectedMultilevelDomainName(), $filter);
+$conferenceBooking = (array)$this->getApi()->getPmsManager()->getConferenceBookings($this->getSelectedMultilevelDomainName(), $filter);
 $conferences = array();
 foreach ($conferenceBooking as $conferenceBooking) {
      $conferences[$conferenceBooking->conferenceId] = $conferenceBooking->rooms[0]->pmsBookingRoomId;

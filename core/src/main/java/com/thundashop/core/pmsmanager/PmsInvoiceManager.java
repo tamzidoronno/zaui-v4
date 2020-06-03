@@ -848,7 +848,19 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     private Double increasePriceByAdvanceCoverage(String typeId, Date start, Double price) {
         Integer coverage = null;
+        PmsConfiguration config = pmsManager.getConfigurationSecure();
+        start = config.getDefaultStart(start);
+        Calendar test = Calendar.getInstance();
+        test.setTime(start);
+        test.set(Calendar.HOUR_OF_DAY, 0);
+        test.set(Calendar.MINUTE, 0);
+        test.set(Calendar.SECOND, 0);
+        start = test.getTime();
         
+        int diff = config.getTimeDifferenceInTimeZone();
+        test.add(Calendar.SECOND, diff);
+        
+        System.out.println("Increasing by coverage: " + typeId + ", start: " + start + ", price: " + price);
         if (useCacheCoverage()) {
             if(!savedCoverage.containsKey(start.getTime()/10000)) {
                 coverage = bookingEngine.getCoverageForDate(start);

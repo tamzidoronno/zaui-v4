@@ -20,4 +20,6 @@ public class PmsConference extends DataCommon {
     public int attendeeCount = 0;
     
     public String state = "";
+    
+    public String forUserFullName = "";
 }

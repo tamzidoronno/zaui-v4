@@ -69,7 +69,7 @@ class PmsStatisticsBuilder {
         Calendar cal = Calendar.getInstance();
         cal.setTime(filter.startDate);
         List<String> roomsAddedForGuests = new ArrayList();
-        List<BookingItemType> types = bookingEngine.getBookingItemTypes();
+        List<BookingItemType> types = bookingEngine.getBookingItemTypesWithSystemType(null);
         HashMap<String, BookingItemType> typesmap = new HashMap();
         for(BookingItemType type : types) {
             typesmap.put(type.id, type);
@@ -413,6 +413,9 @@ class PmsStatisticsBuilder {
     private double getTaxForRoom(PmsBookingRooms room, Date time, HashMap<String, BookingItemType> typesmap) {
         double tax = 0.0;
         BookingItemType type = typesmap.get(room.bookingItemTypeId);
+        if(type == null) {
+            return 0;
+        }
         Product product = productManager.getProductUnfinalized(type.productId);
         TaxGroup group = productManager.getTaxGroup(type.productId, product.taxgroup, time);
         return group.taxRate;

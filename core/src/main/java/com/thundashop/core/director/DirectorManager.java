@@ -90,7 +90,7 @@ public class DirectorManager extends ManagerBase implements IDirectorManager {
     
     @Override
     public void syncFromOld() {
-        syncUtils.createSystems();
+//        syncUtils.createSystems();
         
         for (Company company : userManager.getAllCompanies()) {
             systemManager.getSystemsForCompany(company.id).stream()

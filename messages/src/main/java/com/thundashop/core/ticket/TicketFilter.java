@@ -20,4 +20,6 @@ public class TicketFilter {
     public boolean uassigned = false;
     public Date end;
     public Date start;
+    public String sorting = "";
+    public String internalTag = "";
 }

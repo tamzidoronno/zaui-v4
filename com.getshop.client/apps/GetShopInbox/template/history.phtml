@@ -1,0 +1,213 @@
+<?
+/* @var $this \ns_f1706b4c_f779_4eb7_aec3_ee08f182e090\GetShopInbox */
+$filter = new \core_ticket_TicketFilter();
+$filter->sorting = "number_asc";
+$showtype = "";
+$timefilter = "";
+
+if(isset($_GET['showtype'])) {
+    $showtype = $_GET['showtype'];
+}
+
+if(isset($_GET['timefilter'])) {
+    $timefilter = $_GET['timefilter'];
+}
+
+if(!isset($_GET['showtype']) || $_GET['showtype'] == "unprocessed") {
+    $filter->state = "CREATED";
+}
+
+$tickets = $this->getApi()->getTicketManager()->getAllTickets($filter);
+$cachedUsers = new stdClass();
+$rightList = $this->getRightList();
+
+
+$admins = $this->getApi()->getUserManager()->getUsersByType(100);
+$admins = $this->indexList($admins);
+
+$selectedStates = $this->getAllTypes();
+
+$states = array("CREATED", "REPLIED", "COMPLETED", "INITIAL");
+$groupedByStates = array();
+
+foreach ($states as $state) {
+    $groupedByStates[$state] = array();
+    foreach ($tickets as $ticket) {
+        if ($ticket->currentState != $state) {
+            continue;
+        }
+        $groupedByStates[$state][] = $ticket;
+    }
+}
+?>
+<hr>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a href='?page=inbox&showtype=alltickets'>Display all tickets</a> -
+<a href='?page=inbox&showtype=unprocessed'>Unprocessed tickets</a> -
+<a href='?page=inbox&showtype=completed'>Completed tickets</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<select id='changeDatesForFilter'>
+<?php
+$time = time();
+echo "<option value=''>Filter for time</option>";
+for($i = 0; $i < 30; $i++) {
+    $date = date("M Y", $time);
+    $index = date("m-y", $time);
+    $selected = $timefilter == $index ? "SELECTED" : "";
+    echo "<option value='$index' $selected>$date</option>";
+    $time = strtotime("-1 month", $time);
+}
+?>
+</select>
+<hr>
+
+<div class="ticketlist">
+<?
+$counter = 0;
+$tagCounter = array();
+foreach ($tickets as $ticket) {
+    if($ticket->type == "SETUP") {
+        continue;
+    }
+    if($ticket->type == "BACKLOG") {
+        continue;
+    }
+    
+    if(isset($_GET['showtype']) && $_GET['showtype'] == "completed" && $ticket->type == "CREATED") {
+        continue;
+    }
+    
+    if($timefilter) {
+        $index = date("m-y", strtotime($ticket->rowCreatedDate));
+        if($index != $timefilter) {
+            continue;
+        }
+    }
+    
+    $user = false;
+    if($ticket->ignored && !isset($_GET['showignored'])) {
+        continue;
+    }
+
+    if ($ticket->userId && !isset($cachedUsers->{$ticket->userId})) {
+        $user = $this->getApi()->getUserManager()->getUserById($ticket->userId);
+        $cachedUsers->{$ticket->userId} = $user;
+    }
+
+    if (!$user && @$cachedUsers->{$ticket->userId}) {
+        $user = $cachedUsers->{$ticket->userId};
+    }
+
+    $name = $user ? $user->fullName : "N/A";
+
+    ?>
+    <div class="row ticketrow">
+        
+        <span style="width:80px; float:right;" class='ticketoptions' ticketid='<?php echo $ticket->id; ?>'> 
+            <i class='fa fa-dollar changeinternaltag <?php if($ticket->internalTag == "accounting") { echo "selectedtag"; } ?>' tag='accounting' style='cursor:pointer;' title='Accounting / order handling'></i> 
+            <i class='fa fa-get-pocket changeinternaltag <?php if($ticket->internalTag == "pms") { echo "selectedtag"; } ?>' tag='pms' style='cursor:pointer;' title='PMS'></i> 
+            <i class='fa fa-lock changeinternaltag <?php if($ticket->internalTag == "hardware") { echo "selectedtag"; } ?>' tag='hardware' style='cursor:pointer;' title='Hardware'></i> 
+            <i class='fa fa-chain changeinternaltag <?php if($ticket->internalTag == "channelmanager") { echo "selectedtag"; } ?>' tag='channelmanager' style='cursor:pointer;' title='Channel manager'></i> 
+        </span>
+        <a href="/getshop.php?page=ticketview&ticketId=<? echo $ticket->id; ?>">
+            <div>
+                <div class="col col1 ticketid"><? echo $ticket->incrementalId; ?></div>
+                <div class="col col2"><? echo date('d.m.Y H:i', strtotime($ticket->rowCreatedDate)); ?></div>
+                <div class="col col3 title"><?
+                if($ticket->ignored) {
+                    echo "<b>(IGNORED)</b> ";
+                }
+                echo $ticket->title; ?></div>
+
+                <div class="col col5 customer"><? echo $name; ?></div>
+                <div class="col col4 state"><? echo $ticket->currentState; ?></div>
+                <div class="col col8 state" style="width:200px;"><? 
+                if($ticket->assignedToUserId && isset($admins[$ticket->assignedToUserId])) {
+                    $user = $admins[$ticket->assignedToUserId];
+                    echo $user->fullName;
+                }
+                ?></div>
+            </div>
+        </a>
+    </div>
+    <?
+    $counter++;
+    if(!isset($tagCounter[$ticket->internalTag])) {
+        $tagCounter[$ticket->internalTag] = 0;
+    }
+    $tagCounter[$ticket->internalTag]++;
+}
+echo "<br>";
+echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A total of $counter tickets.<br>";
+foreach($tagCounter as $idx => $count) {
+    if(!$idx) {
+        $idx = "Unspecified";
+    }
+    echo "<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$idx : $count</div>";
+}
+?>
+
+</div>
+
+<div class="lastcontentmessages">
+    <?
+    foreach ($rightList as $ticketContent) {
+        $isReadClass = ""; 
+        
+        if ($this->getCurrentTab() == "unassigned" && !$ticketContent->isReadByInboxHandler) { 
+            $isReadClass = "notread";
+        }
+        
+        if ($this->getCurrentTab() == "yourcases" && !$ticketContent->isReadByAssignedTo) { 
+            $isReadClass = "notread";
+        }
+        
+        if ($this->getCurrentTab() == "unassigned" && $ticketContent->isAssignedToAGetShopAdmin) {
+            $isReadClass = "assignedToUser";
+            if ($ticketContent->isReadByAssignedTo) {
+                $readText = '<i class="fa fa-check"></i> Read';
+            } else {
+                $readText = '<i class="fa fa-close"></i> Not read';
+            }
+        }
+        
+        ?>
+        <a href="/getshop.php?page=ticketview&ticketId=<? echo $ticketContent->ticketId; ?>">
+            <div class="ticketcontent_right <? echo $isReadClass; ?>">
+                <div><? echo $ticketContent->content; ?></div>
+                <div><? echo date("d.m.y H:i", strtotime($ticket->rowCreatedDate)); ?></div>
+                <?
+                if ($isReadClass === "assignedToUser") {
+                    echo $readText;
+                }
+                ?>
+            </div>
+        </a>
+        <? 
+    }
+    ?>
+</div>
+
+<script>
+$('#changeDatesForFilter').on('change', function() {
+    var val = $(this).val();
+    window.location.href='?page=inbox&showtype=<?php echo $showtype; ?>&timefilter='+val;
+});
+$('.changeinternaltag').on('click', function() {
+    var btn = $(this);
+    var row = $(this).closest('.ticketoptions');
+    var event = thundashop.Ajax.createEvent('','changeInternalTag', $('.GetShopInbox'), {
+        "tag" : $(this).attr('tag'),
+        "ticketid" : row.attr('ticketid')
+    });
+    
+    thundashop.Ajax.postWithCallBack(event, function(res) {
+        row.find('.selectedtag').removeClass('selectedtag');
+        btn.addClass('selectedtag');
+    });
+});
+</script>
+<style>
+    .selectedtag { color:green; }
+    .ticketrow:hover { background-color:gold !important; }
+</style>

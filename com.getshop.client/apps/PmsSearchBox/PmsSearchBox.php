@@ -28,6 +28,8 @@ class PmsSearchBox extends \MarketingApplication implements \Application {
         $this->getApi()->getPmsManager()->processor($this->getSelectedMultilevelDomainName());
         $this->getApi()->getPmsManager()->hourlyProcessor($this->getSelectedMultilevelDomainName());
         $this->getApi()->getPmsManager()->checkIfGuestHasArrived($this->getSelectedMultilevelDomainName());
+        $cards = $this->getApi()->getPmsManager()->getCardsToSave($this->getSelectedMultilevelDomainName());
+        print_r($cards);
     }
     
     public function search() {

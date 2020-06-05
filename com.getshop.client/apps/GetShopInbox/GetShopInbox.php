@@ -124,12 +124,20 @@ class GetShopInbox extends \MarketingApplication implements \Application {
                     $this->includefile("searchTickets");
                 } else if($this->getCurrentTab() == "settings") {
                     $this->includefile("settings");
+                } else if($this->getCurrentTab() == "billing") {
+                    $this->includefile("history");
                 } else {
                     $this->includefile("ticketlist");
                 }
                 
             echo "</div>";
         echo "</div>";
+    }
+    
+    public function changeInternalTag() {
+        $ticket = $this->getApi()->getTicketManager()->getTicket($_POST['data']['ticketid']);
+        $ticket->internalTag = $_POST['data']['tag'];
+        $this->getApi()->getTicketManager()->saveTicket($ticket);
     }
     
     public function deleteGroup() {

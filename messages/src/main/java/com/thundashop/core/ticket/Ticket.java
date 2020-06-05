@@ -28,6 +28,7 @@ public class Ticket extends DataCommon {
     public String title;
     public int incrementalId = 1;
     public String externalId = "";
+    public String internalTag = "";
     
     public Date dateCompleted = null;
    

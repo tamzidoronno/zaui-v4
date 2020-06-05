@@ -42,6 +42,10 @@ $ecomsettings = $this->getFactory()->getApplicationPool()->createInstace($ecom);
             if(!$instance->hasPaymentLink()) {
                 continue;
             }
+             $name = $method->appName;
+            if(method_exists($instance, "getName")) {
+                $name = $instance->getName();
+            }
             ?>
             <option value="<? echo $method->id; ?>" <? echo $selected; ?>><? echo $name; ?></option>
         <? } ?>

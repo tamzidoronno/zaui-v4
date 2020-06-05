@@ -163,9 +163,17 @@ public class TicketManager extends ManagerBase implements ITicketManager {
         }
         
 
-        Collections.sort(retList, (Ticket t1, Ticket t2) -> {
-            return t2.getLastRepliedDate().compareTo(t1.getLastRepliedDate());
-        });
+        if(filter.sorting != null && filter.sorting.equals("number_asc")) {
+            Collections.sort(retList, (Ticket t1, Ticket t2) -> {
+                Integer number = t1.incrementalId;
+                Integer number2 = t2.incrementalId;
+                return number2.compareTo(number);
+            });
+        } else {
+            Collections.sort(retList, (Ticket t1, Ticket t2) -> {
+                return t2.getLastRepliedDate().compareTo(t1.getLastRepliedDate());
+            });
+        }
 
         return retList;
     }

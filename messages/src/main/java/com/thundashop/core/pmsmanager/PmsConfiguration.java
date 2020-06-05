@@ -26,7 +26,7 @@ public class PmsConfiguration extends DataCommon {
     
     boolean requestForPmhr = false;
     boolean ignorePmhr = false;
-    public boolean checkedForErrorsInBookingComPrepaid;
+    boolean checkedForErrorsInBookingComPrepaidTwo = false;
     
     void setTimeZone(Store store) {
         this.store = store;

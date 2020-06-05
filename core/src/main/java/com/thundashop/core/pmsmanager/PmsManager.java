@@ -2170,9 +2170,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         getShopLockSystemManager.pingServers();
         
         PmsConfiguration config = getConfigurationSecure();
-        if(!config.checkedForErrorsInBookingComPrepaid) {
+        if(!config.checkedForErrorsInBookingComPrepaidTwo) {
             checkedForErrorsInBookingComPrepaid();
-            config.checkedForErrorsInBookingComPrepaid = true;
+            config.checkedForErrorsInBookingComPrepaidTwo = true;
             saveConfiguration(configuration);
         }
 
@@ -11292,7 +11292,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         int found = 0;
         for(PmsBooking booking : bookings) {
-            if(!booking.isOld(60*24*4)) {
+            if(!booking.isOld(60*24*60)) {
                 if(booking.isPrePaid) {
                     continue;
                 }
@@ -11302,11 +11302,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                             continue;
                         }
                         try {
-                            if(comment.comment.toLowerCase().contains("booking note : payment charge is")) {
+                            if(comment.comment.toLowerCase().contains("received a virtual credit card for this reservation")) {
                                 booking.isPrePaid = true;
                                 booking.isBookingComVirtual = true;
                                 booking.paymentType = "d79569c6-ff6a-4ab5-8820-add42ae71170";
-                                booking.fixedBySystemProcess = 1122;
+                                booking.fixedBySystemProcess = 1123;
                                 saveBooking(booking);
                                 
                                 pmsInvoiceManager.clearOrdersOnBooking(booking);

@@ -103,6 +103,15 @@ if(stristr($user->emailAddress, "@getshop.com")) {
     </div>
     <div class='container'>
         <span class='option'>
+            <input type='text' class='gsniceinput1' gsname='cleaningInterval' value='<?php echo $config->cleaningInterval; ?>' style='width: 50px; text-align: center;'>
+        </span>
+        <span class='title'>
+            Cleaning interval<br>
+            * How many days between each cleaning?
+        </span>
+    </div>
+    <div class='container'>
+        <span class='option'>
             <select class='gsniceselect1' gsname="avoidRandomRoomAssigning">
                 <option value='false'>Select a random clean room</option>
                 <option value='true' <?php if($config->avoidRandomRoomAssigning) { echo "SELECTED"; } ?>>Select a clean room from sorted list</option>

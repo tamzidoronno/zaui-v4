@@ -775,6 +775,10 @@ public class ProductManager extends AProductManager implements IProductManager {
         
         taxGroup.addTestGroup();
         
+        if (o == null) {
+            return taxGroup;
+        }
+        
         for (OverrideTaxGroup overTaxGroup : taxGroup.overrideTaxGroups) {
             long startL = overTaxGroup.start.getTime();
             long endL = overTaxGroup.end.getTime() + TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS);

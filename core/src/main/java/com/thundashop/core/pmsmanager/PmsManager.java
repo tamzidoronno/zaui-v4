@@ -2170,11 +2170,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         getShopLockSystemManager.pingServers();
         
         PmsConfiguration config = getConfigurationSecure();
-//        if(!config.checkedForErrorsInBookingComPrepaidTwo) {
+        if(!config.checkedForErrorsInBookingComPrepaidTwo) {
             checkedForErrorsInBookingComPrepaid();
             config.checkedForErrorsInBookingComPrepaidTwo = true;
             saveConfiguration(configuration);
-//        }
+        }
 
     }
 

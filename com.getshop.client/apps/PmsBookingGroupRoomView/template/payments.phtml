@@ -112,7 +112,7 @@ $payAfterStay = $room->createOrdersOnZReport && !($needToCreateOrdersFor <= 1 &&
     <?
         usort($orders, array("ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView", "sortByIncrementalOrderId"));
         foreach ($orders as $order) {
-            if ($order->correctedByUserId) {
+            if ($order->correctedByUserId && sizeof($order->createdBasedOnCorrectionFromOrderIds) > 0) {
                 continue;
             }
             $paymentDate = $order->status == 7 && $order->paymentDate ? date('d.m.Y H:i', strtotime($order->paymentDate)) : 'N/A';

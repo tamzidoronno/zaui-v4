@@ -269,7 +269,7 @@ public abstract class LockServerBase extends DataCommon {
 
     public void addAccessHistory(String lockId, int slotId, Date time) {
         AccessHistory history = new AccessHistory();
-        history.lockId = lockId;
+        history.lockId = lockId; 
         history.userSlot = slotId;
         history.code = getCodeForSlot(time, slotId, lockId);
         history.accessTime = time;

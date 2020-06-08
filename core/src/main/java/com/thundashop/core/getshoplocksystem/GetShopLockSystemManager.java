@@ -812,7 +812,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
             }
             
             query.put("userSlot", new BasicDBObject("$in", userSlots));
-//        
+//
             List<AccessHistoryResult> hist = database.query(getClass().getSimpleName(), getStoreId(), query).stream()
                 .map(o -> (AccessHistory)o)
                 .map(o -> o.toResult(getDoorName(o.serverId, o.lockId), ""))

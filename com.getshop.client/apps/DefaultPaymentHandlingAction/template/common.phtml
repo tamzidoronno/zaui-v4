@@ -76,7 +76,7 @@ if (!$order->isCreditNote && count($order->creditOrderId)) {
             <td>
                 
                 <?php
-                if($order->closed) {
+                if($order->closed && !$order->correctedByUserId) {
                     ?>
                     <span style='font-size: 16px; cursor:pointer;' class='showPreviewFixOrder bookinghighlightcolor' orderid='<? echo $order->id; ?>' bookingid='<?php echo $booking->id; ?>'>
                        &nbsp;&nbsp;| <? echo $this->__f("Update new details to order"); ?>

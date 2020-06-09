@@ -465,5 +465,16 @@ public class StripeManager extends ManagerBase implements IStripeManager {
 //        return true;
         return storeManager.isProductMode();
     }
+
+    @Override
+    public boolean isStripeSecretActive() {
+        return !settings.webhookSecret.isEmpty();
+    }
+
+    @Override
+    public void clearStripeSecret() {
+        settings.webhookSecret = "";
+        saveObject(settings);
+    }
     
 }

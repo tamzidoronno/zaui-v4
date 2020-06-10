@@ -18,4 +18,6 @@ public interface IStripeManager {
     public String createSessionForPayment(String orderId, String address);
     public void handleWebhookCallback(WebhookCallback callbackResult);
     public boolean chargeSofort(String orderId, String source);
+    public boolean isStripeSecretActive();
+    public void clearStripeSecret();
 }

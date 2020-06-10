@@ -105,7 +105,8 @@ public abstract class AProductManager extends ManagerBase {
         TaxGroup taxGroup = getTaxGroupAbstract(product.taxgroup);
         addOverrideTaxGroup(taxGroup, product);
         
-        for (TaxGroup additionalTaxGroup : product.additionalTaxGroupObjects) {
+        List<TaxGroup> additionalTaxGroups = new ArrayList(product.additionalTaxGroupObjects);
+        for (TaxGroup additionalTaxGroup : additionalTaxGroups) {
             addOverrideTaxGroup(additionalTaxGroup, product);
         }
         

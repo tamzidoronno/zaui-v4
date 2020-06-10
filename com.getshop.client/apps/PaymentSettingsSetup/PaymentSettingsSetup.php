@@ -10,6 +10,10 @@ class PaymentSettingsSetup extends \WebshopApplication implements \Application {
         return "PaymentSettingsSetup";
     }
     
+    public function clearStripeWebhook() {
+        $this->getApi()->getStripeManager()->clearStripeSecret();
+    }
+    
     public function saveMultiplePayments() {
         $ids = array();
         foreach($_POST['data'] as $id => $val) {

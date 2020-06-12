@@ -23,6 +23,7 @@ echo "15 = 1015sls6.getshop.com - 10.200.1.228 - Trysil hotell - Lora Gateway";
 echo "16 = 1016sls6.getshop.com - 10.200.1.230 - Lom camping - Lora Gateway";
 echo "17 = 1017sls6.getshop.com - 10.200.1.236 - Ami Hotel - Lora Gateway";
 echo "18 = 1000020seros.c6.hotelautomation.tech - 10.200.1.246 - Kronen Gaard - Lora Gateway";
+echo "19 = 1000024seros.c6.hotelautomation.tech - 10.200.2.10 - Gamlaskola henningsvær - Lora Gateway";
 read serverQuestion;
 
 if [ $serverQuestion = "1" ]; then
@@ -115,6 +116,11 @@ elif [ $serverQuestion = "18" ]; then
         SSID=""
         WIFIPASS=""
         VPN="kronen_gaard_seros"
+elif [ $serverQuestion = "19" ]; then
+        TOKEN="18e1d7b8-056e-4754-a118-f0227acddd59"
+        SSID="Gammelskola"
+        WIFIPASS="gammelskola2018"
+        VPN="gammelskola_apartments_lora"
 else 
 	echo "Invalid selection";
 fi;

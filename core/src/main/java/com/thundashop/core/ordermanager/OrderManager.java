@@ -2833,7 +2833,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
             
             // AccruedPayment
-            if (order.getPaymentApplicationId().equals("60f2f24e-ad41-4054-ba65-3a8a02ce0190")) {
+            if (order.getPaymentApplicationId().equals("60f2f24e-ad41-4054-ba65-3a8a02ce0190") && !isGetShop) {
                 throw new ErrorException(1052);
             }
         }

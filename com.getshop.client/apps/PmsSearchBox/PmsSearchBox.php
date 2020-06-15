@@ -106,18 +106,9 @@ class PmsSearchBox extends \MarketingApplication implements \Application {
         $searchtypes = array();
         $searchtypes['registered'] = "Registered";
         $searchtypes['active'] = "Active";
-        $searchtypes['uncofirmed'] = "Unconfirmed";
         $searchtypes['checkin'] = "Checking in";
         $searchtypes['checkout'] = "Checking out";
-        $searchtypes['waiting'] = "Waiting";
-        $searchtypes['activecheckin'] = "Checkin + stayover";
-        $searchtypes['activecheckout'] = "Checkout + stayover";
         $searchtypes['inhouse'] = "Inhouse";
-        $searchtypes['stats'] = "Coverage";
-        $searchtypes['summary'] = "Summary";
-        $searchtypes['orderstats'] = "Income report";
-        $searchtypes['afterstayorder'] = "Order created after stay";
-        $searchtypes['unsettled'] = "Bookings with unsettled amounts";
         return $searchtypes;
     }
 

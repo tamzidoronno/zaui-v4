@@ -16,6 +16,15 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         
     }
     
+    public function createNewUser(){
+        $name = $_POST['data']['name'];
+        $bookingId = $this->getPmsBooking()->id;
+        
+        $this->getApi()->getPmsManager()->createNewUserOnBooking($this->getSelectedMultilevelDomainName(),$bookingId, $name, "");
+        $this->clearCache();
+        return $this->getUserForBooking();
+    }
+   
     public function addExistingRoomToBooking() {
         $curbooking = $this->getPmsBooking();
         $roomId = $_POST['data']['tomoveroomid'];

@@ -59,23 +59,6 @@ public class ListManager extends ManagerBase implements IListManager {
     @Autowired
     private MessageManager messageManager;
     
-    @Autowired
-    private List<ListBadgetAware> badgeAwareManagers;
-    
-    @PostConstruct
-    public void setBadgeAwareManagers() throws Exception {
-        List<ListBadgetAware> newBadges = new ArrayList();
-        for (ListBadgetAware aware : badgeAwareManagers) {
-            Advised advised = (Advised) aware;
-            TargetSource source = advised.getTargetSource();
-            newBadges.add((ListBadgetAware)source.getTarget());
-        }
-        
-        badgeAwareManagers.clear();
-        badgeAwareManagers.addAll(newBadges);
-    }
-    
-    
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon entry : data.data) {
@@ -880,10 +863,6 @@ public class ListManager extends ManagerBase implements IListManager {
         }
         
         int badges = 0;
-        
-        for (ListBadgetAware aware : badgeAwareManagers) {
-            badges += aware.getBadges(entry);
-        }
         
         entry.badges = badges;
     }

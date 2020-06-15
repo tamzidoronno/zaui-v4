@@ -58,6 +58,6 @@ public class DayIncome {
     }
 
     public boolean transferredToAccounting() {
-        return accountingTransfer.size() > 0;
+        return dayEntries.isEmpty() || accountingTransfer.size() > 0;
     }
 }

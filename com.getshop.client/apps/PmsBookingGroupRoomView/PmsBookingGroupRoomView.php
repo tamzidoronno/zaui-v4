@@ -1971,7 +1971,7 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
 
     public function isPgaSupportActivated() {
         // Letting bergstaden test it.
-        if ($this->getFactory()->getStore()->id == "1ed4ab1f-c726-4364-bf04-8dcddb2fb2b1") {
+        if ($this->getFactory()->getStore()->id == "1ed4ab1f-c726-4364-bf04-8dcddb2fb2b1" || $this->getFactory()->getStore()->id == "8016f02d-95bc-4910-b600-bbea8c06bedf") {
             return true;
         }
         

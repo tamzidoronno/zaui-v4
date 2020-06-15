@@ -39,7 +39,6 @@ import com.thundashop.core.getshop.data.SmsResponse;
 import com.thundashop.core.getshop.data.StartData;
 import com.thundashop.core.getshop.data.WebPageData;
 import com.thundashop.core.getshoplocksystem.LockServer;
-import com.thundashop.core.mecamanager.MecaManager;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
@@ -388,10 +387,6 @@ public class GetShop extends ManagerBase implements IGetShop {
             
             OrderManager orderManager = AppContext.appContext.getBean(OrderManager.class);
             orderManager.clear();
-            
-            MecaManager mecaManager = AppContext.appContext.getBean(MecaManager.class);
-            mecaManager.clear();
-            
             
             saveCustomerToGetShop(user, scope);
             if (startData.language.equals("nb_NO")) {
@@ -1099,9 +1094,6 @@ public class GetShop extends ManagerBase implements IGetShop {
 
         OrderManager orderManager = AppContext.appContext.getBean(OrderManager.class);
         orderManager.clear();
-
-        MecaManager mecaManager = AppContext.appContext.getBean(MecaManager.class);
-        mecaManager.clear();
 
         StoreApplicationPool applicationPool = AppContext.appContext.getBean(StoreApplicationPool.class);
 

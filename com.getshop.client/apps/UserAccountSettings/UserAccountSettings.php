@@ -6,6 +6,10 @@ class UserAccountSettings extends \WebshopApplication implements \Application {
         
     }
     
+    public function syncuserstoclusters() {
+        $this->getApi()->getUserManager()->syncUsersToClusters();
+    }
+    
     public function getName() {
         return "UserAccountSettings";
     }

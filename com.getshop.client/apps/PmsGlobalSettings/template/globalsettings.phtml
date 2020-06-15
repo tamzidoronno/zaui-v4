@@ -103,15 +103,6 @@ if(stristr($user->emailAddress, "@getshop.com")) {
     </div>
     <div class='container'>
         <span class='option'>
-            <input type='text' class='gsniceinput1' gsname='cleaningInterval' value='<?php echo $config->cleaningInterval; ?>' style='width: 50px; text-align: center;'>
-        </span>
-        <span class='title'>
-            Cleaning interval<br>
-            * How many days between each cleaning?
-        </span>
-    </div>
-    <div class='container'>
-        <span class='option'>
             <select class='gsniceselect1' gsname="avoidRandomRoomAssigning">
                 <option value='false'>Select a random clean room</option>
                 <option value='true' <?php if($config->avoidRandomRoomAssigning) { echo "SELECTED"; } ?>>Select a clean room from sorted list</option>
@@ -151,6 +142,38 @@ if(stristr($user->emailAddress, "@getshop.com")) {
             * The default langauge to use when registering a booking, only used for under "new", when using the booking engine the selected language is used instead.
         </span>
     </div>
+    <h1>Cleaning</h1>
+    
+    <div class='container'>
+        <span class='option'>
+            <input type='checkbox' gsname='automaticallyCloseRoomIfDirtySameDay' <?php if($config->automaticallyCloseRoomIfDirtySameDay) { echo "CHECKED"; } ?>>
+        </span>
+        <span class='title'>
+            If room where not cleaned during day hours, mark the room as unavailable for the rest of the day
+        </span>
+    </div>
+
+    <div class='container'>
+        <span class='option'>
+            <input type='text' class='gsniceinput1' gsname='cleaningInterval' value='<?php echo $config->cleaningInterval; ?>' style='width: 50px; text-align: center;'>
+        </span>
+        <span class='title'>
+            Cleaning interval<br>
+            * How many days between each cleaning?
+        </span>
+    </div>
+    <div class='container'>
+        <span class='option'>
+            <input type='text' class='gsniceinput1' gsname='closeRoomNotCleanedAtHour' value='<?php echo $config->closeRoomNotCleanedAtHour; ?>' style='width: 50px; text-align: center;'>
+        </span>
+        <span class='title'>
+            Closing hour<br>
+            If room is not cleaned at hour of day, make it unavailable for booking's
+        </span>
+    </div>
+    
+    
+
     <h1>Booking engine</h1>
     <div class='container'>
         <span class='option'>

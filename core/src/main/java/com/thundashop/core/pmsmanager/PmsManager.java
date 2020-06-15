@@ -2679,7 +2679,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         user.birthDay = result.get("user_birthday");
 
-        return userManager.createUser(user);
+        User userToReturn = userManager.createUser(user);
+
+        return userToReturn;
     }
 
     private Company createCompany(PmsBooking booking) {

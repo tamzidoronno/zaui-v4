@@ -54,6 +54,9 @@ public interface IUserManager {
      */
     public Boolean canCreateUser(User user) throws ErrorException;
     
+    @Administrator
+    public void syncUsersToClusters();
+    
     /**
      * Find all users with a given search criteria.
      * @param searchCriteria The criteria to search for

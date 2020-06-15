@@ -784,6 +784,14 @@ public class PmsBooking extends DataCommon {
         return amount;
     }
 
+    public double getUnpaidAmountForAllRooms() {
+        double amount = 0;
+        for(PmsBookingRooms r : getAllRoomsIncInactive()) {
+            amount += r.unpaidAmount;
+        }
+        return amount;
+    }
+
     boolean isOta() {
         if(channel != null && channel.contains("wubook")) {
             return true;

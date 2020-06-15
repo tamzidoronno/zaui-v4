@@ -1,3 +1,9 @@
+<?php
+$storeId = $this->getApi()->getStoreManager()->getStoreId();
+if("13442b34-31e5-424c-bb23-a396b7aeb8ca" == $storeId) {
+    echo "<span class='shop_button' gsclick='syncuserstoclusters' style='float:left;margin-top:20px;'>Sync users to all clusters</span>";
+}
+?>
 <div style='text-align:right; padding: 20px;border-bottom: solid 1px #bbb;' gstype='form' method='createAdministrator'>
     <input type='text' class='gsniceinput1' gsname='name' placeholder="Name">
     <input type='text' class='gsniceinput1' gsname='email' placeholder='Email'>

@@ -133,6 +133,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     Date lastOrderProcessed;
     private boolean initFinalized = false;
     private String orderIdToSend;
+    private String onlyCalculateForRoom = null;
     private Date lastCheckForIncosistent;
     private String emailToSendTo;
     private String phoneToSend;
@@ -5856,6 +5857,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (toRemove != null) {
             room.addons.remove(toRemove);
         }
+        onlyCalculateForRoom = roomId;
         saveBooking(booking);
     }
 
@@ -10434,6 +10436,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return;
         
         for (PmsBookingRooms room : pmsBooking.rooms) {
+            if(onlyCalculateForRoom != null && !room.pmsBookingRoomId.equals(onlyCalculateForRoom)) {
+                continue;
+            }
             PmsRoomPaymentSummary summary = getSummaryWithoutAccrued(pmsBooking.id, room.pmsBookingRoomId);
             if (summary == null) {
                 room.unsettledAmount = 0D;
@@ -10461,6 +10466,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         .sum();
             }
         }
+        onlyCalculateForRoom = null;
+        
     }
 
     @Override
@@ -11019,6 +11026,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             setAddonPricesOnRoom(room, booking);
             updateRoomPriceFromAddons(room, booking);
         }
+        
+        onlyCalculateForRoom = roomId;
+        
         saveBooking(booking);
     }
 

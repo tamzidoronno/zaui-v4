@@ -498,7 +498,7 @@ public class EhfXmlGenerator {
 
             temp.delete();
             
-            return resultText.equals("OK");
+            return resultText.equals("OK") || resultText.equals("WARNING");
         } catch (Exception ex) {
             ex.printStackTrace();
         } finally {

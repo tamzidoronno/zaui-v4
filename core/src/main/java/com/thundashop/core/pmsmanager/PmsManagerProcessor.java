@@ -1385,7 +1385,10 @@ public class PmsManagerProcessor {
             }
             
             if(booking != null) {
-                manager.pmsInvoiceManager.sendRecieptOnOrder(order, booking.id);
+                double totalAmount = manager.orderManager.getTotalAmount(order);
+                if(totalAmount >= 0.0) {
+                    manager.pmsInvoiceManager.sendRecieptOnOrder(order, booking.id);
+                }
             } else {
                 if(order != null && order.payment != null && order.payment.transactionLog != null) {
                     order.payment.transactionLog.put(System.currentTimeMillis(), "Did not autosend order since the booking connected does not exist");

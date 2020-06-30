@@ -75,7 +75,7 @@ if($pmsSelectedRoom->deleted || $pmsSelectedRoom->overbooking) {
     echo "<div class='isdeletedinformation'>";
     echo "This room has been cancelled / deleted, <span gsclick='deleteRoom' roomid='".$pmsSelectedRoom->pmsBookingRoomId."'  style='color:#be99d7;cursor:pointer;'>try to undelete it</span>.";
     if($pmsSelectedRoom->overbooking) {
-        echo "<span gsclick='removeFromOverBookingList' roomid='".$pmsSelectedRoom->pmsBookingRoomId."' style='float:right; color:#be99d7;cursor:pointer;' gs_confirm='Warning, this will not readd the booking, just remove it from the list, use undelete it to make sure it is readded.'>remove it from overbooking list</span>.";
+        echo "<div gsclick='removeFromOverBookingList' roomid='".$pmsSelectedRoom->pmsBookingRoomId."' style='color:#be99d7;cursor:pointer;' gs_confirm='Warning, this will not readd the booking, just remove it from the list, use undelete it to make sure it is readded.'>Remove it from overbooking list</div>";
     }
     echo "</div>";
 } 

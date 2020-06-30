@@ -5197,24 +5197,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     private void detectAndSaveDaysThatAreOpenInBetweenSet(List<DayIncome> newlyBrokenIncome, DayIncomeFilter filter) {
-        Date latestCloseDate = new Date(0);
-        Date firstDate = new Date(Long.MAX_VALUE);
         
-        for (DayIncome income : newlyBrokenIncome) {
-            if (!income.isFinal) {
-                continue;
-            }
-            
-            if (latestCloseDate.before(income.end)) {
-                latestCloseDate = income.end;
-            }
-            
-            if (income.start.before(firstDate)) {
-                firstDate = income.start;
-            }
+        if (getOrderManagerSettings().closedTilPeriode == null) {
+            return;
         }
         
-        final Date toCheck = latestCloseDate;
+        final Date toCheck = getOrderManagerSettings().closedTilPeriode;
         
         List<DayIncome> incomes = newlyBrokenIncome.stream()
                 .filter(o -> !o.isFinal && o.end.before(toCheck))

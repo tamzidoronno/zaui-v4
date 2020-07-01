@@ -4220,7 +4220,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .collect(Collectors.groupingBy(o -> o.accountingNumber));
         
         for (String accountNumber : groupedByAccountNumber.keySet()) {
-            Double total = groupedByAccountNumber.get(accountNumber).stream().mapToDouble(o -> (incTaxes ? o.amount.doubleValue() : o.amountExTax.doubleValue()))
+            Double total = groupedByAccountNumber.get(accountNumber).stream().mapToDouble(o -> (incTaxes ? o.amount.doubleValue() : o.getAmountExTaxes().doubleValue()))
                     .sum();
             
             balance.balances.put(accountNumber, total);

@@ -130,4 +130,14 @@ public class DayEntry implements Serializable, Cloneable {
         
         return false;
     }
+
+    public BigDecimal getAmountExTaxes() {
+        if(amountExTax != null) {
+            return amountExTax;
+        }
+        if(amount != null) {
+            return amount;
+        }
+        return new BigDecimal(0.0);
+    }
 }

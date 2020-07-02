@@ -133,7 +133,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     Date lastOrderProcessed;
     private boolean initFinalized = false;
     private String orderIdToSend;
-    private String onlyCalculateForRoom = null;
     private Date lastCheckForIncosistent;
     private String emailToSendTo;
     private String phoneToSend;
@@ -5845,20 +5844,27 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
-    public void removeAddonFromRoomById(String addonId, String roomId) {
+    public void removeAddonFromRoomByIds(List<String> addonIds, String roomId) {
         PmsBooking booking = getBookingFromRoom(roomId);
         PmsBookingRooms room = booking.findRoom(roomId);
-        PmsBookingAddonItem toRemove = null;
-        for (PmsBookingAddonItem item : room.addons) {
-            if (item.addonId.equals(addonId)) {
-                toRemove = item;
+        for(String addonId : addonIds) {
+            PmsBookingAddonItem toRemove = null;
+            for (PmsBookingAddonItem item : room.addons) {
+                if (item.addonId.equals(addonId)) {
+                    toRemove = item;
+                }
+            }
+            if (toRemove != null) {
+                room.addons.remove(toRemove);
             }
         }
-        if (toRemove != null) {
-            room.addons.remove(toRemove);
-        }
-        onlyCalculateForRoom = roomId;
         saveBooking(booking);
+    }
+    
+    public void removeAddonFromRoomById(String addonId, String roomId) {
+        List<String> ids = new ArrayList();
+        ids.add(addonId);
+        removeAddonFromRoomByIds(ids, roomId);
     }
 
     @Override
@@ -10436,12 +10442,24 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return;
         
         
-        for (PmsBookingRooms room : pmsBooking.rooms) {
-            if(onlyCalculateForRoom != null && !room.pmsBookingRoomId.equals(onlyCalculateForRoom)) {
-                continue;
+        List<Order> orders = new ArrayList();
+        try {
+            for(String orderId : pmsBooking.orderIds) {
+                orders.add(orderManager.getOrderDirect(orderId));
             }
-            if(!room.needToCalculateUnsettledAmount()) {
-                continue;
+        }catch(Exception e) {
+            logPrintException(e);
+            messageManager.sendErrorNotificationToEmail("pal@getshop.com", "Failed to calculate md5sum", e);
+        }
+        
+        for (PmsBookingRooms room : pmsBooking.rooms) {
+            try {
+                if(!room.needToCalculateUnsettledAmount(orders)) {
+                    continue;
+                }
+            }catch(Exception e) {
+                logPrintException(e);
+                messageManager.sendErrorNotificationToEmail("pal@getshop.com", "Failed to calculate md5sum", e);
             }
             PmsRoomPaymentSummary summary = getSummaryWithoutAccrued(pmsBooking.id, room.pmsBookingRoomId);
             if (summary == null) {
@@ -10470,8 +10488,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         .sum();
             }
         }
-        onlyCalculateForRoom = null;
-        
     }
 
     @Override
@@ -11030,9 +11046,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             setAddonPricesOnRoom(room, booking);
             updateRoomPriceFromAddons(room, booking);
         }
-        
-        onlyCalculateForRoom = roomId;
-        
         saveBooking(booking);
     }
 

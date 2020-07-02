@@ -151,6 +151,9 @@ public interface IPmsManager {
     public void removeAddonFromRoomById(String addonId, String roomId);
     
     @Administrator
+    public void removeAddonFromRoomByIds(List<String> addonId, String roomId);
+    
+    @Administrator
     public void saveCareTakerJob(PmsCareTaker job);
     
     @Administrator

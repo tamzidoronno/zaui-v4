@@ -1315,11 +1315,14 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     
     public function removeSelectedAddons() {
         $room = $this->getSelectedRoom();
+        $ids = array();
         foreach($room->addons as $addon) {
             if(in_array($addon->addonId, $_POST['data']['addonIds'])) {
-                $this->getApi()->getPmsManager()->removeAddonFromRoomById($this->getSelectedMultilevelDomainName(), $addon->addonId, $room->pmsBookingRoomId);
+                $ids[] = $addon->addonId;
             }
         }
+        $this->getApi()->getPmsManager()->removeAddonFromRoomByIds($this->getSelectedMultilevelDomainName(), $ids, $room->pmsBookingRoomId);
+        $this->clearCache();
     }
 
     public function getAddonsCost($withIncludedInRoomPrice) {

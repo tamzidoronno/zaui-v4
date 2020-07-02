@@ -5,10 +5,12 @@ import com.thundashop.core.annotations.ExcludePersonalInformation;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
+import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.getshoplocksystem.LockCode;
+import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pmsmanager.PmsBooking.PriceType;
 import java.io.Serializable;
 import java.security.MessageDigest;
@@ -1060,8 +1062,21 @@ public class PmsBookingRooms implements Serializable {
         return (bookingItemTypeId != null && bookingItemTypeId.equals("gspmsconference"));
     }
 
-    boolean needToCalculateUnsettledAmount() {
+    boolean needToCalculateUnsettledAmount(List<Order> orders) throws Exception {
         String checksum = calculateCheckSum();
+        
+        for(Order order : orders) {
+            for(CartItem item : order.getCartItems()) {
+                if(item.getProduct().externalReferenceId.equals(pmsBookingRoomId)) {
+                    checksum += item.getCartItemId() + "_" + item.getProductPrice()+ "_" + item.getCount();
+                }
+            }
+        }
+        
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        byte[] thedigest = md.digest(checksum.getBytes());
+        checksum = new String(thedigest);
+        
         boolean needUpdate = !checksum.equals(unsettledChecksum);
         unsettledChecksum = checksum;
         return needUpdate;
@@ -1077,14 +1092,6 @@ public class PmsBookingRooms implements Serializable {
             sum += item.getKey() + "_" + item.count + "_" + item.price + "_" + item.priceExTaxes;
         }
         
-        try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            byte[] thedigest = md.digest(sum.getBytes());
-            return new String(thedigest);
-        }catch(Exception e) {
-            e.printStackTrace();
-        }
-        
-        return Math.random()+ "";
+        return sum;
     }
 }

@@ -87,7 +87,7 @@ class PmsRestrictions extends \WebshopApplication implements \Application {
             $typeid = $_POST['data']['typeid'];
         }
 
-        $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+        $types = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
         $data->categories = array();
         foreach($types as $type) {
             if(isset($_POST['data']['category_'.$type->id]) && $_POST['data']['category_'.$type->id] == "true") {
@@ -227,7 +227,7 @@ class PmsRestrictions extends \WebshopApplication implements \Application {
         
         if(sizeof((array)$data->categories) > 0) {
             if(!$this->categories) {
-                $this->categories = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+                $this->categories = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(),null);
                 $this->categories = $this->indexList($this->categories);
             }
             

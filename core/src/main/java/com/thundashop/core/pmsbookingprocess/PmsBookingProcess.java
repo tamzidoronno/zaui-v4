@@ -341,9 +341,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         
         Collections.sort(toUse, new Comparator<PmsBookingProcessorCalculator>(){
             public int compare(PmsBookingProcessorCalculator o1, PmsBookingProcessorCalculator o2){
-                if(o1.guestPrice == o2.guestPrice)
-                    return 0;
-                return o1.guestPrice < o2.guestPrice ? -1 : 1;
+                return o1.guestPrice.compareTo(o2.guestPrice);
             }
         });
        

@@ -860,7 +860,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         int diff = config.getTimeDifferenceInTimeZone();
         test.add(Calendar.SECOND, diff);
         
-        System.out.println("Increasing by coverage: " + typeId + ", start: " + start + ", price: " + price);
         if (useCacheCoverage()) {
             if(!savedCoverage.containsKey(start.getTime()/10000)) {
                 coverage = bookingEngine.getCoverageForDate(start);

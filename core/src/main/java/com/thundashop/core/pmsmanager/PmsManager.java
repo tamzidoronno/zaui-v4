@@ -10435,8 +10435,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (pmsBooking == null || pmsBooking.rooms == null)
             return;
         
+        
         for (PmsBookingRooms room : pmsBooking.rooms) {
             if(onlyCalculateForRoom != null && !room.pmsBookingRoomId.equals(onlyCalculateForRoom)) {
+                continue;
+            }
+            if(!room.needToCalculateUnsettledAmount()) {
                 continue;
             }
             PmsRoomPaymentSummary summary = getSummaryWithoutAccrued(pmsBooking.id, room.pmsBookingRoomId);

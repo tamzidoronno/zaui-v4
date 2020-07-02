@@ -11,6 +11,7 @@ import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.getshoplocksystem.LockCode;
 import com.thundashop.core.pmsmanager.PmsBooking.PriceType;
 import java.io.Serializable;
+import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,6 +53,8 @@ public class PmsBookingRooms implements Serializable {
     public List<PmsBookingAddonItem> addons = new ArrayList();
     public String currency = "NOK";
     public String cleaningComment = "";
+    
+    private String unsettledChecksum = "";
 
     public boolean nonrefundable = false;    
     public boolean checkedin = false;
@@ -1055,5 +1058,33 @@ public class PmsBookingRooms implements Serializable {
 
     boolean isPmsConferenceRoom() {
         return (bookingItemTypeId != null && bookingItemTypeId.equals("gspmsconference"));
+    }
+
+    boolean needToCalculateUnsettledAmount() {
+        String checksum = calculateCheckSum();
+        boolean needUpdate = !checksum.equals(unsettledChecksum);
+        unsettledChecksum = checksum;
+        return needUpdate;
+    }
+
+    private String calculateCheckSum() {
+        String sum = "";
+        for(String day : priceMatrix.keySet()) {
+            sum += day + "_" + priceMatrix.get(day);
+        }
+        
+        for(PmsBookingAddonItem item : addons) {
+            sum += item.getKey() + "_" + item.count + "_" + item.price + "_" + item.priceExTaxes;
+        }
+        
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] thedigest = md.digest(sum.getBytes());
+            return new String(thedigest);
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+        
+        return Math.random()+ "";
     }
 }

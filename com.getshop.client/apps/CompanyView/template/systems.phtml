@@ -35,7 +35,7 @@ foreach($systems as $system) {
     echo "<td>" . date("d.m.Y", strtotime($system->activeFrom)) . "</td>";
     echo "<td>" . $system->webAddresses . "</td>";
     echo "<td>" . $price . "</td>";
-    echo "<td>" . $products[$system->productId]->name. "</td>";
+    echo "<td productid='".$system->productId."'>" . $products[$system->productId]->name. "</td>";
     echo "<td>" . $companies[$system->companyId]->name. "</td>";
     echo "<td>" . $companies[$system->companyId]->currency. "</td>";
     echo "</tr>";

@@ -105,6 +105,10 @@ class PmsPricingNew extends \WebshopApplication implements \Application {
         
         
         $this->getApi()->getPmsInvoiceManager()->saveAdvancePriceYield($this->getSelectedMultilevelDomainName(), $plan);
+        
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        $config->enableCoveragePrices = false;
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $config);
     }
     
     public function deleteAdvancePricePlan() {
@@ -133,6 +137,11 @@ class PmsPricingNew extends \WebshopApplication implements \Application {
         $pricePlan->coveragePrices = $newArray;
         $pricePlan->coverageType = $_POST['data']['coveragePriceType'];
         $this->getApi()->getPmsManager()->setPrices($this->getSelectedName(), $pricePlan->code, $pricePlan);
+        
+        $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
+        $config->enableCoveragePrices = true;
+        $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $config);
+        
     }
     
     public function saveAddonsToDiscount() {

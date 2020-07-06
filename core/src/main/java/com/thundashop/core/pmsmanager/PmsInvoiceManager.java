@@ -585,7 +585,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         if(increase > 0) {
             if(prices.coverageType == 0) {
-                price = price * (increase / 100);
+                price = price * ((increase / 100)+1);
             } else {
                 price = price + increase;
             }

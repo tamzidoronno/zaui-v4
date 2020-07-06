@@ -1071,6 +1071,7 @@ public class PmsBookingRooms implements Serializable {
                     checksum += item.getCartItemId() + "_" + item.getProductPrice()+ "_" + item.getCount();
                 }
             }
+            checksum += "_" + order.status;
         }
         
         MessageDigest md = MessageDigest.getInstance("MD5");

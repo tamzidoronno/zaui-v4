@@ -297,6 +297,7 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
             GetShopLogHandler.logPrintStatic("Unable to send email to : " + to + " since it does not contain an @", storeId);
             return;
         }
+        boolean authError = false;
         for(int i = 0; i < 10; i++) {
             try {
                 message.setSubject(subject, "UTF-8");
@@ -342,10 +343,13 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
             } catch (Exception ex) {
                 if(ex instanceof AuthenticationFailedException) {
                     GetShopLogHandler.logPrintStatic("Authentication error on email", storeId);
-                    GetShopLogHandler.authenticationError.add(storeId);
+                    authError = true;
                     break;
                 }
                 updateMailStatus("failed");
+                if(authError) {
+                    GetShopLogHandler.authenticationError.add(storeId);
+                }
                 GetShopLogHandler.logPrintStatic("Was not able to send email on try: " + i + "( message: " + from + " - " + to + " " + subject + content + "", storeId);
                 GetShopLogHandler.logStack(ex, storeId);
             }

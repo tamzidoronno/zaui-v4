@@ -2,6 +2,10 @@
 /* @var $this ns_4be8e427_bead_491e_8d9f_7dd16356d8eb\OrderView */
 $order = $this->getOrder();
 ?>
+<div class="summaryheader"><? echo $this->__f("Order reciept email"); ?></div>
+<div style="padding: 10px;">
+    <?php echo @$order->recieptEmail ? $order->recieptEmail : "No reciept email"; ?>
+</div>
 <div class="summaryheader"><? echo $this->__f("Order sent log"); ?></div>
 <?
 if (!count($order->shipmentLog)) {

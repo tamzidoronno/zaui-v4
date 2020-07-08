@@ -5844,19 +5844,27 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
-    public void removeAddonFromRoomById(String addonId, String roomId) {
+    public void removeAddonFromRoomByIds(List<String> addonIds, String roomId) {
         PmsBooking booking = getBookingFromRoom(roomId);
         PmsBookingRooms room = booking.findRoom(roomId);
-        PmsBookingAddonItem toRemove = null;
-        for (PmsBookingAddonItem item : room.addons) {
-            if (item.addonId.equals(addonId)) {
-                toRemove = item;
+        for(String addonId : addonIds) {
+            PmsBookingAddonItem toRemove = null;
+            for (PmsBookingAddonItem item : room.addons) {
+                if (item.addonId.equals(addonId)) {
+                    toRemove = item;
+                }
+            }
+            if (toRemove != null) {
+                room.addons.remove(toRemove);
             }
         }
-        if (toRemove != null) {
-            room.addons.remove(toRemove);
-        }
         saveBooking(booking);
+    }
+    
+    public void removeAddonFromRoomById(String addonId, String roomId) {
+        List<String> ids = new ArrayList();
+        ids.add(addonId);
+        removeAddonFromRoomByIds(ids, roomId);
     }
 
     @Override
@@ -10433,7 +10441,26 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (pmsBooking == null || pmsBooking.rooms == null)
             return;
         
+        
+        List<Order> orders = new ArrayList();
+        try {
+            for(String orderId : pmsBooking.orderIds) {
+                orders.add(orderManager.getOrderDirect(orderId));
+            }
+        }catch(Exception e) {
+            logPrintException(e);
+            messageManager.sendErrorNotificationToEmail("pal@getshop.com", "Failed to calculate md5sum", e);
+        }
+        
         for (PmsBookingRooms room : pmsBooking.rooms) {
+            try {
+                if(!room.needToCalculateUnsettledAmount(orders)) {
+                    continue;
+                }
+            }catch(Exception e) {
+                logPrintException(e);
+                messageManager.sendErrorNotificationToEmail("pal@getshop.com", "Failed to calculate md5sum", e);
+            }
             PmsRoomPaymentSummary summary = getSummaryWithoutAccrued(pmsBooking.id, room.pmsBookingRoomId);
             if (summary == null) {
                 room.unsettledAmount = 0D;

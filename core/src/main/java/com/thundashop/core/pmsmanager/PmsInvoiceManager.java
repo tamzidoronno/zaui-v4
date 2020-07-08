@@ -585,7 +585,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         if(increase > 0) {
             if(prices.coverageType == 0) {
-                price = price * (increase / 100);
+                price = price * ((increase / 100)+1);
             } else {
                 price = price + increase;
             }
@@ -860,7 +860,6 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         int diff = config.getTimeDifferenceInTimeZone();
         test.add(Calendar.SECOND, diff);
         
-        System.out.println("Increasing by coverage: " + typeId + ", start: " + start + ", price: " + price);
         if (useCacheCoverage()) {
             if(!savedCoverage.containsKey(start.getTime()/10000)) {
                 coverage = bookingEngine.getCoverageForDate(start);
@@ -3661,6 +3660,15 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         Order alreadyCreatedOrder = orderManager.getOrderCreatedByPaymentLinkWithRoomId(roomBookingId);
         
         String recieptEmail = booking.recieptEmail.get(roomBookingId);
+        
+        if(recieptEmail == null || recieptEmail.isEmpty()) {
+            User usr = userManager.getUserById(booking.userId);
+            if(usr != null && usr.emailAddressToInvoice != null && !usr.emailAddressToInvoice.isEmpty()) {
+                recieptEmail = usr.emailAddressToInvoice;
+            } else if(usr != null && usr.emailAddress != null && !usr.emailAddress.isEmpty()) {
+                recieptEmail = usr.emailAddress;
+            }
+        }
         
         if (shouldUseAlreadyCreatedOrder(alreadyCreatedOrder, booking, room)) {
             alreadyCreatedOrder.language = booking.language;

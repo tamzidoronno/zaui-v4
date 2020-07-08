@@ -198,6 +198,13 @@ class EasyByNets extends \PaymentApplication implements \Application {
 
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Accept: application/json', 'Authorization: ' . $this->getApiKey()));
         $result = curl_exec($ch);
+        
+        $total = $this->getApi()->getOrderManager()->getTotalAmount($order);
+        if($total <= 1) {
+            echo "The amount for the order is too low.";
+            return;
+        }
+        
         if(!$result) {
             echo "failed to excute: " . $addr;
             printf("cUrl error (#%d): %s<br>\n", curl_errno($ch), htmlspecialchars(curl_error($ch)));

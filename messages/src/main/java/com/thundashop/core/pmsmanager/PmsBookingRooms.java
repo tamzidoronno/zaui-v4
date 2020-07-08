@@ -5,12 +5,15 @@ import com.thundashop.core.annotations.ExcludePersonalInformation;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
+import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.getshoplocksystem.LockCode;
+import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pmsmanager.PmsBooking.PriceType;
 import java.io.Serializable;
+import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,6 +55,8 @@ public class PmsBookingRooms implements Serializable {
     public List<PmsBookingAddonItem> addons = new ArrayList();
     public String currency = "NOK";
     public String cleaningComment = "";
+    
+    private String unsettledChecksum = "";
 
     public boolean nonrefundable = false;    
     public boolean checkedin = false;
@@ -1055,5 +1060,39 @@ public class PmsBookingRooms implements Serializable {
 
     boolean isPmsConferenceRoom() {
         return (bookingItemTypeId != null && bookingItemTypeId.equals("gspmsconference"));
+    }
+
+    boolean needToCalculateUnsettledAmount(List<Order> orders) throws Exception {
+        String checksum = calculateCheckSum();
+        
+        for(Order order : orders) {
+            for(CartItem item : order.getCartItems()) {
+                if(item.getProduct().externalReferenceId.equals(pmsBookingRoomId)) {
+                    checksum += item.getCartItemId() + "_" + item.getProductPrice()+ "_" + item.getCount();
+                }
+            }
+            checksum += "_" + order.status;
+        }
+        
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        byte[] thedigest = md.digest(checksum.getBytes());
+        checksum = new String(thedigest);
+        
+        boolean needUpdate = !checksum.equals(unsettledChecksum);
+        unsettledChecksum = checksum;
+        return needUpdate;
+    }
+
+    private String calculateCheckSum() {
+        String sum = "";
+        for(String day : priceMatrix.keySet()) {
+            sum += day + "_" + priceMatrix.get(day);
+        }
+        
+        for(PmsBookingAddonItem item : addons) {
+            sum += item.getKey() + "_" + item.count + "_" + item.price + "_" + item.priceExTaxes;
+        }
+        
+        return sum;
     }
 }

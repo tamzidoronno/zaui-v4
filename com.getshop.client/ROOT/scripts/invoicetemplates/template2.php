@@ -100,6 +100,12 @@ $isInvoice = $order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200
     .invoice_template .outerproductrow .col.col4,
     .invoice_template .productrow .col.col4 { width: 150px; text-align: right;}
     
+    .invoice_template .taxesouterrow .col.col1 { width: 405px;}
+    .invoice_template .taxesouterrow .col { text-align: left !important;}
+    .invoice_template .taxesouterrow .col.col3 { width: 150px;text-align:left !important;}
+    .invoice_template .taxesouterrow .col.col5 { width: 90px;text-align:right !important;}
+    .invoice_template .taxesouterrow .col.col5 { width: 90px;text-align:right !important;}
+    
     .invoice_template .paymenthasbeencompleted {    
         position: absolute;
     width: 100%;
@@ -241,8 +247,12 @@ $isInvoice = $order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200
         if (!isset($calculatedTaxes[$key])) {
             $calculatedTaxes[$key] = 0;
         }
+        if (!isset($calculatedExTaxes[$key])) {
+            $calculatedExTaxes[$key] = 0;
+        }
 
         $calculatedTaxes[$key] += $taxes;
+        $calculatedExTaxes[$key] += $lineTotal - $taxes;
         $metadata = "";
         $isStay = sizeof((array)$item->priceMatrix) > 0;
         if ($item->product->additionalMetaData) {
@@ -328,11 +338,12 @@ $isInvoice = $order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200
        } 
     ?>
     
-    <div class='outerproductrow bold' style='border-bottom: solid 1px #DDD; margin-top: 30px;'>
+    <div class='outerproductrow taxesouterrow bold' style='border-bottom: solid 1px #DDD; margin-top: 30px;'>
         <div class='col col1'><? echo $translator->translate("Calculated Taxes"); ?></div>
-        <div class='col col2'></div>
-        <div class='col col3'><? echo $translator->translate("Percent"); ?></div>
-        <div class='col col4'><? echo $translator->translate("Amount"); ?></div>
+        <div class='col col2'><? echo $translator->translate("Percent"); ?></div>
+        <div class='col col3'><? echo $translator->translate("Ex tax"); ?></div>
+        <div class='col col4'><? echo $translator->translate("Tax"); ?></div>
+        <div class='col col5'><? echo $translator->translate("Total"); ?></div>
     </div>
 
     <?
@@ -340,25 +351,29 @@ $isInvoice = $order->payment->paymentType == "ns_70ace3f0_3981_11e3_aa6e_0800200
         if($taxTotal == 0) {
             continue;
         }
+        $exTaxes = $calculatedExTaxes[$percent];
+        $exTaxes = round($exTaxes, 2);
         $percent = explode("_", $percent);
         $desc = $percent[0];
         $percent = $percent[1];
     ?>
-        <div class='outerproductrow'>
+        <div class='outerproductrow taxesouterrow'>
             <div class='col col1'><?php echo $desc; ?></div>
-            <div class='col col2'></div>
-            <div class='col col3'><? echo $percent."%"; ?></div>
+            <div class='col col2'><? echo $percent."%"; ?></div>
+            <div class='col col3'><?php echo $translator->formatPrice($exTaxes); ?></div>
             <div class='col col4'><? echo $translator->formatPrice($taxTotal); ?></div>
+            <div class='col col5'><? echo $translator->formatPrice($taxTotal+$exTaxes); ?></div>
         </div>
     <?
     }
     
     ?>
-        <div class='outerproductrow'>
+        <div class='outerproductrow taxesouterrow'>
             <div class='col col1'></div>
             <div class='col col2'></div>
-            <div class='col col3'><? echo $translator->translate("Amount"); ?></div>
-            <div class='col col4'><? echo $translator->formatPrice($total); ?></div>
+            <div class='col col3'></div>
+            <div class='col col4'><? echo $translator->translate("Amount"); ?></div>
+            <div class='col col5'><? echo $translator->formatPrice($total); ?></div>
         </div>
     <?
     

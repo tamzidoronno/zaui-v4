@@ -230,8 +230,6 @@ public interface IStoreManager {
     @Administrator
     public boolean supportsCreateOrderOnDemand();
     
-    
-    @Administrator
     public String getSelectedCurrency();
     
 }

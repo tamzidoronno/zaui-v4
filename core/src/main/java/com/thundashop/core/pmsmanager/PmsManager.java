@@ -10454,6 +10454,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         for (PmsBookingRooms room : pmsBooking.rooms) {
             try {
+                if(room.getNumberOfNights() > 5000 && room.isDeleted() && room.unsettledAmount == 0.0) {
+                    continue;
+                }
                 if(!room.needToCalculateUnsettledAmount(orders)) {
                     continue;
                 }

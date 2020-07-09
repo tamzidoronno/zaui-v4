@@ -503,7 +503,14 @@ public class GetShop extends ManagerBase implements IGetShop {
                 BasicDBObject data = (BasicDBObject)collections.next();
                 Morphia morphia = new Morphia();
                 morphia.map(DataCommon.class);
-                DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, data);
+                DataCommon dataCommon = null;
+                
+                try {
+                    dataCommon = morphia.fromDBObject(DataCommon.class, data);
+                } catch (Exception ex) {
+                    continue;
+                }
+                
                 dataCommon.storeId = newStoreId;
                 
                 // Need to figure out a different way of creating the schedulers.

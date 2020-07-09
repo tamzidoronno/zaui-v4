@@ -494,7 +494,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
             attachments.put("termsandcondition.html", createContractAttachment(booking.id));
         }
         if (key.startsWith("sendreciept")) {
-            String name = "reciept";
+            String name = "receipt";
             if(details != null && details.language != null && details.language.contains("de")) {
                 name = "Rechnung";
             }

@@ -47,17 +47,22 @@ public class ChecklistManager extends GetShopSessionBeanNamed implements ICheckl
         List<CheckListError> errors = new ArrayList();
         
         bookings.stream().forEach(booking -> {
-                    CheckListError errorForBooking = null;
-                    if(cachedErrors.containsKey(booking.id)) {
-                        errorForBooking = cachedErrors.get(booking.id);
-                    } else {
-                        errorForBooking = runTroughProcessors(booking);
-                        cachedErrors.put(booking.id, errorForBooking);
-                    }
-                    if (errorForBooking != null) {
-                        errors.add(errorForBooking);
-                    }
-                });
+            try {
+                CheckListError errorForBooking = null;
+                if(cachedErrors.containsKey(booking.id)) {
+                    errorForBooking = cachedErrors.get(booking.id);
+                } else {
+                    errorForBooking = runTroughProcessors(booking);
+                    cachedErrors.put(booking.id, errorForBooking);
+                }
+                if (errorForBooking != null) {
+                    errors.add(errorForBooking);
+                }
+            }catch(Exception e) {
+                logPrint("Problem with booking: " + booking.incrementBookingId);
+                e.printStackTrace();
+            }
+        });
         
         return errors;
     }

@@ -1,0 +1,61 @@
+<?php
+$factory = IocContainer::getFactorySingelton();
+
+$timezone = $factory->getStore()->timeZone;
+if($timezone) {
+    date_default_timezone_set($timezone);
+}
+
+if(!$factory->getApi()->getUserManager()->isLoggedIn()) {
+    header('location:/login.php?redirectto=/pms.php');
+    exit(0);
+}
+
+$api = $factory->getApi();
+$gs_multilevel_name = "default";
+$config = $factory->getApi()->getPmsManager()->getConfiguration($gs_multilevel_name);
+
+$views = array();
+$views["cleaning"] = "Cleaning";
+$views["locks"] = "Locks";
+foreach($config->mobileViews as $view) {
+    $views[] = $view->name;
+}
+
+$selectedApp = "c9a0671d-2eef-4a8e-8e69-523bcfc263e1";
+
+$apps = array();
+$apps['c9a0671d-2eef-4a8e-8e69-523bcfc263e1'] = "PmsCleaningNew";
+
+?>
+<link rel="stylesheet" href="express/main.css">
+<?php
+if(isset($_GET['subpage'])) {
+    echo "<a href='/express.php' class='back button' style='float:left;'>Back</a>";
+} else {
+    echo "<a href='/pms.php' class='back button' style='float:left;'>Back to pms</a>";
+}
+?>
+
+<center>
+    <img src="https://www.getshop.com/getshop/logo.png">
+<br><bR>
+<?php
+
+if(isset($_GET['subpage'])) {
+    $helper = new ExpressHelper();
+    $helper->createAppInstance($selectedApp);
+    
+    $ns = str_replace("-","_", $selectedApp);
+    $nsName = $apps[$selectedApp];
+    echo '<link rel="stylesheet" href="/cssfolder/ns_'.$ns.'/'.$nsName.'.css?1594106055">';
+    echo '<script type="text/javascript" src="/javascripts/ns_'.$ns.'_0_'.$nsName.'.js?1594106055"></script>';
+    $instance = $helper->getAppInstance();
+    $instance->renderStandalone();
+} else {
+    foreach($views as $idx => $mobileView) {
+        echo "<a class='button mainpagebuttons' style='margin: 10px;' href='?subpage=$idx'>" . $mobileView . "</a>";
+    }
+}
+?>
+</center>

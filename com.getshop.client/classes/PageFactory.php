@@ -41,6 +41,9 @@ class PageFactory {
         if ($moduleId == "getshopsupport") {
             $this->createGetShopSupportPages();
         }
+        if ($moduleId == "express") {
+            $this->createGetshopExpressPages();
+        }
         if ($moduleId == "intranet") {
             $this->createIntranetPages();
         }
@@ -1019,6 +1022,18 @@ class PageFactory {
         $row->addColumn("d8ac717e-8e03-4b59-a2c3-e61b064a21c2", "1f998ecd-72e2-4b44-8529-cc8d6e5b2d19");
         $this->pages['updateguestinformation'] = $page;
         
+    }
+
+    public function createGetshopExpressPages() {
+        $factory = IocContainer::getFactorySingelton();
+        $factory = $factory->getApi()->getPmsManager()->getConfiguration("default");
+        
+        $page = new \ModulePage("home", "pga");
+        $row = $page->createRow();
+        $row->ignoreTopRow = true;
+        $row->addColumn("2f998ecd-72e2-4b44-8529-cc8d6e5b2d15", "1f998ecd-72e2-4b44-8529-cc8d6e5b2d15");
+        $this->pages['home'] = $page;
+
     }
 
 }

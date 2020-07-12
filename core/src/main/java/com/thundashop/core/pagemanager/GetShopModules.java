@@ -23,17 +23,18 @@ public class GetShopModules {
         addModule("cms", "CMS", false, 1, "", "icon-document-file-html");
         addModule("salespoint", "Salespoint", true, 3, "83d6098e-43b1-4b52-a0d1-665525c67e80", "icon-cashier"); // SalespointModuleTheme
         addModule("pmsconference", "Conference", true, 3, "4a3c18b2-4437-4d41-9fd1-d4eae9c5553b", " fa-group"); // Conference module theme
-        addModule("ecommerce", "Ecommerce", true, 4, "f599c0a6-6f76-49af-ba15-7d496dd4387b", "icon-basket"); // EcommerceModuleTheme
+//        addModule("ecommerce", "Ecommerce", true, 4, "f599c0a6-6f76-49af-ba15-7d496dd4387b", "icon-basket"); // EcommerceModuleTheme
         addModule("crm", "CRM", true, 5, "14d46706-d524-4d3c-abde-7fb1a56ca2b9", "icon-users");   
         addModule("apac", "APAC", true, 6, "affd0624-7311-480c-93bc-06b72459b45d", "icon-key"); // GetShopModuleApacTheme
         addModule("settings", "Settings", true, 7, "75f4dc38-a356-4d04-866c-c8bc4e11d7ab", "icon-gs-gears"); // GetShopModuleSettingsTheme
         addModule("account", "Accounting", true, 8, "a34d4cdd-e339-4c19-b1ae-500b510a4209", "icon-calculator"); // AccountingModuleTheme
-        addModule("srs", "Resturant", true, 8, "a34d4cdd-e339-4c19-b1ae-500b510a4209", "icon-dinner"); // AccountingModuleTheme
-        addModule("ticket", "TicketSystem", true, 9, "a34d4cdd-e339-4c19-b1ae-500b510a4209", "icon-lifebuoy"); // TicketTheme
+//        addModule("srs", "Resturant", true, 8, "a34d4cdd-e339-4c19-b1ae-500b510a4209", "icon-dinner"); // AccountingModuleTheme
+//        addModule("ticket", "TicketSystem", true, 9, "a34d4cdd-e339-4c19-b1ae-500b510a4209", "icon-lifebuoy"); // TicketTheme
         addModule("invoice", "Invoicing", true, 10, "a34d4cdd-e339-4c19-b1ae-500b510a4209", "icon-receipt"); // Invoicing system
-        addModule("analytics", "Analytics", true, 11, "a34d4cdd-e339-4c19-b1ae-500b510a4209", "icon-chart-growth"); // Invoicing system
-        addModule("comfort", "Comfort", true, 11, "c9c1f200-41c6-4f27-8676-5b63c4da30c3", "fa-thermometer"); // Comfort system
-        addModule("getshopnone", "None", true, 12, "a34d4cdd-e339-4c19-b1ae-500b510a4209", "icon-none"); // None, used to block users from all other modules
+//        addModule("analytics", "Analytics", true, 11, "a34d4cdd-e339-4c19-b1ae-500b510a4209", "icon-chart-growth"); // Invoicing system
+//        addModule("comfort", "Comfort", true, 11, "c9c1f200-41c6-4f27-8676-5b63c4da30c3", "fa-thermometer"); // Comfort system
+        addModule("express", "Express", true, 12, "a34d4cdd-e339-4c19-b1ae-500b510a4209", "fa-fighter-jet"); // None, used to block users from all other modules
+        addModule("getshopnone", "None", true, 13, "a34d4cdd-e339-4c19-b1ae-500b510a4209", "icon-none"); // None, used to block users from all other modules
     }
 
     private void addModule(String nameAndId, String displayName, boolean externalPageTemplate, int sequence, String themeApplicationId, String fontAwesome) {

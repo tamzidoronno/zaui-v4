@@ -11096,7 +11096,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         User user = userManager.getUserById(booking.userId);
         Address address = user != null ? user.address : null;
         
-        if (address != null && user.fullName != null && !user.fullName.isEmpty() && (address.fullName == null || address.fullName.isEmpty())) {
+        if (address != null && user.fullName != null && !user.fullName.isEmpty()) {
            address.fullName = user.fullName; 
         }
         

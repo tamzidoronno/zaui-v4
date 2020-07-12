@@ -5,7 +5,7 @@ $totalForOrderInLocalCurrency = 0;
 
 $loggedOnUser = $this->getApi()->getUserManager()->getLoggedOnUser();
 
-if ($order->currency) {
+if (@$order->currency) {
     $totalForOrderInLocalCurrency = $this->getApi()->getOrderManager()->getTotalForOrderInLocalCurrencyById($order->id);
 }
 ?>
@@ -54,7 +54,7 @@ if (!count($order->orderTransactions)) {
                 if($paymentLog->transactionType == 4) {
                     echo "Registered as loss";
                 }
-                if ($type && $paymentLog->comment) {
+                if (@$type && @$paymentLog->comment) {
                     echo " / ";
                 }
                 echo @$paymentLog->comment."</div>";
@@ -74,7 +74,7 @@ foreach ($accounts as $account) {
 <div style='margin:10px;'>
     <span class='shop_button actiontabbtn' tab='registerpayment'>Manually register a payment</span>
     <span class='shop_button actiontabbtn' tab='registerloss'>Register loss</span>
-    <span class='shop_button actiontabbtn' tab='registeraglorounding'>Register rounding</span>
+    <span class='shop_button actiontabbtn' tab='registeraglorounding'>Special registration</span>
     <?php if(stristr($loggedOnUser->emailAddress, "@getshop.com")) { ?>
         <span class='shop_button cleanorder' orderid='<?php echo $order->id; ?>' style='float:right;'>Clean items/matrix on order</span>
         <span class='shop_button openorder' orderid='<?php echo $order->id; ?>' style='float:right; margin-right: 10px;' gs_prompt="Password">Open order</span>

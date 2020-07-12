@@ -140,7 +140,7 @@ class OrderView extends \MarketingApplication implements \Application {
         $amountInLocalCurrency = isset($_POST['data']['localCurrency']) ? $_POST['data']['localCurrency'] : null;
         $date = $this->convertToJavaDate(strtotime($_POST['data']['date']));
         
-        $this->getApi()->getOrderManager()->addSpecialPaymentTransactions($orderid, $amount, $amountInLocalCurrency, $type, $comment, $date);
+        $this->getApi()->getOrderManager()->addSpecialPaymentTransactionsToAccount($orderid, $amount, $amountInLocalCurrency, $_POST['data']['account'], $comment, $date);
         $this->rePrintTab("paymenthistory");
     }
     

@@ -1,5 +1,23 @@
 <?php
 /* @var $this ns_4be8e427_bead_491e_8d9f_7dd16356d8eb\OrderView */
+
+$accounts = (array)$this->getApi()->getProductManager()->getAccountingAccounts();
+
+$tmpAccounts = array();
+foreach($accounts as $acc) {
+    echo $acc->type;
+    if($acc->type == "fee") {
+        $tmpAccounts[] = $acc;
+    }
+}
+
+if(sizeof($tmpAccounts) == 0) {
+    echo "No accounts created yet for this purpose.";
+    return;
+}
+
+$accounts = $tmpAccounts;
+
 $generalconfig = $this->getApi()->getPaymentManager()->getGeneralPaymentConfig();
 $roundingAccount = $generalconfig->conversionAccount;
 $currencyAccount = $generalconfig->agioAccount;
@@ -8,7 +26,7 @@ $order = $this->getOrder();
 $restAmount = $order->restAmount;
 $now = date("d.m.Y", time());
 ?>
-<h1>Register rounding</h1>
+<h1>Special registration</h1>
 <div class='registerRoundingAgioForm'>
     <input type='hidden' gsname='orderid' value='<?php echo $order->id; ?>'>
     
@@ -17,7 +35,7 @@ $now = date("d.m.Y", time());
         <span style='display: inline-block; width: 200px;'>Comment</span>
         <span style='display: inline-block; width: 200px;'>Value</span>
         <?
-        if ($order->currency) {
+        if (@$order->currency) {
             ?>
             <span style='display: inline-block; width: 200px;'>Local currency</span>
             <?
@@ -29,7 +47,7 @@ $now = date("d.m.Y", time());
     <input class="gsniceinput1 aglocomment" gsname='comment' placeholder="<? echo $this->__f('Optional comment'); ?>" />
     <input type='txt' class='gsniceinput1' style='width: 180px;' gsname='amount' value='<?php echo $restAmount; ?>' style='width:40px;'>
     <?
-    if ($order->currency) {
+    if (@$order->currency) {
     ?>
     <input type='txt' class='gsniceinput1' style='width: 180px' gsname='localCurrency' value='' style='width:40px;'>
     <?
@@ -37,7 +55,14 @@ $now = date("d.m.Y", time());
     ?>
     <br>
     <br>
-    <div style='margin-bottom: 5px;'><span class='shop_button registerRoundingAgioBtn' transactiontype='6' style='width:410px;text-align:left;'>Register rounding <span style='float:right;'>(posting to account <?php echo $roundingAccount; ?>)</span></span></div>
+    <?php
+    foreach($accounts as $account) {
+        ?>
+        <div style='margin-bottom: 5px;'><span class='shop_button registerRoundingAgioBtn' transactiontype='6' account="<?php echo $account->accountNumber; ?>" style='text-align:left;'>Register <?php echo $account->description; ?> to account <?php echo $account->accountNumber; ?></span></div>
+        <?php
+    }
+    ?>
+    
     
     
 </div>

@@ -3651,10 +3651,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public void addOrderTransaction(String orderId, double amount, String comment, Date paymentDate, Double amountInLocalCurrency, Double agio, String accountDetailId) {
+        addOrderTransactionWithType(orderId, 0, comment, paymentDate, amountInLocalCurrency, agio, accountDetailId, Order.OrderTransactionType.MANUAL);
+    }
+    
+    public void addOrderTransactionWithType(String orderId, double amount, String comment, Date paymentDate, Double amountInLocalCurrency, Double agio, String accountDetailId, Integer type) {
         Order order = getOrder(orderId);
         if (order != null) {
             String userId = getSession().currentUser.id;
-            order.registerTransaction(paymentDate, amount, userId, Order.OrderTransactionType.MANUAL, "", comment, amountInLocalCurrency, agio, accountDetailId, getBatchId(order, ""));
+            order.registerTransaction(paymentDate, amount, userId, type, "", comment, amountInLocalCurrency, agio, accountDetailId, getBatchId(order, ""));
             if (order.isFullyPaid()) {
                 markAsPaidInternal(order, paymentDate, amount);
             }
@@ -5138,6 +5142,23 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public void addSpecialPaymentTransactionsToAccount(String orderId, Double amount, Double amountInLocalCurrency, Integer account, String comment, Date date) {
+        throw new NullPointerException("Kai 12 juli 18:25 messenger : Husker ikke hvordan det var");
+//        Order order = getOrder(orderId);
+//        if (order == null) {
+//            return;
+//        }
+//        
+//        AccountingDetail detail = productManager.getAccountingDetail(account);
+//        if (detail == null) {
+//            throw new NullPointerException("Did not find the account");
+//        }
+//
+//        addOrderTransactionWithType(orderId, amount, comment, date, amountInLocalCurrency, 0D, detail.id, Order.OrderTransactionType.ROUNDING);
+//        return;
     }
 
     @Override

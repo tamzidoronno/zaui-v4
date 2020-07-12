@@ -59,6 +59,8 @@ app.OrderView = {
         
         var data = app.OrderView.getData(this);
         
+        event.data.account = $(this).attr('account');
+        
         thundashop.Ajax.postWithCallBack(event, function(res) {
             app.OrderView.rePrintTab(res, 'paymenthistory', data);
         });

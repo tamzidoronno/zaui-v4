@@ -71,6 +71,11 @@ class UserAccountSettings extends \WebshopApplication implements \Application {
             return "<i class='fa fa-check'></i>";
         }
     }
+    
+    public function formatexpress() {
+        
+    }
+    
     public function formatsrs($user) {
         if(in_array("srs", $user->hasAccessToModules)) {
             return "<i class='fa fa-check'></i>";

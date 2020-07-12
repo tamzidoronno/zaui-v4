@@ -47,7 +47,7 @@ $now = date("d.m.Y", time());
     <input class="gsniceinput1 aglocomment" gsname='comment' placeholder="<? echo $this->__f('Optional comment'); ?>" />
     <input type='txt' class='gsniceinput1' style='width: 180px;' gsname='amount' value='<?php echo $restAmount; ?>' style='width:40px;'>
     <?
-    if (@$order->currency) {
+    if ($order->currency) {
     ?>
     <input type='txt' class='gsniceinput1' style='width: 180px' gsname='localCurrency' value='' style='width:40px;'>
     <?

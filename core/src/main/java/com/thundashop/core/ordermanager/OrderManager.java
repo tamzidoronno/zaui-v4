@@ -3797,11 +3797,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         List<DayIncome> incomes = getDayIncomes(start, end);
         
         for (DayIncome dayIncome : incomes) {
-            
             if (!dayIncome.isFinal && getOrderManagerSettings().autoCloseFinancialDataWhenCreatingZReport) {
                 continue;
             }
-            
+
             Map<String, List<DayEntry>> groupedByDepartmentId = dayIncome.dayEntries.stream()
                 .filter(entry -> !(!entry.isActualIncome || entry.isOffsetRecord))
                 .filter(o -> o.orderId != null)
@@ -3810,16 +3809,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                     if (cartItem == null || cartItem.getProduct() == null || cartItem.getProduct().departmentId == null) {
                         return "";
                     }
-                    
+
                     return cartItem.getProduct().departmentId;
                 }));
 
 
             for (String departmentId : groupedByDepartmentId.keySet()) {
                 Department department = departmentManager.getDepartment(departmentId);
-                
+
                 List<DayEntry> itemsWithDepartment = groupedByDepartmentId.get(departmentId);
-                
+
                 Map<String, List<DayEntry>> groupedByProductId = itemsWithDepartment
                         .stream()
                         .filter(o -> o.orderId != null)
@@ -3827,18 +3826,18 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
                 for (String accountingNumber : groupedByProductId.keySet()) {
                     int accountingCodeInt = -1;
-                    
+
                     try {
                         accountingCodeInt = Integer.parseInt(accountingNumber);
                     } catch (Exception ex) {
                         // Ok.
                     }
-                    
+
                     AccountingDetail detail = null;
                     if (accountingCodeInt > -1) {
                         detail = productManager.getAccountingDetail(accountingCodeInt);
                     }
-                    
+
                     PmiResult toAdd = new PmiResult();
                     toAdd.department = department != null ? department.code : "";
                     toAdd.prodcutId = accountingNumber;
@@ -3848,14 +3847,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                             .mapToDouble(o -> o.amountExTax.doubleValue() * -1)
                             .sum();
                     toAdd.transactiondate = dayIncome.start;
-                    
+
                     if (toAdd.revenue != 0) {
                         result.add(toAdd);
                     }
                 }
             }
-        }
-        
+        }   
+    
         return result;
     }
 

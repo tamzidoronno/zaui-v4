@@ -44,11 +44,16 @@ $roomCount = 0;
 foreach($list as $room) {
     $guests = array();
     foreach((array)$room->guest as $g) {
+        $guesttext = $g->name;
         if($g->isDisabled) {
-            $guests[] = "<span style='color:red; font-weight:bold;'>" . $g->name . " is disabled.</span>";
-        } else {
-            $guests[] = $g->name;
+            $guesttext .= " <span style='color:red; font-weight:bold;'> is disabled.</span>";
         }
+        
+        if($g->phone) {
+            $guesttext .= " (".$g->prefix." ".$g->phone.")";
+        }
+        
+        $guests[] = $guesttext;
     }
     if($_GET['useCheckinInstead']) {
         if(!$room->checkedIn || $room->checkedOut) {

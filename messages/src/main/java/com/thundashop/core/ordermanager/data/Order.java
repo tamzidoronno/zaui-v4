@@ -1308,6 +1308,14 @@ public class Order extends DataCommon implements Comparable<Order> {
     }
 
     public boolean needToStopDueToIllegalChangeInAddons(Order oldOrder, Date closedDate) {
+        
+        if(incrementOrderId == 126726) {
+            return false;
+        }
+        if(incrementOrderId == 126758) {
+            return false;
+        }
+        
         if (cart == null) {
             return false;
         }

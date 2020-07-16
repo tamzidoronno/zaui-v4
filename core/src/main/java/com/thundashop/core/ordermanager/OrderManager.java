@@ -3651,7 +3651,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public void addOrderTransaction(String orderId, double amount, String comment, Date paymentDate, Double amountInLocalCurrency, Double agio, String accountDetailId) {
-        addOrderTransactionWithType(orderId, 0, comment, paymentDate, amountInLocalCurrency, agio, accountDetailId, Order.OrderTransactionType.MANUAL);
+        addOrderTransactionWithType(orderId, amount, comment, paymentDate, amountInLocalCurrency, agio, accountDetailId, Order.OrderTransactionType.MANUAL);
     }
     
     public void addOrderTransactionWithType(String orderId, double amount, String comment, Date paymentDate, Double amountInLocalCurrency, Double agio, String accountDetailId, Integer type) {

@@ -504,15 +504,18 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Order order = getOrder(orderId);
         if(order == null) {
             try {
+                logPrint("Searching for ordre using inc id: " + orderId);
                 Integer incOrderId = new Integer(orderId);
                 order = getOrderByincrementOrderId(incOrderId);
+                logPrint("Order not found: " + orderId + " not found for logging");
             }catch(Exception e) {
                 //No need to try to continue from here.
                 return;
             }
         }
+        logPrint("Loggint text to order: " + orderId + " to order: " + entry);
         order.payment.transactionLog.put(new Date().getTime(), entry);
-        saveOrder(order);
+        saveOrderInternal(order);
     }
 
     private String formatText(Order order, String text) throws ErrorException {

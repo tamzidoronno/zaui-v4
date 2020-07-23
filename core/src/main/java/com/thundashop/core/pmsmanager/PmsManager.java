@@ -10454,6 +10454,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         for (PmsBookingRooms room : pmsBooking.rooms) {
             try {
+                if(room.getNumberOfNights() > 5000 && room.isDeleted() && room.unsettledAmount == 0.0) {
+                    continue;
+                }
                 if(!room.needToCalculateUnsettledAmount(orders)) {
                     continue;
                 }
@@ -11093,7 +11096,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         User user = userManager.getUserById(booking.userId);
         Address address = user != null ? user.address : null;
         
-        if (address != null && user.fullName != null && !user.fullName.isEmpty() && (address.fullName == null || address.fullName.isEmpty())) {
+        if (address != null && user.fullName != null && !user.fullName.isEmpty()) {
            address.fullName = user.fullName; 
         }
         

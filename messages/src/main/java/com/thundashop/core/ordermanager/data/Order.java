@@ -443,6 +443,7 @@ public class Order extends DataCommon implements Comparable<Order> {
         if(cart == null || cart.getItems() == null) {
             return;
         }
+        
         List<String> removeItem = new ArrayList();
         for(CartItem item : cart.getItems()) {
             if(item.getProduct() == null) {
@@ -1331,6 +1332,7 @@ public class Order extends DataCommon implements Comparable<Order> {
                 PmsBookingAddonItem oldAddon = oldOrder.cart.getCartItem(item.getCartItemId())
                         .itemsAdded
                         .stream()
+                        .filter(i -> i.price.equals(addon.price))
                         .filter(i -> i.addonId.equals(addon.addonId))
                         .findAny()
                         .orElse(null);
@@ -1649,6 +1651,41 @@ public class Order extends DataCommon implements Comparable<Order> {
             return true;
         }
         return false;
+    }
+
+//    public void printAddonsOnCartItems(String state) {
+//        if(incrementOrderId == 126726) {
+//            System.out.println(state + "--------------");
+//        }
+//        for(CartItem item : cart.getItems()) {
+//            if(item.itemsAdded == null) {
+//                continue;
+//            }
+//            for(PmsBookingAddonItem addon : item.itemsAdded) {
+//                if(addon.addonId.equals("d44da2d2-1997-4959-86a6-6cb2ec1705c9")) {  
+//                    if(incrementOrderId == 126726) {
+//                        System.out.println(incrementOrderId + ";" + item.getCartItemId() + ";" + addon.productId + ";" + addon.count + ":" + addon.price);
+//                    }
+//                }
+//            }
+//        }
+//    }
+    
+    public List<String> getDoubleCartItems() {
+        HashMap<String, Integer> counter = new HashMap();
+        List<String> doubleItems = new ArrayList();
+        for(CartItem item : cart.getItems()) {
+            if(item.itemsAdded == null ){
+                continue;
+            }
+            for(PmsBookingAddonItem addon : item.itemsAdded) {
+                if(counter.containsKey(addon.addonId)) {
+                    doubleItems.add(item.getCartItemId());
+                }
+                counter.put(addon.addonId, 0);
+            }
+        }
+        return doubleItems;
     }
     
     public static class Status  {

@@ -363,6 +363,8 @@ public interface IOrderManager {
     
     public void logTransactionEntry(String orderId, String entry) throws ErrorException;
     
+    @Administrator
+    public void addSpecialPaymentTransactionsToAccount(String orderId, Double amount, Double amountInLocalCurrency, Integer account, String comment, Date date);
     
     @Administrator
     public List<Order> getOrdersToCapture() throws ErrorException;

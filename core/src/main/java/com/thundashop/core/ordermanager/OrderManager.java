@@ -504,15 +504,18 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Order order = getOrder(orderId);
         if(order == null) {
             try {
+                logPrint("Searching for ordre using inc id: " + orderId);
                 Integer incOrderId = new Integer(orderId);
                 order = getOrderByincrementOrderId(incOrderId);
+                logPrint("Order not found: " + orderId + " not found for logging");
             }catch(Exception e) {
                 //No need to try to continue from here.
                 return;
             }
         }
+        logPrint("Loggint text to order: " + orderId + " to order: " + entry);
         order.payment.transactionLog.put(new Date().getTime(), entry);
-        saveOrder(order);
+        saveOrderInternal(order);
     }
 
     private String formatText(Order order, String text) throws ErrorException {
@@ -3651,10 +3654,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public void addOrderTransaction(String orderId, double amount, String comment, Date paymentDate, Double amountInLocalCurrency, Double agio, String accountDetailId) {
+        addOrderTransactionWithType(orderId, amount, comment, paymentDate, amountInLocalCurrency, agio, accountDetailId, Order.OrderTransactionType.MANUAL);
+    }
+    
+    public void addOrderTransactionWithType(String orderId, double amount, String comment, Date paymentDate, Double amountInLocalCurrency, Double agio, String accountDetailId, Integer type) {
         Order order = getOrder(orderId);
         if (order != null) {
             String userId = getSession().currentUser.id;
-            order.registerTransaction(paymentDate, amount, userId, Order.OrderTransactionType.MANUAL, "", comment, amountInLocalCurrency, agio, accountDetailId, getBatchId(order, ""));
+            order.registerTransaction(paymentDate, amount, userId, type, "", comment, amountInLocalCurrency, agio, accountDetailId, getBatchId(order, ""));
             if (order.isFullyPaid()) {
                 markAsPaidInternal(order, paymentDate, amount);
             }
@@ -3793,11 +3800,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         List<DayIncome> incomes = getDayIncomes(start, end);
         
         for (DayIncome dayIncome : incomes) {
-            
             if (!dayIncome.isFinal && getOrderManagerSettings().autoCloseFinancialDataWhenCreatingZReport) {
                 continue;
             }
-            
+
             Map<String, List<DayEntry>> groupedByDepartmentId = dayIncome.dayEntries.stream()
                 .filter(entry -> !(!entry.isActualIncome || entry.isOffsetRecord))
                 .filter(o -> o.orderId != null)
@@ -3806,16 +3812,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                     if (cartItem == null || cartItem.getProduct() == null || cartItem.getProduct().departmentId == null) {
                         return "";
                     }
-                    
+
                     return cartItem.getProduct().departmentId;
                 }));
 
 
             for (String departmentId : groupedByDepartmentId.keySet()) {
                 Department department = departmentManager.getDepartment(departmentId);
-                
+
                 List<DayEntry> itemsWithDepartment = groupedByDepartmentId.get(departmentId);
-                
+
                 Map<String, List<DayEntry>> groupedByProductId = itemsWithDepartment
                         .stream()
                         .filter(o -> o.orderId != null)
@@ -3823,18 +3829,18 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
                 for (String accountingNumber : groupedByProductId.keySet()) {
                     int accountingCodeInt = -1;
-                    
+
                     try {
                         accountingCodeInt = Integer.parseInt(accountingNumber);
                     } catch (Exception ex) {
                         // Ok.
                     }
-                    
+
                     AccountingDetail detail = null;
                     if (accountingCodeInt > -1) {
                         detail = productManager.getAccountingDetail(accountingCodeInt);
                     }
-                    
+
                     PmiResult toAdd = new PmiResult();
                     toAdd.department = department != null ? department.code : "";
                     toAdd.prodcutId = accountingNumber;
@@ -3844,14 +3850,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                             .mapToDouble(o -> o.amountExTax.doubleValue() * -1)
                             .sum();
                     toAdd.transactiondate = dayIncome.start;
-                    
+
                     if (toAdd.revenue != 0) {
                         result.add(toAdd);
                     }
                 }
             }
-        }
-        
+        }   
+    
         return result;
     }
 
@@ -5138,6 +5144,23 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public void addSpecialPaymentTransactionsToAccount(String orderId, Double amount, Double amountInLocalCurrency, Integer account, String comment, Date date) {
+        throw new NullPointerException("Kai 12 juli 18:25 messenger : Husker ikke hvordan det var");
+//        Order order = getOrder(orderId);
+//        if (order == null) {
+//            return;
+//        }
+//        
+//        AccountingDetail detail = productManager.getAccountingDetail(account);
+//        if (detail == null) {
+//            throw new NullPointerException("Did not find the account");
+//        }
+//
+//        addOrderTransactionWithType(orderId, amount, comment, date, amountInLocalCurrency, 0D, detail.id, Order.OrderTransactionType.ROUNDING);
+//        return;
     }
 
     @Override

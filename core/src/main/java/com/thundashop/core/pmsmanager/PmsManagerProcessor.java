@@ -501,6 +501,10 @@ public class PmsManagerProcessor {
     }
 
     private boolean pushToArx(PmsBookingRooms room, boolean deleted) {
+        if(!manager.getStore().id.equals("123865ea-3232-4b3b-9136-7df23cf896c6")) {
+            return false;
+        }
+        
         Person person = new Person();
         if (!room.guests.isEmpty() && room.guests.get(0).name != null && room.guests.get(0).name.contains(" ")) {
             person.firstName = room.guests.get(0).name.split(" ")[0];

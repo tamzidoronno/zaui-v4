@@ -23,6 +23,11 @@ $invoke = $this->invokeJavascriptFunctionAfterActions;
 if(isset($extraArgs['invokeJavascriptFunctionAfterActions'])) {
     $invoke = $extraArgs['invokeJavascriptFunctionAfterActions'];
 }
+
+if(!$user->address) {
+    $user->address = new core_usermanager_data_Address();
+}
+
 ?>
 <div gstype="form" method="saveUser" invokeJavascriptFunctionAfterActions='<? echo $invoke; ?>'>
     <?

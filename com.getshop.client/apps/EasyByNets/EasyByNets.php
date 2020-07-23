@@ -96,14 +96,12 @@ class EasyByNets extends \PaymentApplication implements \Application {
     }
     
     public function paymentCallback() {
+        $postdata = json_encode($_POST);
+        $getdata = json_encode($_GET);
+        $headers = json_encode(getallheaders());
+        $headers = getallheaders();
+        
         if(isset($_GET['webhookcompletion'])) {
-            $postdata = json_encode($_POST);
-            $getdata = json_encode($_GET);
-            $headers = json_encode(getallheaders());
-            
-            
-            $headers = getallheaders();
-            
             $orderId = $_GET['orderId'];
             $auth = $headers['Authorization'];
 
@@ -114,7 +112,8 @@ class EasyByNets extends \PaymentApplication implements \Application {
             if($orderSecret == $auth) {
                 $this->getApi()->getOrderManager()->markAsPaidWithPassword($order->id, $this->convertToJavaDate(time()), $this->getApi()->getOrderManager()->getTotalAmount($order), "fdsvb4354345345");
             } else {
-            $this->getApi()->getOrderManager()->changeOrderStatusWithPassword($_GET['orderId'], 9, "gfdsabdf034534BHdgfsdgfs#!");
+                $this->getApi()->getOrderManager()->changeOrderStatusWithPassword($_GET['orderId'], 9, "gfdsabdf034534BHdgfsdgfs#!");
+                $this->getApi()->getOrderManager()->logTransactionEntry($_GET['orderId'], "Order has been marked as status 9 from a webhook, POST" . $postdata . " GET: " . $getdata . " Headers: " . $headers);
             }
             
             echo "OK";
@@ -123,6 +122,7 @@ class EasyByNets extends \PaymentApplication implements \Application {
         
         if(isset($_GET['status']) && $_GET['status'] == "success") {
             $this->getApi()->getOrderManager()->changeOrderStatusWithPassword($_GET['orderId'], 9, "gfdsabdf034534BHdgfsdgfs#!");
+            $this->getApi()->getOrderManager()->logTransactionEntry($_GET['orderId'], "Order has been marked as status 9 from a web request, POST" . $postdata . " GET: " . $getdata . " Headers: " . $headers);
         } else {
             $this->getApi()->getOrderManager()->changeOrderStatusWithPassword($_GET['orderId'], 3, "gfdsabdf034534BHdgfsdgfs#!");
         }

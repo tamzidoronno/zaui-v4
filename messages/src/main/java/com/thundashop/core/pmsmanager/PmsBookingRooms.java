@@ -1074,6 +1074,12 @@ public class PmsBookingRooms implements Serializable {
             checksum += "_" + order.status;
         }
         
+        checksum += "_" + numberOfGuests;
+        
+        if(guests != null) {
+            checksum += "_" + guests.size();
+        }
+        
         MessageDigest md = MessageDigest.getInstance("MD5");
         byte[] thedigest = md.digest(checksum.getBytes());
         checksum = new String(thedigest);

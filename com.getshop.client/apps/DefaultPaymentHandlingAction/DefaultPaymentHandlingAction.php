@@ -54,6 +54,8 @@ class DefaultPaymentHandlingAction extends \PaymentApplication implements \Appli
         $order->userId = $user->id;
         $this->getApi()->getOrderManager()->saveOrder($order);
         $this->order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
+        
+        $this->updatePms($user);
     }
     
     public function updateDueDate() {
@@ -75,11 +77,16 @@ class DefaultPaymentHandlingAction extends \PaymentApplication implements \Appli
         $vat = $_POST['data']['vatnumber'];
         $user = $this->getApi()->getUserManager()->createCompany($vat, $name);
         
-        $order = $this->getOrder();
+        if(!$user->address) {
+            $user->address = new \core_usermanager_data_Address();
+        }
+        
+        $order = $this->getApi()->getOrderManager()->getOrder($_POST['data']['orderid']);
         $order->userId = $user->id;
         $order->cart->address = $user->address;
         $order->cart->address->fullName = $user->fullName;
         $this->getApi()->getOrderManager()->saveOrder($order);
+        $this->updatePms($user);
         return $user;
     }
     
@@ -118,5 +125,20 @@ class DefaultPaymentHandlingAction extends \PaymentApplication implements \Appli
     public function changeMethod() {
         $this->getApi()->getOrderManager()->changeOrderType($_POST['data']['orderid'], $_POST['data']['paymentid']);
     }
+
+    public function updatePms($user) {
+         if(isset($_SESSION['PmsBookingRoomView_current_pmsroom_id'])) {
+             echo "Updating";
+            if($_SESSION['PmsBookingRoomView_current_pmsroom_id']) {
+                $_POST['data']['roomid'] = $_SESSION['PmsBookingRoomView_current_pmsroom_id'];
+                $pmsBookingGroupView = new \ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView();
+                $booking = $pmsBookingGroupView->getPmsBooking();
+                $booking->userId = $user->id;
+                $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+                $pmsBookingGroupView->clearCache();
+            }
+        }
+    }
+
 }
 ?>

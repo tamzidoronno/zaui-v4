@@ -136,7 +136,11 @@ if(isset($_GET['page']) && $_GET['page'] == "cart") {
 }
 
 if(!$factory->getApi()->getPageManager()->hasAccessToModule($module) && !$ignoreAccess) {
-    echo "access denied to module";
+    echo "access denied to module<br>";
+    echo "<br>";
+    echo "If this is wrong, try navigating to the booking system.<br>";
+    echo "<a href='/pms.php'>For booking system click here</a>";
+    echo "<br>";
     exit(0);
 }
 include('commonforallmodules.php');

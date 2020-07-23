@@ -90,7 +90,6 @@ public class GdsManager extends ManagerBase implements IGdsManager {
         device.lastPulledRequest = new Date();
         DeviceMessageQueue queue = getQueue(device.id);
         queue.markMessagesPulled();
-        System.out.println("Number of messages: " + queue.getMessages().size());
         if (queue.isEmpty()) {
             for (int i=0; i<180; i++) {
                 try { Thread.sleep(100); } catch (Exception ex) {};

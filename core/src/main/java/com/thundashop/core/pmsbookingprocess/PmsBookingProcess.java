@@ -134,6 +134,10 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     @Override
     public StartBookingResult startBooking(StartBooking arg) {
         
+        if(arg.discountCode != null) {
+            arg.discountCode = arg.discountCode.replaceAll("&amp;", "&");
+        }
+        
         if(arg.start == null || arg.end == null) {
             return new StartBookingResult();
         }

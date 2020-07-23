@@ -151,6 +151,8 @@ class ModulePageMenu {
                     echo "<a class='gs_ignorenavigate' href='pos.php'><div class='gs_framework_module $moduleActiveClass'>$icon<br/>SalesPoint</div></a>";
                 } elseif (strtolower($module->id) == "pmsconference") {
                     echo "<a class='gs_ignorenavigate' href='/pmsconference.php'><div class='gs_framework_module $moduleActiveClass'><i class='fa fa-group'></i><br/>Conference</div></a>";
+                } elseif (strtolower($module->id) == "express") {
+                    echo "<a class='gs_ignorenavigate' href='/express.php'><div class='gs_framework_module $moduleActiveClass'><i class='fa fa-fighter-jet'></i><br/>Express</div></a>";
                 } elseif ($module->name == "Comfort") {
                     echo "<a class='gs_ignorenavigate' href='/comfort.php'><div class='gs_framework_module $moduleActiveClass'><i class='fa fa-sun-o'></i><br/>Comfort</div></a>";
                 } elseif (strtolower($module->name) == "apac") {

@@ -10,6 +10,7 @@ class DataStorage {
 	  void DataStorage::resetAll();
 	  void DataStorage::deleteAllCodes();
 	  void DataStorage::deleteAllLogs();
+	  void DataStorage::setNetworkId(int networkId);
 	  unsigned int DataStorage::handleCodeMessage(unsigned char* msgFromGateWay);
 
    private:

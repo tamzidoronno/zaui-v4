@@ -129,14 +129,33 @@ void setMillis(unsigned long ms)
     }
 }
 
+void initBootMode() {
+	int red = 17;
+	int green = 9;
+	int blue = 8;
+
+	digitalWrite(blue, HIGH);
+	digitalWrite(green, LOW);
+	digitalWrite(red, LOW);
+}
+
+bool isBootMode() {
+	return digitalRead(16) == LOW;
+}
+
+
 void setup()
 {
+    pinMode(16, INPUT);
+    digitalWrite(16, HIGH);
 
 	wdt_enable(WDTO_8S);
 
 	keypadReader.setCodeHandler(&codeHandler);
 
 	Serial.begin(115200);
+
+	actionHandlerObj.setup();
 
 	dataStorage.setupDataStorageBus();
 	resetLora();
@@ -145,7 +164,6 @@ void setup()
 	keypadReader.setup();
 	logging.init();
 	codeHandler.setup();
-	actionHandlerObj.setup();
 
 	sleepHandler.initalize(powerSaveMode, &dataStorage);
 
@@ -155,6 +173,11 @@ void setup()
 		logging.addLog("Started:N", 9, true);
 	} else {
 		logging.addLog("Started:W", 9, true);
+	}
+
+	 if (isBootMode()) {
+		initBootMode();
+		return;
 	}
 }
 
@@ -264,14 +287,14 @@ void loop()
 		}
 
 		// SETS THE GID
-		if (bufferForCommunication[0] == 'S' && bufferForCommunication[1] == ':' && bufferForCommunication[2] == 'G') {
+		if (bufferForCommunication[0] == 'S' && bufferForCommunication[1] == ':' && bufferForCommunication[2] == 'G' && !isBootMode()) {
 			dataStorage.writeCode(904, bufferForCommunication);
 			logging.addLog("GIDCHANGED", 10, true);
 			return;
 		}
 
 		// SETS ENCRYPTIONKEY
-		if (bufferForCommunication[0] == 'S' && bufferForCommunication[1] == 'C') {
+		if (bufferForCommunication[0] == 'S' && bufferForCommunication[1] == 'C' && !isBootMode()) {
 			bool codeUpdated = communication.setEncryptionKey(bufferForCommunication);
 			if (!codeUpdated) {
 				logging.addLog("ENC:SET:2", 9, true);

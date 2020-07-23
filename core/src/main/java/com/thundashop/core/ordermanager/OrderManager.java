@@ -501,7 +501,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Override
     public void logTransactionEntry(String orderId, String entry) throws ErrorException {
-        Order order = getOrder(orderId);
+        Order order = getOrderSecure(orderId);
         if(order == null) {
             try {
                 logPrint("Searching for ordre using inc id: " + orderId);

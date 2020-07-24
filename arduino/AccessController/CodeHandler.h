@@ -53,6 +53,8 @@ class CodeHandler {
 		void CodeHandler::resetOpenTimeStamp();
 		void CodeHandler::resetCloseTimeStamp();
 		void internalUnlock();
+		void CodeHandler::saveState(unsigned char state);
+		void _setPrevState();
 };
 
 #endif

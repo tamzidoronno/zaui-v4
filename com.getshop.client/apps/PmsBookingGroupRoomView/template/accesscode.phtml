@@ -17,7 +17,20 @@ $daysToArrival = ceil($diff / (60 * 60 * 24));
 
 $hasAcessControl = $this->getApi()->getPmsManager()->hasLockSystemActive($this->getSelectedMultilevelDomainName());
 
+$hasGroupConnected = $this->getApi()->getPmsManager()->hasLockAccessGroupConnected($this->getSelectedMultilevelDomainName(), $room->bookingItemId);
+
 $printers = $this->getPrinters();
+
+if (!$hasGroupConnected) {
+    ?>
+<br>
+    <div style="font-size: 30px;">
+        The lock system has not been set up properly yet.<br>
+        There are no access group connected to this room.<br><br>Go to SETTINGS -> <a href='/pms.php?page=lockconfig&gs_getshopmodule=' style='color:blue;'>Lock Setup</a> and match the groups properly to the rooms.
+    </div><br>
+    <?
+    return;
+}
 
 if ($isEnded) {
     ?>

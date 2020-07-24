@@ -32,6 +32,7 @@ import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.User;
+import com.thundashop.core.wubook.WubookManager;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -71,6 +72,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     
     @Autowired
     StoreManager storeManager;
+    
+    
+    @Autowired
+    WubookManager wubookManager;
     
     @Autowired
     GBat10AccountingSystem gBat10AccountingSystem;
@@ -825,6 +830,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     public void saveAdvancePriceYield(PmsAdvancePriceYield yieldPlan) {
         saveObject(yieldPlan);
         advancePriceYields.put(yieldPlan.id, yieldPlan);
+        wubookManager.markRoomsWithNewPricingModel();
     }
 
     @Override

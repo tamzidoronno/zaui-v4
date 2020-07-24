@@ -34,6 +34,9 @@ public interface IPmsManager {
     public void checkInRoom(String pmsBookingRoomId);
     
     @Administrator
+    public boolean hasLockAccessGroupConnected(String typeId);
+    
+    @Administrator
     public void reinstateStay(String pmsBookingRoomId, Integer minutes);
     
     @Administrator

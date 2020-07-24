@@ -11357,5 +11357,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             messageManager.sendErrorNotification("Fixed " + found + " bookings that where failed", null);
         }
     }
+
+    @Override
+    public boolean hasLockAccessGroupConnected(String itemId) {
+        BookingItem type = bookingEngine.getBookingItem(itemId);
+        return type.lockGroupId != null && !type.lockGroupId.isEmpty();
+    }
     
 }

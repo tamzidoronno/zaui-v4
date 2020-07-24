@@ -10008,7 +10008,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsRoomPaymentSummary getSummaryWithoutAccrued(String pmsBookingId, String pmsBookingRoomId) {
-        return getSummaryWithoutAccrued(pmsBookingId, pmsBookingRoomId, false);
+        PmsBooking booking = bookings.get(pmsBookingId);
+        PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
+        return getSummaryWithoutAccrued(booking, room, false);
     }
     
     @Override
@@ -10464,7 +10466,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 logPrintException(e);
                 messageManager.sendErrorNotificationToEmail("pal@getshop.com", "Failed to calculate md5sum", e);
             }
-            PmsRoomPaymentSummary summary = getSummaryWithoutAccrued(pmsBooking.id, room.pmsBookingRoomId);
+            PmsRoomPaymentSummary summary = getSummaryWithoutAccrued(pmsBooking, room, false);
             if (summary == null) {
                 room.unsettledAmount = 0D;
             } else {
@@ -10474,7 +10476,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                         .sum();
             }
             
-            summary = getSummaryWithoutAccrued(pmsBooking.id, room.pmsBookingRoomId, true);
+            summary = getSummaryWithoutAccrued(pmsBooking, room, true);
             if (summary == null) {
                 room.unpaidAmount = 0D;
             } else {
@@ -10737,14 +10739,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 });
     }
 
-    private PmsRoomPaymentSummary getSummaryWithoutAccrued(String pmsBookingId, String pmsBookingRoomId, boolean unpaidOnly) {
-        PmsBooking booking = bookings.get(pmsBookingId);
+    private PmsRoomPaymentSummary getSummaryWithoutAccrued(PmsBooking booking, PmsBookingRooms pmsBookingRoom, boolean unpaidOnly) {
         
         if (booking == null) {
             return null;
         }
         
-        PmsBookingRooms room = booking.getRoom(pmsBookingRoomId);
+        PmsBookingRooms room = pmsBookingRoom;
         
         if (room == null) {
             return new PmsRoomPaymentSummary();

@@ -1096,7 +1096,7 @@ public class PmsBookingRooms implements Serializable {
         }
         
         for(PmsBookingAddonItem item : addons) {
-            sum += item.getKey() + "_" + item.count + "_" + item.price + "_" + item.priceExTaxes;
+            sum += item.getKey() + "_" + item.count + "_" + item.price + "_" + item.priceExTaxes + "_" + isDeleted();
         }
         
         return sum;

@@ -1285,7 +1285,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             return -1;
         }
 
-        if(!booking.payLater && booking.isRegisteredToday() && (booking.channel == null || booking.channel.isEmpty() || booking.channel.equals("website")) && config.autoDeleteUnpaidBookings) {
+        if(booking.avoidAutoDelete && !booking.payLater && booking.isRegisteredToday() && (booking.channel == null || booking.channel.isEmpty() || booking.channel.equals("website")) && config.autoDeleteUnpaidBookings) {
             //If autodeleting bookings and booked on website, do not send paymentlink
             return 10;
         }

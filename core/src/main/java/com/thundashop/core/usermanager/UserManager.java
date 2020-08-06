@@ -1670,9 +1670,8 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             
             getUserStoreCollection(storeId).addUserDirect(internalApiUser);
             
-            if (storeId != null && storeId.equals("a4548012-433e-47a4-b154-ac47c4b7b0ed")) {
-                System.out.println("Added internal id: " + internalApiUser.id + ",  password: " + internalApiUser.internalPassword + ", username: " + internalApiUser.username);
-            }
+            System.out.println("Added internal id: " + internalApiUser.id + ",  password: " + internalApiUser.internalPassword + ", username: " + internalApiUser.username + ", store: " + storeId);
+
         }
         
         return internalApiUser;

@@ -2605,5 +2605,12 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         return true;
     }
 
+    public void markRoomsWithNewPricingModel() {
+        for(WubookRoomData data : wubookdata.values()) {
+            data.newRoomPriceSystem = true;
+        }
+        saveWubookRoomData(wubookdata);
+    }
+
 
 }

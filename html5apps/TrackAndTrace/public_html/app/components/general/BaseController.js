@@ -70,6 +70,19 @@ controllers.BaseController = function($scope, $rootScope, $state, datarepository
         datarepository.loadAllData($api, $scope, null, $state);
     });
     
+    $scope.$on('loggedOut', function() {
+        datarepository.driverMessages = [];
+        
+        datarepository.messages = [];
+        
+        datarepository.save();
+        
+        $scope.messages = datarepository.driverMessages;
+                
+        $scope.$evalAsync();
+        $rootScope.$apply();
+    });
+    
     $scope.groupBy = function(xs, key) {
         
     }

@@ -360,4 +360,13 @@ public class GdsManager extends ManagerBase implements IGdsManager {
             devices.put(device.id, device);
         }
     }
+    
+    public void sendMessageToAllUserQueues(Serializable dataCommon) {
+        userMessageQueue.values()
+                .stream()
+                .map(q -> q.userId)
+                .forEach(userId -> {
+                    addUserMessageToQueue(userId, dataCommon);
+                });
+    }
 }

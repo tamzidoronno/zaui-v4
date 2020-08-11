@@ -204,4 +204,7 @@ public interface ITrackAndTraceManager {
     
     @Administrator
     public List<ExportedCollectedData> getCompletedCollectionTasks(Date start, Date end);
+    
+    @Administrator
+    public void logoutAllDevices();
 }

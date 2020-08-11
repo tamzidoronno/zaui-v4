@@ -11,8 +11,7 @@ import java.io.Serializable;
  *
  * @author ktonder
  */
-public class DriverRemoved implements Serializable {
-        public String className = "com.thundashop.core.trackandtrace.DriverRemoved";
-        public String routeId = "";
-        public String userId = "";
+public class LogoutBroadCast implements Serializable {
+    public String className = "com.thundashop.core.trackandtrace.LogoutBroadCast";
+    public String userId = "";
 }

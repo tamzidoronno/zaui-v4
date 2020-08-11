@@ -501,18 +501,21 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Override
     public void logTransactionEntry(String orderId, String entry) throws ErrorException {
-        Order order = getOrder(orderId);
+        Order order = getOrderSecure(orderId);
         if(order == null) {
             try {
+                logPrint("Searching for ordre using inc id: " + orderId);
                 Integer incOrderId = new Integer(orderId);
                 order = getOrderByincrementOrderId(incOrderId);
+                logPrint("Order not found: " + orderId + " not found for logging");
             }catch(Exception e) {
                 //No need to try to continue from here.
                 return;
             }
         }
+        logPrint("Loggint text to order: " + orderId + " to order: " + entry);
         order.payment.transactionLog.put(new Date().getTime(), entry);
-        saveOrder(order);
+        saveOrderInternal(order);
     }
 
     private String formatText(Order order, String text) throws ErrorException {
@@ -3651,7 +3654,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public void addOrderTransaction(String orderId, double amount, String comment, Date paymentDate, Double amountInLocalCurrency, Double agio, String accountDetailId) {
-        addOrderTransactionWithType(orderId, 0, comment, paymentDate, amountInLocalCurrency, agio, accountDetailId, Order.OrderTransactionType.MANUAL);
+        addOrderTransactionWithType(orderId, amount, comment, paymentDate, amountInLocalCurrency, agio, accountDetailId, Order.OrderTransactionType.MANUAL);
     }
     
     public void addOrderTransactionWithType(String orderId, double amount, String comment, Date paymentDate, Double amountInLocalCurrency, Double agio, String accountDetailId, Integer type) {

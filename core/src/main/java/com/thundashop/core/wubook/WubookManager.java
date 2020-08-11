@@ -1030,6 +1030,12 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                     logText("Failed to find room type for booking: " + booking.reservationCode);
                     sendErrorForReservation(booking.reservationCode, "Failed to find room type for reservation");
                 }
+                
+                if(!doesTypeExists(room.bookingItemTypeId)) {
+                    logText("The booking type for this room does not exists (channel manager), this needs to be remapped. Category in GetShop has been deleted.");
+                    continue;
+                }
+                
                 pricestoset.put(room.pmsBookingRoomId, r.priceMatrix);
                 PmsGuests guest = new PmsGuests();
                 guest.email = booking.email;
@@ -1042,6 +1048,12 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 room.guests.add(guest);
                 newbooking.addRoom(room);
             }
+            
+            if(newbooking.rooms.isEmpty()) {
+                logText("Returning since there are no rooms to add id: " + booking.reservationCode);
+                return null;
+            }
+            
             boolean isPrepaidByOta = false;
             if(booking.isExpediaCollect) {
                 checkIfPaymentMethodIsActive("92bd796f-758e-4e03-bece-7d2dbfa40d7a");
@@ -2583,6 +2595,21 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             return true;
         }
         return false;
+    }
+
+    private boolean doesTypeExists(String bookingItemTypeId) {
+        BookingItemType type = bookingEngine.getBookingItemType(bookingItemTypeId);
+        if(type == null) {
+            return false;
+        }
+        return true;
+    }
+
+    public void markRoomsWithNewPricingModel() {
+        for(WubookRoomData data : wubookdata.values()) {
+            data.newRoomPriceSystem = true;
+        }
+        saveWubookRoomData(wubookdata);
     }
 
 

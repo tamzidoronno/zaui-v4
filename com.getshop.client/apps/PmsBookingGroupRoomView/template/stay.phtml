@@ -3,7 +3,7 @@
 $savedRoom = $this->getPmsBookingRoom();
 $hasAcessControl = $this->getApi()->getPmsManager()->hasLockSystemActive($this->getSelectedMultilevelDomainName());
 
-$types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSelectedMultilevelDomainName());
+$types = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
 $types = $this->indexList($types);
 $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelectedMultilevelDomainName());
 $items = $this->indexList($items);

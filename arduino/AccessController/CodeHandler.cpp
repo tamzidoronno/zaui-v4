@@ -52,6 +52,20 @@ void CodeHandler::_initAutoCloseAfterMillis() {
 void CodeHandler::setup() {
 	this->actionHandler->setup();
 	this->_initAutoCloseAfterMillis();
+	this->_setPrevState();
+}
+
+void CodeHandler::_setPrevState() {
+	unsigned char buf[16];
+	this->dataStorage->getCode(908, buf);
+
+	if (buf[0] == 0xFE) {
+		changeState('U');
+	}
+
+	if (buf[0] == 0xFD) {
+		changeState('L');
+	}
 }
 
 void CodeHandler::resetOpenTimeStamp() {
@@ -94,16 +108,35 @@ bool CodeHandler::compareCodes(unsigned char* savedCode, unsigned char* typedCod
 bool CodeHandler::testCodes(unsigned char* codeFromPanel) {
 	unsigned char buffer[16];
 
-	if (!this->isLocked() && codeFromPanel[15] == 0x0A && codeFromPanel[14] == 0x01 && codeFromPanel[13] == 0x0A) {
-		this->resetCloseTimeStamp();
-    this->changeState('U');
-    return false;
+	// Boot Mode.
+	if (digitalRead(16) == LOW) {
+		// 11* = Reset all data.
+		if (codeFromPanel[15] == 0x0A && codeFromPanel[14] == 0x01 && codeFromPanel[13] == 0x01) {
+			dataStorage->resetAll();
+			resetFunc();
+			return true;
+		}
+
+		// 2xx* = Set network id.
+		if (codeFromPanel[15] == 0x0A && codeFromPanel[12] == 0x02) {
+			int id = codeFromPanel[13] * 10;
+			id = id + codeFromPanel[14];
+			dataStorage->setNetworkId(id);
+			resetFunc();
+			return true;
+		}
 	}
 
-  if (!this->isLocked() && codeFromPanel[15] == 0x0A && codeFromPanel[14] == 0x02 && codeFromPanel[13] == 0x0A) {
-   this->changeState('N');
-    return false;
-  }
+	if (!this->isLocked() && codeFromPanel[15] == 0x0A && codeFromPanel[14] == 0x01 && codeFromPanel[13] == 0x0A) {
+		this->resetCloseTimeStamp();
+        this->changeState('U');
+        return false;
+	}
+
+    if (!this->isLocked() && codeFromPanel[15] == 0x0A && codeFromPanel[14] == 0x02 && codeFromPanel[13] == 0x0A) {
+        this->changeState('N');
+        return false;
+    }
 
 	for (unsigned int i=1; i<=800; i++) {
 
@@ -123,11 +156,6 @@ bool CodeHandler::testCodes(unsigned char* codeFromPanel) {
 		if (keypadReader->check()) {
 			break;
 		}
-	}
-
-	if (this->compareCodes(resetCode, codeFromPanel, 0)) {
-		dataStorage->resetAll();
-		resetFunc();
 	}
 
 	return false;
@@ -242,19 +270,35 @@ void CodeHandler::changeState(char state) {
 		this->_forceClosed = false;
 		this->lock(0);
 		this->logging->addLog("STATE:N", 7, true);
+		this->saveState(0xFF);
 	}
 
 	if (state == 'U') {
 		this->_forceClosed = false;
 		this->internalUnlock();
 		this->logging->addLog("STATE:U", 7, true);
+		this->saveState(0xFE);
 	}
 
 	if (state == 'L') {
 		this->_forceClosed = true;
 		this->lock(0);
 		this->logging->addLog("STATE:L", 7, true);
+		this->saveState(0xFD);
 	}
+}
+
+void CodeHandler::saveState(unsigned char state) {
+	unsigned char blank[16] = {
+		0xFF, 0xFF, 0xFF, 0xFF,
+		0xFF, 0xFF, 0xFF, 0xFF,
+		0xFF, 0xFF, 0xFF, 0xFF,
+		0xFF, 0xFF, 0xFF, 0xFF
+	};
+
+	blank[0] = state;
+
+	this->dataStorage->writeCode(908, blank);
 }
 
 void CodeHandler::changeOpeningTime(unsigned char* data) {

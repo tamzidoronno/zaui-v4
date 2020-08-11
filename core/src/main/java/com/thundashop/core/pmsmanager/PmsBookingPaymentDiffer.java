@@ -30,7 +30,10 @@ public class PmsBookingPaymentDiffer {
     private List<String> roomProductIds = new ArrayList();
     private final SimpleDateFormat sdf;
     private final String language;
-
+    private final HashMap<String, List<String>> cartItemIds;
+    private final HashMap<String, List<CartItem>> cartOrderCartItems = new HashMap();
+    private final HashMap<String, String> addonToOrderMap = new HashMap();
+    
     public PmsBookingPaymentDiffer(List<Order> orders, PmsBooking booking, PmsBookingRooms room, PmsManager pmsManager, String language) {
         this.orders = orders.stream()
                 .filter(o -> o != null)
@@ -46,6 +49,13 @@ public class PmsBookingPaymentDiffer {
                 });
 
         setProductIdsForRoom();
+        
+        for (Order order : orders) {
+            cartOrderCartItems.put(order.id, order.getCartItems());
+        }
+        
+        this.cartItemIds = getCartItemsIds(roomProductIds);
+        buildCacheOfAddonsToItems();   
     }
     
     public PmsRoomPaymentSummary getSummary() {
@@ -136,7 +146,7 @@ public class PmsBookingPaymentDiffer {
         if (!room.isDeleted() || room.nonrefundable) {
             row.priceInBooking = room.priceMatrix.get(date) != null ? room.priceMatrix.get(date) : 0D;
         }
-        row.cartItemIds = getCartItemsIds(roomProductIds);
+        row.cartItemIds = cartItemIds;
         row.isAccomocation = true;
         row.countFromBooking = 1;
         row.countFromOrders = 1;
@@ -199,7 +209,7 @@ public class PmsBookingPaymentDiffer {
         HashMap<String, List<CartItem>> retList = new HashMap();
         
         for (Order order : orders) {
-            List<CartItem> itemsForOrder = order.getCartItems().stream()
+            List<CartItem> itemsForOrder = cartOrderCartItems.get(order.id).stream()
                 .filter(o -> productList.contains(o.getProductId()))
                 .filter(o -> o.getProduct().externalReferenceId.equals(room.pmsBookingRoomId))
                 .collect(Collectors.toList());
@@ -242,7 +252,7 @@ public class PmsBookingPaymentDiffer {
             if (!order.id.equals(orderId)) {
                 continue;
             }
-            for (CartItem item :order.getCartItems()) {
+            for (CartItem item : cartOrderCartItems.get(order.id)) {
                 if (item.getCartItemId().equals(id))
                     retItem = item;
             }
@@ -256,10 +266,10 @@ public class PmsBookingPaymentDiffer {
        row.actuallyPaidAmount = orders.stream()
                 .filter(o -> o.status == Order.Status.PAYMENT_COMPLETED)
                 .mapToDouble(order -> {
-                    List<CartItem> cartItems = order.getCartItems();
-                    List<String> cartItemIds = row.cartItemIds.get(order.id);
+                    List<CartItem> cartItems = cartOrderCartItems.get(order.id);
+                    List<String> icartItemIds = row.cartItemIds.get(order.id);
                     for (CartItem item : cartItems) {
-                        if (cartItemIds.contains(item.getCartItemId())) {
+                        if (icartItemIds.contains(item.getCartItemId())) {
                             return getAmountForDate(item, row.date);
                         }
                     }
@@ -311,7 +321,7 @@ public class PmsBookingPaymentDiffer {
 
     private List<String> getAllDatesFromOrders(List<String> allDatesToLookAt) {
         List<String> dates = orders.stream()
-                .flatMap(order -> order.getCartItems().stream())
+                .flatMap(order -> cartOrderCartItems.get(order.id).stream())
                 .flatMap(item -> {
                     if (item.priceMatrix != null && !item.priceMatrix.isEmpty()) {
                         return item.priceMatrix.keySet().stream();
@@ -336,7 +346,7 @@ public class PmsBookingPaymentDiffer {
 
     private List<PmsBookingAddonItem> getAllPmsAddonsFromOrders() {
         return orders.stream()
-                .flatMap(o -> o.getCartItems().stream())
+                .flatMap(o -> cartOrderCartItems.get(o.id).stream())
                 .filter(item -> item.isPmsAddons())
                 .filter(item -> item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId))
                 .flatMap(item -> item.itemsAdded.stream())
@@ -510,7 +520,7 @@ public class PmsBookingPaymentDiffer {
     private List<PmsBookingAddonItem> getAllPmsAddonsFromOrdersPaid() {
             return orders.stream()
                 .filter(o -> o.status == 7)
-                .flatMap(o -> o.getCartItems().stream())
+                .flatMap(o -> cartOrderCartItems.get(o.id).stream())
                 .filter(item -> item.isPmsAddons())
                 .filter(item -> item.getProduct().externalReferenceId.equals(room.pmsBookingRoomId))
                 .flatMap(item -> item.itemsAdded.stream())
@@ -556,23 +566,23 @@ public class PmsBookingPaymentDiffer {
 
     }
 
-    private Order getOrder(PmsBookingAddonItem pmsBookingAddonItem) {
-        for (Order order : orders) {
-            for (CartItem item : order.getCartItems()) {
+    private void buildCacheOfAddonsToItems() {
+        for (String orderId : cartOrderCartItems.keySet()) {
+            for (CartItem item : cartOrderCartItems.get(orderId)) {
                 if (!item.isPmsAddons()) {
                     continue;
                 }
                 
-                if (item.itemsAdded.stream()
-                        .map(o -> o.addonId)
-                        .collect(Collectors.toList())
-                        .contains(pmsBookingAddonItem.addonId)) {
-                    return order;
+                for (PmsBookingAddonItem addonItem : item.itemsAdded) {
+                    this.addonToOrderMap.put(addonItem.addonId, orderId);
                 }
             }
         }
-        
-        return null;
+    }
+    
+    private Order getOrder(PmsBookingAddonItem pmsBookingAddonItem) {
+        String orderId = addonToOrderMap.get(pmsBookingAddonItem.addonId);
+        return ordersMap.get(orderId);
     }
 
     private void correctZeroCountOffset(PmsRoomPaymentSummary summary) {

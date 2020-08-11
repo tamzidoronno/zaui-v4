@@ -1669,6 +1669,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             internalApiUser.emailAddress = "post@getshop.com";
             
             getUserStoreCollection(storeId).addUserDirect(internalApiUser);
+            
+            System.out.println("Added internal id: " + internalApiUser.id + ",  password: " + internalApiUser.internalPassword + ", username: " + internalApiUser.username + ", store: " + storeId);
+
         }
         
         return internalApiUser;

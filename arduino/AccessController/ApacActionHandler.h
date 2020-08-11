@@ -14,5 +14,11 @@ class ApacActionHandler : public ActionHandler {
 		int strikeRelay = 14;
 		int engineRelay = 15;
 		int signalLight = 5;
+
+		int red = 17;
+		int green = 9;
+		int blue = 8;
+
+		void lightOff();
 };
 #endif

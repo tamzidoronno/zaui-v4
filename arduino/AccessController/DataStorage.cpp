@@ -19,7 +19,8 @@
  *  904 = Gid.
  *  905 = EncryptionKey.
  *  906 = Is encryptioncode set.
- *
+ *  907 = Networkkey
+ *  908 = Lock state
  */
 
 #include <Arduino.h>
@@ -128,10 +129,11 @@ void DataStorage::resetAll() {
 	writeCode(902, blank);
 	writeCode(903, blank);
 
-	// Should we delete this or not, gid encryptionkey etc.. security risk?
+	// Should we delete this or not, gid encryption-key etc.. security risk?
 	writeCode(904, blank);
 	writeCode(905, blank);
 	writeCode(906, blank);
+	writeCode(907, blank);
 
 
 	// Autoclose millis
@@ -163,9 +165,20 @@ void DataStorage::deleteAllLogs() {
 		0x00, 0x00, 0x00, 0x00
 	};
 
+	int j = 0;
+	int state = HIGH;
+
 	for (unsigned int i=800; i<=901; i++) {
 		writeCode(i, blank);
 		wdt_reset();
+
+		j++;
+
+		if (j > 10) {
+			digitalWrite(5, state);
+			state = !state;
+			j = 0;
+		}
 	}
 }
 
@@ -177,6 +190,9 @@ void DataStorage::deleteAllCodes() {
 		0xFF, 0xFF, 0xFF, 0xFF
 	};
 
+	int j = 0;
+	int state = HIGH;
+
 	for (unsigned int i=0; i<=800; i++) {
 		char buf[4];
 		itoa(i, buf, 10);
@@ -187,5 +203,27 @@ void DataStorage::deleteAllCodes() {
 		blank[4] = buf[3];
 		writeCode(i, blank);
 		wdt_reset();
+
+		j++;
+
+		if (j > 10) {
+			digitalWrite(5, state);
+			state = !state;
+			j = 0;
+		}
+
 	}
+}
+
+void DataStorage::setNetworkId(int networkId) {
+	unsigned char blank[16] = {
+		0xFF, 0xFF, 0xFF, 0xFF,
+		0xFF, 0xFF, 0xFF, 0xFF,
+		0xFF, 0xFF, 0xFF, 0xFF,
+		0xFF, 0xFF, 0xFF, 0xFF
+	};
+
+	blank[0] = networkId;
+
+	writeCode(907, blank);
 }

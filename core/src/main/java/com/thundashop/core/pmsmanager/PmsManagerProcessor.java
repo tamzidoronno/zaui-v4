@@ -1,7 +1,7 @@
 package com.thundashop.core.pmsmanager;
 
 import com.google.common.base.Ascii;
-import com.ibm.icu.util.Calendar;
+import java.util.Calendar;
 import com.thundashop.core.arx.AccessCategory;
 import com.thundashop.core.arx.Card;
 import com.thundashop.core.arx.Person;

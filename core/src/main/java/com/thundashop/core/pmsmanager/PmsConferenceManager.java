@@ -2,7 +2,7 @@ package com.thundashop.core.pmsmanager;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionScope;
-import com.ibm.icu.util.Calendar;
+import java.util.Calendar;
 import com.mongodb.BasicDBObject;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;

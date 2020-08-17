@@ -2,7 +2,7 @@ package com.thundashop.core.support;
 
 
 import com.getshop.scope.GetShopSession;
-import com.ibm.icu.util.Calendar;
+import java.util.Calendar;
 import com.mongodb.BasicDBObject;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;

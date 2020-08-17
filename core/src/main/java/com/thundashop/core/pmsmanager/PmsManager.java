@@ -10,7 +10,7 @@ import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.ibm.icu.util.Calendar;
+import java.util.Calendar;
 import com.mongodb.BasicDBObject;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;

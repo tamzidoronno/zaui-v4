@@ -1,7 +1,7 @@
 package com.thundashop.core.sales;
 
 import com.getshop.scope.GetShopSession;
-import com.ibm.icu.util.Calendar;
+import java.util.Calendar;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;

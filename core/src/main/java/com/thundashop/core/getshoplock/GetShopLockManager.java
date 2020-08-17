@@ -5,7 +5,7 @@ import com.getshop.scope.GetShopSessionBeanNamed;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.ibm.icu.util.Calendar;
+import java.util.Calendar;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.common.DataCommon;

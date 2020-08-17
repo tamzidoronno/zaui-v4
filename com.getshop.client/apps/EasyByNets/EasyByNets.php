@@ -120,8 +120,37 @@ class EasyByNets extends \PaymentApplication implements \Application {
         }
         
         if(isset($_GET['status']) && $_GET['status'] == "success") {
-            $this->getApi()->getOrderManager()->changeOrderStatusWithPassword($_GET['orderId'], 9, "gfdsabdf034534BHdgfsdgfs#!");
-            $this->getApi()->getOrderManager()->logTransactionEntry($_GET['orderId'], "Order has been marked as status 9 from a web request, POST" . $postdata . " GET: " . $getdata . " Headers: " . json_encode($headers));
+            
+            $datastring = $this->getDatastring();
+            $addr = $this->getApiEndpointAdress().'payments/' . $_GET['paymentid'];
+            $ch = curl_init($addr);
+
+
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $datastring);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', 'Accept: application/json', 'Authorization: ' . $this->getApiKey()));
+            $chargedResult = curl_exec($ch);
+            $result = json_decode($chargedResult, true);
+
+            $successfullyCharges = true;
+            $charged = false;
+            if(isset($result['payment']['charges'])) {
+                $charged = true;
+            } else {
+                $_GET['nextpage'] = "payment_failed";
+            }
+            
+
+            if($charged) {
+                $this->getApi()->getOrderManager()->changeOrderStatusWithPassword($_GET['orderId'], 9, "gfdsabdf034534BHdgfsdgfs#!");
+                $this->getApi()->getOrderManager()->logTransactionEntry($_GET['orderId'], "Order has been marked as status 9 from a web request, POST" . $postdata . " GET: " . $getdata . " Headers: " . json_encode($headers) . " charged result:" . $chargedResult);
+            } else {
+                $this->getApi()->getMessageManager()->sendErrorNotify("Message marked failure: " . $_GET['orderId'] . ", Charged result: " . $chargedResult);
+                $this->getApi()->getOrderManager()->changeOrderStatusWithPassword($_GET['orderId'], 3, "gfdsabdf034534BHdgfsdgfs#!");
+                $this->getApi()->getOrderManager()->logTransactionEntry($_GET['orderId'], "Failed to charge order, error from dibs, POST" . $postdata . " GET: " . $getdata . " Headers: " . json_encode($headers) . " charged result:" . $chargedResult);
+            }
         } else {
             $this->getApi()->getOrderManager()->changeOrderStatusWithPassword($_GET['orderId'], 3, "gfdsabdf034534BHdgfsdgfs#!");
         }

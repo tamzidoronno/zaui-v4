@@ -665,8 +665,14 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         List<PmsGuests> recipients = new ArrayList();
         if(phoneToSendTo != null && !phoneToSendTo.isEmpty()) {
             PmsGuests guest = new PmsGuests();
+            
+            if(room.guests != null && !room.guests.isEmpty()) {
+                guest = room.guests.get(0);
+            }
+            
             guest.phone = phoneToSendTo;
             guest.prefix = prefixToSendTo;
+            
             recipients.add(guest);
             return recipients;
         }

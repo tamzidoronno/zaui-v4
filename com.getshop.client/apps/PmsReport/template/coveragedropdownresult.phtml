@@ -86,7 +86,9 @@
                             echo "<i class='fa fa-warning' title='There has been invoiced ".round($priceOnDifferentTypes)." on different types'></i> ";
                         }
                         
-                        echo round($price);
+                        echo "<span class='displayorders' style='cursor:pointer;' price='$price' pmsbookingroomid='".$room->pmsBookingRoomId."' day='".$entry->date."'>";
+                        echo "<div class='daypriceoverview'></div>";
+                        echo round($price) . "</span>";
                         
                         $total += $price;
                         echo "</td>";

@@ -25,6 +25,9 @@ public interface IPmsInvoiceManager {
     public void creditOrder(String bookingId, String orderId);
     
     @Administrator
+    public OrderReportResult getOrderResultForDay(String pmsBookingRoomId, Date day);
+    
+    @Administrator
     public Double getUnpaidAmountOnBooking(String bookingId);
     
     @Administrator

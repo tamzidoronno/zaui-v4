@@ -3,6 +3,7 @@ package com.thundashop.core.productmanager;
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItemType;
+import com.thundashop.core.central.GetShopCentral;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FilterOptions;
@@ -64,6 +65,9 @@ public class ProductManager extends AProductManager implements IProductManager {
     
     @Autowired
     private PosManager posManager;
+    
+    @Autowired
+    private GetShopCentral getShopCentral;
     
 
     @Override
@@ -140,7 +144,7 @@ public class ProductManager extends AProductManager implements IProductManager {
     public Product createProductWithAccount(Integer accountNumber) throws ErrorException {
         
         AccountingDetail account = getAccountingDetail(accountNumber);
-        if(account == null && posManager.hasLockedPeriods()) {
+        if(account == null && posManager.hasLockedPeriods() && !getShopCentral.hasBeenConnectedToCentral()) {
             return null;
         }
         

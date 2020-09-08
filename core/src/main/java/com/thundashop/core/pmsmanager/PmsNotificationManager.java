@@ -666,7 +666,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         if(phoneToSendTo != null && !phoneToSendTo.isEmpty()) {
             PmsGuests guest = new PmsGuests();
             
-            if(room.guests != null && !room.guests.isEmpty()) {
+            if(room != null && room.guests != null && !room.guests.isEmpty()) {
                 guest = room.guests.get(0);
             }
             

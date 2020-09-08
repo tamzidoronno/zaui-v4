@@ -16,7 +16,29 @@ app.PmsReport = {
         $(document).on('click', '.PmsReport .column', app.PmsReport.loadDayInformation);
         $(document).on('click', '.PmsReport .closeDayInformation', app.PmsReport.closeDayInformation);
         $(document).on('click', '.PmsReport .displayto30list', app.PmsReport.toggleTop30List);
+        $(document).on('click', '.PmsReport .displayorders', app.PmsReport.displayOrders);
         $(document).on('change', '.PmsReport [gsname="segment"]', app.PmsReport.changeSegments);
+    },
+    displayOrders : function() {
+        var event = thundashop.Ajax.createEvent('','loadOrdersForRoomAndDay', $(this), {
+            "pmsbookingroomid" : $(this).attr('pmsbookingroomid'),
+            "day" : $(this).attr('day'),
+            "price" : $(this).attr('price')
+        });
+        
+        var btn = $(this);
+        
+        var view =  btn.find('.daypriceoverview');
+        if(view.is(':visible')) {
+            view.hide();
+            return;
+        }
+        
+        $('.daypriceoverview').hide();
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            view.toggle();
+            view.html(res);
+        });
     },
     closeDayInformation : function() {
         $('.PmsReport .informationoverlay').fadeOut();

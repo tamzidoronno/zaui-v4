@@ -264,7 +264,7 @@ public class OrderDailyBreaker {
                 
                 if (order.overrideAccountingDate != null)
                     entry.date = calculateDate(order.overrideAccountingDate, entry);
-        
+
                 entry.accountingNumber = getAccountingNumberForProduct(item, order);
                 entries.add(entry);
             }

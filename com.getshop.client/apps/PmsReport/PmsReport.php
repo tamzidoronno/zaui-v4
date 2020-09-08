@@ -24,6 +24,56 @@ class PmsReport extends \MarketingApplication implements \Application {
         return $addonsResult;
     }
     
+    public function loadOrdersForRoomAndDay() {
+        $pmsbookingroomid = $_POST['data']['pmsbookingroomid'];
+        $day = $_POST['data']['day'];
+        $day = $this->convertToJavaDate(strtotime($day));
+        $orderResult = $this->getApi()->getPmsInvoiceManager()->getOrderResultForDay($this->getSelectedMultilevelDomainName(), $pmsbookingroomid, $day);
+        echo "<table>";
+        echo "<tR>";
+        echo "<td>Order id</td>";
+        echo "<td>Day</td>";
+        echo "<td>Price inc tax</td>";
+        echo "<td>Price ex tax</td>";
+        echo "<td>Overridden at</td>";
+        echo "</tr>";
+        
+        $total = 0;
+        $totalExTaxes = 0;
+        foreach($orderResult->rows as $res) {
+            /* @var $res core_pmsmanager_OrderReportResultRow */
+            $sameday = true;
+            $gray = "";
+            if(date("dmy", strtotime($res->day)) != date("dmy", strtotime($day)) && date("dmy", strtotime($res->overrideDate)) != date("dmy", strtotime($day))) {
+                $sameday = false;
+                $gray = "style='color:#bbb'";
+                continue;
+            }
+            echo "<tr $gray>";
+            echo "<td><a href='/pms.php?page=orderviewpage&orderid=".$res->orderId."' $gray>" . $res->incrementOrderId . "</a></td>";
+            echo "<td>" . date("d.m.Y", strtotime($res->day)) . "</td>";
+            echo "<td>" . round($res->priceMatrixPrice) . "</td>";
+            echo "<td>" . round($res->priceMatrixPriceExTax) . "</td>";
+            $total += $res->priceMatrixPrice;
+            $totalExTaxes += $res->priceMatrixPriceExTax;
+            if($res->overrideDate) {
+                echo "<td>" . date("d.m.Y", strtotime($res->overrideDate)) . "</td>";
+            } else {
+                echo "<td></td>";
+            }
+            echo "</tr>";
+        }
+        echo "<tr>";
+        echo "<td></td>";
+        echo "<td></td>";
+        echo "<td>".round($total)."</td>";
+        echo "<td>".round($totalExTaxes)."</td>";
+        echo "<td></td>";
+        echo "</tr>";
+        
+        echo "</table>";
+    }
+    
     public function loadBooking() {
         $pmsBookingGroupView = new \ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView();
         $pmsBookingGroupView->setRoomId($_POST['data']['id']);

@@ -101,7 +101,7 @@ class PsmConfigurationAddons extends \WebshopApplication implements \Application
     
     public function createProduct() {
         $account = 0;
-        if($_POST['data']['account']) {
+        if(isset($_POST['data']['account']) && $_POST['data']['account']) {
             $account = $_POST['data']['account'];
         }
         $product = $this->getApi()->getProductManager()->createProductWithAccount($account);
@@ -122,11 +122,10 @@ class PsmConfigurationAddons extends \WebshopApplication implements \Application
             if(!$found) {
                 $notifications->addonConfiguration->{-100000} = $conf;
             }
-
             $conf->productId = $product->id;
             $conf->isSingle = true;
 
-            $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $notifications);        
+            $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $notifications);
         } else {
             $this->createProductError = "Failed to create a new product, make sure the account you are trying to create a product on is correct set up.";
         }

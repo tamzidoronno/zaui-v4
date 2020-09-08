@@ -17,7 +17,6 @@ import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -98,6 +97,8 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
         gsTiming("between Included lost orders");
         includeLostOrders(toinclude, filter);
         gsTiming("Included lost orders");
+        
+//        dumpDayIncomeFromDay(toinclude, "e2336f05-1da2-4bf9-9676-bcd18921d634");
         
         for(DayIncome income : toinclude) {
             BigDecimal total = new BigDecimal(0);
@@ -593,6 +594,24 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
             }
         }
         return null;
+    }
+
+    private void dumpDayIncomeFromDay(List<DayIncome> toinclude, String pmsBookingRoomId) {
+        
+            
+        for(DayIncome income : toinclude) {
+            for(DayEntry entry : income.dayEntries) {
+                if(!entry.isActualIncome || entry.isOffsetRecord  || entry.orderId == null) {
+                    continue;
+                }
+
+                Order order = orderManager.getOrderDirect(entry.orderId);
+                CartItem item = order.cart.getCartItem(entry.cartItemId);
+                if(item != null && item.getProduct() != null && item.getProduct().externalReferenceId != null && item.getProduct().externalReferenceId.equals(pmsBookingRoomId)) {
+                    System.out.println(entry.incrementalOrderId + " : " + income.start + " : " + entry.amountExTax);
+                }
+            }
+        }
     }
 
 

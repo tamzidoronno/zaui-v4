@@ -1177,6 +1177,24 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         return booking.getUnpaidAmountForAllRooms();
     }
 
+    @Override
+    public OrderReportResult getOrderResultForDay(String pmsBookingRoomId, Date day) {
+        OrderReportResult result = new OrderReportResult();
+        List<Order> orders = orderManager.getAllOrders();
+        for(Order order : orders) {
+            for(CartItem item : order.getCartItems()) {
+                String roomId = item.getProduct().externalReferenceId;
+                if(roomId.equals(pmsBookingRoomId)) {
+                    for(String dayString : item.priceMatrix.keySet()) {
+                        Date dayDate = PmsBookingRooms.convertOffsetToDate(dayString);
+                        result.addRow(dayDate, order.incrementOrderId, item.priceMatrix.get(dayString), item, order.id, order.overrideAccountingDate);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
     class BookingOrderSummary {
         Integer count = 0;
         Double price = 0.0; 

@@ -1484,7 +1484,11 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         $showAllOrders = isset($_SESSION['showallorders']) && $_SESSION['showallorders'];
         $_SESSION['showallorders'] = !$showAllOrders;
         $_SESSION['pmsshowcredithistory'] = !$showAllOrders;
-
+    }
+    
+    public function toggleAccrued() {
+        $showAllOrders = isset($_SESSION['showAccrued']) && $_SESSION['showAccrued'];
+        $_SESSION['showAccrued'] = !$showAllOrders;
     }
     
     public function resendCodeForRoom() {

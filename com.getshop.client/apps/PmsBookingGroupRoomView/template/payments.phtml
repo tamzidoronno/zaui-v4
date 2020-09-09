@@ -9,6 +9,7 @@ $summaryWithoutAccrued = $this->getApi()->getPmsManager()->getSummaryWithoutAccr
 
 $showCredittedHistory = (isset($_SESSION['pmsshowcredithistory']) && $_SESSION['pmsshowcredithistory']) ? true : false;
 $showAllOrders = (isset($_SESSION['showallorders']) && $_SESSION['showallorders']) ? true : false;
+$showAccrued = (isset($_SESSION['showAccrued']) && $_SESSION['showAccrued']) ? true : false;
 
 
 $orderMissing = 0;
@@ -89,10 +90,28 @@ $payAfterStay = $room->createOrdersOnZReport && !($needToCreateOrdersFor <= 1 &&
 <br/>
 <div>
     <div class='insideheader'>
+        
+        <?php
+        $accruedCunter = 0;
+        foreach ($orders as $order) {
+            if($order->payment->paymentType == "ns_60f2f24e_ad41_4054_ba65_3a8a02ce0190\AccruedPayment" && !$showAccrued) {
+                $accruedCunter++;
+            }
+        }
+        ?>
+        
         <? echo $this->__f("Payments"); ?>
         <div class="gs_shop_small_icon" style='font-size: 13px; margin-left: 3px;' onclick="$('.detailedorderoverviewsummary').toggle()"><? echo $this->__f("Toggle details"); ?></div>
         <div class="gs_shop_small_icon" style='font-size: 13px; margin-left: 3px;' gsclick="toggleCreditHistory"><? echo $showCredittedHistory ? $this->__f("Hide credit history") : $this->__f("Show credit history"); ?></div> 
         <div class="gs_shop_small_icon" style='font-size: 13px;' gsclick="toggleAllOrders"><? echo  $showAllOrders ? $this->__f("Hide all orders for group") : $this->__f("Show all orders for group") . " (" . sizeof($pmsBooking->orderIds) . ")"; ?></div> 
+        <?php
+        $user = $this->getApi()->getUserManager()->getLoggedOnUser();
+        if(stristr($user->emailAddress, "@getshop.com")) {
+            ?>
+            <div class="gs_shop_small_icon" style='font-size: 13px; margin-right: 3px;' gsclick="toggleAccrued"><? echo  $showAccrued ? $this->__f("Hide accrued ($accruedCunter)") : $this->__f("Show accrued ($accruedCunter)"); ?></div> 
+            <?php
+        }
+        ?>
     </div>
     
    <?
@@ -115,6 +134,10 @@ $payAfterStay = $room->createOrdersOnZReport && !($needToCreateOrdersFor <= 1 &&
             if ($order->correctedByUserId && sizeof($order->createdBasedOnCorrectionFromOrderIds) > 0) {
                 continue;
             }
+            if($order->payment->paymentType == "ns_60f2f24e_ad41_4054_ba65_3a8a02ce0190\AccruedPayment" && !$showAccrued) {
+                continue;
+            }
+            
             $paymentDate = $order->status == 7 && $order->paymentDate ? date('d.m.Y H:i', strtotime($order->paymentDate)) : 'N/A';
             $totalForOrder = $this->getApi()->getOrderManager()->getTotalForOrderById($order->id);
             $totalForOrder = round($totalForOrder, 2);

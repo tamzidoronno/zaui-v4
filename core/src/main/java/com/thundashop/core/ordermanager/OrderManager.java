@@ -5015,7 +5015,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
 
         String userId = getSession().currentUser.id;
-        order.registerTransaction(paymentDate, toMarkOnOriginal, userId, Order.OrderTransactionType.MANUAL, "", comment, (totalAmountInLocalCurrencyToMarkOnOriginal * -1), null, null, getBatchId(order, ""));
+        Double inversedLocalValue = totalAmountInLocalCurrencyToMarkOnOriginal != null ? (totalAmountInLocalCurrencyToMarkOnOriginal * -1) : null;
+        order.registerTransaction(paymentDate, toMarkOnOriginal, userId, Order.OrderTransactionType.MANUAL, "", comment, inversedLocalValue, null, null, getBatchId(order, ""));
         if (order.isFullyPaid()) {
             markAsPaidInternal(order, paymentDate, totalAmount);
         }

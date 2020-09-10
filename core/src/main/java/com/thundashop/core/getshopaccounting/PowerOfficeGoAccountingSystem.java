@@ -7,7 +7,7 @@ package com.thundashop.core.getshopaccounting;
 
 import com.getshop.scope.GetShopSession;
 import com.google.gson.Gson;
-import com.ibm.icu.util.Calendar;
+import java.util.Calendar;
 import com.powerofficego.data.AccessToken;
 import com.powerofficego.data.Address;
 import com.powerofficego.data.ApiCustomerResponse;

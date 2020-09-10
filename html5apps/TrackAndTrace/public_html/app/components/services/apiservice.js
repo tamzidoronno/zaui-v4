@@ -30,6 +30,9 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
                             if (msg.className === "com.thundashop.core.trackandtrace.Route") {
                                 me.refreshRoute(msg);
                             }
+                            if (msg.className === "com.thundashop.core.trackandtrace.LogoutBroadCast") {
+                                me.logOut(msg);
+                            }
                         }
                     }
                 } catch (ex) {
@@ -126,7 +129,18 @@ angular.module('TrackAndTrace').factory('$api', [ '$state', '$rootScope', functi
             }, 3000);
 
         },
-                
+             
+        this.logOut = function($msg) {
+            this.getApi().u
+            localStorage.setItem("loggedInUserId", "");
+            localStorage.setItem("username", "");
+            localStorage.setItem("password", "");
+            this.reconnect();
+
+            $rootScope.$broadcast("loggedOut", "");
+            console.log("Logged out");
+        }
+
         this.refreshRoute = function(route) {
             if (!localStorage.getItem("username")) {
                 return;

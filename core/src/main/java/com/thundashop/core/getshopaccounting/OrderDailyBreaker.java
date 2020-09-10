@@ -6,7 +6,7 @@
 package com.thundashop.core.getshopaccounting;
 
 import com.google.gson.Gson;
-import com.ibm.icu.util.Calendar;
+import java.util.Calendar;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.TwoDecimalRounder;
 import com.thundashop.core.ocr.OcrFileLines;
@@ -264,7 +264,7 @@ public class OrderDailyBreaker {
                 
                 if (order.overrideAccountingDate != null)
                     entry.date = calculateDate(order.overrideAccountingDate, entry);
-        
+
                 entry.accountingNumber = getAccountingNumberForProduct(item, order);
                 entries.add(entry);
             }

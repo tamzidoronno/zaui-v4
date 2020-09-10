@@ -6,7 +6,7 @@
 package com.thundashop.core.getshoplocksystem.zwavejobs;
 
 import com.google.gson.Gson;
-import com.ibm.icu.util.Calendar;
+import java.util.Calendar;
 import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.getshoplocksystem.LocstarLock;
 import com.thundashop.core.getshoplocksystem.ZwaveLockServer;

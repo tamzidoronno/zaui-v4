@@ -6,7 +6,7 @@
  */
 package com.thundashop.core.databasemanager.updatescripts;
 
-import com.ibm.icu.util.Calendar;
+import java.util.Calendar;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.UpdateScript;
 import com.thundashop.core.databasemanager.UpdateScriptBase;

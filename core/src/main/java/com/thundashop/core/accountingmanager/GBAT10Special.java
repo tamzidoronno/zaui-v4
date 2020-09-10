@@ -5,7 +5,7 @@
  */
 package com.thundashop.core.accountingmanager;
 
-import com.ibm.icu.util.Calendar;
+import java.util.Calendar;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.ForAccountingSystem;
 import com.thundashop.core.ordermanager.OrderManager;

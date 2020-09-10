@@ -1639,4 +1639,9 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
                 .filter(o -> o.pickupDateTime.after(start) && o.pickupDateTime.before(end))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void logoutAllDevices() {
+        gdsManager.sendMessageToAllUserQueues(new LogoutBroadCast());
+    }
 }

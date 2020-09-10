@@ -99,6 +99,7 @@ class EasyByNets extends \PaymentApplication implements \Application {
         $postdata = json_encode($_POST);
         $getdata = json_encode($_GET);
         $headers = getallheaders();
+        $entityBody = file_get_contents('php://input');
         
         if(isset($_GET['webhookcompletion'])) {
             $orderId = $_GET['orderId'];
@@ -109,8 +110,9 @@ class EasyByNets extends \PaymentApplication implements \Application {
             $orderSecret = str_replace("-","", $order->secretId);
 
             if($orderSecret == $auth) {
-                $this->getApi()->getOrderManager()->markAsPaidWithPassword($order->id, $this->convertToJavaDate(time()), $this->getApi()->getOrderManager()->getTotalAmount($order), "fdsvb4354345345");
-            } else {
+                    $this->getApi()->getOrderManager()->markAsPaidWithPassword($order->id, $this->convertToJavaDate(time()), $this->getApi()->getOrderManager()->getTotalAmount($order), "fdsvb4354345345");
+                    $this->getApi()->getOrderManager()->logTransactionEntry($_GET['orderId'], "Order has been marked as paid using webhook, POST" . $postdata . " GET: " . $getdata . " Headers: " . json_encode($headers) . " body: " . $entityBody);
+                } else {
                 $this->getApi()->getOrderManager()->changeOrderStatusWithPassword($_GET['orderId'], 9, "gfdsabdf034534BHdgfsdgfs#!");
                 $this->getApi()->getOrderManager()->logTransactionEntry($_GET['orderId'], "Order has been marked as status 9 from a webhook, POST" . $postdata . " GET: " . $getdata . " Headers: " . json_encode($headers));
             }
@@ -296,7 +298,7 @@ class EasyByNets extends \PaymentApplication implements \Application {
         $notifications = new \stdClass();
         $webhooks = array();
         $webhook = new \stdClass();
-        $webhook->eventName = "payment.checkout.completed";
+        $webhook->eventName = "payment.reservation.created";
         $webhook->url = $this->getCallbackUrl();
         $webhook->authorization = str_replace("-","", $this->order->secretId);
         $webhooks[] = $webhook;

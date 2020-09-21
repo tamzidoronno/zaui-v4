@@ -11364,5 +11364,29 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         BookingItem type = bookingEngine.getBookingItem(itemId);
         return type.lockGroupId != null && !type.lockGroupId.isEmpty();
     }
+
+    @Override
+    public void fixAllOrdersWithoutGoToPaymentId() {
+        for(PmsBooking booking : bookings.values()) {
+            if(booking.channel == null || booking.channel.isEmpty()) {
+                continue;
+            }
+            
+            for(String orderId : booking.orderIds) {
+                try {
+                    Order order = orderManager.getOrderDirect(orderId);
+                    if(order == null) {
+                        continue;
+                    }
+                    if(order.payment != null && (order.payment.goToPaymentId == null || order.payment.goToPaymentId.isEmpty())) {
+                        order.payment.setGoToPaymentId(booking.channel);
+                    }
+                    orderManager.saveOrderInternal(order);
+                }catch(Exception e) {
+                    logPrintException(e);
+                }
+            }
+        }
+    }
     
 }

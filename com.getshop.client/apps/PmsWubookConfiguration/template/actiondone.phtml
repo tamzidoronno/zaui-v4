@@ -30,6 +30,8 @@ if($action == "testConnection") {
     echo "done";
 } else if($action == "checkForNoShows") {
     $this->getApi()->getWubookManager()->checkForNoShowsAndMark($this->getSelectedMultilevelDomainName());
+} else if($action == "fixGoToPaymentId") {
+    $this->getApi()->getPmsManager()->fixAllOrdersWithoutGoToPaymentId($this->getSelectedMultilevelDomainName());
 } else if($action == "markCCInvalid") {
     $id = $_POST['data']['id'];
     $res = $wubookmgr->markCCInvalid($name, $id);

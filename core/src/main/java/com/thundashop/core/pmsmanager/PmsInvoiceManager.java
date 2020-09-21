@@ -3714,8 +3714,14 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(recieptEmail != null) {
             ord.recieptEmail = recieptEmail; 
         }
-        orderManager.saveOrder(ord);
         
+         if(booking.channel != null && !booking.channel.isEmpty()) {
+            if(ord.payment != null) {
+                ord.payment.setGoToPaymentId(booking.channel);
+            }
+        }
+        
+        orderManager.saveOrder(ord);
 
         return orderId;
     }

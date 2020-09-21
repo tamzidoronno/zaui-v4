@@ -246,6 +246,10 @@ public interface IPmsManager {
     
     public boolean isActive();
     
+    
+    @Administrator
+    public void fixAllOrdersWithoutGoToPaymentId();
+    
     @Editor
     public PmsBooking getBookingWithOrderId(String orderId);
     

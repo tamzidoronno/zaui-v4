@@ -3394,7 +3394,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return null;
     }
 
-    private void createAndSaveIncomeReport(Date start, Date end, List<DayIncome> days) {
+    private DayIncomeReport createAndSaveIncomeReport(Date start, Date end, List<DayIncome> days) {
         
         DayIncomeReport incomeReport = new DayIncomeReport();
         incomeReport.start = start;
@@ -3403,6 +3403,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
         incomeReport.incomes = days;
         saveObject(incomeReport);
+        
+        return incomeReport;
     }
 
     public Order getOrderDirect(String orderId) {
@@ -3868,6 +3870,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             List<DayIncomeReport> res = database.query("OrderManager", storeId, query).stream()
                     .map(o -> (DayIncomeReport)o)
                     .collect(Collectors.toList());
+            
+            if (res.isEmpty()) {
+                for (DayIncome inc : incomes) {
+                    DayIncomeReport savedIncomeReport = createAndSaveIncomeReport(inc.start, inc.end, incomes);
+                    res.add(savedIncomeReport);
+                }
+                    System.out.println("Empty result");
+            }
             
             for (DayIncomeReport rep : res) {
                 for (DayIncome inc : rep.incomes) {
@@ -5015,7 +5025,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
 
         String userId = getSession().currentUser.id;
-        order.registerTransaction(paymentDate, toMarkOnOriginal, userId, Order.OrderTransactionType.MANUAL, "", comment, (totalAmountInLocalCurrencyToMarkOnOriginal * -1), null, null, getBatchId(order, ""));
+        Double inversedLocalValue = totalAmountInLocalCurrencyToMarkOnOriginal != null ? (totalAmountInLocalCurrencyToMarkOnOriginal * -1) : null;
+        order.registerTransaction(paymentDate, toMarkOnOriginal, userId, Order.OrderTransactionType.MANUAL, "", comment, inversedLocalValue, null, null, getBatchId(order, ""));
         if (order.isFullyPaid()) {
             markAsPaidInternal(order, paymentDate, totalAmount);
         }

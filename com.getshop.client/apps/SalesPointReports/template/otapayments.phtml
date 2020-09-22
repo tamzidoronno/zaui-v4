@@ -1,0 +1,63 @@
+<?
+/* @var $this \ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7\SalesPointReports */
+$orders = $this->getApi()->getOrderManager()->getOverdueOtaPayments();
+$groupedOrders = array();
+
+foreach ($orders as $order) {
+    $groupedOrders[$order->payment->goToPaymentId][] = $order;
+}
+?>
+
+<div class="apptitle">Handle OTA Payments</div>
+
+<div class="information">
+    We need to make sure that the payments for the following orders are handled correctly. This are payments that are being automatically created from the OTA as they are supposed to be prepaid.
+</div>   
+
+
+<?
+$checkOrders = false;
+foreach ($groupedOrders as $paymentId => $orders) {
+    if (!$paymentId) {
+        $checkOrders = true;
+    }
+}
+
+if ($checkOrders) {
+    echo "<div style='text-align: center; padding: 50px; font-size: 30px; font-weight: bold; color: red;'>Found payments that are not having a goto id!, did you forget to go to settings -> channelmanager -> Correct go to payment id for all bookings?</div>";
+    return;
+}
+
+foreach ($groupedOrders as $paymentId => $orders) {
+    
+    $payment = $this->getApi()->getStoreApplicationPool()->getApplication($paymentId);
+    echo "<div class='orders_ota_payments'>";
+        echo "<h2>".$payment->appName."</h2>";
+
+        foreach ($orders as $order) {
+            echo $order->incrementOrderId." ";
+        }
+        ?>
+        <div class="confirmationbox" >
+
+            
+            <div><b>Virtual Credit Cards</b></div>
+            <div style="color: #000">
+                If you receive virtual credit cards, they need to be addressed properly
+            </div>
+            <br/>
+            <div><b>Invoice or bank transfer from OTA</b></div>
+            <div style="color: #000">
+                If you have an agreement with the OTA that you receive the money for the booking trough invoicing or bank transfer, you can click the button below.
+            </div>
+            <br/> <div style="font-weight: bold; color: red;">!!! Do not click the button below if you receive Virtual Creditcards !!!</div>
+            <br/>
+            <div class="shop_button" gsclick="autoMarkGoToPaymentAsPaid" gotopaymentid="<? echo $paymentId; ?>">
+                Yes, we do invoices/bank-transfers to/from OTA
+            </div>
+        </div>
+
+        <?
+    echo "</div>";
+}
+?>

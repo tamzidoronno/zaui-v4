@@ -6,6 +6,8 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
     
     private $cachedPaymentNames = array();
     
+    private $otaOrders = array();
+    
     public function getDescription() {
         
     }
@@ -59,7 +61,7 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
             } else if ($tab == "taxcorrection") {
                 $this->includefile("taxcorrection");
             } else if ($tab == "xreport") {
-                $this->includefile("xreport");
+                $this->showXreportInternal();
             } else if ($tab == "stock") {
                 $this->includefile("stock");
             } else {
@@ -157,14 +159,14 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
     
     public function showXReport($fromRender=false) {
         $_SESSION['ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7_activetab'] = "xreport";
-        $this->includefile('xreport');
+        $this->showXreportInternal();
         die();
     }
     
     public function showMasterReport($fromRender=false) {
         $_SESSION['ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7_activetab'] = "masterreport";
         $this->includefile('masterreport');
-        $this->includefile('xreport');
+        $this->showXreportInternal();
         die();
     }
     
@@ -396,6 +398,32 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
         $cashpoint = $this->getSelectedCashPointId();
         $this->getApi()->getPosManager()->markAllRoomsWithProblemsForPayAfterStay($this->getSelectedMultilevelDomainName(), $cashpoint);
     }
+
+    public function needToHandleOtaPayments() {
+        $this->otaOrders = $this->getApi()->getOrderManager()->getOverdueOtaPayments();
+        return is_array($this->otaOrders) && count($this->otaOrders);
+    }
+    
+    /**
+     * 
+     * @return \core_ordermanager_data_Order[]
+     */
+    public function getOtaOrders() {
+        return $this->otaOrders;
+    }
+    
+    public function autoMarkGoToPaymentAsPaid() {
+        $this->getApi()->getOrderManager()->markOtaPaymentsAsPaid($_POST['data']['gotopaymentid']);
+    }
+
+    public function showXreportInternal() {
+        if ($this->needToHandleOtaPayments()) {
+            $this->includefile("otapayments");   
+        } else {
+            $this->includefile("xreport");
+        }
+    }
+
 }
 ?>
 

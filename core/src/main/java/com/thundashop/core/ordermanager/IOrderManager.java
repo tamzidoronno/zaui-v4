@@ -611,4 +611,10 @@ public interface IOrderManager {
     
     @Administrator
     public Order creditOrderIgnoreClosedDate(String orderId, String reason);
+    
+    @Administrator
+    public List<Order> getOverdueOtaPayments();
+    
+    @Administrator
+    public void markOtaPaymentsAsPaid(String goToPaymentId);
 }

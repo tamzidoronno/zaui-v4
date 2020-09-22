@@ -5611,5 +5611,36 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         return creditNote;
     }
+
+    @Override
+    public List<Order> getOverdueOtaPayments() {
+        List<Order> retOrders = orders.values()
+            .stream()
+            .filter(o -> o.payment != null && o.payment.paymentType.contains("OtaPayments"))
+            .filter(o -> !o.isNullOrder())
+            .filter(order -> order != null && order.payment.paymentType != null && order.status != Order.Status.PAYMENT_COMPLETED)
+            .filter(o -> o.isOrderFinanciallyRelatedToDatesIgnoreCreationDate(new Date(0), new Date()))
+            .collect(Collectors.toList());
+
+        return retOrders;
+    }
+    
+    @Override
+    public void markOtaPaymentsAsPaid(String goToPaymentId) {
+        getOverdueOtaPayments().stream()
+            .filter(o -> o.payment.goToPaymentId.equals(goToPaymentId))
+            .forEach(order -> {
+                Application paymentType = applicationPool.getApplication(goToPaymentId);
+                order.changePaymentType(paymentType);
+                
+                Date date = order.getEndDateByItems();
+
+                if (date == null) {
+                    date = new Date();
+                }
+
+                markAsPaid(order.id, date, getTotalAmount(order));
+            });
+    }
    
 }

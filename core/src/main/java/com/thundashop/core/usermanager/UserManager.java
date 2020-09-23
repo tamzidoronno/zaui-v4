@@ -1658,9 +1658,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if (internalApiUser == null) {
             
             if (getUserStoreCollection(storeId).getUser("gs_system_scheduler_user") != null) {
-                System.out.println("Reused internal api user: " + internalApiUser.id + ",  password: " + internalApiUser.internalPassword + ", username: " + internalApiUser.username + ", store: " + storeId);
                 this.internalApiUser = getUserStoreCollection(storeId).getUser("gs_system_scheduler_user");
                 this.internalApiUserPassword = this.internalApiUser.internalPassword;
+                System.out.println("Reused internal api user: " + internalApiUser.id + ",  password: " + internalApiUser.internalPassword + ", username: " + internalApiUser.username + ", store: " + storeId);
             } else {
                          
                 this.internalApiUserPassword = UUID.randomUUID().toString();

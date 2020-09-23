@@ -367,7 +367,8 @@ class PmsBookingMessageFormatter {
         
         
         String translation = getTranslation(message);
-        
+        message = message.replace("{translation=" + translation + "}", "");
+
         String room = "Room";
         String start = "Start";
         String end = "End";
@@ -610,7 +611,6 @@ class PmsBookingMessageFormatter {
         if(message.contains("{translation=")) {
             int offset = message.indexOf("{translation=")+13;
             translation = message.substring(offset, message.indexOf("}", offset));
-            message = message.replace("{translation=" + translation + "}", "");
         }
         return translation;
     }

@@ -211,8 +211,11 @@ class PmsBookingMessageFormatter {
             if(room.bookingItemTypeId != null && !room.bookingItemTypeId.isEmpty() && !room.bookingItemTypeId.equals("waiting_list")) {
                 BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
                 if(type != null) {
-                    simpleRoom += "<td style='font-size:12px;'>" + bookingEngine.getBookingItemType(room.bookingItemTypeId).name + "</td>";
-                    rooms += bookingEngine.getBookingItemType(room.bookingItemTypeId).name;
+                    String translation = getTranslation(message);
+                    String name = type.getTranslatedName(translation);
+                    
+                    simpleRoom += "<td style='font-size:12px;'>" + name + "</td>";
+                    rooms += name;
                 }
             }
             long diff = 365*60*60*100;
@@ -363,13 +366,9 @@ class PmsBookingMessageFormatter {
         }catch(Exception e) {}
         
         
-        String translation = "en";
-        if(message.contains("{translation=")) {
-            int offset = message.indexOf("{translation=")+13;
-            translation = message.substring(offset, message.indexOf("}", offset));
-            message = message.replace("{translation=" + translation + "}", "");
-        }
-        
+        String translation = getTranslation(message);
+        message = message.replace("{translation=" + translation + "}", "");
+
         String room = "Room";
         String start = "Start";
         String end = "End";
@@ -380,6 +379,13 @@ class PmsBookingMessageFormatter {
             start = "Anreise";
             end = "Abreise";
             amount = "EUR";
+        }
+        
+        if(translation != null && translation.equals("no")) {
+            room = "Rom";
+            start = "Innsjekk";
+            end = "Utsjekk";
+            amount = "Beløp";
         }
         
         String header = "<tr bgcolor='#efefef'>";
@@ -598,6 +604,15 @@ class PmsBookingMessageFormatter {
         }
         
         return list;
+    }
+
+    private String getTranslation(String message) {
+        String translation  = "en";
+        if(message.contains("{translation=")) {
+            int offset = message.indexOf("{translation=")+13;
+            translation = message.substring(offset, message.indexOf("}", offset));
+        }
+        return translation;
     }
 
 }

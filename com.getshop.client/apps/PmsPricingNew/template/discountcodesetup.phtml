@@ -236,6 +236,10 @@ $discountTypes["FIXEDDISCOUNTSTAY"] = "Fixed discount on stay";
     <span class='middlearea'>
         <div class='restriction_addonstitile'>Addons included</div>
         <?php
+        $hasExcludedAddon = $coupon->excludeDefaultAddons ? "CHECKED" : "";
+        ?>
+        <input type="checkbox" <?php echo $hasExcludedAddon; ?> gsname="excludeDefaultAddons"> Exclude all default addons (example breakfast included)<br><br>
+        <?php
         $addons = $this->getApi()->getPmsManager()->getAddonsAvailable($this->getSelectedMultilevelDomainName());
         $coupon = $code;
 

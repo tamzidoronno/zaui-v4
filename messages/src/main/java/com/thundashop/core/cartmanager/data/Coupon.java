@@ -35,6 +35,7 @@ public class Coupon extends DataCommon {
     public boolean presentCampaignOnFrontPage = false;
     public HashMap<String, String> campaignTitle = new HashMap();
     public HashMap<String, String> campaignDescription = new HashMap();
+    public boolean excludeDefaultAddons = false;
 
     public boolean containsAddonProductToInclude(String productId) {
         if(addonsToInclude == null) {

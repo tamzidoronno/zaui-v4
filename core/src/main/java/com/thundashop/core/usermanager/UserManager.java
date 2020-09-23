@@ -1656,22 +1656,30 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     public synchronized User getInternalApiUser() {
         if (internalApiUser == null) {
-            this.internalApiUserPassword = UUID.randomUUID().toString();
             
-            internalApiUser = new User();
-            internalApiUser.id = "gs_system_scheduler_user";
-            internalApiUser.type = 100;
-            internalApiUser.fullName = "System Scheduled";
-            internalApiUser.storeId = storeId;
-            internalApiUser.password = encryptPassword(internalApiUserPassword);
-            internalApiUser.username = UUID.randomUUID().toString();
-            internalApiUser.internalPassword = this.internalApiUserPassword;
-            internalApiUser.emailAddress = "post@getshop.com";
-            
-            getUserStoreCollection(storeId).addUserDirect(internalApiUser);
-            
-            System.out.println("Added internal id: " + internalApiUser.id + ",  password: " + internalApiUser.internalPassword + ", username: " + internalApiUser.username + ", store: " + storeId);
+            if (getUserStoreCollection(storeId).getUser("gs_system_scheduler_user") != null) {
+                System.out.println("Reused internal api user: " + internalApiUser.id + ",  password: " + internalApiUser.internalPassword + ", username: " + internalApiUser.username + ", store: " + storeId);
+                this.internalApiUser = getUserStoreCollection(storeId).getUser("gs_system_scheduler_user");
+                this.internalApiUserPassword = this.internalApiUser.internalPassword;
+            } else {
+                         
+                this.internalApiUserPassword = UUID.randomUUID().toString();
 
+                internalApiUser = new User();
+                internalApiUser.id = "gs_system_scheduler_user";
+                internalApiUser.type = 100;
+                internalApiUser.fullName = "System Scheduled";
+                internalApiUser.storeId = storeId;
+                internalApiUser.password = encryptPassword(internalApiUserPassword);
+                internalApiUser.username = UUID.randomUUID().toString();
+                internalApiUser.internalPassword = this.internalApiUserPassword;
+                internalApiUser.emailAddress = "post@getshop.com";
+
+                getUserStoreCollection(storeId).addUserDirect(internalApiUser);
+
+                System.out.println("Added internal id: " + internalApiUser.id + ",  password: " + internalApiUser.internalPassword + ", username: " + internalApiUser.username + ", store: " + storeId);
+   
+            }
         }
         
         return internalApiUser;

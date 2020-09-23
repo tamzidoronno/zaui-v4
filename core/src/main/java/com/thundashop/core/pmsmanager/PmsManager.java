@@ -5739,7 +5739,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 booking.comments.put(System.currentTimeMillis(), comment);
             }
 
-            addDefaultAddons(booking);
+//            addDefaultAddons(booking);
             
             checkIfBookedBySubAccount(booking);
             if (userManager.getUserById(booking.userId) == null || userManager.getUserById(booking.userId).suspended) {

@@ -565,7 +565,7 @@ class PmsPricingNew extends \WebshopApplication implements \Application {
         $coupon->campaignDescription = $desc;
         $coupon->campaignTitle = $title;
         $coupon->activeCampaign = $_POST['data']['iscampaign'] == "true";
-        $coupon->presentCampaignOnFrontPage = $_POST['data']['presentonfrontpage'] == "true";
+        $coupon->excludeDefaultAddons = $_POST['data']['excludeDefaultAddons'] == "true";
         $this->getApi()->getCartManager()->addCoupon($coupon);
     }
 

@@ -20,6 +20,11 @@ import java.util.List;
 public class BookingItemType extends DataCommon {
 
     public String getTranslatedName(String language) {
+        
+        if(language != null && language.equals("en")) {
+            language = "en_en";
+        }
+        
         String desc = getTranslationsByKey("name", language);
         if(desc == null || desc.isEmpty()) { desc = name; }
         if(nameTranslations.containsKey(language)) { desc = nameTranslations.get(language); }

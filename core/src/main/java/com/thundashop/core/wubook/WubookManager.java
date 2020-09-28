@@ -870,6 +870,21 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             }
         }
         
+        if(bookingtable != null) {
+            Gson gson = new Gson();
+            String test = gson.toJson(bookingtable);
+            if(test.toLowerCase().contains("breakfast is included in the room rate")) {
+                return guests;
+            }
+            if(test.toLowerCase().contains("breakfast included") || test.toLowerCase().contains("frokost inkludert")) {
+                return guests;
+            }
+            if(test.toLowerCase().contains("breakfast is included") || test.toLowerCase().contains("frokost er inkludert")) {
+                return guests;
+            }
+            
+        }
+
         return 0;
     }
     

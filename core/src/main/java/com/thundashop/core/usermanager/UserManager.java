@@ -111,8 +111,17 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     @Autowired
     public Database database;
     
-    private User internalApiUser;
-    private String internalApiUserPassword;
+    /**
+     * Key = storeid
+     * Value = user
+     */
+    public static HashMap<String, User> internalApiUsers = new HashMap();
+    
+    /**
+     * Key = storeid
+     * Value = password
+     */
+    public static HashMap<String, String> internalApiUserPassword = new HashMap();
     
     @Autowired
     private TotpHandler totpHandler;
@@ -298,13 +307,6 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
         
         User user = logonEncrypted(username, password, false);
-        
-        if (user == null && internalApiUser != null && internalApiUser.username != null && internalApiUser.username.equals(username)) {
-            if (!this.hasBeenNotifiedAboutFailedApiUserLogin) {
-                this.hasBeenNotifiedAboutFailedApiUserLogin = true;
-                messageManager.sendErrorNotify("Failed to logon api user");
-            }
-        }
         
         return user;
     }
@@ -1655,26 +1657,29 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     }
 
     public synchronized User getInternalApiUser() {
-        if (internalApiUser == null) {
-            this.internalApiUserPassword = UUID.randomUUID().toString();
+        if (internalApiUsers.get(storeId) == null) {
             
-            internalApiUser = new User();
+                         
+            internalApiUserPassword.put(storeId, UUID.randomUUID().toString());
+
+            User internalApiUser = new User();
             internalApiUser.id = "gs_system_scheduler_user";
             internalApiUser.type = 100;
             internalApiUser.fullName = "System Scheduled";
             internalApiUser.storeId = storeId;
-            internalApiUser.password = encryptPassword(internalApiUserPassword);
+            internalApiUser.password = encryptPassword(internalApiUserPassword.get(storeId));
             internalApiUser.username = UUID.randomUUID().toString();
-            internalApiUser.internalPassword = this.internalApiUserPassword;
+            internalApiUser.internalPassword = internalApiUserPassword.get(storeId);
             internalApiUser.emailAddress = "post@getshop.com";
-            
+
             getUserStoreCollection(storeId).addUserDirect(internalApiUser);
-            
+
+            internalApiUsers.put(storeId, internalApiUser);
             System.out.println("Added internal id: " + internalApiUser.id + ",  password: " + internalApiUser.internalPassword + ", username: " + internalApiUser.username + ", store: " + storeId);
 
         }
         
-        return internalApiUser;
+        return internalApiUsers.get(storeId);
     }
 
     @Override

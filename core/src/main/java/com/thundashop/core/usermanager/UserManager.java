@@ -121,7 +121,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
      * Key = storeid
      * Value = password
      */
-    public static HashMap<String, String> internalApiUserPassword = new HashMap();
+    public static String internalApiUserPassword = UUID.randomUUID().toString();
     
     @Autowired
     private TotpHandler totpHandler;
@@ -295,6 +295,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     @Override
     public User logOn(String username, String password) throws ErrorException {
         // Require double auth for gs admins
+        
+        getInternalApiUser();
+        
         if (password == null || password.isEmpty())
             throw new ErrorException(26);
         
@@ -1658,24 +1661,20 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     public synchronized User getInternalApiUser() {
         if (internalApiUsers.get(storeId) == null) {
-            
-                         
-            internalApiUserPassword.put(storeId, UUID.randomUUID().toString());
 
             User internalApiUser = new User();
             internalApiUser.id = "gs_system_scheduler_user";
             internalApiUser.type = 100;
             internalApiUser.fullName = "System Scheduled";
             internalApiUser.storeId = storeId;
-            internalApiUser.password = encryptPassword(internalApiUserPassword.get(storeId));
-            internalApiUser.username = UUID.randomUUID().toString();
-            internalApiUser.internalPassword = internalApiUserPassword.get(storeId);
+            internalApiUser.password = encryptPassword(internalApiUserPassword);
+            internalApiUser.username = internalApiUserPassword;
             internalApiUser.emailAddress = "post@getshop.com";
 
             getUserStoreCollection(storeId).addUserDirect(internalApiUser);
 
             internalApiUsers.put(storeId, internalApiUser);
-            System.out.println("Added internal id: " + internalApiUser.id + ",  password: " + internalApiUser.internalPassword + ", username: " + internalApiUser.username + ", store: " + storeId);
+            System.out.println("Added internal id: " + internalApiUser.id + ", username: " + internalApiUser.username + ", store: " + storeId);
 
         }
         

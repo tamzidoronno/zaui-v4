@@ -74,9 +74,6 @@ public class User extends DataCommon implements Comparable<User> {
     public String useGroupId = "";
     public String externalAccountingId;
     
-    @Administrator
-    public String internalPassword;
-    
     public List<UserCompanyHistory> companyHistory = new ArrayList();
     
     public List<String> annotionsAdded = new ArrayList();

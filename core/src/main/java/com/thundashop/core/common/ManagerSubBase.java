@@ -454,7 +454,7 @@ public class ManagerSubBase {
                 GetShopSchedulerBase base = (GetShopSchedulerBase)gsscheduler.getShopSchedulerBase;
                 base.setWebAddress(webAddress);
                 base.setUsername(user.username);
-                base.setPassword(user.internalPassword);
+                base.setPassword(UserManager.internalApiUserPassword);
                 base.setMultiLevelName(gsscheduler.multilevelName);
                 base.setStoreId(storeId);
                 Thread td = new Thread(base);
@@ -463,7 +463,7 @@ public class ManagerSubBase {
             } else {
                 Class<?> clazz = Class.forName(gsscheduler.schedulerClassName.getCanonicalName());
                 Constructor<?> ctor = clazz.getConstructor(String.class,String.class,String.class,String.class, String.class);
-                GetShopSchedulerBase ret = (GetShopSchedulerBase) ctor.newInstance(webAddress, user.username, user.internalPassword, gsscheduler.scheduler, gsscheduler.multilevelName);
+                GetShopSchedulerBase ret = (GetShopSchedulerBase) ctor.newInstance(webAddress, user.username, UserManager.internalApiUserPassword, gsscheduler.scheduler, gsscheduler.multilevelName);
                 ret.setStoreId(storeId);
                 
                 schedulersBases.put(gsscheduler.id, ret);

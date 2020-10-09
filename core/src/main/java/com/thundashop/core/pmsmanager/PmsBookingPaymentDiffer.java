@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -30,6 +29,11 @@ public class PmsBookingPaymentDiffer {
     private List<String> roomProductIds = new ArrayList();
     private final SimpleDateFormat sdf;
     private final String language;
+    
+    /**
+     * This list only contains orders and cartitems that are actually
+     * accomadation products.
+     */
     private final HashMap<String, List<String>> cartItemIds;
     private final HashMap<String, List<CartItem>> cartOrderCartItems = new HashMap();
     private final HashMap<String, String> addonToOrderMap = new HashMap();
@@ -199,12 +203,6 @@ public class PmsBookingPaymentDiffer {
         return retMap;
     }
     
-//    private List<String> getProductIds(List<String> productList) {
-//        return getStream(productList)
-//                .map(o -> o.getProductId())
-//                .collect(Collectors.toList());
-//    }
-
     private HashMap<String, List<CartItem>> getStream(List<String> productList) {
         HashMap<String, List<CartItem>> retList = new HashMap();
         
@@ -283,14 +281,7 @@ public class PmsBookingPaymentDiffer {
         if (item.priceMatrix != null && !item.priceMatrix.isEmpty() && item.priceMatrix.get(date) != null) {
             return item.priceMatrix.get(date);
         }
-        
-        if (item.itemsAdded != null && !item.itemsAdded.isEmpty()) {
-            return item.itemsAdded.stream()
-                    .filter(o -> sdf.format(o.date).equals(date))
-                    .mapToDouble(o -> o.count * o.price)
-                    .sum();
-        }
-        
+
         return 0D;
     }
 

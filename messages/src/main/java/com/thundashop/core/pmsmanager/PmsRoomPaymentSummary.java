@@ -40,5 +40,16 @@ public class PmsRoomPaymentSummary {
         ret.addonId = o.addonId;
         return ret;
     }
+
+    /**
+     * This function is used for debugging only.
+     */
+    public void print() {
+        System.out.println("===================== Summary ===================");
+        rows.stream().forEach(o -> {
+            o.print();
+        });
+        System.out.println("===================== End Summary ===================");
+    }
  
 }

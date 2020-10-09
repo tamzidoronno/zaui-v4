@@ -130,4 +130,11 @@ public class PmsRoomPaymentSummaryRow implements Serializable {
         
         return totalInBooking == 0 && totalInOrder == 0;
     }
+
+    /**
+     * this function is used for debugging only.
+     */
+    public void print() {
+        System.out.println("Count: " + count + ", countFromOrders: " + countFromOrders + ", priceInBooking: " + priceInBooking + ", includedInRoomPrice: " + includedInRoomPrice + ", isAccomocation: " + isAccomocation + ", " + ", date: " + date + ", createdOrdersFor: " + createdOrdersFor);
+    }
 }

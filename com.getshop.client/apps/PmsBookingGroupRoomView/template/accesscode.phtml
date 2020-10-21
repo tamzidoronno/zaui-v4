@@ -21,7 +21,7 @@ $hasGroupConnected = $this->getApi()->getPmsManager()->hasLockAccessGroupConnect
 
 $printers = $this->getPrinters();
 
-if (!$hasGroupConnected) {
+if (!$hasGroupConnected && $room->bookingItemId) {
     ?>
 <br>
     <div style="font-size: 30px;">
@@ -29,6 +29,14 @@ if (!$hasGroupConnected) {
         There are no access group connected to this room.<br><br>Go to SETTINGS -> <a href='/pms.php?page=lockconfig&gs_getshopmodule=' style='color:blue;'>Lock Setup</a> and match the groups properly to the rooms.
     </div><br>
     <?
+    return;
+}
+
+if(!$room->bookingItemId) {
+    ?>
+    <br>
+    <div style="font-size: 30px;">The room is unassigned, please assign a room first by navigating to "Stay" and select a room.<br></div><br>
+    <?php
     return;
 }
 

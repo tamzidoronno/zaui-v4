@@ -430,7 +430,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
            Date now = new Date();
             long diff = now.getTime() - lastPulledWubook.getTime();
             long seconds = diff / 1000;
-            if(seconds < 55) {
+            if(seconds < 20) {
                 logPrint("Avoid pulling wubook more than once a minute.");
                 return;
             }
@@ -515,11 +515,15 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 }
             }
 
-            WubookThreadRipper checkNewBookingsThread = new WubookThreadRipper(this, 1);
-            checkNewBookingsThread.setWubookSettings(token, pmsManager.getConfigurationSecure().wubooklcode, client);
-            checkNewBookingsThread.setStoreId(storeId);
-            checkNewBookingsThread.setName("Checking for new bookings wubook: " + storeId);
-            checkNewBookingsThread.start();
+            if(!fetchBookingThreadIsRunning) {
+                WubookThreadRipper checkNewBookingsThread = new WubookThreadRipper(this, 1);
+                checkNewBookingsThread.setWubookSettings(token, pmsManager.getConfigurationSecure().wubooklcode, client);
+                checkNewBookingsThread.setStoreId(storeId);
+                checkNewBookingsThread.setName("Checking for new bookings wubook: " + storeId);
+                checkNewBookingsThread.start();
+            } else {
+                logPrint("Not starting thread fetch new bookings since it is already running since:" + fetchBookingThreadStarted);
+            }
 
             return;
        }catch(Exception e) {

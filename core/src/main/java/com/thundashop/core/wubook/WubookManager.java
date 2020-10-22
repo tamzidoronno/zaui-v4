@@ -114,6 +114,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     private List<String> bookingCodesToAdd = new ArrayList();
     private boolean errorNotificationSent = false;
     private Date lastPulledWubook = new Date();
+    private boolean isRunningFetchNewBookings = false;
 
     
     public void checkIfLastPulledIsOk() {
@@ -425,6 +426,10 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
     @Override
     public void fetchNewBookings() {
+       if(isRunningFetchNewBookings) {
+           return;
+       }
+       isRunningFetchNewBookings = true;
        try {
             if(disableWubook != null) {
                 long diff = new Date().getTime() - disableWubook.getTime();
@@ -518,6 +523,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
            }
            logPrintException(e);
        }
+       isRunningFetchNewBookings = false;
     }
 
     private boolean doNotCheckBookings() {

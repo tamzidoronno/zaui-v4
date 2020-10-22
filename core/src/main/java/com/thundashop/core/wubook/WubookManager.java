@@ -426,8 +426,14 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
     @Override
     public void fetchNewBookings() {
-       if(isRunningFetchNewBookings) {
-           return;
+       if(lastPulledWubook != null) {
+           Date now = new Date();
+            long diff = now.getTime() - lastPulledWubook.getTime();
+            long seconds = diff / 1000;
+            if(seconds < 55) {
+                logPrint("Avoid pulling wubook more than once a minute.");
+                return;
+            }
        }
        isRunningFetchNewBookings = true;
        try {

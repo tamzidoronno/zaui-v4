@@ -6,7 +6,9 @@
 #define blue 12
 
 boolean blinkMode = false;
+boolean aliveModeActive = false;
 unsigned long outOfBlinkMode = 0;
+unsigned long lastAliveMessage = 0;
 
 void off() {
   digitalWrite(red, LOW);
@@ -39,15 +41,17 @@ void showWifiNotConnected() {
 }
 
 void showNotAbleToConnectToServer() {
-  if (digitalRead(red)) {
-    off();
-    digitalWrite(red, LOW);
-  } else {
-    off();
-    digitalWrite(red, HIGH);
-  }
+  off();
+  digitalWrite(red, HIGH);
 }
 
+void showWrongToken() {
+  if (!digitalRead(red)) {
+    digitalWrite(red, HIGH);
+  } else {
+    digitalWrite(red, LOW);
+  }
+}
 
 
 void showNotInitializedLight() {
@@ -57,26 +61,44 @@ void showNotInitializedLight() {
 
 void blinkGreen() {
   if (blinkMode && outOfBlinkMode > millis()) {
+     off();
      return;
   }
 
-  if (blinkMode) {
-    blinkMode = false;
-    outOfBlinkMode = 0;
-    return;
-  }
-
-  off();
-  outOfBlinkMode = millis() + 50;
+  digitalWrite(green, HIGH);
+  outOfBlinkMode = millis() + 100;
   blinkMode = true;
 }
 
-void showConnected() {
-  if (blinkMode) {
-    blinkGreen();
-    return;
+void showDebug() {
+  for (int j=0; j<10; j++) {
+    if (digitalRead(red)) {
+      off();
+      digitalWrite(red, LOW);
+    } else {
+      off();
+      digitalWrite(red, HIGH);
+    }
+    delay(100);
   }
+}
+
+void blinkAlive() {
+  unsigned long milliSecondsSinceLastAliveMessage = millis() - lastAliveMessage;
   
-  digitalWrite(green, HIGH);
+  if (milliSecondsSinceLastAliveMessage > 10000 && !aliveModeActive) {
+      off();
+      digitalWrite(green, HIGH);
+  }
+
+  if (milliSecondsSinceLastAliveMessage > 10100) {
+      off();
+      aliveModeActive = false;
+      lastAliveMessage = millis();
+  }
+}
+
+void showConnected() {
+  off();
 }
 #endif

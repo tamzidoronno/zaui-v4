@@ -18,7 +18,11 @@ class ApacAccessList extends \MarketingApplication implements \Application {
     }
 
     public function formatGroup($userAccess) {
-        return $this->getAccessGroup($userAccess->lockGroupId)->name;
+        $group = $this->getAccessGroup($userAccess->lockGroupId);
+        if(!$group) {
+            return "";
+        }
+        return $group->name;
     }
     
     public function formatPinCode($userAccess) {

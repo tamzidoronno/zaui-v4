@@ -516,6 +516,9 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
     @Override
     public void renewCodeForSlot(String groupId, int slotId) {
         LockGroup group = getGroup(groupId);
+        if(group == null) {
+            return;
+        }
         
         MasterUserSlot slot = getFirstUnusedCodeFromSlot(group);
         if (slot == null) {

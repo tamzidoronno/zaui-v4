@@ -294,7 +294,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
             if(languagesSupported.contains(language) && !msg.containsLanguage(language)) {
                 continue;
             }
-            if(prefixesSupported.contains(prefix) && !msg.prefixes.contains(prefix) && type.equals("sms")) {
+            if(prefixesSupported.contains(prefix) && (!msg.prefixes.isEmpty() && !msg.prefixes.contains(prefix)) && type.equals("sms")) {
                 continue;
             }
             if(!msg.languages.isEmpty() && !msg.containsLanguage(language)) {

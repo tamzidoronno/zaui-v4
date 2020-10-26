@@ -5645,7 +5645,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 Product s2Product = productManager.getProduct(s2.productId);
                 
                 if(s1Product == null || s2Product == null || s1Product.name == null || s2Product.name == null) {
-                    return -1;
+                    return 1;
                 }
                 
                 return s1Product.name.compareTo(s2Product.name);
@@ -11364,6 +11364,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public boolean hasLockAccessGroupConnected(String itemId) {
         BookingItem type = bookingEngine.getBookingItem(itemId);
+        if(type == null) {
+            return false;
+        }
         return type.lockGroupId != null && !type.lockGroupId.isEmpty();
     }
 

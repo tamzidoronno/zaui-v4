@@ -1096,6 +1096,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             logPrintException(e);
         }
         
+        try {
+            checkIfBookingIsUnassignedForBergstaden(booking);
+        }catch(Exception e) {
+            logPrintException(e);
+        }
+        
         saveObject(booking);
         bookingUpdated(booking.id, "modified", null);
         
@@ -11395,6 +11401,35 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     logPrintException(e);
                 }
             }
+        }
+    }
+
+    private void checkIfBookingIsUnassignedForBergstaden(PmsBooking booking) {
+        if(!storeId.equals("1ed4ab1f-c726-4364-bf04-8dcddb2fb2b1")) {
+            return;
+        }
+        
+        for(PmsBookingRooms room : booking.rooms) {
+            if(room.pmsBookingRoomId.equals("317c852d-f0ca-46fb-8d6d-9d61f9b80557")) {
+                System.out.println("check");
+            }
+            if(room.isCreatedLastMinutes(15)) { continue; }
+            if (room.isEnded()) { continue; }
+            if (!room.isStarted()) { continue; }
+            if(room.warnedAboutAutoAssigning) { continue; }
+            if (room.bookingItemId == null || room.bookingItemId.isEmpty()) { 
+                User usr = userManager.getLoggedOnUser();
+
+                String userData = usr.fullName + ", email: " + usr.emailAddress + " id:" + usr.id;
+
+                Exception e = new Exception();
+
+                messageManager.sendErrorNotificationToEmail("pal@getshop.com", "Room missing assignment, booking id : " + booking.incrementBookingId + ", room id: " + room.pmsBookingRoomId + " by " + userData, e);
+                messageManager.sendErrorNotificationToEmail("jonas@bergstaden.no", "Room missing assignment, booking id : " + booking.incrementBookingId + ", room id: " + room.pmsBookingRoomId + " by " + userData, e);
+
+                room.warnedAboutAutoAssigning = true;
+            }
+            
         }
     }
     

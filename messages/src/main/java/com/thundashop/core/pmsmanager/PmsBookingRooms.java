@@ -63,6 +63,7 @@ public class PmsBookingRooms implements Serializable {
     public boolean checkedout = false;
     public boolean blocked = false;
     public boolean triedToAutoAssign = false;
+    public boolean warnedAboutAutoAssigning = false;
     
     @Editor
     public String code = "";
@@ -1042,6 +1043,11 @@ public class PmsBookingRooms implements Serializable {
     boolean isRecentlyCreated() {
         long diff = new Date().getTime() - roomCreatedDate.getTime();
         return diff < 60000;
+    }
+
+    boolean isCreatedLastMinutes(Integer minutes) {
+        long diff = new Date().getTime() - roomCreatedDate.getTime();
+        return diff < (60000 * minutes);
     }
 
     public boolean hasUnsettledAmount() {

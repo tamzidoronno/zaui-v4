@@ -9273,6 +9273,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
                 if (room.bookingItemId != null && room.codeObject != null) {
                     BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
+                    if(item == null || room == null || room.codeObject == null) {
+                        continue;
+                    }
                     List<AccessHistoryResult> events = getShopLockSystemManager.getAccessHistory(item.lockGroupId, start, new Date(), room.codeObject.slotId); 
                     if(!events.isEmpty()) {
                         logEntry("Marking room as arrived", booking.id, item.id, room.pmsBookingRoomId, "markedarrived");
@@ -10092,6 +10095,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private Integer getDaysUntilStart(PmsBooking book) {
         Date now = new Date();
         Date startDate = book.getStartDate();
+        if(startDate == null) {
+            return -1;
+        }
         long diff = (startDate.getTime() - now.getTime());
         if(diff < 86400000 && diff > 1080000) {
             return 1;

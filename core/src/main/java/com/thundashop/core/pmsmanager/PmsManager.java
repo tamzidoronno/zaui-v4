@@ -11422,6 +11422,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if(room.isCreatedLastMinutes(15)) { continue; }
             if (room.isEnded()) { continue; }
             if (!room.isStarted()) { continue; }
+            if(room.isDeleted()) { continue; }
             if(room.warnedAboutAutoAssigning) { continue; }
             if (room.bookingItemId == null || room.bookingItemId.isEmpty()) { 
                 User usr = userManager.getLoggedOnUser();

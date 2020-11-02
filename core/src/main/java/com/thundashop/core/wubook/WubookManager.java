@@ -421,6 +421,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             }
             roomNumber++;
         }
+        
+        if(booking.channelId.equals("0")) {
+            booking = checkForOnlineReceptionDiscount(booking, table);
+        }
+        
         return booking;
     }
     
@@ -2645,6 +2650,32 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             data.newRoomPriceSystem = true;
         }
         saveWubookRoomData(wubookdata);
+    }
+
+    private WubookBooking checkForOnlineReceptionDiscount(WubookBooking booking, Hashtable table) {
+        Double amountFromBooking = (Double)table.get("amount");
+        Double amountFromFetched = 0.0;
+        for(WubookBookedRoom room : booking.rooms) {
+            for(Date day : room.priceMatrix.keySet()) {
+                amountFromFetched += room.priceMatrix.get(day);
+            }
+        }
+        
+        Double diff = amountFromBooking - amountFromFetched;
+        
+        if(diff < -1 || diff > 1) {
+            for(WubookBookedRoom room : booking.rooms) {
+                for(Date day : room.priceMatrix.keySet()) {
+                    Double current = room.priceMatrix.get(day);
+                    current += diff;
+                    room.priceMatrix.put(day, current);
+                    booking.customerNotes += " ::: ADDED BY GETSHOP: Discount added to first day of booking due to no where else to add it total discount: " + Math.round((diff*-1));
+                    break;
+                }
+            }
+        }
+        
+        return booking;
     }
 
 

@@ -10,6 +10,13 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
         
     }
     
+    public function discounnectCompanyUser() {
+        $user = $this->getApi()->getUserManager()->getUserById($_POST['data']['userid']);
+        $user->company = null;
+        $user->companyObject = null;
+        $this->getApi()->getUserManager()->saveUser($user);
+    }
+    
     public function loadDiscountCode() {
         $pmsPricingNew = new \ns_4c8e3fe7_3c81_4a74_b5f6_442f841a0cb1\PmsPricingNew();
         $pmsPricingNew->loadEditDiscountCode();

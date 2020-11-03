@@ -2,7 +2,6 @@
 <?php
 /* @var $this \ns_acb219a1_4a76_4ead_b0dd_6f3ba3776421\CrmCustomerView */
 $user = $this->getUser(); 
-
 if(sizeof((array)$user->company) == 0) {
     ?>
     We have not registered this customer as a company, if this is a company click on the add company button to register is as a company.
@@ -15,6 +14,8 @@ if(sizeof((array)$user->company) == 0) {
         <span class='shop_button' gstype='submit' gs_callback='$(".selectedmenuentry").click();'>Connect to customer</span>
     </div>
     <?php
+        echo "<span gsclick='discounnectCompanyUser' userId='".$user->id."' style='cursor:pointer; color:blue;'>Disconnect company from this user.</span>";
+
     return;
 }
 
@@ -74,6 +75,7 @@ if($user->primaryCompanyUser) {
     </div>
     <?php
 } else {
-    echo "You can not update company details since this is connected to a subaccount.";
+    echo "You can not update company details since this is connected to a subaccount.<br><br>";
+    echo "<span gsclick='discounnectCompanyUser' userId='".$user->id."' style='cursor:pointer; color:blue;'>Disconnect company from this user.</span>";
 }
 ?>

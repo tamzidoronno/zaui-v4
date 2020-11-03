@@ -71,6 +71,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     SavedLastAvailibilityUpdate lastAvailability = new SavedLastAvailibilityUpdate();
     
     private WubookLog log = new WubookLog();
+    private List<String> triedAddingCode = new ArrayList();
 
     @Autowired
     PmsManager pmsManager;
@@ -114,6 +115,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     private List<String> bookingCodesToAdd = new ArrayList();
     private boolean errorNotificationSent = false;
     private Date lastPulledWubook = new Date();
+    private boolean isRunningFetchNewBookings = false;
 
     
     public void checkIfLastPulledIsOk() {
@@ -419,12 +421,27 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             }
             roomNumber++;
         }
+        
+        if(booking.channelId.equals("0")) {
+            booking = checkForOnlineReceptionDiscount(booking, table);
+        }
+        
         return booking;
     }
     
 
     @Override
     public void fetchNewBookings() {
+       if(lastPulledWubook != null) {
+           Date now = new Date();
+            long diff = now.getTime() - lastPulledWubook.getTime();
+            long seconds = diff / 1000;
+            if(seconds < 20) {
+                logPrint("Avoid pulling wubook more than once a minute.");
+                return;
+            }
+       }
+       isRunningFetchNewBookings = true;
        try {
             if(disableWubook != null) {
                 long diff = new Date().getTime() - disableWubook.getTime();
@@ -450,8 +467,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 if(!bookingCodesToAdd.isEmpty()) {
                     logText("BookingsCodesToAdd is not empty:" + bookingCodesToAdd.size());
                     for(String code : bookingCodesToAdd) {
-                        WubookBooking booking = fetchBooking(code + "");
-                        addBookingToPms(booking);
+                        if(!triedAddingCode.contains(code)) {
+                            triedAddingCode.add(code);
+                            WubookBooking booking = fetchBooking(code + "");
+                            addBookingToPms(booking);
+                        }
                     }
                 }
             }catch(Exception e) {
@@ -504,11 +524,15 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 }
             }
 
-            WubookThreadRipper checkNewBookingsThread = new WubookThreadRipper(this, 1);
-            checkNewBookingsThread.setWubookSettings(token, pmsManager.getConfigurationSecure().wubooklcode, client);
-            checkNewBookingsThread.setStoreId(storeId);
-            checkNewBookingsThread.setName("Checking for new bookings wubook: " + storeId);
-            checkNewBookingsThread.start();
+            if(!fetchBookingThreadIsRunning) {
+                WubookThreadRipper checkNewBookingsThread = new WubookThreadRipper(this, 1);
+                checkNewBookingsThread.setWubookSettings(token, pmsManager.getConfigurationSecure().wubooklcode, client);
+                checkNewBookingsThread.setStoreId(storeId);
+                checkNewBookingsThread.setName("Checking for new bookings wubook: " + storeId);
+                checkNewBookingsThread.start();
+            } else {
+                logPrint("Not starting thread fetch new bookings since it is already running since:" + fetchBookingThreadStarted);
+            }
 
             return;
        }catch(Exception e) {
@@ -518,6 +542,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
            }
            logPrintException(e);
        }
+       isRunningFetchNewBookings = false;
     }
 
     private boolean doNotCheckBookings() {
@@ -2625,6 +2650,32 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             data.newRoomPriceSystem = true;
         }
         saveWubookRoomData(wubookdata);
+    }
+
+    private WubookBooking checkForOnlineReceptionDiscount(WubookBooking booking, Hashtable table) {
+        Double amountFromBooking = (Double)table.get("amount");
+        Double amountFromFetched = 0.0;
+        for(WubookBookedRoom room : booking.rooms) {
+            for(Date day : room.priceMatrix.keySet()) {
+                amountFromFetched += room.priceMatrix.get(day);
+            }
+        }
+        
+        Double diff = amountFromBooking - amountFromFetched;
+        
+        if(diff < -1 || diff > 1) {
+            for(WubookBookedRoom room : booking.rooms) {
+                for(Date day : room.priceMatrix.keySet()) {
+                    Double current = room.priceMatrix.get(day);
+                    current += diff;
+                    room.priceMatrix.put(day, current);
+                    booking.customerNotes += " ::: ADDED BY GETSHOP: Discount added to first day of booking due to no where else to add it total discount: " + Math.round((diff*-1));
+                    break;
+                }
+            }
+        }
+        
+        return booking;
     }
 
 

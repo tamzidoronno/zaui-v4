@@ -1096,6 +1096,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             logPrintException(e);
         }
         
+        try {
+            checkIfBookingIsUnassignedForBergstaden(booking);
+        }catch(Exception e) {
+            logPrintException(e);
+        }
+        
         saveObject(booking);
         bookingUpdated(booking.id, "modified", null);
         
@@ -3100,6 +3106,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     void autoAssignItem(PmsBookingRooms room) {
+        if(storeId.equals("1ed4ab1f-c726-4364-bf04-8dcddb2fb2b1")) {
+            return;
+        }
+    
         room.triedToAutoAssign = true;
         
         try {
@@ -5645,7 +5655,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 Product s2Product = productManager.getProduct(s2.productId);
                 
                 if(s1Product == null || s2Product == null || s1Product.name == null || s2Product.name == null) {
-                    return -1;
+                    return 1;
                 }
                 
                 return s1Product.name.compareTo(s2Product.name);
@@ -9263,6 +9273,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
                 if (room.bookingItemId != null && room.codeObject != null) {
                     BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
+                    if(item == null || room == null || room.codeObject == null) {
+                        continue;
+                    }
                     List<AccessHistoryResult> events = getShopLockSystemManager.getAccessHistory(item.lockGroupId, start, new Date(), room.codeObject.slotId); 
                     if(!events.isEmpty()) {
                         logEntry("Marking room as arrived", booking.id, item.id, room.pmsBookingRoomId, "markedarrived");
@@ -10082,6 +10095,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private Integer getDaysUntilStart(PmsBooking book) {
         Date now = new Date();
         Date startDate = book.getStartDate();
+        if(startDate == null) {
+            return -1;
+        }
         long diff = (startDate.getTime() - now.getTime());
         if(diff < 86400000 && diff > 1080000) {
             return 1;
@@ -11364,6 +11380,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public boolean hasLockAccessGroupConnected(String itemId) {
         BookingItem type = bookingEngine.getBookingItem(itemId);
+        if(type == null) {
+            return false;
+        }
         return type.lockGroupId != null && !type.lockGroupId.isEmpty();
     }
 
@@ -11388,6 +11407,39 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     logPrintException(e);
                 }
             }
+        }
+    }
+
+    private void checkIfBookingIsUnassignedForBergstaden(PmsBooking booking) {
+        if(!storeId.equals("1ed4ab1f-c726-4364-bf04-8dcddb2fb2b1") || storeId.equals("fd2fecef-1ca1-4231-86a6-0ec445fbac83")) {
+            return;
+        }
+        
+        for(PmsBookingRooms room : booking.rooms) {
+            if(room.bookingItemTypeId != null && room.bookingItemTypeId.equals("705d0c33-3592-41c8-b631-edc4404675c5")) {
+                continue;
+            }
+            
+            if(room.isCreatedLastMinutes(15)) { continue; }
+            if (room.isEnded()) { continue; }
+            if (!room.isStarted()) { continue; }
+            if(room.isDeleted()) { continue; }
+            if(room.warnedAboutAutoAssigning) { continue; }
+            if (room.bookingItemId == null || room.bookingItemId.isEmpty()) { 
+                User usr = userManager.getLoggedOnUser();
+
+                String userData = usr.fullName + ", email: " + usr.emailAddress + " id:" + usr.id;
+
+                Exception e = new Exception();
+
+                messageManager.sendErrorNotificationToEmail("pal@getshop.com", "Room missing assignment, booking id : " + booking.incrementBookingId + ", room id: " + room.pmsBookingRoomId + " by " + userData, e);
+                if(storeId.equals("1ed4ab1f-c726-4364-bf04-8dcddb2fb2b1")) {
+                    messageManager.sendErrorNotificationToEmail("jonas@bergstaden.no", "Room missing assignment, booking id : " + booking.incrementBookingId + ", room id: " + room.pmsBookingRoomId + " by " + userData, e);
+                }
+
+                room.warnedAboutAutoAssigning = true;
+            }
+            
         }
     }
     

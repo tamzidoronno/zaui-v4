@@ -11411,14 +11411,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private void checkIfBookingIsUnassignedForBergstaden(PmsBooking booking) {
-        if(!storeId.equals("1ed4ab1f-c726-4364-bf04-8dcddb2fb2b1")) {
+        if(!storeId.equals("1ed4ab1f-c726-4364-bf04-8dcddb2fb2b1") || storeId.equals("fd2fecef-1ca1-4231-86a6-0ec445fbac83")) {
             return;
         }
         
         for(PmsBookingRooms room : booking.rooms) {
-            if(room.pmsBookingRoomId.equals("317c852d-f0ca-46fb-8d6d-9d61f9b80557")) {
-                System.out.println("check");
+            if(room.bookingItemTypeId != null && room.bookingItemTypeId.equals("705d0c33-3592-41c8-b631-edc4404675c5")) {
+                continue;
             }
+            
             if(room.isCreatedLastMinutes(15)) { continue; }
             if (room.isEnded()) { continue; }
             if (!room.isStarted()) { continue; }
@@ -11432,7 +11433,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 Exception e = new Exception();
 
                 messageManager.sendErrorNotificationToEmail("pal@getshop.com", "Room missing assignment, booking id : " + booking.incrementBookingId + ", room id: " + room.pmsBookingRoomId + " by " + userData, e);
-                messageManager.sendErrorNotificationToEmail("jonas@bergstaden.no", "Room missing assignment, booking id : " + booking.incrementBookingId + ", room id: " + room.pmsBookingRoomId + " by " + userData, e);
+                if(storeId.equals("1ed4ab1f-c726-4364-bf04-8dcddb2fb2b1")) {
+                    messageManager.sendErrorNotificationToEmail("jonas@bergstaden.no", "Room missing assignment, booking id : " + booking.incrementBookingId + ", room id: " + room.pmsBookingRoomId + " by " + userData, e);
+                }
 
                 room.warnedAboutAutoAssigning = true;
             }

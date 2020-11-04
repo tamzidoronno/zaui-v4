@@ -5414,7 +5414,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Override
     public void correctOrderWithTaxProblem(String orderId) {
         Order originalOrder = getOrder(orderId);
-        boolean isPaid = originalOrder.isFullyPaid();
+        boolean isPaid = originalOrder.isPaid() || originalOrder.isFullyPaid();
         
         if (originalOrder == null) {
             return;

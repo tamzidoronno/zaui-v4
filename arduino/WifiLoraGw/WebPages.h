@@ -17,7 +17,10 @@ void scanWifi() {
     wifi = wifi + "<br/> No wifi found";
   } else {
     for (int i = 0; i < n; ++i) {
-      wifi = wifi + "<br/> " + String(i+1) + ". " + WiFi.SSID(i) + " ( " + WiFi.RSSI(i) + ")";
+      char channelbyte[10];
+      itoa(WiFi.channel(i), channelbyte, 10);
+      
+      wifi = wifi + "<br/> " + String(i+1) + ". " + WiFi.SSID(i) + " ( " + WiFi.RSSI(i) + ") | ch: " + channelbyte + " | bssid: " + WiFi.BSSIDstr(i);
       delay(10);
     }
   }

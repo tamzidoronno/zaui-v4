@@ -27,13 +27,16 @@ ESP8266WebServer webServer(80);
 
 #define STACK_PROTECTOR  512 // bytes
 
-boolean reconnected = false;
 char data[1024];
 int readBytes = 0;
+bool tokenSent = false;
+bool wrongToken = false;
+unsigned long timeOut = 1000*60*3;
 
 #define STACK_PROTECTOR  512 // bytes
 
 unsigned long delayUnitil = 0;
+unsigned long lastReceivedMessageFromServer = 0;
 
 void setup() {
   setupErrorLights();
@@ -51,8 +54,23 @@ void setup() {
     WiFi.softAP("Seros Gateway", "");
     setupWebServer();
   } else {
-    WiFi.mode(WIFI_STA);
-    WiFi.begin(config.essid, config.password);
+    int availableAccessPoints = 0;
+    int n = WiFi.scanNetworks();
+    int networks[256];
+    
+    for (int i = 0; i < n; ++i) {
+      if (WiFi.SSID(i) == config.essid) {
+        networks[availableAccessPoints] = i;
+        availableAccessPoints++;
+      }
+    }
+
+    int networkToUse = random(0, availableAccessPoints);
+    WiFi.mode(WIFI_STA);  
+    WiFi.persistent(false);
+    WiFi.disconnect(true);
+    delay(100);
+    WiFi.begin(config.essid, config.password, WiFi.channel(networks[networkToUse]), WiFi.BSSID(networks[networkToUse]));     
   }
 }
 
@@ -67,7 +85,17 @@ void handleDataFromWifiSocket() {
     }
     
     while (wifiClient.available() && Serial.availableForWrite() > 0) {
-      Serial.write(wifiClient.read());
+      String line = wifiClient.readStringUntil('\n');
+      if (line.indexOf("WRONG_TOKEN") > -1) {
+        off();
+        showWrongToken();
+        wrongToken = true;
+      } else {
+        Serial.println(line);
+      }
+
+      lastReceivedMessageFromServer = millis();
+      blinkGreen();
     }
 }
 
@@ -106,44 +134,65 @@ void sendToken() {
   wifiClient.write(tokenToSend);
 }
 
+void checkConnectivity() {
+  unsigned long millisSinceLastReceived = millis() - lastReceivedMessageFromServer;
+  
+  if (millisSinceLastReceived > timeOut) {
+    ESP.reset();
+  }
+}
+
 void handleNormalOperation() {
+    checkConnectivity();
+    
     if (delayUnitil > millis()) {
+       delay(1);
        return;
     }
+
+    /**
+     * This will reset set device if the 
+     * reset button has been pressed for more then
+     * two seconds.
+     */
     checkReset();
-  
-    while (WiFi.status() != WL_CONNECTED) {
+
+    if (wrongToken) {
+      showWrongToken();
+      delay(100);
+      return;
+    }
+
+    if (WiFi.status() != WL_CONNECTED) {
       showWifiNotConnected();
       delayUnitil = millis() + 500;
       return;
     }
 
-    if(!wifiClient.connected() ) {
-       if (!wifiClient.connect(config.address, SERVER_PORT)) {
-          showNotAbleToConnectToServer();
-          delayUnitil = millis() + 500;
-          return;
-       }
-       
-       reconnected = true;
+    if(!wifiClient.connected()) {
+       tokenSent = false;
+       wifiClient.connect(config.address, SERVER_PORT);
+       showNotAbleToConnectToServer();
+       delayUnitil = millis() + 500;
+       return;      
     }
-
-    showConnected();
-    
-    if (reconnected) {
-        sendToken();
-    }
+     
+    if(wifiClient.connected() && !tokenSent) {
+      lastReceivedMessageFromServer = millis();
+      tokenSent = true;
+      sendToken();
+      showConnected();
+    } 
 
     handleDataFromWifiSocket();
     handleDataFromUart();
-    
-    reconnected = false;
+    blinkAlive();
 }
 
 void loop() {
     if (!isConfigured()) {
       showNotInitializedLight();
-      webServer.handleClient();  
+      webServer.handleClient();
     } else {
       handleNormalOperation();
     }

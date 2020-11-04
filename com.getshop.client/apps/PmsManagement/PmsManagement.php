@@ -4389,7 +4389,10 @@ class PmsManagement extends \WebshopApplication implements \Application {
         if($_POST['data']['periode_selection'] == "alldays") {
             $toAdd = $start;
             while(true) {
-                $dates[] = $toAdd;
+                $isValid = $this->getApi()->getPmsAddonManager()->isValidAddonForDate($this->getSelectedMultilevelDomainName(), $this->convertToJavaDate($toAdd), $addonItem->productId);
+                if($isValid) {
+                    $dates[] = $toAdd;
+                }
                 $toAdd = strtotime('+1 day', $toAdd);
                 if($toAdd > $end || (date("d.m.Y", $toAdd) == date("d.m.Y", $end))) {
                     break;

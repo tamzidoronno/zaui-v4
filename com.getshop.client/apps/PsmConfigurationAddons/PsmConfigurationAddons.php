@@ -217,8 +217,8 @@ class PsmConfigurationAddons extends \WebshopApplication implements \Application
             foreach($config->addonConfiguration as $conf) {
                 if($_POST['data']['id'] == $conf->productId) {
                     $range = new \core_pmsmanager_PmsBookingAddonItemValidDateRange();
-                    $range->start = $this->convertToJavaDate(strtotime($_POST['data']['start']));
-                    $range->end = $this->convertToJavaDate(strtotime($_POST['data']['end']));
+                    $range->start = $this->convertToJavaDate(strtotime($_POST['data']['start'] . " 00:00:00"));
+                    $range->end = $this->convertToJavaDate(strtotime($_POST['data']['end'] . " 23:59:59"));
                     $range->validType = $_POST['data']['validtype'];
                     $conf->validDates[] = $range;
                     $this->getApi()->getPmsManager()->saveConfiguration($this->getSelectedMultilevelDomainName(), $config);

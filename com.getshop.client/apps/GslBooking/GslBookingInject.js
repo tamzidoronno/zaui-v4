@@ -229,6 +229,7 @@ function getshop_showRoomStepTroughConfig() {
     
     var toPush = [];
     for(var k in gslbookingcurresult.rooms) {
+        k = parseInt(k); if(!Number.isInteger(k)) { continue; }
         var room = gslbookingcurresult.rooms[k];
         var obj = {};
         obj.id = room.id;
@@ -625,6 +626,7 @@ function getshop_showNextRoomToConfig() {
 function getshop_loadAddonsAndGuestSumaryView() {
     var toPush = [];
     for(var k in gslbookingcurresult.rooms) {
+        k = parseInt(k); if(!Number.isInteger(k)) { continue; }
         var room = gslbookingcurresult.rooms[k];
         var obj = {};
         obj.id = room.id;
@@ -670,6 +672,7 @@ function getshop_loadAddonsAndGuestSummaryByResult(res) {
     var foundItems = false;
     if(typeof(res) !== "undefined" || typeof(res.items) !== "undefined") {
         for(var k in res.items) {
+            k = parseInt(k); if(!Number.isInteger(k)) { continue; }
             foundItems = true;
             var item = res.items[k];
             var entry = template.clone();
@@ -744,6 +747,7 @@ function getshop_loadTextualSummary(res) {
     $('.yourstaysummary').html('');
     var translation = getshop_getBookingTranslations();
     for(var k in res.textualSummary) {
+        k = parseInt(k); if(!Number.isInteger(k)) { continue; }
         var text = res.textualSummary[k];
         if(typeof(translation['adults']) !== "undefined") {
             text = text.replace("{adults}", translation['adults'].toLowerCase());
@@ -784,6 +788,7 @@ function getshop_loadRooms(res) {
     var translation = getshop_getBookingTranslations();
     $('.roomrowadded').remove();
     for(var k in res.rooms) {
+        k = parseInt(k); if(!Number.isInteger(k)) { continue; }
         var newRoom = roomContainer.clone();
         newRoom.addClass('roomrowadded');
         var room = res.rooms[k];
@@ -1342,6 +1347,7 @@ function getshop_overviewPageLoad(res) {
                 $('.paymentmethodselection').show();
                 $('#paymentmethodselection').html('');
                 for(var k in gslbookingcurresult.supportedPaymentMethods) {
+                    k = parseInt(k); if(!Number.isInteger(k)) { continue; }
                     var id = gslbookingcurresult.supportedPaymentMethods[k];
                     var name = res[id];
                     $('#paymentmethodselection').append("<option value='"+id+"'>" + name + "</option>");
@@ -1354,6 +1360,7 @@ function getshop_overviewPageLoad(res) {
 
     var success = true;
     for(var k in res.fieldsValidation) {
+        k = parseInt(k); if(!Number.isInteger(k)) { continue; }
         if(!k.startsWith("guest_")) {
             continue;
         }
@@ -1442,6 +1449,7 @@ function getshop_updateOrderSummary(res, isSearch) {
     var roomsSelected = 0;
     var systemCounter = {};
     for(var k in res.rooms) {
+        k = parseInt(k); if(!Number.isInteger(k)) { continue; }
         var room = res.rooms[k];
         for(var guest in room.roomsSelectedByGuests) {
             var count = room.roomsSelectedByGuests[guest];
@@ -1821,6 +1829,7 @@ function getshop_handleException(e) {
     var text = e.stack + "<br>";
     text += "Browser:<br>";
     for(var k in getbrowser) {
+        k = parseInt(k); if(!Number.isInteger(k)) { continue; }
         text += k + " : " + getbrowser[k] + "<br>";
     }
     text += e;

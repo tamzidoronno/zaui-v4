@@ -3147,7 +3147,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     }
                 }
                 if (!warnedAboutAutoassigning && !found) {
-                    messageManager.sendErrorNotificationToEmail("pal@getshop.com","Failed to autoassign room, no available items for room : " + room.pmsBookingRoomId, null);
+//                    messageManager.sendErrorNotificationToEmail("pal@getshop.com","Failed to autoassign room, no available items for room : " + room.pmsBookingRoomId, null);
                     warnedAboutAutoassigning = true;
                 }
                 logPrint("....");

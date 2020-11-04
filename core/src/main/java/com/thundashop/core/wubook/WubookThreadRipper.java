@@ -85,8 +85,13 @@ public class WubookThreadRipper extends Thread {
             params.addElement(token);
             params.addElement(lcode);
             params.addElement(1);
-            params.addElement(0);
             
+            if(isCityLiving()) {
+                params.addElement(0);
+            } else {
+                params.addElement(1);
+            }
+
             Vector result = executeClient("fetch_new_bookings", params);
             if(result == null) {
                 return;

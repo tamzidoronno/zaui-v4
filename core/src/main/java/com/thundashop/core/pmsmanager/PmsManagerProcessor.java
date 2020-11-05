@@ -779,6 +779,7 @@ public class PmsManagerProcessor {
                 PmsBooking booking = manager.getBookingFromRoom(room.pmsBookingRoomId);
                 manager.logEntry("Room is out of sync between pmsmanager and in booking engine, found in pms but not in booking engine", booking.id, room.bookingItemId);
                 manager.deleteRoom(room);
+                manager.messageManager.sendErrorNotification(room.pmsBookingRoomId + " where found in the pms manager but not in the booking engine: " + room.date.start + " - " + room.date.end, null);
             }
         }
     }

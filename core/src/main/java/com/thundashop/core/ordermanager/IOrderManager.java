@@ -617,4 +617,7 @@ public interface IOrderManager {
     
     @Administrator
     public void markOtaPaymentsAsPaid(String goToPaymentId);
+    
+    @Administrator
+    public List<Order> getOrdersNotConnectedToAnyZReports();
 }

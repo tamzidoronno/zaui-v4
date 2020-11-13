@@ -37,6 +37,11 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
         $this->includefile("taxcorrection");
     }
     
+    public function showMissingOrders() {
+        $_SESSION['ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7_activetab'] = "missingorders";
+        $this->includefile("missingorders");
+    }
+    
     public function loadReport() {
         $_SESSION['ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7_start'] = $_POST['data']['startdate'];
         $_SESSION['ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7_end'] = $_POST['data']['enddate'];
@@ -64,6 +69,8 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
                 $this->showXreportInternal();
             } else if ($tab == "stock") {
                 $this->includefile("stock");
+            } else if ($tab == "missingorders") {
+                $this->includefile("missingorders");
             } else {
                 $this->includefile("frontpage");
             }
@@ -170,6 +177,10 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
         die();
     }
     
+    public function transferredToCentral($row) {
+        return $row->transferredToCentral ? "Yes" : "No";
+    }
+    
     public function showReportList($fromRender=false) {
         $_SESSION['ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7_activetab'] = "reportlist";
         
@@ -183,7 +194,8 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
             array('rowCreatedDate', 'CREATED DATE', '', 'formatRowCreatedDate'),
             array('user', 'Created by', '', 'formatUser'),
             array('totalAmount', 'TOTAL', 'totalAmount'),
-            array('cashPointName', 'CASHPOINT', '', 'formatCashPointName')
+            array('cashPointName', 'CASHPOINT', '', 'formatCashPointName'),
+            array('transferredToCentral', 'TTC', '', 'transferredToCentral')
         );
         
         $table = new \GetShopModuleTable($this, 'PosManager', 'getZReportsUnfinalized', $args, $attributes);
@@ -424,6 +436,9 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
         }
     }
 
+    public function createZReportOfMissingOrders() {
+        $this->getApi()->getPosManager()->createZReportOfMissingOrders($this->getSelectedCashPointId());
+    }
 }
 ?>
 

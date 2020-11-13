@@ -1955,4 +1955,9 @@ public class Order extends DataCommon implements Comparable<Order> {
         return incrementOrderId;
     }
       
+    public boolean hasUntransferredPayments() {
+        return orderTransactions.stream()
+                .filter(o -> !o.transferredToAccounting)
+                .count() > 0;
+    }
 }

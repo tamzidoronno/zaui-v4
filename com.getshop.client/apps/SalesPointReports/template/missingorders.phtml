@@ -1,0 +1,44 @@
+<?
+/* @var $this ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7\SalesPointReports */
+$missingOrders = $this->getApi()->getOrderManager()->getOrdersNotConnectedToAnyZReports();
+$count = count((array)$missingOrders);
+
+if (!$count) {
+    echo "All good, nothing to do here";
+    return;
+}
+
+?>
+<div style="background-color: #CCC; padding: 50px; margin: 50px">
+    This list is to display if there are any orders that are getting around the zreport creation. This should be empty if the "X Report" list is empty.
+</div>
+<?
+foreach ($missingOrders as $order) {
+    $paymentTypeArr = explode("\\", $order->payment->paymentType);
+    $paymentType = $this->getPaymentMethodName($paymentTypeArr[0]);
+    $user = $this->getUserById($order->userId);
+    $userFullName = $user ? $user->fullName : "N/A";
+    
+    $totalForOrder = $this->getApi()->getOrderManager()->getTotalAmount($order);
+            
+    if (isset($order->cashWithdrawalCorrection)) {
+        $totalForOrder = $order->cashWithdrawalCorrection;
+    }
+
+    $total += $totalForOrder;
+
+    echo "<div class='orderline'>";
+            echo "<a href='/pos.php?page=orderviewpage&orderid=$order->id'>";
+
+            echo "<div class='col orderid'>".$order->incrementOrderId."</div>";
+            echo "<div class='col date'>".$this->formatDate($order->paymentDate)."</div>";
+            echo "<div class='col name'>".$userFullName."</div>";
+            echo "<div class='col type'>".$this->__f($paymentType)."</div>";
+            echo "<div class='col totalfororder'>".$totalForOrder."</div>";
+        echo "</a>";
+    echo "</div>";
+}
+?>
+<br/>
+<br/>
+<div class="shop_button" gsclick="createZReportOfMissingOrders">Create Z Report of Missing Orders</div>

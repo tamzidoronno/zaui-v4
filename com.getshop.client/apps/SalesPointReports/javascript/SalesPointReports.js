@@ -6,6 +6,7 @@ app.SalesPointReports = {
         $(document).on('click', '.SalesPointReports .leftmenu .entry[tab="masterreport"]', app.SalesPointReports.showMasterReport);
         $(document).on('click', '.SalesPointReports .leftmenu .entry[tab="stock"]', app.SalesPointReports.showStockReport);
         $(document).on('click', '.SalesPointReports .leftmenu .entry[tab="taxcorrection"]', app.SalesPointReports.showTaxCorrection);
+        $(document).on('click', '.SalesPointReports .leftmenu .entry[tab="missingorders"]', app.SalesPointReports.showMissingOrders);
         $(document).on('click', '.SalesPointReports .taxcorrectionrow .fixcol', app.SalesPointReports.fixTaxCorrection);
         $(document).on('click', '.SalesPointReports .dotaxcorrection', app.SalesPointReports.doTaxCorrection);
     },
@@ -74,6 +75,19 @@ app.SalesPointReports = {
         };
         
         var event = thundashop.Ajax.createEvent(null, "showTaxCorrection", this, data);
+        event['synchron'] = true;
+        
+        thundashop.Ajax.post(event, function(res) {
+            $('.SalesPointReports .reportarea').html(res);
+        });
+    },
+    
+    showMissingOrders : function() {
+        var data = {
+            tab : $(this).attr('tab')
+        };
+        
+        var event = thundashop.Ajax.createEvent(null, "showMissingOrders", this, data);
         event['synchron'] = true;
         
         thundashop.Ajax.post(event, function(res) {

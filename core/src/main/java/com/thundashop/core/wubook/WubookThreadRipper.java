@@ -85,7 +85,12 @@ public class WubookThreadRipper extends Thread {
             params.addElement(token);
             params.addElement(lcode);
             params.addElement(1);
-            params.addElement(0);
+            
+            if(isCityLiving()) {
+                params.addElement(0);
+            } else {
+                params.addElement(1);
+            }
 
             Vector result = executeClient("fetch_new_bookings", params);
             if(result == null) {
@@ -136,6 +141,16 @@ public class WubookThreadRipper extends Thread {
 
     void setStoreId(String storeId) {
         this.storeId = storeId;
+    }
+
+    private boolean isCityLiving() {
+        if(storeId.equals("7bb18e4a-7a5c-4a0a-9a59-7e7705f0f004")) {
+            return true;
+        }
+        if(storeId.equals("a4548012-433e-47a4-b154-ac47c4b7b0ed")) {
+            return true;
+        }
+        return false;
     }
     
 }

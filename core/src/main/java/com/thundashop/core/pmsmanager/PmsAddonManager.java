@@ -11,6 +11,7 @@ import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -81,5 +82,14 @@ public class PmsAddonManager extends GetShopSessionBeanNamed implements IPmsAddo
         }
         
         pmsManager.saveBooking(booking);
+    }
+
+    @Override
+    public boolean isValidAddonForDate(Date date, String productId) {
+        PmsBookingAddonItem item = pmsManager.getAddonByProductId(productId);
+        if(item != null) {
+            return item.isValidForPeriode(date, date, new Date());
+        }
+        return false;
     }
 }

@@ -8,6 +8,7 @@ package com.thundashop.core.pmsmanager;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
+import java.util.Date;
 
 /**
  *
@@ -19,5 +20,8 @@ public interface IPmsAddonManager {
      
     @Administrator
     public void addProductToGroup(PmsAddonFilter filter);
+    
+    @Administrator
+    public boolean isValidAddonForDate(Date date, String id);
     
 }

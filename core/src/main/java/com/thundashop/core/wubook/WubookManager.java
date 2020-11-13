@@ -71,7 +71,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     SavedLastAvailibilityUpdate lastAvailability = new SavedLastAvailibilityUpdate();
     
     private WubookLog log = new WubookLog();
-    private List<String> triedAddingCode = new ArrayList();
+    private static List<String> triedAddingCode = new ArrayList();
 
     @Autowired
     PmsManager pmsManager;
@@ -467,8 +467,8 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 if(!bookingCodesToAdd.isEmpty()) {
                     logText("BookingsCodesToAdd is not empty:" + bookingCodesToAdd.size());
                     for(String code : bookingCodesToAdd) {
-                        if(!triedAddingCode.contains(code)) {
-                            triedAddingCode.add(code);
+                        if(!triedAddingCode.contains(storeId + "_" + code)) {
+                            triedAddingCode.add(storeId + "_" + code);
                             WubookBooking booking = fetchBooking(code + "");
                             addBookingToPms(booking);
                         }

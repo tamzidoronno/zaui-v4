@@ -3147,7 +3147,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     }
                 }
                 if (!warnedAboutAutoassigning && !found) {
-                    messageManager.sendErrorNotificationToEmail("pal@getshop.com","Failed to autoassign room, no available items for room : " + room.pmsBookingRoomId, null);
+//                    messageManager.sendErrorNotificationToEmail("pal@getshop.com","Failed to autoassign room, no available items for room : " + room.pmsBookingRoomId, null);
                     warnedAboutAutoassigning = true;
                 }
                 logPrint("....");
@@ -8713,9 +8713,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         HashMap<Integer, PmsBookingAddonItem> addons = getConfigurationSecure().addonConfiguration;
         for (PmsBookingRooms room : allRooms) {
             for (PmsBookingAddonItem item : addons.values()) {
-                if(!item.isValidForPeriode(room.date.start, room.date.end, new Date())) {
-                    continue;
-                }
                 if(!canAddDefaultAddon(item, room)) {
                     continue;
                 }
@@ -9431,6 +9428,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             
             List<PmsBookingAddonItem> addons = createAddonForTimePeriode(item.addonType, room, booking.priceType);
+            
+            //Remove addons that is not valid for periode
+            List<PmsBookingAddonItem> toRemove = new ArrayList();
+            for(PmsBookingAddonItem addon : addons) {
+                if(!item.isValidForPeriode(addon.date, addon.date, new Date())) {
+                    toRemove.add(addon);
+                }
+            }
+            addons.removeAll(toRemove);
+            
+            
             for (PmsBookingAddonItem addon : addons) {
                 addon.count = count;
             }

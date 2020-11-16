@@ -26,6 +26,11 @@ $cashPoint = $this->getApi()->getPosManager()->getCashPoint($this->getSelectedCa
             Tax Correction
         </div>
     
+        <div class='entry all' tab='missingorders'>
+            <i class='fa fa-question-circle'></i>
+            Missing orders?
+        </div>
+    
         <?
         if (@$cashPoint->isMaster) {
             ?>
@@ -44,9 +49,6 @@ $cashPoint = $this->getApi()->getPosManager()->getCashPoint($this->getSelectedCa
                 Stock
             </div>
             <?
-            
-        }   
-        
+        }
         ?>
-    </div>
 </div>

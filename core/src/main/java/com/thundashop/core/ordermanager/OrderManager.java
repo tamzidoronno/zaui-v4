@@ -313,6 +313,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         addPaymentMethodsNotAllowedToMarkAsPaid();
         
         for (DataCommon dataFromDatabase : data.data) {
+
             if (dataFromDatabase instanceof VirtualOrder) {
                 virtualOrders.put(dataFromDatabase.id, (VirtualOrder)dataFromDatabase);
             }
@@ -325,7 +326,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             
             if (dataFromDatabase instanceof Order) {
                 Order order = (Order) dataFromDatabase;
-                
+
                 if (order.changedFromNormalToBlank()) {
                     saveObject(order);
                 }
@@ -5538,9 +5539,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if (central.hasBeenConnectedToCentral()) {    
             closeOrder(orderId, "Transferred to Z-Report");
             
-            order.orderTransactions.stream().forEach(o -> {
-                o.transferredToAccounting = true;
-            });
+            order.orderTransactions.stream().forEach(o -> o.transferredToAccounting = true);
         }
         
         order.orderTransactions.stream().forEach(o -> o.addedToZreport = report.id);
@@ -5667,4 +5666,26 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         useCacheForOrderIsCredittedAndPaidFor = false;
     }
    
+    @Override
+    public List<Order> getOrdersNotConnectedToAnyZReports() {
+        List<Order> retList = orders.values()
+                .stream()
+                .filter(o -> !o.isNullOrder())
+                .filter(o -> o.hasUntransferredPayments() || !posManager.hasZreport(o))
+                .collect(Collectors.toList());
+        
+        return retList;
+    }
+
+    public void creditOrdersThatHasDeletedConference() {
+        List<Order> retList = orders.values()
+                .stream()
+                .filter(o -> o.isAccruedPayment() && o.autoCreatedOrderForConferenceId != null && !o.autoCreatedOrderForConferenceId.isEmpty())
+                .filter(o -> posManager.getPosConference(o.autoCreatedOrderForConferenceId) == null)
+                .filter(o -> !o.isCreditNote && o.creditOrderId.isEmpty())
+                .collect(Collectors.toList());
+        
+        retList.stream().forEach(o -> creditOrder(o.id));
+    }
+    
 }

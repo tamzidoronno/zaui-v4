@@ -226,4 +226,7 @@ public interface IPosManager {
     
     @Administrator
     public void markAllRoomsWithProblemsForPayAfterStay(String multilevelName, String cashPointId);
+    
+    @Administrator
+    public void createZReportOfMissingOrders(String cashPointId);
 }

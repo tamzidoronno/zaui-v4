@@ -52,6 +52,18 @@ $order = $this->getOrder();
 <div class="row_account">
     <div class="col col1">
         <?
+        echo $this->__f("Is to GetShop BackOffice (central)");
+        ?>
+    </div>
+    <div class="col col2">
+        <?
+        echo $order->transferredToCentral ? $this->__f("Yes") : $this->__f("No");
+        ?>
+    </div>
+</div>
+<div class="row_account">
+    <div class="col col1">
+        <?
         echo $this->__f("Tried to transfer");
         ?>
     </div>
@@ -101,6 +113,34 @@ $order = $this->getOrder();
     <div class="col col2">
         <?
         echo $order->closed ? 'Yes' : "No";
+        ?>
+    </div>
+</div>
+
+<div class="row_account">
+    <div class="col col1">
+        <?
+        echo $this->__f("Conference id");
+        ?>
+    </div>
+    <div class="col col2">
+        <?
+        if ($order->autoCreatedOrderForConferenceId) {
+            $conference = $this->getApi()->getPosManager()->getPosConference($order->autoCreatedOrderForConferenceId);
+            if ($conference) {
+                $pmsConference = $this->getApi()->getPmsConferenceManager()->getConference($conference->pmsConferenceId);
+                if ($pmsConference) {
+                    echo $pmsConference->meetingTitle;
+                } else {
+                    echo "Missing pms conference";
+                }
+            } else {
+                echo "Not found";
+            }
+            
+        } else {
+            echo "Not connected";
+        }
         ?>
     </div>
 </div>

@@ -475,13 +475,20 @@ public class PosManager extends ManagerBase implements IPosManager {
     public void createZReport(String cashPointId) {
         List<String> autoCreatedOrders = autoCreateOrders(cashPointId);
         List<String> orderdIdsFromConfernceSystem = autoCreateOrdersForConferenceTabs(cashPointId);
+        
+        List<String> orderIds = new ArrayList();
+        orderIds.addAll(orderdIdsFromConfernceSystem);
+        orderIds.addAll(autoCreatedOrders);
+        
+        createZReportInternal(cashPointId, orderIds);
+    }
 
+    private void createZReportInternal(String cashPointId, List<String> orderIds) throws ErrorException {
         ZReport report = getZReport("", cashPointId);
         report.createdByUserId = getSession().currentUser.id;
         report.cashPointId = cashPointId;
-        report.orderIds.addAll(orderdIdsFromConfernceSystem);
-        report.orderIds.addAll(autoCreatedOrders);
-
+        report.orderIds.addAll(orderIds);
+        
         orderManager.markAsTransferredToCentral(report.orderIds);
         
         report.totalAmount = getTotalAmountForZReport(report);
@@ -491,9 +498,28 @@ public class PosManager extends ManagerBase implements IPosManager {
         report.orderIds.stream().forEach(orderId -> orderManager.closeOrderByZReport(orderId, report));
         report.invoicesWithNewPayments.stream().forEach(orderId -> orderManager.closeOrderByZReport(orderId, report));
 
+        if (central.hasBeenConnectedToCentral()) {    
+            orderManager.creditOrdersThatHasDeletedConference();
+        
+            List<String> extraOrderIds = orderManager.getOrdersNotConnectedToAnyZReports()
+                    .stream()
+                    .map(o -> o.id)
+                    .collect(Collectors.toList());
+        
+            extraOrderIds.stream().forEach(orderId -> orderManager.closeOrderByZReport(orderId, report));
+            report.orderIds.addAll(extraOrderIds);
+            report.totalAmount = getTotalAmountForZReport(report);
+            saveObject(report);
+        }
+        
+                
         zReports.put(report.id, report);
 
         if (orderManager.getOrderManagerSettings().autoCloseFinancialDataWhenCreatingZReport && isMasterCashPoint(cashPointId)) {
+            closeFinancialPeriode();
+        }
+        
+        if (central.hasBeenConnectedToCentral()) {
             closeFinancialPeriode();
         }
 
@@ -1901,5 +1927,20 @@ public class PosManager extends ManagerBase implements IPosManager {
         return roomsNeedToCreateOrdersFor;
     }
 
-    
+    public boolean hasZreport(Order order) {
+        return zReports.values()
+                .stream()
+                .filter(o -> o.orderIds.contains(order.id))
+                .count() > 0;
+    }
+
+    @Override
+    public void createZReportOfMissingOrders(String cashPointId) {
+        List<String> orderIds = orderManager.getOrdersNotConnectedToAnyZReports()
+                .stream()
+                .map(o -> o.id)
+                .collect(Collectors.toList());
+        
+        createZReportInternal(cashPointId, orderIds);
+    }
 }

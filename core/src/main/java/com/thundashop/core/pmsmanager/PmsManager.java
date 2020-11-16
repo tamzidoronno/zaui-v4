@@ -8208,7 +8208,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void orderChanged(String orderId) {
-        Order order = orderManager.getOrderSecure(orderId);
+        Order order = orderManager.getOrderDirect(orderId);
 
         if (order == null) {
             bookings.values()
@@ -8227,10 +8227,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         bookingsWithOrderId
                 .stream()
                 .forEach(booking -> {
+                    boolean save = false;
                     if (order.cart.getItems().isEmpty()) {
                         booking.orderIds.remove(orderId);
+                        save = true;
                     }
-                    saveObject(booking);
+                    if(save)
+                        saveBooking(booking);
                 });
     }
 
@@ -9954,6 +9957,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public boolean doesOrderCorrolateToRoom(String pmsBookingRoomsId, String orderId) {
         Order order = orderManager.getOrder(orderId);
         
+        if(order == null) {
+            return false;
+        }
+        
         return order.getCartItems().stream()
                 .filter(o -> o.containsRoom(pmsBookingRoomsId))
                 .count() > 0;
@@ -10242,6 +10249,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsInvoiceManagerNew invoiceManager = new PmsInvoiceManagerNew(orderManager, cartManager, productManager, this, posManager);
         Order order = invoiceManager.createOrder(rows, paymentMethodId, userId);
         
+        orderManager.startUseCacheForOrderIsCredittedAndPaidFor();
+        HashMap<String, PmsBooking> bookingsToSave = new HashMap();
+        HashMap<String, Order> ordersToSave = new HashMap();
+        
+        
         rows.stream()
             .forEach(o -> {
                 if (o.roomId == null || o.roomId.isEmpty()) {
@@ -10256,18 +10268,27 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 
                 if(booking.invoiceNote != null && !booking.invoiceNote.isEmpty()) {
                     order.invoiceNote = booking.invoiceNote;
-                    orderManager.saveOrder(order);
+                    ordersToSave.put(order.id, order);
                 }
                 if (!booking.orderIds.contains(order.id)) {
                     booking.orderIds.add(order.id);
-                    saveBooking(booking);
+                    bookingsToSave.put(booking.id, booking);
                 }
                 
                 if (!paymentMethodId.equals("60f2f24e-ad41-4054-ba65-3a8a02ce0190")) {
                     removeAccrudePayments(booking, o.roomId);
                 }
-                
             });
+        
+        for(PmsBooking booking : bookingsToSave.values()) {
+            saveBooking(booking);
+        }
+        
+        for(Order ord : ordersToSave.values()) {
+            orderManager.saveOrder(ord);
+        }
+        
+        orderManager.doneUseCacheForOrderIsCredittedAndPaidFor();
         
         return order.id;
     }
@@ -10364,15 +10385,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private void removeAccrudePayments(PmsBooking booking, String pmsBookingRoomId) {
         List<String> accrudeOrdres = getAllOrderIds(booking.id)
                     .stream()
-                    .map(id -> orderManager.getOrderSecure(id))
+                    .map(id -> orderManager.getOrderDirect(id))
                     .filter(o -> o.isAccruedPayment())
                     .map(o -> o.id)
                     .collect(Collectors.toList());
-        
+
         accrudeOrdres = orderManager.filterOrdersIsCredittedAndPaidFor(accrudeOrdres);
         
+        HashMap<String, PmsBooking> bookingsToSave = new HashMap();
+        
         for (String orderId : accrudeOrdres) {
-            Order order = orderManager.getOrderSecure(orderId);
+            Order order = orderManager.getOrderDirect(orderId);
             boolean orderHasOrderLinesNotConnectedToBooking = order.getCartItems().stream()
                     .filter(o -> !o.getProduct().externalReferenceId.equals(pmsBookingRoomId))
                     .count() > 0;
@@ -10387,8 +10410,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             } else {
                 orderManager.deleteOrder(order.id);
                 booking.orderIds.remove(order.id);
-                saveBooking(booking);
+                bookingsToSave.put(booking.id, booking);
             }
+        }
+        
+        for(PmsBooking book : bookingsToSave.values()) {
+            saveBooking(book);
         }
     }
 

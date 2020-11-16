@@ -22,6 +22,8 @@ public class JsonObject2 implements Serializable {
     public String realInterfaceName;
     
     public Date started = null;
+    public String id = "";
+    public String storeId = "";
 
     String getPrettyPrinted() {
         Gson gson = new Gson();

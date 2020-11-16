@@ -419,8 +419,8 @@ public class StorePool {
     }
 
     private void startAndCheckTimerForObject(JsonObject2 object) throws Exception {
-        if(lastCheck != null && !isOverDue()) {
-            logToTimerToFile();
+        if(lastCheck != null && isOverDue()) {
+             logToTimerToFile();
         } else {
             lastCheck = new Date();
         }

@@ -29,7 +29,7 @@ public class StorePool {
     private HashMap<String, StoreHandler> storeHandlers = new HashMap();
     private com.thundashop.core.storemanager.StorePool storePool;
     private Date lastTimePrintedTimeStampToLog = null;
-    private Date lastCheck;
+    private static Date lastCheck = new Date();
     public static HashMap<String, JsonObject2> running = new HashMap();
     
     public StorePool() {
@@ -419,9 +419,7 @@ public class StorePool {
     }
 
     private void startAndCheckTimerForObject(JsonObject2 object) throws Exception {
-        if(lastCheck == null || isOverDue()) {
-             logToTimerToFile();
-        }
+        if(isOverDue()) { logToTimerToFile(); }
         object.id = UUID.randomUUID().toString();
         object.started = new Date();
    }

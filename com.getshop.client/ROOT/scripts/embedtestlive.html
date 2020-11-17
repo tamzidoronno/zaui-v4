@@ -17,14 +17,13 @@
 //    getshop_websockethost = "websocket6.getshop.com";
     $ = jQuery;
     jQuery(function ($) {
-        $.getScript("https://fasthotels-marina.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
+        $.getScript("https://tobiasbrygga.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
             $("#bookingprocess").getshopbooking(
                 {
-                    "endpoint": "https://fasthotels-marina.getshop.com/",
-                    "jsendpoint": "https://fasthotels-marina.getshop.com/",
+                    "endpoint": "https://tobiasbrygga.getshop.com/",
+                    "jsendpoint": "https://tobiasbrygga.getshop.com/",
                     "domain" : "default",
-                    "language" : "no",
-                    "websocket" : "websocket6.getshop.com"
+                    "language" : "no"
                 }
             );
         });

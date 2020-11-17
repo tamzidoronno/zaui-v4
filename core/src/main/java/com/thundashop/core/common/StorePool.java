@@ -30,7 +30,7 @@ public class StorePool {
     private com.thundashop.core.storemanager.StorePool storePool;
     private Date lastTimePrintedTimeStampToLog = null;
     private Date lastCheck;
-    private HashMap<String, JsonObject2> running = new HashMap();
+    public static HashMap<String, JsonObject2> running = new HashMap();
     
     public StorePool() {
         if (AppContext.appContext != null) {
@@ -426,7 +426,6 @@ public class StorePool {
         }
         object.id = UUID.randomUUID().toString();
         object.started = new Date();
-        running.put(object.id, object); 
    }
 
     private boolean isOverDue() {

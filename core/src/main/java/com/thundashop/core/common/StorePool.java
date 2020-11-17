@@ -419,10 +419,8 @@ public class StorePool {
     }
 
     private void startAndCheckTimerForObject(JsonObject2 object) throws Exception {
-        if(lastCheck != null && isOverDue()) {
+        if(lastCheck == null || isOverDue()) {
              logToTimerToFile();
-        } else {
-            lastCheck = new Date();
         }
         object.id = UUID.randomUUID().toString();
         object.started = new Date();

@@ -251,6 +251,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public boolean hasCheckedForUndeletion = false;
     private List<PmsBookingAddonItem> cachedAvailableAddons;
     private Date cachedAvailableAddonsLastCached;
+    private boolean avoidCalculateUnsettledAmount = false;
     
 
     @Autowired
@@ -10250,35 +10251,38 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         Order order = invoiceManager.createOrder(rows, paymentMethodId, userId);
         
         orderManager.startUseCacheForOrderIsCredittedAndPaidFor();
+        avoidCalculateUnsettledAmount = true;
         HashMap<String, PmsBooking> bookingsToSave = new HashMap();
         HashMap<String, Order> ordersToSave = new HashMap();
         
         
         rows.stream()
             .forEach(o -> {
-                if (o.roomId == null || o.roomId.isEmpty()) {
+            if (o.roomId == null || o.roomId.isEmpty()) {
                     return;
-                }
-       
-                PmsBooking booking = getBookingFromRoomSecure(o.roomId);
-                
-                if (booking == null) {
+            }
+
+            PmsBooking booking = getBookingFromRoomSecure(o.roomId);
+
+            if (booking == null) {
                     return;
-                }
-                
-                if(booking.invoiceNote != null && !booking.invoiceNote.isEmpty()) {
-                    order.invoiceNote = booking.invoiceNote;
-                    ordersToSave.put(order.id, order);
-                }
-                if (!booking.orderIds.contains(order.id)) {
-                    booking.orderIds.add(order.id);
-                    bookingsToSave.put(booking.id, booking);
-                }
-                
-                if (!paymentMethodId.equals("60f2f24e-ad41-4054-ba65-3a8a02ce0190")) {
-                    removeAccrudePayments(booking, o.roomId);
-                }
-            });
+            }
+
+            if(booking.invoiceNote != null && !booking.invoiceNote.isEmpty()) {
+                order.invoiceNote = booking.invoiceNote;
+                ordersToSave.put(order.id, order);
+            }
+            if (!booking.orderIds.contains(order.id)) {
+                booking.orderIds.add(order.id);
+                bookingsToSave.put(booking.id, booking);
+            }
+
+            if (!paymentMethodId.equals("60f2f24e-ad41-4054-ba65-3a8a02ce0190")) {
+                removeAccrudePayments(booking, o.roomId);
+            }
+        });
+        
+        avoidCalculateUnsettledAmount = false;
         
         for(PmsBooking booking : bookingsToSave.values()) {
             saveBooking(booking);
@@ -10485,7 +10489,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void saveObject(DataCommon data) throws ErrorException {
-        if (data instanceof PmsBooking && data.id != null && !data.id.isEmpty()) {
+        if (data instanceof PmsBooking && data.id != null && !data.id.isEmpty() && !avoidCalculateUnsettledAmount) {
             calculateUnsettledAmountForRooms((PmsBooking)data);
         }
         
@@ -11466,12 +11470,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 String userData = usr.fullName + ", email: " + usr.emailAddress + " id:" + usr.id;
 
                 Exception e = new Exception();
-
                 messageManager.sendErrorNotificationToEmail("pal@getshop.com", "Room missing assignment, booking id : " + booking.incrementBookingId + ", room id: " + room.pmsBookingRoomId + " by " + userData, e);
-                if(storeId.equals("1ed4ab1f-c726-4364-bf04-8dcddb2fb2b1")) {
-                    messageManager.sendErrorNotificationToEmail("jonas@bergstaden.no", "Room missing assignment, booking id : " + booking.incrementBookingId + ", room id: " + room.pmsBookingRoomId + " by " + userData, e);
-                }
-
                 room.warnedAboutAutoAssigning = true;
             }
             

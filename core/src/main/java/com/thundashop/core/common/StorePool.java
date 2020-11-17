@@ -419,14 +419,25 @@ public class StorePool {
     }
 
     private void startAndCheckTimerForObject(JsonObject2 object) throws Exception {
-        if(isOverDue()) { logToTimerToFile(); }
         object.id = UUID.randomUUID().toString();
         object.started = new Date();
+        
+        boolean hasForStore = false;
+        for(JsonObject2 obj : running.values()) {
+            if(obj.storeId.equals(object.storeId)) {
+                hasForStore = true;
+            }
+        }
+        if(!hasForStore) {
+            running.put(object.id, object);
+        }
+        
+        if(isOverDue()) { logToTimerToFile(); }
    }
 
     private boolean isOverDue() {
         long diff = System.currentTimeMillis() - lastCheck.getTime();
-        return diff > 10000;
+        return diff > 2000;
     }
 
     private void logToTimerToFile() throws Exception {

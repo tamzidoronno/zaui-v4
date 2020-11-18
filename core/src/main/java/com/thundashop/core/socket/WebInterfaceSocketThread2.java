@@ -12,8 +12,10 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ErrorMessage;
 import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.GetShopLogging;
+import com.thundashop.core.common.JsonObject2;
 import com.thundashop.core.common.MessageBase;
 import com.thundashop.core.common.StorePool;
+import com.thundashop.core.common.WebSocketReturnMessage;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
@@ -43,7 +45,19 @@ public class WebInterfaceSocketThread2 implements Runnable {
             Object result = storePool.ExecuteMethod(message, addr);
             sendMessage(result);
         } catch (ErrorException d) {
-            sendMessage(new ErrorMessage(d));
+            Gson gson = new GsonBuilder()
+                .serializeNulls()
+                .create();
+        
+            JsonObject2 inObject = gson.fromJson(message, JsonObject2.class);
+            if (inObject.version != null && inObject.version.equals("2")) {
+                WebSocketReturnMessage msg = new WebSocketReturnMessage();
+                msg.messageId = inObject.messageId;
+                msg.object = new ErrorMessage(d);
+                sendMessage(msg);
+            } else {
+                sendMessage(new ErrorMessage(d));
+            }
         }
    
         List<MessageBase> messages = new ArrayList();
@@ -97,5 +111,9 @@ public class WebInterfaceSocketThread2 implements Runnable {
         } catch (Exception d) {
             d.printStackTrace();
         }
+    }
+
+    private boolean isV2(String message) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

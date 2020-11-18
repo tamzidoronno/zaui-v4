@@ -19,6 +19,7 @@ public class JsonObject2 implements Serializable {
     public String addr;
     public String messageId = "";
     public String realInterfaceName;
+    public String version = "1.0";
 
     String getPrettyPrinted() {
         Gson gson = new Gson();

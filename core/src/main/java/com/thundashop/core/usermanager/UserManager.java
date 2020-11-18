@@ -2635,6 +2635,11 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     }
 
     private List<User> removeGetShopUsers(List<User> result) {
+        
+        if(storeId.equals("13442b34-31e5-424c-bb23-a396b7aeb8ca")) {
+            return result;
+        }
+        
         List<User> getshopUsers = new ArrayList();
         for(User usr : result) {
             if(usr.isGetShopAdministrator()) {

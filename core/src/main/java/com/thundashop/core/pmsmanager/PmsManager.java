@@ -8229,7 +8229,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 .stream()
                 .forEach(booking -> {
                     booking.orderIds.remove(orderId);
-                    save = true;
                     saveBooking(booking);
                 });
     }

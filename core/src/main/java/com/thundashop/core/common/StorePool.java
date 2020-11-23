@@ -14,6 +14,10 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.nio.file.Paths;
+import java.nio.file.Path;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -447,6 +451,10 @@ public class StorePool {
             long timer = (System.currentTimeMillis() - obj.started.getTime())/1000;
             if(timer > 5) {
                result += obj.id + ";" + obj.storeId + ";" + obj.interfaceName + ";" + obj.method + ";" + timer + "\n";
+               if(!obj.dumpedToAppendFile) {
+                    appendToTimeLog(obj);
+                    obj.dumpedToAppendFile = true;
+               }
                if(timer > 120) {
                    result += "\n" + obj.getPrettyPrinted();
                    result += "\n";
@@ -459,5 +467,15 @@ public class StorePool {
         writer.write(result);
         writer.close();
         lastCheck = new Date();
+    }
+
+    private void appendToTimeLog(JsonObject2 obj) throws Exception {
+        long timer = (System.currentTimeMillis() - obj.started.getTime())/1000;
+        String result = new Date() + ";" + obj.storeId + ";" + obj.interfaceName + ";" + obj.method + ";" + timer + "\n";
+        Path path = Paths.get("timerLogged.txt");
+        if(!Files.exists(path)) {
+            Files.createFile(path);
+        }
+        Files.write(path, result.getBytes(), StandardOpenOption.APPEND);  //Append mode
     }
 }

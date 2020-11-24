@@ -451,16 +451,17 @@ public class StorePool {
             long timer = (System.currentTimeMillis() - obj.started.getTime())/1000;
             if(timer > 5) {
                result += obj.id + ";" + obj.storeId + ";" + obj.interfaceName + ";" + obj.method + ";" + timer + "\n";
-               if(!obj.dumpedToAppendFile) {
-                    appendToTimeLog(obj);
-                    obj.dumpedToAppendFile = true;
-               }
                if(timer > 120) {
                    result += "\n" + obj.getPrettyPrinted();
                    result += "\n";
                }
             }
-            
+            if(timer >= 2) {
+                if(!obj.dumpedToAppendFile) {
+                     appendToTimeLog(obj);
+                     obj.dumpedToAppendFile = true;
+                }
+            }
         }
         
         BufferedWriter writer = new BufferedWriter(new FileWriter("timer.txt"));
@@ -470,6 +471,12 @@ public class StorePool {
     }
 
     private void appendToTimeLog(JsonObject2 obj) throws Exception {
+        if(obj.interfaceName.equals("core.gsd.GdsManager")) {
+            return;
+        }
+        if(obj.interfaceName.equals("core.applications.StoreApplicationPool")) {
+            return;
+        }
         long timer = (System.currentTimeMillis() - obj.started.getTime())/1000;
         String result = new Date() + ";" + obj.storeId + ";" + obj.interfaceName + ";" + obj.method + ";" + timer + "\n";
         Path path = Paths.get("timerLogged.txt");

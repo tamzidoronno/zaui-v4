@@ -3800,6 +3800,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             retList.add(unsettledAmount);
         }
         
+        removeCompletedAccrued(retList);
+        removeCreditNotes(retList);
+        
         return retList;
     }
      
@@ -5689,6 +5692,51 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .collect(Collectors.toList());
         
         retList.stream().forEach(o -> creditOrder(o.id));
+    }
+
+    private void removeCompletedAccrued(List<OrderUnsettledAmountForAccount> retList) {
+        List<OrderUnsettledAmountForAccount> accuredOrders = retList.stream()
+                .filter(o -> o.order != null && o.order.isAccruedPayment())
+                .collect(Collectors.toList());
+        
+        Map<String, List<OrderUnsettledAmountForAccount>> groupedByRoom = 
+                accuredOrders.stream()
+                .collect((Collectors.groupingBy(o -> o.order.getRoomId())));
+        
+        for (String roomId : groupedByRoom.keySet()) {
+            Double total = groupedByRoom.get(roomId)
+                    .stream()
+                    .mapToDouble(o -> (getTotalAmount(o.order)))
+                    .sum();
+            
+            if (total < 0.05 && total > -0.05) {
+                System.out.println("REVEMOED");
+                retList.removeAll(groupedByRoom.get(roomId));
+            }
+        }
+    }
+
+    private void removeCreditNotes(List<OrderUnsettledAmountForAccount> retList) {
+        List<OrderUnsettledAmountForAccount> creditNotes = retList.stream()
+                .filter(o -> o.order.isCreditNote)
+                .collect(Collectors.toList());
+        
+        for (OrderUnsettledAmountForAccount creditNote : creditNotes) {
+            OrderUnsettledAmountForAccount parent = retList.stream()
+                    .filter(o -> o.order.id.equals(creditNote.order.parentOrder))
+                    .findAny()
+                    .orElse(null);
+            
+            if (parent == null)
+                continue;
+            
+            Double total = getTotalAmount(creditNote.order) + getTotalAmount(parent.order);
+            if (total < 0.05 && total > -0.05) {
+                System.out.println("REVEMOED CREDITNOTE");
+                retList.remove(creditNote);
+                retList.remove(parent);
+            }
+        }
     }
     
 }

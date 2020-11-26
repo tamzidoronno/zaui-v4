@@ -20,6 +20,7 @@ public class JsonObject2 implements Serializable {
     public String addr;
     public String messageId = "";
     public String realInterfaceName;
+    public String version = "1.0";
     
     public Date started = null;
     public String id = "";

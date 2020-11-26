@@ -12,6 +12,7 @@ import com.google.gson.reflect.TypeToken;
 import com.thundashop.core.storemanager.data.Store;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.nio.file.Paths;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -443,7 +445,7 @@ public class StorePool {
         long diff = System.currentTimeMillis() - lastCheck.getTime();
         return diff > 2000;
     }
-
+    
     private void logToTimerToFile() throws Exception {
         String result = "";
         HashMap<String, JsonObject2> runningObjects = new HashMap(running);
@@ -457,10 +459,7 @@ public class StorePool {
                }
             }
             if(timer >= 2) {
-                if(!obj.dumpedToAppendFile) {
-                     appendToTimeLog(obj);
-                     obj.dumpedToAppendFile = true;
-                }
+                appendToTimeLog(obj);
             }
         }
         
@@ -477,12 +476,34 @@ public class StorePool {
         if(obj.interfaceName.equals("core.applications.StoreApplicationPool")) {
             return;
         }
+        removeFromLoggerFile(obj);
         long timer = (System.currentTimeMillis() - obj.started.getTime())/1000;
-        String result = new Date() + ";" + obj.storeId + ";" + obj.interfaceName + ";" + obj.method + ";" + timer + "\n";
+        String result = new Date() + ";" + obj.id + ";" + obj.storeId + ";" + obj.interfaceName + ";" + obj.method + ";" + timer + "\n";
         Path path = Paths.get("timerLogged.txt");
         if(!Files.exists(path)) {
             Files.createFile(path);
         }
         Files.write(path, result.getBytes(), StandardOpenOption.APPEND);  //Append mode
+    }
+
+    private void removeFromLoggerFile(JsonObject2 obj) throws Exception {
+        Path path = Paths.get("timerLogged.txt");
+        if(!Files.exists(path)) {
+            Files.createFile(path);
+        }
+        List<String> lines = Files.readAllLines(path);  //Append mode
+        List<String> newFile = new ArrayList();
+        for(String line : lines) {
+            if(line.contains(obj.id)) {
+                continue;
+            }
+            newFile.add(line + "\n");
+        }
+        
+        Files.write(path, "".getBytes(), StandardOpenOption.WRITE);
+        for(String line : newFile) {
+            Files.write(path, line.getBytes(), StandardOpenOption.APPEND);  //Append mode
+        }
+        
     }
 }

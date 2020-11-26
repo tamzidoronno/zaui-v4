@@ -1960,4 +1960,12 @@ public class Order extends DataCommon implements Comparable<Order> {
                 .filter(o -> !o.transferredToAccounting)
                 .count() > 0;
     }
+    
+    public String getRoomId() {
+        return cart.getItems().stream()
+                .filter(o -> o.getProduct().externalReferenceId != null)
+                .map(o -> o.getProduct().externalReferenceId)
+                .findAny()
+                .orElse(null);
+    }
 }

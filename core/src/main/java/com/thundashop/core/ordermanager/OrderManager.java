@@ -139,6 +139,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     private List<String> fullyIntegratedPaymentMethods = new ArrayList();
     
+    private HashMap<String, Boolean> orderIsCredittedAndPaidFor = new HashMap();
+    
+    private boolean useCacheForOrderIsCredittedAndPaidFor = false;
+    
     @Autowired
     public MailFactory mailFactory;
     
@@ -792,13 +796,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         validateOrder(order);
         saveOrderInternal(order);
-        
-        try {
-            updateOrderChangedFromBooking(order.id);
-        } catch (GetShopBeanException ex) {
-            // Nothing to do, this happens when the order are removed by a named bean manager.
-            // In that case the manager should handle the order itself.
-        }
+
     }
     
     public void markOrderForAutoSending(String orderId) {
@@ -3271,6 +3269,15 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if (data instanceof Order) {
             updateStock((Order)data);
         }
+        
+        if (data instanceof Order) {
+            try {
+                updateOrderChangedFromBooking(data.id);
+            } catch (GetShopBeanException ex) {
+                // Nothing to do, this happens when the order are removed by a named bean manager.
+                // In that case the manager should handle the order itself.
+            }  
+        }
 
     }
 
@@ -4113,21 +4120,28 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public boolean orderIsCredittedAndPaidFor(String orderId) {
-        Order inOrder = getOrder(orderId);
+        if(useCacheForOrderIsCredittedAndPaidFor && orderIsCredittedAndPaidFor.containsKey(orderId)) {
+            return orderIsCredittedAndPaidFor.get(orderId);
+        }
+
+        Order inOrder = getOrderDirect(orderId);
         Order order = null;
         
-        if (inOrder == null)
+        if (inOrder == null) {
+            orderIsCredittedAndPaidFor.put(orderId, false);
             return false;
+        }
         
         if (inOrder != null) {
             if (inOrder.parentOrder != null && !inOrder.parentOrder.isEmpty()) {
-                order = getOrder(inOrder.parentOrder);
+                order = getOrderDirect(inOrder.parentOrder);
             } else {
                 order = inOrder;
             }
         }
         
         if (order.status != Order.Status.PAYMENT_COMPLETED) {
+            orderIsCredittedAndPaidFor.put(orderId, false);
             return false;
         }
         
@@ -4139,7 +4153,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         double diff = sumOfPaidCreditNotes + order.getTotalAmount();
         
-        return diff < 0.0001 && diff > -0.0001;
+        boolean diffResult = diff < 0.0001 && diff > -0.0001;
+        orderIsCredittedAndPaidFor.put(orderId, diffResult);
+        return diffResult;
+
     }
 
     @Override
@@ -5053,8 +5070,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     private Order createCreditOrderAndMarkAsPaid(String orderId, String newReference, boolean markAsPaid) {
-        Order order = getOrderSecure(orderId);
-
+        Order order = getOrderDirect(orderId);
+        
         if (order.createdBasedOnOrderIds != null && !order.createdBasedOnOrderIds.isEmpty()) {
             addCreditNotesToBookings(order.createdBasedOnOrderIds);
         }
@@ -5640,6 +5657,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
                 markAsPaid(order.id, date, getTotalAmount(order));
             });
+    }
+
+    public void startUseCacheForOrderIsCredittedAndPaidFor() {
+        useCacheForOrderIsCredittedAndPaidFor = true;
+        orderIsCredittedAndPaidFor = new HashMap();
+        
+    }
+
+    public void doneUseCacheForOrderIsCredittedAndPaidFor() {
+        useCacheForOrderIsCredittedAndPaidFor = false;
     }
    
     @Override

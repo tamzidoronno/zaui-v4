@@ -1112,9 +1112,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         List<Order> result = new ArrayList();
         PmsBooking booking = pmsManager.getBookingFromRoom(pmsBookingRoomId);
         for(String orderId : booking.orderIds) {
-            Order ord = orderManager.getOrder(orderId);
-            if(ord.isAccruedPayment()) { continue; }
+            Order ord = orderManager.getOrderDirect(orderId);
             if(!ord.containsRoom(pmsBookingRoomId)) { continue; }
+            if(ord.isAccruedPayment()) { continue; }
             if(ord.isPaid()) { continue; }
             if(ord.isInvoice()) { continue; }
             result.add(ord);

@@ -10,8 +10,14 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.thundashop.core.storemanager.data.Store;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.nio.file.Paths;
+import java.nio.file.Path;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -27,6 +33,8 @@ public class StorePool {
     private HashMap<String, StoreHandler> storeHandlers = new HashMap();
     private com.thundashop.core.storemanager.StorePool storePool;
     private Date lastTimePrintedTimeStampToLog = null;
+    private static Date lastCheck = new Date();
+    public static HashMap<String, JsonObject2> running = new HashMap();
     
     public StorePool() {
         if (AppContext.appContext != null) {
@@ -209,6 +217,7 @@ public class StorePool {
             return handleSpecialTimeoutCheck(object, types, argumentValues);
         }
         
+        
         Object res;
         if (object.interfaceName.equals("core.storemanager.StoreManager") && object.method.equals("initializeStore")) {
             res = storePool.initialize((String) argumentValues[0], (String) argumentValues[1]);
@@ -229,9 +238,16 @@ public class StorePool {
                 throw new ErrorException(1000010);
             }
             
+            object.storeId = handler.getStoreId();
             Class aClass = loadClass(object.interfaceName);
             Method method = getMethodToExecute(aClass, object.method, types, argumentValues);
             method = getCorrectMethod(method);
+    
+            try {
+                startAndCheckTimerForObject(object);
+            }catch(Exception e) {
+                e.printStackTrace();
+            }            
             
             try {
                 try {
@@ -243,20 +259,23 @@ public class StorePool {
                     } else {
                         res = handler.executeMethodSync(object, types, argumentValues);
                     }
+                    running.remove(object.id);
                 }catch(Exception x) {
                     
                     if (!(x instanceof ErrorException)) {
                         GetShopLogHandler.logPrintStatic("Exception: " + x.getMessage(), handler.getStoreId());
                         x.printStackTrace();
                     }
-                    
+                    running.remove(object.id);
                     throw x;
                 }
             }catch(ErrorException x) {
+                running.remove(object.id);
                 throw x;
             }
         }
         
+        running.remove(object.id);
         return res;
     }
     
@@ -401,5 +420,69 @@ public class StorePool {
         }
         
         return false;
+    }
+
+    private void startAndCheckTimerForObject(JsonObject2 object) throws Exception {
+        object.id = UUID.randomUUID().toString();
+        object.started = new Date();
+        
+        boolean hasForStore = false;
+        for(JsonObject2 obj : running.values()) {
+            if(obj.storeId.equals(object.storeId)) {
+                hasForStore = true;
+            }
+        }
+        if(!hasForStore) {
+            running.put(object.id, object);
+        }
+        
+        if(isOverDue()) { logToTimerToFile(); }
+   }
+
+    private boolean isOverDue() {
+        long diff = System.currentTimeMillis() - lastCheck.getTime();
+        return diff > 2000;
+    }
+
+    private void logToTimerToFile() throws Exception {
+        String result = "";
+        HashMap<String, JsonObject2> runningObjects = new HashMap(running);
+        for(JsonObject2 obj : runningObjects.values()) {
+            long timer = (System.currentTimeMillis() - obj.started.getTime())/1000;
+            if(timer > 5) {
+               result += obj.id + ";" + obj.storeId + ";" + obj.interfaceName + ";" + obj.method + ";" + timer + "\n";
+               if(timer > 120) {
+                   result += "\n" + obj.getPrettyPrinted();
+                   result += "\n";
+               }
+            }
+            if(timer >= 2) {
+                if(!obj.dumpedToAppendFile) {
+                     appendToTimeLog(obj);
+                     obj.dumpedToAppendFile = true;
+                }
+            }
+        }
+        
+        BufferedWriter writer = new BufferedWriter(new FileWriter("timer.txt"));
+        writer.write(result);
+        writer.close();
+        lastCheck = new Date();
+    }
+
+    private void appendToTimeLog(JsonObject2 obj) throws Exception {
+        if(obj.interfaceName.equals("core.gsd.GdsManager")) {
+            return;
+        }
+        if(obj.interfaceName.equals("core.applications.StoreApplicationPool")) {
+            return;
+        }
+        long timer = (System.currentTimeMillis() - obj.started.getTime())/1000;
+        String result = new Date() + ";" + obj.storeId + ";" + obj.interfaceName + ";" + obj.method + ";" + timer + "\n";
+        Path path = Paths.get("timerLogged.txt");
+        if(!Files.exists(path)) {
+            Files.createFile(path);
+        }
+        Files.write(path, result.getBytes(), StandardOpenOption.APPEND);  //Append mode
     }
 }

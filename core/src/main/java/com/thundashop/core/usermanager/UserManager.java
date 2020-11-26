@@ -418,6 +418,8 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
         List<User> result = collection.filterUsers(getSession().currentUser, allUsers);
         
+        result = removeGetShopUsers(result);
+        
         Collections.sort(result, (User s1, User s2) -> {
             return s1.getName().compareTo(s2.getName());
         }); 
@@ -1575,7 +1577,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     @Override
     public List<User> getUsersByType(int type) {
-        return getUserStoreCollection(storeId).getUsersByType(type);
+        List<User> users = getUserStoreCollection(storeId).getUsersByType(type);
+        users = removeGetShopUsers(users);
+        return users;
     }
 
     @Override
@@ -2628,6 +2632,26 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }catch(Exception e) {
             logPrintException(e);
         }
+    }
+
+    private List<User> removeGetShopUsers(List<User> result) {
+        
+        if(storeId.equals("13442b34-31e5-424c-bb23-a396b7aeb8ca")) {
+            return result;
+        }
+        
+        List<User> getshopUsers = new ArrayList();
+        for(User usr : result) {
+            if(usr.isGetShopAdministrator()) {
+                getshopUsers.add(usr);
+            }
+            if(usr.emailAddress != null && usr.emailAddress.endsWith("@getshop.com")) {
+                getshopUsers.add(usr);
+            }
+        }
+        
+        result.removeAll(getshopUsers);
+        return result;
     }
 
 }

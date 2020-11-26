@@ -2,6 +2,7 @@ package com.thundashop.core.common;
 
 import com.google.gson.Gson;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -20,6 +21,11 @@ public class JsonObject2 implements Serializable {
     public String messageId = "";
     public String realInterfaceName;
     public String version = "1.0";
+    
+    public Date started = null;
+    public String id = "";
+    public String storeId = "";
+    boolean dumpedToAppendFile = false;
 
     String getPrettyPrinted() {
         Gson gson = new Gson();

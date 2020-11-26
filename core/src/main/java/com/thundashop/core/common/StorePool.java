@@ -458,9 +458,9 @@ public class StorePool {
                    result += "\n";
                }
             }
-            if(timer >= 2) {
-                appendToTimeLog(obj);
-            }
+//            if(timer >= 2) {
+//                appendToTimeLog(obj);
+//            }
         }
         
         BufferedWriter writer = new BufferedWriter(new FileWriter("timer.txt"));

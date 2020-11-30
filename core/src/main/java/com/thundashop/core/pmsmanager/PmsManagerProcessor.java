@@ -418,7 +418,7 @@ public class PmsManagerProcessor {
                 }
                 if (room.bookingItemId == null || room.bookingItemId.isEmpty()) {
                     roomsToAssing.add(room);
-                } else if(room.isStarted() && !room.triedToAutoAssign) {
+                } else if(room.isStarted() && !room.triedToAutoAssign && !room.isEnded()) {
                     room.triedToAutoAssign = true;
                     bookingsToSave.put(booking.id, booking);
                 }

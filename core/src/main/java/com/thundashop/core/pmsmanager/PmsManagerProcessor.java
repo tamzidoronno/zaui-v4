@@ -425,8 +425,8 @@ public class PmsManagerProcessor {
             }
         }
         
-        for(PmsBooking booking : bookings) {
-            manager.saveBooking(booking);
+        for(PmsBooking b : bookingsToSave.values()) {
+            manager.saveBooking(b);
         }
         
         Collections.sort(roomsToAssing, new Comparator<PmsBookingRooms>(){

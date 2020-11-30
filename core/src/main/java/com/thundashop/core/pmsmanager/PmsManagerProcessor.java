@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import org.joda.time.DateTime;
@@ -404,12 +405,9 @@ public class PmsManagerProcessor {
     }
 
     private void processAutoAssigning() {
-        if(manager.getStore().id.equals("1ed4ab1f-c726-4364-bf04-8dcddb2fb2b1")) {
-            return;
-        }
-        
         List<PmsBooking> bookings = getAllConfirmedNotDeleted(true);
         List<PmsBookingRooms> roomsToAssing = new ArrayList();
+        HashMap<String, PmsBooking> bookingsToSave = new HashMap();
         for (PmsBooking booking : bookings) {
             for (PmsBookingRooms room : booking.getActiveRooms()) {
                 if (!room.isStartingToday() && !room.isStarted() || room.isEnded()) {
@@ -420,8 +418,15 @@ public class PmsManagerProcessor {
                 }
                 if (room.bookingItemId == null || room.bookingItemId.isEmpty()) {
                     roomsToAssing.add(room);
+                } else if(room.isStarted() && !room.triedToAutoAssign) {
+                    room.triedToAutoAssign = true;
+                    bookingsToSave.put(booking.id, booking);
                 }
             }
+        }
+        
+        for(PmsBooking booking : bookings) {
+            manager.saveBooking(booking);
         }
         
         Collections.sort(roomsToAssing, new Comparator<PmsBookingRooms>(){

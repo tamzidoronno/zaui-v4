@@ -3107,9 +3107,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     void autoAssignItem(PmsBookingRooms room) {
-        if(storeId.equals("1ed4ab1f-c726-4364-bf04-8dcddb2fb2b1")) {
-            return;
-        }
     
         room.triedToAutoAssign = true;
         

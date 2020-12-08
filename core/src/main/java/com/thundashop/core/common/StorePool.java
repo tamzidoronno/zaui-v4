@@ -248,7 +248,7 @@ public class StorePool {
             try {
                 startAndCheckTimerForObject(object);
             }catch(Exception e) {
-                e.printStackTrace();
+                // Dont care if this fails.
             }            
             
             try {

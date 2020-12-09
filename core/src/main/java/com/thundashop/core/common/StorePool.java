@@ -427,7 +427,7 @@ public class StorePool {
     private void startAndCheckTimerForObject(JsonObject2 object) throws Exception {
         object.id = UUID.randomUUID().toString();
         object.started = new Date();
-        
+                
         boolean hasForStore = false;
         for(JsonObject2 obj : running.values()) {
             if(obj.storeId.equals(object.storeId)) {
@@ -447,7 +447,7 @@ public class StorePool {
     }
     
     private void logToTimerToFile() throws Exception {
-        String result = "";
+        String result = "Number of objects to track: " + running.keySet().size() + "\r\n";
         HashMap<String, JsonObject2> runningObjects = new HashMap(running);
         for(JsonObject2 obj : runningObjects.values()) {
             long timer = (System.currentTimeMillis() - obj.started.getTime())/1000;

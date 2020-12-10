@@ -13,6 +13,7 @@ import com.thundashop.core.storemanager.data.Store;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.nio.file.Paths;
@@ -458,9 +459,9 @@ public class StorePool {
                    result += "\n";
                }
             }
-//            if(timer >= 2) {
-//                appendToTimeLog(obj);
-//            }
+            if(timer >= 2) {
+                appendToTimeLog(obj);
+            }
         }
         
         BufferedWriter writer = new BufferedWriter(new FileWriter("timer.txt"));
@@ -500,7 +501,10 @@ public class StorePool {
             newFile.add(line + "\n");
         }
         
-        Files.write(path, "".getBytes(), StandardOpenOption.WRITE);
+        PrintWriter writer = new PrintWriter("timerLogged.txt");
+        writer.print("");
+        writer.close();
+        
         for(String line : newFile) {
             Files.write(path, line.getBytes(), StandardOpenOption.APPEND);  //Append mode
         }

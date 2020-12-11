@@ -477,6 +477,13 @@ public class StorePool {
     private void logToTimerLoggedToFile(JsonObject2 obj) throws Exception {
         long timer = (System.currentTimeMillis() - obj.started.getTime())/1000;
         if(timer > 2) {
+            if(obj.interfaceName.equals("core.gsd.GdsManager")) {
+                return;
+            }
+            if(obj.interfaceName.equals("core.applications.StoreApplicationPool")) {
+                return;
+            }
+            
            File yourFile = new File("timerLogged.txt");
            yourFile.createNewFile(); 
 

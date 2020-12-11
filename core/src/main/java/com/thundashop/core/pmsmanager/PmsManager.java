@@ -6287,6 +6287,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<PmsBookingAddonViewItem> items = new ArrayList();
 
         for (PmsBooking booking : bookings.values()) {
+            if(!booking.isCompletedBooking()) {
+                continue;
+            }
             for (PmsBookingRooms room : booking.getActiveRooms()) {
                 for (PmsBookingAddonItem item : room.addons) {
                     if (!view.products.contains(item.productId)) {

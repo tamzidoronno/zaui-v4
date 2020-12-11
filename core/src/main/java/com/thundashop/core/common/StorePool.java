@@ -460,7 +460,7 @@ public class StorePool {
                }
             }
             if(timer >= 2) {
-//                appendToTimeLog(obj);
+                appendToTimeLog(obj);
             }
         }
         

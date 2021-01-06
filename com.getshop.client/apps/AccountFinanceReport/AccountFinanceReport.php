@@ -401,6 +401,15 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
         $instance = $this->getFactory()->getApplicationPool()->createInstace($app);
         return $instance->getName();
     }
+    
+    public function changeClosedDate() {
+        if (!$_POST['data']['description']) {
+            return;
+        }
+        
+        $date = $this->convertToJavaDate(strtotime($_POST['data']['totime']));
+        $this->getApi()->getOrderManager()->changeClosedDate($_POST['data']['description'], $date);
+    }
 
     public function getTab() {
         if (!isset($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_submenu'])) {
@@ -409,6 +418,10 @@ class AccountFinanceReport extends \MarketingApplication implements \Application
         
         if ($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_submenu'] == "doublepost") {
             return "doublepost";
+        }
+        
+        if ($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_submenu'] == "settings") {
+            return "settings";
         }
         
         if ($_SESSION['ns_e6570c0a_8240_4971_be34_2e67f0253fd3_submenu'] == "freeposting") {

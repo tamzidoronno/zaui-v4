@@ -1,0 +1,47 @@
+<?
+/* @var $this \ns_e6570c0a_8240_4971_be34_2e67f0253fd3\AccountFinanceReport */
+?>
+<div class="settingstab">
+    <h1>Settings</h1>
+    <?
+    $settings = $this->getApi()->getOrderManager()->getOrderManagerSettings();
+    ?>
+    <b>Current close periode</b> 
+    <?
+    echo date('d.m.Y', strtotime($settings->closedTilPeriode));
+    ?>
+
+    <br/>
+    <br/>
+    <hr/>
+    <h2>Change close to date</h2>
+    <div gstype="form" method="changeClosedDate">
+        Why do you want to change the date?
+        <br/><textarea style="width: 500px; height: 200px; border: solid 1px #DDD; padding: 20px" class="textarea" gsname="description"></textarea>
+        <br/>
+        <br/>
+        <b>Date:</b>
+        <br/>
+        <input class="gsniceinput1" placeholder="dd.mm.yyyy" gsname="totime"/> <div class="shop_button" gstype="submit">Change..</div>
+    </div>
+
+    <br/>
+    <h1>Log</h1>
+    <?
+    $logs = $this->getApi()->getOrderManager()->getChangedCloseDateLog();
+    foreach ($logs as $log) {
+        ?>
+        <div style="background-color: #eee; padding: 20px; margin-bottom: 10px">
+            <?
+            echo "<b>Desc</b><br/>";
+            echo $log->description . "<br/>";
+            echo "<b>Old date</b> " . date('d.m.Y', strtotime($log->oldDate)). "<br/>";
+            echo "<b>New date</b> " . date('d.m.Y', strtotime($log->newDate));
+            echo "<br/><b>Done by user:</b> " . $this->getApi()->getUserManager()->getUserById($log->lastModifiedByUserId)->fullName;
+            ?>
+        </div>
+        <?
+    }
+    ?>
+
+</div>

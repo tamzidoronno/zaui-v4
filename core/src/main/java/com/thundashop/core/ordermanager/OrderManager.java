@@ -51,6 +51,7 @@ import com.thundashop.core.ocr.OcrFileLines;
 import com.thundashop.core.ocr.StoreOcrManager;
 import com.thundashop.core.ordermanager.data.AccountingFreePost;
 import com.thundashop.core.ordermanager.data.CartItemDates;
+import com.thundashop.core.ordermanager.data.ChangedCloseDateLog;
 import com.thundashop.core.ordermanager.data.ClosedOrderPeriode;
 import com.thundashop.core.ordermanager.data.EhfSentLog;
 import com.thundashop.core.ordermanager.data.Order;
@@ -5738,5 +5739,32 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
         }
     }
+
+    @Override
+    public void changeClosedDate(String description, Date date) {
+        Date to = getOrderManagerSettings().closedTilPeriode;
+        Date start = date;
+        
+        resetLastMonthClose("adfs9a9087293451q2oi4h1234khakslhfasidurh23", start, to);
+        
+        ChangedCloseDateLog log = new ChangedCloseDateLog();
+        log.description = description;
+        log.newDate = date;
+        log.oldDate = to;
+        
+        saveObject(log);
+    }
+
+    @Override
+    public List<ChangedCloseDateLog> getChangedCloseDateLog() {
+        BasicDBObject query = new BasicDBObject();
+        query.put("className", ChangedCloseDateLog.class.getCanonicalName());
+        
+        return database.query(OrderManager.class.getSimpleName(), storeId, query)
+                .stream()
+                .map(o -> (ChangedCloseDateLog)o)
+                .collect(Collectors.toList());
+    }
+    
     
 }

@@ -173,7 +173,11 @@ public class Database extends StoreComponent {
             return;
         }
         
-        mongo.getDB(credentials.manangerName).getCollection(collectionPrefix + data.storeId).save(dbObject);
+        try {
+            mongo.getDB(credentials.manangerName).getCollection(collectionPrefix + data.storeId).save(dbObject);
+        }catch(Exception e) {
+            throw e;
+        }
     }
 
     public List<DataCommon> retreiveData(Credentials credentials) {

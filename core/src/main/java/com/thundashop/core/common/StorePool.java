@@ -11,8 +11,10 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.thundashop.core.storemanager.data.Store;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.nio.file.Paths;
@@ -261,6 +263,12 @@ public class StorePool {
                     } else {
                         res = handler.executeMethodSync(object, types, argumentValues);
                     }
+                    
+                    try {
+                        logToTimerLoggedToFile(object);
+                    }catch(Exception e) {
+                        GetShopLogHandler.logPrintStatic(e, object.storeId);
+                    }
                     running.remove(object.id);
                 }catch(Exception x) {
                     
@@ -427,7 +435,7 @@ public class StorePool {
     private void startAndCheckTimerForObject(JsonObject2 object) throws Exception {
         object.id = UUID.randomUUID().toString();
         object.started = new Date();
-        
+                
         boolean hasForStore = false;
         for(JsonObject2 obj : running.values()) {
             if(obj.storeId.equals(object.storeId)) {
@@ -447,7 +455,7 @@ public class StorePool {
     }
     
     private void logToTimerToFile() throws Exception {
-        String result = "";
+        String result = "Number of objects to track: " + running.keySet().size() + "\r\n";
         HashMap<String, JsonObject2> runningObjects = new HashMap(running);
         for(JsonObject2 obj : runningObjects.values()) {
             long timer = (System.currentTimeMillis() - obj.started.getTime())/1000;
@@ -458,9 +466,6 @@ public class StorePool {
                    result += "\n";
                }
             }
-//            if(timer >= 2) {
-//                appendToTimeLog(obj);
-//            }
         }
         
         BufferedWriter writer = new BufferedWriter(new FileWriter("timer.txt"));
@@ -468,42 +473,23 @@ public class StorePool {
         writer.close();
         lastCheck = new Date();
     }
-
-    private void appendToTimeLog(JsonObject2 obj) throws Exception {
-        if(obj.interfaceName.equals("core.gsd.GdsManager")) {
-            return;
-        }
-        if(obj.interfaceName.equals("core.applications.StoreApplicationPool")) {
-            return;
-        }
-        removeFromLoggerFile(obj);
+    
+    private void logToTimerLoggedToFile(JsonObject2 obj) throws Exception {
         long timer = (System.currentTimeMillis() - obj.started.getTime())/1000;
-        String result = new Date() + ";" + obj.id + ";" + obj.storeId + ";" + obj.interfaceName + ";" + obj.method + ";" + timer + "\n";
-        Path path = Paths.get("timerLogged.txt");
-        if(!Files.exists(path)) {
-            Files.createFile(path);
-        }
-        Files.write(path, result.getBytes(), StandardOpenOption.APPEND);  //Append mode
-    }
-
-    private void removeFromLoggerFile(JsonObject2 obj) throws Exception {
-        Path path = Paths.get("timerLogged.txt");
-        if(!Files.exists(path)) {
-            Files.createFile(path);
-        }
-        List<String> lines = Files.readAllLines(path);  //Append mode
-        List<String> newFile = new ArrayList();
-        for(String line : lines) {
-            if(line.contains(obj.id)) {
-                continue;
+        if(timer > 2) {
+            if(obj.interfaceName.equals("core.gsd.GdsManager")) {
+                return;
             }
-            newFile.add(line + "\n");
+            if(obj.interfaceName.equals("core.applications.StoreApplicationPool")) {
+                return;
+            }
+            
+           File yourFile = new File("timerLogged.txt");
+           yourFile.createNewFile(); 
+
+           String result = new Date()+ ";" + obj.id + ";" + obj.storeId + ";" + obj.interfaceName + ";" + obj.method + ";" + timer + "\n";
+           Path path = Paths.get("timerLogged.txt");
+           Files.write(path, result.getBytes(), StandardOpenOption.APPEND);  //Append mode
         }
-        
-        Files.write(path, "".getBytes(), StandardOpenOption.WRITE);
-        for(String line : newFile) {
-            Files.write(path, line.getBytes(), StandardOpenOption.APPEND);  //Append mode
-        }
-        
     }
 }

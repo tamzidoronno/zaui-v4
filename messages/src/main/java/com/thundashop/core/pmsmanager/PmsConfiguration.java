@@ -425,6 +425,22 @@ public class PmsConfiguration extends DataCommon {
         for(PmsBookingAddonItem item : addonConfiguration.values()) {
             newAddons.put(item.addonType, item);
         }
+        
+        
+        List<String> replace = new ArrayList();
+        for(String key : channelConfiguration.keySet()) {
+            if(key.contains(".")) {
+                replace.add(key);
+            }
+        }
+        
+        for(String rep : replace) {
+            PmsChannelConfig config = channelConfiguration.get(rep);
+            channelConfiguration.remove(rep);
+            rep = rep.replace(".", "");
+            channelConfiguration.put(rep, config);
+        }
+        
         addonConfiguration = newAddons;
         
     }
@@ -434,6 +450,7 @@ public class PmsConfiguration extends DataCommon {
     }
     
     public PmsChannelConfig getChannelConfiguration(String channel) {
+        channel = channel.replace(".", "");
         if(!channelConfiguration.containsKey(channel)) {
             PmsChannelConfig config = new PmsChannelConfig();
             config.channel = channel;

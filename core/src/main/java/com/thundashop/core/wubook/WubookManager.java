@@ -2664,6 +2664,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         Double diff = amountFromBooking - amountFromFetched;
         
         if(diff < -1 || diff > 1) {
+            if(booking.rooms.size() > 1) {
+                diff = diff / booking.rooms.size();
+            }
             for(WubookBookedRoom room : booking.rooms) {
                 for(Date day : room.priceMatrix.keySet()) {
                     Double current = room.priceMatrix.get(day);

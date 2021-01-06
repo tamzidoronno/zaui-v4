@@ -16,12 +16,16 @@ include '../loader.php';
  */
 $gssid = '';
 $clientheaders = getallheaders();
-if( isset($clientheaders['GSSID']) )
+
+//adhere to https://tools.ietf.org/html/rfc6750#section-2.1
+if( isset($clientheaders['Authorization']) )
 {
-    $gssid = $clientheaders['GSSID'];
+    $gssid = str_replace('Bearer:','', $clientheaders['Authorization'] );
+    $gssid = trim($gssid);
 }
 else if( $_REQUEST['GSSID'] )
 {
+    //fallback for testing
     $gssid = $_REQUEST['GSSID'];
 }
 

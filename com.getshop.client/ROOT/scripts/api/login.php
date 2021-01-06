@@ -27,7 +27,7 @@ if (isset($event['username']) && isset($event['password'])) {
 
    ob_clean();
    echo json_encode($logon);
-   die('\n');
+   die("\n");
 }
 
 header("HTTP/1.1 401 Unauthorized");

@@ -31,8 +31,8 @@ else if( $_REQUEST['GSSID'] )
 
 if($gssid != '')
 {
-    session_start();
     session_id( $gssid );
+    session_start();
 
     if( $_SESSION['authenticated'] )
     {
@@ -43,9 +43,9 @@ if($gssid != '')
         $config = new ConfigReader();
         
         $commhelper = new CommunicationHelper();
-        $commhelper->port = $config->getConfig("port");
+        $commhelper->port = $config->getConfig('port');
         $commhelper->sessionId = session_id();
-        $commhelper->host = $config->getConfig("backenddb");
+        $commhelper->host = $config->getConfig('backenddb');
         $commhelper->connect();
         
         
@@ -68,8 +68,8 @@ if($gssid != '')
         die("\n");
     }
 }
-header("HTTP/1.1 401 Unauthorized");
-echo "Go away";
+header('HTTP/1.1 401 Unauthorized');
+echo 'Go away';
 die();
 
 ?>

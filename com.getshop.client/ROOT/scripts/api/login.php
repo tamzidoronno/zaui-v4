@@ -15,7 +15,16 @@ include '../loader.php';
 
 $factory = IocContainer::getFactorySingelton(false);
 
-$event = $_REQUEST;
+
+$request = file_get_contents('php://input');
+$event = false;
+try{
+    $event = json_decode($request, true);
+} catch (Exception $e) {
+
+}
+
+if(!$event) $event = $_REQUEST;
 
 if (isset($event['username']) && isset($event['password'])) {
    $logon = $factory->getApi()->getUserManager()->logOn($event['username'], $event['password']);

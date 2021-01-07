@@ -43,7 +43,14 @@ if($gssid != '')
     {
 
         // we assume a valid and authenticated user here
+        $request = file_get_contents('php://input');
         $event = $_POST;
+        try{
+            $json = json_decode($request, true);
+            $event['args'] = $json;
+        } catch (Exception $e) {
+        
+        }
 
         $config = new ConfigReader();
         

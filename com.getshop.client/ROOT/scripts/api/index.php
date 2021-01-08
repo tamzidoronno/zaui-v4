@@ -47,10 +47,12 @@ if($gssid != '')
         $event = $_POST;
         try{
             $json = json_decode($request, true);
-            $event['args'] = $json;
+            $event = $json;
         } catch (Exception $e) {
         
         }
+
+        $event['sessionId'] = $gssid;
 
         $config = new ConfigReader();
         

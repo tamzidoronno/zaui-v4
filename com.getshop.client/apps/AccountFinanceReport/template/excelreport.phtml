@@ -25,6 +25,7 @@ foreach ($dayIncomes as $dayIncome) {
 }
 
 $accounts = array_unique($allAccountNumbers);
+asort($accounts);
 
 $rows = array();
 
@@ -35,7 +36,7 @@ foreach ($accounts as $account) {
 }
 
 $rows[] = $header;
-
+$controlSum = 0;
 foreach ($dayIncomes as $dayIncome) {
     $grouped = $this->groupOnAccounting($dayIncome->dayEntries);
     $rowToAdd = array();

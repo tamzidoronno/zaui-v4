@@ -29,6 +29,14 @@ if(isset($_POST['redirect'])) {
     $redirect = $_POST['redirect'];
 }
 
+if($redirect != "")
+{
+	$redirect = rawurldecode( $redirect );
+	$redirect = strip_tags( $redirect );
+	$redirect = filter_var($redirect, FILTER_SANITIZE_STRING, FILTER_SANITIZE_URL);
+	$redirect = rawurlencode($redirect);
+}
+
 if (isset($_GET['username'])) {
     $username = $_GET['username'];
 }
@@ -237,7 +245,7 @@ if (isset($_POST['pincoderequest']) && $_POST['username'] && $_POST['password'])
     <?php
     $gets = "";
     foreach($_GET as $k => $val) {
-        $gets .= $k . "=" . $val . "&";
+        $gets .= $k . "=" . filter_var($val, FILTER_SANITIZE_STRING, FILTER_SANITIZE_URL) . "&";
     }
     ?>
     <a href='totp.php?<?php echo $gets; ?>' style='color:blue; text-decoration: none;'>Totp login</a>

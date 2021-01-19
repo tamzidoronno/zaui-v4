@@ -68,6 +68,7 @@ if (isset($_POST['pincoderequest']) && $_POST['username'] && $_POST['password'])
 </head>
 
 <style>
+    html,body { font: 95% Arial, Helvetica, sans-serif; }
     .form-style-6{
         font: 95% Arial, Helvetica, sans-serif;
         max-width: 400px;
@@ -154,10 +155,7 @@ if (isset($_POST['pincoderequest']) && $_POST['username'] && $_POST['password'])
     }
 </style>
 
-<div style="text-align: center;padding:10px;">
-    <img src="https://www.getshop.com/displayImage.php?id=78c64104-ffe0-45d0-a554-87573d34ae7f&height=100&width=100"></img>
-    <br>
-    <br>
+<div style="text-align: center;padding:32px;">
     <div class="inner <? echo $notloggedInClass; ?>">
         <div  class="form-style-6" >
             <h1>

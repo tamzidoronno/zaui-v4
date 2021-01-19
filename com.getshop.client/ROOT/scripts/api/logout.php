@@ -65,7 +65,9 @@ if($gssid != '')
         //login to log us out!
         $factory = IocContainer::getFactorySingelton(false);
         $logon = $factory->getApi()->getUserManager()->logonUsingToken($gssid);
-        
+        $factory->getApi()->getUserManager()->logout();
+        $_SESSION['authenticated'] = false;
+
         die('{"result":"ok"}');
 
     }

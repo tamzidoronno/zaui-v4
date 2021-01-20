@@ -197,7 +197,7 @@ public class SendRegningManager extends ManagerBase implements ISendRegningManag
         String originatorid = sendRegningApp.getSetting("originatorid");
         
         if(!frameworkConfig.productionMode) {
-            usernamepassword = "pal@getshop.com:1122T3st";
+            usernamepassword = "post@getshop.com:1122T3st";
             originatorid = "79732";
         }
         

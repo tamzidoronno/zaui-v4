@@ -76,7 +76,7 @@ class Login extends \SystemApplication implements \Application {
             // Need to refresh the page in order to make sure that all data is loaded.
             // This login is after data has been initialized to factory.
             if(isset($_POST['redirect']) && $_POST['redirect']) {
-                header("location:" . $_POST['redirect']);
+                header('Location: ' . rawurldecode( $_POST['redirect']) );
                 exit(0);
             }
             $page = $_SERVER['PHP_SELF'];

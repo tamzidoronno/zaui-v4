@@ -2,14 +2,21 @@
 /* @var $this \ns_4be8e427_bead_491e_8d9f_7dd16356d8eb\OrderView */
 $order = $this->getOrder();
 if ($order->closed) {
-    if (!$order->isCreditNote && !$order->creditOrderId) {
+    $isGetShopAdmin = strstr(\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()->emailAddress, "@getshop.com") > -1;
+    if ((!$order->isCreditNote && !$order->creditOrderId) || $isGetShopAdmin) {
     ?>
         <div class="actionbutton creditorder" > 
             <div class="icon"><i class="fa fa-history"></i></div>
-            <div class="title"><? echo $this->__f("Credit order"); ?></div>
+            <div class="title"><? echo $this->__f("Credit order"); ?>
+                <?
+                if ($isGetShopAdmin && ! (!$order->isCreditNote && !$order->creditOrderId)) {
+                    echo "<br/> ( Only available for GS Admin )";
+                }
+                ?>
+            </div>
         </div>
     <?
-    }
+    } 
 } else {
     ?>
     <div class="actionbutton deleteorder" > 

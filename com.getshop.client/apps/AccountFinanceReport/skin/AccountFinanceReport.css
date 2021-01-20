@@ -294,3 +294,7 @@
     border: solid 1px;
     display: none;
 }
+
+.AccountFinanceReport .settingstab {
+    padding: 30px;
+}

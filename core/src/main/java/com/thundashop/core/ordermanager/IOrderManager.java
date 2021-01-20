@@ -21,6 +21,7 @@ import com.thundashop.core.gsd.TerminalReceiptText;
 import com.thundashop.core.gsd.TerminalResponse;
 import com.thundashop.core.ordermanager.data.AccountingFreePost;
 import com.thundashop.core.ordermanager.data.CartItemDates;
+import com.thundashop.core.ordermanager.data.ChangedCloseDateLog;
 import com.thundashop.core.ordermanager.data.ClosedOrderPeriode;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.OrderFilter;
@@ -620,4 +621,10 @@ public interface IOrderManager {
     
     @Administrator
     public List<Order> getOrdersNotConnectedToAnyZReports();
+    
+    @Administrator
+    public void changeClosedDate(String description, Date date);
+    
+    @Administrator
+    public List<ChangedCloseDateLog> getChangedCloseDateLog();
 }

@@ -169,7 +169,7 @@ public class DatabaseRemote extends StoreComponent {
         save(data, credentials);
     }
 
-    public List<DataCommon> getAll(String dbName, String storeId, String moduleName) {
+    public synchronized List<DataCommon> getAll(String dbName, String storeId, String moduleName) {
         String key = dbName+"_"+storeId+"_"+moduleName;
         
         if (cached.get(key) != null) {

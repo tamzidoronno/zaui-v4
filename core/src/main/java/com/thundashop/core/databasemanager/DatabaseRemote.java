@@ -55,7 +55,8 @@ public class DatabaseRemote extends StoreComponent {
     
     private String collectionPrefix = "col_";
     
-    public static HashMap<String, List<DataCommon>> cached = new HashMap();
+    @Autowired
+    public DatabaseRemoteCache cached;
     
     @Autowired
     public Logger logger;

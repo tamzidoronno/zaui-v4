@@ -189,8 +189,6 @@ public class DatabaseRemote extends StoreComponent {
                 mongo.close();
 
                 Runner.cached.put(key, retlist.collect(Collectors.toList()));
-
-                System.out.println("Feched " + key + ", time used: "+ (System.currentTimeMillis() - timeUsed) + " | objects: " + Runner.cached.get(key).size());
             } catch (Exception ex) {
                 java.util.logging.Logger.getLogger(DatabaseRemote.class.getName()).log(Level.WARNING, null, ex);
             }

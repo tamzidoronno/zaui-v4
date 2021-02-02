@@ -9,6 +9,7 @@ package com.thundashop.core.databasemanager;
 import com.thundashop.core.common.DataCommon;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Component;
 
 /**
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class DatabaseRemoteCache {
-    private HashMap<String, List<DataCommon>> cached = new HashMap();
+    private ConcurrentHashMap<String, List<DataCommon>> cached = new ConcurrentHashMap();
     
     List<DataCommon> get(String key) {
         return cached.get(key);

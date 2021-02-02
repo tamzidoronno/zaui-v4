@@ -56,9 +56,6 @@ public class DatabaseRemote extends StoreComponent {
     private String collectionPrefix = "col_";
     
     @Autowired
-    public DatabaseRemoteCache cached;
-    
-    @Autowired
     public Logger logger;
     
     private String[] readLines(String filename) {
@@ -169,35 +166,37 @@ public class DatabaseRemote extends StoreComponent {
         save(data, credentials);
     }
 
-    public synchronized List<DataCommon> getAll(String dbName, String storeId, String moduleName) {
+    public List<DataCommon> getAll(String dbName, String storeId, String moduleName) {
         String key = dbName+"_"+storeId+"_"+moduleName;
         
-        if (cached.get(key) != null) {
-            return cached.get(key);
-        }
-        
-        try {
-            if (GetShopLogHandler.isDeveloper) {
-//                connect();
-                connectLocal();
-            } else {
-                connect();
+        synchronized(DatabaseRemoteCache.class) {
+            if (Runner.cached.get(key) != null) {
+                return Runner.cached.get(key);
             }
-            
-            long timeUsed = System.currentTimeMillis();
-            DBCollection col = mongo.getDB(dbName).getCollection("col_all_" + moduleName);
-            Stream<DataCommon> retlist = col.find().toArray().stream()
-                    .map(o -> morphia.fromDBObject(DataCommon.class, o));
-            mongo.close();
-            
-            cached.put(key, retlist.collect(Collectors.toList()));
-            
-            System.out.println("Feched " + key + ", time used: "+ (System.currentTimeMillis() - timeUsed) + " | objects: " + cached.get(key).size());
-        } catch (Exception ex) {
-            java.util.logging.Logger.getLogger(DatabaseRemote.class.getName()).log(Level.WARNING, null, ex);
+
+            try {
+                if (GetShopLogHandler.isDeveloper) {
+    //                connect();
+                    connectLocal();
+                } else {
+                    connect();
+                }
+
+                long timeUsed = System.currentTimeMillis();
+                DBCollection col = mongo.getDB(dbName).getCollection("col_all_" + moduleName);
+                Stream<DataCommon> retlist = col.find().toArray().stream()
+                        .map(o -> morphia.fromDBObject(DataCommon.class, o));
+                mongo.close();
+
+                Runner.cached.put(key, retlist.collect(Collectors.toList()));
+
+                System.out.println("Feched " + key + ", time used: "+ (System.currentTimeMillis() - timeUsed) + " | objects: " + Runner.cached.get(key).size());
+            } catch (Exception ex) {
+                java.util.logging.Logger.getLogger(DatabaseRemote.class.getName()).log(Level.WARNING, null, ex);
+            }
+
+            return Runner.cached.get(key);
         }
-        
-        return cached.get(key);
     }
 
     /**

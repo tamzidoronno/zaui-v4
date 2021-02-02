@@ -30,9 +30,11 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.mongodb.morphia.Morphia;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +54,8 @@ public class DatabaseRemote extends StoreComponent {
     private Morphia morphia;
     
     private String collectionPrefix = "col_";
+    
+    public static HashMap<String, List<DataCommon>> cached = new HashMap();
     
     @Autowired
     public Logger logger;
@@ -164,40 +168,51 @@ public class DatabaseRemote extends StoreComponent {
         save(data, credentials);
     }
 
-    public Stream<DataCommon> getAll(String dbName, String storeId, String moduleName) {
+    public List<DataCommon> getAll(String dbName, String storeId, String moduleName) {
+        String key = dbName+"_"+storeId+"_"+moduleName;
+        
+        if (cached.get(key) != null) {
+            return cached.get(key);
+        }
+        
         try {
             if (GetShopLogHandler.isDeveloper) {
-                connectLocal();
+                connect();
+                //connectLocal();
             } else {
                 connect();
             }
             
+            long timeUsed = System.currentTimeMillis();
             DBCollection col = mongo.getDB(dbName).getCollection("col_all_" + moduleName);
             Stream<DataCommon> retlist = col.find().toArray().stream()
                     .map(o -> morphia.fromDBObject(DataCommon.class, o));
             mongo.close();
-            return retlist;
+            
+            cached.put(key, retlist.collect(Collectors.toList()));
+            
+            System.out.println("Feched " + key + ", time used: "+ (System.currentTimeMillis() - timeUsed) + " | objects: " + cached.get(key).size());
         } catch (Exception ex) {
             java.util.logging.Logger.getLogger(DatabaseRemote.class.getName()).log(Level.WARNING, null, ex);
         }
         
-        return new ArrayList().stream();
+        return cached.get(key);
     }
 
     /**
      * ************** SAVE FUNCTIONS ****************
      */
     public void save(DataCommon data, Credentials credentials) throws ErrorException {
-        if (data.rowCreatedDate == null) {
-            data.rowCreatedDate = new Date();
-        }
-
-        try {
-            checkId(data);
-            data.onSaveValidate();
-            addDataCommonToDatabase(data, credentials);
-        } catch (Exception ex) {
-            java.util.logging.Logger.getLogger(DatabaseRemote.class.getName()).log(Level.WARNING, null, ex);
-        }
+//        if (data.rowCreatedDate == null) {
+//            data.rowCreatedDate = new Date();
+//        }
+//
+//        try {
+//            checkId(data);
+//            data.onSaveValidate();
+//            addDataCommonToDatabase(data, credentials);
+//        } catch (Exception ex) {
+//            java.util.logging.Logger.getLogger(DatabaseRemote.class.getName()).log(Level.WARNING, null, ex);
+//        }
     }
 }

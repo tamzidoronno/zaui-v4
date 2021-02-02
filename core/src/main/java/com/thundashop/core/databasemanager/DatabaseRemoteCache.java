@@ -10,6 +10,7 @@ import com.thundashop.core.common.DataCommon;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Component;
  * @author ktonder
  */
 @Component
+@Scope(value = "singleton")
 public class DatabaseRemoteCache {
     private ConcurrentHashMap<String, List<DataCommon>> cached = new ConcurrentHashMap();
     

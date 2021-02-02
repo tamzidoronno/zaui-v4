@@ -3476,7 +3476,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
                 BookingItem item = bookingEngine.getBookingItem(room.bookingItemId);
                 if (item == null) {
-                    messageManager.sendMail("pal@getshop.com", "pal@getshop.com", "Booking started without item (nullitem)", "Owner: " + ownerMail + ", address:" + addressMail, "pal@getshop.com", "pal@getshop.com");
+                    messageManager.sendMail("post@getshop.com", "post@getshop.com", "Booking started without item (nullitem)", "Owner: " + ownerMail + ", address:" + addressMail, "post@getshop.com", "post@getshop.com");
                 } else {
                     PmsAdditionalItemInformation additional = getAdditionalInfo(room.bookingItemId);
                     if (additional.isClean(false) && !additional.closed) {
@@ -10505,7 +10505,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }catch(Exception e) {
             logPrintException(e);
-            messageManager.sendErrorNotificationToEmail("pal@getshop.com", "Failed to calculate md5sum", e);
+            messageManager.sendErrorNotificationToEmail("post@getshop.com", "Failed to calculate md5sum", e);
         }
         
         for (PmsBookingRooms room : pmsBooking.rooms) {
@@ -10518,7 +10518,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }catch(Exception e) {
                 logPrintException(e);
-                messageManager.sendErrorNotificationToEmail("pal@getshop.com", "Failed to calculate md5sum", e);
+                messageManager.sendErrorNotificationToEmail("post@getshop.com", "Failed to calculate md5sum", e);
             }
             PmsRoomPaymentSummary summary = getSummaryWithoutAccrued(pmsBooking, room, false);
             if (summary == null) {
@@ -11467,7 +11467,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 String userData = usr.fullName + ", email: " + usr.emailAddress + " id:" + usr.id;
 
                 Exception e = new Exception();
-                messageManager.sendErrorNotificationToEmail("pal@getshop.com", "Room missing assignment, booking id : " + booking.incrementBookingId + ", room id: " + room.pmsBookingRoomId + " by " + userData, e);
+                messageManager.sendErrorNotificationToEmail("post@getshop.com", "Room missing assignment, booking id : " + booking.incrementBookingId + ", room id: " + room.pmsBookingRoomId + " by " + userData, e);
                 room.warnedAboutAutoAssigning = true;
             }
             

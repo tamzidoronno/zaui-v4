@@ -2413,7 +2413,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             if(order.status == Order.Status.NEEDCOLLECTING && order.needCollectingDate != null && !order.warnedNotAbleToCapture && order.incrementOrderId > 0) {
                 if(past.after(order.needCollectingDate)) {
                     messageManager.sendMessageToStoreOwner("Order failed to be collected in 90 minutes, order id: " + order.incrementOrderId, "Payment warning");
-                    messageManager.sendErrorNotificationToEmail("pal@getshop.com","Order failed to be collected in 90 minutes, order id: " + order.incrementOrderId, null);
+                    messageManager.sendErrorNotificationToEmail("post@getshop.com","Order failed to be collected in 90 minutes, order id: " + order.incrementOrderId, null);
                     order.warnedNotAbleToCapture = true;
                     saveOrder(order);
                 }

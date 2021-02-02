@@ -29,6 +29,14 @@ if(isset($_POST['redirect'])) {
     $redirect = $_POST['redirect'];
 }
 
+if($redirect != "")
+{
+	$redirect = rawurldecode( $redirect );
+	$redirect = strip_tags( $redirect );
+	$redirect = filter_var($redirect, FILTER_SANITIZE_STRING, FILTER_SANITIZE_URL);
+	$redirect = rawurlencode($redirect);
+}
+
 if (isset($_GET['username'])) {
     $username = $_GET['username'];
 }
@@ -60,6 +68,7 @@ if (isset($_POST['pincoderequest']) && $_POST['username'] && $_POST['password'])
 </head>
 
 <style>
+    html,body { font: 95% Arial, Helvetica, sans-serif; }
     .form-style-6{
         font: 95% Arial, Helvetica, sans-serif;
         max-width: 400px;
@@ -146,10 +155,7 @@ if (isset($_POST['pincoderequest']) && $_POST['username'] && $_POST['password'])
     }
 </style>
 
-<div style="text-align: center;padding:10px;">
-    <img src="https://www.getshop.com/displayImage.php?id=78c64104-ffe0-45d0-a554-87573d34ae7f&height=100&width=100"></img>
-    <br>
-    <br>
+<div style="text-align: center;padding:32px;">
     <div class="inner <? echo $notloggedInClass; ?>">
         <div  class="form-style-6" >
             <h1>
@@ -237,7 +243,7 @@ if (isset($_POST['pincoderequest']) && $_POST['username'] && $_POST['password'])
     <?php
     $gets = "";
     foreach($_GET as $k => $val) {
-        $gets .= $k . "=" . $val . "&";
+        $gets .= $k . "=" . filter_var($val, FILTER_SANITIZE_STRING, FILTER_SANITIZE_URL) . "&";
     }
     ?>
     <a href='totp.php?<?php echo $gets; ?>' style='color:blue; text-decoration: none;'>Totp login</a>

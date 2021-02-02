@@ -62,28 +62,18 @@ if($gssid != '')
         $commhelper->host = $config->getConfig('backenddb');
         $commhelper->connect();
         
-        
-        if (!isset($event['args'])) {
-            $event['args'] = array();
-        }
-        
-        if(isset($event['getshop_json_body'])) {
-            $event['args'] = json_decode($event['getshop_json_body']);
-            unset($event['getshop_json_body']);
-        }
-        
-        $result = $commhelper->sendMessage($event);
-        if ($commhelper->errorCodes) {
-            echo json_encode($commhelper->errorCodes);
-            http_response_code(400);
-            die();
-        }
-        echo json_encode($result);
-        die("\n");
+        //login to log us out!
+        $factory = IocContainer::getFactorySingelton(false);
+        $logon = $factory->getApi()->getUserManager()->logonUsingToken($gssid);
+        $factory->getApi()->getUserManager()->logout();
+        $_SESSION['authenticated'] = false;
+
+        die('{"result":"ok"}');
+
     }
 }
 header('HTTP/1.1 401 Unauthorized');
-echo 'Go away';
+echo '<h1>Unauthorized!</h1>';
 die();
 
 ?>

@@ -177,8 +177,8 @@ public class DatabaseRemote extends StoreComponent {
         
         try {
             if (GetShopLogHandler.isDeveloper) {
-                connect();
-                //connectLocal();
+//                connect();
+                connectLocal();
             } else {
                 connect();
             }
@@ -203,16 +203,16 @@ public class DatabaseRemote extends StoreComponent {
      * ************** SAVE FUNCTIONS ****************
      */
     public void save(DataCommon data, Credentials credentials) throws ErrorException {
-//        if (data.rowCreatedDate == null) {
-//            data.rowCreatedDate = new Date();
-//        }
-//
-//        try {
-//            checkId(data);
-//            data.onSaveValidate();
-//            addDataCommonToDatabase(data, credentials);
-//        } catch (Exception ex) {
-//            java.util.logging.Logger.getLogger(DatabaseRemote.class.getName()).log(Level.WARNING, null, ex);
-//        }
+        if (data.rowCreatedDate == null) {
+            data.rowCreatedDate = new Date();
+        }
+
+        try {
+            checkId(data);
+            data.onSaveValidate();
+            addDataCommonToDatabase(data, credentials);
+        } catch (Exception ex) {
+            java.util.logging.Logger.getLogger(DatabaseRemote.class.getName()).log(Level.WARNING, null, ex);
+        }
     }
 }

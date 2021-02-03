@@ -37,7 +37,10 @@ class Mail extends \MarketingApplication implements \Application {
     public function saveMailSettings() {
         $this->saveKeySettings("hostname", $_POST['data']['hostname']);
         $this->saveKeySettings("port", $_POST['data']['port']);
-        $this->saveKeySettings("password", $_POST['data']['password'], true);
+        
+        //dont overwrite password with all ******
+        if( !( strpos($_POST['data']['password'],'*') !== false && str_replace('*','',$_POST['data']['password']) == '' ) ) $this->saveKeySettings("password", $_POST['data']['password'], true);
+        
         $this->saveKeySettings("username", $_POST['data']['username']);
         $this->saveKeySettings("enabletls", $_POST['data']['enabletls']);
         $this->saveKeySettings("sendMailFrom", $_POST['data']['sendMailFrom']);

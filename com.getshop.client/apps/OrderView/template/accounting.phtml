@@ -94,6 +94,24 @@ $order = $this->getOrder();
 <div class="row_account">
     <div class="col col1">
         <?
+        echo $this->__f("Override row created date");
+        ?>
+    </div>
+    <div class="col col2">
+        <?
+        echo $order->rowCreatedDate;
+        ?>
+        
+        <div style='color:blue; cursor: pointer;' class='' onclick='$(".OrderView .changeoverridedatebox_rowcreated").toggle()'>( <? echo $this->__f("change"); ?> )</div>
+        <div class='changeoverridedatebox_rowcreated'>
+            <input class='gsniceinput1 overrideboxdate_rowcreated'/>
+            <br/><div class='shop_button'><? echo $this->__f("Submit"); ?></div>
+        </div>
+    </div>
+</div>
+<div class="row_account">
+    <div class="col col1">
+        <?
         echo $this->__f("Excluded from f-report");
         ?>
     </div>
@@ -112,7 +130,14 @@ $order = $this->getOrder();
     </div>
     <div class="col col2">
         <?
-        echo $order->closed ? 'Yes' : "No";
+        if ($order->closed && !$order->forcedOpen) {
+            echo  "Yes";
+            echo "<br/><span class='forceOpenOrder' orderId='".$order->id."' style='color: blue'>Open order</span>";
+        } else {
+            echo "No";
+            echo "<br/><span class='closeOrder' orderId='".$order->id."' style='color: blue'>Close order</span>";
+        }
+        
         ?>
     </div>
 </div>
@@ -147,5 +172,6 @@ $order = $this->getOrder();
 
 <script>
     $('.OrderView .gsniceinput1.overrideboxdate').datepicker({dateFormat: "dd.mm.yy"});
+    $('.OrderView .gsniceinput1.overrideboxdate_rowcreated').datepicker({dateFormat: "dd.mm.yy"});
 </script>
     

@@ -10,6 +10,7 @@ app.OrderView = {
         $(document).on('click', '.OrderView .searchForProductBox .searchForProductBoxInner .closebutton', app.OrderView.closeSearchBox);
         $(document).on('click', '.OrderView .searchForProductBox .selectproductid', app.OrderView.selectProduct);
         $(document).on('click', '.OrderView .changeoverridedatebox .shop_button', app.OrderView.submitNewOverrideDate);
+        $(document).on('click', '.OrderView .changeoverridedatebox_rowcreated .shop_button', app.OrderView.submitNewOverrideDateRowCreated);
         $(document).on('click', '.OrderView .shop_button.save_history_comment', app.OrderView.saveHistoryComment);
         $(document).on('click', '.OrderView .shop_button.dosendehf', app.OrderView.sendEhf);
         $(document).on('click', '.OrderView .shop_button.sendByEmail', app.OrderView.sendByEmail);
@@ -23,7 +24,9 @@ app.OrderView = {
         $(document).on('click', '.OrderView .cleanorder', app.OrderView.cleanOrder);
         $(document).on('click', '.OrderView .openorder', app.OrderView.openOrder);
         $(document).on('click', '.OrderView .deleteOrderTransaction', app.OrderView.deleteOrderTransaction);
-        
+        $(document).on('click', '.OrderView .forceOpenOrder', app.OrderView.unlockOrder);
+        $(document).on('click', '.OrderView .closeOrder', app.OrderView.closeOrder);
+
         // CartItem Changes
         $(document).on('change', '.OrderView .cartitem input.product_desc', app.OrderView.cartItemChanged);
         $(document).on('change', '.OrderView .changeTaxGroupObject', app.OrderView.cartItemChanged);
@@ -31,98 +34,120 @@ app.OrderView = {
         $(document).on('change', '.OrderView .cartitem input.price', app.OrderView.cartItemChanged);
         $(document).on('change', '.OrderView .localcurrencyvalue', app.OrderView.localCurrencyValueChanged);
         $(document).on('change', '.OrderView .cartitemlineloss', app.OrderView.cartitemLineLossChanged);
-        
-        
+
+
         // Payment History
         $(document).on('click', '.OrderView .registerpayment', app.OrderView.registerPayment);
     },
-    
-    cartitemLineLossChanged: function() {
-        var localCurrencyInput = $(this).closest('.registerlossrow').find('.registerlossinput_local_currency');;
+    closeOrder: function() {
+        var data = app.OrderView.getData(this);
         
+        var event = thundashop.Ajax.createEvent(null, "closeOrder", $(this), data);
+        event['synchron'] = true;
+        
+
+        thundashop.Ajax.post(event, function(res) {
+            app.OrderView.rePrintTab(res, 'accounting', data);
+        });
+    },
+    
+    unlockOrder: function() {
+        var data = app.OrderView.getData(this);
+        data.orderId = $(this).attr('orderId');
+        data.pass = prompt("password");
+
+        var event = thundashop.Ajax.createEvent(null, "forceOpenOrder", $(this), data);
+        event['synchron'] = true;
+        
+        thundashop.Ajax.post(event, function(res) {
+            app.OrderView.rePrintTab(res, 'accounting', data);
+        });
+    },
+    cartitemLineLossChanged: function() {
+        var localCurrencyInput = $(this).closest('.registerlossrow').find('.registerlossinput_local_currency');
+        ;
+
         if (!localCurrencyInput) {
             return;
         }
-        
+
         var newFactor = $(this).val() / $(this).attr('originalprice');
         var newLocalCurrencyPrice = localCurrencyInput.attr('originalprice') * newFactor;
         var toUse = Math.round(newLocalCurrencyPrice * 100) / 100;
         localCurrencyInput.val(toUse);
     },
-    
-    registerRoundingAgioBtn : function() {
+    registerRoundingAgioBtn: function() {
         var form = $(this).closest('.registerRoundingAgioForm');
         var args = thundashop.framework.createGsArgs(form);
         args.type = $(this).attr('transactiontype');
-        var event = thundashop.Ajax.createEvent('','registerRoundAgio',$(this), args);
+        var event = thundashop.Ajax.createEvent('', 'registerRoundAgio', $(this), args);
         event['synchron'] = true;
-        
+
         var data = app.OrderView.getData(this);
-        
+
         event.data.account = $(this).attr('account');
-        
+
         thundashop.Ajax.postWithCallBack(event, function(res) {
             app.OrderView.rePrintTab(res, 'paymenthistory', data);
         });
     },
-    
-    cleanOrder : function() {
-        
+    cleanOrder: function() {
+
         var password = prompt("Password");
-        if(!password) {
+        if (!password) {
             return;
         }
-        
+
         args = {};
         args.orderId = $(this).attr('orderid');
         args.password = password;
-        
-        var event = thundashop.Ajax.createEvent('','cleanOrder',$(this), args);
-        
+
+        var event = thundashop.Ajax.createEvent('', 'cleanOrder', $(this), args);
+
         thundashop.Ajax.postWithCallBack(event, function(res) {
             alert('done');
         });
     },
-    openOrder : function() {
-        
+    openOrder: function() {
+
         var password = prompt("Password");
-        if(!password) {
+        if (!password) {
             return;
         }
-        
+
         args = {};
         args.orderId = $(this).attr('orderid');
         args.password = password;
-        
-        var event = thundashop.Ajax.createEvent('','toggleOpenOrder',$(this), args);
-        
+
+        var event = thundashop.Ajax.createEvent('', 'toggleOpenOrder', $(this), args);
+
         thundashop.Ajax.postWithCallBack(event, function(res) {
-            if(res == "H") {
+            if (res == "H") {
                 alert('opened');
             }
-            if(res == "D") {
+            if (res == "D") {
                 alert('closed');
             }
         });
     },
-    deleteOrderTransaction : function() {
-        
+    deleteOrderTransaction: function() {
+
         var confirmed = confirm("Are you sure you want to delete this transaction?");
-        if(!confirmed) {
+        if (!confirmed) {
             return;
         }
-        
+
         var data = {
-            "transactionid" : $(this).attr('transactionid')
+            "transactionid": $(this).attr('transactionid')
         };
-        
-        
-        var event = thundashop.Ajax.createEvent('','deleteTransaction', $(this), data);
+
+
+        var event = thundashop.Ajax.createEvent('', 'deleteTransaction', $(this), data);
         thundashop.Ajax.postWithCallBack(event, function(res) {
             window.location.reload();
         });
     },
-    doRegisterLoss : function() {
+    doRegisterLoss: function() {
         var data = {};
         $('.registerlossrow').each(function(res) {
             var itemid = $(this).attr('cartitemid');
@@ -132,28 +157,27 @@ app.OrderView = {
             itemToAdd.amountInLocalCurrency = $(this).find('[gsname="localCurrency"]').val();
             data[itemid] = itemToAdd;
         });
-        
+
         data.comment = $('.optionalcomment').val();
         data.orderid = $(this).attr('orderid');
-        data.postToDate = $('.registerLossDate').val(); 
-        
-        var event = thundashop.Ajax.createEvent('','registerLoss',$(this),data);
+        data.postToDate = $('.registerLossDate').val();
+
+        var event = thundashop.Ajax.createEvent('', 'registerLoss', $(this), data);
         thundashop.Ajax.postWithCallBack(event, function() {
             window.location.reload();
         });
     },
-    
-    calculateNewLossUpdate : function() {
+    calculateNewLossUpdate: function() {
         var total = 0;
         $('.registerlossrow').each(function() {
             total += ($(this).find('[gsname="count"]').val() * $(this).find('[gsname="price"]').val());
         });
         var totalToRegister = $('.totaltoregister').text();
-        
+
         var diff = totalToRegister - total;
         diff = Math.round(diff);
 
-        if(diff !== 0) {
+        if (diff !== 0) {
             $('.totalregisterview').addClass('totalisnotsame');
             $('.totalregisterview').removeClass('totalissame');
         } else {
@@ -161,86 +185,79 @@ app.OrderView = {
             $('.totalregisterview').removeClass('totalisnotsame');
         }
         $('.totalregisterview').val(total);
-        
+
         $('.totalismissing').html(diff);
     },
-    
-    displayActionArea : function() {
+    displayActionArea: function() {
         var tab = $(this).attr('tab');
         $('.actiontabarea').hide();
-        $('.actiontabarea[actiontab="'+tab+'"]').show();
+        $('.actiontabarea[actiontab="' + tab + '"]').show();
     },
-    
     localCurrencyValueChanged: function() {
         var totalAmountInLocalCurrency = $('.OrderView .disaglo').attr('inlocalcurrency');
         var rest = $(this).val() - totalAmountInLocalCurrency;
         $('.OrderView .disaglo').val(rest);
     },
-    
     toggleSpecialInfo: function() {
         var box = $(this).closest('.gs_shop_small_icon').find('.specialiteminfobox');
         var isVisible = box.is(':visible');
-        
+
         $('.specialiteminfobox').hide();
-        
+
         if (!isVisible) {
             box.show();
         }
     },
-    
     creditOrder: function() {
         var validated = confirm("Are you sure you want to credit this order?");
         if (validated) {
             var from = $(this).closest('.app').find('.orderview');
             var data = app.OrderView.getData(from);
-            
+
             var event = thundashop.Ajax.createEvent(null, 'creditOrder', from, data);
             event['synchron'] = true;
-            
+
             thundashop.Ajax.post(event, function(res) {
                 from.closest('.app').html(res);
             })
         }
     },
-    
     deleteOrder: function() {
         var validated = confirm("Are you sure you want to delete this order?");
         if (validated) {
             var from = $(this).closest('.app').find('.orderview');
             var data = app.OrderView.getData(from);
-            
+
             var event = thundashop.Ajax.createEvent(null, 'deleteOrder', from, data);
             event['synchron'] = true;
-            
+
             thundashop.Ajax.post(event, function(res) {
                 from.closest('.app').html(res);
             });
         }
     },
-
     reloadTab: function(from, tab) {
         var data = app.OrderView.getData(from);
         data.tabName = tab;
-        
+
         var event = thundashop.Ajax.createEvent(null, 'rePrintTab', from, data);
         event['synchron'] = true;
-        
+
         thundashop.Ajax.post(event, function(res) {
             app.OrderView.rePrintTab(res, tab, data);
         })
-        
+
     },
-    
     sendByEmail: function() {
         var data = app.OrderView.getData(this);
         data.emailaddress = $(this).closest('.sendByEhf').find('[gsname="emailaddress"]').val();
-        
+
         console.log(data);
-        
+
         var event = thundashop.Ajax.createEvent(null, "sendByEmail", this, data);
         event['synchron'] = true;
         var me = this;
-        
+
         thundashop.Ajax.post(event, function(res) {
             app.OrderView.reloadTab(me, 'history');
             $('.OrderView .sendByEhf .emailSent').show();
@@ -249,18 +266,17 @@ app.OrderView = {
             }, 5000);
         });
     },
-    
     sendEhf: function() {
         var data = app.OrderView.getData(this);
         data.vatNumber = $(this).closest('.sendehfbox').find('[gsname="vatNumber"]').val();
-        
+
         var event = thundashop.Ajax.createEvent(null, "sendEhf", this, data);
         event['synchron'] = true;
         $('.OrderView .sendehfbox').hide();
         $('.OrderView .sendingehf').show();
         $('.OrderView .sendehfbox .ehfresult').html("");
         var me = this;
-        
+
         thundashop.Ajax.post(event, function(res) {
             app.OrderView.reloadTab(me, 'history');
             $('.OrderView .sendehfbox').show();
@@ -271,10 +287,9 @@ app.OrderView = {
             }, 5000);
         });
     },
-    
     registerPayment: function() {
         var tab = $(this).closest('.app').find('.orderviewtab[tab="paymenthistory"]');
-        
+
         var data = app.OrderView.getData(this);
         data.date = $(tab).find('.manualregisterpaymentdate').val();
         data.amount = $(tab).find('.manualregisterpaymentamount').val();
@@ -282,37 +297,44 @@ app.OrderView = {
         data.localCurrency = $(tab).find('.localcurrencyvalue').val();
         data.agio = $(tab).find('.disaglo').val();
         data.type = $(tab).find('.manualregisterpaymenttype').val();
-        
+
         var event = thundashop.Ajax.createEvent(null, "addTransactionRecord", $(this), data);
         event['synchron'] = true;
-        
+
         thundashop.Ajax.post(event, function(res) {
             app.OrderView.rePrintTab(res, 'paymenthistory', data);
         });
     },
-    
     saveHistoryComment: function() {
         var data = app.OrderView.getData(this);
         data.ordercomment = $(this).closest('.app').find('.orderviewtab[tab="history"] [gsname="ordercomment"]').val();
-      
+
         var event = thundashop.Ajax.createEvent(null, "saveInternalCommentOnOrder", $(this), data);
         event['synchron'] = true;
         thundashop.Ajax.post(event, function(res) {
             app.OrderView.rePrintTab(res, 'history', data);
         });
     },
-    
     submitNewOverrideDate: function() {
         var data = app.OrderView.getData(this);
         data.date = $(this).closest('.changeoverridedatebox').find('input').val();
-        
+
         var event = thundashop.Ajax.createEvent(null, "changeOverrideDate", $(this), data);
         event['synchron'] = true;
         thundashop.Ajax.post(event, function(res) {
             app.OrderView.rePrintTab(res, 'accounting', data);
         });
     },
-    
+    submitNewOverrideDateRowCreated: function() {
+        var data = app.OrderView.getData(this);
+        data.date = $(this).closest('.changeoverridedatebox_rowcreated').find('input').val();
+
+        var event = thundashop.Ajax.createEvent(null, "changeOverrideDateRowCreated", $(this), data);
+        event['synchron'] = true;
+        thundashop.Ajax.post(event, function(res) {
+            app.OrderView.rePrintTab(res, 'accounting', data);
+        });
+    },
     cartItemChanged: function() {
         var data = app.OrderView.getData(this);
         var cartItemDivRow = $(this).closest('.cartitem');
@@ -322,80 +344,74 @@ app.OrderView = {
         data.price = cartItemDivRow.find('input.price').val();
         data.name = cartItemDivRow.find('input.product').val();
         data.taxGroup = cartItemDivRow.find('select.changeTaxGroupObject').val();
-        
+
         var event = thundashop.Ajax.createEvent(null, "updateCartItem", $(this), data);
         event['synchron'] = true;
         var me = this;
-        
+
         thundashop.Ajax.post(event, function(res) {
             var div = $('<div/>').html(res);
             $(me).closest('.orderview').find('.ordersummary').html(div.find('.ordersummary').html());
         }, [], true, true);
     },
-    
     selectProduct: function() {
         var data = app.OrderView.getData(this);
         data.productId = $(this).closest('.selectproductid').attr('productid');
         data.cartItemId = sessionStorage.getItem('searchproductforcartitemid');
-        
+
         var event = thundashop.Ajax.createEvent(null, "changeProductOnCartItem", $(this), data);
         event['synchron'] = true;
         thundashop.Ajax.post(event, function(res) {
             app.OrderView.rePrintTab(res, 'orderlines', data);
         });
     },
-    
     searchForProduct: function() {
         var data = {
-            searchWord : $(this).closest('.searchForProductBoxInner').find('.searchword').val()
+            searchWord: $(this).closest('.searchForProductBoxInner').find('.searchword').val()
         };
-  
+
         var event = thundashop.Ajax.createEvent(null, "searchForProduct", $(this), data);
         event['synchron'] = true;
         thundashop.Ajax.post(event, function(res) {
             $('.OrderView .searchForProductBoxInner .searchresult').html(res);
         });
     },
-    
     closeSearchBox: function() {
         $(this).closest('.searchForProductBox').fadeOut();
     },
-    
     showSearchProduct: function() {
         sessionStorage.setItem('searchproductforcartitemid', $(this).closest('.cartitem').attr('cartitemid'));
-        
+
         var top = $(this).offset().top - 150;
         var left = $(this).offset().left;
-        $('.OrderView .searchForProductBox').css('top', top+"px");
-        $('.OrderView .searchForProductBox').css('left', left+"px");
+        $('.OrderView .searchForProductBox').css('top', top + "px");
+        $('.OrderView .searchForProductBox').css('left', left + "px");
         $('.OrderView .searchForProductBox').fadeIn();
     },
-    
     removeCartItemLine: function() {
         var data = app.OrderView.getData(this);
         data.cartItemId = $(this).closest('.cartitem').attr('cartitemid');
-        
+
         var event = thundashop.Ajax.createEvent(null, "removeCartItemLine", $(this), data);
         event['synchron'] = true;
         thundashop.Ajax.post(event, function(res) {
             app.OrderView.rePrintTab(res, 'orderlines', data);
         });
     },
-    
-    updateCurrency : function() {
+    updateCurrency: function() {
         var data = app.OrderView.getData(this);
         data.currency = $(this).val();
-        
+
         var event = thundashop.Ajax.createEvent(null, "updateCurrencyOnOrder", $(this), data);
         event['synchron'] = true;
         thundashop.Ajax.post(event, function(res) {
             app.OrderView.rePrintTab(res, 'orderlines', data);
         });
     },
-    updateLanguage : function() {
+    updateLanguage: function() {
         var data = app.OrderView.getData(this);
         data.language = $(this).val();
-        
+
         var event = thundashop.Ajax.createEvent(null, "updateLanguageOnOrder", $(this), data);
         event['synchron'] = true;
         thundashop.Ajax.post(event, function(res) {
@@ -404,16 +420,14 @@ app.OrderView = {
     },
     getData: function(innerFormElement) {
         var data = {
-            orderid : $(innerFormElement).closest('.orderview').attr('orderid')
+            orderid: $(innerFormElement).closest('.orderview').attr('orderid')
         }
         return data;
     },
-    
     rePrintTab: function(html, tabname, orgData) {
-        var view = $('.orderview[orderid="'+orgData.orderid+'"]');
-        view.find('.orderviewtab[tab="'+tabname+'"]').html(html);
+        var view = $('.orderview[orderid="' + orgData.orderid + '"]');
+        view.find('.orderviewtab[tab="' + tabname + '"]').html(html);
     },
-    
     createNewOrderLine: function() {
         var data = app.OrderView.getData(this);
         data.productIdToAdd = $('#addorderlinedropdown').val();
@@ -423,32 +437,29 @@ app.OrderView = {
             app.OrderView.rePrintTab(res, 'orderlines', data);
         });
     },
-    
     leftMenuChanged: function() {
         var orderid = $(this).closest('.orderview').attr('orderid');
         var tab = $(this).attr('tab');
-        sessionStorage.setItem('orderview_'+orderid+'_last_active_tab', tab)
+        sessionStorage.setItem('orderview_' + orderid + '_last_active_tab', tab)
         app.OrderView.showTab(orderid, tab);
-        
+
         if ($(this).attr('reprint')) {
             app.OrderView.reloadTab(this, tab);
         }
     },
-    
     orderviewLoaded: function(orderid) {
-        var lastActiveTab = sessionStorage.getItem('orderview_'+orderid+'_last_active_tab');
-        
+        var lastActiveTab = sessionStorage.getItem('orderview_' + orderid + '_last_active_tab');
+
         if (!lastActiveTab) {
             lastActiveTab = 'orderlines';
         }
-        
+
         app.OrderView.showTab(orderid, lastActiveTab);
     },
-    
     showTab: function(orderid, tabName) {
-        var view = $('.orderview[orderid="'+orderid+'"]');
+        var view = $('.orderview[orderid="' + orderid + '"]');
         view.find('.orderviewtab').hide();
-        view.find('.orderviewtab[tab="'+tabName+'"]').show();
+        view.find('.orderviewtab[tab="' + tabName + '"]').show();
     }
 };
 

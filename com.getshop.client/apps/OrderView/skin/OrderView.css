@@ -309,6 +309,7 @@
 }
 
 
+.OrderView .changeoverridedatebox_rowcreated,
 .OrderView .changeoverridedatebox {
     position: absolute;
     border: solid 1px #DDD;

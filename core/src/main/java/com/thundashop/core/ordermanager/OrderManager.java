@@ -3780,10 +3780,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         List<OrderUnsettledAmountForAccount> retList = new ArrayList();
         
         for (String orderId : groupedEntries.keySet()) {
-            List<DayEntry> entries = groupedEntries.get(orderId);
-            double sumOfAccount = entries.stream()
-                    .mapToDouble(o -> o.amount.doubleValue())
-                    .sum();
+            double sumOfAccount = sumOfOrder(groupedEntries, orderId);
             
             if (sumOfAccount < 0.00001 && sumOfAccount > -0.00001) {
                 continue;
@@ -3800,11 +3797,19 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             
             retList.add(unsettledAmount);
         }
-        
-        removeCompletedAccrued(retList);
-        removeCreditNotes(retList);
+//        
+        removeCompletedAccrued(retList, groupedEntries);
+        removeCreditNotes(retList, groupedEntries);
         
         return retList;
+    }
+
+    private double sumOfOrder(Map<String, List<DayEntry>> groupedEntries, String orderId) {
+        List<DayEntry> entries = groupedEntries.get(orderId);
+        double sumOfAccount = entries.stream()
+                .mapToDouble(o -> o.amount.doubleValue())
+                .sum();
+        return sumOfAccount;
     }
      
     
@@ -4260,6 +4265,17 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         for (String accountNumber : groupedByAccountNumber.keySet()) {
             Double total = groupedByAccountNumber.get(accountNumber).stream().mapToDouble(o -> (incTaxes ? o.amount.doubleValue() : o.getAmountExTaxes().doubleValue()))
                     .sum();
+            
+            if (accountNumber.equals("1530")) {
+                
+                List<Order> deletedOrders = groupedByAccountNumber.get(accountNumber)
+                        .stream()
+                        .filter(o -> !orderExists(o.orderId))
+                        .map(o -> getOrder(o.orderId))
+                        .collect(Collectors.toList());
+                
+                System.out.println("Deleted orders: " + deletedOrders.size());
+            }
             
             balance.balances.put(accountNumber, total);
         }
@@ -5695,7 +5711,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         retList.stream().forEach(o -> creditOrder(o.id));
     }
 
-    private void removeCompletedAccrued(List<OrderUnsettledAmountForAccount> retList) {
+    private void removeCompletedAccrued(List<OrderUnsettledAmountForAccount> retList, Map<String, List<DayEntry>> groupedEntries) {
         List<OrderUnsettledAmountForAccount> accuredOrders = retList.stream()
                 .filter(o -> o.order != null && o.order.isAccruedPayment())
                 .collect(Collectors.toList());
@@ -5707,7 +5723,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         for (String roomId : groupedByRoom.keySet()) {
             Double total = groupedByRoom.get(roomId)
                     .stream()
-                    .mapToDouble(o -> (getTotalAmount(o.order)))
+                    .mapToDouble(o -> (sumOfOrder(groupedEntries, o.order.id)))
                     .sum();
             
             if (total < 0.05 && total > -0.05) {
@@ -5717,7 +5733,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
     }
 
-    private void removeCreditNotes(List<OrderUnsettledAmountForAccount> retList) {
+    private void removeCreditNotes(List<OrderUnsettledAmountForAccount> retList, Map<String, List<DayEntry>> groupedEntries) {
         List<OrderUnsettledAmountForAccount> creditNotes = retList.stream()
                 .filter(o -> o.order.isCreditNote)
                 .collect(Collectors.toList());
@@ -5731,7 +5747,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             if (parent == null)
                 continue;
             
-            Double total = getTotalAmount(creditNote.order) + getTotalAmount(parent.order);
+            double sumForOrder = sumOfOrder(groupedEntries, creditNote.order.id);
+            double sumForParent = sumOfOrder(groupedEntries, parent.order.id);
+            Double total = sumForOrder + sumForParent;
+            
             if (total < 0.05 && total > -0.05) {
                 System.out.println("REVEMOED CREDITNOTE");
                 retList.remove(creditNote);

@@ -372,6 +372,40 @@ class OrderView extends \MarketingApplication implements \Application {
         $this->rePrintTab("accounting");
     }
     
+    public function changeOverrideDateRowCreated() {
+        $order = $this->getOrder();
+        $date = $this->convertToJavaDate(strtotime($_POST['data']['date']));
+        $this->getApi()->getOrderManager()->changeRowCreatedDateOnOrder($order->id, $date);
+        $this->rePrintTab("accounting");
+    }
+    
+    public function closeOrder() {
+        $order = $this->getOrder();
+        if ($order->forcedOpen) {
+            $order->closed = true;
+            $order->forcedOpen = false;
+            $this->getApi()->getOrderManager()->saveOrder($order);
+            $this->rePrintTab("accounting");
+        }
+    }
+    
+    public function forceOpenOrder() {
+        if ($_POST['data']['pass'] != "sfdkasok2o") {
+            $this->rePrintTab("accounting");
+            return;
+        }
+        
+        $order = $this->getOrder();
+        if (!$order->forcedOpen) {
+            $order->closed = false;
+            $order->forcedOpen = true;
+            $this->getApi()->getOrderManager()->saveOrder($order);
+            $this->rePrintTab("accounting");
+        } else {
+            $this->rePrintTab("accounting");
+        }
+    }
+    
     public function disableGsTypes() {
         return true;
     }

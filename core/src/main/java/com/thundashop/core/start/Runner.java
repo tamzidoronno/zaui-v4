@@ -9,6 +9,7 @@ import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.StorePool;
+import com.thundashop.core.databasemanager.DatabaseRemoteCache;
 import com.thundashop.core.databasemanager.DatabaseUpdater;
 import com.thundashop.core.socket.WebInterface2;
 import com.thundashop.core.socket.WebSocketServerImpl;
@@ -37,6 +38,8 @@ public class Runner {
     public static boolean AllowedToSaveToRemoteDatabase = false;
     public static String OVERALLPASSWORD = UUID.randomUUID().toString();
 
+    public static DatabaseRemoteCache cached = new DatabaseRemoteCache();
+    
     /**
      * @param args the command line arguments
      */

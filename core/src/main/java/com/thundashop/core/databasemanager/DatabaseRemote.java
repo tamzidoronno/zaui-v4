@@ -30,9 +30,11 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.mongodb.morphia.Morphia;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -164,24 +166,35 @@ public class DatabaseRemote extends StoreComponent {
         save(data, credentials);
     }
 
-    public Stream<DataCommon> getAll(String dbName, String storeId, String moduleName) {
-        try {
-            if (GetShopLogHandler.isDeveloper) {
-                connectLocal();
-            } else {
-                connect();
-            }
-            
-            DBCollection col = mongo.getDB(dbName).getCollection("col_all_" + moduleName);
-            Stream<DataCommon> retlist = col.find().toArray().stream()
-                    .map(o -> morphia.fromDBObject(DataCommon.class, o));
-            mongo.close();
-            return retlist;
-        } catch (Exception ex) {
-            java.util.logging.Logger.getLogger(DatabaseRemote.class.getName()).log(Level.WARNING, null, ex);
-        }
+    public List<DataCommon> getAll(String dbName, String storeId, String moduleName) {
+        String key = dbName+"_"+storeId+"_"+moduleName;
         
-        return new ArrayList().stream();
+        synchronized(DatabaseRemoteCache.class) {
+            if (Runner.cached.get(key) != null) {
+                return Runner.cached.get(key);
+            }
+
+            try {
+                if (GetShopLogHandler.isDeveloper) {
+    //                connect();
+                    connectLocal();
+                } else {
+                    connect();
+                }
+
+                long timeUsed = System.currentTimeMillis();
+                DBCollection col = mongo.getDB(dbName).getCollection("col_all_" + moduleName);
+                Stream<DataCommon> retlist = col.find().toArray().stream()
+                        .map(o -> morphia.fromDBObject(DataCommon.class, o));
+                mongo.close();
+
+                Runner.cached.put(key, retlist.collect(Collectors.toList()));
+            } catch (Exception ex) {
+                java.util.logging.Logger.getLogger(DatabaseRemote.class.getName()).log(Level.WARNING, null, ex);
+            }
+
+            return Runner.cached.get(key);
+        }
     }
 
     /**

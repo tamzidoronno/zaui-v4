@@ -80,7 +80,8 @@ public class PaymentManager extends ManagerBase implements IPaymentManager {
     }
 
     private void loadDataFromRemoteDatabase() {
-        Stream<DataCommon> data = databaseRemote.getAll("PaymentManager", "all", "cms");
+        List<DataCommon> data = databaseRemote.getAll("PaymentManager", "all", "cms");
+        
         data.forEach(d -> {
             if (d instanceof PaymentConfiguration) {
                 paymentConfigs.put(d.id, (PaymentConfiguration)d);

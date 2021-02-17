@@ -57,7 +57,7 @@
     $('<link/>', {
        rel: 'stylesheet',
        type: 'text/css',
-       href: 'https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css'
+       href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css'
     }).appendTo('head');
 
     $('<link/>', {

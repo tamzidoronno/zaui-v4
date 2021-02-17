@@ -14,21 +14,20 @@
     </div>
 <script>
 //    gsisdevmode = false;
-//    getshop_websockethost = "websocket6.getshop.com";
+    getshop_websockethost = "websocket6.getshop.com";
     $ = jQuery;
     jQuery(function ($) {
-        $.getScript("https://tobiasbrygga.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
+        $.getScript("https://xxxxxx.getshop.com/js/getshop.bookingembed.js", function (data, textStatus, jqxhr) {
             $("#bookingprocess").getshopbooking(
                 {
-                    "endpoint": "https://tobiasbrygga.getshop.com/",
-                    "jsendpoint": "https://tobiasbrygga.getshop.com/",
+                    "endpoint": "https://xxxxxx.getshop.com/",
+                    "jsendpoint": "https://xxxxxx.getshop.com/",
                     "domain" : "default",
-                    "language" : "no"
+                    "language" : "no",
+                    "websocket" : "websocket6.getshop.com"
                 }
             );
         });
     });
 </script> 
 </body>
-
- 

@@ -12,6 +12,7 @@ import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.CartTax;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.TwoDecimalRounder;
+import com.thundashop.core.getshopaccounting.DayEntry;
 import com.thundashop.core.gsd.TerminalResponse;
 import com.thundashop.core.pdf.data.AccountingDetails;
 import com.thundashop.core.pmsmanager.PmsBooking;
@@ -123,6 +124,9 @@ public class Order extends DataCommon implements Comparable<Order> {
      * If there is given a reason why this creditnote was created.
      */
     public String creditReason;
+    
+    @Transient
+    public List<DayEntry> cachedDayEntries = new ArrayList();
     
     public void setCanTransactionsBeDeleted() {
         if(orderTransactions != null) {
@@ -1875,6 +1879,11 @@ public class Order extends DataCommon implements Comparable<Order> {
     public void resetTransferToAccounting() {
         transferredToAccountingSystem = false;
         triedTransferredToAccountingSystem  = false;
+        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.DAY_OF_YEAR, -1);
+        shouldHaveBeenTransferredToAccountingOnDate = cal.getTime();
         
         if (status != Status.PAYMENT_COMPLETED) {
             closed = false;

@@ -46,7 +46,7 @@
                 </div>
             </div>
         </div><div class="fa_box coupon">
-            <input id='coupon_input' placeholder="" gstype='bookingtranslation_placeholder' gstranslationfield='discountcode'>
+            <input id='coupon_input' placeholder="" gstype='bookingtranslation_placeholder' gstranslationfield='discountcode' autocomplete="off">
         </div><div class="fa_box gsl_button" id="search_rooms"><span gstype='bookingtranslation' gstranslationfield='search'><div style='margin-top:20px;'><i class='fa fa-spin fa-spinner'></i></span></div></div>
     </div>
 
@@ -188,7 +188,7 @@
 
                             <span class="editroomoptions">
                                 <div class="editroomoptionsrow removeroom">
-                                    <i class="fa fa-trash-o"></i> Remove room
+                                    <i class="fa fa-trash"></i> Remove room
                                 </div>
                                 <div class="editroomoptionsrow">
                                     Change date:<br>
@@ -279,16 +279,16 @@
                             <div style="width: 33.33%;float: left;" class='privateinputbox'>
                                 <div style="width:100%"><span gstype='bookingtranslation' gstranslationfield='phone'></span></div>
                                 <div class='phonefield'><input type="txt" class="guest_phone field_prefix" value="47" gsname="user_prefix"></div>
-                                <input type="txt" gsname="user_cellPhone" class='field_postfix'>
+                                <input type="txt" gsname="user_cellPhone" class='field_postfix' autocomplete="off">
                             </div>
                             <div style="width: 50%;float:left; padding-top: 10px;" class='privateinputbox'>
                                 <div style="width:100%"><span gstype='bookingtranslation' gstranslationfield='streetAdress'></span></div>
-                                <input type="txt" gsname='user_address_address'>
+                                <input type="txt" gsname='user_address_address' autocomplete="off">
                             </div>
                             <div style="width: 50%;float:left; padding-top: 10px;" class='privateinputbox'>
                                 <div style="width:100%"><span gstype='bookingtranslation' gstranslationfield='zipCode'></span></div>
                                 <input id="guest_zipcode" type="txt" class="guest_phone field_prefix" value="" gsname='user_address_postCode'>
-                                <input id="guest_zipname" type="txt" class='field_postfix' gsname='user_address_city'>
+                                <input id="guest_zipname" type="txt" class='field_postfix' gsname='user_address_city' autocomplete="off">
                             </div>
                         </div>
                     </div>
@@ -425,7 +425,7 @@
         $('.addons_overview').hide();
         $.getScript("https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js", function (data, textStatus, jqxhr) {
             $.getScript("{getshop_endpoint}/scripts/booking/bookingscripts.php", function (data, textStatus, jqxhr) {
-                $.getScript("{getshop_endpoint}/js/daterangepicker/moment.js", function (data, textStatus, jqxhr) {
+                $.getScript("https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js", function (data, textStatus, jqxhr) {
                     var getshopinterval = setInterval(function() {
                         if(typeof(moment) !== "undefined") {
                             var loading = getshop_setBookingTranslation();

@@ -1455,7 +1455,7 @@ function getshop_updateOrderSummary(res, isSearch) {
             var count = room.roomsSelectedByGuests[guest];
             if(count > 0) {
                 var price = room.pricesByGuests[guest] * res.numberOfDays;
-                row += "<tr roomid='"+room.id+"' guests='"+guest+"' index='"+k+"' class='priceofferrow'><td style='text-align:left;' class='removeselectedroom'><i class='fa fa-trash-o' style='cursor:pointer;'></i> "+ room.name +"</td>";
+                row += "<tr roomid='"+room.id+"' guests='"+guest+"' index='"+k+"' class='priceofferrow'><td style='text-align:left;' class='removeselectedroom'><i class='fa fa-trash' style='cursor:pointer;'></i> "+ room.name +"</td>";
                 row += "<td>" + (guest*count);
                 row += " (" + count + " ";
                 var text = translationMatrix['selection_'+room.systemCategory];

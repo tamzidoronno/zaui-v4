@@ -285,7 +285,7 @@ public abstract class AccountingSystemBase extends ManagerBase {
         
         StorePaymentConfig config = paymentManager.getStorePaymentConfiguration(paymentId);
         
-        if (config != null) {
+        if (config != null && !config.userCustomerNumber.isEmpty()) {
             return config.userCustomerNumber;
         }
 

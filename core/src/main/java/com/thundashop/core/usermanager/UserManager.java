@@ -1050,7 +1050,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     private User getUserByEmail(String emailAddress) throws ErrorException {
         List<User> users = getUserStoreCollection(storeId).getAllUsersNotFinalized();
         for (User user : users) {
-            if (user.emailAddress != null && user.emailAddress.equals(emailAddress)) {
+            if (user.emailAddress != null && user.emailAddress.equals(emailAddress) && emailAddress.contains("@") ) {
                 finalizeUser(user);
                 return user;
             }

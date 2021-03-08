@@ -5,7 +5,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 
 
-version = 'getshop-v4'
+version = '4.1.0'
 
 subprojects {
     apply from: rootProject.file('common.gradle')

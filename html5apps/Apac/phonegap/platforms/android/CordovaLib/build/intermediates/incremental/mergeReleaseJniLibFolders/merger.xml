@@ -1,2 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="/source/getshop/3.0.0/html5apps/TrackAndTrace/phonegap/platforms/android/CordovaLib/src/main/jniLibs"/></dataSet><dataSet config="release"><source path="/source/getshop/3.0.0/html5apps/TrackAndTrace/phonegap/platforms/android/CordovaLib/src/release/jniLibs"/></dataSet></merger>

@@ -73,7 +73,7 @@ public class GenerateApi {
             core = new File(pathToCore);
             messages = new File(pathToMessages);
         }
-        
+        System.out.println( this.getClass().getName() + " generateapi core " + core.getAbsolutePath());
         
         
         coreClasses = findClasses(core, true);
@@ -313,10 +313,6 @@ public class GenerateApi {
             return classes;
         }
 
-        
-        try {
-            String current = new java.io.File( "." ).getCanonicalPath();
-        } catch (Exception ex) { }
         File[] files = directory.listFiles();
         for (File file : files) {
             String fileName = file.getName();
@@ -326,7 +322,7 @@ public class GenerateApi {
             } else if (fileName.endsWith(".class") && !fileName.contains("$") && (hasChanged(file) || ignoreCache)) {
                 Class _class;
                 try {
-                    String addText = addMain ? "main/" : "";
+                    String addText = addMain ? "java/main/" : "";
                     if (file.getAbsolutePath().contains("/build/classes/" + addText)) {
                         String offset = "/build/classes/" + addText;
                         String className = file.getAbsolutePath().substring(file.getAbsolutePath().indexOf(offset) + offset.length());
@@ -334,6 +330,7 @@ public class GenerateApi {
                         className = className.replace(".class", "");
                         _class = Class.forName(className);
                         classes.add(_class);
+                        System.out.println("class to add" + className);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

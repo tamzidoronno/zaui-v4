@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author boggi
+ * @author boggi    
  */
 public class JavaApiBuilder {
 
@@ -36,6 +36,9 @@ public class JavaApiBuilder {
     private final List<Class> changedManagers;
 
     public JavaApiBuilder(GenerateApi generator, List<Class> allManagers, List<Class> dataObjects, String pathToSource, List<Class> changedManagers) {
+        System.out.println("Trying to build java  api apiPath " + apiPath + " pathToSource  " + pathToSource);
+
+        
         this.generator = generator;
         this.allManagers = allManagers;
         this.changedManagers = changedManagers;
@@ -45,7 +48,7 @@ public class JavaApiBuilder {
         }
         
         File file = new File(apiPath);
-        GetShopLogHandler.logPrintStatic("Writing java api classes to: " + file.getAbsolutePath(), null);
+        System.out.println("Writing java api classes to: " + file.getAbsolutePath());
 
     }
 
@@ -105,13 +108,16 @@ public class JavaApiBuilder {
     private String BuildJavaApi() throws IOException {
         
         List<String> apiclasses = new ArrayList();
+        System.out.println(this.getClass().getName() + " BuildJavaApi " + apiPath);
+
         if(apiPath == null) {
             GetShopLogHandler.logPrintStatic("Not building java api, the path to source is not specified", null);
             return "";
         }
         GetShopLogHandler.logPrintStatic("Building java api to: " + apiPath + "/", null);
-
+        
         for (Class entry : allManagers) {
+            System.out.println(this.getClass().getName() + " Entry " + entry.getName());
             String filename = getFileName(entry);
             if (filename.contains("<error>") || !filename.startsWith("I")) {
                 continue;

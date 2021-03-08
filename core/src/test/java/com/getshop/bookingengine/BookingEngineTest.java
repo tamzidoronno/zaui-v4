@@ -31,7 +31,7 @@ import static org.junit.Assert.assertNotNull;
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("/All.xml")
+@ContextConfiguration(classes = {BookingEngineTestContext.class})
 public class BookingEngineTest extends TestCommon {
    
     @InjectMocks

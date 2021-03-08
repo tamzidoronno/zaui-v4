@@ -85,9 +85,13 @@ public class Runner {
 
         new WebInterface2(log, storePool, port); //Version 2.        
 
-        WebSocketServerImpl webSocketServer = context.getBean(WebSocketServerImpl.class);
-        webSocketServer.start();
-        
+        try {
+            WebSocketServerImpl webSocketServer = context.getBean(WebSocketServerImpl.class);
+            webSocketServer.start();
+        } catch (BeansException e) {
+            e.printStackTrace();
+        }
+
 //        WebSocketServerImplSSL sslWebSocketServer = context.getBean(WebSocketServerImplSSL.class);
 //        sslWebSocketServer.useSSL();
 //        sslWebSocketServer.start();

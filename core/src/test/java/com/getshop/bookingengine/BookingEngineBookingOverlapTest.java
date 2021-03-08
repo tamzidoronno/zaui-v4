@@ -30,7 +30,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author ktonder
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("/All.xml")
+@ContextConfiguration(classes = {BookingEngineTestContext.class})
 public class BookingEngineBookingOverlapTest extends TestCommon {
 
     @InjectMocks

@@ -142,6 +142,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             if(dataCommon instanceof WubookRoomData) {
                 wubookdata.put(dataCommon.id, (WubookRoomData) dataCommon);
             }
+
             if(dataCommon instanceof WubookAvailabilityRestrictions) {
                 restrictions.put(dataCommon.id, (WubookAvailabilityRestrictions) dataCommon);
             }
@@ -152,8 +153,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 lastAvailability = (SavedLastAvailibilityUpdate) dataCommon;
             }
         }
-        
+        // Run every minute
         createScheduler("wubookprocessor", "* * * * *", WuBookManagerProcessor.class);
+        // Run three times per day
         createScheduler("wubookprocessor2", "1 5,12,22 * * *", WuBookHourlyProcessor.class);
     }
     
@@ -744,11 +746,13 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
     private WubookRoomData getWubookRoomData(String typeid) {
         WubookRoomData res = null;
+        // Look for existing room of type
         for(WubookRoomData rdata : wubookdata.values()) {
             if(rdata.bookingEngineTypeId.equals(typeid)) {
                 res = rdata;
             }
         }
+        // No existing room found, create a new one
         if(res == null) {
             WubookRoomData newData = new WubookRoomData();
             newData.bookingEngineTypeId = typeid;

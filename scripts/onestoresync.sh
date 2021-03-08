@@ -67,8 +67,8 @@ echo -e " ####################################";
 echo -e " # Syncing online database to local #";
 echo -e " ####################################";
 echo -e "";
-echo -e " Deleting local database";
-mongo --port 27018 <<< 'db.adminCommand("listDatabases").databases.forEach( function (d) {   if (d.name != "local" && d.name != "admin" && d.name != "config") db.getSiblingDB(d.name).dropDatabase(); });' > /dev/null;
+#echo -e " Deleting local database";
+#mongo --port 27018 <<< 'db.adminCommand("listDatabases").databases.forEach( function (d) {   if (d.name != "local" && d.name != "admin" && d.name != "config") db.getSiblingDB(d.name).dropDatabase(); });' > /dev/null;
 
 #Dumping online database and compressing it.
 echo -e " Dumping and compressing database on server";

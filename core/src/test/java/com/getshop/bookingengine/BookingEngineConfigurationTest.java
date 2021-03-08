@@ -26,7 +26,7 @@ import static org.mockito.Matchers.any;
  * @author ktonder
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("/All.xml")
+@ContextConfiguration(classes = {BookingEngineTestContext.class})
 public class BookingEngineConfigurationTest extends TestCommon {
     @InjectMocks
     @Spy

@@ -41,7 +41,7 @@ import static org.mockito.Mockito.verify;
  * @author ktonder
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("/All.xml")
+@ContextConfiguration(classes = {BookingEngineTestContext.class})
 public class BookingEngineBookingTests extends TestCommon {
     @InjectMocks
     @Spy

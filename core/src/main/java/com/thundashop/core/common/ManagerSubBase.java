@@ -190,7 +190,8 @@ public class ManagerSubBase {
         }
         
         this.ready = true;
-        
+
+        // Feature flag?
         for (Class oneTimeExectors : getOneTimExecutors()) {
             
             try {
@@ -556,7 +557,7 @@ public class ManagerSubBase {
                 return true;
             }
         }
-        
+
         return false;
     }
 

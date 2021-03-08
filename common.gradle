@@ -20,7 +20,7 @@ repositories {
 
 dependencies {
     // Adding dependencies here will add the dependencies to each subproject.
-    testCompile group: 'junit', name: 'junit', version: '4.10'
+    testImplementation group: 'junit', name: 'junit', version: '4.10'
 }
 
 String mavenArtifactId = name

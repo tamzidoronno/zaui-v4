@@ -2617,6 +2617,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                 System.out.println(usr.emailAddress);
                 saveUserToCluster("10.0.5.33", usr);
                 saveUserToCluster("10.0.6.33", usr);
+                saveUserToCluster("10.0.9.33", usr);
             }
         }
     }
@@ -2645,7 +2646,11 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             if(usr.isGetShopAdministrator()) {
                 getshopUsers.add(usr);
             }
-            if(usr.emailAddress != null && usr.emailAddress.endsWith("@getshop.com")) {
+            else if(usr.storeId.equals("13442b34-31e5-424c-bb23-a396b7aeb8ca"))
+            {
+                getshopUsers.add(usr);
+            }
+            else if(usr.emailAddress != null && usr.emailAddress.endsWith("@getshop.com")) {
                 getshopUsers.add(usr);
             }
         }

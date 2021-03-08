@@ -1,4 +1,4 @@
-# Readme
+# Getshop PMS v4  - PHP frontend and java backend
 
 ## Build instructions
 

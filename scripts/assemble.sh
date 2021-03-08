@@ -8,8 +8,8 @@ mkdir -p $folder/dist/libs
 cd $folder
 cp $gradleFolder/libs/* dist/libs/
 cp $gradleFolder/scripts/start.sh dist/
-cp $gradleFolder/core/build/libs/core-3.0.0.jar dist
-cp $gradleFolder/messages/build/libs/messages-3.0.0.jar dist
+cp $gradleFolder/core/build/libs/core-4.1.0.jar dist
+cp $gradleFolder/messages/build/libs/messages-4.1.0.jar dist
 cp -rf $gradleFolder/apitodb.json .
 tar zcvf $zipFile *
 mv $zipFile ../
@@ -27,4 +27,4 @@ rm -rf php;
 
 #Javascript API
 cp $gradleFolder/core/build/getshopapi.js .
-cp $gradleFolder/javaapi/build/libs/javaapi-3.0.0.jar .
+cp $gradleFolder/javaapi/build/libs/javaapi-4.1.0.jar .

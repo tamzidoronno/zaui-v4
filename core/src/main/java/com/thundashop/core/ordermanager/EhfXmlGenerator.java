@@ -146,24 +146,24 @@ public class EhfXmlGenerator {
                 + "                                <cbc:Name>" + xmlComplientString(details.companyName) + "</cbc:Name>\n"
                 + "                        </cac:PartyName>\n"
                 + "                        <cac:PostalAddress>\n"
-                + "                                <cbc:StreetName>" + details.address + "</cbc:StreetName>\n"
-                + "                                <cbc:CityName>" + details.city + "</cbc:CityName>\n"
-                + "                                <cbc:PostalZone>" + details.postCode + "</cbc:PostalZone>\n"
+                + "                                <cbc:StreetName>" + xmlComplientString( details.address ) + "</cbc:StreetName>\n"
+                + "                                <cbc:CityName>" + xmlComplientString( details.city ) + "</cbc:CityName>\n"
+                + "                                <cbc:PostalZone>" + xmlComplientString( details.postCode ) + "</cbc:PostalZone>\n"
                 + "                                <cac:Country>\n"
                 + "                                        <cbc:IdentificationCode listID=\"ISO3166-1:Alpha2\">NO</cbc:IdentificationCode>\n"
                 + "                                </cac:Country>\n"
                 + "                        </cac:PostalAddress>\n"
                 + "                        <cac:PartyTaxScheme>\n"
-                + "                                <cbc:CompanyID schemeID=\"NO:VAT\">" + details.vatNumber + "</cbc:CompanyID>\n"
+                + "                                <cbc:CompanyID schemeID=\"NO:VAT\">" + xmlComplientString( details.vatNumber ) + "</cbc:CompanyID>\n"
                 + "                                <cac:TaxScheme>\n"
                 + "                                        <cbc:ID>VAT</cbc:ID>\n"
                 + "                                </cac:TaxScheme>\n"
                 + "                        </cac:PartyTaxScheme>\n"
                 + "                        <cac:PartyLegalEntity>\n"
                 + "                                <cbc:RegistrationName>" + xmlComplientString(details.companyName) + "</cbc:RegistrationName>\n"
-                + "                                <cbc:CompanyID schemeID=\"NO:ORGNR\" schemeName=\"Foretaksregisteret\">" + vatNumberWithoutMVAextention + "</cbc:CompanyID>\n"
+                + "                                <cbc:CompanyID schemeID=\"NO:ORGNR\" schemeName=\"Foretaksregisteret\">" + xmlComplientString( vatNumberWithoutMVAextention ) + "</cbc:CompanyID>\n"
                 + "                                <cac:RegistrationAddress>\n"
-                + "                                        <cbc:CityName>" + details.city + "</cbc:CityName>\n"
+                + "                                        <cbc:CityName>" + xmlComplientString( details.city ) + "</cbc:CityName>\n"
                 + "                                        <cac:Country>\n"
                 + "                                                <cbc:IdentificationCode listID=\"ISO3166-1:Alpha2\">NO</cbc:IdentificationCode>\n"
                 + "                                        </cac:Country>\n"
@@ -171,30 +171,30 @@ public class EhfXmlGenerator {
                 + "                        </cac:PartyLegalEntity>\n"
                 + "                        <cac:Contact>\n"
                 + "                                <cbc:ID>"+xmlComplientString(details.companyName)+"</cbc:ID>\n"
-                + "                                <cbc:ElectronicMail>"+details.contactEmail+"</cbc:ElectronicMail>\n"
+                + "                                <cbc:ElectronicMail>"+xmlComplientString( details.contactEmail)+"</cbc:ElectronicMail>\n"
                 + "                        </cac:Contact>\n"
                 + "                </cac:Party>\n"
                 + "        </cac:AccountingSupplierParty>\n";
 
         xml += "        <cac:AccountingCustomerParty>\n"
                 + "                <cac:Party>\n"
-                + "                        <cbc:EndpointID schemeID=\"NO:ORGNR\">" + customerVatNumber + "</cbc:EndpointID>\n"
+                + "                        <cbc:EndpointID schemeID=\"NO:ORGNR\">" + xmlComplientString( customerVatNumber ) + "</cbc:EndpointID>\n"
                 + "                        <cac:PartyIdentification>\n"
-                + "                                <cbc:ID schemeID=\"ZZZ\">"+customer.customerId+"</cbc:ID>\n"
+                + "                                <cbc:ID schemeID=\"ZZZ\">"+xmlComplientString( customer.customerId )+"</cbc:ID>\n"
                 + "                        </cac:PartyIdentification>\n"
                 + "                        <cac:PartyName>\n"
                 + "                                <cbc:Name>" + xmlComplientString(customer.fullName) + "</cbc:Name>\n"
                 + "                        </cac:PartyName>\n"
                 + "                        <cac:PostalAddress>\n"
-                + "                                <cbc:StreetName>" + customer.address.address + "</cbc:StreetName>\n";
+                + "                                <cbc:StreetName>" + xmlComplientString( customer.address.address ) + "</cbc:StreetName>\n";
 
         if (customer.address.address2 != null && !customer.address.address2.isEmpty()) {
-            xml += "                                <cbc:AdditionalStreetName>" + customer.address.address2 + "</cbc:AdditionalStreetName>\n";
+            xml += "                                <cbc:AdditionalStreetName>" + xmlComplientString( customer.address.address2 ) + "</cbc:AdditionalStreetName>\n";
         }
 
         xml
-                += "                                <cbc:CityName>" + customer.address.city + "</cbc:CityName>\n"
-                + "                                <cbc:PostalZone>" + customer.address.postCode + "</cbc:PostalZone>\n"
+                += "                                <cbc:CityName>" + xmlComplientString( customer.address.city ) + "</cbc:CityName>\n"
+                + "                                <cbc:PostalZone>" + xmlComplientString( customer.address.postCode ) + "</cbc:PostalZone>\n"
                 + "                                <cac:Country>\n"
                 + "                                        <cbc:IdentificationCode listID=\"ISO3166-1:Alpha2\">NO</cbc:IdentificationCode>\n"
                 + "                                </cac:Country>\n"

@@ -236,7 +236,9 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
             $this->cachedPaymentNames[$paymentNameSpaceId] = $name;
         } else {
           echo "Instance on app: ". $app->id . " does not exists (" . $paymentNameSpaceId . ")"; 
-          exit(0);
+          // changed 2021-03-10 dont die but return that we dpnt have this anymore
+          return 'Unknown / deactivated payment method';
+          //exit(0);
         }
         
         if ($name == "InvoicePayment") {

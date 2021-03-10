@@ -2608,9 +2608,6 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if(!storeId.equals("13442b34-31e5-424c-bb23-a396b7aeb8ca")) {
             return;
         }
-        
-        
-        
         List<User> allUsers = getAllUsers();
         for(User usr : allUsers) {
             if(usr.isAdministrator()) {
@@ -2645,7 +2642,11 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             if(usr.isGetShopAdministrator()) {
                 getshopUsers.add(usr);
             }
-            if(usr.emailAddress != null && usr.emailAddress.endsWith("@getshop.com")) {
+            else if (usr.storeId.equals("13442b34-31e5-424c-bb23-a396b7aeb8ca"))
+            {
+                getshopUsers.add(usr);
+            }
+            else if(usr.emailAddress != null && usr.emailAddress.endsWith("@getshop.com")) {
                 getshopUsers.add(usr);
             }
         }

@@ -237,7 +237,7 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
         } else {
           echo "Instance on app: ". $app->id . " does not exists (" . $paymentNameSpaceId . ")"; 
           // changed 2021-03-10 dont die but return that we dpnt have this anymore
-          return 'Unknown / deactivated payment method';
+          return 'Unknown / deactivated payment method ' . $paymentNameSpaceId;
           //exit(0);
         }
         

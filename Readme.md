@@ -4,7 +4,7 @@
 
 Setup instructions for building with Gradle
 
-This code has been adapted to compile using Gradle version 6.7
+This code has been adapted to compile using Gradle version 6.7/6.8
 
 ### First time, create the gradle wrapper
 

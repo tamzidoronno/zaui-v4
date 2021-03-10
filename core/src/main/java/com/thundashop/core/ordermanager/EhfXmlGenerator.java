@@ -180,7 +180,7 @@ public class EhfXmlGenerator {
                 + "                <cac:Party>\n"
                 + "                        <cbc:EndpointID schemeID=\"NO:ORGNR\">" + xmlComplientString( customerVatNumber ) + "</cbc:EndpointID>\n"
                 + "                        <cac:PartyIdentification>\n"
-                + "                                <cbc:ID schemeID=\"ZZZ\">"+xmlComplientString( customer.customerId )+"</cbc:ID>\n"
+                + "                                <cbc:ID schemeID=\"ZZZ\">"+ customer.customerId +"</cbc:ID>\n"
                 + "                        </cac:PartyIdentification>\n"
                 + "                        <cac:PartyName>\n"
                 + "                                <cbc:Name>" + xmlComplientString(customer.fullName) + "</cbc:Name>\n"

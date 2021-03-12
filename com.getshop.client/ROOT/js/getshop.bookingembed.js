@@ -31,6 +31,12 @@
             jsendpoint = options.jsendpoint;
         }
            
+        //country selection
+        if(options.showCountrySelect === true)
+        {
+            console.log('SHOW DEM COUNTRIES');
+        }
+
         $('<link/>', {
            rel: 'stylesheet',
            type: 'text/css',

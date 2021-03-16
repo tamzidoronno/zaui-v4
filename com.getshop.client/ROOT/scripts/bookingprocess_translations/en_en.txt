@@ -123,5 +123,7 @@
     "numberofrooms_5" : "Number of beds",
     "numberofrooms_6" : "Number of aparments",
     "notetoorder" : "Note to order",
-    "differentconfirmationemail" : "Send confirmation to a different email"
+    "differentconfirmationemail" : "Send confirmation to a different email",
+    "country": "Country",
+    "country_please_select": "Choose country"
 }

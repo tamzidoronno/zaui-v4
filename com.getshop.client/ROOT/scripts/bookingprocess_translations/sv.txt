@@ -119,5 +119,7 @@
     "numberofrooms_5" : "Antal sängar",
     "numberofrooms_6" :  "Antal lägenheter",
     "notetoorder" : "Anmälan till faktura",
-    "differentconfirmationemail" : "Skicka bekräftelse till ett annat email"
+    "differentconfirmationemail" : "Skicka bekräftelse till ett annat email",
+    "country": "Land",
+    "country_please_select": "Välj land",
 }

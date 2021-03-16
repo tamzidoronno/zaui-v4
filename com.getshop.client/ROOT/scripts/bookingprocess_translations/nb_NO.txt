@@ -120,6 +120,8 @@
     "numberofrooms_4" : "Antall hytter",
     "numberofrooms_5" : "Antall senger",
     "numberofrooms_6" : "Antall leiligheter",
-    "differentconfirmationemail" : "Send bekreftelsen til en annen e-post"
+    "differentconfirmationemail" : "Send bekreftelsen til en annen e-post",
+    "country": "Land",
+    "country_please_select": "Velg land"
 
 }

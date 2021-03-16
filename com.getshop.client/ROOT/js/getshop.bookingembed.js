@@ -15,10 +15,11 @@
         getshop_failurecallback = options.failure;
         getshop_websockethost = options.websocket;
         getshop_overridetranslation = options.translation;
+        getshop_display_countryselect = options.showCountrySelect;
         sessionStorage.setItem('getshop_endpoint',options.endpoint);
         sessionStorage.setItem('getshop_domain',options.domain);
         sessionStorage.setItem('getshop_booking_form_options', JSON.stringify(options));
-        
+        sessionStorage.setItem('getshop_display_countryselect',options.showCountrySelect);
         
         if(!options.language) {
             sessionStorage.setItem('getshop_language',"");
@@ -32,7 +33,7 @@
         }
            
         //country selection
-        if(options.showCountrySelect === true)
+        if(getshop_display_countryselect === true)
         {
             console.log('SHOW DEM COUNTRIES');
         }
@@ -42,11 +43,13 @@
            type: 'text/css',
            href: jsendpoint+'scripts/booking/bookingstyles.php'
         }).appendTo('head');
-        
+
+        let bookingembed_url = jsendpoint+'scripts/booking/bookingcontent.php';
+        if(getshop_display_countryselect === true) bookingembed_url += '?display_countryselect=1';
         $.ajax({
             "type": "get",
             async: false,
-            "url": jsendpoint+'scripts/booking/bookingcontent.php',
+            "url": bookingembed_url,
             success: function (form) {
                 box.html("<span class='GslBooking'>" + form + "</span>");
             }

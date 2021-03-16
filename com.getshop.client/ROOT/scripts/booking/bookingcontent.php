@@ -14,7 +14,7 @@ $content = file_get_contents("../apps/GslBooking/template/gslfront_1.phtml");
 /* @var $this \ns_81edf29e_38e8_4811_a2c7_bc86ad5ab948\GslBooking */
 $factory = IocContainer::getFactorySingelton();
 $prod = $factory->getApi()->getStoreManager()->isProductMode();
-$endpoint = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['SERVER_NAME'];
+$endpoint = "https://" . $_SERVER['SERVER_NAME'];
 
 # NOT SURE WHY WE NEED THIS; makes it impossible to test on cluster 9 and not sure if www.getshop.com
 # gets a new version of this file when deploying to the repective clusters.... maybe deploy to c3 would be needed

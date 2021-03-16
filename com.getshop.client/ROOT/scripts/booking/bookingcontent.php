@@ -26,13 +26,17 @@ if( $_GET['display_countryselect'] )
     $cs = '';
     $cs .= '                    <div id="gsCountrySelectContainer" style="display:none; padding:10px 0;">';
     $cs .= "                        <div><span gstype='bookingtranslation' gstranslationfield='country'></span></div>";
-    $cs .= '                        <select  class="gsniceselect1" gsname="countryCode">';
-    $cs .= '                            <option value="" gsname="country_please_select" gstype="bookingtranslation" gstranslationfield="country_please_select"></option>';
+    $cs .= '                        <select id="gsCountrySelect" class="gsniceselect1" gsname="countryCode">';
+    $cs .= '                            <option value="" gstype="bookingtranslation" gstranslationfield="country_please_select"></option>';
 
     foreach (CountryCodes::getCodes() as $code => $country) {
         $cs .= "<option value='$code'>$country</option>";
     }
     $cs .= '                        </select>';
+    $cs .= '                        <input type="hidden" gsname="user_address_countrycode" value="" />';
+    $cs .= '                        <input type="hidden" gsname="user_address_countryname" value="" />';
+    $cs .= '                        <input type="hidden" gsname="company_address_countrycode" value="" />';
+    $cs .= '                        <input type="hidden" gsname="company_address_countryname" value="" />';
     $cs .= '                    </div>';
 
     $content = str_replace('<!--GS_COUNTRY_LIST-->', $cs, $content);

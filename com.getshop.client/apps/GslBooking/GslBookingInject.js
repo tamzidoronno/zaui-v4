@@ -740,14 +740,18 @@ function getshop_loadLoggedOn(res) {
             // as we go default to private people, we move the country selector to the respective div
             $('#gsCountrySelectContainer').appendTo('.overview_contact:first');
             $('#gsCountrySelectContainer').show();
+
+            $('#gsCountrySelect').on('change click', function(){
+                //write to our hidden inputs that will be put into the database...
+                $("[gsname='user_address_countrycode']").val( $('#gsCountrySelect').val() );
+                $("[gsname='user_address_countryname']").val( $('#gsCountrySelect option:selected').text() );
+                $("[gsname='company_address_countrycode']").val( $('#gsCountrySelect').val() );
+                $("[gsname='company_address_countryname']").val( $('#gsCountrySelect option:selected').text() );
+            });
+
+
             console.log('SHOW EM ########################## COUNTRIES HERE');
         }
-        else
-        {
-            // as we go default to private people, we move the country selector to the respective div
-            console.log('NO COUNTRIES HERE ####################### NO NO NO');
-        }
-
         $('.overview_contact').show();
     }
 }

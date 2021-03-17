@@ -641,9 +641,20 @@ public class OrderDailyBreaker {
 
     private void createOffsetAccountEntries(List<DayEntry> orderDayEntries, Order order) throws CloneNotSupportedException {
         List<DayEntry> toAdd = new ArrayList();
-        
+
         StorePaymentConfig storePaymentConfig = paymentManager.getStorePaymentConfiguration(order.getPaymentApplicationId());
-        
+
+        // if we somehow have something that is buggy... it is safe to ignore it when no money is attached to it :)
+        // bugfix for F2 Harstad Ticket ID 4245
+        if(storePaymentConfig == null && order.totalAmount == null )
+        {
+            System.out.println("createOffsetAccountEntries  ==> order.getPaymentApplicationId() NO PAYMENT CONFIG :" + order.getPaymentApplicationId() + "");
+            System.out.println("createOffsetAccountEntries  ==> order.getPaymentApplicationId() Order ID :" + order.incrementOrderId + "");
+            System.out.println("createOffsetAccountEntries  ==> order.getPaymentApplicationId() total amount :" + order.totalAmount + "");
+            System.out.println("createOffsetAccountEntries  ==> order.getPaymentApplicationId() total amount :" + order.restAmount + "");
+            return;
+        }
+
         if (filter.ignoreConfig) {
             storePaymentConfig = new StorePaymentConfig();
             storePaymentConfig.offsetAccountingId_prepayment = "1";
@@ -676,6 +687,10 @@ public class OrderDailyBreaker {
             }
             
             if (entry.isIncome) {
+                if( storePaymentConfig == null )
+                {
+                    System.out.println("We have an income and an invalid the payment config on the order " + order.toString()  );
+                }
                 checkStorePayment(storePaymentConfig, order);
                 entryPrePayment.accountingNumber = storePaymentConfig.offsetAccountingId_prepayment;
                 entryAccrude.accountingNumber = storePaymentConfig.offsetAccountingId_accrude;

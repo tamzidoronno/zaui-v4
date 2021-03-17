@@ -3817,7 +3817,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         ArrayList<PmiResult> result = new ArrayList();
         
         List<DayIncome> incomes = getDayIncomes(start, end);
-        
+
         for (DayIncome dayIncome : incomes) {
             if (!dayIncome.isFinal && getOrderManagerSettings().autoCloseFinancialDataWhenCreatingZReport) {
                 continue;
@@ -3834,7 +3834,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
                     return cartItem.getProduct().departmentId;
                 }));
-
 
             for (String departmentId : groupedByDepartmentId.keySet()) {
                 Department department = departmentManager.getDepartment(departmentId);

@@ -72,6 +72,14 @@ class PageFactory {
         if (!$pageId) {
             $pageId = "home";
         }
+
+        //added march 2021 - support stuff has been moved outside to help.getshop.comfort
+        if( $pageId == 'getshopusermanual' )
+        {
+            ob_clean();
+            header('Location: https://help.getshop.com/?autologin_code=CRYdU4ixyac0c2OaN9HjGyKhrqhaurFm');
+            die();
+        }
                 
         $page = $this->pages[$pageId];
         $page->createApplicationInstances();

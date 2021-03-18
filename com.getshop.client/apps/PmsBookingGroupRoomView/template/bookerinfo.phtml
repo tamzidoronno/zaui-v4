@@ -30,7 +30,7 @@ $channelNames = $formater->getChannels();
         $style = $disabled ? "color:gray;background-image:none;" : "";
         ?>
         <div class="col col2"><? echo $pmsBooking->incrementBookingId; ?>
-            <select class="changechannel gsniceselect1" style="width:50%; float:right;<?php echo $style;?>" <?php echo $disabled; ?> >
+           <select class="changechannel gsniceselect1" style="width:50%; float:right;<?php echo $style;?>" <?php echo $disabled; ?> >
                 <?php
                 echo "<option value=''>No source</option>";
                 foreach($channelList as $idx => $channel) {
@@ -193,7 +193,9 @@ $channelNames = $formater->getChannels();
             } else {
                 echo $user->fullName;
             } ?>
-                </b></div>
+                </b><?php
+                 if( $pmsBooking->channel && isset( $channelNames[$pmsBooking->channel] ) ) echo '<br />Channel: ' . $channelNames[$pmsBooking->channel];
+                ?></div>
         </div>  
     </div>
 

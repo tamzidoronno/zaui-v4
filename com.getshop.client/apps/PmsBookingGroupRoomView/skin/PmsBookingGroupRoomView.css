@@ -178,7 +178,7 @@
 .PmsBookingGroupRoomView .commentarea { padding-left: 10px; font-size: 12px; }
 .PmsBookingGroupRoomView .commentby { float:right; color:#bbb; }
 .PmsBookingGroupRoomView .commenttime { color:#bbb; width: 120px; display:inline-block; }
-.PmsBookingGroupRoomView .bookerinformation .col { width: 40%; display:inline-block; }
+.PmsBookingGroupRoomView .bookerinformation .col { width: 40%; display:inline-block; vertical-align: top; }
 .PmsBookingGroupRoomView .bookerinformation .col_box_width_2 { width: 50%; display:inline-block; float:left; }
 /*.PmsBookingGroupRoomView .col1 {     width: 190px; line-height: 20px; padding-left: 10px; box-sizing: border-box;color: #777; }*/
 .PmsBookingGroupRoomView { font-size: 15px; }

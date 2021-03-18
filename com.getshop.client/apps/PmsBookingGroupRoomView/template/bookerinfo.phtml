@@ -81,7 +81,7 @@ $channelNames = $formater->getChannels();
 
     <div class="row odd">
         <div class="col col1"><? echo $this->__f("Channel reservation ids"); ?></div>
-        <div class="col col2"><? echo $pmsBooking->wubookchannelreservationcode ? $pmsBooking->wubookchannelreservationcode . "/" . $pmsBooking->wubookreservationid : "N/A"; ?></div>    
+        <div class="col col2"><? echo $pmsBooking->wubookchannelreservationcode ? $pmsBooking->wubookchannelreservationcode . "/<a href='https://wubook.net/bookings/" . $pmsBooking->wubookreservationid . "' title='Open in Wubook' target='_blank'>" . $pmsBooking->wubookreservationid . '</a>' : "N/A"; ?></div>
     </div>
 
     <div class="row odd">

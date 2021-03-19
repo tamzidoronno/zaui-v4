@@ -415,7 +415,7 @@
 </div>
 
 
-<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+<link href="//fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 <script>
 
 //Reset page on load.
@@ -423,9 +423,9 @@
         sessionStorage.setItem('gslcurrentpage', '');
         $('.gslbookingBody').hide();
         $('.addons_overview').hide();
-        $.getScript("https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js", function (data, textStatus, jqxhr) {
+        $.getScript("//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js", function (data, textStatus, jqxhr) {
             $.getScript("{getshop_endpoint}/scripts/booking/bookingscripts.php", function (data, textStatus, jqxhr) {
-                $.getScript("https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js", function (data, textStatus, jqxhr) {
+                $.getScript("//cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js", function (data, textStatus, jqxhr) {
                     var getshopinterval = setInterval(function() {
                         if(typeof(moment) !== "undefined") {
                             var loading = getshop_setBookingTranslation();

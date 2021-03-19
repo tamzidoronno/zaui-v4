@@ -2441,7 +2441,7 @@ getshop_WebSocketClient = {
             if(getshop_endpoint) {
                 endpoint = getshop_endpoint;
             }
-            this.socket = new WebSocket("wss://"+endpoint+":21330/");
+            this.socket = new WebSocket((document.location.protocol == 'https'?'wss':'ws') + "://"+endpoint+":21330/");
             this.socket.onopen = getshop_WebSocketClient.connected;
             this.socket.onclose = function() {
                 getshop_WebSocketClient.disconnected();
@@ -2514,7 +2514,7 @@ GetShopApiWebSocketEmbeddedBooking.prototype = {
             var address = "wss://websocket.getshop.com/";
         }
         if(typeof(getshop_websockethost) !== "undefined" && getshop_websockethost) {
-            address = "wss://" + getshop_websockethost;
+            address = (document.location.protocol == 'https'?'wss':'ws') + "://" + getshop_websockethost;
         }
 
         this.socket = new WebSocket(address);

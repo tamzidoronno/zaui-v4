@@ -30,7 +30,7 @@ $channelNames = $formater->getChannels();
         $style = $disabled ? "color:gray;background-image:none;" : "";
         ?>
         <div class="col col2"><? echo $pmsBooking->incrementBookingId; ?>
-            <select class="changechannel gsniceselect1" style="width:50%; float:right;<?php echo $style;?>" <?php echo $disabled; ?> >
+           <select class="changechannel gsniceselect1" style="width:50%; float:right;<?php echo $style;?>" <?php echo $disabled; ?> >
                 <?php
                 echo "<option value=''>No source</option>";
                 foreach($channelList as $idx => $channel) {
@@ -81,7 +81,7 @@ $channelNames = $formater->getChannels();
 
     <div class="row odd">
         <div class="col col1"><? echo $this->__f("Channel reservation ids"); ?></div>
-        <div class="col col2"><? echo $pmsBooking->wubookchannelreservationcode ? $pmsBooking->wubookchannelreservationcode . "/" . $pmsBooking->wubookreservationid : "N/A"; ?></div>    
+        <div class="col col2"><? echo $pmsBooking->wubookchannelreservationcode ? $pmsBooking->wubookchannelreservationcode . "/<a href='https://wubook.net/bookings/" . $pmsBooking->wubookreservationid . "' title='Open in Wubook' target='_blank'>" . $pmsBooking->wubookreservationid . '</a>' : "N/A"; ?></div>
     </div>
 
     <div class="row odd">
@@ -193,7 +193,9 @@ $channelNames = $formater->getChannels();
             } else {
                 echo $user->fullName;
             } ?>
-                </b></div>
+                </b><?php
+                 if( $pmsBooking->channel && isset( $channelNames[$pmsBooking->channel] ) ) echo '<br />Channel: ' . $channelNames[$pmsBooking->channel];
+                ?></div>
         </div>  
     </div>
 

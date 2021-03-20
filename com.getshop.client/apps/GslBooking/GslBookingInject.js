@@ -2514,7 +2514,7 @@ GetShopApiWebSocketEmbeddedBooking.prototype = {
             var address = "wss://websocket.getshop.com/";
         }
         if(typeof(getshop_websockethost) !== "undefined" && getshop_websockethost) {
-            address = (document.location.protocol == 'https'?'wss':'ws') + "://" + getshop_websockethost;
+            address = (document.location.protocol == 'https:'?'wss':'ws') + "://" + getshop_websockethost;
         }
 
         this.socket = new WebSocket(address);

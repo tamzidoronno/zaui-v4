@@ -147,7 +147,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     @Override
     public boolean isPikStore() {
         boolean doPush = false;
-        if(lastCheckedBackups == null) {
+        /*if(lastCheckedBackups == null) {
             doPush = true;
         } else {
             long diff = System.currentTimeMillis() - lastCheckedBackups.getTime();
@@ -159,7 +159,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         if(doPush) {
             lastCheckedBackups = new Date();
             doubleCheckTransferServersToBackupSystem();
-        }
+        }*/
         return getStore().isPikStore();
     }
     

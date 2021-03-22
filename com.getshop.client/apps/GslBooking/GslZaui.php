@@ -1,0 +1,6 @@
+<?php
+
+// do some stuff here...
+// keep all stuff related to API calls and everything here...
+
+?>

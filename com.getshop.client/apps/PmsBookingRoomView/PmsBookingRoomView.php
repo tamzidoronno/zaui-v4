@@ -2511,11 +2511,12 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     }
 
     public function showNewVersionText() {
-        echo "<div style='background-color:green; color:#fff;text-align:center; padding: 5px;'>A new version of this view is available <span gsclick='toggleNewView' style='cursor:pointer; color:blue;' gs_callback='window.location.reload();'>here</a>.</div>";
+        echo '<div id="switch-booking-view" title="Switch to old booking detail view"><i class="fa fa-retweet" gsclick="toggleNewView" gs_callback="window.location.reload();"></i></div>';
+        //echo "<div style='background-color:green; color:#fff;text-align:center; padding: 5px;'>A new version of this view is available <span gsclick='toggleNewView' style='cursor:pointer; color:blue;' gs_callback='window.location.reload();'>here</a>.</div>";
     }
     
     public function toggleNewView() {
-        $_SESSION['newbookingviewtoggled'] = true;
+        $_SESSION['oldbookingviewtoggled'] = false;
     }
 
 }

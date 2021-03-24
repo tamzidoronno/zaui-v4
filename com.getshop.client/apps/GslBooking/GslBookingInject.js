@@ -1409,13 +1409,47 @@ function getshop_overviewPageLoad(res) {
 }
 
 function getshop_showOverviewPage() {
-    getshop_setPageName('overview');
     var saving = getshop_saveGuestInformation();
     var padding = $('.gslbookingBody').position().top;
     var body = $('.gslbookingBody').offset().top;
     $('.invalidinput').removeClass('invalidinput');
     $('.GslBooking .errormessage').hide();
-    saving.done(getshop_overviewPageLoad);
+
+    var zaui = sessionStorage.getItem('getshop_zaui_integration')
+    if(zaui){
+        saving.done(getshop_showZauiPage)
+    } else {
+        getshop_setPageName('overview');
+        saving.done(getshop_overviewPageLoad);
+    }
+}
+
+function getshop_showZauiPage() {
+    // var startDate = sessionStorage.getItem('getshop_startDate')
+    // console.log(startDate)
+    var activities = [{
+        name: "Test",
+        description: "Test description",
+        image: null,
+    },
+    {
+        name: "Test2",
+        description: "Test2 description2",
+        image: null,
+    }];
+    getshop_setPageName('zaui');
+    getshop_zauiPageLoad(activities);
+}
+
+function getshop_zauiPageLoad(activities){
+    activities.forEach(function (activity, index){
+        console.log(activity)
+    })
+
+    $('.addons_overview').fadeOut('400', function () {
+        $('.zaui').fadeIn('400');
+        $(window).scrollTop(0);
+    });
 }
 
 function getshop_startPaymentTerminalProcess() {
@@ -2032,6 +2066,9 @@ function getshop_searchRooms(e) {
 
         startDate = startDate.replace(/[^a-zA-Z0-9,: ]/g, "")
         endDate = endDate.replace(/[^a-zA-Z0-9,: ]/g, "");
+
+        sessionStorage.setItem('getshop_startDate', startDate);
+        sessionStorage.setItem('getshop_endDate', endDate);
 
         var userLang = navigator.language || navigator.userLanguage;
 

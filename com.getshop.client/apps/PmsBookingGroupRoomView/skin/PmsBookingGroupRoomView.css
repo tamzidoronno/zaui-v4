@@ -12,6 +12,11 @@
     line-height:30px;
     font-size:30px;
 }
+@media screen and (max-width: 1350px) {
+    #switch-booking-view {
+        right:45px;
+    }
+}
 .PmsBookingGroupRoomView .movetotype .bookingitem {
     border: solid 1px transparent;
     display: inline-block;

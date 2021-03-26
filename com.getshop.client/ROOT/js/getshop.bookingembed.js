@@ -17,6 +17,7 @@
         getshop_overridetranslation = options.translation;
         getshop_display_countryselect = options.showCountrySelect;
         getshop_zaui_integration = options.zauiIntegration
+
         sessionStorage.setItem('getshop_endpoint',options.endpoint);
         sessionStorage.setItem('getshop_domain',options.domain);
         sessionStorage.setItem('getshop_booking_form_options', JSON.stringify(options));

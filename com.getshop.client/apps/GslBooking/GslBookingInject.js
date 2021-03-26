@@ -1409,13 +1409,83 @@ function getshop_overviewPageLoad(res) {
 }
 
 function getshop_showOverviewPage() {
-    getshop_setPageName('overview');
     var saving = getshop_saveGuestInformation();
     var padding = $('.gslbookingBody').position().top;
     var body = $('.gslbookingBody').offset().top;
     $('.invalidinput').removeClass('invalidinput');
     $('.GslBooking .errormessage').hide();
-    saving.done(getshop_overviewPageLoad);
+
+    var zaui = sessionStorage.getItem('getshop_zaui_integration')
+    if(zaui){
+        saving.done(getshop_showZauiPage)
+    } else {
+        getshop_setPageName('overview');
+        saving.done(getshop_overviewPageLoad);
+    }
+}
+
+function getshop_showZauiPage() {
+    // var startDate = sessionStorage.getItem('getshop_startDate')
+    // console.log(startDate)
+    var startDate = sessionStorage.getItem('getshop_startDate')
+
+    // $.ajax({
+    //     url: getshop_endpoint + '/scripts/booking/booking-zaui.php',
+    //     type: "Get",
+    //     crossDomain: true,
+    //     data: {startDate: startDate},
+    //     dataType: "json",
+    //     success: function (response) {
+    //         console.log(response)
+    //     },
+    //     error: function (xhr, status) {
+    //         alert("error");
+    //     }
+    // });
+    $.ajax(getshop_endpoint + '/scripts/booking/booking-zaui.php', {
+        dataType: 'json',
+        data: {startDate: startDate},
+        success: function (res) {
+            console.log(res)
+        }
+    });
+
+    var activities = [{
+        supplierProductCode: "ACT_1765",
+        supplierProductName: "Test",
+        tourDescription: "Test description",
+        image: null,
+    },
+    {
+        supplierProductCode: "ACT_1766",
+        supplierProductName: "Test2",
+        tourDescription: "Test2 description2",
+        image: null,
+    }];
+    getshop_setPageName('zaui');
+    getshop_zauiPageLoad(activities);
+}
+
+function getshop_zauiPageLoad(activities){
+    activities.forEach(function (activity, index){
+        var activitybox = $('#productentrybox_zaui').clone()
+        activitybox.attr('id', null)
+        activitybox.addClass('productentrybox');
+        activitybox.attr('activityid', activity.supplierProductCode)
+
+        activitybox.find('.roomname').html(activity.supplierProductName)
+        // roomBox.find('.product_availablerooms').attr('numberavailable',room.availableRooms);
+        // roomBox.find('.availableroomcontainer').html(room.availableRooms);
+        activitybox.find('.roomdescription').html(activity.tourDescription)
+
+        $('#productentry_zaui').append(activitybox)
+    })
+    $('#productentrybox_zaui').hide()
+
+    $('.addons_overview').fadeOut('400', function () {
+        $('.zaui').fadeIn('400');
+        $(window).scrollTop(0);
+    });
 }
 
 function getshop_startPaymentTerminalProcess() {
@@ -2032,6 +2102,9 @@ function getshop_searchRooms(e) {
 
         startDate = startDate.replace(/[^a-zA-Z0-9,: ]/g, "")
         endDate = endDate.replace(/[^a-zA-Z0-9,: ]/g, "");
+
+        sessionStorage.setItem('getshop_startDate', startDate);
+        sessionStorage.setItem('getshop_endDate', endDate);
 
         var userLang = navigator.language || navigator.userLanguage;
 

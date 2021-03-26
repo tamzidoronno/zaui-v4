@@ -12,10 +12,9 @@ include '../loader.php';
 include ('../apps/GslBooking/GslZaui.php');
 
 //call some check + render here...
-print_r('<pre>');
-print_r($activities);
-print_r('</pre>');
-echo "asssssss";
+
+echo json_encode($available_activities);
+
 //echo "here comes the integration";
 
 ?>

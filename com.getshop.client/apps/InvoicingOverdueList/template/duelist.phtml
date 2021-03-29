@@ -3,8 +3,40 @@
 $overDueInvoices = $this->getOverDueInvoices();
 $debtCollectors = (array)$this->getApi()->getStoreApplicationPool()->getActivatedApplications("DebtCollectorApplication");
 $hasDebtCollector = sizeof($debtCollectors) > 0;
-?>
 
+if( $_SESSION['massupdatewh'] == 'yes') $mwh = true;
+if($mwh)
+{
+?>
+<script>
+
+function registerWHManualPayment(duedate,orderid,amount,button)
+{
+    console.log('Manual payment registrtation: date:' + duedate + '; orderid: ' + orderid + '; amount: ' + amount);
+
+    var data = {};
+    data.orderid = orderid;
+    data.date = duedate;
+    data.amount = amount;
+    data.comment = '';
+    data.localCurrency = $(tab).find('.localcurrencyvalue').val();
+    data.agio = $(tab).find('.disaglo').val();
+    data.type = $(tab).find('.manualregisterpaymenttype').val();
+
+    var event = thundashop.Ajax.createEvent(null, "addTransactionRecord", $(button), data);
+    event['synchron'] = true;
+
+    thundashop.Ajax.post(event, function(res) {
+        console.log('We have an answer from the backend: ' + res);
+    });
+}
+
+</script>
+
+
+<?php
+} // end if massupdatewh
+?>
 <div class="duerow header">
     <div class="col incrementalOrderId"><? echo $this->__f("Order id"); ?></div>
     <div class="col name"><? echo $this->__f("Name"); ?></div>
@@ -13,6 +45,7 @@ $hasDebtCollector = sizeof($debtCollectors) > 0;
     <div class="col totalpaid"><? echo $this->__f("Paid"); ?></div>
     <div class="col remaining"><? echo $this->__f("Remaining"); ?></div>
     <?php
+    if($mwh) echo '<div class="col remaining">WHUPDATE</div>';
     if($hasDebtCollector) {
         ?>
         <div class="col todebt"><? echo $this->__f(""); ?></div>
@@ -39,8 +72,15 @@ foreach ($overDueInvoices as $order) {
         }
     }
     
-    ?>
 
+    // MANUAL HACK FOR WH INVOICES THAT HAVE NOT BEEN PAID EVER
+    if($mwh)
+    {
+      echo '<div class="duerow" onclick="registerWHManualPayment(\''. date('d.m.Y', strtotime($order->dueDate)) .'\',\''. $order->id .'\',\''. ($amount - $paidAmount) .'\')">RUN FOR THIS ORDER</div>';
+      echo '<pre style="display:none;">'. print_r($order,1) .'</pre>';
+    }
+
+?>
     <div class="duerow  <? echo $color; ?>" duedays='<? echo $dueDays; ?>'>
         <a href='/invoicing.php?page=orderviewpage&orderid=<? echo $order->id; ?>&tab=paymenthistory' target='_new'>
             <div class="col incrementalOrderId"><? echo $order->incrementOrderId; ?>
@@ -75,8 +115,8 @@ foreach ($overDueInvoices as $order) {
                 echo $amount - $paidAmount;
                 ?>
             </div>
-            
-            <?php if($hasDebtCollector) { 
+            <?php
+            if($hasDebtCollector) {
                 
                 $appName = $debtCollectors[0]->appName;
                 $appId = $debtCollectors[0]->id;

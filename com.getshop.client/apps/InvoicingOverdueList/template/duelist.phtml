@@ -54,11 +54,12 @@ function registerWHManualPayment(duedate,orderid,amount,button)
 
             return xhr;
         },
-        error: thundashop.handleAjaxError
+        error: function(e) { console.log('AJAX error ' + e); }
     });
 }
 
 var runallWH = false;
+var totalWHcounter = 0;
 function runThroughAll()
 {
     $ = jQuery;
@@ -72,6 +73,10 @@ function runThroughAll()
        console.log('we will run for this day ' + $(t).attr('duedate'));
        runallWH = true;
        t.removeAttribute('duedate');
+
+       totalWHcounter++;
+       $('#whrunallbutton').html('Updating data at the backend for the ' + totalWHcounter + ' time now!' );
+
        $(t).click();
 
        //window.setTimeout(runThroughAll, 2000);
@@ -88,7 +93,7 @@ function runThroughAll()
 }
 
 </script>
-<h1 style="color:#F00; cursor:pointer;" onclick="runThroughAll()">RUN THROUGH ALL UNTIL END OF 2019</h1>
+<h1 id="whrunallbutton" style="color:#ff0000; cursor:pointer;" onclick="runThroughAll()">RUN THROUGH ALL UNTIL END OF 2019</h1>
 
 <?php
 } // end if massupdatewh

@@ -15,6 +15,9 @@ class InvoicingOverdueList extends \MarketingApplication implements \Application
     }
 
     public function render() {
+        if(isset($_SESSION['massupdatewh']) ) echo '<h1>SESSION WH MASS UPDATE IS HERE '. $_SESSION['massupdatewh'] .'</h1>';
+        if( $_SESSION['massupdatewh'] == 'yes') $mwh = true;
+
         echo "<div class='orderlist'>";
             $this->includefile("duelist");
         echo "</div>";

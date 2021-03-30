@@ -3,8 +3,101 @@
 $overDueInvoices = $this->getOverDueInvoices();
 $debtCollectors = (array)$this->getApi()->getStoreApplicationPool()->getActivatedApplications("DebtCollectorApplication");
 $hasDebtCollector = sizeof($debtCollectors) > 0;
-?>
 
+if( $_SESSION['massupdatewh'] == 'yes') $mwh = true;
+if($mwh)
+{
+?>
+<script>
+
+function registerWHManualPayment(duedate,orderid,amount,button)
+{
+    console.log('Manual payment registrtation: date:' + duedate + '; orderid: ' + orderid + '; amount: ' + amount);
+
+    var data = {};
+    data.orderid = orderid;
+    data.date = duedate;
+    data.amount = amount;
+    data.comment = '';
+
+    var event = thundashop.Ajax.createEvent(null, "addTransactionRecord", $(button), data);
+    event['synchron'] = true;
+    event.core.pageid = 'orderviewpage';
+    event.core.instanceid = '4be8e427-bead-491e-8d9f-7dd16356d8eb';
+
+
+    $.ajax({
+        type: "POST",
+        url: '/data.php',
+        data: thundashop.base64.encodeForAjax(event),
+        dataType: 'html',
+        context: document.body,
+        success: function(response) {
+            console.log('AJAX CAME BACK' + response);
+            if(runallWH) runThroughAll();
+        },
+        xhr: function()
+        {
+            var xhr = new window.XMLHttpRequest();
+            if (!xhr.upload) {
+                return xhr;
+            }
+
+            xhr.upload.addEventListener("progress", function(evt) {
+                if (evt.lengthComputable) {
+                    var percentComplete = (evt.loaded / evt.total) * 100;
+                    if(uploadcallback) {
+                        uploadcallback(percentComplete);
+                    }
+                }
+            }, false);
+
+            return xhr;
+        },
+        error: function(e) { console.log('AJAX error ' + e); }
+    });
+}
+
+var runallWH = false;
+var totalWHcounter = 0;
+function runThroughAll()
+{
+    $ = jQuery;
+    runallWH = false;
+    /*
+    * we go through all .paythisWH elements and check if their duedate does not contain 2021 or 2020 - if this is true, we click one at a time and re-run this function
+    * */
+    var t = $('[duedate]:first')[0];
+    if( $(t).attr('duedate').indexOf('2020') == -1 && $(t).attr('duedate').indexOf('2021') == -1 )
+    {
+       console.log('we will run for this day ' + $(t).attr('duedate'));
+       runallWH = true;
+       t.removeAttribute('duedate');
+
+       totalWHcounter++;
+       $('#whrunallbutton').html('Updating data at the backend for the ' + totalWHcounter + ' time now!' );
+
+       $(t).click();
+
+       //window.setTimeout(runThroughAll, 2000);
+       return;
+    }
+    else
+    {
+       console.log('NO RUN FOR THIS '+ $(t).attr('duedate'));
+       t.removeAttribute('duedate');
+       window.setTimeout(runThroughAll, 200);
+       return;
+    }
+
+}
+
+</script>
+<h1 id="whrunallbutton" style="color:#ff0000; cursor:pointer;" onclick="runThroughAll()">RUN THROUGH ALL UNTIL END OF 2019</h1>
+
+<?php
+} // end if massupdatewh
+?>
 <div class="duerow header">
     <div class="col incrementalOrderId"><? echo $this->__f("Order id"); ?></div>
     <div class="col name"><? echo $this->__f("Name"); ?></div>
@@ -13,6 +106,7 @@ $hasDebtCollector = sizeof($debtCollectors) > 0;
     <div class="col totalpaid"><? echo $this->__f("Paid"); ?></div>
     <div class="col remaining"><? echo $this->__f("Remaining"); ?></div>
     <?php
+    if($mwh) echo '<div class="col remaining">WHUPDATE</div>';
     if($hasDebtCollector) {
         ?>
         <div class="col todebt"><? echo $this->__f(""); ?></div>
@@ -38,9 +132,20 @@ foreach ($overDueInvoices as $order) {
             $debtcollectorText .= "Sent to debt collector at : " . date("d.m.Y H:i", strtotime($slog->date)) . "\r\n";
         }
     }
-    
-    ?>
 
+    $amount = $this->getTotalAmountForOrder($order);
+    $paidAmount = $this->getTotalPaidAmount($order);
+
+    // MANUAL HACK FOR WH INVOICES THAT HAVE NOT BEEN PAID EVER
+    if($mwh)
+    {
+      echo '<div><div class="app" app="OrderView" appid=""></div>';
+      echo '<div class="paythisWH" duedate="'. date('d.m.Y', strtotime($order->dueDate)) .'" class="duerow" onclick="registerWHManualPayment(\''. date('d.m.Y', strtotime($order->dueDate)) .'\',\''. $order->id .'\',\''. ($amount - $paidAmount) .'\',this)">RUN FOR THIS ORDER</div>';
+      echo '<pre style="display:none;">'. print_r($order,1) .'</pre>';
+      echo '</div>';
+    }
+
+?>
     <div class="duerow  <? echo $color; ?>" duedays='<? echo $dueDays; ?>'>
         <a href='/invoicing.php?page=orderviewpage&orderid=<? echo $order->id; ?>&tab=paymenthistory' target='_new'>
             <div class="col incrementalOrderId"><? echo $order->incrementOrderId; ?>
@@ -57,14 +162,14 @@ foreach ($overDueInvoices as $order) {
             </div>
             <div class="col totalamount">
                 <?
-                $amount = $this->getTotalAmountForOrder($order);
+
                 $totalOrderAmount += $amount;
                 echo $amount;
                 ?>
             </div>
             <div class="col totalpaid">
                 <?
-                $paidAmount = $this->getTotalPaidAmount($order);
+
                 $totalOrderPaid += $paidAmount;
                 echo $paidAmount;
                 ?>
@@ -75,8 +180,8 @@ foreach ($overDueInvoices as $order) {
                 echo $amount - $paidAmount;
                 ?>
             </div>
-            
-            <?php if($hasDebtCollector) { 
+            <?php
+            if($hasDebtCollector) {
                 
                 $appName = $debtCollectors[0]->appName;
                 $appId = $debtCollectors[0]->id;

@@ -19,20 +19,76 @@ function registerWHManualPayment(duedate,orderid,amount,button)
     data.date = duedate;
     data.amount = amount;
     data.comment = '';
-    data.localCurrency = $(tab).find('.localcurrencyvalue').val();
-    data.agio = $(tab).find('.disaglo').val();
-    data.type = $(tab).find('.manualregisterpaymenttype').val();
 
     var event = thundashop.Ajax.createEvent(null, "addTransactionRecord", $(button), data);
     event['synchron'] = true;
+    event.core.pageid = 'orderviewpage';
+    event.core.instanceid = '4be8e427-bead-491e-8d9f-7dd16356d8eb';
 
-    thundashop.Ajax.post(event, function(res) {
-        console.log('We have an answer from the backend: ' + res);
+
+    $.ajax({
+        type: "POST",
+        url: '/data.php',
+        data: thundashop.base64.encodeForAjax(event),
+        dataType: 'html',
+        context: document.body,
+        success: function(response) {
+            console.log('AJAX CAME BACK' + response);
+            if(runallWH) runThroughAll();
+        },
+        xhr: function()
+        {
+            var xhr = new window.XMLHttpRequest();
+            if (!xhr.upload) {
+                return xhr;
+            }
+
+            xhr.upload.addEventListener("progress", function(evt) {
+                if (evt.lengthComputable) {
+                    var percentComplete = (evt.loaded / evt.total) * 100;
+                    if(uploadcallback) {
+                        uploadcallback(percentComplete);
+                    }
+                }
+            }, false);
+
+            return xhr;
+        },
+        error: thundashop.handleAjaxError
     });
 }
 
-</script>
+var runallWH = false;
+function runThroughAll()
+{
+    $ = jQuery;
+    runallWH = false;
+    /*
+    * we go through all .paythisWH elements and check if their duedate does not contain 2021 or 2020 - if this is true, we click one at a time and re-run this function
+    * */
+    var t = $('[duedate]:first')[0];
+    if( $(t).attr('duedate').indexOf('2020') == -1 && $(t).attr('duedate').indexOf('2021') == -1 )
+    {
+       console.log('we will run for this day ' + $(t).attr('duedate'));
+       runallWH = true;
+       t.removeAttribute('duedate');
+       $(t).click();
 
+       //window.setTimeout(runThroughAll, 2000);
+       return;
+    }
+    else
+    {
+       console.log('NO RUN FOR THIS '+ $(t).attr('duedate'));
+       t.removeAttribute('duedate');
+       window.setTimeout(runThroughAll, 200);
+       return;
+    }
+
+}
+
+</script>
+<h1 style="color:#F00; cursor:pointer;" onclick="runThroughAll()">RUN THROUGH ALL UNTIL END OF 2019</h1>
 
 <?php
 } // end if massupdatewh
@@ -71,13 +127,17 @@ foreach ($overDueInvoices as $order) {
             $debtcollectorText .= "Sent to debt collector at : " . date("d.m.Y H:i", strtotime($slog->date)) . "\r\n";
         }
     }
-    
+
+    $amount = $this->getTotalAmountForOrder($order);
+    $paidAmount = $this->getTotalPaidAmount($order);
 
     // MANUAL HACK FOR WH INVOICES THAT HAVE NOT BEEN PAID EVER
     if($mwh)
     {
-      echo '<div class="duerow" onclick="registerWHManualPayment(\''. date('d.m.Y', strtotime($order->dueDate)) .'\',\''. $order->id .'\',\''. ($amount - $paidAmount) .'\')">RUN FOR THIS ORDER</div>';
+      echo '<div><div class="app" app="OrderView" appid=""></div>';
+      echo '<div class="paythisWH" duedate="'. date('d.m.Y', strtotime($order->dueDate)) .'" class="duerow" onclick="registerWHManualPayment(\''. date('d.m.Y', strtotime($order->dueDate)) .'\',\''. $order->id .'\',\''. ($amount - $paidAmount) .'\',this)">RUN FOR THIS ORDER</div>';
       echo '<pre style="display:none;">'. print_r($order,1) .'</pre>';
+      echo '</div>';
     }
 
 ?>
@@ -97,14 +157,14 @@ foreach ($overDueInvoices as $order) {
             </div>
             <div class="col totalamount">
                 <?
-                $amount = $this->getTotalAmountForOrder($order);
+
                 $totalOrderAmount += $amount;
                 echo $amount;
                 ?>
             </div>
             <div class="col totalpaid">
                 <?
-                $paidAmount = $this->getTotalPaidAmount($order);
+
                 $totalOrderPaid += $paidAmount;
                 echo $paidAmount;
                 ?>

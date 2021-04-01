@@ -1438,7 +1438,7 @@ function getshop_showZauiPage() {
 
     $.ajax(getshop_endpoint + '/scripts/booking/booking-zaui.php', {
         dataType: 'json',
-        data: {startDate: startDate},
+        data: {startDate: startDate, getActivities: true},
         success: function (response) {
             var activities = response;
             getshop_setPageName('zaui');
@@ -1494,7 +1494,6 @@ function  getshop_showTours(prodCode){
 
             if(Array.isArray(tours)){
                 tours.forEach(function (tour, index){
-                    console.log(prodCode)
                     var id = "" + prodCode + "_" + index + "";
                     var tourEntry = $("<tr class='producentry_itemlist'><td>"  + tour.TourOptions.TourDepartureTime + "</td><td>" + tour.TourPricing.TotalInInt + "</td><td><div id='" + id + "' class='reserveTourButton'>Reserve</div></td>")
                     $('#table_' + prodCode).append(tourEntry);

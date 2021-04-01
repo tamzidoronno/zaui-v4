@@ -1,5 +1,5 @@
 <?php
-
+//Cron to save batch availability in database
 $servername = "localhost";
 $username = "test";
 $password = "test";
@@ -12,6 +12,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+//api call
 $url = "https://api.zaui.io/v1/";
 
 $startDate = date('Y-m-d', time());
@@ -40,7 +41,9 @@ $data = curl_exec($ch);
 curl_close($ch);
 
 $availability = json_decode(json_encode(simplexml_load_string($data)), true);
+//end api call
 
+//delete old list
 $sql = "TRUNCATE TABLE getshop_zaui_cache.availability";
 if ($conn->query($sql) === TRUE) {
     echo "Table truncated successfully";
@@ -48,6 +51,7 @@ if ($conn->query($sql) === TRUE) {
     echo "Error: " . $sql . "<br>" . $conn->error;
 }
 
+//save new list
 $sql = "INSERT INTO getshop_zaui_cache.availability (xml_response, created_at) VALUES ('" . $data . "', '" . time() . "')";
 
 if ($conn->query($sql) === TRUE) {

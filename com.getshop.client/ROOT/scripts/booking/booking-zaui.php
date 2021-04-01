@@ -9,7 +9,7 @@ header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token , Autho
 chdir("../../");
 include '../loader.php';
 
-include ('../apps/GslBooking/GslZaui.php');
+include ('../apps/GslBooking/zaui/GslZaui.php');
 
 //call some check + render here...
 

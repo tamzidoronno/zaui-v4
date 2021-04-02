@@ -420,6 +420,7 @@ Error      : #de5353; red
 .GslBooking .gslfront_1 .zaui_container_left .guestselection {color: #222; display: none}
 .GslBooking .gslfront_1 .reserveTourButton {cursor: pointer;}
 .GslBooking .gslfront_1 .showTours {color: #222; cursor: pointer;}
+.GslBooking .gslfront_1 .zaui_confirmation {box-sizing: border-box; width: 100%;}
 
 /*Addons and guest information*/
 .GslBooking .gslfront_1 .addons_overview .addons_overview_right{width:25%;float:right;color:#fff;padding-left:10px;}

@@ -61,6 +61,9 @@ if(isset($_GET['getActivities'])){
             }
         }
     }
+
+    echo json_encode($available_activities);
+    exit();
 }
 //end loading cached
 
@@ -129,6 +132,7 @@ if(isset($_GET['createAddon']) && isset($_GET['prodCode']) && isset($_GET['tourD
 
     echo json_encode(['product_id' => "189cec15-67c4-4990-969c-be98eb166ce4"]);
     exit();
+    //Create addon
 //    $psm = new \ns_c5a4b5bf_365c_48d1_aeef_480c62edd897\PsmConfigurationAddons();
 //    $product = $psm->getApi()->getProductManager()->createProductWithAccount($account);
 //
@@ -154,6 +158,7 @@ if(isset($_GET['createAddon']) && isset($_GET['prodCode']) && isset($_GET['tourD
 //
 //        $psm->getApi()->getPmsManager()->saveConfiguration($psm->getSelectedMultilevelDomainName(), $notifications);
 //
+//        //send back product id of addon
 //        echo json_encode(['product_id' => $product->id]);
 //        exit();
 //    } else {
@@ -165,6 +170,7 @@ if(isset($_GET['createAddon']) && isset($_GET['prodCode']) && isset($_GET['tourD
 if(isset($_GET['createBooking']) && isset($_POST['bookingReference'])){
     $url = "https://api.zaui.io/v1/";
 
+    //vars received from ajax call
     $date = date("Y-m-d", strtotime($_POST['startDate']));
     $bookingReference = $_POST['bookingReference'];
     $prod_code = $_POST['prodCode'];
@@ -172,6 +178,7 @@ if(isset($_GET['createBooking']) && isset($_POST['bookingReference'])){
     $travellers = $_POST['travellers'];
     $total = $_POST['total'];
 
+    //api call
     $input_xml = '<?xml version="1.0" encoding="UTF-8"?>
 <BookingCreateRequest xmlns="https://api.zaui.io/api/01">
 	<ApiKey>' . $api_key . '</ApiKey>     
@@ -194,9 +201,11 @@ if(isset($_GET['createBooking']) && isset($_POST['bookingReference'])){
 		<Inclusion></Inclusion>
 	</Inclusions>';
 
+    //each registered guest
     foreach($travellers as $traveller){
         $adult = $traveller['isChild'] == "false" ? "ADULT" : "CHILD";
 
+        //separate first and last name
         $names = explode(" ", $traveller['name']);
         $surname = end($names);
         reset($names);
@@ -264,6 +273,7 @@ if(isset($_GET['createBooking']) && isset($_POST['bookingReference'])){
     $data = curl_exec($ch);
     curl_close($ch);
 
+    //booking result
     $booking = json_decode(json_encode(simplexml_load_string($data)), true);
     echo json_encode($booking);
 }

@@ -11,10 +11,4 @@ include '../loader.php';
 
 include ('../apps/GslBooking/zaui/GslZaui.php');
 
-//call some check + render here...
-
-echo json_encode($available_activities);
-
-//echo "here comes the integration";
-
 ?>

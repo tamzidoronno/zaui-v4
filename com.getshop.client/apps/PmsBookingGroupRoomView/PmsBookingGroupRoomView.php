@@ -604,7 +604,7 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
     }
     
     public function render() {
-        //$this->displayToggleNew();
+        $this->displayToggleNew();
         
         echo "<div class='room_view_outer' usenewpayment='true'>";
         $this->includefile("main");
@@ -1718,7 +1718,8 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
     public function displayToggleNew() {
         $config = $this->getPmsConfiguration();
         if(!$config->conferenceSystemActive) {
-            echo "<div style='background-color:green; color:#fff;text-align:center;cursor:pointer; padding: 5px;' gsclick='removenewversion' gs_callback='window.location.reload();'>(This view is in BETA MODE - if you find errors please inform us about it) - Toggle old version</div>";
+            echo '<div id="switch-booking-view" title="Switch to old booking detail view"><i class="fa fa-retweet" gsclick="removenewversion" gs_callback="window.location.reload();"></i></div>';
+            //echo "<div style='background-color:green; color:#fff;text-align:center;cursor:pointer; padding: 5px;' gsclick='removenewversion' gs_callback='window.location.reload();'>(This view is in BETA MODE - if you find errors please inform us about it) - Toggle old version</div>";
         }
     }
 

@@ -31,11 +31,12 @@ if(!$factory->getApi()->getUserManager()->isLoggedIn() || !ns_df435931_9364_4b6a
 
 // Add apps if not already added
 $_SESSION['firstloadpage'] = true;
+if( $_REQUEST['massupdatewh'] ) $_SESSION['massupdatewh'] = $_REQUEST['massupdatewh'];
 
 ?>
 <html pageid="<? echo $page->getId(); ?>" module="invoicing">
     <head>
-        <title><? echo $page->getTitle(); ?></title>
+        <title><? if( isset($_SESSION['massupdatewh'] ) ) { echo 'WH MASS UPDATE ';  } echo $page->getTitle(); ?></title>
         <link rel="stylesheet" href="/icomoon/style.css?<? echo calculateCacheName(); ?>">
         <link rel="stylesheet" href="/skin/default/getshop.css?<? echo calculateCacheName(); ?>">
         <link rel="stylesheet" href="/skin/default/getshopmodules.css?<? echo calculateCacheName(); ?>">

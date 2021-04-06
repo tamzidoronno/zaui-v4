@@ -1,3 +1,22 @@
+#switch-booking-view
+{
+    position:absolute;
+    top:-35px;
+    right:5px;
+    cursor: pointer;
+    min-height:30px;
+    min-width:30px;
+    height:30px;
+    width:30px;
+    color:#71cdf2;
+    line-height:30px;
+    font-size:30px;
+}
+@media screen and (max-width: 1350px) {
+    #switch-booking-view {
+        right:45px;
+    }
+}
 .PmsBookingGroupRoomView .movetotype .bookingitem {
     border: solid 1px transparent;
     display: inline-block;

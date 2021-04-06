@@ -103,7 +103,7 @@ public class EhfXmlGenerator {
             xml += "         <cbc:InvoiceTypeCode listID=\"UNCL1001\">380</cbc:InvoiceTypeCode>\n";
         }
         if (order.invoiceNote != null && !order.invoiceNote.isEmpty()) {
-            xml += "         <cbc:Note>" + order.invoiceNote + "</cbc:Note>\n";
+            xml += "         <cbc:Note>" + xmlComplientString( order.invoiceNote ) + "</cbc:Note>\n";
         }
         
         Date taxDate = order.getStartDateByItems();
@@ -117,7 +117,7 @@ public class EhfXmlGenerator {
         
         xml += "         <cbc:DocumentCurrencyCode listID=\"ISO4217\">" + getCurrentByCode() + "</cbc:DocumentCurrencyCode>\n";
         if (order.invoiceNote != null && !order.invoiceNote.isEmpty()) {
-            xml += "         <cbc:AccountingCost>" + order.invoiceNote + "</cbc:AccountingCost>\n";
+            xml += "         <cbc:AccountingCost>" + xmlComplientString( order.invoiceNote ) + "</cbc:AccountingCost>\n";
         }
         xml += "         <cac:OrderReference>\n";
         xml += "             <cbc:ID>" + useId + "</cbc:ID>\n";

@@ -1121,8 +1121,16 @@ function getshop_gotopayment(e) {
         $('.agreetotermserrormessage').hide();
         $('.invalidinput').removeClass('invalidinput');
         saving.done(function(res) {
-            var travellerIdentifier = res.user_emailAddress
-            var givenName = res.user_fullName
+            var zaui = sessionStorage.getItem('getshop_zaui_integration')
+            var travellers = []
+
+            if(typeof(zaui) != "undefined" && zaui == "true") {
+                res.rooms.forEach(function (room, index) {
+                    room.guestInfo.forEach(function (guest, index) {
+                        travellers.push(guest)
+                    })
+                })
+            }
 
             for(var field in res.fieldsValidation) {
                 if(field === "agreeterms" || gslbookingcurresult.prefilledContactUser) {
@@ -1151,30 +1159,31 @@ function getshop_gotopayment(e) {
                 var completing = getshop_completeBooking(paylater);
                 btn.html('<i class="fa fa-spin fa-spinner"></i>');
                 completing.done(function(res) {
-                    var bookingReference = res.orderid
-                    var startDate = sessionStorage.getItem('getshop_startDate')
-                    var prodCode = sessionStorage.getItem('getshop_prodCode')
-                    var tourDepartureTime = sessionStorage.getItem('getshop_tourDepartureTime')
-                    var adults = sessionStorage.getItem('getshop_adults')
-                    var children = sessionStorage.getItem('getshop_children')
-                    var total = parseInt(adults) + parseInt(children)
+                    if(typeof(zaui) != "undefined" && zaui == "true"){
+                        var bookingReference = res.orderid
+                        var startDate = sessionStorage.getItem('getshop_startDate')
+                        var prodCode = sessionStorage.getItem('getshop_prodCode')
+                        var tourDepartureTime = sessionStorage.getItem('getshop_tourDepartureTime')
+                        var adults = sessionStorage.getItem('getshop_adults')
+                        var children = sessionStorage.getItem('getshop_children')
+                        var total = parseInt(adults) + parseInt(children)
 
-                    $.ajax(getshop_endpoint + '/scripts/booking/booking-zaui.php', {
-                        dataType: 'json',
-                        data: {
-                            createBooking: true,
-                            bookingReference: bookingReference,
-                            startDate: startDate,
-                            prodCode: prodCode,
-                            tourDepartureTime: tourDepartureTime,
-                            travellerIdentifier: travellerIdentifier,
-                            givenName: givenName,
-                            total: total,
-                        },
-                        success: function (response) {
-                            console.log(response)
-                        }
-                    });
+                        $.ajax(getshop_endpoint + '/scripts/booking/booking-zaui.php?createBooking=1', {
+                            dataType: 'json',
+                            method: 'post',
+                            data: {
+                                bookingReference: bookingReference,
+                                startDate: startDate,
+                                prodCode: prodCode,
+                                tourDepartureTime: tourDepartureTime,
+                                travellers: travellers,
+                                total: total,
+                            },
+                            success: function (response) {
+                                console.log(response)
+                            }
+                        });
+                    }
 
 
                     // if(typeof(getshop_successcallback) !== "undefined") {
@@ -1521,23 +1530,23 @@ function  getshop_zauiShowTours(prodCode){
                     var id = "" + prodCode + "_" + index + "";
                     var tourEntry = $("<tr class='producentry_itemlist'><td>"  + tour.TourOptions.TourDepartureTime + "</td><td>" + tour.TourPricing.TotalInInt + "</td><td><div id='" + id + "' class='reserveTourButton'>Reserve</div></td>")
                     $('#table_' + prodCode).append(tourEntry);
-                    tourEntry.find('.reserveTourButton').attr('onclick',"getshop_zauiReserveTour('" + prodCode + "', '" + tour.TourOptions.TourDepartureTime + "')");
+                    tourEntry.find('.reserveTourButton').attr('onclick', "getshop_zauiReserveTour('" + prodCode + "', '" + tour.TourOptions.TourDepartureTime + "', '" + tour.TourPricing.TotalInInt + "')");
                 });
             } else {
                 var id = "" + prodCode + "_" + 0 + "";
                 var tourEntry = $("<tr class='producentry_itemlist'><td>"  + tours.TourOptions.TourDepartureTime + "</td><td>" + tours.TourPricing.TotalInInt + "</td><td><div id='" + id + "' class='reserveTourButton'>Reserve</div></td>")
                 $('#table_' + prodCode).append(tourEntry);
-                tourEntry.find('.reserveTourButton').attr('onclick',"getshop_zauiReserveTour('" + prodCode + "', '" + tours.TourOptions.TourDepartureTime + "')");
+                tourEntry.find('.reserveTourButton').attr('onclick', "getshop_zauiReserveTour('" + prodCode + "', '" + tours.TourOptions.TourDepartureTime + "', '" + tours.TourPricing.TotalInInt + "')");
             }
 
         }
     });
 }
 
-function getshop_zauiReserveTour(prodCode, tourDepartureTime){
+function getshop_zauiReserveTour(prodCode, tourDepartureTime, tourPrice){
     $.ajax(getshop_endpoint + '/scripts/booking/booking-zaui.php', {
         dataType: 'json',
-        data: {createAddon: true, prodCode: prodCode, tourDepartureTime: tourDepartureTime},
+        data: {createAddon: true, prodCode: prodCode, tourDepartureTime: tourDepartureTime, tourPrice: tourPrice},
         success: function (response) {
             var body = {};
             body['roomId'] = $('.roomrowadded').first().attr('roomid');

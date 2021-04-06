@@ -1,11 +1,10 @@
 <?php
 
+//Include MySQL and API credentials
+include ('config.php');
+
 //Load cached available activities from database
 if(isset($_GET['getActivities'])){
-    $servername = "localhost";
-    $username = "test";
-    $password = "test";
-
 // Create connection
     $conn = new mysqli($servername, $username, $password);
 
@@ -78,9 +77,9 @@ if(isset($_GET['checkAvailability']) && isset($_GET['prodCode']) && isset($_GET[
 
     $input_xml = '<?xml version="1.0" encoding="UTF-8"?>
 <CheckAvailabilityRequest xmlns="https://api.zaui.io/api/01">
-	<ApiKey>8bf6895a9a5a92b932d3c0aa9b24a8c7ba0b10d498983cea8eef17f35f2fb95b</ApiKey>     
-	<ResellerId>1436</ResellerId>    
-	<SupplierId>200</SupplierId>       
+	<ApiKey>' . $api_key . '</ApiKey>     
+	<ResellerId>' . $reseller_id . '</ResellerId>    
+	<SupplierId>' . $supplier_id . '</SupplierId>       
 	<Timestamp>' . time() . '</Timestamp>
 	<StartDate>' . $date . '</StartDate>
 	<SupplierProductCode>' . $prod_code .  '</SupplierProductCode>
@@ -122,9 +121,10 @@ if(isset($_GET['checkAvailability']) && isset($_GET['prodCode']) && isset($_GET[
 //End check availability
 
 //Create addon out of activity
-if(isset($_GET['createAddon']) && isset($_GET['prodCode']) && isset($_GET['tourDepartureTime'])){
+if(isset($_GET['createAddon']) && isset($_GET['prodCode']) && isset($_GET['tourDepartureTime']) && isset($_GET['tourPrice'])){
     $prod_code = $_GET['prodCode'];
     $tourDepartureTime = $_GET['tourDepartureTime'];
+    $tourPrice = $_GET['tourPrice'];
     $account = 0;
 
     echo json_encode(['product_id' => "189cec15-67c4-4990-969c-be98eb166ce4"]);
@@ -162,23 +162,21 @@ if(isset($_GET['createAddon']) && isset($_GET['prodCode']) && isset($_GET['tourD
 }
 
 //create payment request in zaui
-if(isset($_GET['createBooking']) && isset($_GET['bookingReference'])){
+if(isset($_GET['createBooking']) && isset($_POST['bookingReference'])){
     $url = "https://api.zaui.io/v1/";
 
-    $date = date("Y-m-d", strtotime($_GET['startDate']));
-    $bookingReference = $_GET['bookingReference'];
-    $prod_code = $_GET['prodCode'];
-    $tourDepartureTime = $_GET['tourDepartureTime'];
-    $travellerIdentifier = $_GET['travellerIdentifier'];
-    $given_name = $_GET['givenName'];
-    $surname = "test";
-    $total = $_GET['total'];
+    $date = date("Y-m-d", strtotime($_POST['startDate']));
+    $bookingReference = $_POST['bookingReference'];
+    $prod_code = $_POST['prodCode'];
+    $tourDepartureTime = $_POST['tourDepartureTime'];
+    $travellers = $_POST['travellers'];
+    $total = $_POST['total'];
 
     $input_xml = '<?xml version="1.0" encoding="UTF-8"?>
 <BookingCreateRequest xmlns="https://api.zaui.io/api/01">
-	<ApiKey>8bf6895a9a5a92b932d3c0aa9b24a8c7ba0b10d498983cea8eef17f35f2fb95b</ApiKey>
-	<ResellerId>1436</ResellerId>
-	<SupplierId>200</SupplierId>
+	<ApiKey>' . $api_key . '</ApiKey>     
+	<ResellerId>' . $reseller_id . '</ResellerId>    
+	<SupplierId>' . $supplier_id . '</SupplierId>
 	<ExternalReference>10051374722992616</ExternalReference>
 	<Timestamp>' . time() . '</Timestamp>
 	<BookingReference>' . $bookingReference . '</BookingReference>
@@ -194,16 +192,23 @@ if(isset($_GET['createBooking']) && isset($_GET['bookingReference'])){
 	<Inclusions>
 		<Inclusion></Inclusion>
 		<Inclusion></Inclusion>
-	</Inclusions>
-	<Traveller>
-		<TravellerIdentifier>' . $travellerIdentifier . '</TravellerIdentifier>
-		<TravellerTitle>Mr.</TravellerTitle>
-		<GivenName>' . $given_name . '</GivenName>
-		<Surname>' . $surname . '</Surname>
+	</Inclusions>';
+
+    foreach($travellers as $traveller){
+        $input_xml .= '
+            <Traveller>
+		<TravellerIdentifier>' . $traveller['email'] . '</TravellerIdentifier>
+		<TravellerTitle></TravellerTitle>
+		<GivenName>' . $traveller['name'] . '</GivenName>
+		<Surname>test</Surname>
 		<AgeBand>ADULT</AgeBand>
-		<LeadTraveller>true</LeadTraveller>
+		<LeadTraveller></LeadTraveller>
 	</Traveller>
-	<TravellerMix>
+        ';
+    }
+
+    $input_xml .=
+        '<TravellerMix>
 		<Senior>0</Senior>
 		<Adult>' . $total . '</Adult>
 		<Child>0</Child>
@@ -241,7 +246,6 @@ if(isset($_GET['createBooking']) && isset($_GET['bookingReference'])){
 	</DropoffLocation>
 </BookingCreateRequest>
 ';
-
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_POSTFIELDS,

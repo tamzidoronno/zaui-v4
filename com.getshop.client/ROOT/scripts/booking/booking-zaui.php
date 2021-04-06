@@ -9,12 +9,6 @@ header('Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token , Autho
 chdir("../../");
 include '../loader.php';
 
-include ('../apps/GslBooking/GslZaui.php');
-
-//call some check + render here...
-
-echo json_encode($available_activities);
-
-//echo "here comes the integration";
+include ('../apps/GslBooking/zaui/GslZaui.php');
 
 ?>

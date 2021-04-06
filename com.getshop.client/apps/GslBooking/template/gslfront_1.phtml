@@ -230,6 +230,12 @@
             </div>
         </div>
         <div class="zaui">
+            <div class="zaui_container_right">
+                <div style="padding:10px;">
+                    <h4 style="border-bottom: 1px solid #fff;text-align:center;padding-bottom: 4px;"><span gstype='bookingtranslation' gstranslationfield='yourStay'></span></h4>
+                    <div class='yourstaysummary'></div>
+                </div>
+            </div>
             <div class="zaui_container_left">
                 <h3><span class="zaui_title" gstype='bookingtranslation' gstranslationfield='addons'></span></h3>
                 <span  gstype='bookingtranslation' gstranslationfield='addonsinformation'></span>
@@ -250,11 +256,12 @@
     <!--                            <div class="product_availablerooms"><span gstype='bookingtranslation' gstranslationfield='availableRooms'></span><span class='availableroomcontainer'></span></div>-->
                             </div>
                             <div class="productentry_body">
-                                <div class='noroomsavailable'><span gstype='bookingtranslation' gstranslationfield='roomisunavailable' class='roomisunavailable'></span></div>
+                                <div class='showTours'></div>
                                 <table class="guestselection">
                                     <tr style="font-weight: bold;">
                                         <td><span gstype='bookingtranslation' gstranslationfield='numberofguests'></span></td>
                                         <td><span gstype='bookingtranslation' gstranslationfield='price'></span></td>
+                                        <td><span></span></td>
                                     </tr>
                                 </table>
                                 <div class="roomdescription"></div>
@@ -266,6 +273,9 @@
                         <div style="clear:both;"></div>
                     </div>
                 </div>
+            </div>
+            <div class="zaui_confirmation">
+                <div class="gsl_button continue" onclick="getshop_zauiToOverviewPage()" style=''><span gstype='bookingtranslation' gstranslationfield='continue'></span></div>
             </div>
         </div>
         <div class="overview">

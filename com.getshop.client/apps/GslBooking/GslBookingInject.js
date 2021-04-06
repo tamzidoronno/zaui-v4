@@ -1159,6 +1159,7 @@ function getshop_gotopayment(e) {
                 var completing = getshop_completeBooking(paylater);
                 btn.html('<i class="fa fa-spin fa-spinner"></i>');
                 completing.done(function(res) {
+
                     if(typeof(zaui) != "undefined" && zaui == "true"){
                         var bookingReference = res.orderid
                         var startDate = sessionStorage.getItem('getshop_startDate')
@@ -1180,17 +1181,16 @@ function getshop_gotopayment(e) {
                                 total: total,
                             },
                             success: function (response) {
-                                console.log(response)
+                                // console.log(response)
                             }
                         });
                     }
 
-
-                    // if(typeof(getshop_successcallback) !== "undefined") {
-                    //     getshop_successcallback(res);
-                    // } else {
-                    //     window.location.href = getshop_endpoint + "/scripts/redirectpayment.php?bookingid="+getshop_bookingId+"&engine="+getshop_domainname;
-                    // }
+                    if(typeof(getshop_successcallback) !== "undefined") {
+                        getshop_successcallback(res);
+                    } else {
+                        window.location.href = getshop_endpoint + "/scripts/redirectpayment.php?bookingid="+getshop_bookingId+"&engine="+getshop_domainname;
+                    }
                 });
                 completing.fail(function(res) {
                     if(typeof(getshop_failurecallback) !== "undefined") {

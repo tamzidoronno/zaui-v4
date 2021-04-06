@@ -195,13 +195,22 @@ if(isset($_GET['createBooking']) && isset($_POST['bookingReference'])){
 	</Inclusions>';
 
     foreach($travellers as $traveller){
+        $adult = $traveller['isChild'] == "false" ? "ADULT" : "CHILD";
+
+        $names = explode(" ", $traveller['name']);
+        $surname = end($names);
+        reset($names);
+        $surname_key = array_search($surname, $names);
+        unset($names[$surname_key]);
+        $first_name = implode(" ", $names);
+
         $input_xml .= '
             <Traveller>
 		<TravellerIdentifier>' . $traveller['email'] . '</TravellerIdentifier>
 		<TravellerTitle></TravellerTitle>
-		<GivenName>' . $traveller['name'] . '</GivenName>
-		<Surname>test</Surname>
-		<AgeBand>ADULT</AgeBand>
+		<GivenName>' . $first_name . '</GivenName>
+		<Surname>' . $surname . '</Surname>
+		<AgeBand>' . $adult . '</AgeBand>
 		<LeadTraveller></LeadTraveller>
 	</Traveller>
         ';

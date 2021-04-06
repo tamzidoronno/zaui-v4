@@ -1,7 +1,7 @@
 <?php
 
 //Include MySQL and API credentials
-include ('config.php');
+include_once ('config.php');
 
 //Load cached available activities from database
 if(isset($_GET['getActivities'])){

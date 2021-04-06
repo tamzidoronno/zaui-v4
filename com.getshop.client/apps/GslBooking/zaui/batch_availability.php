@@ -1,6 +1,6 @@
 <?php
 //Cron to save batch availability in database
-include ('config.php');
+include_once ('config.php');
 
 // Create connection
 $conn = new mysqli($servername, $username, $password);

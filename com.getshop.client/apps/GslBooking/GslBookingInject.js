@@ -1189,7 +1189,6 @@ function getshop_gotopayment(e) {
                             }
                         });
                     }
-
                     if(typeof(getshop_successcallback) !== "undefined") {
                         getshop_successcallback(res);
                     } else {
@@ -1501,8 +1500,9 @@ function getshop_zauiPageLoad(activities){
         activitybox.addClass('productentrybox');
         activitybox.attr('activityid', activity.supplierProductCode)
 
-        activitybox.find('.roomname').html(activity.supplierProductCode)
-        activitybox.find('.roomdescription').html(activity.tourDescription)
+        activitybox.find('.roomname').html(activity.supplierProductName)
+        activitybox.find('.roomdescription').html("" + activity.tourDescription + "")
+        activitybox.find('.featured-image').css('background-image','url('+activity.image+')');
 
         var showTours = $('<span class="showToursButton">Show available tours</span>')
         activitybox.find('.showTours').append(showTours)

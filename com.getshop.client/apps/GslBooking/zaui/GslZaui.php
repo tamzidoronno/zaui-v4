@@ -1,7 +1,8 @@
 <?php
 
 //Include MySQL and API credentials
-include ('config.php');
+include_once ('config.php');
+include_once('xml_function.php');
 
 //Load cached available activities from database
 if(isset($_GET['getActivities'])){
@@ -23,7 +24,8 @@ if(isset($_GET['getActivities'])){
 
     $activities_sql = $result->fetch_assoc()['xml_response'];
 
-    $activities_xml = json_decode(json_encode(simplexml_load_string($activities_sql)), true);
+    $activities_iterator =  new SimpleXMLIterator($activities_sql);
+    $activities_xml = sxiToArray($activities_iterator);
     $activities = $activities_xml['Tour'];
 
 //getting batch availability
@@ -35,7 +37,9 @@ if(isset($_GET['getActivities'])){
     }
 
     $availability_sql = $result->fetch_assoc()['xml_response'];
-    $availability_xml = json_decode(json_encode(simplexml_load_string($availability_sql)), true);
+
+    $availability_iterator = new SimpleXMLIterator($availability_sql);
+    $availability_xml = sxiToArray($availability_iterator);
 
     $availability = $availability_xml['BatchTourAvailability'];
 
@@ -44,20 +48,22 @@ if(isset($_GET['getActivities'])){
 
 //checking which activities are available
     foreach($activities as $activity){
-        $prod_code = $activity['SupplierProductCode'];
+        $prod_code = $activity['SupplierProductCode'][0];
         $act_av = [
             'supplierProductCode' => $prod_code,
-            'supplierProductName' => gettype($activity['SupplierProductName']) == "array" && empty($activity['SupplierProductName']) ? null : $activity['SupplierProductName'],
-            'tourDescription' => gettype($activity['TourDescription']) == "array" && empty($activity['TourDescription']) ? null : $activity['TourDescription'],
-            'image' => null,
+            'supplierProductName' => gettype($activity['SupplierProductName']) == "array" && empty($activity['SupplierProductName']) ? null : $activity['SupplierProductName'][0],
+            'tourDescription' => gettype($activity['TourDescription']) == "array" && empty($activity['TourDescription']) ? null : html_entity_decode($activity['TourDescription'][0]),
+            'image' => gettype($activity['TourImage']) == "array" && empty($activity['TourImage']) ? null : $activity['TourImage'][0],
             'tours' => null,
         ];
 
         foreach($availability as $available){
-            if($available['SupplierProductCode'] == $prod_code && $available['Date'] == $date){
-                $act_av['tours'] = true;
-                array_push($available_activities, $act_av);
-                break;
+            if($available['SupplierProductCode'][0] == $prod_code && $available['Date'][0] == $date){
+                if($available['AvailabilityStatus'][0]['Status'][0] != "UNAVAILABLE") {
+                    $act_av['tours'] = true;
+                    array_push($available_activities, $act_av);
+                    break;
+                }
             }
         }
     }
@@ -115,7 +121,8 @@ if(isset($_GET['checkAvailability']) && isset($_GET['prodCode']) && isset($_GET[
     $data = curl_exec($ch);
     curl_close($ch);
 
-    $tours_xml = json_decode(json_encode(simplexml_load_string($data)), true);
+    $tours_iterator = new SimpleXMLIterator($data);
+    $tours_xml = sxiToArray($tours_iterator);
     $tours = $tours_xml['TourAvailability'];
 
     echo json_encode($tours);

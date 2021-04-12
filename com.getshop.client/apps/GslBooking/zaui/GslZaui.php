@@ -49,7 +49,7 @@ if(isset($_GET['getActivities'])){
             'supplierProductCode' => $prod_code,
             'supplierProductName' => gettype($activity['SupplierProductName']) == "array" && empty($activity['SupplierProductName']) ? null : $activity['SupplierProductName'],
             'tourDescription' => gettype($activity['TourDescription']) == "array" && empty($activity['TourDescription']) ? null : $activity['TourDescription'],
-            'image' => null,
+            'image' => gettype($activity['TourImage']) == "array" && empty($activity['TourImage']) ? null : $activity['TourImage'],
             'tours' => null,
         ];
 

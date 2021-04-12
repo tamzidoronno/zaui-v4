@@ -125,5 +125,7 @@
     "notetoorder" : "Note to order",
     "differentconfirmationemail" : "Send confirmation to a different email",
     "country": "Country",
-    "country_please_select": "Choose country"
+    "country_please_select": "Choose country",
+
+    "activities": "Activities",
 }

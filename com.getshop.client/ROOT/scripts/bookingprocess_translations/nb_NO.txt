@@ -122,6 +122,8 @@
     "numberofrooms_6" : "Antall leiligheter",
     "differentconfirmationemail" : "Send bekreftelsen til en annen e-post",
     "country": "Land",
-    "country_please_select": "Velg land"
+    "country_please_select": "Velg land",
+
+    "activities": "Activities",
 
 }

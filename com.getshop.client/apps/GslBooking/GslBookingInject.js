@@ -1185,14 +1185,14 @@ function getshop_gotopayment(e) {
                                 total: total,
                             },
                             success: function (response) {
-                                // console.log(response)
+                                console.log(response)
+                                if(typeof(getshop_successcallback) !== "undefined") {
+                                    getshop_successcallback(res);
+                                } else {
+                                    window.location.href = getshop_endpoint + "/scripts/redirectpayment.php?bookingid="+getshop_bookingId+"&engine="+getshop_domainname;
+                                }
                             }
                         });
-                    }
-                    if(typeof(getshop_successcallback) !== "undefined") {
-                        getshop_successcallback(res);
-                    } else {
-                        window.location.href = getshop_endpoint + "/scripts/redirectpayment.php?bookingid="+getshop_bookingId+"&engine="+getshop_domainname;
                     }
                 });
                 completing.fail(function(res) {
@@ -1494,23 +1494,30 @@ function getshop_showZauiPage() {
 
 function getshop_zauiPageLoad(activities){
     //Display each activity
-    activities.forEach(function (activity, index){
-        var activitybox = $('#productentrybox_zaui').clone()
-        activitybox.attr('id', null)
-        activitybox.addClass('productentrybox');
-        activitybox.attr('activityid', activity.supplierProductCode)
+    if(activities.length < 1){
+        $('.no_activities').show()
+    } else {
+        activities.forEach(function (activity, index) {
+            var activitybox = $('#productentrybox_zaui').clone()
+            activitybox.attr('id', null)
+            activitybox.addClass('productentrybox');
+            activitybox.attr('activityid', activity.supplierProductCode)
 
-        activitybox.find('.roomname').html(activity.supplierProductName)
-        activitybox.find('.roomdescription').html("" + activity.tourDescription + "")
-        activitybox.find('.featured-image').css('background-image','url('+activity.image+')');
+            activitybox.find('.roomname').html(activity.supplierProductName)
+            activitybox.find('.roomdescription').html("" + activity.tourDescription + "")
+            activitybox.find('.featured-image').css('background-image', 'url(' + activity.image + ')');
 
-        var showTours = $('<span class="showToursButton">Show available tours</span>')
-        activitybox.find('.showTours').append(showTours)
-        $(showTours).attr('onclick',"getshop_zauiShowTours('" + activity.supplierProductCode + "')");
-        activitybox.find('.guestselection').attr('id', "table_" + activity.supplierProductCode)
+            var translation = getshop_getBookingTranslations()
+            var showTours = $('<span class="showToursButton addButton gsl_button">' + translation['check_availability'] + '</span>')
+            activitybox.find('.showTours').append(showTours)
+            $(showTours).attr('onclick', "getshop_zauiShowTours(this, '" + activity.supplierProductCode + "')");
+            activitybox.find('.guestselection').attr('id', "table_" + activity.supplierProductCode)
+            activitybox.find('.no_tours').attr('id', "no_tours_" + activity.supplierProductCode)
 
-        $('#productentry_zaui').append(activitybox)
-    })
+            $('#productentry_zaui').append(activitybox)
+        })
+    }
+
     $('#productentrybox_zaui').hide()
 
     $('.addons_overview').fadeOut('400', function () {
@@ -1519,33 +1526,40 @@ function getshop_zauiPageLoad(activities){
     });
 }
 
-function  getshop_zauiShowTours(prodCode){
+function  getshop_zauiShowTours(btn, prodCode){
     var prodCode = prodCode
     var startDate = sessionStorage.getItem('getshop_startDate')
     var adults = sessionStorage.getItem('getshop_adults')
     var children = sessionStorage.getItem('getshop_children')
+    var button = btn
 
     //Check availability for a particular tour to get price and times
     $.ajax(getshop_endpoint + '/scripts/booking/booking-zaui.php', {
         dataType: 'json',
         data: {startDate: startDate, prodCode: prodCode, adults: adults, children: children, checkAvailability: true},
         success: function (response) {
-            $('#table_' + prodCode).show()
             var tours = response
+            var translation = getshop_getBookingTranslations()
 
-            if(Array.isArray(tours)){
-                tours.forEach(function (tour, index){
+            if(Array.isArray(tours) && tours.length > 0) {
+                $('#table_' + prodCode).show()
+                tours.forEach(function (tour, index) {
                     var id = "" + prodCode + "_" + index + "";
-                    var tourEntry = $("<tr class='producentry_itemlist'><td>"  + tour.TourOptions.TourDepartureTime + "</td><td>" + tour.TourPricing.TotalInInt + "</td><td><div id='" + id + "' class='reserveTourButton'>Reserve</div></td>")
+                    var tourEntry = $("<tr class='producentry_itemlist'><td>" + tour.TourOptions[0].TourDepartureTime[0] + "</td><td>" + tour.TourPricing[0].TotalInInt[0] + " NOK</td><td><div id='" + id + "' class='reserveTourButton'>" + translation['reserve'] + "</div></td>")
                     $('#table_' + prodCode).append(tourEntry);
                     tourEntry.find('.reserveTourButton').attr('onclick', "getshop_zauiReserveTour('" + prodCode + "', '" + tour.TourOptions.TourDepartureTime + "', '" + tour.TourPricing.TotalInInt + "')");
+                    $(button).hide()
                 });
             } else {
-                var id = "" + prodCode + "_" + 0 + "";
-                var tourEntry = $("<tr class='producentry_itemlist'><td>"  + tours.TourOptions.TourDepartureTime + "</td><td>" + tours.TourPricing.TotalInInt + "</td><td><div id='" + id + "' class='reserveTourButton'>Reserve</div></td>")
-                $('#table_' + prodCode).append(tourEntry);
-                tourEntry.find('.reserveTourButton').attr('onclick', "getshop_zauiReserveTour('" + prodCode + "', '" + tours.TourOptions.TourDepartureTime + "', '" + tours.TourPricing.TotalInInt + "')");
+                $(button).hide()
+                $('#no_tours_' + prodCode).show()
             }
+            // else {
+            //     var id = "" + prodCode + "_" + 0 + "";
+            //     var tourEntry = $("<tr class='producentry_itemlist'><td>"  + tours.TourOptions.TourDepartureTime + "</td><td>" + tours.TourPricing.TotalInInt + "</td><td><div id='" + id + "' class='reserveTourButton'>Reserve</div></td>")
+            //     $('#table_' + prodCode).append(tourEntry);
+            //     tourEntry.find('.reserveTourButton').attr('onclick', "getshop_zauiReserveTour('" + prodCode + "', '" + tours.TourOptions.TourDepartureTime + "', '" + tours.TourPricing.TotalInInt + "')");
+            // }
 
         }
     });

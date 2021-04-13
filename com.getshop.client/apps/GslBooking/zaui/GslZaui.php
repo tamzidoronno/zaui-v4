@@ -281,7 +281,29 @@ if(isset($_GET['createBooking']) && isset($_POST['bookingReference'])){
     curl_close($ch);
 
     //booking result
-    $booking = json_decode(json_encode(simplexml_load_string($data)), true);
+
+    $booking_iterator = new SimpleXMLIterator($data);
+    $booking = sxiToArray($booking_iterator);
+
+    // Create connection
+    $conn = new mysqli($servername, $username, $password);
+
+// Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+    //save booking data
+    $sql = "INSERT INTO getshop_zaui_cache.booking_response (prod_code, supplier_confirmation_number, created_at) VALUES ('" . $prod_code . "', '" . $booking['SupplierConfirmationNumber'][0] . "', '" . time() . "')";
+
+    if ($conn->query($sql) === TRUE) {
+        echo "New record created successfully";
+    } else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+    }
+
+    $conn->close();
+
     echo json_encode($booking);
 }
 

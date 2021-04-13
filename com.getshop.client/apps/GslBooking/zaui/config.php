@@ -28,6 +28,9 @@ else
     $reseller_id = "1436";
     $supplier_id = "200";
 
+    $gsZauiUser = 'zaui@getshop.no';
+    $gsZauiPass = 'gsZaui';
+
     if(isset($argv) && isset($argv[1]))
     {
         $storeId = $argv[1];

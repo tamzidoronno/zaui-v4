@@ -714,7 +714,7 @@ function getshop_loadAddonsAndGuestSummaryByResult(res) {
     if(!foundItems) {
         $('.addonsentry').hide();
     }
-
+    console.log(res)
     getshop_loadRooms(res);
     getshop_loadTextualSummary(res);
     getshop_loadBookerInformation(res);
@@ -802,6 +802,11 @@ function getshop_loadTextualSummary(res) {
             text = text.replace("{totalprice}", translation['totalprice']);
             text = text.replace("{currency}", getshop_printPrice(""));
         }
+        if(text.includes("Zaui")){
+            var textParts = text.split(",")
+            text = "1 x " + textParts[1]
+        }
+
         $('.yourstaysummary').append(text + "<br>");
     }
     var lang = sessionStorage.getItem("getshop_language");
@@ -1193,6 +1198,12 @@ function getshop_gotopayment(e) {
                                 }
                             }
                         });
+                    } else {
+                        if(typeof(getshop_successcallback) !== "undefined") {
+                            getshop_successcallback(res);
+                        } else {
+                            window.location.href = getshop_endpoint + "/scripts/redirectpayment.php?bookingid="+getshop_bookingId+"&engine="+getshop_domainname;
+                        }
                     }
                 });
                 completing.fail(function(res) {
@@ -1547,7 +1558,7 @@ function  getshop_zauiShowTours(btn, prodCode){
                     var id = "" + prodCode + "_" + index + "";
                     var tourEntry = $("<tr class='producentry_itemlist'><td>" + tour.TourOptions[0].TourDepartureTime[0] + "</td><td>" + tour.TourPricing[0].TotalInInt[0] + " NOK</td><td><div id='" + id + "' class='reserveTourButton'>" + translation['reserve'] + "</div></td>")
                     $('#table_' + prodCode).append(tourEntry);
-                    tourEntry.find('.reserveTourButton').attr('onclick', "getshop_zauiReserveTour('" + prodCode + "', '" + tour.TourOptions.TourDepartureTime + "', '" + tour.TourPricing.TotalInInt + "')");
+                    tourEntry.find('.reserveTourButton').attr('onclick', "getshop_zauiReserveTour('" + prodCode + "', '" + tour.TourOptions[0].TourDepartureTime[0] + "', '" + tour.TourPricing[0].TotalInInt[0] + "')");
                     $(button).hide()
                 });
             } else {

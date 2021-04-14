@@ -55,6 +55,10 @@ else
     $reseller_id = "1436";
     $supplier_id = "200";
 
+    // Getshop user credentials booking will use to login server side
+    $gsZauiUser = 'zaui@getshop.no';
+    $gsZauiPass = 'gsZaui';
+
     if(isset($argv) && isset($argv[1]))
     {
         $storeId = $argv[1];
@@ -78,6 +82,10 @@ else
     $api_key = "8bf6895a9a5a92b932d3c0aa9b24a8c7ba0b10d498983cea8eef17f35f2fb95b";
     $reseller_id = "1436";
     $supplier_id = "200";
+
+    // Getshop user credentials booking will use to login server side
+    $gsZauiUser = 'zaui@getshop.no';
+    $gsZauiPass = 'gsZaui';
 
     // this config is also used by command line scripts... set the host for sme getshop stuff to work
     if(!isset($_SERVER['HTTP_HOST']))

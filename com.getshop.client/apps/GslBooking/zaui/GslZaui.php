@@ -114,8 +114,7 @@ if(isset($_GET['checkAvailability']) && isset($_GET['prodCode']) && isset($_GET[
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_POSTFIELDS,
-        $input_xml);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $input_xml);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 300);
     $data = curl_exec($ch);
@@ -135,42 +134,81 @@ if(isset($_GET['createAddon']) && isset($_GET['prodCode']) && isset($_GET['tourD
     $prod_code = $_GET['prodCode'];
     $tourDepartureTime = $_GET['tourDepartureTime'];
     $tourPrice = $_GET['tourPrice'];
-    $account = 0;
 
-    echo json_encode(['product_id' => "189cec15-67c4-4990-969c-be98eb166ce4"]);
-    exit();
-    //Create addon
-//    $psm = new \ns_c5a4b5bf_365c_48d1_aeef_480c62edd897\PsmConfigurationAddons();
-//    $product = $psm->getApi()->getProductManager()->createProductWithAccount($account);
-//
-//    if($product) {
-//        $product->name = $prod_code . " - " . $tourDepartureTime;
-//        $product->tag = "addon";
-//        $product = $psm->getApi()->getProductManager()->saveProduct($product);
-//        $notifications = $psm->getApi()->getPmsManager()->getConfiguration($psm->getSelectedMultilevelDomainName());
-//
-//        $conf = new \core_pmsmanager_PmsBookingAddonItem();
-//        $found = false;
-//        foreach($notifications->addonConfiguration as $tmpaddon) {
-//            if($tmpaddon->productId == $product->id) {
-//                $conf = $tmpaddon;
-//                $found = true;
-//            }
-//        }
-//        if(!$found) {
-//            $notifications->addonConfiguration->{-100000} = $conf;
-//        }
-//        $conf->productId = $product->id;
-//        $conf->isSingle = true;
-//
-//        $psm->getApi()->getPmsManager()->saveConfiguration($psm->getSelectedMultilevelDomainName(), $notifications);
-//
-//        //send back product id of addon
-//        echo json_encode(['product_id' => $product->id]);
-//        exit();
-//    } else {
-//        $psm->createProductError = "Failed to create a new product, make sure the account you are trying to create a product on is correct set up.";
-//    }
+    // Create connection
+    $conn = new mysqli($servername, $username, $password);
+
+// Check connection
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
+
+//getting activity list
+    $sql = "SELECT xml_response FROM getshop_zaui_cache.activity_list LIMIT 1";
+    $result = $conn->query($sql);
+
+    if($result->num_rows == 0){
+        die("ERROR: Activity list not found!");
+    }
+
+    $activities_sql = $result->fetch_assoc()['xml_response'];
+
+    $activities_iterator =  new SimpleXMLIterator($activities_sql);
+    $activities_xml = sxiToArray($activities_iterator);
+    $activities = $activities_xml['Tour'];
+
+    foreach($activities as $activity){
+        if($activity['SupplierProductCode'][0] == $prod_code){
+            $activity_name = $activity['SupplierProductName'][0];
+            break;
+        }
+    }
+
+    if(isset($activity_name)) {
+        //Create addon
+        $factory = IocContainer::getFactorySingelton();
+        $factory->getApi()->getUserManager()->logOn($gsZauiUser, $gsZauiPass);
+
+        $product = $factory->getApi()->getProductManager()->createProduct();
+        $psm = new \ns_c5a4b5bf_365c_48d1_aeef_480c62edd897\PsmConfigurationAddons();
+
+        if ($product) {
+            $product->name = "Zaui, " . $activity_name . ", " . $tourDepartureTime . ", " . time() . "";
+            $product->tag = "addon";
+            $product->isSingle = true;
+            $product->price = doubleval($_GET['tourPrice']);
+
+            $product = $factory->getApi()->getProductManager()->saveProduct($product);
+            $alladdons = $factory->getApi()->getPmsManager()->getConfiguration($psm->getSelectedMultilevelDomainName());
+
+            $conf = new \core_pmsmanager_PmsBookingAddonItem();
+            $conf->productId = $product->id;
+            $conf->isSingle = true;
+            $conf->noRefundable = true;
+            $conf->isIncludedInRoomPrice = false;
+            $conf->isUniqueOnOrder = true;
+            $conf->alwaysAddAddon = false;
+            $conf->includedInBookingItemTypes = array();
+            $conf->displayInBookingProcess = array();
+            $conf->descriptionWeb = 'Zaui ' . $prod_code . ' / ' . $tourDepartureTime;
+            $conf->bookingicon = '';
+            $conf->count = 1;
+
+            $alladdons->addonConfiguration->{-100000} = $conf;
+
+
+            $factory->getApi()->getPmsManager()->saveConfiguration($psm->getSelectedMultilevelDomainName(), $alladdons);
+
+            //send back product id of addon
+            echo json_encode(['product_id' => $product->id]);
+            exit();
+        } else {
+            //$psm->createProductError = "Failed to create a new product, make sure the account you are trying to create a product on is correct set up.";
+            echo 'Failed to add activity!';
+        }
+    } else {
+        echo 'This activity does not exist!';
+    }
 }
 
 //create payment request in zaui

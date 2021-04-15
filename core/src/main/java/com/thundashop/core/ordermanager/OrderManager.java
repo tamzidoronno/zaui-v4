@@ -5557,7 +5557,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Order order = getOrder(orderId);
         if (order == null)
             return;
-        
+        User user = userManager.getUserById(order.userId);
+        System.out.println("Lucija :: closeOrderByZReport: incrementOrderId:" + order.incrementOrderId
+                + ",  restAmount: "+ order.restAmount+ ", user: "+ user.fullName+" "+ ", userId: "+ order.userId+ ", id: "+ order.id+ ", recieptEmail:"+ order.recieptEmail) ;
         if (central.hasBeenConnectedToCentral()) {    
             closeOrder(orderId, "Transferred to Z-Report");
             

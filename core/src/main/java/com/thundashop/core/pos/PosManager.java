@@ -65,6 +65,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import com.thundashop.core.usermanager.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -119,7 +120,9 @@ public class PosManager extends ManagerBase implements IPosManager {
 
     @Autowired
     private GetShopCentral central;
-    
+
+    @Autowired
+    private UserManager userManager;
     /**
      * Never access this variable directly! Always go trough the getSettings
      * function!
@@ -416,7 +419,7 @@ public class PosManager extends ManagerBase implements IPosManager {
         report.orderIds = orderIds;
         report.createdAfterConnectedToACentral = central.hasBeenConnectedToCentral();
         report.roomsThatWillBeAutomaticallyCreatedOrdersFor = getRoomsNeedToCreateOrdersFor();
-                
+
         return report;
     }
 
@@ -488,24 +491,24 @@ public class PosManager extends ManagerBase implements IPosManager {
         report.createdByUserId = getSession().currentUser.id;
         report.cashPointId = cashPointId;
         report.orderIds.addAll(orderIds);
-        
+
         orderManager.markAsTransferredToCentral(report.orderIds);
         
         report.totalAmount = getTotalAmountForZReport(report);
 
         saveObject(report);
-        
+        System.out.println("Lucija ************************ Closing regularOrderIds *****************************");
         report.orderIds.stream().forEach(orderId -> orderManager.closeOrderByZReport(orderId, report));
         report.invoicesWithNewPayments.stream().forEach(orderId -> orderManager.closeOrderByZReport(orderId, report));
 
-        if (central.hasBeenConnectedToCentral()) {    
+        if (central.hasBeenConnectedToCentral()) {
             orderManager.creditOrdersThatHasDeletedConference();
         
             List<String> extraOrderIds = orderManager.getOrdersNotConnectedToAnyZReports()
                     .stream()
                     .map(o -> o.id)
                     .collect(Collectors.toList());
-        
+        System.out.println("Lucija ************************ Closing extraOrderIds *****************************");
             extraOrderIds.stream().forEach(orderId -> orderManager.closeOrderByZReport(orderId, report));
             report.orderIds.addAll(extraOrderIds);
             report.totalAmount = getTotalAmountForZReport(report);
@@ -1164,16 +1167,18 @@ public class PosManager extends ManagerBase implements IPosManager {
     }
 
     private List<String> autoCreateOrders(String cashPointId) {
+        Logger.getLogger(PosManager.class.getName()).log(Level.INFO,   "Lucija: Inside autoCreateOrders");
         List<PmsBookingRooms> roomsNeedToCreateOrdersFor = getRoomsNeedToCreateOrdersFor();
-
         List<String> retList = new ArrayList();
         
         if (!roomsNeedToCreateOrdersFor.isEmpty()) {
             checkIfAccrudePaymentIsActivated();
+            Logger.getLogger(PosManager.class.getName()).log(Level.INFO,   "Lucija: autoCreateOrders, !roomsNeedToCreateOrdersFor");
         }
         
         roomsNeedToCreateOrdersFor.stream().forEach(o -> {
             String orderId = createOrder(o);
+            Logger.getLogger(PosManager.class.getName()).log(Level.INFO,"Lucija: autoCreateOrders, created an order.............................:");
             retList.add(orderId);
         });
 
@@ -1480,7 +1485,9 @@ public class PosManager extends ManagerBase implements IPosManager {
         createOrder.add(createOrderForRoom);
 
         String userId = booking.userId != null && !booking.userId.isEmpty() ? booking.userId : getSession().currentUser.id;
-
+        System.out.println("Lucija: Creating orderWithPaymentMethod for pmsBookingRoomId: "+ room.pmsBookingRoomId + ", roomId:" + roomId+", booking.id: " + booking.id);
+        System.out.println("Lucija: Creating orderWithPaymentMethod for data: "+ ", date.start:" + room.date.start+ " hasUnsettledAmountIncAccrued: " +room.hasUnsettledAmountIncAccrued()) ;
+        System.out.println("Lucija: Creating orderWithPaymentMethod for data unsettledAmountIncAccrued: "+ room.unsettledAmountIncAccrued + ", createOrdersOnZReport:" + room.createOrdersOnZReport + ".");
         return pmsManager.createOrderFromCheckout(createOrder, roomId, userId);
     }
 
@@ -1911,20 +1918,42 @@ public class PosManager extends ManagerBase implements IPosManager {
          * When its connected to the getshop central we also do accrude payments for future booking to make a forcast.
          */
         boolean connectedToCentral = central.hasBeenConnectedToCentral();
-        
+
         PmsManager pmsManager = scope.getNamedSessionBean(getEngineName(), PmsManager.class);
 
         List<PmsBookingRooms> roomsNeedToCreateOrdersFor = pmsManager.getAllBookingsFlat()
                 .stream()
-                .flatMap(o -> o.rooms.stream())
-                .filter(o -> connectedToCentral || o.createOrdersOnZReport)
-                .filter(o -> o.hasUnsettledAmountIncAccrued())
-                .filter(o -> {
-                    return o.date.start.before(end) || o.date.start.equals(end);
-                })
+                .flatMap(b -> b.rooms.stream())
+                .filter(r -> connectedToCentral || r.createOrdersOnZReport)
+                .filter(r -> r.hasUnsettledAmountIncAccrued())
+                .filter(r -> r.date.start.before(end) || r.date.start.equals(end))
                 .collect(Collectors.toList());
 
-        return roomsNeedToCreateOrdersFor;
+        updateAccruedAmountForRoomBookings(roomsNeedToCreateOrdersFor, pmsManager);
+
+        return roomsNeedToCreateOrdersFor.stream()
+                .filter(room -> room.hasUnsettledAmountIncAccrued()).collect(Collectors.toList());
+
+    }
+
+    public void updateAccruedAmountForRoomBookings(List<PmsBookingRooms> roomsToBeRecalculated, PmsManager pmsManager){
+
+        for(PmsBookingRooms room : roomsToBeRecalculated) {
+            room.unsettledAmountIncAccrued = recalculateAccruedAmountForRoomBooking(pmsManager, room.bookingId, room.pmsBookingRoomId);
+            System.out.println("============================>>>>>>>>>>>>>>>    Recalculated Accrued and it is ::::::: " + room.unsettledAmountIncAccrued);
+        }
+    }
+
+    private Double recalculateAccruedAmountForRoomBooking(PmsManager pmsManager, String bookingId, String pmsBookingRoomId) {
+        PmsRoomPaymentSummary summary = pmsManager.getSummary(bookingId, pmsBookingRoomId);
+        if (summary == null) {
+            return 0D;
+        } else {
+            return summary.getCheckoutRows()
+                    .stream()
+                    .mapToDouble(o -> o.count * o.price)
+                    .sum();
+        }
     }
 
     public boolean hasZreport(Order order) {

@@ -343,6 +343,7 @@ if(isset($_GET['createBooking']) && isset($_POST['bookingReference'])){
     $conn->close();
 
     echo json_encode($booking);
+    exit();
 }
 
 //end loading available activities

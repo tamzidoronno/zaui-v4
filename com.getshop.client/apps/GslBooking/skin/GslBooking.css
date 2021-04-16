@@ -427,6 +427,7 @@ Error      : #de5353; red
 .GslBooking .gslfront_1 .zaui_confirmation {box-sizing: border-box; width: 100%;}
 .GslBooking .gslfront_1 .no_tours {display: none; color: #222;}
 .GslBooking .gslfront_1 .no_activities {display: none; color: #222; margin: 20px}
+.GslBooking .gslfront_1 .return_to_search {display: none;}
 
 /*Addons and guest information*/
 .GslBooking .gslfront_1 .addons_overview .addons_overview_right{width:25%;float:right;color:#fff;padding-left:10px;}

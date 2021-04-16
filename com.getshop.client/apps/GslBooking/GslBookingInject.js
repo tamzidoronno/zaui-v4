@@ -1505,6 +1505,7 @@ function getshop_zauiPageLoad(activities){
     //Display each activity
     if(activities.length < 1){
         $('.no_activities').show()
+        $('.return_to_search').show()
     } else {
         activities.forEach(function (activity, index) {
             var activitybox = $('#productentrybox_zaui').clone()
@@ -1554,8 +1555,15 @@ function  getshop_zauiShowTours(btn, prodCode){
                 $('#table_' + prodCode).show()
                 tours.forEach(function (tour, index) {
                     var id = "" + prodCode + "_" + index + "";
-                    var tourEntry = $("<tr class='producentry_itemlist'><td>" + tour.TourOptions[0].TourDepartureTime[0] + "</td><td>" + tour.TourPricing[0].TotalInInt[0] + " NOK</td><td><div id='" + id + "' class='reserveTourButton'>" + translation['reserve'] + "</div></td>")
-                    $('#table_' + prodCode).append(tourEntry);
+                    if(tour.TourOptions[0].TourDepartureTime[0] == "00:00:00" && tours.length < 2){
+                        $('#table_' + prodCode).find('.departure_time_column').remove()
+                        var tourEntry = $("<tr class='producentry_itemlist'><td>" + tour.TourPricing[0].TotalInInt[0] + " NOK</td><td><div id='" + id + "' class='reserveTourButton'>" + translation['reserve'] + "</div></td>")
+                        $('#table_' + prodCode).append(tourEntry);
+                        tourEntry.find('.reserveTourButton').attr('onclick', "getshop_zauiReserveTour(this, '" + prodCode + "', '" + tour.TourOptions[0].TourDepartureTime[0] + "', '" + tour.TourPricing[0].TotalInInt[0] + "')");
+                    } else {
+                        var tourEntry = $("<tr class='producentry_itemlist'><td>" + tour.TourOptions[0].TourDepartureTime[0] + "</td><td>" + tour.TourPricing[0].TotalInInt[0] + " NOK</td><td><div id='" + id + "' class='reserveTourButton'>" + translation['reserve'] + "</div></td>")
+                        $('#table_' + prodCode).append(tourEntry);
+                    }
                     tourEntry.find('.reserveTourButton').attr('onclick', "getshop_zauiReserveTour(this, '" + prodCode + "', '" + tour.TourOptions[0].TourDepartureTime[0] + "', '" + tour.TourPricing[0].TotalInInt[0] + "')");
                     $(button).hide()
                 });

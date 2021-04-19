@@ -3782,7 +3782,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         for (String orderId : groupedEntries.keySet()) {
             double sumOfAccount = sumOfOrder(groupedEntries, orderId);
             
-            if (sumOfAccount < 0.00001 && sumOfAccount > -0.00001) {
+            if (sumOfAccount < 0.1 && sumOfAccount > -0.1) {
                 continue;
             }
             

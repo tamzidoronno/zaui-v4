@@ -125,5 +125,15 @@
     "notetoorder" : "Note to order",
     "differentconfirmationemail" : "Send confirmation to a different email",
     "country": "Country",
-    "country_please_select": "Choose country"
+    "country_please_select": "Choose country",
+
+    "activities": "Activities",
+    "check_availability": "Check availability",
+    "departure_time": "Departure time",
+    "reserve": "Reserve",
+    "unreserve": "Unreserve",
+    "pick_new_date": "Pick a new date",
+    "no_tours": "Sorry, this activity is not available during your stay!",
+    "no_activities": "Sorry, there are no available activities during your stay!",
+
 }

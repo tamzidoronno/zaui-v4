@@ -16,10 +16,13 @@
         getshop_websockethost = options.websocket;
         getshop_overridetranslation = options.translation;
         getshop_display_countryselect = options.showCountrySelect;
+        getshop_zaui_integration = options.zauiIntegration
+
         sessionStorage.setItem('getshop_endpoint',options.endpoint);
         sessionStorage.setItem('getshop_domain',options.domain);
         sessionStorage.setItem('getshop_booking_form_options', JSON.stringify(options));
         sessionStorage.setItem('getshop_display_countryselect',options.showCountrySelect);
+        sessionStorage.setItem('getshop_zaui_integration', options.zauiIntegration);
         
         if(!options.language) {
             sessionStorage.setItem('getshop_language',"");
@@ -36,6 +39,10 @@
         if(getshop_display_countryselect === true)
         {
             console.log('SHOW DEM COUNTRIES');
+        }
+
+        if(getshop_zaui_integration === true){
+            console.log("Zaui should be called")
         }
 
         $('<link/>', {

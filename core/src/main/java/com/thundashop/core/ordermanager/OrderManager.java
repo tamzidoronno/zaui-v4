@@ -2990,10 +2990,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                     .filter(o -> !o.excludeFromFReport)
                     .collect(Collectors.toList());
         }
-        
+
         OrderDailyBreaker breaker = new OrderDailyBreaker(ordersToUse, filter, paymentManager, productManager, getOrderManagerSettings().whatHourOfDayStartADay, getAllFreePosts(), storeOcrManager);
         breaker.breakOrders();
-        
+
         if (breaker.hasErrors()) {
             return breaker.getErrors();
         }
@@ -3778,7 +3778,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .collect(Collectors.groupingBy(DayEntry::getOrderId));
      
         List<OrderUnsettledAmountForAccount> retList = new ArrayList();
-        
+
         for (String orderId : groupedEntries.keySet()) {
             double sumOfAccount = sumOfOrder(groupedEntries, orderId);
             
@@ -3786,16 +3786,18 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 continue;
             }
             
-            OrderUnsettledAmountForAccount unsettledAmount = new OrderUnsettledAmountForAccount();
-            unsettledAmount.amount = sumOfAccount;
-            unsettledAmount.order = getOrder(orderId);
-            unsettledAmount.account = accountNumber;
+            OrderUnsettledAmountForAccount orderWithUnsettledAmount = new OrderUnsettledAmountForAccount();
+            orderWithUnsettledAmount.amount = sumOfAccount;
+            orderWithUnsettledAmount.order = getOrder(orderId);
+            orderWithUnsettledAmount.account = accountNumber;
             
-            if (unsettledAmount.amount < 1 && unsettledAmount.amount > -1) {
+            if (orderWithUnsettledAmount.amount < 1 && orderWithUnsettledAmount.amount > -1) {
                 continue;
             }
-            
-            retList.add(unsettledAmount);
+
+            if (orderWithUnsettledAmount.order.markedPaidDate == null && (orderWithUnsettledAmount.order.restAmount > 0.0 ||  orderWithUnsettledAmount.order.restAmount < 0.0 ) ){
+                retList.add(orderWithUnsettledAmount);
+            }
         }
 //        
         removeCompletedAccrued(retList, groupedEntries);
@@ -5557,9 +5559,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Order order = getOrder(orderId);
         if (order == null)
             return;
-        User user = userManager.getUserById(order.userId);
-        System.out.println("Lucija :: closeOrderByZReport: incrementOrderId:" + order.incrementOrderId
-                + ",  restAmount: "+ order.restAmount+ ", user: "+ user.fullName+" "+ ", userId: "+ order.userId+ ", id: "+ order.id+ ", recieptEmail:"+ order.recieptEmail) ;
+
         if (central.hasBeenConnectedToCentral()) {    
             closeOrder(orderId, "Transferred to Z-Report");
             

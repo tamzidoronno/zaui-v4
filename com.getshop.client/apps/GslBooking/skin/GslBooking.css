@@ -418,16 +418,29 @@ Error      : #de5353; red
 .GslBooking .gslfront_1 .zaui_title {margin: 20px;}
 .GslBooking .gslfront_1 .zaui_container_left .roomdescription {color: #222;}
 .GslBooking .gslfront_1 .zaui_container_left .guestselection {color: #222; display: none}
-.GslBooking .gslfront_1 .zaui_container_left .addButton{padding: 6px 6px;background-color:#6cadc2;}
+
+.GslBooking .gslfront_1 .zaui_container_left .addButton,
+.GslBooking .gslfront_1 .reserveTourButton,
+.GslBooking .gslfront_1 .zaui_button
+{padding: 6px 12px;background-color:#6cadc2; cursor:pointer; margin-left:9px; }
 .GslBooking .gslfront_1 .zaui_container_left .addButton.added_addon{background-color:#96deff;}
 .GslBooking .gslfront_1 .zaui_container_left .addButton.added_addon:hover{background-color:#aae0f9;}
-.GslBooking .gslfront_1 .zaui_container_left .addButton:hover{background-color:#7bbdd3;}
-.GslBooking .gslfront_1 .reserveTourButton {cursor: pointer;}
+.GslBooking .gslfront_1 .zaui_container_left .addButton:hover,
+.GslBooking .gslfront_1 .reserveTourButton:hover
+{background-color:#7bbdd3;}
+
+.GslBooking .gslfront_1 .zaui_button,
+.GslBooking .gslfront_1 .reserveTourButton { color:#FFF; display:inline-block; padding:6px 12px; }
+
 .GslBooking .gslfront_1 .showTours {color: #222; cursor: pointer;}
 .GslBooking .gslfront_1 .zaui_confirmation {box-sizing: border-box; width: 100%;}
 .GslBooking .gslfront_1 .no_tours {display: none; color: #222;}
 .GslBooking .gslfront_1 .no_activities {display: none; color: #222; margin: 20px}
 .GslBooking .gslfront_1 .return_to_search {display: none;}
+
+.zaui_container_left table,
+.zaui_container_left tr,
+.zaui_container_left td { border:none; }
 
 /*Addons and guest information*/
 .GslBooking .gslfront_1 .addons_overview .addons_overview_right{width:25%;float:right;color:#fff;padding-left:10px;}

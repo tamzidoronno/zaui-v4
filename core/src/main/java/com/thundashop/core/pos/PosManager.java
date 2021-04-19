@@ -1940,7 +1940,6 @@ public class PosManager extends ManagerBase implements IPosManager {
 
         for(PmsBookingRooms room : roomsToBeRecalculated) {
             room.unsettledAmountIncAccrued = recalculateAccruedAmountForRoomBooking(pmsManager, room.bookingId, room.pmsBookingRoomId);
-            System.out.println("============================>>>>>>>>>>>>>>>    Recalculated Accrued and it is ::::::: " + room.unsettledAmountIncAccrued);
         }
     }
 

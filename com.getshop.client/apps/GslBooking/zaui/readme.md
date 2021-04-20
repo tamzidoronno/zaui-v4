@@ -25,6 +25,19 @@ CREATE TABLE IF NOT EXISTS availability(
    created_at VARCHAR(255)
 ) ENGINE=InnoDB;
 
+CREATE TABLE `booking_response` (
+  `id` int(11) NOT NULL,
+  `prod_code` varchar(255) NOT NULL,
+  `supplier_confirmation_number` int(11) NOT NULL,
+  `created_at` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ 
+ALTER TABLE `booking_response`
+  ADD PRIMARY KEY (`id`);
+ 
+ALTER TABLE `booking_response`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
 ```
 
 ## Config file

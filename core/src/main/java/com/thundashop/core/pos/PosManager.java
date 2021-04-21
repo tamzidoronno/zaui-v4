@@ -65,7 +65,6 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import com.thundashop.core.usermanager.UserManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -121,8 +120,6 @@ public class PosManager extends ManagerBase implements IPosManager {
     @Autowired
     private GetShopCentral central;
 
-    @Autowired
-    private UserManager userManager;
     /**
      * Never access this variable directly! Always go trough the getSettings
      * function!
@@ -497,7 +494,6 @@ public class PosManager extends ManagerBase implements IPosManager {
         report.totalAmount = getTotalAmountForZReport(report);
 
         saveObject(report);
-        System.out.println("Lucija ************************ Closing regularOrderIds *****************************");
         report.orderIds.stream().forEach(orderId -> orderManager.closeOrderByZReport(orderId, report));
         report.invoicesWithNewPayments.stream().forEach(orderId -> orderManager.closeOrderByZReport(orderId, report));
 
@@ -508,7 +504,6 @@ public class PosManager extends ManagerBase implements IPosManager {
                     .stream()
                     .map(o -> o.id)
                     .collect(Collectors.toList());
-        System.out.println("Lucija ************************ Closing extraOrderIds *****************************");
             extraOrderIds.stream().forEach(orderId -> orderManager.closeOrderByZReport(orderId, report));
             report.orderIds.addAll(extraOrderIds);
             report.totalAmount = getTotalAmountForZReport(report);
@@ -1167,18 +1162,15 @@ public class PosManager extends ManagerBase implements IPosManager {
     }
 
     private List<String> autoCreateOrders(String cashPointId) {
-        Logger.getLogger(PosManager.class.getName()).log(Level.INFO,   "Lucija: Inside autoCreateOrders");
         List<PmsBookingRooms> roomsNeedToCreateOrdersFor = getRoomsNeedToCreateOrdersFor();
         List<String> retList = new ArrayList();
         
         if (!roomsNeedToCreateOrdersFor.isEmpty()) {
             checkIfAccrudePaymentIsActivated();
-            Logger.getLogger(PosManager.class.getName()).log(Level.INFO,   "Lucija: autoCreateOrders, !roomsNeedToCreateOrdersFor");
         }
         
         roomsNeedToCreateOrdersFor.stream().forEach(o -> {
             String orderId = createOrder(o);
-            Logger.getLogger(PosManager.class.getName()).log(Level.INFO,"Lucija: autoCreateOrders, created an order.............................:");
             retList.add(orderId);
         });
 
@@ -1485,9 +1477,6 @@ public class PosManager extends ManagerBase implements IPosManager {
         createOrder.add(createOrderForRoom);
 
         String userId = booking.userId != null && !booking.userId.isEmpty() ? booking.userId : getSession().currentUser.id;
-        System.out.println("Lucija: Creating orderWithPaymentMethod for pmsBookingRoomId: "+ room.pmsBookingRoomId + ", roomId:" + roomId+", booking.id: " + booking.id);
-        System.out.println("Lucija: Creating orderWithPaymentMethod for data: "+ ", date.start:" + room.date.start+ " hasUnsettledAmountIncAccrued: " +room.hasUnsettledAmountIncAccrued()) ;
-        System.out.println("Lucija: Creating orderWithPaymentMethod for data unsettledAmountIncAccrued: "+ room.unsettledAmountIncAccrued + ", createOrdersOnZReport:" + room.createOrdersOnZReport + ".");
         return pmsManager.createOrderFromCheckout(createOrder, roomId, userId);
     }
 

@@ -7,7 +7,7 @@ include_once('functions.php');
 
 if(isset($_GET['getActivities'])){
     //Load cached available activities from database
-    gslZauiListActivities();
+    gslZauiListActivities($_GET['language']);
 } else if(isset($_GET['checkAvailability']) && isset($_GET['prodCode']) && isset($_GET['adults']) && isset($_GET['children'])){
     //check availability call after Show more buttons is pressed on front end
     gslZauiCheckAvailability($_GET['prodCode'], $_GET['adults'], $_GET['children'],$_GET['startDate']);

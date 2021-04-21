@@ -9,7 +9,7 @@
 /** ##### ==== ###/ ##### ==== ###/ ##### ==== ###/ ##### ==== ###/ ##### ==== ###/ ##### ==== ###/ ##### ==== ###
     list activities
 */
-function gslZauiListActivities()
+function gslZauiListActivities($lang)
 {
     global $servername, $username, $password;
 // Create connection
@@ -74,7 +74,30 @@ function gslZauiListActivities()
         }
     }
 
-    echo json_encode($available_activities);
+    //check if we have custom headers text + intro for given language... and add to response if we do
+    $uioverrides = new stdClass();
+    if($lang)
+    {
+        switch($lang)
+        {
+            case 'en':
+                global $gsZauiHeadline_en, $gsZauiIntro_en;
+                if(isset($gsZauiHeadline_en)) $uioverrides->headline = $gsZauiHeadline_en;
+                if(isset($gsZauiHeadline_en)) $uioverrides->intro = $gsZauiIntro_en;
+                break;
+            case 'no':
+                global $gsZauiHeadline_no, $gsZauiIntro_no;
+                if(isset($gsZauiHeadline_no)) $uioverrides->headline = $gsZauiHeadline_no;
+                if(isset($gsZauiHeadline_no)) $uioverrides->intro = $gsZauiIntro_no;
+                break;
+            default:
+                //do nothing
+                break;
+        }
+    }
+    $return = (object) array('uioverrides' => $uioverrides,'activities' => $available_activities);
+    ob_clean();
+    echo json_encode($return, JSON_UNESCAPED_UNICODE);
     exit();
 } // end of gslZauiListActivities
 

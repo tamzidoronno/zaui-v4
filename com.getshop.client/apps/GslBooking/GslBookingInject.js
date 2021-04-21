@@ -1490,9 +1490,21 @@ function getshop_showZauiPage() {
     //Ajax call to get cached activities
     $.ajax(getshop_endpoint + '/scripts/booking/booking-zaui.php', {
         dataType: 'json',
-        data: {startDate: startDate, getActivities: true},
+        data: {startDate: startDate, getActivities: true, language: sessionStorage.getItem("getshop_language")},
         success: function (response) {
             var activities = response;
+            try{
+                var rs = response;
+                activities = response.activities;
+                if(rs.uioverrides && rs.uioverrides.headline && document.getElementById('zauiHeadline')) document.getElementById('zauiHeadline').innerHTML =  rs.uioverrides.headline;
+                if(rs.uioverrides && rs.uioverrides.intro && document.getElementById('zauiIntro')) document.getElementById('zauiIntro').innerHTML =  rs.uioverrides.intro;
+            }
+            catch(e)
+            {
+                console.log('Could not parse response??? ' + e);
+                console.log('Could not parse response??? ', response);
+            }
+
             getshop_setPageName('zaui');
             getshop_zauiPageLoad(activities);
             //Right side booking overview

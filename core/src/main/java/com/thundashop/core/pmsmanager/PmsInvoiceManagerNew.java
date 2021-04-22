@@ -54,7 +54,7 @@ public class PmsInvoiceManagerNew {
     
     public Order createOrder(List<PmsOrderCreateRow> rows, String paymentMethodId, String userId) {
         cartManager.clear();
-        
+
         Map<String, List<CartItem>> tabItemsAdded = new HashMap();
         
         for (PmsOrderCreateRow roomData : rows) {

@@ -9784,7 +9784,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 })
                 .map(room -> getBookingFromRoom(room.pmsBookingRoomId))
                 .map(room -> getBooking(room.id))
-                .filter(b -> b.unsettled > 0.005 || b.unsettled < -0.005)
+                .filter(b -> b.unsettled > 0.5 || b.unsettled < -0.5)
                 .distinct()
                 .collect(Collectors.toList());
         
@@ -10510,9 +10510,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         for (PmsBookingRooms room : pmsBooking.rooms) {
             try {
-                if(room.getNumberOfNights() > 5000 && room.isDeleted() && room.unsettledAmount == 0.0) {
-                    continue;
-                }
                 if(!room.needToCalculateUnsettledAmount(orders)) {
                     continue;
                 }

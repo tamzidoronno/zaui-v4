@@ -1571,34 +1571,27 @@ function  getshop_zauiShowTours(btn, prodCode){
                         $('#table_' + prodCode).find('.departure_time_column').remove()
                         var tourEntry = $("<tr class='producentry_itemlist'><td>" + tour.TourPricing[0].TotalInInt[0] + " NOK</td><td><div id='" + id + "' class='reserveTourButton'>" + translation['reserve'] + "</div></td>")
                         $('#table_' + prodCode).append(tourEntry);
-                        tourEntry.find('.reserveTourButton').attr('onclick', "getshop_zauiReserveTour(this, '" + prodCode + "', '" + tour.TourOptions[0].TourDepartureTime[0] + "', '" + tour.TourPricing[0].TotalInInt[0] + "')");
+                        tourEntry.find('.reserveTourButton').attr('onclick', "getshop_zauiReserveTour(this, '" + prodCode + "', '" + tour.TourOptions[0].TourDepartureTime[0] + "', '" + tour.TourPricing[0].TotalInInt[0] + "', '" + tour.TourPricing[0].TaxInInt[0] + "')");
                     } else {
                         var tourEntry = $("<tr class='producentry_itemlist'><td>" + tour.TourOptions[0].TourDepartureTime[0] + "</td><td>" + tour.TourPricing[0].TotalInInt[0] + " NOK</td><td><div id='" + id + "' class='reserveTourButton'>" + translation['reserve'] + "</div></td>")
                         $('#table_' + prodCode).append(tourEntry);
                     }
-                    tourEntry.find('.reserveTourButton').attr('onclick', "getshop_zauiReserveTour(this, '" + prodCode + "', '" + tour.TourOptions[0].TourDepartureTime[0] + "', '" + tour.TourPricing[0].TotalInInt[0] + "')");
+                    tourEntry.find('.reserveTourButton').attr('onclick', "getshop_zauiReserveTour(this, '" + prodCode + "', '" + tour.TourOptions[0].TourDepartureTime[0] + "', '" + tour.TourPricing[0].TotalInInt[0] + "', '" + tour.TourPricing[0].TaxInInt[0] + "')");
                     $(button).hide()
                 });
             } else {
                 $(button).hide()
                 $('#no_tours_' + prodCode).show()
             }
-            // else {
-            //     var id = "" + prodCode + "_" + 0 + "";
-            //     var tourEntry = $("<tr class='producentry_itemlist'><td>"  + tours.TourOptions.TourDepartureTime + "</td><td>" + tours.TourPricing.TotalInInt + "</td><td><div id='" + id + "' class='reserveTourButton'>Reserve</div></td>")
-            //     $('#table_' + prodCode).append(tourEntry);
-            //     tourEntry.find('.reserveTourButton').attr('onclick', "getshop_zauiReserveTour('" + prodCode + "', '" + tours.TourOptions.TourDepartureTime + "', '" + tours.TourPricing.TotalInInt + "')");
-            // }
-
         }
     });
 }
 
-function getshop_zauiReserveTour(btn, prodCode, tourDepartureTime, tourPrice){
+function getshop_zauiReserveTour(btn, prodCode, tourDepartureTime, tourPrice, tourTaxes){
     //Ajax call to reserve a tour
     $.ajax(getshop_endpoint + '/scripts/booking/booking-zaui.php', {
         dataType: 'json',
-        data: {createAddon: true, prodCode: prodCode, tourDepartureTime: tourDepartureTime, tourPrice: tourPrice},
+        data: {createAddon: true, prodCode: prodCode, tourDepartureTime: tourDepartureTime, tourPrice: tourPrice, tourTaxes: tourTaxes},
         success: function (response) {
             var body = {};
             body['roomId'] = $('.roomrowadded').first().attr('roomid');

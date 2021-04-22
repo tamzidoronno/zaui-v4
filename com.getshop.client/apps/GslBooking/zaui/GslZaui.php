@@ -13,7 +13,7 @@ if(isset($_GET['getActivities'])){
     gslZauiCheckAvailability($_GET['prodCode'], $_GET['adults'], $_GET['children'],$_GET['startDate']);
 } else if (isset($_GET['createAddon']) && isset($_GET['prodCode']) && isset($_GET['tourDepartureTime']) && isset($_GET['tourPrice'])){
     //Create addon out of activity
-    gslZauiCreateAddon($_GET['prodCode'], $_GET['tourDepartureTime'], $_GET['tourPrice']);
+    gslZauiCreateAddon($_GET['prodCode'], $_GET['tourDepartureTime'], $_GET['tourPrice'], $_GET['tourTaxes']);
 } else if(isset($_GET['createBooking']) && isset($_POST['bookingReference'])){
 
     //vars received from ajax call

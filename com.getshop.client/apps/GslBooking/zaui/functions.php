@@ -160,10 +160,12 @@ function gslZauiCheckAvailability($prod_code, $adults, $children, $startdate)
 /** ##### ==== ###/ ##### ==== ###/ ##### ==== ###/ ##### ==== ###/ ##### ==== ###/ ##### ==== ###/ ##### ==== ###
     create an addon in GS for a given activity on a booking
 */
-function gslZauiCreateAddon($prod_code, $tourDepartureTime, $tourPrice)
+function gslZauiCreateAddon($prod_code, $tourDepartureTime, $tourPrice, $tourTaxes)
 {
-    global $servername, $username, $password, $gsZauiUser, $gsZauiPass;
+    global $servername, $username, $password, $gsZauiUser, $gsZauiPass, $gsZauiTaxGroup, $gsZauiTaxRate;
     global $api_key, $reseller_id, $supplier_id;
+
+    if(!$tourTaxes) $tourTaxes = 0;
 
     $conn = new mysqli($servername, $username, $password);
     if ($conn->connect_error) {
@@ -203,7 +205,10 @@ function gslZauiCreateAddon($prod_code, $tourDepartureTime, $tourPrice)
             $product->name = "Zaui, " . $activity_name . ", " . $tourDepartureTime . ", " . time() . "";
             $product->tag = "addon";
             $product->isSingle = true;
-            $product->price = doubleval($_GET['tourPrice']);
+            $product->price = doubleval($tourPrice);
+            $product->priceExTaxes = doubleval( doubleval($tourPrice) - doubleval($tourTaxes) );
+            $product->taxGroupObject->groupNumber = ( $gsZauiTaxGroup ? (int)$gsZauiTaxGroup : 0);
+            $product->taxGroupObject->taxRate = ( $gsZauiTaxRate ? (int)$gsZauiTaxRate : 0);
 
             $product = $factory->getApi()->getProductManager()->saveProduct($product);
             $alladdons = $factory->getApi()->getPmsManager()->getConfiguration($psm->getSelectedMultilevelDomainName());

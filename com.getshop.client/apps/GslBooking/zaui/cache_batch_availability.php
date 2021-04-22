@@ -1,5 +1,10 @@
 <?php
-//Cron to save batch availability in database
+/*
+    this file is supposed to be run via a cronjob and cli; can be run from
+    browser as well though, if immediate updates are needed
+*/
+
+
 include_once ('config.php');
 
 // Create connection

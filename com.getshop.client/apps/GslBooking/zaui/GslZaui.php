@@ -27,3 +27,7 @@ if(isset($_GET['getActivities'])){
     gslZauiBookTour($date, $bookingReference, $prod_code, $tourDepartureTime, $travellers, $total);
 
 }
+else if(isset($_GET['cleanup']) && $_GET['cleanup'] == 'yesplease')
+{
+    include_once('cleanup.php');
+}

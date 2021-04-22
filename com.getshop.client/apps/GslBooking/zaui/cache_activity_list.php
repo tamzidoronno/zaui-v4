@@ -1,4 +1,10 @@
 <?php
+
+/*
+    this file is supposed to be run via a cronjob and cli; can be run from
+    browser as well though, if immediate updates are needed
+*/
+
 //Cron to save activity list in database
 include_once ('config.php');
 

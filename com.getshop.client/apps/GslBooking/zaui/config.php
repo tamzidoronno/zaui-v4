@@ -31,6 +31,8 @@ else
     $gsZauiUser = 'zaui@getshop.no';
     $gsZauiPass = 'gsZaui';
 
+    $gsZauiTaxGroup = 0;
+
     if(isset($argv) && isset($argv[1]))
     {
         $storeId = $argv[1];

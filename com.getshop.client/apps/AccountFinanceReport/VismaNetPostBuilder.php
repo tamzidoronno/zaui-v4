@@ -146,7 +146,7 @@ class VismaNetPostBuilder {
             file_put_contents("/tmp/vismanet_json_debug_".$storeId."_".$i.".txt", $jsonData);
             
             $ch = curl_init();
-            curl_setopt($ch, constant("CURLOPT_" . 'URL'), "https://integration.visma.net/API/controller/api/v1/journaltransaction");
+            curl_setopt($ch, constant("CURLOPT_" . 'URL'), "https://integration.visma.net/API/controller/api/v2/journaltransaction");
             curl_setopt($ch, constant("CURLOPT_" . 'POST'), true);
             curl_setopt($ch, constant("CURLOPT_" . 'POSTFIELDS'), $jsonData);
             curl_setopt($ch, CURLOPT_HTTPHEADER, array('authorization: Bearer '.$result->accessToken, "ipp-application-type: Visma.net Financials", "ipp-company-id: ".$vismaCompanyId, 'Content-Type: application/json'));

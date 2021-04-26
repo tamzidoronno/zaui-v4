@@ -248,10 +248,12 @@ function gslZauiCreateAddon($prod_code, $tourDepartureTime, $tourPrice, $tourTax
 /** ##### ==== ###/ ##### ==== ###/ ##### ==== ###/ ##### ==== ###/ ##### ==== ###/ ##### ==== ###/ ##### ==== ###
     book in Zaui
 */
-function gslZauiBookTour($date, $bookingReference, $prod_code, $tourDepartureTime, $travellers, $total)
+function gslZauiBookTour($date, $bookingReference, $prod_code, $tourDepartureTime, $travellers, $total, $orderId)
 {
     global $servername, $username, $password;
     global $api_key, $reseller_id, $supplier_id;
+
+    ob_clean();
 
     //create payment request in zaui
     $url = "https://api.zaui.io/v1/";
@@ -364,18 +366,29 @@ function gslZauiBookTour($date, $bookingReference, $prod_code, $tourDepartureTim
     }
 
     //save booking data
-    $sql = "INSERT INTO getshop_zaui_cache.booking_response (prod_code, supplier_confirmation_number, created_at) VALUES ('" . $prod_code . "', '" . $booking['SupplierConfirmationNumber'][0] . "', '" . time() . "')";
+    $sql = "INSERT INTO getshop_zaui_cache.booking_log (
+        orderId,
+        supplierProductCode,
+        bookingReference,
+        supplierConfirmationNumber,
+        serverResponse,
+        createdAt) VALUES (
+        '" . $orderId . "',
+        '" . $prod_code . "',
+        '" . $bookingReference . "',
+        '" . $booking['SupplierConfirmationNumber'][0] . "',
+        '" . $data . "',
+        '" . time() . "')";
 
     if ($conn->query($sql) === TRUE) {
-        echo "New record created successfully";
+        echo "SUCCESS";
     } else {
+        Header('HTTP/1.0 500 Internal server error');
         echo "Error: " . $sql . "<br>" . $conn->error;
     }
 
     $conn->close();
-
-    echo json_encode($booking);
-    exit();
+    die( $booking['SupplierConfirmationNumber'][0] );
 }
 
 // ##### ==== ###/ ##### ==== ###/ ##### ==== ###/ ##### ==== ###/ ##### ==== ###/ ##### ==== ###/ ##### ==== ###

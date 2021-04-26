@@ -23,8 +23,9 @@ if(isset($_GET['getActivities'])){
     $tourDepartureTime = $_POST['tourDepartureTime'];
     $travellers = $_POST['travellers'];
     $total = $_POST['total'];
+    $orderId = $_REQUEST['orderId'];
 
-    gslZauiBookTour($date, $bookingReference, $prod_code, $tourDepartureTime, $travellers, $total);
+    gslZauiBookTour($date, $bookingReference, $prod_code, $tourDepartureTime, $travellers, $total, $orderId);
 
 }
 else if(isset($_GET['cleanup']) && $_GET['cleanup'] == 'yesplease')

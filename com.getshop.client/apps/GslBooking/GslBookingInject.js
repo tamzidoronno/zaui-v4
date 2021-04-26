@@ -1645,37 +1645,56 @@ function  getshop_zauiShowTours(btn, prodCode){
 }
 
 function getshop_zauiReserveTour(btn, prodCode, tourDepartureTime, tourPrice, tourTaxes){
-    //Ajax call to reserve a tour
-    $.ajax(getshop_endpoint + '/scripts/booking/booking-zaui.php', {
-        dataType: 'json',
-        data: {createAddon: true, prodCode: prodCode, tourDepartureTime: tourDepartureTime, tourPrice: tourPrice, tourTaxes: tourTaxes},
-        success: function (response) {
-            var body = {};
-            body.roomId = $('.roomrowadded').first().attr('roomid');
-            body.productId = response.product_id;
 
-            //store datw we have for later
-            getshop_zauidata.created_addons.push(response.product_id)
-            getshop_zauidata.connected_rooms.push( body.roomId );
+    if( typeof getshop_zauidata.created_addons[ prodCode ] == 'undefined'){
+        //Ajax call to reserve a tour
+        $.ajax(getshop_endpoint + '/scripts/booking/booking-zaui.php', {
+            dataType: 'json',
+            data: {createAddon: true, prodCode: prodCode, tourDepartureTime: tourDepartureTime, tourDate: sessionStorage.getItem('getshop_startDate'), tourPrice: tourPrice, tourTaxes: tourTaxes},
+            success: function (response) {
+                var body = {};
+                body.roomId = $('.roomrowadded').first().attr('roomid');
+                body.productId = response.product_id;
 
-            // add freshly created addon to the current booking
-            var client = getshop_getWebSocketClient();
-            var addAddon = client.PmsBookingProcess.addAddons(getshop_domainname, body);
-            addAddon.done(function(res) {
-                getshop_loadAddonsAndGuestSummaryByResult(res);
-            });
+                //store datw we have for later
+                getshop_zauidata.created_addons[ prodCode ] = response.product_id;
+                getshop_zauidata.connected_rooms.push( body.roomId );
 
-            getshop_zauidata.bookings[ prodCode ] = { prodCode: prodCode, time: tourDepartureTime, price: tourPrice, addonid: response.product_id };
-            sessionStorage.setItem('getshop_zauidata', JSON.stringify(getshop_zauidata));
+                // add freshly created addon to the current booking
+                var client = getshop_getWebSocketClient();
+                var addAddon = client.PmsBookingProcess.addAddons(getshop_domainname, body);
+                addAddon.done(function(res) {
+                    getshop_loadAddonsAndGuestSummaryByResult(res);
+                });
+            }
+        });
+    }
+    else {
 
-            var translation = getshop_getBookingTranslations()
-            $(btn).text(translation['unreserve'])
-            $(btn).attr('onclick', "getshop_zauiUnreserveTour(this, '" + response.product_id + "')")
-            $(btn).attr('data-prodcode', prodCode)
-            $(btn).attr('data-tourtime', tourDepartureTime)
-            $(btn).attr('data-tourprice', tourPrice)
-        }
-    });
+        console.log('we already have created an addon for ' + prodCode + ' for this booking: ' + getshop_zauidata.created_addons[ prodCode ]);
+        console.log('we just add it again...');
+        var body = {};
+        body.roomId = $('.roomrowadded').first().attr('roomid');
+        body.productId = getshop_zauidata.created_addons[ prodCode ];
+
+        // add freshly created addon to the current booking
+        var client = getshop_getWebSocketClient();
+        var addAddon = client.PmsBookingProcess.addAddons(getshop_domainname, body);
+        addAddon.done(function(res) {
+            getshop_loadAddonsAndGuestSummaryByResult(res);
+        });
+    }
+
+    getshop_zauidata.bookings[ prodCode ] = { prodCode: prodCode, time: tourDepartureTime, price: tourPrice, addonid: getshop_zauidata.created_addons[ prodCode ] };
+    sessionStorage.setItem('getshop_zauidata', JSON.stringify(getshop_zauidata));
+
+    var translation = getshop_getBookingTranslations();
+    $(btn).text(translation['unreserve']);
+    $(btn).attr('onclick', "getshop_zauiUnreserveTour(this, '" + getshop_zauidata.created_addons[ prodCode ] + "')");
+    $(btn).attr('data-prodcode', prodCode);
+    $(btn).attr('data-tourtime', tourDepartureTime);
+    $(btn).attr('data-tourprice', tourPrice);
+
 }
 
 function getshop_zauiUnreserveTour(btn, product_id) {

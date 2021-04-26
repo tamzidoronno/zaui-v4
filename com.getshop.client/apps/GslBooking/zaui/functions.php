@@ -160,7 +160,7 @@ function gslZauiCheckAvailability($prod_code, $adults, $children, $startdate)
 /** ##### ==== ###/ ##### ==== ###/ ##### ==== ###/ ##### ==== ###/ ##### ==== ###/ ##### ==== ###/ ##### ==== ###
     create an addon in GS for a given activity on a booking
 */
-function gslZauiCreateAddon($prod_code, $tourDepartureTime, $tourPrice, $tourTaxes)
+function gslZauiCreateAddon($prod_code, $tourDepartureTime, $tourPrice, $tourTaxes, $tourDate)
 {
     global $servername, $username, $password, $gsZauiUser, $gsZauiPass, $gsZauiTaxGroup, $gsZauiTaxRate;
     global $api_key, $reseller_id, $supplier_id;
@@ -202,7 +202,7 @@ function gslZauiCreateAddon($prod_code, $tourDepartureTime, $tourPrice, $tourTax
         $psm = new \ns_c5a4b5bf_365c_48d1_aeef_480c62edd897\PsmConfigurationAddons();
 
         if ($product) {
-            $product->name = "Zaui, " . $activity_name . ", " . $tourDepartureTime . ", " . time() . "";
+            $product->name = "Zaui, " . $activity_name . ", " . $tourDate . ' - '.$tourDepartureTime . ", " . time() . "";
             $product->tag = "addon";
             $product->isSingle = true;
             $product->price = doubleval($tourPrice);
@@ -263,7 +263,6 @@ function gslZauiBookTour($date, $bookingReference, $prod_code, $tourDepartureTim
 	<ApiKey>' . $api_key . '</ApiKey>
 	<ResellerId>' . $reseller_id . '</ResellerId>
 	<SupplierId>' . $supplier_id . '</SupplierId>
-	<ExternalReference>10051374722992616</ExternalReference>
 	<Timestamp>' . time() . '</Timestamp>
 	<BookingReference>' . $bookingReference . '</BookingReference>
 	<TravelDate>' . $date . '</TravelDate>
@@ -282,7 +281,7 @@ function gslZauiBookTour($date, $bookingReference, $prod_code, $tourDepartureTim
 
     //each registered guest
     foreach($travellers as $traveller){
-        $adult = $traveller['isChild'] == "false" ? "ADULT" : "CHILD";
+        $ageBand = $traveller['isChild'] == "false" ? "ADULT" : "CHILD";
 
         //separate first and last name
         $names = explode(" ", $traveller['name']);
@@ -298,7 +297,7 @@ function gslZauiBookTour($date, $bookingReference, $prod_code, $tourDepartureTim
 		<TravellerTitle></TravellerTitle>
 		<GivenName>' . $first_name . '</GivenName>
 		<Surname>' . $surname . '</Surname>
-		<AgeBand>' . $adult . '</AgeBand>
+		<AgeBand>' . $ageBand . '</AgeBand>
 		<LeadTraveller></LeadTraveller>
 	</Traveller>
         ';
@@ -306,11 +305,6 @@ function gslZauiBookTour($date, $bookingReference, $prod_code, $tourDepartureTim
 
     $input_xml .=
         '<TravellerMix>
-		<Senior>0</Senior>
-		<Adult>' . $total . '</Adult>
-		<Child>0</Child>
-		<Student>0</Student>
-		<Infant>0</Infant>
 		<Total>' . $total . '</Total>
 	</TravellerMix>
 	<RequiredInfo>
@@ -381,7 +375,7 @@ function gslZauiBookTour($date, $bookingReference, $prod_code, $tourDepartureTim
         '" . time() . "')";
 
     if ($conn->query($sql) === TRUE) {
-        echo "SUCCESS";
+        echo "SUCCESS-";
     } else {
         Header('HTTP/1.0 500 Internal server error');
         echo "Error: " . $sql . "<br>" . $conn->error;

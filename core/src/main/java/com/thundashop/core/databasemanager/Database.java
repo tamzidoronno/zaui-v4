@@ -97,7 +97,12 @@ public class Database extends StoreComponent {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        mongo = new Mongo("localhost", mongoPort);
+        String host = System.getenv("HOSTNAME_MONGODB");
+        boolean foundInEnvVars = host != null && host.length() > 0;
+        if (!foundInEnvVars){ host = "localhost"; }
+
+        System.out.println("Connecting to mongo host: " + host);
+        mongo = new Mongo(host, mongoPort);
         morphia = new Morphia();
         morphia.getMapper().getConverters().addConverter(BigDecimalConverter.class);
         morphia.map(DataCommon.class);

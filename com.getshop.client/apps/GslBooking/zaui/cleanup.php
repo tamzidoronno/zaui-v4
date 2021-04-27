@@ -14,7 +14,14 @@ include_once('config.php');
 */
 function cleanupAddons()
 {
-    global $gsZauiUser, $gsZauiPass;
+
+    global $servername, $username, $password, $gsZauiUser, $gsZauiPass, $gsZauiTaxGroup, $gsZauiTaxRate;
+    global $api_key, $reseller_id, $supplier_id;
+
+    $conn = new mysqli($servername, $username, $password);
+    if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+    }
     // connect to GetShop
     $factory = IocContainer::getFactorySingelton();
     $factory->getApi()->getUserManager()->logOn($gsZauiUser, $gsZauiPass);
@@ -22,9 +29,18 @@ function cleanupAddons()
 
     $alladdons = $factory->getApi()->getPmsManager()->getConfiguration($psm->getSelectedMultilevelDomainName());
 
-    //$filter = new stdClass();
+    $sql = "SELECT * FROM getshop_zaui_cache.booking_log ORDER BY ID DESC";
+    $result = $conn->query($sql);
 
-    $bookingslist = $factory->getApi()->getPmsManager()->getAllBookings($filter);
+    echo '<pre>';
+    foreach($result as $rvalue)
+    {
+        echo 'we got a Zaui cache item . orderId ' . $rvalue['orderId'] . ":: and it has a product... ". $rvalue['supplierConfirmationNumber'] ."\n";
+        //for    some reason this call dies 
+        //$booking = $factory->getApi()->getPmsManager()->getBooking($rvalue['orderId']);
+        //print_r($booking);
+
+    }
 
     /*
         go through all of them and check if their name contains zaui....
@@ -33,8 +49,9 @@ function cleanupAddons()
     {
         if( strpos($addon->name,'Zaui') !== false )
         {
-            echo 'we got a Zaui addon . ' . $addon->name . ":: and it has a product... \n";
             $product = $product = $factory->getApi()->getProductManager()->getProduct($addon->productId);
+            echo 'we got a Zaui addon . ' . $addon->name . ":: and it has a product... ". $product->name ."\n";
+
             //print_r($product);
             echo "\n\n\n";
         }
@@ -42,7 +59,7 @@ function cleanupAddons()
     }
 
 
-    print_r($alladdons);
+    //print_r($alladdons);
 
     die();
 

@@ -47,12 +47,13 @@ public class WilhelmsenHouse implements AccountingInterface {
 
     @Override
     public List<String> createOrderFile(List<Order> orders, String type) {
-        if(type != null && type.equals("invoice")) {
+        return creategbatfile(orders);
+        /*if(type != null && type.equals("invoice")) {
             orders = removeExpediaPrepaid(orders);
             return createInvoiceXledgerFile(orders);
         } else {
             return creategbatfile(orders);
-        }
+        }*/
     }
     
     public List<String> creategbatfile(List<Order> orders) {

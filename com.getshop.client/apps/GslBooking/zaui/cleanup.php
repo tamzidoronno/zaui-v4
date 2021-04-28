@@ -32,16 +32,39 @@ function cleanupAddons()
     $sql = "SELECT * FROM getshop_zaui_cache.booking_log ORDER BY ID DESC";
     $result = $conn->query($sql);
 
+    $addonstokeep = [];
+
     echo '<pre>';
     foreach($result as $rvalue)
     {
-        echo 'we got a Zaui cache item . orderId ' . $rvalue['orderId'] . ":: and it has a product... ". $rvalue['supplierConfirmationNumber'] ."\n";
+        echo 'we got a Zaui cache item . PmsBooking ID ' . $rvalue['orderId'] . ":: and it has a product... ". $rvalue['supplierConfirmationNumber'] ."\n";
         //for    some reason this call dies 
-        //$booking = $factory->getApi()->getPmsManager()->getBooking($rvalue['orderId']);
+        $booking = $factory->getApi()->getPmsManager()->getBooking('default',$rvalue['orderId']);
+
+        // really hard to find a good indicator for bookings that have been deleted...
+        // some research revealded that deleted bookings dont have any orderIds anymore...
+        if(count($booking->orderIds) < 1 )
+        {
+            echo 'Booking ' . $booking->incrementBookingId . ' was deleted';
+        }
+        else
+        {
+            echo 'Booking is valid ' . $booking->incrementBookingId . ', dont touch its addons.';
+            if($booking->rooms[0]->addons && is_array( $booking->rooms[0]->addons ))
+            {
+                for($i = 0; $i < count( $booking->rooms[0]->addons ); $i++)
+                {
+                    array_push($addonstokeep, $booking->rooms[0]->addons[$i]->productId);
+                }
+            }
+            echo "\n addons to keep save are " . print_r($booking->rooms[0]->addons,1);
+        }
+
         //print_r($booking);
 
     }
-
+    echo "Addons to keep are ";
+    print_r($addonstokeep);
     /*
         go through all of them and check if their name contains zaui....
     */
@@ -49,8 +72,24 @@ function cleanupAddons()
     {
         if( strpos($addon->name,'Zaui') !== false )
         {
-            $product = $product = $factory->getApi()->getProductManager()->getProduct($addon->productId);
-            echo 'we got a Zaui addon . ' . $addon->name . ":: and it has a product... ". $product->name ."\n";
+            if(in_array($addon->productId,$addonstokeep))
+            {
+                echo 'Keeping this addon ' . $addon->name;
+            }
+            else
+            {
+                // make sure we dont delete anything that doesnt match our name scheme....
+                $tmp = explode(', ',$addon->name);
+                if($tmp[0]=='Zaui' && isset($tmp[1]))
+                {
+                    $product = $factory->getApi()->getProductManager()->getProduct($addon->productId);
+                    $product->deactivated = true;
+                    $product = $factory->getApi()->getProductManager()->saveProduct($product);
+                }
+                echo 'We dont want this addon anymore, and can deactivate it (via its product) : ' . $addon->name;
+            }
+
+            //echo 'we got a Zaui addon . ' . $addon->name . ":: and it has a product... ". $product->name ."\n";
 
             //print_r($product);
             echo "\n\n\n";
@@ -61,7 +100,7 @@ function cleanupAddons()
 
     //print_r($alladdons);
 
-    die();
+    die('done');
 
 }
 

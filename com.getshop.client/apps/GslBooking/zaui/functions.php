@@ -9,7 +9,7 @@
 /** ##### ==== ###/ ##### ==== ###/ ##### ==== ###/ ##### ==== ###/ ##### ==== ###/ ##### ==== ###/ ##### ==== ###
     list activities
 */
-function gslZauiListActivities($lang)
+function gslZauiListActivities($lang,$startdate,$enddate)
 {
     global $servername, $username, $password;
 // Create connection
@@ -50,7 +50,8 @@ function gslZauiListActivities($lang)
     $availability = $availability_xml['BatchTourAvailability'];
 
     $available_activities = [];
-    $date = date("Y-m-d", strtotime($_GET['startDate']));
+    $date_start = date("Y-m-d", strtotime($startdate));
+    $date_end = date("Y-m-d", strtotime($enddate));
 
 //checking which activities are available
     foreach($activities as $activity){
@@ -63,8 +64,9 @@ function gslZauiListActivities($lang)
             'tours' => null,
         ];
 
+        // TODO INCLUDE END DATE HERE!
         foreach($availability as $available){
-            if($available['SupplierProductCode'][0] == $prod_code && $available['Date'][0] == $date){
+            if($available['SupplierProductCode'][0] == $prod_code && $available['Date'][0] == $date_start){
                 if($available['AvailabilityStatus'][0]['Status'][0] != "UNAVAILABLE") {
                     $act_av['tours'] = true;
                     array_push($available_activities, $act_av);
@@ -104,22 +106,23 @@ function gslZauiListActivities($lang)
 /** ##### ==== ###/ ##### ==== ###/ ##### ==== ###/ ##### ==== ###/ ##### ==== ###/ ##### ==== ###/ ##### ==== ###
     check availability of a given tour for a given daten
 */
-function gslZauiCheckAvailability($prod_code, $adults, $children, $startdate)
+function gslZauiCheckAvailability($prod_code, $adults, $children, $startdate, $enddate)
 {
     global $api_key, $reseller_id, $supplier_id;
     $total = (int)$adults + (int)$children;
 
     $url = "https://api.zaui.io/v1/";
 
-    $date = date("Y-m-d", strtotime($startdate));
-
+    $date_start = date("Y-m-d", strtotime($startdate));
+    $date_end = date("Y-m-d", strtotime($enddate));
     $input_xml = '<?xml version="1.0" encoding="UTF-8"?>
 <CheckAvailabilityRequest xmlns="https://api.zaui.io/api/01">
 	<ApiKey>' . $api_key . '</ApiKey>
 	<ResellerId>' . $reseller_id . '</ResellerId>
 	<SupplierId>' . $supplier_id . '</SupplierId>
 	<Timestamp>' . time() . '</Timestamp>
-	<StartDate>' . $date . '</StartDate>
+	<StartDate>' . $date_start . '</StartDate>
+	<StartDate>' . $date_end . '</StartDate>
 	<SupplierProductCode>' . $prod_code .  '</SupplierProductCode>
 	<TourOptions>
 		<SupplierOptionCode></SupplierOptionCode>

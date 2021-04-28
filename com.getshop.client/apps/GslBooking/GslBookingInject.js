@@ -1547,12 +1547,13 @@ function getshop_showOverviewPage() {
 }
 
 function getshop_showZauiPage() {
-    var startDate = sessionStorage.getItem('getshop_startDate')
+    var startDate = sessionStorage.getItem('getshop_startDate');
+    var endDate = sessionStorage.getItem('getshop_endDate')
 
     //Ajax call to get cached activities
     $.ajax(getshop_endpoint + '/scripts/booking/booking-zaui.php', {
         dataType: 'json',
-        data: {startDate: startDate, getActivities: true, language: sessionStorage.getItem("getshop_language")},
+        data: {startDate: startDate, endDate: endDate, getActivities: true, language: sessionStorage.getItem("getshop_language")},
         success: function (response) {
             var activities = response;
             try{
@@ -1612,15 +1613,16 @@ function getshop_zauiPageLoad(activities){
 
 function  getshop_zauiShowTours(btn, prodCode){
     var prodCode = prodCode
-    var startDate = sessionStorage.getItem('getshop_startDate')
-    var adults = sessionStorage.getItem('getshop_adults')
-    var children = sessionStorage.getItem('getshop_children')
-    var button = btn
+    var startDate = sessionStorage.getItem('getshop_startDate');
+    var endDate = sessionStorage.getItem('getshop_endDate');
+    var adults = sessionStorage.getItem('getshop_adults');
+    var children = sessionStorage.getItem('getshop_children');
+    var button = btn;
 
     //Check availability for a particular tour to get price and times
     $.ajax(getshop_endpoint + '/scripts/booking/booking-zaui.php', {
         dataType: 'json',
-        data: {startDate: startDate, prodCode: prodCode, adults: adults, children: children, checkAvailability: true},
+        data: {startDate: startDate, endDate: endDate, prodCode: prodCode, adults: adults, children: children, checkAvailability: true},
         success: function (response) {
             var tours = response
             var translation = getshop_getBookingTranslations()

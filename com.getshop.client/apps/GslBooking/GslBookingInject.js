@@ -957,29 +957,38 @@ function getshop_setPageName(pagename) {
 }
 
 function getshop_continueToSummary(e) {
-    var options = getGetShopConfigOptions();
-
     try {
         if(getshop_avoiddoubletap(e)) { return; }
         $('.productoverview').fadeOut('400', function () {
             $('.GslBooking .ordersummary').slideUp();
             $('.GslBooking .gslbookingHeader').slideUp();
 
-            if (options.roomStepTroughConfig) {
-                getshop_setPageName("roomconfig");
-                getshop_showRoomStepTroughConfig();
-            } else {
-                $('.addons_overview').fadeIn('400');
-                getshop_setPageName("summary");
-                getshop_loadAddonsAndGuestSumaryView();
+            var zaui = sessionStorage.getItem('getshop_zaui_integration')
+            if(typeof(zaui) != "undefined" && zaui == "true"){
+                getshop_showZauiPage();
             }
-
+            else
+            {
+                getshop_showSummaryPage();
+            }
             var padding = $('.gslbookingBody').position().top;
             var body = $('.gslbookingBody').offset().top;
             $(window).scrollTop(body-padding);
-
         });
     }catch(e) { getshop_handleException(e); }
+}
+
+function getshop_showSummaryPage()
+{
+    var options = getGetShopConfigOptions();
+    if (options.roomStepTroughConfig) {
+        getshop_setPageName("roomconfig");
+        getshop_showRoomStepTroughConfig();
+    } else {
+        $('.addons_overview').fadeIn('400');
+        getshop_setPageName("summary");
+        getshop_loadAddonsAndGuestSumaryView();
+    }
 }
 
 function getshop_createSticky(sticky) {
@@ -1533,12 +1542,8 @@ function getshop_showOverviewPage() {
     //Check if zaui is true - proceed to zaui part
     //If false - go to overview
     var zaui = sessionStorage.getItem('getshop_zaui_integration')
-    if(typeof(zaui) != "undefined" && zaui == "true"){
-        saving.done(getshop_showZauiPage)
-    } else {
-        getshop_setPageName('overview');
-        saving.done(getshop_overviewPageLoad);
-    }
+    getshop_setPageName('overview');
+    saving.done(getshop_overviewPageLoad);
 }
 
 function getshop_showZauiPage() {
@@ -1745,12 +1750,15 @@ function getshop_zauiRightSide(){
 }
 
 //Go from zaui to overview page
-function getshop_zauiToOverviewPage(){
-    var saving = getshop_saveGuestInformation();
-
+function getshop_zauiToSummaryPage(){
     $('.zaui').fadeOut(400)
-    getshop_setPageName('overview');
-    saving.done(getshop_overviewPageLoad);
+    getshop_showSummaryPage();
+    /*
+    var saving = getshop_saveGuestInformation();
+    getshop_setPageName("summary");
+    getshop_loadAddonsAndGuestSumaryView();
+    //getshop_setPageName('overview');
+    //saving.done(getshop_overviewPageLoad);*/
     $(window).scrollTop(0);
 }
 

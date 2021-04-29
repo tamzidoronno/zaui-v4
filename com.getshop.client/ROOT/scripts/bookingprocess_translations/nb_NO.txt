@@ -126,7 +126,8 @@
 
     "activities": "Aktiviteter",
     "check_availability": "Sjekk tilgjengelighet",
-    "departure_time": "Avgangstid",
+    "departure_date": "Dato",
+    "departure_time": "Tid",
     "reserve": "Bestill",
     "unreserve": "Fjern",
     "pick_new_date": "Velg ny dato",

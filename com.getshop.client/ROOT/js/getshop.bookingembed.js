@@ -34,16 +34,6 @@
         if(options.jsendpoint) {
             jsendpoint = options.jsendpoint;
         }
-           
-        //country selection
-        if(getshop_display_countryselect === true)
-        {
-            console.log('SHOW DEM COUNTRIES');
-        }
-
-        if(getshop_zaui_integration === true){
-            console.log("Zaui should be called")
-        }
 
         $('<link/>', {
            rel: 'stylesheet',

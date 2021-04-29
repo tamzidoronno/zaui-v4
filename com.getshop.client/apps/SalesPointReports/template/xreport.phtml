@@ -38,15 +38,28 @@ if ($cashPointName) {
         echo "Report for: ".$cashPointName;
     echo "</div>";
 }
-
-if(sizeof($report->orderIds) > 10000) {
-    echo "Maximum number of orders exceeded.";
-    return;
-}
-
-
 $orders = array();
-if ($ordersToShow) {
+if(sizeof($report->orderIds) > 5000)
+{
+    $limit = 5000;
+    if( $this->isCurrentZReportASavedReport() )
+    {
+        $limit = 2000;
+        echo '<h1 style="color:#ff0000; padding:32px;">This Report contains a large amount of orders: ' . sizeof($report->orderIds) .' Showing only the first ' . $limit .'.</h1>';
+        $firstset = array_slice($report->orderIds, (-1 * $limit));
+        $orders = $this->getApi()->getOrderManager()->getOrders($firstset, 1, $limit);
+    }
+    else {
+        $limit = 1000;
+        echo '<h1 style="color:#ff0000; padding:32px;">Very large amount of orders found: ' . sizeof($report->orderIds) .' Showing only the first ' . $limit .'. PROCEED WITH CAUTION! All orders with be included in the report!</h1>';
+    }
+    $firstset = array_slice($report->orderIds, (-1 * $limit));
+    $orders = $this->getApi()->getOrderManager()->getOrders($firstset, 1, $limit);
+
+
+}
+else if ($ordersToShow)
+{
     $orders = $this->getApi()->getOrderManager()->getOrders($report->orderIds, 1, 99999);
 }
 

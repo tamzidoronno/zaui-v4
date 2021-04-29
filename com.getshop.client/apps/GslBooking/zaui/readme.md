@@ -25,6 +25,24 @@ CREATE TABLE IF NOT EXISTS availability(
    created_at VARCHAR(255)
 ) ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS `booking_log` (
+    `id` int(11) NOT NULL,
+    `orderId` varchar(255) NOT NULL,
+    `supplierProductCode` varchar(255) NOT NULL,
+    `bookingReference` varchar(255) NOT NULL,
+    `supplierConfirmationNumber` varchar(255) NOT NULL,
+    `serverResponse` MEDIUMTEXT,
+    `createdAt` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `booking_log`
+    ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `booking_log`
+    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+
+DROP TABLE IF EXISTS booking_response;
+
 ```
 
 ## Config file

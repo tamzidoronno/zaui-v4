@@ -39,9 +39,9 @@ public class WebInterface2 implements Runnable {
             log.info(this, "Listening to port: " + this.port);
         } catch (IOException ex) {
             GetShopLogHandler.logPrintStatic("", null);
-            GetShopLogHandler.logPrintStatic("=============================================================================================", null);
-            GetShopLogHandler.logPrintStatic("= Was not able to bind port, check if you have access and that no other programs is running =", null);
-            GetShopLogHandler.logPrintStatic("=============================================================================================", null);
+            GetShopLogHandler.logPrintStatic("===================================================================================================", null);
+            GetShopLogHandler.logPrintStatic("= Was not able to bind port "+ port +", check if you have access and that no other programs is running =", null);
+            GetShopLogHandler.logPrintStatic("===================================================================================================", null);
             GetShopLogHandler.logPrintStatic("", null);
             System.exit(0);
         }

@@ -106,7 +106,12 @@ public class DatabaseRemote extends StoreComponent {
     }
     
     private void connectLocal() throws UnknownHostException {
-        mongo = new Mongo("localhost", Database.mongoPort);
+        String host = System.getenv("HOSTNAME_MONGODB");
+        boolean foundInEnvVars = host != null && host.length() > 0;
+        if (!foundInEnvVars){ host = "localhost"; }
+        System.out.println("Connecting to mongo host: " + host);
+
+        mongo = new Mongo(host, Database.mongoPort);
     }
 
     private void checkId(DataCommon data) throws ErrorException {

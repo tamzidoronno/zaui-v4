@@ -430,7 +430,8 @@ Error      : #de5353; red
 {background-color:#7bbdd3;}
 
 .GslBooking .gslfront_1 .zaui_button,
-.GslBooking .gslfront_1 .reserveTourButton { color:#FFF; display:inline-block; padding:6px 12px; }
+.GslBooking .gslfront_1 .reserveTourButton { color:#FFF; display:inline-block; padding:6px 12px; margin-bottom:6px; text-align:center; min-width:75px; }
+.GslBooking .gslfront_1 .reserveTourButton.cancelTour { background-color:#32a6cd; }
 
 .GslBooking .gslfront_1 .showTours {color: #222; cursor: pointer;}
 .GslBooking .gslfront_1 .zaui_confirmation {box-sizing: border-box; width: 100%;}

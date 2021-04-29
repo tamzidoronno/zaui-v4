@@ -234,13 +234,14 @@
                 <div style="padding:10px;">
                     <h4 style="border-bottom: 1px solid #fff;text-align:center;padding-bottom: 4px;"><span gstype='bookingtranslation' gstranslationfield='yourStay'></span></h4>
                     <div class='yourstaysummary'></div>
-                    <div class="gsl_button continue" onclick="getshop_zauiToOverviewPage()" style=''><span gstype='bookingtranslation' gstranslationfield='continue'></span></div>
+                    <div class="gsl_button continue" onclick="getshop_zauiToSummaryPage()" style=''><span gstype='bookingtranslation' gstranslationfield='continue'></span></div>
                 </div>
             </div>
             <div class="zaui_container_left">
-                <h3><span class="zaui_title" gstype='bookingtranslation' gstranslationfield='activities'></span></h3>
+                <h3 id="zauiHeadline"><span class="zaui_title" gstype='bookingtranslation' gstranslationfield='activities'></span></h3>
+                <div id="zauiIntro"></div>
                 <span class="no_activities" gstype='bookingtranslation' gstranslationfield='no_activities'></span>
-                <div class="gsl_button return return_to_search zaui_button" onclick="">
+                <div class="gsl_button return_to_search zaui_button" style="width:200px;" onclick="getshop_gotoBookingStartFromZaui()">
                     <span gstype='bookingtranslation' gstranslationfield='pick_new_date'></span>
                 </div>
                 <div class="productentry" id="productentry_zaui">
@@ -264,6 +265,7 @@
                                 <div class='showTours'></div>
                                 <table class="guestselection" border="0">
                                     <tr style="font-weight: bold;">
+                                        <td class="departure_date_column"><span gstype='bookingtranslation' gstranslationfield='departure_date'></span></td>
                                         <td class="departure_time_column"><span gstype='bookingtranslation' gstranslationfield='departure_time'></span></td>
                                         <td><span gstype='bookingtranslation' gstranslationfield='price'></span></td>
                                         <td><span></span></td>
@@ -280,7 +282,7 @@
                 </div>
             </div>
             <div class="zaui_confirmation">
-                <div class="gsl_button continue" onclick="getshop_zauiToOverviewPage()" style=''><span gstype='bookingtranslation' gstranslationfield='continue'></span></div>
+                <div class="gsl_button continue" onclick="getshop_zauiToSummaryPage()" style=''><span gstype='bookingtranslation' gstranslationfield='continue'></span></div>
             </div>
         </div>
         <div class="overview">

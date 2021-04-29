@@ -374,6 +374,7 @@ function gslZauiBookTour($date, $bookingReference, $prod_code, $tourDepartureTim
         '" . $orderId . "',
         '" . $prod_code . "',
         '" . $bookingReference . "',
+        '" . json_encode($booking, JSON_UNESCAPED_UNICODE ) . "',
         '" . $booking['SupplierConfirmationNumber'][0] . "',
         '" . $data . "',
         '" . time() . "')";

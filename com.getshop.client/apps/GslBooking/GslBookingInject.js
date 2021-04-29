@@ -1242,7 +1242,7 @@ function getshop_zauiCreateZauiBooking()
         if(currentBooking)
         {
             var bookingReference = currentBooking.prodCode + '-' + getshop_zauidata.orderid;
-            var startDate = sessionStorage.getItem('getshop_startDate');
+            var startDate = currentBooking.date;
             var prodCode = currentBooking.prodCode;
             var tourDepartureTime = currentBooking.time;
 
@@ -1671,6 +1671,9 @@ function  getshop_zauiShowTours(btn, prodCode){
 function getshop_zauiReserveTour(btn, prodCode, tourDate, tourDepartureTime, tourPrice, tourTaxes){
 
     var addonKey = prodCode + '-' + tourDate;
+    getshop_zauidata.bookings[ addonKey ] = { prodCode: prodCode, date: tourDate, time: tourDepartureTime, price: tourPrice, addonid: null };
+    sessionStorage.setItem('getshop_zauidata', JSON.stringify(getshop_zauidata));
+
     if( typeof getshop_zauidata.created_addons[ addonKey ] == 'undefined'){
         //Ajax call to reserve a tour
         $.ajax(getshop_endpoint + '/scripts/booking/booking-zaui.php', {
@@ -1690,6 +1693,7 @@ function getshop_zauiReserveTour(btn, prodCode, tourDate, tourDepartureTime, tou
 
                     //store datw we have for later
                     getshop_zauidata.created_addons[ innerAddonKey ] = response.product_id;
+                    getshop_zauidata.bookings[ innerAddonKey ].addonid = response.product_id;
                     getshop_zauidata.connected_rooms.push( body.roomId );
 
                     // add freshly created addon to the current booking
@@ -1722,8 +1726,6 @@ function getshop_zauiReserveTour(btn, prodCode, tourDate, tourDepartureTime, tou
         });
     }
 
-    getshop_zauidata.bookings[ prodCode ] = { prodCode: prodCode, date: tourDate, time: tourDepartureTime, price: tourPrice, addonid: getshop_zauidata.created_addons[ addonKey ] };
-    sessionStorage.setItem('getshop_zauidata', JSON.stringify(getshop_zauidata));
 
     var translation = getshop_getBookingTranslations();
     console.log('current addon key is ' + addonKey);

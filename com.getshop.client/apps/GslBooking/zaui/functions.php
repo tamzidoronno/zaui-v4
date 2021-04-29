@@ -64,9 +64,8 @@ function gslZauiListActivities($lang,$startdate,$enddate)
             'tours' => null,
         ];
 
-        // TODO INCLUDE END DATE HERE!
         foreach($availability as $available){
-            if($available['SupplierProductCode'][0] == $prod_code && $available['Date'][0] == $date_start){
+            if($available['SupplierProductCode'][0] == $prod_code && ( $available['Date'][0] >= $date_start && $available['Date'][0] <= $date_end ) ){
                 if($available['AvailabilityStatus'][0]['Status'][0] != "UNAVAILABLE") {
                     $act_av['tours'] = true;
                     array_push($available_activities, $act_av);
@@ -122,7 +121,7 @@ function gslZauiCheckAvailability($prod_code, $adults, $children, $startdate, $e
 	<SupplierId>' . $supplier_id . '</SupplierId>
 	<Timestamp>' . time() . '</Timestamp>
 	<StartDate>' . $date_start . '</StartDate>
-	<StartDate>' . $date_end . '</StartDate>
+	<EndDate>' . $date_end . '</EndDate>
 	<SupplierProductCode>' . $prod_code .  '</SupplierProductCode>
 	<TourOptions>
 		<SupplierOptionCode></SupplierOptionCode>
@@ -204,8 +203,10 @@ function gslZauiCreateAddon($prod_code, $tourDepartureTime, $tourPrice, $tourTax
         $product = $factory->getApi()->getProductManager()->createProduct();
         $psm = new \ns_c5a4b5bf_365c_48d1_aeef_480c62edd897\PsmConfigurationAddons();
 
+        $zauiAddonName = "Zaui, " . $activity_name . ", " . $tourDate . ( $tourDepartureTime != '00:00:00' ? ' - '. $tourDepartureTime : '' ) . ", "  . time() . "";
+
         if ($product) {
-            $product->name = "Zaui, " . $activity_name . ", " . $tourDate . ' - '.$tourDepartureTime . ", " . time() . "";
+            $product->name = $zauiAddonName;
             $product->tag = "addon";
             $product->isSingle = true;
             $product->price = doubleval($tourPrice);
@@ -225,7 +226,7 @@ function gslZauiCreateAddon($prod_code, $tourDepartureTime, $tourPrice, $tourTax
             $conf->alwaysAddAddon = false;
             $conf->includedInBookingItemTypes = array();
             $conf->displayInBookingProcess = array();
-            $conf->descriptionWeb = 'Zaui ' . $prod_code . ' / ' . $tourDepartureTime;
+            $conf->descriptionWeb = $zauiAddonName;
             $conf->bookingicon = '';
             $conf->count = 1;
 
@@ -235,7 +236,7 @@ function gslZauiCreateAddon($prod_code, $tourDepartureTime, $tourPrice, $tourTax
             $factory->getApi()->getPmsManager()->saveConfiguration($psm->getSelectedMultilevelDomainName(), $alladdons);
 
             //send back product id of addon
-            echo json_encode(['product_id' => $product->id]);
+            echo json_encode(['product_id' => $product->id,'date' => $tourDate]);
             exit();
         } else {
             //$psm->createProductError = "Failed to create a new product, make sure the account you are trying to create a product on is correct set up.";

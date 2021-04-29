@@ -19,7 +19,7 @@ if ($conn->connect_error) {
 $url = "https://api.zaui.io/v1/";
 
 $startDate = date('Y-m-d', time());
-$six_months = time() + 89*86400;
+$six_months = time() + 180*86400;
 $endDate = date('Y-m-d', $six_months);
 
 $input_xml = '<?xml version="1.0" encoding="UTF-8"?>

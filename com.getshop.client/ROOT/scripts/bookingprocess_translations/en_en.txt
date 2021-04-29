@@ -129,7 +129,8 @@
 
     "activities": "Activities",
     "check_availability": "Check availability",
-    "departure_time": "Departure time",
+    "departure_date": "Date",
+    "departure_time": "Time",
     "reserve": "Book",
     "unreserve": "Cancel",
     "pick_new_date": "Pick a new date",

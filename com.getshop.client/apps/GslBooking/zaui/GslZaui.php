@@ -11,7 +11,7 @@ if(isset($_GET['getActivities'])){
 } else if(isset($_GET['checkAvailability']) && isset($_GET['prodCode']) && isset($_GET['adults']) && isset($_GET['children'])){
     //check availability call after Show more buttons is pressed on front end
     gslZauiCheckAvailability($_GET['prodCode'], $_GET['adults'], $_GET['children'],$_GET['startDate'],$_GET['endDate']);
-} else if (isset($_GET['createAddon']) && isset($_GET['prodCode']) && isset($_GET['tourDepartureTime']) && isset($_GET['tourPrice'])){
+} else if (isset($_GET['createAddon']) && isset($_GET['prodCode']) && isset($_GET['tourDate']) && isset($_GET['tourDepartureTime']) && isset($_GET['tourPrice'])){
     //Create addon out of activity
     gslZauiCreateAddon($_GET['prodCode'], $_GET['tourDepartureTime'], $_GET['tourPrice'], $_GET['tourTaxes'], $_GET['tourDate']);
 } else if(isset($_GET['createBooking']) && isset($_POST['bookingReference'])){

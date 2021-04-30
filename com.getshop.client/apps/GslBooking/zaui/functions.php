@@ -252,7 +252,7 @@ function gslZauiCreateAddon($prod_code, $tourDepartureTime, $tourPrice, $tourTax
 /** ##### ==== ###/ ##### ==== ###/ ##### ==== ###/ ##### ==== ###/ ##### ==== ###/ ##### ==== ###/ ##### ==== ###
     book in Zaui
 */
-function gslZauiBookTour($date, $bookingReference, $prod_code, $tourDepartureTime, $travellers, $total, $orderId)
+function gslZauiBookTour($date, $bookingReference, $prod_code, $tourDepartureTime, $travellers, $total, $orderId, $email)
 {
     global $servername, $username, $password;
     global $api_key, $reseller_id, $supplier_id;
@@ -297,7 +297,7 @@ function gslZauiBookTour($date, $bookingReference, $prod_code, $tourDepartureTim
 
         $input_xml .= '
             <Traveller>
-		<TravellerIdentifier>' . $traveller['email'] . '</TravellerIdentifier>
+		<TravellerIdentifier>' . ( $traveller['email'] ? $traveller['email'] : $email )  . '</TravellerIdentifier>
 		<TravellerTitle></TravellerTitle>
 		<GivenName>' . $first_name . '</GivenName>
 		<Surname>' . $surname . '</Surname>

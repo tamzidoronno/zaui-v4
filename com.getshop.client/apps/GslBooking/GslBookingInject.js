@@ -1250,6 +1250,7 @@ function getshop_zauiCreateZauiBooking()
             var adults = sessionStorage.getItem('getshop_adults')
             var children = sessionStorage.getItem('getshop_children')
             var total = parseInt(adults) + parseInt(children)
+            var email = $('[gsname="user_emailAddress"]').val();
 
             //ajax call to create booking
             $.ajax(getshop_endpoint + '/scripts/booking/booking-zaui.php?createBooking=1', {
@@ -1262,6 +1263,7 @@ function getshop_zauiCreateZauiBooking()
                     tourDepartureTime: tourDepartureTime,
                     travellers: getshop_zauidata.travellers,
                     total: total,
+                    email: email
                 },
                 success: function (response) {
                     console.log('zaui booking response' + response);

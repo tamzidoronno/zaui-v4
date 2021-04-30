@@ -10510,7 +10510,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         for (PmsBookingRooms room : pmsBooking.rooms) {
             try {
-                if(!room.needToCalculateUnsettledAmount(orders)) {
+                if(!room.needToCalculateUnsettledAmount(orders, pmsBooking)) {
                     continue;
                 }
             }catch(Exception e) {

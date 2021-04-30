@@ -1271,6 +1271,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         boolean hasUnpaid = false;
         for(String orderId : booking.orderIds) {
             Order ord = orderManager.getOrderDirect(orderId);
+            if (ord == null) {
+                System.out.println("ERROR. Could not find connected order for booking id:" + booking.incrementBookingId + ".");
+                continue;
+            }
             if(!ord.isPaid()) {
                 hasUnpaid = true;
             }

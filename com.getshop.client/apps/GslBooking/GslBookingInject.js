@@ -1176,7 +1176,8 @@ function getshop_gotopayment(e) {
                     })
                 })
             }
-            getshop_zauidata.travellers = travellers;
+            if(travellers.length > 0) getshop_zauidata.travellers = travellers;
+            sessionStorage.setItem('getshop_zauidata', JSON.stringify(getshop_zauidata));
 
             for(var field in res.fieldsValidation) {
                 if(field === "agreeterms" || gslbookingcurresult.prefilledContactUser) {
@@ -1237,12 +1238,12 @@ function getshop_zauiCreateZauiBooking()
     {
 
         var currentBooking = getshop_zauidata.bookings[ Object.keys(getshop_zauidata.bookings)[0] ];
-        delete getshop_zauidata.bookings[ Object.keys(getshop_zauidata.bookings)[0] ];
+
         // { prodCode: prodCode, time: tourDepartureTime, price: tourPrice, addonid: response.product_id };
         if(currentBooking)
         {
             var bookingReference = currentBooking.prodCode + '-' + getshop_zauidata.orderid;
-            var startDate = sessionStorage.getItem('getshop_startDate');
+            var startDate = currentBooking.date;
             var prodCode = currentBooking.prodCode;
             var tourDepartureTime = currentBooking.time;
 
@@ -1250,6 +1251,7 @@ function getshop_zauiCreateZauiBooking()
             var adults = sessionStorage.getItem('getshop_adults')
             var children = sessionStorage.getItem('getshop_children')
             var total = parseInt(adults) + parseInt(children)
+            var email = $('[gsname="user_emailAddress"]').val();
 
             //ajax call to create booking
             $.ajax(getshop_endpoint + '/scripts/booking/booking-zaui.php?createBooking=1', {
@@ -1262,9 +1264,11 @@ function getshop_zauiCreateZauiBooking()
                     tourDepartureTime: tourDepartureTime,
                     travellers: getshop_zauidata.travellers,
                     total: total,
+                    email: email
                 },
                 success: function (response) {
                     console.log('zaui booking response' + response);
+                    delete getshop_zauidata.bookings[ Object.keys(getshop_zauidata.bookings)[0] ];
                     getshop_zauiCreateZauiBooking();
                 }
             });
@@ -1671,13 +1675,15 @@ function  getshop_zauiShowTours(btn, prodCode){
 function getshop_zauiReserveTour(btn, prodCode, tourDate, tourDepartureTime, tourPrice, tourTaxes){
 
     var addonKey = prodCode + '-' + tourDate;
+    getshop_zauidata.bookings[ addonKey ] = { prodCode: prodCode, date: tourDate, time: tourDepartureTime, price: tourPrice, addonid: null };
+    sessionStorage.setItem('getshop_zauidata', JSON.stringify(getshop_zauidata));
+
     if( typeof getshop_zauidata.created_addons[ addonKey ] == 'undefined'){
         //Ajax call to reserve a tour
         $.ajax(getshop_endpoint + '/scripts/booking/booking-zaui.php', {
             dataType: 'json',
             data: {createAddon: true, prodCode: prodCode, tourDepartureTime: tourDepartureTime, tourDate: tourDate, tourPrice: tourPrice, tourTaxes: tourTaxes},
             success: function (response) {
-                console.log('cone creating addon!');
                 window.setTimeout(function(){
 
                     var body = {};
@@ -1685,11 +1691,9 @@ function getshop_zauiReserveTour(btn, prodCode, tourDate, tourDepartureTime, tou
                     body.productId = response.product_id;
                     var innerAddonKey = prodCode + '-' + response.date;
 
-                    console.log('waited half a second and will try to add this to the booking now',innerAddonKey,body);
-
-
                     //store datw we have for later
                     getshop_zauidata.created_addons[ innerAddonKey ] = response.product_id;
+                    getshop_zauidata.bookings[ innerAddonKey ].addonid = response.product_id;
                     getshop_zauidata.connected_rooms.push( body.roomId );
 
                     // add freshly created addon to the current booking
@@ -1707,9 +1711,8 @@ function getshop_zauiReserveTour(btn, prodCode, tourDate, tourDepartureTime, tou
     }
     else
     {
-
-        console.log('we already have created an addon for ' + prodCode + ' for this booking: ' + getshop_zauidata.created_addons[ addonKey ]);
-        console.log('we just add it again...');
+        //console.log('we already have created an addon for ' + prodCode + ' for this booking: ' + getshop_zauidata.created_addons[ addonKey ]);
+        //console.log('we just add it again...');
         var body = {};
         body.roomId = $('.roomrowadded').first().attr('roomid');
         body.productId = getshop_zauidata.created_addons[ addonKey ];
@@ -1722,8 +1725,6 @@ function getshop_zauiReserveTour(btn, prodCode, tourDate, tourDepartureTime, tou
         });
     }
 
-    getshop_zauidata.bookings[ prodCode ] = { prodCode: prodCode, date: tourDate, time: tourDepartureTime, price: tourPrice, addonid: getshop_zauidata.created_addons[ addonKey ] };
-    sessionStorage.setItem('getshop_zauidata', JSON.stringify(getshop_zauidata));
 
     var translation = getshop_getBookingTranslations();
     console.log('current addon key is ' + addonKey);

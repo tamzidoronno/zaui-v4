@@ -213,6 +213,7 @@ function gslZauiCreateAddon($prod_code, $tourDepartureTime, $tourPrice, $tourTax
             $product->priceExTaxes = doubleval( doubleval($tourPrice) - doubleval($tourTaxes) );
             $product->taxGroupObject->groupNumber = ( $gsZauiTaxGroup ? (int)$gsZauiTaxGroup : 0);
             $product->taxGroupObject->taxRate = ( $gsZauiTaxRate ? (int)$gsZauiTaxRate : 0);
+            $product->taxgroup =  ( $gsZauiTaxGroup ? (int)$gsZauiTaxGroup : 0);
 
             $product = $factory->getApi()->getProductManager()->saveProduct($product);
             $alladdons = $factory->getApi()->getPmsManager()->getConfiguration($psm->getSelectedMultilevelDomainName());
@@ -252,7 +253,7 @@ function gslZauiCreateAddon($prod_code, $tourDepartureTime, $tourPrice, $tourTax
 /** ##### ==== ###/ ##### ==== ###/ ##### ==== ###/ ##### ==== ###/ ##### ==== ###/ ##### ==== ###/ ##### ==== ###
     book in Zaui
 */
-function gslZauiBookTour($date, $bookingReference, $prod_code, $tourDepartureTime, $travellers, $total, $orderId)
+function gslZauiBookTour($date, $bookingReference, $prod_code, $tourDepartureTime, $travellers, $total, $orderId, $email)
 {
     global $servername, $username, $password;
     global $api_key, $reseller_id, $supplier_id;
@@ -276,13 +277,12 @@ function gslZauiBookTour($date, $bookingReference, $prod_code, $tourDepartureTim
 		<SupplierOptionCode></SupplierOptionCode>
 		<SupplierOptionName></SupplierOptionName>
 		<TourDepartureTime>' . $tourDepartureTime . '</TourDepartureTime>
-		<TourDuration> </TourDuration>
+		<TourDuration></TourDuration>
 	</TourOptions>
-	<Inclusions>
-		<Inclusion></Inclusion>
-		<Inclusion></Inclusion>
-	</Inclusions>';
+	';
 
+    $travellerIndex = 0;
+    $contactNode = '';
     //each registered guest
     foreach($travellers as $traveller){
         $ageBand = $traveller['isChild'] == "false" ? "ADULT" : "CHILD";
@@ -295,9 +295,19 @@ function gslZauiBookTour($date, $bookingReference, $prod_code, $tourDepartureTim
         unset($names[$surname_key]);
         $first_name = implode(" ", $names);
 
+        if( $travellerIndex == 0 && $traveller['email'] )
+        {
+            $contactNode = '<ContactDetail>
+            <ContactType>EMAIL</ContactType>
+            <ContactName>'.$traveller['name'].'</ContactName>
+            <ContactValue>'.$traveller['email'].'</ContactValue>
+        </ContactDetail>
+            ';
+        }
+        $travellerIndex++;
         $input_xml .= '
-            <Traveller>
-		<TravellerIdentifier>' . $traveller['email'] . '</TravellerIdentifier>
+        <Traveller>
+		<TravellerIdentifier>' . $travellerIndex  . '</TravellerIdentifier>
 		<TravellerTitle></TravellerTitle>
 		<GivenName>' . $first_name . '</GivenName>
 		<Surname>' . $surname . '</Surname>
@@ -306,9 +316,13 @@ function gslZauiBookTour($date, $bookingReference, $prod_code, $tourDepartureTim
 	</Traveller>
         ';
     }
-
     $input_xml .=
-        '<TravellerMix>
+    '<TravellerMix>
+		<Senior>0</Senior>
+		<Adult>' . $total . '</Adult>
+		<Child>0</Child>
+		<Student>0</Student>
+		<Infant>0</Infant>
 		<Total>' . $total . '</Total>
 	</TravellerMix>
 	<RequiredInfo>
@@ -328,11 +342,7 @@ function gslZauiBookTour($date, $bookingReference, $prod_code, $tourDepartureTim
 		<Remark>
 		</Remark>
 	</AdditionalRemarks>
-	<ContactDetail>
-		<ContactType></ContactType>
-		<ContactName></ContactName>
-		<ContactValue></ContactValue>
-	</ContactDetail>
+	'. $contactNode .'
 	<PickupLocation>
 		<SupplierPickupCode></SupplierPickupCode>
 	</PickupLocation>
@@ -351,9 +361,18 @@ function gslZauiBookTour($date, $bookingReference, $prod_code, $tourDepartureTim
     curl_close($ch);
 
     //booking result
-
     $booking_iterator = new SimpleXMLIterator($data);
     $booking = sxiToArray($booking_iterator);
+
+    if( isset( $booking['RequestStatus'][0]['Status'][0] ) && $booking['RequestStatus'][0]['Status'][0] == 'ERROR')
+    {
+
+        Header('HTTP/1.0 500 Internal server error');
+        print_r($input_xml);
+        print_r($booking);
+        die();
+    }
+
 
     // Create connection
     $conn = new mysqli($servername, $username, $password);
@@ -365,16 +384,18 @@ function gslZauiBookTour($date, $bookingReference, $prod_code, $tourDepartureTim
 
     //save booking data
     $sql = "INSERT INTO getshop_zaui_cache.booking_log (
-        orderId,
+        bookingId,
         supplierProductCode,
         bookingReference,
         supplierConfirmationNumber,
+        bookingRequest,
         serverResponse,
         createdAt) VALUES (
         '" . $orderId . "',
         '" . $prod_code . "',
         '" . $bookingReference . "',
         '" . $booking['SupplierConfirmationNumber'][0] . "',
+        '" . json_encode($input_xml, JSON_UNESCAPED_UNICODE ) . "',
         '" . $data . "',
         '" . time() . "')";
 

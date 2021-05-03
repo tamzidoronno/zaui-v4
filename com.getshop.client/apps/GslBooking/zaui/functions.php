@@ -213,6 +213,7 @@ function gslZauiCreateAddon($prod_code, $tourDepartureTime, $tourPrice, $tourTax
             $product->priceExTaxes = doubleval( doubleval($tourPrice) - doubleval($tourTaxes) );
             $product->taxGroupObject->groupNumber = ( $gsZauiTaxGroup ? (int)$gsZauiTaxGroup : 0);
             $product->taxGroupObject->taxRate = ( $gsZauiTaxRate ? (int)$gsZauiTaxRate : 0);
+            $product->taxgroup =  ( $gsZauiTaxGroup ? (int)$gsZauiTaxGroup : 0);
 
             $product = $factory->getApi()->getProductManager()->saveProduct($product);
             $alladdons = $factory->getApi()->getPmsManager()->getConfiguration($psm->getSelectedMultilevelDomainName());

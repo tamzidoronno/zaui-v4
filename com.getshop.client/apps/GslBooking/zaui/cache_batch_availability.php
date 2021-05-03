@@ -19,8 +19,8 @@ if ($conn->connect_error) {
 $url = "https://api.zaui.io/v1/";
 
 $startDate = date('Y-m-d', time());
-$six_months = time() + 180*86400;
-$endDate = date('Y-m-d', $six_months);
+$max_zaui_range = time() + 89*86400;
+$endDate = date('Y-m-d', $max_zaui_range);
 
 $input_xml = '<?xml version="1.0" encoding="UTF-8"?>
 <BatchCheckAvailabilityRequest xmlns="https://api.zaui.io/api/01">

@@ -6,6 +6,7 @@
 package com.thundashop.core.pmsmanager;
 
 import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.ForceAsync;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
 import java.util.LinkedList;
@@ -22,6 +23,7 @@ public interface IPmsCoverageAndIncomeReportManager {
     public IncomeReportResultData getStatistics(CoverageAndIncomeReportFilter filter);
 
     @Administrator
+    @ForceAsync
     public List<PmsSegment> getSegments();
 
     @Administrator

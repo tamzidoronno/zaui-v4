@@ -1928,7 +1928,8 @@ public class PosManager extends ManagerBase implements IPosManager {
     public void updateAccruedAmountForRoomBookings(List<PmsBookingRooms> roomsToBeRecalculated, PmsManager pmsManager){
 
         for(PmsBookingRooms room : roomsToBeRecalculated) {
-            room.unsettledAmountIncAccrued = recalculateAccruedAmountForRoomBooking(pmsManager, room.bookingId, room.pmsBookingRoomId);
+            PmsBooking booking = pmsManager.getBookingFromRoom(room.pmsBookingRoomId);
+            room.unsettledAmountIncAccrued = recalculateAccruedAmountForRoomBooking(pmsManager, booking.id, room.pmsBookingRoomId);
         }
     }
 

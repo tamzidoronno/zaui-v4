@@ -27,10 +27,11 @@ CREATE TABLE IF NOT EXISTS availability(
 
 CREATE TABLE IF NOT EXISTS `booking_log` (
     `id` int(11) NOT NULL,
-    `orderId` varchar(255) NOT NULL,
+    `bookingId` varchar(255) NOT NULL,
     `supplierProductCode` varchar(255) NOT NULL,
     `bookingReference` varchar(255) NOT NULL,
     `supplierConfirmationNumber` varchar(255) NOT NULL,
+    `bookingRequest` MEDIUMTEXT,
     `serverResponse` MEDIUMTEXT,
     `createdAt` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

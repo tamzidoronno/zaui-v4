@@ -103,11 +103,32 @@ if($this->createProductError) {
             </tr>
 
 
-            <?php foreach($products as $product) {
-                /* @var $addonItem core_pmsmanager_PmsBookingAddonItem */ 
+            <?php
+
+            usort($products, function($a, $b) {return strcmp($a->name, $b->name);});
+
+            $activeproducts = [];
+            $deactivatedproducts = [];
+
+            //sort em by name first; after that we split into active and inactive products
+            foreach($products as $product) {
                 if(!isset($addonItems[$product->id])) {
                     continue;
                 }
+                if( $product->deactivated )
+                {
+                    array_push($deactivatedproducts, $product);
+                }
+                else
+                {
+                    array_push($activeproducts, $product);
+                }
+            }
+
+            $products = array_merge($activeproducts, $deactivatedproducts);
+            foreach($products as $product) {
+                /* @var $addonItem core_pmsmanager_PmsBookingAddonItem */ 
+
                 $addonItem = $addonItems[$product->id];
                 $selectedDaily = $addonItem->isSingle ? "" : "CHECKED";
                 $includedInRoomPrice = array_values($addonItem->includedInBookingItemTypes);

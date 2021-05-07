@@ -72,7 +72,7 @@ function cleanupAddons()
     {
         if( strpos($addon->name,'Zaui') !== false )
         {
-            if(in_array($addon->productId,$addonstokeep))
+            if(in_array($addon->productId,$addonstokeep) )
             {
                 echo 'Keeping this addon ' . $addon->name;
             }
@@ -83,23 +83,24 @@ function cleanupAddons()
                 if($tmp[0]=='Zaui' && isset($tmp[1]))
                 {
                     $product = $factory->getApi()->getProductManager()->getProduct($addon->productId);
-                    $product->deactivated = true;
-                    $product = $factory->getApi()->getProductManager()->saveProduct($product);
+                    if( ( ( time() - strtotime( $product->rowCreatedDate ) ) / 3600 ) > 24 )
+                    {
+                        $product->deactivated = true;
+                        $product = $factory->getApi()->getProductManager()->saveProduct($product);
+                        echo 'We dont want this addon anymore, and can deactivate it (via its product) : ' . $addon->name;
+                    }
+                    else
+                    {
+                        echo 'Keeping this ' . print_r($product,1);
+                    }
                 }
-                echo 'We dont want this addon anymore, and can deactivate it (via its product) : ' . $addon->name;
             }
-
             //echo 'we got a Zaui addon . ' . $addon->name . ":: and it has a product... ". $product->name ."\n";
-
-            //print_r($product);
             echo "\n\n\n";
         }
 
     }
-
-
     //print_r($alladdons);
-
     die('done');
 
 }

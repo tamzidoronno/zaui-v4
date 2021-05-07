@@ -46,6 +46,19 @@ if (isset($event['username']) && isset($event['password'])) {
    $_SESSION['authenticated'] = true;
    $_SESSION['username'] = $event['username'];
 
+   // fill empty access which mean access to everything in the old solution....
+   if(isset( $logon->pmsPageAccess ) && count( $logon->pmsPageAccess ) == 0 ){
+       $logon->pmsPageAccess = [ "home","a90a9031-b67d-4d98-b034-f8c201a8f496",
+           "048e2e10-1be3-4d77-a235-4b47e3ebfaab","0da68de9-da08-4b60-9652-3ac456da2627",
+           "afe687b7-219e-4396-9e7b-2848f5ed034d","394bb905-8448-45c1-8910-e9a60f8aebc5",
+           "e03b19de-d1bf-4d1c-ac40-8c100ef53366","4f66aad0-08a0-466c-9b4c-71337c1e00b7",
+           "checklist","messages","getshopsupport" ];
+   }
+   if(isset( $logon->hasAccessToModules ) && count( $logon->hasAccessToModules ) == 0 ){
+       $logon->hasAccessToModules = [ "cms","pms","pmsconference","salespoint","crm",
+            "apac","settings","account","invoice","express" ];
+   }
+
    ob_clean();
    echo json_encode($logon);
    die("\n");

@@ -380,7 +380,7 @@ public class PosManager extends ManagerBase implements IPosManager {
      * Gets all the data, orderIds that appear on XReport and ZReport. If a booking has no order, it will not appear on XReport.
      * Recalculates and sets room.unsettledAmountIncAccrued .
      * For some bookings like for ones that have "payAfterStay" it checks for which accruedPayments(==orders) will need to be
-     * created (doesn't created them).
+     * created (doesn't create them).
      */
     @Override
     public ZReport getZReport(String zReportId, String cashPointId) {

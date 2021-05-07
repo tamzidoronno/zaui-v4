@@ -302,7 +302,7 @@ public class Product extends DataCommon implements Comparable<Product>  {
                 priceExTaxesLocalCurrency = priceLocalCurrency / divident;
             }
         } else {
-            priceExTaxes = price;
+            priceExTaxes = price - taxes;
             if (priceLocalCurrency != null) {
                 priceExTaxesLocalCurrency = priceLocalCurrency;
             }

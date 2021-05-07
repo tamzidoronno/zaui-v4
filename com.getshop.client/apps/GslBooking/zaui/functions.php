@@ -366,7 +366,7 @@ function gslZauiBookTour($date, $bookingReference, $prod_code, $tourDepartureTim
     $booking_iterator = new SimpleXMLIterator($data);
     $booking = sxiToArray($booking_iterator);
 
-    if( isset( $booking['RequestStatus'][0]['Status'][0] ) && $booking['RequestStatus'][0]['Status'][0] == 'ERROR')
+    if( ( isset( $booking['RequestStatus'][0]['Status'][0] ) && $booking['RequestStatus'][0]['Status'][0] == 'ERROR' ) || ( isset( $booking['TransactionStatus'][0]['Status'][0] ) && $booking['TransactionStatus'][0]['Status'][0] != 'CONFIRMED' ))
     {
 
         Header('HTTP/1.0 500 Internal server error');

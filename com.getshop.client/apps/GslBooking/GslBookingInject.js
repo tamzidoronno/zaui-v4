@@ -1270,19 +1270,28 @@ function getshop_zauiCreateZauiBooking()
                 },
                 success: function (response) {
                     console.log('zaui booking response' + response);
-                    delete getshop_zauidata.bookings[ Object.keys(getshop_zauidata.bookings)[0] ];
-                    getshop_zauiCreateZauiBooking();
+                    if(response != '' && response.indexOf('SUCCESS') != -1 )
+                    {
+                        delete getshop_zauidata.bookings[ Object.keys(getshop_zauidata.bookings)[0] ];
+                        getshop_zauiCreateZauiBooking();
+                    }
+                    else
+                    {
+                        console.log('Server error?');
+                    }
                 }
             });
         }
         else
         {
             // check if next item is more valid...
+            delete getshop_zauidata.bookings[ Object.keys(getshop_zauidata.bookings)[0] ];
             getshop_zauiCreateZauiBooking();
         }
     }
     else
     {
+
         // forget the ongoing booking stuff...
         delete getshop_zauidata;
         sessionStorage.removeItem('getshop_zauidata');

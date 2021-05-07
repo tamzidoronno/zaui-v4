@@ -961,22 +961,24 @@ function getshop_setPageName(pagename) {
 function getshop_continueToSummary(e) {
     try {
         if(getshop_avoiddoubletap(e)) { return; }
-        $('.productoverview').fadeOut('400', function () {
-            $('.GslBooking .ordersummary').slideUp();
-            $('.GslBooking .gslbookingHeader').slideUp();
 
-            var zaui = sessionStorage.getItem('getshop_zaui_integration')
-            if(typeof(zaui) != "undefined" && zaui == "true"){
-                getshop_showZauiPage();
-            }
-            else
-            {
-                getshop_showSummaryPage();
-            }
-            var padding = $('.gslbookingBody').position().top;
-            var body = $('.gslbookingBody').offset().top;
-            $(window).scrollTop(body-padding);
-        });
+        var zaui = sessionStorage.getItem('getshop_zaui_integration')
+        if(typeof(zaui) != "undefined" && zaui == "true"){
+            $('.productoverview').fadeOut('400');
+            getshop_showZauiPage();
+        }
+        else
+        {
+            $('.productoverview').fadeOut('400', function () {
+                $('.GslBooking .ordersummary').slideUp();
+                $('.GslBooking .gslbookingHeader').slideUp();
+
+                var padding = $('.gslbookingBody').position().top;
+                var body = $('.gslbookingBody').offset().top;
+                $(window).scrollTop(body-padding);
+            });
+            getshop_showSummaryPage();
+        }
     }catch(e) { getshop_handleException(e); }
 }
 
@@ -1619,11 +1621,10 @@ function getshop_zauiPageLoad(activities){
             $('#productentry_zaui').append(activitybox)
         })
     }
-
     $('#productentrybox_zaui').hide()
-
-    $('.addons_overview').fadeOut('400', function () {
-        $('.zaui').fadeIn('400');
+    $('.zaui').fadeIn('400', function() {
+        $('.GslBooking .ordersummary').slideUp();
+        $('.GslBooking .gslbookingHeader').slideUp();
         $(window).scrollTop(0);
     });
 }
@@ -1675,7 +1676,7 @@ function  getshop_zauiShowTours(btn, prodCode){
 function getshop_zauiReserveTour(btn, prodCode, tourDate, tourDepartureTime, tourPrice, tourTaxes){
 
     var addonKey = prodCode + '-' + tourDate;
-    getshop_zauidata.bookings[ addonKey ] = { prodCode: prodCode, date: tourDate, time: tourDepartureTime, price: tourPrice, addonid: null };
+    getshop_zauidata.bookings[ addonKey ] = { prodCode: prodCode, date: tourDate, time: tourDepartureTime, price: tourPrice, tax:tourTaxes,  addonid: null };
     sessionStorage.setItem('getshop_zauidata', JSON.stringify(getshop_zauidata));
 
     if( typeof getshop_zauidata.created_addons[ addonKey ] == 'undefined'){
@@ -1734,6 +1735,7 @@ function getshop_zauiReserveTour(btn, prodCode, tourDate, tourDepartureTime, tou
     $(btn).attr('data-tourtime', tourDepartureTime);
     $(btn).attr('data-tourdate', tourDate);
     $(btn).attr('data-tourprice', tourPrice);
+    $(btn).attr('data-tourtax', tourTaxes);
     $(btn).addClass('cancelTour');
 
 }
@@ -1758,12 +1760,13 @@ function getshop_zauiUnreserveTour(btn, addonkey) {
     var prodCode = $(btn).attr('data-prodcode')
     var tourDepartureTime = $(btn).attr('data-tourtime')
     var tourPrice = $(btn).attr('data-tourprice');
+    var tourTax = $(btn).attr('data-tourtax');
     var tourDate = $(btn).attr('data-tourdate');
 
     getshop_zauidata.bookings[ prodCode ] = null;
     sessionStorage.setItem('getshop_zauidata', JSON.stringify(getshop_zauidata));
 
-    $(btn).attr('onclick', "getshop_zauiReserveTour(this, '" + prodCode + "', '" + tourDate + "', '" + tourDepartureTime + "', '" + tourPrice + "')");
+    $(btn).attr('onclick', "getshop_zauiReserveTour(this, '" + prodCode + "', '" + tourDate + "', '" + tourDepartureTime + "', '" + tourPrice + "', '" + tourTax + "')");
 }
 
 //Right side order overview

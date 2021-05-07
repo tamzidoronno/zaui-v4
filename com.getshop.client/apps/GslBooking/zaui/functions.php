@@ -210,9 +210,11 @@ function gslZauiCreateAddon($prod_code, $tourDepartureTime, $tourPrice, $tourTax
             $product->tag = "addon";
             $product->isSingle = true;
             $product->price = doubleval($tourPrice);
-            $product->priceExTaxes = doubleval( doubleval($tourPrice) - doubleval($tourTaxes) );
+            $product->taxes = doubleval($tourTaxes);
+            $netto = $product->priceExTaxes = doubleval( doubleval($tourPrice) - doubleval($tourTaxes) );
+
             $product->taxGroupObject->groupNumber = ( $gsZauiTaxGroup ? (int)$gsZauiTaxGroup : 0);
-            $product->taxGroupObject->taxRate = ( $gsZauiTaxRate ? (int)$gsZauiTaxRate : 0);
+            $product->taxGroupObject->taxRate = $tourTaxes ? doubleval($tourTaxes ) * 100 / $netto : 0;
             $product->taxgroup =  ( $gsZauiTaxGroup ? (int)$gsZauiTaxGroup : 0);
 
             $product = $factory->getApi()->getProductManager()->saveProduct($product);
@@ -237,7 +239,7 @@ function gslZauiCreateAddon($prod_code, $tourDepartureTime, $tourPrice, $tourTax
             $factory->getApi()->getPmsManager()->saveConfiguration($psm->getSelectedMultilevelDomainName(), $alladdons);
 
             //send back product id of addon
-            echo json_encode(['product_id' => $product->id,'date' => $tourDate]);
+            echo json_encode(['product_id' => $product->id,'date' => $tourDate,'netto'=>$netto,'savedtaxes'=>$product->taxes]);
             exit();
         } else {
             //$psm->createProductError = "Failed to create a new product, make sure the account you are trying to create a product on is correct set up.";

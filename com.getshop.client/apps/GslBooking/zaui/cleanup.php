@@ -89,6 +89,10 @@ function cleanupAddons()
                         $product = $factory->getApi()->getProductManager()->saveProduct($product);
                         echo 'We dont want this addon anymore, and can deactivate it (via its product) : ' . $addon->name;
                     }
+                    else
+                    {
+                        echo 'Keeping this ' . print_r($product,1);
+                    }
                 }
             }
             //echo 'we got a Zaui addon . ' . $addon->name . ":: and it has a product... ". $product->name ."\n";

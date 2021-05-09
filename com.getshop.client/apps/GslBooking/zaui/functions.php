@@ -203,7 +203,7 @@ function gslZauiCreateAddon($prod_code, $tourDepartureTime, $tourPrice, $tourTax
         $product = $factory->getApi()->getProductManager()->createProduct();
         $psm = new \ns_c5a4b5bf_365c_48d1_aeef_480c62edd897\PsmConfigurationAddons();
 
-        $zauiAddonName = "Zaui, " . $activity_name . ", " . $tourDate . ( $tourDepartureTime != '00:00:00' ? ' - '. $tourDepartureTime : '' ) . ", "  . time() . "";
+        $zauiAddonName = "Zaui, " . $activity_name . " " . $tourDate . ( $tourDepartureTime != '00:00:00' ? ' - '. $tourDepartureTime : '' ) . ", "  . time() . "";
 
         if ($product) {
             $product->name = $zauiAddonName;

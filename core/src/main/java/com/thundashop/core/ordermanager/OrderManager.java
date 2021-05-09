@@ -3780,14 +3780,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         List<OrderUnsettledAmountForAccount> retList = new ArrayList();
 
         for (String orderId : groupedEntries.keySet()) {
-            double sumOfAccount = sumOfOrder(groupedEntries, orderId);
+            double sumOfOrderForAccount = sumOfOrder(groupedEntries, orderId);
             
-            if (sumOfAccount < 0.1 && sumOfAccount > -0.1) {
+            if (sumOfOrderForAccount < 0.1 && sumOfOrderForAccount > -0.1) {
                 continue;
             }
             
             OrderUnsettledAmountForAccount orderWithUnsettledAmount = new OrderUnsettledAmountForAccount();
-            orderWithUnsettledAmount.amount = sumOfAccount;
+            orderWithUnsettledAmount.amount = sumOfOrderForAccount;
             orderWithUnsettledAmount.order = getOrder(orderId);
             orderWithUnsettledAmount.account = accountNumber;
             
@@ -3795,14 +3795,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 continue;
             }
 
-            if (orderWithUnsettledAmount.order.markedPaidDate == null && (orderWithUnsettledAmount.order.restAmount > 0.0 ||  orderWithUnsettledAmount.order.restAmount < 0.0 ) ){
+            if (orderWithUnsettledAmount.order.markedPaidDate == null && (orderWithUnsettledAmount.order.restAmount > 0.5 ||  orderWithUnsettledAmount.order.restAmount < -0.5 ) ){
                 retList.add(orderWithUnsettledAmount);
             }
         }
 //        
         removeCompletedAccrued(retList, groupedEntries);
         removeCreditNotes(retList, groupedEntries);
-        
+
         return retList;
     }
 
@@ -5726,7 +5726,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                     .stream()
                     .mapToDouble(o -> (sumOfOrder(groupedEntries, o.order.id)))
                     .sum();
-            
+
             if (total < 0.05 && total > -0.05) {
                 System.out.println("REVEMOED");
                 retList.removeAll(groupedByRoom.get(roomId));

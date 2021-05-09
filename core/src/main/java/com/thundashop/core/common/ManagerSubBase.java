@@ -38,6 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -66,9 +67,9 @@ public class ManagerSubBase {
     
     protected boolean isSingleton = false;
     protected boolean ready = false;
-//    private Session session;
-    private Map<Long, Session> threadSessions = Collections.synchronizedMap(new HashMap<Long, Session>());
-
+    //private Session session;
+    //private Map<Long, Session> threadSessions = Collections.synchronizedMap(new HashMap<Long, Session>());
+    private Map<Long, Session> threadSessions = new ConcurrentHashMap<>();
     private ManagerSetting managerSettings = new ManagerSetting();
     
     @Autowired

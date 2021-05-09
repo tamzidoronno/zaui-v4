@@ -1067,10 +1067,14 @@ public class PmsBookingRooms implements Serializable {
         return (bookingItemTypeId != null && bookingItemTypeId.equals("gspmsconference"));
     }
 
-    boolean needToCalculateUnsettledAmount(List<Order> orders) throws Exception {
+    boolean needToCalculateUnsettledAmount(List<Order> orders, PmsBooking pmsBooking) throws Exception {
         String checksum = calculateCheckSum();
-        
+
         for(Order order : orders) {
+            if (order == null) {
+                System.out.println("ERROR. Could not find connected order for booking id: " + pmsBooking.incrementBookingId + ".");
+                continue;
+            }
             for(CartItem item : order.getCartItems()) {
                 if(item.getProduct().externalReferenceId.equals(pmsBookingRoomId)) {
                     checksum += item.getCartItemId() + "_" + item.getProductPrice()+ "_" + item.getCount();

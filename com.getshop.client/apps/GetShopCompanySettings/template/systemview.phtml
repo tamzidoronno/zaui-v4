@@ -56,7 +56,7 @@ $products = $this->getApi()->getProductManager()->getAllProducts();
 
 <div style='margin: 50px;'>
     <div class='shop_button' gsclick="deleteSystem" systemid="<? echo $system->id; ?>" gs_confirm="Area you sure you want to delete this system?">Delete system</div>    
-    <div class='shop_button' gsclick="syncSystem" systemid="<? echo $system->id; ?>" gs_confirm="Area you sure you want to delete this system?">Sync system</div>    
+    <div class='shop_button' gsclick="syncSystem" systemid="<? echo $system->id; ?>">Sync system (SMS/EHF usage)</div>
     <div class='shop_button' gsclick="triggerTest" systemid="<? echo $system->id; ?>">Create invoice</div>    
     <div class='shop_button' onclick='window.open("https://<?php echo $system->webAddresses; ?>/totp.php", "fdsafasf")'>Open system</div>    
 </div>

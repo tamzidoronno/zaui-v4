@@ -13,21 +13,19 @@ fi
 IFS=';'
 
 echo "What store?";
-cat 9 | while read line
+cat 100 | while read line
 do
   array=(${line})
   echo ${array[0]}"="${array[2]};
 done
 read storeQuestion;
 
-
-
 echo  -e " GO ON HERE ";
 IFS=';'
 
 
-serverQuestion="9"
-SERVER="10.0.9.33"
+serverQuestion="100"
+SERVER="10.0.9.50"
 STOREID="NONE";
 MASTERSTOREID="NONE";
 
@@ -56,13 +54,13 @@ echo -e " ####################################";
 echo -e " # Syncing online database to local #";
 echo -e " ####################################";
 echo -e "";
-#echo -e " Deleting local database";
-#mongo --port 27018 <<< 'db.adminCommand("listDatabases").databases.forEach( function (d) {   if (d.name != "local" && d.name != "admin" && d.name != "config") db.getSiblingDB(d.name).dropDatabase(); });' > /dev/null;
+echo -e " Deleting local database";
+mongo --port 27018 <<< 'db.adminCommand("listDatabases").databases.forEach( function (d) {   if (d.name != "local" && d.name != "admin" && d.name != "config") db.getSiblingDB(d.name).dropDatabase(); });' > /dev/null;
 
 #Dumping online database and compressing it.
 echo -e " Dumping and compressing database on server";
 ssh -T naxa@$SERVER << EOF > /dev/null
-/home/naxa/backup2.sh $STOREID $MASTERSTOREID >> /dev/null 2>&1
+/home/naxa/development_db_scripts/dump_dev_db.sh $STOREID
 EOF
 
 if [ -f dump.tar.gz ]; then
@@ -87,14 +85,9 @@ tar xzvf dump.tar.gz > /dev/null
 mongorestore --port 27018  &> /dev/null
 rm -rf dump.tar.gz
 
-#transfer images
-echo -e " Syncing images";
-#rsync -avz -e ssh naxa@10.0.4.32:/thundashopimages/ ../com.getshop.client/uploadedfiles/ &> /dev/null
+
 
 echo -e " Done!"
 echo -e " Note: if you wish to run resin on port 80 run: "
 echo -e "   iptables -t nat -A OUTPUT -d localhost -p tcp --dport 80 -j REDIRECT --to-ports 8080";
 
-echo "Importing shared database"
-mongodump -o shareddump --host 192.168.100.1 --port 27017 -u getshopadmin -p commondatabaseadministrator &> /dev/null
-mongorestore --port 27018 shareddump &> /dev/null

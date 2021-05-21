@@ -105,7 +105,7 @@ if($this->createProductError) {
 
             <?php
 
-            usort($products, function($a, $b) {return strcmp($a->name, $b->name);});
+            usort($products, function($a, $b) {return strcmp(strtolower($a->name), strtolower($b->name));});
 
             $activeproducts = [];
             $deactivatedproducts = [];
@@ -139,18 +139,16 @@ if($this->createProductError) {
                 $alwaysAddAddon = $addonItem->alwaysAddAddon ? "CHECKED" : "";
                 $isUniqueOnOrder = $addonItem->isUniqueOnOrder ? "CHECKED" : "";
                 $states = $this->getFactory()->getLanguageReadable();
-                $deactivated = $product->deactivated ? "style='color:#afafaf;'" : "";
-                $color = $product->deactivated ? "#afafaf;'" : "green";
             ?>
-            <tr class='settingsForProduct' <?php echo $deactivated; ?> productid='<?php echo $product->id; ?>' productincid="<?php echo $product->incrementalProductId; ?>">
+            <tr class='settingsForProduct<?php echo $product->deactivated ? ' deactivatedProduct': '' ?>' productid='<?php echo $product->id; ?>' productincid="<?php echo $product->incrementalProductId; ?>">
                 <td style="width:300px;text-align: left;position:relative;">
-                    <i class="fa fa-info-circle loadExtendedProductInformation" style="color:<?php echo $color; ?>; cursor:pointer;"></i>
-                    <i class="fa fa-language" style="color:<?php echo $color; ?>; cursor:pointer;" aria-hidden="true" title='Description / Translation' gss_method="submitToInfoBox" method="loadTranslationText" gsname="id" gsvalue="<?php echo $product->id; ?>"></i>
-                    <i class='fa fa-edit changeproductname' productid='<?php echo $product->id; ?>' style="color:<?php echo $color; ?>; cursor:pointer;"></i>
+                    <i class="fa fa-info-circle loadExtendedProductInformation" style="color:green; cursor:pointer;"></i>
+                    <i class="fa fa-language" style="color:green; cursor:pointer;" aria-hidden="true" title='Description / Translation' gss_method="submitToInfoBox" method="loadTranslationText" gsname="id" gsvalue="<?php echo $product->id; ?>"></i>
+                    <i class='fa fa-edit changeproductname' productid='<?php echo $product->id; ?>' style="color:green; cursor:pointer;"></i>
                     <?
                     if ($addonItem->groupAddonType) {
                         ?>
-                        <i class='fa fa-chain editgroupaddon' productid='<?php echo $product->id; ?>' style="color:<?php echo $color; ?>; cursor:pointer;"></i>
+                        <i class='fa fa-chain editgroupaddon' productid='<?php echo $product->id; ?>' style="color:green; cursor:pointer;"></i>
                         <?
                     }
                     ?>
@@ -240,7 +238,8 @@ if($this->createProductError) {
             <? } ?>
             <tr>
                 <td colspan='200' style='padding:0px; background-color:#096709;'>
-                    <div style='margin-bottom: 10px; padding: 10px; border-top: solid 1px #ccc;'>
+                    <div style='position:relative; margin-bottom: 10px; padding: 10px; border-top: solid 1px #ccc;'>
+                        <div style="position: absolute; width:150px; top:7px; color:#FFF; cursor: pointer;" onclick="toggleDeativatedProduct(this)">Show deactivated products</div>
                         <input type='button' value='Save settings' class='doSaveSettings'>
                     </div>
                 </td>

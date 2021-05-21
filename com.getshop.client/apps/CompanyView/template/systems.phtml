@@ -33,7 +33,7 @@ foreach($systems as $system) {
     $total += $price;
     echo "<tr $red>";
     echo "<td>" . date("d.m.Y", strtotime($system->activeFrom)) . "</td>";
-    echo "<td>" . $system->webAddresses . "</td>";
+    echo "<td value='" . $system->id . "' onclick=''>" . $system->webAddresses . "</td>";
     echo "<td>" . $price . "</td>";
     echo "<td productid='".$system->productId."'>" . $products[$system->productId]->name. "</td>";
     echo "<td>" . $companies[$system->companyId]->name. "</td>";

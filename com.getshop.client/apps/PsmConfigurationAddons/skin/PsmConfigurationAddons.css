@@ -7,6 +7,8 @@
   border-bottom: solid 1px #ccc;
 }
 
+.deactivatedProduct { color:#afafaf; display:none; }
+
 .PsmConfigurationAddons th.rotate > div {
   transform: 
     /* Magic Numbers */

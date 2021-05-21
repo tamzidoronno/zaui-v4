@@ -791,6 +791,7 @@ function getshop_loadTextualSummary(res) {
     $('.yourstaysummary').append( '<div>' + document.getElementById('date_picker_start').value + ' - ' + document.getElementById('date_picker_end').value + '</div>' );
 
     var translation = getshop_getBookingTranslations();
+    var hideGuestButton = false;
     for(var k in res.textualSummary) {
         k = parseInt(k); if(!Number.isInteger(k)) { continue; }
         var text = res.textualSummary[k];
@@ -824,9 +825,11 @@ function getshop_loadTextualSummary(res) {
         // Zaui activities are stored as Zaui, Activity name, Booking info (last item is for internal use)
         if(text.includes("Zaui")){
             var textParts = text.split(",")
-            text = "1 x " + textParts[1]
+            text = "1 x " + textParts[1];
+            hideGuestButton = true;
         }
-
+        //when booking activities we wont let users add more people in our first phase... todo: allow this for phase 
+        if( hideGuestButton ) $('.addguest.gsl_button').hide();
         $('.yourstaysummary').append(text + "<br />");
     }
     var lang = sessionStorage.getItem("getshop_language");

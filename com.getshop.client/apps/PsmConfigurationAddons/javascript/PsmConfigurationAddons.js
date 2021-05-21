@@ -145,4 +145,18 @@ app.PsmConfigurationAddons = {
     }
 };
 
+function toggleDeativatedProduct(btn)
+{
+    if( btn.innerHTML == 'Show deactivated products' )
+    {
+        btn.innerHTML = 'Hide deactivated products';
+        $('.deactivatedProduct').show();
+    }
+    else
+    {
+        btn.innerHTML = 'Show deactivated products';
+        $('.deactivatedProduct').hide();
+    }
+}
+
 app.PsmConfigurationAddons.init();

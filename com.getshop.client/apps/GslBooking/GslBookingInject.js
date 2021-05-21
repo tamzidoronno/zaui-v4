@@ -781,10 +781,10 @@ function getshop_loadBookerInformation(res) {
 }
 
 function getshop_loadTextualSummary(res) {
-    var adults = res.textualSummary[0].charAt(0)
+    var adults = parseInt( res.textualSummary[0].split(" ")[0] );
     sessionStorage.setItem("getshop_adults", adults);
 
-    var children = res.textualSummary[1].charAt(0)
+    var children = parseInt( res.textualSummary[1].split(" ")[0] );
     sessionStorage.setItem('getshop_children', children)
 
     $('.yourstaysummary').html('');
@@ -1666,7 +1666,7 @@ function  getshop_zauiShowTours(btn, prodCode){
                         $('#table_' + prodCode).append(tourEntry);
 
                         //var tourEntry = $("<tr class='producentry_itemlist'><td>" + tour.DateotalInInt[0] + " NOK</td><td><div id='" + id + "' class='reserveTourButton'>" + translation['reserve'] + "</div></td>")
-                        var tourEntry = $("<tr class='producentry_itemlist'><td>"+ tour.Date + "</td></td><td "+ (showTimeCol ? "" : " style='display:none;'") +">" + ( tour.TourOptions[0].TourDepartureTime[0] != "00:00:00" ? tour.TourOptions[0].TourDepartureTime[0] : "" )  + "</td><td>" + tour.TourPricing[0].TotalInInt[0] + " NOK</td><td><div id='" + id + "' class='reserveTourButton'>" + translation['reserve'] + "</div></td>")
+                        var tourEntry = $("<tr class='producentry_itemlist'><td>"+ tour.Date + "</td></td><td "+ (showTimeCol ? "" : " style='display:none;'") +">" + ( tour.TourOptions[0].TourDepartureTime[0] != "00:00:00" ? tour.TourOptions[0].TourDepartureTime[0].slice(0,-3) : "" )  + "</td><td>" + tour.TourPricing[0].TotalInInt[0] + " NOK</td><td><div id='" + id + "' class='reserveTourButton'>" + translation['reserve'] + "</div></td>")
                         $('#table_' + prodCode).append(tourEntry);
 
                     tourEntry.find('.reserveTourButton').attr('onclick', "getshop_zauiReserveTour(this, '" + prodCode + "', '" + tour.Date + "', '" + tour.TourOptions[0].TourDepartureTime[0] + "', '" + tour.TourPricing[0].TotalInInt[0] + "', '" + tour.TourPricing[0].TaxInInt[0] + "')");

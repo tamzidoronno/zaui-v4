@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.JsonObject2;
 import com.thundashop.core.common.ManagerSubBase;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -36,11 +37,11 @@ public class Transporter {
             return false;
         }
     }
-    
+
     public void setAutoReconnect(boolean auto) {
         autoReconnect = auto;
     }
-    
+
     public boolean isConnected() {
         return connected;
     }
@@ -64,36 +65,36 @@ public class Transporter {
             if (result != null) {
                 break;
             } else {
-                if(!reconnect()) {
+                if (!reconnect()) {
                     return null;
                 }
-            } 
+            }
         }
         return result;
     }
-    
+
     public boolean reconnect() throws Exception {
         connected = false;
         while (true) {
-            if(autoReconnect) {
+            if (autoReconnect) {
                 GetShopLogHandler.logPrintStatic("Reconnecting to java backend", null);
             }
             if (connected) {
                 break;
             }
             connect();
-            if(!autoReconnect) {
+            if (!autoReconnect) {
                 break;
             }
             Thread.sleep(2000);
         }
-        if(connected) {
+        if (connected) {
             api.getStoreManager().initializeStore(webaddress, sessionId);
             return true;
         }
         return false;
     }
-   
+
     public void close() throws IOException {
         out.close();
         in.close();

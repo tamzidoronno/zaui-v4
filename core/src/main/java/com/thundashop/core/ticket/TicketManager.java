@@ -1026,6 +1026,9 @@ public class TicketManager extends ManagerBase implements ITicketManager {
     }
 
     private boolean avoidNotIncludedTicketTypes(TicketType type) {
+
+        if(type == null ) return true;
+
         if(type.equals(TicketType.ACCOUNTING)) {
             return true;
         }

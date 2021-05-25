@@ -10,24 +10,36 @@ if [ "1" == `ping -c 1 www.getshop.com |grep "bytes from" |grep 127.0.0.1 |wc -l
      exit;
 fi
 
+echo "What server do you want to sync from?"
+echo "3 = Server 3 ( First server ever created )";
+echo "4 = Server 4 ( Created: 8 june 2017 )";
+echo "5 = Server 5 ( Created: 19 aug 2018 )";
+echo "6 = Server 6 ( Created: 19 aug 2019 )";
+read serverQuestion;
+
 IFS=';'
 
+SERVER="NONE";
+if [ $serverQuestion = "3" ]; then
+        SERVER="148.251.15.227";
+elif [ $serverQuestion = "4" ]; then
+        SERVER="10.0.4.1"
+elif [ $serverQuestion = "5" ]; then
+        SERVER="10.0.5.1"
+elif [ $serverQuestion = "6" ]; then
+        SERVER="10.0.6.1"
+else
+        echo "Invalid server setup";
+fi;
+
 echo "What store?";
-cat 9 | while read line
+cat $serverQuestion | while read line
 do
   array=(${line})
   echo ${array[0]}"="${array[2]};
 done
 read storeQuestion;
 
-
-
-echo  -e " GO ON HERE ";
-IFS=';'
-
-
-serverQuestion="9"
-SERVER="10.0.9.33"
 STOREID="NONE";
 MASTERSTOREID="NONE";
 
@@ -37,7 +49,6 @@ do
   val=${array[0]};
   if [ "$storeQuestion" == "$val" ]
   then
-      echo "FOUND IN FILE"
       STOREID="${array[1]}";
       if [ ${#array[@]}  == 4 ] ; then
           MASTERSTOREID="${array[3]}";
@@ -56,12 +67,14 @@ echo -e " ####################################";
 echo -e " # Syncing online database to local #";
 echo -e " ####################################";
 echo -e "";
-#echo -e " Deleting local database";
-#mongo --port 27018 <<< 'db.adminCommand("listDatabases").databases.forEach( function (d) {   if (d.name != "local" && d.name != "admin" && d.name != "config") db.getSiblingDB(d.name).dropDatabase(); });' > /dev/null;
+echo " Deleting exisisting local collections for ";
+echo $STOREID;
+echo -e "";
+mongo --port=27018 --eval "var storeId='$STOREID'" onestoresync_clear_existing_data.js
 
 #Dumping online database and compressing it.
 echo -e " Dumping and compressing database on server";
-ssh -T naxa@$SERVER << EOF > /dev/null
+ssh -oPort=4223 -T naxa@$SERVER << EOF > /dev/null
 /home/naxa/backup2.sh $STOREID $MASTERSTOREID >> /dev/null 2>&1
 EOF
 
@@ -75,7 +88,7 @@ get dump.tar.gz
 EOF
 
 echo -e " Fetching database file from server";
-sftp -b batchfile naxa@$SERVER > /dev/null
+sftp -oPort=4223 -b batchfile naxa@$SERVER > /dev/null
 rm -rf batchfile;
 
 echo -e " Importing database to local";

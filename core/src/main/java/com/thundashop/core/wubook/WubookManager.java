@@ -1948,7 +1948,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             
             Vector result = executeClient("update_sparse_rooms_values", params);
             if ((Integer)result.get(0) != 0) {
-                logText("Failed to update availability " + "(" + result.get(0) + ")" + result.get(1) + " Parameters sent: " + params.toString());
+                logText("Failed to update availability (" + result.get(0) + ") " + result.get(1) + " Parameters sent: " + params.toString() );
             } else {
                 lastAvailability.lastAvailabilityUpdated = fieldsUpdated;
                 saveObject(lastAvailability);

@@ -1,0 +1,14 @@
+apply plugin: 'java'
+
+
+dependencies {
+    compile project(":messages")
+    compile project(":core")
+    compile fileTree(dir: 'lib', include: ['*.jar'])
+}
+
+
+artifacts {
+    archives jar
+    archives sourcesJar
+}

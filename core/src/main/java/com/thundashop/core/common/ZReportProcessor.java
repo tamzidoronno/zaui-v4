@@ -20,7 +20,6 @@ public class ZReportProcessor extends GetShopSchedulerBase {
         try {
             PmsConfiguration pmsConfiguration = getApi().getPmsManager().getConfiguration(multilevelname);
             String scheduledTimeForZReport = pmsConfiguration.zReportProcessingTime;
-            System.out.println("scheduledTimeForZReport: "+scheduledTimeForZReport);
             if (StringUtils.nonNull(scheduledTimeForZReport) && scheduledTimeForZReport.equals(DateUtils.getCurrentTime())) {
                 getApi().getPosManager().createZReport("");
             }

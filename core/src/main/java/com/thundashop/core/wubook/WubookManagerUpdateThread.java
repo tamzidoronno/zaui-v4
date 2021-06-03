@@ -27,7 +27,7 @@ public class WubookManagerUpdateThread extends Thread {
         try {
             result = (Vector) client.execute(action, params);
             if ((Integer)result.get(0) != 0) {
-                mgr.logText("Failed to update availability " + "(" + result.get(0) + ")" + result.get(1));
+                mgr.logText("Failed to update availability (" + result.get(0) + ") " + result.get(1) + " Parameters sent: " + params.toString() );
             } else {
                 mgr.logText("Availability successfully updated.");
             }

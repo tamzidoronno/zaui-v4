@@ -129,13 +129,5 @@ public class ProcessPrinterMessage extends GetShopIOTCommon implements MessagePr
         }
     }
 
-    public static void testprinter(String message) throws IOException {
-        File path = new File("/home/lucija/Desktop/iot/tmp.txt");
 
-        OutputStreamWriter writer =
-                new OutputStreamWriter(new FileOutputStream(path), StandardCharsets.UTF_8);
-        writer.write("\uFEFF" +message);
-        writer.close();
-
-    }
 }

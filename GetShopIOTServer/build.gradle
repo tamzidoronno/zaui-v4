@@ -1,14 +1,4 @@
 
-jar {
-    manifest {
-//        attributes 'Main-Class': 'PrinterTest'
-        attributes(
-                'Main-Class': 'getshopiotserver.GetShopIOTServer',
-                "Class-Path": 'lib/GetShop_Messages.jar lib/commons-lang3-3.2.1.jar \n' +
-                        'lib/gson-2.5.jar lib/jbaxi-ef_1.2.3.0.jar lib/jbaxi.jar lib/PayPoint.jar')
-    }
-}
-
 sourceSets {
     main {
         java {
@@ -18,13 +8,21 @@ sourceSets {
 }
 
 dependencies {
-    compile project(":messages")
-    compile project(":core")
     compile fileTree(dir: 'lib', include: ['*.jar'])
+    compile project(":messages")
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'getshopiotserver.GetShopIOTServer'
+        attributes 'Class-Path' : configurations.compile.collect { 'lib/' + it.getName() }.join(' ')
+//        attributes(
+//                'Main-Class': 'getshopiotserver.GetShopIOTServer',
+//                "Class-Path": 'lib/GetShop_Messages.jar lib/commons-lang3-3.2.1.jar lib/gson-2.5.jar lib/jbaxi-ef_1.2.3.0.jar lib/jbaxi.jar lib/PayPoint.jar')
+    }
 }
 
 
 artifacts {
     archives jar
-    archives sourcesJar
-}
+Z}

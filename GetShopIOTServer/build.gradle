@@ -1,5 +1,21 @@
-apply plugin: 'java'
 
+jar {
+    manifest {
+//        attributes 'Main-Class': 'PrinterTest'
+        attributes(
+                'Main-Class': 'getshopiotserver.GetShopIOTServer',
+                "Class-Path": 'lib/GetShop_Messages.jar lib/commons-lang3-3.2.1.jar \n' +
+                        'lib/gson-2.5.jar lib/jbaxi-ef_1.2.3.0.jar lib/jbaxi.jar lib/PayPoint.jar')
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src']
+        }
+    }
+}
 
 dependencies {
     compile project(":messages")

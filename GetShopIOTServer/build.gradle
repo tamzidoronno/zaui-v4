@@ -14,7 +14,6 @@ dependencies {
 
 jar {
     manifest {
-        attributes 'Main-Class': 'getshopiotserver.GetShopIOTServer'
 //        attributes 'Class-Path' : configurations.compile.collect { 'lib/' + it.getName() }.join(' ')
         attributes(
                 'Main-Class': 'getshopiotserver.GetShopIOTServer',

@@ -2,7 +2,6 @@ package getshopiotserver;
 
 import getshop.nets.GetShopNetsApp;
 import getshop.nets.GetShopNetsController;
-import java.io.File;
 
 public class GetShopIOTServer {
 

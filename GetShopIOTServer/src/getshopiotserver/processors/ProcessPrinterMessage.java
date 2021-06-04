@@ -102,18 +102,12 @@ public class ProcessPrinterMessage extends GetShopIOTCommon implements MessagePr
         path.createNewFile();
         byte[] res = Base64.getDecoder().decode(content);
         String message = new String(res, StandardCharsets.UTF_8);
-        // strips off all non-ASCII characters
-        message = message.replaceAll("[^\\x00-\\x7F]", "");
-
-        // removes non-printable characters from Unicode
-        message = message.replaceAll("\\p{C}", "");
-
-        List<String> lines =  Arrays. asList("\uFEFF" +message);
+        List<String> lines =  Arrays. asList(message);
         Files.write(path.toPath(), lines, StandardCharsets.UTF_8);
 
 
         try {
-            final Process p = Runtime.getRuntime().exec("print /d:\"\\\\localhost\\POS-80-Series\" tmp_print_file.txt");
+            final Process p = Runtime.getRuntime().exec("copy /b tmp_print_file.txt \"\\\\localhost\\POS-80-Series\" ");
             p.waitFor();
             final BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 

@@ -93,7 +93,6 @@ public class ProcessPrinterMessage extends GetShopIOTCommon implements MessagePr
 
     private void printToWindows(final String content) throws IOException {
         this.logPrint("Printing on Windows, saving temp files to C:\\GetShop");
-        System.out.println("Printing message on windows...");
         File path = new File("C:\\GetShop\\tmp_print_file.txt");
         if (path.exists()) {
             path.delete();

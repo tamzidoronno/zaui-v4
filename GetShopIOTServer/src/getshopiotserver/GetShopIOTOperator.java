@@ -82,7 +82,6 @@ public class GetShopIOTOperator extends GetShopIOTCommon {
             System.out.println("Reading message ..");
             String msg = readFromPullService();
             if(msg != null && !msg.isEmpty()) {
-                System.out.println("Message exists, continuing..");
                 List<GetShopDeviceMessage> result = new ArrayList();
                 Type listType = new TypeToken<List<GetShopDeviceMessage>>(){}.getType();
 

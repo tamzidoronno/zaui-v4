@@ -106,7 +106,8 @@ public class ProcessPrinterMessage extends GetShopIOTCommon implements MessagePr
 
 
         try {
-            final Process p = Runtime.getRuntime().exec("copy /b tmp_print_file.txt \"\\\\localhost\\POS-80-Series\" ");
+            String[] print_cmd = { "CMD", "/C", "COPY", "/b", "tmp_print_file.txt", "\\\\localhost\\POS-80-Series" };
+            Process p = Runtime.getRuntime().exec(print_cmd);
             p.waitFor();
             final BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 

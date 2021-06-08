@@ -3,50 +3,32 @@ package com.thundashop.core.socket;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
-import com.thundashop.core.common.AnnotationExclusionStrategy;
-import com.thundashop.core.common.ErrorException;
-import com.thundashop.core.common.ErrorMessage;
-import com.thundashop.core.common.GetShopLogHandler;
-import com.thundashop.core.common.GetShopLogging;
-import com.thundashop.core.common.JsonObject2;
-import com.thundashop.core.common.MessageBase;
-import com.thundashop.core.common.StorePool;
-import com.thundashop.core.common.WebSocketReturnMessage;
+import com.thundashop.core.common.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Type;
 import java.net.Socket;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
 
 /**
- *
  * @author ktonder
  */
 public class WebInterfaceSocketThread2 implements Runnable {
 
     private static final Logger log = LoggerFactory.getLogger(WebInterfaceSocketThread2.class);
 
-    private StorePool storePool;
-    private Socket socket;
+    private final StorePool storePool;
+    private final Socket socket;
 
     public WebInterfaceSocketThread2(Socket socket, StorePool storePool) {
         this.storePool = storePool;
         this.socket = socket;
     }
 
-    private List<MessageBase> executeMessage(String message, String addr) {
+    private void executeMessage(String message, String addr) {
         try {
             Object result = storePool.ExecuteMethod(message, addr);
             sendMessage(result);
@@ -54,8 +36,8 @@ public class WebInterfaceSocketThread2 implements Runnable {
             log.error("Error while executing, message `{}`, addr `{}`", message, addr, d);
 
             Gson gson = new GsonBuilder()
-                .serializeNulls()
-                .create();
+                    .serializeNulls()
+                    .create();
 
             JsonObject2 inObject = gson.fromJson(message, JsonObject2.class);
             if (inObject.version != null && inObject.version.equals("2")) {
@@ -68,17 +50,14 @@ public class WebInterfaceSocketThread2 implements Runnable {
             }
         }
 
-        List<MessageBase> messages = new ArrayList();
-        return messages;
     }
 
     @Override
     public void run() {
-        String json = "";
         try {
-            while(true) {
+            while (true) {
                 BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                json = br.readLine();
+                String json = br.readLine();
                 if (json == null) {
                     return;
                 }
@@ -86,14 +65,11 @@ public class WebInterfaceSocketThread2 implements Runnable {
             }
         } catch (Exception ex) {
             log.error("", ex);
-            if (!(ex instanceof ErrorException)) {
-                ex.printStackTrace();
-            }
         } finally {
             try {
                 socket.close();
             } catch (Exception ex) {
-                ex.printStackTrace();
+                log.error("", ex);
             }
         }
     }
@@ -110,8 +86,8 @@ public class WebInterfaceSocketThread2 implements Runnable {
                 builder.setExclusionStrategies(new AnnotationExclusionStrategy(null));
                 builder.registerTypeAdapter(Date.class, new GsonUTCDateAdapter()).create();
                 Gson gson = builder.create();
-                json = gson.toJson((Object) result);
-            }catch(Exception e) {
+                json = gson.toJson(result);
+            } catch (Exception e) {
                 log.error("", e);
             }
             dos.write((json + "\n").getBytes("UTF8"));
@@ -121,7 +97,4 @@ public class WebInterfaceSocketThread2 implements Runnable {
         }
     }
 
-    private boolean isV2(String message) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }

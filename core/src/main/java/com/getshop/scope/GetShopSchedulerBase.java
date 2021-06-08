@@ -7,27 +7,28 @@ package com.getshop.scope;
 
 import com.getshop.javaapi.GetShopApi;
 import com.thundashop.core.common.AppContext;
-import com.thundashop.core.common.GetShopLogHandler;
-import com.thundashop.core.common.ManagerSubBase;
-import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.DatabaseLog;
 import com.thundashop.core.usermanager.data.User;
 import it.sauronsoftware.cron4j.Scheduler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+
 import java.lang.reflect.Field;
 import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.springframework.context.ApplicationContext;
 
 /**
  *
  * @author ktonder
  */
 public abstract class GetShopSchedulerBase implements Runnable {
+
+    private static final Logger log = LoggerFactory.getLogger(GetShopSchedulerBase.class);
+
     private GetShopApi api;
     private String sessionId = UUID.randomUUID().toString();
     private boolean loggedOn = false;
@@ -90,20 +91,19 @@ public abstract class GetShopSchedulerBase implements Runnable {
         if (this.api != null) {
             boolean isLoggedIn = this.api.getUserManager().isLoggedIn();
             if (!isLoggedIn) {
-                System.out.println("GetShopSchedulerBase | reconnecting and logging in again : " + storeId + " | " + webAddress + " | username: " + username + " | password: " + password);
+                log.info("GetShopSchedulerBase | reconnecting and logging in again : " + storeId + " | " + webAddress + " | username: " + username + " | password: " + password);
                 sessionId = UUID.randomUUID().toString();
                 this.api = new GetShopApi(25554, "localhost", sessionId, webAddress);
                 try {
                     User user = this.api.getUserManager().logOn(username, password);
                     
                     if (user == null) {
-                        System.out.println("GetShopSchedulerBase | tried to login but was not able to log in again : " + storeId + " | " + webAddress);
+                        log.debug("GetShopSchedulerBase | tried to login but was not able to log in again : " + storeId + " | " + webAddress);
                     } else {
-                        System.out.println("GetShopSchedulerBase | logged in with user on store : " + storeId + " | " + webAddress  + " | User print: " + user + " | User id: " + user.id + " | type : " + user.type );
+                        log.debug("GetShopSchedulerBase | logged in with user on store : " + storeId + " | " + webAddress  + " | User print: " + user + " | User id: " + user.id + " | type : " + user.type );
                     }
                 } catch (Exception ex) {
-                    System.out.println("GetShopSchedulerBase | Failed to login with execption : " + storeId + " | " + webAddress);
-                    ex.printStackTrace();
+                    log.error("Failed to login with exception storeId `{}`, webAddress `{}`", storeId, webAddress, ex);
                 }
             }
         }
@@ -113,7 +113,7 @@ public abstract class GetShopSchedulerBase implements Runnable {
             User user = this.api.getUserManager().logOn(username, password);
             this.loggedOn = true;
             if (user == null) {
-                System.out.println("GetShopSchedulerBase | not able to login? why? : " + storeId + " | " + webAddress);
+                log.debug("GetShopSchedulerBase | not able to login? why? : " + storeId + " | " + webAddress);
             }
         }
     
@@ -150,7 +150,7 @@ public abstract class GetShopSchedulerBase implements Runnable {
             closeConnection();
             
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error("", ex);
         } finally {
             if (logmsg != null) {
                 logEnded(logmsg);
@@ -167,8 +167,7 @@ public abstract class GetShopSchedulerBase implements Runnable {
         try {
             runConnection();
         } catch (Exception ex) {
-            GetShopLogHandler.logPrintStatic("Problem with scheduled task....", null);
-            ex.printStackTrace();
+            log.error("Problem with scheduled task....", ex);
         }
     }
 
@@ -192,8 +191,7 @@ public abstract class GetShopSchedulerBase implements Runnable {
                 this.api.transport.close();
                 this.api = null;
             } catch (Exception ex) {
-                ex.printStackTrace();
-                Logger.getLogger(GetShopSchedulerBase.class.getName()).log(Level.SEVERE, null, ex);
+                log.error("Error while closing connection", ex);
             }
         }
     }
@@ -222,7 +220,7 @@ public abstract class GetShopSchedulerBase implements Runnable {
             Thread value = (Thread) field.get(this.scheduler);
             value.setName("cron4j::" + this.getClass().getCanonicalName()  + "::" + schedulerInterval + "::" + storeId + "::" + this.scheduler.getGuid() );
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error("", ex);
         } 
     }
 

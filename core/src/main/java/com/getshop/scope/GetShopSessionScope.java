@@ -18,6 +18,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.config.Scope;
@@ -29,6 +32,9 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class GetShopSessionScope implements Scope {
+
+    private static final Logger log = LoggerFactory.getLogger(GetShopSessionScope.class);
+
     private StorePool storePool = null;
     private Map<Long, String> threadStoreIds = new ConcurrentHashMap<Long, String>();
     private Map<Long, String> threadSessionBeanNames = new ConcurrentHashMap<Long, String>();
@@ -137,8 +143,7 @@ public class GetShopSessionScope implements Scope {
                 
                 objectMap.put(nameWithStoreId, object);
             } catch (BeansException exception) {
-                GetShopLogHandler.logPrintStatic("Got an bean exception ? ", storeId);
-                exception.printStackTrace();
+                log.error("Got an bean exception ? storeId `{}`", storeId, exception);
             }
         }
 
@@ -220,20 +225,20 @@ public class GetShopSessionScope implements Scope {
             objectMap.remove(key);
         }
     }
-    
+
     public void cleanupThreadSessions() {
-        System.out.println(new Date() + " | Thread sessions before removal : " + threadSessions.size() );
+        log.debug("Thread sessions before removal : `{}`", threadSessions.size());
         List<Long> toRemove = new ArrayList();
-        
+
         for (Long threadId : threadSessions.keySet()) {
             Session session = threadSessions.get(threadId);
             if (session.hasExpired()) {
                 toRemove.add(threadId);
             }
         }
-                
+
         toRemove.stream().forEach(o -> threadSessions.remove(o));
-        
-        System.out.println(new Date() + " | Thread sessions after removal : " + threadSessions.size() );
+
+        log.debug("Thread sessions after removal : `{}`", threadSessions.size());
     }
 }

@@ -4,27 +4,21 @@
  */
 package com.getshop.scope;
 
-import com.thundashop.core.common.AppContext;
-import com.thundashop.core.common.GetShopBeanException;
-import com.thundashop.core.common.GetShopLogHandler;
-import com.thundashop.core.common.ManagerBase;
-import com.thundashop.core.common.Session;
-import com.thundashop.core.common.StoreComponent;
+import com.thundashop.core.common.*;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.storemanager.data.Store;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.config.Scope;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -36,18 +30,13 @@ public class GetShopSessionScope implements Scope {
     private static final Logger log = LoggerFactory.getLogger(GetShopSessionScope.class);
 
     private StorePool storePool = null;
-    private Map<Long, String> threadStoreIds = new ConcurrentHashMap<Long, String>();
-    private Map<Long, String> threadSessionBeanNames = new ConcurrentHashMap<Long, String>();
-    private Map<Long, String> originalSessionBeanName = new ConcurrentHashMap<Long, String>();
-    private Map<Long, Session> threadSessions = new ConcurrentHashMap<Long, Session>();
-    private Map<String, Object> objectMap = new ConcurrentHashMap<String, Object>();
-    private Map<String, Object> namedSessionObjects = new ConcurrentHashMap<String, Object>();
+    private final Map<Long, String> threadStoreIds = new ConcurrentHashMap<Long, String>();
+    private final Map<Long, String> threadSessionBeanNames = new ConcurrentHashMap<Long, String>();
+    private final Map<Long, String> originalSessionBeanName = new ConcurrentHashMap<Long, String>();
+    private final Map<Long, Session> threadSessions = new ConcurrentHashMap<Long, Session>();
+    private final Map<String, Object> objectMap = new ConcurrentHashMap<String, Object>();
+    private final Map<String, Object> namedSessionObjects = new ConcurrentHashMap<String, Object>();
 
-    public String getCurrentMultilevelName() {
-        long threadId = Thread.currentThread().getId();
-        return threadSessionBeanNames.get(threadId);
-    }
-    
     public <T> T getNamedSessionBean(String multiLevelName, Class className) {
         if (multiLevelName == null || multiLevelName.isEmpty()) {
             throw new RuntimeException("Come on!! name your multilevel beans properly!!!");
@@ -151,16 +140,6 @@ public class GetShopSessionScope implements Scope {
 
     }
     
-    /**
-     * There must be a very good reason for using this function.
-     * @param name
-     * @param storeId
-     * @return 
-     */
-    public Object getManagerBasedOnNameAndStoreId(String name, String storeId) {
-        return objectMap.get(name + "_" + storeId);
-    }
-    
     public List<GetShopSessionBeanNamed> getSessionNamedObjects() {
         long threadId = Thread.currentThread().getId();
         String storeId = threadStoreIds.get(threadId);
@@ -228,7 +207,7 @@ public class GetShopSessionScope implements Scope {
 
     public void cleanupThreadSessions() {
         log.debug("Thread sessions before removal : `{}`", threadSessions.size());
-        List<Long> toRemove = new ArrayList();
+        List<Long> toRemove = new ArrayList<>();
 
         for (Long threadId : threadSessions.keySet()) {
             Session session = threadSessions.get(threadId);
@@ -237,7 +216,7 @@ public class GetShopSessionScope implements Scope {
             }
         }
 
-        toRemove.stream().forEach(o -> threadSessions.remove(o));
+        toRemove.forEach(threadSessions::remove);
 
         log.debug("Thread sessions after removal : `{}`", threadSessions.size());
     }

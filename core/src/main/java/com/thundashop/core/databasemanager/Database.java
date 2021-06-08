@@ -16,7 +16,6 @@ import com.mongodb.Mongo;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopLogHandler;
-import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.PermenantlyDeleteData;
 import com.thundashop.core.common.StoreComponent;
 import com.thundashop.core.databasemanager.data.Credentials;
@@ -39,6 +38,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.mongodb.morphia.Morphia;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.nio.file.Path;
@@ -55,6 +56,8 @@ import static java.nio.file.StandardOpenOption.CREATE;
 @GetShopSession
 public class Database extends StoreComponent {
 
+    private static final Logger log = LoggerFactory.getLogger(Database.class);
+
     public static int mongoPort = 27018;
 
     private Mongo mongo;
@@ -65,12 +68,9 @@ public class Database extends StoreComponent {
 
     @Autowired
     private StorePool storePool;
-    
-    @Autowired
-    private BackupRepository backupRepository;
 
     @Autowired
-    public Logger logger;
+    private BackupRepository backupRepository;
 
     public void activateSandBox() {
         sandbox = true;
@@ -84,13 +84,13 @@ public class Database extends StoreComponent {
         try {
             createDataFolder();
         } catch (IOException ex) {
-            ex.printStackTrace();
+            log.error("", ex);
         }
         String host = System.getenv("HOSTNAME_MONGODB");
         boolean foundInEnvVars = host != null && host.length() > 0;
         if (!foundInEnvVars){ host = "localhost"; }
 
-        System.out.println("Connecting to mongo host: " + host);
+        log.debug("Connecting to mongo host: `{}`", host);
         mongo = new Mongo(host, mongoPort);
         morphia = new Morphia();
         morphia.getMapper().getConverters().addConverter(BigDecimalConverter.class);
@@ -132,27 +132,25 @@ public class Database extends StoreComponent {
         }
 
         if (file.exists() && !file.isDirectory()) {
-            GetShopLogHandler.logPrintStatic("The file " + file.getPath() + " is not a folder", null);
+            log.error("The file `{}` is not a folder", file.getPath());
             System.exit(-1);
         }
 
         file.mkdir();
 
         if (!file.exists()) {
-            GetShopLogHandler.logPrintStatic("=======================================================================================================", null);
-            GetShopLogHandler.logPrintStatic("Was not able to create folder " + file.getCanonicalPath(), null);
-            GetShopLogHandler.logPrintStatic("=======================================================================================================", null);
+            log.error("Was not able to create folder `{}`", file.getCanonicalPath());
             System.exit(-1);
         }
 
     }
-    
+
     private void permanentlyDeleteData(String id, String databaseName, String storeId) {
         if (id == null || id.isEmpty()) {
             // Really, nothing to delete;
             return;
         }
-        
+
         BasicDBObject dbo = new BasicDBObject();
         dbo.put("_id", id);
         mongo.getDB(databaseName).getCollection(collectionPrefix + storeId).remove(dbo);
@@ -162,14 +160,15 @@ public class Database extends StoreComponent {
 //        logSavedMessge(data, credentials.manangerName, collectionPrefix + data.storeId);
         data.gs_manager = credentials.manangerName;
         DBObject dbObject = morphia.toDBObject(data);
-        
+
         if (data.deepFreeze) {
             return;
         }
-        
+
         try {
             mongo.getDB(credentials.manangerName).getCollection(collectionPrefix + data.storeId).save(dbObject);
         }catch(Exception e) {
+            log.error("", e);
             throw e;
         }
     }
@@ -205,23 +204,23 @@ public class Database extends StoreComponent {
 
     private List<DataCommon> getData(DBCollection collection) {
         BasicDBObject query = createQuery();
-        
+
         DBCursor cur = collection.find(query);
         List<DataCommon> all = new ArrayList<DataCommon>();
-        
+
         List<DBObject> dbObjects = new ArrayList();
-        
+
         while (cur.hasNext()) {
             dbObjects.add(cur.next());
         }
-        
+
         for (DBObject dbObject : dbObjects) {
             String className = (String) dbObject.get("className");
             if (className != null) {
                 try {
                     Class.forName(className);
                 } catch (ClassNotFoundException ex) {
-//                    logger.warning(this, "Database object has references to object that does not exists: " + className + " collection: " + collection.getName() + " manager: " + collection.getDB().getName());
+                    log.warn("Database object has references to object that does not exists: " + className + " collection: " + collection.getName() + " manager: " + collection.getDB().getName());
                     continue;
                 }
             }
@@ -236,9 +235,8 @@ public class Database extends StoreComponent {
             } catch (ClassCastException ex) {
                 // Nothing to do, the class probably been deleted but not the data in database.
             } catch (Exception ex) {
-                GetShopLogHandler.logPrintStatic("Figure out this : " + collection.getName() + " " + collection.getDB().getName(), null);
-                GetShopLogHandler.logPrintStatic(dbObject, null);
-                ex.printStackTrace();
+                log.error("Figure out this collection.getName() `{}`, collection.getDB().getName() `{}`, dbObject `{}`",
+                        collection.getName(), collection.getDB().getName(), dbObject, ex);
             }
         }
         cur.close();
@@ -251,7 +249,7 @@ public class Database extends StoreComponent {
         if(!includeDeleted) {
             obj.add(new BasicDBObject("deleted", null));
         }
-        
+
         obj.add(addBannedClass("com.thundashop.core.messagemanager.SmsLogEntry"));
         obj.add(addBannedClass("com.thundashop.core.googleapi.GmailMessage"));
         obj.add(addBannedClass("com.thundashop.core.messagehandler.data.MailSent"));
@@ -264,9 +262,9 @@ public class Database extends StoreComponent {
         obj.add(addBannedClass("com.thundashop.core.ticket.TicketAttachment"));
         obj.add(addBannedClass("com.thundashop.core.warehousemanager.StockQuantityRow"));
         andQuery.put("$and", obj);
-        
+
         return andQuery;
-        
+
     }
 
     private BasicDBObject addBannedClass(String bannedClassName) {
@@ -288,7 +286,7 @@ public class Database extends StoreComponent {
         if (isDeepFreezed(data)) {
             return;
         }
-        
+
         if (data != null && data.getClass().getAnnotation(PermenantlyDeleteData.class) != null) {
             permanentlyDeleteData(data.id, credentials.manangerName, data.storeId);
             return;
@@ -318,7 +316,7 @@ public class Database extends StoreComponent {
         try {
             return morphia.fromDBObject(DataCommon.class, found);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error("", ex);
         }
 
         return null;
@@ -423,7 +421,7 @@ public class Database extends StoreComponent {
     }
 
     public void save(String database, String collection, DataCommon data) {
-        
+
         if (data instanceof VirtualOrder) {
             return;
         }
@@ -431,17 +429,17 @@ public class Database extends StoreComponent {
         checkId(data);
         DBCollection col = mongo.getDB(database).getCollection(collection);
         DBObject dbObject = morphia.toDBObject(data);
-        
+
         if (data.rowCreatedDate == null) {
             data.rowCreatedDate = new Date();
         }
 
         logSavedMessge(data, database, collection);
-        
+
         if (data.deepFreeze) {
             return;
         }
-        
+
         col.save(dbObject);
     }
 
@@ -506,7 +504,7 @@ public class Database extends StoreComponent {
 
         addDataCommonToDatabase(data, credentials);
     }
-    
+
     public void saveDirect(DBObject dbObject, Credentials credentials) {
         mongo.getDB(credentials.manangerName).getCollection(collectionPrefix + credentials.storeid).save(dbObject);
     }
@@ -516,35 +514,35 @@ public class Database extends StoreComponent {
         if (getSession() != null && getSession().currentUser != null) {
             userId = getSession().currentUser.id;
         }
-        
+
         if (database.contains("'")) {
             throw new RuntimeException("Database names are not allowed to contain '");
         }
-        
+
         DataCommon oldObject = getObjectDirect(database, collection, newObject.id);
         if (oldObject != null) {
             backupRepository.saveBackup(userId, oldObject, storeId, database, collection);
         }
 
-        
+
     }
 
     public boolean verifyThatStoreIdentifierNotInUse(String identifier) {
         DB db = mongo.getDB("StoreManager");
-        
+
         for (String colName : db.getCollectionNames()) {
             DBCollection col = db.getCollection(colName);
-            
+
             BasicDBObject finder = new BasicDBObject();
             finder.put("className", "com.thundashop.core.storemanager.data.Store");
             finder.put("identifier", identifier);
-            
+
             int found = col.find(finder).size();
             if (found > 0) {
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -584,9 +582,9 @@ public class Database extends StoreComponent {
 
         Collections.sort(all, new DataCommonSorter());
 
-        return all;    
+        return all;
     }
-    
+
     private void logToFile(DataCommon data) {
         try {
             StackTraceElement[] trace = Thread.currentThread().getStackTrace();
@@ -597,7 +595,7 @@ public class Database extends StoreComponent {
             for(StackTraceElement el : trace) {
                 if(el.getClassName().toString().contains("thundashop")) {
                     String methodName = el.getMethodName();
-                    if(!methodName.contains("invoke") && 
+                    if(!methodName.contains("invoke") &&
                             !methodName.equalsIgnoreCase("ExecuteMethod") &&
                             !methodName.equals("logToFile") &&
                             !methodName.equals("executeMethodSync") &&
@@ -615,12 +613,12 @@ public class Database extends StoreComponent {
             for(String mname : methods.values()) {
                 txt += mname + ";";
             }
-            
+
             txt += "\r\n";
             Path logPath = Paths.get("/tmp/dbwritelog.txt");
             Files.write(logPath, txt.getBytes(), APPEND, CREATE);
         }catch(Exception e) {
-            e.printStackTrace();
+            log.error("", e);
         }
     }
 

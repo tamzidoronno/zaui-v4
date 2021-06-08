@@ -16,6 +16,9 @@ import com.thundashop.core.common.JsonObject2;
 import com.thundashop.core.common.MessageBase;
 import com.thundashop.core.common.StorePool;
 import com.thundashop.core.common.WebSocketReturnMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
@@ -32,6 +35,9 @@ import java.util.TimeZone;
  * @author ktonder
  */
 public class WebInterfaceSocketThread2 implements Runnable {
+
+    private static final Logger log = LoggerFactory.getLogger(WebInterfaceSocketThread2.class);
+
     private StorePool storePool;
     private Socket socket;
 
@@ -39,16 +45,18 @@ public class WebInterfaceSocketThread2 implements Runnable {
         this.storePool = storePool;
         this.socket = socket;
     }
-    
+
     private List<MessageBase> executeMessage(String message, String addr) {
         try {
             Object result = storePool.ExecuteMethod(message, addr);
             sendMessage(result);
         } catch (ErrorException d) {
+            log.error("Error while executing, message `{}`, addr `{}`", message, addr, d);
+
             Gson gson = new GsonBuilder()
                 .serializeNulls()
                 .create();
-        
+
             JsonObject2 inObject = gson.fromJson(message, JsonObject2.class);
             if (inObject.version != null && inObject.version.equals("2")) {
                 WebSocketReturnMessage msg = new WebSocketReturnMessage();
@@ -59,7 +67,7 @@ public class WebInterfaceSocketThread2 implements Runnable {
                 sendMessage(new ErrorMessage(d));
             }
         }
-   
+
         List<MessageBase> messages = new ArrayList();
         return messages;
     }
@@ -77,6 +85,7 @@ public class WebInterfaceSocketThread2 implements Runnable {
                 executeMessage(json, socket.getInetAddress().getHostAddress());
             }
         } catch (Exception ex) {
+            log.error("", ex);
             if (!(ex instanceof ErrorException)) {
                 ex.printStackTrace();
             }
@@ -103,13 +112,12 @@ public class WebInterfaceSocketThread2 implements Runnable {
                 Gson gson = builder.create();
                 json = gson.toJson((Object) result);
             }catch(Exception e) {
-                GetShopLogHandler.logPrintStatic(result, null);
-                e.printStackTrace();
+                log.error("", e);
             }
             dos.write((json + "\n").getBytes("UTF8"));
             dos.flush();
         } catch (Exception d) {
-            d.printStackTrace();
+            log.error("", d);
         }
     }
 

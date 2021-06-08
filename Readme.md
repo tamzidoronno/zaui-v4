@@ -6,6 +6,8 @@ Setup instructions for building with Gradle
 
 This code has been adapted to compile using Gradle version 6.7/6.8
 
+Create all the jars in the artifacts/builds folder by running './scripts/assemble.sh <version-name>' from the root folder of the main project.
+
 ### First time, create the gradle wrapper
 
 `gradle wrapper`

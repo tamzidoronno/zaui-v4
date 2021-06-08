@@ -10,13 +10,14 @@ import com.thundashop.core.gsd.GetShopDeviceMessage;
 import getshopiotserver.GetShopIOTCommon;
 import getshopiotserver.GetShopIOTOperator;
 import getshopiotserver.MessageProcessorInterface;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
+
+import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.StandardOpenOption;
-import java.util.Base64;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,32 +45,39 @@ public class ProcessPrinterMessage extends GetShopIOTCommon implements MessagePr
             logPrint("Printing socket ip:" + ip + ", port: " + port);
             printToSocket(ip, port, directPrintMessage.content);
             logPrint("Printing socket done...");
-        } else {
-            logPrint("Printing usb...");
+        }else if (GetShopIOTOperator.isWindows) {
+            this.printToWindows(directPrintMessage.content);
+        }
+        else {
+            this.logPrint("Printing usb...");
             File dir = new File("/dev/usb");
-            File[] directoryListing = dir.listFiles(); 
+            File[] directoryListing = dir.listFiles();
             if (directoryListing != null) {
-              for (File child : directoryListing) {
-                // Do something with child
-                if (child.getName().contains("lp")) {
-                    Files.write(
-                    child.toPath(), 
-                    Base64.getDecoder().decode(directPrintMessage.content), 
-                    StandardOpenOption.APPEND);    
+                File[] var7 = directoryListing;
+                int var8 = directoryListing.length;
+
+                for(int var9 = 0; var9 < var8; ++var9) {
+                    File child = var7[var9];
+                    if (child.getName().contains("lp")) {
+                        Files.write(child.toPath(), Base64.getDecoder().decode(directPrintMessage.content), new OpenOption[]{StandardOpenOption.APPEND});
+                    }
                 }
-              }
             }
         }        
     }
 
     private void printToSocket(String ip, int port, String message) {
         try{
+            this.logPrint("Inside ProcessPrinterMessage.printToSocket");
+            this.logPrint("Message:" + message);
+            System.out.println("SystemOut: Inside ProcessPrinterMessage.printToSocket");
             byte[] res = Base64.getDecoder().decode(message);
-            message = new String(res);
+            message = new String(res, StandardCharsets.UTF_8);
             Socket sock= new Socket(ip, port);
             PrintWriter writer= new PrintWriter(sock.getOutputStream());
             writer.println(message);
             writer.close();
+            this.logPrint("Done and closing socket..");
             sock.close();
             
             // Sleep as we wait for the printer to be finished printing.
@@ -82,5 +90,38 @@ public class ProcessPrinterMessage extends GetShopIOTCommon implements MessagePr
         }
 
     }
-    
+
+    private void printToWindows(final String content) throws IOException {
+        this.logPrint("Printing on Windows, saving temp files to C:\\GetShop");
+        File path = new File("C:\\GetShop\\tmp_print_file.txt");
+        if (path.exists()) {
+            path.delete();
+        }
+
+        path.createNewFile();
+        byte[] res = Base64.getDecoder().decode(content);
+        String message = new String(res, StandardCharsets.UTF_8);
+        List<String> lines =  Arrays. asList(message);
+        Files.write(path.toPath(), lines, StandardCharsets.UTF_8);
+
+
+        try {
+            String[] print_cmd = { "CMD", "/C", "COPY", "/b", "tmp_print_file.txt", "\\\\localhost\\POS-80-Series" };
+            Process p = Runtime.getRuntime().exec(print_cmd);
+            p.waitFor();
+            final BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e2) {
+            e2.printStackTrace();
+        }
+    }
+
+
 }

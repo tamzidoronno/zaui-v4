@@ -165,6 +165,7 @@ public class PmsConfiguration extends DataCommon {
     public boolean markDirtyEvenWhenCodeNotPressed = false;
     public boolean doNotRecommendBestPrice = false;
     public boolean automaticallyCheckInOutGuests = false;
+    public String zReportProcessingTime = null;
 
     /* Invoice creation options */
     public boolean fastOrderCreation = false;

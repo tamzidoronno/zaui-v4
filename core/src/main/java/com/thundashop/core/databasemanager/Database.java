@@ -17,19 +17,13 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.Logger;
-import com.thundashop.core.common.ManagerSubBase;
 import com.thundashop.core.common.PermenantlyDeleteData;
-import com.thundashop.core.common.SessionFactory;
 import com.thundashop.core.common.StoreComponent;
 import com.thundashop.core.databasemanager.data.Credentials;
-import com.thundashop.core.getshoplocksystem.ZwaveLockServer;
 import com.thundashop.core.ordermanager.data.VirtualOrder;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.storemanager.data.Store;
-import com.thundashop.core.usermanager.data.User;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.nio.file.Files;
@@ -47,11 +41,9 @@ import java.util.stream.Stream;
 import org.mongodb.morphia.Morphia;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-
-import static java.nio.charset.StandardCharsets.UTF_8;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
 import static java.nio.file.StandardOpenOption.APPEND;
 import static java.nio.file.StandardOpenOption.CREATE;
 
@@ -64,16 +56,10 @@ import static java.nio.file.StandardOpenOption.CREATE;
 public class Database extends StoreComponent {
 
     public static int mongoPort = 27018;
-//    public static int mongoPort = 27015;
 
     private Mongo mongo;
     private Morphia morphia;
-    
     private String collectionPrefix = "col_";
-    
-    @Autowired
-    public Logger logger;
-
     private boolean sandbox = false;
     private boolean includeDeleted = false;
 
@@ -82,6 +68,9 @@ public class Database extends StoreComponent {
     
     @Autowired
     private BackupRepository backupRepository;
+
+    @Autowired
+    public Logger logger;
 
     public void activateSandBox() {
         sandbox = true;

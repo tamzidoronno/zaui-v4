@@ -4,8 +4,6 @@ package com.thundashop.core.common;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,10 +24,7 @@ public class GetShopLogHandler {
     }
 
     public static void logStack(Exception ex, String storeId) {
-        StringWriter errors = new StringWriter();
-        ex.printStackTrace(new PrintWriter(errors));
-        String stack = errors.toString();
-        logPrintStatic(stack, storeId);
+        log.error("Error for storeId `{}`", storeId, ex);
     }
 
  

@@ -1,5 +1,5 @@
 #!/bin/bash
-cd C:/wamp64/www/getshop-v4
+cd ../../
 mkdir tmpfrontend
 cd tmpfrontend
 cp -r ../com.getshop.client/* .
@@ -10,6 +10,9 @@ mkdir app;
 mkdir etc;
 chmod 777 app;
 chmod 777 etc;
+
+rm -rf events/
+cp -r ../../build/events .
 
 echo "backenddb=116.202.132.139" > etc/config.txt
 echo "port=25554" >> etc/config.txt
@@ -22,9 +25,5 @@ chmod 777 ROOT/cssfolder
 chmod 777 ROOT/javascripts
 
 cd ../
-cp -r tmpfrontend C:/wamp64/www/getshopServer
-rm -rf tmpfrontend;
-
-cd C:/wamp64/www/getshopServer
 rm -fr frontend
 mv tmpfrontend frontend

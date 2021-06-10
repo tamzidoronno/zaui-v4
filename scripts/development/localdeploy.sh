@@ -1,8 +1,8 @@
 #!/bin/bash
 
 echo "Deploying Frontend code to Apache docroot"
-cp c:/wamp64/www/php_4.1.0.tar.gz c:/wamp64/www/getshopServer
-cd c:/wamp64/www/getshopServer/
+cp ../../../php_4.1.0.tar.gz ../../
+cd ../../
 
 FILE=php_4.1.0.tar.gz
 if test -f "$FILE"; then

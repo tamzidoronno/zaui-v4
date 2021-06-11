@@ -653,7 +653,13 @@ function getshop_loadAddonsAndGuestSumaryView() {
     var client = getshop_getWebSocketClient();
     var getAddons = client.PmsBookingProcess.getAddonsSummary(getshop_domainname, toPush);
     getAddons.done(function(res) {
-        getshop_loadAddonsAndGuestSummaryByResult(res);
+        try {
+            parseInt( res.textualSummary[0].split(" ")[0] );
+            getshop_loadAddonsAndGuestSummaryByResult(res);
+        }
+        catch (e) {
+            getshop_fixCupounCode();
+        }
     });
 }
 
@@ -730,8 +736,8 @@ function getshop_loadAddonsAndGuestSummaryByResult(res) {
     }
     if(!foundItems) {
         $('.addonsentry').hide();
-    }
-    console.log(res)
+    };
+    console.log(res);
     getshop_loadRooms(res);
     getshop_loadTextualSummary(res);
     getshop_loadBookerInformation(res);
@@ -2384,6 +2390,25 @@ function getshop_printPrice(price) {
     }
 }
 
+function getshop_fixCupounCode() {
+    var divEl = document.createElement("div");
+    divEl.innerHTML = "The booking code is invalid. Please try again.";
+    divEl.style.color = "red";
+    divEl.style.display = "inline-block";
+    document.getElementsByClassName("gslbookingHeader")[0].append(divEl);
+
+    document.getElementById("coupon_input").value = "";
+    setTimeout(function() {
+        document.getElementsByClassName("gslbookingHeader")[0].style.display = "inline-block"; 
+        document.getElementsByClassName("gslbookingBody")[0].style.display = "none";
+        document.getElementsByClassName("ordersummary")[0].style.display = "block"; 
+        document.getElementsByClassName("productoverview")[0].style.display = "block"; 
+
+    }, 1000);
+    
+    document.getElementsByClassName("addons_overview")[0].style.display = "none";
+}
+
 function getshop_searchRooms(e) {
     try {
         if(getshop_avoiddoubletap(e)) { return; }
@@ -2393,6 +2418,7 @@ function getshop_searchRooms(e) {
             return;
         }
         if(typeof(getshop_nextPage) !== "undefined") {
+            console.log("nextPage");
             getshop_goToNextPage(getshop_nextPage);
             return;
         }
@@ -2414,23 +2440,6 @@ function getshop_searchRooms(e) {
         $('.productentrybox').remove();
         var time = new Date().toLocaleTimeString('en-us');
         var discountCode = $('#coupon_input').val();
-        console.log("DiscountCode");
-        console.log(discountCode);
-        console.log(typeof(discountCode));
-
-        var client = getshop_getWebSocketClient();
-
-        try {
-            discountCodeObj = {"discount": discountCode};
-            var couponCheck = client.PmsBookingProcess.setCampaignCode(getshop_domainname, discountCodeObj);
-            couponCheck.done(function(res) {
-                console.log(res);
-                console.log(res.discount)
-            });
-        } catch (err) {
-            discountCode = "";
-            getshop_handleException(err);
-        }
 
         var start = moment.utc($('#date_picker_start').val(), "DD.MM.YYYY").local();
         var startDate = start.format('MMM DD, YYYY ') + time;
@@ -2458,7 +2467,7 @@ function getshop_searchRooms(e) {
             "browser" : getshop_get_browser(),
             "browserLanguage" : userLang
         };
-
+        var client = getshop_getWebSocketClient();
         var starting = client.PmsBookingProcess.startBooking(getshop_domainname, data);
         starting.done(function(res) {
             if(btnText) {
@@ -2967,10 +2976,7 @@ GetShopApiWebSocketEmbeddedBooking.prototype = {
     handleMessage: function(msg) {
         var data = msg.data;
         var jsonObject = JSON.parse(data);
-        console.log("L2954. jsonObject");
-        console.log(jsonObject);
         
-
         var corrolatingMessage = this.getMessage(jsonObject.messageId);
 
         if (typeof(corrolatingMessage) === "undefined") {

@@ -658,7 +658,7 @@ function getshop_loadAddonsAndGuestSumaryView() {
             getshop_loadAddonsAndGuestSummaryByResult(res);
         }
         catch (e) {
-            getshop_fixCupounCode();
+            getshop_fixCouponCode();
         }
     });
 }
@@ -2390,7 +2390,7 @@ function getshop_printPrice(price) {
     }
 }
 
-function getshop_fixCupounCode() {
+function getshop_fixCouponCode() {
     var divEl = document.createElement("div");
     divEl.innerHTML = "The booking code is invalid. Please try again.";
     divEl.style.color = "red";

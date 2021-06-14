@@ -10,30 +10,28 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.thundashop.core.storemanager.data.Store;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.nio.file.Paths;
-import java.nio.file.Path;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  *
  * @author ktonder
  */
 public class StorePool {
+
+    private static final Logger log = LoggerFactory.getLogger(StorePool.class);
+
     private HashMap<String, StoreHandler> storeHandlers = new HashMap();
     private com.thundashop.core.storemanager.StorePool storePool;
     private Date lastTimePrintedTimeStampToLog = null;
@@ -51,6 +49,7 @@ public class StorePool {
             Method method = getMethod(object);
             return method.getGenericParameterTypes();
         } catch (ClassNotFoundException ex) {
+            log.error("", ex);
             throw new ErrorException(81);
         }
 
@@ -61,6 +60,7 @@ public class StorePool {
             Method method = getMethod(object);
             return (Class<?>[]) method.getParameterTypes();
         } catch (Exception ex) {
+            log.error("", ex);
             throw new ErrorException(81);
         }
     }
@@ -91,6 +91,7 @@ public class StorePool {
 
             return classLoaded;
         } catch (ClassNotFoundException ex) {
+            log.error("", ex);
             throw new ErrorException(81);
         }
     }
@@ -141,16 +142,10 @@ public class StorePool {
         
         
         if(lastTimePrintedTimeStampToLog == null) {
-            System.out.println("####################################################################################################################################");
-            System.out.println("####################################################  " + new Date() + "  ################################################");
-            System.out.println("####################################################################################################################################");
             lastTimePrintedTimeStampToLog = new Date();
         } else {
             long diff = System.currentTimeMillis() - lastTimePrintedTimeStampToLog.getTime();
             if(diff > (1000*60*5)) {
-                System.out.println("####################################################################################################################################");
-                System.out.println("####################################################  " + new Date() + "  ################################################");
-                System.out.println("####################################################################################################################################");
                 lastTimePrintedTimeStampToLog = new Date();
             }
         }
@@ -159,8 +154,7 @@ public class StorePool {
             object = gson.fromJson(message, type);
             object.addr = addr;
         } catch (JsonSyntaxException ex) {
-            GetShopLogHandler.logPrintStatic("Could not decode: " + message, null);
-            ex.printStackTrace();
+            log.error("Could not decode: `{}`", message, ex);
             return null;
         }
         try {
@@ -168,6 +162,8 @@ public class StorePool {
         }catch(Exception e) {
             //invalid mulitlevelname.
         }
+
+        log.debug("interface '{}' method '{}' getShopModuleName `{}`", object.interfaceName, object.method, object.getShopModuleName);
        
         int i = 0;
         Object[] executeArgs = new Object[object.args.size()];
@@ -177,17 +173,17 @@ public class StorePool {
             try {
                 Class classLoaded = getClass(types[i].getCanonicalName());
             }catch(Exception e) {
-                GetShopLogHandler.logPrintStatic("test", null);
+                log.error("", e);
             }
             try {
                 Gson useGson = isAdministrator(object) || whiteLabeledForVirusScans(object) ? gson : gsonWithVirusScanner;
                 Object argument = useGson.fromJson(object.args.get(parameter), casttypes[i]);
                 executeArgs[i] = argument;
             } catch (Exception e) {
-                GetShopLogHandler.logPrintStatic("Cast type: " + casttypes[i], null);
-                GetShopLogHandler.logPrintStatic("From json param: " + object.args.get(parameter), null);
-                GetShopLogHandler.logPrintStatic("From json paramValue: " + object.args.get(parameter), null);
-                GetShopLogHandler.logPrintStatic("From json message: " + message, null);
+                log.error("Cast type `{}`, json param `{}`, json paramValue `{}`, json message `{}`", casttypes[i],
+                        object.args.get(parameter),
+                        object.args.get(parameter),
+                        message, e);
                 ErrorException ex = new ErrorException(100);
                 ex.additionalInformation = e.getMessage();
                 throw ex;
@@ -267,19 +263,19 @@ public class StorePool {
                     try {
                         logToTimerLoggedToFile(object);
                     }catch(Exception e) {
-                        GetShopLogHandler.logPrintStatic(e, object.storeId);
+                        log.error("storeId `{}`", object.storeId, e);
                     }
                     running.remove(object.id);
                 }catch(Exception x) {
                     
                     if (!(x instanceof ErrorException)) {
-                        GetShopLogHandler.logPrintStatic("Exception: " + x.getMessage(), handler.getStoreId());
-                        x.printStackTrace();
+                        log.error("storeId `{}`", handler.getStoreId(), x);
                     }
                     running.remove(object.id);
                     throw x;
                 }
             }catch(ErrorException x) {
+                log.error("", x);
                 running.remove(object.id);
                 throw x;
             }
@@ -299,6 +295,7 @@ public class StorePool {
                 try {
                     return iface.getDeclaredMethod(executeMethod.getName(), executeMethod.getParameterTypes());
                 } catch (Exception ex) {
+                    log.error("", ex);
                     retex.additionalInformation = ex.getMessage();
                     throw retex;
                 }
@@ -320,8 +317,10 @@ public class StorePool {
 
             return aClass.getMethod(method, types);
         } catch (NoSuchMethodException ex) {
+            log.error("", ex);
             throw new ErrorException(82);
         } catch (SecurityException ex) {
+            log.error("", ex);
             throw new ErrorException(83);
         }
     }
@@ -331,9 +330,9 @@ public class StorePool {
             ClassLoader classLoader = getClass().getClassLoader();
             return classLoader.loadClass("com.thundashop." + objectName);
         } catch (ClassNotFoundException ex) {
+            log.error("", ex);
             ErrorException gex = new ErrorException(81);
             gex.additionalInformation = ex.getMessage();
-            ex.printStackTrace();
             throw gex;
         }
     }
@@ -367,9 +366,7 @@ public class StorePool {
             }
         }
         if (method == null) {
-            GetShopLogHandler.logPrintStatic("Failed on interface: " + object.interfaceName, null);
-            GetShopLogHandler.logPrintStatic("Failed on method: " + object.method, null);
-            GetShopLogHandler.logPrintStatic("Failed on size: " + object.args.size(), null);
+            log.error("Cannot find interface `{}`, method `{}`, size '{}'", object.interfaceName, object.method, object.args.size());
         }
         return method;
     }
@@ -453,7 +450,8 @@ public class StorePool {
         long diff = System.currentTimeMillis() - lastCheck.getTime();
         return diff > 2000;
     }
-    
+
+    // TODO why is this method?
     private void logToTimerToFile() throws Exception {
         String result = "Number of objects to track: " + running.keySet().size() + "\r\n";
         HashMap<String, JsonObject2> runningObjects = new HashMap(running);
@@ -473,7 +471,8 @@ public class StorePool {
         writer.close();
         lastCheck = new Date();
     }
-    
+
+    // TODO why is this method?
     private void logToTimerLoggedToFile(JsonObject2 obj) throws Exception {
         long timer = (System.currentTimeMillis() - obj.started.getTime())/1000;
         if(timer > 2) {

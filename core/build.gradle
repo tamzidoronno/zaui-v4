@@ -16,8 +16,13 @@ task fatJar(type: Jar) {
 }
 
 task startGenerator(type:JavaExec) {
+    environment "AWS_ACCESS_KEY_ID", "AKIA5AUGC7IRQTFVIZ3C"
+    environment "AWS_SECRET_ACCESS_KEY", "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"
     main = 'com.thundashop.core.apigenerator.GenerateApi'
     classpath = sourceSets.main.runtimeClasspath
+    dependencies {
+        runtimeClasspath group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.30'
+    }
 }
 
 task generateJavascriptApi(type:JavaExec) {
@@ -34,4 +39,6 @@ manifest {
 dependencies {
     compile project(":messages")
     compile fileTree(dir: '../libs', include: ['*.jar'])
+    implementation group: 'ca.pjer', name: 'logback-awslogs-appender', version: '1.5.0'
+    implementation group: 'software.amazon.awssdk', name: 'bundle', version: '2.16.83'
 }

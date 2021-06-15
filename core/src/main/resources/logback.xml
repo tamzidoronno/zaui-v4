@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration>
+<configuration packagingData="true">
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <withJansi>true</withJansi>
         <encoder>
@@ -21,5 +21,64 @@
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILE"/>
     </root>
+
+<!-- Register the shutdown hook to allow logback to cleanly stop appenders -->
+<!-- this is strongly recommend when using AwsLogsAppender in async mode, -->
+<!-- to allow the queue to flush on exit -->
+<shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>
+
+<!-- Timestamp used into the Log Stream Name -->
+<timestamp key="timestamp" datePattern="yyyyMMddHHmmssSSS"/>
+
+<!-- The actual AwsLogsAppender (asynchronous mode because of maxFlushTimeMillis > 0) -->
+<appender name="ASYNC_AWS_LOGS" class="ca.pjer.logback.AwsLogsAppender">
+
+    <!-- Send only WARN and above -->
+    <!-- <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+         <level>WARN</level>
+         <level>INFO</level>
+         <level>DEBUG</level>
+     </filter>-->
+
+    <!-- Nice layout pattern -->
+    <layout>
+        <pattern>%date{ISO8601} %thread %level %logger{15} %msg%n</pattern>
+    </layout>
+
+    <!-- Hardcoded Log Group Name -->
+    <logGroupName>/myapp/onprem/component-1</logGroupName>
+
+    <!-- Log Stream Name UUID Prefix -->
+    <logStreamName>cluster-9</logStreamName>
+
+    <!-- Hardcoded AWS region -->
+    <!-- So even when running inside an AWS instance in us-west-1, logs will go to us-west-2 -->
+    <logRegion>us-east-2</logRegion>
+
+    <!-- Maximum number of events in each batch (50 is the default) -->
+    <!-- will flush when the event queue has 50 elements, even if still in quiet time (see maxFlushTimeMillis) -->
+    <maxBatchLogEvents>5</maxBatchLogEvents>
+
+    <!-- Maximum quiet time in millisecond (0 is the default) -->
+    <!-- will flush when met, even if the batch size is not met (see maxBatchLogEvents) -->
+    <maxFlushTimeMillis>3</maxFlushTimeMillis>
+
+    <!-- Maximum block time in millisecond (5000 is the default) -->
+    <!-- when > 0: this is the maximum time the logging thread will wait for the logger, -->
+    <!-- when == 0: the logging thread will never wait for the logger, discarding events while the queue is full -->
+    <maxBlockTimeMillis>0</maxBlockTimeMillis>
+
+    <!-- Retention value for log groups, 0 for infinite see -->
+    <!-- https://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_PutRetentionPolicy.html for other -->
+    <!-- possible values -->
+
+    <retentionTimeDays>1</retentionTimeDays>
+</appender>
+
+<!-- Root with a threshold to INFO and above -->
+<root level="INFO">
+    <!-- Append to the (async) AwsLogsAppender -->
+    <appender-ref ref="ASYNC_AWS_LOGS"/>
+</root>
 
 </configuration>

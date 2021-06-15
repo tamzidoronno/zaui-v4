@@ -35,6 +35,7 @@ public class WubookThreadRipper extends Thread {
     
     @Override
     public void run() {
+        manager.logPrint(Thread.currentThread().getName() + " " + getClass() + " " + "Starting thread... opType: " + type);
         if(type == 1) { fetchNewBookings(); }
         if(type == 2) { updateShortAvailability(); }
     }
@@ -53,29 +54,34 @@ public class WubookThreadRipper extends Thread {
         
         manager.logText("Executing api call: " + apicall);
         try {
+            manager.logPrint(Thread.currentThread().getName() + " " + getClass() + "Calling wubookManger api, apiCall: " + apicall + " params: " + params);
             Vector res = (Vector) client.execute(apicall, params);
+            manager.logPrint(Thread.currentThread().getName() + " " + getClass() + "Response from wubookManager api, apiCall: " + apicall + " response: " + res);
             return res;
         }catch(Exception d) {
             manager.logText("Could not connect to wubook on api call: " + apicall + " message: " + d.getMessage());
+            manager.messageManager.sendErrorNotification(Thread.currentThread().getName() + " " + getClass() + " Exception while calling wubook, apiCall: " + apicall + " params: " + params + " error: " + d.getMessage(), d);
             manager.disableWubook = new Date();
-            d.printStackTrace();
+            manager.logPrintException(d);
         }
         return null;
     }
     
     public void fetchNewBookings() {
+        manager.logPrint(Thread.currentThread().getName() + " " + getClass() + " fetch Booking Thread Is Running: " + manager.fetchBookingThreadIsRunning);
         if(manager.fetchBookingThreadIsRunning) {
-            manager.logText("A thread already running for fetchnewbooking");
-            manager.logPrint("A thread already running for fetchnewbooking");
+            manager.logText(Thread.currentThread().getName() + " " + getClass() + " A thread already running for fetchnewbooking");
             Calendar cal = Calendar.getInstance();
             long diff = System.currentTimeMillis() - manager.fetchBookingThreadStarted.getTime();
             diff = diff / 10000;
+            manager.logText(Thread.currentThread().getName() + " " + getClass() + " diff from last running time: " + diff);
             if(diff > 600) {
                 manager.fetchBookingThreadIsRunning = false;
             }
             return;
         }
         manager.fetchBookingThreadStarted = new Date();
+        manager.logText(Thread.currentThread().getName() + " " + getClass() + " Acquiring lock at: " + manager.fetchBookingThreadStarted);
         manager.fetchBookingThreadIsRunning = true;
         try {
             markBookingsFetched();
@@ -104,8 +110,9 @@ public class WubookThreadRipper extends Thread {
                 manager.bookingsToAdd = (Vector) result.get(1);
             }
         }catch(Exception d) {
-            manager.logText("Failed in fetch new booking " + d.getMessage());
+            manager.logText(Thread.currentThread().getName() + " " + getClass() +"Failed in fetch new booking " + d.getMessage());
             manager.logPrintException(d);
+            manager.messageManager.sendErrorNotification(Thread.currentThread().getName() + " " + getClass() + " Exception while calling wubook, apiCall: fetch_new_bookings" + " error: " + d.getMessage(), d);
         }
         manager.fetchBookingThreadIsRunning = false;
         

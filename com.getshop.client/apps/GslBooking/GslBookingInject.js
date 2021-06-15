@@ -653,12 +653,12 @@ function getshop_loadAddonsAndGuestSumaryView() {
     var client = getshop_getWebSocketClient();
     var getAddons = client.PmsBookingProcess.getAddonsSummary(getshop_domainname, toPush);
     getAddons.done(function(res) {
-        try {
-            parseInt( res.textualSummary[0].split(" ")[0] );
-            getshop_loadAddonsAndGuestSummaryByResult(res);
-        }
-        catch (e) {
+        if (Number.isInteger(res.errorCode)) {
             getshop_fixCouponCode();
+            
+        } else {
+            getshop_loadAddonsAndGuestSummaryByResult(res);
+            
         }
     });
 }
@@ -737,7 +737,6 @@ function getshop_loadAddonsAndGuestSummaryByResult(res) {
     if(!foundItems) {
         $('.addonsentry').hide();
     };
-    console.log(res);
     getshop_loadRooms(res);
     getshop_loadTextualSummary(res);
     getshop_loadBookerInformation(res);
@@ -2391,11 +2390,20 @@ function getshop_printPrice(price) {
 }
 
 function getshop_fixCouponCode() {
-    var divEl = document.createElement("div");
-    divEl.innerHTML = "The booking code is invalid. Please try again.";
-    divEl.style.color = "red";
-    divEl.style.display = "inline-block";
-    document.getElementsByClassName("gslbookingHeader")[0].append(divEl);
+    if (!document.getElementById("invalid_coupon")) {
+        var spanEl = document.createElement("span");
+        spanEl.setAttribute("id", "invalid_coupon");
+
+        spanEl.setAttribute("gstype", "bookingtranslation");
+        spanEl.setAttribute("gstranslationfield", "invalid_coupon");
+        getshop_setBookingTranslation();
+
+        spanEl.style.color = "red";
+        spanEl.style.display = "inline-block";
+        spanEl.style.textAlign = "center";
+        spanEl.style.width = "100%";
+        document.getElementsByClassName("gslbookingHeader")[0].append(spanEl);
+    }
 
     document.getElementById("coupon_input").value = "";
     setTimeout(function() {

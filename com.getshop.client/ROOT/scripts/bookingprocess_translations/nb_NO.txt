@@ -133,4 +133,5 @@
     "pick_new_date": "Velg ny dato",
     "no_tours": "Beklager, denne aktiviteten er ikke tilgjengelig for ditt opphold.",
     "no_activities": "Beklager, vi har ingen ledige aktiviteter for ditt opphold.",
+    "invalid_coupon": "Bookingkoden er ugyldig. Vennligst prøv på ny.",
 }

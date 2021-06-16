@@ -1,8 +1,8 @@
 #!/bin/bash
 
 echo "Deploying Frontend code to Apache docroot"
-cp ../../../php_4.1.0.tar.gz ../../
-cd ../../
+cp /home/atequer/getshop-v4/artifacts/builds/4.1.0/php_4.1.0.tar.gz /home/atequer/getshop-php/dist
+cd /home/atequer/getshop-php/dist
 
 FILE=php_4.1.0.tar.gz
 if test -f "$FILE"; then
@@ -19,7 +19,7 @@ if test -f "$FILE"; then
 	chmod 777 app;
 	chmod 777 etc;
 
-	echo "backenddb=116.202.132.139" > etc/config.txt
+	echo "backenddb=127.0.0.1" > etc/config.txt
 	echo "port=25554" >> etc/config.txt 
 
 	# Setting up symlink
@@ -41,10 +41,35 @@ if test -f "$FILE"; then
 
 	echo "Activating and cleaning up";
 	cd ../
-	rm -rf frontend
+	sudo rm -rf frontend
 	mv tmp frontend
 	rm -rf php_4.1.0.tar.gz
 	#sudo /etc/init.d/apache2 restart
 else 
     echo "Release file at $FILE does not exist. No action taken."
 fi;
+
+
+echo "Deploying Backend code to Apache docroot"
+cp /home/atequer/getshop-v4/artifacts/builds/4.1.0/backend_4.1.0.tar.gz /home/atequer/getshop-java/dist
+cd /home/atequer/getshop-java/dist
+
+FILE=backend_4.1.0.tar.gz
+if test -f "$FILE"; then
+    echo "Found valid backend release file at $FILE"
+    echo "Stopping java";
+    kill -9 `ps aux |grep thunda |grep -v "auto" |awk '{print $2}'` > /dev/null 2>&1
+
+    echo "Cleaning up old java files";
+    rm -rf dist/*.jar
+    rm -rf dist/libs
+
+    tar xzvf backend_4.1.0.tar.gz > /dev/null;
+    chmod +x dist/start.sh;
+    cd dist;
+    ./start.sh
+    cd ..;
+    rm -rf backend_4.1.0.tar.gz;
+else
+    echo "Backend release file at $FILE does not exist. No action taken."
+fi

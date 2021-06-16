@@ -166,3 +166,6 @@ com.getshop.printclient/nbproject/project.properties
 iot/getshopiotserverconfig.txt
 iot/baxi.ini
 /GetShopIOTServer/dist/
+
+frontend/
+tmpfrontend/

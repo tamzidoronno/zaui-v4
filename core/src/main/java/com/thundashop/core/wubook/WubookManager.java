@@ -1948,7 +1948,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             
             Vector result = executeClient("update_sparse_rooms_values", params);
             if ((Integer)result.get(0) != 0) {
-                logText("Failed to update availability " + "(" + result.get(0) + ")" + result.get(1));
+                logText("Failed to update availability (" + result.get(0) + ") " + result.get(1) + " Parameters sent: " + params.toString() );
             } else {
                 lastAvailability.lastAvailabilityUpdated = fieldsUpdated;
                 saveObject(lastAvailability);
@@ -2213,7 +2213,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             
             return res;
         }catch(Exception d) {
-            logPrint("Could not connect to wubook on api call: " + apicall + " message: " + d.getMessage());
+            logPrint("Could not connect to wubook on api call: " + apicall + " message: " + d.getMessage() + "; parameters sent: " + params.toString() );
             disableWubook = new Date();
         }
         return null;
@@ -2610,7 +2610,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         
         Vector result = executeClient("update_plan_prices", params);
         if((Integer)result.get(0) != 0) {
-            logText("Where not able to update prices:" + result.get(1));
+            logText("Unable to update prices:" + result.get(1) + " parameters sent: " + params.toString() );
             return "Failed to update price, " + result.get(1);
         } else {
             logText("Prices updated between " + now + " - " + end);

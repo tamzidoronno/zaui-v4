@@ -960,10 +960,13 @@ public class PosManager extends ManagerBase implements IPosManager {
 
     @Override
     public void deleteZReport(String zreportId, String password) {
+        System.out.println("Deleting a z-report here " + zreportId + " pass sent in was " + password );
         if (password != null && password.equals("as9d08f90213841nkajsdfi2u3h4kasjdf")) {
+            System.out.println("password is correct.... find and delete the zreport");
             ZReport report = zReports.remove(zreportId);
 
             if (report != null) {
+                System.out.println("found the report here... deleting it");
                 deleteObject(report);
             }
         }

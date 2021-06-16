@@ -1618,9 +1618,11 @@ function getshop_zauiPageLoad(activities){
         $('.no_activities').show()
         $('.return_to_search').show()
     } else {
+        $('#productentry_zaui .productentrybox').remove();
         activities.forEach(function (activity, index) {
             var activitybox = $('#productentrybox_zaui').clone()
-            activitybox.attr('id', null)
+            activitybox.attr('id', null);
+
             activitybox.addClass('productentrybox');
             activitybox.attr('activityid', activity.supplierProductCode)
 
@@ -1635,7 +1637,8 @@ function getshop_zauiPageLoad(activities){
             activitybox.find('.guestselection').attr('id', "table_" + activity.supplierProductCode)
             activitybox.find('.no_tours').attr('id', "no_tours_" + activity.supplierProductCode)
 
-            $('#productentry_zaui').append(activitybox)
+            $('#productentry_zaui').append(activitybox);
+            activitybox.show();
         })
     }
     $('#productentrybox_zaui').hide()
@@ -1800,7 +1803,12 @@ function getshop_zauiRightSide(){
     var client = getshop_getWebSocketClient();
     var getAddons = client.PmsBookingProcess.getAddonsSummary(getshop_domainname, toPush);
     getAddons.done(function(res) {
-        getshop_loadTextualSummary(res);
+        if (Number.isInteger(res.errorCode)) {
+            getshop_fixCouponCode();
+
+        } else {
+            getshop_loadTextualSummary(res);
+        }
     });
 }
 

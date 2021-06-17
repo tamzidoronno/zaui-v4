@@ -1121,8 +1121,10 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 newbooking.isPrePaid = true;
                 isPrepaidByOta = true;
             }
-            
-            if(useNewPrePaidMethod()) {
+
+            // changed by TW - if none of the checks above set a payment type we activate OTA Payments
+            // earlier check here was just if customer was set up after 1 May 2020 :(
+            if(newbooking.paymentType == null || newbooking.paymentType.isEmpty()) {
                 checkIfPaymentMethodIsActive("4aa4888a-4685-4373-bffe-aa6a3005eff1");
                 newbooking.paymentType = "4aa4888a-4685-4373-bffe-aa6a3005eff1";
                 newbooking.isPrePaid = true;
@@ -2636,18 +2638,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             count = pmsManager.getConfigurationSecure().maxNumberForEachCategory.get(bookingEngineTypeId);
         }
         return count;
-    }
-
-    private boolean useNewPrePaidMethod() {
-        Date storeDate = storeManager.getMyStore().rowCreatedDate;
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, 2020);
-        cal.set(Calendar.MONTH, 5);
-        cal.set(Calendar.DAY_OF_MONTH, 1);
-        if(cal.getTime().before(storeDate)) {
-            return true;
-        }
-        return false;
     }
 
     private boolean doesTypeExists(String bookingItemTypeId) {

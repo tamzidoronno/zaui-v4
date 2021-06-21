@@ -62,6 +62,10 @@ import org.apache.xmlrpc.XmlRpcTransportFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import static com.thundashop.core.utils.Constants.THREE_MINUTES_IN_MILLISECONDS;
+import static com.thundashop.core.utils.Constants.WUBOOK_BASE_URL;
+import static com.thundashop.core.utils.Constants.WUBOOK_CLIENT_URL;
+
 
 @Component
 @GetShopSession
@@ -117,7 +121,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     private boolean forceUpdate = false;
     public Date disableWubook = null;
     public Vector bookingsToAdd = null;
-    boolean fetchBookingThreadIsRunning = false;
+    public volatile boolean fetchBookingThreadIsRunning = false;
     Date fetchBookingThreadStarted = null;
     private List<WubookBooking> nextBookings;
     private List<String> bookingCodesToAdd = new ArrayList();
@@ -196,12 +200,12 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
        return true;
     }
 
-    public XmlRpcTransportFactory setTimeout() {
+    public XmlRpcTransportFactory constructTransportFactoryWithTimeout() {
         XmlRpcTransportFactory xmlRpcTransportFactory = null;
         try {
-            CommonsXmlRpcTransportFactory commonsXmlRpcTransportFactory = new CommonsXmlRpcTransportFactory(new URL("https://wired.wubook.net/"));
-            commonsXmlRpcTransportFactory.setConnectionTimeout(3*60*1000);
-            commonsXmlRpcTransportFactory.setTimeout(3*60*1000);
+            CommonsXmlRpcTransportFactory commonsXmlRpcTransportFactory = new CommonsXmlRpcTransportFactory(new URL(WUBOOK_BASE_URL));
+            commonsXmlRpcTransportFactory.setConnectionTimeout(THREE_MINUTES_IN_MILLISECONDS);
+            commonsXmlRpcTransportFactory.setTimeout(THREE_MINUTES_IN_MILLISECONDS);
             xmlRpcTransportFactory = commonsXmlRpcTransportFactory;
         } catch (MalformedURLException e) {
             logPrint(getClass() + "Failed to create CommonsXmlRpcTransportFactory: " + e.getLocalizedMessage());
@@ -211,7 +215,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
     public XmlRpcClient createClient() {
         try {
-            client = new XmlRpcClient(new URL("https://wired.wubook.net/xrws/"), setTimeout());
+            client = new XmlRpcClient(new URL(WUBOOK_CLIENT_URL), constructTransportFactoryWithTimeout());
         } catch (MalformedURLException e) {
             logPrint(getClass() + "Failed to create a new XmlRpcClient: " + e.getLocalizedMessage());
         }

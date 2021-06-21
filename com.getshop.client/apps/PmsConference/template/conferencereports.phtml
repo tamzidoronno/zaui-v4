@@ -30,6 +30,7 @@ $firstDate = true;
     echo "<th valign='top' align='left'>Extended text</th>";
     echo "<th valign='top' align='center'>Count</th>";
     echo "<th valign='top' align='left'>Room</th>";
+    echo "<th valign='top' align='left'>Booking</th>";
     echo "</tr>";
 
     foreach($events as $event) {
@@ -66,6 +67,7 @@ $firstDate = true;
         echo "<td align='center'>".$count."</td>";
         $name = $conferenceItems[$event->pmsConferenceItemId]->name;
         echo "<td>".$name."</td>";
+        echo "<td>". $conference->meetingTitle ."<pre>".print_r($event,1)."#####".print_r($conference,1)."</pre></td>";
         echo "</tr>";
         
         

@@ -38,6 +38,8 @@ import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.io.IOException;
 import java.net.ConnectException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -53,8 +55,10 @@ import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.apache.xmlrpc.CommonsXmlRpcTransportFactory;
 import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpcException;
+import org.apache.xmlrpc.XmlRpcTransportFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -191,8 +195,30 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         } 
        return true;
     }
-    
-    
+
+    public XmlRpcTransportFactory setTimeout() {
+        XmlRpcTransportFactory xmlRpcTransportFactory = null;
+        try {
+            CommonsXmlRpcTransportFactory commonsXmlRpcTransportFactory = new CommonsXmlRpcTransportFactory(new URL("https://wired.wubook.net/"));
+            commonsXmlRpcTransportFactory.setConnectionTimeout(3*60*1000);
+            commonsXmlRpcTransportFactory.setTimeout(3*60*1000);
+            xmlRpcTransportFactory = commonsXmlRpcTransportFactory;
+        } catch (MalformedURLException e) {
+            logPrint(getClass() + "Failed to create CommonsXmlRpcTransportFactory: " + e.getLocalizedMessage());
+        }
+        return xmlRpcTransportFactory;
+    }
+
+    public XmlRpcClient createClient() {
+        try {
+            client = new XmlRpcClient(new URL("https://wired.wubook.net/xrws/"), setTimeout());
+        } catch (MalformedURLException e) {
+            logPrint(getClass() + "Failed to create a new XmlRpcClient: " + e.getLocalizedMessage());
+        }
+        return client;
+    }
+
+
     private boolean connectToApi() throws Exception {
         
         if(!isWubookActive()) { return false; }
@@ -202,11 +228,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             
             return true;
         }
-        
-        //Old
-//        client = new XmlRpcClient("https://wubook.net/xrws/");
-        //New
-        client = new XmlRpcClient("https://wired.wubook.net/xrws/");
+
+        client = createClient();
+
         logText("Reloading token");
         Vector<String> params = new Vector<String>();
         params.addElement(pmsManager.getConfigurationSecure().wubookusername);

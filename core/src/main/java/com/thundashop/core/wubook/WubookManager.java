@@ -1124,11 +1124,15 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
             // changed by TW - if none of the checks above set a payment type we activate OTA Payments
             // earlier check here was just if customer was set up after 1 May 2020 :(
+            /*
+
+            Hotfix removed useless payment method 2021-06-21 as it just cuased issues for older customers and we dont expect newer ones to have a real benefit from it
+
             if(newbooking.paymentType == null || newbooking.paymentType.isEmpty()) {
                 checkIfPaymentMethodIsActive("4aa4888a-4685-4373-bffe-aa6a3005eff1");
                 newbooking.paymentType = "4aa4888a-4685-4373-bffe-aa6a3005eff1";
                 newbooking.isPrePaid = true;
-            }
+            }*/
             
             pmsManager.setBooking(newbooking);
             int i = 0;

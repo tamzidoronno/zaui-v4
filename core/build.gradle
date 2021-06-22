@@ -14,15 +14,16 @@ task fatJar(type: Jar) {
         exclude "META-INF/*.DSA"
         exclude "META-INF/*.RSA"
 }
-
+buildscript {
+        // this is used only for startGenerator script
+        dependencies {
+            classpath group: 'org.slf4j', name: 'slf4j-simple', version: '1.6.1'
+        }
+}
 task startGenerator(type:JavaExec) {
-    environment "AWS_ACCESS_KEY_ID", "AKIA5AUGC7IRQTFVIZ3C"
-    environment "AWS_SECRET_ACCESS_KEY", "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"
     main = 'com.thundashop.core.apigenerator.GenerateApi'
-    classpath = sourceSets.main.runtimeClasspath
-    dependencies {
-        runtimeClasspath group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.30'
-    }
+    classpath = sourceSets.main.output.classesDirs + sourceSets.main.compileClasspath
+
 }
 
 task generateJavascriptApi(type:JavaExec) {
@@ -40,5 +41,60 @@ dependencies {
     compile project(":messages")
     compile fileTree(dir: '../libs', include: ['*.jar'])
     implementation group: 'ca.pjer', name: 'logback-awslogs-appender', version: '1.5.0'
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
     implementation group: 'software.amazon.awssdk', name: 'bundle', version: '2.16.83'
+
+//    implementation 'com.google.oauth-client:google-oauth-client:1.25.0'
+//    implementation 'com.google.oauth-client:google-oauth-client-appengine:1.25.0'
+//    implementation 'com.google.oauth-client:google-oauth-client-java6:1.25.0'
+//    implementation 'com.google.oauth-client:google-oauth-client-jetty:1.25.0'
+//    implementation 'com.google.apis:google-api-services-gmail:v1-rev98-1.25.0'
+//    implementation 'com.warrenstrange:googleauth:1.1.5'
+//    implementation 'com.google.api-client:google-api-client:1.25.0'
+//    implementation 'org.jsoup:jsoup:1.9.1'
+//    implementation 'org.owasp.antisamy:antisamy:1.5.3'
+//    implementation 'com.google.inject:guice:4.2.1'
+//    implementation group: 'org.springframework', name: 'spring-beans', version: '4.2.1.RELEASE'
+//    implementation group: 'org.springframework', name: 'spring-context', version: '4.2.1.RELEASE'
+//    implementation group: 'org.mongodb', name: 'mongo-java-driver', version: '2.13.2'
+//    implementation group: 'org.mongodb.morphia', name: 'morphia', version: '1.3.2'
+//    implementation group: 'it.sauronsoftware.cron4j', name: 'cron4j', version: '2.2.5'
+//    implementation 'dev.galasa:gson:2.7'
+//    implementation 'com.braintreepayments.gateway:braintree-java:2.39.1'
+//    //implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
+//    implementation group: 'com.stripe', name: 'stripe-java', version: '11.6.1'
+//    implementation group: 'net.sf.biweekly', name: 'biweekly', version: '0.4.4'
+//    implementation group: 'joda-time', name: 'joda-time', version: '2.9.1'
+//    implementation group: 'org.apache.axis', name: 'axis', version: '1.4'
+//    implementation group: 'xmlrpc', name: 'xmlrpc', version: '2.0.1'
+//    implementation group: 'com.ganyo', name: 'gcm-server', version: '1.0.2'
+//    implementation group: 'org.java-websocket', name: 'Java-WebSocket', version: '1.3.4'
+//    implementation group: 'com.googlecode.libphonenumber', name: 'libphonenumber', version: '7.0.8'
+//    implementation group: 'javax.mail', name: 'mail', version: '1.5.0-b01'
+//    implementation group: 'com.mashape.unirest', name: 'unirest-java', version: '1.4.9'
+//    //implementation group: 'org.mortbay.jetty', name: 'jetty', version: '6.1.26'
+//    implementation group: 'org.eclipse.jetty', name: 'jetty-server', version: '9.2.10.v20150310'
+//    implementation group: 'com.github.fernandospr', name: 'javapns-jdk16', version: '2.2.1'
+//    implementation group: 'org.apache.pdfbox', name: 'pdfbox-app', version: '1.8.2'
+//    //implementation group: 'org.apache.poi', name: 'poi', version: '3.15'
+//    //implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '3.15'
+//    implementation group: 'org.springframework.hateoas', name: 'spring-hateoas', version: '0.24.0.RELEASE'
+//    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.3'
+//    //implementation group: 'javax.xml.rpc', name: 'javax.xml.rpc-api', version: '1.1.2'
+//    implementation group: 'com.google.apis', name: 'google-api-services-youtube', version: 'v3-rev117-1.19.0'
+//    implementation group: 'com.google.api-client', name: 'google-api-client-gson', version: '1.25.0'
+    //implementation group: 'commons-net', name: 'commons-net', version: '2.0'
+    implementation group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.5.5'
+    implementation group: 'org.apache.httpcomponents', name: 'httpasyncclient', version: '4.1.4'
+    implementation group: 'org.apache.httpcomponents', name: 'httpcore', version: '4.4.5'
+    implementation group: 'org.apache.httpcomponents', name: 'httpcore-nio', version: '4.4.5'
+    implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.5'
+
+}
+
+
+task infoSourceSets(){
+    println("result:")
+    println(sourceSets.main.output.classesDirs)
+    println(sourceSets.main.compileClasspath.asPath)
 }

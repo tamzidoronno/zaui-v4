@@ -11,7 +11,7 @@
 */
 function gslZauiListActivities($lang,$startdate,$enddate)
 {
-    global $servername, $username, $password;
+    global $servername, $username, $password, $zaui_dbname;
 // Create connection
     $conn = new mysqli($servername, $username, $password);
 
@@ -21,11 +21,11 @@ function gslZauiListActivities($lang,$startdate,$enddate)
     }
 
 //getting activity list
-    $sql = "SELECT xml_response FROM getshop_zaui_cache.activity_list LIMIT 1";
+    $sql = "SELECT xml_response FROM {$zaui_dbname}.activity_list LIMIT 1";
     $result = $conn->query($sql);
 
     if($result->num_rows == 0){
-        die("ERROR: Activity list not found!");
+        die("ERROR: Activity list not found in ". $zaui_dbname ."!" . $sql);
     }
 
     $activities_sql = $result->fetch_assoc()['xml_response'];
@@ -35,7 +35,7 @@ function gslZauiListActivities($lang,$startdate,$enddate)
     $activities = $activities_xml['Tour'];
 
 //getting batch availability
-    $sql = "SELECT xml_response FROM getshop_zaui_cache.availability LIMIT 1";
+    $sql = "SELECT xml_response FROM {$zaui_dbname}.availability LIMIT 1";
     $result = $conn->query($sql);
 
     if($result->num_rows == 0){
@@ -164,7 +164,7 @@ function gslZauiCheckAvailability($prod_code, $adults, $children, $startdate, $e
 */
 function gslZauiCreateAddon($prod_code, $tourDepartureTime, $tourPrice, $tourTaxes, $tourDate)
 {
-    global $servername, $username, $password, $gsZauiUser, $gsZauiPass, $gsZauiTaxGroup, $gsZauiTaxRate;
+    global $servername, $username, $password, $gsZauiUser, $gsZauiPass, $gsZauiTaxGroup, $gsZauiTaxRate, $zaui_dbname;
     global $api_key, $reseller_id, $supplier_id;
 
     if(!$tourTaxes) $tourTaxes = 0;
@@ -175,7 +175,7 @@ function gslZauiCreateAddon($prod_code, $tourDepartureTime, $tourPrice, $tourTax
     }
 
     //getting activity list
-    $sql = "SELECT xml_response FROM getshop_zaui_cache.activity_list LIMIT 1";
+    $sql = "SELECT xml_response FROM {$zaui_dbname}.activity_list LIMIT 1";
     $result = $conn->query($sql);
 
     if($result->num_rows == 0){
@@ -257,7 +257,7 @@ function gslZauiCreateAddon($prod_code, $tourDepartureTime, $tourPrice, $tourTax
 */
 function gslZauiBookTour($date, $bookingReference, $prod_code, $tourDepartureTime, $travellers, $total, $orderId, $email)
 {
-    global $servername, $username, $password;
+    global $servername, $username, $password, $zaui_dbname;
     global $api_key, $reseller_id, $supplier_id;
 
     ob_clean();
@@ -385,7 +385,7 @@ function gslZauiBookTour($date, $bookingReference, $prod_code, $tourDepartureTim
     }
 
     //save booking data
-    $sql = "INSERT INTO getshop_zaui_cache.booking_log (
+    $sql = "INSERT INTO {$zaui_dbname}.booking_log (
         bookingId,
         supplierProductCode,
         bookingReference,

@@ -9,6 +9,7 @@ if(!isset( $storeId ) && isset($argv) && isset($argv[1]))
 if( isset( $storeId ) && file_exists('/thundashopimages/zaui-config-' . $storeId . '.php' ) )
 {
     include_once('/thundashopimages/zaui-config-' . $storeId . '.php');
+    if(!isset($zaui_dbname)) $zaui_dbname = 'getshop_zaui_cache';
 }
 else
 {
@@ -22,6 +23,8 @@ else
     $servername = "localhost";
     $username = "test";
     $password = "test";
+
+    $zaui_dbname = 'getshop_zaui_cache';
 
     //API credentials
     $api_key = "8bf6895a9a5a92b932d3c0aa9b24a8c7ba0b10d498983cea8eef17f35f2fb95b";

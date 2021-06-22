@@ -1675,7 +1675,6 @@ function  getshop_zauiShowTours(btn, prodCode){
                     try {
                         var id = "" + prodCode + "_" + index + "";
                         if(showTimeCol == false) $('#table_' + prodCode).find('.departure_time_column').css({'display':'none'});
-                        $('#table_' + prodCode).append(tourEntry);
 
                         var currencyPrecision = parseInt(tour.TourPricing[0].CurrencyPrecision[0]);
                         var tourPrice = parseInt(tour.TourPricing[0].Total[0]);

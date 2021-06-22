@@ -136,5 +136,6 @@
     "pick_new_date": "Pick a new date",
     "no_tours": "Sorry, this activity is not available during your stay!",
     "no_activities": "Sorry, there are no available activities during your stay!",
+    "invalid_coupon": "The booking code is invalid. Please try again.",
 
 }

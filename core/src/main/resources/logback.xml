@@ -44,10 +44,12 @@
         <retentionTimeDays>1</retentionTimeDays>
     </appender>
 
-<!-- Root with a threshold to INFO and above -->
-<root level="INFO">
-    <!-- Append to the (async) AwsLogsAppender -->
-    <appender-ref ref="ASYNC_AWS_LOGS"/>
-</root>
+    <root level="debug">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="SIFT"/>
+        <appender-ref ref="ASYNC_AWS_LOGS"/>
+    </root>
+
+    <logger name="software.amazon" level="info"/>
 
 </configuration>

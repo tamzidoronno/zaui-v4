@@ -22,10 +22,7 @@ buildscript {
 }
 task startGenerator(type:JavaExec) {
     main = 'com.thundashop.core.apigenerator.GenerateApi'
-    classpath = sourceSets.main.runtimeClasspath
-    dependencies {
-        runtimeClasspath group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.30'
-    }
+    classpath = sourceSets.main.output.classesDirs + sourceSets.main.compileClasspath
 }
 
 task generateJavascriptApi(type:JavaExec) {

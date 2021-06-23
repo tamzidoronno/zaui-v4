@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.thundashop.core.questback;
+package com.thundashop.core.utils;
 
 import java.io.StringWriter;
 import java.util.HashMap;
@@ -211,4 +211,7 @@ public class StringUtils {
             lookupMap.put(seq[1].toString(), seq[0]);
     }
 
+    public static final boolean nonNull(String input) {
+        return (input != null ) ? true : false;
+    }
 }

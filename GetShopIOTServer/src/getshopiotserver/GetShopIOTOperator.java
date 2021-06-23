@@ -3,10 +3,6 @@ package getshopiotserver;
 import getshopiotserver.processors.ProcessPrinterMessage;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.thundashop.core.gsd.DevicePrintMessage;
-import com.thundashop.core.gsd.DirectPrintMessage;
-import com.thundashop.core.gsd.GdsAccessDenied;
-import com.thundashop.core.gsd.GdsPaymentAction;
 import com.thundashop.core.gsd.GetShopDeviceMessage;
 import getshop.nets.GetShopNetsApp;
 import getshop.verifone.VerifoneApp;
@@ -26,8 +22,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -37,13 +31,14 @@ public class GetShopIOTOperator extends GetShopIOTCommon {
     private List<String> configsSent = new ArrayList();
             
     private PaymentOperator paymentOperator = null;
-    
+    public static boolean isWindows = false;
     private boolean isProductionMode = true;
     private String debugConnectionAddr ="http://www.3.0.local.getshop.com/";
     private String debugLongPullAddr ="http://lomcamping.3.0.local.getshop.com/";
 
     public GetShopIOTOperator(String configFile) {
         this.configFile = configFile;
+        isWindows = System.getProperty("os.name").toLowerCase().contains("windows");
     }
     
     
@@ -84,17 +79,18 @@ public class GetShopIOTOperator extends GetShopIOTCommon {
         
         Gson gson = new Gson();
         try {
-            System.out.println("Reading message");
+            System.out.println("Reading message ..");
             String msg = readFromPullService();
             if(msg != null && !msg.isEmpty()) {
                 List<GetShopDeviceMessage> result = new ArrayList();
                 Type listType = new TypeToken<List<GetShopDeviceMessage>>(){}.getType();
-                
+
                 result = gson.fromJson(msg, listType);
                 ArrayList result2 = gson.fromJson(msg, ArrayList.class);
                 if(result!=null) {
                     int idx = 0;
                     for(GetShopDeviceMessage gsdmsg : result) {
+                        System.out.println("In the loop for GetShopDeviceMessage gsdmsg.");
                         Class classLoaded = this.getClass().getClassLoader().loadClass(gsdmsg.className);
                         Object res = gson.fromJson(gson.toJson(result2.get(idx)), classLoaded);
                         idx++;
@@ -243,7 +239,7 @@ public class GetShopIOTOperator extends GetShopIOTCommon {
 
     private void processMessage(Object res) {
         boolean isInstanceOfMessage = (res instanceof  GetShopDeviceMessage);
-        
+        System.out.println("Inside processMassagw");
         if (res == null || !isInstanceOfMessage) {
             return;
         }
@@ -256,7 +252,9 @@ public class GetShopIOTOperator extends GetShopIOTCommon {
         processors.stream().forEach(o -> {
             
             try {
+                System.out.println("Processing message for processor " + o.getClass());
                 o.processMessage(this, (GetShopDeviceMessage)res);
+                System.out.println("Processed for " + o.getClass());
             } catch (Exception ex) {
                 logPrintException(ex);
             }

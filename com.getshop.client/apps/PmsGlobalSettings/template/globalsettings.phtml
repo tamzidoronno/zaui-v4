@@ -142,6 +142,15 @@ if(stristr($user->emailAddress, "@getshop.com")) {
             * The default langauge to use when registering a booking, only used for under "new", when using the booking engine the selected language is used instead.
         </span>
     </div>
+    <h1>Automatic creation of Z-Report</h1>
+    <div class='container' style='padding-bottom: 30px;'>
+    <span class='option'>
+        <input type='text' class='gsniceinput1' gsname='zReportProcessingTime' value='<?php echo $config->zReportProcessingTime; ?>' style='width: 50px; text-align: center;'>
+    </span>
+    <span class='title'>
+        Enter a valid time of the day to automate the creation of Z-Reports <b>(Empty the field to turn off automatic Z-report creation)</b><br>
+    </span>
+    </div>
     <h1>Cleaning</h1>
     
     <div class='container'>

@@ -330,7 +330,6 @@ public class GenerateApi {
                         className = className.replace(".class", "");
                         _class = Class.forName(className);
                         classes.add(_class);
-                        System.out.println("class to add" + className);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

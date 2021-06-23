@@ -35,13 +35,13 @@
         <layout>
             <pattern>%date{ISO8601} %p [%X{store_id}-%X{random_code}] %c{15}:%L - %m%n</pattern>
         </layout>
-        <logGroupName>/myapp/onprem/component-1</logGroupName>
-        <logStreamName>cluster-9</logStreamName>
+        <logGroupName>production-log</logGroupName>
+        <logStreamName>centralized-log</logStreamName>
         <logRegion>us-east-2</logRegion>
         <maxBatchLogEvents>5</maxBatchLogEvents>
         <maxFlushTimeMillis>3</maxFlushTimeMillis>
         <maxBlockTimeMillis>0</maxBlockTimeMillis>
-        <retentionTimeDays>1</retentionTimeDays>
+        <retentionTimeDays>0</retentionTimeDays>
     </appender>
 
     <root level="debug">

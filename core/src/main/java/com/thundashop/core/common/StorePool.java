@@ -12,6 +12,7 @@ import com.google.gson.reflect.TypeToken;
 import com.thundashop.core.storemanager.data.Store;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -23,6 +24,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.*;
+
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 
 /**
  *
@@ -247,8 +250,11 @@ public class StorePool {
                 startAndCheckTimerForObject(object);
             }catch(Exception e) {
                 // Dont care if this fails.
-            }            
-            
+            }
+
+            MDC.put("store_id", object.storeId);
+            MDC.put("random_code", randomAlphanumeric(5));
+
             try {
                 try {
                     if ((aClass != null && method != null) && (method.getAnnotation(GetShopNotSynchronized.class) != null || method.getAnnotation(ForceAsync.class) != null)) {
@@ -278,6 +284,9 @@ public class StorePool {
                 log.error("", x);
                 running.remove(object.id);
                 throw x;
+            } finally {
+                MDC.remove("store_id");
+                MDC.remove("random_code");
             }
         }
         

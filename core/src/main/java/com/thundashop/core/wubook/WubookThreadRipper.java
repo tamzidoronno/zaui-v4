@@ -100,6 +100,7 @@ public class WubookThreadRipper extends Thread {
 
             Vector result = executeClient("fetch_new_bookings", params);
             if(result == null) {
+                manager.fetchBookingThreadIsRunning = false;
                 return;
             }
 
@@ -130,8 +131,9 @@ public class WubookThreadRipper extends Thread {
         Vector bookings = manager.bookingsToAdd;
         if(bookings.size() > 0) {
 //            List<Integer> reservationCodes = new ArrayList();
-            Vector reservationCodes = new Vector(); 
-            for(int bookcount = 0; bookcount < bookings.size(); bookcount++) {
+            Vector reservationCodes = new Vector();
+            int bookingSize = bookings.size();
+            for(int bookcount = 0; bookcount < bookingSize; bookcount++) {
                 Hashtable reservation = (Hashtable) bookings.get(bookcount);
                 Integer reservationCode = (Integer) reservation.get("reservation_code");
                 reservationCodes.add(reservationCode);

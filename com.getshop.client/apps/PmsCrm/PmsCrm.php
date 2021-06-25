@@ -175,6 +175,13 @@ class PmsCrm extends \WebshopApplication implements \Application {
             array('discount', 'Discount', null, 'formatDiscounts'),
             array('afterstay', 'After stay', null, 'formatAfterStay')
         );
+
+        if (isset($_POST['data']['newpagenumber'])) {
+            $filter->pageNumber = $_POST['data']['newpagenumber'];
+        }
+        if (isset($_POST['data']['newpagesize'])) {
+            $filter->pageSize = $_POST['data']['newpagesize'];
+        }
         
         $data = $this->getApi()->getPmsManager()->getAllCrmUsers($this->getSelectedMultilevelDomainName(), $filter);
         

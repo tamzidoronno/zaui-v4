@@ -556,6 +556,15 @@ thundashop.Ajax = {
             var value = attrib.value;
             data[name] = value;
         });
+
+        if ($(this).attr('gsclick')) {
+            if (!data["newpagesize"]) {
+                let nps_name = "newpagesize";
+                let nps_value = document.getElementsByClassName("pagenumber active")[1].getAttribute("newpagesize");
+                console.log("newpagesize: ", nps_name, nps_value);
+                data[nps_name] = nps_value;
+            }
+        }
         
         var event = thundashop.Ajax.createEvent(null, method, this, data);
         

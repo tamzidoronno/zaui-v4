@@ -1,5 +1,5 @@
 #!/bin/bash
-# dump of whole database in a form of dump.tar.gz
+# dump of whole database on a specific port in a form of dump.tar.gz
 # input -d for the working directory, and -p for mongodb port
 while getopts d:p: flag
   do
@@ -18,23 +18,34 @@ then
    port=27018
 fi
 echo "connected to port: $port"
+echo "working directory:: $dir"
 
 cd $dir;
 if [ -d dump ]; then
     rm -rf dump;
+    rm -rf dump.*;
 fi
+mkdir dump
 dbs=`echo "rs.slaveOk(); db.getMongo().getDBNames()"|mongo --port $port --quiet |tr -d \[\] | tr , "\n"|cut -c3-| tr -d \" |grep -Ev "^$"`
+cluster_number=${port:(-1)}
 
 for db in $dbs
-do
-	[ -z "$db" ] && continue
-	mongodump --forceTableScan --db $db  --port $port --host localhost  &> /dev/null
+  do
+    [ -z "$db" ] && continue
+    if [[ $db != *"_"* || ( $db == *"_default"  ) ]]; then
+      if [[ $db != "test" && ( $db != "local" ) ]]; then
+        echo "Dumping $db"
+	pwd
+        $dir/dump_collections_of_cluster$cluster_number.sh $port $db
 
-done
 
-cd dump;
+      fi
+    fi
+
+  done
+
+
 #rm -rf LoggerManager;
-cd ../;
 if [ -f dump.tar.gz ]; then
     rm -rf dump.tar.gz
 fi
@@ -42,6 +53,4 @@ fi
 DATE=`date`;
 tar zcf dump.tar.gz dump
 
-#!/bin/bash
-#
 echo "Dump executed.";

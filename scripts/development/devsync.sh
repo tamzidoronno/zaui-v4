@@ -35,7 +35,7 @@ do
   val=${array[0]};
   if [ "$storeQuestion" == "$val" ]
   then
-      echo "FOUND IN FILE"
+      echo "FOUND IN FILE ${array[1]}"
       STOREID="${array[1]}";
       if [ ${#array[@]}  == 4 ] ; then
           MASTERSTOREID="${array[3]}";
@@ -58,8 +58,8 @@ echo " Deleting exisisting local collections for $STOREID";
 echo -e "";
 mongo --port=27018 --eval "var storeId='$STOREID'" onestoresync_clear_existing_data.js
 
-#Dumping online database and compressing it.
-echo -e " Dumping and compressing database on server";
+#Dumping online database and compressing it. It will run backup2.sh on server
+echo -e " Dumping and compressing database on server for $STOREID";
 ssh -T naxa@$SERVER << EOF > /dev/null
 /home/naxa/development_db_scripts/dump_dev_db.sh $STOREID
 EOF

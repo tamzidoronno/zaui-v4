@@ -1,12 +1,17 @@
 #!/bin/bash
 # dump originaldb   # upload dump to testdb   # run gdprizer
 
-set -e
 PORT_SOURCEDB=$1 # port of source mongo db
-PORT_TESTDB=$2 # port where all mocked data will end up, default 27017
+DIR=$2
+PORT_TESTDB=$3 # port where all mocked data will end up, default 27017
 if [ -z "$PORT_SOURCEDB" ]
 then
-   echo "Please restart and provide port of source database as input."
+   echo "Please restart and provide port of source database on input arg-1."
+   exit 0
+fi
+if [ -z "$DIR" ]
+then
+   echo "Please restart and provide working directory on input arg-2."
    exit 0
 fi
 if [ -z "$PORT_TESTDB" ]
@@ -17,13 +22,15 @@ fi
 if [ -d dump ]; then
     rm -rf dump;
 fi
-echo "Dumping old db.."
-DIR="$(pwd)"
-DIR_DUMP=$PORT_SOURCEDB
+echo "Dumping source db from port $PORT_SOURCEDB.."
+DIR_DUMP=$DIR
 $DIR/mongodump.sh -d $DIR_DUMP -p $PORT_SOURCEDB
-
+cluster_number=${PORT_SOURCEDB:(-1)}
+#delete existing data in test db for collections which will be imported
+echo "Deleting existing overlapping data in test db .. using mongodrop_$cluster_number.sh"
+$DIR/mongodrop_$cluster_number.sh
 # upload dump to testdb
-echo "Importing old db.."
+echo "Importing source db.."
 cd $DIR_DUMP
 tar xzvf dump.tar.gz > /dev/null
 mongorestore --port $PORT_TESTDB  &> /dev/null

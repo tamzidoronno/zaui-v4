@@ -1676,11 +1676,11 @@ function  getshop_zauiShowTours(btn, prodCode){
                         var id = "" + prodCode + "_" + index + "";
                         if(showTimeCol == false) $('#table_' + prodCode).find('.departure_time_column').css({'display':'none'});
 
-                        var currencyPrecision = parseInt(tour.TourPricing[0].CurrencyPrecision[0]);
+                        var currencyPrecision = typeof( tour.TourPricing[0].CurrencyPrecision ) == 'undefined' ? false : parseInt(tour.TourPricing[0].CurrencyPrecision[0]);
                         var tourPrice = parseInt(tour.TourPricing[0].Total[0]);
                         var tourTax =  parseInt(tour.TourPricing[0].Tax[0]);
-
-                        if(!isNaN(currencyPrecision))
+                        var tourCurrency = typeof( tour.TourPricing[0].Currency ) == 'undefined' ? false : tour.TourPricing[0].Currency[0];
+                        if(currencyPrecision!== false && !isNaN(currencyPrecision))
                         {
                             for(ii = 0; ii < currencyPrecision; ii++)
                             {
@@ -1688,14 +1688,23 @@ function  getshop_zauiShowTours(btn, prodCode){
                                 tourTax = tourTax/10;
                             }
                         }
+                        else if(tourCurrency)
+                        {
+                            var cleanedPrice = tour.TourPricing[0].Total[0].replace( tourCurrency, "" ).replace(",","");
+                            var cleanedTax = tour.TourPricing[0].Tax[0].replace( tourCurrency, "" ).replace(",","");
 
-                        //var tourEntry = $("<tr class='producentry_itemlist'><td>" + tour.DateotalInInt[0] + " NOK</td><td><div id='" + id + "' class='reserveTourButton'>" + translation['reserve'] + "</div></td>")
+                            tourPrice = parseInt(cleanedPrice);
+                            tourTax = parseInt(cleanedTax);
+
+                            console.log('Fixed those nubmers?',cleanedPrice,tourPrice);
+                        }
                         var tourEntry = $("<tr class='producentry_itemlist'><td>"+ tour.Date + "</td></td><td "+ (showTimeCol ? "" : " style='display:none;'") +">" + ( tour.TourOptions[0].TourDepartureTime[0] != "00:00:00" ? tour.TourOptions[0].TourDepartureTime[0].slice(0,-3) : "" )  + "</td><td>" + tourPrice + " NOK</td><td><div id='" + id + "' class='reserveTourButton'>" + translation['reserve'] + "</div></td>")
                         $('#table_' + prodCode).append(tourEntry);
 
                         tourEntry.find('.reserveTourButton').attr('onclick', "getshop_zauiReserveTour(this, '" + prodCode + "', '" + tour.Date + "', '" + tour.TourOptions[0].TourDepartureTime[0] + "', '" + tourPrice + "', '" + tourTax + "')");
                     } catch(e)
                     {
+                        console.log('Unexpected error occured ',e);
                         $('#table_' + prodCode).append( $('<h1>An unexpected error occured. Please try again.</h1>'));
                     }
                 });

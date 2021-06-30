@@ -1673,7 +1673,11 @@ function  getshop_zauiShowTours(btn, prodCode){
 
                 tours.forEach(function (tour, index) {
                     try {
+                        //if not available... dont show
+                        if(tour.AvailabilityStatus[0].Status[0] != 'AVAILABLE') return;
+
                         var id = "" + prodCode + "_" + index + "";
+
                         if(showTimeCol == false) $('#table_' + prodCode).find('.departure_time_column').css({'display':'none'});
 
                         var currencyPrecision = typeof( tour.TourPricing[0].CurrencyPrecision ) == 'undefined' ? false : parseInt(tour.TourPricing[0].CurrencyPrecision[0]);
@@ -1696,7 +1700,6 @@ function  getshop_zauiShowTours(btn, prodCode){
                             tourPrice = parseInt(cleanedPrice);
                             tourTax = parseInt(cleanedTax);
 
-                            console.log('Fixed those nubmers?',cleanedPrice,tourPrice);
                         }
                         var tourEntry = $("<tr class='producentry_itemlist'><td>"+ tour.Date + "</td></td><td "+ (showTimeCol ? "" : " style='display:none;'") +">" + ( tour.TourOptions[0].TourDepartureTime[0] != "00:00:00" ? tour.TourOptions[0].TourDepartureTime[0].slice(0,-3) : "" )  + "</td><td>" + tourPrice + " NOK</td><td><div id='" + id + "' class='reserveTourButton'>" + translation['reserve'] + "</div></td>")
                         $('#table_' + prodCode).append(tourEntry);

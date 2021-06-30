@@ -1225,6 +1225,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             list.add(room);
             addDefaultAddonsToRooms(list);
         } catch (BookingEngineException ex) {
+            messageManager.sendErrorNotification(getClass() + "storeId-" + storeId, ex);
             return ex.getMessage();
         }
         saveBooking(booking);

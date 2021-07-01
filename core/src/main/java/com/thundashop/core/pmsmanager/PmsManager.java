@@ -10430,11 +10430,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 //Do no allow changing segment that has been marked as closed.
                 throw new ErrorException(1058);
             }
-            
-            if(!oldBooking.isStartingToday() && oldBooking.isStarted()) {
-                //Do no allow changing segment on booking day after it has started.
-                throw new ErrorException(1058);
-            }
         }   
     }
     

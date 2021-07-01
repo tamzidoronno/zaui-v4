@@ -215,7 +215,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
     public XmlRpcClient createClient() {
         try {
-            client = new XmlRpcClient(new URL(WUBOOK_CLIENT_URL), constructTransportFactoryWithTimeout());
+            client = new XmlRpcClient(new URL(WUBOOK_CLIENT_URL));
         } catch (MalformedURLException e) {
             logPrint(getClass() + "Failed to create a new XmlRpcClient: " + e.getLocalizedMessage());
         }

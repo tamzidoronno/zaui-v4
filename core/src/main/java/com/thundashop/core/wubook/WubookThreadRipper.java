@@ -50,7 +50,7 @@ public class WubookThreadRipper extends Thread {
 
         try {
             manager.logPrint(Thread.currentThread().getName() + " " + getClass() + "Calling wubookManger api, apiCall: " + apicall + " params: " + params);
-            Vector res = taskFuture.get(2, TimeUnit.MINUTES);
+            Vector res = taskFuture.get(3, TimeUnit.MINUTES);
             manager.logPrint(Thread.currentThread().getName() + " " + getClass() + "Response from wubookManager api, apiCall: " + apicall + " response: " + res);
             return res;
         } catch (Exception d) {

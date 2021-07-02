@@ -30,7 +30,7 @@ public class WubookManagerUpdateThread extends Thread {
         Vector result;
         try {
             mgr.logPrint(Thread.currentThread().getName() + " " + getClass() + "Calling wubookManger api, apiCall: " + action + " params: " + params);
-            result = taskFuture.get(2, TimeUnit.MINUTES);
+            result = taskFuture.get(3, TimeUnit.MINUTES);
             mgr.logPrint(getClass() + "Response from wubookManager api, apiCall: " + action + " response: " + result);
             if ((Integer)result.get(0) != 0) {
                 mgr.logText("Failed to update availability (" + result.get(0) + ") " + result.get(1) + " Parameters sent: " + params.toString() );

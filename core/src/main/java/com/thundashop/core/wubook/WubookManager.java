@@ -1,6 +1,5 @@
 package com.thundashop.core.wubook;
 
-import com.thundashop.core.storemanager.StoreManager;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.google.gson.Gson;
@@ -16,54 +15,27 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
-import com.thundashop.core.pmsmanager.NewOrderFilter;
-import com.thundashop.core.pmsmanager.PmsBooking;
-import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
-import com.thundashop.core.pmsmanager.PmsBookingComment;
-import com.thundashop.core.pmsmanager.PmsBookingDateRange;
-import com.thundashop.core.pmsmanager.PmsBookingFilter;
-import com.thundashop.core.pmsmanager.PmsBookingRooms;
-import com.thundashop.core.pmsmanager.PmsConfiguration;
-import com.thundashop.core.pmsmanager.PmsGuests;
-import com.thundashop.core.pmsmanager.PmsInvoiceManager;
-import com.thundashop.core.pmsmanager.PmsManager;
-import com.thundashop.core.pmsmanager.PmsPricing;
-import com.thundashop.core.pmsmanager.TimeRepeater;
-import com.thundashop.core.pmsmanager.TimeRepeaterData;
-import com.thundashop.core.pmsmanager.TimeRepeaterDateRange;
+import com.thundashop.core.pmsmanager.*;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.TaxGroup;
+import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.UserManager;
-import com.thundashop.core.usermanager.data.User;
+import org.apache.xmlrpc.XmlRpcClient;
+import org.apache.xmlrpc.XmlRpcException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StopWatch;
+
 import java.io.IOException;
-import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.apache.xmlrpc.CommonsXmlRpcTransportFactory;
-import org.apache.xmlrpc.XmlRpcClient;
-import org.apache.xmlrpc.XmlRpcException;
-import org.apache.xmlrpc.XmlRpcTransportFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import static com.thundashop.core.utils.Constants.THREE_MINUTES_IN_MILLISECONDS;
-import static com.thundashop.core.utils.Constants.WUBOOK_BASE_URL;
 import static com.thundashop.core.utils.Constants.WUBOOK_CLIENT_URL;
 
 
@@ -200,22 +172,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
        return true;
     }
 
-    public XmlRpcTransportFactory constructTransportFactoryWithTimeout() {
-        XmlRpcTransportFactory xmlRpcTransportFactory = null;
-        try {
-            CommonsXmlRpcTransportFactory commonsXmlRpcTransportFactory = new CommonsXmlRpcTransportFactory(new URL(WUBOOK_BASE_URL));
-            commonsXmlRpcTransportFactory.setConnectionTimeout(THREE_MINUTES_IN_MILLISECONDS);
-            commonsXmlRpcTransportFactory.setTimeout(THREE_MINUTES_IN_MILLISECONDS);
-            xmlRpcTransportFactory = commonsXmlRpcTransportFactory;
-        } catch (MalformedURLException e) {
-            logPrint(getClass() + "Failed to create CommonsXmlRpcTransportFactory: " + e.getLocalizedMessage());
-        }
-        return xmlRpcTransportFactory;
-    }
-
     public XmlRpcClient createClient() {
         try {
-            client = new XmlRpcClient(new URL(WUBOOK_CLIENT_URL), constructTransportFactoryWithTimeout());
+            client = new XmlRpcClient(new URL(WUBOOK_CLIENT_URL));
         } catch (MalformedURLException e) {
             logPrint(getClass() + "Failed to create a new XmlRpcClient: " + e.getLocalizedMessage());
         }
@@ -229,7 +188,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         
         if(tokenCount < 30 && token != null && !token.isEmpty()) {
             tokenCount++;
-            
+
             return true;
         }
 
@@ -2229,27 +2188,24 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         return false;
     }
 
-    private Vector executeClient(String apicall, Vector params) throws XmlRpcException, IOException {
-        
-        javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(
-        new javax.net.ssl.HostnameVerifier(){
+    private Vector executeClient(String apicall, Vector params) {
+        javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier((hostname, sslSession) -> true);
 
-            public boolean verify(String hostname,
-                    javax.net.ssl.SSLSession sslSession) {
-                return true;
-            }
-        });
-        
         logText("Executing api call: " + apicall);
         logPrint(getClass() + "Calling wubookManger api, apiCall: " + apicall + " params: " + params);
+
+        ExecutorService executor = Executors.newFixedThreadPool(1);
+        Callable<Vector> task = () -> (Vector) client.execute(apicall, params);
+        Future<Vector> taskFuture = executor.submit(task);
+
         try {
-            long start = System.currentTimeMillis();
-            Vector res = (Vector) client.execute(apicall, params);
-            long end = System.currentTimeMillis();
-            long diff = end - start;
-            if (diff > 2000) {
-                logPrint("Excecuted api call: " + apicall + ", time: " + diff);
-            }
+            StopWatch stopWatch = new StopWatch("Api Call: " + apicall);
+            stopWatch.start();
+
+            Vector res = taskFuture.get(2, TimeUnit.MINUTES);
+
+            stopWatch.stop();
+            logPrint(getClass() + "Executed api call: " + apicall + ", time: " + stopWatch);
             logPrint(getClass() + "Response from wubookManager api, apiCall: " + apicall + " response: " + res);
             return res;
         } catch (Exception d) {
@@ -2258,7 +2214,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             messageManager.sendErrorNotification(getClass() + "storeId-" + storeId + " " + errMessage, d);
             disableWubook = new Date();
             logPrint("Disabling wubook due to exception at time: " + disableWubook);
+        } finally {
+            taskFuture.cancel(true);
+            executor.shutdownNow();
         }
+
         return null;
     }
 

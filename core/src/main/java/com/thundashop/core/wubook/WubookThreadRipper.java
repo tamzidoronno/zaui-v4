@@ -1,17 +1,14 @@
 package com.thundashop.core.wubook;
 
-import static com.stripe.net.OAuth.token;
+import org.apache.xmlrpc.XmlRpcClient;
+import org.apache.xmlrpc.XmlRpcException;
+
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.apache.xmlrpc.XmlRpcClient;
-import org.apache.xmlrpc.XmlRpcException;
+import java.util.concurrent.*;
 
 public class WubookThreadRipper extends Thread {
 
@@ -39,32 +36,35 @@ public class WubookThreadRipper extends Thread {
         if(type == 1) { fetchNewBookings(); }
         if(type == 2) { updateShortAvailability(); }
     }
-    
-    
-    private Vector executeClient(String apicall, Vector params) throws XmlRpcException, IOException {
-        
-        javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(
-        new javax.net.ssl.HostnameVerifier(){
 
-            public boolean verify(String hostname,
-                    javax.net.ssl.SSLSession sslSession) {
-                return true;
-            }
-        });
-        
+
+    private Vector executeClient(String apicall, Vector params) {
+
+        javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier((hostname, sslSession) -> true);
+
         manager.logText("Executing api call: " + apicall);
+
+        ExecutorService executor = Executors.newFixedThreadPool(1);
+        Callable<Vector> task = () -> (Vector) client.execute(apicall, params);
+        Future<Vector> taskFuture = executor.submit(task);
+
         try {
             manager.logPrint(Thread.currentThread().getName() + " " + getClass() + "Calling wubookManger api, apiCall: " + apicall + " params: " + params);
-            Vector res = (Vector) client.execute(apicall, params);
+            Vector res = taskFuture.get(3, TimeUnit.MINUTES);
             manager.logPrint(Thread.currentThread().getName() + " " + getClass() + "Response from wubookManager api, apiCall: " + apicall + " response: " + res);
             return res;
-        }catch(Exception d) {
-            manager.logText("Could not connect to wubook on api call: " + apicall + " message: " + d.getMessage());
+        } catch (Exception d) {
+            String errStr = "Could not connect to wubook on api call: " + apicall + " message: " + d.getMessage();
+            manager.logText(errStr);
             manager.messageManager.sendErrorNotification(Thread.currentThread().getName() + " " + getClass() + " Exception while calling wubook, apiCall: " + apicall + " params: " + params + " error: " + d.getMessage(), d);
             manager.disableWubook = new Date();
             manager.logPrintException(d);
+            throw new RuntimeException(errStr, d);
+        } finally {
+            taskFuture.cancel(true);
+            executor.shutdownNow();
         }
-        return null;
+
     }
     
     public void fetchNewBookings() {

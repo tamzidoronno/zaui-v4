@@ -438,7 +438,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
        try {
             if(disableWubook != null) {
                 long diff = new Date().getTime() - disableWubook.getTime();
-                if(diff < (10*60*1000)) {
+
+                // 300000 millisecond == 5 minutes
+                if(diff < (300000)) {
                     logText("Fetch new booking disabled from : " + disableWubook);
                     lastPulledWubook = new Date();
                     return;
@@ -2213,13 +2215,13 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             logPrint(errMessage);
             messageManager.sendErrorNotification(getClass() + "storeId-" + storeId + " " + errMessage, d);
             disableWubook = new Date();
-            logPrint("Disabling wubook due to exception at time: " + disableWubook);
+            logPrint("Pausing Wubook requests for 5 minutes due to exception at time: " + disableWubook);
+            throw new RuntimeException(errMessage, d);
         } finally {
             taskFuture.cancel(true);
             executor.shutdownNow();
         }
 
-        return null;
     }
 
     private Double getSpecialRestriction(Date time, String bookingEngineTypeId, Integer type) {

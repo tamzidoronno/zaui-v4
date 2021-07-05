@@ -54,16 +54,17 @@ public class WubookThreadRipper extends Thread {
             manager.logPrint(Thread.currentThread().getName() + " " + getClass() + "Response from wubookManager api, apiCall: " + apicall + " response: " + res);
             return res;
         } catch (Exception d) {
-            manager.logText("Could not connect to wubook on api call: " + apicall + " message: " + d.getMessage());
+            String errStr = "Could not connect to wubook on api call: " + apicall + " message: " + d.getMessage();
+            manager.logText(errStr);
             manager.messageManager.sendErrorNotification(Thread.currentThread().getName() + " " + getClass() + " Exception while calling wubook, apiCall: " + apicall + " params: " + params + " error: " + d.getMessage(), d);
             manager.disableWubook = new Date();
             manager.logPrintException(d);
+            throw new RuntimeException(errStr, d);
         } finally {
             taskFuture.cancel(true);
             executor.shutdownNow();
         }
 
-        return null;
     }
     
     public void fetchNewBookings() {

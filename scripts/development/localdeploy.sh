@@ -24,10 +24,10 @@ if test -f "$FILE"; then
 	chmod 777 etc;
 
 	echo "backenddb=127.0.0.1" > etc/config.txt
-	echo "port=25554" >> etc/config.txt
+	echo "port=25554" >> etc/config.txt 
 
 	# Setting up symlink
-	ln -s /thundashopimages uploadedfiles
+	ln -s /thundashopimages uploadedfiles 
 
 	#Extra folders
 	echo "Creating extra folders";
@@ -49,7 +49,7 @@ if test -f "$FILE"; then
 	mv tmp frontend
 	rm -rf php_4.1.0.tar.gz
 	#sudo /etc/init.d/apache2 restart
-else
+else 
     echo "Release file at $FILE does not exist. No action taken."
 fi;
 

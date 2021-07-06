@@ -292,4 +292,24 @@ public class Booking extends DataCommon implements Comparable<Booking> {
         
         return Objects.equals(year, year2) && Objects.equals(dayofyear, dayofyear2);
     }
+
+    @Override
+    public String toString() {
+        return "Booking{" +
+                "bookingItemId='" + bookingItemId + '\'' +
+                ", incrementalBookingId=" + incrementalBookingId +
+                ", bookingDeleted=" + bookingDeleted +
+                ", bookingItemTypeId='" + bookingItemTypeId + '\'' +
+                ", prevAssignedBookingItemId='" + prevAssignedBookingItemId + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", needConfirmation=" + needConfirmation +
+                ", externalReference='" + externalReference + '\'' +
+                ", userId='" + userId + '\'' +
+                ", source='" + source + '\'' +
+                ", doneByUserId='" + doneByUserId + '\'' +
+                ", doneByImpersonator='" + doneByImpersonator + '\'' +
+                ", storeId='" + storeId + '\'' +
+                '}';
+    }
 }

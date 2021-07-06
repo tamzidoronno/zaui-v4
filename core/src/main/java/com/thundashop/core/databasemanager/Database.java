@@ -463,15 +463,17 @@ public class Database extends StoreComponent {
 
     public List<DataCommon> query(String manager, String storeId, DBObject query) {
         DBCollection col = getCollection(manager, storeId);
-        DBCursor res = col.find(query);
-        List<DataCommon> retObjecs = new ArrayList();
-        while (res.hasNext()) {
-            DBObject nx = res.next();
-            DataCommon data = morphia.fromDBObject(DataCommon.class, nx);
-            retObjecs.add(data);
+        List<DataCommon> retObjects = new ArrayList<>();
+
+        try (DBCursor res = col.find(query)) {
+            while (res.hasNext()) {
+                DBObject nx = res.next();
+                DataCommon data = morphia.fromDBObject(DataCommon.class, nx);
+                retObjects.add(data);
+            }
         }
 
-        return retObjecs;
+        return retObjects;
     }
 
     public DBCollection getCollection(String manager, String storeId1) {

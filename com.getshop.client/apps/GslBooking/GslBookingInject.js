@@ -1672,17 +1672,46 @@ function  getshop_zauiShowTours(btn, prodCode){
                 });
 
                 tours.forEach(function (tour, index) {
-                    var id = "" + prodCode + "_" + index + "";
-                    if(showTimeCol == false) $('#table_' + prodCode).find('.departure_time_column').css({'display':'none'});
+                    try {
+                        //if not available... dont show
+                        if(tour.AvailabilityStatus[0].Status[0] != 'AVAILABLE') return;
+
+                        var id = "" + prodCode + "_" + index + "";
+
+                        if(showTimeCol == false) $('#table_' + prodCode).find('.departure_time_column').css({'display':'none'});
+
+                        var currencyPrecision = typeof( tour.TourPricing[0].CurrencyPrecision ) == 'undefined' ? false : parseInt(tour.TourPricing[0].CurrencyPrecision[0]);
+                        var tourPrice = parseInt(tour.TourPricing[0].Total[0]);
+                        var tourTax =  parseInt(tour.TourPricing[0].Tax[0]);
+                        var tourCurrency = typeof( tour.TourPricing[0].Currency ) == 'undefined' ? false : tour.TourPricing[0].Currency[0];
+                        if(currencyPrecision!== false && !isNaN(currencyPrecision))
+                        {
+                            for(ii = 0; ii < currencyPrecision; ii++)
+                            {
+                                tourPrice = tourPrice/10;
+                                tourTax = tourTax/10;
+                            }
+                        }
+                        else if(tourCurrency)
+                        {
+                            var cleanedPrice = tour.TourPricing[0].Total[0].replace( tourCurrency, "" ).replace(",","");
+                            var cleanedTax = tour.TourPricing[0].Tax[0].replace( tourCurrency, "" ).replace(",","");
+
+                            tourPrice = parseInt(cleanedPrice);
+                            tourTax = parseInt(cleanedTax);
+
+                        }
+                        var tourEntry = $("<tr class='producentry_itemlist'><td>"+ tour.Date + "</td></td><td "+ (showTimeCol ? "" : " style='display:none;'") +">" + ( tour.TourOptions[0].TourDepartureTime[0] != "00:00:00" ? tour.TourOptions[0].TourDepartureTime[0].slice(0,-3) : "" )  + "</td><td>" + tourPrice + " NOK</td><td><div id='" + id + "' class='reserveTourButton'>" + translation['reserve'] + "</div></td>")
                         $('#table_' + prodCode).append(tourEntry);
 
-                        //var tourEntry = $("<tr class='producentry_itemlist'><td>" + tour.DateotalInInt[0] + " NOK</td><td><div id='" + id + "' class='reserveTourButton'>" + translation['reserve'] + "</div></td>")
-                        var tourEntry = $("<tr class='producentry_itemlist'><td>"+ tour.Date + "</td></td><td "+ (showTimeCol ? "" : " style='display:none;'") +">" + ( tour.TourOptions[0].TourDepartureTime[0] != "00:00:00" ? tour.TourOptions[0].TourDepartureTime[0].slice(0,-3) : "" )  + "</td><td>" + tour.TourPricing[0].TotalInInt[0] + " NOK</td><td><div id='" + id + "' class='reserveTourButton'>" + translation['reserve'] + "</div></td>")
-                        $('#table_' + prodCode).append(tourEntry);
-
-                    tourEntry.find('.reserveTourButton').attr('onclick', "getshop_zauiReserveTour(this, '" + prodCode + "', '" + tour.Date + "', '" + tour.TourOptions[0].TourDepartureTime[0] + "', '" + tour.TourPricing[0].TotalInInt[0] + "', '" + tour.TourPricing[0].TaxInInt[0] + "')");
+                        tourEntry.find('.reserveTourButton').attr('onclick', "getshop_zauiReserveTour(this, '" + prodCode + "', '" + tour.Date + "', '" + tour.TourOptions[0].TourDepartureTime[0] + "', '" + tourPrice + "', '" + tourTax + "')");
+                    } catch(e)
+                    {
+                        console.log('Unexpected error occured ',e);
+                        $('#table_' + prodCode).append( $('<h1>An unexpected error occured. Please try again.</h1>'));
+                    }
                 });
-                $(button).hide()
+                $(button).hide();
 
                 $('#table_' + prodCode).show();
             } else {

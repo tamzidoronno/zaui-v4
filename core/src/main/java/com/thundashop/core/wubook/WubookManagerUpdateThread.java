@@ -1,11 +1,9 @@
 package com.thundashop.core.wubook;
 
-import java.io.IOException;
-import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.xmlrpc.XmlRpcClient;
-import org.apache.xmlrpc.XmlRpcException;
+
+import java.util.Vector;
+import java.util.concurrent.*;
 
 public class WubookManagerUpdateThread extends Thread {
 
@@ -23,18 +21,28 @@ public class WubookManagerUpdateThread extends Thread {
     
     @Override
     public void run() {
+        mgr.logPrint(Thread.currentThread().getName() + " " + getClass() + " " + "Starting thread...");
+
+        ExecutorService executor = Executors.newFixedThreadPool(1);
+        Callable<Vector> task = () -> (Vector) client.execute(action, params);
+        Future<Vector> taskFuture = executor.submit(task);
+
         Vector result;
         try {
-            result = (Vector) client.execute(action, params);
+            mgr.logPrint(Thread.currentThread().getName() + " " + getClass() + "Calling wubookManger api, apiCall: " + action + " params: " + params);
+            result = taskFuture.get(3, TimeUnit.MINUTES);
+            mgr.logPrint(getClass() + "Response from wubookManager api, apiCall: " + action + " response: " + result);
             if ((Integer)result.get(0) != 0) {
                 mgr.logText("Failed to update availability (" + result.get(0) + ") " + result.get(1) + " Parameters sent: " + params.toString() );
             } else {
                 mgr.logText("Availability successfully updated.");
             }
-        } catch (XmlRpcException ex) {
-            mgr.logText("XMLException caught: " + ex.code);
-        } catch (IOException ex) {
-            mgr.logText("IOException caught: " + ex.getLocalizedMessage());
+        } catch (Exception ex) {
+            mgr.logText(Thread.currentThread().getName() + " " + getClass() + " Exception : " + ex.getMessage());
+            mgr.messageManager.sendErrorNotification(Thread.currentThread().getName() + " " + getClass() + " params: " + params + " Exception " + ex.getMessage(), ex);
+        } finally {
+            taskFuture.cancel(true);
+            executor.shutdownNow();
         }
 
     }

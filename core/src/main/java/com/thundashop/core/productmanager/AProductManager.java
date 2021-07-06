@@ -1,20 +1,36 @@
 package com.thundashop.core.productmanager;
 
-import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.common.ErrorException;
-import com.thundashop.core.common.ManagerBase;
+import com.thundashop.app.content.ContentManager;
+import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.listmanager.data.Entry;
 import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
-import com.thundashop.core.productmanager.data.*;
+import com.thundashop.core.pdf.data.AccountingDetails;
+import com.thundashop.core.productmanager.data.AccountingDetail;
+import com.thundashop.core.productmanager.data.OverrideTaxGroup;
+import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.productmanager.data.ProductCategory;
+import com.thundashop.core.productmanager.data.ProductConfiguration;
+import com.thundashop.core.productmanager.data.ProductCriteria;
+import com.thundashop.core.productmanager.data.ProductImage;
+import com.thundashop.core.productmanager.data.ProductList;
+import com.thundashop.core.productmanager.data.SearchResult;
+import com.thundashop.core.productmanager.data.TaxGroup;
 import com.thundashop.core.usermanager.data.User;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author ktonder
@@ -23,31 +39,30 @@ public abstract class AProductManager extends ManagerBase {
 
     HashMap<String, ProductList> productList = new HashMap();
     public HashMap<String, ProductCategory> categories = new HashMap();
-    
 
-    private final Map<String, Product> products = new ConcurrentHashMap<>();
+
+    public Map<String, Product> products = new HashMap();
     public ProductConfiguration productConfiguration = new ProductConfiguration();
     public HashMap<Integer, TaxGroup> taxGroups = new HashMap();
-    
+
     HashMap<Integer, AccountingDetail> accountingAccountDetails = new HashMap();
 
-    private Set<Product> sortedProducts;
-    
+
     @Autowired
     public PageManager pageManager;
 
     @Autowired
     public ListManager listManager;
-    
+
     protected Product finalize(Product product) throws ErrorException {
         if (product == null) {
             return null;
         }
-        
+
         if (product != null && product.pageId != null && product.page == null) {
             product.page = pageManager.getPage(product.pageId);
         }
-        
+
         if (taxGroups.get(1) != null && product.taxGroupObject == null && product.taxgroup == -1) {
             product.taxGroupObject = taxGroups.get(1);
             product.taxgroup = 1;
@@ -55,46 +70,46 @@ public abstract class AProductManager extends ManagerBase {
             product.taxGroupObject = taxGroups.get(product.taxgroup);
         }
         checkIncrementalProductId(product);
-        
+
         setOriginalPriceIfNull(product);
         setGroupPrice(product);
         addSubProductsToTransientVariable(product);
         updateAdditionalTaxGroups(product);
-        
+
         for (ProductImage image : product.images.values()) {
             if (!product.imagesAdded.contains(image.fileId)) {
                 product.imagesAdded.add(image.fileId);
             }
         }
-        
+
         product.uniqueName = product.name;
         ensureUniqueNameWhenDuplicate(product);
-    
+
         if (product.pageId != null && !product.pageId.isEmpty() && !product.selectedProductTemplate.equals(product.currentSelectedProducTemplate)) {
             Page page = pageManager.getPage(product.pageId);
             if (page.isASlavePage() && !page.masterPageId.equals(product.selectedProductTemplate)) {
                 pageManager.changeTemplateForPage(product.pageId, product.selectedProductTemplate);
             }
-            
+
             product.currentSelectedProducTemplate = product.selectedProductTemplate;
             saveObject(product);
         }
-        
+
         product.doFinalize();
-        
+
         product.variations = listManager.getJsTree("variationslist_product_"+product.id);
         if (product.variations != null && product.variations.nodes.isEmpty()) {
             product.variations = null;
         }
-        
+
         TaxGroup taxGroup = getTaxGroupAbstract(product.taxgroup);
         addOverrideTaxGroup(taxGroup, product);
-        
+
         List<TaxGroup> additionalTaxGroups = new ArrayList(product.additionalTaxGroupObjects);
         for (TaxGroup additionalTaxGroup : additionalTaxGroups) {
             addOverrideTaxGroup(additionalTaxGroup, product);
         }
-        
+
 //        updateTranslation(product);
         return product;
     }
@@ -108,10 +123,10 @@ public abstract class AProductManager extends ManagerBase {
                         product.additionalTaxGroupObjects.add(toAdd);
                     }
                 }
-            }   
+            }
         }
     }
-    
+
     public abstract TaxGroup getTaxGroupAbstract(int taxGroupNumber);
 
     private void setOriginalPriceIfNull(Product product) {
@@ -121,20 +136,20 @@ public abstract class AProductManager extends ManagerBase {
     }
 
     private void ensureUniqueNameWhenDuplicate(Product product) {
-        Set<Product> sortedProducts = getSortedProducts();
+        Set<Product> sortedProducts = new TreeSet<Product>(products.values());
 
         int i = 0;
-        
+
         for (Product iproduct : sortedProducts) {
-            
+
             if (iproduct.name != null
-                    && product.name != null 
-                    && iproduct.name.equalsIgnoreCase(product.name)) {
-                
+                    && product.name != null
+                    && iproduct.name.toLowerCase().equals(product.name.toLowerCase())) {
+
                 i++;
-                
+
                 if (product.id.equals(iproduct.id) && i > 1) {
-                    product.uniqueName = product.name + "_" + i;    
+                    product.uniqueName = product.name + "_" + i;
                 }
             }
         }
@@ -146,7 +161,7 @@ public abstract class AProductManager extends ManagerBase {
             if (object instanceof Product) {
                 Product product = (Product) object;
                 finalize(product);
-                setProductById(product.id, product);
+                products.put(product.id, product);
             }
             if (object instanceof ProductList) {
                 ProductList list = (ProductList) object;
@@ -171,7 +186,7 @@ public abstract class AProductManager extends ManagerBase {
     }
 
     protected Product getProduct(String productId) throws ErrorException {
-        Product product = getProductById(productId);
+        Product product = products.get(productId);
         if (product == null) {
             return null;
         }
@@ -183,7 +198,7 @@ public abstract class AProductManager extends ManagerBase {
     protected ArrayList<Product> randomProducts(String ignoreProductId, int fetchSize) throws ErrorException {
         List<Product> randomProducts = new ArrayList<>();
 
-        for (Product product : getProducts()) {
+        for (Product product : products.values()) {
             product = finalize(product);
             if (product.page.id.equals(ignoreProductId) || product.id.equals(ignoreProductId)) {
                 continue;
@@ -202,7 +217,7 @@ public abstract class AProductManager extends ManagerBase {
 
     protected List<Product> getProducts(ProductCriteria searchCriteria) throws ErrorException {
         ArrayList<Product> retProducts = new ArrayList();
-        for (Product product : getProducts()) {
+        for (Product product : products.values()) {
             if (product.check(searchCriteria) || searchCriteria.pageIds.contains(product.pageId)) {
                 product = finalize(product);
                 retProducts.add(product);
@@ -212,7 +227,7 @@ public abstract class AProductManager extends ManagerBase {
         if (searchCriteria.listId != null && searchCriteria.listId.trim().length() > 0) {
             List<Entry> list = listManager.getList(searchCriteria.listId);
             for (Entry entry : list) {
-                Product product = getProductById(entry.productId);
+                Product product = products.get(entry.productId);
                 if (product == null) {
                     continue;
                 }
@@ -228,7 +243,7 @@ public abstract class AProductManager extends ManagerBase {
 
     protected List<Product> latestProducts(int count) throws ErrorException {
         ArrayList<Product> result = new ArrayList();
-        for (Product product : getProducts()) {
+        for (Product product : products.values()) {
             product = finalize(product);
             result.add(product);
         }
@@ -245,7 +260,7 @@ public abstract class AProductManager extends ManagerBase {
     }
 
     public Product findProductByPage(String id) {
-        for (Product product : getProducts()) {
+        for (Product product : products.values()) {
             if (product.pageId != null && product.pageId.equals(id)) {
                 return product;
             }
@@ -292,13 +307,13 @@ public abstract class AProductManager extends ManagerBase {
     private List<Product> getProductIdsThatMatchSearchWord(String searchWord) {
         Set<String> filteredProductIds = new HashSet();
         if (searchWord == null || searchWord.isEmpty()) {
-            getProducts().forEach(p -> filteredProductIds.add(p.id));
+            products.values().stream().forEach(p -> filteredProductIds.add(p.id));
         }
 
         if (searchWord != null) {
             List<String> splittedSearchWord = Arrays.asList(searchWord.split(" "));
 
-                getProducts().stream()
+            products.values().stream()
                     .filter(p -> p.name != null && !p.name.isEmpty())
                     .filter(p -> matchSearchWords(p.name, splittedSearchWord))
                     .forEach(p -> filteredProductIds.add(p.id));
@@ -306,7 +321,7 @@ public abstract class AProductManager extends ManagerBase {
 
         List<Product> retProducts = new ArrayList();
         for (String productId : filteredProductIds) {
-            Product product = getProductById(productId);
+            Product product = products.get(productId);
             if (product != null) {
                 retProducts.add(product);
             }
@@ -321,10 +336,10 @@ public abstract class AProductManager extends ManagerBase {
                 return false;
             }
         }
-        
+
         return true;
     }
-    
+
     public void setProductDynamicPrice(String productId, int count) {
     }
 
@@ -332,26 +347,26 @@ public abstract class AProductManager extends ManagerBase {
         if (getSession() == null || getSession().currentUser == null) {
             return;
         }
-        
+
         User currentUser = getSession().currentUser;
         if (currentUser.groups == null) {
             return;
         }
-        
+
         for (String groupId : currentUser.groups) {
             Double groupPrice = product.groupPrice.get(groupId);
             if (groupPrice != null) {
                 product.price = groupPrice;
             }
         }
-        
+
     }
 
     private void addSubProductsToTransientVariable(Product product) {
         product.subProducts.clear();
-        
+
         for (String subProductId : product.subProductIds) {
-            Product iproduct = getProductById(subProductId);
+            Product iproduct = products.get(subProductId);
             finalize(iproduct);
             product.subProducts.add(iproduct);
         }
@@ -365,7 +380,7 @@ public abstract class AProductManager extends ManagerBase {
             saveObject(product);
         }
     }
-    
+
     public AccountingDetail getAccountingDetail(int accountNumber) {
         if (accountNumber == 2900) {
             AccountingDetail forskudd = new AccountingDetail();
@@ -376,19 +391,19 @@ public abstract class AProductManager extends ManagerBase {
         }
         return accountingAccountDetails.get(accountNumber);
     }
-    
+
     public List<AccountingDetail> getAccountingAccounts() {
         ArrayList result = new ArrayList(accountingAccountDetails.values());
         Collections.sort(result);
         return result;
     }
-    
+
     public void saveAccountingDetail(AccountingDetail detail) {
         AccountingDetail alreadyExists = getAccountingDetail(detail.accountNumber);
         if (alreadyExists != null) {
             detail.id = alreadyExists.id;
         }
-        
+
         saveObject(detail);
         accountingAccountDetails.put(detail.accountNumber, detail);
     }
@@ -396,31 +411,31 @@ public abstract class AProductManager extends ManagerBase {
     private void updateAdditionalTaxGroups(Product product) {
         if (product.additionalTaxGroupObjects.isEmpty())
             return;
-        
+
         List<TaxGroup> groups = product.additionalTaxGroupObjects.stream()
                 .filter(group -> group != null)
                 .filter(group -> taxGroups.get(group.groupNumber) != null)
                 .map(group -> taxGroups.get(group.groupNumber))
                 .collect(Collectors.toList());
-        
+
         if (product.additionalTaxGroupObjects.size() == groups.size()) {
             product.additionalTaxGroupObjects = groups;
         }
     }
 
     void doubleCheckAndCorrectAccounts(List<TaxGroup> taxlist) {
-        
+
         HashMap<Integer, TaxGroup> taxesByAccounting = new HashMap();
         for(TaxGroup tax : taxlist) {
             taxesByAccounting.put(tax.accountingTaxGroupId, tax);
         }
-        
-        
+
+
         HashMap<Integer, TaxGroup> taxesByGetShop = new HashMap();
         for(TaxGroup tax : taxlist) {
             taxesByGetShop.put(tax.groupNumber, tax);
         }
-        
+
         for(AccountingDetail detail : accountingAccountDetails.values()) {
             if(detail.getShopTaxGroup == -1 && detail.taxgroup > -1) {
                 TaxGroup tax = taxesByAccounting.get(detail.taxgroup);
@@ -435,64 +450,23 @@ public abstract class AProductManager extends ManagerBase {
                     detail.taxgroup = tax.accountingTaxGroupId;
                     saveAccountingDetail(detail);
                 }
-                
+
             }
         }
     }
 
     private boolean containsTaxGroup(OverrideTaxGroup overrideTaxGroup, Product product) {
-        
+
         if (overrideTaxGroup.groupNumber == product.taxgroup) {
             return true;
         }
-        
+
         for (TaxGroup add : product.additionalTaxGroupObjects) {
             if (add.groupNumber == overrideTaxGroup.groupNumber) {
                 return true;
             }
         }
-        
+
         return false;
-    }
-
-    public Product getProductById(String productId) {
-        return products.get(productId);
-    }
-
-    public Product setProductById(String productId, Product product) {
-        nullifySortedProducts();
-        return products.put(productId, product);
-    }
-
-    public Product removeProductById(String productId) {
-        nullifySortedProducts();
-        return products.remove(productId);
-    }
-
-    public boolean isProductExist(String productId) {
-        return products.containsKey(productId);
-    }
-
-    public Collection<Product> getProducts() {
-        return products.values();
-    }
-
-    public Set<Product> getSortedProducts() {
-        Set<Product> set = sortedProducts;
-
-        if (set == null) {
-            set = new TreeSet<>(products.values());
-            setSortedProducts(set);
-        }
-
-        return set;
-    }
-
-    public void setSortedProducts(Set<Product> sortedProducts) {
-        this.sortedProducts = sortedProducts;
-    }
-
-    public void nullifySortedProducts() {
-        sortedProducts = null;
     }
 }

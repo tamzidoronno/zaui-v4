@@ -25,7 +25,7 @@ public abstract class AProductManager extends ManagerBase {
     public HashMap<String, ProductCategory> categories = new HashMap();
     
 
-    private final Map<String, Product> products = new ConcurrentHashMap<>();
+    private final Map<String, Product> products = new HashMap<>();
     public ProductConfiguration productConfiguration = new ProductConfiguration();
     public HashMap<Integer, TaxGroup> taxGroups = new HashMap();
     

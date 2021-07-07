@@ -13,7 +13,6 @@ import com.thundashop.core.usermanager.data.User;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 /**
@@ -481,7 +480,7 @@ public abstract class AProductManager extends ManagerBase {
         Set<Product> set = sortedProducts;
 
         if (set == null) {
-            set = new TreeSet<>(products.values());
+            set = new TreeSet<>(getProducts());
             setSortedProducts(set);
         }
 

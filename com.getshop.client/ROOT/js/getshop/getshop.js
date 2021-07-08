@@ -561,7 +561,9 @@ thundashop.Ajax = {
             if (!data["newpagesize"]) {
                 let nps_name = "newpagesize";
                 let nps_value = document.getElementsByClassName("pagenumber active")[1].getAttribute("newpagesize");
-                console.log("newpagesize: ", nps_name, nps_value);
+                if (typeof(nps_value) === "undefined") {
+                    let nps_value = 15;
+                }
                 data[nps_name] = nps_value;
             }
         }

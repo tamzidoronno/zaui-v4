@@ -167,4 +167,6 @@ iot/getshopiotserverconfig.txt
 iot/baxi.ini
 /GetShopIOTServer/dist/
 
+# Local specifications for Daniel.
 frontend
+windowsdeploy.sh

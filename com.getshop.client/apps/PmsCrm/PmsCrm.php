@@ -147,7 +147,7 @@ class PmsCrm extends \WebshopApplication implements \Application {
         $crmFilter = $filterApp->getSelectedFilter();
         
         $filter = new \core_common_FilterOptions();
-        $filter->pageSize = 20;
+        $filter->pageSize = 15;
         $filter->pageNumber = 1;
         
         if(isset($crmFilter['start']) && $crmFilter['start']) {

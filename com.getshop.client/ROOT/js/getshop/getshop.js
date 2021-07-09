@@ -562,12 +562,23 @@ thundashop.Ajax = {
                 let nps_name = "newpagesize";
                 let nps_value = document.getElementsByClassName("pagenumber active")[1].getAttribute("newpagesize");
                 if (typeof(nps_value) === "undefined") {
-                    let nps_value = 15;
+                    nps_value = 15;
                 }
                 data[nps_name] = nps_value;
+  
+                if (!$(this).attr("newpagenumber")) {
+                    let newpagenumberValue = Number(document.getElementsByClassName("pagenumber active")[0].getAttribute("newpagenumber"));
+                    if ($(this).hasClass("gsicon-chevron-left-circle")) {
+                        data["newpagenumber"] = $(this).hasClass("disabled") ? newpagenumberValue : (newpagenumberValue - 1).toString();
+                    }
+                    else if ($(this).hasClass("gsicon-chevron-right-circle")) {
+                        data["newpagenumber"] = $(this).hasClass("disabled") ? newpagenumberValue : (newpagenumberValue + 1).toString();
+                    }
+                }
             }
         }
-        
+        console.log("Data nedenfor");
+        console.log(data);
         var event = thundashop.Ajax.createEvent(null, method, this, data);
         
         if ($(this).attr('synchron')) {

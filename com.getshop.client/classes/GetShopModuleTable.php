@@ -299,7 +299,7 @@ class GetShopModuleTable {
 
         $leftAndRightCount = 4;
         $disabeled = $this->pagedInfo->currentPageNumber > 1 ? "" : "disabled";
-        echo "<div class='pagenumber gsicon-chevron-left-circle $disabeled'></div>";
+        echo "<div gsclick='handleGetShopModulePaging' class='pagenumber gsicon-chevron-left-circle $disabeled'></div>";
 
         $start = $this->pagedInfo->currentPageNumber - $leftAndRightCount;
         if ($start < 1) {
@@ -328,7 +328,7 @@ class GetShopModuleTable {
         }
 
         $disabeled = $this->pagedInfo->currentPageNumber < $this->pagedInfo->totalPages ? "" : "disabled";
-        echo "<div class='pagenumber gsicon-chevron-right-circle $disabeled'></div>";
+        echo "<div gsclick='handleGetShopModulePaging' class='pagenumber gsicon-chevron-right-circle $disabeled'></div>";
 
         echo "</div>";
 
@@ -375,7 +375,7 @@ class GetShopModuleTable {
             return $_SESSION['gs_moduletable_' . $this->getFunctionName() . "_pagesize"];
         }
 
-        return 20;
+        return 15;
     }
 
     public function printPageSize($pageSize) {

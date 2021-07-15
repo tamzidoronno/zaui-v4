@@ -39,30 +39,30 @@ public abstract class AProductManager extends ManagerBase {
 
     HashMap<String, ProductList> productList = new HashMap();
     public HashMap<String, ProductCategory> categories = new HashMap();
-    
+
 
     public Map<String, Product> products = new HashMap();
     public ProductConfiguration productConfiguration = new ProductConfiguration();
     public HashMap<Integer, TaxGroup> taxGroups = new HashMap();
-    
+
     HashMap<Integer, AccountingDetail> accountingAccountDetails = new HashMap();
-    
-    
+
+
     @Autowired
     public PageManager pageManager;
 
     @Autowired
     public ListManager listManager;
-    
+
     protected Product finalize(Product product) throws ErrorException {
         if (product == null) {
             return null;
         }
-        
+
         if (product != null && product.pageId != null && product.page == null) {
             product.page = pageManager.getPage(product.pageId);
         }
-        
+
         if (taxGroups.get(1) != null && product.taxGroupObject == null && product.taxgroup == -1) {
             product.taxGroupObject = taxGroups.get(1);
             product.taxgroup = 1;
@@ -70,46 +70,46 @@ public abstract class AProductManager extends ManagerBase {
             product.taxGroupObject = taxGroups.get(product.taxgroup);
         }
         checkIncrementalProductId(product);
-        
+
         setOriginalPriceIfNull(product);
         setGroupPrice(product);
         addSubProductsToTransientVariable(product);
         updateAdditionalTaxGroups(product);
-        
+
         for (ProductImage image : product.images.values()) {
             if (!product.imagesAdded.contains(image.fileId)) {
                 product.imagesAdded.add(image.fileId);
             }
         }
-        
+
         product.uniqueName = product.name;
         ensureUniqueNameWhenDuplicate(product);
-    
+
         if (product.pageId != null && !product.pageId.isEmpty() && !product.selectedProductTemplate.equals(product.currentSelectedProducTemplate)) {
             Page page = pageManager.getPage(product.pageId);
             if (page.isASlavePage() && !page.masterPageId.equals(product.selectedProductTemplate)) {
                 pageManager.changeTemplateForPage(product.pageId, product.selectedProductTemplate);
             }
-            
+
             product.currentSelectedProducTemplate = product.selectedProductTemplate;
             saveObject(product);
         }
-        
+
         product.doFinalize();
-        
+
         product.variations = listManager.getJsTree("variationslist_product_"+product.id);
         if (product.variations != null && product.variations.nodes.isEmpty()) {
             product.variations = null;
         }
-        
+
         TaxGroup taxGroup = getTaxGroupAbstract(product.taxgroup);
         addOverrideTaxGroup(taxGroup, product);
-        
+
         List<TaxGroup> additionalTaxGroups = new ArrayList(product.additionalTaxGroupObjects);
         for (TaxGroup additionalTaxGroup : additionalTaxGroups) {
             addOverrideTaxGroup(additionalTaxGroup, product);
         }
-        
+
 //        updateTranslation(product);
         return product;
     }
@@ -123,10 +123,10 @@ public abstract class AProductManager extends ManagerBase {
                         product.additionalTaxGroupObjects.add(toAdd);
                     }
                 }
-            }   
+            }
         }
     }
-    
+
     public abstract TaxGroup getTaxGroupAbstract(int taxGroupNumber);
 
     private void setOriginalPriceIfNull(Product product) {
@@ -137,19 +137,19 @@ public abstract class AProductManager extends ManagerBase {
 
     private void ensureUniqueNameWhenDuplicate(Product product) {
         Set<Product> sortedProducts = new TreeSet<Product>(products.values());
-        
+
         int i = 0;
-        
+
         for (Product iproduct : sortedProducts) {
-            
+
             if (iproduct.name != null
-                    && product.name != null 
+                    && product.name != null
                     && iproduct.name.toLowerCase().equals(product.name.toLowerCase())) {
-                
+
                 i++;
-                
+
                 if (product.id.equals(iproduct.id) && i > 1) {
-                    product.uniqueName = product.name + "_" + i;    
+                    product.uniqueName = product.name + "_" + i;
                 }
             }
         }
@@ -313,7 +313,7 @@ public abstract class AProductManager extends ManagerBase {
         if (searchWord != null) {
             List<String> splittedSearchWord = Arrays.asList(searchWord.split(" "));
 
-                products.values().stream()
+            products.values().stream()
                     .filter(p -> p.name != null && !p.name.isEmpty())
                     .filter(p -> matchSearchWords(p.name, splittedSearchWord))
                     .forEach(p -> filteredProductIds.add(p.id));
@@ -336,10 +336,10 @@ public abstract class AProductManager extends ManagerBase {
                 return false;
             }
         }
-        
+
         return true;
     }
-    
+
     public void setProductDynamicPrice(String productId, int count) {
     }
 
@@ -347,24 +347,24 @@ public abstract class AProductManager extends ManagerBase {
         if (getSession() == null || getSession().currentUser == null) {
             return;
         }
-        
+
         User currentUser = getSession().currentUser;
         if (currentUser.groups == null) {
             return;
         }
-        
+
         for (String groupId : currentUser.groups) {
             Double groupPrice = product.groupPrice.get(groupId);
             if (groupPrice != null) {
                 product.price = groupPrice;
             }
         }
-        
+
     }
 
     private void addSubProductsToTransientVariable(Product product) {
         product.subProducts.clear();
-        
+
         for (String subProductId : product.subProductIds) {
             Product iproduct = products.get(subProductId);
             finalize(iproduct);
@@ -380,7 +380,7 @@ public abstract class AProductManager extends ManagerBase {
             saveObject(product);
         }
     }
-    
+
     public AccountingDetail getAccountingDetail(int accountNumber) {
         if (accountNumber == 2900) {
             AccountingDetail forskudd = new AccountingDetail();
@@ -391,19 +391,19 @@ public abstract class AProductManager extends ManagerBase {
         }
         return accountingAccountDetails.get(accountNumber);
     }
-    
+
     public List<AccountingDetail> getAccountingAccounts() {
         ArrayList result = new ArrayList(accountingAccountDetails.values());
         Collections.sort(result);
         return result;
     }
-    
+
     public void saveAccountingDetail(AccountingDetail detail) {
         AccountingDetail alreadyExists = getAccountingDetail(detail.accountNumber);
         if (alreadyExists != null) {
             detail.id = alreadyExists.id;
         }
-        
+
         saveObject(detail);
         accountingAccountDetails.put(detail.accountNumber, detail);
     }
@@ -411,31 +411,31 @@ public abstract class AProductManager extends ManagerBase {
     private void updateAdditionalTaxGroups(Product product) {
         if (product.additionalTaxGroupObjects.isEmpty())
             return;
-        
+
         List<TaxGroup> groups = product.additionalTaxGroupObjects.stream()
                 .filter(group -> group != null)
                 .filter(group -> taxGroups.get(group.groupNumber) != null)
                 .map(group -> taxGroups.get(group.groupNumber))
                 .collect(Collectors.toList());
-        
+
         if (product.additionalTaxGroupObjects.size() == groups.size()) {
             product.additionalTaxGroupObjects = groups;
         }
     }
 
     void doubleCheckAndCorrectAccounts(List<TaxGroup> taxlist) {
-        
+
         HashMap<Integer, TaxGroup> taxesByAccounting = new HashMap();
         for(TaxGroup tax : taxlist) {
             taxesByAccounting.put(tax.accountingTaxGroupId, tax);
         }
-        
-        
+
+
         HashMap<Integer, TaxGroup> taxesByGetShop = new HashMap();
         for(TaxGroup tax : taxlist) {
             taxesByGetShop.put(tax.groupNumber, tax);
         }
-        
+
         for(AccountingDetail detail : accountingAccountDetails.values()) {
             if(detail.getShopTaxGroup == -1 && detail.taxgroup > -1) {
                 TaxGroup tax = taxesByAccounting.get(detail.taxgroup);
@@ -450,23 +450,23 @@ public abstract class AProductManager extends ManagerBase {
                     detail.taxgroup = tax.accountingTaxGroupId;
                     saveAccountingDetail(detail);
                 }
-                
+
             }
         }
     }
 
     private boolean containsTaxGroup(OverrideTaxGroup overrideTaxGroup, Product product) {
-        
+
         if (overrideTaxGroup.groupNumber == product.taxgroup) {
             return true;
         }
-        
+
         for (TaxGroup add : product.additionalTaxGroupObjects) {
             if (add.groupNumber == overrideTaxGroup.groupNumber) {
                 return true;
             }
         }
-        
+
         return false;
     }
 }

@@ -1,4 +1,9 @@
 <?php
+$_SESSION['hasoverdueinvoices'] = false;
+/*
+ *
+ * Removed this check as a whole 2921-06-21
+ *
 $factory = IocContainer::getFactorySingelton();
 if(!\ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator()) {
     return;
@@ -34,4 +39,5 @@ if($fetched && $fetched != "null" && $fetched != "[]") {
     echo "Your system is in danger of being shut down due to unpaid invoices, please pay invoice: " . join(" <b>AND</b> ", $ids);
     echo "</div>";
 }
+*/
 ?>

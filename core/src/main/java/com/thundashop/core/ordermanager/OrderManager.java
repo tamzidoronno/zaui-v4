@@ -5,10 +5,9 @@ import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionScope;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.DBCollection;
-import com.thundashop.core.accountingmanager.SavedOrderFile;
 import com.thundashop.core.applications.GetShopApplicationPool;
 import com.thundashop.core.applications.StoreApplicationInstancePool;
 import com.thundashop.core.applications.StoreApplicationPool;
@@ -2493,11 +2492,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     public List<Order> getAllOrders() {
-        List<Order> orderList = new ArrayList();
-        for(Order order : orders.values()) {
-            orderList.add(order);
-        }
-        return orderList;
+        return new ArrayList<>(orders.values());
     }
     
 
@@ -2975,11 +2970,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     private List<DayIncome> getDayIncomesInternal(DayIncomeFilter filter) {
-        List<DayIncome> dayIncomes = new ArrayList();
+        List<DayIncome> dayIncomes = new ArrayList<>();
         
         if (!filter.ignoreFromDatabase) {
             dayIncomes = getDayIncomesFromDatabase(filter.start, filter.end);
-            dayIncomes.stream().forEach(o -> o.isFinal = true);
+            dayIncomes.forEach(o -> o.isFinal = true);
         }
         
         List<Order> ordersToUse = getAllOrders();
@@ -3001,9 +2996,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         List<DayIncome> newlyBrokenIncome = breaker.getDayIncomes();
         List<DayIncome> fromDatabase = new ArrayList(dayIncomes);
         
-        newlyBrokenIncome.removeIf(income -> {
-            return isInArray(income, fromDatabase);
-        });
+        newlyBrokenIncome.removeIf(income -> isInArray(income, fromDatabase));
         
         newlyBrokenIncome.addAll(dayIncomes);
         
@@ -3024,44 +3017,34 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     private List<DayIncome> getDayIncomesFromDatabase(Date startDate, Date endDate) {
-        long start = startDate.getTime();
-        long end = endDate.getTime();
-        
         BasicDBObject query = new BasicDBObject();
         query.put("className", DayIncomeReport.class.getCanonicalName());
-        
-        SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
+        query.put("incomes", new BasicDBObject("$exists", true));
+        query.put("deleted", new BasicDBObject("$exists", false));
+        query.put("incomes.dayEntries", new BasicDBObject("$exists", true).append("$ne", "[]"));
 
-        List<DayIncomeReport> all = database.query("OrderManager", storeId, query).stream()
-                .map(o -> (DayIncomeReport)o)
-                .filter(r -> r.deleted == null)
-                .collect(Collectors.toList());
-       
-        List<String> usedIds = new ArrayList();
-        
-        List<DayIncome> dayIncomes = all.stream()
-                .flatMap(o -> o.incomes.stream())
+        BasicDBObject incomesStartDate = new BasicDBObject("incomes.start", new BasicDBObject("$gte", startDate).append("$lt", endDate));
+        BasicDBObject incomesEndDate = new BasicDBObject("incomes.end", new BasicDBObject("$gte", startDate).append("$lt", endDate));
+        BasicDBList or = new BasicDBList();
+        or.add(incomesStartDate);
+        or.add(incomesEndDate);
+
+        query.put("$or", or);
+
+        Set<String> usedIds = new HashSet<>();
+        List<DayIncome> all = database.query("OrderManager", storeId, query)
+                .stream()
+                .flatMap(o -> ((DayIncomeReport) o).incomes.stream())
                 .filter(r -> {
                     if (usedIds.contains(r.id)) {
                         return false;
                     }
-                    if(r.dayEntries.isEmpty()) {
-                        return false;
-                    }
-                    
-                    long iStart = r.start.getTime();
-                    long iEnd = r.end.getTime();
-                    
-                    boolean startIsWithin = iStart >= start && iStart < end;
-                    boolean endIsWithin = iEnd >= start && iEnd < end;
-                    boolean everythingIsBetween = iStart >= start && iEnd < end;
-                    
                     usedIds.add(r.id);
-                    return startIsWithin || endIsWithin || everythingIsBetween;
+                    return true;
                 })
                 .collect(Collectors.toList());
         
-        return dayIncomes;
+        return all;
     }
     
     private DayIncomeReport getReport(Date startDate, Date endDate) {

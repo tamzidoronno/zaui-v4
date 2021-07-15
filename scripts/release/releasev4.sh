@@ -12,6 +12,7 @@ if [ $releaseAnswer = "1" ]; then
 	echo "5 = Server Kronen ( Created: 19 aug 2018 )";
   echo "6 = Server cluster 6 ( Created: 19 juli 2019 )";
   echo "9 = Server cluster 9 ( Created: 26 nov 2020 )";
+  echo "Q = QP Server (Created 2021)"
   read serverQuestion;
 
   if [ $serverQuestion = "3" ]; then
@@ -25,7 +26,9 @@ if [ $releaseAnswer = "1" ]; then
     ssh naxa@jenkins2021.getshop.com '/home/naxa/scripts/releaseSoftwareV4.sh 10.0.6.33 10.0.6.32'
   elif [ $serverQuestion = "9" ]; then
     ssh naxa@jenkins2021.getshop.com '/home/naxa/scripts/releaseSoftwareV4.sh 10.0.9.33 10.0.9.32'
-	else 
+  elif [ $serverQuestion = "Q" ]; then
+    ssh naxa@jenkins2021.getshop.com '/home/naxa/scripts/releaseSoftwareQP.sh 10.0.9.99'
+	else
 		echo "Invalid server answer";
 	fi;
 else

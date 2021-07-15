@@ -577,8 +577,7 @@ thundashop.Ajax = {
                 }
             }
         }
-        console.log("Data nedenfor");
-        console.log(data);
+        
         var event = thundashop.Ajax.createEvent(null, method, this, data);
         
         if ($(this).attr('synchron')) {

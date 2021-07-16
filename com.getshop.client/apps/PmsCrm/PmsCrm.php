@@ -147,8 +147,6 @@ class PmsCrm extends \WebshopApplication implements \Application {
         $crmFilter = $filterApp->getSelectedFilter();
         
         $filter = new \core_common_FilterOptions();
-        $filter->pageSize = 15;
-        $filter->pageNumber = 1;
         
         if(isset($crmFilter['start']) && $crmFilter['start']) {
             $filter->startDate = $this->convertToJavaDate(strtotime($crmFilter['start']));
@@ -173,14 +171,20 @@ class PmsCrm extends \WebshopApplication implements \Application {
             array('other', 'Book.', null, 'formatBookings'),
             array('extax', 'ExTax', null, 'formatExTax'),
             array('discount', 'Discount', null, 'formatDiscounts'),
-            array('afterstay', 'After stay', null, 'formatAfterStay')
+            array('afterstay', 'After stay', null, 'formatAfterStay'),
         );
 
         if (isset($_POST['data']['newpagenumber'])) {
             $filter->pageNumber = $_POST['data']['newpagenumber'];
         }
+        else {
+            $filter->pageNumber = 15;
+        }
         if (isset($_POST['data']['newpagesize'])) {
             $filter->pageSize = $_POST['data']['newpagesize'];
+        }
+        else {
+            $filter->pageSize = 1;
         }
         
         $data = $this->getApi()->getPmsManager()->getAllCrmUsers($this->getSelectedMultilevelDomainName(), $filter);

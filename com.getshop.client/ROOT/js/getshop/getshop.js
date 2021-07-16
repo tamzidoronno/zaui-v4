@@ -560,25 +560,33 @@ thundashop.Ajax = {
         if ($(this).attr('gsclick')) {
             if (!data["newpagesize"]) {
                 let nps_name = "newpagesize";
-                let nps_value = document.getElementsByClassName("pagenumber active")[1].getAttribute("newpagesize");
-                if (typeof(nps_value) === "undefined") {
-                    nps_value = 15;
+
+                if ($(".pagenumber.active").length > 0) {
+
+
+                    let nps_value = $(".pagenumber.active")[1].getAttribute("newpagesize");
+                    if (typeof(nps_value) === "undefined") {
+                        nps_value = 15;
+                    }
+                    data[nps_name] = nps_value;
+    
+                    if (!$(this).attr("newpagenumber")) {
+                        let newpagenumberValue = Number($(".pagenumber.active")[0].getAttribute("newpagenumber"));
+                        if ($(this).hasClass("gsicon-chevron-left-circle")) {
+                            data["newpagenumber"] = $(this).hasClass("disabled") ? newpagenumberValue : (newpagenumberValue - 1).toString();
+                        }
+                        else if ($(this).hasClass("gsicon-chevron-right-circle")) {
+                            data["newpagenumber"] = $(this).hasClass("disabled") ? newpagenumberValue : (newpagenumberValue + 1).toString();
+                        }
+                    }
                 }
-                data[nps_name] = nps_value;
-  
-                if (!$(this).attr("newpagenumber")) {
-                    let newpagenumberValue = Number(document.getElementsByClassName("pagenumber active")[0].getAttribute("newpagenumber"));
-                    if ($(this).hasClass("gsicon-chevron-left-circle")) {
-                        data["newpagenumber"] = $(this).hasClass("disabled") ? newpagenumberValue : (newpagenumberValue - 1).toString();
-                    }
-                    else if ($(this).hasClass("gsicon-chevron-right-circle")) {
-                        data["newpagenumber"] = $(this).hasClass("disabled") ? newpagenumberValue : (newpagenumberValue + 1).toString();
-                    }
+                else {
+                    data["newpagesize"] = 15;
+                    data["newpagenumber"] = 1;
                 }
             }
         }
-        console.log("Data nedenfor");
-        console.log(data);
+
         var event = thundashop.Ajax.createEvent(null, method, this, data);
         
         if ($(this).attr('synchron')) {

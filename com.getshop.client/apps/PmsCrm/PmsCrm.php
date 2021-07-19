@@ -178,13 +178,13 @@ class PmsCrm extends \WebshopApplication implements \Application {
             $filter->pageNumber = $_POST['data']['newpagenumber'];
         }
         else {
-            $filter->pageNumber = 15;
+            $filter->pageNumber = 1;
         }
         if (isset($_POST['data']['newpagesize'])) {
             $filter->pageSize = $_POST['data']['newpagesize'];
         }
         else {
-            $filter->pageSize = 1;
+            $filter->pageSize = 15;
         }
         
         $data = $this->getApi()->getPmsManager()->getAllCrmUsers($this->getSelectedMultilevelDomainName(), $filter);

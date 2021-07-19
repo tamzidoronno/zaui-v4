@@ -48,27 +48,27 @@ import org.springframework.stereotype.Component;
  * should<br>
  * be pretty straight forward to use.
  */
-@Component 
+@Component
 @GetShopSession
 public class ProductManager extends AProductManager implements IProductManager {
     @Autowired
     private PageManager pageManager;
-    
+
     @Autowired
     private Database database;
-    
+
     @Autowired
     private OrderManager orderManager;
-    
+
     @Autowired
     private StoreManager storeManager;
-    
+
     @Autowired
     private PosManager posManager;
-    
+
     @Autowired
     private GetShopCentral getShopCentral;
-    
+
 
     @Override
     public Product saveProduct(Product product) throws ErrorException {
@@ -78,9 +78,9 @@ public class ProductManager extends AProductManager implements IProductManager {
         product.original_price = product.price;
 
         product.doFinalize();
-        
+
         saveObject(product);
-        
+
         if (product.deleted == null) {
             products.put(product.id, product);
         }
@@ -94,17 +94,17 @@ public class ProductManager extends AProductManager implements IProductManager {
         product.stockQuantity = product.stockQuantity + count;
         saveProduct(product);
     }
-    
+
     public void changeStockQuantityForWareHouse(String productId, int count, String wareHouseId) throws ErrorException {
         Product product = products.get(productId);
         Integer oldCount = product.wareHouseStockQuantities.get(wareHouseId);
-        
+
         if (oldCount == null) {
             oldCount = 0;
         }
-        
+
         oldCount = oldCount + count;
-        
+
         product.wareHouseStockQuantities.put(wareHouseId, oldCount);
         saveProduct(product);
     }
@@ -133,32 +133,32 @@ public class ProductManager extends AProductManager implements IProductManager {
         Product product = new Product();
         product.storeId = storeId;
         product.id = UUID.randomUUID().toString();
-        
+
         product.pageId = pageManager.createPageFromTemplatePage("ecommerce_product_template_1").id;
         saveProduct(product);
-        
+
         return finalize(product);
     }
-    
+
     @Override
     public Product createProductWithAccount(Integer accountNumber) throws ErrorException {
-        
+
         AccountingDetail account = getAccountingDetail(accountNumber);
         if(account == null && posManager.hasLockedPeriods() && !getShopCentral.hasBeenConnectedToCentral()) {
             return null;
         }
-        
+
         if(account != null && account.getShopTaxGroup < 0) {
             return null;
         }
-        
+
         Product product = new Product();
         product.storeId = storeId;
         product.id = UUID.randomUUID().toString();
-        
+
         product.pageId = pageManager.createPageFromTemplatePage("ecommerce_product_template_1").id;
-        
-        
+
+
         if(account != null) {
             ProductAccountingInformation info = new ProductAccountingInformation();
             info.accountingNumber = account.accountNumber + "";
@@ -168,12 +168,12 @@ public class ProductManager extends AProductManager implements IProductManager {
             product.taxGroupObject = getTaxGroup(account.getShopTaxGroup);
             product.accountingConfig.add(info);
         }
-        
+
         saveProduct(product);
-        
+
         return finalize(product);
     }
-    
+
 
     @Override
     public ArrayList<Product> getRandomProducts(Integer fetchSize, String ignoreProductId) throws ErrorException {
@@ -216,7 +216,7 @@ public class ProductManager extends AProductManager implements IProductManager {
         Product product = getProduct(productId);
         return product.getPrice(variations);
     }
-    
+
     public Double getPriceWithoutDiscount(String productId, List<String> variations) throws ErrorException {
         Product product = getProduct(productId);
         return product.price;
@@ -242,7 +242,7 @@ public class ProductManager extends AProductManager implements IProductManager {
     @Override
     public List<Product> getAllProducts() throws ErrorException {
         long time = System.currentTimeMillis();
-        
+
         ArrayList<Product> list = new ArrayList(products.values());
         ArrayList<Product> finalized = new ArrayList();
         for (Product prod : list) {
@@ -267,7 +267,7 @@ public class ProductManager extends AProductManager implements IProductManager {
     @Override
     public List<Product> getAllProductsSortedByName() throws ErrorException {
         long time = System.currentTimeMillis();
-        
+
         ArrayList<Product> list = new ArrayList(products.values());
         ArrayList<Product> finalized = new ArrayList();
         for (Product prod : list) {
@@ -310,7 +310,7 @@ public class ProductManager extends AProductManager implements IProductManager {
     public void setTaxes(List<TaxGroup> groups) throws ErrorException {
         //Remove the old ones first.
         List<TaxGroup> oldGroups = new ArrayList(taxGroups.values());
-        
+
         for (TaxGroup grp : taxGroups.values()) {
             deleteObject(grp);
         }
@@ -335,7 +335,7 @@ public class ProductManager extends AProductManager implements IProductManager {
     public TaxGroup getTaxGroup(int i) {
         return taxGroups.get(i);
     }
-    
+
     public TaxGroup getTaxGroupById(String id) {
         return taxGroups.values()
                 .stream()
@@ -399,11 +399,11 @@ public class ProductManager extends AProductManager implements IProductManager {
         if (productList == null) {
             return;
         }
-        
+
         if (productList.id == null || productList.id.equals("")) {
             saveObject(productList);
         }
-        
+
         this.productList.put(productList.id, productList);
         saveObject(productList);
     }
@@ -421,8 +421,8 @@ public class ProductManager extends AProductManager implements IProductManager {
             for (int i=0; i<count; i++) {
                 product.prices.add(new ProductDynamicPrice(i));
             }
-        } 
-   }
+        }
+    }
 
     @Override
     public void saveCategory(ProductCategory categories) {
@@ -445,33 +445,33 @@ public class ProductManager extends AProductManager implements IProductManager {
     @Override
     public List<ProductCategory> getAllCategories() {
         List<ProductCategory> result = new ArrayList(this.categories.values());
-        
+
         Collections.sort(result, new Comparator<ProductCategory>(){
             public int compare(ProductCategory o1, ProductCategory o2){
                 return o1.name.compareTo(o2.name);
             }
-       });
-        
+        });
+
         return result;
     }
 
     @Override
     public Product copyProduct(String fromProductId, String newName) {
         Product product = products.get(fromProductId);
-        
+
         Page currentPage = pageManager.getPage(product.pageId);
-        
+
         Product newProduct = product.clone();
         newProduct.id = UUID.randomUUID().toString();
         newProduct.pageId = pageManager.createPageFromTemplatePage(currentPage.masterPageId).id;
         newProduct.name = newName;
         saveProduct(newProduct);
-        
+
         List<ProductList> addToLists = productList.values().stream()
                 .filter(list -> list.productIds.contains(product.id))
                 .collect(Collectors.toList());
-                
-        
+
+
         addToLists.forEach(o -> addProductToList(o.id, newProduct.id));
         return newProduct;
     }
@@ -480,7 +480,7 @@ public class ProductManager extends AProductManager implements IProductManager {
         ProductList list = productList.get(productListId);
         list.productIds.add(productId);
         saveProductList(list);
-        
+
     }
 
     public Product getProductUnfinalized(String productId) {
@@ -493,7 +493,7 @@ public class ProductManager extends AProductManager implements IProductManager {
                 return list.id;
             }
         }
-        
+
         return "";
     }
 
@@ -511,7 +511,7 @@ public class ProductManager extends AProductManager implements IProductManager {
     @Override
     public List<Product> getAllProductsIncDeleted() throws ErrorException {
         List<DataCommon> res = database.findWithDeleted("col_" + storeId, null, null, "ProductManager", null, true);
-        
+
         List<Product> result = new ArrayList();
         for(DataCommon com : res) {
             if(com instanceof Product) {
@@ -526,7 +526,7 @@ public class ProductManager extends AProductManager implements IProductManager {
         List<Product> products = search(filterOptions.searchWord, 10000000, 1).products;
         return pageIt(products, filterOptions);
     }
-    
+
     @Override
     public FilteredData findProducts(FilterOptions filterOptions) {
         List<Product> products = search(filterOptions.searchWord, 10000000, 1).products;
@@ -536,11 +536,11 @@ public class ProductManager extends AProductManager implements IProductManager {
     @Override
     public List<ProductLight> getProductLight(List<String> ids) throws ErrorException {
         List<ProductLight> arrayList = new ArrayList();
-        
+
         ids.stream()
-            .forEach(id -> arrayList.add(new ProductLight(getProduct(id))));
-        
-        
+                .forEach(id -> arrayList.add(new ProductLight(getProduct(id))));
+
+
         return arrayList;
     }
 
@@ -548,7 +548,7 @@ public class ProductManager extends AProductManager implements IProductManager {
     public AccountingDetail getAccountingDetail(int accountNumber) {
         return super.getAccountingDetail(accountNumber); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     @Override
     public List<AccountingDetail> getAccountingAccounts() {
         return super.getAccountingAccounts();
@@ -567,28 +567,28 @@ public class ProductManager extends AProductManager implements IProductManager {
     @Override
     public void addAdditionalTaxGroup(String productId, String taxGroupId) {
         Product product = getProduct(productId);
-        
+
         if (product == null) {
             product = getDeletedProduct(productId);
         }
-        
+
         if (product != null) {
             if (product.taxGroupObject != null && product.taxGroupObject.id.equals(taxGroupId)) {
                 return;
             }
-            
+
             for (TaxGroup existingGroup : product.additionalTaxGroupObjects) {
                 if (existingGroup.id.equals(taxGroupId)) {
                     return;
                 }
             }
-            
+
             TaxGroup taxGroup = taxGroups.values()
                     .stream()
                     .filter(tax -> tax.id.equals(taxGroupId))
                     .findFirst()
                     .orElse(null);
-            
+
             if (taxGroup != null) {
                 product.additionalTaxGroupObjects.add(taxGroup);
                 saveProduct(product);
@@ -599,7 +599,7 @@ public class ProductManager extends AProductManager implements IProductManager {
     @Override
     public void removeTaxGroup(String productId, String taxGroupId) {
         Product product = getProduct(productId);
-        
+
         if (product != null) {
             product.additionalTaxGroupObjects.removeIf(o -> o.id.equals(taxGroupId));
             saveObject(product);
@@ -616,29 +616,29 @@ public class ProductManager extends AProductManager implements IProductManager {
         if (grp.accountingTaxAccount == null || grp.accountingTaxAccount.isEmpty()) {
             return false;
         }
-        
+
         TaxGroup oldGroup = oldGroups.stream()
                 .filter(g -> g.groupNumber == grp.groupNumber)
                 .findFirst()
                 .orElse(null);
-        
+
         boolean oldGroupHasNoAccountingTaxAccounnt = oldGroup.accountingTaxAccount == null || oldGroup.accountingTaxAccount.isEmpty();
         boolean newTaxGroupHasAccounting = grp.accountingTaxAccount != null && !grp.accountingTaxAccount.isEmpty();
-        
+
         return oldGroupHasNoAccountingTaxAccounnt && newTaxGroupHasAccounting;
     }
 
     public void createGiftCardProduct() {
-        if (getProduct("giftcard") != null) 
+        if (getProduct("giftcard") != null)
             return;
-        
+
         Product product = new Product();
         product.id = "giftcard";
         product.name = "Gift Card";
         product.taxgroup = 0;
         product.setAccountingAccount("2901");
         saveObject(product);
-        
+
         products.put(product.id, product);
     }
 
@@ -648,11 +648,11 @@ public class ProductManager extends AProductManager implements IProductManager {
                 .filter(o -> o.id.equals(productId))
                 .findAny()
                 .orElse(null);
-        
+
         if (product == null) {
             throw new ErrorException(28);
         }
-        
+
         product.accountingConfig = infos;
         saveProduct(product);
     }
@@ -661,14 +661,14 @@ public class ProductManager extends AProductManager implements IProductManager {
         if (loss) {
             return "8160";
         }
-        
+
         return "8060";
     }
 
     @Override
     public void deleteAccountingAccount(int accountNumber) {
         AccountingDetail detail = accountingAccountDetails.get(accountNumber);
-        
+
         if (detail != null) {
             boolean isInUse = products.values()
                     .stream()
@@ -678,12 +678,12 @@ public class ProductManager extends AProductManager implements IProductManager {
                                 .count() > 0;
                     })
                     .count() > 0;
-            
+
             if (isInUse) {
                 logPrint("Cant delete the account as it is in use for a one or more products");
                 return;
             }
-            
+
             accountingAccountDetails.remove(accountNumber);
             deleteObject(detail);
         }
@@ -694,7 +694,7 @@ public class ProductManager extends AProductManager implements IProductManager {
         AccountingDetail res = getAccountingDetail(oldAccountNumber);
         res.accountNumber = accountNumber;
         saveObject(res);
-        
+
         accountingAccountDetails.remove(oldAccountNumber);
         accountingAccountDetails.put(accountNumber, res);
     }
@@ -717,7 +717,7 @@ public class ProductManager extends AProductManager implements IProductManager {
         List<TaxGroup> taxes = getTaxes();
         super.doubleCheckAndCorrectAccounts(taxes);
     }
-    
+
     @Override
     public void setAccomodationAccount(String accountId) {
         AccountingDetail accomodationAccount = null;
@@ -727,7 +727,7 @@ public class ProductManager extends AProductManager implements IProductManager {
                 detail.isAccomodation = false;
                 saveAccountingDetail(detail);
             }
-            
+
             if(detail.id.equals(accountId)) {
                 if(detail.getShopTaxGroup > -1) {
                     detail.isAccomodation = true;
@@ -738,7 +738,7 @@ public class ProductManager extends AProductManager implements IProductManager {
         }
         updateAllBookingTypesWithAccountingAccount();
     }
-    
+
     @Override
     public void updateAllBookingTypesWithAccountingAccount() {
         AccountingDetail accomodationAccount = null;
@@ -751,7 +751,7 @@ public class ProductManager extends AProductManager implements IProductManager {
         if(accomodationAccount == null) {
             return;
         }
-        
+
         List<BookingEngine> bengines = storeManager.getBookingEngines();
         for(BookingEngine engine : bengines) {
             List<BookingItemType> types = engine.getBookingItemTypes();
@@ -776,13 +776,13 @@ public class ProductManager extends AProductManager implements IProductManager {
 
     public TaxGroup getTaxGroup(String productId, int taxgroup, Date o) {
         TaxGroup taxGroup = getTaxGroup(taxgroup);
-        
+
         taxGroup.addTestGroup();
-        
+
         if (o == null) {
             return taxGroup;
         }
-        
+
         for (OverrideTaxGroup overTaxGroup : taxGroup.overrideTaxGroups) {
             long startL = overTaxGroup.start.getTime();
             long endL = overTaxGroup.end.getTime() + TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS);
@@ -791,14 +791,14 @@ public class ProductManager extends AProductManager implements IProductManager {
                 return getTaxGroup(overTaxGroup.groupNumber);
             }
         }
-        
+
         return taxGroup;
     }
 
     @Override
     public void addOverrideTaxGroup(Integer groupNumber, Date start, Date end, Integer overrideGroupNumber) {
         TaxGroup taxGroup = getTaxGroup(groupNumber);
-        
+
         if (taxGroup != null) {
             taxGroup.addOverrideGroup(start, end, overrideGroupNumber);
             saveObject(taxGroup);

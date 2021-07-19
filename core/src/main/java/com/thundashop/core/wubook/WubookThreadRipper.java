@@ -1,17 +1,14 @@
 package com.thundashop.core.wubook;
 
-import static com.stripe.net.OAuth.token;
+import org.apache.xmlrpc.XmlRpcClient;
+import org.apache.xmlrpc.XmlRpcException;
+
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.apache.xmlrpc.XmlRpcClient;
-import org.apache.xmlrpc.XmlRpcException;
+import java.util.concurrent.*;
 
 public class WubookThreadRipper extends Thread {
 
@@ -35,47 +32,56 @@ public class WubookThreadRipper extends Thread {
     
     @Override
     public void run() {
+        manager.logPrint(Thread.currentThread().getName() + " " + getClass() + " " + "Starting thread... opType: " + type);
         if(type == 1) { fetchNewBookings(); }
         if(type == 2) { updateShortAvailability(); }
     }
-    
-    
-    private Vector executeClient(String apicall, Vector params) throws XmlRpcException, IOException {
-        
-        javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(
-        new javax.net.ssl.HostnameVerifier(){
 
-            public boolean verify(String hostname,
-                    javax.net.ssl.SSLSession sslSession) {
-                return true;
-            }
-        });
-        
+
+    private Vector executeClient(String apicall, Vector params) {
+
+        javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier((hostname, sslSession) -> true);
+
         manager.logText("Executing api call: " + apicall);
+
+        ExecutorService executor = Executors.newFixedThreadPool(1);
+        Callable<Vector> task = () -> (Vector) client.execute(apicall, params);
+        Future<Vector> taskFuture = executor.submit(task);
+
         try {
-            Vector res = (Vector) client.execute(apicall, params);
+            manager.logPrint(Thread.currentThread().getName() + " " + getClass() + "Calling wubookManger api, apiCall: " + apicall + " params: " + params);
+            Vector res = taskFuture.get(3, TimeUnit.MINUTES);
+            manager.logPrint(Thread.currentThread().getName() + " " + getClass() + "Response from wubookManager api, apiCall: " + apicall + " response: " + res);
             return res;
-        }catch(Exception d) {
-            manager.logText("Could not connect to wubook on api call: " + apicall + " message: " + d.getMessage());
+        } catch (Exception d) {
+            String errStr = "Could not connect to wubook on api call: " + apicall + " message: " + d.getMessage();
+            manager.logText(errStr);
+            manager.messageManager.sendErrorNotification(Thread.currentThread().getName() + " " + getClass() + " Exception while calling wubook, apiCall: " + apicall + " params: " + params + " error: " + d.getMessage(), d);
             manager.disableWubook = new Date();
-            d.printStackTrace();
+            manager.logPrintException(d);
+            throw new RuntimeException(errStr, d);
+        } finally {
+            taskFuture.cancel(true);
+            executor.shutdownNow();
         }
-        return null;
+
     }
     
     public void fetchNewBookings() {
+        manager.logPrint(Thread.currentThread().getName() + " " + getClass() + " fetch Booking Thread Is Running: " + manager.fetchBookingThreadIsRunning);
         if(manager.fetchBookingThreadIsRunning) {
-            manager.logText("A thread already running for fetchnewbooking");
-            manager.logPrint("A thread already running for fetchnewbooking");
+            manager.logText(Thread.currentThread().getName() + " " + getClass() + " A thread already running for fetchnewbooking");
             Calendar cal = Calendar.getInstance();
             long diff = System.currentTimeMillis() - manager.fetchBookingThreadStarted.getTime();
             diff = diff / 10000;
+            manager.logText(Thread.currentThread().getName() + " " + getClass() + " diff from last running time: " + diff);
             if(diff > 600) {
                 manager.fetchBookingThreadIsRunning = false;
             }
             return;
         }
         manager.fetchBookingThreadStarted = new Date();
+        manager.logText(Thread.currentThread().getName() + " " + getClass() + " Acquiring lock at: " + manager.fetchBookingThreadStarted);
         manager.fetchBookingThreadIsRunning = true;
         try {
             markBookingsFetched();
@@ -94,6 +100,7 @@ public class WubookThreadRipper extends Thread {
 
             Vector result = executeClient("fetch_new_bookings", params);
             if(result == null) {
+                manager.fetchBookingThreadIsRunning = false;
                 return;
             }
 
@@ -104,8 +111,9 @@ public class WubookThreadRipper extends Thread {
                 manager.bookingsToAdd = (Vector) result.get(1);
             }
         }catch(Exception d) {
-            manager.logText("Failed in fetch new booking " + d.getMessage());
+            manager.logText(Thread.currentThread().getName() + " " + getClass() +"Failed in fetch new booking " + d.getMessage());
             manager.logPrintException(d);
+            manager.messageManager.sendErrorNotification(Thread.currentThread().getName() + " " + getClass() + " Exception while calling wubook, apiCall: fetch_new_bookings" + " error: " + d.getMessage(), d);
         }
         manager.fetchBookingThreadIsRunning = false;
         
@@ -123,8 +131,9 @@ public class WubookThreadRipper extends Thread {
         Vector bookings = manager.bookingsToAdd;
         if(bookings.size() > 0) {
 //            List<Integer> reservationCodes = new ArrayList();
-            Vector reservationCodes = new Vector(); 
-            for(int bookcount = 0; bookcount < bookings.size(); bookcount++) {
+            Vector reservationCodes = new Vector();
+            int bookingSize = bookings.size();
+            for(int bookcount = 0; bookcount < bookingSize; bookcount++) {
                 Hashtable reservation = (Hashtable) bookings.get(bookcount);
                 Integer reservationCode = (Integer) reservation.get("reservation_code");
                 reservationCodes.add(reservationCode);

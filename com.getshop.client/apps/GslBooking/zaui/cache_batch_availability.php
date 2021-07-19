@@ -47,7 +47,7 @@ $availability = json_decode(json_encode(simplexml_load_string($data)), true);
 //end api call
 
 //delete old list
-$sql = "TRUNCATE TABLE getshop_zaui_cache.availability";
+$sql = "TRUNCATE TABLE {$zaui_dbname}.availability";
 if ($conn->query($sql) === TRUE) {
     echo "Table truncated successfully \n";
 } else {
@@ -55,7 +55,7 @@ if ($conn->query($sql) === TRUE) {
 }
 
 //save new list
-$sql = "INSERT INTO getshop_zaui_cache.availability (xml_response, created_at) VALUES ('" . $data . "', '" . time() . "')";
+$sql = "INSERT INTO {$zaui_dbname}.availability (xml_response, created_at) VALUES ('" . $data . "', '" . time() . "')";
 
 if ($conn->query($sql) === TRUE) {
     echo "New record created successfully \n";

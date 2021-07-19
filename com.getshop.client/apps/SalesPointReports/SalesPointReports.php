@@ -262,7 +262,7 @@ class SalesPointReports extends \ns_57db782b_5fe7_478f_956a_ab9eb3575855\SalesPo
     }
     
     public function deleteZReport() {
-        
+        $this->getApi()->getPosManager()->deleteZReport($_POST['data']['zreportid'],$_POST['data']['gsextradatafromprecheck']['password']);
     }
     
     public function recalculateSegments() {

@@ -38,14 +38,14 @@ curl_close($ch);
 //end api call
 
 //remove old list
-$sql = "TRUNCATE TABLE getshop_zaui_cache.activity_list";
+$sql = "TRUNCATE TABLE {$zaui_dbname}.activity_list";
 if ($conn->query($sql) === TRUE) {
     echo "Table truncated successfully";
 } else {
     echo "Error: " . $sql . "<br>" . $conn->error;
 }
 //save new list
-$sql = "INSERT INTO getshop_zaui_cache.activity_list (xml_response, created_at) VALUES ('" . $data . "', '" . time() . "')";
+$sql = "INSERT INTO {$zaui_dbname}.activity_list (xml_response, created_at) VALUES ('" . $data . "', '" . time() . "')";
 
 if ($conn->query($sql) === TRUE) {
     echo "New record created successfully";

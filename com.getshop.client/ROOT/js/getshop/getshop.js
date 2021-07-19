@@ -562,8 +562,6 @@ thundashop.Ajax = {
                 let nps_name = "newpagesize";
 
                 if ($(".pagenumber.active").length > 0) {
-
-
                     let nps_value = $(".pagenumber.active")[1].getAttribute("newpagesize");
                     if (typeof(nps_value) === "undefined") {
                         nps_value = 15;

@@ -64,19 +64,29 @@ function cleanupAddons()
         }
         //print_r($booking);
     }
-    echo "Addons to keep are ";
+    echo "<br />Addons to keep are ";
     print_r($addonstokeep);
 
     // go trough result set once more and tell zaui to delete everything that
     foreach($result as $rvalue)
     {
-        if(!in_array($rvalue->id, $zauiorderstokeep))
+        if(!in_array($rvalue['id'], $zauiorderstokeep))
         {
-            echo 'DELETE THIS ZAUI ORDER ' . $rvalue->supplierConfirmationNumber;
+            //echo '<br />DELETE THIS ZAUI ORDER :: '. $rvalue['bookingReference'] .' : ' . $rvalue['supplierConfirmationNumber'];
+            if($rvalue['bookingReference']  && $rvalue['supplierConfirmationNumber'])
+            {
+                cancelZauiBooking( $rvalue['bookingReference']  , $rvalue['supplierConfirmationNumber'] );
+                $sql = "UPDATE getshop_zaui_cache.booking_log SET bookingReference='{$rvalue['bookingReference']}__{$rvalue['supplierConfirmationNumber']}',supplierConfirmationNumber='' WHERE ID = '{$rvalue['id']}'";
+                $result = $conn->query($sql);
+            }
+            else
+            {
+                echo '<br />Invalid data set or already tried to cancel? id ' . $rvalue['id'] . ' bookingref:'. $rvalue['bookingReference'] . ' SupplConfNumber:'. $rvalue['supplierConfirmationNumber'] . ':';
+            }
         }
         else
         {
-            echo 'This Zaui order is connected to a valid booking: ' . $rvalue->supplierConfirmationNumber;
+            echo '<br />This Zaui order is connected to a valid booking: ' . $rvalue->supplierConfirmationNumber;
         }
     }
     /*
@@ -88,7 +98,7 @@ function cleanupAddons()
         {
             if(in_array($addon->productId,$addonstokeep) )
             {
-                echo 'Keeping this addon ' . $addon->name;
+                echo '<br />Keeping this addon ' . $addon->name;
             }
             else
             {
@@ -125,34 +135,22 @@ function cleanupAddons()
 */
 function cancelZauiBooking($bookingReference, $supplierConfirmationNumber)
 {
+    global $api_key, $reseller_id, $supplier_id;
+
+    $url = "https://api.zaui.io/v1/";
     $input_xml = '<?xml version="1.0" encoding="UTF-8"?>
-<CheckAvailabilityRequest xmlns="https://api.zaui.io/api/01">
+<BookingCancelRequest xmlns="https://api.zaui.io/api/01">
 	<ApiKey>' . $api_key . '</ApiKey>
 	<ResellerId>' . $reseller_id . '</ResellerId>
 	<SupplierId>' . $supplier_id . '</SupplierId>
 	<Timestamp>' . time() . '</Timestamp>
-	<StartDate>' . $date_start . '</StartDate>
-	<EndDate>' . $date_end . '</EndDate>
-	<SupplierProductCode>' . $prod_code .  '</SupplierProductCode>
-	<TourOptions>
-		<SupplierOptionCode></SupplierOptionCode>
-	</TourOptions>
-	<TravellerMix>
-		<Senior></Senior>
-		<Adult>' . $adults . '</Adult>
-		<Student></Student>
-		<Child>' . $children . '</Child>
-		<Infant></Infant>
-		<Total>' . $total . '</Total>
-	</TravellerMix>
-	<PickupLocation>
-		<SupplierPickupCode></SupplierPickupCode>
-	</PickupLocation>
-	<DropoffLocation>
-		<SupplierDropoffCode></SupplierDropoffCode>
-	</DropoffLocation>
-</CheckAvailabilityRequest>
-';
+	<BookingReference>'. $bookingReference  .'</BookingReference>
+	<SupplierConfirmationNumber>'. $supplierConfirmationNumber .'</SupplierConfirmationNumber>
+	<CancelDate>'. date('Y-m-d') .'</CancelDate>
+ 	<Author>Customer Service</Author>
+	<Reason>No longer traveling</Reason>
+	<SupplierNote>Refunded Customer</SupplierNote>
+</BookingCancelRequest>';
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
@@ -162,8 +160,20 @@ function cancelZauiBooking($bookingReference, $supplierConfirmationNumber)
     $data = curl_exec($ch);
     curl_close($ch);
 
-    $tours_iterator = new SimpleXMLIterator($data);
-    $tours_xml = sxiToArray($tours_iterator);
+    echo '<br />' . htmlentities($input_xml) . '<hr />'. htmlentities($data);
+
+    if($data)
+    {
+        $xml_iterator = new SimpleXMLIterator($data);
+        $cancel_xml = sxiToArray($xml_iterator);
+
+        print_r($cancel_xml);
+    }
+    else
+    {
+        echo '<br />No curl response? '. $url .' : ' . htmlentities($input_xml);
+    }
+    //  if($cancel_xml)
 }
 
 

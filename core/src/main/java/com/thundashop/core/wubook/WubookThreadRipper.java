@@ -1,7 +1,11 @@
 package com.thundashop.core.wubook;
 
+import com.getshop.scope.GetShopSessionScope;
+import com.thundashop.core.common.AppContext;
+import com.thundashop.core.common.GetShopLogHandler;
 import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpcException;
+import org.springframework.beans.BeansException;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -18,11 +22,18 @@ public class WubookThreadRipper extends Thread {
     private XmlRpcClient client;
     private String token;
     private String storeId;
+    private GetShopSessionScope scope;
     
     public WubookThreadRipper(WubookManager manager, Integer type) {
         this.type = type;
         this.manager = manager;
+        try {
+            scope = AppContext.appContext.getBean(GetShopSessionScope.class);
+        } catch (BeansException ex) {
+            manager.logPrint("Cannot find GetShopSessionScope bean defined for WubookThreadRipper. Might cause sendErrorNotification email to fail.");
+        }
     }
+
     
     public void setWubookSettings(String token, String lcode, XmlRpcClient client) {
         this.token = token;
@@ -32,7 +43,18 @@ public class WubookThreadRipper extends Thread {
     
     @Override
     public void run() {
+        scope.setStoreId(storeId, "", null);
         manager.logPrint(Thread.currentThread().getName() + " " + getClass() + " " + "Starting thread... opType: " + type);
+        try {
+            doRealStuff();
+        }catch (Exception e){
+            manager.logPrint(Thread.currentThread().getName() + " " + getClass() + " " + "Execution of (1)fetchNewBookings or (2)updateShortAvailability failed: " + type);
+        }finally {
+            scope.removethreadStoreId(storeId);
+        }
+    }
+
+    private void doRealStuff() {
         if(type == 1) { fetchNewBookings(); }
         if(type == 2) { updateShortAvailability(); }
     }
@@ -114,9 +136,10 @@ public class WubookThreadRipper extends Thread {
             manager.logText(Thread.currentThread().getName() + " " + getClass() +"Failed in fetch new booking " + d.getMessage());
             manager.logPrintException(d);
             manager.messageManager.sendErrorNotification(Thread.currentThread().getName() + " " + getClass() + " Exception while calling wubook, apiCall: fetch_new_bookings" + " error: " + d.getMessage(), d);
+        }finally {
+            manager.fetchBookingThreadIsRunning = false;
         }
-        manager.fetchBookingThreadIsRunning = false;
-        
+
     }
 
     private void updateShortAvailability() {

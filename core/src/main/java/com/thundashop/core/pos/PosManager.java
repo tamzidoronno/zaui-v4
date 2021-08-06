@@ -364,10 +364,11 @@ public class PosManager extends ManagerBase implements IPosManager {
 
         List<String> orderIds = new ArrayList();
         if (central.hasBeenConnectedToCentral()) {
+            Date fromWhenToTakeIntoAccount  = setDateToBeginningOfMonth(central.hasBeenConnectedToCentralSince());
             orderIds = orderManager.getAllOrders()
                     .stream()
                     .filter(o -> !o.isNullOrder())
-                    .filter(o -> o.createdAfterConnectedToACentral && (o.addedToZreport == null || o.addedToZreport.isEmpty()))
+                    .filter(o-> (o.hasPaymentDateAfter(fromWhenToTakeIntoAccount) && o.transferredToCentral == false || o.hasPaymentDateAfter(prevZReportDate)))
                     .filter(o -> o.isOrderFinanciallyRelatedToDatesIgnoreCreationDate(new Date(0), new Date()))
                     .map(o -> o.id)
                     .collect(Collectors.toList());
@@ -474,10 +475,11 @@ public class PosManager extends ManagerBase implements IPosManager {
         if (central.hasBeenConnectedToCentral()) {
             orderManager.creditOrdersThatHasDeletedConference();
             Date fromWhenToTakeIntoAccount  = setDateToBeginningOfMonth(central.hasBeenConnectedToCentralSince());
+            Date prevZReportDate = getPreviouseZReportDate(cashPointId);
 
             List<String> extraOrderIds = orderManager.getOrdersNotConnectedToAnyZReports()
                     .stream()
-                    .filter(o-> o.createdDate == null || o.createdDate.after(fromWhenToTakeIntoAccount)) //after switching old customers to central, all old reports would get processed here
+                    .filter(o-> o.hasPaymentDateAfter(fromWhenToTakeIntoAccount) && o.transferredToCentral == false || o.hasPaymentDateAfter(prevZReportDate)) //after switching old customers to central, all old reports would get processed here
                     .map(o -> o.id)
                     .collect(Collectors.toList());
             extraOrderIds.stream().forEach(orderId -> orderManager.closeOrderByZReport(orderId, report));
@@ -1910,7 +1912,7 @@ public class PosManager extends ManagerBase implements IPosManager {
         cal.setTime(date);
         cal.set(Calendar.HOUR, 0);
         cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.SECOND, 1);
         cal.set(Calendar.MILLISECOND, 0);
         cal.set(Calendar.DAY_OF_MONTH, 1);
         return cal.getTime();

@@ -21,7 +21,8 @@ public class GetShopDevice extends DataCommon {
     public String token = "";
     public String type = "";
     public String ip = "";
-    
+    public Date rowCreatedDate = null;
+
     public HashMap<String, String> extraConfigs = new HashMap();
     
     @Transient

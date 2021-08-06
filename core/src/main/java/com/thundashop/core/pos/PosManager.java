@@ -473,9 +473,11 @@ public class PosManager extends ManagerBase implements IPosManager {
 
         if (central.hasBeenConnectedToCentral()) {
             orderManager.creditOrdersThatHasDeletedConference();
+            Date fromWhenToTakeIntoAccount  = setDateToBeginningOfMonth(central.hasBeenConnectedToCentralSince());
 
             List<String> extraOrderIds = orderManager.getOrdersNotConnectedToAnyZReports()
                     .stream()
+                    .filter(o-> o.createdDate == null || o.createdDate.after(fromWhenToTakeIntoAccount)) //after switching old customers to central, all old reports would get processed here
                     .map(o -> o.id)
                     .collect(Collectors.toList());
             extraOrderIds.stream().forEach(orderId -> orderManager.closeOrderByZReport(orderId, report));
@@ -1884,13 +1886,14 @@ public class PosManager extends ManagerBase implements IPosManager {
          * When its connected to the getshop central we also do accrude payments for future booking to make a forcast.
          */
         boolean connectedToCentral = central.hasBeenConnectedToCentral();
+        Date fromWhenToTakeIntoAccount  = (connectedToCentral) ? setDateToBeginningOfMonth(central.hasBeenConnectedToCentralSince()) : null;
 
         PmsManager pmsManager = scope.getNamedSessionBean(getEngineName(), PmsManager.class);
 
         List<PmsBookingRooms> roomsNeedToCreateOrdersFor = pmsManager.getAllBookingsFlat()
                 .stream()
                 .flatMap(b -> b.rooms.stream())
-                .filter(r -> connectedToCentral || r.createOrdersOnZReport)
+                .filter(r -> (connectedToCentral && r.date.end.after(fromWhenToTakeIntoAccount)) || r.createOrdersOnZReport)
                 .filter(r -> r.hasUnsettledAmountIncAccrued())
                 .filter(r -> r.date.start.before(end) || r.date.start.equals(end))
                 .collect(Collectors.toList());
@@ -1900,6 +1903,17 @@ public class PosManager extends ManagerBase implements IPosManager {
         return roomsNeedToCreateOrdersFor.stream()
                 .filter(room -> room.hasUnsettledAmountIncAccrued()).collect(Collectors.toList());
 
+    }
+
+    private Date setDateToBeginningOfMonth(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.HOUR, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+        return cal.getTime();
     }
 
     public void updateAccruedAmountForRoomBookings(List<PmsBookingRooms> roomsToBeRecalculated, PmsManager pmsManager) {

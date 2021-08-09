@@ -212,7 +212,6 @@ $this->iterationCounter = false;		// Set to TRUE to use table Head iteration cou
 $this->splitTableBorderWidth = 0;		// Use table border (using this width in mm) when table breaks across pages
 							// Recommended to use small value e.g. 0.01
 
-
 // IMAGES
 $this->img_dpi = 96;	// Default dpi to output images if size not defined
 				// See also above "dpi"

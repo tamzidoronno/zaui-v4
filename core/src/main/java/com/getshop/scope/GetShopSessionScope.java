@@ -208,6 +208,10 @@ public class GetShopSessionScope implements Scope {
             originalSessionBeanName.put(threadId, multiLevelName);
         }
     }
+    public void removethreadStoreId(String storeId){
+        long threadId = Thread.currentThread().getId();
+        threadStoreIds.remove(threadId, storeId);
+    }
 
     public void clearStore(String storeId) {
         List<String> keysToRemove = namedSessionObjects.keySet().stream().filter(o -> o.contains(storeId)).collect(Collectors.toList());

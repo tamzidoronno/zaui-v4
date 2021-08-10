@@ -7,6 +7,10 @@
     width: 200px;
 }
 
+#errorContainer h1 { padding:16px; }
+#errorContainer p { cursor:pointer; padding:0 16px 12px 16px; color:#F00; font-size: 18px; }
+
+
 .PmsAvailability .pmsavailabilitywaitinglist { 
     display:none;
     position: absolute;

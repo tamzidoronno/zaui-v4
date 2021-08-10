@@ -170,3 +170,7 @@ iot/baxi.ini
 frontend/
 tmpfrontend/
 downloaded/
+*.jar
+*.metadata.json
+*.bson
+.idea

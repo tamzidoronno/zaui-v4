@@ -53,8 +53,8 @@ echo -e "";
 mongo --port=27018 --eval "var storeId='$STOREID'" onestoresync_clear_existing_data.js
 #Dumping online database and compressing it.
 echo -e " Dumping and compressing database on server";
-ssh -i /home/tamzid/.ssh/id_rsa -T naxa@10.0.9.33 << EOF > /dev/null
-#ssh -T naxa@$SERVER << EOF > /dev/null
+
+ssh -T naxa@$SERVER << EOF > /dev/null
 /home/naxa/backup2.sh $STOREID $MASTERSTOREID >> /dev/null 2>&1
 EOF
 if [ -f dump.tar.gz ]; then

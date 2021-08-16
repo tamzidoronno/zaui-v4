@@ -79,8 +79,12 @@ public class PmsInvoiceManagerNew {
         }
         
         User user = pmsManager.userManager.getUserById(userId);
-        
-        if (userId.equals("false")) {
+
+        if (userId.equals("false") || user == null) {
+            Logger.getLogger(PmsInvoiceManagerNew.class.getName()).log(Level.WARNING, "One of the bookings on ZReport has no user assigned to the booking rooms:");
+            rows.stream().flatMap(row -> row.items.stream()).forEach(
+                    item -> Logger.getLogger(PmsInvoiceManagerNew.class.getName()).log(Level.WARNING, "Booking: room " + (item.textOnOrder != null ? item.textOnOrder : ""  )+ " for date " + (item.date != null ? item.date : "" )));
+
             user = pmsManager.getSession().currentUser;
             userId = user.id;
         }

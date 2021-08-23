@@ -109,11 +109,13 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
                     settings.sendMailFrom = sendfrom;
                 }
             }
-            
+
             if (confSettings.get("enabletls") != null && confSettings.get("enabletls").value != null && !confSettings.get("enabletls").value.isEmpty()) {
                 String enableTls = confSettings.get("enabletls").value;
                 if (enableTls != null && enableTls.equals("true")) {
                     settings.enableTls = true;
+                }else if(enableTls != null && enableTls.equals("false")){
+                    settings.enableTls = false;
                 }
             }
         }
@@ -127,12 +129,12 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
         Properties properties = new Properties();
         properties.setProperty("mail.smtp.submitter", authenticator.getPasswordAuthentication().getUserName());
         properties.setProperty("mail.smtp.auth", "true");
-
         properties.setProperty("mail.smtp.host", mailSettings.hostname);
         properties.setProperty("mail.smtp.port", "" + mailSettings.port);
-        
-        if (mailSettings.enableTls)
+        if (mailSettings.enableTls) {
             properties.setProperty("mail.smtp.starttls.enable", "true");
+            properties.setProperty("mail.smtp.ssl.protocols", "TLSv1.2");
+        }
         
         return Session.getInstance(properties, authenticator);
     }
@@ -251,10 +253,7 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
     }
 
     private boolean isToDeveloper(String to) {
-        List<String> developersAddresses = new ArrayList();
-        developersAddresses.add("kai@getshop.com");
-        developersAddresses.add("pal@getshop.com");
-        return false;
+        return to.contains("@norwegianexperience.no");
     }
 
     private class Authenticator extends javax.mail.Authenticator {

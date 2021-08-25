@@ -469,28 +469,19 @@ public class PosManager extends ManagerBase implements IPosManager {
         report.totalAmount = getTotalAmountForZReport(report);
 
         saveObject(report);
-        report.orderIds.stream().forEach(orderId -> orderManager.closeOrderByZReport(orderId, report));
-        report.invoicesWithNewPayments.stream().forEach(orderId -> orderManager.closeOrderByZReport(orderId, report));
+        closeOrdersAndInvoicesByZReport(report);
 
         if (central.hasBeenConnectedToCentral()) {
-            orderManager.creditOrdersThatHasDeletedConference();
-            Date fromWhenToTakeIntoAccount  = setDateToBeginningOfMonth(central.hasBeenConnectedToCentralSince());
-            Date prevZReportDate = getPreviouseZReportDate(cashPointId);
-
-            List<String> extraOrderIds = orderManager.getOrdersNotConnectedToAnyZReports()
-                    .stream()
-                    .filter(o-> o.hasPaymentDateAfter(fromWhenToTakeIntoAccount) && o.transferredToCentral == false || o.hasPaymentDateAfter(prevZReportDate)) //after switching old customers to central, all old reports would get processed here
-                    .map(o -> o.id)
-                    .collect(Collectors.toList());
-            extraOrderIds.stream().forEach(orderId -> orderManager.closeOrderByZReport(orderId, report));
-            report.orderIds.addAll(extraOrderIds);
-            report.totalAmount = getTotalAmountForZReport(report);
-            saveObject(report);
+            processExtraOrderIdsForCentral(cashPointId, report);
         }
-
-
         zReports.put(report.id, report);
 
+        closeFinancialPeriodeIfNeeded(cashPointId);
+        getShopAccountingManager.transferAllDaysThatCanBeTransferred();
+        gdsManager.sendMessageToGetShopCentral(new GetShopCentralMessage("NEW_ZREPORT_CREATED"));
+    }
+
+    private void closeFinancialPeriodeIfNeeded(String cashPointId) {
         if (orderManager.getOrderManagerSettings().autoCloseFinancialDataWhenCreatingZReport && isMasterCashPoint(cashPointId)) {
             closeFinancialPeriode();
         }
@@ -498,9 +489,27 @@ public class PosManager extends ManagerBase implements IPosManager {
         if (central.hasBeenConnectedToCentral()) {
             closeFinancialPeriode();
         }
+    }
 
-        getShopAccountingManager.transferAllDaysThatCanBeTransferred();
-        gdsManager.sendMessageToGetShopCentral(new GetShopCentralMessage("NEW_ZREPORT_CREATED"));
+    private void processExtraOrderIdsForCentral(String cashPointId, ZReport report) {
+        orderManager.creditOrdersThatHasDeletedConference();
+        Date fromWhenToTakeIntoAccount  = setDateToBeginningOfMonth(central.hasBeenConnectedToCentralSince());
+        Date prevZReportDate = getPreviouseZReportDate(cashPointId);
+
+        List<String> extraOrderIds = orderManager.getOrdersNotConnectedToAnyZReports()
+                .stream()
+                .filter(o-> o.hasPaymentDateAfter(fromWhenToTakeIntoAccount) && o.transferredToCentral == false || o.hasPaymentDateAfter(prevZReportDate)) //after switching old customers to central, all old reports would get processed here
+                .map(o -> o.id)
+                .collect(Collectors.toList());
+        extraOrderIds.forEach(orderId -> orderManager.closeOrderByZReport(orderId, report));
+        report.orderIds.addAll(extraOrderIds);
+        report.totalAmount = getTotalAmountForZReport(report);
+        saveObject(report);
+    }
+
+    private void closeOrdersAndInvoicesByZReport(ZReport report) {
+        report.orderIds.forEach(orderId -> orderManager.closeOrderByZReport(orderId, report));
+        report.invoicesWithNewPayments.forEach(orderId -> orderManager.closeOrderByZReport(orderId, report));
     }
 
     /**

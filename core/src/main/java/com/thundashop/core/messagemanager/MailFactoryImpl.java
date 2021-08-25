@@ -114,7 +114,7 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
                 String enableTls = confSettings.get("enabletls").value;
                 if (enableTls != null && enableTls.equals("true")) {
                     settings.enableTls = true;
-                }else if(enableTls != null && enableTls.equals("false")){
+                } else if (enableTls != null && "false".equals(enableTls)) {
                     settings.enableTls = false;
                 }
             }

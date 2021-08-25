@@ -18,8 +18,9 @@ if ($conferencesToCreateFor) {
 }
 
 $invoicePaymentsToShow = is_array($report->invoicesWithNewPayments) && count($report->invoicesWithNewPayments);
+$accruedThatWillBeCreated = $report->roomsThatWillBeAutomaticallyCreatedOrdersFor;
 
-if (!$ordersToShow && !$conferencesToShow && !$invoicePaymentsToShow) {
+if (!$ordersToShow && !$conferencesToShow && !$invoicePaymentsToShow && !$accruedThatWillBeCreated) {
     echo "<div class='nofound'>";
     echo $this->__f("No transactions found");
     echo "</div>";
@@ -165,18 +166,56 @@ if ($invoicePaymentsToShow) {
             if ($orderTransaction->addedToZreport) {
                 continue;
             }
-            
+            $user = $this->getUserById($order->userId);
+            $userFullName = $user ? $user->fullName : "N/A";
+
             echo "<div class='orderline'>";
                 echo "<a href='#'>";
 
                     echo "<div class='col orderid'>".$order->incrementOrderId."</div>";
                     echo "<div class='col date'>".date('d.m.Y', strtotime($orderTransaction->date))."</div>";
-                    echo "<div class='col name'></div>";
+                    echo "<div class='col name'>$userFullName</div>";
                     echo "<div class='col type'></div>";
                     echo "<div class='col totalfororder'>".$orderTransaction->amount."</div>";
                 echo "</a>";
             echo "</div>";
         }
+    }
+    echo "</div>";
+}
+if ($accruedThatWillBeCreated) {
+    echo "<div class='paymentrow'>";
+    echo "<h2>Accrued payments that will be created</h2>";
+
+    $accrued_that_will_be_created_title = "Accrued That Will Be Created";
+    $totalForPaymentMethods[$accrued_that_will_be_created_title] = 0;
+
+    ?>
+    <div class="orderline">
+        <div class='col orderid'><? echo $this->__f("id"); ?></div>
+        <div class='col date'><? echo $this->__f("Payment Date"); ?></div>
+        <div class='col name'><? echo $this->__f("Employee / customer"); ?></div>
+        <div class='col type'><? echo $this->__f("Payment type"); ?></div>
+        <div class='col totalfororder'><? echo $this->__f("Price"); ?></div>
+    </div>
+    <?
+
+    foreach ($accruedThatWillBeCreated as $accruedPmsBookingRoom) {
+
+        echo "<div class='orderline'>";
+        echo "<a href='#'>";
+        $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $accruedPmsBookingRoom->pmsBookingRoomId);
+        $user = $this->getUserById($booking->userId);
+        $userFullName = $user ? $user->fullName : "N/A";
+        echo "<div class='col orderid'>" .$booking->incrementBookingId ."</div>";
+        echo "<div class='col date'>N/A</div>";
+        echo "<div class='col name'> $userFullName </div>";
+        echo "<div class='col type'>Accrued</div>";
+        echo "<div class='col totalfororder'>".$accruedPmsBookingRoom->unsettledAmountIncAccrued."</div>";
+        echo "</a>";
+        echo "</div>";
+
+        $totalForPaymentMethods[$accrued_that_will_be_created_title] += $accruedPmsBookingRoom->unsettledAmountIncAccrued;
     }
     echo "</div>";
 }

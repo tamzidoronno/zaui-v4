@@ -510,13 +510,19 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         echo $newRoom;
     }
     
-    public function printAvailableRoomsFromCategory($start, $end) {
-        $start = $this->convertToJavaDate(strtotime($start));
-        $end = $this->convertToJavaDate(strtotime($end));
+    public function printAvailableRoomsFromCategory($start=null, $end=null) {
+        //appending 14.00 and 11.00 to start & end
+        $start = isset($start) ? $start : $_POST['data']['start'];
+        $end = isset($end) ? $end : $_POST['data']['end'];
+        $start = $this->convertToJavaDate(strtotime($start . " 14:00"));
+        $end = $this->convertToJavaDate(strtotime($end . " 11:00"));
+
         $categories = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
         echo "<option value=''>Choose a category</option>";
+
         foreach($categories as $cat) {
-            $number = $this->getApi()->getBookingEngine()->getNumberOfAvailable($this->getSelectedMultilevelDomainName(), $cat->id, $start, $end);
+           // $number = $this->getApi()->getBookingEngine()->getNumberOfAvailable($this->getSelectedMultilevelDomainName(), $cat->id, $start, $end);
+           $number = $this->getApi()->getPmsManager()->getNumberOfAvailable($this->getSelectedMultilevelDomainName(), $cat->id, $start, $end, false);
             echo "<option value='" . $cat->id . "'>" . $cat->name . " ($number available)</option>";
         }
     }

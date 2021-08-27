@@ -342,7 +342,16 @@ public class GdsManager extends ManagerBase implements IGdsManager {
                 .findAny()
                 .orElse(null);
     }
-    
+
+    public Date getCentralDeviceCreatedDate() {
+        return devices.values()
+                .stream()
+                .filter(o -> o.type != null && o.type.equals("getshop_central"))
+                .findAny()
+                .map(d -> d.rowCreatedDate)
+                .orElse(null);
+    }
+
     public void createCentralDevice(String token) {
         GetShopDevice device = devices.values()
                 .stream()

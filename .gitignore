@@ -167,6 +167,12 @@ iot/getshopiotserverconfig.txt
 iot/baxi.ini
 /GetShopIOTServer/dist/
 
+frontend
+windowsdeploy.sh
 frontend/
 tmpfrontend/
 downloaded/
+scripts/development/dump
+scripts/development/shareddump
+core/log
+log

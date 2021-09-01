@@ -1977,4 +1977,13 @@ public class Order extends DataCommon implements Comparable<Order> {
                 .findAny()
                 .orElse(null);
     }
+    public boolean hasPaymentDateAfter(Date date){
+        if (this.markedPaidDate != null){
+            return date != null  && this.markedPaidDate.after(date);
+        }else{
+            return date != null && this.paymentDate != null  && this.paymentDate.after(date);
+        }
+    }
+
+
 }

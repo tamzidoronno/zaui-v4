@@ -29,7 +29,7 @@ if(isset($_GET['token']))
     setrawcookie('PHPSESSID', $encoded,0,'/'); 
     unset($_GET['token']);
     $quey_param =  http_build_query($_GET);
-    header("location:/pms.php?$quey_param&redirectedfrom=v5");
+    header("location:/pms.php?$quey_param");
 }
 
 if(!$factory->getApi()->getUserManager()->isLoggedIn() && !(isset($_GET['redirectedfrom']))) {

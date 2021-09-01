@@ -77,6 +77,8 @@ public interface IUserManager {
      * @throws ErrorException 
      */
     public User logOn(String username, String password) throws ErrorException;
+
+    public User forceLogon(String userId) throws ErrorException;
     
     /**
      * Logon a given user.

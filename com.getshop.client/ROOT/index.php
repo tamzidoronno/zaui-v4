@@ -13,7 +13,37 @@ if ($localmode && isset($_GET['changeGetShopModule']) && $_GET['changeGetShopMod
 if(isset($_GET['network-code']) && isset($_GET['messageId'])) {
     exit(0);
 }
+ 
 
+if($_GET['token'])
+{
+    $redirect_module = getModuleName($_GET['gs_getshopmodule']);
+
+    if (strpos($redirect_module, 'changeGetShopModule'))
+    { 
+        unset($_GET['token']);
+        $quey_param =  http_build_query($_GET);
+        header("location:$redirect_module&$quey_param&redirectedfrom=v5");
+    }
+    else
+    {
+        $quey_param =  http_build_query($_GET);
+        header("location:$redirect_module?$quey_param&redirectedfrom=v5");
+    }
+    exit(0);
+}
+
+function getModuleName($id) {
+
+    $modules = [
+        'salespoint' => 'pos.php',
+        'invoice'    => 'invoicing.php',
+        'account' => "/?changeGetShopModule=account&scopeid=NEW",
+        'cms'        => "/?changeGetShopModule=cms&scopeid=NEW",
+        'getshopnone'    => "/?changeGetShopModule=getshopnone&scopeid=NEW"
+    ];
+    return array_key_exists($id, $modules) ? $modules[$id] : "$id.php";
+}
 
 ob_start();
 //phpinfo();
@@ -98,10 +128,7 @@ if (isset($_GET['logonwithkey'])) {
     header('location:index.php');
     die();
 }
-
-
 $factory = IocContainer::getFactorySingelton();
-
 
 
 if ($factory->isEditorMode()) {

@@ -131,6 +131,8 @@ class ModulePageMenu {
             $gsadminmenues[] = "settings";
             $gsadminmenues[] = "account";
             $gsadminmenues[] = "invoice";
+
+          
             
             echo "<div class='inner_header_top_menu_gs'>Modules</div>";
             
@@ -165,6 +167,9 @@ class ModulePageMenu {
                     echo "<a class='gs_ignorenavigate' href='/?changeGetShopModule=$module->id&scopeid=$scopeId'><div class='gs_framework_module $moduleActiveClass'>$icon<br>$module->name</div></a>";
                 }
             }
+            //switch to v5
+            $v5_url = 'http://v5-'.$_SERVER['SERVER_NAME'].'?token='.session_id();
+            echo "<a class='gs_ignorenavigate' href='$v5_url'><div class='gs_framework_module'><i class='fa fa-toggle-up'></i><br/>Switch to V5</div></a>";
             
             if ($printPageMenuInModulesMenu) {
                 $this->printSupportMenuIcon();
@@ -314,9 +319,11 @@ class ModulePageMenu {
                         }
                         
                         $hassubs =  count($activeSubEntries) ? "hassubentries" : false;
-                        $pms5_pages = ['a90a9031-b67d-4d98-b034-f8c201a8f496' => 'bookings','0da68de9-da08-4b60-9652-3ac456da2627' => 'availability'];
-                        $page_url = array_key_exists($entry->getPageId(), $pms5_pages) ?  'http://localhost:4200/'.$pms5_pages[$entry->getPageId()]
-                                         : '?page='.$entry->getPageId().'&gs_getshopmodule='.\PageFactory::getGetShopModule();
+                        //$pms5_pages = ['a90a9031-b67d-4d98-b034-f8c201a8f496' => 'bookings','0da68de9-da08-4b60-9652-3ac456da2627' => 'availability'];
+                        // $page_url = array_key_exists($entry->getPageId(), $pms5_pages) ?  'http://localhost:4200/'.$pms5_pages[$entry->getPageId()]
+                        //                  : '?page='.$entry->getPageId().'&gs_getshopmodule='.\PageFactory::getGetShopModule();
+
+                        $page_url = '?page='.$entry->getPageId().'&gs_getshopmodule='.\PageFactory::getGetShopModule();
                                                 
                         ?>
                         <div class="entry <?php echo $hassubs; ?>">
@@ -357,11 +364,6 @@ class ModulePageMenu {
                     echo "<div class='support'>".$factory->__f("I Need Help")."</div>";
                 echo "</div>";
             echo "</span>";
-            //New version checkbox
-            echo "<span id='opensupportcenter' href='/getshopsupport.php' target='_blank'>";
-            echo "<div class='gs_framework_module modulechangericoncontainer' id='opensupportcases' style='position:relative;'>";
-                echo "<input type='checkbox'>".$factory->__f("Deactivate V5")."";
-            echo "</div>";
         echo "</span>";
         }
         

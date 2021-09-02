@@ -8,10 +8,12 @@ package com.thundashop.core.getshoplocksystem.zwavejobs;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonSyntaxException;
+import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.getshoplocksystem.LocstarLock;
 import com.thundashop.core.getshoplocksystem.UserSlot;
 import com.thundashop.core.getshoplocksystem.ZwaveLockServer;
-import java.util.Date;
+
+import static java.lang.Thread.currentThread;
 
 /**
  *
@@ -67,10 +69,13 @@ public class ZwaveAddCodeThread extends ZwaveThread {
         
         server.httpLoginRequestZwaveServer(getFetchingOfCodes());
         waitForEmptyQueue();
-        
-        String result = server.httpLoginRequestZwaveServer(getAddressForFetchingLog());
 
-        if (result.equals("null") || result.isEmpty()) {
+        String addressForFetchingLog = getAddressForFetchingLog();
+        GetShopLogHandler.logPrintStatic(currentThread().getId() + " " + currentThread().getName() + " addressForFetchingLog " + addressForFetchingLog, storeId);
+        String result = server.httpLoginRequestZwaveServer(addressForFetchingLog);
+        GetShopLogHandler.logPrintStatic(currentThread().getId() + " " + currentThread().getName() + " zwave server result: " + result, storeId);
+
+        if (result.equals("null") || result.isEmpty() || "401".equals(result)) {
             slot.isAddedToLock = "unkown";
             return slot.isAddedToLock;
         }

@@ -200,7 +200,7 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
                 if (nextThread != null) {
                     currentThread = nextThread; 
                     Thread td = new Thread(nextThread);
-                    td.setName("Starting zwave thread: " + nextThread );
+                    td.setName("Thread[ZWave]-storeId-" + storeId  + "-deviceId-" + lockToWorkWith.zwaveDeviceId);
                     td.start();
                 }            
             } else {

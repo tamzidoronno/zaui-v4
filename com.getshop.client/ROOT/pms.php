@@ -21,16 +21,6 @@ $timezone = $factory->getStore()->timeZone;
 if($timezone) {
     date_default_timezone_set($timezone);
 }
-if(isset($_GET['token']))
-{
-   
-    $token = $_GET['token'];
-    $encoded = preg_replace('/\s+/', '+', $token);
-    setrawcookie('PHPSESSID', $encoded,0,'/'); 
-    unset($_GET['token']);
-    $quey_param =  http_build_query($_GET);
-    header("location:/pms.php?$quey_param");
-}
 
 if(!$factory->getApi()->getUserManager()->isLoggedIn() && !(isset($_GET['redirectedfrom']))) {
    header('location:/login.php?redirectto=/pms.php&'.http_build_query($_GET));

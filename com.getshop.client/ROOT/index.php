@@ -1,7 +1,6 @@
 <?php
 $filecontent = file_get_contents("../etc/config.txt");
 $localmode = strstr($filecontent, "localhost");
-
 if ($localmode) {
     session_start();
 }
@@ -15,28 +14,32 @@ if (isset($_GET['network-code']) && isset($_GET['messageId'])) {
 }
 
 if ($_GET['token']) {
-    
-    
     $token = $_GET['token'];
     $encoded = preg_replace('/\s+/', '+', $token);
     setrawcookie('PHPSESSID', $encoded, 0, '/');
     unset($_GET['token']);
     $quey_param =  http_build_query($_GET);
     $redirect_module = getModuleName($_GET['gs_getshopmodule']);
-
+   
     include '../loader.php';
     $factory = IocContainer::getFactorySingelton(false);
     $user = $factory->getApi()->getUserManager()->getLoggedOnUser();
     $_SESSION['loggedin'] =  serialize($user);
+    $_SESSION['checkifloggedout'] = true;
+   
+
 
     if (strpos($redirect_module, 'changeGetShopModule')) {
         unset($_GET['token']);
         $quey_param =  http_build_query($_GET);
         header("location:$redirect_module&$quey_param&redirectedfrom=v5");
+        exit(0);
     } else {
         $quey_param =  http_build_query($_GET);
         header("location:$redirect_module?$quey_param&redirectedfrom=v5");
+        exit(0);
     }
+    
 }
 
 function getModuleName($id)
@@ -141,6 +144,7 @@ if (isset($_GET['logonwithkey'])) {
     header('location:index.php');
     die();
 }
+
 $factory = IocContainer::getFactorySingelton();
 
 
@@ -148,8 +152,9 @@ if ($factory->isEditorMode()) {
     echo '<script src="/js/ace/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>';
     echo '<link rel="stylesheet" type="text/css" href="skin/default/settings.css" />';
 }
-//responsible for invalidating session
+//responsible for invalidating session token
 // if (!isset($_SESSION['checkifloggedout']) || !$_SESSION['checkifloggedout']) {
+   
 //     $result = $factory->getApi()->getUserManager()->getLoggedOnUser();
 //     if ($result && !ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()) {
 //         $factory->getApi()->getUserManager()->logout();

@@ -22,11 +22,10 @@ if($timezone) {
     date_default_timezone_set($timezone);
 }
 
-if(!$factory->getApi()->getUserManager()->isLoggedIn() && !(isset($_GET['redirectedfrom']))) {
-   header('location:/login.php?redirectto=/pms.php&'.http_build_query($_GET));
-   exit(0);
+if(!$factory->getApi()->getUserManager()->isLoggedIn()) {
+    header('location:/login.php?redirectto=/pms.php');
+    exit(0);
 }
-
 if(isset($_GET['page']) && $_GET['page'] == "groupbooking" && isset($_GET['bookingId'])) {
     $_SESSION['PmsSearchBooking_bookingId'] = $_GET['bookingId'];
 } else {
@@ -36,7 +35,6 @@ if(isset($_GET['page']) && $_GET['page'] == "a90a9031-b67d-4d98-b034-f8c201a8f49
     $_SESSION['PmsSearchBooking_loadBooking'] = $_GET['loadBooking'];
 }
 $user = $factory->getApi()->getUserManager()->getLoggedOnUser();
-
 
 if(!$factory->getApi()->getPageManager()->hasAccessToModule("pms")) {
     echo "Access denied";

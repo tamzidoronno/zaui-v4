@@ -28,7 +28,6 @@ $channelNames = $formater->getChannels();
         <?php
         $disabled = stristr($pmsBooking->channel, "wubook_") ? "DISABLED" :"";
         $style = $disabled ? "color:gray;background-image:none;" : "";
-        $pmsBooking->channel = $pmsBooking->channel == "" ? "web" : $pmsBooking->channel;
         ?>
         <div class="col col2"><? echo $pmsBooking->incrementBookingId; ?>
            <select class="changechannel gsniceselect1" style="width:50%; float:right;<?php echo $style;?>" <?php echo $disabled; ?> >

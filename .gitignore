@@ -172,10 +172,6 @@ windowsdeploy.sh
 frontend/
 tmpfrontend/
 downloaded/
-*.jar
-*.metadata.json
-*.bson
-.idea
 scripts/development/dump
 scripts/development/shareddump
 core/log

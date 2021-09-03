@@ -386,6 +386,10 @@ if (isset($_SESSION['gs_currently_showing_rightWidget'])) {
                 echo "<a class='gs_ignorenavigate' href='/?changeGetShopModule=$module->id&scopeid=$scopeId'><div class='gs_framework_module $moduleActiveClass'>$icon $module->name</div></a>";
             }
         }
+        //switch to v5
+        $v5_url = 'http://v5-'.$_SERVER['SERVER_NAME'].'?token='.session_id();
+        echo "<a class='gs_ignorenavigate' href='$v5_url'><div class='gs_framework_module'><i class='fa fa-toggle-up'></i><br/>Switch to V5</div></a>";
+        
 
         if ($factory->getStore()->id == "13442b34-31e5-424c-bb23-a396b7aeb8ca") {
             echo "<a class='gs_ignorenavigate' href='/getshop.php?page=inbox&gs_getshopmodule='><div class='gs_framework_module active'><i class='fa fa-group'></i><br>Getshop support</div></a>";

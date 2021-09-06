@@ -19,27 +19,41 @@ if ($_GET['token']) {
     setrawcookie('PHPSESSID', $encoded, 0, '/');
     unset($_GET['token']);
     $quey_param =  http_build_query($_GET);
+    header("location:/$quey_param&redirectedfrom=v5&validatetoken=1");
+    exit(0);
+}
+
+if($_GET['validatetoken']){
+
+    unset($_GET['validatetoken']);
+    $quey_param =  http_build_query($_GET);
     $redirect_module = getModuleName($_GET['gs_getshopmodule']);
    
     include '../loader.php';
     $factory = IocContainer::getFactorySingelton(false);
     $user = $factory->getApi()->getUserManager()->getLoggedOnUser();
-    $_SESSION['loggedin'] =  serialize($user);
-    $_SESSION['checkifloggedout'] = true;
-   
 
+    if($user)
+    {
+        $_SESSION['loggedin'] =  serialize($user);
+        $_SESSION['checkifloggedout'] = true;
 
-    if (strpos($redirect_module, 'changeGetShopModule')) {
-        unset($_GET['token']);
-        $quey_param =  http_build_query($_GET);
-        header("location:$redirect_module&$quey_param&redirectedfrom=v5");
-        exit(0);
-    } else {
-        $quey_param =  http_build_query($_GET);
-        header("location:$redirect_module?$quey_param&redirectedfrom=v5");
-        exit(0);
+        if (strpos($redirect_module, 'changeGetShopModule')) {
+            unset($_GET['token']);
+            $quey_param =  http_build_query($_GET);
+            header("location:$redirect_module&$quey_param&redirectedfrom=v5");
+            exit(0);
+        } else {
+            $quey_param =  http_build_query($_GET);
+            header("location:$redirect_module?$quey_param&redirectedfrom=v5");
+            exit(0);
+        }
+
     }
-    
+    else
+    {
+        die('unauthorized');
+    }
 }
 
 function getModuleName($id)

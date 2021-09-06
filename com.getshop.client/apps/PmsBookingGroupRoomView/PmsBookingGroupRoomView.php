@@ -1049,7 +1049,9 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
         $this->printConnectedConferenceEventToGuest($guestInvolved);
         $this->clearCache();
     }
-    
+    public function attachOrderToBooking() {
+        $this->getApi()->getPmsManager()->attachOrderToBooking($this->getSelectedMultilevelDomainName(), $_POST['data']['bookingid'], $_POST['data']['orderid']);
+    }
     
     public function markRoomCleanedWithoutLogging() {
         $itemId = $this->getPmsBookingRoom()->bookingItemId;

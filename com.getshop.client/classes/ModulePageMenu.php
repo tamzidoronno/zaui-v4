@@ -319,16 +319,10 @@ class ModulePageMenu {
                         }
                         
                         $hassubs =  count($activeSubEntries) ? "hassubentries" : false;
-                        //$pms5_pages = ['a90a9031-b67d-4d98-b034-f8c201a8f496' => 'bookings','0da68de9-da08-4b60-9652-3ac456da2627' => 'availability'];
-                        // $page_url = array_key_exists($entry->getPageId(), $pms5_pages) ?  'http://localhost:4200/'.$pms5_pages[$entry->getPageId()]
-                        //                  : '?page='.$entry->getPageId().'&gs_getshopmodule='.\PageFactory::getGetShopModule();
 
-                        $page_url = '?page='.$entry->getPageId().'&gs_getshopmodule='.\PageFactory::getGetShopModule();
-                                                
                         ?>
                         <div class="entry <?php echo $hassubs; ?>">
-                        <a href="<?echo $page_url;?>"><div><i class="fa <? echo $entry->getIcon(); ?>"></i>  <? echo $entry->getName(); ?> </div></a>
-                        
+                            <a href="?page=<? echo $entry->getPageId(); ?>&gs_getshopmodule=<? echo \PageFactory::getGetShopModule(); ?>"><div><i class="fa <? echo $entry->getIcon(); ?>"></i>  <? echo $entry->getName(); ?> </div></a>
                             <?php
                             if ($hassubs) {
                                 echo "<div class='gss_dropdownmenu'>";

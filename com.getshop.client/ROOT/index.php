@@ -19,7 +19,7 @@ if ($_GET['token']) {
     setrawcookie('PHPSESSID', $encoded, 0, '/');
     unset($_GET['token']);
     $quey_param =  http_build_query($_GET);
-    header("location:/$quey_param&redirectedfrom=v5&validatetoken=1");
+    header("location:/?$quey_param&redirectedfrom=v5&validatetoken=1");
     exit(0);
 }
 

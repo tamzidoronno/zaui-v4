@@ -519,6 +519,17 @@ app.PmsBookingGroupRoomView = {
             $('.addanotherroompopup').html(res);
         });
     },
+    //datepicker on change event from js to php
+    loadAvailableRoomFromCategory : function(){
+        $('#availableRoomsList').html('');
+        var event = thundashop.Ajax.createEvent('','printAvailableRoomsFromCategory',$('.PmsBookingGroupRoomView'), {
+            "start" : $('.PmsBookingGroupRoomView .addanotherroompopup input[gsname="start"]').val(),
+            "end" : $('.PmsBookingGroupRoomView .addanotherroompopup input[gsname="end"]').val()
+        });
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('#availableRoomsList').append(res);
+        });
+    },
     eventDeleted : function() {
         latestOverLayLoadingEvent.data.eventid = "";
         app.PmsBookingGroupRoomView.refresh();

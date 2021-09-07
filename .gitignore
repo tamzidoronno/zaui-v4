@@ -176,3 +176,8 @@ scripts/development/dump
 scripts/development/shareddump
 core/log
 log
+downloaded/
+*.jar
+*.metadata.json
+*.bson
+.idea

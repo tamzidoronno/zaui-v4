@@ -3002,7 +3002,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         newlyBrokenIncome.removeIf(o -> {
             long startL = filter.start.getTime();
-            long endL = filter.end.getTime() + (1000*60*60*24);
+            long endL = filter.end.getTime();
             boolean completlyWithin = startL <= o.start.getTime() && o.end.getTime() <= endL;
             return !completlyWithin;
         });

@@ -78,7 +78,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public boolean activated = false;
     public boolean testOrder = false;
     public boolean captured = false;
-    public List<CardTransaction> transactions = new ArrayList();
+    public List<CardTransaction> cardTransactions = new ArrayList();
     public List<OrderLog> logLines = new ArrayList();
     public List<String> notifications = new ArrayList();
     public String invoiceNote = "";
@@ -241,7 +241,7 @@ public class Order extends DataCommon implements Comparable<Order> {
         orderNew.transferredToAccountingSystem = false;
         orderNew.createdDate = new Date();
         orderNew.logLines.clear();
-        orderNew.transactions.clear();
+        orderNew.cardTransactions.clear();
         orderNew.orderTransactions.clear();
         
         if (orderNew.cart != null) {
@@ -1966,7 +1966,7 @@ public class Order extends DataCommon implements Comparable<Order> {
       
     public boolean hasUntransferredPayments() {
         return orderTransactions.stream()
-                .filter(o -> !o.transferredToAccounting)
+                .filter(o -> !o.transferredToAccounting && isEmpty(o.addedToZreport))
                 .count() > 0;
     }
     
@@ -1985,5 +1985,8 @@ public class Order extends DataCommon implements Comparable<Order> {
         }
     }
 
+    public boolean isEmpty(String s){
+        return s == null || s.isEmpty();
+    }
 
 }

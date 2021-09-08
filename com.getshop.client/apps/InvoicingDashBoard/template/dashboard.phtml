@@ -3,20 +3,20 @@
 
 $boxes = array();
 $link = array();
-$boxes["Overdue Invoices"] = "Overdue Invoices";
+$boxes["No. of Unpaid Invoices"] = "No. of Unpaid Invoices";
 $boxes["TOTAL SALES INVOICES"] = "Total outstanding amount invoices";
-$boxes["OVERDUE INVOICES"] = "Invoices that are overdue.";
+$boxes["UNPAID INVOICES"] = "Invoices that are overdue.";
 
-$colors["Overdue_Invoices"] = "green";
+$colors["No._of_Unpaid_Invoices"] = "green";
 $colors["TOTAL_SALES_INVOICES"] = "orange";
-$colors["OVERDUE_INVOICES"] = "pink";
+$colors["UNPAID_INVOICES"] = "pink";
 
-$count["Overdue_Invoices"] = count($this->getApi()->getOrderManager()->getOverdueInvoices(null));
+$count["No._of_Unpaid_Invoices"] = count($this->getApi()->getOrderManager()->getOverdueInvoices(null));
 $count["TOTAL_SALES_INVOICES"] = round($this->getApi()->getOrderManager()->getTotalOutstandingInvoices(null));
-$count["OVERDUE_INVOICES"] = round($this->getApi()->getOrderManager()->getTotalOutstandingInvoicesOverdue(null));
+$count["UNPAID_INVOICES"] = round($this->getApi()->getOrderManager()->getTotalOutstandingInvoicesOverdue(null));
 
-$link['OVERDUE_INVOICES'] = "overduelist";
-$link['Overdue_Invoices'] = "overduelist";
+$link['No._of_Unpaid_Invoices'] = "overduelist";
+$link['UNPAID_INVOICES'] = "overduelist";
 ?>
 
 <div class='dashboard_main'>

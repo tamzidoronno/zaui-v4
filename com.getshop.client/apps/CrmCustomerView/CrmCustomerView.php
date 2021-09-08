@@ -300,6 +300,7 @@ class CrmCustomerView extends \MarketingApplication implements \Application {
         
         
         $company = $user->companyObject;
+        $company->vatNumber = $_POST['data']['vatNumber'];
         $company->invoiceReference = $_POST['data']['invoiceReference'];
         
         if(!$company->invoiceAddress) {

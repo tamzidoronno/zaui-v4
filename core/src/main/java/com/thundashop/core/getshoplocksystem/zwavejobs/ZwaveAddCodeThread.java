@@ -71,30 +71,40 @@ public class ZwaveAddCodeThread extends ZwaveThread {
         waitForEmptyQueue();
 
         String addressForFetchingLog = getAddressForFetchingLog();
-        GetShopLogHandler.logPrintStatic(currentThread().getId() + " " + currentThread().getName() + " addressForFetchingLog " + addressForFetchingLog, storeId);
         String result = server.httpLoginRequestZwaveServer(addressForFetchingLog);
-        GetShopLogHandler.logPrintStatic(currentThread().getId() + " " + currentThread().getName() + " zwave server result: " + result, storeId);
 
-        if (result.equals("null") || result.isEmpty() || "401".equals(result)) {
-            slot.isAddedToLock = "unkown";
-            return slot.isAddedToLock;
-        }
+        try {
 
-        Gson gson = new Gson();
-        JsonElement element = gson.fromJson(result, JsonElement.class);
+            if (result.equals("null") || result.isEmpty() || "401".equals(result)) {
+                slot.isAddedToLock = "unkown";
+                return slot.isAddedToLock;
+            }
 
-        if (element != null && element.getAsJsonObject() != null && element.getAsJsonObject().get("hasCode") != null) {
-            JsonElement hasCodeElement = element.getAsJsonObject().get("hasCode");
-            if (hasCodeElement.getAsJsonObject() != null ) {
-                boolean added = hasCodeElement.getAsJsonObject().get("value").getAsBoolean();
-                if (added) {
-                    slot.isAddedToLock = "yes";
-                } else {
-                    slot.isAddedToLock = "no";
+            Gson gson = new Gson();
+            JsonElement element = gson.fromJson(result, JsonElement.class);
+
+            if (element != null && element.getAsJsonObject() != null && element.getAsJsonObject().get("hasCode") != null) {
+                JsonElement hasCodeElement = element.getAsJsonObject().get("hasCode");
+                if (hasCodeElement.getAsJsonObject() != null) {
+                    boolean added = hasCodeElement.getAsJsonObject().get("value").getAsBoolean();
+                    if (added) {
+                        slot.isAddedToLock = "yes";
+                    } else {
+                        slot.isAddedToLock = "no";
+                    }
                 }
             }
+
+        } catch (RuntimeException e) {
+            // This catch block is only for logging purpose.
+            GetShopLogHandler.logStack(e, storeId);
+            String errStr = currentThread().getId() + " " + currentThread().getName()
+                    + " Error while calling zwave server"
+                    + " addressForFetchingLog " + addressForFetchingLog
+                    + " zwave server result: " + result;
+            throw new RuntimeException(errStr, e);
         }
-        
+
         return slot.isAddedToLock;
     }
 

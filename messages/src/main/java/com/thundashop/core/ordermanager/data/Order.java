@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.TreeSet;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 import org.mongodb.morphia.annotations.Transient;
 
 /**
@@ -1966,7 +1967,7 @@ public class Order extends DataCommon implements Comparable<Order> {
       
     public boolean hasUntransferredPayments() {
         return orderTransactions.stream()
-                .filter(o -> !o.transferredToAccounting && isEmpty(o.addedToZreport))
+                .filter(o -> !o.transferredToAccounting && StringUtils.isEmpty(o.addedToZreport))
                 .count() > 0;
     }
     
@@ -1985,8 +1986,5 @@ public class Order extends DataCommon implements Comparable<Order> {
         }
     }
 
-    public boolean isEmpty(String s){
-        return s == null || s.isEmpty();
-    }
 
 }

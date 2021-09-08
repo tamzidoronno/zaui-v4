@@ -998,7 +998,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     @Override
     public void storeReady() {
     }
-
+    
     public User forceLogon(String userId) throws ErrorException {
         User user = getUserById(userId);
         forceLogon(user);

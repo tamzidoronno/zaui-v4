@@ -47,7 +47,7 @@
     <root level="debug">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="SIFT"/>
-        <appender-ref ref="ASYNC_AWS_LOGS"/>
+<!--        <appender-ref ref="ASYNC_AWS_LOGS"/>-->
     </root>
 
     <logger name="software.amazon" level="info"/>

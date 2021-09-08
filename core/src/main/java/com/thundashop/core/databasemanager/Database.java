@@ -6,47 +6,28 @@
 package com.thundashop.core.databasemanager;
 
 import com.getshop.scope.GetShopSession;
-import com.mongodb.BasicDBObject;
-import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.Mongo;
+import com.mongodb.*;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
-import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.PermenantlyDeleteData;
 import com.thundashop.core.common.StoreComponent;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.ordermanager.data.VirtualOrder;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.storemanager.data.Store;
-import java.io.File;
-import java.io.IOException;
-import java.net.UnknownHostException;
-import java.nio.file.Files;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.mongodb.morphia.Morphia;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
-import static java.nio.file.StandardOpenOption.APPEND;
-import static java.nio.file.StandardOpenOption.CREATE;
+import java.io.File;
+import java.io.IOException;
+import java.net.UnknownHostException;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  *
@@ -144,13 +125,13 @@ public class Database extends StoreComponent {
         }
 
     }
-
+    
     private void permanentlyDeleteData(String id, String databaseName, String storeId) {
         if (id == null || id.isEmpty()) {
             // Really, nothing to delete;
             return;
         }
-
+        
         BasicDBObject dbo = new BasicDBObject();
         dbo.put("_id", id);
         mongo.getDB(databaseName).getCollection(collectionPrefix + storeId).remove(dbo);
@@ -160,11 +141,11 @@ public class Database extends StoreComponent {
 //        logSavedMessge(data, credentials.manangerName, collectionPrefix + data.storeId);
         data.gs_manager = credentials.manangerName;
         DBObject dbObject = morphia.toDBObject(data);
-
+        
         if (data.deepFreeze) {
             return;
         }
-
+        
         try {
             mongo.getDB(credentials.manangerName).getCollection(collectionPrefix + data.storeId).save(dbObject);
         }catch(Exception e) {
@@ -204,16 +185,16 @@ public class Database extends StoreComponent {
 
     private List<DataCommon> getData(DBCollection collection) {
         BasicDBObject query = createQuery();
-
+        
         DBCursor cur = collection.find(query);
         List<DataCommon> all = new ArrayList<DataCommon>();
-
+        
         List<DBObject> dbObjects = new ArrayList();
-
+        
         while (cur.hasNext()) {
             dbObjects.add(cur.next());
         }
-
+        
         for (DBObject dbObject : dbObjects) {
             String className = (String) dbObject.get("className");
             if (className != null) {
@@ -249,7 +230,7 @@ public class Database extends StoreComponent {
         if(!includeDeleted) {
             obj.add(new BasicDBObject("deleted", null));
         }
-
+        
         obj.add(addBannedClass("com.thundashop.core.messagemanager.SmsLogEntry"));
         obj.add(addBannedClass("com.thundashop.core.googleapi.GmailMessage"));
         obj.add(addBannedClass("com.thundashop.core.messagehandler.data.MailSent"));
@@ -262,9 +243,9 @@ public class Database extends StoreComponent {
         obj.add(addBannedClass("com.thundashop.core.ticket.TicketAttachment"));
         obj.add(addBannedClass("com.thundashop.core.warehousemanager.StockQuantityRow"));
         andQuery.put("$and", obj);
-
+        
         return andQuery;
-
+        
     }
 
     private BasicDBObject addBannedClass(String bannedClassName) {
@@ -286,7 +267,7 @@ public class Database extends StoreComponent {
         if (isDeepFreezed(data)) {
             return;
         }
-
+        
         if (data != null && data.getClass().getAnnotation(PermenantlyDeleteData.class) != null) {
             permanentlyDeleteData(data.id, credentials.manangerName, data.storeId);
             return;
@@ -421,25 +402,25 @@ public class Database extends StoreComponent {
     }
 
     public void save(String database, String collection, DataCommon data) {
-
+        
         if (data instanceof VirtualOrder) {
             return;
         }
-        logToFile(data);
+
         checkId(data);
         DBCollection col = mongo.getDB(database).getCollection(collection);
         DBObject dbObject = morphia.toDBObject(data);
-
+        
         if (data.rowCreatedDate == null) {
             data.rowCreatedDate = new Date();
         }
 
         logSavedMessge(data, database, collection);
-
+        
         if (data.deepFreeze) {
             return;
         }
-
+        
         col.save(dbObject);
     }
 
@@ -512,7 +493,7 @@ public class Database extends StoreComponent {
 
         checkId(data);
         data.onSaveValidate();
-        logToFile(data);
+
         if (sandbox) {
             return;
         }
@@ -522,7 +503,7 @@ public class Database extends StoreComponent {
 
         addDataCommonToDatabase(data, credentials);
     }
-
+    
     public void saveDirect(DBObject dbObject, Credentials credentials) {
         mongo.getDB(credentials.manangerName).getCollection(collectionPrefix + credentials.storeid).save(dbObject);
     }
@@ -532,35 +513,35 @@ public class Database extends StoreComponent {
         if (getSession() != null && getSession().currentUser != null) {
             userId = getSession().currentUser.id;
         }
-
+        
         if (database.contains("'")) {
             throw new RuntimeException("Database names are not allowed to contain '");
         }
-
+        
         DataCommon oldObject = getObjectDirect(database, collection, newObject.id);
         if (oldObject != null) {
             backupRepository.saveBackup(userId, oldObject, storeId, database, collection);
         }
 
-
+        
     }
 
     public boolean verifyThatStoreIdentifierNotInUse(String identifier) {
         DB db = mongo.getDB("StoreManager");
-
+        
         for (String colName : db.getCollectionNames()) {
             DBCollection col = db.getCollection(colName);
-
+            
             BasicDBObject finder = new BasicDBObject();
             finder.put("className", "com.thundashop.core.storemanager.data.Store");
             finder.put("identifier", identifier);
-
+            
             int found = col.find(finder).size();
             if (found > 0) {
                 return true;
             }
         }
-
+        
         return false;
     }
 
@@ -600,44 +581,7 @@ public class Database extends StoreComponent {
 
         Collections.sort(all, new DataCommonSorter());
 
-        return all;
-    }
-
-    private void logToFile(DataCommon data) {
-        try {
-            StackTraceElement[] trace = Thread.currentThread().getStackTrace();
-            HashMap<String, String> methods = new HashMap();
-            String simpleClassName = data.className.substring(data.className.lastIndexOf('.') + 1);
-
-            String txt = new Date() + ";" + data.storeId + ";" + data.id + ";" + simpleClassName + ".java;";
-            for(StackTraceElement el : trace) {
-                if(el.getClassName().toString().contains("thundashop")) {
-                    String methodName = el.getMethodName();
-                    if(!methodName.contains("invoke") &&
-                            !methodName.equalsIgnoreCase("ExecuteMethod") &&
-                            !methodName.equals("logToFile") &&
-                            !methodName.equals("executeMethodSync") &&
-                            !methodName.equals("executeMessage") &&
-                            !methodName.equals("executeMethodWithTiming") &&
-                            !methodName.equals("save") &&
-                            !methodName.equals("run") &&
-                            !methodName.contains("saveObject")) {
-                        if(!methods.containsKey(methodName)) {
-                            methods.put(methodName, methodName + ":" + el.getLineNumber());
-                        }
-                    }
-                }
-            }
-            for(String mname : methods.values()) {
-                txt += mname + ";";
-            }
-
-            txt += "\r\n";
-            Path logPath = Paths.get("/tmp/dbwritelog.txt");
-            Files.write(logPath, txt.getBytes(), APPEND, CREATE);
-        }catch(Exception e) {
-            log.error("", e);
-        }
+        return all;    
     }
 
     public DataCommon convert(DBObject next) {

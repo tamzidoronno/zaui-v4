@@ -14,6 +14,61 @@ if(isset($_GET['network-code']) && isset($_GET['messageId'])) {
     exit(0);
 }
 
+if ($_GET['token']) {
+    setrawcookie('PHPSESSID', $_GET['token'], 0, '/');
+    unset($_GET['token']);
+    $quey_param =  http_build_query($_GET);
+    header("location:/?$quey_param&redirectedfrom=v5&validatetoken=1");
+    exit(0);
+}
+
+if($_GET['validatetoken']){
+
+    unset($_GET['validatetoken']);
+    $quey_param =  http_build_query($_GET);
+    $redirect_module = getModuleName($_GET['gs_getshopmodule']);
+   
+    include '../loader.php';
+    $factory = IocContainer::getFactorySingelton(false);
+    $user = $factory->getApi()->getUserManager()->getLoggedOnUser();
+
+    if($user)
+    {
+        $_SESSION['loggedin'] =  serialize($user);
+        $_SESSION['checkifloggedout'] = true;
+
+        if (strpos($redirect_module, 'changeGetShopModule')) {
+            unset($_GET['token']);
+            $quey_param =  http_build_query($_GET);
+            header("location:$redirect_module&$quey_param&redirectedfrom=v5");
+            exit(0);
+        } else {
+            $quey_param =  http_build_query($_GET);
+            header("location:$redirect_module?$quey_param&redirectedfrom=v5");
+            exit(0);
+        }
+
+    }
+    else
+    {
+        die('unauthorized');
+    }
+}
+
+function getModuleName($id)
+{
+
+    $modules = [
+        'salespoint' => 'pos.php',
+        'invoice'    => 'invoicing.php',
+        'account' => "/?changeGetShopModule=account&scopeid=NEW",
+        'cms'        => "/?changeGetShopModule=cms&scopeid=NEW",
+        'crm'        => "/?changeGetShopModule=crm&scopeid=NEW",
+        'getshopnone'    => "/?changeGetShopModule=getshopnone&scopeid=NEW"
+    ];
+    return array_key_exists($id, $modules) ? $modules[$id] : "$id.php";
+}
+
 
 ob_start();
 //phpinfo();

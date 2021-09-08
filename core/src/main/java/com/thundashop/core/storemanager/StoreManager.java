@@ -81,6 +81,9 @@ public class StoreManager extends ManagerBase implements IStoreManager {
 
     @Autowired
     private BackupServerSyncManager backupServerSyncManager;
+
+    @Autowired
+    private FrameworkConfig frameworkConfig;
     
     
     private HashMap<String, KeyData> keyDataStore = new HashMap();
@@ -130,20 +133,23 @@ public class StoreManager extends ManagerBase implements IStoreManager {
      */
     @Override
     public boolean isPikStore() {
-        boolean doPush = false;
-        if(lastCheckedBackups == null) {
-            doPush = true;
-        } else {
-            long diff = System.currentTimeMillis() - lastCheckedBackups.getTime();
-            if(diff > (1000*60*60*6)) {
+        if (frameworkConfig.productionMode) {
+            boolean doPush = false;
+            if(lastCheckedBackups == null) {
                 doPush = true;
+            } else {
+                long diff = System.currentTimeMillis() - lastCheckedBackups.getTime();
+                if(diff > (1000*60*60*6)) {  // 6 hours
+                    doPush = true;
+                }
+            }
+
+            if(doPush) {
+                lastCheckedBackups = new Date();
+                backupServerSyncManager.doubleCheckTransferServersToBackupSystem(storeId);
             }
         }
-            
-        if(doPush) {
-            lastCheckedBackups = new Date();
-            backupServerSyncManager.doubleCheckTransferServersToBackupSystem(storeId);
-        }
+
         return getStore().isPikStore();
     }
     

@@ -130,7 +130,7 @@ class ModulePageMenu {
             $gsadminmenues[] = "salespoint";
             $gsadminmenues[] = "settings";
             $gsadminmenues[] = "account";
-            $gsadminmenues[] = "invoice";
+            $gsadminmenues[] = "invoice";   
             
             echo "<div class='inner_header_top_menu_gs'>Modules</div>";
             
@@ -165,6 +165,9 @@ class ModulePageMenu {
                     echo "<a class='gs_ignorenavigate' href='/?changeGetShopModule=$module->id&scopeid=$scopeId'><div class='gs_framework_module $moduleActiveClass'>$icon<br>$module->name</div></a>";
                 }
             }
+            //switch to v5
+            $v5_url = 'http://v5-'.$_SERVER['SERVER_NAME'].'?token='.session_id();
+            echo "<a class='gs_ignorenavigate' href='$v5_url'><div class='gs_framework_module'><i class='fa fa-toggle-up'></i><br/>Switch to V5</div></a>";
             
             if ($printPageMenuInModulesMenu) {
                 $this->printSupportMenuIcon();
@@ -353,6 +356,7 @@ class ModulePageMenu {
                     echo "<div class='support'>".$factory->__f("I Need Help")."</div>";
                 echo "</div>";
             echo "</span>";
+        echo "</span>";
         }
         
         ?>

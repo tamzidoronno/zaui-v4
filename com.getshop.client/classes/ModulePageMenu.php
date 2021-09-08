@@ -130,9 +130,7 @@ class ModulePageMenu {
             $gsadminmenues[] = "salespoint";
             $gsadminmenues[] = "settings";
             $gsadminmenues[] = "account";
-            $gsadminmenues[] = "invoice";
-
-          
+            $gsadminmenues[] = "invoice";   
             
             echo "<div class='inner_header_top_menu_gs'>Modules</div>";
             

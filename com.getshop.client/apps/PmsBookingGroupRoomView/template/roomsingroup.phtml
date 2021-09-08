@@ -14,7 +14,7 @@ foreach($booking->rooms as $room) {
     if($room->bookingItemTypeId == "gspmsconference") {
         continue;
     }
-    $deleted = $room->deleted ? "roomisdeleted" : "";
+    $deleted = $room->deleted || $room->overbooking ? "roomisdeleted" : "";
     $selected = $selectedRoom->pmsBookingRoomId == $room->pmsBookingRoomId ? "selected" : "";
     echo "<div class='roomgroupbox changeRoomByEvent $selected $deleted' roomid='".$room->pmsBookingRoomId."'>";
     echo "<div>";

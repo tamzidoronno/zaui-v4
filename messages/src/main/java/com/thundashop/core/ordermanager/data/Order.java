@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.TreeSet;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 import org.mongodb.morphia.annotations.Transient;
 
 /**
@@ -78,7 +79,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public boolean activated = false;
     public boolean testOrder = false;
     public boolean captured = false;
-    public List<CardTransaction> transactions = new ArrayList();
+    public List<CardTransaction> cardTransactions = new ArrayList();
     public List<OrderLog> logLines = new ArrayList();
     public List<String> notifications = new ArrayList();
     public String invoiceNote = "";
@@ -241,7 +242,7 @@ public class Order extends DataCommon implements Comparable<Order> {
         orderNew.transferredToAccountingSystem = false;
         orderNew.createdDate = new Date();
         orderNew.logLines.clear();
-        orderNew.transactions.clear();
+        orderNew.cardTransactions.clear();
         orderNew.orderTransactions.clear();
         
         if (orderNew.cart != null) {
@@ -1966,7 +1967,7 @@ public class Order extends DataCommon implements Comparable<Order> {
       
     public boolean hasUntransferredPayments() {
         return orderTransactions.stream()
-                .filter(o -> !o.transferredToAccounting)
+                .filter(o -> !o.transferredToAccounting && StringUtils.isEmpty(o.addedToZreport))
                 .count() > 0;
     }
     
@@ -1977,4 +1978,13 @@ public class Order extends DataCommon implements Comparable<Order> {
                 .findAny()
                 .orElse(null);
     }
+    public boolean hasPaymentDateAfter(Date date){
+        if (this.markedPaidDate != null){
+            return date != null  && this.markedPaidDate.after(date);
+        }else{
+            return date != null && this.paymentDate != null  && this.paymentDate.after(date);
+        }
+    }
+
+
 }

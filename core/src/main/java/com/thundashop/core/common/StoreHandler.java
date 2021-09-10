@@ -62,14 +62,9 @@ public class StoreHandler {
         
     public synchronized Object executeMethodSync(JsonObject2 inObject, Class[] types, Object[] argumentValues) throws ErrorException {
         StorePool.running.put(inObject.id, inObject);
-        return executeMethodWithTiming(inObject, types, argumentValues);
+        return executeMethod(inObject, types, argumentValues, true);
     }
 
-    private Object executeMethodWithTiming(JsonObject2 inObject, Class[] types, Object[] argumentValues) throws ErrorException {
-        Object rest = executeMethod(inObject, types, argumentValues, true);
-        return rest;
-    }
-    
     public  void setGetShopModule(String sessionId, String moduleId) {
         Session session = getSession(sessionId);
         if (session != null) {

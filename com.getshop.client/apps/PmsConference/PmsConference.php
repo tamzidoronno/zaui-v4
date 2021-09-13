@@ -47,7 +47,13 @@ class PmsConference extends \WebshopApplication implements \Application {
         $this->setCurrentConference($_POST['data']['conferenceid']);
         $this->includefile("conferenceoverview");
     }
-    
+
+    public function loadBooking() {
+        $pmsBookingGroupView = new \ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView();
+        $pmsBookingGroupView->setRoomId($_POST['data']['id']);
+        $pmsBookingGroupView->renderApplication(true, $this, true);
+    }
+
     public function loadday() {
         $day = $_POST['data']['day'];
         $_SESSION['pmsconferencecurrentstart'] = date("d.m.Y", $day);

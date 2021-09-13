@@ -75,7 +75,7 @@ echo "</span>";
 </div>
 <div class='itemsarea'>
     <?php
-    
+
     foreach($items as $item) {
         echo "<div class='itemrow'>";
         echo "<span class='itemname'>";
@@ -103,7 +103,15 @@ echo "</span>";
                 $roomid = $conferences[$event->pmsConferenceId];
             }
             $betweendate = date("H:i", strtotime($event->from)) . " - " . date("H:i", strtotime($event->to));
-            echo "<span method='loadBooking' gs_show_overlay='booking_room_view' id='$roomid' class='evententry $thisConference' start='".strtotime($event->from)."' end='".strtotime($event->to)."' title='".$event->name." ($betweendate)'>".$event->name."</span>";
+            if( $roomid != '' )
+            {
+              echo "<span method='loadBooking' gs_show_overlay='booking_room_view' id='$roomid' class='evententry $thisConference' start='".strtotime($event->from)."' end='".strtotime($event->to)."' title='".$event->name." ($betweendate)'>".$event->name."</span>";
+            }
+            else
+            {
+              echo "<span onClick='alertEventOutsideConferenceStart()' class='evententry $thisConference' start='".strtotime($event->from)."' end='".strtotime($event->to)."' title='".$event->name." ($betweendate)'>".$event->name."</span>";
+            }
+
         }
         echo "</span>";
         echo "</span>";
@@ -115,6 +123,12 @@ echo "</span>";
 <script>
     getshop_loadDatePicker($('[gsname="start"]'), { dependant : $('[gsname="end"]'), jump: 1 });
     getshop_loadDatePicker($('[gsname="end"]'), { dependant : $('[gsname="start"]'), jump: -1 });
+
+    function alertEventOutsideConferenceStart()
+    {
+      thundashop.common.Alert("Conference for alert outside chosen date range", "The conference for this event is outside the chosen date range. Extend the date range to find the corresponding conference.", true);
+    }
+
 </script>
 
 <style>

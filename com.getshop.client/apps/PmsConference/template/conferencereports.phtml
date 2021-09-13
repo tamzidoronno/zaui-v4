@@ -16,11 +16,28 @@ $currentDate = "";
 $conferenceItems = $this->getApi()->getPmsConferenceManager()->getAllItem("-1");
 $conferenceItems = $this->indexList($conferenceItems);
 $firstDate = true;
+
+    $fromTime = strtotime($start) - 86400 * 3;
+    $toTime = strtotime($end) + 86400 * 3;
+
+    $bfilter = new core_pmsmanager_PmsConferenceEventFilter();
+    $bfilter->start = $this->convertToJavaDate( $fromTime );
+    $bfilter->end = $this->convertToJavaDate( $toTime );
+
+    // TODO - Make filter of list to date range.
+    $conferenceBooking = (array)$this->getApi()->getPmsManager()->getConferenceBookings($this->getSelectedMultilevelDomainName(), $bfilter);
+    $conferences = array();
+    foreach ($conferenceBooking as $conferenceBooking) {
+         $conferences[$conferenceBooking->conferenceId] = $conferenceBooking->rooms[0]->pmsBookingRoomId;
+    }
+
+
 ?>
 
 <div class='eventreportarea'>
     <?php
     $this->includefile("reportheader");
+
     echo "<table width='100%' class='texttable' cellspacing='0' cellpadding='0'>";
 
     echo "<tr>";
@@ -30,6 +47,7 @@ $firstDate = true;
     echo "<th valign='top' align='left'>Extended text</th>";
     echo "<th valign='top' align='center'>Count</th>";
     echo "<th valign='top' align='left'>Room</th>";
+    echo "<th valign='top' align='left'>Booking</th>";
     echo "</tr>";
 
     foreach($events as $event) {
@@ -66,6 +84,21 @@ $firstDate = true;
         echo "<td align='center'>".$count."</td>";
         $name = $conferenceItems[$event->pmsConferenceItemId]->name;
         echo "<td>".$name."</td>";
+
+        $roomid = "";
+        if(isset($conferences[$event->pmsConferenceId])) {
+            $roomid = $conferences[$event->pmsConferenceId];
+        }
+        if( $roomid != '' )
+        {
+          echo "<td><span method='loadBooking' gs_show_overlay='booking_room_view' id='$roomid' class='canOpenBooking evententry $thisConference' start='".strtotime($event->from)."' end='".strtotime($event->to)."' title='".$event->name." ($betweendate)'>".$conference->meetingTitle."</span>";
+        }
+        else
+        {
+          echo "<td>". $conference->meetingTitle ."</td>"; //echo "<span onClick='alertEventOutsideConferenceStart()' class='evententry $thisConference' start='".strtotime($event->from)."' end='".strtotime($event->to)."' title='".$event->name." ($betweendate)'>".$event->name."</span>";
+        }
+
+         // <pre>".print_r($event,1)."#####".print_r($conference,1)."</pre>
         echo "</tr>";
         
         
@@ -101,7 +134,9 @@ $firstDate = true;
     echo "</table>";
     ?>
 </div>
-
+<style>
+.canOpenBooking { cursor:pointer; color:#23314e;  }
+<style>
 <script>
     getshop_loadDatePicker($('.startdate'), { dependant : $('.enddate') });    
     getshop_loadDatePicker($('.enddate'), { dependant : $('.startdate') });

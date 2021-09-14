@@ -224,6 +224,7 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         }
     }
 
+    @Deprecated // TODO: this method will replaced with logback.error
     public void sendErrorNotify(String inText) {
         if(latestSentErrorNotification != null) {
             Calendar check = Calendar.getInstance();
@@ -235,7 +236,8 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         latestSentErrorNotification = new Date();
         sendErrorNotification(inText, null);
     }
-    
+
+    @Deprecated // TODO: this method will replaced with logback.error
     public void sendErrorNotification(String inText, Exception ex) {
         sendErrorNotificationToEmail("post@getshop.com", inText, ex);
     }
@@ -457,6 +459,7 @@ public class MessageManager extends ManagerBase implements IMessageManager {
                              i -> list.subList(i, min(i + pageSize, list.size()))));
     }
 
+    @Deprecated // TODO: this method will replaced with logback.error
     public void sendErrorNotificationToEmail(String email, String inText, Exception ex) {
         String text = "";
         text += "<br/><b>Message:</b> <br/>";

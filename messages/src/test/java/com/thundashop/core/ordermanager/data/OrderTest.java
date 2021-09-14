@@ -18,16 +18,11 @@ public class OrderTest {
     }
 
     @Test
-    public void anOrderTransactionAddedToAZReportHasNoUntransferredPayements() {
+    public void anOrderTransactionAddedToAZReportisNotOnAnyZreport() {
         t1.addedToZreport = "ZREPORT1";
 
-        Assert.assertFalse(order.hasUntransferredPayments());
+        Assert.assertFalse(order.isNotOnZreport());
     }
 
-    @Test
-    public void anOrderTransactionTransferredToAccountingHasNoUntransferredPayements() {
-        t1.transferredToAccounting = true;
 
-        Assert.assertEquals(order.hasUntransferredPayments(), false);
-    }
 }

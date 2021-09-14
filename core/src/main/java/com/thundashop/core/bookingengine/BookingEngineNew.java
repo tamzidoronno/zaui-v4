@@ -681,10 +681,12 @@ public class BookingEngineNew extends GetShopSessionBeanNamed implements IBookin
             booking.startDate = oldStartDate;
             booking.endDate = oldEndDate;
             booking.bookingItemTypeId = oldBookingItemTypeId;
-            String errStr = "Error while Booking: " + booking + " message: " + ex.getMessage();
+            String categoryName = type != null ? type.name : "n/a";
             logPrint(ex);
-            messageManager.sendErrorNotification(errStr, ex);
-            messageManager.sendMessageToStoreOwner("Error while Booking: " + ex.getMessage(), "Booking Error!");
+            messageManager.sendErrorNotification(String.format("Error while booking for category `%s`, Booking: '%s', error message `%s`",
+                    categoryName, booking, ex.getMessage()), ex);
+            messageManager.sendMessageToStoreOwner(String.format("Error while booking for category `%s`, message `%s`",
+                    categoryName, ex.getMessage()), "Booking Error!");
             throw ex;
         }
     }

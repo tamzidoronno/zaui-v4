@@ -161,14 +161,13 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         feedGrafana(content);
         return "";
     }
-    
-    
+
+
     private void feedGrafana(String content) {
         HashMap<String, Object> toAdd = new HashMap();
-        toAdd.put("emailsize", (Number)content.length());
-        toAdd.put("storeid", (String)storeId);
-        
-        GrafanaFeederImpl feeder = new GrafanaFeederImpl();
+        toAdd.put("emailsize", content.length());
+        toAdd.put("storeid", storeId);
+
         grafanaManager.addPoint("webdata", "email", toAdd);
     }    
 

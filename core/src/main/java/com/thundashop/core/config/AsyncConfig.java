@@ -46,6 +46,16 @@ public class AsyncConfig extends AsyncConfigurerSupport {
         return executor;
     }
 
+    @Bean(name = "grafanaFeederExecutor")
+    public TaskExecutor grafanaExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(processors);
+        executor.setMaxPoolSize(processors * 2);
+        executor.setThreadNamePrefix("grafana-feeder-");
+        executor.initialize();
+        return executor;
+    }
+
     @Override
     public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
         return new AsyncExceptionHandler();

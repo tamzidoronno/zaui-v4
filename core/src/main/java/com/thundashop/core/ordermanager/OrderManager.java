@@ -5106,7 +5106,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             credited.cart.reference = newReference;
         }
 
+        ignoreValidation();
         saveOrder(credited);
+        enableValidation();
+
         saveOrder(order);
 //        cleanOrder(credited.id, "fdasf345345345!mnm!");
         

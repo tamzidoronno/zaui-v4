@@ -1,8 +1,12 @@
 #!/bin/bash
 
 echo "Deploying Frontend code to Apache docroot"
-cp /home/atequer/getshop-v4/artifacts/builds/4.1.0/php_4.1.0.tar.gz /home/atequer/getshop-php/dist
-cd /home/atequer/getshop-php/dist
+#Enter your project directory
+project_directory=$HOME
+mkdir $project_directory/getshop-php
+mkdir $project_directory/getshop-php/dist
+cp $project_directory/getshop-v4/artifacts/builds/4.1.0/php_4.1.0.tar.gz $project_directory/getshop-php/dist
+cd $project_directory/getshop-php/dist
 
 FILE=php_4.1.0.tar.gz
 if test -f "$FILE"; then
@@ -51,8 +55,10 @@ fi;
 
 
 echo "Deploying Backend code to Apache docroot"
-cp /home/atequer/getshop-v4/artifacts/builds/4.1.0/backend_4.1.0.tar.gz /home/atequer/getshop-java/dist
-cd /home/atequer/getshop-java/dist
+mkdir $project_directory/getshop-java
+mkdir $project_directory/getshop-java/dist
+cp $project_directory/getshop-v4/artifacts/builds/4.1.0/backend_4.1.0.tar.gz $project_directory/getshop-java/dist
+cd $project_directory/getshop-java/dist
 
 FILE=backend_4.1.0.tar.gz
 if test -f "$FILE"; then

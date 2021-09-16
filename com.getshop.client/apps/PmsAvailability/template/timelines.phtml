@@ -46,7 +46,7 @@ foreach ($types as $type) {
         continue;
     }
 ?>
-   
+    <div id="errorContainer"></div>
     <div class='type_line' typeid="<? echo $type->id; ?>">
         
         <div class='timeline_item_name'>
@@ -271,7 +271,9 @@ $(document).ready(function() {
             var toUse = $('.type_line[typeid="'+data.typeId+'"] .col_outer.nodata[time="'+data.time+'"]');
             
             if (toUse.size() < 1) {
-                alert("There are bookings that we are not able to show you because you dont have enough rooms");
+                if( document.getElementById("errorContainer").innerHTML == '' ) document.getElementById("errorContainer").innerHTML = '<h1 style="color:#ff0000;">There are bookings that we are not able to show you because you dont have enough rooms</h1><div id="faultyRooms"></div>';
+                console.log('Overbookingalert!',data)
+                document.getElementById("faultyRooms").innerHTML += '<p method="loadBooking" gs_show_overlay="booking_room_view" bookingid="'+ data.bookingIds[0] +'" roomid="'+ data.roomId +'">Booker: '+ data.name +'; Date: '+ (new Date( data.time ).toLocaleDateString()) +'</p>';
                 continue;
             }
             

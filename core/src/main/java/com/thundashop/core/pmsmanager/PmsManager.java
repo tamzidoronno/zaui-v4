@@ -1225,6 +1225,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             list.add(room);
             addDefaultAddonsToRooms(list);
         } catch (BookingEngineException ex) {
+            messageManager.sendErrorNotification(getClass() + "storeId-" + storeId, ex);
             return ex.getMessage();
         }
         saveBooking(booking);
@@ -10427,11 +10428,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             
             if (oldBooking.segmentClosed) {
                 //Do no allow changing segment that has been marked as closed.
-                throw new ErrorException(1058);
-            }
-            
-            if(!oldBooking.isStartingToday() && oldBooking.isStarted()) {
-                //Do no allow changing segment on booking day after it has started.
                 throw new ErrorException(1058);
             }
         }   

@@ -168,9 +168,9 @@ $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSele
             }
             echo "</td>";
             if($rdata->virtualWubookRoomIds) {
-                echo "<td align='right'><input type='txt' value='".$rdata->virtualWubookRoomIds."' gsname='".$id."' class='gsniceinput1' disabled></td>";
+                echo "<td align='right'><input type='txt' value='".$rdata->virtualWubookRoomIds."' gsname='".$id."' class='gsniceinput1'></td>";
             } else {
-                echo "<td align='right'><input type='txt' value='".$rdata->wubookroomid."' gsname='".$id."' class='gsniceinput1' disabled></td>";
+                echo "<td align='right'><input type='txt' value='".$rdata->wubookroomid."' gsname='".$id."' class='gsniceinput1'></td>";
             }
             echo "</td>";
             
@@ -186,7 +186,7 @@ $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSele
         echo "</tr>";
         echo "</table>";
         ?> <br><br>
-    <div style="text-align:right; display:none;">
+    <div style="text-align:right;">
         <span class='gsmodulebutton' gstype="submit">Save settings</span>
     </div>
 </div>

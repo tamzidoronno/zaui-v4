@@ -1,6 +1,5 @@
 package com.thundashop.core.wubook;
 
-import com.thundashop.core.storemanager.StoreManager;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.google.gson.Gson;
@@ -16,45 +15,28 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
-import com.thundashop.core.pmsmanager.NewOrderFilter;
-import com.thundashop.core.pmsmanager.PmsBooking;
-import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
-import com.thundashop.core.pmsmanager.PmsBookingComment;
-import com.thundashop.core.pmsmanager.PmsBookingDateRange;
-import com.thundashop.core.pmsmanager.PmsBookingFilter;
-import com.thundashop.core.pmsmanager.PmsBookingRooms;
-import com.thundashop.core.pmsmanager.PmsConfiguration;
-import com.thundashop.core.pmsmanager.PmsGuests;
-import com.thundashop.core.pmsmanager.PmsInvoiceManager;
-import com.thundashop.core.pmsmanager.PmsManager;
-import com.thundashop.core.pmsmanager.PmsPricing;
-import com.thundashop.core.pmsmanager.TimeRepeater;
-import com.thundashop.core.pmsmanager.TimeRepeaterData;
-import com.thundashop.core.pmsmanager.TimeRepeaterDateRange;
+import com.thundashop.core.pmsmanager.*;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.TaxGroup;
+import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.UserManager;
-import com.thundashop.core.usermanager.data.User;
-import java.io.IOException;
-import java.net.ConnectException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Vector;
 import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpcException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StopWatch;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicLong;
+
+import static com.thundashop.core.utils.Constants.WUBOOK_CLIENT_URL;
 
 
 @Component
@@ -72,6 +54,8 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     
     private WubookLog log = new WubookLog();
     private static List<String> triedAddingCode = new ArrayList();
+
+    private static final AtomicLong incrThreadId = new AtomicLong();
 
     @Autowired
     PmsManager pmsManager;
@@ -109,7 +93,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     private boolean forceUpdate = false;
     public Date disableWubook = null;
     public Vector bookingsToAdd = null;
-    boolean fetchBookingThreadIsRunning = false;
+    public volatile boolean fetchBookingThreadIsRunning = false;
     Date fetchBookingThreadStarted = null;
     private List<WubookBooking> nextBookings;
     private List<String> bookingCodesToAdd = new ArrayList();
@@ -187,22 +171,29 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         } 
        return true;
     }
-    
-    
+
+    public XmlRpcClient createClient() {
+        try {
+            client = new XmlRpcClient(new URL(WUBOOK_CLIENT_URL));
+        } catch (MalformedURLException e) {
+            logPrint(getClass() + "Failed to create a new XmlRpcClient: " + e.getLocalizedMessage());
+        }
+        return client;
+    }
+
+
     private boolean connectToApi() throws Exception {
         
         if(!isWubookActive()) { return false; }
         
         if(tokenCount < 30 && token != null && !token.isEmpty()) {
             tokenCount++;
-            
+
             return true;
         }
-        
-        //Old
-//        client = new XmlRpcClient("https://wubook.net/xrws/");
-        //New
-        client = new XmlRpcClient("https://wired.wubook.net/xrws/");
+
+        client = createClient();
+
         logText("Reloading token");
         Vector<String> params = new Vector<String>();
         params.addElement(pmsManager.getConfigurationSecure().wubookusername);
@@ -439,7 +430,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             long diff = now.getTime() - lastPulledWubook.getTime();
             long seconds = diff / 1000;
             if(seconds < 20) {
-                logPrint("Avoid pulling wubook more than once a minute.");
+                logPrint("Avoid pulling wubook more than once a minute. diff seconds: " + seconds);
                 return;
             }
        }
@@ -447,7 +438,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
        try {
             if(disableWubook != null) {
                 long diff = new Date().getTime() - disableWubook.getTime();
-                if(diff < (10*60*1000)) {
+
+                // 300000 millisecond == 5 minutes
+                if(diff < (300000)) {
                     logText("Fetch new booking disabled from : " + disableWubook);
                     lastPulledWubook = new Date();
                     return;
@@ -459,7 +452,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                     logText("Next bookings found:" + nextBookings.size());
                     checkBookingsToDelete(nextBookings);
                 }catch(Exception e) {
-                    messageManager.sendErrorNotification("Failed to double delete bookings", e);
+                    messageManager.sendErrorNotification("storeId-" + storeId + "Failed to double delete bookings", e);
                     logPrintException(e);
                 }
                 nextBookings = null; 
@@ -478,7 +471,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 }
             }catch(Exception e) {
                 logPrintException(e);
-                messageManager.sendErrorNotification("Failed to add booking codes", e);
+                messageManager.sendErrorNotification("storeId-" + storeId + "Failed to add booking codes", e);
             }
             bookingCodesToAdd.clear();
 
@@ -530,7 +523,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 WubookThreadRipper checkNewBookingsThread = new WubookThreadRipper(this, 1);
                 checkNewBookingsThread.setWubookSettings(token, pmsManager.getConfigurationSecure().wubooklcode, client);
                 checkNewBookingsThread.setStoreId(storeId);
-                checkNewBookingsThread.setName("Checking for new bookings wubook: " + storeId);
+                checkNewBookingsThread.setName("Checking for new bookings wubook: " + storeId + " threadId: " + incrThreadId.incrementAndGet());
                 checkNewBookingsThread.start();
             } else {
                 logPrint("Not starting thread fetch new bookings since it is already running since:" + fetchBookingThreadStarted);
@@ -847,7 +840,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
         params.addElement(rdata.wubookroomid + "");
         params.addElement(type.name);
-        params.addElement(type.capacity + "");
+        params.addElement(type.size + "");
         params.addElement("9999");
         params.addElement(items.size() + "");
         params.addElement("r" + rdata.code);
@@ -1117,12 +1110,18 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 newbooking.isPrePaid = true;
                 isPrepaidByOta = true;
             }
-            
-            if(useNewPrePaidMethod()) {
+
+            // changed by TW - if none of the checks above set a payment type we activate OTA Payments
+            // earlier check here was just if customer was set up after 1 May 2020 :(
+            /*
+
+            Hotfix removed useless payment method 2021-06-21 as it just cuased issues for older customers and we dont expect newer ones to have a real benefit from it
+
+            if(newbooking.paymentType == null || newbooking.paymentType.isEmpty()) {
                 checkIfPaymentMethodIsActive("4aa4888a-4685-4373-bffe-aa6a3005eff1");
                 newbooking.paymentType = "4aa4888a-4685-4373-bffe-aa6a3005eff1";
                 newbooking.isPrePaid = true;
-            }
+            }*/
             
             pmsManager.setBooking(newbooking);
             int i = 0;
@@ -1825,9 +1824,8 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement(tosend);
         logText("Doing update of " + numberOfDays + " days");
         WubookManagerUpdateThread updateThread = new WubookManagerUpdateThread("update_rooms_values", client, this, params);
-        updateThread.setName("Wubook update thread, storeid: " + storeId);
+        updateThread.setName("Wubook update thread, storeid: " + storeId + " threadId: " + incrThreadId.incrementAndGet());
         updateThread.start();
-        updateThread.setName("Updating WuBookThread for store: " + storeId);
         availabilityHasBeenChanged = null;
         lastAvailability.lastAvailabilityUpdated = fieldsUpdated;
         
@@ -1948,7 +1946,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             
             Vector result = executeClient("update_sparse_rooms_values", params);
             if ((Integer)result.get(0) != 0) {
-                logText("Failed to update availability " + "(" + result.get(0) + ")" + result.get(1));
+                logText("Failed to update availability (" + result.get(0) + ") " + result.get(1) + " Parameters sent: " + params.toString() );
             } else {
                 lastAvailability.lastAvailabilityUpdated = fieldsUpdated;
                 saveObject(lastAvailability);
@@ -1988,6 +1986,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     }
 
     public void logText(String string) {
+        logPrint(string);
         log.logEntries.put(System.currentTimeMillis(), string);
         long old = System.currentTimeMillis();
         old = old - (1000*60*24*3);
@@ -2027,7 +2026,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
     private void sendErrorForReservation(String wubookId, String message) {
         if(!pmsManager.hasSentErrorNotificationForWubookId(wubookId)) {
-            messageManager.sendErrorNotification("Error for wubookreservation: " + wubookId + " : "  + message, null);
+            messageManager.sendErrorNotification("storeId-" + storeId + "Error for wubookreservation: " + wubookId + " : "  + message, null);
             pmsManager.markSentErrorMessageForWubookId(wubookId);
         }
     }
@@ -2184,39 +2183,45 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 return true;
             }
         }catch(Exception e) {
+            messageManager.sendErrorNotification(getClass() + " storeId-" + storeId + "Error in checkBcomVirtualCard", e);
             logPrintException(e);
         }
         
         return false;
     }
 
-    private Vector executeClient(String apicall, Vector params) throws XmlRpcException, IOException {
-        
-        javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier(
-        new javax.net.ssl.HostnameVerifier(){
+    private Vector executeClient(String apicall, Vector params) {
+        javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier((hostname, sslSession) -> true);
 
-            public boolean verify(String hostname,
-                    javax.net.ssl.SSLSession sslSession) {
-                return true;
-            }
-        });
-        
         logText("Executing api call: " + apicall);
+        logPrint(getClass() + "Calling wubookManger api, apiCall: " + apicall + " params: " + params);
+
+        ExecutorService executor = Executors.newFixedThreadPool(1);
+        Callable<Vector> task = () -> (Vector) client.execute(apicall, params);
+        Future<Vector> taskFuture = executor.submit(task);
+
         try {
-            long start = System.currentTimeMillis();
-            Vector res = (Vector) client.execute(apicall, params);
-            long end = System.currentTimeMillis();
-            long diff = end - start;
-            if(diff > 2000) {
-                logPrint("Excecuted api call: " + apicall + ", time: " + diff);
-            }
-            
+            StopWatch stopWatch = new StopWatch("Api Call: " + apicall);
+            stopWatch.start();
+
+            Vector res = taskFuture.get(3, TimeUnit.MINUTES);
+
+            stopWatch.stop();
+            logPrint(getClass() + "Executed api call: " + apicall + ", time: " + stopWatch);
+            logPrint(getClass() + "Response from wubookManager api, apiCall: " + apicall + " response: " + res);
             return res;
-        }catch(Exception d) {
-            logPrint("Could not connect to wubook on api call: " + apicall + " message: " + d.getMessage());
+        } catch (Exception d) {
+            String errMessage = "Could not connect to wubook on api call: " + apicall + " message: " + d.getMessage() + "; parameters sent: " + params.toString();
+            logPrint(errMessage);
+            messageManager.sendErrorNotification(getClass() + "storeId-" + storeId + " " + errMessage, d);
             disableWubook = new Date();
+            logPrint("Pausing Wubook requests for 5 minutes due to exception at time: " + disableWubook);
+            throw new RuntimeException(errMessage, d);
+        } finally {
+            taskFuture.cancel(true);
+            executor.shutdownNow();
         }
-        return null;
+
     }
 
     private Double getSpecialRestriction(Date time, String bookingEngineTypeId, Integer type) {
@@ -2610,7 +2615,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         
         Vector result = executeClient("update_plan_prices", params);
         if((Integer)result.get(0) != 0) {
-            logText("Where not able to update prices:" + result.get(1));
+            logText("Unable to update prices:" + result.get(1) + " parameters sent: " + params.toString() );
             return "Failed to update price, " + result.get(1);
         } else {
             logText("Prices updated between " + now + " - " + end);
@@ -2627,18 +2632,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             count = pmsManager.getConfigurationSecure().maxNumberForEachCategory.get(bookingEngineTypeId);
         }
         return count;
-    }
-
-    private boolean useNewPrePaidMethod() {
-        Date storeDate = storeManager.getMyStore().rowCreatedDate;
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.YEAR, 2020);
-        cal.set(Calendar.MONTH, 5);
-        cal.set(Calendar.DAY_OF_MONTH, 1);
-        if(cal.getTime().before(storeDate)) {
-            return true;
-        }
-        return false;
     }
 
     private boolean doesTypeExists(String bookingItemTypeId) {

@@ -6,46 +6,23 @@
 package com.thundashop.core.databasemanager;
 
 import com.getshop.scope.GetShopSession;
-import com.mongodb.BasicDBObject;
-import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.Mongo;
-import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.common.ErrorException;
-import com.thundashop.core.common.GetShopLogHandler;
-import com.thundashop.core.common.Logger;
-import com.thundashop.core.common.PermenantlyDeleteData;
-import com.thundashop.core.common.StoreComponent;
+import com.mongodb.*;
+import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.ordermanager.data.VirtualOrder;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.storemanager.data.Store;
-import java.io.File;
-import java.io.IOException;
-import java.net.UnknownHostException;
-import java.nio.file.Files;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.mongodb.morphia.Morphia;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
-import static java.nio.file.StandardOpenOption.APPEND;
-import static java.nio.file.StandardOpenOption.CREATE;
+import java.io.File;
+import java.io.IOException;
+import java.net.UnknownHostException;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  *
@@ -427,7 +404,7 @@ public class Database extends StoreComponent {
         if (data instanceof VirtualOrder) {
             return;
         }
-        logToFile(data);
+
         checkId(data);
         DBCollection col = mongo.getDB(database).getCollection(collection);
         DBObject dbObject = morphia.toDBObject(data);
@@ -465,15 +442,17 @@ public class Database extends StoreComponent {
 
     public List<DataCommon> query(String manager, String storeId, DBObject query) {
         DBCollection col = getCollection(manager, storeId);
-        DBCursor res = col.find(query);
-        List<DataCommon> retObjecs = new ArrayList();
-        while (res.hasNext()) {
-            DBObject nx = res.next();
-            DataCommon data = morphia.fromDBObject(DataCommon.class, nx);
-            retObjecs.add(data);
+        List<DataCommon> retObjects = new ArrayList<>();
+
+        try (DBCursor res = col.find(query)) {
+            while (res.hasNext()) {
+                DBObject nx = res.next();
+                DataCommon data = morphia.fromDBObject(DataCommon.class, nx);
+                retObjects.add(data);
+            }
         }
 
-        return retObjecs;
+        return retObjects;
     }
 
     public DBCollection getCollection(String manager, String storeId1) {
@@ -496,7 +475,7 @@ public class Database extends StoreComponent {
 
         checkId(data);
         data.onSaveValidate();
-        logToFile(data);
+
         if (sandbox) {
             return;
         }
@@ -587,43 +566,6 @@ public class Database extends StoreComponent {
         return all;    
     }
     
-    private void logToFile(DataCommon data) {
-        try {
-            StackTraceElement[] trace = Thread.currentThread().getStackTrace();
-            HashMap<String, String> methods = new HashMap();
-            String simpleClassName = data.className.substring(data.className.lastIndexOf('.') + 1);
-
-            String txt = new Date() + ";" + data.storeId + ";" + data.id + ";" + simpleClassName + ".java;";
-            for(StackTraceElement el : trace) {
-                if(el.getClassName().toString().contains("thundashop")) {
-                    String methodName = el.getMethodName();
-                    if(!methodName.contains("invoke") && 
-                            !methodName.equalsIgnoreCase("ExecuteMethod") &&
-                            !methodName.equals("logToFile") &&
-                            !methodName.equals("executeMethodSync") &&
-                            !methodName.equals("executeMessage") &&
-                            !methodName.equals("executeMethodWithTiming") &&
-                            !methodName.equals("save") &&
-                            !methodName.equals("run") &&
-                            !methodName.contains("saveObject")) {
-                        if(!methods.containsKey(methodName)) {
-                            methods.put(methodName, methodName + ":" + el.getLineNumber());
-                        }
-                    }
-                }
-            }
-            for(String mname : methods.values()) {
-                txt += mname + ";";
-            }
-            
-            txt += "\r\n";
-            Path logPath = Paths.get("/tmp/dbwritelog.txt");
-            Files.write(logPath, txt.getBytes(), APPEND, CREATE);
-        }catch(Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public DataCommon convert(DBObject next) {
         return morphia.fromDBObject(DataCommon.class, next);
     }

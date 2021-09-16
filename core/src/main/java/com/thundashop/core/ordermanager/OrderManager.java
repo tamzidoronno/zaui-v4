@@ -5548,11 +5548,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             
             order.orderTransactions.stream().forEach(o -> o.transferredToAccounting = true);
         }
-        
-        order.orderTransactions.stream().forEach(o -> o.addedToZreport = report.id);
+
+        order.orderTransactions.forEach(o ->markOrderTransactionClosedByZReport(o, report.id));
         order.addedToZreport = report.id;
         
         saveObject(order);
+    }
+
+    public void markOrderTransactionClosedByZReport(OrderTransaction orderTransaction, String reportId){
+        orderTransaction.addedToZreport = reportId;
+        orderTransaction.transferredToAccounting = true;
     }
 
     private String getBatchId(Order order, String refId) {

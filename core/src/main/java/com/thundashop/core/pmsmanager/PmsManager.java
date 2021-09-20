@@ -1948,6 +1948,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(!booking.isWubook()) {
             doNotification("room_cancelled", booking, remove);
         }
+        processor();
     }
 
     @Override

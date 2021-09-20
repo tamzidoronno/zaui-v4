@@ -2011,6 +2011,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         bookingUpdated(bookingId, "room_removed", roomId);
 
+        processor();
+
         return addResult;
     }
 

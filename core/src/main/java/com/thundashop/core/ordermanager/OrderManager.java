@@ -2999,10 +2999,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         newlyBrokenIncome.removeIf(income -> isInArray(income, fromDatabase));
         
         newlyBrokenIncome.addAll(dayIncomes);
-        
+        long oneMinute = 1000 * 60;
         newlyBrokenIncome.removeIf(o -> {
             long startL = filter.start.getTime();
-            long endL = filter.end.getTime();
+            long endL = filter.end.getTime() + oneMinute; // for the case when filter.end is date is last day of month 23:59:00 and dayIncome's time is 00:00:00
             boolean completlyWithin = startL <= o.start.getTime() && o.end.getTime() <= endL;
             return !completlyWithin;
         });
@@ -5106,7 +5106,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             credited.cart.reference = newReference;
         }
 
+        ignoreValidation();
         saveOrder(credited);
+        enableValidation();
+
         saveOrder(order);
 //        cleanOrder(credited.id, "fdasf345345345!mnm!");
         

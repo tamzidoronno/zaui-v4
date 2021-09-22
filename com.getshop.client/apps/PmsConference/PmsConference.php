@@ -83,7 +83,7 @@ class PmsConference extends \WebshopApplication implements \Application {
                         //this one has no conference... we just hope its our booking and connect to it
                         $booking->conferenceId = $conferenceId;
                         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(),$booking);
-                        $this->includefile("conferencereports");
+                        //$this->includefile("conferencereports");
                         die('<script>document.location.reload();</script>');
                     }
                     else

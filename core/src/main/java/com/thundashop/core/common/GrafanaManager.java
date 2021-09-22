@@ -8,6 +8,8 @@ package com.thundashop.core.common;
 import com.getshop.scope.GetShopSession;
 import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,6 +18,10 @@ public class GrafanaManager extends ManagerBase{
      
     @Autowired
     public FrameworkConfig frameworkConfig;
+
+    @Autowired
+    @Qualifier("grafanaFeederExecutor")
+    private TaskExecutor taskExecutor;
     
     public void addPoint(String dbName, String point, HashMap<String, Object> values) {
         GrafanaFeeder feeder = new GrafanaFeederImpl();
@@ -30,9 +36,7 @@ public class GrafanaManager extends ManagerBase{
         values.put("storeId", storeId);
 
         if(frameworkConfig.productionMode) {
-            Thread td = new Thread(feeder);
-            td.setName("Feeding graphana for store " + storeId);
-            td.start();
+            taskExecutor.execute(feeder);
         }
     }
     

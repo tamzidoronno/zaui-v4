@@ -1692,7 +1692,16 @@ public class Order extends DataCommon implements Comparable<Order> {
         }
         return doubleItems;
     }
-    
+
+    public boolean isAutoCreatedAccrued() {
+        String accruedPaymentType = "ns_60f2f24e_ad41_4054_ba65_3a8a02ce0190";
+        String accruedPaymentType2 = "ns-60f2f24e-ad41-4054-ba65-3a8a02ce0190";
+        boolean orderTransactionsDontExist = this.orderTransactions == null || this.orderTransactions.isEmpty();
+        boolean paymentIsAccruedType = this.payment.paymentType.contains(accruedPaymentType) || this.payment.paymentType.contains(accruedPaymentType2);
+
+        return paymentIsAccruedType && orderTransactionsDontExist;
+    }
+
     public static class Status  {
         public static int CREATED = 1;
         public static int WAITING_FOR_PAYMENT = 2;
@@ -1965,9 +1974,9 @@ public class Order extends DataCommon implements Comparable<Order> {
         return incrementOrderId;
     }
       
-    public boolean hasUntransferredPayments() {
+    public boolean isNotOnZreport() {
         return orderTransactions.stream()
-                .filter(o -> !o.transferredToAccounting && StringUtils.isEmpty(o.addedToZreport))
+                .filter(o -> StringUtils.isEmpty(o.addedToZreport))
                 .count() > 0;
     }
     

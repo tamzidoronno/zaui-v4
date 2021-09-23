@@ -987,13 +987,19 @@ public class PosManager extends ManagerBase implements IPosManager {
         if (password != null && password.equals("as9d08f90213841nkajsdfi2u3h4kasjdf")) {
             System.out.println("password is correct.... find and delete the zreport");
             ZReport report = zReports.remove(zreportId);
-
+            removeZReportParametersFromCorrelatedOrders(report.orderIds);
             if (report != null) {
                 System.out.println("found the report here... deleting it");
                 deleteObject(report);
             }
         }
     }
+
+
+    private void removeZReportParametersFromCorrelatedOrders(List<String> orderIds) {
+        orderIds.forEach(oId -> orderManager.removeZReportDatafromOrder(oId));
+    }
+
     /**
      * It will create orders for some rooms which need them.
      */

@@ -5548,8 +5548,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
         if (central.hasBeenConnectedToCentral()) {    
             closeOrder(orderId, "Transferred to Z-Report");
-            
-            order.orderTransactions.stream().forEach(o -> o.transferredToAccounting = true);
         }
 
         order.orderTransactions.forEach(o ->markOrderTransactionClosedByZReport(o, report.id));
@@ -5560,7 +5558,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     public void markOrderTransactionClosedByZReport(OrderTransaction orderTransaction, String reportId){
         orderTransaction.addedToZreport = reportId;
-        orderTransaction.transferredToAccounting = true;
     }
 
     private String getBatchId(Order order, String refId) {
@@ -5686,7 +5683,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         List<Order> retList = orders.values()
                 .stream()
                 .filter(o -> !o.isNullOrder())
-                .filter(o -> o.hasUntransferredPayments() || !posManager.hasZreport(o))
+                .filter(o -> o.isNotOnZreport() || !posManager.hasZreport(o))
                 .collect(Collectors.toList());
         
         return retList;
@@ -5776,6 +5773,15 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .map(o -> (ChangedCloseDateLog)o)
                 .collect(Collectors.toList());
     }
-    
-    
+
+
+    public void removeZReportDatafromOrder(String orderId) {
+        Order order = getOrder(orderId);
+
+        order.addedToZreport = "";
+        order.transferredToCentral = false;
+        order.transferredToAccountingSystem = false;
+        order.transferToAccountingDate = null;
+        saveObject(order);
+    }
 }

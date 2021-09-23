@@ -1,11 +1,17 @@
 <?
 /* @var $this \ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
 $booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $_POST['data']['id']);
+
+if(!$booking){
+  echo '<h1>An unexpected errror occured</h1><h4>Please go back to room view, select another room and try again. If that does not solve the issue, open a ticket with reference to this booking</h4>';
+}
+else
+{
+
 $conference = $this->getApi()->getPmsConferenceManager()->getConference($booking->conferenceId);
 $confdate = $conference->conferenceDate ? date('d.m.Y', strtotime($conference->conferenceDate)) : "";
 ?>
 <h2>Conference</h2>
-
 <div gstype="form" method="saveConferenceData">
     <input type="hidden" value="<? echo $_POST['data']['id']; ?>" gsname="id"/>
     <input type="hidden" value="<? echo $conference->id; ?>" gsname="conferenceid"/>
@@ -56,3 +62,7 @@ $confdate = $conference->conferenceDate ? date('d.m.Y', strtotime($conference->c
 <script>
     getshop_loadDatePicker($('[gsname="conferencedate"]'), {});
 </script>
+
+<?
+}
+    ?>

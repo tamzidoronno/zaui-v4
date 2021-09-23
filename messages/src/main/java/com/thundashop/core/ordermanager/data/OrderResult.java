@@ -70,4 +70,19 @@ public class OrderResult {
         }
         return false;
     }
+
+    public boolean hasCreatedOrPaymentDateAfter(Date date){
+        if (date == null) {
+            return true;
+        }
+        if (this.orderDate != null && this.paymentDate != null) {
+            return this.orderDate.after(date) || this.paymentDate.after(date);
+        } else if (this.orderDate != null) {
+            return this.orderDate.after(date);
+        } else if (this.paymentDate != null) {
+            return this.paymentDate.after(date);
+        } else { //payment and created date are null
+            return false;
+        }
+    }
 }

@@ -82,7 +82,7 @@ public class ProductManager extends AProductManager implements IProductManager {
         saveObject(product);
         
         if (product.deleted == null) {
-            products.put(product.id, product);
+            setProductById(product.id, product);
         }
 
         return finalize(product);
@@ -90,13 +90,13 @@ public class ProductManager extends AProductManager implements IProductManager {
 
     @Override
     public void changeStockQuantity(String productId, int count) throws ErrorException {
-        Product product = products.get(productId);
+        Product product = getProductById(productId);
         product.stockQuantity = product.stockQuantity + count;
         saveProduct(product);
     }
     
     public void changeStockQuantityForWareHouse(String productId, int count, String wareHouseId) throws ErrorException {
-        Product product = products.get(productId);
+        Product product = getProductById(productId);
         Integer oldCount = product.wareHouseStockQuantities.get(wareHouseId);
         
         if (oldCount == null) {
@@ -116,13 +116,13 @@ public class ProductManager extends AProductManager implements IProductManager {
 
     @Override
     public void removeProduct(String productId) throws ErrorException {
-        Product product = products.get(productId);
+        Product product = getProductById(productId);
 
         if (product == null) {
             throw new ErrorException(27);
         }
 
-        products.remove(product.id);
+        removeProductById(product.id);
         deleteObject(product);
 
         listManager.removeProductFromListsIfExists(productId);
@@ -184,7 +184,7 @@ public class ProductManager extends AProductManager implements IProductManager {
     public HashMap<String, String> translateEntries(List<String> entryIds) throws ErrorException {
         HashMap result = new HashMap();
         for (String id : entryIds) {
-            for (Product prod : products.values()) {
+            for (Product prod : getProducts()) {
                 if (prod.pageId != null && prod.pageId.equals(id)) {
                     result.put(id, prod.name);
                 }
@@ -243,7 +243,7 @@ public class ProductManager extends AProductManager implements IProductManager {
     public List<Product> getAllProducts() throws ErrorException {
         long time = System.currentTimeMillis();
         
-        ArrayList<Product> list = new ArrayList(products.values());
+        ArrayList<Product> list = new ArrayList(getProducts());
         ArrayList<Product> finalized = new ArrayList();
         for (Product prod : list) {
             finalized.add(finalize(prod));
@@ -268,7 +268,7 @@ public class ProductManager extends AProductManager implements IProductManager {
     public List<Product> getAllProductsSortedByName() throws ErrorException {
         long time = System.currentTimeMillis();
         
-        ArrayList<Product> list = new ArrayList(products.values());
+        ArrayList<Product> list = new ArrayList(getProducts());
         ArrayList<Product> finalized = new ArrayList();
         for (Product prod : list) {
             finalized.add(finalize(prod));
@@ -292,7 +292,7 @@ public class ProductManager extends AProductManager implements IProductManager {
 
     @Override
     public String getPageIdByName(String name) {
-        for (Product product : products.values()) {
+        for (Product product : getProducts()) {
             String productName = makeSeoUrl(product.uniqueName, "");
             if (productName.equals(name)) {
                 return product.pageId;
@@ -303,7 +303,7 @@ public class ProductManager extends AProductManager implements IProductManager {
     }
 
     public boolean exists(String id) {
-        return products.containsKey(id);
+        return isProductExist(id);
     }
 
     @Override
@@ -354,7 +354,7 @@ public class ProductManager extends AProductManager implements IProductManager {
     public List<Product> getAllProductsLight() throws ErrorException {
         List<Product> retval = new ArrayList();
 
-        for (Product prod : products.values()) {
+        for (Product prod : getProducts()) {
             Product result = new Product();
             result.id = prod.id;
             result.name = prod.name;
@@ -457,7 +457,7 @@ public class ProductManager extends AProductManager implements IProductManager {
 
     @Override
     public Product copyProduct(String fromProductId, String newName) {
-        Product product = products.get(fromProductId);
+        Product product = getProductById(fromProductId);
         
         Page currentPage = pageManager.getPage(product.pageId);
         
@@ -484,7 +484,7 @@ public class ProductManager extends AProductManager implements IProductManager {
     }
 
     public Product getProductUnfinalized(String productId) {
-        return products.get(productId);
+        return getProductById(productId);
     }
 
     public String getFirstProductList(String productId) {
@@ -639,7 +639,7 @@ public class ProductManager extends AProductManager implements IProductManager {
         product.setAccountingAccount("2901");
         saveObject(product);
         
-        products.put(product.id, product);
+        setProductById(product.id, product);
     }
 
     @Override
@@ -670,7 +670,7 @@ public class ProductManager extends AProductManager implements IProductManager {
         AccountingDetail detail = accountingAccountDetails.get(accountNumber);
         
         if (detail != null) {
-            boolean isInUse = products.values()
+            boolean isInUse = getProducts()
                     .stream()
                     .filter(o -> {
                         return o.accountingConfig.stream()

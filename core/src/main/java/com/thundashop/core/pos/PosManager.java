@@ -374,7 +374,7 @@ public class PosManager extends ManagerBase implements IPosManager {
             orderIds = orderManager.getAllOrders()
                     .stream()
                     .filter(o -> !o.isNullOrder())
-                    .filter(o-> (o.hasPaymentDateAfter(fromWhenToTakeIntoAccount) && o.transferredToCentral == false || o.hasPaymentDateAfter(prevZReportDate)))
+                    .filter(o-> (o.hasCreatedOrPaymentDateAfter(fromWhenToTakeIntoAccount) && o.transferredToCentral == false || o.hasCreatedOrPaymentDateAfter(prevZReportDate)))
                     .filter(o -> o.isOrderFinanciallyRelatedToDatesIgnoreCreationDate(new Date(0), new Date()))
                     .map(o -> o.id)
                     .collect(Collectors.toList());
@@ -384,7 +384,7 @@ public class PosManager extends ManagerBase implements IPosManager {
         } else {
             orderIds = orderManager.getOrdersByFilter(getOrderFilter())
                     .stream()
-                    .filter(order -> (order.getMarkedPaidDate() != null && order.getMarkedPaidDate().after(prevZReportDate)))
+                    .filter(order -> (order.getMarkedPaidDate() != null && order.hasCreatedOrPaymentDateAfter(prevZReportDate)))
                     .filter(order -> order.orderId != null && !order.orderId.isEmpty())
                     .filter(order -> order.isConnectedToCashPointId(cashPointId) || (isMasterCashPoint(cashPointId) && order.isConnectedToCashPointId("")))
                     .sorted((OrderResult o1, OrderResult o2) -> {
@@ -507,7 +507,7 @@ public class PosManager extends ManagerBase implements IPosManager {
 
         List<String> extraOrderIds = orderManager.getOrdersNotConnectedToAnyZReports()
                 .stream()
-                .filter(o-> o.hasPaymentDateAfter(fromWhenToTakeIntoAccount) && o.transferredToCentral == false || o.hasPaymentDateAfter(prevZReportDate)) //after switching old customers to central, all old reports would get processed here
+                .filter(o-> o.hasCreatedOrPaymentDateAfter(fromWhenToTakeIntoAccount) && o.transferredToCentral == false || o.hasCreatedOrPaymentDateAfter(prevZReportDate)) //after switching old customers to central, all old reports would get processed here
                 .map(o -> o.id)
                 .collect(Collectors.toList());
         extraOrderIds.forEach(orderId -> orderManager.closeOrderByZReport(orderId, report));

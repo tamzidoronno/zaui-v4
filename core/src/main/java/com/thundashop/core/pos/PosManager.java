@@ -368,7 +368,7 @@ public class PosManager extends ManagerBase implements IPosManager {
             orderIds = orderManager.getAllOrders()
                     .stream()
                     .filter(o -> !o.isNullOrder())
-                    .filter(o-> (o.hasCreatedOrPaymentDateAfter(fromWhenToTakeIntoAccount) && o.transferredToCentral == false || o.hasCreatedOrPaymentDateAfter(prevZReportDate)))
+                    .filter(o-> (o.hasCreatedOrPaymentDateAfter(fromWhenToTakeIntoAccount) && o.transferredToCentral == false && o.paymentDateNotInFuture() || (o.paymentDateNotInFuture() && o.hasCreatedOrPaymentDateAfter(prevZReportDate)) ))
                     .filter(o -> o.isOrderFinanciallyRelatedToDatesIgnoreCreationDate(new Date(0), new Date()))
                     .map(o -> o.id)
                     .collect(Collectors.toList());
@@ -378,7 +378,7 @@ public class PosManager extends ManagerBase implements IPosManager {
         } else {
             orderIds = orderManager.getOrdersByFilter(getOrderFilter())
                     .stream()
-                    .filter(order -> (order.getMarkedPaidDate() != null && order.hasCreatedOrPaymentDateAfter(prevZReportDate)))
+                    .filter(order -> (order.getMarkedPaidDate() != null && order.hasCreatedOrPaymentDateAfter(prevZReportDate) && order.paymentDateNotInFuture()))
                     .filter(order -> order.orderId != null && !order.orderId.isEmpty())
                     .filter(order -> order.isConnectedToCashPointId(cashPointId) || (isMasterCashPoint(cashPointId) && order.isConnectedToCashPointId("")))
                     .sorted((OrderResult o1, OrderResult o2) -> {

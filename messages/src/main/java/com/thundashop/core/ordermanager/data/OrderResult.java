@@ -91,8 +91,8 @@ public class OrderResult {
 
         if (this.paymentDate != null) {
             return this.paymentDate.before(today);
-        } else { //payment and created date are null
-            return false;
         }
+        return true;
+
     }
 }

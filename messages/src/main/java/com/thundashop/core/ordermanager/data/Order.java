@@ -2007,9 +2007,9 @@ public class Order extends DataCommon implements Comparable<Order> {
 
         if (this.paymentDate != null) {
             return this.paymentDate.before(today);
-        } else { //payment and created date are null
-            return false;
         }
+        return true;
+
     }
 
 

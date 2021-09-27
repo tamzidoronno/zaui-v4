@@ -98,7 +98,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private final HashMap<String, Date> lastProcessedTimedMessage = new HashMap<>();
     private final HashMap<String, PmsBookingFilter> savedFilters = new HashMap<>();
     private final List<String> warnedAboutNotAddedToBookingEngine = new ArrayList<>();
-    private final PmsBooking includeAlways = null; // TODO: This could be removed.
 
     private HashMap<String, String> bookingIdMap = new HashMap<>();
     private PmsConfiguration configuration = new PmsConfiguration();
@@ -692,10 +691,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsBooking getBooking(String bookingId) {
-        if(includeAlways != null) {  // TODO: This block could be removed
-            bookings.put(includeAlways.id, includeAlways);
-            return includeAlways;
-        }
         return getBookingInternal(bookingId, true);
     }
     
@@ -3235,11 +3230,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsBooking getBookingFromRoom(String pmsBookingRoomId) {
-        if(includeAlways != null) { // TODO: this could be removed
-            bookings.put(includeAlways.id, includeAlways);
-            return includeAlways;
-        }
-        
         PmsBooking booking = getBookingFromRoomSecure(pmsBookingRoomId);
         if (booking == null) {
             return null;
@@ -5349,9 +5339,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     public PmsBooking getBookingFromRoomSecure(String pmsBookingRoomId) {
-        if(includeAlways != null) { // TODO: This block could be removed
-            return includeAlways;
-        }
         for (PmsBooking booking : bookings.values()) {
             for (PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
                 if (room.pmsBookingRoomId.equals(pmsBookingRoomId)) {
@@ -6284,9 +6271,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     PmsBooking getBookingUnfinalized(String bookingId) {
-        if(includeAlways != null) { // TODO: This block could be removed
-            return includeAlways;
-        }
         return bookings.get(bookingId);
     }
 

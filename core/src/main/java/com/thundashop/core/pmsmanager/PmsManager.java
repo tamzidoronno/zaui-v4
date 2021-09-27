@@ -10,19 +10,12 @@ import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import java.util.Calendar;
-import com.mongodb.BasicDBObject;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.arx.AccessLog;
 import com.thundashop.core.arx.DoorManager;
 import com.thundashop.core.bookingengine.BookingEngine;
-import com.thundashop.core.bookingengine.data.Booking;
-import com.thundashop.core.bookingengine.data.BookingItem;
-import com.thundashop.core.bookingengine.data.BookingItemType;
-import com.thundashop.core.bookingengine.data.BookingTimeLine;
-import com.thundashop.core.bookingengine.data.BookingTimeLineFlatten;
-import com.thundashop.core.bookingengine.data.RegistrationRules;
+import com.thundashop.core.bookingengine.data.*;
 import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.AddonsInclude;
 import com.thundashop.core.cartmanager.data.CartItem;
@@ -34,11 +27,7 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.getshoplock.GetShopDeviceLog;
 import com.thundashop.core.getshoplock.GetShopLockManager;
-import com.thundashop.core.getshoplocksystem.AccessHistoryResult;
-import com.thundashop.core.getshoplocksystem.GetShopLockSystemManager;
-import com.thundashop.core.getshoplocksystem.LockCode;
-import com.thundashop.core.getshoplocksystem.LockGroup;
-import com.thundashop.core.getshoplocksystem.MasterUserSlot;
+import com.thundashop.core.getshoplocksystem.*;
 import com.thundashop.core.gsd.DevicePrintRoomCode;
 import com.thundashop.core.gsd.GdsManager;
 import com.thundashop.core.messagemanager.MessageManager;
@@ -68,23 +57,6 @@ import com.thundashop.core.utils.Constants;
 import com.thundashop.core.utils.UtilManager;
 import com.thundashop.core.webmanager.WebManager;
 import com.thundashop.core.wubook.WubookManager;
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -93,8 +65,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static org.apache.commons.lang3.StringUtils.*;
 
 /**
  *
@@ -106,33 +83,45 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private static final Logger logger = LoggerFactory.getLogger(PmsManager.class);
 
-    private HashMap<String, PmsBooking> bookings = new HashMap();
-    private HashMap<String, String> bookingIdMap = new HashMap();
-    private HashMap<String, Product> fetchedProducts = new HashMap();
-    private HashMap<String, PmsAddonDeliveryLogEntry> deliveredAddons = new HashMap();
-    private HashMap<String, PmsCareTaker> careTaker = new HashMap();
-    private HashMap<String, PmsAdditionalItemInformation> addiotionalItemInfo = new HashMap();
-    private HashMap<String, PmsPricing> priceMap = new HashMap();
-    private HashMap<String, ConferenceData> conferenceDatas = new HashMap();
-    private HashMap<String, FailedWubookInsertion> failedWubooks = new HashMap();
-    private HashMap<String, PmsRoomTypeAccessory> accesories = new HashMap();
+    private final HashMap<String, PmsBooking> bookings = new HashMap<>();
+    private final HashMap<String, Product> fetchedProducts = new HashMap<>();
+    private final HashMap<String, PmsAddonDeliveryLogEntry> deliveredAddons = new HashMap<>();
+    private final HashMap<String, PmsCareTaker> careTaker = new HashMap<>();
+    private final HashMap<String, PmsAdditionalItemInformation> addiotionalItemInfo = new HashMap<>();
+    private final HashMap<String, PmsPricing> priceMap = new HashMap<>();
+    private final HashMap<String, ConferenceData> conferenceDatas = new HashMap<>();
+    private final HashMap<String, FailedWubookInsertion> failedWubooks = new HashMap<>();
+    private final HashMap<String, PmsRoomTypeAccessory> accesories = new HashMap<>();
+    private final List<String> repicientList = new ArrayList<>();
+    private final List<String> warnedAbout = new ArrayList<>();
+    private final List<PmsAdditionalTypeInformation> additionDataForTypes = new ArrayList<>();
+    private final HashMap<String, Date> lastProcessedTimedMessage = new HashMap<>();
+    private final HashMap<String, PmsBookingFilter> savedFilters = new HashMap<>();
+    private final List<String> warnedAboutNotAddedToBookingEngine = new ArrayList<>();
+    private final PmsBooking includeAlways = null; // TODO: This could be removed.
+
+    private HashMap<String, String> bookingIdMap = new HashMap<>();
     private PmsConfiguration configuration = new PmsConfiguration();
-    private List<String> repicientList = new ArrayList();
-    private List<String> warnedAbout = new ArrayList();
-    private List<PmsAdditionalTypeInformation> additionDataForTypes = new ArrayList();
+    private PmsBookingAutoIncrement autoIncrement = new PmsBookingAutoIncrement();
+    private List<PmsBookingAddonItem> cachedAvailableAddons;
+
     private String specifiedMessage = "";
-    Date lastOrderProcessed;
-    private boolean initFinalized = false;
     private String orderIdToSend;
-    private Date lastCheckForIncosistent;
     private String emailToSendTo;
     private String phoneToSend;
     private String prefixToSend;
-    private List<Order> tmpOrderList;
-    private HashMap<String, Date> lastProcessedTimedMessage = new HashMap();
+    private String messageToSend;
+    private String overrideNotificationTitle;
+    private String currentBookingId = "";
+    private Integer daysInRestrioction;
+    private Date lastCheckForIncosistent;
+    private Date virtualOrdersCreated;
+    private Date startedDate;
+    private Date cachedAvailableAddonsLastCached;
     private boolean warnedAboutAutoassigning = false;
-
-    private HashMap<String, PmsBookingFilter> savedFilters = new HashMap();
+    private boolean convertedDiscountSystem = false;
+    private boolean initFinalized = false;
+    private boolean avoidCalculateUnsettledAmount = false;
 
     @Autowired
     WubookManager wubookManager;
@@ -225,28 +214,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Autowired
     private PmsLogManager pmsLogManager;
-    
-    
+
     @Autowired
     Database dataBase;
-    private Date virtualOrdersCreated;
-    private Date startedDate;
-
-    private PmsBookingAutoIncrement autoIncrement = new PmsBookingAutoIncrement();
-    private String messageToSend;
-    private boolean tmpFixed = false;
-    private String overrideNotificationTitle;
-    private List<String> warnedAboutNotAddedToBookingEngine = new ArrayList();
-    private boolean convertedDiscountSystem = false;
-    private String currentBookingId = "";
-    private boolean updatedAllBookings = false;
-    private PmsBooking includeAlways = null;
-    private Integer daysInRestrioction;
-    public boolean hasCheckedForUndeletion = false;
-    private List<PmsBookingAddonItem> cachedAvailableAddons;
-    private Date cachedAvailableAddonsLastCached;
-    private boolean avoidCalculateUnsettledAmount = false;
-    
 
     @Autowired
     public void setOrderManager(OrderManager orderManager) {
@@ -723,7 +693,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsBooking getBooking(String bookingId) {
-        if(includeAlways != null) {
+        if(includeAlways != null) {  // TODO: This block could be removed
             bookings.put(includeAlways.id, includeAlways);
             return includeAlways;
         }
@@ -3266,7 +3236,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsBooking getBookingFromRoom(String pmsBookingRoomId) {
-        if(includeAlways != null) {
+        if(includeAlways != null) { // TODO: this could be removed
             bookings.put(includeAlways.id, includeAlways);
             return includeAlways;
         }
@@ -5380,7 +5350,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     public PmsBooking getBookingFromRoomSecure(String pmsBookingRoomId) {
-        if(includeAlways != null) {
+        if(includeAlways != null) { // TODO: This block could be removed
             return includeAlways;
         }
         for (PmsBooking booking : bookings.values()) {
@@ -5395,15 +5365,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void logEntryObject(PmsLog log) {
-        if (log.logText == null || log.logText.trim().isEmpty()) {
+        if (isBlank(log.logText)) {
             return;
         }
-        String userId = "";
-        if (getSession() != null && getSession().currentUser != null) {
-            userId = getSession().currentUser.id;
-        }
 
+        String userId = getCurrentUserId();
         User user = userManager.getUserById(userId);
+
         if (user != null) {
             log.userName = user.fullName;
         }
@@ -6317,7 +6285,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     PmsBooking getBookingUnfinalized(String bookingId) {
-        if(includeAlways != null) {
+        if(includeAlways != null) { // TODO: This block could be removed
             return includeAlways;
         }
         return bookings.get(bookingId);

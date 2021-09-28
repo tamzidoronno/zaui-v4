@@ -27,6 +27,7 @@ if(sizeof($entries) == 0) {
     
     $events = (array)$this->getApi()->getPmsConferenceManager()->getConferenceEventsBetweenTime($this->convertToJavaDate($fromTime), $this->convertToJavaDate($toTime));
     $eventsByItem = $this->convertEventsByItem($events);
+
     ?>
     <span class='loadcalendar' gstype='form' method='updateDateRange' style='display:none;'>
         <input type='text' class='gsniceinput1 calendarstartdate' value='<?php echo $from; ?>' gsname='start'>

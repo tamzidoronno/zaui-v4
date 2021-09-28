@@ -7,36 +7,27 @@ package com.thundashop.core.messagemanager;
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
-import com.thundashop.core.common.FrameworkConfig;
-import com.thundashop.core.common.GetShopLogHandler;
-import com.thundashop.core.common.GrafanaManager;
-import com.thundashop.core.common.Logger;
-import com.thundashop.core.common.Setting;
-import com.thundashop.core.common.StoreComponent;
+import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.Database;
-import com.thundashop.core.storemanager.StoreManager;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.stereotype.Component;
+
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
-import javax.mail.AuthenticationFailedException;
-import javax.mail.BodyPart;
-import javax.mail.Multipart;
-import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
-import javax.mail.Transport;
+import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMessage.RecipientType;
 import javax.mail.internet.MimeMultipart;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import java.io.File;
+import java.util.Date;
+import java.util.Map;
+import java.util.Properties;
 
 
 @Component
@@ -65,6 +56,11 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
     
     @Autowired
     public Logger logger;
+
+    @Autowired
+    @Qualifier("mailSenderExecutor")
+    private TaskExecutor mailSenderExecutor;
+
     private Map<String, String> files;
     private boolean delete;
     private MailMessage logMessage;
@@ -109,11 +105,13 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
                     settings.sendMailFrom = sendfrom;
                 }
             }
-            
+
             if (confSettings.get("enabletls") != null && confSettings.get("enabletls").value != null && !confSettings.get("enabletls").value.isEmpty()) {
                 String enableTls = confSettings.get("enabletls").value;
                 if (enableTls != null && enableTls.equals("true")) {
                     settings.enableTls = true;
+                } else if ("false".equals(enableTls)) {
+                    settings.enableTls = false;
                 }
             }
         }
@@ -127,12 +125,12 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
         Properties properties = new Properties();
         properties.setProperty("mail.smtp.submitter", authenticator.getPasswordAuthentication().getUserName());
         properties.setProperty("mail.smtp.auth", "true");
-
         properties.setProperty("mail.smtp.host", mailSettings.hostname);
         properties.setProperty("mail.smtp.port", "" + mailSettings.port);
-        
-        if (mailSettings.enableTls)
+        if (mailSettings.enableTls) {
             properties.setProperty("mail.smtp.starttls.enable", "true");
+            properties.setProperty("mail.smtp.ssl.protocols", "TLSv1.2");
+        }
         
         return Session.getInstance(properties, authenticator);
     }
@@ -146,15 +144,11 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
                     message = createMailMessage(email, from, title, content);
                     String useFrom = from.contains(";") ? email : from;
                     MailFactoryImpl mfi = createMailFactory(useFrom, email, title, content, message);
-                    Thread td = new Thread(mfi);
-                    td.setName("Send email thread for store: " + storeId);
-                    td.start();
+                    mailSenderExecutor.execute(mfi);
                 }
             } else {
                 MailFactoryImpl mfi = createMailFactory(from, to, title, content, message);
-                Thread td = new Thread(mfi);
-                td.setName("Send email thread for store: " + storeId);
-                td.start();
+                mailSenderExecutor.execute(mfi);
             }
         }
         
@@ -190,17 +184,13 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
                     MailFactoryImpl mfi = createMailFactory(from, email, title, content, mailMessage);
                     mfi.files = files;
                     mfi.delete = delete;
-                    Thread td = new Thread(mfi);
-                    td.setName("Send email with attachment for store: " + storeId);
-                    td.start();
+                    mailSenderExecutor.execute(mfi);
                 }
             } else {
                 MailFactoryImpl mfi = createMailFactory(from, to, title, content, mailMessage);
                 mfi.files = files;
                 mfi.delete = delete;
-                Thread td = new Thread(mfi);
-                td.setName("Send email with attachment for store: " + storeId);
-                td.start();
+                mailSenderExecutor.execute(mfi);
             }
         }
         
@@ -251,10 +241,7 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
     }
 
     private boolean isToDeveloper(String to) {
-        List<String> developersAddresses = new ArrayList();
-        developersAddresses.add("kai@getshop.com");
-        developersAddresses.add("pal@getshop.com");
-        return false;
+        return to.contains("@norwegianexperience.no");
     }
 
     private class Authenticator extends javax.mail.Authenticator {

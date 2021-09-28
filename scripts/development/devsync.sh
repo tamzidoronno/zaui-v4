@@ -13,21 +13,19 @@ fi
 IFS=';'
 
 echo "What store?";
-cat 9 | while read line
+cat 100 | while read line
 do
   array=(${line})
   echo ${array[0]}"="${array[2]};
 done
 read storeQuestion;
 
-
-
 echo  -e " GO ON HERE ";
 IFS=';'
 
 
-serverQuestion="9"
-SERVER="10.0.9.33"
+serverQuestion="100"
+SERVER="10.0.9.50"
 STOREID="NONE";
 MASTERSTOREID="NONE";
 
@@ -37,7 +35,7 @@ do
   val=${array[0]};
   if [ "$storeQuestion" == "$val" ]
   then
-      echo "FOUND IN FILE"
+      echo "FOUND IN FILE ${array[1]}"
       STOREID="${array[1]}";
       if [ ${#array[@]}  == 4 ] ; then
           MASTERSTOREID="${array[3]}";
@@ -59,10 +57,11 @@ echo -e "";
 echo " Deleting exisisting local collections for $STOREID";
 echo -e "";
 mongo --port=27018 --eval "var storeId='$STOREID'" onestoresync_clear_existing_data.js
-#Dumping online database and compressing it.
-echo -e " Dumping and compressing database on server";
+
+#Dumping online database and compressing it. It will run backup2.sh on server
+echo -e " Dumping and compressing database on server for $STOREID";
 ssh -T naxa@$SERVER << EOF > /dev/null
-/home/naxa/backup2.sh $STOREID $MASTERSTOREID >> /dev/null 2>&1
+/home/naxa/development_db_scripts/dump_dev_db.sh $STOREID
 EOF
 
 if [ -f dump.tar.gz ]; then
@@ -87,14 +86,9 @@ tar xzvf dump.tar.gz > /dev/null
 mongorestore --port 27018  &> /dev/null
 rm -rf dump.tar.gz
 
-#transfer images
-echo -e " Syncing images";
-#rsync -avz -e ssh naxa@10.0.4.32:/thundashopimages/ ../com.getshop.client/uploadedfiles/ &> /dev/null
+
 
 echo -e " Done!"
 echo -e " Note: if you wish to run resin on port 80 run: "
 echo -e "   iptables -t nat -A OUTPUT -d localhost -p tcp --dport 80 -j REDIRECT --to-ports 8080";
 
-echo "Importing shared database"
-mongodump -o shareddump --host 192.168.100.1 --port 27017 -u getshopadmin -p commondatabaseadministrator &> /dev/null
-mongorestore --port 27018 shareddump &> /dev/null

@@ -5,7 +5,6 @@ import com.getshop.javaapi.GetShopApi;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.getshop.scope.GetShopSessionScope;
-import com.google.gson.Gson;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.common.DataCommon;
@@ -17,10 +16,7 @@ import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshoplocksystem.GetShopLockSystemManager;
-import com.thundashop.core.getshoplocksystem.LockServer;
-import com.thundashop.core.getshoplocksystem.LockServerBase;
 import com.thundashop.core.gsd.GdsManager;
-import com.thundashop.core.gsd.GetShopDevice;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.pagemanager.GetShopModules;
@@ -33,30 +29,15 @@ import com.thundashop.core.storemanager.data.StoreConfiguration;
 import com.thundashop.core.storemanager.data.StoreCriticalMessage;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.webmanager.WebManager;
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.net.URLEncoder;
-import java.security.MessageDigest;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
-import javax.annotation.PostConstruct;
-import org.apache.http.client.utils.URLEncodedUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.io.*;
+import java.security.MessageDigest;
+import java.util.*;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 /**
  *
@@ -97,6 +78,12 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     
     @Autowired
     public GetShopSessionScope getShopSessionScope;
+
+    @Autowired
+    private BackupServerSyncManager backupServerSyncManager;
+
+    @Autowired
+    private FrameworkConfig frameworkConfig;
     
     
     private HashMap<String, KeyData> keyDataStore = new HashMap();
@@ -146,20 +133,23 @@ public class StoreManager extends ManagerBase implements IStoreManager {
      */
     @Override
     public boolean isPikStore() {
-        boolean doPush = false;
-        /*if(lastCheckedBackups == null) {
-            doPush = true;
-        } else {
-            long diff = System.currentTimeMillis() - lastCheckedBackups.getTime();
-            if(diff > (1000*60*60*6)) {
+        if (frameworkConfig.productionMode) {
+            boolean doPush = false;
+            if(lastCheckedBackups == null) {
                 doPush = true;
+            } else {
+                long diff = System.currentTimeMillis() - lastCheckedBackups.getTime();
+                if(diff > (1000*60*60*6)) {  // 6 hours
+                    doPush = true;
+                }
+            }
+
+            if(doPush) {
+                lastCheckedBackups = new Date();
+                backupServerSyncManager.doubleCheckTransferServersToBackupSystem(storeId);
             }
         }
-            
-        if(doPush) {
-            lastCheckedBackups = new Date();
-            doubleCheckTransferServersToBackupSystem();
-        }*/
+
         return getStore().isPikStore();
     }
     
@@ -267,55 +257,6 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         }
         storePool.saveStore(store);
         return store;
-    }
-    
-    public void doubleCheckTransferServersToBackupSystem() {
-        Gson gson = new Gson();
-        
-        List<LockServer> lockservers = getShopLockSystemManager.getLockServersUnfinalized();
-        List<BackupServerInfo> toSendList = new ArrayList();
-        for(LockServer server : lockservers) {
-            RemoteServerMetaData serverInfo = getBackupServerInfoByServerId(server.getId());
-            if(serverInfo.beenTransferred) {
-                continue;
-            }
-            
-            BackupServerInfo info = new BackupServerInfo();
-            LockServerBase base = (LockServerBase) server;
-            info.setData(base);
-            toSendList.add(info);
-            
-        }
-        
-        List<GetShopDevice> devices = gdsManager.getDevices();
-        for(GetShopDevice dev : devices) {
-            RemoteServerMetaData serverInfo = getBackupServerInfoByServerId(dev.id);
-            if(serverInfo.beenTransferred) {
-                continue;
-            }
-            BackupServerInfo info = new BackupServerInfo();
-            info.setData(dev);
-            toSendList.add(info);
-        }
-        
-        for(BackupServerInfo info : toSendList) {
-            try {
-                info.webaddr = getMyStore().getDefaultWebAddress();
-                info.storeId = storeId;
-                String toSend = gson.toJson(info);
-                toSend = URLEncoder.encode(toSend, "UTF-8");
-                String result = webManager.htmlGet("http://10.0.7.10:8800/?setServer="+toSend);
-                if(result.equals("added")) {
-                    RemoteServerMetaData serverInfo = new RemoteServerMetaData();
-                    serverInfo.serverId = info.id;
-                    serverInfo.beenTransferred = true;
-                    saveObject(serverInfo);
-                }
-            }catch(Exception e) {
-                logPrintException(e);
-            }
-        }
-        
     }
     
     @Override
@@ -815,7 +756,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         storePool.saveStore(store);
     }
 
-    private RemoteServerMetaData getBackupServerInfoByServerId(String id) {
+    public RemoteServerMetaData getBackupServerInfoByServerId(String id) {
         for(RemoteServerMetaData tmp : backupInfo.values()) {
             if(tmp.serverId.equals(id)) {
                 return tmp;

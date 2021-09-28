@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.TreeSet;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.StringUtils;
 import org.mongodb.morphia.annotations.Transient;
 
 /**
@@ -78,7 +79,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public boolean activated = false;
     public boolean testOrder = false;
     public boolean captured = false;
-    public List<CardTransaction> transactions = new ArrayList();
+    public List<CardTransaction> cardTransactions = new ArrayList();
     public List<OrderLog> logLines = new ArrayList();
     public List<String> notifications = new ArrayList();
     public String invoiceNote = "";
@@ -241,7 +242,7 @@ public class Order extends DataCommon implements Comparable<Order> {
         orderNew.transferredToAccountingSystem = false;
         orderNew.createdDate = new Date();
         orderNew.logLines.clear();
-        orderNew.transactions.clear();
+        orderNew.cardTransactions.clear();
         orderNew.orderTransactions.clear();
         
         if (orderNew.cart != null) {
@@ -1691,7 +1692,16 @@ public class Order extends DataCommon implements Comparable<Order> {
         }
         return doubleItems;
     }
-    
+
+    public boolean isAutoCreatedAccrued() {
+        String accruedPaymentType = "ns_60f2f24e_ad41_4054_ba65_3a8a02ce0190";
+        String accruedPaymentType2 = "ns-60f2f24e-ad41-4054-ba65-3a8a02ce0190";
+        boolean orderTransactionsDontExist = this.orderTransactions == null || this.orderTransactions.isEmpty();
+        boolean paymentIsAccruedType = this.payment.paymentType.contains(accruedPaymentType) || this.payment.paymentType.contains(accruedPaymentType2);
+
+        return paymentIsAccruedType && orderTransactionsDontExist;
+    }
+
     public static class Status  {
         public static int CREATED = 1;
         public static int WAITING_FOR_PAYMENT = 2;
@@ -1964,9 +1974,9 @@ public class Order extends DataCommon implements Comparable<Order> {
         return incrementOrderId;
     }
       
-    public boolean hasUntransferredPayments() {
+    public boolean isNotOnZreport() {
         return orderTransactions.stream()
-                .filter(o -> !o.transferredToAccounting)
+                .filter(o -> StringUtils.isEmpty(o.addedToZreport))
                 .count() > 0;
     }
     
@@ -1977,4 +1987,30 @@ public class Order extends DataCommon implements Comparable<Order> {
                 .findAny()
                 .orElse(null);
     }
+    public boolean hasCreatedOrPaymentDateAfter(Date date){
+        if (date == null) {
+            return true;
+        }
+        if (this.createdDate != null && this.paymentDate != null) {
+            return this.createdDate.after(date) || this.paymentDate.after(date);
+        } else if (this.createdDate != null) {
+            return this.createdDate.after(date);
+        } else if (this.paymentDate != null) {
+            return this.paymentDate.after(date);
+        } else { //payment and created date are null
+            return false;
+        }
+    }
+
+    public boolean paymentDateNotInFuture(){
+        Date today = new Date();
+
+        if (this.paymentDate != null) {
+            return this.paymentDate.before(today);
+        }
+        return true;
+
+    }
+
+
 }

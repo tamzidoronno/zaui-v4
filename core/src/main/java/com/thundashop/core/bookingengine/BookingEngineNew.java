@@ -677,11 +677,16 @@ public class BookingEngineNew extends GetShopSessionBeanNamed implements IBookin
             validateBooking(booking);
             saveObject(booking);
         } catch (BookingEngineException ex) {
-            ex.printStackTrace();
             booking.bookingItemId = oldItemId;
             booking.startDate = oldStartDate;
             booking.endDate = oldEndDate;
             booking.bookingItemTypeId = oldBookingItemTypeId;
+            String categoryName = type != null ? type.name : "n/a";
+            logPrint(ex);
+            messageManager.sendErrorNotification(String.format("Error while booking for category `%s`, Booking: '%s', error message `%s`",
+                    categoryName, booking, ex.getMessage()), ex);
+            messageManager.sendMessageToStoreOwner(String.format("Error while booking for category `%s`, message `%s`",
+                    categoryName, ex.getMessage()), "Booking Error!");
             throw ex;
         }
     }

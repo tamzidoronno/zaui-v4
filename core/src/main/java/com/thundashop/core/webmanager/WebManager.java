@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Component;
 
+import static com.thundashop.core.utils.Constants.THREE_MINUTES_IN_MILLISECONDS;
+
 /**
  *
  * @author hung
@@ -43,6 +45,7 @@ public class WebManager extends ManagerBase implements IWebManager {
         
         connection.setRequestMethod("GET");
         connection.setRequestProperty("User-Agent", USER_AGENT);
+        connection.setConnectTimeout(THREE_MINUTES_IN_MILLISECONDS);
         
         BufferedReader responseStream = new BufferedReader(new InputStreamReader(connection.getInputStream()));    
         

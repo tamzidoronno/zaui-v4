@@ -2002,5 +2002,15 @@ public class Order extends DataCommon implements Comparable<Order> {
         }
     }
 
+    public boolean paymentDateNotInFuture(){
+        Date today = new Date();
+
+        if (this.paymentDate != null) {
+            return this.paymentDate.before(today);
+        }
+        return true;
+
+    }
+
 
 }

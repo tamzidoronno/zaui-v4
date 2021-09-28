@@ -368,13 +368,24 @@ public class PosManager extends ManagerBase implements IPosManager {
         report.start = prevZReportDate;
         report.end = new Date();
 
-        List<String> orderIds = new ArrayList();
-        if (central.hasBeenConnectedToCentral()) {
-            Date fromWhenToTakeIntoAccount  = setDateToBeginningOfMonth(central.hasBeenConnectedToCentralSince());
-            orderIds = orderManager.getAllOrders()
+        List<Order> allOrders = orderManager.getAllOrders();
+
+        report.orderIds = filterOrdersForZreport(cashPointId, prevZReportDate, report, allOrders);;
+        report.createdAfterConnectedToACentral = isConnectedToCentral();
+        report.roomsThatWillBeAutomaticallyCreatedOrdersFor = getRoomsNeedToCreateOrdersFor();
+
+        return report;
+    }
+
+    public List<String> filterOrdersForZreport(String cashPointId, Date prevZReportDate, ZReport report, List<Order> allOrders) {
+        List<String> orderIds;
+        if (isConnectedToCentral()) {
+            Date fromWhenToTakeIntoAccount  = setDateToBeginningOfMonth(isConnectedToCentralSince());
+            orderIds = allOrders
                     .stream()
                     .filter(o -> !o.isNullOrder())
-                    .filter(o-> (o.hasCreatedOrPaymentDateAfter(fromWhenToTakeIntoAccount) && o.transferredToCentral == false || o.hasCreatedOrPaymentDateAfter(prevZReportDate)))
+                    .filter(o -> o.paymentDateNotInFuture())
+                    .filter(o-> (o.hasCreatedOrPaymentDateAfter(fromWhenToTakeIntoAccount) && o.transferredToCentral == false || o.hasCreatedOrPaymentDateAfter(prevZReportDate) ))
                     .filter(o -> o.isOrderFinanciallyRelatedToDatesIgnoreCreationDate(new Date(0), new Date()))
                     .map(o -> o.id)
                     .collect(Collectors.toList());
@@ -384,7 +395,7 @@ public class PosManager extends ManagerBase implements IPosManager {
         } else {
             orderIds = orderManager.getOrdersByFilter(getOrderFilter())
                     .stream()
-                    .filter(order -> (order.getMarkedPaidDate() != null && order.hasCreatedOrPaymentDateAfter(prevZReportDate)))
+                    .filter(order -> (order.getMarkedPaidDate() != null && order.hasCreatedOrPaymentDateAfter(prevZReportDate) && order.paymentDateNotInFuture()))
                     .filter(order -> order.orderId != null && !order.orderId.isEmpty())
                     .filter(order -> order.isConnectedToCashPointId(cashPointId) || (isMasterCashPoint(cashPointId) && order.isConnectedToCashPointId("")))
                     .sorted((OrderResult o1, OrderResult o2) -> {
@@ -393,12 +404,11 @@ public class PosManager extends ManagerBase implements IPosManager {
                     .map(order -> order.orderId)
                     .collect(Collectors.toList());
         }
+        return orderIds;
+    }
 
-        report.orderIds = orderIds;
-        report.createdAfterConnectedToACentral = central.hasBeenConnectedToCentral();
-        report.roomsThatWillBeAutomaticallyCreatedOrdersFor = getRoomsNeedToCreateOrdersFor();
-
-        return report;
+    public boolean isConnectedToCentral() {
+        return central.hasBeenConnectedToCentral();
     }
 
     public void removeOrdersPrePaidByOTAAndNotMarkedAsPaid(List<String> orderIds) {
@@ -480,7 +490,7 @@ public class PosManager extends ManagerBase implements IPosManager {
         saveObject(report);
         closeOrdersAndInvoicesByZReport(report);
 
-        if (central.hasBeenConnectedToCentral()) {
+        if (isConnectedToCentral()) {
             processExtraOrderIdsForCentral(cashPointId, report);
         }
         zReports.put(report.id, report);
@@ -495,7 +505,7 @@ public class PosManager extends ManagerBase implements IPosManager {
             closeFinancialPeriode();
         }
 
-        if (central.hasBeenConnectedToCentral()) {
+        if (isConnectedToCentral()) {
             closeFinancialPeriode();
         }
     }
@@ -1029,7 +1039,7 @@ public class PosManager extends ManagerBase implements IPosManager {
 
         List<DayIncome> incomes = orderManager.getDayIncomes(start, end);
 
-        if (!central.hasBeenConnectedToCentral()) {
+        if (!isConnectedToCentral()) {
             canClose.fReportErrorCount = incomes.stream()
                     .filter(o -> o != null && o.errorMsg != null && !o.errorMsg.isEmpty())
                     .count();
@@ -1493,7 +1503,7 @@ public class PosManager extends ManagerBase implements IPosManager {
         boolean isActive = storeApplicationPool.isActivated(accuredPayment);
 
         // We need to have a payment method in order to autocreate orders
-        if (!isActive && central.hasBeenConnectedToCentral()) {
+        if (!isActive && isConnectedToCentral()) {
             storeApplicationPool.activateApplication("60f2f24e-ad41-4054-ba65-3a8a02ce0190");
             isActive = true;
         }
@@ -1913,8 +1923,8 @@ public class PosManager extends ManagerBase implements IPosManager {
         /**
          * When its connected to the getshop central we also do accrude payments for future booking to make a forcast.
          */
-        boolean connectedToCentral = central.hasBeenConnectedToCentral();
-        Date fromWhenToTakeIntoAccount  = (connectedToCentral) ? setDateToBeginningOfMonth(central.hasBeenConnectedToCentralSince()) : null;
+        boolean connectedToCentral = isConnectedToCentral();
+        Date fromWhenToTakeIntoAccount  = (connectedToCentral) ? setDateToBeginningOfMonth(isConnectedToCentralSince()) : null;
 
         PmsManager pmsManager = scope.getNamedSessionBean(getEngineName(), PmsManager.class);
 
@@ -1931,6 +1941,10 @@ public class PosManager extends ManagerBase implements IPosManager {
         return roomsNeedToCreateOrdersFor.stream()
                 .filter(room -> room.hasUnsettledAmountIncAccrued()).collect(Collectors.toList());
 
+    }
+
+    public Date isConnectedToCentralSince() {
+        return central.hasBeenConnectedToCentralSince();
     }
 
     private Date setDateToBeginningOfMonth(Date date) {

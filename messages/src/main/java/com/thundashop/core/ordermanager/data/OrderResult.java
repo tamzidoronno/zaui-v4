@@ -85,4 +85,14 @@ public class OrderResult {
             return false;
         }
     }
+
+    public boolean paymentDateNotInFuture(){
+        Date today = new Date();
+
+        if (this.paymentDate != null) {
+            return this.paymentDate.before(today);
+        }
+        return true;
+
+    }
 }

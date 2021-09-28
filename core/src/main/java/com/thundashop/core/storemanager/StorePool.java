@@ -5,24 +5,26 @@
 package com.thundashop.core.storemanager;
 
 import com.getshop.scope.GetShopSessionScope;
+import com.mongodb.BasicDBObject;
 import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.SessionFactory;
 import com.thundashop.core.databasemanager.Database;
+import com.thundashop.core.databasemanager.Database3;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.storemanager.data.StoreConfiguration;
 import com.thundashop.core.storemanager.data.StoreCounter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -42,6 +44,10 @@ public class StorePool {
     
     @Autowired
     public MessageManager messageManager;
+
+    @Autowired
+    @Qualifier("storeIdDb")
+    public Database3 storeIdDb;
     
     @PostConstruct
     public void loadData() {
@@ -366,15 +372,11 @@ public class StorePool {
         return null;
     }
 
-    private Integer getNextIncrementalStoreId() {
-        int start = 1000000;
-        for (Store store : stores.values()) {
-            if (store.incrementalStoreId != null && store.incrementalStoreId.intValue() > start) {
-                start = store.incrementalStoreId.intValue();
-            }
-        }
-        
-        start++;
-        return start;
+    public Integer getNextIncrementalStoreId() {
+        List<DataCommon> dataCommons = storeIdDb.query("StoreManager", "all", new BasicDBObject(),
+                new BasicDBObject("_id", -1), 1);
+        Integer incrementalStoreId = ((Store) dataCommons.get(0)).incrementalStoreId;
+        incrementalStoreId++;
+        return incrementalStoreId;
     }
 }

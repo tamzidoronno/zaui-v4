@@ -137,6 +137,9 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
     public void deleteConference(String conferenceId) {
         PmsConference conference = conferences.get(conferenceId);
         conferences.remove(conferenceId);
+
+        conferenceUpdated(conference);
+
         deleteObject(conference);
         
         HashMap<String, PmsConferenceEvent> confevents = new HashMap(conferenceEvents);        
@@ -146,7 +149,7 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
             }
         }
         
-        conferenceUpdated(conference);
+
     }
 
     @Override
@@ -677,10 +680,13 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
         PmsConference conference = new PmsConference();
         conference.conferenceDate = date;
         conference.meetingTitle = name;
+        conference.pmsBookingId = booking.id;
+
         saveConference(conference);
-        
+
         booking.conferenceId = conference.id;
-        
+        pmsManager.saveBooking(booking);
+
         return room.pmsBookingRoomId;
     }
 

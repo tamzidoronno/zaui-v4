@@ -362,10 +362,20 @@ public class PosManager extends ManagerBase implements IPosManager {
         report.start = prevZReportDate;
         report.end = new Date();
 
-        List<String> orderIds = new ArrayList();
+        List<Order> allOrders = orderManager.getAllOrders();
+
+        report.orderIds = filterOrdersForZreport(cashPointId, prevZReportDate, report, allOrders);;
+        report.createdAfterConnectedToACentral = isConnectedToCentral();
+        report.roomsThatWillBeAutomaticallyCreatedOrdersFor = getRoomsNeedToCreateOrdersFor();
+
+        return report;
+    }
+
+    public List<String> filterOrdersForZreport(String cashPointId, Date prevZReportDate, ZReport report, List<Order> allOrders) {
+        List<String> orderIds;
         if (isConnectedToCentral()) {
             Date fromWhenToTakeIntoAccount  = setDateToBeginningOfMonth(isConnectedToCentralSince());
-            orderIds = getAllOrders()
+            orderIds = allOrders
                     .stream()
                     .filter(o -> !o.isNullOrder())
                     .filter(o -> o.paymentDateNotInFuture())
@@ -388,16 +398,7 @@ public class PosManager extends ManagerBase implements IPosManager {
                     .map(order -> order.orderId)
                     .collect(Collectors.toList());
         }
-
-        report.orderIds = orderIds;
-        report.createdAfterConnectedToACentral = isConnectedToCentral();
-        report.roomsThatWillBeAutomaticallyCreatedOrdersFor = getRoomsNeedToCreateOrdersFor();
-
-        return report;
-    }
-
-    public List<Order> getAllOrders() {
-        return orderManager.getAllOrders();
+        return orderIds;
     }
 
     public boolean isConnectedToCentral() {

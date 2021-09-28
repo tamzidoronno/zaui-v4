@@ -103,7 +103,7 @@ $firstDate = true;
           }
           else
           {
-              echo "<td><div onclick='app.PmsConference.openConferenceById(\"".  $event->pmsConferenceId ."\")'>". $conference->meetingTitle ."</div> (<div onclick='app.PmsConference.reconnectConferenceWithBooking(\"".  $event->pmsConferenceId ."\")'>Reconnect conference</div>)</td>"; //echo "<span onClick='alertEventOutsideConferenceStart()' class='evententry $thisConference' start='".strtotime($event->from)."' end='".strtotime($event->to)."' title='".$event->name." ($betweendate)'>".$event->name."</span>";
+              echo "<td><span onclick='app.PmsConference.openConferenceById(\"".  $event->pmsConferenceId ."\")'>". $conference->meetingTitle ."</span> (<span onclick='app.PmsConference.reconnectConferenceWithBooking(\"".  $event->pmsConferenceId ."\")'>Reconnect conference</span>)</td>"; //echo "<span onClick='alertEventOutsideConferenceStart()' class='evententry $thisConference' start='".strtotime($event->from)."' end='".strtotime($event->to)."' title='".$event->name." ($betweendate)'>".$event->name."</span>";
           }
         }
 

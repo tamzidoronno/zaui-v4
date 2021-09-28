@@ -57,7 +57,7 @@ if($_POST['data']['isclosed'] && $_POST['data']['isclosed'] == "true") {
                 <?php } else { ?>
                     <span class="shop_button" style='width:100%;box-sizing:border-box;margin-top:5px;' gs_show_modal='booking_room_view' onclick="app.PmsAvailability.closeCloseRoomDialog();" bookingid='<?php echo $booking->id; ?>'  roomid="<?php echo $_POST['data']['roomid']; ?>">Open booking</span>
                 <? } ?>
-                <span class="shop_button" style='width:100%;box-sizing:border-box;margin-top:5px;background-color:red;' gstype='clicksubmit' method="deleteroom" gsvalue="<?php echo $_POST['data']['roomid']; ?>" gsname='roomid'><i class='fa fa-trash-o'></i> Delete booking</span>
+                <span class="shop_button" style='width:100%;box-sizing:border-box;margin-top:5px;background-color:red;' onclick='$(".cancelConfirmation").show();'><i class='fa fa-trash-o'></i> Cancel Room</span> 
                 <span class="shop_button" style='width:100%;box-sizing:border-box;margin-top:5px;background-color:brown;' gstype='clicksubmit' method="addToWaitingList" gsvalue="<?php echo $_POST['data']['roomid']; ?>" gsname='roomid'> Add to waitinglist</span>
                 <?php
             }
@@ -150,7 +150,14 @@ if($_POST['data']['isclosed'] && $_POST['data']['isclosed'] == "true") {
         </td>
     </tr>
 </table>
-    
+<div>
+    <div gstype='form' method='closeForPeriode' class='cancelConfirmation' style='z-index:2;background-color:#ffded7;border: solid 1px #bbb; padding: 10px;display:none;'>
+        <h4>Are You Sure You Want to Cancel This Room? </h4>
+        <span class="shop_button" style="background-color:red;"  gstype='clicksubmit' method="deleteroom" gsvalue="<?php echo $_POST['data']['roomid']; ?>" gsname='roomid'>OK</span>
+        <span class="shop_button" style="background-color:grey;" onclick='$(".cancelConfirmation").hide();'>Cancel</span>
+   
+    </div>
+</div>
 <script>
     $("[gsname='startdate']").datepicker({ dateFormat: "dd.mm.yy"});
     $("[gsname='enddate']").datepicker({ dateFormat: "dd.mm.yy"});

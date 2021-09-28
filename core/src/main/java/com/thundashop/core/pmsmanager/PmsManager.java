@@ -235,9 +235,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (dataCommon instanceof PmsBooking) {
                 
                 PmsBooking booking = (PmsBooking) dataCommon;
-//                if(booking.orderIds.contains("7efc86d1-4147-4c78-8cc1-c0d57c33fdc8")) {
-//                    includeAlways = booking;
-//                }
+
+                // TODO: nonrefundable seems always false.
                 if(booking.nonrefundable) { booking.setAllRoomsNonRefundable(); }
                 bookings.put(booking.id, booking);
             }
@@ -486,7 +485,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             booking.isDeleted = false;
         }
 
-        saveObject(booking);
+        saveObject(booking);  // TODO: replace with PmsBookingManager.save()
         bookings.put(booking.id, booking);
     }
 

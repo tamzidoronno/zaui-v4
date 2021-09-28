@@ -12,15 +12,8 @@ public class TaxGroup extends DataCommon {
     public Double taxRate = 0.0;
     public String accountingTaxAccount;
     public String description;
-    public List<OverrideTaxGroup> overrideTaxGroups = new ArrayList();
+    public List<OverrideTaxGroup> overrideTaxGroups = new ArrayList<>();
 
-    public void addTestGroup() {
-        if (!overrideTaxGroups.isEmpty()) {
-            return;
-        }
-    }
-    
-    
     public Double getTaxRate() {
         return taxRate/100;
     }

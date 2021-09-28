@@ -25,6 +25,6 @@ public class ProductExtraConfig implements Serializable {
     
     public String name = "";
     
-    public List<ProductExtraConfigOption> extras = new ArrayList();
+    public List<ProductExtraConfigOption> extras = new ArrayList<>();
 }
 

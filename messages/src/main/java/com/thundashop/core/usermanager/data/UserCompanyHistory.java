@@ -18,5 +18,5 @@ import java.util.UUID;
 public class UserCompanyHistory implements Serializable {
     public String id = UUID.randomUUID().toString();
     public Date suspendedDate = new Date();
-    public List<String> companyIds = new ArrayList();
+    public List<String> companyIds = new ArrayList<>();
 }

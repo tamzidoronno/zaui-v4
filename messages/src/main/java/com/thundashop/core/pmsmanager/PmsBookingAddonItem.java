@@ -36,10 +36,6 @@ public class PmsBookingAddonItem extends TranslationHandler implements Serializa
         return false;
     }
 
-    boolean isOverridden() {
-        return overrideName != null && !overrideName.isEmpty();
-    }
-
     boolean nameIsSameAsTranslation(String text) {
         HashMap<String, String> translations = getTranslations();
         Gson gson = new Gson();
@@ -87,11 +83,11 @@ public class PmsBookingAddonItem extends TranslationHandler implements Serializa
     public GroupAddonSettings groupAddonSettings = new GroupAddonSettings();
     public String channelManagerAddonText = "";
     public String bookingicon = "";
-    public List<String> includedInBookingItemTypes = new ArrayList();
-    public List<String> onlyForBookingItems = new ArrayList();
-    public List<String> displayInBookingProcess = new ArrayList();
+    public List<String> includedInBookingItemTypes = new ArrayList<>();
+    public List<String> onlyForBookingItems = new ArrayList<>();
+    public List<String> displayInBookingProcess = new ArrayList<>();
     public String addedBy;
-    public List<PmsBookingAddonItemValidDateRange> validDates = new ArrayList();
+    public List<PmsBookingAddonItemValidDateRange> validDates = new ArrayList<>();
     public boolean atEndOfStay;
     public boolean isUniqueOnOrder = false;
     public String referenceId = "";
@@ -99,7 +95,7 @@ public class PmsBookingAddonItem extends TranslationHandler implements Serializa
     public String departmentRemoteId = "";
     
     
-    Map<String, String> variations = new HashMap();
+    Map<String, String> variations = new HashMap<>();
     String description;
 
     
@@ -143,10 +139,6 @@ public class PmsBookingAddonItem extends TranslationHandler implements Serializa
 
     void setName(String name) {
         this.name = name;
-        
-        if (overrideName != null && !overrideName.isEmpty()) {
-            name = overrideName;
-        }
     }
     
     void setName(Product product) {

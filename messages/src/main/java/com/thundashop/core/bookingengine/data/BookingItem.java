@@ -51,17 +51,17 @@ public class BookingItem extends DataCommon {
      * A bookingitem has a list of availabilities, 
      * this availibilites can not overlap eachother within an BookingItem.
      */
-    public List<String> availabilitieIds = new ArrayList();
+    public List<String> availabilitieIds = new ArrayList<>();
     
     /**
      * A set of id that is bookings that has been added to this booking item.
      */
-    public List<String> bookingIds = new ArrayList<String>();
+    public List<String> bookingIds = new ArrayList<>();
     
     /**
      * A set of id that is bookings that has been added to this booking item.
      */
-    public List<String> waitingListBookingIds = new ArrayList<String>();
+    public List<String> waitingListBookingIds = new ArrayList<>();
     
     /**
      * This is calculated if the booking is full or not.
@@ -76,7 +76,7 @@ public class BookingItem extends DataCommon {
     public int freeSpots = 0;
     
     @Transient
-    public List<Availability> availabilities = new ArrayList();
+    public List<Availability> availabilities = new ArrayList<>();
     
     /**
      * Who owns the bookingItem. 

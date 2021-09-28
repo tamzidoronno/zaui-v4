@@ -13,5 +13,5 @@ import java.util.HashMap;
  * @author ktonder
  */
 public class CellGroupAccess implements Serializable {
-    public HashMap<String, Boolean> access = new HashMap();
+    public HashMap<String, Boolean> access = new HashMap<>();
 }

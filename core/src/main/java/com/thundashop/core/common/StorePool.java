@@ -166,8 +166,7 @@ public class StorePool {
             //invalid mulitlevelname.
         }
 
-        log.debug("interface '{}' method '{}' getShopModuleName `{}`", object.interfaceName, object.method, object.getShopModuleName);
-       
+
         int i = 0;
         Object[] executeArgs = new Object[object.args.size()];
         Class[] types = getArguments(object);

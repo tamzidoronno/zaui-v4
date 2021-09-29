@@ -1400,7 +1400,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
     
     public void doNotification(String key, PmsBooking booking, PmsBookingRooms room) {
-        
+
+        if(room != null && room.deleted && key != "room_cancelled") return;
+
         if(pmsNotificationManager.isActive()) {
             pmsNotificationManager.doNotification(key, booking, room);
             return;

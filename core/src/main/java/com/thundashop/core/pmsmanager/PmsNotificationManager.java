@@ -567,7 +567,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
             }
         }
 
-        if(room.deleted && key != "room_cancelled" ) return new ArrayList<>();
+        if(room != null && room.deleted && key != "room_cancelled" ) return new ArrayList<>();
 
         List<PmsGuests> recipients = getSmsRecipients(booking, room, type);
         for(PmsGuests guest : recipients) {

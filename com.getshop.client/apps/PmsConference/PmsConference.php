@@ -47,7 +47,65 @@ class PmsConference extends \WebshopApplication implements \Application {
         $this->setCurrentConference($_POST['data']['conferenceid']);
         $this->includefile("conferenceoverview");
     }
-    
+
+    public function reconnectConferenceWithBooking() {
+        $conferenceId = $_POST['data']['conferenceid'];
+        if(!$conferenceId) return;
+
+        $this->setCurrentConference($conferenceId);
+        $conference = $this->getApi()->getPmsConferenceManager()->getConference($conferenceId);
+        if(!$conference) return;
+
+        //check if we already have a booking here...
+        $existingBooking = $this->getApi()->getPmsManager()->getconferenceBooking($this->getSelectedMultilevelDomainName(), $conferenceId);
+
+
+        if($existingBooking) return;
+
+
+        //find bookings that have been created within 2s after the conference
+        $bfilter = new \core_pmsmanager_PmsBookingFilter();
+        $bfilter->filterType = 'registered';
+        $bfilter->startDate = $this->convertToJavaDate( strtotime( $conference->rowCreatedDate) - 1000 );
+        $bfilter->endDate = $this->convertToJavaDate( strtotime( $conference->rowCreatedDate) + 2000 );
+
+        $conferenceBookings = (array)$this->getApi()->getPmsManager()->getAllBookings($this->getSelectedMultilevelDomainName(), $bfilter);
+        if($conferenceBookings && count($conferenceBookings) > 0 )
+        {
+            for($i = 0; $i < count( $conferenceBookings ); $i++)
+            {
+                $booking = $conferenceBookings[ $i ];
+                if( isset( $booking->rooms ) && isset( $booking->rooms[0] )  && isset( $booking->rooms[0]->bookingItemTypeId ) &&  $booking->rooms[0]->bookingItemTypeId == 'gspmsconference' )
+                {
+                    //we seem to have a conference booking here... we check its conferenceId
+                    if( isset( $booking->conferenceId ) && $booking->conferenceId == '' )
+                    {
+                        //this one has no conference... we just hope its our booking and connect to it
+                        $booking->conferenceId = $conferenceId;
+                        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(),$booking);
+                        //$this->includefile("conferencereports");
+                        die('<script>document.location.reload();</script>');
+                    }
+                    else
+                    {
+                        echo 'not here....';
+                    }
+                }
+            }
+        }
+        else
+        {
+            die('no bookings close to our conference creation found');
+        }
+    }
+
+
+    public function loadBooking() {
+        $pmsBookingGroupView = new \ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView();
+        $pmsBookingGroupView->setRoomId($_POST['data']['id']);
+        $pmsBookingGroupView->renderApplication(true, $this, true);
+    }
+
     public function loadday() {
         $day = $_POST['data']['day'];
         $_SESSION['pmsconferencecurrentstart'] = date("d.m.Y", $day);

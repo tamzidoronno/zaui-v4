@@ -62,7 +62,6 @@ public class StoreHandler {
     }
         
     public synchronized Object executeMethodSync(JsonObject2 inObject, Class[] types, Object[] argumentValues) throws ErrorException {
-        StorePool.running.put(inObject.id, inObject);
         long start = System.currentTimeMillis();
         GetShopTimer.start();
         

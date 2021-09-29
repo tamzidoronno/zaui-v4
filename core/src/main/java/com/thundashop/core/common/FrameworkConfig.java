@@ -14,6 +14,8 @@ import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 
+import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
+
 /**
  *
  * @author ktonder
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Component;
 public class FrameworkConfig {
 
     public boolean productionMode = false;
+    private String storeCreationIP = "";
 
     @PostConstruct
     public void readConfig() {
@@ -63,6 +66,12 @@ public class FrameworkConfig {
     private void setVariables(String[] content) {
         if (content[0].toLowerCase().equals("productionmode")) {
             productionMode = content[1].toLowerCase().equals("true");
+        } else if (equalsIgnoreCase(content[0], "storeCreationIP")) {
+            storeCreationIP = content[1].trim();
         }
+    }
+
+    public String getStoreCreationIP() {
+        return storeCreationIP;
     }
 }

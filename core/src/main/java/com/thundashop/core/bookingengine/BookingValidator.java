@@ -92,7 +92,7 @@ public class BookingValidator {
                             .forEach(id -> {
                                 Booking b = savedBookings.get(id);
                             });
-                    throw new BookingEngineException("Overbooking detected for category at " + line.start + " - " + line.end);
+                    throw new BookingEngineException("Overbooking detected at " + line.start + " - " + line.end);
                 }
             });
         }

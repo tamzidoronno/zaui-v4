@@ -21,6 +21,7 @@ import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.repository.common.SessionInfo;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.ByteArrayInputStream;
@@ -40,8 +41,22 @@ import static com.thundashop.core.common.GetShopLogHandler.logPrintStatic;
  * @author ktonder
  */
 public class ManagerSubBase {
+
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(ManagerSubBase.class);
+
     protected String storeId = "";
     protected Credentials credentials = null;
+    protected boolean isSingleton = false;
+    protected boolean ready = false;
+
+    private final HashMap<String, GetShopScheduler> schedulers = new HashMap<>();
+    private final HashMap<String, GetShopSchedulerBase> schedulersBases = new HashMap<>();
+    private final Map<Long, Session> threadSessions = new ConcurrentHashMap<>();
+
+    private final GetShopModules modules = new GetShopModules();
+    private ManagerSetting managerSettings = new ManagerSetting();
+
+    private boolean anyDataRetrieved = false;
     private String overrideCollectionName;
     
     @Autowired
@@ -55,26 +70,12 @@ public class ManagerSubBase {
     
     @Autowired
     public FrameworkConfig frameworkConfig;
-    
-    private GetShopModules modules = new GetShopModules();
-    
-    protected boolean isSingleton = false;
-    protected boolean ready = false;
-    //private Session session;
-    //private Map<Long, Session> threadSessions = Collections.synchronizedMap(new HashMap<Long, Session>());
-    private Map<Long, Session> threadSessions = new ConcurrentHashMap<>();
-    private ManagerSetting managerSettings = new ManagerSetting();
-    
+
     @Autowired
     protected Database database;
     
     @Autowired
     protected DatabaseRemote databaseRemote;
-    
-    
-    private HashMap<String, GetShopScheduler> schedulers = new HashMap();
-    private HashMap<String, GetShopSchedulerBase> schedulersBases = new HashMap();
-    private boolean anyDataRetreived = false;
 
     public Database getDatabase() {
         return database;
@@ -173,7 +174,7 @@ public class ManagerSubBase {
     
             dataFromDatabase(dataRetreived);
             
-            anyDataRetreived = anyNormalDataObject(dataRetreived.data);
+            anyDataRetrieved = anyNormalDataObject(dataRetreived.data);
             
             for (DataCommon common : dataRetreived.data) {
                 if (common instanceof GetShopScheduler) {
@@ -202,10 +203,8 @@ public class ManagerSubBase {
             
             
         }
-        
-        if (GetShopLogHandler.isDeveloper) {
-            logPrint("Started manager: " + this.getClass().getSimpleName() + " in " + (System.currentTimeMillis()-start) + "ms");
-        }
+
+        logger.info("Started manager: {} in {} ms",this.getClass().getSimpleName(), (System.currentTimeMillis() - start));
     }
 
     private boolean isDatabaseMethodInUse() throws SecurityException {
@@ -215,7 +214,7 @@ public class ManagerSubBase {
             cArg[0] = DataRetreived.class;
             dataFromDatabaseOverridden = this.getClass().getMethod("dataFromDatabase", cArg).getDeclaringClass() != ManagerSubBase.class;
         } catch (NoSuchMethodException ex) {
-            ex.printStackTrace();
+            logger.error("storeId-{}", storeId, ex);
         }
         return dataFromDatabaseOverridden;
     }
@@ -223,25 +222,6 @@ public class ManagerSubBase {
     public Session getSession() {
         long threadId = Thread.currentThread().getId();
         return threadSessions.get(threadId);
-    }
-
-    /**
-     * Dont use this, override onEvent. this is for logging purposes only!
-     *
-     * @param eventName
-     * @param eventReferance
-     */
-    public void onEventPrivate(String eventName, String eventReferance) {
-        try {
-            onEvent(eventName, eventReferance);
-        } catch (ErrorException ex) {
-            log.error(this, "Failed to run event for manager "
-                    + this.getClass().getSimpleName()
-                    + ", event : "
-                    + eventName
-                    + " reference: "
-                    + eventReferance, ex);
-        }
     }
 
     public String makeSeoUrl(String name, String prefix) {
@@ -262,9 +242,6 @@ public class ManagerSubBase {
         newAddress = prefix + newAddress;
         
         return newAddress;
-    }
-
-    public void onEvent(String eventName, String eventReferance) throws ErrorException {
     }
 
     public void dataFromDatabase(DataRetreived data) {
@@ -301,7 +278,7 @@ public class ManagerSubBase {
                 data.lastModifiedByUserId = getSession().currentUser.id;
             }
         }catch(Exception e) {
-            logPrintException(e);
+            logger.error("", e);
         }
         
         if(getSession() != null) {
@@ -355,7 +332,6 @@ public class ManagerSubBase {
     }
     
     public void setSession(Session session) {
-//        this.session = session;
         long threadId = Thread.currentThread().getId();
 
         if (session == null) {
@@ -399,7 +375,7 @@ public class ManagerSubBase {
           return res;
         }
         catch (Exception e) {
-          e.printStackTrace();
+          logger.error("", e);
           return null;
         }
     }
@@ -422,12 +398,12 @@ public class ManagerSubBase {
             return;
         }
         
-        if (!anyDataRetreived) {
+        if (!anyDataRetrieved) {
             return;
         }
         
         try {
-            UserManager userManager = null;
+            UserManager userManager;
 
             if (this instanceof UserManager) {
                 userManager = (UserManager)this;
@@ -452,6 +428,7 @@ public class ManagerSubBase {
                 base.setPassword(UserManager.internalApiUserPassword);
                 base.setMultiLevelName(gsscheduler.multilevelName);
                 base.setStoreId(storeId);
+                // TODO: ThreadPool might useful
                 Thread td = new Thread(base);
                 td.setName("Direct Scheduler Thread: " + storeId + ", scheduler: " + base);
                 td.start();
@@ -465,8 +442,7 @@ public class ManagerSubBase {
                 schedulers.put(gsscheduler.id, gsscheduler);
             }
         } catch (Exception ex) {
-            GetShopLogHandler.logPrintStatic("Could not start scheduler", null);
-            ex.printStackTrace();
+            logger.error("storeId-{} Could not start scheduler", storeId, ex);
         }
     }
     
@@ -575,7 +551,7 @@ public class ManagerSubBase {
      * @return 
      */
     public List<Class> getOneTimExecutors() {
-        return new ArrayList();
+        return new ArrayList<>();
     }
 
     private boolean hasBeenExecuted(Class oneTimeExectors) {
@@ -592,8 +568,7 @@ public class ManagerSubBase {
         if (this instanceof GetShopSessionBeanNamed) {
             collectionName = collectionName + "_" + ((GetShopSessionBeanNamed)this).getSessionBasedName();
         }
-        DBCollection collection = db.getCollection("col_"+collectionName);
-        return collection;
+        return db.getCollection("col_"+collectionName);
     }
 
     private void retgisterExecuted(Class oneTimeExectors) {

@@ -7,40 +7,33 @@ package com.thundashop.core.common;
 
 import com.getshop.scope.GetShopSchedulerBase;
 import com.getshop.scope.GetShopSessionBeanNamed;
-import com.getshop.scope.GetShopSessionScope;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
-import static com.thundashop.core.common.GetShopLogHandler.logPrintStatic;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.DatabaseRemote;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
-import com.thundashop.core.getshopaccounting.DayIncomeReport;
-import com.thundashop.core.ordermanager.data.VirtualOrder;
 import com.thundashop.core.pagemanager.GetShopModules;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
+import com.thundashop.repository.common.SessionInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import static com.thundashop.core.common.GetShopLogHandler.logPrintStatic;
 
 /**
  *
@@ -610,5 +603,32 @@ public class ManagerSubBase {
         query.put("_id", "one_time_executor_"+oneTimeExectors.getCanonicalName());
     
         collection.save(query);
+    }
+
+    public String getCurrentUserId() {
+        return Optional.ofNullable(getSession())
+                .map(i -> i.currentUser)
+                .map(i -> i.id)
+                .orElse("");
+    }
+
+    public String getLanguage() {
+        return Optional.ofNullable(getSession())
+                .map(i -> i.language)
+                .orElse("");
+    }
+
+    public SessionInfo getSessionInfo() {
+        return SessionInfo.builder()
+                .setStoreId(storeId)
+                .setCurrentUserId(getCurrentUserId())
+                .setLanguage(getLanguage())
+                .build();
+    }
+
+    public SessionInfo getStoreIdInfo() {
+        return SessionInfo.builder()
+                .setStoreId(storeId)
+                .build();
     }
 }

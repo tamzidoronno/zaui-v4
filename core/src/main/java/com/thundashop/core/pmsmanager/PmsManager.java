@@ -3197,7 +3197,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public List<PmsLog> getLogEntries(PmsLog filter) {
         logger.debug("PmsLog for bookingId {} filter {}", filter.bookingId, filter);
-        List<PmsLog> logentries = queryLogEntries(filter);
+        List<PmsLog> logentries = pmsLogManager.query(filter);
         logger.debug("PmsLogs found for bookingId {} count {}", filter.bookingId, logentries.size());
 
         for (PmsLog log : logentries) {
@@ -10295,34 +10295,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
         return result;
-    }
-
-    private List<PmsLog> queryLogEntries(PmsLog filter) {
-        BasicDBObject query = new BasicDBObject();
-        BasicDBObject sort = new BasicDBObject();
-
-        query.put("className", PmsLog.class.getCanonicalName());
-        if(isNotEmpty(filter.bookingId)) {
-            query.put("bookingId", filter.bookingId);
-        }
-        if(isNotEmpty(filter.logType)) {
-            query.put("logType", filter.logType);
-        }
-        if (isNotEmpty(filter.tag)) {
-            query.put("tag", filter.tag);
-        }
-        if (isNotEmpty(filter.bookingItemId)) {
-            query.put("bookingItemId", filter.bookingItemId);
-        }
-        if (isNotEmpty(filter.roomId)) {
-            query.put("roomId", filter.roomId);
-        }
-
-        sort.put("rowCreatedDate", -1);
-        int limit = filter.includeAll ? Integer.MAX_VALUE : 100;
-
-        logger.debug("PmsLog retrieve query for bookingId {} , query {}", filter.bookingId, query);
-        return pmsLogManager.query(query, sort , limit);
     }
 
     @Override

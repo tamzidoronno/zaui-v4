@@ -256,11 +256,6 @@ public class StorePool {
                         res = handler.executeMethodSync(object, types, argumentValues);
                     }
                     
-                    try {
-                        logToTimerLoggedToFile(object);
-                    }catch(Exception e) {
-                        GetShopLogHandler.logPrintStatic(e, object.storeId);
-                    }
                 }catch(Exception x) {
                     
                     if (!(x instanceof ErrorException)) {
@@ -418,24 +413,5 @@ public class StorePool {
         }
         
         return false;
-    }
-
-    private void logToTimerLoggedToFile(JsonObject2 obj) throws Exception {
-        long timer = (System.currentTimeMillis() - obj.started.getTime())/1000;
-        if(timer > 2) {
-            if(obj.interfaceName.equals("core.gsd.GdsManager")) {
-                return;
-            }
-            if(obj.interfaceName.equals("core.applications.StoreApplicationPool")) {
-                return;
-            }
-            
-           File yourFile = new File("timerLogged.txt");
-           yourFile.createNewFile(); 
-
-           String result = new Date()+ ";" + obj.id + ";" + obj.storeId + ";" + obj.interfaceName + ";" + obj.method + ";" + timer + "\n";
-           Path path = Paths.get("timerLogged.txt");
-           Files.write(path, result.getBytes(), StandardOpenOption.APPEND);  //Append mode
-        }
     }
 }

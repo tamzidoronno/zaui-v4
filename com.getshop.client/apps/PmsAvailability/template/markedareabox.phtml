@@ -49,6 +49,11 @@ if($_POST['data']['isclosed'] && $_POST['data']['isclosed'] == "true") {
 <table width='100%'>
     <tr>
         <td valign='top' width='50%' style='padding: 10px;'>
+            <div gstype='form' method='closeForPeriode' class='cancelConfirmation' style='position:absolute;z-index:2;right:50%;background-color:#ffded7;border: solid 1px #bbb; padding: 10px;display:none;'>
+            <i class='fa fa-close' style='float:right; cursor:pointer;' onclick='$(".cancelConfirmation").hide();'></i>
+                <h4>Are you sure you want to cancel this room? </h4>
+                <span class="shop_button" style="background-color:red;"  gstype='clicksubmit' method="deleteroom" gsvalue="<?php echo $_POST['data']['roomid']; ?>" gsname='roomid'>OK</span>
+            </div>
             <?php
             if($booking) {
                 if($groupBooking->useNew()) {
@@ -150,14 +155,7 @@ if($_POST['data']['isclosed'] && $_POST['data']['isclosed'] == "true") {
         </td>
     </tr>
 </table>
-<div>
-    <div gstype='form' method='closeForPeriode' class='cancelConfirmation' style='z-index:2;background-color:#ffded7;border: solid 1px #bbb; padding: 10px;display:none;'>
-        <h4>Are You Sure You Want to Cancel This Room? </h4>
-        <span class="shop_button" style="background-color:red;"  gstype='clicksubmit' method="deleteroom" gsvalue="<?php echo $_POST['data']['roomid']; ?>" gsname='roomid'>OK</span>
-        <span class="shop_button" style="background-color:grey;" onclick='$(".cancelConfirmation").hide();'>Cancel</span>
-   
-    </div>
-</div>
+    
 <script>
     $("[gsname='startdate']").datepicker({ dateFormat: "dd.mm.yy"});
     $("[gsname='enddate']").datepicker({ dateFormat: "dd.mm.yy"});

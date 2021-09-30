@@ -10,6 +10,9 @@
  *
  * @author ktonder
  */
+
+include '/thundashopimages/v5customers.php';
+
 class ModulePageMenu {
 
     public $entries = array();
@@ -166,9 +169,12 @@ class ModulePageMenu {
                 }
             }
             //switch to v5
-            $v5_url = 'http://v5-'.$_SERVER['SERVER_NAME'].'?token='.session_id();
-            echo "<a class='gs_ignorenavigate' href='$v5_url'><div class='gs_framework_module'><i class='fa fa-toggle-up'></i><br/>Switch to V5</div></a>";
-            
+            $storeId = $factory->getApi()->getStoreManager()->getStoreId();
+            if(isV5Customer($storeId)) {
+                $v5_url = 'https://v5-'.$_SERVER['SERVER_NAME'].'?token='.session_id();
+                echo "<a class='gs_ignorenavigate' href='$v5_url'><div class='gs_framework_module'><i class='fa fa-toggle-up'></i><br/>Switch to V5</div></a>";    
+            }
+           
             if ($printPageMenuInModulesMenu) {
                 $this->printSupportMenuIcon();
             }

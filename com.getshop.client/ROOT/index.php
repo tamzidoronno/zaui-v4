@@ -2,6 +2,8 @@
 $filecontent = file_get_contents("../etc/config.txt");
 $localmode = strstr($filecontent, "localhost");
 
+include '/thundashopimages/v5customers.php';
+
 if ($localmode) {
     session_start();
 }
@@ -402,6 +404,13 @@ include('commonforallmodules.php');
                     echo "<a class='gs_ignorenavigate' href='/?changeGetShopModule=$module->id&scopeid=$scopeId'><div class='gs_framework_module $moduleActiveClass'>$icon $module->name</div></a>";
                 }
             }
+
+             //switch to v5
+             $storeId = $factory->getApi()->getStoreManager()->getStoreId();
+             if(isV5Customer($storeId)) {
+                 $v5_url = 'https://v5-'.$_SERVER['SERVER_NAME'].'?token='.session_id();
+                 echo "<a class='gs_ignorenavigate' href='$v5_url'><div class='gs_framework_module'><i class='fa fa-toggle-up'></i><br/>Switch to V5</div></a>";    
+             }
             
             if($factory->getStore()->id == "13442b34-31e5-424c-bb23-a396b7aeb8ca") {
                 echo "<a class='gs_ignorenavigate' href='/getshop.php?page=inbox&gs_getshopmodule='><div class='gs_framework_module active'><i class='fa fa-group'></i><br>Getshop support</div></a>";

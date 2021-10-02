@@ -1,58 +1,18 @@
 package com.thundashop.repository.pmsmanager;
 
 import com.mongodb.BasicDBObject;
-import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.pmsmanager.PmsLog;
 import com.thundashop.repository.common.SessionInfo;
 import com.thundashop.repository.db.Database;
-import com.thundashop.core.pmsmanager.PmsLog;
 
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
-import static java.util.stream.Collectors.toList;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
-public class PmsLogRepository {
-
-    private final Database database;
-
-    private final String dbName;
+public class PmsLogRepository extends Repository {
 
     public PmsLogRepository(Database database, String dbName) {
-        this.database = database;
-        this.dbName = dbName;
-    }
-
-    public String getDbName() {
-        return dbName;
-    }
-
-    public PmsLog save(PmsLog pmsLog, SessionInfo sessionInfo) {
-        if (isEmpty(pmsLog.id)) {
-            pmsLog.id = UUID.randomUUID().toString();
-        }
-
-        if (pmsLog.rowCreatedDate == null) {
-            pmsLog.rowCreatedDate = new Date();
-        }
-
-        if (isNotEmpty(sessionInfo.getCurrentUserId())) {
-            pmsLog.lastModifiedByUserId = sessionInfo.getCurrentUserId();
-        }
-
-        pmsLog.storeId = sessionInfo.getStoreId();
-        pmsLog.lastModified = new Date();
-
-        if (isNotEmpty(sessionInfo.getLanguage())) {
-            String lang = sessionInfo.getLanguage();
-            pmsLog.validateTranslationMatrix();
-            pmsLog.updateTranslation(lang);
-        }
-
-        DataCommon dataCommon = database.save(dbName, "col_" + sessionInfo.getStoreId(), pmsLog);
-        return (PmsLog) dataCommon;
+        super(database, dbName);
     }
 
     public List<PmsLog> query(PmsLog filter, SessionInfo sessionInfo) {
@@ -79,10 +39,7 @@ public class PmsLogRepository {
         sort.put("rowCreatedDate", -1);
         int limit = filter.includeAll ? Integer.MAX_VALUE : 100;
 
-        return database.query(dbName, "col_" + sessionInfo.getStoreId(), query, sort, limit)
-                .stream()
-                .map(i -> (PmsLog) i)
-                .collect(toList());
+        return getDatabase().query(getDbName(), getCollectionName(sessionInfo), PmsLog.class, query, sort, limit);
     }
 
 }

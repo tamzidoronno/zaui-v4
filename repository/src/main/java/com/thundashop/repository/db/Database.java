@@ -2,7 +2,6 @@ package com.thundashop.repository.db;
 
 import com.mongodb.*;
 import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.pmsmanager.PmsLog;
 import org.mongodb.morphia.Morphia;
 
 import java.net.UnknownHostException;
@@ -43,18 +42,19 @@ public class Database {
         return data;
     }
 
-    public List<DataCommon> query(String dbName, String collectionName, DBObject query) {
-        return query(dbName, collectionName, query, new BasicDBObject(), Integer.MAX_VALUE);
+    public <T> List<T> query(String dbName, String collectionName, Class<T> entityClass, DBObject query) {
+        return query(dbName, collectionName, entityClass, query, new BasicDBObject(), Integer.MAX_VALUE);
     }
 
-    public List<DataCommon> query(String dbName, String collectionName, DBObject query, DBObject orderBy, int limit) {
+    public <T> List<T> query(String dbName, String collectionName, Class<T> entityClass, DBObject query,
+                             DBObject orderBy, int limit) {
         DBCollection col = mongo.getDB(dbName).getCollection(collectionName);
-        List<DataCommon> retObjects = new ArrayList<>();
+        List<T> retObjects = new ArrayList<>();
 
         try (DBCursor res = col.find(query).sort(orderBy).limit(limit)) {
             while (res.hasNext()) {
                 DBObject it = res.next();
-                DataCommon data = morphia.fromDBObject(DataCommon.class, it);
+                T data = morphia.fromDBObject(entityClass, it);
                 retObjects.add(data);
             }
         }

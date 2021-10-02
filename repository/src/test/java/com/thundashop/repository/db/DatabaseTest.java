@@ -1,9 +1,9 @@
 package com.thundashop.repository.db;
 
 import com.mongodb.BasicDBObject;
-import com.thundashop.core.common.DataCommon;
 import com.thundashop.repository.testutils.TestConfig;
 import com.thundashop.repository.utils.Config;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 import java.util.UUID;
 
-import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -51,12 +50,12 @@ class DatabaseTest {
         BasicDBObject query = new BasicDBObject();
         query.put("_id", id);
 
-        List<DataCommon> result = database.query(testDbName, testCollection, query);
+        List<DbTest> result = database.query(testDbName, testCollection, DbTest.class, query);
 
         assertThat(result).isNotNull();
         assertThat(result.size()).isEqualTo(1);
 
-        DbTest actual = (DbTest) result.get(0);
+        DbTest actual = result.get(0);
 
         assertThat(actual.id).isEqualTo(expected.id);
         assertThat(actual.getStrMatch()).isEqualTo(expected.getStrMatch());
@@ -87,15 +86,15 @@ class DatabaseTest {
         sort.put("order", -1);
         int expectedLimit = 2;
 
-        List<DataCommon> result = database.query(testDbName, testCollection, new BasicDBObject(), sort, expectedLimit);
+        List<DbTest> result = database.query(testDbName, testCollection, DbTest.class, new BasicDBObject(), sort, expectedLimit);
 
         assertThat(result).isNotEmpty().size().isEqualTo(expectedLimit);
-
-        List<DbTest> dbTestList = result.stream()
-                .map(i -> (DbTest) i)
-                .collect(toList());
-
-        assertThat(dbTestList).extracting(DbTest::getOrder)
+        assertThat(result).extracting(DbTest::getOrder)
                 .containsExactly(expected3.getOrder(), expected2.getOrder());
+    }
+
+    @Test
+    void testFullPathClassName() {
+        Assertions.assertThat(DbTest.class.getName()).isEqualTo("com.thundashop.repository.db.DbTest");
     }
 }

@@ -3,7 +3,6 @@ package com.thundashop.repository.pmsmanager;
 import com.thundashop.core.pmsmanager.PmsLog;
 import com.thundashop.repository.TestCommon;
 import com.thundashop.repository.common.SessionInfo;
-import com.thundashop.repository.db.Database;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -64,7 +63,7 @@ class PmsLogRepositoryTest extends TestCommon {
                 .setLanguage("en")
                 .build();
 
-        PmsLog actualPmsLog = pmsLogRepository.save(expectedPmsLog, sessionInfo);
+        PmsLog actualPmsLog = (PmsLog) pmsLogRepository.save(expectedPmsLog, sessionInfo);
 
         assertThat(actualPmsLog).isNotNull();
         assertThat(actualPmsLog.id).isNotEmpty();

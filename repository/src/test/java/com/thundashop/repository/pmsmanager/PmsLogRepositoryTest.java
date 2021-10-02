@@ -1,10 +1,9 @@
 package com.thundashop.repository.pmsmanager;
 
+import com.thundashop.core.pmsmanager.PmsLog;
+import com.thundashop.repository.TestCommon;
 import com.thundashop.repository.common.SessionInfo;
 import com.thundashop.repository.db.Database;
-import com.thundashop.core.pmsmanager.PmsLog;
-import com.thundashop.repository.utils.Config;
-import com.thundashop.repository.testutils.TestConfig;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,19 +17,17 @@ import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
-class PmsLogRepositoryTest {
+class PmsLogRepositoryTest extends TestCommon {
 
     private static final String testDbName = "PmsLogManagerTest" + randomAlphabetic(5);
 
-    static Database database;
     static PmsLogRepository pmsLogRepository;
 
     String storeId;
 
     @BeforeAll
     static void setUp() {
-        Config config = TestConfig.newInstance();
-        database = Database.of(config.getAsString("mongo.host"), config.getAsInt("mongo.port"));
+        init();
         pmsLogRepository = new PmsLogRepository(database, testDbName);
     }
 

@@ -215,6 +215,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private PmsLogManager pmsLogManager;
 
     @Autowired
+    private ConferenceDataManager conferenceDataManager;
+
+    @Autowired
     Database dataBase;
 
     @Autowired
@@ -706,7 +709,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         checkSecurity(booking);
 
-        pmsInvoiceManager.validateInvoiceToDateForBooking(booking, new ArrayList());
+        pmsInvoiceManager.validateInvoiceToDateForBooking(booking, new ArrayList<>());
         booking.calculateTotalCost();
         
         if (calculateUnsettledAmount) {
@@ -6530,19 +6533,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public ConferenceData getConferenceData(String bookingId) {
-        ConferenceData data = conferenceDatas.values()
-                .stream()
-                .filter(conf -> conf.bookingId != null && conf.bookingId.equals(bookingId))
-                .findFirst()
-                .orElse(new ConferenceData());
-
-        data.bookingId = bookingId;
-
+        ConferenceData data = conferenceDataManager.findByBookingId(bookingId);
         finalize(data);
         return data;
     }
 
     private void finalize(ConferenceData data) {
+        // TODO use instead ConferenceDataManager.finalize
         PmsBooking booking = getBooking(data.bookingId);
         if (booking != null) {
             data.attendeesCount = booking.getTotalGuestCount();
@@ -6570,7 +6567,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public void saveConferenceData(ConferenceData data) {
         ConferenceData old = getConferenceData(data.bookingId);
         data.id = old.id;
-        saveObject(data);
+        conferenceDataManager.save(data);
         conferenceDatas.put(data.id, data);
     }
 
@@ -6620,6 +6617,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return false;
     }
 
+    // TODO no use. remove.
     public List<String> getListOfAllRoomsThatHasPriceMatrix() {
         List<String> ids = new ArrayList();
 

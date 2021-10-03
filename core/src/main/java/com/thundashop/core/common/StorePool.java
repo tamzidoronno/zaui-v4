@@ -14,15 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
@@ -35,12 +28,10 @@ public class StorePool {
 
     private static final Logger log = LoggerFactory.getLogger(StorePool.class);
 
-    private HashMap<String, StoreHandler> storeHandlers = new HashMap();
+    private final HashMap<String, StoreHandler> storeHandlers = new HashMap<>();
     private com.thundashop.core.storemanager.StorePool storePool;
     private Date lastTimePrintedTimeStampToLog = null;
-    private static Date lastCheck = new Date();
-    public static HashMap<String, JsonObject2> running = new HashMap();
-    
+
     public StorePool() {
         if (AppContext.appContext != null) {
             this.storePool = AppContext.appContext.getBean(com.thundashop.core.storemanager.StorePool.class);
@@ -166,7 +157,6 @@ public class StorePool {
             //invalid mulitlevelname.
         }
 
-
         int i = 0;
         Object[] executeArgs = new Object[object.args.size()];
         Class[] types = getArguments(object);
@@ -244,12 +234,6 @@ public class StorePool {
             Class aClass = loadClass(object.interfaceName);
             Method method = getMethodToExecute(aClass, object.method, types, argumentValues);
             method = getCorrectMethod(method);
-    
-            try {
-                startAndCheckTimerForObject(object);
-            }catch(Exception e) {
-                // Dont care if this fails.
-            }
 
             MDC.put("store_id", object.storeId);
             MDC.put("random_code", randomAlphanumeric(5));
@@ -264,32 +248,22 @@ public class StorePool {
                     } else {
                         res = handler.executeMethodSync(object, types, argumentValues);
                     }
-                    
-                    try {
-                        logToTimerLoggedToFile(object);
-                    }catch(Exception e) {
-                        log.error("storeId `{}`", object.storeId, e);
-                    }
-                    running.remove(object.id);
-                }catch(Exception x) {
-                    
+
+                } catch (Exception x) {
                     if (!(x instanceof ErrorException)) {
                         log.error("storeId `{}`", handler.getStoreId(), x);
                     }
-                    running.remove(object.id);
                     throw x;
                 }
-            }catch(ErrorException x) {
+            } catch (ErrorException x) {
                 log.error("", x);
-                running.remove(object.id);
                 throw x;
             } finally {
                 MDC.remove("store_id");
                 MDC.remove("random_code");
             }
         }
-        
-        running.remove(object.id);
+
         return res;
     }
     
@@ -435,68 +409,5 @@ public class StorePool {
         }
         
         return false;
-    }
-
-    private void startAndCheckTimerForObject(JsonObject2 object) throws Exception {
-        object.id = UUID.randomUUID().toString();
-        object.started = new Date();
-                
-        boolean hasForStore = false;
-        for(JsonObject2 obj : running.values()) {
-            if(obj.storeId.equals(object.storeId)) {
-                hasForStore = true;
-            }
-        }
-        if(!hasForStore) {
-            running.put(object.id, object);
-        }
-        
-        if(isOverDue()) { logToTimerToFile(); }
-   }
-
-    private boolean isOverDue() {
-        long diff = System.currentTimeMillis() - lastCheck.getTime();
-        return diff > 2000;
-    }
-
-    // TODO why is this method?
-    private void logToTimerToFile() throws Exception {
-        String result = "Number of objects to track: " + running.keySet().size() + "\r\n";
-        HashMap<String, JsonObject2> runningObjects = new HashMap(running);
-        for(JsonObject2 obj : runningObjects.values()) {
-            long timer = (System.currentTimeMillis() - obj.started.getTime())/1000;
-            if(timer > 5) {
-               result += obj.id + ";" + obj.storeId + ";" + obj.interfaceName + ";" + obj.method + ";" + timer + "\n";
-               if(timer > 120) {
-                   result += "\n" + obj.getPrettyPrinted();
-                   result += "\n";
-               }
-            }
-        }
-        
-        BufferedWriter writer = new BufferedWriter(new FileWriter("timer.txt"));
-        writer.write(result);
-        writer.close();
-        lastCheck = new Date();
-    }
-
-    // TODO why is this method?
-    private void logToTimerLoggedToFile(JsonObject2 obj) throws Exception {
-        long timer = (System.currentTimeMillis() - obj.started.getTime())/1000;
-        if(timer > 2) {
-            if(obj.interfaceName.equals("core.gsd.GdsManager")) {
-                return;
-            }
-            if(obj.interfaceName.equals("core.applications.StoreApplicationPool")) {
-                return;
-            }
-            
-           File yourFile = new File("timerLogged.txt");
-           yourFile.createNewFile(); 
-
-           String result = new Date()+ ";" + obj.id + ";" + obj.storeId + ";" + obj.interfaceName + ";" + obj.method + ";" + timer + "\n";
-           Path path = Paths.get("timerLogged.txt");
-           Files.write(path, result.getBytes(), StandardOpenOption.APPEND);  //Append mode
-        }
     }
 }

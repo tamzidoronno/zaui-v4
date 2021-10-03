@@ -56,7 +56,6 @@ public class StoreHandler {
     }
         
     public synchronized Object executeMethodSync(JsonObject2 inObject, Class[] types, Object[] argumentValues) throws ErrorException {
-        StorePool.running.put(inObject.id, inObject);
         return executeMethod(inObject, types, argumentValues, true);
     }
 

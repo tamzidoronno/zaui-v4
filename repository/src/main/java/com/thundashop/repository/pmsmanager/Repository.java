@@ -1,10 +1,15 @@
 package com.thundashop.repository.pmsmanager;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.repository.common.SessionInfo;
 import com.thundashop.repository.db.Database;
+import org.apache.commons.lang3.Validate;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -56,6 +61,17 @@ public abstract class Repository {
         }
 
         return database.save(dbName, getCollectionName(sessionInfo), dataCommon);
+    }
+
+    public <T> Optional<T> findById(String id, Class<T> entityClass, SessionInfo sessionInfo) {
+        DBObject query = new BasicDBObject("_id", id);
+        List<T> result = getDatabase().query(getDbName(), getCollectionName(sessionInfo), entityClass, query);
+
+        if (result.size() > 1) {
+            throw new RuntimeException("Found more than one entity by id " + id + " entityClass: " + entityClass.getName());
+        }
+
+        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
     }
 
 }

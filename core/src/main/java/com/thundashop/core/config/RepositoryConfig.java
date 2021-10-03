@@ -1,7 +1,9 @@
 package com.thundashop.core.config;
 
-import com.thundashop.repository.db.Database;
+import com.thundashop.core.pmsmanager.ConferenceData;
 import com.thundashop.core.pmsmanager.PmsLogManager;
+import com.thundashop.repository.db.Database;
+import com.thundashop.repository.pmsmanager.ConferenceDataRepository;
 import com.thundashop.repository.pmsmanager.PmsLogRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -19,5 +21,11 @@ public class RepositoryConfig {
     @Bean
     public PmsLogRepository pmsLogRepository(@Qualifier("repositoryDatabase") Database database) {
         return new PmsLogRepository(database, PmsLogManager.class.getSimpleName());
+    }
+
+    @Bean
+    public ConferenceDataRepository conferenceDataRepository(@Qualifier("repositoryDatabase") Database database) {
+        return new ConferenceDataRepository(database, PmsLogManager.class.getSimpleName(),
+                ConferenceData.class.getSimpleName());
     }
 }

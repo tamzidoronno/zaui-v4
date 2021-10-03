@@ -61,7 +61,6 @@ public class StoreHandler {
     }
         
     public synchronized Object executeMethodSync(JsonObject2 inObject, Class[] types, Object[] argumentValues) throws ErrorException {
-        StorePool.running.put(inObject.id, inObject);
         return executeMethod(inObject, types, argumentValues, true);
     }
 
@@ -90,7 +89,7 @@ public class StoreHandler {
     private Object internaleExecuteMethod(JsonObject2 inObject, Class[] types, Object[] argumentValues, boolean isFromSynchronizedCall) throws ErrorException {
         Session session = getSession(inObject.sessionId);
         initMultiLevels(storeId, session); 
-        
+
         scope.setStoreId(storeId, inObject.multiLevelName, getSession(inObject.sessionId));
         Class getShopInterfaceClass = loadClass(inObject.realInterfaceName);
         IUserManager userManager = getManager(IUserManager.class, getShopInterfaceClass, inObject);
@@ -290,11 +289,11 @@ public class StoreHandler {
         } catch (BeansException ex) {
             GetShopLogHandler.logPrintStatic("Throws bean exception?", null);
         }
-        
+
         for (GetShopSessionBeanNamed bean : scope.getSessionNamedObjects()) {
             bean.setSession(session);
         }
-        
+
         try {
             session.currentUser = userManager.getLoggedOnUser();
         } catch (ErrorException ex) {

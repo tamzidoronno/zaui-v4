@@ -6617,24 +6617,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return false;
     }
 
-    // TODO no use. remove.
-    public List<String> getListOfAllRoomsThatHasPriceMatrix() {
-        List<String> ids = new ArrayList();
-
-        for (PmsBooking book : bookings.values()) {
-            for (PmsBookingRooms room : book.rooms) {
-                if (!room.isActiveInPeriode(new Date(), new Date())) {
-                    continue;
-                }
-                if (room.priceMatrix != null && !room.priceMatrix.isEmpty()) {
-                    ids.add(room.pmsBookingRoomId);
-                }
-            }
-        }
-
-        return ids;
-    }
-
     @Override
     public void markRoomDirty(String itemId) throws Exception {
         PmsAdditionalItemInformation item = getAdditionalInfo(itemId);
@@ -9205,45 +9187,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         return object;
     }
-    
-    public void createDefaultAddonConfig(String productId) {
-        List<PmsBookingAddonItem> addonConfigsForProduct = getConfigurationSecure().addonConfiguration.values()
-                .stream()
-                .filter(o -> o.productId.equals(productId))
-                .collect(Collectors.toList());
-        
-        if (addonConfigsForProduct.isEmpty()) {
-            PmsBookingAddonItem config = new PmsBookingAddonItem();
-            config.productId = productId;
-            config.isSingle = true;
-            getConfigurationSecure().addonConfiguration.put(getConfigurationSecure().addonConfiguration.size(), config);
-            saveObject(configuration);
-        }
-    }
-    
-    public Date getNextCleaningDate(String bookingId, String pmsRoomId) {
-        PmsBookingRooms room = getBookingUnsecure(bookingId).getRoom(pmsRoomId);
-        
-        Date now = new Date();
-        
-        PmsBookingAddonItem firstCleaningAddonInFuture = room.addons.stream()
-                .filter(item -> item.productId.equals("gs_pms_extra_cleaning"))
-                .filter(item -> item.date.after(now))
-                .sorted((PmsBookingAddonItem item1, PmsBookingAddonItem item2) -> {
-                    return item1.date.compareTo(item2.date);
-                })
-                .findFirst()
-                .orElse(null);
-        
-        if (firstCleaningAddonInFuture != null) {
-            return firstCleaningAddonInFuture.date;
-        }
-        
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DAY_OF_MONTH, 4);
-        return cal.getTime();
-    }
-    
+
     @Override
     public void generatePgaAccess(String pmsBookingId, String pmsBookingRoomId) {
         throw new RuntimeException("This function is no longer in use, using token instead for bookings and rooms");

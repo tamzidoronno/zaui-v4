@@ -18,6 +18,8 @@ class CommunicationHelperDirectAjax {
     
         curl_setopt($ch, CURLOPT_URL, $this->getshopAddress."/scripts/api.php");
         curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($event));
         
         // Receive server response ...

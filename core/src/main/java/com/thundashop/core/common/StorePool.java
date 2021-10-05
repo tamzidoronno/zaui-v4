@@ -34,12 +34,10 @@ import java.util.UUID;
  * @author ktonder
  */
 public class StorePool {
-    private HashMap<String, StoreHandler> storeHandlers = new HashMap();
+    private final HashMap<String, StoreHandler> storeHandlers = new HashMap<>();
     private com.thundashop.core.storemanager.StorePool storePool;
     private Date lastTimePrintedTimeStampToLog = null;
-    private static Date lastCheck = new Date();
-    public static HashMap<String, JsonObject2> running = new HashMap();
-    
+
     public StorePool() {
         if (AppContext.appContext != null) {
             this.storePool = AppContext.appContext.getBean(com.thundashop.core.storemanager.StorePool.class);
@@ -246,13 +244,7 @@ public class StorePool {
             Class aClass = loadClass(object.interfaceName);
             Method method = getMethodToExecute(aClass, object.method, types, argumentValues);
             method = getCorrectMethod(method);
-    
-            try {
-                startAndCheckTimerForObject(object);
-            }catch(Exception e) {
-                // Dont care if this fails.
-            }            
-            
+
             try {
                 try {
                     if ((aClass != null && method != null) && (method.getAnnotation(GetShopNotSynchronized.class) != null || method.getAnnotation(ForceAsync.class) != null)) {
@@ -264,28 +256,19 @@ public class StorePool {
                         res = handler.executeMethodSync(object, types, argumentValues);
                     }
                     
-                    try {
-                        logToTimerLoggedToFile(object);
-                    }catch(Exception e) {
-                        GetShopLogHandler.logPrintStatic(e, object.storeId);
-                    }
-                    running.remove(object.id);
                 }catch(Exception x) {
                     
                     if (!(x instanceof ErrorException)) {
                         GetShopLogHandler.logPrintStatic("Exception: " + x.getMessage(), handler.getStoreId());
                         x.printStackTrace();
                     }
-                    running.remove(object.id);
                     throw x;
                 }
             }catch(ErrorException x) {
-                running.remove(object.id);
                 throw x;
             }
         }
         
-        running.remove(object.id);
         return res;
     }
     
@@ -430,66 +413,5 @@ public class StorePool {
         }
         
         return false;
-    }
-
-    private void startAndCheckTimerForObject(JsonObject2 object) throws Exception {
-        object.id = UUID.randomUUID().toString();
-        object.started = new Date();
-                
-        boolean hasForStore = false;
-        for(JsonObject2 obj : running.values()) {
-            if(obj.storeId.equals(object.storeId)) {
-                hasForStore = true;
-            }
-        }
-        if(!hasForStore) {
-            running.put(object.id, object);
-        }
-        
-        if(isOverDue()) { logToTimerToFile(); }
-   }
-
-    private boolean isOverDue() {
-        long diff = System.currentTimeMillis() - lastCheck.getTime();
-        return diff > 2000;
-    }
-    
-    private void logToTimerToFile() throws Exception {
-        String result = "Number of objects to track: " + running.keySet().size() + "\r\n";
-        HashMap<String, JsonObject2> runningObjects = new HashMap(running);
-        for(JsonObject2 obj : runningObjects.values()) {
-            long timer = (System.currentTimeMillis() - obj.started.getTime())/1000;
-            if(timer > 5) {
-               result += obj.id + ";" + obj.storeId + ";" + obj.interfaceName + ";" + obj.method + ";" + timer + "\n";
-               if(timer > 120) {
-                   result += "\n" + obj.getPrettyPrinted();
-                   result += "\n";
-               }
-            }
-        }
-        
-        BufferedWriter writer = new BufferedWriter(new FileWriter("timer.txt"));
-        writer.write(result);
-        writer.close();
-        lastCheck = new Date();
-    }
-    
-    private void logToTimerLoggedToFile(JsonObject2 obj) throws Exception {
-        long timer = (System.currentTimeMillis() - obj.started.getTime())/1000;
-        if(timer > 2) {
-            if(obj.interfaceName.equals("core.gsd.GdsManager")) {
-                return;
-            }
-            if(obj.interfaceName.equals("core.applications.StoreApplicationPool")) {
-                return;
-            }
-            
-           File yourFile = new File("timerLogged.txt");
-           yourFile.createNewFile(); 
-
-           String result = new Date()+ ";" + obj.id + ";" + obj.storeId + ";" + obj.interfaceName + ";" + obj.method + ";" + timer + "\n";
-           Path path = Paths.get("timerLogged.txt");
-           Files.write(path, result.getBytes(), StandardOpenOption.APPEND);  //Append mode
-        }
     }
 }

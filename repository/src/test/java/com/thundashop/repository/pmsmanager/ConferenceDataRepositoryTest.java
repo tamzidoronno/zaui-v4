@@ -105,7 +105,7 @@ class ConferenceDataRepositoryTest extends TestCommon {
 
         assertThat(actual).usingRecursiveComparison()
                 // these fields are asserted previously. ignoring for now.
-                .ignoringFields("id", "lastModifiedByUserId", "gs_manager", "lastModified", "rowCreatedDate", "storeId")
+                .ignoringFields("id", "lastModifiedByUserId", "gs_manager", "lastModified", "rowCreatedDate", "storeId", "colection")
                 .isEqualTo(conferenceData3);
     }
 }

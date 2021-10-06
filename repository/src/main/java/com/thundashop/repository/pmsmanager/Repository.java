@@ -5,7 +5,6 @@ import com.mongodb.DBObject;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.repository.common.SessionInfo;
 import com.thundashop.repository.db.Database;
-import org.apache.commons.lang3.Validate;
 
 import java.util.Date;
 import java.util.List;
@@ -53,6 +52,7 @@ public abstract class Repository {
         dataCommon.storeId = sessionInfo.getStoreId();
         dataCommon.lastModified = new Date();
         dataCommon.gs_manager = getDbName();
+        dataCommon.colection = getCollectionName(sessionInfo);
 
         if (isNotEmpty(sessionInfo.getLanguage())) {
             String lang = sessionInfo.getLanguage();

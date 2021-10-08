@@ -49,7 +49,7 @@ public class StoreIdRepositoryTest {
 
         int nextIncrementalStoreId = storeIdRepository.getNextIncrementalStoreId();
 
-        Assert.assertEquals(1, nextIncrementalStoreId);
+        Assert.assertEquals(1100000, nextIncrementalStoreId);
     }
 
     @Test

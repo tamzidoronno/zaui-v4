@@ -27,7 +27,7 @@ public class StoreIdRepository {
                 new BasicDBObject("incrementalStoreId", -1),
                 1);
 
-        return (list.isEmpty()) ? 1 : (((Store) list.get(0)).incrementalStoreId) + 1;
+        return (list.isEmpty()) ? 1100000 : (((Store) list.get(0)).incrementalStoreId) + 1;
     }
 
 }

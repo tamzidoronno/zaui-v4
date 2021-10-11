@@ -69,7 +69,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.*;
@@ -8893,8 +8892,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     public List<PmsBooking> getAllBookingsInternal(PmsBookingFilter filter) {
-        // TODO: Race condition happen. SHOULD BE REMOVED
-        Map<String, PmsBooking> _bookings = new HashMap<>(bookings);
 
         boolean unsettled = false;
         if (filter != null && filter.filterType != null && filter.filterType.equals("unsettled")) {
@@ -8906,11 +8903,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         if (!initFinalized) {
-            finalizeList(new ArrayList(_bookings.values()));
+            finalizeList(new ArrayList(bookings.values()));
             initFinalized = true;
         }
         if (filter == null) {
-            return finalizeList(new ArrayList(_bookings.values()));
+            return finalizeList(new ArrayList(bookings.values()));
         }
         if (filter.state == null) {
             filter.state = 0;
@@ -8921,7 +8918,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         if (filter.searchWord != null && !filter.searchWord.isEmpty()) {
 
-            for (PmsBooking booking : _bookings.values()) {
+            for (PmsBooking booking : bookings.values()) {
                 User user = userManager.getUserById(booking.userId);
                 if (booking.id != null && booking.id.equals(filter.searchWord)) {
                     result.add(booking);
@@ -8961,7 +8958,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         } else if (filter.filterType == null || filter.filterType.isEmpty() || filter.filterType.equals("registered")) {
-            for (PmsBooking booking : _bookings.values()) {
+            for (PmsBooking booking : bookings.values()) {
                 if (filter.startDate == null || (booking.rowCreatedDate.after(filter.startDate) && booking.rowCreatedDate.before(filter.endDate))) {
                     if (filter.userId == null || filter.userId.isEmpty()) {
                         result.add(booking);
@@ -8974,49 +8971,49 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 || filter.filterType.equals("inhouse")
                 || filter.filterType.equals("unpaid")
                 || filter.filterType.equals("afterstayorder")) {
-            for (PmsBooking booking : _bookings.values()) {
+            for (PmsBooking booking : bookings.values()) {
                 if (booking.isActiveInPeriode(filter.startDate, filter.endDate)) {
                     result.add(booking);
                 }
             }
         } else if (filter.filterType.equals("waiting")) {
-            for (PmsBooking booking : _bookings.values()) {
+            for (PmsBooking booking : bookings.values()) {
                 if (booking.isActiveInPeriode(filter.startDate, filter.endDate) && (booking.hasWaitingRooms() || booking.hasOverBooking())) {
                     result.add(booking);
                 }
             }
         } else if (filter.filterType.equals("requestedending")) {
-            for (PmsBooking booking : _bookings.values()) {
+            for (PmsBooking booking : bookings.values()) {
                 if (booking.hasRequestedEnding(filter.startDate, filter.endDate)) {
                     result.add(booking);
                 }
             }
         } else if (filter.filterType.equals("uncofirmed")) {
-            for (PmsBooking booking : _bookings.values()) {
+            for (PmsBooking booking : bookings.values()) {
                 if (!booking.confirmed) {
                     result.add(booking);
                 }
             }
         } else if (filter.filterType.equals("checkin")) {
-            for (PmsBooking booking : _bookings.values()) {
+            for (PmsBooking booking : bookings.values()) {
                 if (booking.checkingInBetween(filter.startDate, filter.endDate)) {
                     result.add(booking);
                 }
             }
         } else if (filter.filterType.equals("checkout")) {
-            for (PmsBooking booking : _bookings.values()) {
+            for (PmsBooking booking : bookings.values()) {
                 if (booking.checkingOutBetween(filter.startDate, filter.endDate)) {
                     result.add(booking);
                 }
             }
         } else if (filter.filterType.equals("deleted")) {
-            for (PmsBooking booking : _bookings.values()) {
+            for (PmsBooking booking : bookings.values()) {
                 if (booking.isDeleted) {
                     result.add(booking);
                 }
             }
         } else {
-            for (PmsBooking booking : _bookings.values()) {
+            for (PmsBooking booking : bookings.values()) {
                 if (!booking.isDeleted) {
                     result.add(booking);
                 }

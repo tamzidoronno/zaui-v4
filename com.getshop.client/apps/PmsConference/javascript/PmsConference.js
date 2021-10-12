@@ -1,3 +1,10 @@
+/* try to fix broken conferences and events */
+function reconnectConferenceWithBooking(conferenceId)
+{
+
+}
+
+
 app.PmsConference = {
     currentInput : null,
     disableAutoReload : false,
@@ -112,6 +119,15 @@ app.PmsConference = {
             $('.conferenceoverview').html(res);
         });
     },
+    reconnectConferenceWithBooking: function(conferenceid) {
+        var event = thundashop.Ajax.createEvent('','reconnectConferenceWithBooking',$('.PmsConference'), { "conferenceid" : conferenceid});
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.conferenceoverview').show();
+            $('.eventoverview').hide();
+            $('.conferenceoverview').html(res);
+        });
+    },
+
     openConference : function() {
         var conferenceid = $(this).attr('conferenceid');
         app.PmsConference.openConferenceById(conferenceid);

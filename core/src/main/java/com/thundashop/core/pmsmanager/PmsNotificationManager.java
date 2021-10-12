@@ -566,7 +566,9 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
                 booking.userId = tmpOrder.userId;
             }
         }
-        
+
+        if (room != null && room.deleted && !"room_cancelled".equalsIgnoreCase(key)) return new ArrayList<>();
+
         List<PmsGuests> recipients = getSmsRecipients(booking, room, type);
         for(PmsGuests guest : recipients) {
             PmsNotificationMessage message = getSpecificMessage(key, booking, room, "sms", guest.prefix);
@@ -662,6 +664,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
     }
 
     private List<PmsGuests> getSmsRecipients(PmsBooking booking, PmsBookingRooms room, String type) {
+
         List<PmsGuests> recipients = new ArrayList();
         if(phoneToSendTo != null && !phoneToSendTo.isEmpty()) {
             PmsGuests guest = new PmsGuests();

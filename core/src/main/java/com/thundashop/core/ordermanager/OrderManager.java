@@ -2999,10 +2999,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         newlyBrokenIncome.removeIf(income -> isInArray(income, fromDatabase));
         
         newlyBrokenIncome.addAll(dayIncomes);
-        
+        long oneMinute = 1000 * 60;
         newlyBrokenIncome.removeIf(o -> {
             long startL = filter.start.getTime();
-            long endL = filter.end.getTime();
+            long endL = filter.end.getTime() + oneMinute; // for the case when filter.end is date is last day of month 23:59:00 and dayIncome's time is 00:00:00
             boolean completlyWithin = startL <= o.start.getTime() && o.end.getTime() <= endL;
             return !completlyWithin;
         });
@@ -5106,7 +5106,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             credited.cart.reference = newReference;
         }
 
+        ignoreValidation();
         saveOrder(credited);
+        enableValidation();
+
         saveOrder(order);
 //        cleanOrder(credited.id, "fdasf345345345!mnm!");
         
@@ -5545,14 +5548,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
         if (central.hasBeenConnectedToCentral()) {    
             closeOrder(orderId, "Transferred to Z-Report");
-            
-            order.orderTransactions.stream().forEach(o -> o.transferredToAccounting = true);
         }
-        
-        order.orderTransactions.stream().forEach(o -> o.addedToZreport = report.id);
+
+        order.orderTransactions.forEach(o ->markOrderTransactionClosedByZReport(o, report.id));
         order.addedToZreport = report.id;
         
         saveObject(order);
+    }
+
+    public void markOrderTransactionClosedByZReport(OrderTransaction orderTransaction, String reportId){
+        orderTransaction.addedToZreport = reportId;
     }
 
     private String getBatchId(Order order, String refId) {
@@ -5678,7 +5683,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         List<Order> retList = orders.values()
                 .stream()
                 .filter(o -> !o.isNullOrder())
-                .filter(o -> o.hasUntransferredPayments() || !posManager.hasZreport(o))
+                .filter(o -> o.isNotOnZreport() || !posManager.hasZreport(o))
                 .collect(Collectors.toList());
         
         return retList;
@@ -5768,6 +5773,15 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .map(o -> (ChangedCloseDateLog)o)
                 .collect(Collectors.toList());
     }
-    
-    
+
+
+    public void removeZReportDatafromOrder(String orderId) {
+        Order order = getOrder(orderId);
+
+        order.addedToZreport = "";
+        order.transferredToCentral = false;
+        order.transferredToAccountingSystem = false;
+        order.transferToAccountingDate = null;
+        saveObject(order);
+    }
 }

@@ -840,7 +840,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
         params.addElement(rdata.wubookroomid + "");
         params.addElement(type.name);
-        params.addElement(type.capacity + "");
+        params.addElement(type.size + "");
         params.addElement("9999");
         params.addElement(items.size() + "");
         params.addElement("r" + rdata.code);

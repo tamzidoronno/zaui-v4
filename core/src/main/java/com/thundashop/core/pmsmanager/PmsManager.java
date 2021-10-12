@@ -1405,7 +1405,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
     
     public void doNotification(String key, PmsBooking booking, PmsBookingRooms room) {
-        
+
+        if (room != null && room.deleted && !"room_cancelled".equalsIgnoreCase(key)) return;
+
         if(pmsNotificationManager.isActive()) {
             pmsNotificationManager.doNotification(key, booking, room);
             return;
@@ -1953,6 +1955,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(!booking.isWubook()) {
             doNotification("room_cancelled", booking, remove);
         }
+        processor();
     }
 
     @Override
@@ -2014,6 +2017,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         bookingUpdated(bookingId, "room_removed", roomId);
+
+        processor();
 
         return addResult;
     }

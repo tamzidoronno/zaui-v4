@@ -218,6 +218,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private ConferenceDataManager conferenceDataManager;
 
     @Autowired
+    private PmsPricingManager pmsPricingManager;
+
+    @Autowired
     Database dataBase;
 
     @Autowired
@@ -262,6 +265,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     price.code = "default";
                     saveObject(price);
                 }
+                // TODO this `if block` seems never be executed
                 if (priceMap.containsKey(price.code)) {
                     for (int i = 0; i < 10; i++) {
                         String code = price.code + "_" + i;
@@ -341,15 +345,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         super.setSession(session);
     }
 
-    private PmsPricing getDefaultPriceObject() {
-        PmsPricing price = priceMap.get("default");
-        if (price != null) {
-            return price;
-        }
-        return new PmsPricing();
-    }
-
     public PmsPricing getPriceObject(String code) {
+        // TODO: Replace with pmsPricingManager.getByCodeOrDefaultCode(code)
         PmsPricing object = priceMap.get(code);
         if (object == null) {
             object = priceMap.get("default");
@@ -3151,6 +3148,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     public void logEntry(String logText, String bookingId, String itemId, String roomId, String logType) {
+        // TODO move to PmsLogManager
 
         PmsLog log = new PmsLog();
         log.bookingId = bookingId;
@@ -6115,14 +6113,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         saveBooking(booking);
     }
 
-    HashMap<String, PmsPricing> getAllPrices() {
-        return priceMap;
-    }
-
     @Override
     public List<String> getpriceCodes() {
         HashMap<String, PmsPricing> allPrices = priceMap;
-        List<String> codes = new ArrayList(allPrices.keySet());
+        List<String> codes = new ArrayList<>(allPrices.keySet());
         return codes;
     }
 
@@ -6573,6 +6567,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public List<ConferenceData> getFutureConferenceData(Date fromDate) {
+        // TODO: need to find out the flow and think!
         List<ConferenceData> retList = conferenceDatas.values().stream()
                 .filter(conference -> conference.days != null && !conference.days.isEmpty())
                 .filter(conf -> isInFuture(conf, fromDate))

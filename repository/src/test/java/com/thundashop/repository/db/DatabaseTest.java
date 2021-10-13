@@ -25,7 +25,8 @@ class DatabaseTest {
     @BeforeAll
     static void setUp() {
         Config config = TestConfig.newInstance();
-        database = Database.of(config.getAsString("mongo.host"), config.getAsInt("mongo.port"));
+        database = Database.of(config.getAsString("mongo.host"),
+                config.getAsInt("mongo.port"), new DbTestEntityMappers());
     }
 
     @AfterEach

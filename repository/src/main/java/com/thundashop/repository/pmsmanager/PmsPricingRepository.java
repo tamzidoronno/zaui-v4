@@ -32,4 +32,7 @@ public class PmsPricingRepository extends Repository {
         return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
     }
 
+    public String getClassName() {
+        return className;
+    }
 }

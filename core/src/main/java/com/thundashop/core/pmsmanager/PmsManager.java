@@ -1203,7 +1203,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsPricing getPrices(Date start, Date end) {
-        return priceMap.get("default");
+        return pmsPricingManager.getByDefaultCode();
     }
 
     @Override
@@ -1213,7 +1213,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsPricing setPrices(String code, PmsPricing newPrices) {
-        logPrint("New prices set from setPrices call (" + code + "), " + newPrices.getStartDate() + " - " + newPrices.getEndDate());
+        logger.debug("New prices set from setPrices call code {} , startDate {} , endDate {}", code, newPrices.getStartDate(), newPrices.getEndDate());
         PmsPricing prices = getPriceObject(code);
         prices.defaultPriceType = newPrices.defaultPriceType;
         prices.progressivePrices = newPrices.progressivePrices;
@@ -10826,14 +10826,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public boolean updatePrices(List<PmsPricingDayObject> prices) {
         Date start = null;
         Date end = null;
-        logPrint("Prices are being updated");
+        logger.debug("Prices are being updated");
         List<BookingItemType> alltypes = bookingEngine.getBookingItemTypes();
-        HashMap<String, BookingItemType> types = new HashMap();
+        HashMap<String, BookingItemType> types = new HashMap<>();
         for(BookingItemType t : alltypes) {
             types.put(t.id, t);
         }
         try {
-            PmsPricing pricestoupdate = priceMap.get("default");
+            PmsPricing pricestoupdate = pmsPricingManager.getByDefaultCode();
             
             for(PmsPricingDayObject price : prices) {
                 Date dayPrice = PmsBookingRooms.convertOffsetToDate(price.date);
@@ -10846,14 +10846,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 HashMap<String, Double> dailypricematrix = pricestoupdate.dailyPrices.get(price.typeId);
                 if(dailypricematrix != null) {
                     dailypricematrix.put(price.date, price.newPrice);
-                    logPrint("New prices set from updatePrices " + types.get(price.typeId).name + " : date : " + price.date + ", new price: "  + price.newPrice);
+                    logger.info("New prices set from updatePrices: {} ,  date: {} , new price: {}", types.get(price.typeId).name, price.date, price.newPrice);
                 }
             }
             setPrices(pricestoupdate.code, pricestoupdate);
             wubookManager.updatePricesBetweenDates(start, end);
             return true;
-        }catch(Exception e) {
-            logPrintException(e);
+        } catch (Exception e) {
+            logger.error("Failed to update prices", e);
         }
         return false;
     }

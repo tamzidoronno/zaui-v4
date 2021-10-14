@@ -28,4 +28,10 @@ public class PmsPricingManager extends ManagerBase implements IPmsPricingManager
                         .orElse(null));
     }
 
+    @Override
+    public PmsPricing getByDefaultCode() {
+        return pmsPricingRepository.findPmsPricingByCode(defaultCode, getStoreIdInfo())
+                .orElse(null);
+    }
+
 }

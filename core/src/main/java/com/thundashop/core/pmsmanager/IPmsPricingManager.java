@@ -4,4 +4,6 @@ public interface IPmsPricingManager {
 
     PmsPricing getByCodeOrDefaultCode(String code);
 
+    PmsPricing getByDefaultCode();
+
 }

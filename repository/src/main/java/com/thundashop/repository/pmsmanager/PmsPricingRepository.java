@@ -3,9 +3,8 @@ package com.thundashop.repository.pmsmanager;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.thundashop.core.pmsmanager.PmsPricing;
-import com.thundashop.repository.common.SessionInfo;
+import com.thundashop.repository.utils.SessionInfo;
 import com.thundashop.repository.db.Database;
-import com.thundashop.repository.exceptions.NotUniqueDataException;
 
 import java.util.List;
 import java.util.Optional;

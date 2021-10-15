@@ -1,4 +1,4 @@
-package com.thundashop.repository.common;
+package com.thundashop.repository.utils;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

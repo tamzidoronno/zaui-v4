@@ -3,7 +3,7 @@ package com.thundashop.repository.pmsmanager;
 import com.google.gson.reflect.TypeToken;
 import com.thundashop.core.pmsmanager.ConferenceData;
 import com.thundashop.repository.TestCommon;
-import com.thundashop.repository.common.SessionInfo;
+import com.thundashop.repository.utils.SessionInfo;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;

@@ -20,7 +20,7 @@ import com.thundashop.core.pagemanager.GetShopModules;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
-import com.thundashop.repository.common.SessionInfo;
+import com.thundashop.repository.utils.SessionInfo;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 

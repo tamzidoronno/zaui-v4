@@ -1,4 +1,4 @@
-package com.thundashop.repository.common;
+package com.thundashop.repository.utils;
 
 public class SessionInfo {
 

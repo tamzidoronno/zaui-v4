@@ -1,6 +1,6 @@
 package com.thundashop.repository;
 
-import com.thundashop.repository.common.SessionInfo;
+import com.thundashop.repository.utils.SessionInfo;
 import com.thundashop.repository.db.Database;
 import com.thundashop.repository.db.EntityMappersImpl;
 import com.thundashop.repository.testutils.TestConfig;

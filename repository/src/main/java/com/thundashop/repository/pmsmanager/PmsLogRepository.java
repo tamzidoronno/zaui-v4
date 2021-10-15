@@ -2,7 +2,7 @@ package com.thundashop.repository.pmsmanager;
 
 import com.mongodb.BasicDBObject;
 import com.thundashop.core.pmsmanager.PmsLog;
-import com.thundashop.repository.common.SessionInfo;
+import com.thundashop.repository.utils.SessionInfo;
 import com.thundashop.repository.db.Database;
 
 import java.util.List;

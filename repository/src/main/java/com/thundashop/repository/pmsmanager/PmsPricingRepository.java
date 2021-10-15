@@ -10,7 +10,7 @@ import com.thundashop.repository.exceptions.NotUniqueDataException;
 import java.util.List;
 import java.util.Optional;
 
-public class PmsPricingRepository extends Repository {
+public class PmsPricingRepository extends Repository<PmsPricing> {
 
     private final String className;
 
@@ -24,12 +24,7 @@ public class PmsPricingRepository extends Repository {
         query.put("className", className);
         query.put("code", code);
         List<PmsPricing> result = getDatabase().query(getDbName(), getCollectionName(sessionInfo), PmsPricing.class, query);
-
-        if (result.size() > 1) {
-            throw new NotUniqueDataException("Found multiple data for: " + PmsPricing.class.getSimpleName() + " code: " + code);
-        }
-
-        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
+        return getSingle(result, () -> "Found multiple data for: " + PmsPricing.class.getSimpleName() + " code: " + code);
     }
 
     public String getClassName() {

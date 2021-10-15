@@ -3,13 +3,14 @@ package com.thundashop.repository.pmsmanager;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.thundashop.core.pmsmanager.ConferenceData;
+import com.thundashop.core.pmsmanager.PmsPricing;
 import com.thundashop.repository.common.SessionInfo;
 import com.thundashop.repository.db.Database;
 
 import java.util.List;
 import java.util.Optional;
 
-public class ConferenceDataRepository extends Repository {
+public class ConferenceDataRepository extends Repository<ConferenceData> {
 
     private final String className;
 
@@ -23,7 +24,8 @@ public class ConferenceDataRepository extends Repository {
         query.put("className", className);
         query.put("bookingId", bookingId);
         List<ConferenceData> result = getDatabase().query(getDbName(), getCollectionName(sessionInfo), ConferenceData.class, query);
-        return result.isEmpty() ? Optional.empty() : Optional.of(result.get(0));
+        return getSingle(result, () -> "Found multiple data for: " + ConferenceData.class.getSimpleName()
+                + " bookingId: " + bookingId);
     }
 
 }

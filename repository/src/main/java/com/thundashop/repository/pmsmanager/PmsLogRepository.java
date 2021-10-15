@@ -9,7 +9,7 @@ import java.util.List;
 
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
-public class PmsLogRepository extends Repository {
+public class PmsLogRepository extends Repository<PmsLog> {
 
     public PmsLogRepository(Database database, String dbName) {
         super(database, dbName);

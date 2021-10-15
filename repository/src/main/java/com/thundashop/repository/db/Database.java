@@ -24,7 +24,6 @@ public class Database {
         }
         morphia = new Morphia();
         morphia.getMapper().getConverters().addConverter(BigDecimalConverter.class);
-        morphia.map(DataCommon.class);
         morphia.map(mappers.getEntities());
     }
 

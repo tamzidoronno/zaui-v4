@@ -2,6 +2,7 @@ package com.thundashop.repository.db;
 
 import com.google.common.collect.ImmutableSet;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.pmsmanager.ConferenceData;
 import com.thundashop.core.pmsmanager.PmsPricing;
 
 import java.util.Set;
@@ -21,8 +22,9 @@ public class EntityMappersImpl implements EntityMappers {
 
     private Set<Class> init() {
         return ImmutableSet.of(
-            DataCommon.class,
-            PmsPricing.class
+                DataCommon.class,
+                ConferenceData.class,
+                PmsPricing.class
         );
     }
 

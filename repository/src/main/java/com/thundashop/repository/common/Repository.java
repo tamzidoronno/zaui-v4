@@ -1,4 +1,4 @@
-package com.thundashop.repository.pmsmanager;
+package com.thundashop.repository.common;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;

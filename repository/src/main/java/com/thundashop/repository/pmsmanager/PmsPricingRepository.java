@@ -3,6 +3,7 @@ package com.thundashop.repository.pmsmanager;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.thundashop.core.pmsmanager.PmsPricing;
+import com.thundashop.repository.common.Repository;
 import com.thundashop.repository.utils.SessionInfo;
 import com.thundashop.repository.db.Database;
 

@@ -15,6 +15,7 @@ import java.util.function.Supplier;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import static org.apache.commons.lang3.Validate.notNull;
 
 public abstract class Repository<T> {
 
@@ -66,6 +67,9 @@ public abstract class Repository<T> {
     }
 
     protected Optional<T> getSingle(List<T> resultList, Supplier<String> notUniqueExceptionMessage) {
+        notNull(resultList, "resultList parameter is null");
+        notNull(notUniqueExceptionMessage, "notUniqueExceptionMessage parameter is null");
+
         if (resultList.size() > 1) {
             throw new NotUniqueDataException(notUniqueExceptionMessage.get());
         }

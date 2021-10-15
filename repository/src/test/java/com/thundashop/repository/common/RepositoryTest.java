@@ -1,72 +1,78 @@
 package com.thundashop.repository.common;
 
-import com.google.common.collect.ImmutableList;
-import com.thundashop.repository.db.Database;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+import com.thundashop.repository.TestCommon;
 import com.thundashop.repository.db.DbTest;
 import com.thundashop.repository.exceptions.NotUniqueDataException;
+import com.thundashop.repository.utils.SessionInfo;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+import java.util.stream.Stream;
 
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.mock;
 
 
-class RepositoryTest {
+class RepositoryTest extends TestCommon {
 
-    Database mockedDatabase;
-    RepositoryTestImpl repositoryTest;
+    private static final String testDbName = "repositoryTest_" + randomAlphanumeric(5);
+
+    static RepositoryTestImpl repositoryTest;
+    SessionInfo sessionInfo;
+
+    @BeforeAll
+    static void setup() {
+        init();
+        repositoryTest = new RepositoryTestImpl(database, testDbName);
+    }
 
     @BeforeEach
     void beforeEach() {
-        mockedDatabase = mock(Database.class);
-        repositoryTest = new RepositoryTestImpl(mockedDatabase, "testDbName");
+        sessionInfo = buildSessionInfo();
+    }
+
+    @AfterEach
+    void afterEach() {
+        database.dropDatabase(testDbName);
     }
 
     @Test
-    void getSingle() {
-        final String id = UUID.randomUUID().toString();
-        List<DbTest> list = ImmutableList.of(new DbTest(id));
+    void getOne() {
+        saveTestData("code_1", "code_2", "code_3");
+        DBObject query = new BasicDBObject("strMatch", "code_1");
 
-        Optional<DbTest> actual = repositoryTest.getSingle(list, () -> "Exception Message");
+        Optional<DbTest> actual = repositoryTest.getOne(query, DbTest.class, sessionInfo);
 
-        assertThat(actual).isNotEmpty().map(it -> it.id).contains(id);
+        assertThat(actual).isNotEmpty().map(DbTest::getStrMatch).contains("code_1");
     }
 
     @Test
     void testWhenListSizeMoreThanOneThrowException() {
-        List<DbTest> list = ImmutableList.of(new DbTest(), new DbTest());
-        String exceptionMessage = "Multiple entity found";
+        saveTestData("code_1", "code_2", "code_1");
+        DBObject query = new BasicDBObject("strMatch", "code_1");
 
-        assertThatThrownBy(() -> repositoryTest.getSingle(list, () -> exceptionMessage))
-                .isInstanceOf(NotUniqueDataException.class)
-                .hasMessage(exceptionMessage);
+        assertThatThrownBy(() -> repositoryTest.getOne(query, DbTest.class, sessionInfo))
+                .isInstanceOf(NotUniqueDataException.class);
     }
 
     @Test
     void testWhenEmptyListReturnOptionalEmpty() {
-        List<DbTest> list = ImmutableList.of();
+        saveTestData("code_1", "code_2", "code_3");
+        DBObject query = new BasicDBObject("strMatch", "code_4");
 
-        Optional<DbTest> actual = repositoryTest.getSingle(list, () -> "");
+        Optional<DbTest> actual = repositoryTest.getOne(query, DbTest.class, sessionInfo);
 
         assertThat(actual).isEmpty();
     }
 
-    @Test
-    void testWhenResultListParameterIsNullThrowNullPointer() {
-        assertThatThrownBy(() -> repositoryTest.getSingle(null, null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("resultList parameter is null");
-    }
-
-    @Test
-    void testWhenExceptionMessageParameterIsNullThrowNullPointer() {
-        assertThatThrownBy(() -> repositoryTest.getSingle(ImmutableList.of(), null))
-                .isInstanceOf(NullPointerException.class)
-                .hasMessage("notUniqueExceptionMessage parameter is null");
+    private void saveTestData(String... strMatch) {
+        Stream.of(strMatch)
+                .forEachOrdered(it -> repositoryTest.save(new DbTest(it), sessionInfo));
     }
 }

@@ -7,7 +7,6 @@ import com.thundashop.repository.common.Repository;
 import com.thundashop.repository.utils.SessionInfo;
 import com.thundashop.repository.db.Database;
 
-import java.util.List;
 import java.util.Optional;
 
 public class ConferenceDataRepository extends Repository<ConferenceData> {
@@ -23,9 +22,7 @@ public class ConferenceDataRepository extends Repository<ConferenceData> {
         DBObject query = new BasicDBObject();
         query.put("className", className);
         query.put("bookingId", bookingId);
-        List<ConferenceData> result = getDatabase().query(getDbName(), getCollectionName(sessionInfo), ConferenceData.class, query);
-        return getSingle(result, () -> "Found multiple data for: " + ConferenceData.class.getSimpleName()
-                + " bookingId: " + bookingId);
+        return getOne(query, ConferenceData.class, sessionInfo);
     }
 
 }

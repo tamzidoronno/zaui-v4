@@ -87,7 +87,6 @@ public class PmsPricingRepositoryTest extends TestCommon {
         repository.save(toPojo(type, jsonPath + "pmspricing.json"), sessionInfo);
 
         assertThatThrownBy(() -> repository.findPmsPricingByCode("default", sessionInfo))
-                .isInstanceOf(NotUniqueDataException.class)
-                .hasMessage("Found multiple data for: " + PmsPricing.class.getSimpleName() + " code: default");
+                .isInstanceOf(NotUniqueDataException.class);
     }
 }

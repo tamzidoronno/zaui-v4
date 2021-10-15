@@ -7,7 +7,6 @@ import com.thundashop.repository.common.Repository;
 import com.thundashop.repository.utils.SessionInfo;
 import com.thundashop.repository.db.Database;
 
-import java.util.List;
 import java.util.Optional;
 
 public class PmsPricingRepository extends Repository<PmsPricing> {
@@ -23,8 +22,7 @@ public class PmsPricingRepository extends Repository<PmsPricing> {
         DBObject query = new BasicDBObject();
         query.put("className", className);
         query.put("code", code);
-        List<PmsPricing> result = getDatabase().query(getDbName(), getCollectionName(sessionInfo), PmsPricing.class, query);
-        return getSingle(result, () -> "Found multiple data for: " + PmsPricing.class.getSimpleName() + " code: " + code);
+        return getOne(query, PmsPricing.class, sessionInfo);
     }
 
     public String getClassName() {

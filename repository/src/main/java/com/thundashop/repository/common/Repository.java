@@ -3,19 +3,17 @@ package com.thundashop.repository.common;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.thundashop.core.common.DataCommon;
-import com.thundashop.repository.utils.SessionInfo;
 import com.thundashop.repository.db.Database;
 import com.thundashop.repository.exceptions.NotUniqueDataException;
+import com.thundashop.repository.utils.SessionInfo;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
-import static org.apache.commons.lang3.Validate.notNull;
 
 public abstract class Repository<T> {
 
@@ -66,12 +64,12 @@ public abstract class Repository<T> {
         return database.save(dbName, getCollectionName(sessionInfo), dataCommon);
     }
 
-    protected Optional<T> getSingle(List<T> resultList, Supplier<String> notUniqueExceptionMessage) {
-        notNull(resultList, "resultList parameter is null");
-        notNull(notUniqueExceptionMessage, "notUniqueExceptionMessage parameter is null");
+    protected Optional<T> getOne(DBObject query, Class<T> entityClass, SessionInfo sessionInfo) {
+        List<T> resultList = getDatabase().query(getDbName(), getCollectionName(sessionInfo), entityClass, query);
 
         if (resultList.size() > 1) {
-            throw new NotUniqueDataException(notUniqueExceptionMessage.get());
+            throw new NotUniqueDataException(String.format("Found multiple data count: %s , entity: %s , query: %s",
+                    resultList.size(), entityClass.getName(), query));
         }
 
         return resultList.isEmpty() ? Optional.empty() : Optional.of(resultList.get(0));
@@ -79,8 +77,7 @@ public abstract class Repository<T> {
 
     public Optional<T> findById(String id, Class<T> entityClass, SessionInfo sessionInfo) {
         DBObject query = new BasicDBObject("_id", id);
-        List<T> result = getDatabase().query(getDbName(), getCollectionName(sessionInfo), entityClass, query);
-        return getSingle(result, () -> "Found more than one entity by id " + id + " entityClass: " + entityClass.getName());
+        return getOne(query, entityClass, sessionInfo);
     }
 
 }

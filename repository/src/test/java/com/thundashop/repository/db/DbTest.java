@@ -11,8 +11,8 @@ public class DbTest extends DataCommon {
     public DbTest() {
     }
 
-    public DbTest(String id) {
-        super.id = id;
+    public DbTest(String strMatch) {
+        this.strMatch = strMatch;
     }
 
     public String getStrMatch() {

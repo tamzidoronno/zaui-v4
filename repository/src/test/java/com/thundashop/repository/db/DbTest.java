@@ -8,6 +8,13 @@ public class DbTest extends DataCommon {
 
     private int order;
 
+    public DbTest() {
+    }
+
+    public DbTest(String id) {
+        super.id = id;
+    }
+
     public String getStrMatch() {
         return strMatch;
     }

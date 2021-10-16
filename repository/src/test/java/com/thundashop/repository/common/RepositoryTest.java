@@ -58,7 +58,9 @@ class RepositoryTest extends TestCommon {
         DBObject query = new BasicDBObject("strMatch", "code_1");
 
         assertThatThrownBy(() -> repositoryTest.getOne(query, DbTest.class, sessionInfo))
-                .isInstanceOf(NotUniqueDataException.class);
+                .isInstanceOf(NotUniqueDataException.class)
+                .hasMessage("Found multiple data count: 2 , entity: %s , query: { \"strMatch\" : \"code_1\"}",
+                        DbTest.class.getName());
     }
 
     @Test

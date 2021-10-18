@@ -80,7 +80,7 @@ public abstract class Repository<T> {
         return getOne(query, entityClass, sessionInfo);
     }
 
-    public boolean exist(DBObject query, Class<T> entityClass, SessionInfo sessionInfo) {
+    protected boolean exist(DBObject query, Class<T> entityClass, SessionInfo sessionInfo) {
         return !getDatabase().query(getDbName(), getCollectionName(sessionInfo), entityClass, query).isEmpty();
     }
 

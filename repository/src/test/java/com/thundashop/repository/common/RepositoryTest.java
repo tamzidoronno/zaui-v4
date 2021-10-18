@@ -73,6 +73,19 @@ class RepositoryTest extends TestCommon {
         assertThat(actual).isEmpty();
     }
 
+    @Test
+    void exist() {
+        saveTestData("code_1");
+        DBObject query = new BasicDBObject("strMatch", "code_1");
+
+        assertThat(repositoryTest.exist(query, DbTest.class, sessionInfo)).isTrue();
+    }
+
+    @Test
+    void testNotExist() {
+        assertThat(repositoryTest.exist(new BasicDBObject("strMatch", "codeShouldNotExist"), DbTest.class, sessionInfo)).isFalse();
+    }
+
     private void saveTestData(String... strMatch) {
         Stream.of(strMatch)
                 .forEachOrdered(it -> repositoryTest.save(new DbTest(it), sessionInfo));

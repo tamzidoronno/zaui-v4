@@ -6,4 +6,6 @@ public interface IPmsPricingManager {
 
     PmsPricing getByDefaultCode();
 
+    int deleteByCode(String code);
+
 }

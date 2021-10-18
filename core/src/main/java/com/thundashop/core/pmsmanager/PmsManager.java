@@ -6135,9 +6135,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void deletePricePlan(String code) {
-        PmsPricing prices = priceMap.get(code);
-        priceMap.remove(code);
-        deleteObject(prices);
+        priceMap.remove(code); // TODO remove priceMap
+        pmsPricingManager.deleteByCode(code);
     }
 
     @Override

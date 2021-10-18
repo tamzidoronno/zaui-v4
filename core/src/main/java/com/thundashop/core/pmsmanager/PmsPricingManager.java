@@ -34,4 +34,8 @@ public class PmsPricingManager extends ManagerBase implements IPmsPricingManager
                 .orElse(null);
     }
 
+    @Override
+    public int deleteByCode(String code) {
+        return pmsPricingRepository.markDeleteByCode(code, getSessionInfo());
+    }
 }

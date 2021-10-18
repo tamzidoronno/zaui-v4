@@ -14,6 +14,7 @@ import java.util.UUID;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 
 class DatabaseTest {
 
@@ -111,7 +112,7 @@ class DatabaseTest {
         BasicDBObject updateField = new BasicDBObject("testDate", new Date()).append("order", 100);
         BasicDBObject setQuery = new BasicDBObject("$set", updateField);
 
-        database.update(testDbName, testCollection, query, setQuery);
+        database.updateMultiple(testDbName, testCollection, query, setQuery);
 
         // then
         List<DbTest> list = database.query(testDbName, testCollection, DbTest.class, new BasicDBObject("_id", dbTest.id));
@@ -121,5 +122,29 @@ class DatabaseTest {
         assertThat(actual.id).isEqualTo(dbTest.id);
         assertThat(actual.getTestDate()).isNotNull();
         assertThat(actual.getOrder()).isEqualTo(100);
+    }
+
+    @Test
+    void testUpdateMultipleDocument() {
+        // setup
+        DbTest dbTest1 = new DbTest(UUID.randomUUID().toString(), "code_1");
+        DbTest dbTest2 = new DbTest(UUID.randomUUID().toString(), "code_1");
+        database.save(testDbName, testCollection, dbTest1);
+        database.save(testDbName, testCollection, dbTest2);
+
+        // when
+        BasicDBObject query = new BasicDBObject("strMatch", "code_1");
+        Date testDate = new Date();
+        BasicDBObject updateField = new BasicDBObject("testDate", testDate).append("order", 100);
+        BasicDBObject setQuery = new BasicDBObject("$set", updateField);
+
+        int updateDocNumber = database.updateMultiple(testDbName, testCollection, query, setQuery);
+
+        // then
+        List<DbTest> list = database.query(testDbName, testCollection, DbTest.class, new BasicDBObject("strMatch", "code_1"));
+        assertThat(list).isNotEmpty().size().isEqualTo(2);
+        assertThat(list).extracting(DbTest::getTestDate, DbTest::getOrder)
+                .containsExactly(tuple(testDate, 100), tuple(testDate, 100));
+        assertThat(updateDocNumber).isEqualTo(2);
     }
 }

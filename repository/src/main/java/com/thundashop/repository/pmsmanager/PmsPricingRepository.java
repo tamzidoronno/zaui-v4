@@ -32,8 +32,6 @@ public class PmsPricingRepository extends Repository<PmsPricing> {
 
     public int markDeleteByCode(String code, SessionInfo sessionInfo) {
         DBObject query = new BasicDBObject().append("className", className).append("code", code);
-        DBObject updateFields = new BasicDBObject().append("deleted", new Date()).append("gsDeletedBy", sessionInfo.getCurrentUserId());
-        DBObject setQuery = new BasicDBObject("$set", updateFields);
-        return getDatabase().updateMultiple(getDbName(), getCollectionName(sessionInfo), query, setQuery);
+        return markDeletedByQuery(query, sessionInfo);
     }
 }

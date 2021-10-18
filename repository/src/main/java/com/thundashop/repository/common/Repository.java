@@ -84,4 +84,10 @@ public abstract class Repository<T> {
         return !getDatabase().query(getDbName(), getCollectionName(sessionInfo), entityClass, query).isEmpty();
     }
 
+    public int markDeletedByQuery(DBObject query, SessionInfo sessionInfo) {
+        DBObject updateFields = new BasicDBObject().append("deleted", new Date()).append("gsDeletedBy", sessionInfo.getCurrentUserId());
+        DBObject setQuery = new BasicDBObject("$set", updateFields);
+        return getDatabase().updateMultiple(getDbName(), getCollectionName(sessionInfo), query, setQuery);
+    }
+
 }

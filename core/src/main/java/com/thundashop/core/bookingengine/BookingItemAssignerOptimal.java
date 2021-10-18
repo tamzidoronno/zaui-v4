@@ -439,10 +439,17 @@ public class BookingItemAssignerOptimal {
     }
 
     private List<Booking> getAllUnassignedBookings(Date endDate) {
-        return bookings.stream()
-                .filter(book -> book.bookingItemId == null || book.bookingItemId.isEmpty())
-                .filter(booking -> booking.startDate.before(endDate))
-                .collect(Collectors.toList());
+
+        if (endDate!=null){
+            return bookings.stream()
+                    .filter(book -> book.bookingItemId == null || book.bookingItemId.isEmpty())
+                    .filter(booking -> booking.startDate.before(endDate))
+                    .collect(Collectors.toList());
+        }else{
+            return bookings.stream()
+                    .filter(book -> book.bookingItemId == null || book.bookingItemId.isEmpty())
+                    .collect(Collectors.toList());
+        }
     }
 
     private List<Booking>  getAllAssginedBookings() {

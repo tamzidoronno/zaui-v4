@@ -8,6 +8,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -97,5 +98,28 @@ class DatabaseTest {
     @Test
     void testFullPathClassName() {
         Assertions.assertThat(DbTest.class.getName()).isEqualTo("com.thundashop.repository.db.DbTest");
+    }
+
+    @Test
+    void update() {
+        // setup
+        DbTest dbTest = new DbTest(UUID.randomUUID().toString(), "code_1");
+        database.save(testDbName, testCollection, dbTest);
+
+        // when
+        BasicDBObject query = new BasicDBObject("strMatch", "code_1");
+        BasicDBObject updateField = new BasicDBObject("testDate", new Date()).append("order", 100);
+        BasicDBObject setQuery = new BasicDBObject("$set", updateField);
+
+        database.update(testDbName, testCollection, query, setQuery);
+
+        // then
+        List<DbTest> list = database.query(testDbName, testCollection, DbTest.class, new BasicDBObject("_id", dbTest.id));
+        assertThat(list).isNotEmpty();
+
+        DbTest actual = list.get(0);
+        assertThat(actual.id).isEqualTo(dbTest.id);
+        assertThat(actual.getTestDate()).isNotNull();
+        assertThat(actual.getOrder()).isEqualTo(100);
     }
 }

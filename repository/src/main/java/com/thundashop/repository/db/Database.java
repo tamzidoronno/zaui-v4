@@ -66,4 +66,8 @@ public class Database {
         mongo.dropDatabase(dbName);
     }
 
+    public void update(String dbName, String collectionName, BasicDBObject searchQuery, BasicDBObject setQuery) {
+        DBCollection col = mongo.getDB(dbName).getCollection(collectionName);
+        col.update(searchQuery, setQuery);
+    }
 }

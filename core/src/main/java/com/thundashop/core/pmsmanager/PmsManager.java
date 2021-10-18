@@ -88,7 +88,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private final HashMap<String, PmsAddonDeliveryLogEntry> deliveredAddons = new HashMap<>();
     private final HashMap<String, PmsCareTaker> careTaker = new HashMap<>();
     private final HashMap<String, PmsAdditionalItemInformation> addiotionalItemInfo = new HashMap<>();
-    private final HashMap<String, PmsPricing> priceMap = new HashMap<>();
     private final HashMap<String, ConferenceData> conferenceDatas = new HashMap<>();
     private final HashMap<String, FailedWubookInsertion> failedWubooks = new HashMap<>();
     private final HashMap<String, PmsRoomTypeAccessory> accesories = new HashMap<>();
@@ -259,26 +258,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (dataCommon instanceof PmsRoomTypeAccessory) {
                 accesories.put(dataCommon.id, (PmsRoomTypeAccessory) dataCommon);
             }
-            if (dataCommon instanceof PmsPricing) {
-                PmsPricing price = (PmsPricing) dataCommon;
-                if (price.code.isEmpty()) {
-                    price.code = "default";
-                    saveObject(price);
-                }
-                // TODO this `if block` seems never be executed
-                if (priceMap.containsKey(price.code)) {
-                    for (int i = 0; i < 10; i++) {
-                        String code = price.code + "_" + i;
-                        if (!priceMap.containsKey(code)) {
-                            price.code = code;
-                            saveObject(price);
-                            break;
-                        }
-                        break;
-                    }
-                }
-                priceMap.put(price.code, price);
-            }
             if (dataCommon instanceof PmsCareTaker) {
                 careTaker.put(dataCommon.id, (PmsCareTaker) dataCommon);
             }
@@ -346,12 +325,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     public PmsPricing getPriceObject(String code) {
-        // TODO: Replace with pmsPricingManager.getByCodeOrDefaultCode(code)
-        PmsPricing object = priceMap.get(code);
-        if (object == null) {
-            object = priceMap.get("default");
-        }
-        return object;
+        return pmsPricingManager.getByCodeOrDefaultCode(code);
     }
 
     @Override
@@ -1226,15 +1200,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         prices.longTermDeal = newPrices.longTermDeal;
         prices.coveragePrices = newPrices.coveragePrices;
         prices.coverageType = newPrices.coverageType;
-        if (newPrices.code != null && !newPrices.code.isEmpty()) {
-            if (priceMap.containsKey(prices.code)) {
-                priceMap.remove(prices.code);
-            } else {
-                priceMap.remove("default");
-            }
-            prices.code = newPrices.code;
-            priceMap.put(prices.code, prices);
-        }
 
         for (String typeId : newPrices.dailyPrices.keySet()) {
             HashMap<String, Double> priceMap = newPrices.dailyPrices.get(typeId);
@@ -1254,7 +1219,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
             }
         }
-        saveObject(prices);
+        pmsPricingManager.save(prices);
 
         logEntry("Prices updated", null, null);
 
@@ -6115,27 +6080,24 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public List<String> getpriceCodes() {
-        HashMap<String, PmsPricing> allPrices = priceMap;
-        List<String> codes = new ArrayList<>(allPrices.keySet());
-        return codes;
+        return pmsPricingManager.getPriceCodes();
     }
 
     @Override
     public void createNewPricePlan(String code) {
-        HashMap<String, PmsPricing> current = priceMap;
-        if (current.containsKey(code)) {
+        boolean exist = pmsPricingManager.existByCode(code);
+
+        if (exist) {
             return;
         }
 
         PmsPricing price = new PmsPricing();
         price.code = code;
-        priceMap.put(code, price);
-        saveObject(price);
+        pmsPricingManager.save(price);
     }
 
     @Override
     public void deletePricePlan(String code) {
-        priceMap.remove(code); // TODO remove priceMap
         pmsPricingManager.deleteByCode(code);
     }
 

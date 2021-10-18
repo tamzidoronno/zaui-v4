@@ -4,10 +4,10 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.thundashop.core.pmsmanager.PmsPricing;
 import com.thundashop.repository.common.Repository;
-import com.thundashop.repository.utils.SessionInfo;
 import com.thundashop.repository.db.Database;
+import com.thundashop.repository.utils.SessionInfo;
 
-import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 public class PmsPricingRepository extends Repository<PmsPricing> {
@@ -33,5 +33,13 @@ public class PmsPricingRepository extends Repository<PmsPricing> {
     public int markDeleteByCode(String code, SessionInfo sessionInfo) {
         DBObject query = new BasicDBObject().append("className", className).append("code", code);
         return markDeletedByQuery(query, sessionInfo);
+    }
+
+    public List<String> getPriceCode() {
+        throw new UnsupportedOperationException();
+    }
+
+    public boolean existByCode(String code, SessionInfo sessionInfo) {
+        return exist(new BasicDBObject().append("className", className).append("code", code), PmsPricing.class, sessionInfo);
     }
 }

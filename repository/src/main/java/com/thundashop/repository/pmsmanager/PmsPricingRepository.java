@@ -7,6 +7,7 @@ import com.thundashop.repository.common.Repository;
 import com.thundashop.repository.utils.SessionInfo;
 import com.thundashop.repository.db.Database;
 
+import java.util.Date;
 import java.util.Optional;
 
 public class PmsPricingRepository extends Repository<PmsPricing> {
@@ -27,5 +28,12 @@ public class PmsPricingRepository extends Repository<PmsPricing> {
 
     public String getClassName() {
         return className;
+    }
+
+    public int markDeleteByCode(String code, SessionInfo sessionInfo) {
+        DBObject query = new BasicDBObject().append("className", className).append("code", code);
+        DBObject updateFields = new BasicDBObject().append("deleted", new Date()).append("gsDeletedBy", sessionInfo.getCurrentUserId());
+        DBObject setQuery = new BasicDBObject("$set", updateFields);
+        return getDatabase().updateMultiple(getDbName(), getCollectionName(sessionInfo), query, setQuery);
     }
 }

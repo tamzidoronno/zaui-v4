@@ -1,6 +1,7 @@
 package com.thundashop.repository.pmsmanager;
 
 import com.google.gson.reflect.TypeToken;
+import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.pmsmanager.PmsPricing;
 import com.thundashop.repository.TestCommon;
 import com.thundashop.repository.utils.SessionInfo;
@@ -88,5 +89,30 @@ public class PmsPricingRepositoryTest extends TestCommon {
 
         assertThatThrownBy(() -> repository.findPmsPricingByCode("default", sessionInfo))
                 .isInstanceOf(NotUniqueDataException.class);
+    }
+
+    @Test
+    void testMarkDeleteByCode() {
+        PmsPricing saved = (PmsPricing) repository.save(toPojo(type, jsonPath + "pmspricing.json"), sessionInfo);
+
+        repository.markDeleteByCode(saved.code, sessionInfo);
+
+        Optional<PmsPricing> actual = repository.findById(saved.id, PmsPricing.class, sessionInfo);
+        assertThat(actual).isNotEmpty().map(it -> it.id).contains(saved.id);
+        assertThat(actual).map(it -> it.gsDeletedBy).contains(sessionInfo.getCurrentUserId());
+        assertThat(actual).map(it -> it.deleted).isNotEmpty();
+    }
+
+    @Test
+    void testMarkDeleteByCodeMultiple() {
+        // setup
+        repository.save(toPojo(type, jsonPath + "pmspricing.json"), sessionInfo);
+        repository.save(toPojo(type, jsonPath + "pmspricing.json"), sessionInfo);
+
+        // when
+        int numberOfUpdatedDoc = repository.markDeleteByCode("default", sessionInfo);
+
+        // then
+        assertThat(numberOfUpdatedDoc).isEqualTo(2);
     }
 }

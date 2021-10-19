@@ -64,6 +64,7 @@ public class PmsPricingManager extends ManagerBase implements IPmsPricingManager
     @Override
     public PmsPricing save(PmsPricing pmsPricing) {
         pricingMap.remove(pmsPricing.code); // TODO remove
+        pricingMap.put(pmsPricing.code, pmsPricing);
         saveObject(pmsPricing); // TODO move to repository
         return pmsPricing;
     }

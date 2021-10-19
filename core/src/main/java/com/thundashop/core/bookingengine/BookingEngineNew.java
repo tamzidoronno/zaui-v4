@@ -1125,7 +1125,7 @@ public class BookingEngineNew extends GetShopSessionBeanNamed implements IBookin
             
             BookingItemAssignerOptimal assigner = getAvailableItemsAssigner(bookingItemTypeId, start, end, null);
             assigner.disableErrorCheck();
-            List<OptimalBookingTimeLine> availableBookingItems = assigner.getOptimalAssigned();
+            List<OptimalBookingTimeLine> availableBookingItems = assigner.getOptimalAssigned(end);
             
             assigner.getLinesOverBooked().stream()
                     .forEach(overLine -> {

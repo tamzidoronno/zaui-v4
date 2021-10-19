@@ -16,6 +16,7 @@ import org.mongodb.morphia.annotations.Transient;
 
 import java.io.Serializable;
 import java.security.MessageDigest;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -256,10 +257,9 @@ public class PmsBookingRooms implements Serializable {
         try {
             SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
             return formatter.parse(offset);
-        }catch(Exception e) {
-            GetShopLogHandler.logStack(e, null);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
         }
-        return null;
     }
     
     boolean isActiveOnDay(Date time) {

@@ -960,7 +960,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed implements IB
             if (ignoreErrors) {
                 assigner.disableErrorCheck();
             }
-            List<OptimalBookingTimeLine> availableBookingItems = assigner.getOptimalAssigned();
+            List<OptimalBookingTimeLine> availableBookingItems = assigner.getOptimalAssigned(end);
             
             if (!assigner.getLinesOverBooked().isEmpty()) {
                 assigner.printBookingLines(assigner.getLinesOverBooked());

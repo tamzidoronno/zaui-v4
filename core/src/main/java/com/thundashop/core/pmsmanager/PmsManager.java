@@ -57,6 +57,7 @@ import com.thundashop.core.utils.Constants;
 import com.thundashop.core.utils.UtilManager;
 import com.thundashop.core.webmanager.WebManager;
 import com.thundashop.core.wubook.WubookManager;
+import org.apache.commons.lang3.tuple.Pair;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -69,8 +70,11 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.lang3.StringUtils.*;
 
 /**
@@ -1187,42 +1191,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsPricing setPrices(String code, PmsPricing newPrices) {
-        logger.debug("New prices set from setPrices call code {} , startDate {} , endDate {}", code, newPrices.getStartDate(), newPrices.getEndDate());
-        PmsPricing prices = getPriceObject(code);
-        prices.defaultPriceType = newPrices.defaultPriceType;
-        prices.progressivePrices = newPrices.progressivePrices;
-        prices.pricesExTaxes = newPrices.pricesExTaxes;
-        prices.privatePeopleDoNotPayTaxes = newPrices.privatePeopleDoNotPayTaxes;
-        prices.channelDiscount = newPrices.channelDiscount;
-        prices.derivedPrices = newPrices.derivedPrices;
-        prices.derivedPricesChildren = newPrices.derivedPricesChildren;
-        prices.productPrices = newPrices.productPrices;
-        prices.longTermDeal = newPrices.longTermDeal;
-        prices.coveragePrices = newPrices.coveragePrices;
-        prices.coverageType = newPrices.coverageType;
-
-        for (String typeId : newPrices.dailyPrices.keySet()) {
-            HashMap<String, Double> priceMap = newPrices.dailyPrices.get(typeId);
-            for (String date : priceMap.keySet()) {
-                HashMap<String, Double> existingPriceRange = prices.dailyPrices.get(typeId);
-                if (existingPriceRange == null) {
-                    existingPriceRange = new HashMap();
-                    prices.dailyPrices.put(typeId, existingPriceRange);
-                }
-                Double price = priceMap.get(date);
-                if (price == -999999.0) {
-                    if (existingPriceRange.containsKey(date)) {
-                        existingPriceRange.remove(date);
-                    }
-                } else {
-                    existingPriceRange.put(date, priceMap.get(date));
-                }
-            }
-        }
-        pmsPricingManager.save(prices);
-
+        PmsPricing prices = pmsPricingManager.setPrices(code, newPrices);
         logEntry("Prices updated", null, null);
-
         return prices;
     }
 
@@ -6085,15 +6055,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void createNewPricePlan(String code) {
-        boolean exist = pmsPricingManager.existByCode(code);
-
-        if (exist) {
-            return;
-        }
-
-        PmsPricing price = new PmsPricing();
-        price.code = code;
-        pmsPricingManager.save(price);
+        pmsPricingManager.createNewPricePlan(code);
     }
 
     @Override
@@ -10785,37 +10747,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public boolean updatePrices(List<PmsPricingDayObject> prices) {
-        Date start = null;
-        Date end = null;
-        logger.debug("Prices are being updated");
-        List<BookingItemType> alltypes = bookingEngine.getBookingItemTypes();
-        HashMap<String, BookingItemType> types = new HashMap<>();
-        for(BookingItemType t : alltypes) {
-            types.put(t.id, t);
-        }
+        Map<String, BookingItemType> types = bookingEngine.getBookingItemTypes()
+                .stream()
+                .collect(toMap(it -> it.id, identity()));
+
         try {
-            PmsPricing pricestoupdate = pmsPricingManager.getByDefaultCode();
-            
-            for(PmsPricingDayObject price : prices) {
-                Date dayPrice = PmsBookingRooms.convertOffsetToDate(price.date);
-                if(start == null || dayPrice.before(start)) {
-                    start = dayPrice;
-                }
-                if(end == null || dayPrice.after(end)) {
-                    end = dayPrice;
-                }
-                HashMap<String, Double> dailypricematrix = pricestoupdate.dailyPrices.get(price.typeId);
-                if(dailypricematrix != null) {
-                    dailypricematrix.put(price.date, price.newPrice);
-                    logger.info("New prices set from updatePrices: {} ,  date: {} , new price: {}", types.get(price.typeId).name, price.date, price.newPrice);
-                }
-            }
-            setPrices(pricestoupdate.code, pricestoupdate);
-            wubookManager.updatePricesBetweenDates(start, end);
+            Pair<Date, Date> datePair = pmsPricingManager.updatePrices(prices, types);
+            wubookManager.updatePricesBetweenDates(datePair.getLeft(), datePair.getRight());
             return true;
         } catch (Exception e) {
             logger.error("Failed to update prices", e);
         }
+
         return false;
     }
 

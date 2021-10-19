@@ -1,20 +1,24 @@
 package com.thundashop.core.pmsmanager;
 
 import com.getshop.scope.GetShopSession;
+import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.repository.utils.SessionInfo;
 import com.thundashop.repository.pmsmanager.PmsPricingRepository;
+import org.apache.commons.lang3.tuple.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 @GetShopSession
 public class PmsPricingManager extends ManagerBase implements IPmsPricingManager {
+
+    private static final Logger logger = LoggerFactory.getLogger(PmsPricingManager.class);
 
     private static final String defaultCode = "default";
 
@@ -32,9 +36,9 @@ public class PmsPricingManager extends ManagerBase implements IPmsPricingManager
         return pricingMap.computeIfAbsent(code, this::getPmsPricing); // TODO refactor
     }
 
-    private PmsPricing getPmsPricing(String _code) {
+    private PmsPricing getPmsPricing(String code) {
         SessionInfo storeIdInfo = getStoreIdInfo();
-        return pmsPricingRepository.findPmsPricingByCode(_code, storeIdInfo)
+        return pmsPricingRepository.findPmsPricingByCode(code, storeIdInfo)
                 .orElseGet(() -> pmsPricingRepository.findPmsPricingByCode(defaultCode, storeIdInfo)
                         .orElse(null));
     }
@@ -65,7 +69,82 @@ public class PmsPricingManager extends ManagerBase implements IPmsPricingManager
     public PmsPricing save(PmsPricing pmsPricing) {
         pricingMap.remove(pmsPricing.code); // TODO remove
         pricingMap.put(pmsPricing.code, pmsPricing);
-        saveObject(pmsPricing); // TODO move to repository
+        pmsPricingRepository.save(pmsPricing, getSessionInfo());
         return pmsPricing;
+    }
+
+    @Override
+    public PmsPricing setPrices(String code, PmsPricing newPrices) {
+        logger.debug("New prices set from setPrices call code {} , startDate {} , endDate {}", code,
+                newPrices.getStartDate(), newPrices.getEndDate());
+
+        PmsPricing prices = getByCodeOrDefaultCode(code);
+        prices.defaultPriceType = newPrices.defaultPriceType;
+        prices.progressivePrices = newPrices.progressivePrices;
+        prices.pricesExTaxes = newPrices.pricesExTaxes;
+        prices.privatePeopleDoNotPayTaxes = newPrices.privatePeopleDoNotPayTaxes;
+        prices.channelDiscount = newPrices.channelDiscount;
+        prices.derivedPrices = newPrices.derivedPrices;
+        prices.derivedPricesChildren = newPrices.derivedPricesChildren;
+        prices.productPrices = newPrices.productPrices;
+        prices.longTermDeal = newPrices.longTermDeal;
+        prices.coveragePrices = newPrices.coveragePrices;
+        prices.coverageType = newPrices.coverageType;
+
+        for (String typeId : newPrices.dailyPrices.keySet()) {
+            HashMap<String, Double> priceMap = newPrices.dailyPrices.get(typeId);
+            for (String date : priceMap.keySet()) {
+                HashMap<String, Double> existingPriceRange = prices.dailyPrices.computeIfAbsent(typeId, k -> new HashMap<>());
+                Double price = priceMap.get(date);
+                if (price == -999999.0) {
+                    existingPriceRange.remove(date);
+                } else {
+                    existingPriceRange.put(date, priceMap.get(date));
+                }
+            }
+        }
+
+        return save(prices);
+    }
+
+    @Override
+    public Pair<Date, Date> updatePrices(List<PmsPricingDayObject> prices, Map<String, BookingItemType> types) {
+        Date start = null, end = null;
+        PmsPricing pricesToUpdate = getByDefaultCode();
+
+        for(PmsPricingDayObject price : prices) {
+            Date dayPrice = PmsBookingRooms.convertOffsetToDate(price.date);
+
+            if(start == null || dayPrice.before(start)) {
+                start = dayPrice;
+            }
+
+            if(end == null || dayPrice.after(end)) {
+                end = dayPrice;
+            }
+
+            HashMap<String, Double> dailyPriceMatrix = pricesToUpdate.dailyPrices.get(price.typeId);
+
+            if(dailyPriceMatrix != null) {
+                dailyPriceMatrix.put(price.date, price.newPrice);
+                logger.info("New prices set from updatePrices: {} ,  date: {} , new price: {}", types.get(price.typeId).name, price.date, price.newPrice);
+            }
+        }
+
+        setPrices(pricesToUpdate.code, pricesToUpdate);
+        return Pair.of(start, end);
+    }
+
+    @Override
+    public void createNewPricePlan(String code) {
+        boolean exist = existByCode(code);
+
+        if (exist) {
+            return;
+        }
+
+        PmsPricing price = new PmsPricing();
+        price.code = code;
+        save(price);
     }
 }

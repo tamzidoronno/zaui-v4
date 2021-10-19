@@ -101,14 +101,14 @@ public class BookingItemAssignerOptimal {
      * @return 
      */
     private List<OptimalBookingTimeLine> makeOptimalTimeLines(Date startDate, Date endDate) {
-        List<Booking> unassignedBookings = new ArrayList(getAllUnassignedBookings());
+        List<Booking> unassignedBookings = new ArrayList(getAllUnassignedBookings(endDate));
         List<Booking> assignedBookings = new ArrayList(getAllAssginedBookings());
         
         Collections.sort(unassignedBookings, Booking.sortByStartDate());
         Collections.sort(assignedBookings, Booking.sortByStartDate());
-        
+
         List<OptimalBookingTimeLine> bookingLines = makeLinesOfAssignedBookings(assignedBookings);
-             
+
         String k1StoreId = "26c65d63-e353-4997-83df-488cc2fa3550";
         
         // Optimalisation as there is only one room of a category, so there is no point trying to make it optimal.
@@ -438,10 +438,18 @@ public class BookingItemAssignerOptimal {
         return new ArrayList();
     }
 
-    private List<Booking> getAllUnassignedBookings() {
-        return bookings.stream()
-                .filter(book -> book.bookingItemId == null || book.bookingItemId.isEmpty())
-                .collect(Collectors.toList());
+    private List<Booking> getAllUnassignedBookings(Date endDate) {
+
+        if (endDate!=null){
+            return bookings.stream()
+                    .filter(book -> book.bookingItemId == null || book.bookingItemId.isEmpty())
+                    .filter(booking -> booking.startDate.before(endDate))
+                    .collect(Collectors.toList());
+        }else{
+            return bookings.stream()
+                    .filter(book -> book.bookingItemId == null || book.bookingItemId.isEmpty())
+                    .collect(Collectors.toList());
+        }
     }
 
     private List<Booking>  getAllAssginedBookings() {
@@ -505,7 +513,7 @@ public class BookingItemAssignerOptimal {
                     if (overlappingBooking(booking, timeLine.bookings)) {
                         continue;
                     }
-                    
+
                     long closestDistanceInBooking = timeLine.getDistanceBetweenBookings(booking);
                     if (closestDistanceInBooking < closestDistance) {
                         closestDistance = closestDistanceInBooking;
@@ -639,9 +647,9 @@ public class BookingItemAssignerOptimal {
         }
     }
     
-    public List<OptimalBookingTimeLine> getOptimalAssigned() {
+    public List<OptimalBookingTimeLine> getOptimalAssigned(Date endDate) {
         dryRun = true;
-        return preCheck(null, null);
+        return preCheck(null, endDate);
     }
 
     private BookingItemTimeline getNextAvailableItem(OptimalBookingTimeLine line, List<OptimalBookingTimeLine> bookingLines, List<String> itemIdsUsed) {

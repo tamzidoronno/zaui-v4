@@ -14,10 +14,15 @@ task fatJar(type: Jar) {
         exclude "META-INF/*.DSA"
         exclude "META-INF/*.RSA"
 }
-
+buildscript {
+        // this is used only for startGenerator script
+        dependencies {
+            classpath group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.30'
+        }
+}
 task startGenerator(type:JavaExec) {
     main = 'com.thundashop.core.apigenerator.GenerateApi'
-    classpath = sourceSets.main.runtimeClasspath
+    classpath = sourceSets.main.output.classesDirs + sourceSets.main.compileClasspath
 }
 
 task generateJavascriptApi(type:JavaExec) {
@@ -34,4 +39,19 @@ manifest {
 dependencies {
     compile project(":messages")
     compile fileTree(dir: '../libs', include: ['*.jar'])
+    implementation group: 'ca.pjer', name: 'logback-awslogs-appender', version: '1.5.0'
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
+    implementation group: 'software.amazon.awssdk', name: 'bundle', version: '2.16.83'
+    implementation group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.5.5'
+    implementation group: 'org.apache.httpcomponents', name: 'httpasyncclient', version: '4.1.4'
+    implementation group: 'org.apache.httpcomponents', name: 'httpcore', version: '4.4.5'
+    implementation group: 'org.apache.httpcomponents', name: 'httpcore-nio', version: '4.4.5'
+    implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.5'
+}
+
+
+task infoSourceSets(){
+    println("result:")
+    println(sourceSets.main.output.classesDirs)
+    println(sourceSets.main.compileClasspath.asPath)
 }

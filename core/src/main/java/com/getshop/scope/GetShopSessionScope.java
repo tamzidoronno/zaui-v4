@@ -4,24 +4,21 @@
  */
 package com.getshop.scope;
 
-import com.thundashop.core.common.AppContext;
-import com.thundashop.core.common.GetShopBeanException;
-import com.thundashop.core.common.GetShopLogHandler;
-import com.thundashop.core.common.ManagerBase;
-import com.thundashop.core.common.Session;
-import com.thundashop.core.common.StoreComponent;
+import com.thundashop.core.common.*;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.storemanager.data.Store;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.config.Scope;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -29,19 +26,17 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class GetShopSessionScope implements Scope {
-    private StorePool storePool = null;
-    private Map<Long, String> threadStoreIds = new ConcurrentHashMap<Long, String>();
-    private Map<Long, String> threadSessionBeanNames = new ConcurrentHashMap<Long, String>();
-    private Map<Long, String> originalSessionBeanName = new ConcurrentHashMap<Long, String>();
-    private Map<Long, Session> threadSessions = new ConcurrentHashMap<Long, Session>();
-    private Map<String, Object> objectMap = new ConcurrentHashMap<String, Object>();
-    private Map<String, Object> namedSessionObjects = new ConcurrentHashMap<String, Object>();
 
-    public String getCurrentMultilevelName() {
-        long threadId = Thread.currentThread().getId();
-        return threadSessionBeanNames.get(threadId);
-    }
-    
+    private static final Logger log = LoggerFactory.getLogger(GetShopSessionScope.class);
+
+    private StorePool storePool = null;
+    private final Map<Long, String> threadStoreIds = new ConcurrentHashMap<Long, String>();
+    private final Map<Long, String> threadSessionBeanNames = new ConcurrentHashMap<Long, String>();
+    private final Map<Long, String> originalSessionBeanName = new ConcurrentHashMap<Long, String>();
+    private final Map<Long, Session> threadSessions = new ConcurrentHashMap<Long, Session>();
+    private final Map<String, Object> objectMap = new ConcurrentHashMap<String, Object>();
+    private final Map<String, Object> namedSessionObjects = new ConcurrentHashMap<String, Object>();
+
     public <T> T getNamedSessionBean(String multiLevelName, Class className) {
         if (multiLevelName == null || multiLevelName.isEmpty()) {
             throw new RuntimeException("Come on!! name your multilevel beans properly!!!");
@@ -137,23 +132,12 @@ public class GetShopSessionScope implements Scope {
                 
                 objectMap.put(nameWithStoreId, object);
             } catch (BeansException exception) {
-                GetShopLogHandler.logPrintStatic("Got an bean exception ? ", storeId);
-                exception.printStackTrace();
+                log.error("Got an bean exception ? storeId `{}`", storeId, exception);
             }
         }
 
         return objectMap.get(nameWithStoreId);
 
-    }
-    
-    /**
-     * There must be a very good reason for using this function.
-     * @param name
-     * @param storeId
-     * @return 
-     */
-    public Object getManagerBasedOnNameAndStoreId(String name, String storeId) {
-        return objectMap.get(name + "_" + storeId);
     }
     
     public List<GetShopSessionBeanNamed> getSessionNamedObjects() {
@@ -224,20 +208,20 @@ public class GetShopSessionScope implements Scope {
             objectMap.remove(key);
         }
     }
-    
+
     public void cleanupThreadSessions() {
-        System.out.println(new Date() + " | Thread sessions before removal : " + threadSessions.size() );
-        List<Long> toRemove = new ArrayList();
-        
+        log.debug("Thread sessions before removal : `{}`", threadSessions.size());
+        List<Long> toRemove = new ArrayList<>();
+
         for (Long threadId : threadSessions.keySet()) {
             Session session = threadSessions.get(threadId);
             if (session.hasExpired()) {
                 toRemove.add(threadId);
             }
         }
-                
-        toRemove.stream().forEach(o -> threadSessions.remove(o));
-        
-        System.out.println(new Date() + " | Thread sessions after removal : " + threadSessions.size() );
+
+        toRemove.forEach(threadSessions::remove);
+
+        log.debug("Thread sessions after removal : `{}`", threadSessions.size());
     }
 }

@@ -6,23 +6,18 @@
 package com.thundashop.core.databasemanager;
 
 import com.getshop.scope.GetShopSession;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.Mongo;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
+import com.mongodb.*;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopLogHandler;
-import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.StoreComponent;
-import static com.thundashop.core.databasemanager.Database.mongoPort;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.start.Runner;
-import com.thundashop.core.storemanager.StorePool;
-import com.thundashop.core.storemanager.data.Store;
+import org.mongodb.morphia.Morphia;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -30,15 +25,10 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.mongodb.morphia.Morphia;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  *
@@ -48,15 +38,14 @@ import org.springframework.stereotype.Component;
 @GetShopSession
 public class DatabaseRemote extends StoreComponent {
 
+    private static final Logger log = LoggerFactory.getLogger(DatabaseRemote.class);
+
     public static int mongoPort = 27017;
 
     private Mongo mongo;
     private Morphia morphia;
     
     private String collectionPrefix = "col_";
-    
-    @Autowired
-    public Logger logger;
     
     private String[] readLines(String filename) {
         FileReader fileReader;
@@ -71,7 +60,7 @@ public class DatabaseRemote extends StoreComponent {
             bufferedReader.close();
             return lines.toArray(new String[lines.size()]);
         } catch (IOException ex) {
-            System.out.println("Warning, you do not have the commonpassword.txt file on your computer, you will not be able to write to the common database. file should be located ../commonpassword.txt, next to the secret.txt");
+            log.error("Warning, you do not have the commonpassword.txt file on your computer, you will not be able to write to the common database. file should be located ../commonpassword.txt, next to the secret.txt", ex);
         }
         
         return new String[0];
@@ -81,7 +70,7 @@ public class DatabaseRemote extends StoreComponent {
         try {
             createDataFolder();
         } catch (IOException ex) {
-            ex.printStackTrace();
+            log.error("", ex);
         }
         
         
@@ -109,7 +98,7 @@ public class DatabaseRemote extends StoreComponent {
         String host = System.getenv("HOSTNAME_MONGODB");
         boolean foundInEnvVars = host != null && host.length() > 0;
         if (!foundInEnvVars){ host = "localhost"; }
-        System.out.println("Connecting to mongo host: " + host);
+        log.debug("Connecting to mongo host: `{}`", host);
 
         mongo = new Mongo(host, Database.mongoPort);
     }
@@ -128,16 +117,14 @@ public class DatabaseRemote extends StoreComponent {
         }
 
         if (file.exists() && !file.isDirectory()) {
-            GetShopLogHandler.logPrintStatic("The file " + file.getPath() + " is not a folder", null);
+            log.error("The file " + file.getPath() + " is not a folder");
             System.exit(-1);
         }
 
         file.mkdir();
 
         if (!file.exists()) {
-            GetShopLogHandler.logPrintStatic("=======================================================================================================", null);
-            GetShopLogHandler.logPrintStatic("Was not able to create folder " + file.getCanonicalPath(), null);
-            GetShopLogHandler.logPrintStatic("=======================================================================================================", null);
+            log.error("Was not able to create folder `{}`", file.getCanonicalPath());
             System.exit(-1);
         }
 
@@ -149,7 +136,7 @@ public class DatabaseRemote extends StoreComponent {
         }
         
         if (!Runner.AllowedToSaveToRemoteDatabase) {
-            System.out.println("WARNING!!!!!!!!!!!!!!!! Data is not stored to remote database because remote activation is not activated");
+            log.warn("WARNING!!!!!!!!!!!!!!!! Data is not stored to remote database because remote activation is not activated");
             return;
         }
         
@@ -160,9 +147,9 @@ public class DatabaseRemote extends StoreComponent {
             mongo.getDB(credentials.manangerName).getCollection(collectionPrefix + data.storeId).save(dbObject);
             mongo.close();
         } catch (com.mongodb.CommandFailureException ex) {
-            ex.printStackTrace();
+            log.error("", ex);
         } catch (UnknownHostException ex) {
-            java.util.logging.Logger.getLogger(DatabaseRemote.class.getName()).log(Level.SEVERE, null, ex);
+            log.error("", ex);
         }
     }
 
@@ -195,7 +182,7 @@ public class DatabaseRemote extends StoreComponent {
 
                 Runner.cached.put(key, retlist.collect(Collectors.toList()));
             } catch (Exception ex) {
-                java.util.logging.Logger.getLogger(DatabaseRemote.class.getName()).log(Level.WARNING, null, ex);
+                log.error("", ex);
             }
 
             return Runner.cached.get(key);
@@ -215,7 +202,7 @@ public class DatabaseRemote extends StoreComponent {
             data.onSaveValidate();
             addDataCommonToDatabase(data, credentials);
         } catch (Exception ex) {
-            java.util.logging.Logger.getLogger(DatabaseRemote.class.getName()).log(Level.WARNING, null, ex);
+            log.error("", ex);
         }
     }
 }

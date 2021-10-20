@@ -24,7 +24,7 @@ public class ConferenceDataManager extends ManagerBase {
     }
 
     public ConferenceData save(ConferenceData conferenceData) {
-        return (ConferenceData) conferenceDataRepository.save(conferenceData, getSessionInfo());
+        return conferenceDataRepository.save(conferenceData, getSessionInfo());
     }
 
     public ConferenceData findByBookingId(String bookingId) {

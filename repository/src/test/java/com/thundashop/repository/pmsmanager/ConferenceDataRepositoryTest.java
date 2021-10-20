@@ -51,7 +51,7 @@ class ConferenceDataRepositoryTest extends TestCommon {
     void save() {
         ConferenceData conferenceData = toPojo(type, "src/test/resources/pmsmanager/conferencedata/conferenceData.json");
 
-        ConferenceData expected = (ConferenceData) conferenceDataRepository.save(conferenceData, sessionInfo);
+        ConferenceData expected = conferenceDataRepository.save(conferenceData, sessionInfo);
         Optional<ConferenceData> actual = conferenceDataRepository.findById(expected.id, ConferenceData.class, sessionInfo);
 
         assertThat(actual).isNotEmpty()
@@ -93,10 +93,10 @@ class ConferenceDataRepositoryTest extends TestCommon {
         final ConferenceData conferenceData2 = toPojo(type, "src/test/resources/pmsmanager/conferencedata/conferenceData1.json");
         final ConferenceData conferenceData3 = toPojo(type, "src/test/resources/pmsmanager/conferencedata/conferenceData1.json");
 
-        ConferenceData previouslySaved = (ConferenceData) conferenceDataRepository.save(conferenceData1, sessionInfo);
+        ConferenceData previouslySaved = conferenceDataRepository.save(conferenceData1, sessionInfo);
         conferenceData2.id = previouslySaved.id;
 
-        ConferenceData actual = (ConferenceData) conferenceDataRepository.save(conferenceData2, sessionInfo);
+        ConferenceData actual = conferenceDataRepository.save(conferenceData2, sessionInfo);
 
         // these are the fields set while saving. need to test separately.
         assertThat(actual).isNotNull()

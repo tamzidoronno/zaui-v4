@@ -51,7 +51,7 @@ public class PmsPricingRepositoryTest extends TestCommon {
     void save() {
         PmsPricing pmsPricing = toPojo(type, jsonPath + "pmspricing.json");
 
-        PmsPricing actual = (PmsPricing) repository.save(pmsPricing, sessionInfo);
+        PmsPricing actual = repository.save(pmsPricing, sessionInfo);
 
         assertThat(actual).isNotNull();
         assertThat(actual.id).isNotEmpty();
@@ -64,7 +64,7 @@ public class PmsPricingRepositoryTest extends TestCommon {
 
     @Test
     void testFindPmsPricingByCode() {
-        PmsPricing pmsPricing = (PmsPricing) repository.save(toPojo(type, jsonPath + "pmspricing.json"), sessionInfo);
+        PmsPricing pmsPricing = repository.save(toPojo(type, jsonPath + "pmspricing.json"), sessionInfo);
 
         Optional<PmsPricing> actual = repository.findPmsPricingByCode("default", sessionInfo);
 
@@ -93,7 +93,7 @@ public class PmsPricingRepositoryTest extends TestCommon {
 
     @Test
     void testMarkDeleteByCode() {
-        PmsPricing saved = (PmsPricing) repository.save(toPojo(type, jsonPath + "pmspricing.json"), sessionInfo);
+        PmsPricing saved = repository.save(toPojo(type, jsonPath + "pmspricing.json"), sessionInfo);
 
         repository.markDeleteByCode(saved.code, sessionInfo);
 

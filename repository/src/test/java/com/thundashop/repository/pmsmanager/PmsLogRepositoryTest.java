@@ -63,7 +63,7 @@ class PmsLogRepositoryTest extends TestCommon {
                 .setLanguage("en")
                 .build();
 
-        PmsLog actualPmsLog = (PmsLog) pmsLogRepository.save(expectedPmsLog, sessionInfo);
+        PmsLog actualPmsLog = pmsLogRepository.save(expectedPmsLog, sessionInfo);
 
         assertThat(actualPmsLog).isNotNull();
         assertThat(actualPmsLog.id).isNotEmpty();

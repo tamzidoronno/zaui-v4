@@ -37,7 +37,7 @@ public abstract class Repository<T> {
         return "col_" + sessionInfo.getStoreId();
     }
 
-    public DataCommon save(DataCommon dataCommon, SessionInfo sessionInfo) {
+    public T save(DataCommon dataCommon, SessionInfo sessionInfo) {
         if (isEmpty(dataCommon.id)) {
             dataCommon.id = UUID.randomUUID().toString();
         }
@@ -61,7 +61,7 @@ public abstract class Repository<T> {
             dataCommon.updateTranslation(lang);
         }
 
-        return database.save(dbName, getCollectionName(sessionInfo), dataCommon);
+        return (T) database.save(dbName, getCollectionName(sessionInfo), dataCommon);
     }
 
     protected Optional<T> getOne(DBObject query, Class<T> entityClass, SessionInfo sessionInfo) {

@@ -457,6 +457,22 @@ public class Database extends StoreComponent {
         return retObjects;
     }
 
+    // TODO Refactor these overloaded `query` method. Duplicate code
+    public List<DataCommon> query(String manager, String storeId, DBObject query, DBObject orderBy, int limit) {
+        DBCollection col = getCollection(manager, storeId);
+        List<DataCommon> retObjects = new ArrayList<>();
+
+        try (DBCursor res = col.find(query).sort(orderBy).limit(limit)) {
+            while (res.hasNext()) {
+                DBObject nx = res.next();
+                DataCommon data = morphia.fromDBObject(DataCommon.class, nx);
+                retObjects.add(data);
+            }
+        }
+
+        return retObjects;
+    }
+
     public DBCollection getCollection(String manager, String storeId1) {
         DB db = mongo.getDB(manager);
         DBCollection col = db.getCollection("col_" + storeId1);

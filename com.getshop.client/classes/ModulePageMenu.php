@@ -174,7 +174,7 @@ class ModulePageMenu {
                 $v5_url = 'https://v5-'.$_SERVER['SERVER_NAME'].'?token='.session_id();
                 echo "<a class='gs_ignorenavigate' href='$v5_url'><div class='gs_framework_module'><i class='fa fa-toggle-up'></i><br/>Switch to V5</div></a>";    
             }
-           
+
             if ($printPageMenuInModulesMenu) {
                 $this->printSupportMenuIcon();
             }

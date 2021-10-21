@@ -88,8 +88,13 @@ import java.util.stream.Collectors;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 /**
  *
@@ -98,6 +103,8 @@ import org.springframework.stereotype.Component;
 @Component
 @GetShopSession
 public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
+
+    private static final Logger logger = LoggerFactory.getLogger(PmsManager.class);
 
     private HashMap<String, PmsBooking> bookings = new HashMap();
     private HashMap<String, String> bookingIdMap = new HashMap();
@@ -215,6 +222,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Autowired
     private ChecklistManager checkListManager;
+
+    @Autowired
+    private PmsLogManager pmsLogManager;
     
     
     @Autowired
@@ -331,12 +341,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     additionDataForTypes.add(cur);
                 }
             }
-            if (dataCommon instanceof PmsLog) {
-                PmsLog entry = (PmsLog) dataCommon;
-                if (entry.logText.contains("Automarking booking as paid for, since no orders has been added") || entry.logText.equals("Booking saved / updated") || entry.logText.contains("booking has been deleted")) {
-                    deleteObject(entry);
-                }
-            }
+
             if (dataCommon instanceof PmsAdditionalItemInformation) {
                 PmsAdditionalItemInformation res = (PmsAdditionalItemInformation) dataCommon;
                 addiotionalItemInfo.put(res.itemId, res);  
@@ -1401,7 +1406,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     public void doNotification(String key, PmsBooking booking, PmsBookingRooms room) {
 
-        if(room.deleted && key != "room_cancelled") return;
+        if (room != null && room.deleted && !"room_cancelled".equalsIgnoreCase(key)) return;
 
         if(pmsNotificationManager.isActive()) {
             pmsNotificationManager.doNotification(key, booking, room);
@@ -3191,66 +3196,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public List<PmsLog> getLogEntries(PmsLog filter) {
+        logger.debug("PmsLog for bookingId {} filter {}", filter.bookingId, filter);
         List<PmsLog> logentries = queryLogEntries(filter);
-        
-        List<PmsLog> res = new ArrayList();
-        if (filter != null) {
-            for (PmsLog log : logentries) {
-                if (filter.tag != null && !filter.tag.isEmpty()) {
-                    if (log.tag == null || !log.tag.equals(filter.tag)) {
-                        continue;
-                    }
-                }
-                if (!filter.bookingId.isEmpty()) {
-                    if (filter.bookingId.equals(log.bookingId)) {
-                        res.add(log);
-                    }
-                } else if (!filter.bookingItemId.isEmpty()) {
-                    if (filter.bookingItemId.equals(log.bookingItemId)) {
-                        res.add(log);
-                    }
-                } else if (filter.logType != null && !filter.logType.isEmpty()) {
-                    if (filter.logType.equals(log.logType)) {
-                        res.add(log);
-                    }
-                } else if ((!filter.roomId.isEmpty() && filter.roomId.equals(log.roomId)) || log.roomId == null || log.roomId.isEmpty()) {
-                    res.add(log);
-                } else if(filter.includeAll) {
-                    res.add(log);
-                }
-            }
-        } else {
-            res = logentries;
-        }
+        logger.debug("PmsLogs found for bookingId {} count {}", filter.bookingId, logentries.size());
 
-        Collections.sort(res, new Comparator<PmsLog>() {
-            public int compare(PmsLog o1, PmsLog o2) {
-                if (o2.rowCreatedDate != null && o1.rowCreatedDate != null) {
-                    return o2.rowCreatedDate.compareTo(o1.rowCreatedDate);
-                }
-                return o2.dateEntry.compareTo(o1.dateEntry);
-            }
-        });
-
-        if (res.size() > 100) {
-            List<PmsLog> newres = new ArrayList();
-            int i = 0;
-            for (PmsLog test : res) {
-                i++;
-                newres.add(test);
-                if (i > 100 && !filter.includeAll) {
-                    break;
+        for (PmsLog log : logentries) {
+            if (isEmpty(log.userName)) {
+                User user = userManager.getUserById(log.userId);
+                if (user != null) {
+                    log.userName = user.fullName;
                 }
             }
-            res = newres;
-        }
 
-        for (PmsLog log : res) {
-            User user = userManager.getUserById(log.userId);
-            if (user != null) {
-                log.userName = user.fullName;
-            }
-            if (log.bookingItemId != null && !log.bookingItemId.isEmpty()) {
+            if (isEmpty(log.roomName) && isNotEmpty(log.bookingItemId)) {
                 BookingItem item = bookingEngine.getBookingItem(log.bookingItemId);
                 if (item != null) {
                     log.roomName = item.bookingItemName;
@@ -3258,7 +3216,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
 
-        return res;
+        return logentries;
     }
 
     private String convertToStandardTime(Date start) {
@@ -5444,14 +5402,21 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (getSession() != null && getSession().currentUser != null) {
             userId = getSession().currentUser.id;
         }
+
+        User user = userManager.getUserById(userId);
+        if (user != null) {
+            log.userName = user.fullName;
+        }
+
         if (log.bookingItemId != null) {
             BookingItem item = bookingEngine.getBookingItem(log.bookingItemId);
             if (item != null) {
                 log.bookingItemType = item.bookingItemTypeId;
+                log.roomName = item.bookingItemName;
             }
         }
         log.userId = userId;
-        saveObject(log);
+        pmsLogManager.save(log);
 
         if (log.tag != null && log.tag.equals("mobileapp")) {
             List<String> emailsToNotify = configuration.emailsToNotify.get("applogentry");
@@ -10333,24 +10298,31 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     private List<PmsLog> queryLogEntries(PmsLog filter) {
-        String manager = "PmsManager_default";
-        if(storeId.equals("a152b5bd-80b6-417b-b661-c7c522ccf305")) { manager = "PmsManager_demo"; }
-        if(storeId.equals("3b647c76-9b41-4c2a-80db-d96212af0789")) { manager = "PmsManager_demo"; }
-        if(storeId.equals("e625c003-9754-4d66-8bab-d1452f4d5562")) { manager = "PmsManager_demo"; }
-        
         BasicDBObject query = new BasicDBObject();
+        BasicDBObject sort = new BasicDBObject();
+
         query.put("className", PmsLog.class.getCanonicalName());
-        if(filter.bookingId != null && !filter.bookingId.isEmpty()) {
+        if(isNotEmpty(filter.bookingId)) {
             query.put("bookingId", filter.bookingId);
         }
-        if(filter.logType != null && !filter.logType.isEmpty()) {
+        if(isNotEmpty(filter.logType)) {
             query.put("logType", filter.logType);
         }
+        if (isNotEmpty(filter.tag)) {
+            query.put("tag", filter.tag);
+        }
+        if (isNotEmpty(filter.bookingItemId)) {
+            query.put("bookingItemId", filter.bookingItemId);
+        }
+        if (isNotEmpty(filter.roomId)) {
+            query.put("roomId", filter.roomId);
+        }
 
-        List<PmsLog> result = database.query(manager, storeId, query).stream()
-                .map(o -> (PmsLog)o)
-                .collect(Collectors.toList());
-        return result;
+        sort.put("rowCreatedDate", -1);
+        int limit = filter.includeAll ? Integer.MAX_VALUE : 100;
+
+        logger.debug("PmsLog retrieve query for bookingId {} , query {}", filter.bookingId, query);
+        return pmsLogManager.query(query, sort , limit);
     }
 
     @Override

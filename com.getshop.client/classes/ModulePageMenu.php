@@ -10,8 +10,18 @@
  *
  * @author ktonder
  */
+if(file_exists('/thundashopimages/v5customers.php'))
+{
+    include '/thundashopimages/v5customers.php';
+}
+else
+{
+    function isV5Customer($storeId)
+    {
+        return false;
+    }
+}
 
-include '/thundashopimages/v5customers.php';
 
 class ModulePageMenu {
 

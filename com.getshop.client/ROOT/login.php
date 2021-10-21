@@ -1,7 +1,17 @@
 <?
 include '../loader.php';
 
-include '/thundashopimages/v5customers.php';
+if(file_exists('/thundashopimages/v5customers.php'))
+{
+    include '/thundashopimages/v5customers.php';
+}
+else
+{
+    function isV5Customer($storeId)
+    {
+        return false;
+    }
+}
 
 
 $factory = IocContainer::getFactorySingelton();

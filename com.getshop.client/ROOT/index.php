@@ -2,7 +2,17 @@
 $filecontent = file_get_contents("../etc/config.txt");
 $localmode = strstr($filecontent, "localhost");
 
-include '/thundashopimages/v5customers.php';
+if(file_exists('/thundashopimages/v5customers.php'))
+{
+    include '/thundashopimages/v5customers.php';
+}
+else
+{
+    function isV5Customer($storeId)
+    {
+        return false;
+    }
+}
 
 if ($localmode) {
     session_start();

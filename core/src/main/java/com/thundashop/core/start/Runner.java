@@ -4,37 +4,30 @@ import com.getshop.scope.GetShopSessionScopeCleaner;
 import com.google.gson.Gson;
 import com.mashape.unirest.http.ObjectMapper;
 import com.mashape.unirest.http.Unirest;
-import com.thundashop.core.common.AppContext;
-import com.thundashop.core.common.FrameworkConfig;
-import com.thundashop.core.common.GetShopLogHandler;
-import com.thundashop.core.common.Logger;
-import com.thundashop.core.common.StorePool;
+import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.DatabaseRemoteCache;
 import com.thundashop.core.databasemanager.DatabaseUpdater;
 import com.thundashop.core.socket.WebInterface2;
 import com.thundashop.core.socket.WebSocketServerImpl;
-import com.thundashop.core.socket.WebSocketServerImplSSL;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.PrintWriter;
-import java.lang.reflect.Method;
-import java.security.KeyStore;
-import java.util.UUID;
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManagerFactory;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ResourceHandler;
-import org.java_websocket.server.DefaultSSLWebSocketServerFactory;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import java.io.PrintWriter;
+import java.lang.reflect.Method;
+import java.util.UUID;
 
 /**
  *
  * @author k
  */
 public class Runner {
+
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(Runner.class);
+
     public static boolean AllowedToSaveToRemoteDatabase = false;
     public static String OVERALLPASSWORD = UUID.randomUUID().toString();
 
@@ -44,6 +37,9 @@ public class Runner {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws InterruptedException, Exception {
+
+        log.info("Starting application...");
+
         java.lang.System.setProperty("java.net.preferIPv6Addresses", "false");
         java.lang.System.setProperty("java.net.preferIPv4Stack", "true");
 
@@ -127,7 +123,7 @@ public class Runner {
         try {
             if (java.lang.System.getProperty("gs_apigenerator") != null) {
                 Class cls = Class.forName(java.lang.System.getProperty("gs_apigenerator"));
-                System.out.println(cls);
+                log.debug("invokeApiGenerator class `{}`", cls);
                 Method method = cls.getMethod("main", String[].class);
                 String[] params = null; // init params accordingly
                 method.invoke(null, (Object) params);

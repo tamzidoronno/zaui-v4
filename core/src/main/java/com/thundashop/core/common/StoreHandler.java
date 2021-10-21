@@ -24,7 +24,6 @@ import com.thundashop.core.usermanager.data.UserPrivilege;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.annotation.Annotation;
-import java.lang.management.ManagementFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -62,36 +61,9 @@ public class StoreHandler {
     }
         
     public synchronized Object executeMethodSync(JsonObject2 inObject, Class[] types, Object[] argumentValues) throws ErrorException {
-        long start = System.currentTimeMillis();
-        GetShopTimer.start();
-        
-        Object rest = executeMethodWithTiming(inObject, types, argumentValues);
-        
-        GetShopTimer.timeEntry("Finished", "StoreHandler");
-        String timing = GetShopTimer.getPrintedTiming();
-        timing += "\n\n" + inObject.getPrettyPrinted();
-        GetShopTimer.destroy();
-        long end = System.currentTimeMillis();
-        
-        long diff = end - start;
-        if (diff > 40) {
-            GetShopLogHandler.logPrintStatic("" + diff + " : " + inObject.interfaceName + " method: " + inObject.method, storeId);
-            
-            if (!timing.isEmpty() && diff > 3000) {
-                GetShopLogHandler.logPrintStatic(timing, storeId);
-            }
-        }
-        
-        return rest;
+        return executeMethod(inObject, types, argumentValues, true);
     }
 
-    private Object executeMethodWithTiming(JsonObject2 inObject, Class[] types, Object[] argumentValues) throws ErrorException {
-        GetShopTimer.timeEntry("Thread dead timer started", "StoreHandler");
-        Object rest = executeMethod(inObject, types, argumentValues, true);
-        return rest;
-        
-    }
-    
     public  void setGetShopModule(String sessionId, String moduleId) {
         Session session = getSession(sessionId);
         if (session != null) {
@@ -117,16 +89,14 @@ public class StoreHandler {
     private Object internaleExecuteMethod(JsonObject2 inObject, Class[] types, Object[] argumentValues, boolean isFromSynchronizedCall) throws ErrorException {
         Session session = getSession(inObject.sessionId);
         initMultiLevels(storeId, session); 
-        
-        GetShopTimer.timeEntry("Initted multilevelnames", "StoreHandler");
+
         scope.setStoreId(storeId, inObject.multiLevelName, getSession(inObject.sessionId));
         Class getShopInterfaceClass = loadClass(inObject.realInterfaceName);
         IUserManager userManager = getManager(IUserManager.class, getShopInterfaceClass, inObject);
         String moduleName = isFromSynchronizedCall ? inObject.getShopModuleName : null;
         setSessionObject(inObject.sessionId, userManager, moduleName);
 
-        GetShopTimer.timeEntry("Session objects set to usermanager, session count: " + getSessionCount(), "StoreHandler");
-        
+
         Class aClass = loadClass(inObject.interfaceName);
         Class getShopApiInterface = getGetShopApiInterface(aClass);
         if (getShopApiInterface == null) {
@@ -138,18 +108,11 @@ public class StoreHandler {
             User user = findUser(getShopInterfaceClass, inObject);
             Annotation userLevel = authenticateUserLevel(executeMethod, aClass, getShopInterfaceClass, inObject);
             Object result;
-            
-//            if (storeId != null && storeId.equals("178330ad-4b1d-4b08-a63d-cca9672ac329")) {
-//                result = invokeMethodUtsiktenDebug(executeMethod, aClass, argumentValues, getShopInterfaceClass, inObject);
-//            } else {
-                GetShopTimer.timeEntry("Ready to invoke method for manager...", "StoreHandler");
-                result = invokeMethod(executeMethod, aClass, argumentValues, getShopInterfaceClass, inObject, isFromSynchronizedCall);
-                GetShopTimer.timeEntry("Invoke completed...", "StoreHandler");
-//            }
-            
+
+            result = invokeMethod(executeMethod, aClass, argumentValues, getShopInterfaceClass, inObject, isFromSynchronizedCall);
+
             clearSessionObject();
-            
-            GetShopTimer.timeEntry("Cleared session object", "StoreHandler");
+
             try {
                 result = cloneResult(result, user);
             }catch(Exception e) {
@@ -326,15 +289,11 @@ public class StoreHandler {
         } catch (BeansException ex) {
             GetShopLogHandler.logPrintStatic("Throws bean exception?", null);
         }
-        
-        GetShopTimer.timeEntry("Added sessions to managers: " +  sessionScopedBeans.size(), "StoreHandler");
-        
+
         for (GetShopSessionBeanNamed bean : scope.getSessionNamedObjects()) {
             bean.setSession(session);
         }
-        
-        GetShopTimer.timeEntry("Added sessions to named session objects: " +  scope.getSessionNamedObjects().size(), "StoreHandler");
-        
+
         try {
             session.currentUser = userManager.getLoggedOnUser();
         } catch (ErrorException ex) {
@@ -346,7 +305,6 @@ public class StoreHandler {
         }
         
         setDefaultLanguageIfNotSet(session);
-        GetShopTimer.timeEntry("Default lang set: " +  scope.getSessionNamedObjects().size(), "StoreHandler");
     }
 
     private void clearSessionObject() {

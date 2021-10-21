@@ -6304,15 +6304,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return 10.0;
     }
 
-    private PmsBookingAddonItem getAddonOriginalItem(PmsBookingAddonItem item) {
-        for (PmsBookingAddonItem item2 : getConfiguration().addonConfiguration.values()) {
-            if (item2.addonType == item.addonType) {
-                return item2;
-            }
-        }
-        return null;
-    }
-
     public void addDefaultAddons(PmsBooking booking) {
         addDefaultAddonsToRooms(booking.getAllRooms());
     }

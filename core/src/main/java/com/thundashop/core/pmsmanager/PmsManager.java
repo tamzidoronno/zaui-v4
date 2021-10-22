@@ -7452,7 +7452,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     public void removeAllUnclosedOrders(String id) {
         PmsBooking booking = getBooking(id);
-
+        // TODO refactor the following code
         new ArrayList<String>(booking.orderIds).stream().forEach(orderId -> {
             Order order = orderManager.getOrderSecure(orderId);
 
@@ -9635,7 +9635,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 .filter(o -> o != null && !o.isNullOrder())
                 .map(o -> o.id)
                 .collect(Collectors.toList());
-        
+        // TODO refactor the following code
         new ArrayList<String>(orderIds).stream()
                 .forEach(id -> {
                     List<String> creditNotes = orderManager

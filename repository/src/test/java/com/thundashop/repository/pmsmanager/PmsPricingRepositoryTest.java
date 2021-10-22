@@ -1,7 +1,7 @@
 package com.thundashop.repository.pmsmanager;
 
+import com.google.common.collect.ImmutableList;
 import com.google.gson.reflect.TypeToken;
-import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.pmsmanager.PmsPricing;
 import com.thundashop.repository.TestCommon;
 import com.thundashop.repository.utils.SessionInfo;
@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Type;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import static com.thundashop.repository.testutils.JsonUtils.toPojo;
@@ -114,5 +115,30 @@ public class PmsPricingRepositoryTest extends TestCommon {
 
         // then
         assertThat(numberOfUpdatedDoc).isEqualTo(2);
+    }
+
+    @Test
+    void getPriceCode() {
+        // setup
+        ImmutableList<String> codeList = ImmutableList.of("code_1", "code_2", "code_2", "code_3");
+        saveTestPmsPricing(codeList);
+
+        // when
+        List<String> priceCodes = repository.getPriceCodes(sessionInfo);
+
+        // then
+        assertThat(priceCodes).isNotEmpty()
+                .size()
+                .isEqualTo(3)
+                .returnToIterable()
+                .contains("code_1", "code_2", "code_3");
+    }
+
+    private void saveTestPmsPricing(List<String> priceCodes) {
+        priceCodes.forEach(code -> {
+            PmsPricing obj = toPojo(type, jsonPath + "pmspricing.json");
+            obj.code = code;
+            repository.save(obj, sessionInfo);
+        });
     }
 }

@@ -35,8 +35,8 @@ public class PmsPricingRepository extends Repository<PmsPricing> {
         return markDeletedByQuery(query, sessionInfo);
     }
 
-    public List<String> getPriceCode() {
-        throw new UnsupportedOperationException();
+    public List<String> getPriceCodes(SessionInfo sessionInfo) {
+        return distinct("code", new BasicDBObject().append("className", className), sessionInfo);
     }
 
     public boolean existByCode(String code, SessionInfo sessionInfo) {

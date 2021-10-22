@@ -57,7 +57,7 @@ public class PmsPricingManager extends ManagerBase implements IPmsPricingManager
 
     @Override
     public List<String> getPriceCodes() {
-        return new ArrayList<>(pricingMap.keySet());
+        return pmsPricingRepository.getPriceCodes(getStoreIdInfo());
     }
 
     @Override

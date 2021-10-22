@@ -19,3 +19,9 @@ Create all the jars in the artifacts/builds folder by running './scripts/assembl
 ### Build from commandline
 
 `./gradlew clean assembleGetshop`
+
+### Enlist customers for v5 redirection
+
+Run and update the PMS_V5_CUSTOMERS array with a text editor
+
+ `cp com.getshop.client/ROOT/v5customers.php ~/thundashopimages`

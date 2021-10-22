@@ -1,8 +1,26 @@
 <?
 include '../loader.php';
 
-$factory = IocContainer::getFactorySingelton();
+if(file_exists('/thundashopimages/v5customers.php'))
+{
+    include '/thundashopimages/v5customers.php';
+}
+else
+{
+    function isV5Customer($storeId)
+    {
+        return false;
+    }
+}
 
+
+$factory = IocContainer::getFactorySingelton();
+$storeId = $factory->getApi()->getStoreManager()->getStoreId();
+if(isV5Customer($storeId))
+{
+    $redirectUrl = 'https://v5-'.$_SERVER['SERVER_NAME'];
+    header("location:$redirectUrl");
+}
 if (isset($_GET['refcode'])) {
     $user = $factory->getApi()->getUserManager()->logonUsingRefNumber($_GET['refcode']);
     

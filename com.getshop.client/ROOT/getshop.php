@@ -6,6 +6,7 @@ $showingModal = isset($_SESSION['gs_currently_showing_modal']) ? "active" : "";
 
 $factory = IocContainer::getFactorySingelton();
 if(!$factory->getApi()->getUserManager()->isLoggedIn() || !ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()) {
+    setcookie('PHPSESSID','');
     header('location:/login.php?redirectto=/getshop.php');
     exit(0);
 }

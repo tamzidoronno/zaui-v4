@@ -12,6 +12,7 @@ if($timezone) {
 }
 
 if(!$factory->getApi()->getUserManager()->isLoggedIn()) {
+    setcookie('PHPSESSID','');
     header('location:/login.php?redirectto=/intranet.php');
     exit(0);
 }

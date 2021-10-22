@@ -1,5 +1,6 @@
 package com.thundashop.repository.db;
 
+import com.google.common.collect.ImmutableList;
 import com.mongodb.BasicDBObject;
 import com.thundashop.repository.testutils.TestConfig;
 import com.thundashop.repository.utils.Config;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -146,5 +148,25 @@ class DatabaseTest {
         assertThat(list).extracting(DbTest::getTestDate, DbTest::getOrder)
                 .containsExactly(tuple(testDate, 100), tuple(testDate, 100));
         assertThat(updateDocNumber).isEqualTo(2);
+    }
+
+    @Test
+    void distinct() {
+        // setup
+        saveDbTest(ImmutableList.of("code_1", "code_2", "code_2"));
+
+        // when
+        List<String> actual = database.distinct(testDbName, testCollection, "strMatch", new BasicDBObject());
+
+        // then
+        assertThat(actual).isNotEmpty()
+                .containsExactly("code_1", "code_2");
+    }
+
+    private List<DbTest> saveDbTest(List<String> strMatch) {
+        return strMatch.stream()
+                .map(it -> new DbTest(UUID.randomUUID().toString(), it))
+                .peek(it -> database.save(testDbName, testCollection, it))
+                .collect(Collectors.toList());
     }
 }

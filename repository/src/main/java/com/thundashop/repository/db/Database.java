@@ -70,4 +70,9 @@ public class Database {
         DBCollection col = mongo.getDB(dbName).getCollection(collectionName);
         return col.updateMulti(searchQuery, setQuery).getN();
     }
+
+    public <T> List<T> distinct(String dbName, String collectionName, String field, DBObject searchQuery) {
+        DBCollection col = mongo.getDB(dbName).getCollection(collectionName);
+        return (List<T>) col.distinct(field, searchQuery);
+    }
 }

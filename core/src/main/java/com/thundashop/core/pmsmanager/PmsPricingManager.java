@@ -3,16 +3,21 @@ package com.thundashop.core.pmsmanager;
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.ManagerBase;
-import com.thundashop.repository.utils.SessionInfo;
 import com.thundashop.repository.pmsmanager.PmsPricingRepository;
+import com.thundashop.repository.utils.SessionInfo;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 @Component
 @GetShopSession
@@ -33,6 +38,10 @@ public class PmsPricingManager extends ManagerBase implements IPmsPricingManager
 
     @Override
     public PmsPricing getByCodeOrDefaultCode(String code) {
+        if (isEmpty(code)) {
+            // New booking has empty string price code
+            return pricingMap.computeIfAbsent(defaultCode, k -> getByDefaultCode());
+        }
         return pricingMap.computeIfAbsent(code, this::getPmsPricing); // TODO refactor
     }
 

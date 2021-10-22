@@ -90,4 +90,8 @@ public abstract class Repository<T> {
         return getDatabase().updateMultiple(getDbName(), getCollectionName(sessionInfo), query, setQuery);
     }
 
+    public <U> List<U> distinct(String field, DBObject query, SessionInfo sessionInfo) {
+        return getDatabase().distinct(getDbName(), getCollectionName(sessionInfo), field, query);
+    }
+
 }

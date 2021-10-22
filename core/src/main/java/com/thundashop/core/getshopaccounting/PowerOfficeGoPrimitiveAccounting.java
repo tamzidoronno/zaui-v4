@@ -158,6 +158,9 @@ public class PowerOfficeGoPrimitiveAccounting extends AccountingSystemBase {
 
                 if (accountingNumber.length() == 4) {
                     toAdd.accountNumber = new Integer(accountingNumber);
+                } else if(accountingNumber.equals("")){
+                    logPrint("There is an already created DayIncome in db which contains empty account parameter. Transfer to accounting/central might fail. Find it in OrderManager: className:/DayIncomeReport/, 'incomes.dayEntries.accountingNumber': ''... Income.id: " + income.id);
+                    toAdd.accountNumber = new Integer(accountingNumber);
                 } else {
                     toAdd.customerCode = new Integer(accountingNumber);
                 }

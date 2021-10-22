@@ -1,8 +1,26 @@
 <?
 include '../loader.php';
 
-$factory = IocContainer::getFactorySingelton();
+if(file_exists('/thundashopimages/v5customers.php'))
+{
+    include '/thundashopimages/v5customers.php';
+}
+else
+{
+    function isV5Customer($storeId)
+    {
+        return false;
+    }
+}
 
+
+$factory = IocContainer::getFactorySingelton();
+$storeId = $factory->getApi()->getStoreManager()->getStoreId();
+if(isV5Customer($storeId))
+{
+    $redirectUrl = 'https://v5-'.$_SERVER['SERVER_NAME'];
+    header("location:$redirectUrl");
+}
 if (isset($_GET['refcode'])) {
     $user = $factory->getApi()->getUserManager()->logonUsingRefNumber($_GET['refcode']);
     
@@ -167,6 +185,14 @@ if (isset($_POST['pincoderequest']) && $_POST['username'] && $_POST['password'])
             <form id='getshoploginform' method="POST" action="/login.php<? echo $doubleauth ? "?doubleauth=true" : ""; ?>" name="loginform" class="loginform">
                 <input type="hidden" name="redirect" value="<?php echo $redirect; ?>">
                 <?php
+                if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null && $factory->getApi()->getUserManager()->getLoggedOnUser() == null) {
+                    $result = $factory->getApi()->getUserManager()->getLoggedOnUser();
+                    if (!$result && ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject()) {
+                        session_destroy();
+                        header("Refresh:0");
+                    }
+                }
+
                 if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null) {
                     $user = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject();
 

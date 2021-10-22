@@ -12,7 +12,7 @@ public class PmsConference extends DataCommon {
     public String forUser = "";
     public String memo = "";
     public Date conferenceDate = null;
-    
+
     public String contactName = "";
     public String contactEmail = "";
     public String contactPhone = "";
@@ -22,4 +22,5 @@ public class PmsConference extends DataCommon {
     public String state = "";
     
     public String forUserFullName = "";
+    public String pmsBookingId = "";
 }

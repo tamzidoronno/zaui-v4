@@ -40,6 +40,7 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static com.thundashop.core.utils.Constants.WUBOOK_CLIENT_URL;
+import static org.apache.commons.lang3.StringUtils.containsAny;
 
 
 @Component
@@ -2202,7 +2203,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier((hostname, sslSession) -> true);
 
         logText("Executing api call: " + apicall);
-        logger.info("Calling wubookManger api, apiCall: {} , params: {}", apicall, params);
+
+        if (!containsAny(apicall, "rplan_update_rplan_values", "update_plan_prices")) {
+            // these api's params is too large and unnecessary for logging.
+            logger.info("Calling wubookManger api, apiCall: {} , params: {}", apicall, params);
+        }
 
         ExecutorService executor = Executors.newFixedThreadPool(1);
         Callable<Vector> task = () -> (Vector) client.execute(apicall, params);

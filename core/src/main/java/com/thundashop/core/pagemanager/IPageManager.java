@@ -398,6 +398,8 @@ public interface IPageManager {
     public boolean accessDenied(String pageId);
     
     public List<GetShopModule> getModules();
+
+    public List<GetShopModule> getAllModules();
     
     public void changeModule(String moduleId);
 }

@@ -3330,6 +3330,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         // If a order has created date that is not the same as the one in the database, what happend? 
         if (order.rowCreatedDate != null && oldOrder != null && !order.rowCreatedDate.equals(oldOrder.rowCreatedDate) && order.rowCreatedDate.before(closedDate) && !order.forcedOpen) {
+            logPrint("ERROR 1053 for order " + order.incrementOrderId + ", id: " +order.id);
             throw new ErrorException(1053);
         }
     }

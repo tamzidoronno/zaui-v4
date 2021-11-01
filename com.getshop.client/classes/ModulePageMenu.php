@@ -131,7 +131,7 @@ class ModulePageMenu {
 
     public function printChangedMenues($user, $printPageMenuInModulesMenu, $store) {
         $factory = IocContainer::getFactorySingelton();
-        $modules = $factory->getAccessModules();
+        $modules = $factory->getUserAccessModules();
         echo "<div class='gs_framework_modules'>";
         
             if ($printPageMenuInModulesMenu) {

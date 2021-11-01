@@ -268,7 +268,7 @@ class FactoryBase {
     public function getJavaScriptVariables() {
         return false;
     }
-    public function getAccessModules()
+    public function getUserAccessModules()
     {
         $modules = $this->getApi()->getPageManager()->getModules();
         if(count($modules) == 0)

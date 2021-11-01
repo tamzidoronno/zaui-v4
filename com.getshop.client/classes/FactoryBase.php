@@ -268,6 +268,15 @@ class FactoryBase {
     public function getJavaScriptVariables() {
         return false;
     }
+    public function getAccessModules()
+    {
+        $modules = $this->getApi()->getPageManager()->getModules();
+        if(count($modules) == 0)
+            $modules = $this->getApi()->getPageManager()->getAllModules();
+        
+        return $modules;
+        
+    }
 }
 
 ?>

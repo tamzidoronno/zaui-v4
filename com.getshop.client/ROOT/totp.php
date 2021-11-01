@@ -203,7 +203,7 @@ if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null) {
         echo "<script>document.location = '".$_POST['redirect']."';</script>";
     }
     
-    $modules = $factory->getApi()->getPageManager()->getModules();
+    $modules = $factory->getAccessModules();
     if(sizeof($modules) > 1) {
         echo "<center><h1>Select a module</h1></center>";
         foreach($modules as $module) {

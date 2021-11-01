@@ -1,6 +1,6 @@
 <div gstype='form' method='updateUsersRight'>
     <?php
-    $modules = $this->getApi()->getPageManager()->getModules();
+    $modules = $this->getAccessModules();
     echo "<div class='header'>Restrictions</div>";
     $user = $this->getUser();
     foreach($modules as $module) {

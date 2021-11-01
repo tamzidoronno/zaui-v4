@@ -9,7 +9,7 @@ if($user->type < 100) {
 ?>
 <div gstype='form' method='updateUsersRight'>
     <?php
-    $modules = $this->getApi()->getPageManager()->getModules();
+    $modules = $this->getUserAccessModules();
     $user = $this->getUser();
     foreach($modules as $module) {
         echo "<div style='clear:both;'>";

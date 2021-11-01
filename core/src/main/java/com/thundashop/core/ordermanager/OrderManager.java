@@ -111,6 +111,8 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -142,6 +144,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     private HashMap<String, Boolean> orderIsCredittedAndPaidFor = new HashMap();
     
     private boolean useCacheForOrderIsCredittedAndPaidFor = false;
+
+    private static final Logger logger = LoggerFactory.getLogger(OrderManager.class);
     
     @Autowired
     public MailFactory mailFactory;
@@ -474,7 +478,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             cloned.status = Order.Status.PAYMENT_COMPLETED;
             validateOrder(cloned);
         } catch (CloneNotSupportedException ex) {
-            logPrintException(ex);
+            logger.error("", ex);
         }
     }
     
@@ -509,16 +513,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Order order = getOrderSecure(orderId);
         if(order == null) {
             try {
-                logPrint("Searching for ordre using inc id: " + orderId);
+                logger.info("Searching for ordre using inc id: " + orderId);
                 Integer incOrderId = new Integer(orderId);
                 order = getOrderByincrementOrderId(incOrderId);
-                logPrint("Order not found: " + orderId + " not found for logging");
+                logger.info("Order not found: " + orderId + " not found for logging");
             }catch(Exception e) {
                 //No need to try to continue from here.
                 return;
             }
         }
-        logPrint("Loggint text to order: " + orderId + " to order: " + entry);
+        logger.info("Loggint text to order: " + orderId + " to order: " + entry);
         order.payment.transactionLog.put(new Date().getTime(), entry);
         saveOrderInternal(order);
     }
@@ -765,8 +769,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if (internalPassword == null || !internalPassword.equals("asfasdfuj2843ljsdflansfkjn432k5lqjnwlfkjnsdfklajhsdf2")) {
             return;
         }
-        
-        logPrint("Checking for orders to collect.. " + getSession().currentUser.fullName);
+
+        logger.info("Checking for orders to collect.. " + getSession().currentUser.fullName);
         boolean dibs = dibsManager.checkForOrdersToCapture();
         boolean epay = epayManager.checkForOrdersToCapture();
 //        bamboraManager.checkForOrdersToCapture();
@@ -835,11 +839,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Override
     public Order getOrder(String orderId) throws ErrorException {
         if(getSession() == null) {
-            logPrint("Tried to fetch an order on id: " + orderId + " when session is null.");
+            logger.warn("Tried to fetch an order on id: " + orderId + " when session is null.");
             return null;
         }
         if(orderId == null) {
-            logPrint("Tried to fetch a order with id null.");
+            logger.warn("Tried to fetch a order with id null.");
             return null;
         } 
         
@@ -869,15 +873,15 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 return order;
             }
         }
-        
-        logPrint("Order with id :" + orderId + " does not exists, or someone with not correct admin rights tries to fetch it, " + foundOrderIncId);
+
+        logger.warn("Order with id :" + orderId + " does not exists, or someone with not correct admin rights tries to fetch it, " + foundOrderIncId);
         if(!foundOrder) {
-            logPrint("Order does not exists");
+            logger.warn("Order does not exists");
         } else {
             if(getSession().currentUser == null) {
-                logPrint("Order does exists but current user is null");
+                logger.warn("Order does exists but current user is null");
             } else {
-                logPrint("Order does exists but user: " + getSession().currentUser.fullName + " does not has access to it");
+                logger.warn("Order does exists but user: " + getSession().currentUser.fullName + " does not has access to it");
             }
         }
         
@@ -958,7 +962,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             toPay += order.payment.paymentFee;
         }
         if(toPay.isNaN()) {
-            logPrint("Nan calc on order: " + order.incrementOrderId);
+            logger.warn("Nan calc on order: " + order.incrementOrderId);
             return 0.0;
         }
         
@@ -1378,7 +1382,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             
             // We do not transfer order until them are atleast 
             if (order.createdDate.after(twentyFourHoursAgo)) {
-                logPrint("Skipping : " + order.incrementOrderId + " date: " + order.createdDate);
+                logger.info("Skipping : " + order.incrementOrderId + " date: " + order.createdDate);
                 continue;
             }
             
@@ -1611,7 +1615,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 
                         
                 if(!frameworkConfig.productionMode) {
-                    logPrint("Tried autopay with card: " + card.savedByVendor + " - " + card.mask);
+                    logger.info("Tried autopay with card: " + card.savedByVendor + " - " + card.mask);
                     continue;
                 }
 
@@ -1647,7 +1651,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     public void notifyAboutFailedPaymentOnOrder(Order order) {
-        logPrint("Need to notify about failed payment");
+        logger.error("Need to notify about failed payment");
     }
 
     private boolean orderNeedAutoPay(Order order, int daysToTryAfterOrderHasStarted) {
@@ -1693,7 +1697,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                                 saveOrder(order);
                             }
                         }catch(Exception e) {
-                            logPrintException(e);
+                            logger.error("", e);
                         }
                         return false;
                     }
@@ -2468,7 +2472,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 int month = cal.get(Calendar.MONTH);
                 int day = cal.get(Calendar.DAY_OF_MONTH);
                 if(month == 2 && year == 2018 && day == 1) {
-                    logPrint(ord.rowCreatedDate + " : " + ord.chargeAfterDate + " : " + day + "." + month+"."+year);
+                    logger.info(ord.rowCreatedDate + " : " + ord.chargeAfterDate + " : " + day + "." + month+"."+year);
                     cal.set(Calendar.MONTH, 1);
                     ord.chargeAfterDate = cal.getTime();
                     saveObject(ord);
@@ -3107,7 +3111,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 List<DataCommon> datas = database.query("OrderManager", storeId, query);
                 datas.stream().forEach(o -> {
                     resetFreePostsEntries(o);
-                    logPrint("Deleted report");
+                    logger.info("Deleted report");
                     deleteObject(o);
                 });
             }
@@ -3313,7 +3317,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         if(order.isAlreadyPaidAndDifferentStatus(oldOrder)) {
-            logPrint("Tried to revert an order with a different payment status, incid: " + order.incrementOrderId);
+            logger.error("Tried to revert an order with a different payment status, incid: " + order.incrementOrderId);
             resetOrder(oldOrder, order);
             throw new ErrorException(1063);
         }
@@ -3330,7 +3334,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         // If a order has created date that is not the same as the one in the database, what happend? 
         if (order.rowCreatedDate != null && oldOrder != null && !order.rowCreatedDate.equals(oldOrder.rowCreatedDate) && order.rowCreatedDate.before(closedDate) && !order.forcedOpen) {
-            logPrint("ERROR 1053 for order " + order.incrementOrderId + ", id: " +order.id);
+            logger.error("ERROR 1053 for order " + order.incrementOrderId + ", id: " +order.id);
             throw new ErrorException(1053);
         }
     }
@@ -3469,14 +3473,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
                 boolean orderExists = isThereOrderCreatedBasedOnOrder(orderId);
                 if (orderExists) {
-                    logPrint("There are orders for the id: " + orderId + " but have multiple creditted orders? : orderid: " + getOrder(orderId).incrementOrderId);
+                    logger.warn("There are orders for the id: " + orderId + " but have multiple creditted orders? : orderid: " + getOrder(orderId).incrementOrderId);
                     groupedOrders.get(orderId).stream()
                         .forEach(i -> {
-                            logPrint("  - Creditnoteid: " + i.incrementOrderId);
+                            logger.warn("  - Creditnoteid: " + i.incrementOrderId);
                         });
                 }
-                
-                logPrint("Found a bit of a problem: " + groupedOrders.get(orderId).size());
+
+                logger.warn("Found a bit of a problem: " + groupedOrders.get(orderId).size());
                 boolean first = false;
                 List<Order> retOrders = groupedOrders.get(orderId);
                 
@@ -3733,7 +3737,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 }
             }
         }catch(Exception e) {
-            logPrintException(e);
+            logger.error("", e);
         }
         return check;
     }
@@ -4392,7 +4396,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if(orderToPay != null && orderToPay.payment != null) {
             orderToPay.payment.transactionLog.put(System.currentTimeMillis(), string);
         }
-        logPrint("\t" + string);
+        logger.info("\t" + string);
     }
 
     @Override
@@ -4440,7 +4444,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             orderToPay.payment.transactionLog.put(System.currentTimeMillis(), text);
             saveOrder(orderToPay);
         }catch(Exception e) {
-            logPrintException(e);
+            logger.error("", e);
         }
         
         terminalMessages.add(text);
@@ -4478,9 +4482,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             
             if (item.getProduct().priceLocalCurrency == null || !samePriceInTaxAsOldOrder || !currencySame || !hasOldOrder) {
                 item.getProduct().priceLocalCurrency = convertCurrency(order, item.getProduct().price);
-                logPrint("Calculating the order prices to: " + item.getProduct().priceLocalCurrency);
+                logger.info("Calculating the order prices to: " + item.getProduct().priceLocalCurrency);
             } else {
-                logPrint("Skipping calcualation, already set " + item.getProduct().priceLocalCurrency + " and same price as before");
+                logger.info("Skipping calcualation, already set " + item.getProduct().priceLocalCurrency + " and same price as before");
             }
             
             
@@ -4507,10 +4511,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         try {
             String url = "https://free.currconv.com/api/v7/convert?q="+covertString+"&compact=ultra&apiKey=a937737cc8a3af4b1766";
-            logPrint("Using url to fetch currency convertion: " + url);
+            logger.info("Using url to fetch currency convertion: " + url);
             res = webManager.htmlGetJson(url);
         } catch (Exception ex) {
-            logPrintException(ex);
+            logger.error("", ex);
             return null;
         }
         
@@ -4518,7 +4522,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             double convertNumber = res.get(covertString).getAsDouble();
             return price * convertNumber;
         } else {
-            logPrint("Warning, the currency converter returned a null response");
+            logger.warn("Warning, the currency converter returned a null response");
         }
         
         return null;

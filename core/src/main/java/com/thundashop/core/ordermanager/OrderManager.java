@@ -377,7 +377,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             List<Order> creditNotes = getCreditNotesForOrder(order.id);
             for (Order creditNote : creditNotes) {
                 if (getTotalAmount(creditNote) > 0 && isParentOrderPositive) {
-                    System.out.println("A creditnote with positive amount ? " + creditNote.incrementOrderId + " | parent: " + order.incrementOrderId);
+                    logger.info("A creditnote with positive amount ? {} | parent: {}", creditNote.incrementOrderId, order.incrementOrderId);
                 }
             }
         }
@@ -513,16 +513,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Order order = getOrderSecure(orderId);
         if(order == null) {
             try {
-                logger.info("Searching for ordre using inc id: " + orderId);
+                logger.info("Searching for ordre using inc id: {} ", orderId);
                 Integer incOrderId = new Integer(orderId);
                 order = getOrderByincrementOrderId(incOrderId);
-                logger.info("Order not found: " + orderId + " not found for logging");
+                logger.info("Order not found: {} not found for logging", orderId);
             }catch(Exception e) {
                 //No need to try to continue from here.
                 return;
             }
         }
-        logger.info("Loggint text to order: " + orderId + " to order: " + entry);
+        logger.info("Loggint text to order: {} to order: {}", orderId, entry);
         order.payment.transactionLog.put(new Date().getTime(), entry);
         saveOrderInternal(order);
     }
@@ -839,7 +839,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Override
     public Order getOrder(String orderId) throws ErrorException {
         if(getSession() == null) {
-            logger.warn("Tried to fetch an order on id: " + orderId + " when session is null.");
+            logger.warn("Tried to fetch an order on id: {} when session is null.", orderId);
             return null;
         }
         if(orderId == null) {
@@ -881,7 +881,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             if(getSession().currentUser == null) {
                 logger.warn("Order does exists but current user is null");
             } else {
-                logger.warn("Order does exists but user: " + getSession().currentUser.fullName + " does not has access to it");
+                logger.warn("Order does exists but user: {} does not has access to it", getSession().currentUser.fullName );
             }
         }
         
@@ -962,7 +962,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             toPay += order.payment.paymentFee;
         }
         if(toPay.isNaN()) {
-            logger.warn("Nan calc on order: " + order.incrementOrderId);
+            logger.warn("Nan calc on order: {}", order.incrementOrderId);
             return 0.0;
         }
         
@@ -1382,7 +1382,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             
             // We do not transfer order until them are atleast 
             if (order.createdDate.after(twentyFourHoursAgo)) {
-                logger.info("Skipping : " + order.incrementOrderId + " date: " + order.createdDate);
+                logger.info("Skipping : {} date: {}", order.incrementOrderId, order.createdDate);
                 continue;
             }
             
@@ -1615,7 +1615,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 
                         
                 if(!frameworkConfig.productionMode) {
-                    logger.info("Tried autopay with card: " + card.savedByVendor + " - " + card.mask);
+                    logger.info("Tried autopay with card: {} - {}", card.savedByVendor, card.mask);
                     continue;
                 }
 
@@ -2472,7 +2472,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 int month = cal.get(Calendar.MONTH);
                 int day = cal.get(Calendar.DAY_OF_MONTH);
                 if(month == 2 && year == 2018 && day == 1) {
-                    logger.info(ord.rowCreatedDate + " : " + ord.chargeAfterDate + " : " + day + "." + month+"."+year);
+                    logger.info("{} : {} : {}.{}.{}", ord.rowCreatedDate,  ord.chargeAfterDate, day, month, year);
                     cal.set(Calendar.MONTH, 1);
                     ord.chargeAfterDate = cal.getTime();
                     saveObject(ord);
@@ -3317,7 +3317,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         if(order.isAlreadyPaidAndDifferentStatus(oldOrder)) {
-            logger.error("Tried to revert an order with a different payment status, incid: " + order.incrementOrderId);
+            logger.error("Tried to revert an order with a different payment status, incid: {}", order.incrementOrderId);
             resetOrder(oldOrder, order);
             throw new ErrorException(1063);
         }
@@ -3473,14 +3473,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
                 boolean orderExists = isThereOrderCreatedBasedOnOrder(orderId);
                 if (orderExists) {
-                    logger.warn("There are orders for the id: " + orderId + " but have multiple creditted orders? : orderid: " + getOrder(orderId).incrementOrderId);
+                    logger.warn("There are orders for the id: {} but have multiple creditted orders? : orderid: {}", orderId, getOrder(orderId).incrementOrderId);
                     groupedOrders.get(orderId).stream()
                         .forEach(i -> {
-                            logger.warn("  - Creditnoteid: " + i.incrementOrderId);
+                            logger.warn("  - Creditnoteid: {}", i.incrementOrderId);
                         });
                 }
 
-                logger.warn("Found a bit of a problem: " + groupedOrders.get(orderId).size());
+                logger.warn("Found a bit of a problem: {}", groupedOrders.get(orderId).size());
                 boolean first = false;
                 List<Order> retOrders = groupedOrders.get(orderId);
                 
@@ -4263,7 +4263,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                         .map(o -> getOrder(o.orderId))
                         .collect(Collectors.toList());
                 
-                System.out.println("Deleted orders: " + deletedOrders.size());
+                logger.info("Deleted orders size: {}", deletedOrders.size());
             }
             
             balance.balances.put(accountNumber, total);
@@ -4406,7 +4406,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         if (response.isAdministrativeTask()) {
-            System.out.println("Received an adminsitrative task: " + response);
+            logger.info("Received an adminsitrative task: {}", response);
             return;
         }
 
@@ -4482,9 +4482,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             
             if (item.getProduct().priceLocalCurrency == null || !samePriceInTaxAsOldOrder || !currencySame || !hasOldOrder) {
                 item.getProduct().priceLocalCurrency = convertCurrency(order, item.getProduct().price);
-                logger.info("Calculating the order prices to: " + item.getProduct().priceLocalCurrency);
+                logger.info("Calculating the order prices to: {}", item.getProduct().priceLocalCurrency);
             } else {
-                logger.info("Skipping calcualation, already set " + item.getProduct().priceLocalCurrency + " and same price as before");
+                logger.info("Skipping calcualation, already set {} and same price as before", item.getProduct().priceLocalCurrency );
             }
             
             
@@ -4511,7 +4511,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         try {
             String url = "https://free.currconv.com/api/v7/convert?q="+covertString+"&compact=ultra&apiKey=a937737cc8a3af4b1766";
-            logger.info("Using url to fetch currency convertion: " + url);
+            logger.info("Using url to fetch currency convertion: {}", url);
             res = webManager.htmlGetJson(url);
         } catch (Exception ex) {
             logger.error("", ex);
@@ -4795,7 +4795,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             
             
             if (oringalOrders.size() > 1) {
-                System.out.println("Found problem with order: " + creditNote.incrementOrderId + " | size: " + oringalOrders.size() + " | " + oringalOrders.get(0).incrementOrderId);
+                logger.warn("Found problem with order: {} | size: {} |  {}", creditNote.incrementOrderId, oringalOrders.size(), oringalOrders.get(0).incrementOrderId);
                 Order orderToFix = oringalOrders.get(0);
                 orderToFix.creditOrderId.clear();
                 saveObject(orderToFix);
@@ -5168,7 +5168,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         GeneralPaymentConfig paymentConfig = paymentManager.getGeneralPaymentConfig();
         if(Order.OrderTransactionType.AGIO == transactionType) {
-            System.out.println("register agio to account: " + paymentConfig.agioAccount);
+            logger.info("register agio to account: {}",  paymentConfig.agioAccount);
         }
         if(Order.OrderTransactionType.ROUNDING == transactionType) {
             AccountingDetail detail = productManager.getAccountingDetail(new Integer(paymentConfig.conversionAccount));
@@ -5180,7 +5180,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             return;
         }
         if(Order.OrderTransactionType.DISAGIO == transactionType) {
-            System.out.println("register disagoi to account: " + paymentConfig.dissAgioAccount);
+            logger.info("register disagoi to account: {}", paymentConfig.dissAgioAccount);
         }
         
         
@@ -5293,7 +5293,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .count() > 0;
         
         if (hasNullTaxGroups) {
-            System.out.println("Skipping order: " + order.incrementOrderId + " as hit has products without taxes");
+            logger.info("Skipping order: {} as hit has products without taxes", order.incrementOrderId);
             return false;
         }
                 
@@ -5540,7 +5540,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                     adjustedOrder.status = Order.Status.CREATED;
                     adjustedOrder.orderTransactions.clear();
                     saveObject(adjustedOrder);
-                    System.out.println("Adjusted order: " + adjustedOrder.incrementOrderId);
+                    logger.info("Adjusted order: {}", adjustedOrder.incrementOrderId);
                 }
             }
         }

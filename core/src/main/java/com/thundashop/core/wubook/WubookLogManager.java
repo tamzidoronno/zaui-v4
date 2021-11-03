@@ -31,7 +31,7 @@ public class WubookLogManager extends ManagerBase implements IWubookLogManager {
 
         DBObject sortQuery = new BasicDBObject("timeStamp", -1);
 
-        return database.query(MANAGER, storeId, searchQuery, sortQuery, 100)
+        return database.query(MANAGER, storeId, searchQuery, sortQuery, 2_000)
                 .stream()
                 .map(i -> (WubookLog) i);
     }

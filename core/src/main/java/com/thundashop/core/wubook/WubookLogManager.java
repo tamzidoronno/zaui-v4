@@ -24,7 +24,7 @@ public class WubookLogManager extends ManagerBase implements IWubookLogManager {
 
     @Override
     public Stream<WubookLog> get() {
-        long cutOff = System.currentTimeMillis() - (1000 * 60 * 24 * 3); // 72 minute
+        long cutOff = getCutOff();
 
         DBObject searchQuery = new BasicDBObject()
                 .append("timeStamp", new BasicDBObject("$gte", cutOff));
@@ -34,5 +34,13 @@ public class WubookLogManager extends ManagerBase implements IWubookLogManager {
         return database.query(MANAGER, storeId, searchQuery, sortQuery, 100)
                 .stream()
                 .map(i -> (WubookLog) i);
+    }
+
+    public static String getManager() {
+        return MANAGER;
+    }
+
+    public static long getCutOff() {
+        return System.currentTimeMillis() - (1000 * 60 * 24 * 3); // 72 minute
     }
 }

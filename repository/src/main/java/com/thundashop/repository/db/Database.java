@@ -18,7 +18,7 @@ public class Database {
 
     private Database(String host, int port, EntityMappers mappers) {
         try {
-            mongo = new Mongo(host, port);
+            mongo = new MongoClient(host, port);
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
         }

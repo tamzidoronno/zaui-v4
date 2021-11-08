@@ -2535,7 +2535,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         order.virtuallyDeleted = true;
-        order.cart.clear();
         saveObject(order);
         
         try {

@@ -7,12 +7,17 @@ package com.thundashop.core.databasemanager;
 
 import com.getshop.scope.GetShopSession;
 import com.mongodb.*;
-import com.thundashop.core.common.*;
+import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.PermenantlyDeleteData;
+import com.thundashop.core.common.StoreComponent;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.ordermanager.data.VirtualOrder;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.storemanager.data.Store;
 import org.mongodb.morphia.Morphia;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -32,6 +37,8 @@ import java.util.stream.Stream;
 @GetShopSession
 public class Database extends StoreComponent {
 
+    private static final Logger log = LoggerFactory.getLogger(Database.class);
+
     public static int mongoPort = 27018;
 
     private Mongo mongo;
@@ -42,12 +49,9 @@ public class Database extends StoreComponent {
 
     @Autowired
     private StorePool storePool;
-    
-    @Autowired
-    private BackupRepository backupRepository;
 
     @Autowired
-    public Logger logger;
+    private BackupRepository backupRepository;
 
     public void activateSandBox() {
         sandbox = true;
@@ -61,13 +65,13 @@ public class Database extends StoreComponent {
         try {
             createDataFolder();
         } catch (IOException ex) {
-            ex.printStackTrace();
+            log.error("", ex);
         }
         String host = System.getenv("HOSTNAME_MONGODB");
         boolean foundInEnvVars = host != null && host.length() > 0;
         if (!foundInEnvVars){ host = "localhost"; }
 
-        System.out.println("Connecting to mongo host: " + host);
+        log.debug("Connecting to mongo host: `{}`", host);
         mongo = new Mongo(host, mongoPort);
         morphia = new Morphia();
         morphia.getMapper().getConverters().addConverter(BigDecimalConverter.class);
@@ -109,16 +113,14 @@ public class Database extends StoreComponent {
         }
 
         if (file.exists() && !file.isDirectory()) {
-            GetShopLogHandler.logPrintStatic("The file " + file.getPath() + " is not a folder", null);
+            log.error("The file `{}` is not a folder", file.getPath());
             System.exit(-1);
         }
 
         file.mkdir();
 
         if (!file.exists()) {
-            GetShopLogHandler.logPrintStatic("=======================================================================================================", null);
-            GetShopLogHandler.logPrintStatic("Was not able to create folder " + file.getCanonicalPath(), null);
-            GetShopLogHandler.logPrintStatic("=======================================================================================================", null);
+            log.error("Was not able to create folder `{}`", file.getCanonicalPath());
             System.exit(-1);
         }
 
@@ -147,6 +149,7 @@ public class Database extends StoreComponent {
         try {
             mongo.getDB(credentials.manangerName).getCollection(collectionPrefix + data.storeId).save(dbObject);
         }catch(Exception e) {
+            log.error("", e);
             throw e;
         }
     }
@@ -198,7 +201,7 @@ public class Database extends StoreComponent {
                 try {
                     Class.forName(className);
                 } catch (ClassNotFoundException ex) {
-//                    logger.warning(this, "Database object has references to object that does not exists: " + className + " collection: " + collection.getName() + " manager: " + collection.getDB().getName());
+                    log.warn("Database object has references to object that does not exists: " + className + " collection: " + collection.getName() + " manager: " + collection.getDB().getName());
                     continue;
                 }
             }
@@ -213,9 +216,8 @@ public class Database extends StoreComponent {
             } catch (ClassCastException ex) {
                 // Nothing to do, the class probably been deleted but not the data in database.
             } catch (Exception ex) {
-                GetShopLogHandler.logPrintStatic("Figure out this : " + collection.getName() + " " + collection.getDB().getName(), null);
-                GetShopLogHandler.logPrintStatic(dbObject, null);
-                ex.printStackTrace();
+                log.error("Figure out this collection.getName() `{}`, collection.getDB().getName() `{}`, dbObject `{}`",
+                        collection.getName(), collection.getDB().getName(), dbObject, ex);
             }
         }
         cur.close();
@@ -295,7 +297,7 @@ public class Database extends StoreComponent {
         try {
             return morphia.fromDBObject(DataCommon.class, found);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error("", ex);
         }
 
         return null;
@@ -455,6 +457,22 @@ public class Database extends StoreComponent {
         return retObjects;
     }
 
+    // TODO Refactor these overloaded `query` method. Duplicate code
+    public List<DataCommon> query(String manager, String storeId, DBObject query, DBObject orderBy, int limit) {
+        DBCollection col = getCollection(manager, storeId);
+        List<DataCommon> retObjects = new ArrayList<>();
+
+        try (DBCursor res = col.find(query).sort(orderBy).limit(limit)) {
+            while (res.hasNext()) {
+                DBObject nx = res.next();
+                DataCommon data = morphia.fromDBObject(DataCommon.class, nx);
+                retObjects.add(data);
+            }
+        }
+
+        return retObjects;
+    }
+
     public DBCollection getCollection(String manager, String storeId1) {
         DB db = mongo.getDB(manager);
         DBCollection col = db.getCollection("col_" + storeId1);
@@ -565,7 +583,7 @@ public class Database extends StoreComponent {
 
         return all;    
     }
-    
+
     public DataCommon convert(DBObject next) {
         return morphia.fromDBObject(DataCommon.class, next);
     }

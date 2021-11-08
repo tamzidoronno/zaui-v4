@@ -6,7 +6,6 @@ if($this->getPageIdModule() == "systemsetup") {
     $lightTickets = $this->getApi()->getTicketManager()->getTicketLights();
 }
 
-
 //Tmp to update all tickets out there.
 if($this->getPageIdModule() != "systemsetup") {
     foreach($lightTickets as $tmp) {

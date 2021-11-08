@@ -117,7 +117,6 @@ public class JavaApiBuilder {
         GetShopLogHandler.logPrintStatic("Building java api to: " + apiPath + "/", null);
         
         for (Class entry : allManagers) {
-            System.out.println(this.getClass().getName() + " Entry " + entry.getName());
             String filename = getFileName(entry);
             if (filename.contains("<error>") || !filename.startsWith("I")) {
                 continue;

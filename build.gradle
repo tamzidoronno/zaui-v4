@@ -30,9 +30,10 @@ task javaapiGen {
 }
 
 
-task assembleGetShop(type: Exec, dependsOn: ['javaapiClean', 'javaapiGen', 'javaapi:jar', 'core:build', 'core:generateJavascriptApi']) {
+task assembleGetShop(type: Exec, dependsOn: ['copyLibs']) {
     commandLine 'scripts/assemble.sh', version
 }
+
 
 task mergedJavadoc(type: Javadoc, description: 'Creates Javadoc from all the projects.') {
     title = 'All modules'
@@ -45,4 +46,18 @@ task mergedJavadoc(type: Javadoc, description: 'Creates Javadoc from all the pro
     classpath.from {
         subprojects*.configurations*.compile*.copyRecursive({ !(it instanceof ProjectDependency); })*.resolve()
     }
+}
+
+
+task copyLibs(type: Copy, dependsOn: ['javaapiClean', 'javaapiGen', 'javaapi:jar',
+                                      'core:build', 'core:generateJavascriptApi']) {
+    //prebuild all and copy all external libraries, gradle + libs to downloaded folder which will be used for assembleGetShop task
+    def dst = "./downloaded"
+    def outs = project(":core").sourceSets.main.output.classesDirs
+    def allRuntime = project(":core").sourceSets.main.runtimeClasspath
+    def src = allRuntime.filter { !outs.contains(it) }
+    delete dst
+    from src
+    into dst
+    println(" Task copyLibs done.")
 }

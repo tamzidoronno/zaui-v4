@@ -49,6 +49,11 @@ if($_POST['data']['isclosed'] && $_POST['data']['isclosed'] == "true") {
 <table width='100%'>
     <tr>
         <td valign='top' width='50%' style='padding: 10px;'>
+            <div gstype='form' method='closeForPeriode' class='cancelConfirmation' style='position:absolute;z-index:2;right:50%;background-color:#ffded7;border: solid 1px #bbb; padding: 10px;display:none;'>
+            <i class='fa fa-close' style='float:right; cursor:pointer;' onclick='$(".cancelConfirmation").hide();'></i>
+                <h4>Are you sure you want to cancel this room? </h4>
+                <span class="shop_button" style="background-color:red;"  gstype='clicksubmit' method="deleteroom" gsvalue="<?php echo $_POST['data']['roomid']; ?>" gsname='roomid'>OK</span>
+            </div>
             <?php
             if($booking) {
                 if($groupBooking->useNew()) {
@@ -57,7 +62,7 @@ if($_POST['data']['isclosed'] && $_POST['data']['isclosed'] == "true") {
                 <?php } else { ?>
                     <span class="shop_button" style='width:100%;box-sizing:border-box;margin-top:5px;' gs_show_modal='booking_room_view' onclick="app.PmsAvailability.closeCloseRoomDialog();" bookingid='<?php echo $booking->id; ?>'  roomid="<?php echo $_POST['data']['roomid']; ?>">Open booking</span>
                 <? } ?>
-                <span class="shop_button" style='width:100%;box-sizing:border-box;margin-top:5px;background-color:red;' gstype='clicksubmit' method="deleteroom" gsvalue="<?php echo $_POST['data']['roomid']; ?>" gsname='roomid'><i class='fa fa-trash-o'></i> Delete booking</span>
+                <span class="shop_button" style='width:100%;box-sizing:border-box;margin-top:5px;background-color:red;' onclick='$(".cancelConfirmation").show();'><i class='fa fa-trash-o'></i> Cancel Room</span> 
                 <span class="shop_button" style='width:100%;box-sizing:border-box;margin-top:5px;background-color:brown;' gstype='clicksubmit' method="addToWaitingList" gsvalue="<?php echo $_POST['data']['roomid']; ?>" gsname='roomid'> Add to waitinglist</span>
                 <?php
             }

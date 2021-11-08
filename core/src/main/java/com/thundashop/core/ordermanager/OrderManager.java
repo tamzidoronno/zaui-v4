@@ -5264,7 +5264,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         final Date toCheck = getOrderManagerSettings().closedTilPeriode;
         
         List<DayIncome> incomes = newlyBrokenIncome.stream()
-                .filter(o -> !o.isFinal && o.end.before(toCheck))
+                .filter(o -> !o.isFinal && (o.end.before(toCheck) || o.end.equals(toCheck)))
                 .collect(Collectors.toList());
         
         for (DayIncome inc : incomes) {

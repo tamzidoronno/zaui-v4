@@ -30,7 +30,7 @@ import org.mongodb.morphia.annotations.Transient;
  * @author ktonder
  */
 public class ZwaveLockServer extends LockServerBase implements LockServer {
-    private Map<String, LocstarLock> locks = new HashMap();
+    private final Map<String, LocstarLock> locks = new HashMap<>();
 
     @Transient
     @ExcludeFromJson
@@ -43,7 +43,7 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
 
     @Override
     public List<Lock> getLocks() {
-        return new ArrayList(locks.values());
+        return new ArrayList<>(locks.values());
     }
 
     @Override
@@ -74,7 +74,7 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
     }
 
     private List<LocstarLock> createDevicesFromServerResult(String result) throws JsonSyntaxException {
-        List<LocstarLock> locks = new ArrayList();
+        List<LocstarLock> locks = new ArrayList<>();
         
         Gson gson = new Gson();
         JsonElement element = gson.fromJson(result, JsonElement.class);
@@ -145,7 +145,6 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
     
     public void finalizeServer() {
         locks.values()
-                .stream()
                 .forEach(l -> l.finalize());
     }
     
@@ -192,7 +191,7 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
         }
         
         if (currentThread == null) {
-            ZwaveJobPriotizer jobMaker = new ZwaveJobPriotizer(new ArrayList(locks.values()));
+            ZwaveJobPriotizer jobMaker = new ZwaveJobPriotizer(new ArrayList<>(locks.values()));
             LocstarLock lockToWorkWith = jobMaker.getNextLock();
             
             if (lockToWorkWith != null) {
@@ -317,7 +316,7 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
             currentThread.stop();
         }
          
-        locks.values().stream()
+        locks.values()
             .forEach(l -> {
                 l.prioritizeLockUpdate = false;
             });

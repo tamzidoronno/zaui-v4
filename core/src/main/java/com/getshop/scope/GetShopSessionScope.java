@@ -30,12 +30,12 @@ public class GetShopSessionScope implements Scope {
     private static final Logger log = LoggerFactory.getLogger(GetShopSessionScope.class);
 
     private StorePool storePool = null;
-    private final Map<Long, String> threadStoreIds = new ConcurrentHashMap<Long, String>();
-    private final Map<Long, String> threadSessionBeanNames = new ConcurrentHashMap<Long, String>();
-    private final Map<Long, String> originalSessionBeanName = new ConcurrentHashMap<Long, String>();
-    private final Map<Long, Session> threadSessions = new ConcurrentHashMap<Long, Session>();
-    private final Map<String, Object> objectMap = new ConcurrentHashMap<String, Object>();
-    private final Map<String, Object> namedSessionObjects = new ConcurrentHashMap<String, Object>();
+    private final Map<Long, String> threadStoreIds = new ConcurrentHashMap<>();
+    private final Map<Long, String> threadSessionBeanNames = new ConcurrentHashMap<>();
+    private final Map<Long, String> originalSessionBeanName = new ConcurrentHashMap<>();
+    private final Map<Long, Session> threadSessions = new ConcurrentHashMap<>();
+    private final Map<String, Object> objectMap = new ConcurrentHashMap<>();
+    private final Map<String, Object> namedSessionObjects = new ConcurrentHashMap<>();
 
     public <T> T getNamedSessionBean(String multiLevelName, Class className) {
         if (multiLevelName == null || multiLevelName.isEmpty()) {
@@ -77,7 +77,7 @@ public class GetShopSessionScope implements Scope {
         }
         
         if (storePool != null) {
-            if (name != null && name.equals("scopedTarget.userManager") && storePool != null) {
+            if (name != null && name.equals("scopedTarget.userManager")) {
                 Store slaveStore = storePool.getStore(storeId);
                 if(slaveStore!= null) {
                     Store masterStore = storePool.getStore(slaveStore.masterStoreId);
@@ -143,12 +143,11 @@ public class GetShopSessionScope implements Scope {
     public List<GetShopSessionBeanNamed> getSessionNamedObjects() {
         long threadId = Thread.currentThread().getId();
         String storeId = threadStoreIds.get(threadId);
-        return new ArrayList(
-                namedSessionObjects.values()
-                        .stream()
-                        .filter(o -> ((GetShopSessionBeanNamed)o).getStoreId().equals(storeId))
-                        .collect(Collectors.toList())
-        );
+        return namedSessionObjects.values()
+                .stream()
+                .map(i -> (GetShopSessionBeanNamed) i)
+                .filter(o -> o.getStoreId().equals(storeId))
+                .collect(Collectors.toList());
     }
 
     public Object remove(String name) {

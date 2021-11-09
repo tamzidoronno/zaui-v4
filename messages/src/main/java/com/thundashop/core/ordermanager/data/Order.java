@@ -233,7 +233,8 @@ public class Order extends DataCommon implements Comparable<Order> {
     public boolean createdAfterConnectedToACentral;
     
     public String addedToZreport = null;
-    
+    public Date zReportDate = null;
+
     public Order jsonClone() {
         Order orderNew = jsonCloneLight();
         orderNew.expiryDate = null;

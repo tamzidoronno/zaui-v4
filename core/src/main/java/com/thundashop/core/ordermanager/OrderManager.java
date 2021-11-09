@@ -5557,7 +5557,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
         order.orderTransactions.forEach(o ->markOrderTransactionClosedByZReport(o, report.id));
         order.addedToZreport = report.id;
-        
+        order.zReportDate = new Date();
+
         saveObject(order);
     }
 

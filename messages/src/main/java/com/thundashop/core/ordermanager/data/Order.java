@@ -114,7 +114,7 @@ public class Order extends DataCommon implements Comparable<Order> {
      * If there is given a reason why this creditnote was created.
      */
     public String creditReason;
-
+    
     @Transient
     public List<DayEntry> cachedDayEntries = new ArrayList<>();
 
@@ -125,19 +125,19 @@ public class Order extends DataCommon implements Comparable<Order> {
             }
         }
     }
-
+    
     /**
      * This holds a reference to what conference id the order is autocreated for.
      */
     public String autoCreatedOrderForConferenceId = "";
-
+    
     /**
-     * Key = productid, value is a list of taxgroups used
+     * Key = productid, value is a list of taxgroups used 
      * for this order on the given product.
      */
     public HashMap<String, List<Integer>> taxGroupsUsed = null;
     /**
-     * This will be populated if the order is created by merging multiple
+     * This will be populated if the order is created by merging multiple 
      * of other orders.
      */
     public List<String> createdBasedOnOrderIds = new ArrayList<>();
@@ -150,7 +150,7 @@ public class Order extends DataCommon implements Comparable<Order> {
     public Date chargeAfterDate = null;
     public boolean warnedNotPaid = false;
     public Date tryAutoPayWithDibs = null;
-
+    
     /**
      * Its possible to add different tags to the order,
      * this can for instance be extra information from the salespoints, invoices
@@ -176,42 +176,42 @@ public class Order extends DataCommon implements Comparable<Order> {
 
     @Transient
     private Calendar cal2;
-
+    
     @Transient
     private Calendar cal1;
-
+    
     public boolean isUnderConstruction = false;
-
+    
     @Transient
     public Date dueDate = null;
-
+    
     /**
-     * If this is set to a date it will use this date for everything
-     * to accounting.
-     *
+     * If this is set to a date it will use this date for everything 
+     * to accounting. 
+     * 
      * Example when you need to credit an order but the periode is closed.
      */
     public Date overrideAccountingDate = null;
-
+    
     /**
-     * This is marked as true if the order
-     * should be billed to an external OTA, example
+     * This is marked as true if the order 
+     * should be billed to an external OTA, example 
      * booking.com, expedia.com etc.
      */
     public boolean billable = false;
-
+    
     @Transient
     public double restAmount;
-
+    
     //This is being used to optimze speed when showing complete list (specific invoice export).
     @Transient
     public Double totalAmount;
-
+    
     public boolean virtuallyDeleted = false;
     public boolean supportMultipleBookings = false;
     public String createdByPaymentLinkId = "";
     private boolean notfiedAutoSend = false;
-
+    
     public String correctedByUserId = "";
     public Date correctedAtTime = null;
     public TreeSet<String> createdBasedOnCorrectionFromOrderIds = new TreeSet<>();
@@ -220,8 +220,9 @@ public class Order extends DataCommon implements Comparable<Order> {
     public String terminalReceiptText = "";
     public boolean transferredToCentral = false;
     public boolean createdAfterConnectedToACentral;
-
+    
     public String addedToZreport = null;
+    public Date zReportDate = null;
 
     public Order jsonClone() {
         Order orderNew = jsonCloneLight();
@@ -233,7 +234,7 @@ public class Order extends DataCommon implements Comparable<Order> {
         orderNew.logLines.clear();
         orderNew.cardTransactions.clear();
         orderNew.orderTransactions.clear();
-
+        
         if (orderNew.cart != null) {
             orderNew.cart.rowCreatedDate = new Date();
         }
@@ -248,7 +249,7 @@ public class Order extends DataCommon implements Comparable<Order> {
         orderNew.id = UUID.randomUUID().toString();
         return orderNew;
     }
-
+    
     public boolean isMatrixAndItemsValid() {
         Double total = 0.0;
         boolean found = false;
@@ -289,7 +290,7 @@ public class Order extends DataCommon implements Comparable<Order> {
         }
         return true;
     }
-
+    
     public void generateKidLuhn(String byNumber, Integer length) {
         if(kid != null && !kid.trim().isEmpty()) {
             return;
@@ -303,78 +304,78 @@ public class Order extends DataCommon implements Comparable<Order> {
         kid = result;
     }
 
-    /**
-     * Validate a number string using Luhn algorithm
-     *
-     * @param numberString
-     * @return
-     */
-    public boolean validate(String numberString) {
-        return checkSum(numberString) == 0;
-    }
+	/**
+	 * Validate a number string using Luhn algorithm
+	 * 
+	 * @param numberString
+	 * @return
+	 */
+	public boolean validate(String numberString) {
+		return checkSum(numberString) == 0;
+	}
 
-    /**
-     * Generate check digit for a number string. Assumes check digit or a place
-     * holder is already appended at end of the string.
-     *
-     * @param numberString
-     * @return
-     */
-    public int checkSum(String numberString) {
-        return checkSum(numberString, false);
-    }
+	/**
+	 * Generate check digit for a number string. Assumes check digit or a place
+	 * holder is already appended at end of the string.
+	 * 
+	 * @param numberString
+	 * @return
+	 */
+	public int checkSum(String numberString) {
+		return checkSum(numberString, false);
+	}
 
-    /**
-     * Generate check digit for a number string.
-     *
-     * @param numberString
-     * @param noCheckDigit
-     *            Whether check digit is present or not. True if no check Digit
-     *            is appended.
-     * @return
-     */
-    public int checkSum(String numberString, boolean noCheckDigit) {
-        int sum = 0, checkDigit = 0;
+	/**
+	 * Generate check digit for a number string.
+	 * 
+	 * @param numberString
+	 * @param noCheckDigit
+	 *            Whether check digit is present or not. True if no check Digit
+	 *            is appended.
+	 * @return
+	 */
+	public int checkSum(String numberString, boolean noCheckDigit) {
+		int sum = 0, checkDigit = 0;
+		
+		if(!noCheckDigit)
+			numberString = numberString.substring(0, numberString.length()-1);
+			
+		boolean isDouble = true;
+		for (int i = numberString.length() - 1; i >= 0; i--) {
+			int k = Integer.parseInt(String.valueOf(numberString.charAt(i)));
+			sum += sumToSingleDigit((k * (isDouble ? 2 : 1)));
+			isDouble = !isDouble;
+		}
 
-        if(!noCheckDigit)
-            numberString = numberString.substring(0, numberString.length()-1);
+		if ((sum % 10) > 0)
+			checkDigit = (10 - (sum % 10));
 
-        boolean isDouble = true;
-        for (int i = numberString.length() - 1; i >= 0; i--) {
-            int k = Integer.parseInt(String.valueOf(numberString.charAt(i)));
-            sum += sumToSingleDigit((k * (isDouble ? 2 : 1)));
-            isDouble = !isDouble;
-        }
+		return checkDigit;
+	}
 
-        if ((sum % 10) > 0)
-            checkDigit = (10 - (sum % 10));
-
-        return checkDigit;
-    }
-
-    private int sumToSingleDigit(int k) {
-        if (k < 10)
-            return k;
-        return sumToSingleDigit(k / 10) + (k % 10);
-    }
+	private int sumToSingleDigit(int k) {
+            if (k < 10)
+                    return k;
+            return sumToSingleDigit(k / 10) + (k % 10);
+	}
 
     public boolean useForStatistic() {
         if (status == Status.CANCELED || status == Status.PAYMENT_FAILED) {
             return false;
         }
-
+        
         if (testOrder) {
             return false;
         }
-
+        
         return true;
     }
-
+    
     public void changePaymentType(Application paymentApplication) {
         if (payment == null) {
             payment = new Payment();
         }
-
+        
         payment.paymentType = "ns_"+paymentApplication.id.replace("-", "_")+"\\"+paymentApplication.appName;
     }
 
@@ -382,7 +383,7 @@ public class Order extends DataCommon implements Comparable<Order> {
         if(payment.triedAutoPay.isEmpty()) {
             return false;
         }
-
+        
         if(payment.triedAutoPay.size() >= 50) {
             //Tried to pay with card for 50 days.. time to give up.
             return true;
@@ -395,9 +396,9 @@ public class Order extends DataCommon implements Comparable<Order> {
                 return true;
             }
         }
-
+        
         return false;
-
+       
     }
 
     public boolean createdOnDay(Date time) {
@@ -412,7 +413,7 @@ public class Order extends DataCommon implements Comparable<Order> {
         }
         return false;
     }
-
+    
     public boolean paidOnDay(Date time) {
         if(paymentDate == null) {
             return false;
@@ -445,7 +446,7 @@ public class Order extends DataCommon implements Comparable<Order> {
         for(String cartItemIdToRemove : removeItem) {
             cart.removeItem(cartItemIdToRemove);
         }
-
+        
         if(!closed && !forcedOpen) {
             if(status == Status.PAYMENT_COMPLETED) {
                 closed = true;
@@ -454,7 +455,7 @@ public class Order extends DataCommon implements Comparable<Order> {
                 closed = true;
             }
         }
-
+        
         if (forcedOpen) {
             closed = false;
         }
@@ -476,9 +477,9 @@ public class Order extends DataCommon implements Comparable<Order> {
         sentToPhone = null;
         sentToPhonePrefix = null;
         sentToCustomerDate = null;
-
+        
         restAmount = getPaidRest();
-
+        
         dueDate = getDueDate();
     }
 
@@ -496,7 +497,7 @@ public class Order extends DataCommon implements Comparable<Order> {
         entry.address = adress;
         shipmentLog.add(entry);
     }
-
+    
     public boolean needToBeTranferredToCreditor() {
         if(transferredToCreditor != null) {
             return false;
@@ -505,7 +506,7 @@ public class Order extends DataCommon implements Comparable<Order> {
         if(status == Status.PAYMENT_COMPLETED) {
             return false;
         }
-
+        
         for(CartItem item : cart.getItems()) {
             if(item.periodeStart == null) {
                 continue;
@@ -513,16 +514,16 @@ public class Order extends DataCommon implements Comparable<Order> {
             if(item.getProduct().minPeriode <= 0) {
                 continue;
             }
-
+            
             long diff = item.getStartingDate().getTime() - item.periodeStart.getTime();
-
+            
             diff /= 1000;
-
+            
             if(diff < item.getProduct().minPeriode) {
                 return true;
             }
         }
-
+        
         return false;
     }
 
@@ -532,7 +533,7 @@ public class Order extends DataCommon implements Comparable<Order> {
         }
         return false;
     }
-
+    
     public boolean isSamleFaktura() {
         if(payment != null && payment.paymentType != null && payment.paymentType.toLowerCase().contains("samlefaktura")) {
             return true;
@@ -561,11 +562,11 @@ public class Order extends DataCommon implements Comparable<Order> {
         if (paymentDate == null && this.paymentDate == null) {
             return false;
         }
-
+        
         if (this.paymentDate == null) {
             return false;
         }
-
+        
         return this.paymentDate.equals(paymentDate);
     }
 
@@ -599,7 +600,7 @@ public class Order extends DataCommon implements Comparable<Order> {
 
     public String createThermalPrinterReciept(AccountingDetails details, User user) {
         SimpleDateFormat sm = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");
-
+        
         String res = "";
         res += "Date    : " + sm.format(new Date()) + "\n";
         res += "Orderid : " + incrementOrderId + "\n";
@@ -613,17 +614,17 @@ public class Order extends DataCommon implements Comparable<Order> {
         res += details.postCode + " " + details.city + "\n";
         res += "\n";
 
-
+        
         double total = cart.getShippingCost() + cart.getTotal(true);
         total = Math.round(total);
-
+        
         for (CartTax cartTax : cart.getCartTaxes()) {
             res += "Tax " + cartTax.taxGroup.taxRate + "% : " + Math.round(cartTax.sum) + " kr\n";
         }
         res += "Total     : " + total + " kr\n";
-
+        
         res += "\n";
-
+        
         res += user.fullName + "\n";
         if(user.cellPhone != null && user.cellPhone.isEmpty()) {
             res += "Phone: " + "(" + user.prefix + ")" + user.cellPhone + "\n";
@@ -637,14 +638,14 @@ public class Order extends DataCommon implements Comparable<Order> {
             }
         }
         res += "\n";
-
+        
         for(CartItem item : cart.getItems()) {
             res += createLineText(item) + "\n";
         }
-
+        
         res += "\n";
         res = wrapText(res);
-
+        
         return res;
     }
 
@@ -660,12 +661,12 @@ public class Order extends DataCommon implements Comparable<Order> {
         if(item.endDate != null) {
             endDate = sm.format(item.endDate);
         }
-
+        
         String startEnd = "";
         if(startDate != null && endDate != null && !endDate.isEmpty() && !startDate.isEmpty()) {
             startEnd = startDate + " - " + endDate + "\n";
         }
-
+        
         if(!item.getProduct().additionalMetaData.trim().isEmpty()) {
             lineText = item.getProduct().name + "\n";
             lineText += item.getProduct().additionalMetaData + "\n";
@@ -674,12 +675,12 @@ public class Order extends DataCommon implements Comparable<Order> {
             lineText = item.getProduct().name.trim()  + "\n";
             lineText += startEnd;
         }
-
+        
         lineText = lineText.trim();
         lineText = makeSureIsOkay(lineText);
         return lineText;
     }
-
+    
     private String makeSureIsOkay(String text) {
         if(text == null) {
             return "";
@@ -963,11 +964,11 @@ public class Order extends DataCommon implements Comparable<Order> {
         if(diff < 0) {
             diff *= -1;
         }
-
+        
         if(diff > (86400000*2)) {
             return false;
         }
-
+        
         return true;
     }
 
@@ -982,10 +983,10 @@ public class Order extends DataCommon implements Comparable<Order> {
         for(CartItem item : cart.getItems()) {
             amount = amount.add(item.getTotalExRoundedWithTwoDecimals(precision));
         }
-
+        
         return total.subtract(amount);
     }
-
+    
     public Double getTotalAmountVat() {
         double total = getTotalAmount();
         double amount = 0.0;
@@ -994,7 +995,7 @@ public class Order extends DataCommon implements Comparable<Order> {
         }
         return total-amount;
     }
-
+    
     public Map<TaxGroup, BigDecimal> getTaxesRoundedWithTwoDecimals(int precision) {
         Map<TaxGroup, BigDecimal> retMap = new HashMap<>();
         Map<String, TaxGroup> groups = new HashMap<>();
@@ -1006,11 +1007,11 @@ public class Order extends DataCommon implements Comparable<Order> {
                 .forEach(item -> {
                     TaxGroup taxGroup = groups.get(item.getProduct().taxGroupObject.id);
                     BigDecimal current = retMap.get(taxGroup);
-
+                    
                     if (current == null) {
                         current = new BigDecimal(BigInteger.ZERO);
                     }
-
+                    
                     BigDecimal taxesToAdd = item.getTotalAmountRoundedWithTwoDecimals(precision).subtract(item.getTotalExRoundedWithTwoDecimals(precision));
                     current = current.add(taxesToAdd);
                     retMap.put(taxGroup, current);
@@ -1024,11 +1025,11 @@ public class Order extends DataCommon implements Comparable<Order> {
         if(dueDays == null) {
             dueDays = 14;
         }
-
+        
         if (rowCreatedDate == null) {
             return new Date();
         }
-
+        
         Calendar cal = Calendar.getInstance();
         cal.setTime(rowCreatedDate);
         cal.add(Calendar.DAY_OF_YEAR, dueDays);
@@ -1069,7 +1070,7 @@ public class Order extends DataCommon implements Comparable<Order> {
 
         return true;
     }
-
+    
     public double getPaidRest() {
         double transactionAmount = getTransactionAmount();
         double total = getTotalAmount();
@@ -1080,19 +1081,19 @@ public class Order extends DataCommon implements Comparable<Order> {
     /**
      * Returns prices without taxes added.
      * @param group
-     * @return
+     * @return 
      */
     public BigDecimal getTotalAmountForTaxGroupRoundedWithTwoDecimals(TaxGroup group, int precision) {
         BigDecimal ret = new BigDecimal(0);
-
+        
         List<CartItem> cartItems = cart.getItems().stream()
                 .filter(item -> item.getProduct().taxGroupObject.id.equals(group.id))
                 .collect(Collectors.toList());
-
+        
         for (CartItem item : cartItems) {
             ret = ret.add(item.getTotalExRoundedWithTwoDecimals(precision));
         }
-
+        
         return ret;
     }
 
@@ -1150,16 +1151,16 @@ public class Order extends DataCommon implements Comparable<Order> {
     /**
      * this function will return true if there are any items in the pricematrix
      * that will validate the closed periode of the accounting.
-     *
+     * 
      * @param oldOrder
      * @param closedDate
-     * @return
+     * @return 
      */
     public boolean needToStopDueToIllegalChangeOfPriceMatrix(Order oldOrder, Date closedDate) {
         if (cart == null) {
             return false;
         }
-
+        
         List<CartItem> itemsToCheck = cart.getItems().stream()
                 .filter(CartItem::isPriceMatrixItem)
                 .collect(Collectors.toList());
@@ -1189,29 +1190,29 @@ public class Order extends DataCommon implements Comparable<Order> {
                 }
             }
         }
-
+        
         return false;
     }
-
+    
     /**
      * this function will return true if there are any items in the pricematrix
      * that will validate the closed periode of the accounting.
-     *
+     * 
      * @param oldOrder
      * @param closedDate
-     * @return
+     * @return 
      */
     public boolean needToStopDueToIllegalChangeNormalItems(Order oldOrder, Date closedDate) {
         if (cart == null) {
             return false;
         }
-
+        
         List<CartItem> itemsToCheck = cart.getItems().stream()
                 .filter(item -> item.accountingDate != null)
                 .collect(Collectors.toList());
-
+        
         for (CartItem item : itemsToCheck) {
-
+            
             Date date = item.accountingDate;
 
             if (date.equals(closedDate) || date.after(closedDate)) {
@@ -1294,32 +1295,32 @@ public class Order extends DataCommon implements Comparable<Order> {
     public boolean needToStopDueToIllegalChangePaymentDate(Order oldOrder, Date closedDate) {
         if (paymentDate == null || paymentDate.equals(closedDate) || paymentDate.after(closedDate))
             return false;
-
+        
         if (oldOrder == null || oldOrder.paymentDate == null)
             return true;
-
+        
         if (!oldOrder.paymentDate.equals(paymentDate)) {
             return true;
-        }
-
+        } 
+        
         return false;
     }
 
     public void moveAllTransactionToTodayIfItsBeforeDate(Date close) {
         if (cart == null)
             return;
-
+        
         // PMS Addons
         if (needToStopDueToIllegalChangeInAddons(null, close)) {
             overrideAccountingDate = close;
             return;
         }
-
+        
         if (needToStopDueToIllegalChangeOfPriceMatrix(null, close)) {
             overrideAccountingDate = close;
             return;
         }
-
+        
         if (needToStopDueToIllegalChangePaymentDate(null, close)) {
             overrideAccountingDate = close;
             return;
@@ -1351,7 +1352,7 @@ public class Order extends DataCommon implements Comparable<Order> {
         if (cart == null) {
             return false;
         }
-
+        
         for(CartItem item : cart.getItems()) {
             if(item == null) {
                 continue;
@@ -1563,25 +1564,25 @@ public class Order extends DataCommon implements Comparable<Order> {
         public static int NEEDCOLLECTING = 9;
         public static int SEND_TO_INVOICE = 10;
     }
-
+    
     public static class OrderTransactionType {
         public static Integer UNKNOWN = 1;
         public static Integer OCR = 2;
-
+        
         /**
          * If the operatolr manually enter this transaaction.
          */
         public static Integer MANUAL = 3;
         public static Integer LOSS = 4;
-
+        
         public static Integer AGIO = 5;
         public static Integer ROUNDING = 6;
         public static Integer DISAGIO = 7;
     }
-
-
+    
+    
     public Date createdDate = new Date();
-
+    
     /**
      * This expiry date is used for recurring orders. Orders that has an expiry
      * date will automatically be renewed with a new order when it expires.
@@ -1600,32 +1601,32 @@ public class Order extends DataCommon implements Comparable<Order> {
 
     public int status = Status.CREATED;
     public Cart cart;
-
+    
     public String getDateCreated() {
         if (createdDate == null) {
             return "";
         }
-
+        
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm");
         return sdf.format(rowCreatedDate);
     }
-
+    
     public void setStatusCreated() {
         status = Status.CREATED;
     }
-
+    
     public void setStatusPaymentFailed() {
         status = Status.PAYMENT_FAILED;
     }
-
+    
     public void setStatusCompleted() {
         status = Status.COMPLETED;
     }
-
+    
     public void setStatusCanceled() {
         status = Status.CANCELED;
     }
-
+    
     @Override
     public int compareTo(Order o) {
         if(o.createdDate == null || createdDate == null) {
@@ -1633,35 +1634,35 @@ public class Order extends DataCommon implements Comparable<Order> {
         }
         return createdDate.compareTo(o.createdDate);
     }
-
+    
     public void updateCount(String cartItemId, Integer count) {
         if (cart.getCartItem(cartItemId) == null) {
             return;
         }
         cart.setProductCount(cartItemId, count);
     }
-
+    
     public void removeAllItemsExcept(List<String> ids) {
         List<String> toRemove = new ArrayList();
         for(CartItem item : cart.getItems()) {
             toRemove.add(item.getCartItemId());
         }
-
+        
         toRemove.removeAll(ids);
-
+        
         for(String remove : toRemove) {
             cart.removeItem(remove);
         }
     }
-
+    
     public void updatePrice(String cartItemId, double price) {
         if (cart.getCartItem(cartItemId) == null) {
             return;
         }
-
+        
         double oldPrice = cart.getCartItem(cartItemId).getProduct().price;
         cart.updatePrice(cartItemId, price);
-
+        
         OrderLog log = new OrderLog();
         log.userId = userId;
         log.description = "CartItem price changed price from " + oldPrice + " to " + price;
@@ -1693,75 +1694,75 @@ public class Order extends DataCommon implements Comparable<Order> {
         }
         return end;
     }
-
+    
     public boolean matchOnString(String searchWord) {
         if (searchWord == null || searchWord.isEmpty())
             return true;
-
+        
         boolean match = false;
-
+        
         if (cart != null && cart.address != null && cart.address.fullName != null) {
             match = cart.address.fullName.toLowerCase().contains(searchWord.toLowerCase());
         }
         if(searchWord.equals(incrementOrderId + "")) {
             return true;
         }
-
+        
         // Add more search criterias here ? :D
-
+        
         return match;
     }
-
+    
     public boolean paymentDateWithin(Date from, Date to) {
         if (paymentDate == null)
             return false;
-
+        
         long inDate = paymentDate.getTime();
         long fromL = from.getTime();
         long toL = to.getTime();
-
+        
         return (fromL <= inDate &&  inDate <= toL);
     }
-
+    
     public boolean isTransferBefore(Date end) {
         if (transferToAccountingDate != null && transferToAccountingDate.before(end)) {
             return true;
         }
-
+        
         if (transferToAccountingDate != null && transferToAccountingDate.equals(end)) {
             return true;
         }
-
+        
         return false;
     }
-
+    
     public void resetTransferToAccounting() {
         transferredToAccountingSystem = false;
         triedTransferredToAccountingSystem  = false;
-
+        
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
         cal.add(Calendar.DAY_OF_YEAR, -1);
         shouldHaveBeenTransferredToAccountingOnDate = cal.getTime();
-
+        
         if (status != Status.PAYMENT_COMPLETED) {
             closed = false;
         }
     }
-
+    
     public void markAsTransferredToAccounting() {
         transferredToAccountingSystem = true;
         triedTransferredToAccountingSystem  = true;
     }
-
+    
     public PaymentTerminalInformation getTerminalInformation() {
         if (isVerifonePayment()) {
             return new VerifoneLogParser(this);
         }
-
+        
         return null;
     }
-
+    
     public List<CartItem> getCartItems() {
         if (cart == null)
             return new ArrayList<>();
@@ -1786,9 +1787,9 @@ public class Order extends DataCommon implements Comparable<Order> {
                 .map(o -> o.cashPointId)
                 .findFirst()
                 .orElse("");
-
+                
     }
-
+    
     public boolean hasNewOrderTransactions() {
         return orderTransactions.stream()
                 .filter(trans -> trans.addedToZreport != null && trans.addedToZreport.isEmpty())
@@ -1798,13 +1799,13 @@ public class Order extends DataCommon implements Comparable<Order> {
     public long getIncrementOrderId() {
         return incrementOrderId;
     }
-
+      
     public boolean isNotOnZreport() {
         return orderTransactions.stream()
                 .filter(o -> StringUtils.isEmpty(o.addedToZreport))
                 .count() > 0;
     }
-
+    
     public String getRoomId() {
         return cart.getItems().stream()
                 .filter(o -> o.getProduct().externalReferenceId != null)

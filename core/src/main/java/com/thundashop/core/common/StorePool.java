@@ -156,7 +156,7 @@ public class StorePool {
         }catch(Exception e) {
             //invalid mulitlevelname.
         }
-
+       
         int i = 0;
         Object[] executeArgs = new Object[object.args.size()];
         Class[] types = getArguments(object);
@@ -255,15 +255,14 @@ public class StorePool {
                     }
                     throw x;
                 }
-            } catch (ErrorException x) {
-                log.error("", x);
+            }catch(ErrorException x) {
                 throw x;
             } finally {
                 MDC.remove("store_id");
                 MDC.remove("random_code");
             }
         }
-
+        
         return res;
     }
     

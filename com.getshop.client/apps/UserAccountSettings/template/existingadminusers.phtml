@@ -13,7 +13,7 @@ if("13442b34-31e5-424c-bb23-a396b7aeb8ca" == $storeId) {
 <?php
 /* @var $this ns_27656859_aeed_41f7_9941_f01d0f860212\UserAccountSettings */
 $users = $this->getApi()->getUserManager()->getUsersByType(100);
-$modules = $this->getApi()->getPageManager()->getModules();
+$modules = $this->getUserAccessModules();
 //print_r($users);
 $attributes = array(
     array('id', 'gs_hidden', 'id'),

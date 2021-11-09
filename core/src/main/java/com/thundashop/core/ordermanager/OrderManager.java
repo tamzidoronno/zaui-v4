@@ -2539,7 +2539,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         order.virtuallyDeleted = true;
-        order.cart.clear();
         saveObject(order);
         
         try {
@@ -5551,9 +5550,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if (order == null)
             return;
 
-        if (central.hasBeenConnectedToCentral()) {    
-            closeOrder(orderId, "Transferred to Z-Report");
-        }
+        closeOrder(orderId, "Transferred to Z-Report");
 
         order.orderTransactions.forEach(o ->markOrderTransactionClosedByZReport(o, report.id));
         order.addedToZreport = report.id;

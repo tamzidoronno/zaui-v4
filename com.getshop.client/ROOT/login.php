@@ -199,7 +199,7 @@ if (isset($_POST['pincoderequest']) && $_POST['username'] && $_POST['password'])
                     $modules = array();
                     
                     if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::getUserObject() != null) {
-                        $modules = $factory->getApi()->getPageManager()->getModules();
+                        $modules = $factory->getUserAccessModules();
                     }
                     
                     if (sizeof($modules) > 1) {

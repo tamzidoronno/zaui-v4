@@ -354,7 +354,7 @@ include('commonforallmodules.php');
 
         <?
         
-        $modules = $factory->getApi()->getPageManager()->getModules();
+        $modules = $factory->getUserAccessModules();
         $isLoggedInEditorOrAdministrator = ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isEditor() || ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isAdministrator();
         $acceptedGdpr = $factory->getStore()->acceptedGDPR;
         if(!$acceptedGdpr && $isLoggedInEditorOrAdministrator) {

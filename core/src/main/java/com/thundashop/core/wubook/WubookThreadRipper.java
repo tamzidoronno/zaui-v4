@@ -2,35 +2,39 @@ package com.thundashop.core.wubook;
 
 import com.getshop.scope.GetShopSessionScope;
 import com.thundashop.core.common.AppContext;
-import com.thundashop.core.common.GetShopLogHandler;
 import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpcException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.BeansException;
+import org.springframework.util.StopWatch;
 
 import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Hashtable;
-import java.util.Vector;
+import java.util.*;
 import java.util.concurrent.*;
 
 public class WubookThreadRipper extends Thread {
 
+    private static final Logger logger = LoggerFactory.getLogger(WubookThreadRipper.class);
+
     private final WubookManager manager;
+    private final Map<String, String> mdcContext;
     private final Integer type;
     private String lcode;
     private XmlRpcClient client;
     private String token;
     private String storeId;
     private GetShopSessionScope scope;
-    
-    public WubookThreadRipper(WubookManager manager, Integer type) {
+
+    public WubookThreadRipper(WubookManager manager, Integer type, Map<String, String> mdcContext) {
         this.type = type;
         this.manager = manager;
+        this.mdcContext = mdcContext;
         try {
             scope = AppContext.appContext.getBean(GetShopSessionScope.class);
         } catch (BeansException ex) {
-            manager.logPrint("Cannot find GetShopSessionScope bean defined for WubookThreadRipper. Might cause sendErrorNotification email to fail.");
+            logger.error("sid-{} Cannot find GetShopSessionScope bean defined for WubookThreadRipper.", storeId);
         }
     }
 
@@ -44,13 +48,15 @@ public class WubookThreadRipper extends Thread {
     @Override
     public void run() {
         scope.setStoreId(storeId, "", null);
-        manager.logPrint(Thread.currentThread().getName() + " " + getClass() + " " + "Starting thread... opType: " + type);
+        MDC.setContextMap(mdcContext);
+        logger.debug("Starting thread... opType: {}", type);
         try {
             doRealStuff();
         }catch (Exception e){
-            manager.logPrint(Thread.currentThread().getName() + " " + getClass() + " " + "Execution of (1)fetchNewBookings or (2)updateShortAvailability failed: " + type);
+            logger.error("Execution of (1)fetchNewBookings or (2)updateShortAvailability failed: {}", type);
         }finally {
             scope.removethreadStoreId(storeId);
+            mdcContext.forEach((k, v) -> MDC.remove(k));
         }
     }
 
@@ -71,16 +77,21 @@ public class WubookThreadRipper extends Thread {
         Future<Vector> taskFuture = executor.submit(task);
 
         try {
-            manager.logPrint(Thread.currentThread().getName() + " " + getClass() + "Calling wubookManger api, apiCall: " + apicall + " params: " + params);
+            logger.info("Calling wubookManger api, apiCall: {} , params: {}", apicall, params);
+            StopWatch stopWatch = new StopWatch("Api Call: " + apicall);
+            stopWatch.start();
+
             Vector res = taskFuture.get(3, TimeUnit.MINUTES);
-            manager.logPrint(Thread.currentThread().getName() + " " + getClass() + "Response from wubookManager api, apiCall: " + apicall + " response: " + res);
+
+            stopWatch.stop();
+            logger.info("Executed api: {} , time: {} , response: {}", apicall, stopWatch, res);
             return res;
         } catch (Exception d) {
             String errStr = "Could not connect to wubook on api call: " + apicall + " message: " + d.getMessage();
             manager.logText(errStr);
             manager.messageManager.sendErrorNotification(Thread.currentThread().getName() + " " + getClass() + " Exception while calling wubook, apiCall: " + apicall + " params: " + params + " error: " + d.getMessage(), d);
             manager.disableWubook = new Date();
-            manager.logPrintException(d);
+            logger.error("Could not connect to wubook on api call: {}", apicall, d);
             throw new RuntimeException(errStr, d);
         } finally {
             taskFuture.cancel(true);
@@ -90,7 +101,7 @@ public class WubookThreadRipper extends Thread {
     }
     
     public void fetchNewBookings() {
-        manager.logPrint(Thread.currentThread().getName() + " " + getClass() + " fetch Booking Thread Is Running: " + manager.fetchBookingThreadIsRunning);
+        logger.debug(" fetch Booking Thread Is Running: " + manager.fetchBookingThreadIsRunning);
         if(manager.fetchBookingThreadIsRunning) {
             manager.logText(Thread.currentThread().getName() + " " + getClass() + " A thread already running for fetchnewbooking");
             Calendar cal = Calendar.getInstance();
@@ -120,7 +131,15 @@ public class WubookThreadRipper extends Thread {
                 params.addElement(1);
             }
 
+            logger.info("Calling wubookManger api, apiCall: {} , params: {}", "fetch_new_bookings", params);
+            StopWatch stopWatch = new StopWatch("Api Call: fetch_new_bookings");
+            stopWatch.start();
+
             Vector result = executeClient("fetch_new_bookings", params);
+
+            stopWatch.stop();
+            logger.info("Executed api: {} , time: {} , response: {}", "fetch_new_bookings", stopWatch, result);
+
             if(result == null) {
                 manager.fetchBookingThreadIsRunning = false;
                 return;
@@ -134,7 +153,7 @@ public class WubookThreadRipper extends Thread {
             }
         }catch(Exception d) {
             manager.logText(Thread.currentThread().getName() + " " + getClass() +"Failed in fetch new booking " + d.getMessage());
-            manager.logPrintException(d);
+            logger.error("Failed in fetch new booking", d);
             manager.messageManager.sendErrorNotification(Thread.currentThread().getName() + " " + getClass() + " Exception while calling wubook, apiCall: fetch_new_bookings" + " error: " + d.getMessage(), d);
         }finally {
             manager.fetchBookingThreadIsRunning = false;

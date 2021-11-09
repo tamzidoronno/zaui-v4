@@ -6,9 +6,10 @@
 package com.thundashop.core.getshoplocksystem;
 
 import static com.thundashop.core.arx.WrapClient.wrapClient;
-import com.thundashop.core.common.Administrator;
-import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.common.ExcludeFromJson;
+import static java.lang.Thread.currentThread;
+
+import com.thundashop.core.common.*;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -22,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.apache.axis.encoding.Base64;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -118,6 +120,8 @@ public abstract class LockServerBase extends DataCommon {
         
         DefaultHttpClient client = new DefaultHttpClient(my_httpParams);
         try {
+            GetShopLogHandler.logPrintStatic(currentThread().getId() +
+                    " " + currentThread().getName() + " username: " + username + " loginUrl:" + loginUrl, storeId);
             client = wrapClient(client);
             HttpResponse httpResponse;
 
@@ -130,6 +134,8 @@ public abstract class LockServerBase extends DataCommon {
             httpResponse = client.execute(request);
 
             Integer statusCode = httpResponse.getStatusLine().getStatusCode();
+            GetShopLogHandler.logPrintStatic(currentThread().getId() +
+                    " " + currentThread().getName() + " response status code: " + statusCode, storeId);
             if(statusCode == 401) {
                 return "401";
             }
@@ -152,6 +158,9 @@ public abstract class LockServerBase extends DataCommon {
             successfullyMadeRequest();
         } catch (Exception x) {
             lostConnection();
+            GetShopLogHandler.logPrintStatic(currentThread().getId() +
+                    " " + currentThread().getName() + " exception during zwave call message:" + x.getMessage(), storeId);
+            GetShopLogHandler.logStack(x, storeId);
         } finally {
             if (client != null) {
                 client.getConnectionManager().shutdown();

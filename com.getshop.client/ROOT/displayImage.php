@@ -14,6 +14,11 @@ ob_start();
 include '../loader.php';
 session_cache_limiter('none');
 
+if (!is_string($_GET['id']) || (preg_match('/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i', $_GET['id']) !== 1)) {
+    echo "Invalid id";
+    return;
+}
+
 $factory = IocContainer::getFactorySingelton();
 if(!$factory->getApi()->getUUIDSecurityManager()->hasAccess($_GET['id'], true, false)) {
     echo "Access denied";

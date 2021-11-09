@@ -257,7 +257,6 @@ public class StorePool {
                     throw x;
                 }
             }catch(ErrorException x) {
-                log.error("", x);
                 throw x;
             } finally {
                 MDC.remove("store_id");

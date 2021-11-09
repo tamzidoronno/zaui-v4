@@ -1563,6 +1563,9 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
     public function togglePayAfterStayForGroup() {
         $booking = $this->getPmsBooking();
         $booking->createOrderAfterStay = !$booking->createOrderAfterStay;
+        foreach ($booking->rooms as $room){
+            $room->createOrdersOnZReport = !$room->createOrdersOnZReport;
+        }
         $text = $booking->createOrderAfterStay ? " on " : " off";
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
         $this->getApi()->getPmsManager()->logEntry($this->getSelectedMultilevelDomainName(), "Pay after stay toggled to : " . $text, $booking->id, null);

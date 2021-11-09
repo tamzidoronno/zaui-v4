@@ -7,11 +7,11 @@ package com.thundashop.core.getshoplocksystem.zwavejobs;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonSyntaxException;
-import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.getshoplocksystem.LocstarLock;
 import com.thundashop.core.getshoplocksystem.UserSlot;
 import com.thundashop.core.getshoplocksystem.ZwaveLockServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static java.lang.Thread.currentThread;
 
@@ -20,6 +20,9 @@ import static java.lang.Thread.currentThread;
  * @author ktonder
  */
 public class ZwaveAddCodeThread extends ZwaveThread {
+
+    private static final Logger logger = LoggerFactory.getLogger(ZwaveAddCodeThread.class);
+
     private UserSlot slot;
     
     public ZwaveAddCodeThread(ZwaveLockServer server, UserSlot slot, LocstarLock lock, String storeId) {
@@ -34,13 +37,13 @@ public class ZwaveAddCodeThread extends ZwaveThread {
         if (slot.isAddedToLock.equals("unkown")) {
             String result = isCodeAdded();
             if (result.equals("unkown")) {
-                logEntry("Unkown status of added code on attempt, not added: " + attempt + ", slot: " + slot.slotId + ", pinCode: " + slot.code.pinCode + ", cardId: " + slot.code.cardId);
+                logger.info("sid-{} Unknown status of added code on attempt, not added: {} , slot: {} , pinCode: {} cardId: {}",
+                        storeId, attempt, slot.slotId, slot.code.pinCode, slot.code.cardId);
                 return false;
             }
         }
         
         if (slot.isAddedToLock.equals("yes") && !removeCodeFromSlot()) {
-//            logEntry("Code was already added but was not able to remove it from slot on attempt: " + attempt + ", slot: " + slot.slotId + ", pinCode: " + slot.code.pinCode + ", cardId: " + slot.code.cardId);
             return false;
         }
 
@@ -48,12 +51,14 @@ public class ZwaveAddCodeThread extends ZwaveThread {
         waitForEmptyQueue();
 
         if (isCodeAdded().equals("yes")) {
-            logEntry("Successfully added code on attempt: " + attempt + ", slot: " + slot.slotId + ", pinCode: " + slot.code.pinCode + ", cardId: " + slot.code.cardId);
+            logger.info("sid-{} Successfully added code on attempt: {} , slot: {} , pinCode: {} , cardId: {}",
+                    storeId, attempt, slot.slotId, slot.code.pinCode, slot.code.cardId);
             successfullyCompleted = true;
             server.codeAddedSuccessfully(lock.id, slot.slotId);
             return true;
         } else {
-            logEntry("Failed to add code on attempt: " + attempt + ", slot: " + slot.slotId + ", pinCode: " + slot.code.pinCode + ", cardId: " + slot.code.cardId);
+            logger.info("sid-{} Failed to add code on attempt: {}, slot: {} , pinCode: {} , cardId: {}",
+                    storeId, attempt, slot.slotId, slot.code.pinCode, slot.code.cardId);
         }
         
         return false;
@@ -97,7 +102,7 @@ public class ZwaveAddCodeThread extends ZwaveThread {
 
         } catch (RuntimeException e) {
             // This catch block is only for logging purpose.
-            GetShopLogHandler.logStack(e, storeId);
+            logger.error("sid-{}", storeId, e);
             String errStr = currentThread().getId() + " " + currentThread().getName()
                     + " Error while calling zwave server"
                     + " addressForFetchingLog " + addressForFetchingLog
@@ -108,16 +113,6 @@ public class ZwaveAddCodeThread extends ZwaveThread {
         return slot.isAddedToLock;
     }
 
-    private int getLastUpdatedTime(String result) throws JsonSyntaxException {
-        Gson gson = new Gson();
-        JsonElement element = gson.fromJson(result, JsonElement.class);
-        if (element.getAsJsonObject() != null && element.getAsJsonObject().get("updateTime") != null) {
-            return element.getAsJsonObject().get("updateTime").getAsInt();
-        }
-        
-        return 0;
-    }
-    
     private String getFetchingOfCodes() {
         return "ZWave.zway/Run/devices["+lock.zwaveDeviceId+"].instances[0].commandClasses[99].Get("+slot.slotId+")";
     }

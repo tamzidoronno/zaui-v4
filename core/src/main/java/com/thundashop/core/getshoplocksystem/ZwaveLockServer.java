@@ -5,24 +5,18 @@
  */
 package com.thundashop.core.getshoplocksystem;
 
-import com.thundashop.core.getshoplocksystem.zwavejobs.ZwaveThread;
-import com.thundashop.core.getshoplocksystem.zwavejobs.ZwaveAddCodeThread;
-import com.thundashop.core.getshoplocksystem.zwavejobs.ZwaveRemoveCodeThread;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.thundashop.core.common.ExcludeFromJson;
-import com.thundashop.core.common.GetShopLogHandler;
-import com.thundashop.core.getshoplock.GetshopLockCom;
+import com.thundashop.core.getshoplocksystem.zwavejobs.ZwaveAddCodeThread;
 import com.thundashop.core.getshoplocksystem.zwavejobs.ZwaveJobPriotizer;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import com.thundashop.core.getshoplocksystem.zwavejobs.ZwaveRemoveCodeThread;
+import com.thundashop.core.getshoplocksystem.zwavejobs.ZwaveThread;
 import org.mongodb.morphia.annotations.Transient;
+
+import java.util.*;
 
 /**
  * This is a representation for a razberry zwave server.
@@ -30,7 +24,7 @@ import org.mongodb.morphia.annotations.Transient;
  * @author ktonder
  */
 public class ZwaveLockServer extends LockServerBase implements LockServer {
-    private Map<String, LocstarLock> locks = new HashMap();
+    private final Map<String, LocstarLock> locks = new HashMap<>();
 
     @Transient
     @ExcludeFromJson
@@ -43,7 +37,7 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
 
     @Override
     public List<Lock> getLocks() {
-        return new ArrayList(locks.values());
+        return new ArrayList<>(locks.values());
     }
 
     @Override
@@ -74,7 +68,7 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
     }
 
     private List<LocstarLock> createDevicesFromServerResult(String result) throws JsonSyntaxException {
-        List<LocstarLock> locks = new ArrayList();
+        List<LocstarLock> locks = new ArrayList<>();
         
         Gson gson = new Gson();
         JsonElement element = gson.fromJson(result, JsonElement.class);
@@ -145,7 +139,6 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
     
     public void finalizeServer() {
         locks.values()
-                .stream()
                 .forEach(l -> l.finalize());
     }
     
@@ -192,7 +185,7 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
         }
         
         if (currentThread == null) {
-            ZwaveJobPriotizer jobMaker = new ZwaveJobPriotizer(new ArrayList(locks.values()));
+            ZwaveJobPriotizer jobMaker = new ZwaveJobPriotizer(new ArrayList<>(locks.values()));
             LocstarLock lockToWorkWith = jobMaker.getNextLock();
             
             if (lockToWorkWith != null) {
@@ -203,8 +196,6 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
                     td.setName("Thread[ZWave]-storeId-" + storeId  + "-deviceId-" + lockToWorkWith.zwaveDeviceId);
                     td.start();
                 }            
-            } else {
-                GetShopLogHandler.logPrintStatic("No more jobs to do, or waiting because of failed locks.", storeId);
             }
         } 
     }
@@ -317,7 +308,7 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
             currentThread.stop();
         }
          
-        locks.values().stream()
+        locks.values()
             .forEach(l -> {
                 l.prioritizeLockUpdate = false;
             });

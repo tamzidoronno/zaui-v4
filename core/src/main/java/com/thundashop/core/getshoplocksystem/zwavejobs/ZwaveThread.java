@@ -10,11 +10,12 @@ import java.util.Calendar;
 import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.getshoplocksystem.LocstarLock;
 import com.thundashop.core.getshoplocksystem.ZwaveLockServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -22,12 +23,13 @@ import java.util.logging.Logger;
  */
 public abstract class ZwaveThread implements Runnable {
 
+    private static final Logger logger = LoggerFactory.getLogger(ZwaveThread.class);
+
     public boolean shouldStop = false;
     public boolean successfullyCompleted = false;
     public ZwaveThreadExecption exception = null;
     public ZwaveLockServer server;
     protected final LocstarLock lock;
-    private List<String> logEntries = new ArrayList();
     private int attempts;
     public final String storeId;
 
@@ -85,7 +87,7 @@ public abstract class ZwaveThread implements Runnable {
                 if (ex instanceof ZwaveThreadExecption) {
                     server.threadFailed(this);
                 } else {
-                    GetShopLogHandler.logStack(ex, storeId);
+                    logger.error("sid-{}", storeId, ex);
                 }
 
                 break;
@@ -114,10 +116,6 @@ public abstract class ZwaveThread implements Runnable {
 
     public abstract boolean execute(int attempt) throws ZwaveThreadExecption;
 
-    public boolean isForLock(LocstarLock lock) {
-        return this.lock.id.equals(lock.id);
-    }
-
     public void waitForEmptyQueue() {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.SECOND, 360);
@@ -140,7 +138,7 @@ public abstract class ZwaveThread implements Runnable {
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException ex) {
-                Logger.getLogger(ZwaveThread.class.getName()).log(Level.SEVERE, null, ex);
+                logger.error("sid-{}", storeId, ex);
             }
         }
     }
@@ -168,17 +166,6 @@ public abstract class ZwaveThread implements Runnable {
         return true;
     }
 
-    protected void logEntry(String string) {
-        Date date = new Date();
-        String logString = date + " | Server: " + server.hostname + ", Lock: " + lock.zwaveDeviceId + ", Description: " + string;
-        logEntries.add(logString);
-        GetShopLogHandler.logPrintStatic(logString, storeId);
-    }
-
-    public List<String> getLogEntries() {
-        return logEntries;
-    }
-    
     public boolean isDeviceDead() {
         String postfix = "ZWave.zway/Run/devices["+lock.zwaveDeviceId+"]";
         String res = server.httpLoginRequestZwaveServer(postfix);
@@ -200,7 +187,7 @@ public abstract class ZwaveThread implements Runnable {
             
             return dead;
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error("sid-{}", storeId, ex);
         }
         
         return false;

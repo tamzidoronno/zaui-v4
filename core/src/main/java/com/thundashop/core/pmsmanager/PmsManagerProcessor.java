@@ -22,17 +22,14 @@ public class PmsManagerProcessor {
     private static final Logger logger = LoggerFactory.getLogger(PmsManagerProcessor.class);
 
     private final PmsManager manager;
-    private Date lastProcessed;
     private List<PmsBooking> cachedResult;
     private List<PmsBooking> cachedResult_includepaidfor;
-    private long start;
 
     PmsManagerProcessor(PmsManager manager) {
         this.manager = manager;
     }
 
     public void doProcessing() {
-        start = System.currentTimeMillis();
         clearCachedObject();
 
         clearCachedObject();
@@ -65,7 +62,6 @@ public class PmsManagerProcessor {
     }
     
     public void hourlyProcessor() {
-        start = System.currentTimeMillis();
         try { autoCreateInvoice(); }catch(Exception e) { logger.error("", e); }
 
         try { processAutoExtend(); }catch(Exception e) { logger.error("", e); }

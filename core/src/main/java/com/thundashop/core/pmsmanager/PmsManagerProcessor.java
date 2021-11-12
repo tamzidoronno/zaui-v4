@@ -1,7 +1,5 @@
 package com.thundashop.core.pmsmanager;
 
-import com.google.common.base.Ascii;
-import java.util.Calendar;
 import com.thundashop.core.arx.AccessCategory;
 import com.thundashop.core.arx.Card;
 import com.thundashop.core.arx.Person;
@@ -11,19 +9,18 @@ import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.getshop.data.GetShopDevice;
 import com.thundashop.core.getshop.data.GetShopLockCode;
 import com.thundashop.core.getshoplocksystem.LockCode;
-import com.thundashop.core.getshoplocksystem.LockGroup;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.usermanager.data.User;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 public class PmsManagerProcessor {
+
+    private static final Logger logger = LoggerFactory.getLogger(PmsManagerProcessor.class);
+
     private final PmsManager manager;
     private Date lastProcessed;
     private List<PmsBooking> cachedResult;
@@ -37,90 +34,90 @@ public class PmsManagerProcessor {
     public void doProcessing() {
         start = System.currentTimeMillis();
         clearCachedObject();
-        checkTimer("Cleared cache");
+
         clearCachedObject();
-        checkTimer("Clear cache 2");
-        try { autoMarkBookingsAsPaid(); }catch(Exception e) {manager.logPrintException(e); }
-        checkTimer("autoMarkBookingsAsPaid");
-        try { autoSendPassportQuestion(); }catch(Exception e) {manager.logPrintException(e); }
-        checkTimer("autoMarkBookingsAsPaid");
-        clearCachedObject(); 
-        checkTimer("Clear cache 2");
-        try { pingServers(); } catch(Exception e) {}
-        checkTimer("pingServers");
-        try { processAutoAssigning(); }catch(Exception e) { manager.logPrintException(e); }
-        checkTimer("processAutoAssigning");
-        try { processAutoDeletion(); }catch(Exception e) { manager.logPrintException(e); }
-        checkTimer("processAutoDeletion");
-        try { processLockSystem(); }catch(Exception e) {manager.logPrintException(e); }
-        checkTimer("processLockSystem");
-        try { sendPaymentLinkOnUnpaidBookings(); }catch(Exception e) { manager.logPrintException(e); }
-        checkTimer("sendPaymentLinkOnUnpaidBookings");
-        try { sendRecieptsOnCompletedPayments(); }catch(Exception e) { manager.logPrintException(e); }
-        checkTimer("sendRecieptsOnCompletedPayments");
-        try { autoMarkOrdersAsPaid(); }catch(Exception e) { manager.logPrintException(e); }
-        checkTimer("autoMarkOrdersAsPaid");
-        try { manager.wubookManager.checkIfLastPulledIsOk(); }catch(Exception e) { manager.logPrintException(e); }
-        checkTimer("checkIfWubookrunning");
-        try { processTimedMessage(false); }catch(Exception e) { manager.logPrintException(e); }
-        try { processTimedMessage(true); }catch(Exception e) { manager.logPrintException(e); }
-        checkTimer("processed timed messages");
+
+        try { autoMarkBookingsAsPaid(); }catch(Exception e) {logger.error("", e); }
+
+        try { autoSendPassportQuestion(); }catch(Exception e) {logger.error("", e); }
+
+        clearCachedObject();
+
+        try { pingServers(); } catch(Exception e) { logger.error("", e);}
+
+        try { processAutoAssigning(); }catch(Exception e) { logger.error("", e); }
+
+        try { processAutoDeletion(); }catch(Exception e) { logger.error("", e); }
+
+        try { processLockSystem(); }catch(Exception e) {logger.error("", e); }
+
+        try { sendPaymentLinkOnUnpaidBookings(); }catch(Exception e) { logger.error("", e); }
+
+        try { sendRecieptsOnCompletedPayments(); }catch(Exception e) { logger.error("", e); }
+
+        try { autoMarkOrdersAsPaid(); }catch(Exception e) { logger.error("", e); }
+
+        try { manager.wubookManager.checkIfLastPulledIsOk(); }catch(Exception e) { logger.error("", e); }
+
+        try { processTimedMessage(false); }catch(Exception e) { logger.error("", e); }
+        try { processTimedMessage(true); }catch(Exception e) { logger.error("", e); }
+
     }
     
     public void hourlyProcessor() {
         start = System.currentTimeMillis();
-        try { autoCreateInvoice(); }catch(Exception e) { manager.logPrintException(e); }
-        checkTimer("Autocreating invoices");
-        try { processAutoExtend(); }catch(Exception e) { manager.logPrintException(e); }
-        checkTimer("processAutoExtend");
-        try { processIntervalCleaning(false); }catch(Exception e) { manager.logPrintException(e); }
-        checkTimer("processIntervalCleaning(false)");
-        try { processIntervalCleaning(true); }catch(Exception e) { manager.logPrintException(e); }
-        checkTimer("processIntervalCleaning(true)");
-        try { makeSureCleaningsAreOkey(); }catch(Exception e) { manager.logPrintException(e); }
-        checkTimer("makeSureCleaningsAreOkey");
-        try { checkForIncosistentBookings(); }catch(Exception e) { manager.logPrintException(e); }
-        checkTimer("checkForIncosistentBookings");
-        try { checkForRoomToClose(); }catch(Exception e) {manager.logPrintException(e); }
-        checkTimer("checkForRoomToClose");
-        try { updateInvoices(); }catch(Exception e) {manager.logPrintException(e); }
-        checkTimer("updateInvoices");
-        try { checkForDeadCodes(); }catch(Exception e) { manager.logPrintException(e); }
-        checkTimer("checkForDeadCodes");
-        try { warnOrderNotPaidFor(); }catch(Exception e) { manager.logPrintException(e); }
-        checkTimer("warnOrderNotPaidFor");
+        try { autoCreateInvoice(); }catch(Exception e) { logger.error("", e); }
+
+        try { processAutoExtend(); }catch(Exception e) { logger.error("", e); }
+
+        try { processIntervalCleaning(false); }catch(Exception e) { logger.error("", e); }
+
+        try { processIntervalCleaning(true); }catch(Exception e) { logger.error("", e); }
+
+        try { makeSureCleaningsAreOkey(); }catch(Exception e) { logger.error("", e); }
+
+        try { checkForIncosistentBookings(); }catch(Exception e) { logger.error("", e); }
+
+        try { checkForRoomToClose(); }catch(Exception e) {logger.error("", e); }
+
+        try { updateInvoices(); }catch(Exception e) {logger.error("", e); }
+
+        try { checkForDeadCodes(); }catch(Exception e) { logger.error("", e); }
+
+        try { warnOrderNotPaidFor(); }catch(Exception e) { logger.error("", e); }
+
     }
     
     public void processStartEndings() {
-        try { processGreetingMessage(); }catch(Exception e) { manager.logPrintException(e); }
+        try { processGreetingMessage(); }catch(Exception e) { logger.error("", e); }
         
-        checkTimer("processAutoAssigning");
-        try { processStarting(-4, 0, false); }catch(Exception e) { manager.logPrintException(e); }
-        checkTimer("processStarting (-4,0)");
-        try { processStarting(0, 4, false); }catch(Exception e) { manager.logPrintException(e); }
-        checkTimer("processStarting (0,4)");
-        try { processStarting(4, 12, false); }catch(Exception e) { manager.logPrintException(e); }
-        checkTimer("processStarting (4,12)");
-        try { processStarting(12, 12 * 2, false); }catch(Exception e) { manager.logPrintException(e);  }
-        checkTimer("processStarting (12,24)");
-        try { processStarting(24, 24 * 2, false); }catch(Exception e) { manager.logPrintException(e); }
-        checkTimer("processStarting (24,48)");
-        try { processStarting(48, 24 * 3, false); }catch(Exception e) { manager.logPrintException(e); }
-        checkTimer("processStarting (48,72)");
-        try { processStarting(0, 12, true); }catch(Exception e) { manager.logPrintException(e);  }
-        checkTimer("processStarting (0,12,true)");
-        try { processStarting(12, 12 * 2, true); }catch(Exception e) { manager.logPrintException(e);  }
-        checkTimer("processStarting (12,24,true)");
-        try { processStarting(24, 24 * 2, true); }catch(Exception e) { manager.logPrintException(e);  }
-        checkTimer("processStarting (24,48,true)");
-        try { processStarting(48, 24 * 3, true); }catch(Exception e) { manager.logPrintException(e); }
-        checkTimer("processStarting (48,72,true)");
-        try { processEndings(0, 24 * 1); }catch(Exception e) { manager.logPrintException(e);  }
-        checkTimer("processEndings (0,24,true)");
-        try { processEndings(24, 24 * 2); }catch(Exception e) { manager.logPrintException(e); }
-        checkTimer("processEndings (24,48,true)");
-        try { processEndings(48, 24 * 3); }catch(Exception e) { manager.logPrintException(e); }
-        checkTimer("processEndings (48,72,true)");
+
+        try { processStarting(-4, 0, false); }catch(Exception e) { logger.error("", e); }
+
+        try { processStarting(0, 4, false); }catch(Exception e) { logger.error("", e); }
+
+        try { processStarting(4, 12, false); }catch(Exception e) { logger.error("", e); }
+
+        try { processStarting(12, 12 * 2, false); }catch(Exception e) { logger.error("", e);  }
+
+        try { processStarting(24, 24 * 2, false); }catch(Exception e) { logger.error("", e); }
+
+        try { processStarting(48, 24 * 3, false); }catch(Exception e) { logger.error("", e); }
+
+        try { processStarting(0, 12, true); }catch(Exception e) { logger.error("", e);  }
+
+        try { processStarting(12, 12 * 2, true); }catch(Exception e) { logger.error("", e);  }
+
+        try { processStarting(24, 24 * 2, true); }catch(Exception e) { logger.error("", e);  }
+
+        try { processStarting(48, 24 * 3, true); }catch(Exception e) { logger.error("", e); }
+
+        try { processEndings(0, 24); }catch(Exception e) { logger.error("", e);  }
+
+        try { processEndings(24, 24 * 2); }catch(Exception e) { logger.error("", e); }
+
+        try { processEndings(48, 24 * 3); }catch(Exception e) { logger.error("", e); }
+
     }
     
 
@@ -289,7 +286,7 @@ public class PmsManagerProcessor {
         try {
             manager.checkDoorStatusControl();
         }catch(Exception e) {
-            manager.logPrintException(e);
+            logger.error("", e);
         }
         
         List<PmsBooking> bookings = getAllConfirmedNotDeleted(true);
@@ -297,7 +294,6 @@ public class PmsManagerProcessor {
             bookings = getBookingsNeedsToBeChecked(bookings);
         }
         
-        manager.gsTiming("\t Before looping " + bookings.size() + " bookings");
         for (PmsBooking booking : bookings) {
          
             if(!booking.confirmed) {
@@ -342,7 +338,7 @@ public class PmsManagerProcessor {
                                 manager.bookingEngine.changeDatesOnBooking(room.bookingId, new Date(), room.date.end);
                                 manager.finalize(booking);
                             }catch(Exception e) {
-
+                                logger.error("", e);
                             }
                         }
                     }
@@ -400,14 +396,13 @@ public class PmsManagerProcessor {
                 manager.saveBooking(booking);
             }
         }
-        manager.gsTiming("\t After looping " + bookings.size() + " bookings");
-        
+
     }
 
     private void processAutoAssigning() {
         List<PmsBooking> bookings = getAllConfirmedNotDeleted(true);
-        List<PmsBookingRooms> roomsToAssing = new ArrayList();
-        HashMap<String, PmsBooking> bookingsToSave = new HashMap();
+        List<PmsBookingRooms> roomsToAssing = new ArrayList<>();
+        HashMap<String, PmsBooking> bookingsToSave = new HashMap<>();
         for (PmsBooking booking : bookings) {
             for (PmsBookingRooms room : booking.getActiveRooms()) {
                 if (!room.isStartingToday() && !room.isStarted() || room.isEnded()) {
@@ -438,27 +433,11 @@ public class PmsManagerProcessor {
        });
         
         for(PmsBookingRooms room : roomsToAssing) {
-            if(room.recentlyChangedBookingItem()) {
-//                continue;
-            }
             PmsBooking booking = manager.getBookingFromRoomSecure(room.pmsBookingRoomId);
             manager.autoAssignItem(room);
             manager.finalize(booking);
             manager.saveBooking(booking);
         }
-    }
-
-    
-
-    private boolean isSameDay(Date date1, Date date2) {
-        Calendar calendar1 = Calendar.getInstance();
-        calendar1.setTime(date1);
-        Calendar calendar2 = Calendar.getInstance();
-        calendar2.setTime(date2);
-        boolean sameYear = calendar1.get(Calendar.YEAR) == calendar2.get(Calendar.YEAR);
-        boolean sameMonth = calendar1.get(Calendar.MONTH) == calendar2.get(Calendar.MONTH);
-        boolean sameDay = calendar1.get(Calendar.DAY_OF_MONTH) == calendar2.get(Calendar.DAY_OF_MONTH);
-        return (sameDay && sameMonth && sameYear);
     }
 
     private List<PmsBooking> getAllConfirmedNotDeleted(boolean includeNotPaidFor) {
@@ -469,8 +448,8 @@ public class PmsManagerProcessor {
             return cachedResult;
         }
         
-        List<PmsBooking> res = new ArrayList(manager.getBookingMap().values());
-        List<PmsBooking> toRemove = new ArrayList();
+        List<PmsBooking> res = new ArrayList<>(manager.getBookingMap().values());
+        List<PmsBooking> toRemove = new ArrayList<>();
         for (PmsBooking booking : res) {
             boolean ignoreNotPaidFor = checkIgnorePaidFor(booking);
             if (booking.getActiveRooms() == null) {
@@ -501,14 +480,6 @@ public class PmsManagerProcessor {
         return res;
     }
 
-    private Date beginningOfMonth(int monthsToAdd) {
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.DAY_OF_MONTH, Calendar.getInstance().getActualMinimum(Calendar.DAY_OF_MONTH)); 
-       cal.add(Calendar.MONTH, monthsToAdd);
-
-        return cal.getTime();
-    }
-
     private boolean pushToArx(PmsBookingRooms room, boolean deleted) {
         if(!manager.getStore().id.equals("123865ea-3232-4b3b-9136-7df23cf896c6")) {
             return false;
@@ -526,7 +497,7 @@ public class PmsManagerProcessor {
         }
 
         if (manager.getConfigurationSecure().getDefaultLockServer().arxCardFormat == null || manager.getConfigurationSecure().getDefaultLockServer().arxCardFormat.isEmpty()) {
-            manager.logPrint("Card format not set yet");
+            logger.info("Card format not set yet");
             return false;
         }
 
@@ -545,7 +516,7 @@ public class PmsManagerProcessor {
         AccessCategory category = new AccessCategory();
         BookingItem item = manager.bookingEngine.getBookingItem(room.bookingItemId);
         if (item == null) {
-            manager.logPrint("Not able to push to arx, item does not exists");
+            logger.info("Not able to push to arx, item does not exists");
             return false;
         }
         String alias = item.bookingItemAlias;
@@ -650,7 +621,7 @@ public class PmsManagerProcessor {
         List<PmsBooking> bookings = getAllConfirmedNotDeleted(false);
 
         DateTime time = new DateTime();
-        for (Integer i = 0; i < 10; i++) {
+        for (int i = 0; i < 10; i++) {
             int maxNumAtDay = 0;
             int numberOfInterval = 0;
             int weekOfDay = time.getDayOfWeek();
@@ -714,9 +685,9 @@ public class PmsManagerProcessor {
 
     private void checkForIncosistentBookings() {
         List<Booking> allBookings = manager.bookingEngine.getAllBookings();
-        List<String> allBookingIdsInPmsManager = new ArrayList();
-        HashSet<String> allBookingIdsInBookingEngine = new HashSet();
-        List<PmsBookingRooms> allRoomsInPmsManager = new ArrayList();
+        List<String> allBookingIdsInPmsManager = new ArrayList<>();
+        HashSet<String> allBookingIdsInBookingEngine = new HashSet<>();
+        List<PmsBookingRooms> allRoomsInPmsManager = new ArrayList<>();
         for(PmsBooking booking : manager.getBookingMap().values()) {
             if(booking.isDeleted) {
                 continue;
@@ -724,35 +695,6 @@ public class PmsManagerProcessor {
             if(booking.isEnded()) {
                 continue;
             }
-            
-            
-//            if(!manager.hasCheckedForUndeletion) {
-//                PmsLog filter = new PmsLog();
-//                filter.bookingId = booking.id;
-//                Calendar cal = Calendar.getInstance();
-//
-//                for(PmsBookingRooms r : booking.rooms) {
-//                    try {
-//                        if(r.isEnded() && r.isDeleted()) {
-//                            List<PmsLog> entries = manager.getLogEntries(filter);
-//                            for(PmsLog logentry : entries) {
-//                                if(logentry.bookingItemId.equals(r.bookingItemId) && logentry.logText.contains("Room is out of sync between pmsmanager and in booking engine")) {
-//                                    cal.setTime(logentry.dateEntry);
-//                                    Integer dayOfYear = cal.get(Calendar.DAY_OF_YEAR);
-//                                    if(dayOfYear == 294 || dayOfYear == 295 || dayOfYear == 296) {
-//                                        System.out.println("MAYBE: " + dayOfYear + " : " + logentry.dateEntry  + " : "  + logentry.logText);
-//                                        manager.removeFromBooking(booking.id, r.pmsBookingRoomId);
-//                                        break;
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }catch(Exception e) {
-//                        manager.logPrintException(e);
-//                    }
-//                }
-//            }
-            
             
             if(booking.getActiveRooms() != null) {
                 for(PmsBookingRooms room : booking.getActiveRooms()) {
@@ -764,8 +706,7 @@ public class PmsManagerProcessor {
                 }
             }
         }
-//        manager.hasCheckedForUndeletion = true;
-        
+
         for(Booking test : allBookings) {
             if(test.isEnded()) {
                 continue;
@@ -938,7 +879,7 @@ public class PmsManagerProcessor {
     private boolean fetchFromGetshopHotelLock(PmsBookingRooms room, boolean deleted) {
         BookingItem item = manager.bookingEngine.getBookingItem(room.bookingItemId);
         if (item == null) {
-            manager.logPrint("Not able to fetch code from getshop hotel lock, no lock is connected to the room");
+            logger.info("Not able to fetch code from getshop hotel lock, no lock is connected to the room");
             return false;
         }
         
@@ -1000,7 +941,6 @@ public class PmsManagerProcessor {
     }
 
     private void processAutoDeletion() {
-        long start = System.currentTimeMillis();
         PmsConfiguration configuration = manager.getConfigurationSecure();
         if(!configuration.autoDeleteUnpaidBookings) {
             return;
@@ -1055,7 +995,6 @@ public class PmsManagerProcessor {
         Calendar cal = Calendar.getInstance();
         
         int days = manager.getConfigurationSecure().numberOfDaysToSendPaymentLinkAheadOfStay;
-        cal = Calendar.getInstance();
         cal.add(Calendar.DAY_OF_YEAR, -1);
         
         PmsBookingFilter filter = new PmsBookingFilter();
@@ -1068,7 +1007,7 @@ public class PmsManagerProcessor {
         
         List<PmsBooking> bookingsCheckingIn = manager.getAllBookings(filter);
         List<PmsBooking> nonRefBookings = getLatestNonRefBookings();
-        checkTimer("Get all bookings to check for non paid");
+
         bookingsCheckingIn.addAll(nonRefBookings);
         
         for(PmsBooking book : bookingsCheckingIn) {
@@ -1099,7 +1038,7 @@ public class PmsManagerProcessor {
         }
         
         List<Order> orders = manager.orderManager.getAllOrders();
-        checkTimer("Fetching orders");
+
         for(Order ord : orders) {
             if(ord.createdOnDay(new Date())) {
                 continue;
@@ -1157,7 +1096,7 @@ public class PmsManagerProcessor {
                         }
                     }
                     if(!found) {
-                        manager.logPrint("Dead code found for device: " + lock.name + " - " + lock.zwaveid + " - " + code.fetchCodeToAddToLock() + " slot: " + code.slot);
+                        logger.info("Dead code found for device: " + lock.name + " - " + lock.zwaveid + " - " + code.fetchCodeToAddToLock() + " slot: " + code.slot);
                         code.refreshCode();
                         lockNeedUpdate = true;
                     }
@@ -1178,7 +1117,7 @@ public class PmsManagerProcessor {
         filter.startDate = cal.getTime();
         
         List<PmsBooking> latestBookings = manager.getAllBookings(filter);
-        List<PmsBooking> result = new ArrayList();
+        List<PmsBooking> result = new ArrayList<>();
         
         for(PmsBooking booking : latestBookings) {
             if(booking.hasNoRefRooms()) {
@@ -1270,16 +1209,6 @@ public class PmsManagerProcessor {
         }
     }
 
-    private void checkTimer(String text) {
-        manager.gsTiming(text);
-    }
-    
-    private void checkTimerInner(String text) { 
-        long diff = System.currentTimeMillis() - start;
-        manager.logPrint("\t Processor inner:" + diff + " : " + text);
-        start = System.currentTimeMillis();
-    }
-
     private boolean handleGetShopLockSystemCodes(PmsBookingRooms room, boolean deleted) {
         if (room.bookingItemId == null || room.bookingItemId.isEmpty()) {
             return false;
@@ -1304,7 +1233,7 @@ public class PmsManagerProcessor {
             try {
                 nextUnusedCode = manager.getShopLockSystemManager.getNextUnusedCode(item.lockGroupId, room.pmsBookingRoomId, getClass().getSimpleName(), "Automatically assigned by PMS processor");
             } catch (Exception ex) {
-                manager.logPrintException(ex);
+                logger.error("", ex);
                 return false;
             }
             
@@ -1360,7 +1289,7 @@ public class PmsManagerProcessor {
     }
 
     private List<PmsBooking> getBookingsNeedsToBeChecked(List<PmsBooking> bookings) {
-        List<PmsBooking> toCheck = new ArrayList();
+        List<PmsBooking> toCheck = new ArrayList<>();
         
         java.util.Calendar end = java.util.Calendar.getInstance();
         java.util.Calendar start = java.util.Calendar.getInstance();
@@ -1404,7 +1333,7 @@ public class PmsManagerProcessor {
                     manager.pmsInvoiceManager.sendRecieptOnOrder(order, booking.id);
                 }
             } else {
-                if(order != null && order.payment != null && order.payment.transactionLog != null) {
+                if(order.payment != null && order.payment.transactionLog != null) {
                     order.payment.transactionLog.put(System.currentTimeMillis(), "Did not autosend order since the booking connected does not exist");
                     manager.orderManager.saveOrder(order);
                 }

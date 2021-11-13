@@ -183,4 +183,5 @@ downloaded/
 .idea
 
 repository/build/
+!gradle/wrapper/gradle-wrapper.jar
 

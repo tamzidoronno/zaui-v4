@@ -181,3 +181,6 @@ downloaded/
 *.metadata.json
 *.bson
 .idea
+
+repository/build/
+

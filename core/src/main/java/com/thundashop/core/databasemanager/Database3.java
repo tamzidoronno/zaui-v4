@@ -14,13 +14,8 @@ public class Database3 {
 
     private final Morphia morphia;
 
-    public Database3(String host, int port) {
-        try {
-            mongo = new Mongo(host, port);
-        } catch (UnknownHostException e) {
-            GetShopLogHandler.logStack(e, null);
-            throw new RuntimeException(e);
-        }
+    public Database3(MongoClientProvider provider) {
+        mongo = provider.getMongo();
         morphia = new Morphia();
         morphia.getMapper().getConverters().addConverter(BigDecimalConverter.class);
         morphia.map(DataCommon.class);

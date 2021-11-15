@@ -33,6 +33,7 @@ import java.util.logging.Level;
 import java.util.stream.Stream;
 import org.mongodb.morphia.Morphia;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 /**
@@ -44,7 +45,7 @@ public class SupportDatabase extends StoreComponent {
 
     public static int mongoPort = 27017;
 
-    private MongoClient mongo;
+    private Mongo mongo;
     private Morphia morphia;
     
     private String collectionPrefix = "col_";
@@ -53,20 +54,14 @@ public class SupportDatabase extends StoreComponent {
     public Logger logger;
     
 
-    public SupportDatabase() throws UnknownHostException {
+    @Autowired
+    public SupportDatabase(@Qualifier("supportMongo") MongoClientProvider provider) {
         morphia = new Morphia();
         morphia.map(DataCommon.class);
         
-        List<MongoCredential> creds = new ArrayList<MongoCredential>();  
+        List<MongoCredential> creds = new ArrayList<>();
         creds.add(MongoCredential.createCredential("getshop", "SupportManager", "aisdfjoiw3j4q2oaijsdfoiajsfdoi23joiASD__ASDF".toCharArray()));
-
-        MongoClientOptions.Builder optionsBuilder = MongoClientOptions.builder();
-        optionsBuilder.connectTimeout(2000);
-        optionsBuilder.socketTimeout(2000);
-
-        MongoClientOptions options = optionsBuilder.build();
-
-        mongo = new MongoClient(new ServerAddress("192.168.100.1", 27017), options);
+        mongo = provider.getMongo();
     }
 
     private boolean isConnected() {

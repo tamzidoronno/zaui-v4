@@ -74,7 +74,7 @@ public class Database extends StoreComponent {
         if (!foundInEnvVars){ host = "localhost"; }
 
         log.debug("Connecting to mongo host: `{}`", host);
-        mongo = provider.getMongo();
+        mongo = provider.getMongoClient();
         morphia = new Morphia();
         morphia.getMapper().getConverters().addConverter(BigDecimalConverter.class);
         morphia.map(DataCommon.class);

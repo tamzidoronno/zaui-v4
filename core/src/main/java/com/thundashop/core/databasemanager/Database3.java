@@ -15,7 +15,7 @@ public class Database3 {
     private final Morphia morphia;
 
     public Database3(MongoClientProvider provider) {
-        mongo = provider.getMongo();
+        mongo = provider.getMongoClient();
         morphia = new Morphia();
         morphia.getMapper().getConverters().addConverter(BigDecimalConverter.class);
         morphia.map(DataCommon.class);

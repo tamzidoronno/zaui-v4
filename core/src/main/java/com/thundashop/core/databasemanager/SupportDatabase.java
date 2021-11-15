@@ -43,9 +43,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class SupportDatabase extends StoreComponent {
 
-    public static int mongoPort = 27017;
-
-    private Mongo mongo;
+    private MongoClient mongo;
     private Morphia morphia;
     
     private String collectionPrefix = "col_";
@@ -61,7 +59,7 @@ public class SupportDatabase extends StoreComponent {
         
         List<MongoCredential> creds = new ArrayList<>();
         creds.add(MongoCredential.createCredential("getshop", "SupportManager", "aisdfjoiw3j4q2oaijsdfoiajsfdoi23joiASD__ASDF".toCharArray()));
-        mongo = provider.getMongo();
+        mongo = provider.getMongoClient();
     }
 
     private boolean isConnected() {

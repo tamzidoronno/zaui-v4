@@ -1,6 +1,5 @@
 package com.thundashop.core.databasemanager;
 
-import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.ServerAddress;
@@ -10,7 +9,7 @@ import java.util.function.Function;
 
 public class MongoClientProvider {
 
-    private final Mongo mongo;
+    private final MongoClient mongo;
 
     private MongoClientProvider(String host, int port, MongoClientOptions options) throws UnknownHostException {
         this.mongo = new MongoClient(new ServerAddress(host, port), options);
@@ -20,7 +19,7 @@ public class MongoClientProvider {
         return new MongoClientProviderBuilder();
     }
 
-    public Mongo getMongo() {
+    public MongoClient getMongoClient() {
         return mongo;
     }
 

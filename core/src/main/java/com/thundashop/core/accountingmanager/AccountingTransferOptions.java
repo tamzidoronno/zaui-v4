@@ -5,13 +5,11 @@
  */
 package com.thundashop.core.accountingmanager;
 
-import com.thundashop.core.cartmanager.data.CartItem;
-import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.ordermanager.data.Order;
-import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.data.User;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +18,9 @@ import java.util.List;
  * @author boggi
  */
 class AccountingTransferOptions {
+
+    private static final Logger log = LoggerFactory.getLogger(AccountingTransferOptions.class);
+
     public boolean hasFail = false;
     public List<User> users;
     public List<Order> orders;
@@ -47,7 +48,7 @@ class AccountingTransferOptions {
             try {
                 accountingId = new Integer(user.accountingId);
             }catch(Exception e) {
-                GetShopLogHandler.logPrintStatic("Number exception problem on user: " + user.fullName, user.storeId);
+                log.error("Number exception problem on user: `{}` storeId `{}`", user.fullName, user.storeId, e);
             }
         }
         if(accountingId >= idToUse) {

@@ -10,31 +10,25 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.thundashop.core.storemanager.data.Store;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import java.nio.file.Paths;
-import java.nio.file.Path;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 
 /**
  *
  * @author ktonder
  */
 public class StorePool {
-    private final HashMap<String, StoreHandler> storeHandlers = new HashMap<>();
+
+    private static final Logger log = LoggerFactory.getLogger(StorePool.class);
+
+    private final HashMap<String, StoreHandler> storeHandlers = new HashMap();
     private com.thundashop.core.storemanager.StorePool storePool;
     private Date lastTimePrintedTimeStampToLog = null;
 
@@ -49,6 +43,7 @@ public class StorePool {
             Method method = getMethod(object);
             return method.getGenericParameterTypes();
         } catch (ClassNotFoundException ex) {
+            log.error("", ex);
             throw new ErrorException(81);
         }
 
@@ -59,6 +54,7 @@ public class StorePool {
             Method method = getMethod(object);
             return (Class<?>[]) method.getParameterTypes();
         } catch (Exception ex) {
+            log.error("", ex);
             throw new ErrorException(81);
         }
     }
@@ -89,6 +85,7 @@ public class StorePool {
 
             return classLoaded;
         } catch (ClassNotFoundException ex) {
+            log.error("", ex);
             throw new ErrorException(81);
         }
     }
@@ -139,16 +136,10 @@ public class StorePool {
         
         
         if(lastTimePrintedTimeStampToLog == null) {
-            System.out.println("####################################################################################################################################");
-            System.out.println("####################################################  " + new Date() + "  ################################################");
-            System.out.println("####################################################################################################################################");
             lastTimePrintedTimeStampToLog = new Date();
         } else {
             long diff = System.currentTimeMillis() - lastTimePrintedTimeStampToLog.getTime();
             if(diff > (1000*60*5)) {
-                System.out.println("####################################################################################################################################");
-                System.out.println("####################################################  " + new Date() + "  ################################################");
-                System.out.println("####################################################################################################################################");
                 lastTimePrintedTimeStampToLog = new Date();
             }
         }
@@ -157,8 +148,7 @@ public class StorePool {
             object = gson.fromJson(message, type);
             object.addr = addr;
         } catch (JsonSyntaxException ex) {
-            GetShopLogHandler.logPrintStatic("Could not decode: " + message, null);
-            ex.printStackTrace();
+            log.error("Could not decode: `{}`", message, ex);
             return null;
         }
         try {
@@ -175,17 +165,17 @@ public class StorePool {
             try {
                 Class classLoaded = getClass(types[i].getCanonicalName());
             }catch(Exception e) {
-                GetShopLogHandler.logPrintStatic("test", null);
+                log.error("", e);
             }
             try {
                 Gson useGson = isAdministrator(object) || whiteLabeledForVirusScans(object) ? gson : gsonWithVirusScanner;
                 Object argument = useGson.fromJson(object.args.get(parameter), casttypes[i]);
                 executeArgs[i] = argument;
             } catch (Exception e) {
-                GetShopLogHandler.logPrintStatic("Cast type: " + casttypes[i], null);
-                GetShopLogHandler.logPrintStatic("From json param: " + object.args.get(parameter), null);
-                GetShopLogHandler.logPrintStatic("From json paramValue: " + object.args.get(parameter), null);
-                GetShopLogHandler.logPrintStatic("From json message: " + message, null);
+                log.error("Cast type `{}`, json param `{}`, json paramValue `{}`, json message `{}`", casttypes[i],
+                        object.args.get(parameter),
+                        object.args.get(parameter),
+                        message, e);
                 ErrorException ex = new ErrorException(100);
                 ex.additionalInformation = e.getMessage();
                 throw ex;
@@ -245,6 +235,9 @@ public class StorePool {
             Method method = getMethodToExecute(aClass, object.method, types, argumentValues);
             method = getCorrectMethod(method);
 
+            MDC.put("store_id", object.storeId);
+            MDC.put("random_code", randomAlphanumeric(5));
+
             try {
                 try {
                     if ((aClass != null && method != null) && (method.getAnnotation(GetShopNotSynchronized.class) != null || method.getAnnotation(ForceAsync.class) != null)) {
@@ -255,17 +248,19 @@ public class StorePool {
                     } else {
                         res = handler.executeMethodSync(object, types, argumentValues);
                     }
-                    
+
                 }catch(Exception x) {
                     
                     if (!(x instanceof ErrorException)) {
-                        GetShopLogHandler.logPrintStatic("Exception: " + x.getMessage(), handler.getStoreId());
-                        x.printStackTrace();
+                        log.error("storeId `{}`", handler.getStoreId(), x);
                     }
                     throw x;
                 }
             }catch(ErrorException x) {
                 throw x;
+            } finally {
+                MDC.remove("store_id");
+                MDC.remove("random_code");
             }
         }
         
@@ -282,6 +277,7 @@ public class StorePool {
                 try {
                     return iface.getDeclaredMethod(executeMethod.getName(), executeMethod.getParameterTypes());
                 } catch (Exception ex) {
+                    log.error("", ex);
                     retex.additionalInformation = ex.getMessage();
                     throw retex;
                 }
@@ -303,8 +299,10 @@ public class StorePool {
 
             return aClass.getMethod(method, types);
         } catch (NoSuchMethodException ex) {
+            log.error("", ex);
             throw new ErrorException(82);
         } catch (SecurityException ex) {
+            log.error("", ex);
             throw new ErrorException(83);
         }
     }
@@ -314,9 +312,9 @@ public class StorePool {
             ClassLoader classLoader = getClass().getClassLoader();
             return classLoader.loadClass("com.thundashop." + objectName);
         } catch (ClassNotFoundException ex) {
+            log.error("", ex);
             ErrorException gex = new ErrorException(81);
             gex.additionalInformation = ex.getMessage();
-            ex.printStackTrace();
             throw gex;
         }
     }
@@ -350,9 +348,7 @@ public class StorePool {
             }
         }
         if (method == null) {
-            GetShopLogHandler.logPrintStatic("Failed on interface: " + object.interfaceName, null);
-            GetShopLogHandler.logPrintStatic("Failed on method: " + object.method, null);
-            GetShopLogHandler.logPrintStatic("Failed on size: " + object.args.size(), null);
+            log.error("Cannot find interface `{}`, method `{}`, size '{}'", object.interfaceName, object.method, object.args.size());
         }
         return method;
     }

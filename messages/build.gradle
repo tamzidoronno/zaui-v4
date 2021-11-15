@@ -15,6 +15,7 @@ if (!hasProperty('mainClass')) {
 
 
 dependencies {
-   implementation fileTree(dir: '../libs', include: ['morphia.jar', 'gson-2.5.jar'])
-   implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+    implementation fileTree(dir: '../libs', include: ['morphia.jar', 'gson-2.5.jar', 'slf4j-api-1.7.30.jar', 'logback-classic-1.2.3.jar'])
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
 }

@@ -33,7 +33,7 @@ public class Database3 {
         try (DBCursor res = col.find(query).sort(orderBy).limit(limit)) {
             while (res.hasNext()) {
                 DBObject nx = res.next();
-                DataCommon data = morphia.fromDBObject(DataCommon.class, nx);
+                DataCommon data = getMorphia().fromDBObject(DataCommon.class, nx);
                 retObjects.add(data);
             }
         }
@@ -42,7 +42,16 @@ public class Database3 {
     }
 
     public DBCollection getCollection(String manager, String storeId1) {
-        DB db = mongo.getDB(manager);
+        DB db = getMongo().getDB(manager);
         return db.getCollection("col_" + storeId1);
     }
+
+    public Mongo getMongo() {
+        return mongo;
+    }
+
+    public Morphia getMorphia() {
+        return morphia;
+    }
+
 }

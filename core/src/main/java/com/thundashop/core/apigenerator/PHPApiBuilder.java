@@ -29,7 +29,7 @@ public class PHPApiBuilder {
     private final List<Class> managersChanged;
 
     public PHPApiBuilder(GenerateApi generator, List<Class> allManagers, List<Class> dataObjects, String pathToEvents, List<Class> managersChanged) {
-        
+
         if (pathToEvents != null) {
             eventsPath = pathToEvents+"events/";
         }
@@ -237,7 +237,6 @@ public class PHPApiBuilder {
     }
     
     public String generatePHPApiClass(Class manager) {
-        System.out.println("Generating");
         String phpClass = "class API" + manager.getSimpleName().substring(1) + " {\n";
 
         phpClass += "\n\tvar $transport;\n"

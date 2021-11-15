@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <withJansi>true</withJansi>
+        <encoder>
+            <pattern>%date{ISO8601} %highlight(%p) [%X{store_id}-%X{random_code}] %boldGreen(%c{15}):%L - %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="SIFT" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator>
+            <key>store_id</key>
+            <defaultValue>all</defaultValue>
+        </discriminator>
+        <sift>
+            <appender name="FILE-${store_id}" class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <File>log/logs-${store_id}.log</File>
+                <encoder>
+                    <pattern>%date{ISO8601} %p [%X{store_id}-%X{random_code}] %c{15}:%L - %m%n</pattern>
+                </encoder>
+                <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                    <fileNamePattern>log/logs.log.${store_id}.%d{yyyy-MM-dd}.log</fileNamePattern>
+                </rollingPolicy>
+            </appender>
+        </sift>
+    </appender>
+
+    <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>
+    <timestamp key="timestamp" datePattern="yyyyMMddHHmmssSSS"/>
+
+    <appender name="ASYNC_AWS_LOGS" class="ca.pjer.logback.AwsLogsAppender">
+         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+             <level>DEBUG</level>
+         </filter>
+        <layout>
+            <pattern>%date{ISO8601} %p [%X{store_id}-%X{random_code}] %c{15}:%L - %m%n</pattern>
+        </layout>
+        <logGroupName>production-log</logGroupName>
+        <logStreamName>centralized-log</logStreamName>
+        <logRegion>us-east-2</logRegion>
+        <maxBatchLogEvents>5</maxBatchLogEvents>
+        <maxFlushTimeMillis>3</maxFlushTimeMillis>
+        <maxBlockTimeMillis>0</maxBlockTimeMillis>
+        <retentionTimeDays>0</retentionTimeDays>
+    </appender>
+
+    <root level="debug">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="SIFT"/>
+<!--        <appender-ref ref="ASYNC_AWS_LOGS"/>-->
+    </root>
+
+    <logger name="software.amazon" level="info"/>
+
+</configuration>

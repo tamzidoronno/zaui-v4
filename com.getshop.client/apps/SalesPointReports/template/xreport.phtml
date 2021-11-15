@@ -1,6 +1,6 @@
 <?
 /* @var $this ns_c20ea6e2_bc0b_4fe1_b92a_0c73b67aead7\SalesPointReports */
-$report = $this->getCurrentZReport();
+$report = $this->getCurrentZReport(); // fetches order_ids which will appear on XReport
 
 if ($this->isCurrentZReportASavedReport()) {
     echo "<div class='informationbox'>";
@@ -9,6 +9,7 @@ if ($this->isCurrentZReportASavedReport()) {
     echo "</div>";
 }
 
+//$ordersToShow = $report->orderIds && count($report->orderIds);
 $ordersToShow = !(!$report->orderIds || !count($report->orderIds));
 
 $conferencesToCreateFor = $this->getApi()->getPosManager()->getSummaryListForConferences();

@@ -39,6 +39,13 @@ public class DatabaseConfig {
                 .build();
     }
 
+    @Bean(name = "oAuthMongo")
+    public MongoClientProvider oAuthMongoClientProvider() {
+        return LazyMongoClientProvider.builder()
+                .setConnectionString(() -> "mongodb://oauth:02349890uqadsfajsl3n421k24j3nblksadnf@192.168.100.1/oauth")
+                .build();
+    }
+
     @Bean(name = "storeIdDb")
     public Database3 storeIdDd(FrameworkConfig frameworkConfig) throws UnknownHostException {
         MongoClientProvider provider = isNotEmpty(frameworkConfig.getStoreCreationIP()) && frameworkConfig.productionMode

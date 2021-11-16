@@ -5,19 +5,16 @@
  */
 package com.thundashop.core.databasemanager;
 
-import com.google.common.util.concurrent.ExecutionError;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.Mongo;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
+import com.mongodb.*;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.StoreComponent;
+import org.mongodb.morphia.Morphia;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,9 +22,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.stream.Stream;
-import org.mongodb.morphia.Morphia;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  *
@@ -45,16 +39,18 @@ public class OAuthDatabase extends StoreComponent {
     
     @Autowired
     public Logger logger;
-    
 
-    public OAuthDatabase() throws UnknownHostException {
+    private final MongoClientProvider mongoClientProvider;
+    
+    @Autowired
+    public OAuthDatabase(@Qualifier("oAuthMongo") MongoClientProvider provider) throws UnknownHostException {
+        this.mongoClientProvider = provider;
         morphia = new Morphia();
         morphia.map(DataCommon.class);
     }
 
     private void connect() throws UnknownHostException {
-        String connectionString = "mongodb://oauth:02349890uqadsfajsl3n421k24j3nblksadnf@192.168.100.1/oauth";
-        mongo = new MongoClient(new MongoClientURI(connectionString));
+        mongo = mongoClientProvider.getMongoClient();
     }
     
 
@@ -70,7 +66,6 @@ public class OAuthDatabase extends StoreComponent {
         try {
             connect();
             mongo.getDB("oauth").getCollection(collectionPrefix + "all").save(dbObject);
-            mongo.close();
         } catch (com.mongodb.CommandFailureException ex) {
             ex.printStackTrace();
         } catch (UnknownHostException ex) {
@@ -83,7 +78,6 @@ public class OAuthDatabase extends StoreComponent {
             data.gs_manager = "oauth";
             connect();
             mongo.getDB("oauth").getCollection(collectionPrefix + "all").remove(new BasicDBObject().append("_id", data.id));
-            mongo.close();
         } catch (UnknownHostException ex) {
             java.util.logging.Logger.getLogger(OAuthDatabase.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -102,7 +96,6 @@ public class OAuthDatabase extends StoreComponent {
             DBCollection col = mongo.getDB(dbName).getCollection("col_all_" + moduleName);
             Stream<DataCommon> retlist = col.find().toArray().stream()
                     .map(o -> morphia.fromDBObject(DataCommon.class, o));
-            mongo.close();
             return retlist;
         } catch (Exception ex) {
             java.util.logging.Logger.getLogger(DatabaseRemote.class.getName()).log(Level.WARNING, null, ex);
@@ -148,7 +141,6 @@ public class OAuthDatabase extends StoreComponent {
                 }
             }
 
-            mongo.close();
             return retObjecs;
         } catch (Exception ex) {
             java.util.logging.Logger.getLogger(DatabaseRemote.class.getName()).log(Level.WARNING, null, ex);

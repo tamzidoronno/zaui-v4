@@ -8,9 +8,10 @@ package com.thundashop.core.databasemanager;
 import com.mongodb.*;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
-import com.thundashop.core.common.Logger;
 import com.thundashop.core.common.StoreComponent;
 import org.mongodb.morphia.Morphia;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -20,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Level;
 import java.util.stream.Stream;
 
 /**
@@ -30,20 +30,17 @@ import java.util.stream.Stream;
 @Component
 public class OAuthDatabase extends StoreComponent {
 
-    public static int mongoPort = 27017;
+    private static Logger logger = LoggerFactory.getLogger(OAuthDatabase.class);
 
-    private Mongo mongo;
-    private Morphia morphia;
-    
-    private String collectionPrefix = "col_";
-    
-    @Autowired
-    public Logger logger;
+    private volatile Mongo mongo;
+    private final Morphia morphia;
+
+    private final String collectionPrefix = "col_";
 
     private final MongoClientProvider mongoClientProvider;
     
     @Autowired
-    public OAuthDatabase(@Qualifier("oAuthMongo") MongoClientProvider provider) throws UnknownHostException {
+    public OAuthDatabase(@Qualifier("oAuthMongo") MongoClientProvider provider) {
         this.mongoClientProvider = provider;
         morphia = new Morphia();
         morphia.map(DataCommon.class);
@@ -66,10 +63,8 @@ public class OAuthDatabase extends StoreComponent {
         try {
             connect();
             mongo.getDB("oauth").getCollection(collectionPrefix + "all").save(dbObject);
-        } catch (com.mongodb.CommandFailureException ex) {
-            ex.printStackTrace();
-        } catch (UnknownHostException ex) {
-            java.util.logging.Logger.getLogger(DatabaseRemote.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (CommandFailureException | UnknownHostException ex) {
+            logger.error("", ex);
         }
     }
 
@@ -79,7 +74,7 @@ public class OAuthDatabase extends StoreComponent {
             connect();
             mongo.getDB("oauth").getCollection(collectionPrefix + "all").remove(new BasicDBObject().append("_id", data.id));
         } catch (UnknownHostException ex) {
-            java.util.logging.Logger.getLogger(OAuthDatabase.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("", ex);
         }
     }
     
@@ -98,7 +93,7 @@ public class OAuthDatabase extends StoreComponent {
                     .map(o -> morphia.fromDBObject(DataCommon.class, o));
             return retlist;
         } catch (Exception ex) {
-            java.util.logging.Logger.getLogger(DatabaseRemote.class.getName()).log(Level.WARNING, null, ex);
+            logger.error("", ex);
         }
         
         return null;
@@ -117,7 +112,7 @@ public class OAuthDatabase extends StoreComponent {
             data.onSaveValidate();
             addDataCommonToDatabase(data);
         } catch (Exception ex) {
-            java.util.logging.Logger.getLogger(DatabaseRemote.class.getName()).log(Level.WARNING, null, ex);
+            logger.error("", ex);
         }
     }
     
@@ -129,7 +124,7 @@ public class OAuthDatabase extends StoreComponent {
             DB db = mongo.getDB("oauth");
             DBCollection col = db.getCollection("col_all");
             DBCursor res = col.find(query);
-            List<DataCommon> retObjecs = new ArrayList();
+            List<DataCommon> retObjecs = new ArrayList<>();
 
             while (res.hasNext()) {
                 DBObject nx = res.next();
@@ -143,9 +138,9 @@ public class OAuthDatabase extends StoreComponent {
 
             return retObjecs;
         } catch (Exception ex) {
-            java.util.logging.Logger.getLogger(DatabaseRemote.class.getName()).log(Level.WARNING, null, ex);
+            logger.error("", ex);
         }
         
-        return new ArrayList();
+        return new ArrayList<>();
     }
 }

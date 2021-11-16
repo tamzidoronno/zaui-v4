@@ -11,8 +11,14 @@ public class LazyMongoClientProvider implements MongoClientProvider {
 
     private final Supplier<MongoClient> supplier;
 
-    LazyMongoClientProvider(Supplier<MongoClient> supplier) {
-        this.supplier = supplier;
+    LazyMongoClientProvider(String connectionString) {
+        this.supplier = Suppliers.memoize(() -> {
+            try {
+                return new MongoClient(new MongoClientURI(connectionString));
+            } catch (UnknownHostException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     @Override
@@ -33,13 +39,7 @@ public class LazyMongoClientProvider implements MongoClientProvider {
         }
 
         public LazyMongoClientProvider build() {
-            return new LazyMongoClientProvider(Suppliers.memoize(() -> {
-                try {
-                    return new MongoClient(new MongoClientURI(connectionString));
-                } catch (UnknownHostException e) {
-                    throw new RuntimeException(e);
-                }
-            }));
+            return new LazyMongoClientProvider(connectionString);
         }
     }
 

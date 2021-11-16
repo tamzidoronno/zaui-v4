@@ -6,7 +6,9 @@
 package com.thundashop.core.databasemanager;
 
 import com.getshop.scope.GetShopSession;
-import com.mongodb.*;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.Mongo;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopLogHandler;
@@ -20,13 +22,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.net.UnknownHostException;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -41,70 +41,33 @@ public class DatabaseRemote extends StoreComponent {
     private static final Logger log = LoggerFactory.getLogger(DatabaseRemote.class);
 
     private volatile Mongo mongo;
-    private final Mongo mongoLocal;
+    private final MongoClientProvider localMongoProvider;
+    private final MongoClientProvider remoteMongoProvider;
     private final Morphia morphia;
     
     private static final String collectionPrefix = "col_";
 
-    private static final Map<String, Mongo> mongoCache = new ConcurrentHashMap<>();
-    
-    private String[] readLines(String filename) {
-        FileReader fileReader;
-        try {
-            fileReader = new FileReader(filename);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            List<String> lines = new ArrayList<String>();
-            String line = null;
-            while ((line = bufferedReader.readLine()) != null) {
-                lines.add(line);
-            }
-            bufferedReader.close();
-            return lines.toArray(new String[lines.size()]);
-        } catch (IOException ex) {
-            log.error("Warning, you do not have the commonpassword.txt file on your computer, you will not be able to write to the common database. file should be located ../commonpassword.txt, next to the secret.txt", ex);
-        }
-        
-        return new String[0];
-    }
-
     @Autowired
-    public DatabaseRemote(@Qualifier("localMongo") MongoClientProvider localMongoProvider) {
+    public DatabaseRemote(@Qualifier("localMongo") MongoClientProvider localMongoProvider,
+                          @Qualifier("remoteMongo") MongoClientProvider remoteMongoProvider) {
         try {
             createDataFolder();
         } catch (IOException ex) {
             log.error("", ex);
         }
 
-        this.mongoLocal = localMongoProvider.getMongoClient();
+        this.localMongoProvider = localMongoProvider;
+        this.remoteMongoProvider = remoteMongoProvider;
         morphia = new Morphia();
         morphia.map(DataCommon.class);
-
     }
 
     private void connect() {
-        mongo = mongoCache.computeIfAbsent("remoteMongo", k -> connectRemote());
-    }
-
-    private Mongo connectRemote() {
-        String connectionString = "mongodb://getshopreadonly:readonlypassword@192.168.100.1/admin";
-
-        if (GetShopLogHandler.isDeveloper) {
-            String[] linesFromFile = readLines("../commonpassword.txt");
-            if (linesFromFile != null && linesFromFile.length > 0) {
-                connectionString = linesFromFile[0];
-            }
-        }
-
-        try {
-            return new MongoClient(new MongoClientURI(connectionString));
-        } catch (UnknownHostException e) {
-            log.error("", e);
-            throw new RuntimeException(e);
-        }
+        mongo = remoteMongoProvider.getMongoClient();
     }
 
     private void connectLocal() {
-        mongo = mongoLocal;
+        mongo = localMongoProvider.getMongoClient();
     }
 
     private void checkId(DataCommon data) throws ErrorException {
@@ -165,13 +128,11 @@ public class DatabaseRemote extends StoreComponent {
 
             try {
                 if (GetShopLogHandler.isDeveloper) {
-    //                connect();
                     connectLocal();
                 } else {
                     connect();
                 }
 
-                long timeUsed = System.currentTimeMillis();
                 DBCollection col = mongo.getDB(dbName).getCollection("col_all_" + moduleName);
                 Stream<DataCommon> retlist = col.find().toArray().stream()
                         .map(o -> morphia.fromDBObject(DataCommon.class, o));

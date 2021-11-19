@@ -1005,6 +1005,11 @@ public class PageManager extends ManagerBase implements IPageManager {
     }
 
     @Override
+    public List<GetShopModule> getAllModules() {
+        return modules.getModules();
+    }
+
+    @Override
     public void changeModule(String moduleId) {
         
         if (getSession() == null)

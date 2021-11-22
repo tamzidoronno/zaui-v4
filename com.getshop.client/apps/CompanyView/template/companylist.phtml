@@ -9,10 +9,21 @@ function sortByName($a, $b) {
 
 usort($companies, 'sortByName');
 
+$unnamedCompanies = [];
+
 foreach ($companies as $result) {
-    echo "<div class='row companysearch'>";
+    if($result->name == '')
+    {
+        array_push($unnamedCompanies, $result );
+    }
+    else
+    {
+        echo "<div class='row companysearch'>";
         echo "<div class='col companyname'>$result->name</div>";
         echo "<div class='col buttons'><div class='gs_shop_small_icon' gsclick='selectCompany' companyId='$result->id'>Select</div></div>";
-    echo "</div>";
+        echo "</div>";
+    }
 }
+//echo '<h1>Companies without a name</h1>';
+//echo '<pre>' . print_r($unnamedCompanies,1) . '</pre>';
 ?>

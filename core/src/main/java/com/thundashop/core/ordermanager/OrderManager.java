@@ -5191,7 +5191,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
         AccountingDetail detail = productManager.getAccountingDetail(account);
         if (detail == null) {
-            throw new NullPointerException("Did not find the account");
+            throw new RuntimeException("Did not find the account");
         }
 
         addOrderTransactionWithType(orderId, amount, comment, date, amountInLocalCurrency, 0D, detail.id, Order.OrderTransactionType.ROUNDING);

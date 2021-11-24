@@ -58,7 +58,7 @@ class UsersRow extends \WebshopApplication implements \Application {
     }
     
     public function updateUsersRight() {
-        $modules = $this->getApi()->getPageManager()->getModules();
+        $modules = $this->getUserAccessModules();
         $user = $this->getUser();
         $user->hasAccessToModules = array();
         foreach($modules as $module) {

@@ -15,6 +15,7 @@ $storeId = $factory->getStore()->id;
 $toxicCustomers = $factory->getToxicCustomers();
 
 if(!$factory->getApi()->getUserManager()->isLoggedIn()) {
+    setcookie('PHPSESSID','');
     header('location:/login.php?redirectto=/pms.php');
     exit(0);
 }

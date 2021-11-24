@@ -181,3 +181,7 @@ downloaded/
 *.metadata.json
 *.bson
 .idea
+
+repository/build/
+!gradle/wrapper/gradle-wrapper.jar
+

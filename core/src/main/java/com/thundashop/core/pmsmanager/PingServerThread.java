@@ -33,6 +33,8 @@ public class PingServerThread implements Runnable {
             InetAddress inet = InetAddress.getByName(host);
             if(inet.isReachable(5000)) {
                 this.server.lastPing = new Date();
+            } else {
+                logger.warn("Server is not reachable, arxHostname: {}", server.arxHostname);
             }
         } catch (Exception e) {
             logger.error("Error while ping server arxHostname: {}", server.arxHostname, e);

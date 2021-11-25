@@ -6,16 +6,12 @@
 package com.getshop.scope;
 
 import com.getshop.javaapi.GetShopApi;
-import com.thundashop.core.common.AppContext;
-import com.thundashop.core.databasemanager.DatabaseLog;
 import com.thundashop.core.usermanager.data.User;
 import it.sauronsoftware.cron4j.Scheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
 
 import java.lang.reflect.Field;
-import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -41,8 +37,6 @@ public abstract class GetShopSchedulerBase implements Runnable {
     private String schedulerInterval = "";
     
     private static ConcurrentHashMap<String, ReentrantLock> storeLocks = new ConcurrentHashMap();
-    
-    private DatabaseLog database;
     
     public String getUsername() {
         return username;
@@ -143,18 +137,12 @@ public abstract class GetShopSchedulerBase implements Runnable {
             storeLock.lock();
         }
         
-        CronThreadStartLog logmsg = null;
         try {
-            logmsg = logStarted();
             execute();
             closeConnection();
             
         } catch (Exception ex) {
             log.error("", ex);
-        } finally {
-            if (logmsg != null) {
-                logEnded(logmsg);
-            }
         }
         
         if (storeLock != null) {
@@ -238,43 +226,4 @@ public abstract class GetShopSchedulerBase implements Runnable {
         return lock;
     }
 
-    private CronThreadStartLog logStarted() {
-        DatabaseLog db = getDatabase();
-        
-        if (db != null) {
-            CronThreadStartLog log = new CronThreadStartLog();
-            log.storeId = "all";
-            log.belongsToStoreId = storeId;
-            log.threadName = this.getClass().getCanonicalName();
-            log.type = "cron";
-            log.started = new Date();
-            log.startedMs = System.currentTimeMillis();
-            db.save("StoreThreadLog", "col_all", log);
-            
-            return log;
-        }
-        
-        return null;
-    }
-
-    private void logEnded(CronThreadStartLog logmsg) {
-        DatabaseLog db = getDatabase();
-        
-        if (db != null && logmsg != null) {
-            logmsg.ended = new Date();
-            logmsg.endedMs = System.currentTimeMillis();
-            logmsg.timeUsed = logmsg.endedMs - logmsg.startedMs;
-            db.save("StoreThreadLog", "col_all", logmsg);
-        }
-    }
-
-    private DatabaseLog getDatabase() {
-        ApplicationContext context = AppContext.appContext;
-        
-        if (context != null && database == null) {
-            database = context.getBean(DatabaseLog.class);
-        }
-        
-        return database;
-    }
 }

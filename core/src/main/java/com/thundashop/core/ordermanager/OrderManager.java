@@ -5791,7 +5791,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public List<String> getOrderIdsOfconference(String conferenceId){
-        List<String> orderids = orders.values().stream().filter(o -> o.autoCreatedOrderForConferenceId.equals(conferenceId) || o.conferenceIds.contains(conferenceId))
+        List<String> orderids = orders.values().stream()
+                .filter(o -> o.autoCreatedOrderForConferenceId.equals(conferenceId) || o.conferenceIds.contains(conferenceId))
+                .filter(o->o.virtuallyDeleted != true)
                 .map(o -> o.id).collect(Collectors.toList());
         return orderids;
     }

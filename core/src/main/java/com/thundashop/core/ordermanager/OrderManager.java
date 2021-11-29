@@ -5788,4 +5788,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         order.transferToAccountingDate = null;
         saveObject(order);
     }
+
+    @Override
+    public List<String> getOrderIdsOfconference(String conferenceId){
+        List<String> orderids = orders.values().stream().filter(o -> o.autoCreatedOrderForConferenceId.equals(conferenceId) || o.conferenceIds.contains(conferenceId))
+                .map(o -> o.id).collect(Collectors.toList());
+        return orderids;
+    }
+
+
+
 }

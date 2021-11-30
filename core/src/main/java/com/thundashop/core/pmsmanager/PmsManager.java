@@ -10208,30 +10208,33 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         HashMap<String, PmsBooking> bookingsToSave = new HashMap();
         HashMap<String, Order> ordersToSave = new HashMap();
         
-        
         rows.stream()
             .forEach(o -> {
-            if (o.roomId == null || o.roomId.isEmpty()) {
+            if ( o.conferenceId == null && (o.roomId == null || o.roomId.isEmpty())) {
                     return;
             }
-
             PmsBooking booking = getBookingFromRoomSecure(o.roomId);
 
-            if (booking == null) {
+            if (booking == null && o.conferenceId == null) {
                     return;
             }
-
-            if(booking.invoiceNote != null && !booking.invoiceNote.isEmpty()) {
-                order.invoiceNote = booking.invoiceNote;
-                ordersToSave.put(order.id, order);
+            if (booking != null ){
+                if(booking.invoiceNote != null && !booking.invoiceNote.isEmpty()) {
+                    order.invoiceNote = booking.invoiceNote;
+                    ordersToSave.put(order.id, order);
+                }
+                if (!booking.orderIds.contains(order.id)) {
+                    booking.orderIds.add(order.id);
+                    bookingsToSave.put(booking.id, booking);
+                }
             }
-            if (!booking.orderIds.contains(order.id)) {
-                booking.orderIds.add(order.id);
-                bookingsToSave.put(booking.id, booking);
-            }
-
             if (!paymentMethodId.equals("60f2f24e-ad41-4054-ba65-3a8a02ce0190")) {
-                removeAccrudePayments(booking, o.roomId);
+                if (booking != null ){
+                    removeAccrudePayments(booking, o.roomId);
+                }
+                if (o.conferenceId != null){
+                    removeAccrudePaymentsForConference(o.conferenceId, o.items);
+                }
             }
         });
         
@@ -10380,6 +10383,36 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         for(PmsBooking book : bookingsToSave.values()) {
             saveBooking(book);
+        }
+    }
+    private void removeAccrudePaymentsForConference(String conferenceId,  List<PmsOrderCreateRowItemLine> items) {
+        List<String> cartProductIds = items.stream().map(i -> i.createOrderOnProductId).collect(Collectors.toList());
+        List<String> accrudeOrdres = orderManager.getOrderIdsOfconference(conferenceId)
+                    .stream()
+                    .map(id -> orderManager.getOrderDirect(id))
+                    .filter(o -> o.isAccruedPayment())
+                    .map(o -> o.id)
+                    .collect(Collectors.toList());
+
+        accrudeOrdres = orderManager.filterOrdersIsCredittedAndPaidFor(accrudeOrdres);
+
+        HashMap<String, PmsBooking> bookingsToSave = new HashMap();
+
+        for (String orderId : accrudeOrdres) {
+            Order order = orderManager.getOrderDirect(orderId);
+            boolean orderHasOrderLinesNotConnectedToBooking = order.getCartItems().stream()
+                    .filter(o -> !cartProductIds.contains(o.getProduct().id))
+                    .count() > 0;
+
+            if (orderHasOrderLinesNotConnectedToBooking) {
+                continue;
+            }
+
+            if (order.closed) {
+                Order credittedOrder = orderManager.creditOrder(order.id);
+            } else {
+                orderManager.deleteOrder(order.id);;
+            }
         }
     }
 

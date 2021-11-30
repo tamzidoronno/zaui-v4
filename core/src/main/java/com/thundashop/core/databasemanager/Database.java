@@ -19,6 +19,7 @@ import org.mongodb.morphia.Morphia;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -61,7 +62,8 @@ public class Database extends StoreComponent {
         return mongo;
     }
 
-    public Database() throws UnknownHostException {
+    @Autowired
+    public Database(@Qualifier("localMongo") MongoClientProvider provider) throws UnknownHostException {
         try {
             createDataFolder();
         } catch (IOException ex) {
@@ -72,7 +74,7 @@ public class Database extends StoreComponent {
         if (!foundInEnvVars){ host = "localhost"; }
 
         log.debug("Connecting to mongo host: `{}`", host);
-        mongo = new Mongo(host, mongoPort);
+        mongo = provider.getMongoClient();
         morphia = new Morphia();
         morphia.getMapper().getConverters().addConverter(BigDecimalConverter.class);
         morphia.map(DataCommon.class);

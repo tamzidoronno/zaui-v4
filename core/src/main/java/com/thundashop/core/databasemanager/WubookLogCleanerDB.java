@@ -1,30 +1,21 @@
 package com.thundashop.core.databasemanager;
 
-import com.mongodb.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.mongodb.DBObject;
+import com.mongodb.Mongo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
-import java.net.UnknownHostException;
 import java.util.Set;
 
-import static java.lang.String.format;
-
+@Service
 public class WubookLogCleanerDB {
-
-    private static final Logger logger = LoggerFactory.getLogger(WubookLogCleanerDB.class);
 
     private final Mongo mongo;
 
-    public WubookLogCleanerDB(String host, int port) {
-        try {
-            MongoClientOptions options = MongoClientOptions.builder()
-                    .connectionsPerHost(1)
-                    .build();
-            mongo = new MongoClient(new ServerAddress(host, port), options);
-        } catch (UnknownHostException e) {
-            logger.error("host: {} , port: {}", host, port, e);
-            throw new RuntimeException(format("host %s , port %d", host, port), e);
-        }
+    @Autowired
+    public WubookLogCleanerDB(@Qualifier("localMongo") MongoClientProvider provider) {
+        this.mongo = provider.getMongoClient();
     }
 
     public Set<String> getAllCollection(String manager) {

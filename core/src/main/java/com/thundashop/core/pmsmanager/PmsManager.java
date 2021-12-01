@@ -85,6 +85,7 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -10210,7 +10211,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         rows.stream()
             .forEach(o -> {
-            if ( o.conferenceId == null && (o.roomId == null || o.roomId.isEmpty())) {
+            if ( StringUtils.isEmpty(o.conferenceId) && StringUtils.isEmpty(o.roomId) ) {
                     return;
             }
             PmsBooking booking = getBookingFromRoomSecure(o.roomId);
@@ -10219,7 +10220,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     return;
             }
             if (booking != null ){
-                if(booking.invoiceNote != null && !booking.invoiceNote.isEmpty()) {
+                if(!StringUtils.isEmpty(booking.invoiceNote) && !StringUtils.isEmpty(booking.invoiceNote)) {
                     order.invoiceNote = booking.invoiceNote;
                     ordersToSave.put(order.id, order);
                 }
@@ -10387,18 +10388,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
     private void removeAccrudePaymentsForConference(String conferenceId,  List<PmsOrderCreateRowItemLine> items) {
         List<String> cartProductIds = items.stream().map(i -> i.createOrderOnProductId).collect(Collectors.toList());
-        List<String> accrudeOrdres = orderManager.getOrderIdsOfconference(conferenceId)
+        List<String> accruedOrders = orderManager.getOrderIdsOfconference(conferenceId)
                     .stream()
-                    .map(id -> orderManager.getOrderDirect(id))
-                    .filter(o -> o.isAccruedPayment())
+                    .map(orderManager::getOrderDirect)
+                    .filter(Order::isAccruedPayment)
                     .map(o -> o.id)
                     .collect(Collectors.toList());
 
-        accrudeOrdres = orderManager.filterOrdersIsCredittedAndPaidFor(accrudeOrdres);
+        List<String>  filteredAccruedOrders = orderManager.filterOrdersIsCredittedAndPaidFor(accruedOrders);
 
-        HashMap<String, PmsBooking> bookingsToSave = new HashMap();
-
-        for (String orderId : accrudeOrdres) {
+        for (String orderId : filteredAccruedOrders) {
             Order order = orderManager.getOrderDirect(orderId);
             boolean orderHasOrderLinesNotConnectedToBooking = order.getCartItems().stream()
                     .filter(o -> !cartProductIds.contains(o.getProduct().id))
@@ -10407,9 +10406,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (orderHasOrderLinesNotConnectedToBooking) {
                 continue;
             }
-
             if (order.closed) {
-                Order credittedOrder = orderManager.creditOrder(order.id);
+                orderManager.creditOrder(order.id);
             } else {
                 orderManager.deleteOrder(order.id);;
             }

@@ -6,22 +6,15 @@
 package com.thundashop.core.getshoplocksystem;
 
 import static com.thundashop.core.arx.WrapClient.wrapClient;
-import com.thundashop.core.common.Administrator;
-import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.common.ExcludeFromJson;
-import java.io.BufferedReader;
+
+import com.thundashop.core.common.*;
+
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.ProtocolException;
-import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.axis.encoding.Base64;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -31,15 +24,17 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.mongodb.morphia.annotations.Transient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author ktonder
  */
 public abstract class LockServerBase extends DataCommon {
-//    
-//    private Map<String, Lock> locks = new HashMap();
-//    
+
+    private static final Logger logger = LoggerFactory.getLogger(LockServerBase.class);
+
     private boolean hasConnection = false;
     private Date lastChecked;
     private Date connectionDown;
@@ -61,7 +56,7 @@ public abstract class LockServerBase extends DataCommon {
     
     @Transient
     @ExcludeFromJson
-    private List<AccessEvent> accessEvents = new ArrayList();
+    private List<AccessEvent> accessEvents = new ArrayList<>();
     
 
     public void setManger(GetShopLockSystemManager manager) {
@@ -107,7 +102,7 @@ public abstract class LockServerBase extends DataCommon {
                 address = URLEncoder.encode(address, "UTF-8");
             }
         } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(LockServerBase.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("sid-{}", storeId, ex);
         }
         
         String loginUrl = "http://"+hostname+":8083/"+address;
@@ -118,6 +113,7 @@ public abstract class LockServerBase extends DataCommon {
         
         DefaultHttpClient client = new DefaultHttpClient(my_httpParams);
         try {
+            logger.info("sid-{} username: {} loginUrl: {}", storeId, username, loginUrl);
             client = wrapClient(client);
             HttpResponse httpResponse;
 
@@ -130,6 +126,7 @@ public abstract class LockServerBase extends DataCommon {
             httpResponse = client.execute(request);
 
             Integer statusCode = httpResponse.getStatusLine().getStatusCode();
+            logger.info("sid-{} response status code: {}", storeId, statusCode);
             if(statusCode == 401) {
                 return "401";
             }
@@ -152,6 +149,7 @@ public abstract class LockServerBase extends DataCommon {
             successfullyMadeRequest();
         } catch (Exception x) {
             lostConnection();
+            logger.error("sid-{} exception during zwave call message:", storeId, x);
         } finally {
             if (client != null) {
                 client.getConnectionManager().shutdown();
@@ -236,7 +234,7 @@ public abstract class LockServerBase extends DataCommon {
 
     public void syncGroupSlot(LockGroup group, int slotId) {
         MasterUserSlot groupCode = group.getGroupLockCodes().get(slotId);
-        groupCode.subSlots.stream().forEach(slot -> { 
+        groupCode.subSlots.forEach(slot -> {
             Lock lock = getLock(slot.connectedToLockId);
 
             if (lock != null && groupCode.code != null) {
@@ -252,11 +250,8 @@ public abstract class LockServerBase extends DataCommon {
     }
     
     public void syncGroup(LockGroup group) {
-        group.getGroupLockCodes().values().stream().forEach(groupCode -> {
-            syncGroupSlot(group, groupCode.slotId);
-        });
-        
-        saveMe(); 
+        group.getGroupLockCodes().values().forEach(groupCode -> syncGroupSlot(group, groupCode.slotId));
+        saveMe();
     }
     
     public void startUpdatingOfLocks() {
@@ -331,8 +326,7 @@ public abstract class LockServerBase extends DataCommon {
     }
 
     public List<AccessEvent> getAccessEvents() {
-        List<AccessEvent> events = new ArrayList();
-        events.addAll(accessEvents);
+        List<AccessEvent> events = new ArrayList<>(accessEvents);
         accessEvents.clear();
         return events;
     }
@@ -380,10 +374,9 @@ public abstract class LockServerBase extends DataCommon {
      * Override this method in order return the locks connected to a group.
      * 
      * @param groupId
-     * @param lockIds 
      */
     
     public List<String> getLocksForGroup(String groupId) {
-        return new ArrayList();
+        return new ArrayList<>();
     }
 }

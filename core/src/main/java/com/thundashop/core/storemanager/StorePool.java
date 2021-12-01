@@ -46,8 +46,7 @@ public class StorePool {
     public MessageManager messageManager;
 
     @Autowired
-    @Qualifier("storeIdDb")
-    public Database3 storeIdDb;
+    private StoreIdRepository storeIdRepository;
     
     @PostConstruct
     public void loadData() {
@@ -227,7 +226,7 @@ public class StorePool {
         store.storeId = "all";
         
         if (store.incrementalStoreId == null) {
-            store.incrementalStoreId = getNextIncrementalStoreId();
+            store.incrementalStoreId = storeIdRepository.getNextIncrementalStoreId();
         }
         
         stores.put(store.id, store);
@@ -370,13 +369,5 @@ public class StorePool {
         }
 
         return null;
-    }
-
-    public Integer getNextIncrementalStoreId() {
-        List<DataCommon> dataCommons = storeIdDb.query("StoreManager", "all", new BasicDBObject(),
-                new BasicDBObject("_id", -1), 1);
-        Integer incrementalStoreId = ((Store) dataCommons.get(0)).incrementalStoreId;
-        incrementalStoreId++;
-        return incrementalStoreId;
     }
 }

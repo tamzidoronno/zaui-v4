@@ -1,26 +1,19 @@
 package com.thundashop.core.getshop;
 
-import com.getshop.scope.CronThreadStartLog;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import com.thundashop.core.common.Administrator;
-import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopNotSynchronized;
 import com.thundashop.core.common.GetShopApi;
-import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.getshop.data.CreatedStoreData;
 import com.thundashop.core.getshop.data.DibsAutoCollectData;
 import com.thundashop.core.getshop.data.GetshopStore;
 import com.thundashop.core.getshop.data.Lead;
-import com.thundashop.core.getshop.data.LeadHistory;
 import com.thundashop.core.getshop.data.PartnerData;
 import com.thundashop.core.getshop.data.SmsResponse;
 import com.thundashop.core.getshop.data.StartData;
-import com.thundashop.core.getshop.data.StoreCreatedData;
 import com.thundashop.core.getshop.data.WebPageData;
 import com.thundashop.core.storemanager.data.Store;
-import com.thundashop.core.usermanager.data.User;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;

@@ -1,0 +1,38 @@
+{
+  "nameOfEvent" : "Hedemark Skiskytterkrets",
+  "days" : [
+    {
+      "day" : "12.02.2021",
+      "conferences" : [
+        {
+          "rowId" : "092d533e-dfeb-4a4a-aa01-0a7c79bb08f6",
+          "from" : "1800",
+          "to" : "2000",
+          "place" : "Bør Børson",
+          "actionName" : "Hedemark Skiskytterkrets",
+          "attendeesCount" : "20"
+        }
+      ]
+    },
+    {
+      "day" : "13.02.2021",
+      "conferences" : [
+        {
+          "rowId" : "793789d1-5611-4adb-956c-763320ec1adf",
+          "from" : "1800",
+          "to" : "2000",
+          "place" : "Bør Børson",
+          "actionName" : "Hedemark Skiskytterkrets",
+          "attendeesCount" : "20"
+        }
+      ]
+    }
+  ],
+  "bookingId" : "433dfce9-bff9-4ca3-a0bc-6c16d6d3b223",
+  "storeId" : "1ed4ab1f-c726-4364-bf04-8dcddb2fb2b1",
+  "gs_manager" : "PmsManager_default",
+  "lastModifiedByUserId" : "871ae74c-e38a-45b2-9ab5-d9af9a25672e",
+  "getshopModule" : "",
+  "deepFreeze" : false,
+  "translationId" : "47e0ba45-e2fc-4a66-a2c9-b81a8f50464b"
+}

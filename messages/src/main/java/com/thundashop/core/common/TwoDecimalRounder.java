@@ -41,15 +41,4 @@ public class TwoDecimalRounder {
         }
         return format;
     }
-    
-    public static BigDecimal roundTwoDecimalsHalfDown(double value, int precision) {
-        String format = getFormat(precision);
-        
-        DecimalFormat df = new DecimalFormat(format);
-        df.setRoundingMode(RoundingMode.HALF_DOWN);
-        String twoDec = df.format(value);
-        
-        return new BigDecimal(twoDec);
-    }
-    
 }

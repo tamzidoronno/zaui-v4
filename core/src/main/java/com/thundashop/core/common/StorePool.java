@@ -28,7 +28,7 @@ public class StorePool {
 
     private static final Logger log = LoggerFactory.getLogger(StorePool.class);
 
-    private final HashMap<String, StoreHandler> storeHandlers = new HashMap();
+    private final HashMap<String, StoreHandler> storeHandlers = new HashMap<>();
     private com.thundashop.core.storemanager.StorePool storePool;
     private Date lastTimePrintedTimeStampToLog = null;
 
@@ -249,8 +249,7 @@ public class StorePool {
                         res = handler.executeMethodSync(object, types, argumentValues);
                     }
 
-                }catch(Exception x) {
-                    
+                } catch (Exception x) {
                     if (!(x instanceof ErrorException)) {
                         log.error("storeId `{}`", handler.getStoreId(), x);
                     }

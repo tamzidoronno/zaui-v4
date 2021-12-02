@@ -22,10 +22,10 @@ import java.util.Map;
  */
 public class Product extends DataCommon implements Comparable<Product>  {
     /* This variable is no longer in use, using only imagesAdded */
-    public Map<String, ProductImage> images = new HashMap<String, ProductImage>();    
+    public Map<String, ProductImage> images = new HashMap<>();
     
-    public List<String> imagesAdded = new LinkedList();
-    public List<String> descriptions = new ArrayList();
+    public List<String> imagesAdded = new LinkedList<>();
+    public List<String> descriptions = new ArrayList<>();
 
     public String selectedProductTemplate = "ecommerce_product_template_1";
     
@@ -68,7 +68,7 @@ public class Product extends DataCommon implements Comparable<Product>  {
     public boolean deactivated = false;
     public boolean hideFromStorageList = false;
     
-    public List<ProductDynamicPrice> prices = new ArrayList();
+    public List<ProductDynamicPrice> prices = new ArrayList<>();
     public double campaign_price;
     public Double original_price;
     @Translation
@@ -78,8 +78,8 @@ public class Product extends DataCommon implements Comparable<Product>  {
     public String uniqueName;
     
     public int stockQuantity;
-    public Map<String, Integer> wareHouseStockQuantities = new HashMap();
-    public Map<String, Integer> wareHouseStockQuantitiesOrdered = new HashMap();
+    public Map<String, Integer> wareHouseStockQuantities = new HashMap<>();
+    public Map<String, Integer> wareHouseStockQuantitiesOrdered = new HashMap<>();
     public double stockValue = 0;
     public String pageId;
     public boolean freeShipping = false;
@@ -89,7 +89,7 @@ public class Product extends DataCommon implements Comparable<Product>  {
     public boolean privateExcluded = false;
     public Integer incrementalProductId = null;
     
-    public List<String> warehouseLocationIds = new ArrayList();
+    public List<String> warehouseLocationIds = new ArrayList<>();
     
     
     /**
@@ -109,28 +109,28 @@ public class Product extends DataCommon implements Comparable<Product>  {
     /**
      * Used on the new accounting (primitiv) way.
      */
-    public List<ProductAccountingInformation> accountingConfig = new ArrayList();
+    public List<ProductAccountingInformation> accountingConfig = new ArrayList<>();
     
-    public HashMap<String, AttributeItem> addedAttributes = new HashMap();
+    public HashMap<String, AttributeItem> addedAttributes = new HashMap<>();
     
-    public HashMap<String, Double> groupPrice = new HashMap();
+    public HashMap<String, Double> groupPrice = new HashMap<>();
     
-    public List<String> categories = new ArrayList();
+    public List<String> categories = new ArrayList<>();
     
-    public List<String> subProductIds = new ArrayList();
+    public List<String> subProductIds = new ArrayList<>();
     
     public TaxGroup taxGroupObject;
     
-    public List<TaxGroup> additionalTaxGroupObjects = new ArrayList();
+    public List<TaxGroup> additionalTaxGroupObjects = new ArrayList<>();
     
     @Transient
     public Page page;
     
     @Transient
-    public List<Product> subProducts = new ArrayList();
+    public List<Product> subProducts = new ArrayList<>();
     
     @Transient
-    public HashMap<String, String> attributesToSave = new HashMap();
+    public HashMap<String, String> attributesToSave = new HashMap<>();
     
     @Transient
     public ProductAccountingInformation activeAccountingInformation = null;
@@ -164,7 +164,7 @@ public class Product extends DataCommon implements Comparable<Product>  {
     public String metaData = "";
     public String additionalMetaData = "";
     
-    public HashMap<String, String> pmsData = new HashMap();
+    public HashMap<String, String> pmsData = new HashMap<>();
     
     /* This we need i case we need to track down more data later on (used for bookings) */
     public String externalReferenceId = "";
@@ -181,29 +181,20 @@ public class Product extends DataCommon implements Comparable<Product>  {
     @Transient
     public JsTreeList variations = null;
     
-    public List<ProductExtraConfig> extras = new ArrayList();
+    public List<ProductExtraConfig> extras = new ArrayList<>();
     
-    public HashMap<String, List<String>> selectedExtras  = new HashMap();
+    public HashMap<String, List<String>> selectedExtras  = new HashMap<>();
     
     /**
      * This contains a distinct list of taxgroupnumbers that this
      * product has been sold on.
      */
-    public List<Integer> soldOnTaxGroups = new ArrayList();
+    public List<Integer> soldOnTaxGroups = new ArrayList<>();
     
     public void setMainImage(String fileId) {
         mainImage = fileId;
     }
-    
-    
-    public void removeImage(String fileId) {
-        if (imagesAdded == null) {
-            return;
-        }
-        
-        imagesAdded.remove(fileId);
-    }
-    
+
     @Override
     public int hashCode() {
         int h = 0;

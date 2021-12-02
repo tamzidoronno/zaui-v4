@@ -10,19 +10,12 @@ import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import java.util.Calendar;
-import com.mongodb.BasicDBObject;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.arx.AccessLog;
 import com.thundashop.core.arx.DoorManager;
 import com.thundashop.core.bookingengine.BookingEngine;
-import com.thundashop.core.bookingengine.data.Booking;
-import com.thundashop.core.bookingengine.data.BookingItem;
-import com.thundashop.core.bookingengine.data.BookingItemType;
-import com.thundashop.core.bookingengine.data.BookingTimeLine;
-import com.thundashop.core.bookingengine.data.BookingTimeLineFlatten;
-import com.thundashop.core.bookingengine.data.RegistrationRules;
+import com.thundashop.core.bookingengine.data.*;
 import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.AddonsInclude;
 import com.thundashop.core.cartmanager.data.CartItem;
@@ -34,11 +27,7 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.getshoplock.GetShopDeviceLog;
 import com.thundashop.core.getshoplock.GetShopLockManager;
-import com.thundashop.core.getshoplocksystem.AccessHistoryResult;
-import com.thundashop.core.getshoplocksystem.GetShopLockSystemManager;
-import com.thundashop.core.getshoplocksystem.LockCode;
-import com.thundashop.core.getshoplocksystem.LockGroup;
-import com.thundashop.core.getshoplocksystem.MasterUserSlot;
+import com.thundashop.core.getshoplocksystem.*;
 import com.thundashop.core.gsd.DevicePrintRoomCode;
 import com.thundashop.core.gsd.GdsManager;
 import com.thundashop.core.messagemanager.MessageManager;
@@ -68,23 +57,7 @@ import com.thundashop.core.utils.Constants;
 import com.thundashop.core.utils.UtilManager;
 import com.thundashop.core.webmanager.WebManager;
 import com.thundashop.core.wubook.WubookManager;
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
+import org.apache.commons.lang3.tuple.Pair;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -93,8 +66,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.toMap;
+import static org.apache.commons.lang3.StringUtils.*;
 
 /**
  *
@@ -106,33 +87,43 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private static final Logger logger = LoggerFactory.getLogger(PmsManager.class);
 
-    private HashMap<String, PmsBooking> bookings = new HashMap();
-    private HashMap<String, String> bookingIdMap = new HashMap();
-    private HashMap<String, Product> fetchedProducts = new HashMap();
-    private HashMap<String, PmsAddonDeliveryLogEntry> deliveredAddons = new HashMap();
-    private HashMap<String, PmsCareTaker> careTaker = new HashMap();
-    private HashMap<String, PmsAdditionalItemInformation> addiotionalItemInfo = new HashMap();
-    private HashMap<String, PmsPricing> priceMap = new HashMap();
-    private HashMap<String, ConferenceData> conferenceDatas = new HashMap();
-    private HashMap<String, FailedWubookInsertion> failedWubooks = new HashMap();
-    private HashMap<String, PmsRoomTypeAccessory> accesories = new HashMap();
+    private final HashMap<String, PmsBooking> bookings = new HashMap<>();
+    private final HashMap<String, Product> fetchedProducts = new HashMap<>();
+    private final HashMap<String, PmsAddonDeliveryLogEntry> deliveredAddons = new HashMap<>();
+    private final HashMap<String, PmsCareTaker> careTaker = new HashMap<>();
+    private final HashMap<String, PmsAdditionalItemInformation> addiotionalItemInfo = new HashMap<>();
+    private final HashMap<String, ConferenceData> conferenceDatas = new HashMap<>();
+    private final HashMap<String, FailedWubookInsertion> failedWubooks = new HashMap<>();
+    private final HashMap<String, PmsRoomTypeAccessory> accesories = new HashMap<>();
+    private final List<String> repicientList = new ArrayList<>();
+    private final List<String> warnedAbout = new ArrayList<>();
+    private final List<PmsAdditionalTypeInformation> additionDataForTypes = new ArrayList<>();
+    private final HashMap<String, Date> lastProcessedTimedMessage = new HashMap<>();
+    private final HashMap<String, PmsBookingFilter> savedFilters = new HashMap<>();
+    private final List<String> warnedAboutNotAddedToBookingEngine = new ArrayList<>();
+
+    private HashMap<String, String> bookingIdMap = new HashMap<>();
     private PmsConfiguration configuration = new PmsConfiguration();
-    private List<String> repicientList = new ArrayList();
-    private List<String> warnedAbout = new ArrayList();
-    private List<PmsAdditionalTypeInformation> additionDataForTypes = new ArrayList();
+    private PmsBookingAutoIncrement autoIncrement = new PmsBookingAutoIncrement();
+    private List<PmsBookingAddonItem> cachedAvailableAddons;
+
     private String specifiedMessage = "";
-    Date lastOrderProcessed;
-    private boolean initFinalized = false;
     private String orderIdToSend;
-    private Date lastCheckForIncosistent;
     private String emailToSendTo;
     private String phoneToSend;
     private String prefixToSend;
-    private List<Order> tmpOrderList;
-    private HashMap<String, Date> lastProcessedTimedMessage = new HashMap();
+    private String messageToSend;
+    private String overrideNotificationTitle;
+    private String currentBookingId = "";
+    private Integer daysInRestrioction;
+    private Date lastCheckForIncosistent;
+    private Date virtualOrdersCreated;
+    private Date startedDate;
+    private Date cachedAvailableAddonsLastCached;
     private boolean warnedAboutAutoassigning = false;
-
-    private HashMap<String, PmsBookingFilter> savedFilters = new HashMap();
+    private boolean convertedDiscountSystem = false;
+    private boolean initFinalized = false;
+    private boolean avoidCalculateUnsettledAmount = false;
 
     @Autowired
     WubookManager wubookManager;
@@ -225,28 +216,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Autowired
     private PmsLogManager pmsLogManager;
-    
-    
+
+    @Autowired
+    private ConferenceDataManager conferenceDataManager;
+
+    @Autowired
+    private PmsPricingManager pmsPricingManager;
+
     @Autowired
     Database dataBase;
-    private Date virtualOrdersCreated;
-    private Date startedDate;
-
-    private PmsBookingAutoIncrement autoIncrement = new PmsBookingAutoIncrement();
-    private String messageToSend;
-    private boolean tmpFixed = false;
-    private String overrideNotificationTitle;
-    private List<String> warnedAboutNotAddedToBookingEngine = new ArrayList();
-    private boolean convertedDiscountSystem = false;
-    private String currentBookingId = "";
-    private boolean updatedAllBookings = false;
-    private PmsBooking includeAlways = null;
-    private Integer daysInRestrioction;
-    public boolean hasCheckedForUndeletion = false;
-    private List<PmsBookingAddonItem> cachedAvailableAddons;
-    private Date cachedAvailableAddonsLastCached;
-    private boolean avoidCalculateUnsettledAmount = false;
-    
 
     @Autowired
     public void setOrderManager(OrderManager orderManager) {
@@ -265,9 +243,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (dataCommon instanceof PmsBooking) {
                 
                 PmsBooking booking = (PmsBooking) dataCommon;
-//                if(booking.orderIds.contains("7efc86d1-4147-4c78-8cc1-c0d57c33fdc8")) {
-//                    includeAlways = booking;
-//                }
+
+                // TODO: nonrefundable seems always false.
                 if(booking.nonrefundable) { booking.setAllRoomsNonRefundable(); }
                 bookings.put(booking.id, booking);
             }
@@ -284,25 +261,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             if (dataCommon instanceof PmsRoomTypeAccessory) {
                 accesories.put(dataCommon.id, (PmsRoomTypeAccessory) dataCommon);
-            }
-            if (dataCommon instanceof PmsPricing) {
-                PmsPricing price = (PmsPricing) dataCommon;
-                if (price.code.isEmpty()) {
-                    price.code = "default";
-                    saveObject(price);
-                }
-                if (priceMap.containsKey(price.code)) {
-                    for (int i = 0; i < 10; i++) {
-                        String code = price.code + "_" + i;
-                        if (!priceMap.containsKey(code)) {
-                            price.code = code;
-                            saveObject(price);
-                            break;
-                        }
-                        break;
-                    }
-                }
-                priceMap.put(price.code, price);
             }
             if (dataCommon instanceof PmsCareTaker) {
                 careTaker.put(dataCommon.id, (PmsCareTaker) dataCommon);
@@ -370,20 +328,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         super.setSession(session);
     }
 
-    private PmsPricing getDefaultPriceObject() {
-        PmsPricing price = priceMap.get("default");
-        if (price != null) {
-            return price;
-        }
-        return new PmsPricing();
-    }
-
     public PmsPricing getPriceObject(String code) {
-        PmsPricing object = priceMap.get(code);
-        if (object == null) {
-            object = priceMap.get("default");
-        }
-        return object;
+        return pmsPricingManager.getByCodeOrDefaultCode(code);
     }
 
     @Override
@@ -516,7 +462,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             booking.isDeleted = false;
         }
 
-        saveObject(booking);
+        saveObject(booking);  // TODO: replace with PmsBookingManager.save()
         bookings.put(booking.id, booking);
     }
 
@@ -723,10 +669,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsBooking getBooking(String bookingId) {
-        if(includeAlways != null) {
-            bookings.put(includeAlways.id, includeAlways);
-            return includeAlways;
-        }
         return getBookingInternal(bookingId, true);
     }
     
@@ -742,7 +684,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         checkSecurity(booking);
 
-        pmsInvoiceManager.validateInvoiceToDateForBooking(booking, new ArrayList());
+        pmsInvoiceManager.validateInvoiceToDateForBooking(booking, new ArrayList<>());
         booking.calculateTotalCost();
         
         if (calculateUnsettledAmount) {
@@ -1239,7 +1181,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsPricing getPrices(Date start, Date end) {
-        return priceMap.get("default");
+        return pmsPricingManager.getByDefaultCode();
     }
 
     @Override
@@ -1249,51 +1191,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsPricing setPrices(String code, PmsPricing newPrices) {
-        logPrint("New prices set from setPrices call (" + code + "), " + newPrices.getStartDate() + " - " + newPrices.getEndDate());
-        PmsPricing prices = getPriceObject(code);
-        prices.defaultPriceType = newPrices.defaultPriceType;
-        prices.progressivePrices = newPrices.progressivePrices;
-        prices.pricesExTaxes = newPrices.pricesExTaxes;
-        prices.privatePeopleDoNotPayTaxes = newPrices.privatePeopleDoNotPayTaxes;
-        prices.channelDiscount = newPrices.channelDiscount;
-        prices.derivedPrices = newPrices.derivedPrices;
-        prices.derivedPricesChildren = newPrices.derivedPricesChildren;
-        prices.productPrices = newPrices.productPrices;
-        prices.longTermDeal = newPrices.longTermDeal;
-        prices.coveragePrices = newPrices.coveragePrices;
-        prices.coverageType = newPrices.coverageType;
-        if (newPrices.code != null && !newPrices.code.isEmpty()) {
-            if (priceMap.containsKey(prices.code)) {
-                priceMap.remove(prices.code);
-            } else {
-                priceMap.remove("default");
-            }
-            prices.code = newPrices.code;
-            priceMap.put(prices.code, prices);
-        }
-
-        for (String typeId : newPrices.dailyPrices.keySet()) {
-            HashMap<String, Double> priceMap = newPrices.dailyPrices.get(typeId);
-            for (String date : priceMap.keySet()) {
-                HashMap<String, Double> existingPriceRange = prices.dailyPrices.get(typeId);
-                if (existingPriceRange == null) {
-                    existingPriceRange = new HashMap();
-                    prices.dailyPrices.put(typeId, existingPriceRange);
-                }
-                Double price = priceMap.get(date);
-                if (price == -999999.0) {
-                    if (existingPriceRange.containsKey(date)) {
-                        existingPriceRange.remove(date);
-                    }
-                } else {
-                    existingPriceRange.put(date, priceMap.get(date));
-                }
-            }
-        }
-        saveObject(prices);
-
+        PmsPricing prices = pmsPricingManager.setPrices(code, newPrices);
         logEntry("Prices updated", null, null);
-
         return prices;
     }
 
@@ -3184,6 +3083,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     public void logEntry(String logText, String bookingId, String itemId, String roomId, String logType) {
+        // TODO move to PmsLogManager
 
         PmsLog log = new PmsLog();
         log.bookingId = bookingId;
@@ -3197,7 +3097,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public List<PmsLog> getLogEntries(PmsLog filter) {
         logger.debug("PmsLog for bookingId {} filter {}", filter.bookingId, filter);
-        List<PmsLog> logentries = queryLogEntries(filter);
+        List<PmsLog> logentries = pmsLogManager.query(filter);
         logger.debug("PmsLogs found for bookingId {} count {}", filter.bookingId, logentries.size());
 
         for (PmsLog log : logentries) {
@@ -3266,11 +3166,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public PmsBooking getBookingFromRoom(String pmsBookingRoomId) {
-        if(includeAlways != null) {
-            bookings.put(includeAlways.id, includeAlways);
-            return includeAlways;
-        }
-        
         PmsBooking booking = getBookingFromRoomSecure(pmsBookingRoomId);
         if (booking == null) {
             return null;
@@ -5380,9 +5275,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     public PmsBooking getBookingFromRoomSecure(String pmsBookingRoomId) {
-        if(includeAlways != null) {
-            return includeAlways;
-        }
         for (PmsBooking booking : bookings.values()) {
             for (PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
                 if (room.pmsBookingRoomId.equals(pmsBookingRoomId)) {
@@ -5395,15 +5287,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void logEntryObject(PmsLog log) {
-        if (log.logText == null || log.logText.trim().isEmpty()) {
+        if (isBlank(log.logText)) {
             return;
         }
-        String userId = "";
-        if (getSession() != null && getSession().currentUser != null) {
-            userId = getSession().currentUser.id;
-        }
 
+        String userId = getCurrentUserId();
         User user = userManager.getUserById(userId);
+
         if (user != null) {
             log.userName = user.fullName;
         }
@@ -6158,35 +6048,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         saveBooking(booking);
     }
 
-    HashMap<String, PmsPricing> getAllPrices() {
-        return priceMap;
-    }
-
     @Override
     public List<String> getpriceCodes() {
-        HashMap<String, PmsPricing> allPrices = priceMap;
-        List<String> codes = new ArrayList(allPrices.keySet());
-        return codes;
+        return pmsPricingManager.getPriceCodes();
     }
 
     @Override
     public void createNewPricePlan(String code) {
-        HashMap<String, PmsPricing> current = priceMap;
-        if (current.containsKey(code)) {
-            return;
-        }
-
-        PmsPricing price = new PmsPricing();
-        price.code = code;
-        priceMap.put(code, price);
-        saveObject(price);
+        pmsPricingManager.createNewPricePlan(code);
     }
 
     @Override
     public void deletePricePlan(String code) {
-        PmsPricing prices = priceMap.get(code);
-        priceMap.remove(code);
-        deleteObject(prices);
+        pmsPricingManager.deleteByCode(code);
     }
 
     @Override
@@ -6317,9 +6191,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     PmsBooking getBookingUnfinalized(String bookingId) {
-        if(includeAlways != null) {
-            return includeAlways;
-        }
         return bookings.get(bookingId);
     }
 
@@ -6431,15 +6302,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private Double getRoomPriceFromPackage(PmsBookingAddonItem item) {
         return 10.0;
-    }
-
-    private PmsBookingAddonItem getAddonOriginalItem(PmsBookingAddonItem item) {
-        for (PmsBookingAddonItem item2 : getConfiguration().addonConfiguration.values()) {
-            if (item2.addonType == item.addonType) {
-                return item2;
-            }
-        }
-        return null;
     }
 
     public void addDefaultAddons(PmsBooking booking) {
@@ -6579,19 +6441,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public ConferenceData getConferenceData(String bookingId) {
-        ConferenceData data = conferenceDatas.values()
-                .stream()
-                .filter(conf -> conf.bookingId != null && conf.bookingId.equals(bookingId))
-                .findFirst()
-                .orElse(new ConferenceData());
-
-        data.bookingId = bookingId;
-
+        ConferenceData data = conferenceDataManager.findByBookingId(bookingId);
         finalize(data);
         return data;
     }
 
     private void finalize(ConferenceData data) {
+        // TODO use instead ConferenceDataManager.finalize
         PmsBooking booking = getBooking(data.bookingId);
         if (booking != null) {
             data.attendeesCount = booking.getTotalGuestCount();
@@ -6619,12 +6475,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public void saveConferenceData(ConferenceData data) {
         ConferenceData old = getConferenceData(data.bookingId);
         data.id = old.id;
-        saveObject(data);
+        conferenceDataManager.save(data);
         conferenceDatas.put(data.id, data);
     }
 
     @Override
     public List<ConferenceData> getFutureConferenceData(Date fromDate) {
+        // TODO: need to find out the flow and think!
         List<ConferenceData> retList = conferenceDatas.values().stream()
                 .filter(conference -> conference.days != null && !conference.days.isEmpty())
                 .filter(conf -> isInFuture(conf, fromDate))
@@ -6667,23 +6524,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         
         return false;
-    }
-
-    public List<String> getListOfAllRoomsThatHasPriceMatrix() {
-        List<String> ids = new ArrayList();
-
-        for (PmsBooking book : bookings.values()) {
-            for (PmsBookingRooms room : book.rooms) {
-                if (!room.isActiveInPeriode(new Date(), new Date())) {
-                    continue;
-                }
-                if (room.priceMatrix != null && !room.priceMatrix.isEmpty()) {
-                    ids.add(room.pmsBookingRoomId);
-                }
-            }
-        }
-
-        return ids;
     }
 
     @Override
@@ -7612,7 +7452,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     public void removeAllUnclosedOrders(String id) {
         PmsBooking booking = getBooking(id);
-
+        // TODO refactor the following code
         new ArrayList<String>(booking.orderIds).stream().forEach(orderId -> {
             Order order = orderManager.getOrderSecure(orderId);
 
@@ -9256,45 +9096,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         return object;
     }
-    
-    public void createDefaultAddonConfig(String productId) {
-        List<PmsBookingAddonItem> addonConfigsForProduct = getConfigurationSecure().addonConfiguration.values()
-                .stream()
-                .filter(o -> o.productId.equals(productId))
-                .collect(Collectors.toList());
-        
-        if (addonConfigsForProduct.isEmpty()) {
-            PmsBookingAddonItem config = new PmsBookingAddonItem();
-            config.productId = productId;
-            config.isSingle = true;
-            getConfigurationSecure().addonConfiguration.put(getConfigurationSecure().addonConfiguration.size(), config);
-            saveObject(configuration);
-        }
-    }
-    
-    public Date getNextCleaningDate(String bookingId, String pmsRoomId) {
-        PmsBookingRooms room = getBookingUnsecure(bookingId).getRoom(pmsRoomId);
-        
-        Date now = new Date();
-        
-        PmsBookingAddonItem firstCleaningAddonInFuture = room.addons.stream()
-                .filter(item -> item.productId.equals("gs_pms_extra_cleaning"))
-                .filter(item -> item.date.after(now))
-                .sorted((PmsBookingAddonItem item1, PmsBookingAddonItem item2) -> {
-                    return item1.date.compareTo(item2.date);
-                })
-                .findFirst()
-                .orElse(null);
-        
-        if (firstCleaningAddonInFuture != null) {
-            return firstCleaningAddonInFuture.date;
-        }
-        
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DAY_OF_MONTH, 4);
-        return cal.getTime();
-    }
-    
+
     @Override
     public void generatePgaAccess(String pmsBookingId, String pmsBookingRoomId) {
         throw new RuntimeException("This function is no longer in use, using token instead for bookings and rooms");
@@ -9833,7 +9635,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 .filter(o -> o != null && !o.isNullOrder())
                 .map(o -> o.id)
                 .collect(Collectors.toList());
-        
+        // TODO refactor the following code
         new ArrayList<String>(orderIds).stream()
                 .forEach(id -> {
                     List<String> creditNotes = orderManager
@@ -10297,34 +10099,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return result;
     }
 
-    private List<PmsLog> queryLogEntries(PmsLog filter) {
-        BasicDBObject query = new BasicDBObject();
-        BasicDBObject sort = new BasicDBObject();
-
-        query.put("className", PmsLog.class.getCanonicalName());
-        if(isNotEmpty(filter.bookingId)) {
-            query.put("bookingId", filter.bookingId);
-        }
-        if(isNotEmpty(filter.logType)) {
-            query.put("logType", filter.logType);
-        }
-        if (isNotEmpty(filter.tag)) {
-            query.put("tag", filter.tag);
-        }
-        if (isNotEmpty(filter.bookingItemId)) {
-            query.put("bookingItemId", filter.bookingItemId);
-        }
-        if (isNotEmpty(filter.roomId)) {
-            query.put("roomId", filter.roomId);
-        }
-
-        sort.put("rowCreatedDate", -1);
-        int limit = filter.includeAll ? Integer.MAX_VALUE : 100;
-
-        logger.debug("PmsLog retrieve query for bookingId {} , query {}", filter.bookingId, query);
-        return pmsLogManager.query(query, sort , limit);
-    }
-
     @Override
     public void toggleAutoCreateOrders(String bookingId, String roomId) {
         PmsBooking booking = getBooking(bookingId);
@@ -10734,20 +10508,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return result;
     }
 
-    private void tmpCheckForNanInRoomUnsettledAmount() {
-        bookings.values()
-                .stream()
-                .forEach(b -> {
-                    if (b != null && b.rooms != null) {
-                        b.rooms.stream().forEach(r -> {
-                            if (r.unsettledAmountIncAccrued != null && r.unsettledAmountIncAccrued.isNaN()) {
-                                calculateUnsettledAmountForRooms(b);
-                            }
-                        });
-                    }       
-                });
-    }
-
     private PmsRoomPaymentSummary getSummaryWithoutAccrued(PmsBooking booking, PmsBookingRooms pmsBookingRoom, boolean unpaidOnly) {
         
         if (booking == null) {
@@ -10964,37 +10724,18 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public boolean updatePrices(List<PmsPricingDayObject> prices) {
-        Date start = null;
-        Date end = null;
-        logPrint("Prices are being updated");
-        List<BookingItemType> alltypes = bookingEngine.getBookingItemTypes();
-        HashMap<String, BookingItemType> types = new HashMap();
-        for(BookingItemType t : alltypes) {
-            types.put(t.id, t);
-        }
+        Map<String, BookingItemType> types = bookingEngine.getBookingItemTypes()
+                .stream()
+                .collect(toMap(it -> it.id, identity()));
+
         try {
-            PmsPricing pricestoupdate = priceMap.get("default");
-            
-            for(PmsPricingDayObject price : prices) {
-                Date dayPrice = PmsBookingRooms.convertOffsetToDate(price.date);
-                if(start == null || dayPrice.before(start)) {
-                    start = dayPrice;
-                }
-                if(end == null || dayPrice.after(end)) {
-                    end = dayPrice;
-                }
-                HashMap<String, Double> dailypricematrix = pricestoupdate.dailyPrices.get(price.typeId);
-                if(dailypricematrix != null) {
-                    dailypricematrix.put(price.date, price.newPrice);
-                    logPrint("New prices set from updatePrices " + types.get(price.typeId).name + " : date : " + price.date + ", new price: "  + price.newPrice);
-                }
-            }
-            setPrices(pricestoupdate.code, pricestoupdate);
-            wubookManager.updatePricesBetweenDates(start, end);
+            Pair<Date, Date> datePair = pmsPricingManager.updatePrices(prices, types);
+            wubookManager.updatePricesBetweenDates(datePair.getLeft(), datePair.getRight());
             return true;
-        }catch(Exception e) {
-            logPrintException(e);
+        } catch (Exception e) {
+            logger.error("Failed to update prices", e);
         }
+
         return false;
     }
 

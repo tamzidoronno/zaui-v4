@@ -4,7 +4,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.Database3;
-import com.thundashop.core.databasemanager.MongoClientProvider;
+import com.thundashop.repository.db.MongoClientProvider;
 
 public class ExtendedDatabase3 extends Database3 {
 

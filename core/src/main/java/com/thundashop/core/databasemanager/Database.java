@@ -15,6 +15,7 @@ import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.ordermanager.data.VirtualOrder;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.storemanager.data.Store;
+import com.thundashop.repository.db.MongoClientProvider;
 import org.mongodb.morphia.Morphia;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

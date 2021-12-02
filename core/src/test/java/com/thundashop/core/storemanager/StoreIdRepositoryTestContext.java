@@ -1,6 +1,6 @@
 package com.thundashop.core.storemanager;
 
-import com.thundashop.core.databasemanager.MongoClientProvider;
+import com.thundashop.repository.db.MongoClientProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

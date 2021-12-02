@@ -19,3 +19,9 @@ to instantiate a MongoDB server for the purpose of executing tests.
     docker pull mongo:3.6.3 
     docker container run --name mongo-test --publish 27019:27017 mongo:3.6.3
 ```
+
+- Run command for the repository's test suits
+
+```
+    ./gradlew :repository:check
+```

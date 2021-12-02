@@ -9,6 +9,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -27,10 +28,15 @@ class DatabaseTest {
     static Database database;
 
     @BeforeAll
-    static void setUp() {
+    static void setUp() throws UnknownHostException {
         Config config = TestConfig.newInstance();
-        database = Database.of(config.getAsString("mongo.host"),
-                config.getAsInt("mongo.port"), new DbTestEntityMappers());
+
+        MongoClientProvider provider = MongoClientProvider.builder()
+                .setHost(config.getAsString("mongo.host"))
+                .setPort(config.getAsInt("mongo.port"))
+                .build();
+
+        database = Database.of(provider, new DbTestEntityMappers());
     }
 
     @AfterEach

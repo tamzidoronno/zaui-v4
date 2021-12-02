@@ -6,6 +6,7 @@ import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.pmsmanager.PmsPricing;
 import com.thundashop.repository.db.Database;
 import com.thundashop.repository.db.EntityMappersImpl;
+import com.thundashop.repository.db.MongoClientProvider;
 import com.thundashop.repository.pmsmanager.ConferenceDataRepository;
 import com.thundashop.repository.pmsmanager.PmsLogRepository;
 import com.thundashop.repository.pmsmanager.PmsPricingRepository;
@@ -17,9 +18,8 @@ import org.springframework.context.annotation.Configuration;
 public class RepositoryConfig {
 
     @Bean(name = "repositoryDatabase")
-    public Database database() {
-        // TODO: Read from config file
-        return Database.of("localhost", 27018, new EntityMappersImpl());
+    public Database database(@Qualifier("localMongo") MongoClientProvider provider) {
+        return Database.of(provider, new EntityMappersImpl());
     }
 
     @Bean

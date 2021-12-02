@@ -4,7 +4,6 @@ import com.mongodb.*;
 import com.thundashop.core.common.DataCommon;
 import org.mongodb.morphia.Morphia;
 
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,19 +15,15 @@ public class Database {
 
     private final Morphia morphia;
 
-    private Database(String host, int port, EntityMappers mappers) {
-        try {
-            mongo = new MongoClient(host, port);
-        } catch (UnknownHostException e) {
-            throw new RuntimeException(e);
-        }
+    private Database(MongoClientProvider provider, EntityMappers mappers) {
+            mongo = provider.getMongoClient();
         morphia = new Morphia();
         morphia.getMapper().getConverters().addConverter(BigDecimalConverter.class);
         morphia.map(mappers.getEntities());
     }
 
-    public static Database of(String host, int port, EntityMappers mappers) {
-        return new Database(host, port, mappers);
+    public static Database of(MongoClientProvider provider, EntityMappers mappers) {
+        return new Database(provider, mappers);
     }
 
     public DataCommon save(String dbName, String collectionName, DataCommon data) {

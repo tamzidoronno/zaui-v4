@@ -9,7 +9,6 @@ import com.getshop.scope.GetShopSession;
 import com.google.gson.Gson;
 import java.util.Calendar;
 import com.powerofficego.data.AccessToken;
-import com.powerofficego.data.Address;
 import com.powerofficego.data.ApiCustomerResponse;
 import com.powerofficego.data.ApiOrderTransferResponse;
 import com.powerofficego.data.Customer;
@@ -21,7 +20,6 @@ import com.thundashop.core.accountingmanager.SavedOrderFile;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopLogHandler;
-import com.thundashop.core.getshopaccounting.fikenservice.FikenInvoiceService;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.data.User;
@@ -31,6 +29,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -40,6 +41,8 @@ import org.springframework.stereotype.Component;
 @Component
 @GetShopSession
 public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
+
+    private static final Logger logger = LoggerFactory.getLogger(PowerOfficeGoAccountingSystem.class);
 
     private String token;
 
@@ -64,7 +67,7 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
 
             return retFiles;
         }catch(Exception e) {
-            logPrintException(e);
+            logger.error("", e);
         }
         return null;
     }
@@ -95,6 +98,7 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
     private SavedOrderFile generateFile(List<Order> orders, String subType) {
         this.token = createAccessToken();
         if(token == null || token.isEmpty()) {
+            logger.warn("Failed to fetch access token of powerOffice, authentication failed.");
             addToLog("Failed to fetch access token, authentication failed.");
             return null;
         }
@@ -120,7 +124,7 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
                 Product product = productManager.getProduct(item.getProduct().id);
                 if(product == null) { product = productManager.getDeletedProduct(item.getProduct().id); }
                 if(product.accountingSystemId == null || product.accountingSystemId.isEmpty()) {
-                    logPrint("Failed to since product id is missing on product : " + product.name + " order: " + order.incrementOrderId);
+                    logger.info("Failed to since product id is missing on product : {} order: {}" , product.name, order.incrementOrderId);
                     addToLog("Failed to since product id is missing on product : " + product.name + " order: " + order.incrementOrderId);
                     stopNow = true;
                 } else {
@@ -134,6 +138,8 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
         
         for(User user : users.values()) {
             if(!createUpdateUser(user)) {
+                logger.warn("failed Transferring user, accounting id {} , name {} , getShop customerId {}",
+                        user.accountingId, user.fullName, user.customerId);
                 addToLog("failed Transferring user, accounting id " + user.accountingId + ", name" + user.fullName + ", getshop customerid " + user.customerId);
                 return null;
             }
@@ -173,31 +179,41 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
         customer.setUser(user);
         customer.code = getAccountingAccountId(user.id) + "";
         Gson gson = new Gson();
-        try {
-            String htmlType = "POST";
-            String data = gson.toJson(customer);
-            if(!GetShopLogHandler.isDeveloper) {
-                String result = webManager.htmlPostBasicAuth(endpoint, data, true, "ISO-8859-1", token, "Bearer", false, htmlType);
-                ApiCustomerResponse resp = gson.fromJson(result, ApiCustomerResponse.class);
-                if(resp.success) {
-                    user.accountingId = customer.code + "";
-                    user.externalAccountingId = resp.data.id + "";
-                    userManager.saveUser(user);
-                    return true;
-                } else {
-                    /* @TODO HANDLE PROPER WARNING */
-                    addToLog("Failed to transfer customer: " + result + "(" + user.customerId + " - " + user.fullName);
-                    addToLog(resp.summary + " : accounting id: " + user.accountingId + ", powerofficego id: " + user.externalAccountingId);
-                } 
-            } else {
-                user.accountingId = customer.code + "";
-                user.externalAccountingId = "1";
-                return true;
-            }
-        }catch(Exception e) {
-            /* @TODO HANDLE PROPER WARNING */
-            e.printStackTrace();
+
+        String htmlType = "POST";
+        String data = gson.toJson(customer);
+
+        if (GetShopLogHandler.isDeveloper) {
+            user.accountingId = customer.code + "";
+            user.externalAccountingId = "1";
+            return true;
         }
+
+        String result = null;
+        ApiCustomerResponse resp = null;
+
+        try {
+            result = webManager.htmlPostBasicAuth(endpoint, data, true, "ISO-8859-1", token,
+                    "Bearer", false, htmlType);
+            resp = gson.fromJson(result, ApiCustomerResponse.class);
+        } catch (Exception e) {
+            logger.error("PowerOfficeGo api result: {} , postData: {} ", result, data, e);
+        }
+
+        if(resp != null && resp.success) {
+            user.accountingId = customer.code + "";
+            user.externalAccountingId = resp.data.id + "";
+            userManager.saveUser(user);
+            return true;
+        } else {
+            String respSummary = (resp != null) ? resp.summary : "";
+            logger.warn("Failed to transfer customer, post data: {},  result: {} , user.customerId: {} , user.fullName: {} , " +
+                    "summary: {} , accountingId: {} , powerOfficeGoId: {}", data, result, user.customerId, user.fullName,
+                    respSummary, user.accountingId, user.externalAccountingId);
+            addToLog("Failed to transfer customer: " + result + "(" + user.customerId + " - " + user.fullName);
+            addToLog(respSummary + " : accounting id: " + user.accountingId + ", powerofficego id: " + user.externalAccountingId);
+        }
+
         return false;
     }
 
@@ -209,7 +225,7 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
             AccessToken token = gson.fromJson(res, AccessToken.class);
             return token.access_token;
         }catch(Exception e) {
-            e.printStackTrace();
+            logger.error("", e);
             return "";
         }
     }
@@ -251,13 +267,14 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
                     return resp.data;
                 } else {
                     /* @TODO HANDLE PROPER WARNING */
+                    logger.warn("Failed to transfer customer: {}", result);
                     addToLog("Failed to transfer customer: " + result);
                 }
             } else {
                 addToLog("Did not transfer files to powerofficego due to developer mode");
             }
         }catch(Exception e) {
-            e.printStackTrace();
+            logger.error("", e);
         }
         return "";
     }
@@ -272,7 +289,7 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
         PowerOfficeGoSalesOrder goOrder = new PowerOfficeGoSalesOrder();
         if(uniqueId == null) {
             if (user == null) {
-                logPrint("Not found user: " + order.userId);
+                logger.warn("Not found user: " + order.userId);
             }
             goOrder.customerCode = new Integer(user.accountingId);
         } else {
@@ -340,11 +357,11 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
                     prod = productManager.getDeletedProduct(item.getProduct().id);
                 }
                 if(prod == null) {
-                    addToLog("Product does not exists on order " + order.incrementOrderId);
+                    logger.warn("Product does not exists on order {}", order.incrementOrderId);
                     continue;
                 }
                 if(prod.getAccountingAccount() == null) {
-                    addToLog("Product : " + prod.name + " does not have an accounting number, orderid: " + order.incrementOrderId);
+                    logger.warn("Product : {} does not have an accounting number, orderId: {}" , prod.name, order.incrementOrderId);
                     continue;
                 }
                 line.accountNumber = new Integer(prod.getAccountingAccount());

@@ -171,11 +171,7 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
     private boolean createUpdateUser(User user) {
         String endpoint = "https://api.poweroffice.net/customer/";
         Customer customer = new Customer();
-        if((user.accountingId != null || user.accountingId.isEmpty()) && user.externalAccountingId == null || user.externalAccountingId.isEmpty()) {
-            //Something is wrong here. There should be an externa account id connected to it.
-//            user.externalAccountingId = findExternalAccountId(user.accountingId);
-        }
-        
+
         if(user.address == null) {
             user.address = new com.thundashop.core.usermanager.data.Address();
         }
@@ -184,7 +180,6 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
         customer.code = getAccountingAccountId(user.id) + "";
         Gson gson = new Gson();
 
-        String htmlType = "POST";
         String data = gson.toJson(customer);
 
         if (GetShopLogHandler.isDeveloper) {

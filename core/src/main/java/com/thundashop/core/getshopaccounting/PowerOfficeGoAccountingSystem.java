@@ -32,6 +32,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -45,6 +46,9 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
     private static final Logger logger = LoggerFactory.getLogger(PowerOfficeGoAccountingSystem.class);
 
     private String token;
+
+    @Autowired
+    private PowerOfficeGoHttpClientManager httpClientManager;
 
     @Override
     public List<SavedOrderFile> createFiles(List<Order> orders, Date start, Date end) {
@@ -193,8 +197,7 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
         ApiCustomerResponse resp = null;
 
         try {
-            result = webManager.htmlPostBasicAuth(endpoint, data, true, "ISO-8859-1", token,
-                    "Bearer", false, htmlType);
+            result = httpClientManager.post(data, token, endpoint);
             resp = gson.fromJson(result, ApiCustomerResponse.class);
         } catch (Exception e) {
             logger.error("PowerOfficeGo api result: {} , postData: {} ", result, data, e);
@@ -256,7 +259,7 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
         String data = gson.toJson(transferObject);
         try {
             if(!GetShopLogHandler.isDeveloper) {
-                String result = webManager.htmlPostBasicAuth(endpoint, data, true, "ISO-8859-1", token, "Bearer", false, "POST");
+                String result = httpClientManager.post(data, token, endpoint);
                 ApiOrderTransferResponse resp = gson.fromJson(result, ApiOrderTransferResponse.class);
                 if(resp.success) {
                     for(Order order : orders) {

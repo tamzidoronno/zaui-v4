@@ -165,7 +165,7 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
     }
 
     private boolean createUpdateUser(User user) {
-        String endpoint = "http://api.poweroffice.net/customer/";
+        String endpoint = "https://api.poweroffice.net/customer/";
         Customer customer = new Customer();
         if((user.accountingId != null || user.accountingId.isEmpty()) && user.externalAccountingId == null || user.externalAccountingId.isEmpty()) {
             //Something is wrong here. There should be an externa account id connected to it.
@@ -231,7 +231,7 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
     }
 
     private String transferOrders(List<Order> orders, String subType) {
-        String endpoint = "http://api.poweroffice.net/Import/";
+        String endpoint = "https://api.poweroffice.net/Import/";
         List<PowerOfficeGoSalesOrder> salesOrdersToTransfer = new ArrayList();
         List<PowerOfficeGoImportLine> importLinesToTransfer = new ArrayList();
         for(Order order : orders) {

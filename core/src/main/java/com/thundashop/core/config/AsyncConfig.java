@@ -56,6 +56,16 @@ public class AsyncConfig extends AsyncConfigurerSupport {
         return executor;
     }
 
+    @Bean(name = "pingServerExecutor")
+    public TaskExecutor pingServerExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(processors);
+        executor.setMaxPoolSize(processors * 2);
+        executor.setThreadNamePrefix("ping-server-");
+        executor.initialize();
+        return executor;
+    }
+
     @Override
     public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
         return new AsyncExceptionHandler();

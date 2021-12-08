@@ -1,6 +1,6 @@
 package com.thundashop.core.webmanager;
 
-import com.squareup.okhttp.*;
+import okhttp3.*;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -12,12 +12,13 @@ public class OkHttpService {
 
     public OkHttpResponse post(OkHttpRequest httpRequest) {
         OkHttpClient client = httpRequest.getClient();
+        RequestBody requestBody = RequestBody.Companion.create(httpRequest.getPayload(), mediaType);
 
         Request request = new Request.Builder()
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Authorization", "Bearer " + httpRequest.getToken())
                 .url(httpRequest.getUrl())
-                .method("POST", RequestBody.create(mediaType, httpRequest.getPayload()))
+                .method("POST", requestBody)
                 .build();
 
         try {

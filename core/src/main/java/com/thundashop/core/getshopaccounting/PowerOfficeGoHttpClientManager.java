@@ -1,9 +1,9 @@
 package com.thundashop.core.getshopaccounting;
 
-import com.squareup.okhttp.OkHttpClient;
 import com.thundashop.core.webmanager.OkHttpRequest;
 import com.thundashop.core.webmanager.OkHttpResponse;
 import com.thundashop.core.webmanager.OkHttpService;
+import okhttp3.OkHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

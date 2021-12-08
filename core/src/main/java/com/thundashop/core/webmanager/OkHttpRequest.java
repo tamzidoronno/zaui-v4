@@ -1,6 +1,6 @@
 package com.thundashop.core.webmanager;
 
-import com.squareup.okhttp.OkHttpClient;
+import okhttp3.OkHttpClient;
 
 public class OkHttpRequest {
 

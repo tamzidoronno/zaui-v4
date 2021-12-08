@@ -1,9 +1,9 @@
 package com.thundashop.core.getshopaccounting;
 
 
-import com.squareup.okhttp.*;
 import com.thundashop.core.webmanager.OkHttpService;
 import com.thundashop.core.webmanager.WebManager;
+import okhttp3.*;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -67,8 +67,9 @@ public class PowerOfficeGoAccountingSystemTest {
     @Test
     @Ignore
     public void okHttpClient() {
-        OkHttpClient client = new OkHttpClient();
-        client.setConnectTimeout(3, TimeUnit.MINUTES);
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(3, TimeUnit.MINUTES)
+                .build();
         OkHttpService httpService = new OkHttpService();
         PowerOfficeGoHttpClientManager manager = new PowerOfficeGoHttpClientManager(client, httpService);
 

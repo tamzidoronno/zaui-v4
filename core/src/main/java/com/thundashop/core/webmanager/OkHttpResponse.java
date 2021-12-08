@@ -1,7 +1,8 @@
 package com.thundashop.core.webmanager;
 
-import com.squareup.okhttp.Response;
-import com.squareup.okhttp.ResponseBody;
+
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 import java.io.IOException;
 
@@ -15,7 +16,7 @@ public class OkHttpResponse {
 
         // close responseBody for connection recycling
         try (ResponseBody body = response.body()){
-            this.body = body.string();
+            this.body = (body != null) ? body.string() : null;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

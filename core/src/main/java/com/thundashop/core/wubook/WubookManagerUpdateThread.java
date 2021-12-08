@@ -1,5 +1,7 @@
 package com.thundashop.core.wubook;
 
+import com.getshop.scope.GetShopSessionScope;
+import com.thundashop.core.common.AppContext;
 import org.apache.xmlrpc.XmlRpcClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,12 +21,16 @@ public class WubookManagerUpdateThread extends Thread {
     private final XmlRpcClient client;
     private final String action;
     private final Map<String, String> mdcContext;
+    private final String storeId;
+    private final GetShopSessionScope scope;
 
-    WubookManagerUpdateThread(String action, XmlRpcClient client, WubookManager mgr, Vector params, Map<String, String> mdcContext) {
+    WubookManagerUpdateThread(String action, XmlRpcClient client, WubookManager mgr, Vector params, String storeId,Map<String, String> mdcContext) {
         this.client = client;
         this.mgr = mgr;
         this.params = params;
         this.action = action;
+        this.storeId = storeId;
+        scope = AppContext.appContext.getBean(GetShopSessionScope.class);
         this.mdcContext = mdcContext;
     }
     
@@ -32,6 +38,7 @@ public class WubookManagerUpdateThread extends Thread {
     public void run() {
         MDC.setContextMap(mdcContext);
         mgr.logPrint(Thread.currentThread().getName() + " " + getClass() + " " + "Starting thread...");
+        scope.setStoreId(storeId, "", null);
 
         ExecutorService executor = Executors.newFixedThreadPool(1);
         Callable<Vector> task = () -> (Vector) client.execute(action, params);
@@ -59,6 +66,7 @@ public class WubookManagerUpdateThread extends Thread {
         } finally {
             taskFuture.cancel(true);
             executor.shutdownNow();
+            scope.removethreadStoreId(storeId);
             mdcContext.forEach((k, v) -> MDC.remove(k));
         }
 

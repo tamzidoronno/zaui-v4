@@ -5,7 +5,9 @@
  */
 package com.thundashop.core.getshoplocksystem;
 
-import com.thundashop.core.pmsmanager.PingServerThread;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.net.InetAddress;
 import java.util.Date;
 
@@ -13,12 +15,16 @@ import java.util.Date;
  *
  * @author boggi
  */
-class PingThread extends Thread {
+class PingThread implements Runnable {
+
+    private static final Logger logger = LoggerFactory.getLogger(PingThread.class);
 
     private final LockServer server;
+    private final String storeId;
 
-    public PingThread(LockServer server) {
+    public PingThread(LockServer server, String storeId) {
         this.server = server;
+        this.storeId = storeId;
     }
     
     
@@ -34,8 +40,11 @@ class PingThread extends Thread {
             InetAddress inet = InetAddress.getByName(host);
             if(inet.isReachable(5000) || server.getLastPing() == null) {
                 this.server.setLastPing(new Date());
+            } else {
+                logger.warn("Server is not reachable, storeId: {},  serverName: {}", storeId, server.getGivenName());
             }
-        }catch(Exception e) {
+        } catch (Exception e) {
+            logger.error("Error while ping server, storeId: {} , serverName: {}", storeId, server.getGivenName(), e);
         }
     }
     

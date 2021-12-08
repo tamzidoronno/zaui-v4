@@ -19,7 +19,6 @@ import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.messagemanager.MailMessage;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.messagemanager.SmsMessage;
-import com.thundashop.core.pmsmanager.PingServerThread;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.webmanager.WebManager;
 import java.util.ArrayList;
@@ -31,6 +30,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 
 /**
@@ -60,6 +61,10 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
     
     @Autowired
     StoreManager storeManager;
+
+    @Autowired
+    @Qualifier("pingServerExecutor")
+    private TaskExecutor pingServerExecutor;
     
     
     @Override
@@ -1016,9 +1021,8 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         }
         for(LockServer server : lockServers.values()) {
             getShop.updateServerStatus(server, storeId);
-            PingThread thrad = new PingThread(server);
-            thrad.setName("Pingthread for store: " + storeId + ", server: "  + server.getGivenName());
-            thrad.start();
+            PingThread task = new PingThread(server, storeId);
+            pingServerExecutor.execute(task);
         }
     }
 

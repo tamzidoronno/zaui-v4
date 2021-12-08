@@ -21,11 +21,8 @@ public class OkHttpService {
                 .method("POST", requestBody)
                 .build();
 
-        try {
-            Response response = client.newCall(request).execute();
-
-            // OkHttpResponse close the responseBody upon constructor calling.
-            return new OkHttpResponse(response);
+        try (Response response = client.newCall(request).execute()) {
+            return new OkHttpResponse(response, response.body().string());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

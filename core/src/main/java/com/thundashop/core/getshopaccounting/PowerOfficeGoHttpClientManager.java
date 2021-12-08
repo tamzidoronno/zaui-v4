@@ -7,7 +7,6 @@ import okhttp3.OkHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import static com.thundashop.core.webmanager.OkHttpRequest.AuthType.BEARER;
@@ -21,8 +20,8 @@ public class PowerOfficeGoHttpClientManager {
     private final OkHttpService okHttpService;
 
     @Autowired
-    public PowerOfficeGoHttpClientManager(@Qualifier("powerOfficeGoClient") OkHttpClient client, OkHttpService okHttpService) {
-        this.client = client;
+    public PowerOfficeGoHttpClientManager(OkHttpClient okHttpClient, OkHttpService okHttpService) {
+        this.client = okHttpClient;
         this.okHttpService = okHttpService;
     }
 

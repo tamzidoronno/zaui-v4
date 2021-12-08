@@ -7,15 +7,13 @@ import org.springframework.context.annotation.Configuration;
 import java.util.concurrent.TimeUnit;
 
 @Configuration
-public class OkHttpConfig {
+public class OkHttpClientConfig {
 
-    @Bean(name = "powerOfficeGoClient")
-    public OkHttpClient powerOfficeGoClient() {
-        OkHttpClient client = new OkHttpClient.Builder()
+    @Bean
+    public OkHttpClient okHttpClient() {
+        return new OkHttpClient.Builder()
                 .callTimeout(5, TimeUnit.MINUTES)
                 .build();
-
-        return client;
     }
 
 }

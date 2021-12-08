@@ -25,4 +25,11 @@ public class OkHttpResponse {
         return response.isSuccessful();
     }
 
+    @Override
+    public String toString() {
+        return "OkHttpResponse{" +
+                "response=" + response +
+                ", responseBody='" + body + '\'' +
+                '}';
+    }
 }

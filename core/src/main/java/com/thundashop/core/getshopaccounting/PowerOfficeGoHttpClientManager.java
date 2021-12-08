@@ -38,7 +38,7 @@ public class PowerOfficeGoHttpClientManager {
         OkHttpResponse response = okHttpService.post(request);
 
         if (!response.isSuccessful()) {
-            logger.warn("PowerOfficeGo api error statusCode: {} , requestBody: {}", response.statusCode(), request);
+            logger.warn("PowerOfficeGo api error response: {}", response);
             throw new RuntimeException("PowerOfficeGo api error statusCode: " + response.statusCode());
         }
 

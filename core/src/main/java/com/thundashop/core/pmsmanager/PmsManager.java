@@ -91,6 +91,8 @@ import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -225,6 +227,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Autowired
     private PmsLogManager pmsLogManager;
+
+    @Autowired
+    @Qualifier("pingServerExecutor")
+    private TaskExecutor pingServerExecutor;
     
     
     @Autowired
@@ -11428,5 +11434,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             
         }
     }
-    
+
+    public void submitPingServerThread(PingServerThread task) {
+        pingServerExecutor.execute(task);
+    }
 }

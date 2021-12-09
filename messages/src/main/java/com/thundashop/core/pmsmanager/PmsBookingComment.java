@@ -13,5 +13,5 @@ public class PmsBookingComment implements Serializable {
     public boolean deleted = false;
     public String pmsBookingRoomId = "";
     public String commentId = UUID.randomUUID().toString();
-    public HashMap<Long, String> modifiedByUser = new HashMap();
+    public HashMap<Long, String> modifiedByUser = new HashMap<>();
 }

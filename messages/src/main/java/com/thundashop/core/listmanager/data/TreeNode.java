@@ -10,7 +10,7 @@ public class TreeNode implements Serializable {
     public String text;
     public String parent;
     public String type;
-    public List<TreeNode> children = new ArrayList();
+    public List<TreeNode> children = new ArrayList<>();
 
     public TreeNode getNode(String nodeId) {
         if (id.equals(nodeId))

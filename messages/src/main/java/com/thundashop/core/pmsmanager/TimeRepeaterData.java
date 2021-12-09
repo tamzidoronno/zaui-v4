@@ -58,7 +58,7 @@ public class TimeRepeaterData implements Serializable {
     
     boolean avoidFirstEvent = false;
     
-    List<String> categories = new ArrayList();
+    List<String> categories = new ArrayList<>();
     
     Date createdDate = new Date();
 

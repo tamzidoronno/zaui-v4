@@ -32,6 +32,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -45,6 +46,9 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
     private static final Logger logger = LoggerFactory.getLogger(PowerOfficeGoAccountingSystem.class);
 
     private String token;
+
+    @Autowired
+    private PowerOfficeGoHttpClientManager httpClientManager;
 
     @Override
     public List<SavedOrderFile> createFiles(List<Order> orders, Date start, Date end) {
@@ -165,13 +169,9 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
     }
 
     private boolean createUpdateUser(User user) {
-        String endpoint = "http://api.poweroffice.net/customer/";
+        String endpoint = "https://api.poweroffice.net/customer/";
         Customer customer = new Customer();
-        if((user.accountingId != null || user.accountingId.isEmpty()) && user.externalAccountingId == null || user.externalAccountingId.isEmpty()) {
-            //Something is wrong here. There should be an externa account id connected to it.
-//            user.externalAccountingId = findExternalAccountId(user.accountingId);
-        }
-        
+
         if(user.address == null) {
             user.address = new com.thundashop.core.usermanager.data.Address();
         }
@@ -180,7 +180,6 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
         customer.code = getAccountingAccountId(user.id) + "";
         Gson gson = new Gson();
 
-        String htmlType = "POST";
         String data = gson.toJson(customer);
 
         if (GetShopLogHandler.isDeveloper) {
@@ -193,8 +192,7 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
         ApiCustomerResponse resp = null;
 
         try {
-            result = webManager.htmlPostBasicAuth(endpoint, data, true, "ISO-8859-1", token,
-                    "Bearer", false, htmlType);
+            result = httpClientManager.post(data, token, endpoint);
             resp = gson.fromJson(result, ApiCustomerResponse.class);
         } catch (Exception e) {
             logger.error("PowerOfficeGo api result: {} , postData: {} ", result, data, e);
@@ -231,7 +229,7 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
     }
 
     private String transferOrders(List<Order> orders, String subType) {
-        String endpoint = "http://api.poweroffice.net/Import/";
+        String endpoint = "https://api.poweroffice.net/Import/";
         List<PowerOfficeGoSalesOrder> salesOrdersToTransfer = new ArrayList();
         List<PowerOfficeGoImportLine> importLinesToTransfer = new ArrayList();
         for(Order order : orders) {
@@ -256,7 +254,7 @@ public class PowerOfficeGoAccountingSystem extends AccountingSystemBase {
         String data = gson.toJson(transferObject);
         try {
             if(!GetShopLogHandler.isDeveloper) {
-                String result = webManager.htmlPostBasicAuth(endpoint, data, true, "ISO-8859-1", token, "Bearer", false, "POST");
+                String result = httpClientManager.post(data, token, endpoint);
                 ApiOrderTransferResponse resp = gson.fromJson(result, ApiOrderTransferResponse.class);
                 if(resp.success) {
                     for(Order order : orders) {

@@ -40,6 +40,7 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static com.thundashop.core.utils.Constants.WUBOOK_CLIENT_URL;
+import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.lang3.StringUtils.containsAny;
 
 
@@ -48,7 +49,7 @@ import static org.apache.commons.lang3.StringUtils.containsAny;
 public class WubookManager extends GetShopSessionBeanNamed implements IWubookManager {
 
     private static final Logger logger = LoggerFactory.getLogger(WubookManager.class);
-    
+
     private XmlRpcClient client;
     String token = "";
     private HashMap<String, WubookRoomData> wubookdata = new HashMap<>();
@@ -92,6 +93,10 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     
     @Autowired
     OrderManager orderManager;
+
+    @Autowired
+    WubookLogManager wubookLogManager;
+
     private int tokenCount;
     private Date availabiltyyHasBeenChangedEnd;
     private Date availabiltyyHasBeenChangedStart;
@@ -1832,7 +1837,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement(todayString);
         params.addElement(tosend);
         logText("Doing update of " + numberOfDays + " days");
-        WubookManagerUpdateThread updateThread = new WubookManagerUpdateThread("update_rooms_values", client, this, params, MDC.getCopyOfContextMap());
+        WubookManagerUpdateThread updateThread = new WubookManagerUpdateThread("update_rooms_values", client, this, params, storeId, MDC.getCopyOfContextMap());
         updateThread.setName("Wubook update thread, storeid: " + storeId + " threadId: " + incrThreadId.incrementAndGet());
         updateThread.start();
         availabilityHasBeenChanged = null;
@@ -1995,24 +2000,14 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     }
 
     public void logText(String string) {
-        logger.debug(string);
-        log.logEntries.put(System.currentTimeMillis(), string);
-        long old = System.currentTimeMillis();
-        old = old - (1000*60*24*3);
-        List<Long> toRemove = new ArrayList();
-        for(long key : log.logEntries.keySet()) {
-            if(key < old) {
-                toRemove.add(key);
-            }
-        }
-        for(Long key : toRemove) {
-            log.logEntries.remove(key);
-        }
+        logPrint(string);
+        wubookLogManager.save(string, System.currentTimeMillis());
     }
 
     @Override
     public HashMap<Long, String> getLogEntries() {
-        return log.logEntries;
+        return (HashMap<Long, String>) wubookLogManager.get()
+                .collect(toMap(WubookLog::getTimeStamp, WubookLog::getMessage));
     }
 
     private Integer numberOfBookingsHavingWuBookId(String idToMark) {

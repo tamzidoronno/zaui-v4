@@ -12,6 +12,7 @@ if(isset($_POST['data']['subsection'])) {
 $menu = array();
 $menu['conference_overview'] = "Details";
 $menu['conference_pos'] = "Pos";
+$menu['conference_payments'] = "Payments";
 
 
 $icons = array();
@@ -54,6 +55,9 @@ echo "</div>";
         }
         if ($_POST['data']['subsection'] == 'conference_pos') {
             $this->includefile("conference_pos");
+        }
+        if ($_POST['data']['subsection'] == 'conference_payments') {
+            $this->includefile("conference_payments");
         }
         ?>
 

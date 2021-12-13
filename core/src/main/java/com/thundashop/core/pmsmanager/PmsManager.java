@@ -8997,6 +8997,22 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 } else if (booking.containsSearchWord(filter.searchWord)) {
                     result.add(booking);
                     continue;
+                }else if (!isEmpty(booking.conferenceId)){
+                    List<String> orderIdsOfConference = orderManager.getOrderIdsOfconference(booking.conferenceId);
+                    for (String orderId : orderIdsOfConference){
+                        if (filter.searchWord.equals(orderId)){
+                            result.add(booking);
+                            continue;
+                        }else {
+                            Order order = orderManager.getOrder(orderId);
+                            if (("" +order.incrementOrderId).equals(filter.searchWord)){
+                                result.add(booking);
+                                filter.bookingId = booking.id;
+                                continue;
+                            }
+                        }
+                    }
+
                 }
 
                 for (PmsBookingRooms room : booking.rooms) {

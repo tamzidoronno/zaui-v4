@@ -11,6 +11,8 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 public class PmsBookingSimpleFilter { 
  
     private final PmsManager manager;
@@ -42,6 +44,9 @@ public class PmsBookingSimpleFilter {
                         result.add(convertRoom(room, booking));
                         i++;
                     }
+                }
+                if (result.size()==0 && !isEmpty(booking.conferenceId)){
+
                 }
             }
         }

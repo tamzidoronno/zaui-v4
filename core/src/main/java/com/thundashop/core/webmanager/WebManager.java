@@ -20,9 +20,11 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.springframework.stereotype.Component;
 
-import static com.thundashop.core.utils.Constants.THREE_MINUTES_IN_MILLISECONDS;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  *
@@ -33,30 +35,31 @@ import static com.thundashop.core.utils.Constants.THREE_MINUTES_IN_MILLISECONDS;
 @GetShopSession
 public class WebManager extends ManagerBase implements IWebManager {
     
+    private static final Logger logger = LoggerFactory.getLogger(WebManager.class);
+    
     private final String USER_AGENT = "Mozilla/5.0";
     private HashMap<String, String> latestResponseHeader = new HashMap();
     private String latestErrorMessage;
+
+    @Autowired
+    private OkHttpService okHttpService;
     
     
     @Override
-    public String htmlGet(String url) throws Exception {
-        URL urlObj = new URL(url);
-        HttpURLConnection connection = (HttpURLConnection) urlObj.openConnection();
+    public String htmlGet(String url) {
+        OkHttpRequest request = OkHttpRequest.builder()
+                .setUrl(url)
+                .build();
         
-        connection.setRequestMethod("GET");
-        connection.setRequestProperty("User-Agent", USER_AGENT);
-        connection.setConnectTimeout(THREE_MINUTES_IN_MILLISECONDS);
+        OkHttpResponse response = okHttpService.get(request);
         
-        BufferedReader responseStream = new BufferedReader(new InputStreamReader(connection.getInputStream()));    
-        
-        String responseLine;
-        StringBuilder responseBuffer = new StringBuilder();
-        
-        while((responseLine = responseStream.readLine()) != null) {
-            responseBuffer.append(responseLine);
+        if (!response.isSuccessful()) {
+            logger.error("Unsuccessful GET request, response: {}", response);
+            throw new RuntimeException(String.format("Unsuccessful GET request url: [%s] , code: [%s]", 
+                    url, response.statusCode()));
         }
         
-        return responseBuffer.toString();
+        return response.getBody();
     }
     
     @Override

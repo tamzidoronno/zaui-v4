@@ -70,7 +70,7 @@ public class PowerOfficeGoAccountingSystemTest {
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(3, TimeUnit.MINUTES)
                 .build();
-        OkHttpService httpService = new OkHttpService();
+        OkHttpService httpService = new OkHttpService(client);
         PowerOfficeGoHttpClientManager manager = new PowerOfficeGoHttpClientManager(client, httpService);
 
         String response = manager.post(data, token, endpoint);

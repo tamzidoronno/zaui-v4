@@ -9,6 +9,7 @@ import com.mongodb.*;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.StoreComponent;
+import com.thundashop.repository.db.MongoClientProvider;
 import org.mongodb.morphia.Morphia;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

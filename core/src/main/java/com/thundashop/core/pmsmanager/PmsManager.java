@@ -10018,7 +10018,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         rows.stream()
             .forEach(o -> {
-            if ( StringUtils.isEmpty(o.conferenceId) && StringUtils.isEmpty(o.roomId) ) {
+            if ( isEmpty(o.conferenceId) && isEmpty(o.roomId) ) {
                     return;
             }
             PmsBooking booking = getBookingFromRoomSecure(o.roomId);
@@ -10027,7 +10027,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     return;
             }
             if (booking != null ){
-                if(!StringUtils.isEmpty(booking.invoiceNote) && !StringUtils.isEmpty(booking.invoiceNote)) {
+                if(!isEmpty(booking.invoiceNote) && !isEmpty(booking.invoiceNote)) {
                     order.invoiceNote = booking.invoiceNote;
                     ordersToSave.put(order.id, order);
                 }

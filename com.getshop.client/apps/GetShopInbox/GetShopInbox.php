@@ -344,9 +344,12 @@ class GetShopInbox extends \MarketingApplication implements \Application {
             }   
             $result = $newResult;
         }
-        
+
+        usort($result, "sortTicketsByIdDesc");
         return $result;
     }
+
+
 
     public function getSetupTickets() {
         $filter = new \core_ticket_TicketFilter();
@@ -392,6 +395,12 @@ class GetShopInbox extends \MarketingApplication implements \Application {
     }
 
 }
+
+function sortTicketsByIdDesc($a, $b) {
+    return strcmp($a->incrementalId, $b->incrementalId);
+}
+
+
 
 ?>
 

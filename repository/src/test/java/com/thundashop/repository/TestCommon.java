@@ -1,6 +1,7 @@
 package com.thundashop.repository;
 
 import com.thundashop.repository.db.MongoClientProvider;
+import com.thundashop.repository.db.MongoClientProviderImpl;
 import com.thundashop.repository.utils.SessionInfo;
 import com.thundashop.repository.db.Database;
 import com.thundashop.repository.db.EntityMappersImpl;
@@ -18,7 +19,7 @@ public abstract class TestCommon {
         Config config = TestConfig.newInstance();
 
         try {
-            MongoClientProvider provider = MongoClientProvider.builder()
+            MongoClientProvider provider = MongoClientProviderImpl.builder()
                     .setHost(config.getAsString("mongo.host"))
                     .setPort(config.getAsInt("mongo.port"))
                     .build();

@@ -31,7 +31,7 @@ class DatabaseTest {
     static void setUp() throws UnknownHostException {
         Config config = TestConfig.newInstance();
 
-        MongoClientProvider provider = MongoClientProvider.builder()
+        MongoClientProvider provider = MongoClientProviderImpl.builder()
                 .setHost(config.getAsString("mongo.host"))
                 .setPort(config.getAsInt("mongo.port"))
                 .build();

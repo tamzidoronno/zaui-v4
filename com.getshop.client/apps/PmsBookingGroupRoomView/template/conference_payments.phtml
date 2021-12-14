@@ -1,0 +1,393 @@
+<?
+/* @var $this ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
+$booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $_POST['data']['id']);
+$allOrderIds = $this->getApi()->getOrderManager()->getOrderIdsOfconference($booking->conferenceId);
+//"autoCreatedOrderForConferenceId"
+//
+//$summary = $this->getApi()->getPmsManager()->getSummary($this->getSelectedMultilevelDomainName(), $pmsBooking->id, $room->pmsBookingRoomId);
+//$summaryWithoutAccrued = $this->getApi()->getPmsManager()->getSummaryWithoutAccrued($this->getSelectedMultilevelDomainName(), $pmsBooking->id, $room->pmsBookingRoomId);
+
+$showCredittedHistory = (isset($_SESSION['pmsshowcredithistory']) && $_SESSION['pmsshowcredithistory']) ? true : false;
+$showAllOrders = true;
+$showAccrued = true;
+
+
+$orderMissing = 0;
+$paymentMissing = 0;
+
+$orders = array();
+
+
+$unpaidOrders = false;
+
+foreach ($allOrderIds as $orderId) {
+
+    $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+    
+    if ($order->status != 7) {
+        $unpaidOrders = true;
+    }
+    $orders[] = $order;
+}
+
+
+
+?>
+
+<div class='insideheader'>SUMMARY <? ?></div>
+<div style='font-size: 16px;'>
+</div>
+
+<br/>
+<br/>
+<div>
+    <div class='insideheader'>
+        
+        <?php
+        $accruedCunter = 0;
+        foreach ($orders as $order) {
+            if($order->payment->paymentType == "ns_60f2f24e_ad41_4054_ba65_3a8a02ce0190\AccruedPayment" && !$showAccrued) {
+                $accruedCunter++;
+            }
+        }
+        ?>
+        
+        <? echo $this->__f("Payments"); ?>
+        <div class="gs_shop_small_icon" style='font-size: 13px; margin-left: 3px;' onclick="$('.detailedorderoverviewsummary').toggle()"><? echo $this->__f("Toggle details"); ?></div>
+        <div class="gs_shop_small_icon" style='font-size: 13px; margin-left: 3px;' gsclick="toggleCreditHistory"><? echo $showCredittedHistory ? $this->__f("Hide credit history") : $this->__f("Show credit history"); ?></div> 
+        <?php
+        $user = $this->getApi()->getUserManager()->getLoggedOnUser();
+        if(stristr($user->emailAddress, "@getshop.com")) {
+            ?>
+            <div class="gs_shop_small_icon" style='font-size: 13px; margin-right: 3px;' gsclick="toggleAccrued"><? echo  $showAccrued ? $this->__f("Hide accrued ($accruedCunter)") : $this->__f("Show accrued ($accruedCunter)"); ?></div> 
+            <?php
+        }
+        ?>
+    </div>
+    
+   <?
+   if (!count($orders)) {
+        echo "<div style='font-size: 16px; padding-left: 10px;'>";
+            echo $this->__f("No orders to show");
+        echo "</div>";
+   } else {
+   ?>
+    <div class="row row_payment_status_line header">
+        <div class="col col_date"> Created </div>
+        <div class="col col_productname"> Payment Type </div>
+        <div class="col col_value"> Amount </div>
+        <div class="col col_value odd col_payment_date"> Payment Date </div>
+        <div class="col col_orderid odd"> Order id</div>
+    </div>
+    <?
+        usort($orders, array("ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView", "sortByIncrementalOrderId"));
+        foreach ($orders as $order) {
+            if ($order->correctedByUserId && sizeof($order->createdBasedOnCorrectionFromOrderIds) > 0) {
+                continue;
+            }
+            if($order->payment->paymentType == "ns_60f2f24e_ad41_4054_ba65_3a8a02ce0190\AccruedPayment" && !$showAccrued) {
+                continue;
+            }
+            
+            $paymentDate = $order->status == 7 && $order->paymentDate ? date('d.m.Y H:i', strtotime($order->paymentDate)) : 'N/A';
+            $totalForOrder = $this->getApi()->getOrderManager()->getTotalForOrderById($order->id);
+            $totalForOrder = round($totalForOrder, 2);
+            ?>
+            <div class=''>
+                <div class="row row_payment_status_line ">
+                    <div class="col col_date"> <? echo date('d.m.Y h:i', strtotime($order->rowCreatedDate)); ?> </div>
+                    <div class="col col_productname"> <? echo $this->getPaymentType($order); ?></div>
+                    <div class="col col_value"> <? echo $totalForOrder; ?></div>
+                    <div class="col col_value  col_payment_date odd"> <? echo $paymentDate; ?></div>
+                    <div class="col col_orderid odd"> 
+                        <? 
+                        if ($order->closed) {
+                            ?>
+                            <i class='fa fa-lock'></i>
+                            <?
+                        }
+                        echo $order->incrementOrderId; 
+                        
+                        ?> 
+                    
+                    </div>
+                    <div class="col col_action">
+                        <div class="fa fa-gear toggle_action_menu bookinghighlightcolor" style="cursor:pointer;margin-right: 5px;"></div>
+                        <div class="fa fa-search-plus showOrderSummary bookinghighlightcolor" style='cursor:pointer;' orderid="<? echo $order->id; ?>" title='<? echo $this->__f("Show order"); ?>'></div>
+                        <?
+                        
+                        $orderCanBeFixed = $order->closed && !($order->payment != null && strstr($order->payment->paymentType, "ns_60f2f24e_ad41_4054_ba65_3a8a02ce0190") > -1);
+
+                        ?>
+                        <div class="ordermenu">
+
+                            <?
+                            if ((!count($order->creditOrderId) && !$order->isCreditNote) || !$order->closed ) {
+                            ?>
+                            <div class='entry' gsclick="creditOrDeleteOrder" orderid="<? echo $order->id; ?>" roomid='<?php echo $this->getPmsBookingRoom()->pmsBookingRoomId; ?>' gs_confirm='Are you sure?'>
+                                <?
+                                if ($order->closed) {  
+                                ?>
+                                    <i class="fa fa-history"></i> <? echo $this->__f("Credit order"); ?>
+                                <?
+                                } else {?>
+                                    <i class="fa fa-trash"></i> <? echo $this->__f("Delete order"); ?>
+                                <?
+                                }
+                                ?>
+                            </div>
+                            <?
+                            }
+                            ?>
+
+
+                            <a href='/pms.php?page=orderviewpage&orderid=<? echo $order->id; ?>' target='_blank'>
+                                <div class='entry' orderid="<? echo $order->id; ?>">
+                                    <i class="fa fa-arrow-right"></i> <? echo $this->__f("Open"); ?>
+                        </div>
+                            </a>
+                    </div>
+                </div>
+            </div>
+                <?php
+                if ($order->createdBasedOnCorrectionFromOrderIds && $showCredittedHistory) {
+                    foreach ($order->createdBasedOnCorrectionFromOrderIds as $innerOrderId) {
+                        $order = $this->getApi()->getOrderManager()->getOrder($innerOrderId);
+                        $paymentDate = $order->status == 7 && $order->paymentDate ? date('d.m.Y H:i', strtotime($order->paymentDate)) : 'N/A';
+                        $totalForOrder = $this->getApi()->getOrderManager()->getTotalForOrderById($order->id);
+                        
+                        ?>
+                        <div class="row row_payment_status_line corrected ">
+                           <div class="col col_date"> <? echo date('d.m.Y h:i', strtotime($order->rowCreatedDate)); ?> </div>
+                           <div class="col col_productname"> <? // echo $this->getPaymentType($order); ?></div>
+                           <div class="col col_value"> <? echo $totalForOrder; ?></div>
+                           <div class="col col_value odd"> <? echo $paymentDate; ?></div>
+                           <div class="col col_orderid odd"> 
+                               <? 
+                               if ($order->closed) {
+                                   ?>
+                                   <i class='fa fa-lock'></i>
+                                   <?
+                               }
+                               echo $order->incrementOrderId; 
+
+                               ?> 
+
+                           </div>
+                           <div class="col col_action">
+                               <div class="fa fa-gear toggle_action_menu bookinghighlightcolor" style="cursor:pointer;margin-right: 5px;"></div>
+                               <div class="fa fa-search-plus showOrderSummary bookinghighlightcolor" style='cursor:pointer;' orderid="<? echo $order->id; ?>" title='<? echo $this->__f("Show order"); ?>'></div>
+                               <div class="ordermenu">
+
+                                   <?
+                                   if ((!count($order->creditOrderId) && !$order->isCreditNote) || !$order->closed ) {
+                                   ?>
+                                   <div class='entry' gsclick="creditOrDeleteOrder" orderid="<? echo $order->id; ?>">
+                                       <?
+                                       if ($order->closed) {  
+                                       ?>
+                                           <i class="fa fa-history"></i> <? echo $this->__f("Credit order"); ?>
+                                       <?
+                                       } else {?>
+                                           <i class="fa fa-trash"></i> <? echo $this->__f("Delete order"); ?>
+                                       <?
+                                       }
+                                       ?>
+                                   </div>
+                                   <?
+                                   }
+                                   ?>
+
+
+                                   <a href='/pms.php?page=orderviewpage&orderid=<? echo $order->id; ?>' target='_blank'>
+                                       <div class='entry' orderid="<? echo $order->id; ?>">
+                                           <i class="fa fa-arrow-right"></i> <? echo $this->__f("Open"); ?>
+                               </div>
+                                   </a>
+                           </div>
+                       </div>
+            </div>
+                        <?
+                    }
+                }
+                if($showAllOrders) {
+                    $rooms = $this->getApi()->getPmsManager()->getAllRoomsOnOrder($this->getSelectedMultilevelDomainName(), $order->id);
+                    foreach($rooms as $room) {
+                        echo "<div class='row row_payment_status_line row_payment_status_line_expanded'>";
+                        echo "<div class='col col_date' style='padding-left: 20px;'> ".$room->room . "</div> ";
+                        echo "<div class='col col_productname'> ".$room->roomType."</div> ";
+                        echo "<div class='col col_value'> ".$room->totalCost."</div> ";
+                        echo "<div class='col col_value'> ".date("d.m.Y H:i", $room->start/1000)."</div> ";
+                        echo "<div class='col col_value'> ".date("d.m.Y H:i", $room->end/1000)."</div> ";
+                        $guestsNames = array();
+                        foreach($room->guest as $g) {
+                            if($g->name) {
+                                $guestsNames[] = $g->name;
+                            }
+                        }
+                        echo "<div class='col col_guestname'> ".join(",", $guestsNames)."</div>";
+                        echo "</div>";
+                    }
+                }
+                ?>
+            </div>
+            <?
+        }
+    }
+    
+    if (ns_df435931_9364_4b6a_b4b2_951c90cc0d70\Login::isGetShopUser()) {
+        ?>
+    <br>
+        <div gstype="form" method="addIncrementOrderIdToBooking">
+            Import order:<br>
+            <input type="txt" class="gsniceinput1" gsname="orderid" placeholder="100123">
+            <span class="shop_button" gstype="submit">Import order</span>
+        </div>
+        <?php
+        $orderIds = $this->getApi()->getOrderManager()->getAllOrdersForRoom($room->pmsBookingRoomId);
+        $found = false;
+        foreach ($orderIds as $orderId) {
+            if (in_array($orderId, $pmsBooking->orderIds)) {
+                continue;
+            }
+            $found = true;
+        }
+        
+        if ($found) {
+            echo "<div style='margin-top: 50px; border-top: solid 1px #DDD;'>";
+            echo "<h2> GetShop Admin View, orders that are connected to this room but not added to the booking.. </h2>";
+
+
+            foreach ($orderIds as $orderId) {
+                if (in_array($orderId, $pmsBooking->orderIds)) {
+                    continue;
+                }
+
+                $order = $this->getApi()->getOrderManager()->getOrder($orderId);
+                ?>
+
+                <div>
+                    <? echo $order->incrementOrderId; ?>
+                    <a href="/pms.php?page=orderviewpage&orderid=<? echo $order->id; ?>" target="_blank">
+                        <div class="gs_shop_small_icon">Open</div>
+                    </a>
+                    <div gsclick='attachOrderToBooking' bookingid='<? echo $pmsBooking->id; ?>' orderid='<? echo $order->id; ?>' class="gs_shop_small_icon">Re-attach</div>
+                </div>
+                <?
+            }
+
+            echo "</div>";
+        }
+    }
+    ?>
+    
+</div>
+
+<br/>
+<br/>
+<div style="display:none;" class="detailedorderoverviewsummary">
+    <div class='insideheader'>Detailed order summary for <? echo $room->guests[0]->name; ?></div>
+    
+    <?
+    if ($this->shouldShowPager($distinctDates)) {
+        $distinctMonthsAndYears = $this->getDistinctMonthsAndYears($distinctDates);
+        sort($distinctMonthsAndYears);
+        
+    ?>
+        <div>
+            <? echo $this->__f("Filter by month").": "; ?>
+            <select class='gsniceselect1 filterbymonth'>
+                <?
+                echo "<option value='$distinct'>".$this->__f("All")."</option>";
+                foreach ($distinctMonthsAndYears as $distinct) {
+                    $name = $this->translateMonthAndYear($distinct);
+                    echo "<option value='$distinct'>$name</option>";
+                }
+                ?>    
+            </select>
+            
+        </div>
+    <?
+    }
+    ?>
+    
+    <?
+    $totalRemainingGuestOwe = 0;
+    usort($summary->rows, array("ns_f8cc5247_85bf_4504_b4f3_b39937bd9955\PmsBookingRoomView", "sortSummaryRowByDate"));
+    ?>
+    <div class="row row_payment_status_line header">
+        <div class="col col_date"></div>
+        <div class="col col_productname longwidth"></div>
+        <div class="col col_value"><? echo $this->__f("Price"); ?></div>
+        <div class="col col_value odd"><? echo $this->__f("Orders"); ?></div>
+        <div class="col col_balance large"><? echo $this->__f("Diff"); ?></div>
+    </div>
+
+    <?
+    
+    $totalMissing = 0;
+    $totalPaid = 0;
+    $prevDate = "";
+    $i = 0;
+    
+    foreach ($summary->rows as $row) {
+        $i++;
+        
+        if ($row->date != $prevDate ) {
+            $prevDate = $row->date;
+        }
+        
+        $oddrow = $i%2 != 0 ? "oddrow" : "evenrow";
+        $product = $this->getProduct($row->createOrderOnProductId);
+       
+        $balance = 0;
+        $remaining = ($row->priceInBooking * $row->countFromBooking) - $row->actuallyPaidAmount;
+        $allOk = round($remaining, 0) == 0;
+        $balance += $remaining;
+        $missingInOrders = ($row->createdOrdersFor * $row->countFromOrders) - ($row->priceInBooking * $row->countFromBooking);
+        $orderColor = $missingInOrders != 0 ? '#ff7a00' : '#86c50d';
+        $paymentColor = $remaining != 0 ? 'red' : '#86c50d';
+        
+        $totalMissing += $missingInOrders;
+        $totalPaid += $remaining;
+        ?>
+    
+        <div class="row row_payment_status_line <? echo $oddrow; ?>" date='<? echo $row->date; ?>'>
+            <div class="col col_date"><? echo $row->date; ?></div>
+            <div class="col col_productname  longwidth"><? echo $product->name; ?></div>
+            <div class="col col_value"><? echo round(($row->priceInBooking * $row->countFromBooking),2); ?></div>
+            <div class="col col_value odd"><? echo round(($row->createdOrdersFor * $row->countFromOrders),2); ?></div>
+            <div class="col col_balance large" style='color: <? echo $orderColor; ?>'>
+                <? 
+                if ($orderColor == '#ff7a00') {
+                    echo "<i class='fa fa-warning' title='You need to create order for this payment, click start payment process'></i> ";
+                }
+                $roundedValue = round($missingInOrders,2);
+                if ($roundedValue == 0) {
+                    echo "<i class='fa fa-check-circle'></i>";
+                } else {
+                    echo $roundedValue;
+                }
+                ?>
+            </div>
+        </div>
+        <?
+        
+    }
+    
+    if ($this->shouldShowPager($distinctDates)) {
+        ?>
+        <script>   
+            $(document).ready(function() {
+                app.PmsBookingRoomView.selectLastOrdersDetailedMonth('<? echo $room->pmsBookingRoomId; ?>');
+            });
+        </script>
+        <?
+    }
+?>
+
+</div>
+<br/>
+<br/>
+<br/>
+

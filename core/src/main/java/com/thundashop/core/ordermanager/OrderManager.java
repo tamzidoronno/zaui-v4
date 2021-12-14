@@ -5189,19 +5189,18 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Override
     public void addSpecialPaymentTransactionsToAccount(String orderId, Double amount, Double amountInLocalCurrency, Integer account, String comment, Date date) {
-        throw new NullPointerException("Kai 12 juli 18:25 messenger : Husker ikke hvordan det var");
-//        Order order = getOrder(orderId);
-//        if (order == null) {
-//            return;
-//        }
-//        
-//        AccountingDetail detail = productManager.getAccountingDetail(account);
-//        if (detail == null) {
-//            throw new NullPointerException("Did not find the account");
-//        }
-//
-//        addOrderTransactionWithType(orderId, amount, comment, date, amountInLocalCurrency, 0D, detail.id, Order.OrderTransactionType.ROUNDING);
-//        return;
+        Order order = getOrder(orderId);
+        if (order == null) {
+            return;
+        }
+
+        AccountingDetail detail = productManager.getAccountingDetail(account);
+        if (detail == null) {
+            throw new RuntimeException("Did not find the account");
+        }
+
+        addOrderTransactionWithType(orderId, amount, comment, date, amountInLocalCurrency, 0D, detail.id, Order.OrderTransactionType.ROUNDING);
+        return;
     }
 
     @Override
@@ -5788,4 +5787,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         order.transferToAccountingDate = null;
         saveObject(order);
     }
+
+    @Override
+    public List<String> getOrderIdsOfconference(String conferenceId){
+        List<String> orderids = orders.values().stream()
+                .filter(o -> o.autoCreatedOrderForConferenceId.equals(conferenceId) || o.conferenceIds.contains(conferenceId))
+                .filter(o->o.virtuallyDeleted != true)
+                .map(o -> o.id).collect(Collectors.toList());
+        return orderids;
+    }
+
+
+
 }

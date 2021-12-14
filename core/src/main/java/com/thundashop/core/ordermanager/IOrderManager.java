@@ -627,4 +627,7 @@ public interface IOrderManager {
     
     @Administrator
     public List<ChangedCloseDateLog> getChangedCloseDateLog();
+
+    @Administrator
+    public List<String> getOrderIdsOfconference(String pmsBookingId);
 }

@@ -19,7 +19,7 @@ public class OkHttpService {
     }
 
     public OkHttpResponse post(OkHttpRequest httpRequest) {
-        OkHttpClient client = httpRequest.getClient();
+        OkHttpClient client = httpRequest.getClient() != null ? httpRequest.getClient() : okHttpClient;
         RequestBody requestBody = RequestBody.Companion.create(httpRequest.getPayload(), mediaType);
 
         Request request = new Request.Builder()
@@ -29,12 +29,7 @@ public class OkHttpService {
                 .method("POST", requestBody)
                 .build();
 
-        try (Response response = client.newCall(request).execute()) {
-            return new OkHttpResponse(response, response.body().string());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
+        return execute(client, request);
     }
 
     public OkHttpResponse get(OkHttpRequest httpRequest) {
@@ -45,6 +40,10 @@ public class OkHttpService {
                 .get()
                 .build();
 
+        return execute(client, request);
+    }
+
+    private OkHttpResponse execute(OkHttpClient client, Request request) {
         try (Response response = client.newCall(request).execute()) {
             return new OkHttpResponse(response, response.body().string());
         } catch (IOException e) {

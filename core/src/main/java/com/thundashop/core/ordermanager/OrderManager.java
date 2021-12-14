@@ -3566,6 +3566,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         List<Order> retOrders = orders.values()
                 .stream()
                 .filter(o -> o.isInvoice())
+                .filter(o -> o.virtuallyDeleted != true)
                 .filter(o -> !o.isFullyPaid())
                 .collect(Collectors.toList());
         

@@ -1,9 +1,8 @@
-package com.thundashop.core.databasemanager;
+package com.thundashop.repository.db;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.ServerAddress;
-import com.thundashop.repository.db.MongoClientProvider;
 
 import java.net.UnknownHostException;
 import java.util.function.Function;

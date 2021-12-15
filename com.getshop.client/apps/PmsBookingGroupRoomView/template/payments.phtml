@@ -104,14 +104,7 @@ $payAfterStay = $room->createOrdersOnZReport && !($needToCreateOrdersFor <= 1 &&
         <div class="gs_shop_small_icon" style='font-size: 13px; margin-left: 3px;' onclick="$('.detailedorderoverviewsummary').toggle()"><? echo $this->__f("Toggle details"); ?></div>
         <div class="gs_shop_small_icon" style='font-size: 13px; margin-left: 3px;' gsclick="toggleCreditHistory"><? echo $showCredittedHistory ? $this->__f("Hide credit history") : $this->__f("Show credit history"); ?></div> 
         <div class="gs_shop_small_icon" style='font-size: 13px;' gsclick="toggleAllOrders"><? echo  $showAllOrders ? $this->__f("Hide all orders for group") : $this->__f("Show all orders for group") . " (" . sizeof($pmsBooking->orderIds) . ")"; ?></div> 
-        <?php
-        $user = $this->getApi()->getUserManager()->getLoggedOnUser();
-        if(stristr($user->emailAddress, "@getshop.com")) {
-            ?>
-            <div class="gs_shop_small_icon" style='font-size: 13px; margin-right: 3px;' gsclick="toggleAccrued"><? echo  $showAccrued ? $this->__f("Hide accrued ($accruedCunter)") : $this->__f("Show accrued ($accruedCunter)"); ?></div> 
-            <?php
-        }
-        ?>
+        <div class="gs_shop_small_icon" style='font-size: 13px; margin-right: 3px;' gsclick="toggleAccrued"><? echo  $showAccrued ? $this->__f("Hide accrued ($accruedCunter)") : $this->__f("Show accrued ($accruedCunter)"); ?></div>
     </div>
     
    <?

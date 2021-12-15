@@ -13,14 +13,51 @@ $companies = $this->indexList($companies);
 $productsToInclude = array();
 $productsToInclude[] = "0d862998-a6ce-4c90-b161-95f5a4d10d99";
 $productsToInclude[] = "7316f0ad-3ac9-485e-8a11-0b1b487efd36";
-
+?>
+<div>Filter tables: <input type="text" value="" placeholder="Filter string" id="tableFilter" onkeyup="applyTableFilter()" /></div>
+<script>
+function applyTableFilter()
+{
+    filter = jQuery('#tableFilter').val().toLowerCase();
+    if(filter=='')
+    {
+        var x = document.getElementsByClassName('data-row');
+        for (i = 0; i < x.length; i++) {
+          x[i].style.display = 'table-row';
+        }
+    }
+    else
+    {
+        var x = document.getElementsByClassName('data-row');
+        for (i = 0; i < x.length; i++)
+        {
+            if( x[i].innerText.toLowerCase().indexOf(filter) < 0 )
+                x[i].style.display = 'none';
+            else
+                x[i].style.display = 'table-row';
+        }
+    }
+}
+</script>
+<?php
+echo '<h3>Active PMS installations</h3>';
 echo "<table width='100%' id='systemslist'>";
+echo '<tr>
+    <th>Active since</th>
+    <th>Webaddress</th>
+    <th>Monthly Price</th>
+    <th>Product</th>
+    <th>Company</th>
+</tr>';
 $total = 0;
+$others_and_inactive = [];
 foreach($systems as $system) {
     if($system->activeTo) {
+        array_push($others_and_inactive, clone( $system ) );
         continue;
     }
     if(!in_array($system->productId, $productsToInclude)) {
+        array_push($others_and_inactive, clone( $system ) );
         continue;
     }
     
@@ -29,19 +66,53 @@ foreach($systems as $system) {
     if($companies[$system->companyId]->currency == "EUR") {
         $price = $system->monthlyPrice * 10;
     }
-    $red = $price == 0 ? "style='background-color:red;'" : "";
+    $red = $price == 0 ? "style='background-color:#EEE;'" : "";
     $total += $price;
-    echo "<tr $red>";
+    echo "<tr $red class='data-row'>";
     echo "<td>" . date("d.m.Y", strtotime($system->activeFrom)) . "</td>";
     echo "<td value='" . $system->id . "' onclick=''>" . $system->webAddresses . "</td>";
     echo "<td>" . $price . "</td>";
     echo "<td productid='".$system->productId."'>" . $products[$system->productId]->name. "</td>";
-    echo "<td>" . $companies[$system->companyId]->name. "</td>";
+    echo "<td style='cursor:pointer;' gsclick='selectCompany' onclick=\"showCompany('" . $system->companyId . "')\">" . $companies[$system->companyId]->name. "</td>";
     echo "<td>" . $companies[$system->companyId]->currency. "</td>";
     echo "</tr>";
     
 }
 echo "</table>";
+echo '<h3>Other installations</h3>';
+echo "<table width='100%' id='systemslist'>";
+echo '<tr>
+    <th>Active since</th>
+    <th>Active to</th>
+    <th>Webaddress</th>
+    <th>Monthly Price</th>
+    <th>Product</th>
+    <th>Company</th>
+</tr>';
+for($i = 0; $i < count($others_and_inactive); $i++) {
+    $system = $others_and_inactive[$i];
+    $counter++;
+    $price = $system->monthlyPrice;
+    if($companies[$system->companyId]->currency == "EUR") {
+        $price = $system->monthlyPrice * 10;
+    }
+    $red = $price == 0 ? "style='background-color:#EEE;'" : "";
+    $total += $price;
+    echo "<tr $red class='data-row'>";
+    echo "<td>" . date("d.m.Y", strtotime($system->activeFrom)) . "</td>";
+    echo "<td>" . ( $system->activeTo ? date("d.m.Y", strtotime($system->activeTo)) : '-' ) . "</td>";
+    echo "<td value='" . $system->id . "' onclick=''>" . $system->webAddresses . "</td>";
+    echo "<td>" . $price . "</td>";
+    echo "<td productid='".$system->productId."'>" . $products[$system->productId]->name. "</td>";
+    echo "<td  style='cursor:pointer;'  gsclick='selectCompany' onclick=\"showCompany('" . $system->companyId . "')\">" . $companies[$system->companyId]->name. "</td>";
+    echo "<td>" . $companies[$system->companyId]->currency. "</td>";
+    echo "</tr>";
+
+}
+echo "</table>";
+
+
+
 echo "</div>";
 echo "<div style='text-align:center;'>";
 echo "Number of systems in list: " . $counter . ", total: " . $total;

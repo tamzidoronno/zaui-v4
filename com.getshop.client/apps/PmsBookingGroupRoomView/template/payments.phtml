@@ -79,7 +79,7 @@ $payAfterStay = $room->createOrdersOnZReport && !($needToCreateOrdersFor <= 1 &&
     echo "<div style='color: #8ac136; padding: 5px; padding-left: 10px; '><i class='fa fa-info-circle'></i> ".$this->__f("The total amount for this room is")." ".$totalForRoom."</div>";
         
     if ($payAfterStay) {
-        echo "<div style='border: solid 1px red; padding: 20px; color: red; margin-top: 20px;'>";
+        echo "<div style='border: solid 1px #ff0000; padding: 20px; color: red; margin-top: 20px;'>";
             echo "<i class='fa fa-warning'></i> ".$this->__f("This room has not yet been paid as pay after stay has been activated.");
         echo "</div>";
     }

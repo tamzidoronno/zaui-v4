@@ -2987,7 +2987,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             ordersToUse = ordersToUse
                     .stream()
                     .filter(o -> !o.excludeFromFReport)
-                    .filter(o -> o.virtuallyDeleted != true)
+                    .filter(o -> !o.virtuallyDeleted)
                     .collect(Collectors.toList());
         }
 
@@ -4990,7 +4990,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         List<Order> ordersAlreadyTransferred = getAllOrders().stream()
                 .filter(o -> o.transferredToAccountingSystem)
-                .filter(o -> o.virtuallyDeleted == true)
+                .filter(o -> o.virtuallyDeleted)
                 .collect(Collectors.toList());
         
         ordersAlreadyTransferred.stream().forEach(order -> {

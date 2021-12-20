@@ -1,0 +1,28 @@
+<html>
+    <head>
+        <title>500 - Internal Server Error</title>
+        <style>
+
+            body,html { font-family:Helvetica, sans-serif; margin:0; padding:0; color:rgb(9,48,109);  }
+            #texts { position:absolute; top:250px; left:300px; width:calc(100%-300px); }
+            @media only screen and (max-width: 600px) {
+              img { width:50%; }
+              #texts { top:50px; left:32px; width:calc(100%-64px); }
+            }
+        </style>
+    </head>
+    <body>
+        <div style="width:70%; max-width:720px; min-width:320px; margin:0 auto;">
+        <div style="position:relative;">
+        <img src="/skin/404-icon.svg" />
+        <div id="texts">
+            <h1>Psssshhhht</h1>
+            <p>This page has taken a break. Somehow it can not connect properly to its server.</p>
+            <p>It will reload itself in a bit to check if things have improved.</p>
+        </div>
+        </div>
+        <script>
+            window.setTimeout("document.location.reload();",10000);
+        </script>
+    </body>
+</html>

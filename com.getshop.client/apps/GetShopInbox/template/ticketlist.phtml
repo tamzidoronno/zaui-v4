@@ -17,6 +17,14 @@ foreach ($states as $state) {
         $groupedByStates[$state][] = $ticket;
     }
 }
+foreach ($states as $state) {
+    if (!$groupedByStates[$state]) continue;
+
+    //now sort them by date...
+    usort($groupedByStates[$state], function ($a, $b) {
+        return strcmp(strtolower($b->rowCreatedDate), strtolower($a->rowCreatedDate));
+    });
+}
 ?>
 <div class="ticketlist">
 <?

@@ -11,6 +11,8 @@ import com.thundashop.repository.utils.Config;
 import java.net.UnknownHostException;
 import java.util.UUID;
 
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
+
 public abstract class TestCommon {
 
     public static Database database;
@@ -30,11 +32,12 @@ public abstract class TestCommon {
         }
     }
 
-    public SessionInfo buildSessionInfo() {
+    public SessionInfo buildSessionInfo(String dbName) {
         return SessionInfo.builder()
                 .setStoreId(UUID.randomUUID().toString())
                 .setCurrentUserId("testUserId")
                 .setLanguage("en")
+                .setManagerName(dbName)
                 .build();
     }
 

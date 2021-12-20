@@ -13,8 +13,8 @@ public class ConferenceDataRepository extends Repository<ConferenceData> {
 
     private final String className;
 
-    public ConferenceDataRepository(Database database, String dbName, String className) {
-        super(database, dbName);
+    public ConferenceDataRepository(Database database, String className) {
+        super(database);
         this.className = className;
     }
 

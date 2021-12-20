@@ -5,7 +5,7 @@ import com.thundashop.repository.db.DbTest;
 
 public class RepositoryTestImpl extends Repository<DbTest> {
 
-    public RepositoryTestImpl(Database database, String dbName) {
-        super(database, dbName);
+    public RepositoryTestImpl(Database database) {
+        super(database);
     }
 }

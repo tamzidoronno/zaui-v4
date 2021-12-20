@@ -14,8 +14,8 @@ public class PmsPricingRepository extends Repository<PmsPricing> {
 
     private final String className;
 
-    public PmsPricingRepository(Database database, String dbName, String className) {
-        super(database, dbName);
+    public PmsPricingRepository(Database database, String className) {
+        super(database);
         this.className = className;
     }
 

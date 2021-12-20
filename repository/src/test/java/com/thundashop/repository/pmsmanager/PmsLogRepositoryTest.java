@@ -27,7 +27,7 @@ class PmsLogRepositoryTest extends TestCommon {
     @BeforeAll
     static void setUp() {
         init();
-        pmsLogRepository = new PmsLogRepository(database, testDbName);
+        pmsLogRepository = new PmsLogRepository(database);
     }
 
     @BeforeEach
@@ -41,16 +41,6 @@ class PmsLogRepositoryTest extends TestCommon {
     }
 
     @Test
-    void testGetDbName() {
-        String expectedDbName = "TestDbName";
-        PmsLogRepository pmsLogRepository = new PmsLogRepository(null, expectedDbName);
-
-        String actual = pmsLogRepository.getDbName();
-
-        assertThat(actual).isEqualTo(expectedDbName);
-    }
-
-    @Test
     void save() {
         Date rowCreated = new Date();
         PmsLog expectedPmsLog = new PmsLog();
@@ -61,6 +51,7 @@ class PmsLogRepositoryTest extends TestCommon {
                 .setStoreId(storeId)
                 .setCurrentUserId("12345")
                 .setLanguage("en")
+                .setManagerName(testDbName)
                 .build();
 
         PmsLog actualPmsLog = pmsLogRepository.save(expectedPmsLog, sessionInfo);

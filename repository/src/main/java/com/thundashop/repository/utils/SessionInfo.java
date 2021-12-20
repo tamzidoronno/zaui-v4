@@ -8,14 +8,17 @@ public class SessionInfo {
 
     private final String language;
 
-    private SessionInfo(String storeId, String currentUserId, String language) {
+    private final String managerName;
+
+    private SessionInfo(String storeId, String currentUserId, String language, String managerName) {
         this.storeId = storeId;
         this.currentUserId = currentUserId;
         this.language = language;
+        this.managerName = managerName;
     }
 
     public static SessionInfo empty() {
-        return new SessionInfo("", "", "");
+        return new SessionInfo("", "", "", "");
     }
 
     public static SessionInfoBuilder builder() {
@@ -34,10 +37,15 @@ public class SessionInfo {
         return language;
     }
 
+    public String getManagerName() {
+        return managerName;
+    }
+
     public static class SessionInfoBuilder {
         private String storeId = "";
         private String currentUserId = "";
         private String language = "";
+        private String managerName = "";
 
         public SessionInfoBuilder setStoreId(String storeId) {
             this.storeId = storeId;
@@ -54,8 +62,13 @@ public class SessionInfo {
             return this;
         }
 
+        public SessionInfoBuilder setManagerName(String managerName) {
+            this.managerName = managerName;
+            return this;
+        }
+
         public SessionInfo build() {
-            return new SessionInfo(storeId, currentUserId, language);
+            return new SessionInfo(storeId, currentUserId, language, managerName);
         }
     }
 

@@ -29,12 +29,12 @@ class RepositoryTest extends TestCommon {
     @BeforeAll
     static void setup() {
         init();
-        repositoryTest = new RepositoryTestImpl(database, testDbName);
+        repositoryTest = new RepositoryTestImpl(database);
     }
 
     @BeforeEach
     void beforeEach() {
-        sessionInfo = buildSessionInfo();
+        sessionInfo = buildSessionInfo(testDbName);
     }
 
     @AfterEach

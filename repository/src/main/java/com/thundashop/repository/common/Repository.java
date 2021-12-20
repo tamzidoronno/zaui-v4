@@ -18,19 +18,13 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 public abstract class Repository<T> {
 
     private final Database database;
-    private final String dbName;
 
-    public Repository(Database database, String dbName) {
+    public Repository(Database database) {
         this.database = database;
-        this.dbName = dbName;
     }
 
     public Database getDatabase() {
         return database;
-    }
-
-    public String getDbName() {
-        return dbName;
     }
 
     public String getCollectionName(SessionInfo sessionInfo) {
@@ -52,7 +46,7 @@ public abstract class Repository<T> {
 
         dataCommon.storeId = sessionInfo.getStoreId();
         dataCommon.lastModified = new Date();
-        dataCommon.gs_manager = getDbName();
+        dataCommon.gs_manager = sessionInfo.getManagerName();
         dataCommon.colection = getCollectionName(sessionInfo);
 
         if (isNotEmpty(sessionInfo.getLanguage())) {
@@ -61,11 +55,11 @@ public abstract class Repository<T> {
             dataCommon.updateTranslation(lang);
         }
 
-        return (T) database.save(dbName, getCollectionName(sessionInfo), dataCommon);
+        return (T) database.save(sessionInfo.getManagerName(), getCollectionName(sessionInfo), dataCommon);
     }
 
     protected Optional<T> getOne(DBObject query, Class<T> entityClass, SessionInfo sessionInfo) {
-        List<T> resultList = getDatabase().query(getDbName(), getCollectionName(sessionInfo), entityClass, query);
+        List<T> resultList = getDatabase().query(sessionInfo.getManagerName(), getCollectionName(sessionInfo), entityClass, query);
 
         if (resultList.size() > 1) {
             throw new NotUniqueDataException(String.format("Found multiple data count: %s , entity: %s , query: %s",
@@ -81,17 +75,17 @@ public abstract class Repository<T> {
     }
 
     protected boolean exist(DBObject query, Class<T> entityClass, SessionInfo sessionInfo) {
-        return !getDatabase().query(getDbName(), getCollectionName(sessionInfo), entityClass, query).isEmpty();
+        return !getDatabase().query(sessionInfo.getManagerName(), getCollectionName(sessionInfo), entityClass, query).isEmpty();
     }
 
     public int markDeletedByQuery(DBObject query, SessionInfo sessionInfo) {
         DBObject updateFields = new BasicDBObject().append("deleted", new Date()).append("gsDeletedBy", sessionInfo.getCurrentUserId());
         DBObject setQuery = new BasicDBObject("$set", updateFields);
-        return getDatabase().updateMultiple(getDbName(), getCollectionName(sessionInfo), query, setQuery);
+        return getDatabase().updateMultiple(sessionInfo.getManagerName(), getCollectionName(sessionInfo), query, setQuery);
     }
 
     public <U> List<U> distinct(String field, DBObject query, SessionInfo sessionInfo) {
-        return getDatabase().distinct(getDbName(), getCollectionName(sessionInfo), field, query);
+        return getDatabase().distinct(sessionInfo.getManagerName(), getCollectionName(sessionInfo), field, query);
     }
 
 }

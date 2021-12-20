@@ -12,8 +12,8 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 public class PmsLogRepository extends Repository<PmsLog> {
 
-    public PmsLogRepository(Database database, String dbName) {
-        super(database, dbName);
+    public PmsLogRepository(Database database) {
+        super(database);
     }
 
     public List<PmsLog> query(PmsLog filter, SessionInfo sessionInfo) {
@@ -40,7 +40,7 @@ public class PmsLogRepository extends Repository<PmsLog> {
         sort.put("rowCreatedDate", -1);
         int limit = filter.includeAll ? Integer.MAX_VALUE : 100;
 
-        return getDatabase().query(getDbName(), getCollectionName(sessionInfo), PmsLog.class, query, sort, limit);
+        return getDatabase().query(sessionInfo.getManagerName(), getCollectionName(sessionInfo), PmsLog.class, query, sort, limit);
     }
 
 }

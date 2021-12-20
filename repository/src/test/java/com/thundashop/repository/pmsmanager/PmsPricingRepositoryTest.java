@@ -35,12 +35,12 @@ public class PmsPricingRepositoryTest extends TestCommon {
     @BeforeAll
     static void setUp() {
         init();
-        repository = new PmsPricingRepository(database, dbName, PmsPricing.class.getName());
+        repository = new PmsPricingRepository(database, PmsPricing.class.getName());
     }
 
     @BeforeEach
     void beforeEach() {
-        sessionInfo = buildSessionInfo();
+        sessionInfo = buildSessionInfo(dbName);
     }
 
     @AfterEach

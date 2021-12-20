@@ -30,7 +30,7 @@ class ConferenceDataRepositoryTest extends TestCommon {
     @BeforeAll
     static void setUp() {
         init();
-        conferenceDataRepository = new ConferenceDataRepository(database, dbName, ConferenceData.class.getName());
+        conferenceDataRepository = new ConferenceDataRepository(database, ConferenceData.class.getName());
     }
 
     @BeforeEach
@@ -39,6 +39,7 @@ class ConferenceDataRepositoryTest extends TestCommon {
                 .setStoreId(UUID.randomUUID().toString())
                 .setCurrentUserId("testUserId")
                 .setLanguage("en")
+                .setManagerName(dbName)
                 .build();
     }
 

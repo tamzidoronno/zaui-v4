@@ -598,12 +598,14 @@ public class ManagerSubBase {
                 .setStoreId(storeId)
                 .setCurrentUserId(getCurrentUserId())
                 .setLanguage(getLanguage())
+                .setManagerName(credentials.manangerName)
                 .build();
     }
 
     public SessionInfo getStoreIdInfo() {
         return SessionInfo.builder()
                 .setStoreId(storeId)
+                .setManagerName(credentials.manangerName)
                 .build();
     }
 }

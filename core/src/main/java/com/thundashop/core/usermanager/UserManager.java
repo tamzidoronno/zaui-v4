@@ -608,7 +608,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                 toReset = user;
             }
             
-            if (user.cellPhone != null && user.cellPhone.equals(email)) {
+            if (user.cellPhone != null && user.cellPhone.equalsIgnoreCase(email)) {
                 toReset = user;
             }
         }
@@ -1050,7 +1050,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     private User getUserByEmail(String emailAddress) throws ErrorException {
         List<User> users = getUserStoreCollection(storeId).getAllUsersNotFinalized();
         for (User user : users) {
-            if (user.emailAddress != null && user.emailAddress.equals(emailAddress) && emailAddress.contains("@") ) {
+            if (user.emailAddress != null && user.emailAddress.equalsIgnoreCase(emailAddress) && emailAddress.contains("@") ) {
                 finalizeUser(user);
                 return user;
             }
@@ -1986,7 +1986,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         if(field.equals("emailAddress") && doForceUniqueEmails()) {
             for(User user : getAllUsers()) {
-                if(user.emailAddress.equals(value)) {
+                if(user.emailAddress.equalsIgnoreCase(value)) {
                     return false;
                 }
             }

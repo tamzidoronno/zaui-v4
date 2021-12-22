@@ -629,11 +629,12 @@ class CartManager extends \SystemApplication implements \Application {
                 }
             }
 
+            $total = $this->getApi()->getOrderManager()->getTotalAmount($order);
             if ($payment) {
                 $payment->order = $order;
                 if ($payment->order) {
                     $payment->initPaymentMethod();
-                    if(method_exists($payment, "simplePayment")) {
+                    if(method_exists($payment, "simplePayment") && $total >= 1) {
                         $payment->simplePayment();
                     } else {
                         echo "<script>window.location.href='?page=payment_success'</script>";

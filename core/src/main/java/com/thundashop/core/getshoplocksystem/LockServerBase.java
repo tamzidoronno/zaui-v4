@@ -113,7 +113,6 @@ public abstract class LockServerBase extends DataCommon {
         
         DefaultHttpClient client = new DefaultHttpClient(my_httpParams);
         try {
-            logger.info("sid-{} username: {} loginUrl: {}", storeId, username, loginUrl);
             client = wrapClient(client);
             HttpResponse httpResponse;
 
@@ -125,8 +124,13 @@ public abstract class LockServerBase extends DataCommon {
             request.addHeader("Authorization", "Basic " + encoding);
             httpResponse = client.execute(request);
 
-            Integer statusCode = httpResponse.getStatusLine().getStatusCode();
-            logger.info("sid-{} response status code: {}", storeId, statusCode);
+            int statusCode = httpResponse.getStatusLine().getStatusCode();
+
+            if (statusCode != 200) {
+                logger.error("sid-{} response status code: {} , username: {} , loginUrl: {}",
+                        storeId, statusCode, username, loginUrl);
+            }
+
             if(statusCode == 401) {
                 return "401";
             }

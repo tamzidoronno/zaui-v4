@@ -1,15 +1,15 @@
 <?
 /* @var $this ns_3e2bc00a_4d7c_44f4_a1ea_4b1b953d8c01\PmsBookingGroupRoomView */
-$room = $this->getPmsBookingRoom();
-$pmsBooking = $this->getPmsBooking();
-$extraOrders = $this->getApi()->getPmsManager()->getExtraOrderIds($this->getSelectedMultilevelDomainName(), $pmsBooking->id);
-
-$summary = $this->getApi()->getPmsManager()->getSummary($this->getSelectedMultilevelDomainName(), $pmsBooking->id, $room->pmsBookingRoomId);
-$summaryWithoutAccrued = $this->getApi()->getPmsManager()->getSummaryWithoutAccrued($this->getSelectedMultilevelDomainName(), $pmsBooking->id, $room->pmsBookingRoomId);
+$booking = $this->getApi()->getPmsManager()->getBookingFromRoom($this->getSelectedMultilevelDomainName(), $_POST['data']['id']);
+$allOrderIds = $this->getApi()->getOrderManager()->getOrderIdsOfconference($booking->conferenceId);
+//"autoCreatedOrderForConferenceId"
+//
+//$summary = $this->getApi()->getPmsManager()->getSummary($this->getSelectedMultilevelDomainName(), $pmsBooking->id, $room->pmsBookingRoomId);
+//$summaryWithoutAccrued = $this->getApi()->getPmsManager()->getSummaryWithoutAccrued($this->getSelectedMultilevelDomainName(), $pmsBooking->id, $room->pmsBookingRoomId);
 
 $showCredittedHistory = (isset($_SESSION['pmsshowcredithistory']) && $_SESSION['pmsshowcredithistory']) ? true : false;
-$showAllOrders = (isset($_SESSION['showallorders']) && $_SESSION['showallorders']) ? true : false;
-$showAccrued = (isset($_SESSION['showAccrued']) && $_SESSION['showAccrued']) ? true : false;
+$showAllOrders = true;
+$showAccrued = true;
 
 
 $orderMissing = 0;
@@ -17,73 +17,25 @@ $paymentMissing = 0;
 
 $orders = array();
 
-$allOrderIds = $pmsBooking->orderIds;
-
-
-if ($extraOrders) {
-    $allOrderIds = array_merge($allOrderIds, $extraOrders);
-}
-
-if(!$showAllOrders)
-    $allOrderIds = $this->filterOrderIds($allOrderIds);
 
 $unpaidOrders = false;
 
 foreach ($allOrderIds as $orderId) {
-    
-    $orderIsForRoom = $this->getApi()->getPmsManager()->doesOrderCorrolateToRoom($this->getSelectedMultilevelDomainName(),$room->pmsBookingRoomId, $orderId);
-    
-    if(!$orderIsForRoom && !$showAllOrders) {
-        continue;
-    }
-    
+
     $order = $this->getApi()->getOrderManager()->getOrder($orderId);
     
     if ($order->status != 7) {
         $unpaidOrders = true;
     }
-    
     $orders[] = $order;
 }
 
-$totalUnpaid = 0;
-$totalForRoom = 0;
 
-$distinctDates = array();
-$needToCreateOrdersFor = 0;
 
-foreach ($summaryWithoutAccrued->rows as $row) {
-    $priceInOrders = $row->createdOrdersFor * $row->countFromOrders;
-    
-    $priceInBooking = $row->priceInBooking * $row->countFromBooking;
-    $missingInOrders = ($row->priceInBooking * $row->countFromBooking) - ($row->createdOrdersFor * $row->countFromOrders);
-    
-    $totalUnpaid += ($priceInBooking - $priceInOrders);
-    $needToCreateOrdersFor += $missingInOrders;
-    $totalForRoom += $priceInBooking;
-    
-    if (!in_array($row->date, $distinctDates)) {
-        $distinctDates[] = $row->date;
-    }
-}
-
-$missingInOrders = round($missingInOrders, 2);
-$needToCreateOrdersFor = round($needToCreateOrdersFor, 2);
-$totalForRoom = round($totalForRoom, 2);
-$payAfterStay = $room->createOrdersOnZReport && !($needToCreateOrdersFor <= 1 && $needToCreateOrdersFor >= -1);
 ?>
 
-<div class='insideheader'>SUMMARY <? echo $room->guests[0]->name; ?></div>
+<div class='insideheader'>SUMMARY <? ?></div>
 <div style='font-size: 16px;'>
-    <? 
-    echo "<div style='color: #8ac136; padding: 5px; padding-left: 10px; '><i class='fa fa-info-circle'></i> ".$this->__f("The total amount for this room is")." ".$totalForRoom."</div>";
-        
-    if ($payAfterStay) {
-        echo "<div style='border: solid 1px #ff0000; padding: 20px; color: red; margin-top: 20px;'>";
-            echo "<i class='fa fa-warning'></i> ".$this->__f("This room has not yet been paid as pay after stay has been activated.");
-        echo "</div>";
-    }
-    ?>
 </div>
 
 <br/>
@@ -103,7 +55,6 @@ $payAfterStay = $room->createOrdersOnZReport && !($needToCreateOrdersFor <= 1 &&
         <? echo $this->__f("Payments"); ?>
         <div class="gs_shop_small_icon" style='font-size: 13px; margin-left: 3px;' onclick="$('.detailedorderoverviewsummary').toggle()"><? echo $this->__f("Toggle details"); ?></div>
         <div class="gs_shop_small_icon" style='font-size: 13px; margin-left: 3px;' gsclick="toggleCreditHistory"><? echo $showCredittedHistory ? $this->__f("Hide credit history") : $this->__f("Show credit history"); ?></div> 
-        <div class="gs_shop_small_icon" style='font-size: 13px;' gsclick="toggleAllOrders"><? echo  $showAllOrders ? $this->__f("Hide all orders for group") : $this->__f("Show all orders for group") . " (" . sizeof($pmsBooking->orderIds) . ")"; ?></div> 
         <div class="gs_shop_small_icon" style='font-size: 13px; margin-right: 3px;' gsclick="toggleAccrued"><? echo  $showAccrued ? $this->__f("Hide accrued ($accruedCunter)") : $this->__f("Show accrued ($accruedCunter)"); ?></div>
     </div>
     
@@ -159,12 +110,7 @@ $payAfterStay = $room->createOrdersOnZReport && !($needToCreateOrdersFor <= 1 &&
                         <?
                         
                         $orderCanBeFixed = $order->closed && !($order->payment != null && strstr($order->payment->paymentType, "ns_60f2f24e_ad41_4054_ba65_3a8a02ce0190") > -1);
-                        
-                        if ($order->closed && $orderCanBeFixed) {
-                        ?>
-                            <div class="fa fa-magic showPreviewFixOrder bookinghighlightcolor" style='cursor:pointer;' bookingid="<? echo $pmsBooking->id; ?>" orderid="<? echo $order->id; ?>" title='<? echo $this->__f("Update order details"); ?>'></div>
-                        <?
-                        }
+
                         ?>
                         <div class="ordermenu">
 

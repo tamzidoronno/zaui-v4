@@ -79,7 +79,7 @@ $payAfterStay = $room->createOrdersOnZReport && !($needToCreateOrdersFor <= 1 &&
     echo "<div style='color: #8ac136; padding: 5px; padding-left: 10px; '><i class='fa fa-info-circle'></i> ".$this->__f("The total amount for this room is")." ".$totalForRoom."</div>";
         
     if ($payAfterStay) {
-        echo "<div style='border: solid 1px red; padding: 20px; color: red; margin-top: 20px;'>";
+        echo "<div style='border: solid 1px #ff0000; padding: 20px; color: red; margin-top: 20px;'>";
             echo "<i class='fa fa-warning'></i> ".$this->__f("This room has not yet been paid as pay after stay has been activated.");
         echo "</div>";
     }
@@ -104,14 +104,7 @@ $payAfterStay = $room->createOrdersOnZReport && !($needToCreateOrdersFor <= 1 &&
         <div class="gs_shop_small_icon" style='font-size: 13px; margin-left: 3px;' onclick="$('.detailedorderoverviewsummary').toggle()"><? echo $this->__f("Toggle details"); ?></div>
         <div class="gs_shop_small_icon" style='font-size: 13px; margin-left: 3px;' gsclick="toggleCreditHistory"><? echo $showCredittedHistory ? $this->__f("Hide credit history") : $this->__f("Show credit history"); ?></div> 
         <div class="gs_shop_small_icon" style='font-size: 13px;' gsclick="toggleAllOrders"><? echo  $showAllOrders ? $this->__f("Hide all orders for group") : $this->__f("Show all orders for group") . " (" . sizeof($pmsBooking->orderIds) . ")"; ?></div> 
-        <?php
-        $user = $this->getApi()->getUserManager()->getLoggedOnUser();
-        if(stristr($user->emailAddress, "@getshop.com")) {
-            ?>
-            <div class="gs_shop_small_icon" style='font-size: 13px; margin-right: 3px;' gsclick="toggleAccrued"><? echo  $showAccrued ? $this->__f("Hide accrued ($accruedCunter)") : $this->__f("Show accrued ($accruedCunter)"); ?></div> 
-            <?php
-        }
-        ?>
+        <div class="gs_shop_small_icon" style='font-size: 13px; margin-right: 3px;' gsclick="toggleAccrued"><? echo  $showAccrued ? $this->__f("Hide accrued ($accruedCunter)") : $this->__f("Show accrued ($accruedCunter)"); ?></div>
     </div>
     
    <?

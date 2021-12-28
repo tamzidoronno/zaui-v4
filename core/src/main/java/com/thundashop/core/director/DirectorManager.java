@@ -132,12 +132,12 @@ public class DirectorManager extends ManagerBase implements IDirectorManager {
         
         usage.domesticSmses = smses.stream()
                 .filter(o -> o.prefix.trim().equals(defaultPrefix))
-                .mapToInt(o -> (int)Math.ceil((double)o.message.length() / (double)164))
+                .mapToInt(o -> (int)Math.ceil((double)o.message.length() / (double)130))
                 .sum();
         
         usage.internationalSmses = smses.stream()
                 .filter(o -> !o.prefix.trim().equals(defaultPrefix))
-                .mapToInt(o -> (int)Math.ceil((double)o.message.length() / (double)164))
+                .mapToInt(o -> (int)Math.ceil((double)o.message.length() / (double)130))
                 .sum();
         
         usage.ehfs = orderManager.getEhfSentLog(start, end).size();

@@ -90,8 +90,6 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
     public function addIncrementOrderIdToBooking() {
         $order = $this->getApi()->getOrderManager()->getOrderByincrementOrderId($_POST['data']['orderid']);
         $booking = $this->getPmsBooking();
-        echo "adding order to booking " .$booking->id;
-        echo $order->id;
         $booking->orderIds[] = $order->id;
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
     }

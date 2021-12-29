@@ -45,9 +45,6 @@ public class PmsBookingSimpleFilter {
                         i++;
                     }
                 }
-                if (result.size()==0 && !isEmpty(booking.conferenceId)){
-
-                }
             }
         }
         if(result.size() > 200) {

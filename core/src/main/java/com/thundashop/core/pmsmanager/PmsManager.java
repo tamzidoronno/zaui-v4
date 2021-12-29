@@ -9002,12 +9002,13 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     for (String orderId : orderIdsOfConference){
                         if (filter.searchWord.equals(orderId)){
                             result.add(booking);
+                            filter.searchWord = booking.id;
                             continue;
                         }else {
                             Order order = orderManager.getOrder(orderId);
-                            if (("" +order.incrementOrderId).equals(filter.searchWord)){
+                            if (filter.searchWord.equals(String.valueOf(order.incrementOrderId))){
                                 result.add(booking);
-                                filter.bookingId = booking.id;
+                                filter.searchWord = booking.id;
                                 continue;
                             }
                         }

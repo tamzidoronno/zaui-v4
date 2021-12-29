@@ -387,12 +387,15 @@ app.PmsPaymentProcess = {
     
     createOrder: function() {
         var app = $(this).closest('.app');
-        
+        var conferenceOfBooking = null;
         var rooms = [];
-        
+
         $(app).find('.room').each(function() {
             var roomId = $(this).attr('roomid');
             var conferenceId = $(this).attr('conferenceId');
+            if (conferenceId != null){
+                conferenceOfBooking = conferenceId;
+            }
             var items = [];
             
             $(this).find('.cartitemline').each(function() {
@@ -427,7 +430,8 @@ app.PmsPaymentProcess = {
         });
         
         var data = {
-            rooms : rooms
+            rooms : rooms,
+            conference : conferenceOfBooking
         };
         
         var event = thundashop.Ajax.createEvent(null, "createOrder", this, data);

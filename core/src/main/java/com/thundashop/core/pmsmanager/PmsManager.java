@@ -85,12 +85,15 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -225,6 +228,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Autowired
     private PmsLogManager pmsLogManager;
+
+    @Autowired
+    @Qualifier("pingServerExecutor")
+    private TaskExecutor pingServerExecutor;
     
     
     @Autowired
@@ -10225,30 +10232,33 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         HashMap<String, PmsBooking> bookingsToSave = new HashMap();
         HashMap<String, Order> ordersToSave = new HashMap();
         
-        
         rows.stream()
             .forEach(o -> {
-            if (o.roomId == null || o.roomId.isEmpty()) {
+            if ( StringUtils.isEmpty(o.conferenceId) && StringUtils.isEmpty(o.roomId) ) {
                     return;
             }
-
             PmsBooking booking = getBookingFromRoomSecure(o.roomId);
 
-            if (booking == null) {
+            if (booking == null && o.conferenceId == null) {
                     return;
             }
-
-            if(booking.invoiceNote != null && !booking.invoiceNote.isEmpty()) {
-                order.invoiceNote = booking.invoiceNote;
-                ordersToSave.put(order.id, order);
+            if (booking != null ){
+                if(!StringUtils.isEmpty(booking.invoiceNote) && !StringUtils.isEmpty(booking.invoiceNote)) {
+                    order.invoiceNote = booking.invoiceNote;
+                    ordersToSave.put(order.id, order);
+                }
+                if (!booking.orderIds.contains(order.id)) {
+                    booking.orderIds.add(order.id);
+                    bookingsToSave.put(booking.id, booking);
+                }
             }
-            if (!booking.orderIds.contains(order.id)) {
-                booking.orderIds.add(order.id);
-                bookingsToSave.put(booking.id, booking);
-            }
-
             if (!paymentMethodId.equals("60f2f24e-ad41-4054-ba65-3a8a02ce0190")) {
-                removeAccrudePayments(booking, o.roomId);
+                if (booking != null ){
+                    removeAccrudePayments(booking, o.roomId);
+                }
+                if (o.conferenceId != null){
+                    removeAccrudePaymentsForConference(o.conferenceId, o.items);
+                }
             }
         });
         
@@ -10397,6 +10407,33 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         for(PmsBooking book : bookingsToSave.values()) {
             saveBooking(book);
+        }
+    }
+    private void removeAccrudePaymentsForConference(String conferenceId,  List<PmsOrderCreateRowItemLine> items) {
+        List<String> cartProductIds = items.stream().map(i -> i.createOrderOnProductId).collect(Collectors.toList());
+        List<String> accruedOrders = orderManager.getOrderIdsOfconference(conferenceId)
+                    .stream()
+                    .map(orderManager::getOrderDirect)
+                    .filter(Order::isAccruedPayment)
+                    .map(o -> o.id)
+                    .collect(Collectors.toList());
+
+        List<String>  filteredAccruedOrders = orderManager.filterOrdersIsCredittedAndPaidFor(accruedOrders);
+
+        for (String orderId : filteredAccruedOrders) {
+            Order order = orderManager.getOrderDirect(orderId);
+            boolean orderHasOrderLinesNotConnectedToBooking = order.getCartItems().stream()
+                    .filter(o -> !cartProductIds.contains(o.getProduct().id))
+                    .count() > 0;
+
+            if (orderHasOrderLinesNotConnectedToBooking) {
+                continue;
+            }
+            if (order.closed) {
+                orderManager.creditOrder(order.id);
+            } else {
+                orderManager.deleteOrder(order.id);;
+            }
         }
     }
 
@@ -11445,5 +11482,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             
         }
     }
-    
+
+    public void submitPingServerThread(PingServerThread task) {
+        pingServerExecutor.execute(task);
+    }
 }

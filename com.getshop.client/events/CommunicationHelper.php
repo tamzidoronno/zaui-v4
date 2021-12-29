@@ -58,8 +58,9 @@ class CommunicationHelper {
         $this->socket = @fsockopen($this->host, $this->port, $erstr, $errno, 220);
         if (!$this->socket) {
             header("HTTP/1.0 500 Internal server error");
-            echo "The system are being updated / upgraded, please retry in about 10 seconds.";
-            echo "<script>setTimeout(function() { document.location = document.location; }, 10000)</script>";
+            include_once('../template/maintenance-mode.html');
+            //echo "The system are being updated / upgraded, please retry in about 10 seconds.";
+            //echo "<script>setTimeout(function() { document.location = document.location; }, 10000)</script>";
             exit(0);
         }
         $this->connected = true;

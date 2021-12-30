@@ -5,15 +5,13 @@ import com.thundashop.core.databasemanager.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.net.UnknownHostException;
-
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 @Configuration
 public class DatabaseConfig {
 
     @Bean(name = "localMongo")
-    public MongoClientProvider localMongoClientProvider() throws UnknownHostException {
+    public MongoClientProvider localMongoClientProvider() {
         return MongoClientProviderImpl.builder()
                 .setHost("localhost")
                 .setPort(27018)
@@ -21,7 +19,7 @@ public class DatabaseConfig {
     }
 
     @Bean(name = "supportMongo")
-    public MongoClientProvider supportMongoClientProvider() throws UnknownHostException {
+    public MongoClientProvider supportMongoClientProvider() {
         return MongoClientProviderImpl.builder()
                 .setHost("192.168.100.1")
                 .setPort(27017)
@@ -47,7 +45,7 @@ public class DatabaseConfig {
     }
 
     @Bean(name = "storeIdDb")
-    public Database3 storeIdDd(FrameworkConfig frameworkConfig) throws UnknownHostException {
+    public Database3 storeIdDd(FrameworkConfig frameworkConfig) {
         MongoClientProvider provider = isNotEmpty(frameworkConfig.getStoreCreationIP()) && frameworkConfig.productionMode
                 ? MongoClientProviderImpl.builder().setHost(frameworkConfig.getStoreCreationIP()).setPort(27018).build()
                 : localMongoClientProvider();

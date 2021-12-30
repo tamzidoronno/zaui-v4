@@ -33,6 +33,10 @@ dependencies {
 
     testImplementation group: 'org.springframework', name: 'spring-test', version: '4.2.1.RELEASE'
 
+    // mongo
+    implementation group: 'org.mongodb', name: 'mongo-java-driver', version: '2.13.2'
+    implementation group: 'org.mongodb.morphia', name: 'morphia', version: '1.0.1'
+
 }
 
 String mavenArtifactId = name

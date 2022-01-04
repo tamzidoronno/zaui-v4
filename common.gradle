@@ -20,47 +20,47 @@ repositories {
 
 dependencies {
     // Adding dependencies here will add the dependencies to each subproject.
-    testImplementation group: 'junit', name: 'junit', version: '4.10'
+    testImplementation 'junit:junit:4.10'
 
     // spring
-    implementation group: 'org.springframework', name: 'spring-core', version: '4.2.1.RELEASE'
-    implementation group: 'org.springframework', name: 'spring-context', version: '4.2.1.RELEASE'
-    implementation group: 'org.springframework', name: 'spring-beans', version: '4.2.1.RELEASE'
-    implementation group: 'org.springframework', name: 'spring-aop', version: '4.2.1.RELEASE'
-    implementation group: 'org.springframework', name: 'spring-web', version: '4.2.9.RELEASE'
-    implementation group: 'org.springframework', name: 'spring-expression', version: '4.2.1.RELEASE'
-    implementation group: 'org.springframework.hateoas', name: 'spring-hateoas', version: '0.24.0.RELEASE'
+    implementation 'org.springframework:spring-core:4.2.1.RELEASE'
+    implementation 'org.springframework:spring-context:4.2.1.RELEASE'
+    implementation 'org.springframework:spring-beans:4.2.1.RELEASE'
+    implementation 'org.springframework:spring-aop:4.2.1.RELEASE'
+    implementation 'org.springframework:spring-web:4.2.9.RELEASE'
+    implementation 'org.springframework:spring-expression:4.2.1.RELEASE'
+    implementation 'org.springframework.hateoas:spring-hateoas:0.24.0.RELEASE'
 
-    testImplementation group: 'org.springframework', name: 'spring-test', version: '4.2.1.RELEASE'
+    testImplementation 'org.springframework:spring-test:4.2.1.RELEASE'
 
     // mongo
-    implementation group: 'org.mongodb', name: 'mongo-java-driver', version: '2.13.2'
-    implementation group: 'org.mongodb.morphia', name: 'morphia', version: '1.0.1'
+    implementation 'org.mongodb:mongo-java-driver:2.13.2'
+    implementation 'org.mongodb.morphia:morphia:1.0.1'
 
     // apache commons
-    implementation group: 'commons-codec', name: 'commons-codec', version: '1.10'
-    implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.1'
-    implementation group: 'commons-discovery', name: 'commons-discovery', version: '0.5'
-    implementation group: 'commons-httpclient', name: 'commons-httpclient', version: '2.0.2'
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
-    implementation group: 'commons-net', name: 'commons-net', version: '2.0'
+    implementation 'commons-codec:commons-codec:1.10'
+    implementation 'org.apache.commons:commons-collections4:4.1'
+    implementation 'commons-discovery:commons-discovery:0.5'
+    implementation 'commons-httpclient:commons-httpclient:2.0.2'
+    implementation 'org.apache.commons:commons-lang3:3.4'
+    implementation 'commons-net:commons-net:2.0'
 
     // google
-    implementation group: 'com.google.api-client', name: 'google-api-client', version: '1.25.0'
-    implementation group: 'com.google.api-client', name: 'google-api-client-android', version: '1.25.0'
-    implementation group: 'com.google.api-client', name: 'google-api-client-appengine', version: '1.25.0'
-    implementation group: 'com.google.api-client', name: 'google-api-client-gson', version: '1.25.0'
-    implementation group: 'com.google.api-client', name: 'google-api-client-java6', version: '1.25.0'
-    implementation group: 'com.google.api-client', name: 'google-api-client-servlet', version: '1.25.0'
-    implementation group: 'com.google.apis', name: 'google-api-services-gmail', version: 'v1-rev98-1.25.0'
-    implementation group: 'com.google.apis', name: 'google-api-services-youtube', version: 'v3-rev117-1.19.0'
-    implementation group: 'com.google.oauth-client', name: 'google-oauth-client', version: '1.25.0'
-    implementation group: 'com.google.oauth-client', name: 'google-oauth-client-appengine', version: '1.25.0'
-    implementation group: 'com.google.oauth-client', name: 'google-oauth-client-jetty', version: '1.25.0'
-    implementation group: 'com.google.code.gson', name: 'gson', version: '2.5'
-    implementation group: 'com.google.guava', name: 'guava', version: '18.0'
+    implementation 'com.google.api-client:google-api-client:1.25.0'
+    implementation 'com.google.api-client:google-api-client-android:1.25.0'
+    implementation 'com.google.api-client:google-api-client-appengine:1.25.0'
+    implementation 'com.google.api-client:google-api-client-gson:1.25.0'
+    implementation 'com.google.api-client:google-api-client-java6:1.25.0'
+    implementation 'com.google.api-client:google-api-client-servlet:1.25.0'
+    implementation 'com.google.apis:google-api-services-gmail:v1-rev98-1.25.0'
+    implementation 'com.google.apis:google-api-services-youtube:v3-rev117-1.19.0'
+    implementation 'com.google.oauth-client:google-oauth-client:1.25.0'
+    implementation 'com.google.oauth-client:google-oauth-client-appengine:1.25.0'
+    implementation 'com.google.oauth-client:google-oauth-client-jetty:1.25.0'
+    implementation 'com.google.code.gson:gson:2.5'
+    implementation 'com.google.guava:guava:18.0'
 
-    implementation group: 'com.warrenstrange', name: 'googleauth', version: '1.1.5'
+    implementation 'com.warrenstrange:googleauth:1.1.5'
 
 }
 

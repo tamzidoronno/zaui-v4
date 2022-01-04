@@ -391,7 +391,7 @@ public class PosManager extends ManagerBase implements IPosManager {
                     .collect(Collectors.toList());
 
             removeOrdersPrePaidByOTAAndNotMarkedAsPaid(orderIds);
-            report.invoicesWithNewPayments = getInvoicePayments();
+            report.invoicesWithNewPayments = getInvoicePayments(fromWhenToTakeIntoAccount);
         } else {
             orderIds = orderManager.getOrdersByFilter(getOrderFilter())
                     .stream()
@@ -424,8 +424,12 @@ public class PosManager extends ManagerBase implements IPosManager {
         });
     }
 
-    public List<String> getInvoicePayments() {
+    /** Since invoice payments are getting processed individually here only for the case when isConnectedtoCentral()
+     *  in the moment when we connect an old customer to central  not all the transactions from history should be processed because some of them
+     *  are a part of finished, closed, marked-as-paid orders.**/
+    public List<String> getInvoicePayments(Date fromWhenToTakeIntoAccount) {
         return orderManager.getAllOrders().stream()
+                .filter(o ->  o.markedPaidDate == null || o.markedPaidDate.after(fromWhenToTakeIntoAccount))
                 .filter(o -> o.isInvoice() && o.hasNewOrderTransactions())
                 .map(o -> o.id)
                 .collect(Collectors.toList());
@@ -998,6 +1002,8 @@ public class PosManager extends ManagerBase implements IPosManager {
             System.out.println("password is correct.... find and delete the zreport");
             ZReport report = zReports.remove(zreportId);
             removeZReportParametersFromCorrelatedOrders(report.orderIds);
+            removeZReportParametersFromRegisteredPaymentsOnInvoices(report.invoicesWithNewPayments, report.id);
+
             if (report != null) {
                 System.out.println("found the report here... deleting it");
                 deleteObject(report);
@@ -1008,6 +1014,18 @@ public class PosManager extends ManagerBase implements IPosManager {
 
     private void removeZReportParametersFromCorrelatedOrders(List<String> orderIds) {
         orderIds.forEach(oId -> orderManager.removeZReportDatafromOrder(oId));
+    }
+
+    private void removeZReportParametersFromRegisteredPaymentsOnInvoices(List<String> invoicesWithNewPaymentsOrderIds, String reportId) {
+        invoicesWithNewPaymentsOrderIds.forEach(orderId -> {
+                    Order order = orderManager.getOrder(orderId);
+                    order.orderTransactions.forEach(t -> {
+                        if (t.addedToZreport.equals(reportId)){
+                            t.addedToZreport = "";
+                        }
+                    });
+                    orderManager.saveOrder(order);
+            });
     }
 
     /**

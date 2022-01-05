@@ -13,6 +13,8 @@ import com.thundashop.core.common.ManagerBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -31,6 +33,10 @@ public class WebManager extends ManagerBase implements IWebManager {
     private HashMap<String, String> latestResponseHeader = new HashMap<>();
 
     @Autowired
+    @Qualifier("webManagerExecutor")
+    private TaskExecutor webManagerExecutor;
+
+    @Autowired
     private OkHttpService okHttpService;
     
     
@@ -44,7 +50,7 @@ public class WebManager extends ManagerBase implements IWebManager {
         
         if (!response.isSuccessful()) {
             logger.error("Unsuccessful GET request, response: {}", response);
-            throw new RuntimeException(String.format("Unsuccessful GET request url: [%s] , code: [%s]", 
+            throw new RuntimeException(String.format("Unsuccessful GET request url: [%s] , code: [%s]",
                     url, response.statusCode()));
         }
         
@@ -63,9 +69,7 @@ public class WebManager extends ManagerBase implements IWebManager {
     
     public void htmlPostThreaded(String url, String data, boolean jsonPost, String encoding) throws Exception {
         WebManagerPostThread thread = new WebManagerPostThread(url, data, jsonPost, encoding, "", "Basic", true, "POST", new HashMap());
-        Thread td = new Thread(thread);
-        td.setName("Posting data to " + url);
-        td.start();
+        webManagerExecutor.execute(thread);
     }       
     
     @Override

@@ -66,6 +66,16 @@ public class AsyncConfig extends AsyncConfigurerSupport {
         return executor;
     }
 
+    @Bean(name = "webManagerExecutor")
+    public TaskExecutor webManagerExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(1);
+        executor.setMaxPoolSize(processors);
+        executor.setThreadNamePrefix("web-manager-");
+        executor.initialize();
+        return executor;
+    }
+
     @Override
     public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
         return new AsyncExceptionHandler();

@@ -106,7 +106,7 @@ class PmsPaymentProcess extends \MarketingApplication implements \Application {
      * @return \core_pmsmanager_PmsBooking[]
      */
     public function getSelectedBookings() {
-        
+
         if (!isset($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_roomids']) || !$_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_roomids'] || !is_array($_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_roomids'])) {
             return array();
         }
@@ -162,6 +162,10 @@ class PmsPaymentProcess extends \MarketingApplication implements \Application {
     
     public function createOrder() {
         $userId = $this->getUserIdToCreateOrderOn();
+        if (($userId == false && $_POST['data']['conference'] != null) ) {
+            $pmsConference = $this->getApi()->getPmsConferenceManager()->getConference($_POST['data']['conference']);
+            $userId = $pmsConference->forUser;
+        }
         $orderId = $this->getApi()->getPmsManager()->createOrderFromCheckout($this->getSelectedMultilevelDomainName(), $_POST['data']['rooms'], $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_paymentmethod'], $userId);
         $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_orderid'] = $orderId;
         $_SESSION['ns_af54ced1_4e2d_444f_b733_897c1542b5a8_state'] = "paymentoverview";
@@ -292,7 +296,7 @@ class PmsPaymentProcess extends \MarketingApplication implements \Application {
 
     public function getDistinctUserIds() {
         $distinctUserIds = array();
-        
+
         foreach ($this->getSelectedBookings() as $booking) {
             if (!in_array($booking->userId, $distinctUserIds)) {
                 $distinctUserIds[] = $booking->userId;

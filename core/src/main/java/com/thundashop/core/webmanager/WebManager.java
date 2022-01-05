@@ -20,6 +20,10 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 
 import static com.thundashop.core.utils.Constants.THREE_MINUTES_IN_MILLISECONDS;
@@ -36,7 +40,10 @@ public class WebManager extends ManagerBase implements IWebManager {
     private final String USER_AGENT = "Mozilla/5.0";
     private HashMap<String, String> latestResponseHeader = new HashMap();
     private String latestErrorMessage;
-    
+
+    @Autowired
+    @Qualifier("webManagerExecutor")
+    private TaskExecutor webManagerExecutor;
     
     @Override
     public String htmlGet(String url) throws Exception {
@@ -71,9 +78,7 @@ public class WebManager extends ManagerBase implements IWebManager {
     
     public void htmlPostThreaded(String url, String data, boolean jsonPost, String encoding) throws Exception {
         WebManagerPostThread thread = new WebManagerPostThread(url, data, jsonPost, encoding, "", "Basic", true, "POST", new HashMap());
-        Thread td = new Thread(thread);
-        td.setName("Posting data to " + url);
-        td.start();
+        webManagerExecutor.execute(thread);
     }       
     
     @Override

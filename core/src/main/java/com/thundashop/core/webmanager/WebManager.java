@@ -10,21 +10,19 @@ import com.getshop.scope.GetShopSession;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.thundashop.core.common.ManagerBase;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.stereotype.Component;
+
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  *
@@ -36,15 +34,19 @@ import org.springframework.stereotype.Component;
 public class WebManager extends ManagerBase implements IWebManager {
     
     private static final Logger logger = LoggerFactory.getLogger(WebManager.class);
-    
+
     private final String USER_AGENT = "Mozilla/5.0";
     private HashMap<String, String> latestResponseHeader = new HashMap();
     private String latestErrorMessage;
 
     @Autowired
+    @Qualifier("webManagerExecutor")
+    private TaskExecutor webManagerExecutor;
+
+    @Autowired
     private OkHttpService okHttpService;
-    
-    
+
+
     @Override
     public String htmlGet(String url) {
         OkHttpRequest request = OkHttpRequest.builder()
@@ -55,7 +57,7 @@ public class WebManager extends ManagerBase implements IWebManager {
         
         if (!response.isSuccessful()) {
             logger.error("Unsuccessful GET request, response: {}", response);
-            throw new RuntimeException(String.format("Unsuccessful GET request url: [%s] , code: [%s]", 
+            throw new RuntimeException(String.format("Unsuccessful GET request url: [%s] , code: [%s]",
                     url, response.statusCode()));
         }
         
@@ -74,9 +76,7 @@ public class WebManager extends ManagerBase implements IWebManager {
     
     public void htmlPostThreaded(String url, String data, boolean jsonPost, String encoding) throws Exception {
         WebManagerPostThread thread = new WebManagerPostThread(url, data, jsonPost, encoding, "", "Basic", true, "POST", new HashMap());
-        Thread td = new Thread(thread);
-        td.setName("Posting data to " + url);
-        td.start();
+        webManagerExecutor.execute(thread);
     }       
     
     @Override

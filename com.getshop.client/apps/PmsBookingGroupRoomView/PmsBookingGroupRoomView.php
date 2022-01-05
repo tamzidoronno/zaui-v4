@@ -85,6 +85,14 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
             echo "no";
         }
     }
+
+
+    public function addIncrementOrderIdToBooking() {
+        $order = $this->getApi()->getOrderManager()->getOrderByincrementOrderId($_POST['data']['orderid']);
+        $booking = $this->getPmsBooking();
+        $booking->orderIds[] = $order->id;
+        $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
+    }
     
     public function addRoomToGroup() {
         $type = $_POST['data']['type'];

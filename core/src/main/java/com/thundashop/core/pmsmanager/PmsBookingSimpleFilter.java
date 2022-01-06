@@ -11,6 +11,8 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 public class PmsBookingSimpleFilter { 
  
     private final PmsManager manager;

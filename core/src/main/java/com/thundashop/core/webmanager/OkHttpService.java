@@ -1,6 +1,7 @@
 package com.thundashop.core.webmanager;
 
-import com.squareup.okhttp.*;
+import okhttp3.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -10,25 +11,44 @@ public class OkHttpService {
 
     private static final MediaType mediaType = MediaType.parse("application/json");
 
+    private final OkHttpClient okHttpClient;
+
+    @Autowired
+    public OkHttpService(OkHttpClient okHttpClient) {
+        this.okHttpClient = okHttpClient;
+    }
+
     public OkHttpResponse post(OkHttpRequest httpRequest) {
-        OkHttpClient client = httpRequest.getClient();
+        OkHttpClient client = httpRequest.getClient() != null ? httpRequest.getClient() : okHttpClient;
+        RequestBody requestBody = RequestBody.Companion.create(httpRequest.getPayload(), mediaType);
 
         Request request = new Request.Builder()
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Authorization", "Bearer " + httpRequest.getToken())
                 .url(httpRequest.getUrl())
-                .method("POST", RequestBody.create(mediaType, httpRequest.getPayload()))
+                .method("POST", requestBody)
                 .build();
 
-        try {
-            Response response = client.newCall(request).execute();
+        return execute(client, request);
+    }
 
-            // OkHttpResponse close the responseBody upon constructor calling.
-            return new OkHttpResponse(response);
+    public OkHttpResponse get(OkHttpRequest httpRequest) {
+        OkHttpClient client = httpRequest.getClient() != null ? httpRequest.getClient() : okHttpClient;
+
+        Request request = new Request.Builder()
+                .url(httpRequest.getUrl())
+                .get()
+                .build();
+
+        return execute(client, request);
+    }
+
+    private OkHttpResponse execute(OkHttpClient client, Request request) {
+        try (Response response = client.newCall(request).execute()) {
+            return new OkHttpResponse(response, response.body().string());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 
 }

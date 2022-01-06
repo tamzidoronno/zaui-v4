@@ -105,7 +105,6 @@ class PmsBookingRoomView extends \MarketingApplication implements \Application {
     public function addIncrementOrderIdToBooking() {
         $order = $this->getApi()->getOrderManager()->getOrderByincrementOrderId($_POST['data']['orderid']);
         $booking = $this->getPmsBooking();
-        echo $order->id;
         $booking->orderIds[] = $order->id;
         $this->getApi()->getPmsManager()->saveBooking($this->getSelectedMultilevelDomainName(), $booking);
     }

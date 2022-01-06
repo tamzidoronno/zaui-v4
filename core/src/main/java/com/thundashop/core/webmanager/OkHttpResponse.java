@@ -1,24 +1,16 @@
 package com.thundashop.core.webmanager;
 
-import com.squareup.okhttp.Response;
-import com.squareup.okhttp.ResponseBody;
 
-import java.io.IOException;
+import okhttp3.Response;
 
 public class OkHttpResponse {
 
     private final Response response;
     private final String body;
 
-    public OkHttpResponse(Response response) {
+    public OkHttpResponse(Response response, String body) {
         this.response = response;
-
-        // close responseBody for connection recycling
-        try (ResponseBody body = response.body()){
-            this.body = body.string();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        this.body = body;
     }
 
     public String getBody() {
@@ -33,4 +25,11 @@ public class OkHttpResponse {
         return response.isSuccessful();
     }
 
+    @Override
+    public String toString() {
+        return "OkHttpResponse{" +
+                "response=" + response +
+                ", responseBody='" + body + '\'' +
+                '}';
+    }
 }

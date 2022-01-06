@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.net.UnknownHostException;
-
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 @Configuration
@@ -18,11 +16,8 @@ public class DatabaseConfig {
     @Value("${db.localMongo.port}")
     private Integer localMongoPort;
 
-    @Bean(name = "localMongo")
-    public MongoClientProvider localMongoClientProvider() throws UnknownHostException {
-        // --> to test that properties are picking up. remove before merge
-        System.err.println(localMongoHost);
-        System.err.println(localMongoPort);
+    @Bean(name = "localMongo")    
+    public MongoClientProvider localMongoClientProvider() {
         return MongoClientProviderImpl.builder()
                 .setHost(localMongoHost)
                 .setPort(localMongoPort)
@@ -30,7 +25,7 @@ public class DatabaseConfig {
     }
 
     @Bean(name = "supportMongo")
-    public MongoClientProvider supportMongoClientProvider() throws UnknownHostException {
+    public MongoClientProvider supportMongoClientProvider() {
         return MongoClientProviderImpl.builder()
                 .setHost("192.168.100.1")
                 .setPort(27017)
@@ -56,7 +51,7 @@ public class DatabaseConfig {
     }
 
     @Bean(name = "storeIdDb")
-    public Database3 storeIdDd(FrameworkConfig frameworkConfig) throws UnknownHostException {
+    public Database3 storeIdDd(FrameworkConfig frameworkConfig) {
         MongoClientProvider provider = isNotEmpty(frameworkConfig.getStoreCreationIP()) && frameworkConfig.productionMode
                 ? MongoClientProviderImpl.builder().setHost(frameworkConfig.getStoreCreationIP()).setPort(27018).build()
                 : localMongoClientProvider();

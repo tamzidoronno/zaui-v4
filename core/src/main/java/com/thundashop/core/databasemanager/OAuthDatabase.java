@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -46,7 +45,7 @@ public class OAuthDatabase extends StoreComponent {
         morphia.map(DataCommon.class);
     }
 
-    private void connect() throws UnknownHostException {
+    private void connect(){
         mongo = mongoClientProvider.getMongoClient();
     }
     
@@ -60,22 +59,14 @@ public class OAuthDatabase extends StoreComponent {
     private void addDataCommonToDatabase(DataCommon data) {
         data.gs_manager = "oauth";
         DBObject dbObject = morphia.toDBObject(data);
-        try {
-            connect();
-            mongo.getDB("oauth").getCollection(collectionPrefix + "all").save(dbObject);
-        } catch (CommandFailureException | UnknownHostException ex) {
-            logger.error("", ex);
-        }
+        connect();
+        mongo.getDB("oauth").getCollection(collectionPrefix + "all").save(dbObject);
     }
 
     public void hardDelete(DataCommon data) throws ErrorException {
-        try {
-            data.gs_manager = "oauth";
-            connect();
-            mongo.getDB("oauth").getCollection(collectionPrefix + "all").remove(new BasicDBObject().append("_id", data.id));
-        } catch (UnknownHostException ex) {
-            logger.error("", ex);
-        }
+        data.gs_manager = "oauth";
+        connect();
+        mongo.getDB("oauth").getCollection(collectionPrefix + "all").remove(new BasicDBObject().append("_id", data.id));
     }
     
     public void delete(DataCommon data) throws ErrorException {

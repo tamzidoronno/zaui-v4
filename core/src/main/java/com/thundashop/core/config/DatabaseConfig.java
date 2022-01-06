@@ -2,6 +2,7 @@ package com.thundashop.core.config;
 
 import com.thundashop.core.common.FrameworkConfig;
 import com.thundashop.core.databasemanager.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,11 +11,16 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 @Configuration
 public class DatabaseConfig {
 
-    @Bean(name = "localMongo")
+    @Value("${db.localMongo.host}")
+    private String localMongoHost;
+    @Value("${db.localMongo.port}")
+    private Integer localMongoPort;
+
+    @Bean(name = "localMongo")    
     public MongoClientProvider localMongoClientProvider() {
         return MongoClientProviderImpl.builder()
-                .setHost("localhost")
-                .setPort(27018)
+                .setHost(localMongoHost)
+                .setPort(localMongoPort)
                 .build();
     }
 

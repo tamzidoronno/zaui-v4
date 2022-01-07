@@ -81,7 +81,7 @@ public class EhfCsvReader {
                 continue;
             }
             Long vatnumber = Long.parseLong(s[1].replaceAll("\"", ""));
-            boolean canUse = s[positionToCheck].replaceAll("\"", "").equals("Ja");
+            boolean canUse = s[positionToCheck-1].replaceAll("\"", "").equals("Ja");
             boolean canUse30 = s[positionToCheck_ehf_3_0].replaceAll("\"", "").equals("Ja");
             if (canUse || canUse30) {
                 EhfComplientCompany ehfComp = new EhfComplientCompany();

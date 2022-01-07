@@ -380,18 +380,17 @@ public class PosManager extends ManagerBase implements IPosManager {
     public List<String> filterOrdersForZreport(String cashPointId, Date prevZReportDate, ZReport report, List<Order> allOrders) {
         List<String> orderIds;
         if (isConnectedToCentral()) {
-            Date fromWhenToTakeIntoAccount  = setDateToBeginningOfMonth(isConnectedToCentralSince());
             orderIds = allOrders
                     .stream()
                     .filter(o -> !o.isNullOrder())
                     .filter(o -> o.paymentDateNotInFuture())
-                    .filter(o-> (o.hasCreatedOrPaymentDateAfter(fromWhenToTakeIntoAccount) && o.transferredToCentral == false || o.hasCreatedOrPaymentDateAfter(prevZReportDate) ))
+                    .filter(o-> o.hasCreatedOrPaymentDateAfter(prevZReportDate))
                     .filter(o -> o.isOrderFinanciallyRelatedToDatesIgnoreCreationDate(new Date(0), new Date()))
                     .map(o -> o.id)
                     .collect(Collectors.toList());
 
             removeOrdersPrePaidByOTAAndNotMarkedAsPaid(orderIds);
-            report.invoicesWithNewPayments = getInvoicePayments(fromWhenToTakeIntoAccount);
+            report.invoicesWithNewPayments = getInvoicePayments(prevZReportDate);
         } else {
             orderIds = orderManager.getOrdersByFilter(getOrderFilter())
                     .stream()
@@ -493,15 +492,16 @@ public class PosManager extends ManagerBase implements IPosManager {
 
         saveObject(report);
         closeOrdersAndInvoicesByZReport(report);
-
-        if (isConnectedToCentral()) {
-            processExtraOrderIdsForCentral(cashPointId, report);
-        }
         zReports.put(report.id, report);
 
         closeFinancialPeriodeIfNeeded(cashPointId);
         getShopAccountingManager.transferAllDaysThatCanBeTransferred();
         gdsManager.sendMessageToGetShopCentral(new GetShopCentralMessage("NEW_ZREPORT_CREATED"));
+    }
+
+    private List<String> removeDuplicateOrderIds(ZReport report) {
+        return new ArrayList<>(
+                new HashSet<>(report.orderIds));
     }
 
     private void closeFinancialPeriodeIfNeeded(String cashPointId) {
@@ -512,22 +512,6 @@ public class PosManager extends ManagerBase implements IPosManager {
         if (isConnectedToCentral()) {
             closeFinancialPeriode();
         }
-    }
-
-    private void processExtraOrderIdsForCentral(String cashPointId, ZReport report) {
-        orderManager.creditOrdersThatHasDeletedConference();
-        Date fromWhenToTakeIntoAccount  = setDateToBeginningOfMonth(central.hasBeenConnectedToCentralSince());
-        Date prevZReportDate = getPreviouseZReportDate(cashPointId);
-
-        List<String> extraOrderIds = orderManager.getOrdersNotConnectedToAnyZReports()
-                .stream()
-                .filter(o-> o.hasCreatedOrPaymentDateAfter(fromWhenToTakeIntoAccount) && o.transferredToCentral == false || o.hasCreatedOrPaymentDateAfter(prevZReportDate)) //after switching old customers to central, all old reports would get processed here
-                .map(o -> o.id)
-                .collect(Collectors.toList());
-        extraOrderIds.forEach(orderId -> orderManager.closeOrderByZReport(orderId, report));
-        report.orderIds.addAll(extraOrderIds);
-        report.totalAmount = getTotalAmountForZReport(report);
-        saveObject(report);
     }
 
     private void closeOrdersAndInvoicesByZReport(ZReport report) {
@@ -1942,7 +1926,7 @@ public class PosManager extends ManagerBase implements IPosManager {
          * When its connected to the getshop central we also do accrude payments for future booking to make a forcast.
          */
         boolean connectedToCentral = isConnectedToCentral();
-        Date fromWhenToTakeIntoAccount  = (connectedToCentral) ? setDateToBeginningOfMonth(isConnectedToCentralSince()) : null;
+        Date fromWhenToTakeIntoAccount  = (connectedToCentral) ? isConnectedToCentralSince() : null;
 
         PmsManager pmsManager = scope.getNamedSessionBean(getEngineName(), PmsManager.class);
 
@@ -1963,17 +1947,6 @@ public class PosManager extends ManagerBase implements IPosManager {
 
     public Date isConnectedToCentralSince() {
         return central.hasBeenConnectedToCentralSince();
-    }
-
-    private Date setDateToBeginningOfMonth(Date date) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        cal.set(Calendar.HOUR, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 1);
-        cal.set(Calendar.MILLISECOND, 0);
-        cal.set(Calendar.DAY_OF_MONTH, 1);
-        return cal.getTime();
     }
 
     public void updateAccruedAmountForRoomBookings(List<PmsBookingRooms> roomsToBeRecalculated, PmsManager pmsManager) {

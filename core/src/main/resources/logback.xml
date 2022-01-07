@@ -51,5 +51,6 @@
     </root>
 
     <logger name="software.amazon" level="info"/>
+    <logger name="org.mongodb" level="info"/>
 
 </configuration>

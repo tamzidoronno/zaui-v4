@@ -6,6 +6,9 @@
 package com.thundashop.core.getshop;
 
 import com.thundashop.core.getshop.data.EhfComplientCompany;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +21,7 @@ import java.io.*;
  * @author ktonder
  */
 public class EhfCsvReader {
-
+    private static final Logger log = LoggerFactory.getLogger(EhfCsvReader.class);
     public static void main(String[] args) throws Exception {
         
         EhfCsvReader reader = new EhfCsvReader();
@@ -30,7 +33,7 @@ public class EhfCsvReader {
         
         BufferedReader br = null;
         String cvsSplitBy = ";";
-        List<String[]> lines = new ArrayList();
+        List<String[]> lines = new ArrayList<>();
         
         for (String line : texts) {
             String[] country = line.split(cvsSplitBy);
@@ -44,14 +47,14 @@ public class EhfCsvReader {
         try {
             return getCompaniesInternal();
         } catch (Exception ex) {
-            ex.printStackTrace();
-            return new ArrayList();
+            log.error("Get Companies Error: ", ex);
+            return new ArrayList<>();
         }
     }
     
     public List<EhfComplientCompany> getCompaniesInternal() throws Exception {
         List<String[]> lines = readCsv();
-        List<EhfComplientCompany> retList = new ArrayList();
+        List<EhfComplientCompany> retList = new ArrayList<>();
         boolean firstLine = true;
         int positionToCheck = 0;
         int positionToCheck_ehf_3_0 = 0;
@@ -78,7 +81,7 @@ public class EhfCsvReader {
                 continue;
             }
             Long vatnumber = Long.parseLong(s[1].replaceAll("\"", ""));
-            boolean canUse = s[positionToCheck].replaceAll("\"", "").equals("Ja");
+            boolean canUse = s[positionToCheck-1].replaceAll("\"", "").equals("Ja");
             boolean canUse30 = s[positionToCheck_ehf_3_0].replaceAll("\"", "").equals("Ja");
             if (canUse || canUse30) {
                 EhfComplientCompany ehfComp = new EhfComplientCompany();
@@ -96,7 +99,7 @@ public class EhfCsvReader {
         URLConnection connection = website.openConnection();
         BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
-        List<String> response = new ArrayList();
+        List<String> response = new ArrayList<>();
         String inputLine;
 
         while ((inputLine = in.readLine()) != null) {

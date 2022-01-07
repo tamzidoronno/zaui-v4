@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import java.net.*;
@@ -55,42 +56,29 @@ public class EhfCsvReader {
     public List<EhfComplientCompany> getCompaniesInternal() throws Exception {
         List<String[]> lines = readCsv();
         List<EhfComplientCompany> retList = new ArrayList<>();
-        boolean firstLine = true;
-        int positionToCheck = 0;
-        int positionToCheck_ehf_3_0 = 0;
-        
-        for (String[] s : lines) {
-            if (firstLine) {
-                for (String a : s) {
-                    if (a.trim().toLowerCase().equals("\"ehf_invoice_2_0\"")) {
-                        break;
-                    }
-                    positionToCheck++;
-                }
-                
-                for (String a : s) {
-                    if (a.trim().toLowerCase().equals("\"peppolbis_3_0_billing_01_ubl\"")) {
-                        break;
-                    }
-                    positionToCheck_ehf_3_0++;
-                }
-                
-                
-                
-                firstLine = false;
-                continue;
-            }
-            Long vatnumber = Long.parseLong(s[1].replaceAll("\"", ""));
-            boolean canUse = s[positionToCheck-1].replaceAll("\"", "").equals("Ja");
-            boolean canUse30 = s[positionToCheck_ehf_3_0].replaceAll("\"", "").equals("Ja");
-            if (canUse || canUse30) {
+
+        String[] columns = Arrays.stream(lines.get(0)).map(String::trim).map(String::toLowerCase).toArray(String[]::new);
+
+        int peppolbis30ColumnIndex = Arrays.asList(columns).indexOf("\"peppolbis_3_0_billing_01_ubl\"");
+
+        if (peppolbis30ColumnIndex < 0) {
+            log.error("\"PEPPOLBIS_3_0_BILLING_01_UBL\" Column not found");
+            throw new Exception("Error: \"PEPPOLBIS_3_0_BILLING_01_UBL\" Column not found in \"participants.csv\" file");
+        }
+
+        for (int i = 1; i < lines.size(); i++) {
+            String[] line = lines.get(i);
+
+            Long vatNumber = Long.parseLong(line[1].replaceAll("\"", ""));
+            boolean canUse30 = line[peppolbis30ColumnIndex].replaceAll("\"", "").equals("Ja");
+
+            if (canUse30) {
                 EhfComplientCompany ehfComp = new EhfComplientCompany();
-                ehfComp.name = s[2].replaceAll("\"", "");
-                ehfComp.vatNumber = vatnumber;
+                ehfComp.name = line[2].replaceAll("\"", "");
+                ehfComp.vatNumber = vatNumber;
                 retList.add(ehfComp);
             }
         }
-        
         return retList;
     }
 

@@ -499,11 +499,6 @@ public class PosManager extends ManagerBase implements IPosManager {
         gdsManager.sendMessageToGetShopCentral(new GetShopCentralMessage("NEW_ZREPORT_CREATED"));
     }
 
-    private List<String> removeDuplicateOrderIds(ZReport report) {
-        return new ArrayList<>(
-                new HashSet<>(report.orderIds));
-    }
-
     private void closeFinancialPeriodeIfNeeded(String cashPointId) {
         if (orderManager.getOrderManagerSettings().autoCloseFinancialDataWhenCreatingZReport && isMasterCashPoint(cashPointId)) {
             closeFinancialPeriode();
@@ -1933,7 +1928,7 @@ public class PosManager extends ManagerBase implements IPosManager {
         List<PmsBookingRooms> roomsNeedToCreateOrdersFor = pmsManager.getAllBookingsFlat()
                 .stream()
                 .flatMap(b -> b.rooms.stream())
-                .filter(r -> (connectedToCentral && r.date.end.after(fromWhenToTakeIntoAccount)) || r.createOrdersOnZReport)
+                .filter(r -> r.createOrdersOnZReport)
                 .filter(r -> r.hasUnsettledAmountIncAccrued())
                 .filter(r -> r.date.start.before(end) || r.date.start.equals(end))
                 .collect(Collectors.toList());

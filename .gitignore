@@ -185,3 +185,20 @@ downloaded/
 repository/build/
 !gradle/wrapper/gradle-wrapper.jar
 
+
+// needed for vscode
+bin/*
+.classpath
+*.class
+.project
+*.prefs
+*.wsdd
+*.MF
+.vscode/settings.json
+repository/bin/test/*
+graalvm-ee-java8-21.3.0/*
+core/bin/main/*.xml
+core/bin/main/com/thundashop/app/content/*.html
+cron4jonoff
+core/bin/main/com/thundashop/core/start/*
+

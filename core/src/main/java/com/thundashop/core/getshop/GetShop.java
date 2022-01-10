@@ -61,15 +61,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.TimeZone;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
@@ -980,9 +972,9 @@ public class GetShop extends ManagerBase implements IGetShop {
             return;
         }
         
-        List<Long> vatNumbers = companiesFromDatahotelDifi.stream()
+        Set<Long> vatNumbers = companiesFromDatahotelDifi.stream()
                 .map(c -> c.vatNumber)
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
         
         // Delete and remove companies that has been removed from the EHF Supported.
         ehfCompanies.stream()
@@ -990,15 +982,18 @@ public class GetShop extends ManagerBase implements IGetShop {
                 .forEach(c -> deleteObject(c));
         
         ehfCompanies.removeIf(c -> !vatNumbers.contains(c.vatNumber));
-        
+
+        Set<Long> vatNumbersEhfCompanies = ehfCompanies.stream()
+                .map(c -> c.vatNumber)
+                .collect(Collectors.toSet());
+
         // Add new once.
-        companiesFromDatahotelDifi.stream().forEach(comp -> {
-            boolean alreadyExists = getEhfCompany(comp.vatNumber) != null;
-            
-            if (!alreadyExists) {
+        companiesFromDatahotelDifi.forEach(comp -> {
+            if (!vatNumbersEhfCompanies.contains(comp.vatNumber)) {
                 saveObject(comp);
                 ehfCompanies.add(comp);
             }
+
         });
     }
     

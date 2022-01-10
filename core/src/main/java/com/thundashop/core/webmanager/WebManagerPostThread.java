@@ -6,26 +6,24 @@
 package com.thundashop.core.webmanager;
 
 import com.braintreegateway.org.apache.commons.codec.binary.Base64;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author ktonder
  */
 public class WebManagerPostThread implements Runnable {
+
+    private static final Logger logger = LoggerFactory.getLogger(WebManagerPostThread.class);
+
     private final String USER_AGENT = "Mozilla/5.0";
     private String url;
     private String data;
@@ -129,15 +127,11 @@ public class WebManagerPostThread implements Runnable {
                 try {
                     connection.disconnect();
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    logger.error("", ex);
                 }
             }
-        } catch(MalformedURLException ex) {
-            Logger.getLogger(WebManagerPostThread.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ProtocolException ex) {
-            Logger.getLogger(WebManagerPostThread.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(WebManagerPostThread.class.getName()).log(Level.SEVERE, null, ex);
+        } catch(IOException ex) {
+            logger.error("Error while posting to url: {} , data: {}", url, data);
         }
     }
     

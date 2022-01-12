@@ -5,20 +5,12 @@ import com.google.common.base.Suppliers;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 
-import java.net.UnknownHostException;
-
 public class LazyMongoClientProvider implements MongoClientProvider {
 
     private final Supplier<MongoClient> supplier;
 
     LazyMongoClientProvider(String connectionString) {
-        this.supplier = Suppliers.memoize(() -> {
-            try {
-                return new MongoClient(new MongoClientURI(connectionString));
-            } catch (UnknownHostException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        this.supplier = Suppliers.memoize(() -> new MongoClient(new MongoClientURI(connectionString)));
     }
 
     @Override

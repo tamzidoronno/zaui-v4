@@ -25,7 +25,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -64,7 +63,7 @@ public class Database extends StoreComponent {
     }
 
     @Autowired
-    public Database(@Qualifier("localMongo") MongoClientProvider provider) throws UnknownHostException {
+    public Database(@Qualifier("localMongo") MongoClientProvider provider) {
         try {
             createDataFolder();
         } catch (IOException ex) {

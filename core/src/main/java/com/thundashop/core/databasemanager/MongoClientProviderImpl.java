@@ -4,13 +4,14 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.ServerAddress;
 
+import java.net.UnknownHostException;
 import java.util.function.Function;
 
 public class MongoClientProviderImpl implements MongoClientProvider {
 
     private final MongoClient mongo;
 
-    private MongoClientProviderImpl(String host, int port, MongoClientOptions options) {
+    private MongoClientProviderImpl(String host, int port, MongoClientOptions options) throws UnknownHostException {
         this.mongo = new MongoClient(new ServerAddress(host, port), options);
     }
 
@@ -43,7 +44,7 @@ public class MongoClientProviderImpl implements MongoClientProvider {
             return this;
         }
 
-        public MongoClientProviderImpl build() {
+        public MongoClientProviderImpl build() throws UnknownHostException{
             if (this.options == null) {
                 this.options = MongoClientOptions.builder().build();
             }

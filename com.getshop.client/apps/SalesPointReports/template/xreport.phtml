@@ -160,15 +160,17 @@ if ($invoicePaymentsToShow) {
             <div class='col totalfororder'><? echo $this->__f("Price"); ?></div>
         </div>
     <?
+    $totalForPaymentMethods["New Payments For Invoices"] = 0;
     foreach ($report->invoicesWithNewPayments as $orderId) {
         $order = $this->getApi()->getOrderManager()->getOrder($orderId);
         foreach ($order->orderTransactions as $orderTransaction) {
-            
-            if ($orderTransaction->addedToZreport) {
+            $transactionIsInPeriodOfZreport = $orderTransaction->rowCreatedDate > $report->start && $orderTransaction->rowCreatedDate < $report->end;
+            if ($orderTransaction->addedToZreport && !$this->isCurrentZReportASavedReport() || !$transactionIsInPeriodOfZreport) {
                 continue;
             }
             $user = $this->getUserById($order->userId);
             $userFullName = $user ? $user->fullName : "N/A";
+            $totalForPaymentMethods["New Payments For Invoices"] += $orderTransaction->amount;
 
             echo "<div class='orderline'>";
                 echo "<a href='#'>";

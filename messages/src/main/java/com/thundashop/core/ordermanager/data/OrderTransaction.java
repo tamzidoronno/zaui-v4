@@ -81,4 +81,8 @@ public class OrderTransaction implements Serializable {
     void setCanBeDeletedFlag() {
         canBeDeleted = canBeDeleted();
     }
+
+    public Double getAmount() {
+        return amount;
+    }
 }

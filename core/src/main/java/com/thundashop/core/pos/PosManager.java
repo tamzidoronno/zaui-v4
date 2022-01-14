@@ -511,7 +511,17 @@ public class PosManager extends ManagerBase implements IPosManager {
 
     private void closeOrdersAndInvoicesByZReport(ZReport report) {
         report.orderIds.forEach(orderId -> orderManager.closeOrderByZReport(orderId, report));
-        report.invoicesWithNewPayments.forEach(orderId -> orderManager.closeOrderByZReport(orderId, report));
+        report.invoicesWithNewPayments.forEach(orderId -> {
+            Order order = orderManager.getOrder(orderId);
+            order.orderTransactions.forEach(t -> {
+                if (t.date.after(report.start) || t.rowCreatedDate.after(report.start)){
+                    t.addedToZreport = report.id;
+                }
+            });
+            order.addedToZreport = report.id;
+            order.zReportDate = new Date();
+            orderManager.saveOrder(order);
+        });
     }
 
     /**
@@ -538,10 +548,21 @@ public class PosManager extends ManagerBase implements IPosManager {
     }
 
     private double getTotalAmountForZReport(ZReport report) {
-        return report.orderIds.stream()
+        removeDuplicateOrderIds(report);
+        double totalAmount = report.orderIds.stream()
                 .map(orderId -> orderManager.getOrder(orderId))
                 .mapToDouble(order -> orderManager.getTotalAmount(order))
                 .sum();
+        for (String invoiceId : report.invoicesWithNewPayments){
+            Order order = orderManager.getOrder(invoiceId);
+            totalAmount += order.orderTransactions.stream().filter(t -> t.rowCreatedDate.after(report.start) && t.rowCreatedDate.before(report.end))
+                    .mapToDouble(OrderTransaction::getAmount).sum();
+        }
+        return totalAmount;
+    }
+
+    private List<String> removeDuplicateOrderIds(ZReport report) {
+        return new ArrayList<>(new HashSet<>(report.orderIds));
     }
 
     @Override

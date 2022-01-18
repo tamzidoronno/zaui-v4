@@ -59,8 +59,11 @@ public class GetShopSystem extends DataCommon implements Comparable<GetShopSyste
     
       @Override
     public int compareTo(GetShopSystem u) {
-      if (getCreatedOn() == null || u.getCreatedOn() == null) {
-        return -1;
+      if (u.getCreatedOn() == null ) {
+          return (getCreatedOn() == null ) ? 0 : -1;
+      }
+      if (getCreatedOn() == null) {
+          return 1;
       }
       return getCreatedOn().compareTo(u.getCreatedOn());
     }

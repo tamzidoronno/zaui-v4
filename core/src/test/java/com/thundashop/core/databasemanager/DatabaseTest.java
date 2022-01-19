@@ -7,9 +7,7 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.storemanager.ExtendedDatabase3;
-import com.thundashop.core.storemanager.StoreIdRepository;
 import com.thundashop.core.storemanager.StoreIdRepositoryTestContext;
-import com.thundashop.core.storemanager.data.Store;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -54,9 +52,6 @@ public class DatabaseTest {
         order.cart = new Cart();
         order.cart.addCartItems(items);
 
-        Store store = new Store();
-        store.id = testStoreId;
-        store.incrementalStoreId = 1;
         extendedDatabase3.save("OrderManager", "all", order);
     }
 
@@ -71,7 +66,7 @@ public class DatabaseTest {
 
     @After
     public void after() {
-        extendedDatabase3.dropDatabase("StoreManager");
+        extendedDatabase3.dropDatabase("OrderManager");
     }
 
     private static Order getOrderData(DBCollection collection) {
@@ -91,7 +86,7 @@ public class DatabaseTest {
         return o;
     }
 
-    /* When changing morphia library sometimes loaded date does not reflect data from database.*/
+    /* When changing morphia library sometimes loaded data does not reflect data from database.*/
     @Test
     public void numbersLoadedCorectlyFromDb() throws UnknownHostException {
         Mongo mongo = new Mongo("localhost", StoreIdRepositoryTestContext.TEST_DB_PORT);

@@ -277,8 +277,14 @@ public class ProductManager extends AProductManager implements IProductManager {
 
         Comparator<Product> comparator = new Comparator<Product>() {
             public int compare(Product c1, Product c2) {
-                if (c1 == null || c2 == null || c1.name == null || c2.name == null) {
+                if (c1 == null || c2 == null) {
                     return 0;
+                }
+                if (c1.name == null) {
+                    c1.name = "";
+                }
+                if (c2.name == null) {
+                    c1.name = "";
                 }
 
                 return c1.name.compareTo(c2.name);

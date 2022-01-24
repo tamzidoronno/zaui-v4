@@ -5256,10 +5256,20 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
             if(toRemove != null) {
                 order.orderTransactions.remove(toRemove);
+                String name = getCurrentUserName();
+                order.payment.transactionLog.put(System.currentTimeMillis(), "Order transaction deleted by " + name);
                 saveObject(order);
                 return;
             }
         }
+    }
+
+    private String getCurrentUserName() {
+        String name = "";
+        if(getSession() != null && getSession().currentUser != null) {
+            name = getSession().currentUser.fullName;
+        }
+        return name;
     }
 
     private void detectAndSaveDaysThatAreOpenInBetweenSet(List<DayIncome> newlyBrokenIncome, DayIncomeFilter filter) {

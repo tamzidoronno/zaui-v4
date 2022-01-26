@@ -38,6 +38,7 @@ foreach($order->cart->items as $item){
         'price'       => $item->product->price,
         'taxAmount'   => $taxAmount,
         'amountExTax' => $amountExTax,
+        'accountingNumber' => $item->product->activeAccountingInformation->accountingNumber
     ];
     $totalTaxAmount += $taxAmount;
     $totalAmountExTax += $amountExTax;    

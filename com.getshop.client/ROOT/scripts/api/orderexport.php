@@ -26,6 +26,24 @@ $amount = $invoiceingoverduelist->getTotalAmountForOrder($order);
 $paidAmount = $invoiceingoverduelist->getTotalPaidAmount($order);
 $user = $factory->getApi()->getUserManager()->getUserById($order->userId);
 
+//tax details calculation
+$productData = [];
+$totalTaxAmount = 0;
+$totalAmountExTax = 0;
+foreach($order->cart->items as $item){
+    $amountExTax = $item->product->priceExTaxes;
+    $taxAmount = $item->product->price - $item->product->priceExTaxes;
+    $productData[] = [
+        'productName' => $item->product->name,
+        'price'       => $item->product->price,
+        'taxAmount'   => $taxAmount,
+        'amountExTax' => $amountExTax,
+        'accountingNumber' => $item->product->activeAccountingInformation->accountingNumber
+    ];
+    $totalTaxAmount += $taxAmount;
+    $totalAmountExTax += $amountExTax;    
+}
+
 
 $result = new stdClass();
 
@@ -42,6 +60,9 @@ $result->postCode = $order->cart->address->postCode;
 $result->countryCode = $order->cart->address->countrycode;
 $result->currency = $order->currency;
 $result->cart = $order->cart->items;
+$result->productData = $productData;
+$result->taxAmount = round($totalTaxAmount,2);
+$result->amountExTax = round($amountExTax,2);
 $result->kid = $order->kid;
 $result->language = $order->language;
 $result->email = $user->emailAddress;

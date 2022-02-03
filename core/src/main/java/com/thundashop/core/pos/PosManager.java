@@ -380,18 +380,17 @@ public class PosManager extends ManagerBase implements IPosManager {
     public List<String> filterOrdersForZreport(String cashPointId, Date prevZReportDate, ZReport report, List<Order> allOrders) {
         List<String> orderIds;
         if (isConnectedToCentral()) {
-            Date fromWhenToTakeIntoAccount  = setDateToBeginningOfMonth(isConnectedToCentralSince());
             orderIds = allOrders
                     .stream()
                     .filter(o -> !o.isNullOrder())
                     .filter(o -> o.paymentDateNotInFuture())
-                    .filter(o-> (o.hasCreatedOrPaymentDateAfter(fromWhenToTakeIntoAccount) && o.transferredToCentral == false || o.hasCreatedOrPaymentDateAfter(prevZReportDate) ))
+                    .filter(o-> o.hasCreatedOrPaymentDateAfter(prevZReportDate))
                     .filter(o -> o.isOrderFinanciallyRelatedToDatesIgnoreCreationDate(new Date(0), new Date()))
                     .map(o -> o.id)
                     .collect(Collectors.toList());
 
             removeOrdersPrePaidByOTAAndNotMarkedAsPaid(orderIds);
-            report.invoicesWithNewPayments = getInvoicePayments();
+            report.invoicesWithNewPayments = getInvoicePayments(prevZReportDate);
         } else {
             orderIds = orderManager.getOrdersByFilter(getOrderFilter())
                     .stream()
@@ -424,8 +423,12 @@ public class PosManager extends ManagerBase implements IPosManager {
         });
     }
 
-    public List<String> getInvoicePayments() {
+    /** Since invoice payments are getting processed individually here only for the case when isConnectedtoCentral()
+     *  in the moment when we connect an old customer to central  not all the transactions from history should be processed because some of them
+     *  are a part of finished, closed, marked-as-paid orders.**/
+    public List<String> getInvoicePayments(Date fromWhenToTakeIntoAccount) {
         return orderManager.getAllOrders().stream()
+                .filter(o ->  o.markedPaidDate == null || o.markedPaidDate.after(fromWhenToTakeIntoAccount))
                 .filter(o -> o.isInvoice() && o.hasNewOrderTransactions())
                 .map(o -> o.id)
                 .collect(Collectors.toList());
@@ -489,10 +492,6 @@ public class PosManager extends ManagerBase implements IPosManager {
 
         saveObject(report);
         closeOrdersAndInvoicesByZReport(report);
-
-        if (isConnectedToCentral()) {
-            processExtraOrderIdsForCentral(cashPointId, report);
-        }
         zReports.put(report.id, report);
 
         closeFinancialPeriodeIfNeeded(cashPointId);
@@ -510,25 +509,19 @@ public class PosManager extends ManagerBase implements IPosManager {
         }
     }
 
-    private void processExtraOrderIdsForCentral(String cashPointId, ZReport report) {
-        orderManager.creditOrdersThatHasDeletedConference();
-        Date fromWhenToTakeIntoAccount  = setDateToBeginningOfMonth(central.hasBeenConnectedToCentralSince());
-        Date prevZReportDate = getPreviouseZReportDate(cashPointId);
-
-        List<String> extraOrderIds = orderManager.getOrdersNotConnectedToAnyZReports()
-                .stream()
-                .filter(o-> o.hasCreatedOrPaymentDateAfter(fromWhenToTakeIntoAccount) && o.transferredToCentral == false || o.hasCreatedOrPaymentDateAfter(prevZReportDate)) //after switching old customers to central, all old reports would get processed here
-                .map(o -> o.id)
-                .collect(Collectors.toList());
-        extraOrderIds.forEach(orderId -> orderManager.closeOrderByZReport(orderId, report));
-        report.orderIds.addAll(extraOrderIds);
-        report.totalAmount = getTotalAmountForZReport(report);
-        saveObject(report);
-    }
-
     private void closeOrdersAndInvoicesByZReport(ZReport report) {
         report.orderIds.forEach(orderId -> orderManager.closeOrderByZReport(orderId, report));
-        report.invoicesWithNewPayments.forEach(orderId -> orderManager.closeOrderByZReport(orderId, report));
+        report.invoicesWithNewPayments.forEach(orderId -> {
+            Order order = orderManager.getOrder(orderId);
+            order.orderTransactions.forEach(t -> {
+                if (t.date.after(report.start) || t.rowCreatedDate.after(report.start)){
+                    t.addedToZreport = report.id;
+                }
+            });
+            order.addedToZreport = report.id;
+            order.zReportDate = new Date();
+            orderManager.saveOrder(order);
+        });
     }
 
     /**
@@ -555,10 +548,21 @@ public class PosManager extends ManagerBase implements IPosManager {
     }
 
     private double getTotalAmountForZReport(ZReport report) {
-        return report.orderIds.stream()
+        removeDuplicateOrderIds(report);
+        double totalAmount = report.orderIds.stream()
                 .map(orderId -> orderManager.getOrder(orderId))
                 .mapToDouble(order -> orderManager.getTotalAmount(order))
                 .sum();
+        for (String invoiceId : report.invoicesWithNewPayments){
+            Order order = orderManager.getOrder(invoiceId);
+            totalAmount += order.orderTransactions.stream().filter(t -> t.rowCreatedDate.after(report.start) && t.rowCreatedDate.before(report.end))
+                    .mapToDouble(OrderTransaction::getAmount).sum();
+        }
+        return totalAmount;
+    }
+
+    private List<String> removeDuplicateOrderIds(ZReport report) {
+        return new ArrayList<>(new HashSet<>(report.orderIds));
     }
 
     @Override
@@ -998,6 +1002,8 @@ public class PosManager extends ManagerBase implements IPosManager {
             System.out.println("password is correct.... find and delete the zreport");
             ZReport report = zReports.remove(zreportId);
             removeZReportParametersFromCorrelatedOrders(report.orderIds);
+            removeZReportParametersFromRegisteredPaymentsOnInvoices(report.invoicesWithNewPayments, report.id);
+
             if (report != null) {
                 System.out.println("found the report here... deleting it");
                 deleteObject(report);
@@ -1008,6 +1014,18 @@ public class PosManager extends ManagerBase implements IPosManager {
 
     private void removeZReportParametersFromCorrelatedOrders(List<String> orderIds) {
         orderIds.forEach(oId -> orderManager.removeZReportDatafromOrder(oId));
+    }
+
+    private void removeZReportParametersFromRegisteredPaymentsOnInvoices(List<String> invoicesWithNewPaymentsOrderIds, String reportId) {
+        invoicesWithNewPaymentsOrderIds.forEach(orderId -> {
+                    Order order = orderManager.getOrder(orderId);
+                    order.orderTransactions.forEach(t -> {
+                        if (t.addedToZreport.equals(reportId)){
+                            t.addedToZreport = "";
+                        }
+                    });
+                    orderManager.saveOrder(order);
+            });
     }
 
     /**
@@ -1924,14 +1942,14 @@ public class PosManager extends ManagerBase implements IPosManager {
          * When its connected to the getshop central we also do accrude payments for future booking to make a forcast.
          */
         boolean connectedToCentral = isConnectedToCentral();
-        Date fromWhenToTakeIntoAccount  = (connectedToCentral) ? setDateToBeginningOfMonth(isConnectedToCentralSince()) : null;
+        Date fromWhenToTakeIntoAccount  = (connectedToCentral) ? isConnectedToCentralSince() : null;
 
         PmsManager pmsManager = scope.getNamedSessionBean(getEngineName(), PmsManager.class);
 
         List<PmsBookingRooms> roomsNeedToCreateOrdersFor = pmsManager.getAllBookingsFlat()
                 .stream()
                 .flatMap(b -> b.rooms.stream())
-                .filter(r -> (connectedToCentral && r.date.end.after(fromWhenToTakeIntoAccount)) || r.createOrdersOnZReport)
+                .filter(r -> r.createOrdersOnZReport)
                 .filter(r -> r.hasUnsettledAmountIncAccrued())
                 .filter(r -> r.date.start.before(end) || r.date.start.equals(end))
                 .collect(Collectors.toList());
@@ -1945,17 +1963,6 @@ public class PosManager extends ManagerBase implements IPosManager {
 
     public Date isConnectedToCentralSince() {
         return central.hasBeenConnectedToCentralSince();
-    }
-
-    private Date setDateToBeginningOfMonth(Date date) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        cal.set(Calendar.HOUR, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 1);
-        cal.set(Calendar.MILLISECOND, 0);
-        cal.set(Calendar.DAY_OF_MONTH, 1);
-        return cal.getTime();
     }
 
     public void updateAccruedAmountForRoomBookings(List<PmsBookingRooms> roomsToBeRecalculated, PmsManager pmsManager) {

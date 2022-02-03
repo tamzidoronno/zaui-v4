@@ -850,7 +850,8 @@ public class PmsManagerProcessor {
                 needSaving = true;
             }
             if(booking.isRegisteredToday() && !booking.hasSentNotification("booking_completed")) {
-                if((payedfor == true || forceSend) && (booking.orderIds.size() == 1 || booking.createOrderAfterStay || booking.isOta()) || booking.payLater) {
+                if((payedfor == true || forceSend) && (booking.orderIds.size() == 1 || booking.createOrderAfterStay || booking.isOta()) || booking.payLater
+                || booking.getTotalPrice()==0.0) {
                     if(!booking.isSynxis()) {
                         manager.doNotificationFromProcessor("booking_completed", booking, null);
                         needSaving = true;

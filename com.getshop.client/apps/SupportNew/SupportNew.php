@@ -11,6 +11,9 @@ class SupportNew extends \MarketingApplication implements \Application {
     }
 
     public function render() {
+        //ob_clean();
+        //header('Location: https://support.zauistay.com/hc/en-us/');
+        //die();
         $this->includefile("createnew");
     }
     

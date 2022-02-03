@@ -33,9 +33,9 @@ dependencies {
 
     testImplementation 'org.springframework:spring-test:4.2.1.RELEASE'
 
-    // mongo
-    implementation 'org.mongodb:mongo-java-driver:2.13.2'
-    implementation 'org.mongodb.morphia:morphia:1.0.1'
+//    // mongo
+//    implementation 'org.mongodb:mongo-java-driver:2.13.2'
+//    implementation 'org.mongodb.morphia:morphia:1.0.1'
 
     // apache commons
     implementation 'commons-codec:commons-codec:1.10'

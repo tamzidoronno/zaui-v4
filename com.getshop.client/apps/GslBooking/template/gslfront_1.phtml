@@ -473,26 +473,38 @@
 
 <link href="//fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 <script>
-
-//Reset page on load.
-    $(function () {
-        sessionStorage.setItem('gslcurrentpage', '');
-        $('.gslbookingBody').hide();
-        $('.addons_overview').hide();
-        $.getScript("//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js", function (data, textStatus, jqxhr) {
-            $.getScript("{getshop_endpoint}/scripts/booking/bookingscripts.php", function (data, textStatus, jqxhr) {
-                $.getScript("//cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js", function (data, textStatus, jqxhr) {
-                    var getshopinterval = setInterval(function() {
-                        if(typeof(moment) !== "undefined") {
-                            var loading = getshop_setBookingTranslation();
-                            loading.done(function () {
-                                getshop_setDatePicker();
-                            });
-                            clearInterval(getshopinterval);
-                        }
-                    }, 200);
+    function zauiStayStart()
+    {
+        if(typeof $ == 'function')
+        {
+            //Reset page on load.
+            $(function () {
+                sessionStorage.setItem('gslcurrentpage', '');
+                $('.gslbookingBody').hide();
+                $('.addons_overview').hide();
+                $.getScript("//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js", function (data, textStatus, jqxhr) {
+                    $.getScript("{getshop_endpoint}/scripts/booking/bookingscripts.php", function (data, textStatus, jqxhr) {
+                        $.getScript("//cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js", function (data, textStatus, jqxhr) {
+                            var getshopinterval = setInterval(function() {
+                                if(typeof(moment) !== "undefined") {
+                                    var loading = getshop_setBookingTranslation();
+                                    loading.done(function () {
+                                        getshop_setDatePicker();
+                                    });
+                                    clearInterval(getshopinterval);
+                                }
+                            }, 200);
+                        });
+                    });
                 });
             });
-        });
-    });
+        }
+        else
+        {
+            setTimeout(zauiStayStart, 500);
+            if(typeof jQuery == 'function') $ = jQuery;
+        }
+    }
+    zauiStayStart();
+
 </script>

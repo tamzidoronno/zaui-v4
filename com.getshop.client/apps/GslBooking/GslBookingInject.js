@@ -1558,11 +1558,15 @@ function getshop_overviewPageLoad(res) {
         } else {
             $('.addons_overview').fadeOut('400', function () {
                 $('.overview').fadeIn('400');
-                $(window).scrollTop(0);
+                var padding = $('.gslbookingBody').position().top;
+                var body = $('.gslbookingBody').offset().top;
+                $(window).scrollTop(body-padding);
             });
         }
     } else {
-        $(window).scrollTop(0);
+        var padding = $('.gslbookingBody').position().top;
+        var body = $('.gslbookingBody').offset().top;
+        $(window).scrollTop(body-padding);
     }
 }
 
@@ -1645,7 +1649,9 @@ function getshop_zauiPageLoad(activities){
     $('.zaui').fadeIn('400', function() {
         $('.GslBooking .ordersummary').slideUp();
         $('.GslBooking .gslbookingHeader').slideUp();
-        $(window).scrollTop(0);
+        var padding = $('.gslbookingBody').position().top;
+        var body = $('.gslbookingBody').offset().top;
+        $(window).scrollTop(body-padding);
     });
 }
 
@@ -1851,7 +1857,9 @@ function getshop_zauiToSummaryPage(){
     getshop_loadAddonsAndGuestSumaryView();
     //getshop_setPageName('overview');
     //saving.done(getshop_overviewPageLoad);*/
-    $(window).scrollTop(0);
+    var padding = $('.gslbookingBody').position().top;
+    var body = $('.gslbookingBody').offset().top;
+    $(window).scrollTop(body-padding);
 }
 
 

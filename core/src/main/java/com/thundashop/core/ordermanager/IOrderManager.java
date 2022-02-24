@@ -544,7 +544,11 @@ public interface IOrderManager {
     @Administrator
     @ForceAsync
     public AccountingBalance getBalance(Date date, String paymentId, boolean incTaxes);
-    
+
+    @Administrator
+    @ForceAsync
+    public String getBalanceInDetails(String accountId, Date date);
+
     @Administrator
     @ForceAsync
     public List<DayIncome> getDoublePostingDayIncomes(String paymentId, Date start, Date end);

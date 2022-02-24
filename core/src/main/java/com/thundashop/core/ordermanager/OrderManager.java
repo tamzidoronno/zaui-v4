@@ -4247,6 +4247,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return balance;
     }
 
+    /* Similar to outstanding report - we want to get the all dayEntries (==orders) which make up the Balances In amount. When an order is accrued,
+    * there will probably be correlated parent/credited orders which will alltogetgher make the total amount of accrued zero for a particular booking.  */
     @Override
     public String getBalanceInDetails(String accountId, Date date) {
         AccountingBalance balance = new AccountingBalance();
@@ -4258,26 +4260,24 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
 
         List<DayIncome> incomesNotEmpty = res.stream().filter(inc->inc.dayEntries.size()!=0).collect(Collectors.toList());
-        // Map: incremOId : List<DayEntry> entries
-        Map<Long, List<DayEntry>> mappedOrdersAccrued = new HashMap<>();
+        Map<Long, List<DayEntry>> groupedByOrderId = new HashMap<>();
 
         for (DayIncome i : incomesNotEmpty){
             for (DayEntry ent: i.dayEntries){
                 if(ent.accountingNumber.equals(accountId)){
-                    if (mappedOrdersAccrued.containsKey(ent.incrementalOrderId)){
-                        mappedOrdersAccrued.get(ent.incrementalOrderId).add(ent);
+                    if (groupedByOrderId.containsKey(ent.incrementalOrderId)){
+                        groupedByOrderId.get(ent.incrementalOrderId).add(ent);
                     }else{
                         List<DayEntry> entries = new ArrayList<>();
                         entries.add(ent);
-                        mappedOrdersAccrued.put(ent.incrementalOrderId, entries);
+                        groupedByOrderId.put(ent.incrementalOrderId, entries);
                     }
                 }
             }
         }
         Map<Long, List<DayEntry>> unresolvedAccruedIncomes = new HashMap<>();
-        //System.out.println("orderId" +"," +"Amount"+ "," + "accruedAmount" +"," + "accountNumber" +","+"Date");
-        for (long incOrdId : mappedOrdersAccrued.keySet()){
-            List<DayEntry> entries = mappedOrdersAccrued.get(incOrdId);
+        for (long incOrdId : groupedByOrderId.keySet()){
+            List<DayEntry> entries = groupedByOrderId.get(incOrdId);
             Double total = entries.stream().mapToDouble(DayEntry::getAmount).sum();
             if (total> 0.5 || total < -0.5){
                 unresolvedAccruedIncomes.put(incOrdId, entries);

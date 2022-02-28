@@ -3577,7 +3577,7 @@ GetShopApiWebSocketEmbeddedBooking.PmsBookingProcess.prototype = {
         var data = {
             args : {
             },
-            method: 'getConfiguration',
+            method: 'getBookingEmbedConfiguration',
             multiLevelName: multilevelname,
             interfaceName: 'core.pmsbookingprocess.IPmsBookingProcess',
         };

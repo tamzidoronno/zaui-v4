@@ -124,7 +124,7 @@ function getshop_setBookingTranslation() {
                 typeTemplate.find('.roomtextname').html(text);
 //                $('.roomselectionoptions').append(typeTemplate);
             }
-
+            sessionStorage.setItem('getshop_server_timezone',config.timeZone);
             loading.resolve(config);
         });
         getshop_confirmGuestInfoBox();
@@ -2494,14 +2494,12 @@ function getshop_searchRooms(e) {
         var time = new Date().toLocaleTimeString('en-us');
         var discountCode = $('#coupon_input').val();
 
-        var start = moment.utc($('#date_picker_start').val(), "DD.MM.YYYY").local();
-        var startDate = start.format('MMM DD, YYYY ') + time;
+        var timeZone = sessionStorage.getItem('getshop_server_timezone');
+        var start = moment.utc($('#date_picker_start').val() + time,'DD.MM.YYYY H:m:s');
+        var startDate = start.tz(timeZone).format('MMM DD, YYYY H:mm:ss A');
 
-        var end = moment.utc($('#date_picker_end').val(), "DD.MM.YYYY").local();
-        var endDate = end.format('MMM DD, YYYY ') + time;
-
-        startDate = startDate.replace(/[^a-zA-Z0-9,: ]/g, "")
-        endDate = endDate.replace(/[^a-zA-Z0-9,: ]/g, "");
+        var end = moment.utc($('#date_picker_end').val() + time,'DD.MM.YYYY H:m:s');
+        var endDate = end.tz(timeZone).format('MMM DD, YYYY H:mm:ss A');
 
         sessionStorage.setItem('getshop_startDate', startDate);
         sessionStorage.setItem('getshop_endDate', endDate);

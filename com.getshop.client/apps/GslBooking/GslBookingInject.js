@@ -124,7 +124,7 @@ function getshop_setBookingTranslation() {
                 typeTemplate.find('.roomtextname').html(text);
 //                $('.roomselectionoptions').append(typeTemplate);
             }
-            sessionStorage.setItem('getshop_server_timezone',config.timeZone);
+            sessionStorage.setItem('getshop_server_timezone',config.serverTimeZone);
             loading.resolve(config);
         });
         getshop_confirmGuestInfoBox();

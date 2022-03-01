@@ -39,7 +39,7 @@ public class Company extends DataCommon implements Comparable<Company> {
     public Integer monthlyHoursIncluded = 1;
     public Integer additionalHours = 0;
     
-    public List<Company> subCompanies = new ArrayList();
+    public List<Company> subCompanies = new ArrayList<>();
     
     public String companyLeaderUserId = "";
     

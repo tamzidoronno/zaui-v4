@@ -20,11 +20,11 @@ public class Payment implements Serializable {
     public String paymentType = "";
     public double paymentFee = 0D;
     public TaxGroup paymentFeeTaxGroup = null;
-    public HashMap<Long, String> transactionLog = new HashMap();
-    public List<Date> triedAutoPay = new ArrayList();
+    public HashMap<Long, String> transactionLog = new HashMap<>();
+    public List<Date> triedAutoPay = new ArrayList<>();
     public boolean captured = false;
-    public HashMap<String, String> callBackParameters = new HashMap();
-    public Map<String, String> metaData = new HashMap();
+    public HashMap<String, String> callBackParameters = new HashMap<>();
+    public Map<String, String> metaData = new HashMap<>();
     public String paymentId = "";
     //This is used to navigate the user to a differente payment id (specially used for otaPayments).
     public String goToPaymentId = "";
@@ -67,32 +67,11 @@ public class Payment implements Serializable {
         type = type.replace("_", "-");
         return type;
     }
-    
 
-    public String getIssuer() {
-        for (String log : transactionLog.values()) {
-            if (log.contains("Result:") && log.contains("32\n")) {
-                return log.split(";")[22];
-            }
-        }
-        
-        return "";
-    }
-    
     public String getTransactionId() {
         for (String log : transactionLog.values()) {
             if (log.contains("Result:") && log.contains("32\n")) {
                 return log.split(";")[4];
-            }
-        }
-        
-        return "";
-    }
-    
-    public String getCardInfo() {
-        for (String log : transactionLog.values()) {
-            if (log.contains("Result:") && log.contains("32\n")) {
-                return log.split(";")[5];
             }
         }
         

@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  * @author ktonder
  */
 public class Cart extends DataCommon {
-    private List<CartItem> items = new ArrayList(); 
+    private List<CartItem> items = new ArrayList<>();
     private double shippingCost = 0;
     public boolean isShippingFree = false;
     public TaxGroup shippingTax = null;
@@ -35,7 +35,7 @@ public class Cart extends DataCommon {
      * Example, it could be two different bookings that this cart
      * reflects.
      */
-    public List<String> references = new ArrayList();
+    public List<String> references = new ArrayList<>();
     
     public String createByGetShopModule = "";
     
@@ -114,7 +114,7 @@ public class Cart extends DataCommon {
     }
 
     private Double getProductTotal(boolean excludeFreeShipping) {
-        Double total = 0D;
+        double total = 0D;
         for (CartItem cartItem : getItems()) {
             if(cartItem.disabled) {
                 continue;
@@ -169,7 +169,7 @@ public class Cart extends DataCommon {
     }
     
     public List<CartItem> getItems() {
-        List<CartItem> itemsToReturn = new ArrayList();
+        List<CartItem> itemsToReturn = new ArrayList<>();
         for(CartItem it : items) {
             if(it != null) {
                 it.doFinalize();
@@ -225,7 +225,7 @@ public class Cart extends DataCommon {
     }     
 
     public List<CartTax> getCartTaxes() {
-        Map<Integer, CartTax> taxes = new HashMap<Integer, CartTax>();
+        Map<Integer, CartTax> taxes = new HashMap<>();
         
         for (CartItem cartItem : getItems()) {
             if (cartItem.getProduct() != null && cartItem.getProduct().taxGroupObject != null) {
@@ -249,17 +249,14 @@ public class Cart extends DataCommon {
             cartTax.sum = shippingCost - (shippingCost/(shippingTax.getTaxRate()+1));
             taxes.put(shippingTax.groupNumber, cartTax);
         }
-        
-        List retTaxes = new ArrayList();
-        for (CartTax tax : taxes.values()) {
-            retTaxes.add(tax);
-        }
+
+        List<CartTax> retTaxes = new ArrayList<>(taxes.values());
         
         return retTaxes;
     }
 
     public void saveCartItem(CartItem cartItem) {
-        List<CartItem> newList = new ArrayList();
+        List<CartItem> newList = new ArrayList<>();
         
         for (CartItem item : items) {
             if (item.getCartItemId().equals(cartItem.getCartItemId())) {
@@ -305,11 +302,6 @@ public class Cart extends DataCommon {
 
     public boolean isNullCart() {
         return getItems().isEmpty();        
-    }
-
-    public void replaceItem(CartItem item) {
-        items.removeIf(i -> i.getCartItemId().equals(item.getCartItemId()));
-        items.add(item);
     }
 
     public void clearDisabledItems() {

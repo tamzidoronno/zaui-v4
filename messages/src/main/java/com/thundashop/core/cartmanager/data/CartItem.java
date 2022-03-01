@@ -21,13 +21,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -39,7 +33,7 @@ import org.mongodb.morphia.annotations.Transient;
  */
 public class CartItem implements Serializable, Cloneable {
     private String cartItemId = UUID.randomUUID().toString();
-    private Map<String, String> variations = new HashMap(); 
+    private Map<String, String> variations = new HashMap<>();
    
     private Product product;
     
@@ -69,7 +63,7 @@ public class CartItem implements Serializable, Cloneable {
     public Date accountingDate;
     
     public String wareHouseId = "";
-    private List<ProductPriceOverride> overridePriceHistory = new ArrayList();
+    private List<ProductPriceOverride> overridePriceHistory = new ArrayList<>();
     
     @Transient
     public String orderId;
@@ -92,7 +86,6 @@ public class CartItem implements Serializable, Cloneable {
         if(startDate == null || endDate == null) {
             return 0.0;
         }
-        long diff = endDate.getTime() - startDate.getTime();
         long mins = getSeconds();
         if(mins == 0) {
             return 0.0;
@@ -123,7 +116,7 @@ public class CartItem implements Serializable, Cloneable {
         }
         
         for (String varId : this.variations.values()) {
-            if (!variations.values().contains(varId)) {
+            if (!variations.containsValue(varId)) {
                 return false;
             }
         }
@@ -183,7 +176,7 @@ public class CartItem implements Serializable, Cloneable {
     
     public Map<String, String> getVariations() {
         if(variations == null) {
-            return new HashMap();
+            return new HashMap<>();
         }
         return variations;
     }
@@ -203,7 +196,7 @@ public class CartItem implements Serializable, Cloneable {
             overridePriceIncTaxes = null;
         }
         
-        overridePriceHistory.stream().forEach(o -> o.finalize());
+        overridePriceHistory.forEach(ProductPriceOverride::finalize);
         
         
         if(itemsAdded != null) {
@@ -474,13 +467,13 @@ public class CartItem implements Serializable, Cloneable {
     }
     
     public void recalculatePriceMatrixAndAddons() {
-        Double amount = getProduct().price * count;
+        double amount = getProduct().price * count;
         if(priceMatrix != null) {
             int matrixSize = priceMatrix.size();
 
             if(matrixSize > 0) {
                 Double avgPrice = amount / matrixSize;
-                List<String> keys = new ArrayList(priceMatrix.keySet());
+                List<String> keys = new ArrayList<>(priceMatrix.keySet());
                 for(String key : keys) {
                     priceMatrix.put(key, avgPrice);
                 }
@@ -488,7 +481,7 @@ public class CartItem implements Serializable, Cloneable {
         }
         
         if(itemsAdded != null && !itemsAdded.isEmpty()) {
-            Double avgPrice = amount / itemsAdded.size();
+            double avgPrice = amount / itemsAdded.size();
             for(PmsBookingAddonItem item : itemsAdded) {
                 if(item.count > 1) {
                     item.count = 1;
@@ -505,7 +498,6 @@ public class CartItem implements Serializable, Cloneable {
                 }
                 
                 item.price = avgPrice;
-                System.out.println("Count: " + item.count + " : " + item.price);
             }
         }
     }
@@ -546,11 +538,6 @@ public class CartItem implements Serializable, Cloneable {
                 System.out.println("itemdumppricematrix;" + product.name + ";" + day + ";" + priceMatrix.get(day));
             }
         }
-        dumpItem();
-    }
-
-    private void dumpItem() {
-        System.out.println(product.price + ";" + count);
     }
 
     public void recalculateMetaData() {
@@ -565,7 +552,7 @@ public class CartItem implements Serializable, Cloneable {
         if (priceMatrix != null && !priceMatrix.isEmpty() && product != null) {
             double totalPrice = priceMatrix.values()
                     .stream()
-                    .filter(d -> d != null)
+                    .filter(Objects::nonNull)
                     .mapToDouble(d -> d.doubleValue())
                     .sum();
             
@@ -575,10 +562,6 @@ public class CartItem implements Serializable, Cloneable {
             
             count = priceMatrix.size();
         }
-    }
-
-    public boolean isForPeriode(Date date) {
-        return false;
     }
 
     public boolean isMatrixAndItemsValid() {
@@ -610,7 +593,7 @@ public class CartItem implements Serializable, Cloneable {
                 }
             }
         
-        Double orderTotal = getTotalAmount();
+        double orderTotal = getTotalAmount();
         long ordertotalcheck = Math.round(orderTotal);
         long ordercheck = Math.round(total);
 
@@ -635,7 +618,7 @@ public class CartItem implements Serializable, Cloneable {
         double price = 0.0;
         if(priceMatrix != null) {
             SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-            List<String> toRemove = new ArrayList();
+            List<String> toRemove = new ArrayList<>();
             for(String dateString : priceMatrix.keySet()) {
                 try {
                     Date date = formatter.parse(dateString);
@@ -657,7 +640,7 @@ public class CartItem implements Serializable, Cloneable {
         }
         
         if(itemsAdded != null) {
-            List<PmsBookingAddonItem> removeItems = new ArrayList();
+            List<PmsBookingAddonItem> removeItems = new ArrayList<>();
             for(PmsBookingAddonItem item : itemsAdded) {
                 if(item.date == null) {
                     continue;
@@ -702,7 +685,7 @@ public class CartItem implements Serializable, Cloneable {
     }
 
     public void addOverridePriceHistory(ProductPriceOverride override, String userId) {
-        overridePriceHistory.stream().forEach(o -> {
+        overridePriceHistory.forEach(o -> {
             o.deleteEntry(userId);
         });
         overridePriceHistory.add(override);
@@ -797,7 +780,7 @@ public class CartItem implements Serializable, Cloneable {
 
     public void creditPmsAddonsAndPriceMatrix() {
         if (itemsAdded != null) {
-            itemsAdded.stream().forEach(item -> {
+            itemsAdded.forEach(item -> {
                 item.price = item.price * -1;
                 if (item.priceExTaxes != null) {
                     item.priceExTaxes = item.priceExTaxes * -1;
@@ -816,9 +799,7 @@ public class CartItem implements Serializable, Cloneable {
         boolean prevCountNegative = count < 0;
         
         if (itemsAdded != null) {
-            itemsAdded.removeIf(o -> {
-                return !dates.contains(o.date);
-            });
+            itemsAdded.removeIf(o -> !dates.contains(o.date));
             
             count = itemsAdded.size();
         }
@@ -848,7 +829,7 @@ public class CartItem implements Serializable, Cloneable {
     }
 
     public List<Date> getDates(Date overrideAccountingDate, Order order) {
-        List<Date> retList = new ArrayList();
+        List<Date> retList = new ArrayList<>();
         
         if (isPmsAddons()) {
             for (PmsBookingAddonItem i : itemsAdded) {

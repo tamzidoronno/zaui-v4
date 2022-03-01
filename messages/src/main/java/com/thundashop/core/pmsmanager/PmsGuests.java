@@ -15,7 +15,7 @@ public class PmsGuests implements Serializable {
     public String guestId = UUID.randomUUID().toString();
     public boolean isChild = false;
     public boolean isDisabled = false;
-    public List<String> pmsConferenceEventIds = new ArrayList();
+    public List<String> pmsConferenceEventIds = new ArrayList<>();
     public String passportId;
     
     /**
@@ -26,7 +26,7 @@ public class PmsGuests implements Serializable {
      * Key = productid for group addon
      * Value = ProductId for the addon selected
      */
-    public Map<String, String> orderedOption = new HashMap();
+    public Map<String, String> orderedOption = new HashMap<>();
 
     boolean hasAnyOfGuest(PmsGuests guest) {
         boolean matchName = true;

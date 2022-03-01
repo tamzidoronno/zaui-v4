@@ -6,13 +6,10 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
-
 @Service
 public class OkHttpService {
 
-    private static final MediaType JSON = MediaType.parse("application/json");
-    private static final MediaType TEXT = MediaType.parse("text/plain");
+    private static final MediaType mediaType = MediaType.parse("application/json");
 
     private final OkHttpClient okHttpClient;
 
@@ -23,20 +20,13 @@ public class OkHttpService {
 
     public OkHttpResponse post(OkHttpRequest httpRequest) {
         OkHttpClient client = httpRequest.getClient() != null ? httpRequest.getClient() : okHttpClient;
+        RequestBody requestBody = RequestBody.Companion.create(httpRequest.getPayload(), mediaType);
 
-        RequestBody requestBody = httpRequest.isJsonPost()
-                ? RequestBody.Companion.create(httpRequest.getPayload(), JSON)
-                : RequestBody.Companion.create(httpRequest.getPayload(), TEXT);
-
-        Request.Builder requestBuilder = new Request.Builder();
-
-        if (isNotEmpty(httpRequest.getAuth())) {
-            requestBuilder.addHeader("Authorization", httpRequest.getAuth());
-        }
-
-        Request request = requestBuilder
+        Request request = new Request.Builder()
+                .addHeader("Content-Type", "application/json")
+                .addHeader("Authorization", "Bearer " + httpRequest.getToken())
                 .url(httpRequest.getUrl())
-                .post(requestBody)
+                .method("POST", requestBody)
                 .build();
 
         return execute(client, request);

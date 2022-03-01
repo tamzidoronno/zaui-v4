@@ -19,8 +19,8 @@ if(@$result->numberOfUnReadTickets == 0) {
             echo "</a>";
         }
         ?>
-        <a href="https://support.zauistay.com/hc/en-us" target="_blank">
-            <div class='unreadtexttitle' style='text-align: center;border-bottom: 0px;'>Open support center</div>
+        <a href="/getshopsupport.php">
+            <div class='unreadtexttitle' target='_fdasfasfasfs' style='text-align: center;border-bottom: 0px;'>Open support center</div>
         </a>
     </div>
 </span>

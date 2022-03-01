@@ -36,7 +36,6 @@ public interface IPmsBookingProcess {
     public BookingResult completeBooking(CompleteBookingInput input);
     public BookingResult completeBookingForTerminal(CompleteBookingInput input);
     public BookingConfig getConfiguration();
-    public BookingEmbedConfig getBookingEmbedConfiguration();
     public GuestAddonsSummary logOn(BookingLogonData logindata);
     public GuestAddonsSummary logOut();
     public void printReciept(BookingPrintRecieptData data);

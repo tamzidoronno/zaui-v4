@@ -5256,30 +5256,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
             if(toRemove != null) {
                 order.orderTransactions.remove(toRemove);
-                String name = getCurrentUserName();
-                order.payment.transactionLog.put(System.currentTimeMillis(), "Order transaction deleted by " + name);
-                recalculateIfOrderIsStillPaid(order);
                 saveObject(order);
                 return;
             }
         }
-    }
-
-    private void recalculateIfOrderIsStillPaid(Order order) {
-        if (!order.isFullyPaid() && order.status == Order.Status.PAYMENT_COMPLETED){
-            order.payment.transactionLog.put(System.currentTimeMillis(), "Changing order status to not paid.");
-            order.status = Order.Status.CREATED;
-            order.markedPaidDate = null;
-            order.markedAsPaidByUserId = "";
-        }
-    }
-
-    private String getCurrentUserName() {
-        String name = "";
-        if(getSession() != null && getSession().currentUser != null) {
-            name = getSession().currentUser.fullName;
-        }
-        return name;
     }
 
     private void detectAndSaveDaysThatAreOpenInBetweenSet(List<DayIncome> newlyBrokenIncome, DayIncomeFilter filter) {

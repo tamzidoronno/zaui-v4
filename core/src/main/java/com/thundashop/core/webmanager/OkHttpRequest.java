@@ -5,17 +5,21 @@ import okhttp3.OkHttpClient;
 public class OkHttpRequest {
 
     private final OkHttpClient client;
-    private final String auth;
+    private final AuthType authType;
+    private final String token;
     private final String payload;
     private final String url;
-    private final boolean jsonPost;
 
-    private OkHttpRequest(OkHttpClient client, String auth, String payload, String url, boolean jsonPost) {
+    public enum AuthType {
+        BEARER
+    }
+
+    private OkHttpRequest(OkHttpClient client, AuthType authType, String token, String payload, String url) {
         this.client = client;
-        this.auth = auth;
+        this.authType = authType;
+        this.token = token;
         this.payload = payload;
         this.url = url;
-        this.jsonPost = jsonPost;
     }
 
     public static OkHttpRequestBuilder builder() {
@@ -26,8 +30,12 @@ public class OkHttpRequest {
         return client;
     }
 
-    public String getAuth() {
-        return auth;
+    public AuthType getAuthType() {
+        return authType;
+    }
+
+    public String getToken() {
+        return token;
     }
 
     public String getPayload() {
@@ -38,24 +46,20 @@ public class OkHttpRequest {
         return url;
     }
 
-    public boolean isJsonPost() {
-        return jsonPost;
-    }
-
     public static class OkHttpRequestBuilder {
         private OkHttpClient client;
-        private String  auth;
+        private OkHttpRequest.AuthType authType;
+        private String token;
         private String payload;
         private String url;
-        private boolean jsonPost;
 
         public OkHttpRequestBuilder setClient(OkHttpClient client) {
             this.client = client;
             return this;
         }
 
-        public OkHttpRequestBuilder setAuth(String  auth) {
-            this.auth = auth;
+        public OkHttpRequestBuilder setAuthType(OkHttpRequest.AuthType authType) {
+            this.authType = authType;
             return this;
         }
 
@@ -64,28 +68,28 @@ public class OkHttpRequest {
             return this;
         }
 
+        public OkHttpRequestBuilder setToken(String token) {
+            this.token = token;
+            return this;
+        }
+
         public OkHttpRequestBuilder setUrl(String url) {
             this.url = url;
             return this;
         }
 
-        public OkHttpRequestBuilder jsonPost(boolean jsonPost) {
-            this.jsonPost = jsonPost;
-            return this;
-        }
-
         public OkHttpRequest build() {
-            return new OkHttpRequest(client, auth, payload, url, jsonPost);
+            return new OkHttpRequest(client, authType, token, payload, url);
         }
     }
 
     @Override
     public String toString() {
         return "OkHttpRequest{" +
-                "auth=" + auth +
+                "authType=" + authType +
+                ", token='" + token + '\'' +
                 ", payload='" + payload + '\'' +
                 ", url='" + url + '\'' +
-                ", jsonPost=" + jsonPost +
                 '}';
     }
 }

@@ -44,7 +44,6 @@ $result->currency = $order->currency;
 $result->kid = $order->kid;
 $result->language = $order->language;
 $result->email = $user->emailAddress;
-$result->mobile = $user->cellPhone;
 if(isset($user->company->vatNumber)) {
     $result->vatNumber = $user->company->vatNumber;
 } else {

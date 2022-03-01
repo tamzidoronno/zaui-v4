@@ -124,7 +124,7 @@ function getshop_setBookingTranslation() {
                 typeTemplate.find('.roomtextname').html(text);
 //                $('.roomselectionoptions').append(typeTemplate);
             }
-            sessionStorage.setItem('getshop_server_timezone',config.serverTimeZone);
+
             loading.resolve(config);
         });
         getshop_confirmGuestInfoBox();
@@ -1558,15 +1558,11 @@ function getshop_overviewPageLoad(res) {
         } else {
             $('.addons_overview').fadeOut('400', function () {
                 $('.overview').fadeIn('400');
-                var padding = $('.gslbookingBody').position().top;
-                var body = $('.gslbookingBody').offset().top;
-                $(window).scrollTop(body-padding);
+                $(window).scrollTop(0);
             });
         }
     } else {
-        var padding = $('.gslbookingBody').position().top;
-        var body = $('.gslbookingBody').offset().top;
-        $(window).scrollTop(body-padding);
+        $(window).scrollTop(0);
     }
 }
 
@@ -1649,9 +1645,7 @@ function getshop_zauiPageLoad(activities){
     $('.zaui').fadeIn('400', function() {
         $('.GslBooking .ordersummary').slideUp();
         $('.GslBooking .gslbookingHeader').slideUp();
-        var padding = $('.gslbookingBody').position().top;
-        var body = $('.gslbookingBody').offset().top;
-        $(window).scrollTop(body-padding);
+        $(window).scrollTop(0);
     });
 }
 
@@ -1857,9 +1851,7 @@ function getshop_zauiToSummaryPage(){
     getshop_loadAddonsAndGuestSumaryView();
     //getshop_setPageName('overview');
     //saving.done(getshop_overviewPageLoad);*/
-    var padding = $('.gslbookingBody').position().top;
-    var body = $('.gslbookingBody').offset().top;
-    $(window).scrollTop(body-padding);
+    $(window).scrollTop(0);
 }
 
 
@@ -2494,12 +2486,14 @@ function getshop_searchRooms(e) {
         var time = new Date().toLocaleTimeString('en-us');
         var discountCode = $('#coupon_input').val();
 
-        var timeZone = sessionStorage.getItem('getshop_server_timezone');
-        var start = moment.utc($('#date_picker_start').val() + time,'DD.MM.YYYY H:m:s');
-        var startDate = start.tz(timeZone).format('MMM DD, YYYY H:mm:ss A');
+        var start = moment.utc($('#date_picker_start').val(), "DD.MM.YYYY").local();
+        var startDate = start.format('MMM DD, YYYY ') + time;
 
-        var end = moment.utc($('#date_picker_end').val() + time,'DD.MM.YYYY H:m:s');
-        var endDate = end.tz(timeZone).format('MMM DD, YYYY H:mm:ss A');
+        var end = moment.utc($('#date_picker_end').val(), "DD.MM.YYYY").local();
+        var endDate = end.format('MMM DD, YYYY ') + time;
+
+        startDate = startDate.replace(/[^a-zA-Z0-9,: ]/g, "")
+        endDate = endDate.replace(/[^a-zA-Z0-9,: ]/g, "");
 
         sessionStorage.setItem('getshop_startDate', startDate);
         sessionStorage.setItem('getshop_endDate', endDate);
@@ -3577,7 +3571,7 @@ GetShopApiWebSocketEmbeddedBooking.PmsBookingProcess.prototype = {
         var data = {
             args : {
             },
-            method: 'getBookingEmbedConfiguration',
+            method: 'getConfiguration',
             multiLevelName: multilevelname,
             interfaceName: 'core.pmsbookingprocess.IPmsBookingProcess',
         };

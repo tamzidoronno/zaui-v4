@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import static com.thundashop.core.webmanager.OkHttpRequest.AuthType.BEARER;
+
 @Service
 public class PowerOfficeGoHttpClientManager {
 
@@ -27,9 +29,9 @@ public class PowerOfficeGoHttpClientManager {
         OkHttpRequest request = OkHttpRequest.builder()
                 .setUrl(endpoint)
                 .setClient(client)
-                .setAuth("Bearer " + token)
+                .setAuthType(BEARER)
+                .setToken(token)
                 .setPayload(data)
-                .jsonPost(true)
                 .build();
 
         OkHttpResponse response = okHttpService.post(request);

@@ -17,7 +17,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -29,8 +34,10 @@ import java.util.HashMap;
 public class WebManager extends ManagerBase implements IWebManager {
     
     private static final Logger logger = LoggerFactory.getLogger(WebManager.class);
-    
-    private HashMap<String, String> latestResponseHeader = new HashMap<>();
+
+    private final String USER_AGENT = "Mozilla/5.0";
+    private HashMap<String, String> latestResponseHeader = new HashMap();
+    private String latestErrorMessage;
 
     @Autowired
     @Qualifier("webManagerExecutor")
@@ -38,8 +45,8 @@ public class WebManager extends ManagerBase implements IWebManager {
 
     @Autowired
     private OkHttpService okHttpService;
-    
-    
+
+
     @Override
     public String htmlGet(String url) {
         OkHttpRequest request = OkHttpRequest.builder()
@@ -85,46 +92,97 @@ public class WebManager extends ManagerBase implements IWebManager {
     public String htmlPostBasicAuth(String url, String data, boolean jsonPost, String encoding, String auth, String basic, boolean base64EncodeAuth, String htmlType)  throws Exception {
         return htmlPostBasicAuth(url, data, jsonPost, encoding, auth, basic, base64EncodeAuth, htmlType, new HashMap());
     }
-
-    public String htmlPostBasicAuth(String url, String data, boolean jsonPost, String encoding, String auth, String basic, boolean base64EncodeAuth, String htmlType, HashMap<String, String> headerData) throws Exception {
-
-        // ignore the `encoding` param. payload always will be utf-8 encoded.
-
-        OkHttpRequest request = OkHttpRequest.builder()
-                .setAuth(authorization(auth, basic, base64EncodeAuth))
-                .setPayload(data)
-                .setUrl(url)
-                .jsonPost(jsonPost)
-                .build();
-
-        OkHttpResponse response = okHttpService.post(request);
-
-        if (!response.isSuccessful()) {
-            logger.error("Unsuccessful POST request {}, response: {}", request, response);
-            throw new RuntimeException(String.format("Unsuccessful POST request url: [%s] , code: [%s]",
-                    url, response.statusCode()));
+    
+    public String htmlPostBasicAuth(String url, String data, boolean jsonPost, String encoding, String auth, String basic, boolean base64EncodeAuth, String htmlType, HashMap<String, String> headerData)  throws Exception {
+        if(encoding == null || encoding.isEmpty()) {
+            encoding = "UTF-8";
         }
-
-        // previous logic. but don't know why?!
-        latestResponseHeader = (HashMap<String, String>) response.headers();
-
-        return response.getBody();
-    }
-
-    private String authorization(String auth, String basic, boolean base64EncodeAuth) {
-        if (auth != null && !auth.isEmpty()) {
+        
+        URL urlObj = new URL(url);
+        HttpURLConnection connection = (HttpURLConnection) urlObj.openConnection();
+        
+        connection.setRequestMethod(htmlType);
+        connection.setRequestProperty("User-Agent", USER_AGENT);
+        
+        if(auth != null && !auth.isEmpty()) {
             String encoded = auth;
-            if (base64EncodeAuth) {
+            if(base64EncodeAuth) {
                 encoded = Base64.encodeBase64String(auth.getBytes());
             }
-            String authorization = basic + " " + encoded;
-            return authorization;
+            String authorization = basic+ " " + encoded;
+            connection.setRequestProperty("Authorization",authorization);
+        }
+        for(String key : headerData.keySet()) {
+            connection.setRequestProperty(key, headerData.get(key));
+        }
+        
+        if(jsonPost) {
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestProperty("Accept", "application/json");
+        }
+        
+        if(data != null && !data.isEmpty()) {
+            connection.setDoOutput(true);
+            try (DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream())) {
+                outputStream.writeBytes(new String(data.getBytes(), encoding));
+                outputStream.flush();    
+            }
+        } else {
+            connection.setRequestProperty("Content-Length", "0");
         }
 
-        return null;
+        try (InputStream stream = connection.getInputStream()) {
+            BufferedReader responseStream = new BufferedReader(new InputStreamReader(stream));
+        
+            String responseLine;
+            StringBuilder responseBuffer = new StringBuilder();
+
+            while((responseLine = responseStream.readLine()) != null) {
+                responseBuffer.append(responseLine);
+            }
+            latestResponseHeader = new HashMap();
+            try {
+                for (Map.Entry<String, List<String>> entries : connection.getHeaderFields().entrySet()) {    
+                    String values = "";
+                    for (String value : entries.getValue()) {
+                        values += value + ",";
+                    }
+                    latestResponseHeader.put(entries.getKey(), values);
+                }
+            }catch(Exception e) {
+                logPrintException(e);
+            }
+            
+            return responseBuffer.toString();
+        } catch(IOException ex) {
+            try (InputStream errorStream = connection.getErrorStream()) {
+                BufferedReader responseStream = new BufferedReader(new InputStreamReader(errorStream));
+
+                String responseLine;
+                StringBuilder responseBuffer = new StringBuilder();
+
+                while((responseLine = responseStream.readLine()) != null) {
+                    responseBuffer.append(responseLine);
+                }
+                String res = responseBuffer.toString();
+                latestErrorMessage = res;
+                throw ex;
+            }
+        } finally {
+            try {
+                connection.disconnect();
+            } catch (Exception ex) {
+                logPrintException(ex);
+            }
+        }
     }
     
     public HashMap<String, String> getLatestResponseHeader() {
         return latestResponseHeader;
     }
+
+    public String getLatestErrorMessage() {
+        return latestErrorMessage;
+    }
+    
 }

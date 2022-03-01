@@ -315,7 +315,6 @@ class ModulePageMenu {
                         if($entry->getPageId() == "getshopsupport") {
                             continue;
                         }
-                        
                         $subEntries = $entry->getSubEntries();
                         
                         $activeSubEntries = array();
@@ -334,8 +333,19 @@ class ModulePageMenu {
                         
                         $hassubs =  count($activeSubEntries) ? "hassubentries" : false;
 
+                        if($entry->getPageId() == "home" && $this->moduleName == 'support') {
+?>
+                        <div class="entry">
+
+                            <a href="https://support.zauistay.com/hc/en-us/" target="_blank"><div><i class="fa <? echo $entry->getIcon(); ?>"></i>  <? echo $entry->getName(); ?> </div></a>
+                        </div>
+                        <?php
+                            continue;
+                        }
+
                         ?>
                         <div class="entry <?php echo $hassubs; ?>">
+
                             <a href="?page=<? echo $entry->getPageId(); ?>&gs_getshopmodule=<? echo \PageFactory::getGetShopModule(); ?>"><div><i class="fa <? echo $entry->getIcon(); ?>"></i>  <? echo $entry->getName(); ?> </div></a>
                             <?php
                             if ($hassubs) {
@@ -385,7 +395,7 @@ class ModulePageMenu {
                         $('.ticketnotificationsarea').fadeIn();
                     } 
                 } else {
-                    window.open("/getshopsupport.php", "gsfdasfasfdeesupport");
+                    window.open("https://support.zauistay.com/hc/en-us", "_blank");
                 }
             });
             

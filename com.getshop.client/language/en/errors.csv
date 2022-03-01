@@ -165,7 +165,7 @@
 "1060","The Accrued Payment application is not activated, please activate it and configure it under accounting -> payments."
 "1061","Can not delete the freepost as it is closed"
 "1062","Cant create posts as the periode is closed."
-"1063","The order has already been marked as paid."
+"1063","The order is closed and already marked as paid."
 "1064","A credit note can not be modified, only marked as paid."
 "1065","Can not create a new product without connecting an account to it"
 

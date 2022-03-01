@@ -17,15 +17,7 @@ import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -140,7 +132,7 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
                 }
             }
             CartItem item = order.cart.getCartItem(entry.cartItemId);
-            if(item == null) {
+            if(item == null || !isItemInGivenDateRange(item, filter.start, filter.end)) {
                 continue;
             }
             BigDecimal amount = new BigDecimal(0);
@@ -172,6 +164,19 @@ public class PmsCoverageAndIncomeReportManager  extends ManagerBase implements I
         }
         
         return BigDecimal.ZERO;
+    }
+
+    private boolean isItemInGivenDateRange(CartItem item, Date start, Date end){
+        try{
+            if(item.startDate == null || item.endDate == null){
+                return true;
+            }
+            return item.startDate.compareTo(end) <= 0 && item.endDate.compareTo(start) >= 0;
+        }
+        catch (Exception ex){
+            return true;
+        }
+
     }
 
     void setTotalFromNewCoverageIncomeReport(PmsStatistics result, PmsBookingFilter filter) {

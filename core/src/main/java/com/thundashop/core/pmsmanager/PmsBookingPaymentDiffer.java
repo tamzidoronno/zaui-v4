@@ -127,14 +127,14 @@ public class PmsBookingPaymentDiffer {
     }
     
     private List<PmsRoomPaymentSummaryRow> createListRoom() {
-        List<PmsRoomPaymentSummaryRow> retList = new ArrayList();
+        List<PmsRoomPaymentSummaryRow> retList = new ArrayList<>();
         
-        List<String> allDatesToLookAt = new ArrayList<String>(room.priceMatrix.keySet());
+        List<String> allDatesToLookAt = new ArrayList<>(room.priceMatrix.keySet());
         allDatesToLookAt.addAll(getAllDatesFromOrders(allDatesToLookAt));
         
         for (String date : allDatesToLookAt) {
             PmsRoomPaymentSummaryRow row = createEmptyRoomSummaryRow(date);
-            
+
             calculateAmountInOrders(row);
             calculatePaidAmount(row);
             retList.add(row);
@@ -268,6 +268,11 @@ public class PmsBookingPaymentDiffer {
                     List<String> icartItemIds = row.cartItemIds.get(order.id);
                     for (CartItem item : cartItems) {
                         if (icartItemIds.contains(item.getCartItemId())) {
+                            // if room category changes after order has been paid
+                            if(!row.createOrderOnProductId.equals(item.getProductId())){
+                                item.getProduct().id = row.createOrderOnProductId;
+                                pmsManager.orderManager.updateCartItemOnOrder(order.id, item);
+                            }
                             return getAmountForDate(item, row.date);
                         }
                     }

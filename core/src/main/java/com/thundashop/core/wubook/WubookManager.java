@@ -730,7 +730,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         
         List<BookingItemType> types = bookingEngine.getBookingItemTypesWithSystemType(null);
         List<String> errors = new ArrayList();
-        for (BookingItemType type : types) {
+        for (BookingItemType type : types) { //room types from ui
             String added = "";
             WubookRoomData data = getWubookRoomData(type.id);
             if(data.addedToWuBook && data.wubookroomid != -1) {
@@ -791,7 +791,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         if(type.size == 0) {
             return "Invalid size for room: " + type.name;
         }
-        if(!connectToApi()) { return "Faield to connect to api"; }
+        if(!connectToApi()) { return "Failed to connect to api"; }
         List<BookingItem> items = bookingEngine.getBookingItemsByType(type.id);
         WubookRoomData rdata = getWubookRoomData(type.id);
         Vector<String> params = new Vector<String>();
@@ -804,8 +804,15 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement("0");
         params.addElement("r" + rdata.code);
         params.addElement("nb");
+        logText("parameters sent to wubook from insert room method: ");
+        String paramsStr="";
+        for(int i = 0; i< params.size(); i++){
+            paramsStr+=" "+params.get(i).toString();
+        }
+        logText(paramsStr);
         Vector result = executeClient("new_room", params);
         Integer response = (Integer) result.get(0);
+        logText("Got response: "+result.toString());
         String res = "";
         if(response == 0) {
             rdata.addedToWuBook = true;
@@ -832,11 +839,19 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement(9999);
         params.addElement("r" + data.code + "" + guests);
         params.addElement("nb");
+        logText("parameters sent to wubook from insert virtual room method: ");
+        String paramsStr="";
+        for(int i = 0; i< params.size(); i++){
+            paramsStr+=" "+params.get(i).toString();
+        }
+        logText(paramsStr);
+
         Vector result = executeClient("new_virtual_room", params);
         Integer response = (Integer) result.get(0);
+        logText("Got response: "+result.toString());
         String res = "";
         if(response == 0) {
-            logger.debug("Successfully added virtual room");
+            logger.info("Successfully added virtual room");
             return (Integer)result.get(1);
         } else {
             return -1;
@@ -862,6 +877,13 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         if(response == 0) {
             logger.debug("Successfully updated room");
         } else {
+            logText("parameters sent to wubook from insert virtual room method: ");
+            String paramsStr="";
+            for(int i = 0; i< params.size(); i++){
+                paramsStr+=" "+params.get(i).toString();
+            }
+            logText(paramsStr);
+            logText("Response got from update room method: "+result.toString());
             res = result.toString();
         }
         return res;
@@ -2390,6 +2412,13 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             logger.debug("Successfully added virtual room");
             return (Integer)result.get(1);
         } else {
+            logText("parameters sent to wubook from insert virtual room method: ");
+            String paramsStr="";
+            for(int i = 0; i< params.size(); i++){
+                paramsStr+= ", "+ params.get(i).toString();
+            }
+            logText(paramsStr);
+            logText("Response: "+result.toString());
             return -1;
         }
     }

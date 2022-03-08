@@ -9,6 +9,7 @@ import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.ForceAsync;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +24,7 @@ public interface IWubookManager {
     @Administrator
     public boolean testConnection() throws Exception;
     @Administrator
-    public HashMap<Long, String> getLogEntries();
+    public List<WubookLog> getLogEntries();
     
     @Administrator
     public void doUpdateMinStay();

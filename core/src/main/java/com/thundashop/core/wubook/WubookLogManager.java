@@ -19,6 +19,7 @@ public class WubookLogManager extends ManagerBase implements IWubookLogManager {
     @Override
     public void save(String message, Long timeStamp) {
         WubookLog wubookLog = new WubookLog(message, System.currentTimeMillis());
+
         saveObject(wubookLog);
     }
 

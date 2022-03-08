@@ -22,4 +22,7 @@ public class WubookLog extends DataCommon {
        public Long getTimeStamp() {
               return timeStamp;
        }
+       public void increaseTimeStamp(long i){
+              this.timeStamp += i;
+       }
 }

@@ -837,7 +837,7 @@ public class BookingItemAssignerOptimal {
 
     private void addBestCombosBetweenAssignedBookings(List<OptimalBookingTimeLine> bookingLines, List<Booking> unassignedBookings, Date startDate, Date endDate) {
         
-        List<BookingsBetweenCalculator> datesToCheck = new ArrayList();
+        List<BookingsBetweenCalculator> dateRangesToCheck = new ArrayList();
         
         for (OptimalBookingTimeLine timeline : bookingLines) {
             HashMap<Date, Date> datesBetween = timeline.getDatesBetweenAssignedBokings();
@@ -847,43 +847,39 @@ public class BookingItemAssignerOptimal {
                 if (start.equals(end)) {
                     continue;
                 }
-                
                 BookingsBetweenCalculator ret = new BookingsBetweenCalculator(start, end, unassignedBookings, timeline);
-                
                 if (start.equals(new Date(0))) {
                     continue;
                 }
-                
                 if (end.equals(new Date(Long.MAX_VALUE))) {
                     continue;
                 }
-                
-                datesToCheck.add(ret);
+                dateRangesToCheck.add(ret);
             }
         }
         
         if (startDate != null && endDate != null) {
-            datesToCheck.removeIf(o -> o.start.after(endDate));
+            dateRangesToCheck.removeIf(o -> o.start.after(endDate));
         }
         
-        datesToCheck.removeIf(o -> overLoads.contains(o.getTimeString()));
+        dateRangesToCheck.removeIf(o -> overLoads.contains(o.getTimeString()));
         
-        while(!datesToCheck.isEmpty()) {
-            datesToCheck.parallelStream()
+        while(!dateRangesToCheck.isEmpty()) {
+            dateRangesToCheck.parallelStream()
                     .forEach(o -> {
                         o.setUnassignedBookings(unassignedBookings);
                         o.process();
                 });
             
-            overLoads.addAll(datesToCheck.stream()
+            overLoads.addAll(dateRangesToCheck.stream()
                 .filter(o -> o.isOverflow())
                 .map(o -> o.getTimeString())
                 .collect(Collectors.toList())
             );
             
-            datesToCheck.removeIf(o -> o.isOverflow());
+            dateRangesToCheck.removeIf(o -> o.isOverflow());
             
-            List<BookingsBetweenCalculator> bookingsWithPossibleCombos = datesToCheck.stream()
+            List<BookingsBetweenCalculator> bookingsWithPossibleCombos = dateRangesToCheck.stream()
                     .filter(o -> !o.getBestCombo().isEmpty())
                     .collect(Collectors.toList());
             
@@ -901,7 +897,7 @@ public class BookingItemAssignerOptimal {
             List<Booking> bookings = use.getBestCombo();
             use.getTimeLine().bookings.addAll(bookings);
             unassignedBookings.removeAll(bookings);
-            datesToCheck.remove(use);
+            dateRangesToCheck.remove(use);
         }
         
     }

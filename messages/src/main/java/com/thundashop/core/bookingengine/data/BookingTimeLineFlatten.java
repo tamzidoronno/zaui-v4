@@ -421,24 +421,22 @@ public class BookingTimeLineFlatten implements Serializable {
     //maybe method should be called arrangeBookingsThatHaveOnlyOnePossibility
     private void makeDistinct(List<BookingTimeLine> timeLines) {
         for (BookingTimeLine line : timeLines) {
-            makeDistinct(timeLines, line);
-        }
-    }
+            String bookingIdOnlyInGroup = null;
 
-    private void makeDistinct(List<BookingTimeLine> timeLines, BookingTimeLine line) {
-        String bookingIdOnlyInGroup = null;
-        List<String> canBeRemoved = new ArrayList();
-        for (String id : line.bookingIds) {
-            if (idIsOnlyInThisLine(line, timeLines, id)) { // this is maybe for the case if booking is only posible in that line
-                if (bookingIdOnlyInGroup == null) {
-                    bookingIdOnlyInGroup = id;
-                } else {
-                    canBeRemoved.add(id);
+            List<String> canBeRemoved = new ArrayList();
+
+            for (String id : line.bookingIds) {
+                if (idIsOnlyInThisLine(line, timeLines, id)) { // this is maybe for the case if booking is only posible in that line
+                    if (bookingIdOnlyInGroup == null) {
+                        bookingIdOnlyInGroup = id;
+                    } else {
+                        canBeRemoved.add(id);
+                    }
                 }
             }
-        }
 
-        line.bookingIds.removeAll(canBeRemoved);
+            line.bookingIds.removeAll(canBeRemoved);
+        }
     }
 
     private boolean idIsOnlyInThisLine(BookingTimeLine line, List<BookingTimeLine> timeLines, String id) {

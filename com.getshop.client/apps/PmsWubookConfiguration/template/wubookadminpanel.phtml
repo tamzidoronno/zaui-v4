@@ -196,13 +196,20 @@ $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSele
     <h3>Log</h3>
     <?php
     $logentries = (array)$this->getApi()->getWubookManager()->getLogEntries($this->getSelectedMultilevelDomainName());
-    krsort($logentries);
+    usort($logentries,'
+        ($logentry1, $logentry2)
+            {
+            return $logentry2->timeStampe > $logentry1->timeStampe;
+            }
+    ');
     $i = 0;
-    foreach($logentries as $time => $text) {
+    foreach($logentries as $logentry) {
+        $time = $logentry->timeStamp;
+        $text = $logentry->message;
         echo "<div class='ellipsis' title='$text'>";
         echo date("d.m.Y H:i", $time / 1000) . " : " . $text . "<bR>";
         echo "</div>";
-        if($i > 100) { 
+        if($i > 100) {
             break;
         }
         $i++;

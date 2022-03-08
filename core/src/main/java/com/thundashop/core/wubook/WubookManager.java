@@ -38,6 +38,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 import static com.thundashop.core.utils.Constants.WUBOOK_CLIENT_URL;
 import static java.util.stream.Collectors.toMap;
@@ -50,6 +51,8 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
     private static final Logger logger = LoggerFactory.getLogger(WubookManager.class);
 
+    //previously it was 10, now upgraded to 32
+    private final int MAX_NO_OF_VIRTUAL_ROOM_FOR_ANY_ROOM_TYPE = 32;
     private XmlRpcClient client;
     String token = "";
     private HashMap<String, WubookRoomData> wubookdata = new HashMap<>();
@@ -733,9 +736,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         for (BookingItemType type : types) { //room types from ui
             String added = "";
             WubookRoomData data = getWubookRoomData(type.id);
-            if(data.addedToWuBook && data.wubookroomid != -1) {
+            if(data.addedToWuBook && data.wubookroomid >= 0) {
                 added = updateRoom(type);
-            } else {
+            } else if(data.wubookroomid==-1){
                 added = insertRoom(type);
             }
             
@@ -804,12 +807,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement("0");
         params.addElement("r" + rdata.code);
         params.addElement("nb");
-        logText("parameters sent to wubook from insert room method: ");
-        String paramsStr="";
-        for(int i = 0; i< params.size(); i++){
-            paramsStr+=" "+params.get(i).toString();
-        }
-        logText(paramsStr);
+
         Vector result = executeClient("new_room", params);
         Integer response = (Integer) result.get(0);
         logText("Got response: "+result.toString());
@@ -820,6 +818,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             saveObject(rdata);
             logger.debug("Successfully added room");
         } else {
+            logText("parameters sent to wubook for insertion of room of type "+type.name+": ");
+            logText(params.toString());
+            logText("Response got after insertion of room of type "+type.name+":");
+            logText(result.toString());
+
             res = result.toString();
         }
         return res;
@@ -839,12 +842,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement(9999);
         params.addElement("r" + data.code + "" + guests);
         params.addElement("nb");
-        logText("parameters sent to wubook from insert virtual room method: ");
-        String paramsStr="";
-        for(int i = 0; i< params.size(); i++){
-            paramsStr+=" "+params.get(i).toString();
-        }
-        logText(paramsStr);
 
         Vector result = executeClient("new_virtual_room", params);
         Integer response = (Integer) result.get(0);
@@ -854,6 +851,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             logger.info("Successfully added virtual room");
             return (Integer)result.get(1);
         } else {
+            logText("parameters sent to wubook for insertion of virtual room of type "+type.name+": ");
+            logText(params.toString());
+            logText("Response got after insertion of virtual room of type "+type.name+":");
+            logText(result.toString());
+
             return -1;
         }
     }
@@ -877,13 +879,10 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         if(response == 0) {
             logger.debug("Successfully updated room");
         } else {
-            logText("parameters sent to wubook from insert virtual room method: ");
-            String paramsStr="";
-            for(int i = 0; i< params.size(); i++){
-                paramsStr+=" "+params.get(i).toString();
-            }
-            logText(paramsStr);
-            logText("Response got from update room method: "+result.toString());
+            logText("parameters sent to wubook for updating of "+type.name+" type room: ");
+            logText(params.toString());
+            logText("Response got after updating room of type "+type.name+": ");
+            logText(result.toString());
             res = result.toString();
         }
         return res;
@@ -2022,14 +2021,15 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     }
 
     public void logText(String string) {
-        logPrint(string);
         wubookLogManager.save(string, System.currentTimeMillis());
+        logPrint(string);
+
     }
 
     @Override
-    public HashMap<Long, String> getLogEntries() {
-        return (HashMap<Long, String>) wubookLogManager.get()
-                .collect(toMap(WubookLog::getTimeStamp, WubookLog::getMessage));
+    public List<WubookLog> getLogEntries() {
+        List<WubookLog> wubookLogs = wubookLogManager.get().collect(Collectors.toList());
+        return wubookLogs;
     }
 
     private Integer numberOfBookingsHavingWuBookId(String idToMark) {
@@ -2301,29 +2301,36 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     }
 
     private void insertVirtualRooms(WubookRoomData data, BookingItemType type) {
-        if(type.size > 10) {
+        if(type.size > MAX_NO_OF_VIRTUAL_ROOM_FOR_ANY_ROOM_TYPE) {
             return;
         }
         logger.debug("Virtual rooms, number of guests: {} , roomId: {} , data virtualRoom ids: {} , name: {}",
                 type.size, data.rid, data.virtualWubookRoomIds, type.name);
+
         String[] virtualRooms = data.virtualWubookRoomIds.split(";");
         String virtualRoomIds = data.wubookroomid + "";
-        for(int i = 2; i <= type.size; i++) {
+
+        for (int i = 2; i <= type.size; i++) {
             logger.debug("Need to add virtual room for guest: {}", i);
+
             try {
                 int roomId = -1;
-                if(virtualRooms.length >= i) {
-                    roomId = new Integer(virtualRooms[i-1]);
-                    if(roomId == -1) {
+
+                if (virtualRooms.length >= i) {
+                    roomId = new Integer(virtualRooms[i - 1]);
+
+                    //any negative room id except -1 is ignored
+                    if (roomId == -1) { //-1 indicates new room insertion to wubook
                         roomId = insertVirtualRoom(type, i, data);
-                    } else {
-                        updateVirtualRoom(type,i,data, roomId);
+                    }
+                    else if (roomId >= 0) { //positive room id indicates updating room info in wubook
+                        updateVirtualRoom(type, i, data, roomId);
                     }
                 } else {
                     roomId = insertVirtualRoom(type, i, data);
                 }
-                    virtualRoomIds += ";" + roomId;
-            }catch(Exception e) {
+                virtualRoomIds += ";" + roomId;
+            } catch (Exception e) {
                 logger.error("", e);
             }
         }
@@ -2407,18 +2414,15 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement("nb");
         Vector result = executeClient("mod_virtual_room", params);
         Integer response = (Integer) result.get(0);
-        String res = "";
+
         if(response == 0) {
             logger.debug("Successfully added virtual room");
             return (Integer)result.get(1);
         } else {
-            logText("parameters sent to wubook from insert virtual room method: ");
-            String paramsStr="";
-            for(int i = 0; i< params.size(); i++){
-                paramsStr+= ", "+ params.get(i).toString();
-            }
-            logText(paramsStr);
-            logText("Response: "+result.toString());
+            logText("parameters sent to wubook for updating virtual room of type "+type.name+": ");
+            logText(params.toString());
+            logText("Response got after updating virtual room of type "+type.name+"(Room ID-> "+roomid+"):");
+            logText(result.toString());
             return -1;
         }
     }

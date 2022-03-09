@@ -41,6 +41,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import static com.thundashop.core.utils.Constants.WUBOOK_CLIENT_URL;
+import static com.thundashop.core.wubook.WuBookApiCalls.*;
 import static org.apache.commons.lang3.StringUtils.containsAny;
 
 
@@ -49,12 +50,14 @@ import static org.apache.commons.lang3.StringUtils.containsAny;
 public class WubookManager extends GetShopSessionBeanNamed implements IWubookManager {
 
     private static final Logger logger = LoggerFactory.getLogger(WubookManager.class);
-    private static char[] roomNumbers=
+    private final char[] VIRTUAL_ROOM_SERIAL_NO =
     {'0', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
             'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
 
-    //previously it was 10, now upgraded to 32
+    //previously it was 10, now upgraded to 36
     private final int MAX_NO_OF_VIRTUAL_ROOM_FOR_ANY_ROOM_TYPE = 36;
+    private final int SUCCESS_STATUS_CODE = 0;
+
     private XmlRpcClient client;
     String token = "";
     private HashMap<String, WubookRoomData> wubookdata = new HashMap<>();
@@ -215,7 +218,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement(pmsManager.getConfigurationSecure().wubookusername);
         params.addElement(pmsManager.getConfigurationSecure().wubookpassword);
         params.addElement("823y8vcuzntzo_o201");
-        Vector result = executeClient("acquire_token", params);
+        Vector result = executeClient(ACQUIRE_TOKEN.value(), params);
         
         if(result == null) {
             return false;
@@ -224,7 +227,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         Integer response = (Integer) result.get(0);
         token = (String) result.get(1);
         tokenCount = 0;
-        if (response == 0) {
+        if (response == SUCCESS_STATUS_CODE) {
             return true;
         }
         try {
@@ -296,7 +299,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement(from);
         params.addElement(to);
         logger.debug("Finding bookings from: {} -> to {} ", from, to);
-        Vector result = executeClient("fetch_bookings_codes", params);
+        Vector result = executeClient(FETCH_BOOKINGS_CODES.value(), params);
         List<Integer> toReturn = new ArrayList();
         if((Integer)result.get(0) != 0) {
             logText("Failed to fetch all reservations: " + result.get(1));
@@ -582,7 +585,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement(rcode);
         params.addElement(true);
 
-        Vector result = executeClient("fetch_booking", params);
+        Vector result = executeClient(FETCH_BOOKING.value(), params);
         Vector res = (Vector) result.get(1);
         return buildBookingResult((Hashtable) res.get(0));
     }
@@ -601,7 +604,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement(token);
         params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
         params.addElement(rcode);
-        Vector noshow = executeClient("bcom_notify_noshow", params);
+        Vector noshow = executeClient(BCOM_NOTIFY_NOSHOW.value(), params);
         if(!noshow.get(0).equals(0)) {
             return noshow.toString();
         }
@@ -702,7 +705,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             params.addElement(dfrom);
             params.addElement(table);
 
-            Vector result = executeClient("rplan_update_rplan_values", params);
+            Vector result = executeClient(RPLAN_UPDATE_RPLAN_VALUES.value(), params);
             if((Integer)result.get(0) != 0) {
                 logText("Failed to update daily min stay, " + result.get(1));
                 return "Failed to update daily min stay, " + result.get(1);
@@ -720,7 +723,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement(token);
         params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
         params.addElement(rcode);
-        Vector noshow = executeClient("bcom_notify_invalid_cc", params);
+        Vector noshow = executeClient(BCOM_NOTIFY_INVALID_CC.value(), params);
         if(!noshow.get(0).equals(0)) {
             return noshow.toString();
         }
@@ -735,7 +738,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         
         List<BookingItemType> types = bookingEngine.getBookingItemTypesWithSystemType(null);
         List<String> errors = new ArrayList();
-        for (BookingItemType type : types) { //room types from ui
+        for (BookingItemType type : types) {
             String added = "";
             WubookRoomData data = getWubookRoomData(type.id);
             if(data.addedToWuBook && data.wubookroomid >= 0) {
@@ -813,11 +816,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement("r" + rdata.code);
         params.addElement("nb");
 
-        Vector result = executeClient("new_room", params);
+        Vector result = executeClient(NEW_ROOM.value(), params);
         Integer response = (Integer) result.get(0);
 
         String res = "";
-        if(response == 0) {
+        if(response == SUCCESS_STATUS_CODE) {
             rdata.addedToWuBook = true;
             rdata.wubookroomid = (Integer)result.get(1);
             saveObject(rdata);
@@ -846,13 +849,13 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement(type.size);
         params.addElement(0);
         params.addElement(9999);
-        params.addElement("r" + data.code + "" + roomNumbers[guests]);
+        params.addElement("r" + data.code + "" + VIRTUAL_ROOM_SERIAL_NO[guests]);
         params.addElement("nb");
 
-        Vector result = executeClient("new_virtual_room", params);
+        Vector result = executeClient(NEW_VIRTUAL_ROOM.value(), params);
         Integer response = (Integer) result.get(0);
 
-        if(response == 0) {
+        if(response == SUCCESS_STATUS_CODE) {
             logger.info("Successfully added virtual room");
             return (Integer)result.get(1);
         } else {
@@ -878,10 +881,10 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement(items.size() + "");
         params.addElement("r" + rdata.code);
         params.addElement("nb");
-        Vector result = executeClient("mod_room", params);
+        Vector result = executeClient(MOD_ROOM.value(), params);
         String res = "";
         Integer response = (Integer) result.get(0);
-        if(response == 0) {
+        if(response == SUCCESS_STATUS_CODE) {
             logger.debug("Successfully updated room");
         } else {
             logText("parameters sent to wubook for updating of "+type.name+" type room: ");
@@ -1543,7 +1546,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             params.addElement(0);
         }
         logger.debug("Finding bookings from: {} to -> {} ", from, to);
-        Vector result = executeClient("fetch_bookings", params);
+        Vector result = executeClient(FETCH_BOOKINGS.value(), params);
         List<WubookBooking> toReturn = new ArrayList();
         if((Integer)result.get(0) != 0) {
             logger.debug("Failed to fetch all reservations: {}", result.get(1));
@@ -1737,7 +1740,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement(token);
         params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
         
-        Vector result = executeClient("get_otas", params);
+        Vector result = executeClient(GET_OTAS.value(), params);
         Integer responseCode = (Integer) result.get(0);
         List<WubookOta> returnChannels = new ArrayList();
         if(responseCode == 0) {
@@ -1984,7 +1987,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
             params.addElement(tosend);
             
-            Vector result = executeClient("update_sparse_rooms_values", params);
+            Vector result = executeClient(UPDATE_SPARSE_ROOMS_VALUES.value(), params);
             if ((Integer)result.get(0) != 0) {
                 logText("Failed to update availability (" + result.get(0) + ") " + result.get(1) + " Parameters sent: " + params.toString() );
             } else {
@@ -2415,12 +2418,12 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement(type.size);
         params.addElement(0);
         params.addElement(9999);
-        params.addElement("r" + data.code + "" + roomNumbers[guests]);
+        params.addElement("r" + data.code + "" + VIRTUAL_ROOM_SERIAL_NO[guests]);
         params.addElement("nb");
-        Vector result = executeClient("mod_virtual_room", params);
+        Vector result = executeClient(MOD_VIRTUAL_ROOM.value(), params);
         Integer response = (Integer) result.get(0);
 
-        if(response == 0) {
+        if(response == SUCCESS_STATUS_CODE) {
             logger.debug("Successfully added virtual room");
             return (Integer)result.get(1);
         } else {
@@ -2444,9 +2447,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         
         Vector result = null;
         if(channelType == 2) {
-            result = executeClient("bcom_rooms_rates", params);
+            result = executeClient(BCOM_ROOMS_RATES.value(), params);
         } else if(channelType == 1) {
-            result = executeClient("exp_rooms_rates", params);
+            result = executeClient(EXP_ROOMS_RATES.value(), params);
         } else {
             return new ArrayList();
         }
@@ -2561,7 +2564,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement(token);
         params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
         params.addElement(address);
-        Vector res = executeClient("push_activation", params);
+        Vector res = executeClient(PUSH_ACTIVATION.value(), params);
         Integer responseCode = (Integer) res.get(0);
     }
 
@@ -2659,7 +2662,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement(dfrom);
         params.addElement(table);
         
-        Vector result = executeClient("update_plan_prices", params);
+        Vector result = executeClient(UPDATE_PLAN_PRICES.value(), params);
         if((Integer)result.get(0) != 0) {
             logText("Unable to update prices:" + result.get(1) + " parameters sent: " + params.toString() );
             return "Failed to update price, " + result.get(1);

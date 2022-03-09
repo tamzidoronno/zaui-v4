@@ -747,6 +747,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             insertVirtualRooms(data, type);
             
             if(!added.isEmpty()) {
+                ///added type name with error message for which the error is occurring
+                added = "Error for type "+type.name+": \n" + added;
+
                 errors.add(added);
             }
         }

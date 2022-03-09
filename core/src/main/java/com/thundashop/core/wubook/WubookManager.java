@@ -2413,7 +2413,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement(type.size);
         params.addElement(0);
         params.addElement(9999);
-        params.addElement("r" + data.code + "" + guests);
+        params.addElement("r" + data.code + "" + roomNumbers[guests]);
         params.addElement("nb");
         Vector result = executeClient("mod_virtual_room", params);
         Integer response = (Integer) result.get(0);

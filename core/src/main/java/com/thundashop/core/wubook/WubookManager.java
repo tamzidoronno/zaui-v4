@@ -41,7 +41,6 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import static com.thundashop.core.utils.Constants.WUBOOK_CLIENT_URL;
-import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.lang3.StringUtils.containsAny;
 
 
@@ -50,6 +49,9 @@ import static org.apache.commons.lang3.StringUtils.containsAny;
 public class WubookManager extends GetShopSessionBeanNamed implements IWubookManager {
 
     private static final Logger logger = LoggerFactory.getLogger(WubookManager.class);
+    private static char[] roomNumbers=
+    {'0', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
+            'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
 
     //previously it was 10, now upgraded to 32
     private final int MAX_NO_OF_VIRTUAL_ROOM_FOR_ANY_ROOM_TYPE = 32;
@@ -831,6 +833,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     private Integer insertVirtualRoom(BookingItemType type, int guests, WubookRoomData data) throws XmlRpcException, IOException, Exception {
         if(!connectToApi()) { return -1; }
         List<BookingItem> items = bookingEngine.getBookingItemsByType(type.id);
+
         Vector<Object> params = new Vector<Object>();
         params.addElement(token);
         params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
@@ -840,7 +843,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement(type.size);
         params.addElement(0);
         params.addElement(9999);
-        params.addElement("r" + data.code + "" + guests);
+        params.addElement("r" + data.code + "" + roomNumbers[guests]);
         params.addElement("nb");
 
         Vector result = executeClient("new_virtual_room", params);

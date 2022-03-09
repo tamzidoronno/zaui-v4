@@ -815,7 +815,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
         Vector result = executeClient("new_room", params);
         Integer response = (Integer) result.get(0);
-        logText("Got response: "+result.toString());
+
         String res = "";
         if(response == 0) {
             rdata.addedToWuBook = true;
@@ -851,8 +851,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
         Vector result = executeClient("new_virtual_room", params);
         Integer response = (Integer) result.get(0);
-        logText("Got response: "+result.toString());
-        String res = "";
+
         if(response == 0) {
             logger.info("Successfully added virtual room");
             return (Integer)result.get(1);

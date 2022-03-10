@@ -267,8 +267,8 @@ border: solid 0px;
 
 .PmsBookingGroupRoomView .roomsingroupinformation { overflow: auto;max-height: 500px;}
     .PmsBookingGroupRoomView .boxed { min-height: 290px; box-shadow: 0px 2px 15px rgba(0,0,0,0.3); margin: 10px; box-sizing: border-box; background-color:#fff; display:inline-block; padding: 10px; float:left; }
-    .PmsBookingGroupRoomView .groupheaderinformation { width: 300px;   }
-    .PmsBookingGroupRoomView .bookerinformation { width: calc(100% - 350px); min-height: 290px; }
+    .PmsBookingGroupRoomView .groupheaderinformation { width: 250px;   }
+    .PmsBookingGroupRoomView .bookerinformation { width: calc(100% - 300px); min-height: 290px; }
     .gsoverlayinner { background-color:#e0ebee; }
     .PmsBookingGroupRoomView h2 { margin-top: 0px; border-bottom: solid 1px #bbb; padding-bottom: 2px; color:#000; }
     .PmsBookingGroupRoomView h2.nomargin { margin: 0px; }

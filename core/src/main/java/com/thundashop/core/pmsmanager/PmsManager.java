@@ -17,6 +17,8 @@ import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.arx.AccessLog;
 import com.thundashop.core.arx.DoorManager;
 import com.thundashop.core.bookingengine.BookingEngine;
+import com.thundashop.core.bookingengine.BookingItemAssignerOptimal;
+import com.thundashop.core.bookingengine.OptimalBookingTimeLine;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
@@ -626,6 +628,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         saveBooking(booking);
         feedGrafana(booking);
         logPrint("Booking has been completed: " + booking.id);
+        checkIfBookingIsSplit(booking);
 
         User user = userManager.getUserById(booking.userId);
         user.lastBooked = new Date();
@@ -5750,6 +5753,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
                 checkIfNeedToBeAssignedToRoomWithSpecialAddons(booking);
                 bookingUpdated(booking.id, "created", null);
+                checkIfBookingIsSplit(booking);
                 gsTiming("Booking confirmed");
                 return booking;
             }
@@ -10218,6 +10222,24 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             usr.agreeToSpam = true;
             usr.agreeToSpamDate = new Date();
             userManager.saveUserSecure(usr);
+        }
+        checkIfBookingIsSplit(currentBooking);
+    }
+
+    private void checkIfBookingIsSplit(PmsBooking booking) {
+        List<BookingTimeLineFlatten> lines = bookingEngine.getTimeLinesForItemWithOptimalIngoreErrorsWithTypes(booking.getStartDate(),
+                booking.getEndDate(), booking.rooms.stream().map(r -> r.bookingItemTypeId).collect(Collectors.toList()));
+        List<BookingTimeLineFlatten> overflowedLines = lines.stream()
+                .filter(l -> l.overFlow)
+                .collect(Collectors.toList());
+
+        if (overflowedLines.size() > 0){
+            String messageNotification = "Some booking(s) needs to be checked as it might be split on multiple rooms or overflowing the rooms: <br>";
+            for (BookingTimeLineFlatten line : overflowedLines){
+                messageNotification += line.getBookings().stream().map(Booking::basicBookingInfo).collect(Collectors.joining("<br>"));
+            }
+            messageManager.sendMessageToStoreOwner(messageNotification, "Possible split booking");
+            logger.warn(messageNotification);
         }
     }
 

@@ -7,6 +7,7 @@ app.AccountFinanceReport = {
         $(document).on('change', '.AccountFinanceReport .timeperiode[gsname="year"]', app.AccountFinanceReport.changePeriodeOptions);
         $(document).on('click', '.AccountFinanceReport .leftmenu .taboperation', app.AccountFinanceReport.changeMenu);
         $(document).on('click', '.AccountFinanceReport .totalcolforaccount', app.AccountFinanceReport.showSummaryRow);
+        $(document).on('click', '.AccountFinanceReport .balanceInDetails', app.AccountFinanceReport.showBalancesInRow);
         $(document).on('click', '.AccountFinanceReport .transferalldays', app.AccountFinanceReport.transferAllDays);
         $(document).on('click', '.AccountFinanceReport .issuersum', app.AccountFinanceReport.showDetailedOrderViewForPaymentMethod);
         $(document).on('click', '.AccountFinanceReport .applydiff', app.AccountFinanceReport.applyDiff);
@@ -77,7 +78,17 @@ app.AccountFinanceReport = {
             menu.show();
         }
     },
-    
+    showBalancesInRow: function() {
+        var menu = $(this).find('.balanceInRow');
+        var wasVisible = menu.is(':visible');
+
+        $('.balanceInRow').hide();
+
+        if (!wasVisible) {
+            menu.show();
+        }
+    },
+
     changeMenu: function() {
         var data = {
             tab : $(this).attr('tab'),

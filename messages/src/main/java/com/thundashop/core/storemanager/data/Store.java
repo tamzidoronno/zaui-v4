@@ -151,8 +151,9 @@ public class Store extends DataCommon {
     public void setTimeZone(String timezone) {
         this.timeZone = timezone;
     }
+    
     public String getTimeZone() {
-        return !timeZone.isEmpty() ? this.timeZone : "Europe/Oslo";
+        return this.timeZone;
     }
     
 }

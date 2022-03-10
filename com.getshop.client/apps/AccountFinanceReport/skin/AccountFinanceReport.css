@@ -207,6 +207,20 @@
     display: none;
     
 }
+.AccountFinanceReport .balanceInRow .entry {
+    padding: 10px;
+    font-weight: normal;
+    display: block;
+}
+
+.AccountFinanceReport .balanceInRow {
+    background-color: #FFF;
+    position: absolute;
+    top: 285px;
+    border: solid 1px #DDD;
+    display: none;
+
+}
 .AccountFinanceReport .top_row_header {
     text-align: center;
     padding: 10px;

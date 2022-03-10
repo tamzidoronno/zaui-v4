@@ -1202,7 +1202,11 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     public BookingEmbedConfig getBookingEmbedConfiguration() {
         BookingConfig bookingConfig = getConfiguration();
         BookingEmbedConfig bookingEmbedConfig = new BookingEmbedConfig(bookingConfig);
-        bookingEmbedConfig.serverTimeZone = storeManager.getMyStore().getTimeZone();
+        
+        if(!storeManager.getMyStore().getTimeZone().isEmpty()){
+            bookingEmbedConfig.serverTimeZone = storeManager.getMyStore().getTimeZone();
+        }
+        
         return bookingEmbedConfig;
     }
 

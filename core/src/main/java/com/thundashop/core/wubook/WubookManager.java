@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
+import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -51,11 +52,11 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
     private static final Logger logger = LoggerFactory.getLogger(WubookManager.class);
     private final char[] VIRTUAL_ROOM_SERIAL_NO =
-    {'0', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
+    {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
             'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
 
-    //previously it was 10, now upgraded to 36
-    private final int MAX_NO_OF_VIRTUAL_ROOM_FOR_ANY_ROOM_TYPE = 36;
+    //previously it was 10, now upgraded to 35
+    private final int MAX_NO_OF_VIRTUAL_ROOM_FOR_ANY_ROOM_TYPE = 35;
     private final int SUCCESS_STATUS_CODE = 0;
 
     private XmlRpcClient client;
@@ -2225,7 +2226,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     }
 
     private Vector executeClient(String apicall, Vector params) {
-        javax.net.ssl.HttpsURLConnection.setDefaultHostnameVerifier((hostname, sslSession) -> true);
+        HttpsURLConnection.setDefaultHostnameVerifier((hostname, sslSession) -> true);
 
         logText("Executing api call: " + apicall);
 
@@ -2318,6 +2319,8 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         String[] virtualRooms = data.virtualWubookRoomIds.split(";");
         String virtualRoomIds = data.wubookroomid + "";
 
+        //virtual room short-naming has to be start from 2
+        // if we start from 1, there will be shortname mismatching for existing virtual rooms.
         for (int i = 2; i <= type.size; i++) {
             logger.debug("Need to add virtual room for guest: {}", i);
 

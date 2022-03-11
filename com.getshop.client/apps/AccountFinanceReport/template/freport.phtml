@@ -52,14 +52,20 @@ if (count($errors)) {
     return;
 }
 
-function printIncomeValues($accounts, $incomeBalance, $text) {
+function printIncomeValues($accounts, $incomeBalance, $text, $start) {
     echo "<div class='row' >";
         echo "<div class='inner_row inbalance2' >";
             echo "<div class='col orderid'>$text</div>";
-            
+
             foreach ($accounts as $account) {
                 $val = @$incomeBalance->balances->{$account};
-                echo "<div class='col $account'>".round($val,2)."</div>";
+                echo "<div account='$account' class='col $account balanceInDetails'>".round($val,2);
+                    ?>
+                    <div class='balanceInRow'>
+                        <a class='entry'  href="/scripts/downloadBalanceInDetails.php?accountId=<? echo $account; ?>&date=<? echo $start;?>" account='<? echo $account; ?>' ><? echo "Download details for amount"; ?></a>
+                     </div>
+                    <?php
+                echo "</div>";
             }
             
             echo "<div class='col controlsum'>-</div>";
@@ -213,7 +219,7 @@ echo "<div class='outer'>";
     foreach ($dayIncomes as $dayIncome) {
         $i++;
         if ($i == 1) {
-            printIncomeValues($accounts, $incomeBalance, $this->__f("Balance in"));
+            printIncomeValues($accounts, $incomeBalance, $this->__f("Balance in"), $start);
         }
         
         echo "<div class='row' >";
@@ -279,7 +285,7 @@ echo "<div class='outer'>";
 
     echo "</div>";
     
-    printIncomeValues($accounts, $incomeBalance, $this->__f("Balance out"));
+    printIncomeValues($accounts, $incomeBalance, $this->__f("Balance out"), $start);
 echo "</div>";
 
 ?>

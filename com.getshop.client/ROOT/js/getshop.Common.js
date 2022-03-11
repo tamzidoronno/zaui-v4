@@ -111,6 +111,9 @@ $(function() {
         if ($(this).attr('href').indexOf('generatePDF.php') > -1) {
             return;
         }
+        if ($(this).attr('href').indexOf('downloadBalanceInDetails.php') > -1) {
+            return;
+        }
         
         if ($(this).attr('href').indexOf('impersonate.php') > -1) {
             return;

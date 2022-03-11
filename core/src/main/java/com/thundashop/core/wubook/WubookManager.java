@@ -2231,15 +2231,15 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             // these api's params is too large and unnecessary for logging.
             logger.info("Calling wubookManger api, apiCall: {} , params: {}", apicall, params);
         }
-//        ExecutorService executor = Executors.newFixedThreadPool(1);
-//        Callable<Vector> task = () -> (Vector) client.execute(apicall, params);
-//        Future<Vector> taskFuture = executor.submit(task);
+        ExecutorService executor = Executors.newFixedThreadPool(1);
+        Callable<Vector> task = () -> (Vector) client.execute(apicall, params);
+        Future<Vector> taskFuture = executor.submit(task);
         try {
             StopWatch stopWatch = new StopWatch("Api Call: " + apicall);
             stopWatch.start();
 
-//            Vector res = taskFuture.get(3, TimeUnit.MINUTES);
-            Vector res = (Vector) client.execute(apicall, params);
+            Vector res = taskFuture.get(3, TimeUnit.MINUTES);
+//            Vector res = (Vector) client.execute(apicall, params);
             stopWatch.stop();
             logger.info("Executed api: {} , time: {} , response: {}", apicall, stopWatch, res);
             return res;

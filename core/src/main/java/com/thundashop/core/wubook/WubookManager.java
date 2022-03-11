@@ -2239,7 +2239,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             stopWatch.start();
 
             Vector res = taskFuture.get(3, TimeUnit.MINUTES);
-//            Vector res = (Vector) client.execute(apicall, params);
+
             stopWatch.stop();
             logger.info("Executed api: {} , time: {} , response: {}", apicall, stopWatch, res);
             return res;

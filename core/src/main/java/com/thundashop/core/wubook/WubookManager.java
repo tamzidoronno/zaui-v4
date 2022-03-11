@@ -205,41 +205,40 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
 
     private boolean connectToApi() throws Exception {
-        
-        if(!isWubookActive()) { return false; }
-        
-        if(tokenCount < 30 && token != null && !token.isEmpty()) {
-            tokenCount++;
 
+        if(!isWubookActive()) { return false; }
+        Date currentTime = new Date();
+        int tokenAgeInMinute = (int) TimeUnit.MILLISECONDS
+                .toMinutes(currentTime.getTime() - tokenGenerationTime.getTime());
+
+
+        if(tokenAgeInMinute<=30 && tokenCount<=30 && token != null && !token.isEmpty()){
+            tokenCount++;
             return true;
         }
 
         client = createClient();
+        Vector result = createToken();
 
-        logText("Reloading token");
-        Vector<String> params = new Vector<String>();
-        params.addElement(pmsManager.getConfigurationSecure().wubookusername);
-        params.addElement(pmsManager.getConfigurationSecure().wubookpassword);
-        params.addElement("823y8vcuzntzo_o201");
-        Vector result = executeClient(ACQUIRE_TOKEN.value(), params);
+        if(result != null){
+            Integer response = (Integer) result.get(0);
 
-        if(result == null) {
-            return false;
+            if (response == SUCCESS_STATUS_CODE) {
+                token = (String) result.get(1);
+                tokenCount = 0;
+                tokenGenerationTime = new Date();
+                return true;
+            } else {
+                try {
+                    logText("Failed to connect to api,");
+                    logText(response.toString());
+                    logText("Failed to connect to api,");
+                    logText(result.get(1).toString());
+                }catch(Exception e) {
+                    logger.error("", e);
+                }
+            }
         }
-
-        Integer response = (Integer) result.get(0);
-        token = (String) result.get(1);
-        tokenCount = 0;
-        if (response == SUCCESS_STATUS_CODE) {
-            return true;
-        }
-        try {
-            logText("Failed to connect to api,\n" + response);
-            logText("Failed to connect to api,\n" + result.get(1));
-        }catch(Exception e) {
-            logger.error("", e);
-        }
-
         return false;
     }
     

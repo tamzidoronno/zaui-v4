@@ -196,10 +196,12 @@ $types = $this->getApi()->getBookingEngine()->getBookingItemTypes($this->getSele
     <h3>Log</h3>
     <?php
     $logentries = (array)$this->getApi()->getWubookManager()->getLogEntries($this->getSelectedMultilevelDomainName());
+
+    //callback function is for sorting logs according to timestamp
     usort($logentries,'
         ($logentry1, $logentry2)
             {
-            return $logentry2->timeStampe > $logentry1->timeStampe;
+                return $logentry2->timeStampe > $logentry1->timeStampe;
             }
     ');
     $i = 0;

@@ -232,8 +232,8 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             return true;
         }
         try {
-            logText("Failed to connect to api, " + response);
-            logText("Failed to connect to api, " + result.get(1));
+            logText("Failed to connect to api,\n" + response);
+            logText("Failed to connect to api,\n" + result.get(1));
         }catch(Exception e) {
             logger.error("", e);
         }
@@ -303,7 +303,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         Vector result = executeClient(FETCH_BOOKINGS_CODES.value(), params);
         List<Integer> toReturn = new ArrayList();
         if((Integer)result.get(0) != 0) {
-            logText("Failed to fetch all reservations: " + result.get(1));
+            logText("Failed to fetch all reservations:\n" + result.get(1));
         } else {
             Vector getAllBookings = (Vector) result.get(1);
             
@@ -461,7 +461,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
                 // 300000 millisecond == 5 minutes
                 if(diff < (300000)) {
-                    logText("Fetch new booking disabled from : " + disableWubook);
+                    logText("Fetch new booking disabled from :\n" + disableWubook);
                     lastPulledWubook = new Date();
                     return;
                 }
@@ -469,7 +469,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
             if(nextBookings != null) {
                 try {
-                    logText("Next bookings found:" + nextBookings.size());
+                    logText("Next bookings found:\n" + nextBookings.size());
                     checkBookingsToDelete(nextBookings);
                 }catch(Exception e) {
                     logger.error("Failed to double delete bookings", e);
@@ -480,7 +480,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
             try {
                 if(!bookingCodesToAdd.isEmpty()) {
-                    logText("BookingsCodesToAdd is not empty:" + bookingCodesToAdd.size());
+                    logText("BookingsCodesToAdd is not empty:\n" + bookingCodesToAdd.size());
                     for(String code : bookingCodesToAdd) {
                         if(!triedAddingCode.contains(storeId + "_" + code)) {
                             triedAddingCode.add(storeId + "_" + code);
@@ -511,7 +511,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 for(int bookcount = 0; bookcount < bookings.size(); bookcount++) {
                     Hashtable reservation = (Hashtable) bookings.get(bookcount);
                     WubookBooking wubooking = buildBookingResult(reservation);
-                    logText("Adding reservation: " + wubooking.reservationCode);
+                    logText("Adding reservation:\n" + wubooking.reservationCode);
                     if(wubooking.status == 5) {
                         if(wubooking.wasModified > 0) {
                             //This is a modified reservation. its not a new booking.
@@ -708,8 +708,8 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
             Vector result = executeClient(RPLAN_UPDATE_RPLAN_VALUES.value(), params);
             if((Integer)result.get(0) != 0) {
-                logText("Failed to update daily min stay, " + result.get(1));
-                return "Failed to update daily min stay, " + result.get(1);
+                logText("Failed to update daily min stay,\n" + result.get(1));
+                return "Failed to update daily min stay,\n" + result.get(1);
             }
             lastAvailability.needUpdateMinStay = false;
         }
@@ -827,11 +827,8 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             saveObject(rdata);
             logger.debug("Successfully added room");
         } else {
-            logText("parameters sent to wubook for insertion of room of type "+type.name+": ");
-            logText(params.toString());
-            logText("Response got after insertion of room of type "+type.name+":");
-            logText(result.toString());
-
+            logText("parameters sent to wubook for insertion of room of type "+type.name+":\n"+params.toString());
+            logText("Response got after insertion of room of type "+type.name+":\n"+result.toString());
             res = result.toString();
         }
         return res;
@@ -860,10 +857,8 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             logger.info("Successfully added virtual room");
             return (Integer)result.get(1);
         } else {
-            logText("parameters sent to wubook for insertion of virtual room of type "+type.name+": ");
-            logText(params.toString());
-            logText("Response got after insertion of virtual room of type "+type.name+":");
-            logText(result.toString());
+            logText("parameters sent to wubook for insertion of virtual room of type "+type.name+":\n"+params.toString());
+            logText("Response got after insertion of virtual room of type "+type.name+":\n"+result.toString());
 
             return -1;
         }
@@ -883,15 +878,17 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement("r" + rdata.code);
         params.addElement("nb");
         Vector result = executeClient(MOD_ROOM.value(), params);
+//        if(type.name.equals("Café Cafe de Grand Test")){
+//            logText("parameters sent to wubook for updating mother room of type "+type.name+": ");
+//            logText();
+//        }
         String res = "";
         Integer response = (Integer) result.get(0);
         if(response == SUCCESS_STATUS_CODE) {
             logger.debug("Successfully updated room");
         } else {
-            logText("parameters sent to wubook for updating of "+type.name+" type room: ");
-            logText(params.toString());
-            logText("Response got after updating room of type "+type.name+": ");
-            logText(result.toString());
+            logText("parameters sent to wubook for updating of "+type.name+" type room:\n"+params.toString());
+            logText("Response got after updating room of type "+type.name+":\n"+result.toString());
             res = result.toString();
         }
         return res;
@@ -1105,12 +1102,12 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 room.numberOfGuests = r.guest;
                 room.bookingItemTypeId = getTypeFromWubookRoomId(r.roomId);
                 if(room.bookingItemTypeId == null) {
-                    logText("Failed to find room type for booking: " + booking.reservationCode);
+                    logText("Failed to find room type for booking:\n" + booking.reservationCode);
                     sendErrorForReservation(booking.reservationCode, "Failed to find room type for reservation");
                 }
                 
                 if(!doesTypeExists(room.bookingItemTypeId)) {
-                    logText("The booking type for this room does not exists (channel manager), this needs to be remapped. Category in GetShop has been deleted.");
+                    logText("The booking type for this room does not exists (channel manager), this needs to be remapped.\nCategory in GetShop has been deleted.");
                     continue;
                 }
                 
@@ -1128,7 +1125,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             }
             
             if(newbooking.rooms.isEmpty()) {
-                logText("Returning since there are no rooms to add id: " + booking.reservationCode);
+                logText("Returning since there are no rooms to add id:\n" + booking.reservationCode);
                 return null;
             }
             
@@ -1990,7 +1987,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             
             Vector result = executeClient(UPDATE_SPARSE_ROOMS_VALUES.value(), params);
             if ((Integer)result.get(0) != 0) {
-                logText("Failed to update availability (" + result.get(0) + ") " + result.get(1) + " Parameters sent: " + params.toString() );
+                logText("Failed to update availability->\n(" + result.get(0) + ") " + result.get(1) + "\nParameters sent:\n" + params.toString() );
             } else {
                 lastAvailability.lastAvailabilityUpdated = fieldsUpdated;
                 saveObject(lastAvailability);
@@ -2234,17 +2231,15 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             // these api's params is too large and unnecessary for logging.
             logger.info("Calling wubookManger api, apiCall: {} , params: {}", apicall, params);
         }
-
-        ExecutorService executor = Executors.newFixedThreadPool(1);
-        Callable<Vector> task = () -> (Vector) client.execute(apicall, params);
-        Future<Vector> taskFuture = executor.submit(task);
-
+//        ExecutorService executor = Executors.newFixedThreadPool(1);
+//        Callable<Vector> task = () -> (Vector) client.execute(apicall, params);
+//        Future<Vector> taskFuture = executor.submit(task);
         try {
             StopWatch stopWatch = new StopWatch("Api Call: " + apicall);
             stopWatch.start();
 
-            Vector res = taskFuture.get(3, TimeUnit.MINUTES);
-
+//            Vector res = taskFuture.get(3, TimeUnit.MINUTES);
+            Vector res = (Vector) client.execute(apicall, params);
             stopWatch.stop();
             logger.info("Executed api: {} , time: {} , response: {}", apicall, stopWatch, res);
             return res;
@@ -2256,8 +2251,8 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             messageManager.sendErrorNotification(getClass() + "storeId-" + storeId + " " + errMessage, d);
             throw new RuntimeException(errMessage, d);
         } finally {
-            taskFuture.cancel(true);
-            executor.shutdownNow();
+//            taskFuture.cancel(true);
+//            executor.shutdownNow();
         }
 
     }
@@ -2425,15 +2420,16 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement("nb");
         Vector result = executeClient(MOD_VIRTUAL_ROOM.value(), params);
         Integer response = (Integer) result.get(0);
+//        if(type.name.equals("Café Cafe de Grand Test")){
+//            logText("parameters sent to wubook for updating virtual room of type "+type.name+":\n"+params.toString());
+//        }
 
         if(response == SUCCESS_STATUS_CODE) {
             logger.debug("Successfully added virtual room");
             return (Integer)result.get(1);
         } else {
-            logText("parameters sent to wubook for updating virtual room of type "+type.name+": ");
-            logText(params.toString());
-            logText("Response got after updating virtual room of type "+type.name+"(Room ID-> "+roomid+"):");
-            logText(result.toString());
+            logText("parameters sent to wubook for updating virtual room of type "+type.name+":\n"+params.toString());
+            logText("Response got after updating virtual room of type "+type.name+"(Room ID-> "+roomid+"):\n"+result.toString());
             return -1;
         }
     }
@@ -2667,7 +2663,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         
         Vector result = executeClient(UPDATE_PLAN_PRICES.value(), params);
         if((Integer)result.get(0) != 0) {
-            logText("Unable to update prices:" + result.get(1) + " parameters sent: " + params.toString() );
+            logText("Unable to update prices:" + result.get(1) + "\nparameters sent:\n" + params.toString() );
             return "Failed to update price, " + result.get(1);
         } else {
             logText("Prices updated between " + now + " - " + end);

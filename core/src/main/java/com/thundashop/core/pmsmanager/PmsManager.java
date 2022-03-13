@@ -17,8 +17,6 @@ import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.arx.AccessLog;
 import com.thundashop.core.arx.DoorManager;
 import com.thundashop.core.bookingengine.BookingEngine;
-import com.thundashop.core.bookingengine.BookingItemAssignerOptimal;
-import com.thundashop.core.bookingengine.OptimalBookingTimeLine;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
@@ -1365,7 +1363,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void saveConfiguration(PmsConfiguration notifications) {
-        wubookManager.resetConnection();
+        wubookManager.restToken();
 
         if (configuration.rowCreatedDate != null && (notifications.id == null || !notifications.id.equals(configuration.id))) {
             logPrint("Tried to save an invalid configuration object");

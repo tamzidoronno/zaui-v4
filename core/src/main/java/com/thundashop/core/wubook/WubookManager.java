@@ -247,7 +247,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         return connectToApi();
     }
 
-    public void resetConnection(){
+    public void restToken(){
         token = null;
     }
 

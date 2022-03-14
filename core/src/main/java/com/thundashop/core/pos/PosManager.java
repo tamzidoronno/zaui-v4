@@ -1950,6 +1950,7 @@ public class PosManager extends ManagerBase implements IPosManager {
                 .stream()
                 .flatMap(b -> b.rooms.stream())
                 .filter(r -> r.createOrdersOnZReport)
+                .filter(r -> r.deleted == false)
                 .filter(r -> r.hasUnsettledAmountIncAccrued())
                 .filter(r -> r.date.start.before(end) || r.date.start.equals(end))
                 .collect(Collectors.toList());

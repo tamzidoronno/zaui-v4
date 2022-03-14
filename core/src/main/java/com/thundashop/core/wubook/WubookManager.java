@@ -204,38 +204,14 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             return false;
         }
 
-        Date currentTime = new Date();
-        int tokenAgeInMinute = (int) TimeUnit.MILLISECONDS
-                .toMinutes(currentTime.getTime() - tokenGenerationTime.getTime());
-
-        if (tokenAgeInMinute <= 30 && tokenCount <= 30 && token != null && !token.isEmpty()) {
+        if (isTokenValid()) {
             tokenCount++;
             return true;
         }
 
         client = createClient();
-        Vector result = createToken();
-
-        if (result != null) {
-            Integer response = (Integer) result.get(0);
-
-            if (response == SUCCESS_STATUS_CODE) {
-                token = (String) result.get(1);
-                tokenCount = 0;
-                tokenGenerationTime = new Date();
-                return true;
-            } else {
-                try {
-                    logText("Failed to connect to api,");
-                    logText(response.toString());
-                    logText("Failed to connect to api,");
-                    logText(result.get(1).toString());
-                } catch (Exception e) {
-                    logger.error("", e);
-                }
-            }
-        }
-        return false;
+        generateNewToken();
+        return isTokenValid();
     }
 
     @Override
@@ -243,19 +219,41 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         return connectToApi();
     }
 
-    public void restToken() {
+    public void expireToken() {
         token = null;
+        tokenCount = 0;
+        tokenGenerationTime = null;
     }
 
-    private Vector createToken() {
-        token = null;
-
-        logText("Reloading token");
-        Vector<String> params = new Vector<String>();
+    private void generateNewToken() {
+        logText("Generating new token");
+        Vector<String> params = new Vector<>();
         params.addElement(pmsManager.getConfigurationSecure().wubookusername);
         params.addElement(pmsManager.getConfigurationSecure().wubookpassword);
         params.addElement("823y8vcuzntzo_o201");
-        return executeClient(ACQUIRE_TOKEN.value(), params);
+        Vector result = executeClient(ACQUIRE_TOKEN.value(), params);
+
+        if(result == null){
+            expireToken();
+            return;
+        }
+
+        try {
+            Integer response = (Integer) result.get(0);
+
+            if (response == SUCCESS_STATUS_CODE) {
+                token = (String) result.get(1);
+                tokenCount = 0;
+                tokenGenerationTime = new Date();
+            }
+            else {
+                logText("Failed to connect to api. Status code" + response.toString() + "Message: " + result.get(1).toString());
+            }
+
+        } catch (Exception e) {
+            logger.error("Failed to process acquire token response from wubook client", e);
+        }
+
     }
 
     @Override
@@ -851,12 +849,12 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     }
 
     private Integer insertVirtualRoom(BookingItemType type, int guests, WubookRoomData data)
-            throws XmlRpcException, IOException, Exception {
+            throws Exception {
         if (!connectToApi()) {
             return -1;
         }
 
-        Vector<Object> params = new Vector<Object>();
+        Vector<Object> params = new Vector<>();
         params.addElement(token);
         params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
         params.addElement(new Integer(data.wubookroomid));
@@ -887,7 +885,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     private String updateRoom(BookingItemType type) throws XmlRpcException, IOException {
         List<BookingItem> items = bookingEngine.getBookingItemsByType(type.id);
         WubookRoomData rdata = getWubookRoomData(type.id);
-        Vector<String> params = new Vector<String>();
+        Vector<String> params = new Vector<>();
         params.addElement(token);
         params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
         params.addElement(rdata.wubookroomid + "");
@@ -1531,7 +1529,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         if (!connectToApi()) {
             return;
         }
-
         nextBookings = fetchBookings(3, false);
     }
 
@@ -1816,7 +1813,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         if (availabiltyyHasBeenChangedEnd == null || (end != null && end.after(availabiltyyHasBeenChangedEnd))) {
             availabiltyyHasBeenChangedEnd = end;
         }
-        logger.debug("Avialability changed at : start {} - end {}", start, end);
+        logger.debug("Availability changed at : start {} - end {}", start, end);
         availabilityHasBeenChanged = new Date();
     }
 
@@ -1931,7 +1928,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         }
 
         if (!connectToApi()) {
-            return "Faield to connect to api";
+            return "Failed to connect to api";
         }
         Vector<Hashtable> tosend = new Vector();
         int toRemove = pmsManager.getConfigurationSecure().numberOfRoomsToRemoveFromBookingCom;
@@ -2641,6 +2638,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement(address);
         Vector res = executeClient(PUSH_ACTIVATION.value(), params);
         Integer responseCode = (Integer) res.get(0);
+        if(responseCode == SUCCESS_STATUS_CODE){
+            logText("Push callback has been activated.");
+        }
     }
 
     @Override
@@ -2684,7 +2684,6 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         }
 
         Hashtable table = new Hashtable();
-
         String pattern = "dd/MM/yyyy";
         SimpleDateFormat format = new SimpleDateFormat(pattern);
         String dfrom = format.format(now);
@@ -2803,6 +2802,21 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         }
 
         return booking;
+    }
+
+    private boolean isTokenValid(){
+        if(token == null || token.isEmpty()){
+            return false;
+        }
+        if(tokenCount > 30){
+            return false;
+        }
+        int tokenAgeInMinute = (int) TimeUnit.MILLISECONDS
+                .toMinutes(new Date().getTime() - tokenGenerationTime.getTime());
+        if(tokenAgeInMinute > 30){
+            return false;
+        }
+        return true;
     }
 
 }

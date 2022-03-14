@@ -1363,7 +1363,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void saveConfiguration(PmsConfiguration notifications) {
-        wubookManager.restToken();
 
         if (configuration.rowCreatedDate != null && (notifications.id == null || !notifications.id.equals(configuration.id))) {
             logPrint("Tried to save an invalid configuration object");
@@ -1395,6 +1394,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             storeConfig.additionalPlugins.add("conferencelist");
         }
         storeManager.saveStore(storeConfig);
+        // invalided existing token on credentials update
+        wubookManager.expireToken();
         
         notifications.finalize();
         saveObject(notifications);

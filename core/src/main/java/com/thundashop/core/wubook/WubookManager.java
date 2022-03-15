@@ -57,6 +57,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     // previously it was 10, now upgraded to 35
     private final int MAX_NO_OF_VIRTUAL_ROOM_FOR_ANY_ROOM_TYPE = 35;
     private final int SUCCESS_STATUS_CODE = 0;
+    private final String WUBOOK_SECRET = "823y8vcuzntzo_o201";
 
     private XmlRpcClient client;
     String token = "";
@@ -230,7 +231,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         Vector<String> params = new Vector<>();
         params.addElement(pmsManager.getConfigurationSecure().wubookusername);
         params.addElement(pmsManager.getConfigurationSecure().wubookpassword);
-        params.addElement("823y8vcuzntzo_o201");
+        params.addElement(WUBOOK_SECRET);
         Vector result = executeClient(ACQUIRE_TOKEN.value(), params);
 
         if(result == null){

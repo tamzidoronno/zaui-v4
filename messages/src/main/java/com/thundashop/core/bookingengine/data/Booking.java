@@ -294,6 +294,10 @@ public class Booking extends DataCommon implements Comparable<Booking> {
         return Objects.equals(year, year2) && Objects.equals(dayofyear, dayofyear2);
     }
 
+    public String basicBookingInfo(){
+        return "Booking ID: " + this.id + " - start date: " + this.startDate + ", end date: " + this.endDate;
+    }
+
     @Override
     public String toString() {
         return "Booking{" +

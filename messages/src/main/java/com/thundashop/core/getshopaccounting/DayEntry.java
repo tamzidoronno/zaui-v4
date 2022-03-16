@@ -132,4 +132,8 @@ public class DayEntry implements Serializable, Cloneable {
         }
         return new BigDecimal(0.0);
     }
+
+    public Double getAmount(){
+        return this.amount.doubleValue();
+    }
 }

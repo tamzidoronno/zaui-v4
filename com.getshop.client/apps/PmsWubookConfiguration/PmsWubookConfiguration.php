@@ -11,8 +11,8 @@ class PmsWubookConfiguration extends \WebshopApplication implements \Application
     }
 
     public function render() {
-        $this->includefile("wubookadminpanel");
         $this->includefile("actiondone");
+        $this->includefile("wubookadminpanel");
     }
     
     public function addReservation() {

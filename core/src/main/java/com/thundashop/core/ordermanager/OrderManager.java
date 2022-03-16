@@ -4243,8 +4243,90 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
         addBalance(res, balance, incTaxes);
-        
+
         return balance;
+    }
+
+    /* Similar to outstanding report - we want to get the all dayEntries (==orders) which make up the Balances In amount. When an order is accrued,
+    * there will probably be correlated parent/credited orders which will alltogetgher make the total amount of accrued zero for a particular booking.  */
+    @Override
+    public String getBalanceInDetails(String accountId, Date date) {
+        AccountingBalance balance = new AccountingBalance();
+        balance.balanceToDate = date;
+
+        List<DayIncome> res = new ArrayList();
+        res = getDayIncomes(getStore().rowCreatedDate, date);
+        addBalance(res, balance, true);
+
+
+        List<DayIncome> incomesNotEmpty = res.stream().filter(inc->inc.dayEntries.size()!=0).collect(Collectors.toList());
+        Map<Long, List<DayEntry>> groupedByOrderId = new HashMap<>();
+
+        for (DayIncome i : incomesNotEmpty){
+            for (DayEntry ent: i.dayEntries){
+                if(ent.accountingNumber.equals(accountId)){
+                    if (groupedByOrderId.containsKey(ent.incrementalOrderId)){
+                        groupedByOrderId.get(ent.incrementalOrderId).add(ent);
+                    }else{
+                        List<DayEntry> entries = new ArrayList<>();
+                        entries.add(ent);
+                        groupedByOrderId.put(ent.incrementalOrderId, entries);
+                    }
+                }
+            }
+        }
+        Map<Long, List<DayEntry>> unresolvedAccruedIncomes = new HashMap<>();
+        for (long incOrdId : groupedByOrderId.keySet()){
+            List<DayEntry> entries = groupedByOrderId.get(incOrdId);
+            Double total = entries.stream().mapToDouble(DayEntry::getAmount).sum();
+            if (total> 0.5 || total < -0.5){
+                unresolvedAccruedIncomes.put(incOrdId, entries);
+            }
+        }
+
+        //try grouping per booking to see if it is zeroed out on the booking
+        // Map<bookingId, ListofEntries>
+        Map<String, List<DayEntry>> entriesGroupedByBookings = new HashMap<>();
+
+        List<String> multiLevelNames = database.getMultilevelNames("PmsManager", storeId);
+        entriesGroupedByBookings.put("unknown", new ArrayList<>());
+
+        for (String multilevelName : multiLevelNames) {
+            PmsManager pmsManager = getShopSpringScope.getNamedSessionBean(multilevelName, PmsManager.class);
+            if(pmsManager != null) {
+                for (long incrementOrderId : unresolvedAccruedIncomes.keySet()){
+                    for (DayEntry entry : unresolvedAccruedIncomes.get(incrementOrderId)){
+                        List<PmsBooking> bs = pmsManager.getBookingsWithOrderId(entry.orderId);
+                        if (bs.size()>1 || bs.size()==0){
+                            entriesGroupedByBookings.get("unknown").add(entry);
+                            continue;
+                        }
+                        if (entriesGroupedByBookings.containsKey(bs.get(0).id)) {
+                            entriesGroupedByBookings.get(bs.get(0).id).add(entry);
+                        }else{
+                            List<DayEntry> entries = new ArrayList<>();
+                            entries.add(entry);
+                            entriesGroupedByBookings.put(bs.get(0).id, entries);
+                        }
+                    }
+                }
+            }
+        }
+        String contentOutput = "OrderId" +"," +"Amount"+ "," + "AccountNumber" +","+"Date\n";
+        Map<String, List<DayEntry>> unreasolvedEntriesGroupedByBooking = new HashMap<>();
+        for (String bookingId : entriesGroupedByBookings.keySet()){
+            List<DayEntry> entries = entriesGroupedByBookings.get(bookingId);
+            Double total = entries.stream().mapToDouble(DayEntry::getAmount).sum();
+            if (total> 0.5 || total < -0.5){
+                unreasolvedEntriesGroupedByBooking.put(bookingId, entries);
+                for (DayEntry entry : entries) {
+                    contentOutput = contentOutput + (entry.incrementalOrderId +"," +entry.amount + "," + entry.accountingNumber+","+entry.date+"\n");
+                }
+            }
+        }
+
+
+        return contentOutput;
     }
 
     private void addBalance(List<DayIncome> res, AccountingBalance balance, boolean incTaxes) {

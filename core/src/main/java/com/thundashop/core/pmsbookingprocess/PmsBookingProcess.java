@@ -1199,6 +1199,18 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     }
 
     @Override
+    public BookingEmbedConfig getBookingEmbedConfiguration() {
+        BookingConfig bookingConfig = getConfiguration();
+        BookingEmbedConfig bookingEmbedConfig = new BookingEmbedConfig(bookingConfig);
+        
+        if(!storeManager.getMyStore().getTimeZone().isEmpty()){
+            bookingEmbedConfig.serverTimeZone = storeManager.getMyStore().getTimeZone();
+        }
+        
+        return bookingEmbedConfig;
+    }
+
+    @Override
     public GuestAddonsSummary changeDateOnRoom(StartBooking arg) {
         arg.start = pmsInvoiceManager.normalizeDate(arg.start, true);
         arg.end = pmsInvoiceManager.normalizeDate(arg.end, false);

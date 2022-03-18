@@ -101,7 +101,7 @@ public class StripeManager extends ManagerBase implements IStripeManager {
 
     public String createSessionForPayment(String orderId, String address) {
         String callback = getCallBackAddr();
-        String session = createSessionForPayment(orderId, address, callback);
+        String session = createSessionForPaymentWithCallback(orderId, address, callback);
         return session;
     }
 
@@ -115,7 +115,6 @@ public class StripeManager extends ManagerBase implements IStripeManager {
             }
 
             Order order = orderManager.getOrderSecure(orderId);
-            User user = userManager.getUserById(order.userId);
             Double amount = orderManager.getTotalAmount(order);
             Map<String, Object> customerParams = new HashMap<>();
             customerParams.put("amount", (int) (amount * 100));
@@ -226,17 +225,17 @@ public class StripeManager extends ManagerBase implements IStripeManager {
         } catch (JsonSyntaxException e) {
             order.payment.transactionLog.put(System.currentTimeMillis(),
                     "Failed to handle webhook callback from stripe on payload" + result.payload);
-            orderManager.saveOrder(order);
+
             return;
         } catch (SignatureVerificationException e) {
             order.payment.transactionLog.put(System.currentTimeMillis(),
                     "Failed to handle webhook callback from stripe on payload (invalid signature)" + result.payload);
-            orderManager.saveOrder(order);
             return;
+        } finally {
+            orderManager.saveOrder(order);
         }
 
         order.payment.callBackParameters = result.result;
-        orderManager.saveOrder(order);
         orderManager.markAsPaid(result.orderId, new Date(), (double) result.amount / 100);
 
         try {
@@ -249,17 +248,14 @@ public class StripeManager extends ManagerBase implements IStripeManager {
             List<PaymentMethod> cards = PaymentMethod.list(cardParams).getData();
             saveCardByPaymentMethod(order.userId, customerId, cards);
         } catch (StripeException ex) {
-
             Logger.getLogger(StripeManager.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
 
-    private String createWebHook(String key) {
+    private String createWebHook(String key, String webhookaddress) {
         try {
             Stripe.apiKey = key;
-            String webhookaddress = getCallBackAddr();
-
             boolean createWebHook = settings.webhookSecret.isEmpty();
 
             if (createWebHook) {
@@ -377,7 +373,7 @@ public class StripeManager extends ManagerBase implements IStripeManager {
     }
 
     @Override
-    public String createSessionForPayment(String orderId, String address, String callbackUrl) {
+    public String createSessionForPaymentWithCallback(String orderId, String address, String callbackUrl) {
         try {
             Stripe.apiKey = getStripeKey();
             Order order = orderManager.getOrder(orderId);
@@ -395,7 +391,7 @@ public class StripeManager extends ManagerBase implements IStripeManager {
                 }
             }
 
-            String endpoints = createWebHook(Stripe.apiKey);
+            String endpoints = createWebHook(Stripe.apiKey, callbackUrl);
 
             Map<String, Object> params = new HashMap<String, Object>();
 

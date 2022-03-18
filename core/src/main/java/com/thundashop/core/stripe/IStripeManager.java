@@ -15,6 +15,7 @@ import com.thundashop.core.common.GetShopApi;
 public interface IStripeManager {
     public boolean createAndChargeCustomer(String orderId, String token);
     public boolean chargeOrder(String orderId, String cardId);
+    public String createSessionForPayment(String orderId, String address);
     public String createSessionForPayment(String orderId, String address, String callbackUrl);
     public void handleWebhookCallback(WebhookCallback callbackResult);
     public boolean chargeSofort(String orderId, String source);

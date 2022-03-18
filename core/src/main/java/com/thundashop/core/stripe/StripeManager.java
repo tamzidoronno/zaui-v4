@@ -57,35 +57,35 @@ public class StripeManager extends ManagerBase implements IStripeManager {
 
     @Autowired
     MessageManager messageManager;
-    
+
     @Autowired
     OrderManager orderManager;
-    
+
     @Autowired
     StoreManager storeManager;
-    
+
     @Autowired
     StoreApplicationPool storeApplicationPool;
-    
+
     @Autowired
     UserManager userManager;
-    
+
     private StripeSettings settings = new StripeSettings();
-    
-       @Override
+
+    @Override
     public synchronized void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataCommon : data.data) {
-            if(dataCommon instanceof StripeSettings) {
+            if (dataCommon instanceof StripeSettings) {
                 settings = (StripeSettings) dataCommon;
             }
         }
     }
-    
+
     @Override
     public boolean createAndChargeCustomer(String orderId, String token) {
-        
+
         Order order = orderManager.getOrderSecure(orderId);
-        if(isProdMode()) {
+        if (isProdMode()) {
             Application stripeApp = storeApplicationPool.getApplication("3d02e22a-b0ae-4173-ab92-892a94b457ae");
             Stripe.apiKey = stripeApp.getSetting("key");
         } else {
@@ -96,10 +96,10 @@ public class StripeManager extends ManagerBase implements IStripeManager {
             // Create a Customer:
             User usr = userManager.getUserById(order.userId);
             String email = usr.emailAddress;
-            if(email == null || !isValidEmail(email)) {
+            if (email == null || !isValidEmail(email)) {
                 email = "dummy@email.com";
             }
-            
+
             Map<String, Object> chargeParams = new HashMap<>();
             chargeParams.put("source", token);
             chargeParams.put("email", email);
@@ -107,9 +107,9 @@ public class StripeManager extends ManagerBase implements IStripeManager {
 
             List<PaymentSource> data = customer.getSources().getData();
             saveCards(usr.id, customer.getId(), data);
-            
+
             return chargeOrder(orderId, null);
-        }catch(Exception e) {
+        } catch (Exception e) {
             logPrintException(e);
             messageManager.sendErrorNotification("Stripe integration exception", e);
         }
@@ -120,96 +120,17 @@ public class StripeManager extends ManagerBase implements IStripeManager {
         String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
         return email.matches(regex);
     }
-    
+
     public String createSessionForPayment(String orderId, String address) {
-        try {
-            
-            if(isProdMode()) {
-                Application stripeApp = storeApplicationPool.getApplication("3d02e22a-b0ae-4173-ab92-892a94b457ae");
-                Stripe.apiKey = stripeApp.getSetting("key");
-            } else {
-                Stripe.apiKey = "sk_test_K7lzjnniaCB8MjTZjpodqriy";
-            }
-
-            Order order = orderManager.getOrder(orderId);
-            
-            if(order == null) {
-                return "";
-            }
-            
-            User usr = userManager.getUserById(order.userId);
-            String email = "";
-            if(usr != null) {
-                email = usr.emailAddress;
-                if(email == null || !isValidEmail(email)) {
-                    email = "no@emailset.com";
-                }
-            }
-            
-            String endpoints = createWebHook(Stripe.apiKey);
-            
-            String callback = getCallBackAddr();
-            
-            Map<String, Object> params = new HashMap<String, Object>();
-
-            ArrayList<String> paymentMethodTypes = new ArrayList<>();
-            paymentMethodTypes.add("card");
-            params.put("payment_method_types", paymentMethodTypes);
-            params.put("customer_email", email);
-            params.put("client_reference_id", order.id);
-            params.put("success_url", callback+"&page=payment_success&session_id={CHECKOUT_SESSION_ID}&orderid=" + orderId);
-            params.put("cancel_url", callback+"&page=payment_failed&session_id={CHECKOUT_SESSION_ID}&orderid=" + orderId);
-            
-            
-            List<String> supportedLanguages = Arrays.asList("da", "de", "en", "es", "fi", "fr", "it", "ja", "nb", "nl", "pl", "pt", "sv", "zh");
-            
-            
-            if(order.language != null && !order.language.isEmpty()) {
-                if(supportedLanguages.contains(order.language.toLowerCase())) {
-                    params.put("locale",order.language);
-                } else if(order.language.equalsIgnoreCase("no")) {
-                    params.put("locale","nb");
-                }
-            }
-            
-//            params.put("locale", "nb");
-
-            String currency = storeManager.getStoreSettingsApplicationKey("currencycode");
-            if(currency == null || currency.isEmpty()) {
-                currency = "NOK";
-            }
-            HashMap<String, Object> lineItem = new HashMap<String, Object>();
-            lineItem.put("name", "Payment");
-            lineItem.put("description", "Payment for order " + order.incrementOrderId);
-            int total = (int)(orderManager.getTotalAmount(order)*100);
-            if(total <= 0) {
-                return "";
-            }
-            lineItem.put("amount", total);
-            lineItem.put("currency", currency);
-            lineItem.put("quantity", 1);
-
-            ArrayList<HashMap<String, Object>> lineItems = new ArrayList<>();
-            lineItems.add(lineItem);
-            params.put("line_items", lineItems);
-            
-            Session session = Session.create(params);
-            
-            order.payment.transactionLog.put(System.currentTimeMillis(), "Transferred to payment window");
-            orderManager.saveOrder(order);
-            
-            return session.getId();
-        }catch(Exception e) {
-            messageManager.sendErrorNotification("Error in new payment stripe integration", e);
-            logPrint(e.getMessage());
-        }
-        return "";
+        String callback = getCallBackAddr();
+        String session = createSessionForPayment(orderId, address, callback);
+        return session;
     }
-    
+
     @Override
     public boolean chargeSofort(String orderId, String source) {
         try {
-            if(isProdMode()) {
+            if (isProdMode()) {
                 Application stripeApp = storeApplicationPool.getApplication("3d02e22a-b0ae-4173-ab92-892a94b457ae");
                 Stripe.apiKey = stripeApp.getSetting("key");
             } else {
@@ -217,7 +138,7 @@ public class StripeManager extends ManagerBase implements IStripeManager {
             }
 
             String currency = storeManager.getStoreSettingsApplicationKey("currencycode");
-            if(currency == null || currency.isEmpty()) {
+            if (currency == null || currency.isEmpty()) {
                 currency = "NOK";
             }
 
@@ -225,35 +146,37 @@ public class StripeManager extends ManagerBase implements IStripeManager {
             User user = userManager.getUserById(order.userId);
             Double amount = orderManager.getTotalAmount(order);
             Map<String, Object> customerParams = new HashMap<>();
-            customerParams.put("amount", (int)(amount * 100));
+            customerParams.put("amount", (int) (amount * 100));
             customerParams.put("currency", currency);
             customerParams.put("source", source);
             try {
                 Charge charge = Charge.create(customerParams);
-                order.payment.transactionLog.put(System.currentTimeMillis(), "Trying to charge card using sofort source" + source);
-                if(charge.getCaptured()) {
+                order.payment.transactionLog.put(System.currentTimeMillis(),
+                        "Trying to charge card using sofort source" + source);
+                if (charge.getCaptured()) {
                     orderManager.markAsPaid(orderId, new Date(), amount);
                     return true;
                 } else {
                     order.status = Order.Status.PAYMENT_FAILED;
                     orderManager.saveOrder(order);
                 }
-            }catch(Exception d) {
-                order.payment.transactionLog.put(System.currentTimeMillis(), "Failed to charge card: " + d.getMessage());
+            } catch (Exception d) {
+                order.payment.transactionLog.put(System.currentTimeMillis(),
+                        "Failed to charge card: " + d.getMessage());
                 logPrintException(d);
             }
             orderManager.saveOrderInternal(order);
-        }catch(Exception e) {
+        } catch (Exception e) {
             logPrintException(e);
             messageManager.sendErrorNotification("Stripe integration exception", e);
         }
         return false;
     }
-    
+
     @Override
     public boolean chargeOrder(String orderId, String cardId) {
         try {
-            if(isProdMode()) {
+            if (isProdMode()) {
                 Application stripeApp = storeApplicationPool.getApplication("3d02e22a-b0ae-4173-ab92-892a94b457ae");
                 Stripe.apiKey = stripeApp.getSetting("key");
             } else {
@@ -261,48 +184,50 @@ public class StripeManager extends ManagerBase implements IStripeManager {
             }
 
             String currency = storeManager.getStoreSettingsApplicationKey("currencycode");
-            if(currency == null || currency.isEmpty()) {
+            if (currency == null || currency.isEmpty()) {
                 currency = "NOK";
             }
 
             Order order = orderManager.getOrderSecure(orderId);
             User user = userManager.getUserById(order.userId);
             Double amount = orderManager.getTotalAmount(order);
-            for(UserCard card : user.savedCards) {
-                if(cardId != null && !card.id.equals(cardId)) {
+            for (UserCard card : user.savedCards) {
+                if (cardId != null && !card.id.equals(cardId)) {
                     continue;
-                } 
-                if(card.savedByVendor != null && card.savedByVendor.equals("stripe")) {
+                }
+                if (card.savedByVendor != null && card.savedByVendor.equals("stripe")) {
                     Map<String, Object> customerParams = new HashMap<>();
-                    customerParams.put("amount", (int)(amount * 100));
+                    customerParams.put("amount", (int) (amount * 100));
                     customerParams.put("currency", currency);
                     customerParams.put("customer", card.card);
                     try {
                         Charge charge = Charge.create(customerParams);
-                        order.payment.transactionLog.put(System.currentTimeMillis(), "Trying to charge card: " + card.mask + ", " + card.card + ", " + card.id);
-                        if(charge.getPaid()) {
+                        order.payment.transactionLog.put(System.currentTimeMillis(),
+                                "Trying to charge card: " + card.mask + ", " + card.card + ", " + card.id);
+                        if (charge.getPaid()) {
                             orderManager.markAsPaid(orderId, new Date(), amount);
                             return true;
                         } else {
                             order.status = Order.Status.PAYMENT_FAILED;
                             orderManager.saveOrder(order);
                         }
-                    }catch(Exception d) {
-                        order.payment.transactionLog.put(System.currentTimeMillis(), "Failed to charge card: " + d.getMessage());
+                    } catch (Exception d) {
+                        order.payment.transactionLog.put(System.currentTimeMillis(),
+                                "Failed to charge card: " + d.getMessage());
                         logPrintException(d);
                     }
                 }
             }
             orderManager.saveOrderInternal(order);
-        }catch(Exception e) {
+        } catch (Exception e) {
             logPrintException(e);
             messageManager.sendErrorNotification("Stripe integration exception", e);
         }
         return false;
     }
-    
+
     public void saveCard(String card, Integer expMonth, Integer expYear) {
-        if(isProdMode()) {
+        if (isProdMode()) {
             Application stripeApp = storeApplicationPool.getApplication("3d02e22a-b0ae-4173-ab92-892a94b457ae");
             Stripe.apiKey = stripeApp.getSetting("key");
         } else {
@@ -315,48 +240,52 @@ public class StripeManager extends ManagerBase implements IStripeManager {
             chargeParams.put("source", "tok_mastercard");
             chargeParams.put("email", "paying.user@example.com");
             Card stripecard = new Card();
-            stripecard.setExpMonth((long)expMonth);
-            stripecard.setExpYear((long)expYear);
+            stripecard.setExpMonth((long) expMonth);
+            stripecard.setExpYear((long) expYear);
             stripecard.setId(card);
-            //Somehow put this into the source and create the customer.
+            // Somehow put this into the source and create the customer.
             Customer customer = Customer.create(chargeParams);
-        }catch(Exception e) {
-            
+        } catch (Exception e) {
+
         }
     }
-    
+
     @Override
     public void handleWebhookCallback(WebhookCallback result) {
-        
-        if(isProdMode()) {
+
+        if (isProdMode()) {
             Application stripeApp = storeApplicationPool.getApplication("3d02e22a-b0ae-4173-ab92-892a94b457ae");
             Stripe.apiKey = stripeApp.getSetting("key");
         } else {
             Stripe.apiKey = "sk_test_K7lzjnniaCB8MjTZjpodqriy";
         }
-        
+
         Order order = orderManager.getOrderDirect(result.orderId);
-        if(order==null) { return; }
-        
+        if (order == null) {
+            return;
+        }
+
         try {
-           result.payload = new String(Base64.getDecoder().decode(result.payload.getBytes()));
-           Event event = Webhook.constructEvent(result.payload, result.validationKey, settings.webhookSecret);
+            result.payload = new String(Base64.getDecoder().decode(result.payload.getBytes()));
+            Event event = Webhook.constructEvent(result.payload, result.validationKey, settings.webhookSecret);
         } catch (JsonSyntaxException e) {
-            order.payment.transactionLog.put(System.currentTimeMillis(), "Failed to handle webhook callback from stripe on payload" + result.payload);
+            order.payment.transactionLog.put(System.currentTimeMillis(),
+                    "Failed to handle webhook callback from stripe on payload" + result.payload);
             orderManager.saveOrder(order);
             return;
         } catch (SignatureVerificationException e) {
-            order.payment.transactionLog.put(System.currentTimeMillis(), "Failed to handle webhook callback from stripe on payload (invalid signature)" + result.payload);
+            order.payment.transactionLog.put(System.currentTimeMillis(),
+                    "Failed to handle webhook callback from stripe on payload (invalid signature)" + result.payload);
             orderManager.saveOrder(order);
             return;
         }
-        
+
         order.payment.callBackParameters = result.result;
         orderManager.saveOrder(order);
-        orderManager.markAsPaid(result.orderId, new Date(), (double)result.amount/100);
-        
+        orderManager.markAsPaid(result.orderId, new Date(), (double) result.amount / 100);
+
         try {
-            //Saving the card
+            // Saving the card
             String customerId = result.result.get("customer");
             Map<String, Object> cardParams = new HashMap<String, Object>();
             cardParams.put("limit", 3);
@@ -365,21 +294,20 @@ public class StripeManager extends ManagerBase implements IStripeManager {
             List<PaymentMethod> cards = PaymentMethod.list(cardParams).getData();
             saveCardByPaymentMethod(order.userId, customerId, cards);
         } catch (StripeException ex) {
-            
+
             Logger.getLogger(StripeManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
-    
 
     private String createWebHook(String key) {
         try {
             Stripe.apiKey = key;
             String webhookaddress = getCallBackAddr();
-            
+
             boolean createWebHook = settings.webhookSecret.isEmpty();
-            
-            if(createWebHook) {
+
+            if (createWebHook) {
                 Map<String, Object> webhookendpointParams = new HashMap<String, Object>();
                 webhookendpointParams.put("url", webhookaddress);
                 webhookendpointParams.put("enabled_events", Arrays.asList("checkout.session.completed"));
@@ -396,24 +324,24 @@ public class StripeManager extends ManagerBase implements IStripeManager {
             WebhookEndpointCollection webhooks = WebhookEndpoint.list(params);
             List<WebhookEndpoint> webhooksList = webhooks.getData();
             String endpointsCreated = "";
-            for(WebhookEndpoint endpoint : webhooksList) {
+            for (WebhookEndpoint endpoint : webhooksList) {
                 endpointsCreated += endpoint.getUrl() + "<br>";
             }
-            
+
             return endpointsCreated;
-        }catch(Exception e) {
+        } catch (Exception e) {
             logPrint(e.getMessage());
         }
         return "";
     }
 
     private void saveCards(String userId, String customerId, List<PaymentSource> data) {
-        for(PaymentSource account : data) {
-            if(account instanceof Card) {
+        for (PaymentSource account : data) {
+            if (account instanceof Card) {
                 UserCard card = new UserCard();
-                Card stripecard = (Card)account;
-                card.expireMonth = new Integer(stripecard.getExpMonth()+"");
-                card.expireYear = new Integer(stripecard.getExpYear()+"");
+                Card stripecard = (Card) account;
+                card.expireMonth = new Integer(stripecard.getExpMonth() + "");
+                card.expireYear = new Integer(stripecard.getExpYear() + "");
                 card.card = customerId;
                 card.mask = stripecard.getLast4();
                 card.savedByVendor = "stripe";
@@ -423,13 +351,13 @@ public class StripeManager extends ManagerBase implements IStripeManager {
             }
         }
     }
-    
+
     private void saveCardByPaymentMethod(String userId, String customerId, List<PaymentMethod> data) {
-        for(PaymentMethod account : data) {
+        for (PaymentMethod account : data) {
             UserCard card = new UserCard();
             PaymentMethod.Card stripecard = account.getCard();
-            card.expireMonth = new Integer(stripecard.getExpMonth()+"");
-            card.expireYear = new Integer(stripecard.getExpYear()+"");
+            card.expireMonth = new Integer(stripecard.getExpMonth() + "");
+            card.expireYear = new Integer(stripecard.getExpYear() + "");
             card.card = customerId;
             card.mask = stripecard.getLast4();
             card.savedByVendor = "stripe";
@@ -437,32 +365,31 @@ public class StripeManager extends ManagerBase implements IStripeManager {
             card.registeredDate = new Date();
             userManager.addCardToUser(userId, card);
         }
-        
+
     }
 
     private String getCallBackAddr() {
-        if(!isProdMode()) {
+        if (!isProdMode()) {
             return "http://20360.3.0.mdev.getshop.com/callback.php?useapp=stripe";
         }
 
         String address = "";
         String mainaddress = storeManager.getMyStore().getDefaultWebAddress();
-        if(mainaddress.contains("getshop.com")) {
+        if (mainaddress.contains("getshop.com")) {
             address = "https://" + mainaddress + "/callback.php?useapp=stripe";
         } else {
-            for(String tmpAddr : storeManager.getMyStore().additionalDomainNames) {
-                if(tmpAddr.contains("getshop.com")) {
+            for (String tmpAddr : storeManager.getMyStore().additionalDomainNames) {
+                if (tmpAddr.contains("getshop.com")) {
                     address = "https://" + tmpAddr + "/callback.php?useapp=stripe";
                     break;
                 }
             }
         }
-        
+
         return address;
     }
 
     private boolean isProdMode() {
-//        return true;
         return storeManager.isProductMode();
     }
 
@@ -476,5 +403,88 @@ public class StripeManager extends ManagerBase implements IStripeManager {
         settings.webhookSecret = "";
         saveObject(settings);
     }
-    
+
+    @Override
+    public String createSessionForPayment(String orderId, String address, String callbackUrl) {
+        try {
+
+            if (isProdMode()) {
+                Application stripeApp = storeApplicationPool.getApplication("3d02e22a-b0ae-4173-ab92-892a94b457ae");
+                Stripe.apiKey = stripeApp.getSetting("key");
+            } else {
+                Stripe.apiKey = "sk_test_K7lzjnniaCB8MjTZjpodqriy";
+            }
+
+            Order order = orderManager.getOrder(orderId);
+
+            if (order == null) {
+                return "";
+            }
+
+            User usr = userManager.getUserById(order.userId);
+            String email = "";
+            if (usr != null) {
+                email = usr.emailAddress;
+                if (email == null || !isValidEmail(email)) {
+                    email = "no@emailset.com";
+                }
+            }
+
+            String endpoints = createWebHook(Stripe.apiKey);
+
+            Map<String, Object> params = new HashMap<String, Object>();
+
+            ArrayList<String> paymentMethodTypes = new ArrayList<>();
+            paymentMethodTypes.add("card");
+            params.put("payment_method_types", paymentMethodTypes);
+            params.put("customer_email", email);
+            params.put("client_reference_id", order.id);
+            params.put("success_url",
+                    callbackUrl + "&page=payment_success&session_id={CHECKOUT_SESSION_ID}&orderid=" + orderId);
+            params.put("cancel_url",
+                    callbackUrl + "&page=payment_failed&session_id={CHECKOUT_SESSION_ID}&orderid=" + orderId);
+
+            List<String> supportedLanguages = Arrays.asList("da", "de", "en", "es", "fi", "fr", "it", "ja", "nb", "nl",
+                    "pl", "pt", "sv", "zh");
+
+            if (order.language != null && !order.language.isEmpty()) {
+                if (supportedLanguages.contains(order.language.toLowerCase())) {
+                    params.put("locale", order.language);
+                } else if (order.language.equalsIgnoreCase("no")) {
+                    params.put("locale", "nb");
+                }
+            }
+
+            String currency = storeManager.getStoreSettingsApplicationKey("currencycode");
+            if (currency == null || currency.isEmpty()) {
+                currency = "NOK";
+            }
+            HashMap<String, Object> lineItem = new HashMap<String, Object>();
+            lineItem.put("name", "Payment");
+            lineItem.put("description", "Payment for order " + order.incrementOrderId);
+            int total = (int) (orderManager.getTotalAmount(order) * 100);
+            if (total <= 0) {
+                return "";
+            }
+            lineItem.put("amount", total);
+            lineItem.put("currency", currency);
+            lineItem.put("quantity", 1);
+
+            ArrayList<HashMap<String, Object>> lineItems = new ArrayList<>();
+            lineItems.add(lineItem);
+            params.put("line_items", lineItems);
+
+            Session session = Session.create(params);
+
+            order.payment.transactionLog.put(System.currentTimeMillis(), "Transferred to payment window");
+            orderManager.saveOrder(order);
+
+            return session.getId();
+        } catch (Exception e) {
+            messageManager.sendErrorNotification("Error in new payment stripe integration", e);
+            logPrint(e.getMessage());
+        }
+        return "";
+    }
+
 }

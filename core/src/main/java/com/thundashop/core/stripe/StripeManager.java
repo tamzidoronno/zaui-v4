@@ -10,21 +10,11 @@ import com.google.gson.JsonSyntaxException;
 import com.stripe.Stripe;
 import com.stripe.exception.SignatureVerificationException;
 import com.stripe.exception.StripeException;
-import com.stripe.model.Card;
-import com.stripe.model.Charge;
-import com.stripe.model.Customer;
-import com.stripe.model.Event;
-import com.stripe.model.ExternalAccount;
-import com.stripe.model.PaymentMethod;
-import com.stripe.model.PaymentSource;
-import com.stripe.model.PaymentSourceCollection;
-import com.stripe.model.WebhookEndpoint;
-import com.stripe.model.WebhookEndpointCollection;
+import com.stripe.model.*;
 import com.stripe.model.checkout.Session;
 import com.stripe.net.Webhook;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
-import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -35,18 +25,12 @@ import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCard;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.opentravel.ota._2003._05.ActionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author hjemme
@@ -83,14 +67,8 @@ public class StripeManager extends ManagerBase implements IStripeManager {
 
     @Override
     public boolean createAndChargeCustomer(String orderId, String token) {
-
         Order order = orderManager.getOrderSecure(orderId);
-        if (isProdMode()) {
-            Application stripeApp = storeApplicationPool.getApplication("3d02e22a-b0ae-4173-ab92-892a94b457ae");
-            Stripe.apiKey = stripeApp.getSetting("key");
-        } else {
-            Stripe.apiKey = "sk_test_K7lzjnniaCB8MjTZjpodqriy";
-        }
+        Stripe.apiKey = getStripeKey();
 
         try {
             // Create a Customer:
@@ -130,13 +108,7 @@ public class StripeManager extends ManagerBase implements IStripeManager {
     @Override
     public boolean chargeSofort(String orderId, String source) {
         try {
-            if (isProdMode()) {
-                Application stripeApp = storeApplicationPool.getApplication("3d02e22a-b0ae-4173-ab92-892a94b457ae");
-                Stripe.apiKey = stripeApp.getSetting("key");
-            } else {
-                Stripe.apiKey = "sk_test_K7lzjnniaCB8MjTZjpodqriy";
-            }
-
+            Stripe.apiKey = getStripeKey();
             String currency = storeManager.getStoreSettingsApplicationKey("currencycode");
             if (currency == null || currency.isEmpty()) {
                 currency = "NOK";
@@ -176,12 +148,7 @@ public class StripeManager extends ManagerBase implements IStripeManager {
     @Override
     public boolean chargeOrder(String orderId, String cardId) {
         try {
-            if (isProdMode()) {
-                Application stripeApp = storeApplicationPool.getApplication("3d02e22a-b0ae-4173-ab92-892a94b457ae");
-                Stripe.apiKey = stripeApp.getSetting("key");
-            } else {
-                Stripe.apiKey = "sk_test_K7lzjnniaCB8MjTZjpodqriy";
-            }
+            Stripe.apiKey = getStripeKey();
 
             String currency = storeManager.getStoreSettingsApplicationKey("currencycode");
             if (currency == null || currency.isEmpty()) {
@@ -227,13 +194,7 @@ public class StripeManager extends ManagerBase implements IStripeManager {
     }
 
     public void saveCard(String card, Integer expMonth, Integer expYear) {
-        if (isProdMode()) {
-            Application stripeApp = storeApplicationPool.getApplication("3d02e22a-b0ae-4173-ab92-892a94b457ae");
-            Stripe.apiKey = stripeApp.getSetting("key");
-        } else {
-            Stripe.apiKey = "sk_test_K7lzjnniaCB8MjTZjpodqriy";
-        }
-
+        Stripe.apiKey = getStripeKey();
         try {
             // Create a Customer:
             Map<String, Object> chargeParams = new HashMap<>();
@@ -252,15 +213,9 @@ public class StripeManager extends ManagerBase implements IStripeManager {
 
     @Override
     public void handleWebhookCallback(WebhookCallback result) {
-
-        if (isProdMode()) {
-            Application stripeApp = storeApplicationPool.getApplication("3d02e22a-b0ae-4173-ab92-892a94b457ae");
-            Stripe.apiKey = stripeApp.getSetting("key");
-        } else {
-            Stripe.apiKey = "sk_test_K7lzjnniaCB8MjTZjpodqriy";
-        }
-
+        Stripe.apiKey = getStripeKey();
         Order order = orderManager.getOrderDirect(result.orderId);
+
         if (order == null) {
             return;
         }
@@ -389,6 +344,14 @@ public class StripeManager extends ManagerBase implements IStripeManager {
         return address;
     }
 
+    private String getStripeKey() {
+        if (isProdMode()) {
+            Application stripeApp = storeApplicationPool.getApplication("3d02e22a-b0ae-4173-ab92-892a94b457ae");
+            return stripeApp.getSetting("key");
+        }
+        return "sk_test_K7lzjnniaCB8MjTZjpodqriy";
+    }
+
     private boolean isProdMode() {
         return storeManager.isProductMode();
     }
@@ -405,16 +368,18 @@ public class StripeManager extends ManagerBase implements IStripeManager {
     }
 
     @Override
+    public String getStripePublicKey() {
+        if (isProdMode()) {
+            Application stripeApp = storeApplicationPool.getApplication("3d02e22a-b0ae-4173-ab92-892a94b457ae");
+            return stripeApp.getSetting("pkey");
+        }
+        return "pk_test_4LQngWyMqLjFLNwXEVro6DRL";
+    }
+
+    @Override
     public String createSessionForPayment(String orderId, String address, String callbackUrl) {
         try {
-
-            if (isProdMode()) {
-                Application stripeApp = storeApplicationPool.getApplication("3d02e22a-b0ae-4173-ab92-892a94b457ae");
-                Stripe.apiKey = stripeApp.getSetting("key");
-            } else {
-                Stripe.apiKey = "sk_test_K7lzjnniaCB8MjTZjpodqriy";
-            }
-
+            Stripe.apiKey = getStripeKey();
             Order order = orderManager.getOrder(orderId);
 
             if (order == null) {

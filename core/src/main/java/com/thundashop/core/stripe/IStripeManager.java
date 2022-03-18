@@ -21,4 +21,5 @@ public interface IStripeManager {
     public boolean chargeSofort(String orderId, String source);
     public boolean isStripeSecretActive();
     public void clearStripeSecret();
+    public String getStripePublicKey();
 }

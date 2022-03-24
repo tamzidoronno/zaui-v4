@@ -8,8 +8,6 @@ package com.thundashop.core.bookingengine.data;
 import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.GetShopLogHandler;
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -21,7 +19,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -64,7 +61,7 @@ public class BookingTimeLineFlatten implements Serializable {
         Date prev = null;
         for (Date marker : markers) {
             if (prev != null) {
-                BookingTimeLine timeLine = createTimeLine(prev, marker);
+                BookingTimeLine timeLine = createTimeLine(prev, marker); //with all the bookings that intercept that date period
                 if (timeLine.count > 0) {
                     timeLines.add(timeLine);
                 }
@@ -342,29 +339,31 @@ public class BookingTimeLineFlatten implements Serializable {
      */
     public List<String> getAllPossibleCombos() {
  
-        List<BookingTimeLine> timeLines = getTimelines();
+        List<BookingTimeLine> timeLineSegments = getTimelines();
         
-        makeDistinct(timeLines);
+        makeDistinct(timeLineSegments);
        
-        if (timeLines.isEmpty())
+        if (timeLineSegments.isEmpty())
             return new ArrayList();
         
         List<String> result = new ArrayList();
         
-        for (String bookingId : timeLines.get(0).bookingIds) {
-            getNextCombination(0, bookingId, timeLines, bookingId, result);
+        for (String bookingId : timeLineSegments.get(0).bookingIds) {
+            getNextCombination(0, bookingId, timeLineSegments, bookingId, result);
         }
         
         return result;
     }
     
-
-    private boolean getNextCombination(int counter, String currentBookingId, List<BookingTimeLine> timeLines, String prevResult, List<String> result) {
+    /* Trying to create a List<String> timelines for rooms where strings are bookingIds which allign one after other, and are merged by comma.
+       Takes current booking, goes 'next ->next->....' over timeLineSegments until the day when the current-booking is not in next timeLineSegment and puts (keeps) that bookingId
+       in "prevResult"-"result" until it finds a new booking to put after, for the next available day. Also makes multiple versions/permutatuins of similar timelines. */
+    private boolean getNextCombination(int counter, String currentBookingId, List<BookingTimeLine> timeLineSegments, String prevResult, List<String> result) {
         
-        BookingTimeLine nextLine = timeLines.get(counter);
+        BookingTimeLine nextLineSegment = timeLineSegments.get(counter);
         
         int nextCounter = counter + 1;
-        if (timeLines.size() <= nextCounter) {
+        if (timeLineSegments.size() <= nextCounter) {
             result.add(prevResult);
             if (result.size() > 100000) {
                 result.clear();
@@ -373,21 +372,22 @@ public class BookingTimeLineFlatten implements Serializable {
             return false;
         }
         
-        if (nextLine.bookingIds.contains(currentBookingId)) {
-            getNextCombination(nextCounter, currentBookingId, timeLines, ""+prevResult, result);
+        if (nextLineSegment.bookingIds.contains(currentBookingId)) {
+            getNextCombination(nextCounter, currentBookingId, timeLineSegments, ""+prevResult, result);
             return true;
         }
         
         boolean found = false;
         int i = 0;
-        for (String bookingId : nextLine.bookingIds) {
+        for (String bookingId : nextLineSegment.bookingIds) {
             String nextResult = prevResult;
-            
+            // why 4? it must be magic.
             if (i > 4) {
                 break;
             }
-            
-            if (isInPrevTimeLine(bookingId, timeLines, counter))
+            // trying to find new booking to place after the last one. if booking(Id) already exists on the previous day - isInPreviousTimelineSegment, it is not a good combination to
+            // place that one after - because than that booking would have to be in some other room/timeLine the previous day
+            if (isInPrevTimeLineSegment(bookingId, timeLineSegments, counter))
                 continue;
             
             if (nextResult.isEmpty()) {
@@ -396,7 +396,7 @@ public class BookingTimeLineFlatten implements Serializable {
                 nextResult += "," + bookingId;
             }
             
-            getNextCombination(nextCounter, bookingId, timeLines, ""+nextResult, result);
+            getNextCombination(nextCounter, bookingId, timeLineSegments, ""+nextResult, result);
             
             found = true;
             
@@ -404,12 +404,12 @@ public class BookingTimeLineFlatten implements Serializable {
         }
         
         if (!found)
-            return getNextCombination(nextCounter, currentBookingId, timeLines, prevResult, result);
+            return getNextCombination(nextCounter, currentBookingId, timeLineSegments, prevResult, result);
         else
             return false;
     }
 
-    private boolean isInPrevTimeLine(String bookingId, List<BookingTimeLine> timeLines, int count) {
+    private boolean isInPrevTimeLineSegment(String bookingId, List<BookingTimeLine> timeLines, int count) {
         if (count < 1)
             return false;
         
@@ -418,14 +418,15 @@ public class BookingTimeLineFlatten implements Serializable {
         
     }
 
+    //maybe method should be called arrangeBookingsThatHaveOnlyOnePossibility
     private void makeDistinct(List<BookingTimeLine> timeLines) {
         for (BookingTimeLine line : timeLines) {
             String bookingIdOnlyInGroup = null;
-            
+
             List<String> canBeRemoved = new ArrayList();
-            
+
             for (String id : line.bookingIds) {
-                if (isOnlyInTimeLine(line, timeLines, id)) {
+                if (idIsOnlyInThisLine(line, timeLines, id)) { // this is maybe for the case if booking is only posible in that line
                     if (bookingIdOnlyInGroup == null) {
                         bookingIdOnlyInGroup = id;
                     } else {
@@ -433,12 +434,12 @@ public class BookingTimeLineFlatten implements Serializable {
                     }
                 }
             }
-            
+
             line.bookingIds.removeAll(canBeRemoved);
         }
     }
 
-    private boolean isOnlyInTimeLine(BookingTimeLine line, List<BookingTimeLine> timeLines, String id) {
+    private boolean idIsOnlyInThisLine(BookingTimeLine line, List<BookingTimeLine> timeLines, String id) {
         for (BookingTimeLine iLine : timeLines) {
             if (iLine.equals(line)) {
                 continue;

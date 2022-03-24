@@ -66,6 +66,7 @@ $result->amountExTax = round($amountExTax,2);
 $result->kid = $order->kid;
 $result->language = $order->language;
 $result->email = $user->emailAddress;
+$result->invoiceNumber = $user->incrementOrderId;
 if(isset($user->company->vatNumber)) {
     $result->vatNumber = $user->company->vatNumber;
 } else {

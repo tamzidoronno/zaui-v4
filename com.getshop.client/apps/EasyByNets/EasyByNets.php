@@ -298,7 +298,7 @@ class EasyByNets extends \PaymentApplication implements \Application {
         $notifications = new \stdClass();
         $webhooks = array();
         $webhook = new \stdClass();
-        $webhook->eventName = "payment.reservation.created";
+        $webhook->eventName = "payment.reservation.created.v2";
         $webhook->url = $this->getCallbackUrl();
         $webhook->authorization = str_replace("-","", $this->order->secretId);
         $webhooks[] = $webhook;

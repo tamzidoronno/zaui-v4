@@ -22,11 +22,11 @@ import java.util.stream.Collectors;
  */
 public class PmsBookingPaymentDiffer {
     private final List<Order> orders;
-    private final Map<String, Order> ordersMap = new HashMap();
+    private final Map<String, Order> ordersMap = new HashMap<>();
     private final PmsBooking booking;
     private final PmsBookingRooms room;
     private final PmsManager pmsManager;
-    private List<String> roomProductIds = new ArrayList();
+    private List<String> roomProductIds = new ArrayList<>();
     private final SimpleDateFormat sdf;
     private final String language;
     
@@ -35,8 +35,8 @@ public class PmsBookingPaymentDiffer {
      * accomadation products.
      */
     private final HashMap<String, List<String>> cartItemIds;
-    private final HashMap<String, List<CartItem>> cartOrderCartItems = new HashMap();
-    private final HashMap<String, String> addonToOrderMap = new HashMap();
+    private final HashMap<String, List<CartItem>> cartOrderCartItems = new HashMap<>();
+    private final HashMap<String, String> addonToOrderMap = new HashMap<>();
     
     public PmsBookingPaymentDiffer(List<Order> orders, PmsBooking booking, PmsBookingRooms room, PmsManager pmsManager, String language) {
         this.orders = orders.stream()
@@ -92,7 +92,7 @@ public class PmsBookingPaymentDiffer {
         
         Map<String, List<String>> addAddonsByKey = getAddonKeys(roomAddonsGroupedByDay, orderAddonsGroupedByDay);
         
-        List<PmsRoomPaymentSummaryRow> retList = new ArrayList();
+        List<PmsRoomPaymentSummaryRow> retList = new ArrayList<>();
         
         for (String date : addAddonsByKey.keySet()) {
             for (String key : addAddonsByKey.get(date)) {
@@ -127,14 +127,14 @@ public class PmsBookingPaymentDiffer {
     }
     
     private List<PmsRoomPaymentSummaryRow> createListRoom() {
-        List<PmsRoomPaymentSummaryRow> retList = new ArrayList();
+        List<PmsRoomPaymentSummaryRow> retList = new ArrayList<>();
         
-        List<String> allDatesToLookAt = new ArrayList<String>(room.priceMatrix.keySet());
+        List<String> allDatesToLookAt = new ArrayList<>(room.priceMatrix.keySet());
         allDatesToLookAt.addAll(getAllDatesFromOrders(allDatesToLookAt));
         
         for (String date : allDatesToLookAt) {
             PmsRoomPaymentSummaryRow row = createEmptyRoomSummaryRow(date);
-            
+
             calculateAmountInOrders(row);
             calculatePaidAmount(row);
             retList.add(row);
@@ -169,26 +169,8 @@ public class PmsBookingPaymentDiffer {
         
     }
 
-    private HashMap<String, List<String>> getCartItemsIds(PmsBookingAddonItem addonItem) {
-        HashMap<String, List<String>> retMap = new HashMap();
-        
-        for (Order order : orders) {
-            for (CartItem item : order.getCartItems()) {
-                List<String> itemIds = new ArrayList();
-                if (item.isPmsAddons() && item.itemsAdded.contains(addonItem)) {
-                    itemIds.add(item.getCartItemId());
-                }
-                
-                retMap.put(order.id, itemIds);
-            }
-        }
-        
-        return retMap;
-        
-    }
-    
     private HashMap<String, List<String>> getCartItemsIds(List<String> productList) {
-        HashMap<String, List<String>> retMap = new HashMap();
+        HashMap<String, List<String>> retMap = new HashMap<>();
         
         HashMap<String, List<CartItem>> items = getStream(productList);
         
@@ -204,7 +186,7 @@ public class PmsBookingPaymentDiffer {
     }
     
     private HashMap<String, List<CartItem>> getStream(List<String> productList) {
-        HashMap<String, List<CartItem>> retList = new HashMap();
+        HashMap<String, List<CartItem>> retList = new HashMap<>();
         
         for (Order order : orders) {
             List<CartItem> itemsForOrder = cartOrderCartItems.get(order.id).stream()
@@ -221,7 +203,7 @@ public class PmsBookingPaymentDiffer {
     private void calculateAmountInOrders(PmsRoomPaymentSummaryRow row) {
         double sum = 0;
         
-        HashMap<String, Double> createdOrdersForByPaymentMethods = new HashMap();
+        HashMap<String, Double> createdOrdersForByPaymentMethods = new HashMap<>();
         
         for (String orderId : row.cartItemIds.keySet()) {
             Order order = ordersMap.get(orderId);
@@ -268,6 +250,12 @@ public class PmsBookingPaymentDiffer {
                     List<String> icartItemIds = row.cartItemIds.get(order.id);
                     for (CartItem item : cartItems) {
                         if (icartItemIds.contains(item.getCartItemId())) {
+                            // detect if room category has been changed after order payment
+                            if(!row.createOrderOnProductId.equals(item.getProductId())){
+                                // update the cart item as category has been changed
+                                item.getProduct().id = row.createOrderOnProductId;
+                                pmsManager.orderManager.updateCartItemOnOrder(order.id, item);
+                            }
                             return getAmountForDate(item, row.date);
                         }
                     }
@@ -345,7 +333,7 @@ public class PmsBookingPaymentDiffer {
     }
 
     private Map<String, List<PmsBookingAddonItem>> groupByDay(List<PmsBookingAddonItem> roomsAddon) {
-        List<PmsBookingAddonItem> allItems = new ArrayList();
+        List<PmsBookingAddonItem> allItems = new ArrayList<>();
         allItems.addAll(roomsAddon);
         Map<String, List<PmsBookingAddonItem>> res = allItems.stream()
                 .filter(o -> !o.price.equals(0D))
@@ -355,7 +343,7 @@ public class PmsBookingPaymentDiffer {
     }
 
     private Map<String, List<String>> getAddonKeys(Map<String, List<PmsBookingAddonItem>> roomAddonsGroupedByDay, Map<String, List<PmsBookingAddonItem>> orderAddonsGroupedByDay) {
-        Map<String, List<String>> retList = new HashMap();
+        Map<String, List<String>> retList = new HashMap<>();
         
         addKeys(roomAddonsGroupedByDay, retList);
         addKeys(orderAddonsGroupedByDay, retList);
@@ -367,7 +355,7 @@ public class PmsBookingPaymentDiffer {
         for (String date : roomAddonsGroupedByDay.keySet()) {
             List<String> keys = retList.get(date);
             if (keys == null) {
-                keys = new ArrayList();
+                keys = new ArrayList<>();
                 retList.put(date, keys);
             }
             
@@ -439,18 +427,18 @@ public class PmsBookingPaymentDiffer {
                 .filter(addon -> addon.getKey().equals(key))
                 .collect(Collectors.toList());
         
-        Map<String, List<PmsBookingAddonItem>> groupedItems = new HashMap();
+        Map<String, List<PmsBookingAddonItem>> groupedItems = new HashMap<>();
         
         for(PmsBookingAddonItem addon : items) {
             Order order = getOrder(addon);
             if (groupedItems.get(order.payment.paymentType) == null) {
-                groupedItems.put(order.payment.paymentType, new ArrayList());
+                groupedItems.put(order.payment.paymentType, new ArrayList<>());
             }
             
             groupedItems.get(order.payment.paymentType).add(addon);
         }
         
-        HashMap<String, Double> retMap = new HashMap();
+        HashMap<String, Double> retMap = new HashMap<>();
         
         for (String paymentType : groupedItems.keySet()) {
             double sum = groupedItems.get(paymentType).stream().mapToDouble(item -> item.price * item.count).sum();

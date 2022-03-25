@@ -16,7 +16,32 @@ import java.util.List;
  */
 public class RcoLockSystem extends LockServerBase implements LockServer {
     private HashMap<String, RcoLock> locks = new HashMap();
-    
+
+    @Override
+    public String toString() {
+        return "RcoLockSystem{" +
+                "lastPing=" + lastPing +
+                ", hostname='" + hostname + '\'' +
+                ", username='" + username + '\'' +
+                ", givenName='" + givenName + '\'' +
+                ", token='" + token + '\'' +
+                ", password='" + password + '\'' +
+                ", locks=" + locks +
+                ", id='" + id + '\'' +
+                ", storeId='" + storeId + '\'' +
+                ", deleted=" + deleted +
+                ", className='" + className + '\'' +
+                ", rowCreatedDate=" + rowCreatedDate +
+                ", lastModified=" + lastModified +
+                ", gs_manager='" + gs_manager + '\'' +
+                ", colection='" + colection + '\'' +
+                ", gsDeletedBy='" + gsDeletedBy + '\'' +
+                ", lastModifiedByUserId='" + lastModifiedByUserId + '\'' +
+                ", getshopModule='" + getshopModule + '\'' +
+                ", deepFreeze=" + deepFreeze +
+                '}';
+    }
+
     @Override
     public Lock getLock(String id) {
         return locks.get(id);

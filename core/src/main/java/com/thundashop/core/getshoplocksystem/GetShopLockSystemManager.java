@@ -1015,7 +1015,17 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         lastsavedcounter++;
         if(lastsavedcounter >= 20) {
             for(LockServer server : lockServers.values()) {
-                server.save();
+                if (this.storeId.equals("1fcbd648-f0ee-4269-ab35-65eb7d9f67aa")){ //Gkroen
+                    try{
+                        server.save();
+                    }catch (Exception e){
+                        logPrint("Failed saving lock server " + server.getClass() + ", id: " +server.getId());
+                        logPrint( server.toString());
+                        logPrintException(e);
+                    }
+                }else{
+                    server.save();
+                }
             }
             lastsavedcounter = 0;
         }

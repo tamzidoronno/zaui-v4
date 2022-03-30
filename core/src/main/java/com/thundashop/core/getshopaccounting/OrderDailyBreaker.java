@@ -114,6 +114,7 @@ public class OrderDailyBreaker {
                 
                 proccessOrder(order);
             } catch (DailyIncomeException ex) {
+                Logger.getLogger(OrderDailyBreaker.class.getName()).log(Level.WARNING, "Order " + order.id + "/" +order.incrementOrderId + " has error:" + gson.toJson(ex));
                 errors.add(gson.toJson(ex));
             } catch (Exception ex) {
                 if (ex instanceof  NullPointerException) {

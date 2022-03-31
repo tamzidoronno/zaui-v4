@@ -5723,14 +5723,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             gsTiming("Completed booking");
 
             if (result == 0) {
-                if (bookingIsOK(booking)) {
-                    if (!booking.confirmed || storeManager.isPikStore()) {
-                        doNotification("booking_completed", booking, null);
-                    } else {
-                        doNotification("booking_confirmed", booking, null);
+                if(!configuration.payAfterBookingCompleted()){
+                    if (bookingIsOK(booking)) {
+                        if (!booking.confirmed || storeManager.isPikStore()) {
+                            doNotification("booking_completed", booking, null);
+                        } else {
+                            doNotification("booking_confirmed", booking, null);
+                        }
+                        gsTiming("Notified booking confirmed");
                     }
-                    gsTiming("Notified booking confirmed");
-                }
+                }                
                 checkIfNeedToBeAssignedToRoomWithSpecialAddons(booking);
                 bookingUpdated(booking.id, "created", null);
                 checkIfBookingIsSplit(booking);

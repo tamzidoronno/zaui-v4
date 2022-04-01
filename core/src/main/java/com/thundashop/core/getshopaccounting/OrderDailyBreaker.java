@@ -117,6 +117,7 @@ public class OrderDailyBreaker {
                 Logger.getLogger(OrderDailyBreaker.class.getName()).log(Level.WARNING, "Order " + order.id + "/" +order.incrementOrderId + " has error:" + gson.toJson(ex));
                 errors.add(gson.toJson(ex));
             } catch (Exception ex) {
+                Logger.getLogger(OrderDailyBreaker.class.getName()).log(Level.WARNING, "Order " + order.id + "/" +order.incrementOrderId + " has error:" + gson.toJson(ex));
                 if (ex instanceof  NullPointerException) {
                     ex.printStackTrace();
                 }
@@ -512,6 +513,7 @@ public class OrderDailyBreaker {
         ProductAccountingInformation res = null;
         
         if (product == null) {
+            Logger.getLogger(OrderDailyBreaker.class.getName()).log(Level.WARNING, "Was not able to find product with id " + productId);
             throw new NullPointerException("Was not able to find the original product");
         }
         

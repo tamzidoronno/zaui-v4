@@ -5,6 +5,7 @@ $date_formatted = str_replace(" ", "+", $_GET['date']);
 include '../loader.php';
 $factory = IocContainer::getFactorySingelton(false);
 $content = $factory->getApi()->getOrderManager()->getBalanceInDetails($_GET['accountId'], $date_formatted);
-header('Content-Disposition: attachment; filename=balanceIn_"' . $_GET['accountId'] ."_"  . '.csv"');
+$filename="balanceIn_" .$_GET['accountId']  . '.csv';
+header("Content-Disposition: attachment; filename={$filename}");
 header('Content-Type: text/plain');
 echo $content;

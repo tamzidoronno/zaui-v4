@@ -251,7 +251,7 @@ public class PmsBookingPaymentDiffer {
                     for (CartItem item : cartItems) {
                         if (icartItemIds.contains(item.getCartItemId())) {
                             // detect if room category has been changed after order payment
-                            if(!row.createOrderOnProductId.equals(item.getProductId())){
+                            if(!row.createOrderOnProductId.equals("") && !row.createOrderOnProductId.equals(item.getProductId())){
                                 // update the cart item as category has been changed
                                 item.getProduct().id = row.createOrderOnProductId;
                                 pmsManager.orderManager.updateCartItemOnOrder(order.id, item);

@@ -211,4 +211,29 @@ public class GetShopLockBoxServer extends LockServerBase implements LockServer {
     public void deleteLock(String lockId) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public String toString() {
+        return "GetShopLockBoxServer{" +
+                "locks=" + locks +
+                ", lastPing=" + lastPing +
+                ", hostname='" + hostname + '\'' +
+                ", username='" + username + '\'' +
+                ", givenName='" + givenName + '\'' +
+                ", token='" + token + '\'' +
+                ", password='" + password + '\'' +
+                ", id='" + id + '\'' +
+                ", storeId='" + storeId + '\'' +
+                ", deleted=" + deleted +
+                ", className='" + className + '\'' +
+                ", rowCreatedDate=" + rowCreatedDate +
+                ", lastModified=" + lastModified +
+                ", gs_manager='" + gs_manager + '\'' +
+                ", colection='" + colection + '\'' +
+                ", gsDeletedBy='" + gsDeletedBy + '\'' +
+                ", lastModifiedByUserId='" + lastModifiedByUserId + '\'' +
+                ", getshopModule='" + getshopModule + '\'' +
+                ", deepFreeze=" + deepFreeze +
+                '}';
+    }
 }

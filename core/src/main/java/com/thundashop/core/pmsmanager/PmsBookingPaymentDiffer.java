@@ -8,6 +8,7 @@ package com.thundashop.core.pmsmanager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.thundashop.core.cartmanager.data.CartItem;
+import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class PmsBookingPaymentDiffer {
     private final PmsBooking booking;
     private final PmsBookingRooms room;
     private final PmsManager pmsManager;
+    private final OrderManager orderManager;
     private List<String> roomProductIds = new ArrayList<>();
     private final SimpleDateFormat sdf;
     private final String language;
@@ -38,13 +40,14 @@ public class PmsBookingPaymentDiffer {
     private final HashMap<String, List<CartItem>> cartOrderCartItems = new HashMap<>();
     private final HashMap<String, String> addonToOrderMap = new HashMap<>();
     
-    public PmsBookingPaymentDiffer(List<Order> orders, PmsBooking booking, PmsBookingRooms room, PmsManager pmsManager, String language) {
+    public PmsBookingPaymentDiffer(List<Order> orders, PmsBooking booking, PmsBookingRooms room, PmsManager pmsManager, OrderManager orderManager, String language) {
         this.orders = orders.stream()
                 .filter(o -> o != null)
                 .collect(Collectors.toList());
         this.booking = booking;
         this.room = room;
         this.pmsManager = pmsManager;
+        this.orderManager = orderManager;
         this.language = language;
         this.sdf = new SimpleDateFormat("dd-MM-yyyy");
         this.orders.stream()
@@ -56,12 +59,27 @@ public class PmsBookingPaymentDiffer {
         
         for (Order order : orders) {
             cartOrderCartItems.put(order.id, order.getCartItems());
+            fixEmptyProductIdsOnOrders(room, pmsManager, order);
         }
         
         this.cartItemIds = getCartItemsIds(roomProductIds);
         buildCacheOfAddonsToItems();   
     }
-    
+
+    private void fixEmptyProductIdsOnOrders(PmsBookingRooms room, PmsManager pmsManager, Order order) {
+        boolean needToSaveOrder = false;
+        for (CartItem ci: order.getCartItems()) {
+            if (ci.getProduct().id.isEmpty() && pmsManager.bookingEngine.getBookingItemType(room.bookingItemTypeId) != null){
+                ci.getProduct().id = pmsManager.bookingEngine.getBookingItemType(room.bookingItemTypeId).productId;
+                needToSaveOrder = true;
+            }
+        }
+        if (needToSaveOrder){
+            orderManager.saveOrder(order);
+        }
+    }
+
+
     public PmsRoomPaymentSummary getSummary() {
         PmsRoomPaymentSummary summary = new PmsRoomPaymentSummary();
         summary.pmsBookingId = booking.id;

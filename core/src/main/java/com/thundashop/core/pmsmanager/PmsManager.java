@@ -10021,7 +10021,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             .filter(o -> o != null)
             .collect(Collectors.toList());
 
-        PmsBookingPaymentDiffer differ = new PmsBookingPaymentDiffer(orders, booking, room, this, invoiceManager.getAccountingDetails().language);
+        PmsBookingPaymentDiffer differ = new PmsBookingPaymentDiffer(orders, booking, room, this, orderManager, invoiceManager.getAccountingDetails().language);
         PmsRoomPaymentSummary summary = differ.getSummary();
         
         return summary;
@@ -10054,7 +10054,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<PmsRoomPaymentSummary> summaryList = new ArrayList<>();
         
         for (PmsBookingRooms room : booking.rooms) {
-            PmsBookingPaymentDiffer differ = new PmsBookingPaymentDiffer(orders, booking, room, this, invoiceManager.getAccountingDetails().language);
+            PmsBookingPaymentDiffer differ = new PmsBookingPaymentDiffer(orders, booking, room, this, orderManager, invoiceManager.getAccountingDetails().language);
             PmsRoomPaymentSummary summary = differ.getSummary();
             summaryList.add(summary);
         }
@@ -10830,7 +10830,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 .collect(Collectors.toList());
         }
         
-        PmsBookingPaymentDiffer differ = new PmsBookingPaymentDiffer(orders, booking, room, this, invoiceManager.getAccountingDetails().language);
+        PmsBookingPaymentDiffer differ = new PmsBookingPaymentDiffer(orders, booking, room, this, orderManager, invoiceManager.getAccountingDetails().language);
         PmsRoomPaymentSummary summary = differ.getSummary();
         
         return summary;

@@ -3743,7 +3743,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         return check;
     }
-    
+
+    /* Used for view "Show open balances pr.." on FReport. It checks all transactions that happened prior to that time/date ("endDate") for chosen account, groups them per order and then checks if the sum of transactions for that account for order is zero.
+        if 's not zero then it is a candidate for the report. If the order was marked as paid, then it automatically removes it (will not be shown on the list) unless it's prepaid account. Prepaid orders are unresolved if they have been paid and have date of stay after "endDate" */
     @Override
     public List<OrderUnsettledAmountForAccount> getOrdersUnsettledAmount(String accountNumber, Date endDate, String paymentId) {
         Date startDate = getStore().rowCreatedDate;
@@ -3784,8 +3786,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             if (orderWithUnsettledAmount.amount < 1 && orderWithUnsettledAmount.amount > -1) {
                 continue;
             }
-
-            if (orderWithUnsettledAmount.order.markedPaidDate == null && (orderWithUnsettledAmount.order.restAmount > 0.5 ||  orderWithUnsettledAmount.order.restAmount < -0.5 ) ){
+            boolean stayInFuture = orderWithUnsettledAmount.order.cart.getItems().stream().filter(i->i.endDate.after(endDate)).collect(Collectors.toList()).size()>0;
+            boolean isPrepaidAccount =  paymentManager.getStorePaymentConfig().values().stream().filter(o->o.offsetAccountingId_prepayment.equals(accountNumber)).collect(Collectors.toList()).size()>0;
+            if ((orderWithUnsettledAmount.order.markedPaidDate == null || stayInFuture && isPrepaidAccount) && (orderWithUnsettledAmount.order.restAmount > 0.5 ||  orderWithUnsettledAmount.order.restAmount < -0.5 ) ){
                 retList.add(orderWithUnsettledAmount);
             }
         }

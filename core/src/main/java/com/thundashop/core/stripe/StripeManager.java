@@ -16,6 +16,7 @@ import com.stripe.net.Webhook;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
@@ -25,6 +26,7 @@ import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCard;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -55,6 +57,7 @@ public class StripeManager extends ManagerBase implements IStripeManager {
     UserManager userManager;
 
     private StripeSettings settings = new StripeSettings();
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(GetShopLogHandler.class);
 
     @Override
     public synchronized void dataFromDatabase(DataRetreived data) {
@@ -205,12 +208,15 @@ public class StripeManager extends ManagerBase implements IStripeManager {
             // Somehow put this into the source and create the customer.
             Customer customer = Customer.create(chargeParams);
         } catch (Exception e) {
-
+            logPrintException(e);
         }
     }
 
     @Override
     public void handleWebhookCallback(WebhookCallback result) {
+        log.info("Stripe webhook callback has been called for order: " + result.orderId);
+        log.info("Webhook callback payload: " + result.payload);
+
         Stripe.apiKey = getStripeKey();
         Order order = orderManager.getOrderDirect(result.orderId);
 
@@ -259,7 +265,7 @@ public class StripeManager extends ManagerBase implements IStripeManager {
             boolean createWebHook = settings.webhookSecret.isEmpty();
 
             if (createWebHook) {
-                Map<String, Object> webhookendpointParams = new HashMap<String, Object>();
+                Map<String, Object> webhookendpointParams = new HashMap<>();
                 webhookendpointParams.put("url", webhookaddress);
                 webhookendpointParams.put("enabled_events", Arrays.asList("checkout.session.completed"));
 
@@ -390,9 +396,9 @@ public class StripeManager extends ManagerBase implements IStripeManager {
                 }
             }
 
-            String endpoints = createWebHook(Stripe.apiKey);
+            createWebHook(Stripe.apiKey);
 
-            Map<String, Object> params = new HashMap<String, Object>();
+            Map<String, Object> params = new HashMap<>();
 
             ArrayList<String> paymentMethodTypes = new ArrayList<>();
             paymentMethodTypes.add("card");
@@ -435,6 +441,7 @@ public class StripeManager extends ManagerBase implements IStripeManager {
             params.put("line_items", lineItems);
 
             Session session = Session.create(params);
+            log.info("Stripe payment session has been created for order: " + orderId + " Session id: ", session.getId());
 
             order.payment.transactionLog.put(System.currentTimeMillis(), "Transferred to payment window");
             orderManager.saveOrder(order);

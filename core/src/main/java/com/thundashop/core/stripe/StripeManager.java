@@ -101,8 +101,7 @@ public class StripeManager extends ManagerBase implements IStripeManager {
 
     public String createSessionForPayment(String orderId, String address) {
         String callback = getCallBackAddr();
-        String session = createSessionForPaymentWithCallback(orderId, address, callback);
-        return session;
+        return createSessionForPaymentWithCallback(orderId, address, callback);
     }
 
     @Override
@@ -241,7 +240,7 @@ public class StripeManager extends ManagerBase implements IStripeManager {
         try {
             // Saving the card
             String customerId = result.result.get("customer");
-            Map<String, Object> cardParams = new HashMap<String, Object>();
+            Map<String, Object> cardParams = new HashMap<>();
             cardParams.put("limit", 3);
             cardParams.put("customer", customerId);
             cardParams.put("type", "card");
@@ -253,9 +252,10 @@ public class StripeManager extends ManagerBase implements IStripeManager {
 
     }
 
-    private String createWebHook(String key, String webhookaddress) {
+    private String createWebHook(String key) {
         try {
             Stripe.apiKey = key;
+            String webhookaddress = getCallBackAddr();
             boolean createWebHook = settings.webhookSecret.isEmpty();
 
             if (createWebHook) {
@@ -265,12 +265,11 @@ public class StripeManager extends ManagerBase implements IStripeManager {
 
                 WebhookEndpoint result = WebhookEndpoint.create(webhookendpointParams);
 
-                String secret = result.getSecret();
-                settings.webhookSecret = secret;
+                settings.webhookSecret = result.getSecret();
                 saveObject(settings);
             }
 
-            Map<String, Object> params = new HashMap<String, Object>();
+            Map<String, Object> params = new HashMap<>();
             params.put("limit", "30");
             WebhookEndpointCollection webhooks = WebhookEndpoint.list(params);
             List<WebhookEndpoint> webhooksList = webhooks.getData();
@@ -391,7 +390,7 @@ public class StripeManager extends ManagerBase implements IStripeManager {
                 }
             }
 
-            String endpoints = createWebHook(Stripe.apiKey, callbackUrl);
+            String endpoints = createWebHook(Stripe.apiKey);
 
             Map<String, Object> params = new HashMap<String, Object>();
 

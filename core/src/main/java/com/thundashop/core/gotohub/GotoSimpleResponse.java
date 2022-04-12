@@ -1,4 +1,4 @@
-package com.thundashop.core.channelmanagerexperiment.gotohub;
+package com.thundashop.core.gotohub;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

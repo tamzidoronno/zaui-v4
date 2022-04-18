@@ -1,8 +1,6 @@
 package com.thundashop.core.gotohub;
 
 import com.getshop.scope.GetShopSession;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -10,8 +8,6 @@ import com.thundashop.core.wubook.WubookLogManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
-import java.util.stream.Stream;
 
 @Component
 @GetShopSession
@@ -30,14 +26,25 @@ public class GoToManager extends ManagerBase implements IGoToManager {
     }
 
     @Override
-    public void changeToken(String newToken) {
-        settings.authToken = newToken;
+    public boolean changeToken(String newToken) {
+        try{
+            settings.authToken = newToken;
+            saveObject(settings);
+            return true;
+        } catch (Exception e){
+            logger.error(e.getMessage());
+            return false;
+        }
 
-        saveObject(settings);
     }
 
     @Override
     public String testConnection() throws Exception {
         return settings.authToken;
+    }
+
+    @Override
+    public boolean updateAvailability() {
+        return false;
     }
 }

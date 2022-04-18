@@ -7,6 +7,8 @@ import com.thundashop.core.common.GetShopMultiLayerSession;
 
 @GetShopApi
 public interface IGoToManager {
-    public void changeToken(String newToken);
+    public boolean changeToken(String newToken);
     public String testConnection() throws Exception;
+    public boolean updateAvailability();
+
 }

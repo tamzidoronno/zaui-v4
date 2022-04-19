@@ -1,3 +1,4 @@
+// run with:  mongosh --port 27018 findStringInDb.js
 
 // TRONDERGOLF
 colname ="col_1ed4ab1f-c726-4364-bf04-8dcddb2fb2b1";

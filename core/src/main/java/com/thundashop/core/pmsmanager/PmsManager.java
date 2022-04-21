@@ -21,6 +21,7 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import ch.qos.logback.core.CoreConstants;
 import com.braintreegateway.org.apache.commons.codec.binary.Base64;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
@@ -6672,9 +6673,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void markRoomDirty(String itemId) throws Exception {
-        PmsAdditionalItemInformation item = getAdditionalInfo(itemId);
-        item.forceMarkDirty();
-        saveObject(item);
+        markRoomAsDirty(itemId);
+
+        /*Forcefully mark as dirty, previous obj.forceMarkDirty() removed the cleaning log if cleaned by same day*/
+        PmsAdditionalItemInformation additional = getAdditionalInfo(itemId);
+        additional.isClean(false);
+        additional.setLastCleaned(null);
+        additional.setLastUsed(null);
+
+        saveAdditionalInfo(additional);
     }
 
     @Override

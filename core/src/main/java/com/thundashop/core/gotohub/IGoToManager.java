@@ -15,5 +15,6 @@ public interface IGoToManager {
     public String testConnection() throws Exception;
     public Hotel getHotelInformation();
     public List<RoomType> getRoomTypeDetails() throws Exception;
+    public void getPriceAndAllotment() throws Exception;
 
 }

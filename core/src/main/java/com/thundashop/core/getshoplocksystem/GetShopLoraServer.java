@@ -305,4 +305,30 @@ public class GetShopLoraServer extends LockServerBase implements LockServer {
             return "";
         }
     }
+
+    @Override
+    public String toString() {
+        return "GetShopLoraServer{" +
+                "USER_AGENT='" + USER_AGENT + '\'' +
+                ", locks=" + locks +
+                ", lastPing=" + lastPing +
+                ", hostname='" + hostname + '\'' +
+                ", username='" + username + '\'' +
+                ", givenName='" + givenName + '\'' +
+                ", token='" + token + '\'' +
+                ", password='" + password + '\'' +
+                ", id='" + id + '\'' +
+                ", storeId='" + storeId + '\'' +
+                ", deleted=" + deleted +
+                ", className='" + className + '\'' +
+                ", rowCreatedDate=" + rowCreatedDate +
+                ", lastModified=" + lastModified +
+                ", gs_manager='" + gs_manager + '\'' +
+                ", colection='" + colection + '\'' +
+                ", gsDeletedBy='" + gsDeletedBy + '\'' +
+                ", lastModifiedByUserId='" + lastModifiedByUserId + '\'' +
+                ", getshopModule='" + getshopModule + '\'' +
+                ", deepFreeze=" + deepFreeze +
+                '}';
+    }
 }

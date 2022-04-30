@@ -429,5 +429,30 @@ public class ZwaveLockServer extends LockServerBase implements LockServer {
         locks.remove(lockId);
     }
 
-
+    @Override
+    public String toString() {
+        return "ZwaveLockServer{" +
+                "lastPing=" + lastPing +
+                ", hostname='" + hostname + '\'' +
+                ", username='" + username + '\'' +
+                ", givenName='" + givenName + '\'' +
+                ", token='" + token + '\'' +
+                ", password='" + password + '\'' +
+                ", locks=" + locks +
+                ", currentThread=" + currentThread +
+                ", activated=" + activated +
+                ", id='" + id + '\'' +
+                ", storeId='" + storeId + '\'' +
+                ", deleted=" + deleted +
+                ", className='" + className + '\'' +
+                ", rowCreatedDate=" + rowCreatedDate +
+                ", lastModified=" + lastModified +
+                ", gs_manager='" + gs_manager + '\'' +
+                ", colection='" + colection + '\'' +
+                ", gsDeletedBy='" + gsDeletedBy + '\'' +
+                ", lastModifiedByUserId='" + lastModifiedByUserId + '\'' +
+                ", getshopModule='" + getshopModule + '\'' +
+                ", deepFreeze=" + deepFreeze +
+                '}';
+    }
 }

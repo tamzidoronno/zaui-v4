@@ -34,6 +34,7 @@ foreach($emails as $email) {
 }
 echo "<option value='defined'>Type email</option>";
 echo "</select>";
+echo "<input type='text' class='gsniceinput1 emailRecipient' placeholder='Type email here' value='".$emails[0]."' style='display:none;width:100%;font-size:15px;box-sizing: border-box;'>";
 echo "<select class='gsniceselect1 confirmationEmailTemplate' style='width:100%;'>";
 $selected = null;
 foreach($confirmationmessages as $conf) {
@@ -61,3 +62,17 @@ echo "</select>";
 
 
 <div class='previewarea'></div>
+<script>
+    $('#emailList').change(function(){
+        console.log('ho',this);
+        
+        if(this.value == 'defined'){
+            $('.emailRecipient').val("");
+            $('.emailRecipient').show();
+        }
+        else {
+            $('.emailRecipient').val(this.value);
+            $('.emailRecipient').hide();
+        }
+    });
+</script>

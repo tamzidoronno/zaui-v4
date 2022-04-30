@@ -383,4 +383,34 @@ public abstract class LockServerBase extends DataCommon {
     public List<String> getLocksForGroup(String groupId) {
         return new ArrayList<>();
     }
+
+    @Override
+    public String toString() {
+        return "LockServerBase{" +
+                "hasConnection=" + hasConnection +
+                ", lastChecked=" + lastChecked +
+                ", connectionDown=" + connectionDown +
+                ", lastConnected=" + lastConnected +
+                ", lastPing=" + lastPing +
+                ", hostname='" + hostname + '\'' +
+                ", username='" + username + '\'' +
+                ", givenName='" + givenName + '\'' +
+                ", token='" + token + '\'' +
+                ", password='" + password + '\'' +
+                ", getShopLockSystemManager=" + getShopLockSystemManager +
+                ", accessEvents=" + accessEvents +
+                ", id='" + id + '\'' +
+                ", storeId='" + storeId + '\'' +
+                ", deleted=" + deleted +
+                ", className='" + className + '\'' +
+                ", rowCreatedDate=" + rowCreatedDate +
+                ", lastModified=" + lastModified +
+                ", gs_manager='" + gs_manager + '\'' +
+                ", colection='" + colection + '\'' +
+                ", gsDeletedBy='" + gsDeletedBy + '\'' +
+                ", lastModifiedByUserId='" + lastModifiedByUserId + '\'' +
+                ", getshopModule='" + getshopModule + '\'' +
+                ", deepFreeze=" + deepFreeze +
+                '}';
+    }
 }

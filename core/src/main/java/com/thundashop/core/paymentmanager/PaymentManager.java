@@ -313,6 +313,10 @@ public class PaymentManager extends ManagerBase implements IPaymentManager {
         return postpaymentmethods.contains(config.paymentAppId);
     }
 
+    public HashMap<String, StorePaymentConfig> getStorePaymentConfig(){
+        return this.storePaymentConfig;
+    }
+
     @Override
     public void saveMultiplePaymentMethods(List<String> ids) {
         GeneralPaymentConfig config = getGeneralPaymentConfig();

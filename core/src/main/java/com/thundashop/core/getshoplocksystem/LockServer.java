@@ -80,4 +80,6 @@ public interface LockServer {
     public void setLockstoGroup(String groupId, List<String> lockIds);
 
     public List<String> getLocksForGroup(String id);
+
+    public String toString();
 }

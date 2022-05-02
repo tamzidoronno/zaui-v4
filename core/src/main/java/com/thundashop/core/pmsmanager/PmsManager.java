@@ -91,6 +91,7 @@ import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCard;
 import com.thundashop.core.utils.BrRegEngine;
 import com.thundashop.core.utils.Constants;
+import com.thundashop.core.utils.NullSafeConcurrentHashMap;
 import com.thundashop.core.utils.UtilManager;
 import com.thundashop.core.webmanager.WebManager;
 import com.thundashop.core.wubook.WubookManager;
@@ -122,7 +123,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private static final Logger logger = LoggerFactory.getLogger(PmsManager.class);
 
-    private HashMap<String, PmsBooking> bookings = new HashMap<>();
+    private NullSafeConcurrentHashMap<String, PmsBooking> bookings = new NullSafeConcurrentHashMap<>();
     private HashMap<String, String> bookingIdMap = new HashMap<>();
     private HashMap<String, Product> fetchedProducts = new HashMap<>();
     private HashMap<String, PmsAddonDeliveryLogEntry> deliveredAddons = new HashMap<>();
@@ -1082,7 +1083,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (booking.id == null || booking.id.isEmpty()) {
             throw new ErrorException(1000015);
         }
- 
+
         bookings.put(booking.id, booking);
 
         try {
@@ -4409,8 +4410,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         return res;
     }
-    
-    HashMap<String, PmsBooking> getBookingMap() {
+
+    NullSafeConcurrentHashMap<String, PmsBooking> getBookingMap() {
         return bookings;
     }
 

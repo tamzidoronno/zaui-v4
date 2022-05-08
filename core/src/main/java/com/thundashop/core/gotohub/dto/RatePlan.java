@@ -10,6 +10,5 @@ public class RatePlan {
     public String effective_date="";
     public String expire_date="";
     public String cancelation_policy="";
-    public int guest_count=1;
 
 }

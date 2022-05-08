@@ -21,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -57,7 +59,6 @@ public class GoToManager extends ManagerBase implements IGoToManager {
             logger.error(e.getMessage());
             return false;
         }
-
     }
 
     @Override
@@ -69,23 +70,35 @@ public class GoToManager extends ManagerBase implements IGoToManager {
     public Hotel getHotelInformation() {
         Store store = storeManager.getMyStore();
         PmsConfiguration pmsConfiguration = pmsManager.getConfiguration();
-        return finalizeHotel(store, pmsConfiguration);
 
+        return mapStoreToGoToHotel(store, pmsConfiguration);
     }
 
     @Override
     public List<RoomType> getRoomTypeDetails() throws Exception{
         List<BookingItemType> bookingItemTypes = bookingEngine.getBookingItemTypes();
         List<RoomType> roomTypes = new ArrayList<RoomType>();
+
         for (BookingItemType type : bookingItemTypes) {
             PmsAdditionalTypeInformation additionalInfo = pmsManager.getAdditionalTypeInformationById(type.id);
-            roomTypes.add(finalizeRoomType(type, additionalInfo));
+            roomTypes.add(mapBookingItemTypeToGoToRoomType(type, additionalInfo));
         }
 
         return roomTypes;
     }
 
-    RoomType finalizeRoomType(BookingItemType bookingItemType, PmsAdditionalTypeInformation additionalInfo){
+    @Override
+    public void getPriceAndAllotment() throws Exception {
+        Calendar cal = Calendar.getInstance();
+        Date now = cal.getTime();
+        cal.add(Calendar.DAY_OF_YEAR, pmsManager.getConfigurationSecure().daysAllowedInTheFuture + 20);
+        Date end = cal.getTime();
+
+        pmsManager.getAllRoomTypes(now, end);
+
+    }
+
+    RoomType mapBookingItemTypeToGoToRoomType(BookingItemType bookingItemType, PmsAdditionalTypeInformation additionalInfo){
         RoomType roomType = new RoomType();
 
         roomType.room_type_code = bookingItemType.productId;
@@ -95,13 +108,14 @@ public class GoToManager extends ManagerBase implements IGoToManager {
         roomType.number_of_adults = additionalInfo.numberOfAdults;
         roomType.number_of_children = additionalInfo.numberOfChildren;
         roomType.number_of_unit = bookingEngine.getBookingItemsByType(bookingItemType.id).size();
-//        roomType.
+
         return roomType;
     }
 
-    Hotel finalizeHotel(Store store, PmsConfiguration pmsConfiguration){
+    Hotel mapStoreToGoToHotel(Store store, PmsConfiguration pmsConfiguration){
         Hotel hotel = new Hotel();
         Contact contact = new Contact();
+
         hotel.name = pmsConfiguration.bookingTag;
         hotel.address = store.configuration.Adress+ ", "+store.configuration.streetAddress;
         hotel.checkin_time = pmsConfiguration.getDefaultStart();
@@ -109,10 +123,21 @@ public class GoToManager extends ManagerBase implements IGoToManager {
         contact.email = store.configuration.emailAdress;
         contact.organization_number = store.configuration.orgNumber;
         contact.phone_number = store.configuration.phoneNumber;
-        contact.website = store.getDefaultWebAddress();
+        String website = getHotelWebAddress(store);
+        if(website!=null) contact.website = website;
+
         hotel.contact_details = contact;
         hotel.hotel_code = store.additionalDomainNames.get(0);
+
         return hotel;
+    }
+    String getHotelWebAddress(Store store){
+        String webAddress = store.getDefaultWebAddress();
+        if(webAddress.contains("getshop.com")) return webAddress;
+        for(String address: store.additionalDomainNames){
+            if(address.contains("getshop.com")) return address;
+        }
+        return null;
     }
 
 }

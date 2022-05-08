@@ -12,7 +12,7 @@ public class RoomType {
     public String room_category="";
     public String size_measurement="";
     public String non_smoking="";
-    public int max_guest=1;
+    public int max_guest;
     public int number_of_adults;
     public int number_of_children;
     public String status="";

@@ -1,7 +1,9 @@
 package com.thundashop.core.gotohub.dto;
 
-public class RatePlan {
+import com.thundashop.core.common.DataCommon;
 
+public class RatePlan extends DataCommon {
+    public String rate_plan_code="";
     public String name="";
     public String description="";
     public String about="";

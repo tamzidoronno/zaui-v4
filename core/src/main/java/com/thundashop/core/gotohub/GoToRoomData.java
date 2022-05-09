@@ -22,6 +22,6 @@ public class GoToRoomData extends DataCommon {
     public String status="";
     public List<String> images = new ArrayList<String>();
     public List<RatePlan> ratePlans = new ArrayList<RatePlan>();
-    boolean addedToGoTo=false;
+    public boolean newRoomPriceSystem=false;
 
 }

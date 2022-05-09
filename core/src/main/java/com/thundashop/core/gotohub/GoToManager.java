@@ -8,15 +8,14 @@ import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
-import com.thundashop.core.gotohub.dto.Contact;
-import com.thundashop.core.gotohub.dto.Hotel;
-import com.thundashop.core.gotohub.dto.PriceAllotment;
-import com.thundashop.core.gotohub.dto.RoomType;
+import com.thundashop.core.gotohub.dto.*;
 import com.thundashop.core.pmsmanager.*;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.wubook.WubookRoomData;
+import org.opentravel.ota._2003._05.InvBlockRoomType;
+import org.opentravel.ota._2003._05.RateType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +42,8 @@ public class GoToManager extends ManagerBase implements IGoToManager {
     @Autowired
     PmsInvoiceManager pmsInvoiceManager;
 
-    List<GoToRoomData> goToRoomData = new ArrayList<GoToRoomData>();
+    HashMap<String, GoToRoomData> goToRoomData = new HashMap<>();
+    HashMap<String, RatePlan> ratePlans = new HashMap<String, RatePlan>();
 
     private static final Logger logger = LoggerFactory.getLogger(GoToManager.class);
     private static final String MANAGER = GoToManager.class.getSimpleName();
@@ -53,6 +53,12 @@ public class GoToManager extends ManagerBase implements IGoToManager {
         for (DataCommon dataCommon : data.data) {
             if(dataCommon instanceof GoToSettings) {
                 settings = (GoToSettings) dataCommon;
+            }
+            else if(dataCommon instanceof GoToRoomData) {
+                goToRoomData.put(((GoToRoomData) dataCommon).bookingEngineTypeId, (GoToRoomData) dataCommon);
+            }
+            else if(dataCommon instanceof RatePlan) {
+                ratePlans.put(((RatePlan) dataCommon).rate_plan_code,(RatePlan) dataCommon);
             }
         }
     }
@@ -96,27 +102,21 @@ public class GoToManager extends ManagerBase implements IGoToManager {
         return roomData;
     }
 
-    void updateGoToRoomData() throws Exception {
-        List<GoToRoomData> updatedGoToRoomData = new ArrayList<GoToRoomData>();
-        Set<String> goToRoomIDs;
-        goToRoomIDs = goToRoomData.stream().map(roomData-> roomData.bookingEngineTypeId).collect(Collectors.toSet());
+    public void updateGoToRoomData() throws Exception {
+        HashMap<String, GoToRoomData> updatedGoToRoomData = new HashMap<>();
         List<BookingItemType> bookingItemTypes = bookingEngine.getBookingItemTypes();
         for (BookingItemType type : bookingItemTypes) {
             PmsAdditionalTypeInformation additionalInfo = pmsManager.getAdditionalTypeInformationById(type.id);
             GoToRoomData roomData = mapBookingItemTypeToGoToRoomData(type, additionalInfo);
-            if(goToRoomIDs.contains(type.id)){
-                roomData.goToRoomTypeCode = type.id+"-GoTo";
-            } else{
-                roomData.goToRoomTypeCode = "-1";
+            if(!goToRoomData.containsKey(type.id)){
                 saveObject(roomData);
             }
-            updatedGoToRoomData.add(roomData);
+            updatedGoToRoomData.put(roomData.bookingEngineTypeId, roomData);
         }
-
         goToRoomData = updatedGoToRoomData;
     }
 
-    List<GoToRoomData> getGoToRoomData() throws Exception {
+    HashMap<String,GoToRoomData> getGoToRoomData() throws Exception {
         updateGoToRoomData();
         return goToRoomData;
     }
@@ -125,7 +125,7 @@ public class GoToManager extends ManagerBase implements IGoToManager {
     public List<RoomType> getRoomTypeDetails() throws Exception{
         updateGoToRoomData();
         List<RoomType> roomTypes = new ArrayList<RoomType>();
-        for(GoToRoomData roomData: goToRoomData){
+        for(GoToRoomData roomData: goToRoomData.values()){
             if(roomData.goToRoomTypeCode.equals("-2")){
                 continue;
             }
@@ -142,21 +142,20 @@ public class GoToManager extends ManagerBase implements IGoToManager {
         Date now = cal.getTime();
         cal.add(Calendar.DAY_OF_YEAR, pmsManager.getConfigurationSecure().daysAllowedInTheFuture + 20);
         Date end = cal.getTime();
+        updateGoToRoomData();
 
         return getPriceBetweenDates(now, end);
 
     }
 
     List<PriceAllotment> getPriceBetweenDates(Date now, Date end) throws Exception {
-        updateGoToRoomData();
         List<BookingItemType> bookingItemTypes = bookingEngine.getBookingItemTypes();
-        List<GoToRoomData> goToRoomData1 = getGoToRoomData();
         Hashtable table = new Hashtable();
         String pattern = "dd/MM/yyyy";
         SimpleDateFormat format = new SimpleDateFormat(pattern);
         String dfrom = format.format(now);
         pmsInvoiceManager.startCacheCoverage();
-        for (GoToRoomData roomData : goToRoomData) {
+        for (GoToRoomData roomData : goToRoomData.values()) {
             if (roomData.roomCategory.equals("-1") || roomData.roomCategory.equals("-2")) {
                 continue;
             }
@@ -169,27 +168,26 @@ public class GoToManager extends ManagerBase implements IGoToManager {
             Calendar calStart = Calendar.getInstance();
             calStart.setTime(pmsManager.getConfigurationSecure().getDefaultStart(now));
 
-            HashMap<String, Double> pricesForType = prices.dailyPrices.get(roomType.id);
+            HashMap<String, Double> pricesForType = prices.dailyPrices.get(roomData.bookingEngineTypeId);
             if (pricesForType == null) {
                 logger.error("Invalid price daily prices for : {}", roomType.id);
                 continue;
             }
 
-            String[] roomIds = new String[1];
-            roomIds[0] = roomType.wubookroomid + "";
-            if (roomType.newRoomPriceSystem) {
-                roomIds = roomType.virtualWubookRoomIds.split(";");
-            }
+            String roomIds = roomData.goToRoomTypeCode;
             int guests = 1;
-            for (String roomId : roomIds) {
-                Vector list = new Vector();
+            for (RatePlan ratePlan : roomData.ratePlans) {
                 Calendar copy = Calendar.getInstance();
                 copy.setTime(calStart.getTime());
-                list = createRoomPriceList(roomType, pricesForType, copy, list, guests, end);
-                if (!list.isEmpty()) {
-                    if (!roomId.equals("-1") && !roomId.isEmpty()) {
-                        table.put(roomId, list);
+                ArrayList<Double> priceList = createRoomPriceList(roomData, pricesForType, copy, guests, end);
+                if (!priceList.isEmpty()) {
+//                    if (!roomId.equals("-1") && !roomId.isEmpty()) {
+//                        table.put(roomId, list);
+//                    }
+                    for(double price : priceList){
+
                     }
+
                 }
                 guests++;
             }
@@ -214,10 +212,11 @@ public class GoToManager extends ManagerBase implements IGoToManager {
 
     }
 
-    private Vector createRoomPriceList(BookingItemType rdata, HashMap<String, Double> pricesForType, Calendar calStart,
-                                       Vector list, int guests, Date endAtDate) {
+    private ArrayList<Double> createRoomPriceList(GoToRoomData rdata, HashMap<String, Double> pricesForType, Calendar calStart,
+                                       int guests, Date endAtDate) {
         Double defaultPrice = pricesForType.get("default");
         PmsConfiguration config = pmsManager.getConfigurationSecure();
+        ArrayList<Double> priceList = new ArrayList<Double>();
 
         for (int i = 0; i < (365 * 3); i++) {
             int year = calStart.get(Calendar.YEAR);
@@ -275,13 +274,13 @@ public class GoToManager extends ManagerBase implements IGoToManager {
                 priceToAdd = (double) Math.round(priceToAdd);
             }
 
-            list.add(priceToAdd);
+            priceList.add(priceToAdd);
             if (endAtDate.before(calStart.getTime())) {
                 break;
             }
             calStart.add(Calendar.DAY_OF_YEAR, 1);
         }
-        return list;
+        return priceList;
     }
 
     RoomType mapBookingItemTypeToGoToRoomType(GoToRoomData roomData){
@@ -298,7 +297,28 @@ public class GoToManager extends ManagerBase implements IGoToManager {
         roomType.number_of_children = roomData.numberOfChildren;
         roomType.number_of_unit = roomData.numberOfUnits;
 
+        for(int guest=1; guest<=roomData.maxGuest; guest++){
+            String ratePlanCode = getRatePlanCode(guest);
+            if(!ratePlans.containsKey(ratePlanCode)){
+                RatePlan newRatePlan = createNewRatePlan(guest);
+                ratePlans.put(ratePlanCode, newRatePlan);
+                saveObject(newRatePlan);
+            }
+            roomType.rate_plans.add(ratePlans.get(ratePlanCode));
+        }
+
         return roomType;
+    }
+
+    RatePlan createNewRatePlan(int numberOfGuests){
+        RatePlan ratePlan = new RatePlan();
+        ratePlan.rate_plan_code=getRatePlanCode(numberOfGuests);
+        ratePlan.name = "Rate Plan "+String.valueOf(numberOfGuests);
+        ratePlan.description = "Rate Plan for "+String.valueOf(numberOfGuests)+" guests";
+        ratePlan.about = "Rate Plan "+String.valueOf(numberOfGuests)+" is mainly for "+String.valueOf(numberOfGuests)+" guests.";
+        ratePlan.about += " Price may vary for this rate plan and this rate plan will be applied";
+        ratePlan.about += " when someone book a room for "+String.valueOf(numberOfGuests)+" guests";
+        return ratePlan;
     }
 
     Hotel mapStoreToGoToHotel(Store store, PmsConfiguration pmsConfiguration){
@@ -328,6 +348,14 @@ public class GoToManager extends ManagerBase implements IGoToManager {
             if(address.contains("getshop.com")) return address;
         }
         return null;
+    }
+
+    String getRatePlanCode(int numberOfGuests){
+        return "RP-"+String.valueOf(numberOfGuests);
+    }
+
+    String getGoToRoomTypeCode(){
+        return "";
     }
 
 }

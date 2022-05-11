@@ -189,7 +189,7 @@
 .PmsBookingGroupRoomView .savecomment { display:none; }
 .PmsBookingGroupRoomView .hiddencomment { display:none; }
 .PmsBookingGroupRoomView .forroom { color:#bb2d2d; }
-.PmsBookingGroupRoomView .deletedcomment { text-decoration: line-through; }
+.PmsBookingGroupRoomView .deletedcomment { text-decoration: line-through; opacity: 0.5; }
 .PmsBookingGroupRoomView .addcommentarea { margin-top: 10px;display:none; }
 .PmsBookingGroupRoomView .addcommentbtn { width:45%; box-sizing: border-box; float:left;}
 .PmsBookingGroupRoomView .addcommenttobooking { width:100%; box-sizing: border-box; height: 80px; }

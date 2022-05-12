@@ -10,6 +10,8 @@ app.PmsRoomConfiguration = {
         $(document).on('click', '.PmsRoomConfiguration .openitemsorting', app.PmsRoomConfiguration.openitemsorting);
         $(document).on('click', '.PmsRoomConfiguration .savetypesorting', app.PmsRoomConfiguration.savetypesorting);
         $(document).on('click', '.PmsRoomConfiguration .saveitemsorting', app.PmsRoomConfiguration.saveitemsorting);
+        $(document).on('click', '.PmsRoomConfiguration .createType', app.PmsRoomConfiguration.createType);
+        $(document).on('click', '.PmsRoomConfiguration .createRoom', app.PmsRoomConfiguration.createRoom);
      },
     opentypesorting : function() {
         var event = thundashop.Ajax.createEvent('','loadSortingTypes', $(this), {});
@@ -157,6 +159,37 @@ app.PmsRoomConfiguration = {
         });
         
         thundashop.Ajax.post(event);
-    }
+    },
+    createType : function() {
+        var name = $('[gsname="name"]').val();
+        if(name===''){
+            alert('Please input a room type');
+        }
+        else {
+            var event = thundashop.Ajax.createEvent('','createType',$(this), {
+                "name" : $('[gsname="name"]').val()
+            });
+            thundashop.Ajax.post(event);
+        }
+        
+    },
+    createRoom : function() {
+        var name = $('[gsname="roomname"]').val();
+        var type = $('[gsname="type"]').val();
+        console.log('name',name);
+        console.log('type',type);
+        if(name===''){
+            alert('Please input a room name/number');
+            return;
+        }
+        else {
+            var event = thundashop.Ajax.createEvent('','createRoom',$(this), {
+                "name" : $('[gsname="roomname"]').val(),
+                "type" : $('[gsname="type"]').val()
+            });
+            thundashop.Ajax.post(event);
+        }
+        
+    },
 };
 app.PmsRoomConfiguration.init();

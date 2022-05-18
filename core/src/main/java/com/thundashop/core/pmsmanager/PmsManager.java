@@ -92,6 +92,7 @@ import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCard;
 import com.thundashop.core.utils.BrRegEngine;
 import com.thundashop.core.utils.Constants;
+import com.thundashop.core.utils.NullSafeConcurrentHashMap;
 import com.thundashop.core.utils.UtilManager;
 import com.thundashop.core.webmanager.WebManager;
 import com.thundashop.core.wubook.WubookManager;
@@ -123,7 +124,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private static final Logger logger = LoggerFactory.getLogger(PmsManager.class);
 
-    private HashMap<String, PmsBooking> bookings = new HashMap<>();
+    private NullSafeConcurrentHashMap<String, PmsBooking> bookings = new NullSafeConcurrentHashMap<>();
     private HashMap<String, String> bookingIdMap = new HashMap<>();
     private HashMap<String, Product> fetchedProducts = new HashMap<>();
     private HashMap<String, PmsAddonDeliveryLogEntry> deliveredAddons = new HashMap<>();
@@ -1053,7 +1054,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (booking.id == null || booking.id.isEmpty()) {
             throw new ErrorException(1000015);
         }
- 
+
         bookings.put(booking.id, booking);
 
         try {
@@ -2351,14 +2352,27 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         saveAdditionalInfo(additional);
         processor();
     }
-
     void markRoomAsDirty(String bookingItemId) {
+        this.markRoomAsDirty(bookingItemId, false);
+    }
+    void markRoomAsDirty(String bookingItemId, boolean forceDirty) {
         PmsAdditionalItemInformation additional = getAdditionalInfo(bookingItemId);
         PmsRoomSimple currentBookerOnRoom = getCurrentRoomOnItem(bookingItemId);
+        String roomId = null;
         if (currentBookerOnRoom != null) {
-            additional.markDirty(currentBookerOnRoom.pmsRoomId, storeId);
+            roomId = currentBookerOnRoom.pmsRoomId;
+        }
+        if(forceDirty) {
+            String userId = null;
+            if (getSession() != null && getSession().currentUser != null) {
+                userId = getSession().currentUser.id;
+            }
+            additional.markDirty(roomId, storeId, userId);
+            additional.isClean(false);
+            additional.setLastCleaned(null);
+            additional.setLastUsed(null);
         } else {
-            additional.markDirty(null, storeId);
+            additional.markDirty(roomId, storeId, null);
         }
         saveAdditionalInfo(additional);
 
@@ -4291,8 +4305,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         return res;
     }
-    
-    HashMap<String, PmsBooking> getBookingMap() {
+
+    NullSafeConcurrentHashMap<String, PmsBooking> getBookingMap() {
         return bookings;
     }
 
@@ -6484,9 +6498,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void markRoomDirty(String itemId) throws Exception {
-        PmsAdditionalItemInformation item = getAdditionalInfo(itemId);
-        item.forceMarkDirty();
-        saveObject(item);
+        markRoomAsDirty(itemId, true);
     }
 
     @Override
@@ -8370,16 +8382,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             Date date = new Date();
             date.setTime(timezone);
             PmsCleaningHistory res = new PmsCleaningHistory();
-            String roomId = additional.markedDirtyDatesLog.get(timezone);
-            if (roomId != null) {
-                PmsBooking booking = getBookingFromRoom(roomId);
-                if(booking != null) {
-                    PmsBookingRooms room = booking.getRoom(roomId);
-                    if (!room.guests.isEmpty()) {
-                        res.name = room.guests.get(0).name;
-                    }
-                }
-            }
+            res.name = getDirtyByNameOfRoom(additional.markedDirtyDatesLogUser.get(timezone), additional.markedDirtyDatesLog.get(timezone));
             res.cleaned = false;
             res.date = date;
             returnList.add(res);
@@ -8392,6 +8395,23 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         });
 
         return returnList;
+    }
+
+    private String getDirtyByNameOfRoom(String dirtyByUserId, String roomId) {
+        if(dirtyByUserId != null) {
+            User usr = userManager.getUserByIdUnfinalized(dirtyByUserId);
+            if(usr != null) {
+                return usr.fullName;
+            }
+        }
+        if(roomId == null) return "";
+        PmsBooking booking = getBookingFromRoom(roomId);
+        if(booking == null) return "";
+        PmsBookingRooms room = booking.getRoom(roomId);
+        if (!room.guests.isEmpty()) {
+            return room.guests.get(0).name;
+        }
+        return "";
     }
 
     private Date getFirstDateInMonth() {

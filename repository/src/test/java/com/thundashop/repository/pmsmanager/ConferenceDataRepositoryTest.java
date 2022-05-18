@@ -23,14 +23,14 @@ class ConferenceDataRepositoryTest extends TestCommon {
     final Type type = new TypeToken<ConferenceData>() {
     }.getType();
 
-    static ConferenceDataRepository conferenceDataRepository;
+    static IConferenceDataRepository conferenceDataRepository;
 
     SessionInfo sessionInfo;
 
     @BeforeAll
     static void setUp() {
         init();
-        conferenceDataRepository = new ConferenceDataRepository(database, ConferenceData.class.getName());
+        conferenceDataRepository = new ConferenceDataRepository(database);
     }
 
     @BeforeEach
@@ -53,7 +53,7 @@ class ConferenceDataRepositoryTest extends TestCommon {
         ConferenceData conferenceData = toPojo(type, "src/test/resources/pmsmanager/conferencedata/conferenceData.json");
 
         ConferenceData expected = conferenceDataRepository.save(conferenceData, sessionInfo);
-        Optional<ConferenceData> actual = conferenceDataRepository.findById(expected.id, ConferenceData.class, sessionInfo);
+        Optional<ConferenceData> actual = conferenceDataRepository.findById(expected.id, sessionInfo);
 
         assertThat(actual).isNotEmpty()
                 .map(it -> it.id)

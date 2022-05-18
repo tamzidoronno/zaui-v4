@@ -1,8 +1,8 @@
 package com.thundashop.repository.testutils;
 
-import com.thundashop.repository.utils.Config;
-
 import java.io.File;
+
+import com.thundashop.repository.config.Config;
 
 public class TestConfig {
 

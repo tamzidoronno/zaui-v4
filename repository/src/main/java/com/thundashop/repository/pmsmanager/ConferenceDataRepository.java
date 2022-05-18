@@ -2,27 +2,40 @@ package com.thundashop.repository.pmsmanager;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
-import com.thundashop.core.pmsmanager.ConferenceData;
-import com.thundashop.repository.common.Repository;
 import com.thundashop.repository.utils.SessionInfo;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
+import com.thundashop.core.pmsmanager.ConferenceData;
+import com.thundashop.repository.baserepository.Repository;
 import com.thundashop.repository.db.Database;
 
 import java.util.Optional;
 
-public class ConferenceDataRepository extends Repository<ConferenceData> {
+@org.springframework.stereotype.Repository
+public class ConferenceDataRepository extends Repository<ConferenceData> implements IConferenceDataRepository{
 
-    private final String className;
-
-    public ConferenceDataRepository(Database database, String className) {
+    @Autowired
+    public ConferenceDataRepository(@Qualifier("repositoryDatabase")Database database) {
         super(database);
-        this.className = className;
     }
 
     public Optional<ConferenceData> findByBookingId(String bookingId, SessionInfo sessionInfo) {
         DBObject query = new BasicDBObject();
-        query.put("className", className);
+        query.put("className", getClassName());
         query.put("bookingId", bookingId);
-        return getOne(query, ConferenceData.class, sessionInfo);
+        return getFirst(query, sessionInfo);
+    }
+
+    @Override
+    protected String getClassName() {        
+        return ConferenceData.class.getName();
+    }
+
+    @Override
+    protected Class<ConferenceData> getEntityClass() {
+        return ConferenceData.class;
     }
 
 }

@@ -3,7 +3,8 @@ package com.thundashop.core.pmsmanager;
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.usermanager.UserManager;
-import com.thundashop.repository.pmsmanager.ConferenceDataRepository;
+import com.thundashop.repository.pmsmanager.IConferenceDataRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,11 +15,11 @@ import java.util.Collections;
 @GetShopSession
 public class ConferenceDataManager extends ManagerBase {
 
-    private final ConferenceDataRepository conferenceDataRepository;
+    private final IConferenceDataRepository conferenceDataRepository;
     private final UserManager userManager;
 
     @Autowired
-    public ConferenceDataManager(ConferenceDataRepository conferenceDataRepository, UserManager userManager) {
+    public ConferenceDataManager(IConferenceDataRepository conferenceDataRepository, UserManager userManager) {
         this.conferenceDataRepository = conferenceDataRepository;
         this.userManager = userManager;
     }

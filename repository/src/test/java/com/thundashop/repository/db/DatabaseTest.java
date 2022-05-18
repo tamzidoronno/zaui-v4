@@ -2,8 +2,8 @@ package com.thundashop.repository.db;
 
 import com.google.common.collect.ImmutableList;
 import com.mongodb.BasicDBObject;
+import com.thundashop.repository.config.Config;
 import com.thundashop.repository.testutils.TestConfig;
-import com.thundashop.repository.utils.Config;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -36,7 +36,7 @@ class DatabaseTest {
                 .setPort(config.getAsInt("mongo.port"))
                 .build();
 
-        database = Database.of(provider, new DbTestEntityMappers());
+        database = new Database(provider, new DbTestEntityMappers());
     }
 
     @AfterEach

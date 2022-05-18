@@ -1,17 +1,15 @@
 package com.thundashop.repository;
 
-import com.thundashop.repository.db.MongoClientProvider;
-import com.thundashop.repository.db.MongoClientProviderImpl;
-import com.thundashop.repository.utils.SessionInfo;
-import com.thundashop.repository.db.Database;
-import com.thundashop.repository.db.EntityMappersImpl;
-import com.thundashop.repository.testutils.TestConfig;
-import com.thundashop.repository.utils.Config;
-
 import java.net.UnknownHostException;
 import java.util.UUID;
 
-import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
+import com.thundashop.repository.config.Config;
+import com.thundashop.repository.db.Database;
+import com.thundashop.repository.db.MongoClientProvider;
+import com.thundashop.repository.db.MongoClientProviderImpl;
+import com.thundashop.repository.entitymapper.EntityMapper;
+import com.thundashop.repository.testutils.TestConfig;
+import com.thundashop.repository.utils.SessionInfo;
 
 public abstract class TestCommon {
 
@@ -26,7 +24,7 @@ public abstract class TestCommon {
                     .setPort(config.getAsInt("mongo.port"))
                     .build();
 
-            database = Database.of(provider, new EntityMappersImpl());
+            database = new Database(provider, new EntityMapper());
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
         }

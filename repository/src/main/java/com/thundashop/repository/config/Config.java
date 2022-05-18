@@ -1,4 +1,4 @@
-package com.thundashop.repository.utils;
+package com.thundashop.repository.config;
 
 import org.apache.commons.lang3.Validate;
 

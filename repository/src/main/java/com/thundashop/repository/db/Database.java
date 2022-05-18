@@ -2,29 +2,32 @@ package com.thundashop.repository.db;
 
 import com.mongodb.*;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.repository.entitymapper.IEntityMapper;
+
 import org.mongodb.morphia.Morphia;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
+@Component("repositoryDatabase")
 public class Database {
 
     private final Mongo mongo;
 
     private final Morphia morphia;
 
-    private Database(MongoClientProvider provider, EntityMappers mappers) {
-            mongo = provider.getMongoClient();
+    @Autowired
+    public Database(@Qualifier("localMongo")MongoClientProvider provider, IEntityMapper mappers) {
+        mongo = provider.getMongoClient();
         morphia = new Morphia();
         morphia.getMapper().getConverters().addConverter(BigDecimalConverter.class);
         morphia.map(mappers.getEntities());
-    }
-
-    public static Database of(MongoClientProvider provider, EntityMappers mappers) {
-        return new Database(provider, mappers);
-    }
+    }    
 
     public DataCommon save(String dbName, String collectionName, DataCommon data) {
         notNull(data, "DataCommon should not be null");

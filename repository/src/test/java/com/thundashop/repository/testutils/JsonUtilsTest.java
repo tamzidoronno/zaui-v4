@@ -2,11 +2,10 @@ package com.thundashop.repository.testutils;
 
 import com.google.gson.reflect.TypeToken;
 import com.thundashop.core.pmsmanager.ConferenceData;
+
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Type;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class JsonUtilsTest {
 

@@ -2,17 +2,23 @@ package com.thundashop.repository.pmsmanager;
 
 import com.mongodb.BasicDBObject;
 import com.thundashop.core.pmsmanager.PmsLog;
-import com.thundashop.repository.common.Repository;
 import com.thundashop.repository.utils.SessionInfo;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
+import com.thundashop.repository.baserepository.Repository;
 import com.thundashop.repository.db.Database;
 
 import java.util.List;
 
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
-public class PmsLogRepository extends Repository<PmsLog> {
+@org.springframework.stereotype.Repository
+public class PmsLogRepository extends Repository<PmsLog> implements IPmsLogRepository {
 
-    public PmsLogRepository(Database database) {
+    @Autowired
+    public PmsLogRepository(@Qualifier("repositoryDatabase")Database database) {
         super(database);
     }
 
@@ -20,7 +26,7 @@ public class PmsLogRepository extends Repository<PmsLog> {
         BasicDBObject query = new BasicDBObject();
         BasicDBObject sort = new BasicDBObject();
 
-        query.put("className", PmsLog.class.getCanonicalName());
+        query.put("className", getClassName());
         if (isNotEmpty(filter.bookingId)) {
             query.put("bookingId", filter.bookingId);
         }
@@ -40,7 +46,17 @@ public class PmsLogRepository extends Repository<PmsLog> {
         sort.put("rowCreatedDate", -1);
         int limit = filter.includeAll ? Integer.MAX_VALUE : 100;
 
-        return getDatabase().query(sessionInfo.getManagerName(), getCollectionName(sessionInfo), PmsLog.class, query, sort, limit);
+        return getDatabase().query(sessionInfo.getManagerName(), getCollectionName(sessionInfo), getEntityClass(), query, sort, limit);
+    }
+
+    @Override
+    protected String getClassName() {
+        return PmsLog.class.getName();
+    }
+
+    @Override
+    protected Class<PmsLog> getEntityClass() {
+        return PmsLog.class;
     }
 
 }

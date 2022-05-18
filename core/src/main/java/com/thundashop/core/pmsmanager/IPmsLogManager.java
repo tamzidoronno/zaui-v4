@@ -8,4 +8,12 @@ public interface IPmsLogManager {
 
     List<PmsLog> query(PmsLog filter);
 
+    void logEntry(String logText, String bookingId, String itemId, PmsConfiguration configuration);
+
+    void logEntry(String logText, String bookingId, String itemId, String roomId, String logType, PmsConfiguration configuration);
+
+    void logEntryObject(PmsLog log, PmsConfiguration configuration);
+
+    List<PmsLog> getLogEntries(PmsLog filter);
+
 }

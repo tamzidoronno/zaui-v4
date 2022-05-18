@@ -35,7 +35,7 @@ public class PmsPricingRepositoryTest extends TestCommon {
     @BeforeAll
     static void setUp() {
         init();
-        repository = new PmsPricingRepository(database, PmsPricing.class.getName());
+        repository = new PmsPricingRepository(database);
     }
 
     @BeforeEach
@@ -98,7 +98,7 @@ public class PmsPricingRepositoryTest extends TestCommon {
 
         repository.markDeleteByCode(saved.code, sessionInfo);
 
-        Optional<PmsPricing> actual = repository.findById(saved.id, PmsPricing.class, sessionInfo);
+        Optional<PmsPricing> actual = repository.findById(saved.id, sessionInfo);
         assertThat(actual).isNotEmpty().map(it -> it.id).contains(saved.id);
         assertThat(actual).map(it -> it.gsDeletedBy).contains(sessionInfo.getCurrentUserId());
         assertThat(actual).map(it -> it.deleted).isNotEmpty();

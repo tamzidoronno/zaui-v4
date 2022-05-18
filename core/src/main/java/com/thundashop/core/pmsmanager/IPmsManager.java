@@ -1,6 +1,12 @@
 package com.thundashop.core.pmsmanager;
 
-import com.thundashop.core.arx.AccessLog;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import com.thundashop.core.bookingengine.data.RegistrationRules;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.Administrator;
@@ -12,15 +18,7 @@ import com.thundashop.core.common.ForceAsync;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
 import com.thundashop.core.ordermanager.data.Order;
-import com.thundashop.core.pmseventmanager.PmsEventFilter;
 import com.thundashop.core.usermanager.data.User;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Property management system.<br>

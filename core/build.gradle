@@ -39,6 +39,7 @@ manifest {
 dependencies {
     compile project(":messages")
     compile project(":repository")
+    compile project(":services")
     compile fileTree(dir: '../libs', include: ['*.jar'])
     implementation group: 'ca.pjer', name: 'logback-awslogs-appender', version: '1.5.0'
     implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.30'

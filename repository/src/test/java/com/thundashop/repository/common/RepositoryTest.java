@@ -3,6 +3,7 @@ package com.thundashop.repository.common;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.thundashop.repository.TestCommon;
+import com.thundashop.repository.baserepository.IRepository;
 import com.thundashop.repository.db.DbTest;
 import com.thundashop.repository.exceptions.NotUniqueDataException;
 import com.thundashop.repository.utils.SessionInfo;
@@ -23,7 +24,7 @@ class RepositoryTest extends TestCommon {
 
     private static final String testDbName = "repositoryTest_" + randomAlphanumeric(5);
 
-    static RepositoryTestImpl repositoryTest;
+    private static IRepository<DbTest> repositoryTest;
     SessionInfo sessionInfo;
 
     @BeforeAll
@@ -47,7 +48,7 @@ class RepositoryTest extends TestCommon {
         saveTestData("code_1", "code_2", "code_3");
         DBObject query = new BasicDBObject("strMatch", "code_1");
 
-        Optional<DbTest> actual = repositoryTest.getOne(query, DbTest.class, sessionInfo);
+        Optional<DbTest> actual = repositoryTest.getOne(query, sessionInfo);
 
         assertThat(actual).isNotEmpty().map(DbTest::getStrMatch).contains("code_1");
     }
@@ -57,7 +58,7 @@ class RepositoryTest extends TestCommon {
         saveTestData("code_1", "code_2", "code_1");
         DBObject query = new BasicDBObject("strMatch", "code_1");
 
-        assertThatThrownBy(() -> repositoryTest.getOne(query, DbTest.class, sessionInfo))
+        assertThatThrownBy(() -> repositoryTest.getOne(query, sessionInfo))
                 .isInstanceOf(NotUniqueDataException.class)
                 .hasMessage("Found multiple data count: 2 , entity: %s , query: { \"strMatch\" : \"code_1\"}",
                         DbTest.class.getName());
@@ -68,7 +69,7 @@ class RepositoryTest extends TestCommon {
         saveTestData("code_1", "code_2", "code_3");
         DBObject query = new BasicDBObject("strMatch", "code_4");
 
-        Optional<DbTest> actual = repositoryTest.getOne(query, DbTest.class, sessionInfo);
+        Optional<DbTest> actual = repositoryTest.getOne(query, sessionInfo);
 
         assertThat(actual).isEmpty();
     }
@@ -78,12 +79,12 @@ class RepositoryTest extends TestCommon {
         saveTestData("code_1");
         DBObject query = new BasicDBObject("strMatch", "code_1");
 
-        assertThat(repositoryTest.exist(query, DbTest.class, sessionInfo)).isTrue();
+        assertThat(repositoryTest.exist(query, sessionInfo)).isTrue();
     }
 
     @Test
     void testNotExist() {
-        assertThat(repositoryTest.exist(new BasicDBObject("strMatch", "codeShouldNotExist"), DbTest.class, sessionInfo)).isFalse();
+        assertThat(repositoryTest.exist(new BasicDBObject("strMatch", "codeShouldNotExist"), sessionInfo)).isFalse();
     }
 
     private void saveTestData(String... strMatch) {

@@ -1,4 +1,4 @@
-package com.thundashop.repository.common;
+package com.thundashop.repository.baserepository;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
@@ -15,13 +15,16 @@ import java.util.UUID;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
-public abstract class Repository<T> {
-
+public abstract class Repository<T> implements IRepository<T> {
+    
     private final Database database;
+
+    protected abstract String getClassName();
+    protected abstract Class<T> getEntityClass();
 
     public Repository(Database database) {
         this.database = database;
-    }
+    }    
 
     public Database getDatabase() {
         return database;
@@ -57,25 +60,39 @@ public abstract class Repository<T> {
 
         return (T) database.save(sessionInfo.getManagerName(), getCollectionName(sessionInfo), dataCommon);
     }
+  
+    public List<T> getAll(SessionInfo sessionInfo) {
+        DBObject query = new BasicDBObject();
+        query.put("className", getClassName());
+        return this.getDatabase().query(sessionInfo.getManagerName(), getCollectionName(sessionInfo), getEntityClass(), query);
+    }
 
-    protected Optional<T> getOne(DBObject query, Class<T> entityClass, SessionInfo sessionInfo) {
-        List<T> resultList = getDatabase().query(sessionInfo.getManagerName(), getCollectionName(sessionInfo), entityClass, query);
+    public Optional<T> getFirst(DBObject query, SessionInfo sessionInfo) {
+        return getDatabase()
+                .query(sessionInfo.getManagerName(), getCollectionName(sessionInfo), getEntityClass(), query)
+                .stream()
+                .findFirst();
+    }
+
+    public Optional<T> getOne(DBObject query, SessionInfo sessionInfo) {
+        List<T> resultList = getDatabase().query(sessionInfo.getManagerName(), getCollectionName(sessionInfo), getEntityClass(), query);
 
         if (resultList.size() > 1) {
             throw new NotUniqueDataException(String.format("Found multiple data count: %s , entity: %s , query: %s",
-                    resultList.size(), entityClass.getName(), query));
+                    resultList.size(), getClassName(), query));
         }
 
         return resultList.isEmpty() ? Optional.empty() : Optional.of(resultList.get(0));
     }
 
-    public Optional<T> findById(String id, Class<T> entityClass, SessionInfo sessionInfo) {
+    public Optional<T> findById(String id, SessionInfo sessionInfo) {
         DBObject query = new BasicDBObject("_id", id);
-        return getOne(query, entityClass, sessionInfo);
-    }
+        return getOne(query, sessionInfo);
+    }   
+    
 
-    protected boolean exist(DBObject query, Class<T> entityClass, SessionInfo sessionInfo) {
-        return !getDatabase().query(sessionInfo.getManagerName(), getCollectionName(sessionInfo), entityClass, query).isEmpty();
+    public boolean exist(DBObject query, SessionInfo sessionInfo) {
+        return !getDatabase().query(sessionInfo.getManagerName(), getCollectionName(sessionInfo), getEntityClass(), query).isEmpty();
     }
 
     public int markDeletedByQuery(DBObject query, SessionInfo sessionInfo) {

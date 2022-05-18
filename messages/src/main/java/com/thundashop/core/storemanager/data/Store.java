@@ -151,6 +151,7 @@ public class Store extends DataCommon {
     public void setTimeZone(String timezone) {
         this.timeZone = timezone;
     }
+    public String getTimeZone() {return this.timeZone;}
     
     public String getTimeZone() {
         return this.timeZone;

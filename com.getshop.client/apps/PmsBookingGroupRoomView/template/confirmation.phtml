@@ -28,7 +28,7 @@ foreach($booking->rooms as $room) {
         $emails[] = $guest->email;
     }
 }
-echo "<select class='gsniceselect1 emailRecipient' style='width:100%;'>";
+echo "<select class='gsniceselect1' id='emailList' style='width:100%;'>";
 foreach($emails as $email) {
     echo "<option value='$email'>$email</option>";
 }
@@ -64,7 +64,6 @@ echo "</select>";
 <div class='previewarea'></div>
 <script>
     $('#emailList').change(function(){
-        console.log('ho',this);
         
         if(this.value == 'defined'){
             $('.emailRecipient').val("");

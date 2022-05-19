@@ -61,9 +61,11 @@ import com.thundashop.core.usermanager.data.UserCard;
 import com.thundashop.core.verifonemanager.VerifoneFeedback;
 import com.thundashop.core.warehousemanager.WareHouseManager;
 import com.thundashop.core.webmanager.WebManager;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
@@ -202,6 +204,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Autowired
     private GetShopCentral central;
+
+    @Autowired
+    private Environment env;
     
     private List<String> terminalMessages = new ArrayList();
     private Order orderToPay;
@@ -274,12 +279,17 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public List<DataCommon> retreiveData(Credentials credentials) {
-        BasicDBObject neQuery = new BasicDBObject();
+        String dateAfterDataToRetrieve = env.getProperty("data.filter."  + storeId);
+        if(StringUtils.isBlank(dateAfterDataToRetrieve)) return super.retreiveData(credentials, null);
+        Date dt = null;
         try {
-            neQuery.put("rowCreatedDate", new BasicDBObject("$gte", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2019-12-31T11:59:59")));
+            dt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateAfterDataToRetrieve);
         } catch (ParseException e) {
-            throw new RuntimeException(e);
+            logger.error("Fail to covert date of client {} {}, original exception {}", storeId, dateAfterDataToRetrieve, e);
+            return super.retreiveData(credentials, null);
         }
+        BasicDBObject neQuery = new BasicDBObject();
+        neQuery.put("rowCreatedDate", new BasicDBObject("$gte", dt));
         return super.retreiveData(credentials, neQuery);
     }
 

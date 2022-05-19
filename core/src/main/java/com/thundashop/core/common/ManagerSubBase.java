@@ -144,7 +144,7 @@ public class ManagerSubBase {
         
         startScheduler(gsscheduler, true);
     }
-    
+
     public void initialize() throws SecurityException {
         long start = System.currentTimeMillis();
         Credentials credentials = new Credentials(this.getClass());
@@ -170,7 +170,7 @@ public class ManagerSubBase {
                 
         if (database != null && !credentials.manangerName.equals("LoggerManager") && databaseFunctionInUse && shouldLoadData()) {
             DataRetreived dataRetreived = new DataRetreived();
-            dataRetreived.data = retreiveData(credentials, null);
+            dataRetreived.data = retreiveData(credentials);
             
             for (DataCommon common : dataRetreived.data) {
                 if (common instanceof ManagerSetting) {

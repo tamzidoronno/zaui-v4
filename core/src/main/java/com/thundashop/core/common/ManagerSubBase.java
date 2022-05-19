@@ -170,7 +170,7 @@ public class ManagerSubBase {
                 
         if (database != null && !credentials.manangerName.equals("LoggerManager") && databaseFunctionInUse && shouldLoadData()) {
             DataRetreived dataRetreived = new DataRetreived();
-            dataRetreived.data = database.retreiveData(credentials);
+            dataRetreived.data = retreiveData(credentials, null);
             
             for (DataCommon common : dataRetreived.data) {
                 if (common instanceof ManagerSetting) {
@@ -275,6 +275,14 @@ public class ManagerSubBase {
     }
 
     public void dataFromDatabase(DataRetreived data) {
+    }
+
+    public List<DataCommon> retreiveData(Credentials credentials) {
+        return database.retreiveData(credentials);
+    }
+
+    public List<DataCommon> retreiveData(Credentials credentials, BasicDBObject additionalQuery) {
+        return database.retreiveData(credentials, additionalQuery);
     }
 
     /**

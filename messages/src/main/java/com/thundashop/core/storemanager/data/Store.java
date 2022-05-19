@@ -153,8 +153,4 @@ public class Store extends DataCommon {
     }
     public String getTimeZone() {return this.timeZone;}
     
-    public String getTimeZone() {
-        return this.timeZone;
-    }
-    
 }

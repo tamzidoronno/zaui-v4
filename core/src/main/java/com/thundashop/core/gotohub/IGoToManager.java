@@ -1,9 +1,8 @@
 package com.thundashop.core.gotohub;
 
-import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
-import com.thundashop.core.common.GetShopMultiLayerSession;
 import com.thundashop.core.gotohub.dto.Hotel;
+import com.thundashop.core.gotohub.dto.PriceAllotment;
 import com.thundashop.core.gotohub.dto.RoomType;
 
 import java.util.List;
@@ -15,6 +14,6 @@ public interface IGoToManager {
     public String testConnection() throws Exception;
     public Hotel getHotelInformation();
     public List<RoomType> getRoomTypeDetails() throws Exception;
-    public void getPriceAndAllotment() throws Exception;
+    public List<PriceAllotment> getPriceAndAllotment() throws Exception;
 
 }

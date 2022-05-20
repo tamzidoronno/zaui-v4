@@ -2,8 +2,6 @@ package com.thundashop.core.gotohub;
 
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.bookingengine.BookingEngine;
-import com.thundashop.core.bookingengine.data.Booking;
-import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ManagerBase;
@@ -13,9 +11,6 @@ import com.thundashop.core.pmsmanager.*;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.storemanager.data.Store;
-import com.thundashop.core.wubook.WubookRoomData;
-import org.opentravel.ota._2003._05.InvBlockRoomType;
-import org.opentravel.ota._2003._05.RateType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +18,6 @@ import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
-
-import static com.thundashop.core.wubook.WuBookApiCalls.UPDATE_PLAN_PRICES;
 
 @Component
 @GetShopSession
@@ -201,15 +193,15 @@ public class GoToManager extends ManagerBase implements IGoToManager {
 //        params.addElement(table);
 
 //        Vector result = executeClient(UPDATE_PLAN_PRICES.value(), params);
-        if ((Integer) result.get(0) != SUCCESS_STATUS_CODE) {
+//        if ((Integer) result.get(0) != SUCCESS_STATUS_CODE) {
 //            logText("Unable to update prices:" + result.get(1));
 //            logText("parameters sent:");
 //            logText(params.toString());
 //            return "Failed to update price, " + result.get(1);
-        } else {
+//        } else {
 //            logText("Prices updated between " + now + " - " + end);
-        }
-
+//        }
+        return null;
     }
 
     private ArrayList<Double> createRoomPriceList(GoToRoomData rdata, HashMap<String, Double> pricesForType, Calendar calStart,

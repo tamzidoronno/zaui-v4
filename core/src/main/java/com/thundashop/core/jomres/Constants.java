@@ -8,8 +8,8 @@ public class Constants extends DataCommon {
 
     protected String ADMIN_CLIENT_ID = "system";
     protected String ADMIN_CLIENT_SECRET = "DpnPPlSlmbnXLLbxNaioNqDJQwidlCdubqTnlRUHWpsznVgIqo";
-    protected String JOMRES_CMF_REST_API_CLIENT_ID = "QJUaWMQPabVmHlN";
-    protected String JOMRES_CMF_REST_API_CLIENT_SECRET = "fBzXVCrogYZjdCNtuAgmfNCXlgsjVnNqalINOONCpZYTONZBGY";
+    protected String JOMRES_CMF_REST_API_CLIENT_ID = "xUirogUaOFQFOQF";
+    protected String JOMRES_CMF_REST_API_CLIENT_SECRET = "HdZDhHbHPxGXjNhZsQSLDDvbrcgLgaDXfGhfyawUJNbbLALtxs";
 
     protected int CMS_USER_ID = 1743;
     protected String CHANNEL_NAME = "test_channel";

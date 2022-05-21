@@ -132,6 +132,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private HashMap<String, PmsPricing> priceMap = new HashMap<>();
     private HashMap<String, ConferenceData> conferenceDatas = new HashMap<>();
     private HashMap<String, FailedWubookInsertion> failedWubooks = new HashMap<>();
+    
+    private HashMap<Long, FailedJomresInsertion> failedJomresBookings = new HashMap<>();
+    
+    
     private HashMap<String, PmsRoomTypeAccessory> accesories = new HashMap<>();
     private PmsConfiguration configuration = new PmsConfiguration();
     private List<String> repicientList = new ArrayList<>();
@@ -296,6 +300,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (dataCommon instanceof FailedWubookInsertion) {
                 FailedWubookInsertion failure = (FailedWubookInsertion) dataCommon;
                 failedWubooks.put(failure.wubookResId, failure);
+            }
+            if (dataCommon instanceof FailedJomresInsertion) {
+                FailedJomresInsertion failure = (FailedJomresInsertion) dataCommon;
+                failedJomresBookings.put(failure.jomresBookingId, failure);
             }
             if (dataCommon instanceof PmsBookingAutoIncrement) {
                 autoIncrement = (PmsBookingAutoIncrement) dataCommon;
@@ -7177,9 +7185,21 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         saveObject(failed);
         failedWubooks.put(failed.wubookResId, failed);
     }
+    
+    public void markSentErrorMessageForJomresBooking(long  jomresBookingId) {
+        FailedJomresInsertion failed = new FailedJomresInsertion();
+        failed.jomresBookingId = jomresBookingId;
+        failed.when = new Date();
+        saveObject(failed);
+        failedJomresBookings.put(failed.jomresBookingId, failed);
+    }
 
     public boolean hasSentErrorNotificationForWubookId(String wubookId) {
         return failedWubooks.containsKey(wubookId);
+    }
+    
+    public boolean hasSentErrorNotificationForJomresBooking(long jomresBookingId) {
+        return failedJomresBookings.containsKey(jomresBookingId);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.thundashop.core.jomres.services;
 
 import com.google.gson.Gson;
 import com.thundashop.core.jomres.dto.Availability;
+import com.thundashop.core.jomres.dto.UpdateAvailabilityResponse;
 import com.thundashop.core.sedox.autocryptoapi.Exception;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -20,11 +21,11 @@ public class AvailabilityService extends BaseService {
     private static final Logger logger = LoggerFactory.getLogger(AvailabilityService.class);
 
     //SRP stands for "Single Room Property"
-    public boolean changePropertyAvailability(String baseUrl, String token, String channel, int jomresPropertyId,
+    public String changePropertyAvailability(String baseUrl, String token, String channel, int jomresPropertyId,
                                               Map<Date, Date> dateRanges, boolean availabilityStatus) throws Exception {
         try {
             if (dateRanges == null || dateRanges.isEmpty()) {
-                return true;
+                return "";
             }
             createHttpClient();
             DateFormat formatter = new SimpleDateFormat(AVAILABILITY_SENDING_DATE_FORMAT);
@@ -54,12 +55,13 @@ public class AvailabilityService extends BaseService {
                     addChannelIntoHeaders(null, channel), formData, "PUT");
 
             Response response = httpClient.newCall(request).execute();
-
-            boolean success = responseDataParser.parseChangeAvailabilityResponse(response);
-            if (success) return true;
+            UpdateAvailabilityResponse res = responseDataParser.parseChangeAvailabilityResponse(response);
+            if (res.success) {
+                return "Successfully Updated Availability";
+            }
             else {
-                Exception e = new Exception();
-                throw new Exception("Failed to update availability for property " + jomresPropertyId);
+                logger.error("Failed  to update the availability for property: "+jomresPropertyId+"\n"+res.errorMessage);
+                return "Failed  to update the availability for property: "+jomresPropertyId+"\n"+res.errorMessage;
             }
         } catch (Exception e) {
             throw new Exception("Failed:\n\t" + e.getMessage1());

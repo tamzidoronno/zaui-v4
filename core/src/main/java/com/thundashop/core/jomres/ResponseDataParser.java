@@ -5,6 +5,7 @@ import com.google.gson.internal.LinkedTreeMap;
 import com.thundashop.core.jomres.dto.JomresBookedRoom;
 import com.thundashop.core.jomres.dto.JomresBooking;
 import com.thundashop.core.jomres.dto.JomresGuest;
+import com.thundashop.core.jomres.dto.UpdateAvailabilityResponse;
 import com.thundashop.core.jomres.services.BaseService;
 import com.thundashop.core.sedox.autocryptoapi.Exception;
 import okhttp3.Response;
@@ -256,7 +257,7 @@ public class ResponseDataParser {
         return data.get("response").getAsLong();
     }
 
-    public boolean parseChangeAvailabilityResponse(Response response) throws IOException {
+    public UpdateAvailabilityResponse parseChangeAvailabilityResponse(Response response) throws IOException {
         Gson gson = new Gson();
         try {
             JsonObject responseBody = gson.fromJson(response.body().string(), JsonObject.class);
@@ -266,7 +267,13 @@ public class ResponseDataParser {
             }
 
             JsonObject data = responseBody.getAsJsonObject("data").getAsJsonObject("response");
-            return data.get("success").getAsBoolean();
+            boolean success = data.get("success").getAsBoolean();
+            UpdateAvailabilityResponse finalRes = new UpdateAvailabilityResponse();
+            finalRes.success = success;
+            if(!success){
+                finalRes.errorMessage = data.get("message").getAsString();
+            }
+            return finalRes;
 
         } catch (Exception e) {
             throw e;

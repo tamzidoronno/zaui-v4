@@ -147,6 +147,7 @@ public class JomresManager extends ManagerBase implements IJomresManager {
                 Map<Date, Date> unavailableStartToEndDates = new HashMap<>();
                 Map<Date, Date> availableStartToEndDates = new HashMap<>();
                 Date unavailableEndingDay, availableEndingDay;
+                String updateAvailabilityStatus;
 
                 for (IntervalResultEntry availabilityInfo : itemTimeLines.get(roomData.bookingItemId).values()) {
                     if (availabilityInfo.count == 0 && (availabilityInfo.bookingIds == null || availabilityInfo.bookingIds.isEmpty())) {
@@ -206,7 +207,7 @@ public class JomresManager extends ManagerBase implements IJomresManager {
                     availableStartToEndDates.put(availableStartingDay, availableEndingDay);
                 }
 
-                availabilityService.changePropertyAvailability(
+                updateAvailabilityStatus = availabilityService.changePropertyAvailability(
                         constants.CLIENT_BASE_URL,
                         cmfClientAccessToken,
                         constants.CHANNEL_NAME,
@@ -214,9 +215,9 @@ public class JomresManager extends ManagerBase implements IJomresManager {
                         availableStartToEndDates,
                         true
                 );
+                logText(updateAvailabilityStatus);
             }
-            logText("Successfully updated the availability of rooms to Jomres");
-            return "Successfully updated the availability of rooms to Jomres";
+            return "Updated the availability of rooms to Jomres";
         } catch (Exception e) {
             logger.error(e.getMessage1());
             logText(e.getMessage1());

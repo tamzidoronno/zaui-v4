@@ -266,10 +266,10 @@ public class JomresManager extends ManagerBase implements IJomresManager {
             Calendar calendar = Calendar.getInstance();
 
             calendar.setTime(start);
-            calendar.add(Calendar.DATE, 90);
+            calendar.add(Calendar.DATE, 60);
             end = calendar.getTime();
 
-            logText("FetchBooking process for 90 days is starting...");
+            logText("FetchBooking process for 60 days is starting...");
             for (int propertyUID : propertyUIDs) {
                 bookings = bookingService.getJomresBookingsBetweenDates(
                         constants.CLIENT_BASE_URL,

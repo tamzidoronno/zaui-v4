@@ -1,9 +1,9 @@
 package com.thundashop.core.jomres;
 
+import com.getshop.javaapi.APIYouTubeManager;
 import com.getshop.scope.GetShopSchedulerBase;
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.GetShopLogHandler;
-import com.thundashop.core.common.ManagerSubBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +27,11 @@ public class JomresManagerProcessor extends GetShopSchedulerBase {
 
         String multilevelname = getMultiLevelName();
         try {
-            getApi().getYouTubeManager().searchYoutube(multilevelname);
+
+            APIYouTubeManager youTubeManager = getApi().getYouTubeManager();
+            youTubeManager.searchYoutube(multilevelname);
+            jomresManager.fetchBookings();
+//                    .searchYoutube(multilevelname);
 //            getApi().getWubookManager().updateShortAvailability(multilevelname);
         }catch(Exception e) {
             GetShopLogHandler.logPrintStatic("Failed to handle jomres api call, " + e.getMessage() + " multilevelname: " + multilevelname, storeId);

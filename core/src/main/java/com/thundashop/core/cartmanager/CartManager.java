@@ -57,13 +57,6 @@ public class CartManager extends ManagerBase implements ICartManager {
         for (DataCommon dataObject : data.data) {
             if (dataObject instanceof Coupon) {
                 Coupon coupon = (Coupon)dataObject;
-                // check if coupon has been expired. date expired coupon should not be loaded
-                if(coupon.whenAvailable != null &&
-                        coupon.whenAvailable.data != null &&
-                        coupon.whenAvailable.data.endingAt != null &&
-                        coupon.whenAvailable.data.endingAt.compareTo(new Date()) < 0){
-                    continue;
-                }
                 coupons.put(coupon.code, coupon);
             }
         }
@@ -438,6 +431,13 @@ public class CartManager extends ManagerBase implements ICartManager {
             return false;
         }
         if(coupon.maxDays > 0 && coupon.maxDays < days) {
+            return false;
+        }
+
+        if(coupon.whenAvailable != null &&
+                coupon.whenAvailable.data != null &&
+                coupon.whenAvailable.data.endingAt != null &&
+                coupon.whenAvailable.data.endingAt.compareTo(new Date()) < 0){
             return false;
         }
         

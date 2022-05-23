@@ -29,7 +29,7 @@ public class JomresManagerProcessor extends GetShopSchedulerBase {
         try {
             jomresManager.updateAvailability();
             jomresManager.fetchBookings();
-//            getApi().getWubookManager().fetchNewBookings(multilevelname);
+            getApi().getWubookManager().fetchNewBookings(multilevelname);
 //            getApi().getWubookManager().updateShortAvailability(multilevelname);
         }catch(Exception e) {
             GetShopLogHandler.logPrintStatic("Failed to handle wubook api call, " + e.getMessage() + " multilevelname: " + multilevelname, storeId);

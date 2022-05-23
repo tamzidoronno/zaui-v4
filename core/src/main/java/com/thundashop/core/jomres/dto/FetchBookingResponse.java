@@ -10,7 +10,7 @@ public class FetchBookingResponse {
     String pmsBookingItemTypeId;
     String guestName;
     String arrivalDate;
-    String departureDaTe;
+    String departureDate;
     public FetchBookingResponse(long bookingId, String status, String guestName, Date arrivalDate, Date departureDate,
                                 String pmsBookingItemId, String pmsBookingItemTypeId) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -18,7 +18,7 @@ public class FetchBookingResponse {
         this.status = status;
         this.guestName = guestName;
         this.arrivalDate = dateFormat.format(arrivalDate);
-        this.departureDaTe = dateFormat.format(departureDate);
+        this.departureDate = dateFormat.format(departureDate);
         this.pmsBookingItemId = pmsBookingItemId;
         this.pmsBookingItemTypeId = pmsBookingItemTypeId;
     }

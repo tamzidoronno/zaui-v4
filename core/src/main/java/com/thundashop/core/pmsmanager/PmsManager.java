@@ -2287,8 +2287,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     .orElse(null);
 
             gsTiming("Before looping");
-            LinkedHashMap<Long, IntervalResultEntry> retLines = getTimeLine(line, filter);
-            res.itemTimeLines.put(item.id, retLines);
+            if(line==null){
+                System.out.println("Didn't find the booking timeline flatten line for room "+item.bookingItemName+"..");
+                System.out.println("Assigning an empty time line hash map");
+                res.itemTimeLines.put(item.id, new LinkedHashMap<>());
+            } else{
+                LinkedHashMap<Long, IntervalResultEntry> retLines = getTimeLine(line, filter);
+                res.itemTimeLines.put(item.id, retLines);
+            }
         }
         
         List<BookingTimeLineFlatten> overflowedLines = lines.stream()
@@ -2307,7 +2313,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private LinkedHashMap<Long, IntervalResultEntry> getTimeLine(BookingTimeLineFlatten line, PmsIntervalFilter filter) throws ErrorException {
         if(line == null) {
-            System.out.println("ok?");
+            System.out.println("Didn't find the booking timeline flatten line.. returning");
+            return new LinkedHashMap<>();
         }
         List<BookingTimeLine> timelines = line.getTimelines(filter.interval - 21600, 21600);
         LinkedHashMap<Long, IntervalResultEntry> itemCountLine = new LinkedHashMap<>();

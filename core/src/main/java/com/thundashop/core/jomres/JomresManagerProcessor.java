@@ -27,12 +27,10 @@ public class JomresManagerProcessor extends GetShopSchedulerBase {
 
         String multilevelname = getMultiLevelName();
         try {
-            jomresManager.updateAvailability();
-            jomresManager.fetchBookings();
-            getApi().getWubookManager().fetchNewBookings(multilevelname);
+            getApi().getYouTubeManager().searchYoutube(multilevelname);
 //            getApi().getWubookManager().updateShortAvailability(multilevelname);
         }catch(Exception e) {
-            GetShopLogHandler.logPrintStatic("Failed to handle wubook api call, " + e.getMessage() + " multilevelname: " + multilevelname, storeId);
+            GetShopLogHandler.logPrintStatic("Failed to handle jomres api call, " + e.getMessage() + " multilevelname: " + multilevelname, storeId);
             GetShopLogHandler.logStack(e, storeId);
         }
     }

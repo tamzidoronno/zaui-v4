@@ -6,6 +6,10 @@ import com.thundashop.core.jomres.dto.FetchBookingResponse;
 
 import java.util.List;
 
+/**
+ * Jomres management system.<br>
+ */
+
 @GetShopApi
 public interface IJomresManager {
     @Administrator

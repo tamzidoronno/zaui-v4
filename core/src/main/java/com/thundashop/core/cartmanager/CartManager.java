@@ -433,6 +433,13 @@ public class CartManager extends ManagerBase implements ICartManager {
         if(coupon.maxDays > 0 && coupon.maxDays < days) {
             return false;
         }
+
+        if(coupon.whenAvailable != null &&
+                coupon.whenAvailable.data != null &&
+                coupon.whenAvailable.data.endingAt != null &&
+                coupon.whenAvailable.data.endingAt.compareTo(new Date()) < 0){
+            return false;
+        }
         
         if(coupon.pmsWhenAvailable != null && !coupon.pmsWhenAvailable.isEmpty() && coupon.pmsWhenAvailable.equals("REGISTERED")) {
             if(registrationDate != null) {

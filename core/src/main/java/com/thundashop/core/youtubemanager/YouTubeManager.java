@@ -1,5 +1,7 @@
 package com.thundashop.core.youtubemanager;
 
+import com.getshop.scope.GetShopSession;
+import com.getshop.scope.GetShopSessionBeanNamed;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
@@ -20,7 +22,8 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 
 @Component
-public class YouTubeManager extends ManagerBase implements IYouTubeManager {
+@GetShopSession
+public class YouTubeManager extends GetShopSessionBeanNamed implements IYouTubeManager {
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
     private static final long NUMBER_OF_VIDEOS_RETURNED = 10;
     private GsonFactory factory = new GsonFactory();

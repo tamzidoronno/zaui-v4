@@ -6,20 +6,20 @@ import java.util.Date;
 public class FetchBookingResponse {
     long bookingId;
     String status;
-    String pmsBookingItemId;
-    String pmsBookingItemTypeId;
+    String pmsRoomName;
+    String pmsRoomCategoryName;
     String guestName;
     String arrivalDate;
     String departureDate;
     public FetchBookingResponse(long bookingId, String status, String guestName, Date arrivalDate, Date departureDate,
-                                String pmsBookingItemId, String pmsBookingItemTypeId) {
+                                String pmsRoomName, String pmsRoomCategoryName) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         this.bookingId = bookingId;
         this.status = status;
         this.guestName = guestName;
         this.arrivalDate = dateFormat.format(arrivalDate);
         this.departureDate = dateFormat.format(departureDate);
-        this.pmsBookingItemId = pmsBookingItemId;
-        this.pmsBookingItemTypeId = pmsBookingItemTypeId;
+        this.pmsRoomName = pmsRoomName;
+        this.pmsRoomCategoryName = pmsRoomCategoryName;
     }
 }

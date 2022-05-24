@@ -9,7 +9,6 @@ import java.util.List;
 @PermenantlyDeleteData
 public class JomresRoomData extends DataCommon {
     String bookingItemId = "";
-    String bookingItemTypeId="";
     int jomresPropertyId;
     List<Integer> jomresRoomIds = new ArrayList<Integer>();
 }

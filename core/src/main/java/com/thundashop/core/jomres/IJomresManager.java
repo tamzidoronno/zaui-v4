@@ -2,6 +2,7 @@ package com.thundashop.core.jomres;
 
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.common.GetShopMultiLayerSession;
 import com.thundashop.core.jomres.dto.FetchBookingResponse;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
  */
 
 @GetShopApi
+@GetShopMultiLayerSession
 public interface IJomresManager {
     @Administrator
     public boolean testConnection() throws Exception;

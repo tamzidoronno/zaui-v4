@@ -46,7 +46,6 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
     private static final Logger logger = LoggerFactory.getLogger(JomresManager.class);
 
-    //    @Autowired
     Constants constants = new Constants();
 
     Map<String, JomresRoomData> pmsItemToJomresRoomDataMap = new HashMap<>();
@@ -71,14 +70,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 pmsToJomresBookingMap.put(((JomresBookingData) dataCommon).pmsBookingId, (JomresBookingData) dataCommon);
             }
         }
-//        createScheduler("jomresprocessor", "*/5 * * * *", JomresManagerProcessor.class);
-        System.out.println("Scheduler jomres started");
-        RegrowCornAnimate task = new RegrowCornAnimate(this);
-        Timer timer = new Timer("Timer");
-
-        long delay = 3 * 60 * 1000L;
-        timer.schedule(task, delay);
-        System.out.println("Scheduler jomres ended");
+        // createScheduler("jomresprocessor", "* * * * *", JomresManagerProcessor.class);
     }
 
     void getHardCodedJomresRoomData() {
@@ -691,28 +683,4 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         }
     }
 
-}
-
-class RegrowCornAnimate extends TimerTask {
-
-    private JomresManager managerInstance;
-
-
-    RegrowCornAnimate(JomresManager jomresManager) {
-        this.managerInstance = jomresManager;
-    }
-
-    public void run() {
-        try {
-            System.out.println("Started Jomres Fetch bookings from scheduler");
-            managerInstance.fetchBookings();
-            System.out.println("ended Jomres Fetch bookings from scheduler");
-        } catch (Exception e) {
-            System.out.println("Failed Fetch bookings jomres");
-        }
-        System.out.println("Started Jomres updateAvailability from scheduler");
-        managerInstance.updateAvailability();
-        System.out.println("Ended Jomres updateAvailability from scheduler");
-
-    }
 }

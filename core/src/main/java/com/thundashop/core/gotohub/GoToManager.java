@@ -50,7 +50,7 @@ public class GoToManager extends ManagerBase implements IGoToManager {
                 goToRoomData.put(((GoToRoomData) dataCommon).bookingEngineTypeId, (GoToRoomData) dataCommon);
             }
             else if(dataCommon instanceof RatePlan) {
-                ratePlans.put(((RatePlan) dataCommon).rate_plan_code,(RatePlan) dataCommon);
+                ratePlans.put(((RatePlan) dataCommon).rate_plan_code, (RatePlan) dataCommon);
             }
         }
     }
@@ -95,6 +95,7 @@ public class GoToManager extends ManagerBase implements IGoToManager {
     }
 
     public void updateGoToRoomData() throws Exception {
+        /**/
         HashMap<String, GoToRoomData> updatedGoToRoomData = new HashMap<>();
         List<BookingItemType> bookingItemTypes = bookingEngine.getBookingItemTypes();
         for (BookingItemType type : bookingItemTypes) {
@@ -290,13 +291,10 @@ public class GoToManager extends ManagerBase implements IGoToManager {
         roomType.number_of_unit = roomData.numberOfUnits;
 
         for(int guest=1; guest<=roomData.maxGuest; guest++){
-            String ratePlanCode = getRatePlanCode(guest);
-            if(!ratePlans.containsKey(ratePlanCode)){
-                RatePlan newRatePlan = createNewRatePlan(guest);
-                ratePlans.put(ratePlanCode, newRatePlan);
-                saveObject(newRatePlan);
-            }
-            roomType.rate_plans.add(ratePlans.get(ratePlanCode));
+            RatePlan newRatePlan = createNewRatePlan(guest);
+            // For room type, can be duplicated as max guest common
+               /// RatePlan newRatePlan = createNewRatePlan(guest);
+                //TODO no need to save run saveObject(newRatePlan);
         }
 
         return roomType;

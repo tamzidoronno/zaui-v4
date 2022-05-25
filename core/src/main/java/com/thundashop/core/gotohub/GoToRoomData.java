@@ -2,10 +2,12 @@ package com.thundashop.core.gotohub;
 
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.gotohub.dto.RatePlan;
+import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
 public class GoToRoomData extends DataCommon {
     public String goToRoomTypeCode="-1";
     public String bookingEngineTypeId="";

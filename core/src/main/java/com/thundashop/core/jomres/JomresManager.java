@@ -71,7 +71,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 pmsToJomresBookingMap.put(((JomresBookingData) dataCommon).pmsBookingId, (JomresBookingData) dataCommon);
             }
         }
-        // createScheduler("jomresprocessor", "* * * * *", JomresManagerProcessor.class);
+//         createScheduler("jomresprocessor", "*/5 * * * *", JomresManagerProcessor.class);
     }
 
     void getHardCodedJomresRoomData() {
@@ -635,7 +635,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 logger.error("Failed to add new booking in pms from Jomres: " + booking.bookingId);
                 String message = "Maybe there is a manual booking for this room..\n\t" +
                         "Arraival: " + booking.arrivalDate + ", Departure: " + booking.departure;
-                sendErrorForBooking(booking.bookingId, message);
+//                sendErrorForBooking(booking.bookingId, message);
                 return null;
 
             }

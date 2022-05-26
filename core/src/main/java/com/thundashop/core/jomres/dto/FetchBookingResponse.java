@@ -1,10 +1,12 @@
 package com.thundashop.core.jomres.dto;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class FetchBookingResponse {
+public class FetchBookingResponse implements Serializable {
     long bookingId;
+    String pmsBookingId;
     String status;
     String pmsRoomName;
     String pmsRoomCategoryName;
@@ -12,7 +14,7 @@ public class FetchBookingResponse {
     String arrivalDate;
     String departureDate;
     public FetchBookingResponse(long bookingId, String status, String guestName, Date arrivalDate, Date departureDate,
-                                String pmsRoomName, String pmsRoomCategoryName) {
+                                String pmsBookingId,String pmsRoomName, String pmsRoomCategoryName) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         this.bookingId = bookingId;
         this.status = status;
@@ -21,5 +23,6 @@ public class FetchBookingResponse {
         this.departureDate = dateFormat.format(departureDate);
         this.pmsRoomName = pmsRoomName;
         this.pmsRoomCategoryName = pmsRoomCategoryName;
+        this.pmsBookingId = pmsBookingId;
     }
 }

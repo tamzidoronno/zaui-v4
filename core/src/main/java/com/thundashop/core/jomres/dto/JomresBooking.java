@@ -6,10 +6,8 @@ import com.google.gson.internal.LinkedTreeMap;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;;import static com.thundashop.core.jomres.services.Constants.ARRIVAL_DEPARTURE_IN_LIST_DATE_FORMAT;
+import static com.thundashop.core.jomres.services.Constants.CREATED_MODIFIED_IN_DETAILS_DATE_FORMAT;
 
 public class JomresBooking implements Serializable {
     public Date arrivalDate= new Date();
@@ -32,7 +30,6 @@ public class JomresBooking implements Serializable {
     public List<JomresGuest> guests = new ArrayList<JomresGuest>();
     public JomresGuest customer = new JomresGuest();
 
-    public List<JomresBookedRoom> rooms = new ArrayList<JomresBookedRoom>();
     public int numberOfGuests=1;
 
     public JomresBooking() {
@@ -41,40 +38,44 @@ public class JomresBooking implements Serializable {
 
     public JomresBooking(LinkedTreeMap<String, ?> booking) throws ParseException {
         if(booking == null) return;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat timestampFormat = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat(ARRIVAL_DEPARTURE_IN_LIST_DATE_FORMAT);
+        SimpleDateFormat timestampFormat = new SimpleDateFormat(CREATED_MODIFIED_IN_DETAILS_DATE_FORMAT);
 
-        this.currencyCode = booking.get("currency_code").toString();
+        this.currencyCode = Optional.ofNullable(booking.get("currency_code").toString()).orElse("");
 
-        LinkedTreeMap guest = (LinkedTreeMap) booking.get("guest_data");
-        this.customer = new JomresGuest(guest);
+        String firstName =Optional.ofNullable(booking.get("firstname").toString()).orElse("");
+        String surName =Optional.ofNullable(booking.get("surname").toString()).orElse("");
+        this.customer.name = firstName+ " " + surName;
 
-        LinkedTreeMap guestNumber = (LinkedTreeMap) booking.get("guest_numbers");
-        this.numberOfGuests = ((Double)guestNumber.get("number_of_guests")).intValue();
+        this.customer.telLandline = Optional.ofNullable(booking.get("tel_landline").toString()).orElse("");
+        this.customer.telMobile = Optional.ofNullable(booking.get("tel_mobile").toString()).orElse("");
+        this.customer.email = Optional.ofNullable(booking.get("email").toString()).orElse("");
 
-        LinkedTreeMap statusMap = (LinkedTreeMap) booking.get("status");
-        this.statusCode = ((Double)statusMap.get("status_code")).intValue();
-        this.status = statusMap.get("status_text").toString();
+        this.status = Optional.ofNullable(booking.get("TxtStatus").toString()).orElse("Approved");
+        this.statusCode = ((Double)booking.get("cancelled")).intValue() == 1? 6 : 3;
 
-        this.comment =booking.get("comments").toString();
+        this.comment =Optional.ofNullable(booking.get("special_reqs").toString()).orElse("");
 
-        this.arrivalDate = dateFormat.parse(booking.get("date_from").toString());
-        this.departure = dateFormat.parse(booking.get("date_to").toString());
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(departure);
-        calendar.add(Calendar.DATE, 1);
-        this.departure = calendar.getTime();
+        this.arrivalDate = dateFormat.parse(booking.get("arrival").toString());
+        this.departure = dateFormat.parse(booking.get("departure").toString());
+        this.bookingCreated = timestampFormat.parse(booking.get("timestamp").toString());
+        this.lastModified = Optional.ofNullable(timestampFormat.parse(booking.get("last_changed").toString())).orElse(bookingCreated);
 
-        this.lastModified = timestampFormat.parse(booking.get("last_modified").toString());
-        this.bookingCreated = timestampFormat.parse(booking.get("booking_created").toString());
+        this.bookingId = (long) Double.parseDouble(booking.get("contract_uid").toString());
+        this.reservationCode = Optional.ofNullable(booking.get("tag").toString()).orElse("");
 
-        this.bookingId = (long) Double.parseDouble(booking.get("booking_id").toString());
-        this.reservationCode = booking.get("booking_number").toString();
-        this.invoiceNumber = (long) Double.parseDouble(booking.get("invoice_number").toString());
-        this.totalPrice = (long) Double.parseDouble(booking.get("booking_total").toString());
-        this.depositPaid = (Boolean) booking.get("deposit_paid");
-        this.depositAmount =(long) Double.parseDouble(booking.get("deposit_amount").toString());
+        this.totalPrice = (long) Double.parseDouble(Optional.ofNullable(booking.get("contract_total").toString()).orElse("0.0"));
+        this.depositPaid = (Boolean) Optional.ofNullable(booking.get("deposit_paid").toString()).orElse("0").equals("1");
+        this.depositAmount =(long) Double.parseDouble(Optional.ofNullable(booking.get("deposit_required").toString()).orElse("0.0"));
         this.propertyUid = (int) Double.parseDouble(booking.get("property_uid").toString());
-        this.invoiceId =(long) Double.parseDouble(booking.get("invoice_id").toString());
+        this.invoiceId =(long) Double.parseDouble(Optional.ofNullable(booking.get("invoice_uid").toString()).orElse("0"));
+    }
+
+    public void setNumberOfGuests(int numberOfGuests) {
+        this.numberOfGuests = numberOfGuests;
+    }
+
+    public void setCustomer(JomresGuest customer) {
+        this.customer = customer;
     }
 }

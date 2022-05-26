@@ -1,8 +1,11 @@
 package com.thundashop.core.jomres.dto;
 
+import com.google.gson.JsonObject;
 import com.google.gson.internal.LinkedTreeMap;
 
-public class JomresGuest {
+import java.io.Serializable;
+
+public class JomresGuest implements Serializable {
     public String name;
     public String house, street, city, region, country, postcode;
     public String address;
@@ -12,7 +15,7 @@ public class JomresGuest {
 
     public JomresGuest() {
     }
-    public JomresGuest(LinkedTreeMap<String, ?> guest) {
+    public JomresGuest(JsonObject guest) {
         String firstName = guest.get("enc_firstname").toString();
         String surName = guest.get("enc_surname").toString();
         this.name = firstName + " " + surName;

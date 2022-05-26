@@ -44,7 +44,7 @@ public class PriceService extends BaseService{
         } catch (Exception e) {
             throw new Exception("Failed:\n\t" + e.getMessage1());
         } catch (IOException e) {
-            throw new Exception("Failed to execute the update Availability REST API request:\n\t" + e.getMessage());
+            throw new Exception("Failed to execute get daily price REST API request:\n\t" + e.getMessage());
         }
     }
 }

@@ -430,7 +430,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 if (newbooking.jomresLastModified.equals(booking.lastModified)) {
                     logger.debug("Booking didn't modified, BookingId: " + booking.bookingId + ", PropertyId: " + booking.propertyUid);
                     logText("Booking didn't modified, BookingId: " + booking.bookingId + ", PropertyId: " + booking.propertyUid);
-//                    return bookingData;
+                    return bookingData;
                 }
                 booking.setNumberOfGuests(newbooking.rooms.get(0).numberOfGuests);
                 booking.setCustomer(getJomresCustomerFromPmsBooking(newbooking));

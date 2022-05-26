@@ -2,11 +2,9 @@ package com.thundashop.core.jomres;
 
 import com.google.gson.*;
 import com.google.gson.internal.LinkedTreeMap;
-import com.thundashop.core.jomres.dto.JomresBookedRoom;
 import com.thundashop.core.jomres.dto.JomresBooking;
 import com.thundashop.core.jomres.dto.JomresGuest;
 import com.thundashop.core.jomres.dto.UpdateAvailabilityResponse;
-import com.thundashop.core.jomres.services.BaseService;
 import com.thundashop.core.sedox.autocryptoapi.Exception;
 import okhttp3.Response;
 import org.apache.oltu.oauth2.client.response.OAuthResourceResponse;
@@ -44,8 +42,11 @@ public class ResponseDataParser {
                     .getAsJsonObject("response")
                     .getAsJsonObject("tariff_sets");
             for (Map.Entry<String, JsonElement> entry : tariffSet.entrySet()) {
-                LinkedTreeMap ratePlan = (LinkedTreeMap) gson.fromJson(tariffSet.get(entry.getKey()).toString(),
-                        (new ArrayList<>()).getClass()).get(0);
+                LinkedTreeMap ratePlan = (LinkedTreeMap) gson.fromJson(
+                        tariffSet.get(entry.getKey()).toString(),
+                        (new ArrayList<>()).getClass()
+                ).get(0);
+
                 LinkedTreeMap ratePerNight = (LinkedTreeMap) ratePlan.get("rate_per_night");
                 double weeklyPrice = (double) ratePerNight.get("price_including_vat");
                 double dailyPrice = weeklyPrice / 7.0;
@@ -105,7 +106,7 @@ public class ResponseDataParser {
         }
     }
 
-    public JomresBooking parseBookingDetails(OAuthResourceResponse response) throws Exception {
+    public int parseBookingGuestsNumber(OAuthResourceResponse response) throws Exception {
 
         Gson gson = new Gson();
         try {
@@ -119,18 +120,44 @@ public class ResponseDataParser {
             JsonObject data = responseBody.getAsJsonObject("data");
             String bookingsString = data.get("response").toString();
 
-            List<LinkedTreeMap> bookings = gson.fromJson(bookingsString, (new ArrayList<>()).getClass());
-            return new JomresBooking(bookings.stream().findFirst().orElse(null));
+            List<JsonObject> bookings = gson.fromJson(bookingsString, (new ArrayList<>()).getClass());
+            JsonObject booking = bookings.stream().findFirst().orElse(null);
+            if(booking!=null){
+                return booking.get("guest_numbers").getAsJsonObject().get("number_of_guests").getAsInt();
+            }
+            else return 0;
 
         } catch (Exception e) {
             throw e;
-        } catch (ParseException e) {
-            throw new Exception("Failed to get booking details:\n\t");
         }
-
     }
 
-    public List<Long> parseBookingIds(OAuthResourceResponse response) throws Exception {
+    public JomresGuest parseBookingGuestDetails(OAuthResourceResponse response) throws Exception {
+        Gson gson = new Gson();
+        try {
+            JsonObject responseBody = gson.fromJson(response.getBody(), JsonObject.class);
+
+            if (responseBody.get("error_message") != null) {
+                String errorMessage = responseBody.get("error_message").getAsString();
+                throw new Exception(errorMessage);
+            }
+
+            JsonObject data = responseBody.getAsJsonObject("data");
+            String bookingsString = data.get("response").toString();
+
+            List<JsonObject> bookings = gson.fromJson(bookingsString, (new ArrayList<>()).getClass());
+            JsonObject booking = bookings.stream().findFirst().orElse(null);
+            if(booking!=null){
+                return new JomresGuest(booking.get("guest_data").getAsJsonObject());
+            }
+            else return new JomresGuest();
+
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    public List<JomresBooking> parseBookingsFromList(OAuthResourceResponse response) throws Exception {
         Gson gson = new Gson();
         try {
             JsonObject responseBody = gson.fromJson(response.getBody(), JsonObject.class);
@@ -144,86 +171,18 @@ public class ResponseDataParser {
             String bookingsString = data.get("listbookingdate").toString();
 
             List<LinkedTreeMap> bookings = gson.fromJson(bookingsString, (new ArrayList<>()).getClass());
-            return bookings
-                    .stream()
-                    .map(booking -> (long) Double.parseDouble(booking.get("contract_uid").toString()))
-                    .collect(Collectors.toList());
-
+            List<JomresBooking> jomresBookings = new ArrayList<>();
+            for(LinkedTreeMap booking: bookings){
+                try {
+                    jomresBookings.add(new JomresBooking(booking));
+                } catch (ParseException e) {
+                    System.out.println("Falied to parse the booking for BookignId: "+booking.get("contract_uid").toString());
+                }
+            }
+            return jomresBookings;
         } catch (Exception e) {
             throw e;
         }
-    }
-
-    public List<JomresBooking> parseBooking(OAuthResourceResponse response) {
-        Gson gson = new Gson();
-
-        JsonObject responseBody = gson.fromJson(response.getBody(), JsonObject.class);
-        JsonObject data = Optional.ofNullable(responseBody.getAsJsonObject("data")).orElse(new JsonObject());
-        String bookingsString = Optional.ofNullable(data.get("listbooking")).orElse(new JsonArray()).toString();
-
-        List<LinkedTreeMap> bookings = gson.fromJson(bookingsString, (new ArrayList<>()).getClass());
-        return bookings
-                .stream()
-                .map(booking -> {
-                    try {
-                        return new JomresBooking(booking);
-                    } catch (ParseException e) {
-                        logger.error("Failed to parse booking of contract id: " + booking.get("contract_uid").toString());
-                        logger.error("booking details:  " + booking);
-                        logger.error(e.getMessage());
-                        return new JomresBooking();
-                    }
-                })
-                .collect(Collectors.toList());
-    }
-
-    public List<JomresBooking> parseBookingArrDep(OAuthResourceResponse response) {
-        Gson gson = new Gson();
-
-        JsonObject responseBody = gson.fromJson(response.getBody(), JsonObject.class);
-        JsonObject data = Optional.ofNullable(responseBody.getAsJsonObject("data")).orElse(new JsonObject());
-        String bookingsString = Optional.ofNullable(data.get("listbookingarrdep")).orElse(new JsonArray()).toString();
-
-        List<LinkedTreeMap> bookings = gson.fromJson(bookingsString, (new ArrayList<>()).getClass());
-        return bookings
-                .stream()
-                .map(booking -> {
-                    try {
-                        return new JomresBooking(booking);
-                    } catch (ParseException e) {
-                        logger.error("Failed to parse booking of contract id: " + booking.get("contract_uid").toString());
-                        logger.error("booking details:  " + booking);
-                        logger.error(e.getMessage());
-                        return new JomresBooking();
-                    }
-                })
-                .collect(Collectors.toList());
-    }
-
-    public List<?> parseBookingRoomDetails(OAuthResourceResponse response) {
-        Gson gson = new Gson();
-
-        JsonObject responseBody = gson.fromJson(response.getBody(), JsonObject.class);
-        JsonObject data = Optional.ofNullable(responseBody.getAsJsonObject("data")).orElse(new JsonObject());
-        String roomDetailsString = Optional.ofNullable(data.get("listbookingrooms")).orElse(new JsonArray()).toString();
-
-        List<LinkedTreeMap> roomDetails = gson.fromJson(roomDetailsString, (new ArrayList<>()).getClass());
-        List<JomresBookedRoom> rooms = new ArrayList<>();
-//        rooms =  roomDetails.stream().map(room-> new JomresBookedRoom(room)).collect(Collectors.toList());
-        return rooms;
-    }
-
-    public List<?> parsebookingGuestDetails(OAuthResourceResponse response) {
-        Gson gson = new Gson();
-
-        JsonObject responseBody = gson.fromJson(response.getBody(), JsonObject.class);
-        JsonObject data = Optional.ofNullable(responseBody.getAsJsonObject("data")).orElse(new JsonObject());
-        String guestDetailsString = Optional.ofNullable(data.get("listbookingguest")).orElse(new JsonArray()).toString();
-
-        List<LinkedTreeMap> guestDetails = gson.fromJson(guestDetailsString, (new ArrayList<>()).getClass());
-        List<JomresGuest> guests = new ArrayList<>();
-//        guests = guestDetails.stream().map(guest-> new JomresGuest(guest)).collect(Collectors.toList());
-        return guests;
     }
 
     public List<Long> parseAllPropertyIds(OAuthResourceResponse response, boolean channelProperties) {

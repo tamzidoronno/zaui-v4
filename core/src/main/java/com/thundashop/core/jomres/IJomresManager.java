@@ -17,7 +17,7 @@ public interface IJomresManager {
     @Administrator
     public boolean testConnection() throws Exception;
     @Administrator
-    public String updateAvailability() throws Exception;
+    public boolean updateAvailability() throws Exception;
     @Administrator
     public List<FetchBookingResponse> fetchBookings() throws Exception;
     @Administrator

@@ -121,12 +121,12 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     }
 
     @Override
-    public String updateAvailability() {
+    public boolean updateAvailability() {
         getHardCodedJomresRoomData();
         if (!connectToApi()) {
             logger.error("Failed to connect with Jomres API..");
             logText("Failed to connect with Jomres API..");
-            return "Falied";
+            return false;
         }
         try {
             Calendar calendar = Calendar.getInstance();
@@ -228,18 +228,18 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 );
                 logText(updateAvailabilityStatus);
             }
-            return "Updated the availability of rooms to Jomres";
+            return true;
         } catch (Exception e) {
             logger.error(e.getMessage1());
             logText(e.getMessage1());
             logger.error(e.getMessage());
             logText("Failed to Update availability...");
-            return "Failed to Update availability";
+            return false;
         } catch (java.lang.Exception e) {
             e.printStackTrace();
             logger.error(e.getMessage());
             logText("Failed to Update availability...");
-            return "Failed to Update availability";
+            return false;
         }
     }
 

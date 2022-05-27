@@ -15,7 +15,7 @@ import java.util.List;
 @GetShopMultiLayerSession
 public interface IJomresManager {
     @Administrator
-    public boolean testConnection() throws Exception;
+    public boolean testConnection();
     @Administrator
     public boolean updateAvailability() throws Exception;
     @Administrator

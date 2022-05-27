@@ -342,6 +342,11 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                                 bookingStatus = "Added";
                                 System.out.println("Started adding Booking into pms, BookingId: " + jomresBooking.bookingId);
                                 System.out.println("started fetch complete booking, BookingId: " + jomresBooking.bookingId);
+                                jomresBookingData = addBookingToPms(jomresBooking, finalDailyPriceMatrix, null, pmsRoom, pmsRoomCategory);
+                                System.out.println("ended adding Booking into pms BookingId: " + jomresBooking.bookingId);
+                            } else {
+                                bookingStatus = "Modified/Synced";
+                                System.out.println("Started updating Booking into pms, BookingId: " + jomresBooking.bookingId);
                                 jomresBooking = bookingService.getCompleteBooking(
                                         constants.CLIENT_BASE_URL,
                                         cmfClientAccessToken,
@@ -353,11 +358,6 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                                     System.out.println("Complete booking not found, error occurred");
                                     continue;
                                 }
-                                jomresBookingData = addBookingToPms(jomresBooking, finalDailyPriceMatrix, null, pmsRoom, pmsRoomCategory);
-                                System.out.println("ended adding Booking into pms BookingId: " + jomresBooking.bookingId);
-                            } else {
-                                bookingStatus = "Modified/Synced";
-                                System.out.println("Started updating Booking into pms, BookingId: " + jomresBooking.bookingId);
                                 jomresBookingData = updatePmsBooking(jomresBooking, finalDailyPriceMatrix, jomresBookingData, pmsRoom, pmsRoomCategory);
                                 System.out.println("ended updating Booking into pms BookingId: " + jomresBooking.bookingId);
                             }

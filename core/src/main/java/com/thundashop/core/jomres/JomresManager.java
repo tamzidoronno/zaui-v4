@@ -72,7 +72,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 pmsToJomresBookingMap.put(((JomresBookingData) dataCommon).pmsBookingId, (JomresBookingData) dataCommon);
             }
         }
-//         createScheduler("jomresprocessor", "*/5 * * * *", JomresManagerProcessor.class);
+         createScheduler("jomresprocessor", "*/5 * * * *", JomresManagerProcessor.class);
     }
 
     void getHardCodedJomresRoomData() {
@@ -81,15 +81,12 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             JomresRoomData roomData2 = new JomresRoomData();
             JomresRoomData roomData3 = new JomresRoomData();
             roomData1.bookingItemId = "ba5cbb25-ea4b-4184-a813-483ff6ef839b";
-//            roomData1.bookingItemTypeId = "97c16243-d83f-4261-9eca-53c8b69fed1e";
             roomData1.jomresPropertyId = 92;
             pmsItemToJomresRoomDataMap.put(roomData1.bookingItemId, roomData1);
             roomData2.bookingItemId = "2290a31b-0fcb-46b5-90fc-fb6735da752e";
-//            roomData2.bookingItemTypeId = "97c16243-d83f-4261-9eca-53c8b69fed1e";
             roomData2.jomresPropertyId = 93;
             pmsItemToJomresRoomDataMap.put(roomData2.bookingItemId, roomData2);
             roomData3.bookingItemId = "8e626df2-e48f-4129-929b-5a12612627a3";
-//            roomData3.bookingItemTypeId = "97c16243-d83f-4261-9eca-53c8b69fed1e";
             roomData3.jomresPropertyId = 94;
             pmsItemToJomresRoomDataMap.put(roomData3.bookingItemId, roomData3);
             saveObject(roomData1);
@@ -108,12 +105,12 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     }
 
     @Override
-    public boolean testConnection() throws Exception {
+    public boolean testConnection(){
         return connectToApi();
     }
 
     @Override
-    public boolean changeCredentials(String clientId, String clientSecret) throws Exception {
+    public boolean changeCredentials(String clientId, String clientSecret){
         constants.JOMRES_CMF_REST_API_CLIENT_ID = clientId;
         constants.JOMRES_CMF_REST_API_CLIENT_SECRET = clientSecret;
         saveObject(constants);
@@ -254,7 +251,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                     ) + ""
             );
         } catch (Exception e) {
-            logText("Falied to create channel...");
+            logText("Failed to create channel...");
             logText(e.getMessage1());
         }
 
@@ -559,7 +556,6 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         JomresBookingData jomresBookingData = jomresToPmsBookingMap.get(booking.bookingId);
         if (jomresBookingData != null && !jomresBookingData.pmsBookingId.equals("")) {
             newbooking = pmsManager.getBooking(jomresBookingData.pmsBookingId);
-            return newbooking;
         }
         return newbooking;
     }

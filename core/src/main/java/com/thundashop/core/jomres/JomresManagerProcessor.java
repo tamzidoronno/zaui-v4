@@ -21,8 +21,8 @@ public class JomresManagerProcessor extends GetShopSchedulerBase {
 
         String multilevelname = getMultiLevelName();
         try {
-            List<FetchBookingResponse> booking = getApi().getJomresManager().fetchBookings();
-            String availability = getApi().getJomresManager().updateAvailability();
+            List<FetchBookingResponse> booking = getApi().getJomresManager().fetchBookings(multilevelname);
+            boolean availability = getApi().getJomresManager().updateAvailability(multilevelname);
         }catch(Exception e) {
             GetShopLogHandler.logPrintStatic("Failed to handle jomres api call, " + e.getMessage() + " multilevelname: " + multilevelname, storeId);
             GetShopLogHandler.logStack(e, storeId);

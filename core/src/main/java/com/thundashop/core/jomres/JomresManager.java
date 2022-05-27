@@ -72,7 +72,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 pmsToJomresBookingMap.put(((JomresBookingData) dataCommon).pmsBookingId, (JomresBookingData) dataCommon);
             }
         }
-         createScheduler("jomresprocessor", "* * * * *", JomresManagerProcessor.class);
+         createScheduler("jomresprocessor", "*/5 * * * *", JomresManagerProcessor.class);
     }
 
     void getHardCodedJomresRoomData() {
@@ -420,6 +420,17 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         return customer;
     }
 
+    boolean isBookerInfoUpdated(JomresGuest customer,PmsBooking booking){
+        if(!customer.name.equals(booking.registrationData.resultAdded.get("user_fullName")))
+            return true;
+
+        if(!customer.telMobile.equals(booking.registrationData.resultAdded.get("user_cellPhone")))
+            return true;
+        if(!customer.email.equals(booking.registrationData.resultAdded.get("user_emailAddress")))
+            return true;
+        return false;
+    }
+
     boolean isBookingNeedToBeSynced(JomresBooking jBooking, PmsBooking pBooking){
         PmsBookingRooms room = pBooking.rooms.get(0);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -435,8 +446,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         if(room.deleted)
             return true;
 
-        JomresGuest jCustomerFromPms = getJomresCustomerFromPmsBooking(pBooking);
-        if(!jBooking.customer.equals(jCustomerFromPms))
+        if(isBookerInfoUpdated(jBooking.customer, pBooking))
             return true;
 
         return false;

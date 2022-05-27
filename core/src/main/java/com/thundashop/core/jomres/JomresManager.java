@@ -72,7 +72,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 pmsToJomresBookingMap.put(((JomresBookingData) dataCommon).pmsBookingId, (JomresBookingData) dataCommon);
             }
         }
-         createScheduler("jomresprocessor", "*/5 * * * *", JomresManagerProcessor.class);
+         createScheduler("jomresprocessor", "* * * * *", JomresManagerProcessor.class);
     }
 
     void getHardCodedJomresRoomData() {
@@ -342,11 +342,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                                 bookingStatus = "Added";
                                 System.out.println("Started adding Booking into pms, BookingId: " + jomresBooking.bookingId);
                                 System.out.println("started fetch complete booking, BookingId: " + jomresBooking.bookingId);
-                                jomresBookingData = addBookingToPms(jomresBooking, finalDailyPriceMatrix, null, pmsRoom, pmsRoomCategory);
-                                System.out.println("ended adding Booking into pms BookingId: " + jomresBooking.bookingId);
-                            } else {
-                                bookingStatus = "Modified/Synced";
-                                System.out.println("Started updating Booking into pms, BookingId: " + jomresBooking.bookingId);
+
                                 jomresBooking = bookingService.getCompleteBooking(
                                         constants.CLIENT_BASE_URL,
                                         cmfClientAccessToken,
@@ -354,6 +350,13 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                                         jomresBooking
                                 );
                                 System.out.println("ended fetch complete booking, BookingId: " + jomresBooking.bookingId);
+
+                                jomresBookingData = addBookingToPms(jomresBooking, finalDailyPriceMatrix, null, pmsRoom, pmsRoomCategory);
+                                System.out.println("ended adding Booking into pms BookingId: " + jomresBooking.bookingId);
+                            } else {
+                                bookingStatus = "Modified/Synced";
+                                System.out.println("Started updating Booking into pms, BookingId: " + jomresBooking.bookingId);
+
                                 if (jomresBooking == null) {
                                     System.out.println("Complete booking not found, error occurred");
                                     continue;
@@ -417,6 +420,28 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         return customer;
     }
 
+    boolean isBookingNeedToBeSynced(JomresBooking jBooking, PmsBooking pBooking){
+        PmsBookingRooms room = pBooking.rooms.get(0);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        if(!dateFormat.format(jBooking.arrivalDate).equals(dateFormat.format(room.date.start)))
+            return true;
+        if(!dateFormat.format(jBooking.departure).equals(dateFormat.format(room.date.end)))
+            return true;
+        if(jBooking.totalPrice != pBooking.getTotalPrice())
+            return true;
+        if(jBooking.totalPrice != room.totalCost)
+            return true;
+        if(room.deleted)
+            return true;
+
+        JomresGuest jCustomerFromPms = getJomresCustomerFromPmsBooking(pBooking);
+        if(!jBooking.customer.equals(jCustomerFromPms))
+            return true;
+
+        return false;
+    }
+
     JomresBookingData updatePmsBooking(JomresBooking booking, Map<String, Double> priceMatrix, JomresBookingData bookingData,
                                        BookingItem pmsRoom, BookingItemType pmsRoomCategory) {
         try {
@@ -424,7 +449,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             if (newbooking == null) {
                 return addBookingToPms(booking, priceMatrix, null, pmsRoom, pmsRoomCategory);
             } else {
-                if (newbooking.jomresLastModified.equals(booking.lastModified)) {
+                if (!isBookingNeedToBeSynced(booking, newbooking)) {
                     logger.debug("Booking didn't modified, BookingId: " + booking.bookingId + ", PropertyId: " + booking.propertyUid);
                     logText("Booking didn't modified, BookingId: " + booking.bookingId + ", PropertyId: " + booking.propertyUid);
                     return bookingData;

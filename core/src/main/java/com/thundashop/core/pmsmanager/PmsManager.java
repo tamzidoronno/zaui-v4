@@ -886,8 +886,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         for (PmsBookingRooms room : booking.getActiveRooms()) {
-            for (PmsBookingAddonItem item : room.addons) {
-                item.finalize();
+            if(!booking.channel.contains("jomres")){
+                for (PmsBookingAddonItem item : room.addons) {
+                    item.finalize();
+                }
             }
 
             if (room.bookingItemTypeId != null
@@ -10529,7 +10531,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void saveObject(DataCommon data) throws ErrorException {
         if (data instanceof PmsBooking && data.id != null && !data.id.isEmpty() && !avoidCalculateUnsettledAmount) {
-            calculateUnsettledAmountForRooms((PmsBooking)data);
+            if(!((PmsBooking)data).channel.contains("jomres"))
+                calculateUnsettledAmountForRooms((PmsBooking)data);
         }
         
         super.saveObject(data); //To change body of generated methods, choose Tools | Templates.

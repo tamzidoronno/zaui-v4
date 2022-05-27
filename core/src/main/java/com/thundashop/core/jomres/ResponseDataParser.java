@@ -120,10 +120,11 @@ public class ResponseDataParser {
             JsonObject data = responseBody.getAsJsonObject("data");
             String bookingsString = data.get("response").toString();
 
-            List<JsonObject> bookings = gson.fromJson(bookingsString, (new ArrayList<>()).getClass());
-            JsonObject booking = bookings.stream().findFirst().orElse(null);
+            List<LinkedTreeMap> bookings = gson.fromJson(bookingsString, (new ArrayList<>()).getClass());
+            LinkedTreeMap booking = bookings.stream().findFirst().orElse(null);
             if(booking!=null){
-                return booking.get("guest_numbers").getAsJsonObject().get("number_of_guests").getAsInt();
+                LinkedTreeMap guestNumber = (LinkedTreeMap) booking.get("guest_numbers");
+                return (int) Double.parseDouble(guestNumber.get("number_of_guests").toString());
             }
             else return 0;
 
@@ -145,10 +146,10 @@ public class ResponseDataParser {
             JsonObject data = responseBody.getAsJsonObject("data");
             String bookingsString = data.get("response").toString();
 
-            List<JsonObject> bookings = gson.fromJson(bookingsString, (new ArrayList<>()).getClass());
-            JsonObject booking = bookings.stream().findFirst().orElse(null);
+            List<LinkedTreeMap> bookings = gson.fromJson(bookingsString, (new ArrayList<>()).getClass());
+            LinkedTreeMap booking = bookings.stream().findFirst().orElse(null);
             if(booking!=null){
-                return new JomresGuest(booking.get("guest_data").getAsJsonObject());
+                return new JomresGuest((LinkedTreeMap) booking.get("guest_data"));
             }
             else return new JomresGuest();
 

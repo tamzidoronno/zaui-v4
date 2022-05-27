@@ -15,7 +15,7 @@ public class JomresGuest implements Serializable {
 
     public JomresGuest() {
     }
-    public JomresGuest(JsonObject guest) {
+    public JomresGuest(LinkedTreeMap guest) {
         String firstName = guest.get("enc_firstname").toString();
         String surName = guest.get("enc_surname").toString();
         this.name = firstName + " " + surName;
@@ -30,6 +30,7 @@ public class JomresGuest implements Serializable {
         this.region = guest.get("enc_region").toString();
         this.country = guest.get("country").toString();
         this.postcode = guest.get("enc_postcode").toString();
+        this.address= this.house + ", "+this.street + ", " + this.city + ", " + this.region + ", " + this.country+".";
     }
 
 }

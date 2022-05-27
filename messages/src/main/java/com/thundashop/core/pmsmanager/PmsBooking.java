@@ -551,6 +551,10 @@ public class PmsBooking extends DataCommon {
     }
 
     public void calculateTotalCost() {
+        if(channel.contains("jomres")){
+            totalPrice = rooms.get(0).totalCost;
+            return;
+        }
         if(!priceType.equals(PmsBooking.PriceType.daily)) {
             return;
         }

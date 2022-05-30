@@ -259,9 +259,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             logger.error("Fail to covert date of client {} {}, original exception {}", storeId, dateAfterDataToRetrieve, e);
             return super.retreiveData(credentials, null);
         }
-        BasicDBObject neQuery = new BasicDBObject();
-        neQuery.put("rowCreatedDate", new BasicDBObject("$gte", dt));
-        return super.retreiveData(credentials, neQuery);
+        //only PmsBooking with date filtering
+        BasicDBObject bookingQuery = new BasicDBObject();
+        bookingQuery.put("rowCreatedDate", new BasicDBObject("$gte", dt));
+        bookingQuery.put("className", "com.thundashop.core.pmsmanager.PmsBooking");
+        List<DataCommon> bookingData = super.retreiveData(credentials, bookingQuery);
+
+        BasicDBObject otherQuery = new BasicDBObject();
+        otherQuery.put("className", new BasicDBObject("$ne", "com.thundashop.core.pmsmanager.PmsBooking"));
+        List<DataCommon> otherData = super.retreiveData(credentials, otherQuery);
+
+        bookingData.addAll(otherData);
+
+        return bookingData;
     }
     @Override
     public void dataFromDatabase(DataRetreived data) {

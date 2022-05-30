@@ -412,10 +412,21 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     JomresGuest getJomresCustomerFromPmsBooking(PmsBooking booking){
         JomresGuest customer = new JomresGuest();
         customer.name = booking.registrationData.resultAdded.get("user_fullName");
-        customer.telMobile = booking.registrationData.resultAdded.get("user_cellPhone");
+        //TODO: will restore this lines when in real environment
+//        customer.telMobile = booking.registrationData.resultAdded.get("user_cellPhone");
+
+        //TODO: will remove this lines when in real environment
+        customer.telMobile = "";
+
         customer.address = booking.registrationData.resultAdded.get("user_address_address");
         customer.city = booking.registrationData.resultAdded.get("user_address_city");
-        customer.email = booking.registrationData.resultAdded.get("user_emailAddress");
+
+        //TODO: will restore this lines when in real environment
+//        customer.email = booking.registrationData.resultAdded.get("user_emailAddress");
+
+        //TODO: will remove this lines when in real environment
+        customer.email = "asma@zaui.com";
+
         customer.postcode = booking.registrationData.resultAdded.get("user_address_postCode");
         return customer;
     }
@@ -424,9 +435,18 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         if(!customer.name.equals(booking.registrationData.resultAdded.get("user_fullName")))
             return true;
 
-        if(!customer.telMobile.equals(booking.registrationData.resultAdded.get("user_cellPhone")))
+        //TODO: will restore these lines when in real environment
+//        if(!customer.telMobile.equals(booking.registrationData.resultAdded.get("user_cellPhone")))
+//            return true;
+//        if(!customer.email.equals(booking.registrationData.resultAdded.get("user_emailAddress")))
+//            return true;
+
+        //TODO: this is temporary, will remove after testing
+        String cellPhone = "";
+        String tempEmail = "asma@zaui.com";
+        if(!cellPhone.equals(booking.registrationData.resultAdded.get("user_cellPhone")))
             return true;
-        if(!customer.email.equals(booking.registrationData.resultAdded.get("user_emailAddress")))
+        if(!tempEmail.equals(booking.registrationData.resultAdded.get("user_emailAddress")))
             return true;
         return false;
     }
@@ -648,10 +668,22 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             }
 
             newbooking.registrationData.resultAdded.put("user_fullName", booking.customer.name);
-            newbooking.registrationData.resultAdded.put("user_cellPhone", booking.customer.telMobile);
+
+            //TODO: will restore this lines when in real environment
+//            newbooking.registrationData.resultAdded.put("user_cellPhone", booking.customer.telMobile);
+
+            //TODO: will remove this lines when in real environment
+            newbooking.registrationData.resultAdded.put("user_cellPhone", "");
+
             newbooking.registrationData.resultAdded.put("user_address_address", booking.customer.address);
             newbooking.registrationData.resultAdded.put("user_address_city", booking.customer.city);
-            newbooking.registrationData.resultAdded.put("user_emailAddress", booking.customer.email);
+
+            //TODO: will restore this lines when in real environment
+//            newbooking.registrationData.resultAdded.put("user_emailAddress", booking.customer.email);
+
+            //TODO: will remove this lines when in real environment
+            newbooking.registrationData.resultAdded.put("user_emailAddress", "asma@zaui.com");
+
             newbooking.registrationData.resultAdded.put("user_address_postCode", booking.customer.postcode);
             newbooking.jomresLastModified = booking.lastModified;
 

@@ -288,9 +288,20 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             logger.error("Fail to covert date of client {} {}, original exception {}", storeId, dateAfterDataToRetrieve, e);
             return super.retreiveData(credentials, null);
         }
-        BasicDBObject neQuery = new BasicDBObject();
-        neQuery.put("rowCreatedDate", new BasicDBObject("$gte", dt));
-        return super.retreiveData(credentials, neQuery);
+        //Only Order with date filtering
+        BasicDBObject orderQuery = new BasicDBObject();
+        orderQuery.put("rowCreatedDate", new BasicDBObject("$gte", dt));
+        orderQuery.put("className", "com.thundashop.core.ordermanager.data.Order");
+        List<DataCommon> orders = super.retreiveData(credentials, orderQuery);
+
+        //without date filtering and not including Order
+        BasicDBObject otherQuery = new BasicDBObject();
+        otherQuery.put("className", new BasicDBObject("$ne", "com.thundashop.core.ordermanager.data.Order"));
+        List<DataCommon> otherData = super.retreiveData(credentials, otherQuery);
+
+        orders.addAll(otherData);
+
+        return orders;
     }
 
     @Override

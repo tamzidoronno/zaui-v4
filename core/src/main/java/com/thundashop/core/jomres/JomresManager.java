@@ -70,35 +70,11 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             } else if (dataCommon instanceof JomresBookingData) {
                 jomresToPmsBookingMap.put(((JomresBookingData) dataCommon).jomresBookingId, (JomresBookingData) dataCommon);
                 pmsToJomresBookingMap.put(((JomresBookingData) dataCommon).pmsBookingId, (JomresBookingData) dataCommon);
-            } else if (dataCommon instanceof JomresConfiguration) {
-                jomresConfiguration = (JomresConfiguration) dataCommon;
             }
         }
         createScheduler("jomresprocessor", "*/5 * * * *", JomresManagerProcessor.class);
     }
 
-    void getHardCodedJomresRoomData() {
-        if (pmsItemToJomresRoomDataMap.isEmpty()) {
-            JomresRoomData roomData1 = new JomresRoomData();
-            JomresRoomData roomData2 = new JomresRoomData();
-            JomresRoomData roomData3 = new JomresRoomData();
-            roomData1.bookingItemId = "ba5cbb25-ea4b-4184-a813-483ff6ef839b";
-            roomData1.jomresPropertyId = 92;
-            pmsItemToJomresRoomDataMap.put(roomData1.bookingItemId, roomData1);
-            roomData2.bookingItemId = "2290a31b-0fcb-46b5-90fc-fb6735da752e";
-            roomData2.jomresPropertyId = 93;
-            pmsItemToJomresRoomDataMap.put(roomData2.bookingItemId, roomData2);
-            roomData3.bookingItemId = "8e626df2-e48f-4129-929b-5a12612627a3";
-            roomData3.jomresPropertyId = 94;
-            pmsItemToJomresRoomDataMap.put(roomData3.bookingItemId, roomData3);
-            saveObject(roomData1);
-            saveObject(roomData2);
-            saveObject(roomData3);
-            for (Map.Entry<String, JomresRoomData> entry : pmsItemToJomresRoomDataMap.entrySet()) {
-                jomresPropertyToRoomDataMap.put(entry.getValue().jomresPropertyId, entry.getValue());
-            }
-        }
-    }
 
     public void logText(String string) {
         jomresLogManager.save(string, System.currentTimeMillis());
@@ -113,15 +89,14 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
     @Override
     public boolean changeCredentials(String clientId, String clientSecret){
-        jomresConfiguration.JOMRES_CMF_REST_API_CLIENT_ID = clientId;
-        jomresConfiguration.JOMRES_CMF_REST_API_CLIENT_SECRET = clientSecret;
+        jomresConfiguration.jomresCmfRestApiClientId = clientId;
+        jomresConfiguration.jomresCmfRestApiClientSecret = clientSecret;
         saveObject(jomresConfiguration);
         return true;
     }
 
     @Override
     public boolean updateAvailability() {
-        getHardCodedJomresRoomData();
         if (!connectToApi()) {
             logger.error("Failed to connect with Jomres API..");
             logText("Failed to connect with Jomres API..");
@@ -202,9 +177,9 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 }
                 logText("marking property unavailable, Jomres property id: " + roomData.jomresPropertyId);
                 availabilityService.changePropertyAvailability(
-                        jomresConfiguration.CLIENT_BASE_URL,
+                        jomresConfiguration.clientBaseUrl,
                         cmfClientAccessToken,
-                        jomresConfiguration.CHANNEL_NAME,
+                        jomresConfiguration.channelName,
                         roomData.jomresPropertyId,
                         unavailableStartToEndDates,
                         false
@@ -218,9 +193,9 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 }
 
                 updateAvailabilityStatus = availabilityService.changePropertyAvailability(
-                        jomresConfiguration.CLIENT_BASE_URL,
+                        jomresConfiguration.clientBaseUrl,
                         cmfClientAccessToken,
-                        jomresConfiguration.CHANNEL_NAME,
+                        jomresConfiguration.channelName,
                         roomData.jomresPropertyId,
                         availableStartToEndDates,
                         true
@@ -249,7 +224,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             ChannelService channelService = new ChannelService();
             logger.debug(
                     channelService.announceChannel(
-                            jomresConfiguration.CLIENT_BASE_URL, jomresConfiguration.CHANNEL_NAME, "My%20New%20Channel", cmfClientAccessToken
+                            jomresConfiguration.clientBaseUrl, jomresConfiguration.channelName, "My%20New%20Channel", cmfClientAccessToken
                     ) + ""
             );
         } catch (Exception e) {
@@ -261,7 +236,6 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
     @Override
     public List<FetchBookingResponse> fetchBookings() throws Exception {
-        getHardCodedJomresRoomData();
         if (!connectToApi()) {
             logger.error("Failed to connect with Jomres API..");
             return new ArrayList<>();
@@ -287,15 +261,15 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             try {
                 System.out.println("Started fetch booking for PropertyId: "+propertyUID);
                 bookings = bookingService.getJomresBookingsBetweenDates(
-                        jomresConfiguration.CLIENT_BASE_URL,
+                        jomresConfiguration.clientBaseUrl,
                         propertyUID,
                         cmfClientAccessToken,
                         start, end
                 );
                 System.out.println("ended fetch booking for PropertyId: "+propertyUID);
                 System.out.println("Started fetch daily price matrix for PropertyId: "+propertyUID);
-                dailyPriceMatrix = priceService.getDailyPrice(jomresConfiguration.CLIENT_BASE_URL, cmfClientAccessToken,
-                        jomresConfiguration.CHANNEL_NAME, propertyUID);
+                dailyPriceMatrix = priceService.getDailyPrice(jomresConfiguration.clientBaseUrl, cmfClientAccessToken,
+                        jomresConfiguration.channelName, propertyUID);
                 System.out.println("ended fetch daily price matrix for PropertyId: "+propertyUID);
 
                 Map<String, Double> finalDailyPriceMatrix = dailyPriceMatrix;
@@ -346,9 +320,9 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                                 System.out.println("started fetch complete booking, BookingId: " + jomresBooking.bookingId);
 
                                 jomresBooking = bookingService.getCompleteBooking(
-                                        jomresConfiguration.CLIENT_BASE_URL,
+                                        jomresConfiguration.clientBaseUrl,
                                         cmfClientAccessToken,
-                                        jomresConfiguration.CHANNEL_NAME,
+                                        jomresConfiguration.channelName,
                                         jomresBooking
                                 );
                                 System.out.println("ended fetch complete booking, BookingId: " + jomresBooking.bookingId);
@@ -434,8 +408,9 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     }
 
     boolean isBookerInfoUpdated(JomresGuest customer,PmsBooking booking){
-        if(!customer.name.equals(booking.registrationData.resultAdded.get("user_fullName")))
-            return true;
+        //TODO: will restore when real booker info will be used
+//        if(!customer.name.equals(booking.registrationData.resultAdded.get("user_fullName")))
+//            return true;
 
         //TODO: will restore these lines when in real environment
 //        if(!customer.telMobile.equals(booking.registrationData.resultAdded.get("user_cellPhone")))
@@ -576,9 +551,9 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 logText("Generating new token...");
                 cmfClientTokenGenerationTime = new Date();
                 cmfClientAccessToken = jomresService.getAccessToken(
-                        jomresConfiguration.JOMRES_CMF_REST_API_CLIENT_ID,
-                        jomresConfiguration.JOMRES_CMF_REST_API_CLIENT_SECRET,
-                        jomresConfiguration.CMF_CLIENT_TOKEN_URL
+                        jomresConfiguration.jomresCmfRestApiClientId,
+                        jomresConfiguration.jomresCmfRestApiClientSecret,
+                        jomresConfiguration.cmfClientTokenUrl
                 );
             }
             if (cmfClientAccessToken == null) {
@@ -656,7 +631,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             for (PmsBookingRooms room : newbooking.getAllRooms()) {
                 room.unmarkOverBooking();
             }
-            newbooking.channel = "jomres_" + jomresConfiguration.CHANNEL_NAME;
+            newbooking.channel = "jomres_" + jomresConfiguration.channelName;
             newbooking.jomresBookingId = booking.bookingId;
             newbooking.countryCode = booking.customer.countryCode;
             newbooking.isPrePaid = true;
@@ -791,17 +766,11 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                     text += "For more information about overbooking, see: https://getshop.com/double_booking_error.html";
                     String email = getStoreEmailAddress();
                     String content = "Possible overbooking happened:<br>" + text;
-                    messageManager.sendMail(email, email, "Warning: possible overbooking happened", content, email, email);
-//                    messageManager.sendMail("pal@getshop.com","pal@getshop.com", "Warning: possible overbooking happened", content,"pal@getshop.com","pal@getshop.com");
-
                 }
-
             }
 
             if (orderId == null)
                 orderId = pmsInvoiceManager.autoCreateOrderForBookingAndRoom(newbooking.id, newbooking.paymentType);
-            Order order = orderManager.getOrder(orderId);
-//            Double amount = orderManager.getTotalAmount(ord);
             pmsInvoiceManager.markOrderAsPaid(newbooking.id, orderId);
 
             JomresBookingData jomresBookingData = new JomresBookingData();

@@ -1,10 +1,11 @@
-const jomresDatabase = "JomresManager_default_2";
+const jomresDatabase = "JomresManager_default";
 
 let db = connect(host+'/'+jomresDatabase);
 let collection = db.getCollection('col_'+storeId);
 let className = "com.thundashop.core.jomres.JomresRoomData";
 
-let rawdata = cat(mappingFileName);
+let fileName = './roommapping/'+hotelName+'.json';
+let rawdata = cat(fileName);
 let jomresPropertyId = JSON.parse(rawdata);
 
 collection.deleteMany({'className':'com.thundashop.core.jomres.JomresRoomData'});
@@ -16,7 +17,7 @@ for (let roomId in jomresPropertyId) {
     roomIdMapping = {
         "className": className,
         "bookingItemId": roomId,
-        "jomresPropertyId": jomresPropertyId[roomId],
+        "jomresPropertyId": parseInt(jomresPropertyId[roomId]),
         "storeId": storeId,
         "rowCreatedDate": ISODate(timeNow.toISOString),
         "lastModified": ISODate(timeNow.toISOString),

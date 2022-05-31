@@ -2,7 +2,7 @@ package com.thundashop.core.jomres;
 
 import com.thundashop.core.common.DataCommon;
 
-public class Constants extends DataCommon {
+public class JomresConfiguration extends DataCommon {
     String CMF_CLIENT_TOKEN_URL = "https://jomres.zauistay.com/jomres/api/";
     String CLIENT_BASE_URL = "https://jomres.zauistay.com/jomres/api/";
 

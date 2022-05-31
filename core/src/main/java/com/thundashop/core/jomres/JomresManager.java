@@ -48,7 +48,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
     private static final Logger logger = LoggerFactory.getLogger(JomresManager.class);
 
-    Constants constants = new Constants();
+    JomresConfiguration jomresConfiguration;
 
     Map<String, JomresRoomData> pmsItemToJomresRoomDataMap = new HashMap<>();
     Map<Long, JomresBookingData> jomresToPmsBookingMap = new HashMap<>();
@@ -65,14 +65,16 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             if (dataCommon instanceof JomresRoomData) {
                 pmsItemToJomresRoomDataMap.put(((JomresRoomData) dataCommon).bookingItemId, (JomresRoomData) dataCommon);
                 jomresPropertyToRoomDataMap.put(((JomresRoomData) dataCommon).jomresPropertyId, (JomresRoomData) dataCommon);
-            } else if (dataCommon instanceof Constants) {
-                constants = (Constants) dataCommon;
+            } else if (dataCommon instanceof JomresConfiguration) {
+                jomresConfiguration = (JomresConfiguration) dataCommon;
             } else if (dataCommon instanceof JomresBookingData) {
                 jomresToPmsBookingMap.put(((JomresBookingData) dataCommon).jomresBookingId, (JomresBookingData) dataCommon);
                 pmsToJomresBookingMap.put(((JomresBookingData) dataCommon).pmsBookingId, (JomresBookingData) dataCommon);
+            } else if (dataCommon instanceof JomresConfiguration) {
+                jomresConfiguration = (JomresConfiguration) dataCommon;
             }
         }
-         createScheduler("jomresprocessor", "*/5 * * * *", JomresManagerProcessor.class);
+        createScheduler("jomresprocessor", "*/5 * * * *", JomresManagerProcessor.class);
     }
 
     void getHardCodedJomresRoomData() {
@@ -111,9 +113,9 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
     @Override
     public boolean changeCredentials(String clientId, String clientSecret){
-        constants.JOMRES_CMF_REST_API_CLIENT_ID = clientId;
-        constants.JOMRES_CMF_REST_API_CLIENT_SECRET = clientSecret;
-        saveObject(constants);
+        jomresConfiguration.JOMRES_CMF_REST_API_CLIENT_ID = clientId;
+        jomresConfiguration.JOMRES_CMF_REST_API_CLIENT_SECRET = clientSecret;
+        saveObject(jomresConfiguration);
         return true;
     }
 
@@ -200,9 +202,9 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 }
                 logText("marking property unavailable, Jomres property id: " + roomData.jomresPropertyId);
                 availabilityService.changePropertyAvailability(
-                        constants.CLIENT_BASE_URL,
+                        jomresConfiguration.CLIENT_BASE_URL,
                         cmfClientAccessToken,
-                        constants.CHANNEL_NAME,
+                        jomresConfiguration.CHANNEL_NAME,
                         roomData.jomresPropertyId,
                         unavailableStartToEndDates,
                         false
@@ -216,9 +218,9 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 }
 
                 updateAvailabilityStatus = availabilityService.changePropertyAvailability(
-                        constants.CLIENT_BASE_URL,
+                        jomresConfiguration.CLIENT_BASE_URL,
                         cmfClientAccessToken,
-                        constants.CHANNEL_NAME,
+                        jomresConfiguration.CHANNEL_NAME,
                         roomData.jomresPropertyId,
                         availableStartToEndDates,
                         true
@@ -247,7 +249,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             ChannelService channelService = new ChannelService();
             logger.debug(
                     channelService.announceChannel(
-                            constants.CLIENT_BASE_URL, constants.CHANNEL_NAME, "My%20New%20Channel", cmfClientAccessToken
+                            jomresConfiguration.CLIENT_BASE_URL, jomresConfiguration.CHANNEL_NAME, "My%20New%20Channel", cmfClientAccessToken
                     ) + ""
             );
         } catch (Exception e) {
@@ -285,15 +287,15 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             try {
                 System.out.println("Started fetch booking for PropertyId: "+propertyUID);
                 bookings = bookingService.getJomresBookingsBetweenDates(
-                        constants.CLIENT_BASE_URL,
+                        jomresConfiguration.CLIENT_BASE_URL,
                         propertyUID,
                         cmfClientAccessToken,
                         start, end
                 );
                 System.out.println("ended fetch booking for PropertyId: "+propertyUID);
                 System.out.println("Started fetch daily price matrix for PropertyId: "+propertyUID);
-                dailyPriceMatrix = priceService.getDailyPrice(constants.CLIENT_BASE_URL, cmfClientAccessToken,
-                        constants.CHANNEL_NAME, propertyUID);
+                dailyPriceMatrix = priceService.getDailyPrice(jomresConfiguration.CLIENT_BASE_URL, cmfClientAccessToken,
+                        jomresConfiguration.CHANNEL_NAME, propertyUID);
                 System.out.println("ended fetch daily price matrix for PropertyId: "+propertyUID);
 
                 Map<String, Double> finalDailyPriceMatrix = dailyPriceMatrix;
@@ -344,9 +346,9 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                                 System.out.println("started fetch complete booking, BookingId: " + jomresBooking.bookingId);
 
                                 jomresBooking = bookingService.getCompleteBooking(
-                                        constants.CLIENT_BASE_URL,
+                                        jomresConfiguration.CLIENT_BASE_URL,
                                         cmfClientAccessToken,
-                                        constants.CHANNEL_NAME,
+                                        jomresConfiguration.CHANNEL_NAME,
                                         jomresBooking
                                 );
                                 System.out.println("ended fetch complete booking, BookingId: " + jomresBooking.bookingId);
@@ -574,9 +576,9 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 logText("Generating new token...");
                 cmfClientTokenGenerationTime = new Date();
                 cmfClientAccessToken = jomresService.getAccessToken(
-                        constants.JOMRES_CMF_REST_API_CLIENT_ID,
-                        constants.JOMRES_CMF_REST_API_CLIENT_SECRET,
-                        constants.CMF_CLIENT_TOKEN_URL
+                        jomresConfiguration.JOMRES_CMF_REST_API_CLIENT_ID,
+                        jomresConfiguration.JOMRES_CMF_REST_API_CLIENT_SECRET,
+                        jomresConfiguration.CMF_CLIENT_TOKEN_URL
                 );
             }
             if (cmfClientAccessToken == null) {
@@ -654,7 +656,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             for (PmsBookingRooms room : newbooking.getAllRooms()) {
                 room.unmarkOverBooking();
             }
-            newbooking.channel = "jomres_" + constants.CHANNEL_NAME;
+            newbooking.channel = "jomres_" + jomresConfiguration.CHANNEL_NAME;
             newbooking.jomresBookingId = booking.bookingId;
             newbooking.countryCode = booking.customer.countryCode;
             newbooking.isPrePaid = true;

@@ -214,6 +214,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         key = checkIfNeedOverride(key, booking, room, "email");
         List<String> emailRecipients = new ArrayList();
         PmsNotificationMessage message = getSpecificMessage(key, booking, room, "email", null);
+        if(booking.channel.contains("jomres")) return;
         if(message != null) {
             if(key.startsWith("room_")) {
                 emailRecipients.addAll(sendEmail(key, booking, room, "room", message));
@@ -240,7 +241,6 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
     private void notifyBySms(String key, PmsBooking booking, PmsBookingRooms room) {
         key = checkIfNeedOverride(key, booking, room, "email");
         List<PmsGuests> smsRecipients = new ArrayList();
-        
         if(key.startsWith("room_")) {
             smsRecipients.addAll(sendSms(key, booking, room, "room"));
         } else {
@@ -572,6 +572,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         List<PmsGuests> recipients = getSmsRecipients(booking, room, type);
         for(PmsGuests guest : recipients) {
             PmsNotificationMessage message = getSpecificMessage(key, booking, room, "sms", guest.prefix);
+            if(booking.channel.contains("jomres")) return new ArrayList<>();
             if(message != null) {
                 String content = formatMessage(message.content, booking, room, key, "sms", guest);
                 if (guest.prefix != null && (guest.prefix.equals("47") || guest.prefix.equals("+47"))) {

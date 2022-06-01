@@ -333,10 +333,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                                 bookingStatus = "Modified/Synced";
                                 System.out.println("Started updating Booking into pms, BookingId: " + jomresBooking.bookingId);
 
-                                if (jomresBooking == null) {
-                                    System.out.println("Complete booking not found, error occurred");
-                                    continue;
-                                }
+
                                 jomresBookingData = updatePmsBooking(jomresBooking, finalDailyPriceMatrix, jomresBookingData, pmsRoom, pmsRoomCategory);
                                 System.out.println("ended updating Booking into pms BookingId: " + jomresBooking.bookingId);
                             }
@@ -392,7 +389,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 //        customer.telMobile = booking.registrationData.resultAdded.get("user_cellPhone");
 
         //TODO: will remove this lines when in real environment
-        customer.telMobile = "";
+        customer.telMobile = "+8801521484996";
 
         customer.address = booking.registrationData.resultAdded.get("user_address_address");
         customer.city = booking.registrationData.resultAdded.get("user_address_city");
@@ -419,7 +416,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 //            return true;
 
         //TODO: this is temporary, will remove after testing
-        String cellPhone = "";
+        String cellPhone = "+8801521484996";
         String tempEmail = "asma@zaui.com";
         if(!cellPhone.equals(booking.registrationData.resultAdded.get("user_cellPhone")))
             return true;
@@ -449,11 +446,18 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         return false;
     }
 
+    void deleteJomresBookingData(JomresBookingData bookingData){
+        pmsToJomresBookingMap.remove(bookingData.pmsBookingId);
+        jomresToPmsBookingMap.remove(bookingData.jomresBookingId);
+        deleteObject(bookingData);
+    }
+
     JomresBookingData updatePmsBooking(JomresBooking booking, Map<String, Double> priceMatrix, JomresBookingData bookingData,
                                        BookingItem pmsRoom, BookingItemType pmsRoomCategory) {
         try {
             PmsBooking newbooking = findCorrelatedBooking(booking);
             if (newbooking == null) {
+                deleteJomresBookingData(bookingData);
                 return addBookingToPms(booking, priceMatrix, null, pmsRoom, pmsRoomCategory);
             } else {
                 if (!isBookingNeedToBeSynced(booking, newbooking)) {
@@ -504,8 +508,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         } else {
             pmsManager.logEntry("Deleted by channel manager", newbooking.id, null);
             pmsManager.deleteBooking(newbooking.id);
-            deleteObject(jomresToPmsBookingMap.get(booking.bookingId));
-            jomresToPmsBookingMap.remove(booking.bookingId);
+            deleteJomresBookingData(jomresToPmsBookingMap.get(booking.bookingId));
         }
         newbooking = pmsManager.getBooking(newbooking.id);
         List<String> orderIds = new ArrayList<>(newbooking.orderIds);
@@ -650,7 +653,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 //            newbooking.registrationData.resultAdded.put("user_cellPhone", booking.customer.telMobile);
 
             //TODO: will remove this lines when in real environment
-            newbooking.registrationData.resultAdded.put("user_cellPhone", "");
+            newbooking.registrationData.resultAdded.put("user_cellPhone", "+8801521484996");
 
             newbooking.registrationData.resultAdded.put("user_address_address", booking.customer.address);
             newbooking.registrationData.resultAdded.put("user_address_city", booking.customer.city);

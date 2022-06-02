@@ -7,6 +7,5 @@ public class JomresConfiguration extends DataCommon {
     String clientBaseUrl = "";
     String cmfRestApiClientId = "";
     String cmfRestApiClientSecret = "";
-    int cmsUserId = 0;
     String channelName = "";
 }

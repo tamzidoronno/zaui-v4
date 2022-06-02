@@ -497,7 +497,9 @@ public class ManagerSubBase {
     }
     
     public String getStoreEmailAddress() {
-        return storePool.getStore(storeId).configuration.emailAdress;
+        //TODO:This line need to remove after testing
+        return "asma@cefalo.com";
+//        return storePool.getStore(storeId).configuration.emailAdress;
     }
     
     public String getStoreDefaultPrefix() {

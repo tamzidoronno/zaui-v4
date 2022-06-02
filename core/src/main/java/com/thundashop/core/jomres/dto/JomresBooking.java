@@ -1,12 +1,12 @@
 package com.thundashop.core.jomres.dto;
 
-import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;;import static com.thundashop.core.jomres.services.Constants.ARRIVAL_DEPARTURE_IN_LIST_DATE_FORMAT;
+import java.util.*;
+import static com.thundashop.core.jomres.services.Constants.ARRIVAL_DEPARTURE_IN_LIST_DATE_FORMAT;
 import static com.thundashop.core.jomres.services.Constants.CREATED_MODIFIED_IN_DETAILS_DATE_FORMAT;
 
 public class JomresBooking implements Serializable {
@@ -16,7 +16,6 @@ public class JomresBooking implements Serializable {
     public Date bookingCreated = new Date();
     public String comment= "";
     public long invoiceId=0;
-    public long invoiceNumber=0;
     public Date lastModified=new Date();
     public String reservationCode ="";
     public int statusCode=0;
@@ -27,7 +26,6 @@ public class JomresBooking implements Serializable {
     public double depositAmount =0.0;
     public boolean depositPaid=true;
     public int propertyUid = 0;
-    public List<JomresGuest> guests = new ArrayList<JomresGuest>();
     public JomresGuest customer = new JomresGuest();
 
     public int numberOfGuests=1;
@@ -65,7 +63,7 @@ public class JomresBooking implements Serializable {
         this.reservationCode = Optional.ofNullable(booking.get("tag").toString()).orElse("");
 
         this.totalPrice = (long) Double.parseDouble(Optional.ofNullable(booking.get("contract_total").toString()).orElse("0.0"));
-        this.depositPaid = (Boolean) Optional.ofNullable(booking.get("deposit_paid").toString()).orElse("0").equals("1");
+        this.depositPaid = Optional.ofNullable(booking.get("deposit_paid").toString()).orElse("0").equals("1");
         this.depositAmount =(long) Double.parseDouble(Optional.ofNullable(booking.get("deposit_required").toString()).orElse("0.0"));
         this.propertyUid = (int) Double.parseDouble(booking.get("property_uid").toString());
         this.invoiceId =(long) Double.parseDouble(Optional.ofNullable(booking.get("invoice_uid").toString()).orElse("0"));

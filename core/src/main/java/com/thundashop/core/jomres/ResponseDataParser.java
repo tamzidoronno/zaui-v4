@@ -72,6 +72,7 @@ public class ResponseDataParser {
 
     public Map<String, Double> parseDailyPriceMatrix(Response response) throws Exception {
         try {
+            System.out.println("Started parsing daily price matrix");
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             Map<String, Double> dailyPriceMatrix = new HashMap<>();
 
@@ -96,6 +97,7 @@ public class ResponseDataParser {
                 }
 
             }
+            System.out.println("Started parsing daily price matrix");
             return dailyPriceMatrix;
 
         } catch (Exception e) {
@@ -161,6 +163,7 @@ public class ResponseDataParser {
     public List<JomresBooking> parseBookingsFromList(OAuthResourceResponse response) throws Exception {
         Gson gson = new Gson();
         try {
+            System.out.println("Started parsing Jomres booking list between dates");
             JsonObject responseBody = gson.fromJson(response.getBody(), JsonObject.class);
 
             if (responseBody.get("error_message") != null) {
@@ -180,6 +183,7 @@ public class ResponseDataParser {
                     System.out.println("Falied to parse the booking for BookignId: "+booking.get("contract_uid").toString());
                 }
             }
+            System.out.println("Ended parsing Jomres booking list between dates");
             return jomresBookings;
         } catch (Exception e) {
             throw e;

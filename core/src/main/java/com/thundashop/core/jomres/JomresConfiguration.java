@@ -5,8 +5,8 @@ import com.thundashop.core.common.DataCommon;
 public class JomresConfiguration extends DataCommon {
     String cmfClientTokenUrl = "";
     String clientBaseUrl = "";
-    String jomresCmfRestApiClientId = "";
-    String jomresCmfRestApiClientSecret = "";
+    String cmfRestApiClientId = "";
+    String cmfRestApiClientSecret = "";
     int cmsUserId = 0;
     String channelName = "";
 }

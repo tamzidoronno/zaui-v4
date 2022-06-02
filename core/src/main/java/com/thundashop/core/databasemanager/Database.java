@@ -157,9 +157,18 @@ public class Database extends StoreComponent {
     }
 
     public List<DataCommon> retreiveData(Credentials credentials) {
+        return retreiveData(credentials, null);
+    }
+
+    public List<DataCommon> retreiveData(Credentials credentials, BasicDBObject additionalQuery) {
         DB mongoDb = mongo.getDB(credentials.manangerName);
         DBCollection collection = mongoDb.getCollection("col_" + credentials.storeid);
-        return getData(collection);
+        BasicDBObject query = createQuery();
+        if(additionalQuery != null) {
+            List<BasicDBObject> andQuery = (List<BasicDBObject>) query.get("$and");
+            andQuery.add(additionalQuery);
+        }
+        return getData(collection, query);
     }
 
     public List<DataCommon> getAllDataForStore(String storeId) {
@@ -185,9 +194,7 @@ public class Database extends StoreComponent {
         return datas;
     }
 
-    private List<DataCommon> getData(DBCollection collection) {
-        BasicDBObject query = createQuery();
-        
+    private List<DataCommon> getData(DBCollection collection, BasicDBObject query) {
         DBCursor cur = collection.find(query);
         List<DataCommon> all = new ArrayList<DataCommon>();
         
@@ -245,7 +252,7 @@ public class Database extends StoreComponent {
         obj.add(addBannedClass("com.thundashop.core.ticket.TicketAttachment"));
         obj.add(addBannedClass("com.thundashop.core.warehousemanager.StockQuantityRow"));
         andQuery.put("$and", obj);
-        
+
         return andQuery;
         
     }
@@ -318,7 +325,7 @@ public class Database extends StoreComponent {
                 ManagerData data = new ManagerData();
                 data.collection = colName;
                 data.database = managerName;
-                data.datas = getData(collection);
+                data.datas = getData(collection, createQuery());
                 syncMessage.managerDatas.add(data);
             }
         }

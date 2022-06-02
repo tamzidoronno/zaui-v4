@@ -35,7 +35,7 @@ public class TimeRepeaterData implements Serializable {
     
     public String repeaterId = UUID.randomUUID().toString();
     
-    Date endingAt = null;
+    public Date endingAt = null;
     
     public Integer timePeriodeType = TimePeriodeType.open;
     public String timePeriodeTypeAttribute = "";

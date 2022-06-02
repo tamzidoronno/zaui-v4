@@ -7,6 +7,7 @@ import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,6 +29,7 @@ import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.mongodb.BasicDBObject;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.arx.AccessLog;
@@ -57,6 +59,7 @@ import com.thundashop.core.common.Session;
 import com.thundashop.core.common.Setting;
 import com.thundashop.core.common.ZReportProcessor;
 import com.thundashop.core.databasemanager.Database;
+import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.getshoplock.GetShopDeviceLog;
@@ -97,6 +100,7 @@ import com.thundashop.core.utils.UtilManager;
 import com.thundashop.core.webmanager.WebManager;
 import com.thundashop.core.wubook.WubookManager;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -105,6 +109,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.env.Environment;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 
@@ -250,6 +255,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Autowired
     Database dataBase;
+
+    @Autowired
+    private Environment env;
     private Date virtualOrdersCreated;
     private Date startedDate;
 
@@ -277,6 +285,31 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return careTaker;
     }
 
+    @Override
+    public List<DataCommon> retreiveData(Credentials credentials) {
+        String dateAfterDataToRetrieve = env.getProperty("data.filter."  + storeId);
+        if(StringUtils.isBlank(dateAfterDataToRetrieve)) return super.retreiveData(credentials, null);
+        Date dt = null;
+        try {
+            dt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateAfterDataToRetrieve);
+        } catch (ParseException e) {
+            logger.error("Fail to covert date of client {} {}, original exception {}", storeId, dateAfterDataToRetrieve, e);
+            return super.retreiveData(credentials, null);
+        }
+        //only PmsBooking with date filtering
+        BasicDBObject bookingQuery = new BasicDBObject();
+        bookingQuery.put("rowCreatedDate", new BasicDBObject("$gte", dt));
+        bookingQuery.put("className", "com.thundashop.core.pmsmanager.PmsBooking");
+        List<DataCommon> bookingData = super.retreiveData(credentials, bookingQuery);
+
+        BasicDBObject otherQuery = new BasicDBObject();
+        otherQuery.put("className", new BasicDBObject("$ne", "com.thundashop.core.pmsmanager.PmsBooking"));
+        List<DataCommon> otherData = super.retreiveData(credentials, otherQuery);
+
+        bookingData.addAll(otherData);
+
+        return bookingData;
+    }
     @Override
     public void dataFromDatabase(DataRetreived data) {
         Calendar toCheck = Calendar.getInstance();

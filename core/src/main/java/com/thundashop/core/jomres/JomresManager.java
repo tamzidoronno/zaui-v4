@@ -48,7 +48,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
     private static final Logger logger = LoggerFactory.getLogger(JomresManager.class);
 
-    JomresConfiguration jomresConfiguration;
+    JomresConfiguration jomresConfiguration = null;
 
     Map<String, JomresRoomData> pmsItemToJomresRoomDataMap = new HashMap<>();
     Map<Long, JomresBookingData> jomresToPmsBookingMap = new HashMap<>();
@@ -627,13 +627,23 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         }
     }
 
-    private void sendErrorForBooking(long bookingId, String message) {
-        boolean isSentErrorMail = pmsManager.hasSentErrorNotificationForJomresBooking(bookingId);
+    String getJomresBookingErrorMessageForOwner(JomresBooking booking, String pmsRoomName){
+        String message = "Failed to add new booking in pms from Jomres.\n" +
+                "Booking Id: "+booking.bookingId+", Room: "+pmsRoomName+".\n"+
+                "Arraival: " + booking.arrivalDate + ", Departure: " + booking.departure+".\n"+
+                "Maybe there is a manual booking for this room or the room is closed by the system for a while.\n"+
+                "Booking will be created in Pms Automatically as soon as the room is open.";
+        return message;
+    }
+
+    private void sendErrorForBooking(JomresBooking booking, String pmsRoomName) {
+        boolean isSentErrorMail = pmsManager.hasSentErrorNotificationForJomresBooking(booking.bookingId);
         if (!isSentErrorMail) {
-            String emailMessage = "storeId-" + storeId + "Error for jomres booking: " + bookingId + "\n\t" + message;
-//            messageManager.sendErrorNotification(
-//                    emailMessage, null);
-            pmsManager.markSentErrorMessageForJomresBooking(bookingId);
+            String emailMessage = getJomresBookingErrorMessageForOwner(booking, pmsRoomName);
+            String subject = "Jomres Booking Creation Failed";
+            messageManager.sendJomresMessageToStoreOwner(
+                    emailMessage, subject);
+            pmsManager.markSentErrorMessageForJomresBooking(booking.bookingId);
         }
     }
 
@@ -745,9 +755,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             if (newbooking == null) {
                 System.out.println("Failed to add new booking in pms from Jomres: " + booking.bookingId);
                 logger.error("Failed to add new booking in pms from Jomres: " + booking.bookingId);
-                String message = "Maybe there is a manual booking for this room..\n\t" +
-                        "Arraival: " + booking.arrivalDate + ", Departure: " + booking.departure;
-//                sendErrorForBooking(booking.bookingId, message);
+                sendErrorForBooking(booking, pmsRoom.bookingItemName);
                 return null;
 
             }

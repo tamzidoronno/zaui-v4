@@ -1,14 +1,13 @@
 const jomresDatabase = "JomresManager_default";
-
-let db = connect(host+'/'+jomresDatabase);
-let collection = db.getCollection('col_'+storeId);
+let jomresDb = db.getMongo().getDB(jomresDatabase);
+let collection = jomresDb.getCollection('col_' + storeId);
 let className = "com.thundashop.core.jomres.JomresRoomData";
 
-let fileName = './roommapping/'+hotelName+'.json';
+let fileName = './roommapping/' + hotelName + '.json';
 let rawdata = cat(fileName);
 let jomresPropertyId = JSON.parse(rawdata);
 
-collection.deleteMany({'className':className});
+collection.deleteMany({'className': className});
 
 let listOfFinalMapping = [];
 let roomIdMapping;

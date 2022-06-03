@@ -630,9 +630,13 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     }
 
     String getJomresBookingErrorMessageForOwner(JomresBooking booking, String pmsRoomName){
+        String arrival, departure;
+        SimpleDateFormat format = new SimpleDateFormat("E, dd MMM yyyy");
+        arrival = format.format(booking.arrivalDate);
+        departure = format.format(booking.departure);
         String message = "Failed to add new booking in pms from Jomres.\n" +
                 "Booking Id: "+booking.bookingId+", Room: "+pmsRoomName+".\n"+
-                "Arraival: " + booking.arrivalDate + ", Departure: " + booking.departure+".\n"+
+                "Arraival: " + arrival + ", Departure: " + departure+".\n"+
                 "Maybe there is a manual booking for this room or the room is closed by the system for a while.\n"+
                 "Booking will be created in Pms Automatically as soon as the room is open.";
         return message;

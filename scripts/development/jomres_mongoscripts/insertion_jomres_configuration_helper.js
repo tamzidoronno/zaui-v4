@@ -2,15 +2,16 @@ const jomresDatabase = "JomresManager_default";
 
 let db = connect(host+'/'+jomresDatabase);
 let collection = db.getCollection('col_'+storeId);
-let className = "com.thundashop.core.jomres.JomresRoomData";
-
-let fileName = './configuration/'+hotelName+'.json';
-let rawdata = cat(fileName);
-let configurationFile = JSON.parse(rawdata);
+let className = "com.thundashop.core.jomres.JomresConfiguration";
 let timeNow = Date.now();
 
 let jomresConfiguration = {
     "className": className,
+    "cmfClientTokenUrl" : cmfClientTokenUrl,
+    "clientBaseUrl" : clientBaseUrl,
+    "cmfRestApiClientId" : cmfRestApiClientId,
+    "cmfRestApiClientSecret" : cmfRestApiClientSecret,
+    "channelName" : channelName,
     "storeId": storeId,
     "rowCreatedDate": ISODate(timeNow.toISOString),
     "lastModified": ISODate(timeNow.toISOString),
@@ -20,8 +21,7 @@ let jomresConfiguration = {
     "deepFreeze": false,
     "translationId": ""
 }
-for (let key in configurationFile) {
-    jomresConfiguration[key] = configurationFile[key]
-}
 
+
+collection.deleteOne({'className':className});
 collection.insertOne(jomresConfiguration);

@@ -8,7 +8,7 @@ let fileName = './roommapping/'+hotelName+'.json';
 let rawdata = cat(fileName);
 let jomresPropertyId = JSON.parse(rawdata);
 
-collection.deleteMany({'className':'com.thundashop.core.jomres.JomresRoomData'});
+collection.deleteMany({'className':className});
 
 let listOfFinalMapping = [];
 let roomIdMapping;

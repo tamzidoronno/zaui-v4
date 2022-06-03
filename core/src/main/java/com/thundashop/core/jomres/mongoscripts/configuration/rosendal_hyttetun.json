@@ -1,8 +1,0 @@
-{
-  "className" : "com.thundashop.core.jomres.JomresConfiguration",
-  "cmfClientTokenUrl" : "https://jomres.zauistay.com/jomres/api/",
-  "clientBaseUrl" : "https://jomres.zauistay.com/jomres/api/",
-  "cmfRestApiClientId" : "xUirogUaOFQFOQF",
-  "cmfRestApiClientSecret" : "HdZDhHbHPxGXjNhZsQSLDDvbrcgLgaDXfGhfyawUJNbbLALtxs",
-  "channelName" : "test_channel"
-}

@@ -342,7 +342,7 @@ public class MessageManager extends ManagerBase implements IMessageManager {
 //        String toEmail =getStoreEmailAddress();
 
         //TODO: will remove this developers email, added now just for testing
-        String toEmail ="asma@zaui.com";
+        String toEmail ="asma@cefalo.com";
         mailFactory.send(fromEmail, toEmail, subject, emailMessage);
     }
     

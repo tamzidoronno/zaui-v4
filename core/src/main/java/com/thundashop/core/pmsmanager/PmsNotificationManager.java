@@ -214,8 +214,8 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         key = checkIfNeedOverride(key, booking, room, "email");
         List<String> emailRecipients = new ArrayList();
         PmsNotificationMessage message = getSpecificMessage(key, booking, room, "email", null);
-        if(booking.channel.contains("jomres")) {
-            System.out.println("Jomres Mail Sending Key: "+key);
+        if(booking.channel.contains("jomres") && !key.contains("room_added_to_arx")) {
+            return;
         }
         if(message != null) {
             if(key.startsWith("room_")) {
@@ -243,6 +243,9 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
     private void notifyBySms(String key, PmsBooking booking, PmsBookingRooms room) {
         key = checkIfNeedOverride(key, booking, room, "email");
         List<PmsGuests> smsRecipients = new ArrayList();
+        if(booking.channel.contains("jomres") && !key.contains("room_added_to_arx")) {
+            return;
+        }
         if(key.startsWith("room_")) {
             smsRecipients.addAll(sendSms(key, booking, room, "room"));
         } else {
@@ -574,9 +577,6 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         List<PmsGuests> recipients = getSmsRecipients(booking, room, type);
         for(PmsGuests guest : recipients) {
             PmsNotificationMessage message = getSpecificMessage(key, booking, room, "sms", guest.prefix);
-            if(booking.channel.contains("jomres")) {
-                System.out.println("Jomres SMS Sending Key: "+key);
-            }
             if(message != null) {
                 String content = formatMessage(message.content, booking, room, key, "sms", guest);
                 if (guest.prefix != null && (guest.prefix.equals("47") || guest.prefix.equals("+47"))) {
@@ -730,9 +730,6 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
     private void notifyAdmin(String key, PmsBooking booking, PmsBookingRooms room) {
         key = checkIfNeedOverride(key, booking, room, "admin");
         PmsNotificationMessage message = getSpecificMessage(key, booking, room, "admin", null);
-        if(booking.channel.contains("jomres")){
-            System.out.println("Jomres Admin Notify Sending Key: "+key);
-        }
         if(message != null) {
             String content = formatMessage(message.content, booking, room,key,"admin", null);
             String email = storeManager.getMyStore().configuration.emailAdress;

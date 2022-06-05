@@ -21,6 +21,9 @@ import java.util.List;
 @GetShopMultiLayerSession
 public interface IJomresManager {
     @Administrator
+    List<JomresLog> getLogEntries();
+
+    @Administrator
     public boolean testConnection();
     @Administrator
     public boolean updateAvailability() throws Exception;

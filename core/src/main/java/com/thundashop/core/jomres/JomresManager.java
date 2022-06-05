@@ -25,6 +25,7 @@ import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 @GetShopSession
@@ -74,7 +75,6 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         }
         if(jomresPropertyToRoomDataMap.isEmpty()){
             logText("No Jomres room mapping found from database for this hotel, store id: "+ this.storeId);
-            //System.out.println("No Jomres room mapping found from database for this hotel, store id: "+ this.storeId);
         }
 
         createScheduler("jomresprocessor", "*/5 * * * *", JomresManagerProcessor.class);
@@ -85,9 +85,13 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     public void logText(String string) {
         jomresLogManager.save(string, System.currentTimeMillis());
         logPrint(string);
-
     }
 
+    @Override
+    public List<JomresLog> getLogEntries() {
+        List<JomresLog> jomresLogs = jomresLogManager.get().collect(Collectors.toList());
+        return jomresLogs;
+    }
 
     @Override
     public boolean testConnection(){
@@ -109,12 +113,12 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         }
         if(jomresPropertyToRoomDataMap.isEmpty()){
             //System.out.println("No room to Jomres Property mapping found for this hotel. No need to update availability");
-            logText("No room to Jomres Property mapping found for this hotel.");
+            logText("No Room<->Jomres Property mapping found for this hotel.");
             logText("No need to update availability");
             return true;
         }
         try {
-            System.out.println("Started Jomres Update availability");
+            logText("Started Jomres Update availability");
             Calendar calendar = Calendar.getInstance();
             Date startDate = calendar.getTime();
             calendar.add(Calendar.DATE, 60);
@@ -135,9 +139,8 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 Date unavailableEndingDay, availableEndingDay;
                 String updateAvailabilityStatus;
                 if (bookingEngine.getBookingItem(roomData.bookingItemId) == null) {
-                    //System.out.println("The room is not found in Pms for Jomres PropertyId: " + roomData.jomresPropertyId);
-                    //System.out.println("Room is deleted from Pms or mapping is removed.");
-                    logText("The room is not found in Pms for Jomres BookingId: " + roomData.jomresPropertyId);
+                    logText("The room is not found in Pms for Jomres PropertyId: " + roomData.jomresPropertyId
+                            +", pms bookingItemId: "+roomData.bookingItemId);
                     logText("Room is deleted from Pms or mapping is removed.");
                     continue;
                 }
@@ -186,8 +189,8 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                     unavailableEndingDay = calendar.getTime();
                     unavailableStartToEndDates.put(unavailableStartingDay, unavailableEndingDay);
                 }
-                logText("marking property unavailable, Jomres property id: " + roomData.jomresPropertyId);
-                availabilityService.changePropertyAvailability(
+                logText("Started unavailability update, Jomres property id: " + roomData.jomresPropertyId);
+                updateAvailabilityStatus = availabilityService.changePropertyAvailability(
                         jomresConfiguration.clientBaseUrl,
                         cmfClientAccessToken,
                         jomresConfiguration.channelName,
@@ -195,14 +198,15 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                         unavailableStartToEndDates,
                         false
                 );
-
-                logText("marking property available, Jomres property id: " + roomData.jomresPropertyId);
+                logText("Ended unavailability update, Jomres property id: " + roomData.jomresPropertyId);
+                logText(updateAvailabilityStatus);
                 if (availableStartingDay != null) {
                     calendar.add(Calendar.DATE, -1);
                     availableEndingDay = calendar.getTime();
                     availableStartToEndDates.put(availableStartingDay, availableEndingDay);
                 }
 
+                logText("Started availability update, Jomres property id: " + roomData.jomresPropertyId);
                 updateAvailabilityStatus = availabilityService.changePropertyAvailability(
                         jomresConfiguration.clientBaseUrl,
                         cmfClientAccessToken,
@@ -211,6 +215,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                         availableStartToEndDates,
                         true
                 );
+                logText("Ended availability update, Jomres property id: " + roomData.jomresPropertyId);
                 logText(updateAvailabilityStatus);
             }
             System.out.println("Ended Jomres Update availability");

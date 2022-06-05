@@ -1,26 +1,12 @@
 package com.thundashop.core.pmsmanager;
 
-import com.thundashop.core.arx.AccessLog;
 import com.thundashop.core.bookingengine.data.RegistrationRules;
 import com.thundashop.core.cartmanager.data.CartItem;
-import com.thundashop.core.common.Administrator;
-import com.thundashop.core.common.Customer;
-import com.thundashop.core.common.Editor;
-import com.thundashop.core.common.FilterOptions;
-import com.thundashop.core.common.FilteredData;
-import com.thundashop.core.common.ForceAsync;
-import com.thundashop.core.common.GetShopApi;
-import com.thundashop.core.common.GetShopMultiLayerSession;
+import com.thundashop.core.common.*;
 import com.thundashop.core.ordermanager.data.Order;
-import com.thundashop.core.pmseventmanager.PmsEventFilter;
 import com.thundashop.core.usermanager.data.User;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.*;
 
 /**
  * Property management system.<br>
@@ -31,392 +17,390 @@ import org.springframework.beans.factory.annotation.Autowired;
 public interface IPmsManager {
     
     @Administrator
-    public void checkInRoom(String pmsBookingRoomId);
+    void checkInRoom(String pmsBookingRoomId);
     
     @Administrator
-    public boolean hasLockAccessGroupConnected(String typeId);
+    boolean hasLockAccessGroupConnected(String typeId);
     
     @Administrator
-    public void reinstateStay(String pmsBookingRoomId, Integer minutes);
+    void reinstateStay(String pmsBookingRoomId, Integer minutes);
     
     @Administrator
-    public void setDefaultAddons(String bookingId);
+    void setDefaultAddons(String bookingId);
     
     @Administrator
-    public void addProductsToAddons();
+    void addProductsToAddons();
     
     @Administrator
-    public void markRoomAsCleaned(String itemId);
+    void markRoomAsCleaned(String itemId);
     
     @Administrator
-    public void updateCommentOnBooking(String bookingId, String commentId, String newText);
+    void updateCommentOnBooking(String bookingId, String commentId, String newText);
     
     @Administrator
-    public void updatePriceMatrixOnRoom(String pmsBookingRoomId, LinkedHashMap<String,Double> priceMatrix);
+    void updatePriceMatrixOnRoom(String pmsBookingRoomId, LinkedHashMap<String,Double> priceMatrix);
     
-    public void warnFailedBooking(PmsBooking booking);
-    
-    @Administrator
-    public String getBookingSummaryText(String pmsBookingId);
+    void warnFailedBooking(PmsBooking booking);
     
     @Administrator
-    public void setCurrentBooking(String bookingId);
+    String getBookingSummaryText(String pmsBookingId);
     
     @Administrator
-    public void simpleCompleteCurrentBooking();
+    void setCurrentBooking(String bookingId);
     
     @Administrator
-    public void togglePrioritizedRoom(String roomId);
+    void simpleCompleteCurrentBooking();
     
     @Administrator
-    public List<PmsRoomSimple> getAllRoomsOnOrder(String orderId);
+    void togglePrioritizedRoom(String roomId);
     
     @Administrator
-    public void markRoomAsCleanedWithoutLogging(String itemId);
+    List<PmsRoomSimple> getAllRoomsOnOrder(String orderId);
+    
+    @Administrator
+    void markRoomAsCleanedWithoutLogging(String itemId);
             
     @Administrator
-    public void undoLastCleaning(String itemId);
+    void undoLastCleaning(String itemId);
             
     @Administrator
-    public void removeProductFromRoom(String pmsBookingRoomId, String productId);
+    void removeProductFromRoom(String pmsBookingRoomId, String productId);
     
     @Administrator
-    public boolean hasLockSystemActive();
+    boolean hasLockSystemActive();
     
     @Administrator
-    public Double getPriceForRoomWhenBooking(Date start, Date end, String itemType);
+    Double getPriceForRoomWhenBooking(Date start, Date end, String itemType);
             
     @Administrator
-    public void createAllVirtualOrders();
+    void createAllVirtualOrders();
     
     @Administrator
-    public void tryAddToEngine(String pmsBookingRoomId);
+    void tryAddToEngine(String pmsBookingRoomId);
     
     @Administrator
-    public FilteredData getAllCrmUsers(FilterOptions filter);
+    FilteredData getAllCrmUsers(FilterOptions filter);
     
     @Administrator
-    public void logEntryObject(PmsLog log);
+    void logEntryObject(PmsLog log);
     
     @Administrator
-    public void forceMarkRoomAsCleaned(String itemId);
+    void forceMarkRoomAsCleaned(String itemId);
     
     @Administrator
-    public void deleteAllBookings(String code);
+    void deleteAllBookings(String code);
     
     @Administrator
-    public List<CleaningStatistics> getCleaningStatistics(Date start, Date end);
+    List<CleaningStatistics> getCleaningStatistics(Date start, Date end);
     
     @Administrator
     @ForceAsync
-    public List<SimpleCleaningOverview> getSimpleCleaningOverview(Date start, Date end);
+    List<SimpleCleaningOverview> getSimpleCleaningOverview(Date start, Date end);
     
     @Administrator
-    public String generateNewCodeForRoom(String roomId);
+    String generateNewCodeForRoom(String roomId);
     
     @Administrator
-    public List<SimpleInventory> getSimpleInventoryList(String roomName);
+    List<SimpleInventory> getSimpleInventoryList(String roomName);
     
     @Administrator
-    public void addToBlockList(PmsBlockedUser block);
+    void addToBlockList(PmsBlockedUser block);
     
     @Administrator
-    public void removeFromBlockList(String blockedId);
+    void removeFromBlockList(String blockedId);
     
     @Administrator
-    public List<PmsRoomSimple> getRoomsToSwap(String roomId, String moveToType);
+    List<PmsRoomSimple> getRoomsToSwap(String roomId, String moveToType);
     
     @Administrator
-    public List<PmsCleaningHistory> getCleaningHistoryForItem(String itemId);
+    List<PmsCleaningHistory> getCleaningHistoryForItem(String itemId);
     
     @Administrator
-    public String swapRoom(String roomId, List<String> roomIds);
+    String swapRoom(String roomId, List<String> roomIds);
     
     @Administrator
-    public void sendConfirmation(String email, String bookingId, String type);
+    void sendConfirmation(String email, String bookingId, String type);
     
     @Administrator
-    public void reportMissingInventory(List<SimpleInventory> inventories, String itemId, String roomId);
+    void reportMissingInventory(List<SimpleInventory> inventories, String itemId, String roomId);
     
     @Administrator
-    public void saveFilter(String name, PmsBookingFilter filter);
+    void saveFilter(String name, PmsBookingFilter filter);
     
     @Administrator
-    public List<PmsBookingFilter> getAllPmsFilters();
+    List<PmsBookingFilter> getAllPmsFilters();
     
     @Administrator
-    public void deletePmsFilter(String name);
+    void deletePmsFilter(String name);
     
     @Administrator
-    public PmsBookingFilter getPmsBookingFilter(String name);
+    PmsBookingFilter getPmsBookingFilter(String name);
     
     @Administrator
-    public void removeAddonFromRoomById(String addonId, String roomId);
+    void removeAddonFromRoomById(String addonId, String roomId);
     
     @Administrator
-    public void removeAddonFromRoomByIds(List<String> addonId, String roomId);
+    void removeAddonFromRoomByIds(List<String> addonId, String roomId);
     
     @Administrator
-    public void saveCareTakerJob(PmsCareTaker job);
+    void saveCareTakerJob(PmsCareTaker job);
     
     @Administrator
-    public void removeCareTakerJob(String jobId);
+    void removeCareTakerJob(String jobId);
     
     @Administrator
-    public List<PmsCareTaker> getCareTakerJobs();
+    List<PmsCareTaker> getCareTakerJobs();
     
     @Administrator
-    public PmsCareTaker getCareTakerJob(String id);
+    PmsCareTaker getCareTakerJob(String id);
     
     @Administrator
-    public void completeCareTakerJob(String id);
+    void completeCareTakerJob(String id);
     
     @Administrator
-    public PmsAdditionalItemInformation getAdditionalInfo(String itemId);
+    PmsAdditionalItemInformation getAdditionalInfo(String itemId);
     
     @Administrator
-    public boolean removeFromWaitingList(String pmsRoomId);
+    boolean removeFromWaitingList(String pmsRoomId);
     
     @Administrator
-    public boolean addToWaitingList(String pmsRoomId);
+    boolean addToWaitingList(String pmsRoomId);
     
     @Administrator
-    public List<PmsBookingAddonViewItem> getItemsForView(String viewId, Date date);
+    List<PmsBookingAddonViewItem> getItemsForView(String viewId, Date date);
     
     @Administrator
-    public void removeAddonFromRoom(String id, String pmsBookingRooms);
+    void removeAddonFromRoom(String id, String pmsBookingRooms);
         
     @Administrator
-    public void markAddonDelivered(String id);
+    void markAddonDelivered(String id);
     
     @Administrator
-    public void cancelRoom(String roomId);
+    void cancelRoom(String roomId);
     
     @Administrator
-    public void checkOutRoom(String pmsBookingRoomId);
+    void checkOutRoom(String pmsBookingRoomId);
     
     @Administrator
-    public void undoCheckOut(String pmsBookingRoomId);
-    
-    
-    @Administrator
-    public List<PmsAddonDeliveryLogEntry> getDeliveryLog(List<String> productIds, Date start, Date end);
+    void undoCheckOut(String pmsBookingRoomId);
     
     @Administrator
-    public List<PmsAddonDeliveryLogEntry> getDeliveryLogByView(String viewId, Date start, Date end);
+    List<PmsAddonDeliveryLogEntry> getDeliveryLog(List<String> productIds, Date start, Date end);
     
     @Administrator
-    public void deleteDeliveryLogEntry(String id);
+    List<PmsAddonDeliveryLogEntry> getDeliveryLogByView(String viewId, Date start, Date end);
     
     @Administrator
-    public void sendSmsToGuest(String guestId, String message);
-    
-    public List<PmsBooking> getAllBookings(PmsBookingFilter state);
+    void deleteDeliveryLogEntry(String id);
     
     @Administrator
-    public Integer getNumberOfCustomers(PmsBookingFilter state);
+    void sendSmsToGuest(String guestId, String message);
+    
+    List<PmsBooking> getAllBookings(PmsBookingFilter state);
     
     @Administrator
-    public List<PmsCustomerRow> getAllUsers(PmsBookingFilter filter);
+    Integer getNumberOfCustomers(PmsBookingFilter state);
     
     @Administrator
-    public void createNewUserOnBooking(String bookingId, String name, String orgId);
+    List<PmsCustomerRow> getAllUsers(PmsBookingFilter filter);
     
     @Administrator
-    public boolean willAutoDelete(String pmsBookingId);
+    void createNewUserOnBooking(String bookingId, String name, String orgId);
     
     @Administrator
-    public void addToWorkSpace(String pmsRoomId);
+    boolean willAutoDelete(String pmsBookingId);
     
     @Administrator
-    public List<PmsBookingRooms> getWorkSpaceRooms();
+    void addToWorkSpace(String pmsRoomId);
     
     @Administrator
-    public User createUser(PmsNewUser newUser);
+    List<PmsBookingRooms> getWorkSpaceRooms();
     
-    public Date getEarliestEndDate(String pmsBookingRoomId);
+    @Administrator
+    User createUser(PmsNewUser newUser);
+    
+    Date getEarliestEndDate(String pmsBookingRoomId);
     
     @Editor
-    public void logEntry(String logText, String bookingId, String itemId);
+    void logEntry(String logText, String bookingId, String itemId);
     
     @Editor
-    public PmsBooking getBookingFromRoom(String pmsBookingRoomId);
+    PmsBooking getBookingFromRoom(String pmsBookingRoomId);
     
-    public List<PmsRoomSimple> getMyRooms();
+    List<PmsRoomSimple> getMyRooms();
     
-    public boolean isActive();
-    
+    boolean isActive();
     
     @Administrator
-    public void fixAllOrdersWithoutGoToPaymentId();
+    void fixAllOrdersWithoutGoToPaymentId();
     
     @Editor
-    public PmsBooking getBookingWithOrderId(String orderId);
+    PmsBooking getBookingWithOrderId(String orderId);
     
     @Editor
-    public PmsBooking getBookingFromRoomIgnoreDeleted(String roomId);
+    PmsBooking getBookingFromRoomIgnoreDeleted(String roomId);
     
     @Administrator
-    public String setBookingItemAndDate(String roomId, String itemId, boolean split, Date start, Date end);
+    String setBookingItemAndDate(String roomId, String itemId, boolean split, Date start, Date end);
     
     @Administrator
-    public String addCartItemToRoom(CartItem item, String pmsBookingRoomId, String addedBy);
+    String addCartItemToRoom(CartItem item, String pmsBookingRoomId, String addedBy);
     
     @Administrator
-    public String setNewRoomType(String roomId, String bookingId, String newType);
+    String setNewRoomType(String roomId, String bookingId, String newType);
     
     @Administrator
-    public List<PmsRoomSimple> getRoomsNeedingIntervalCleaningSimple(Date day);
+    List<PmsRoomSimple> getRoomsNeedingIntervalCleaningSimple(Date day);
     
     @Administrator
-    public void sendMessage(String bookingId, String email, String title, String message);
+    void sendMessage(String bookingId, String email, String title, String message);
     
     @Administrator
-    public void sendMessageOnRoom(String email, String title, String message, String roomId);
+    void sendMessageOnRoom(String email, String title, String message, String roomId);
     
     @Administrator
-    public void sendSmsOnRoom(String prefix, String phone, String message, String roomId);
+    void sendSmsOnRoom(String prefix, String phone, String message, String roomId);
     
-    public void endRoom(String roomId);
-    
-    @Administrator
-    public void splitBooking(List<String> roomIds);
+    void endRoom(String roomId);
     
     @Administrator
-    public void splitStay(String roomId, Date splitDate);
+    void splitBooking(List<String> roomIds);
     
     @Administrator
-    public String setBookingItem(String roomId, String bookingId, String itemId, boolean split);
+    void splitStay(String roomId, Date splitDate);
     
     @Administrator
-    public PmsBookingRooms changeDates(String roomId, String bookingId, Date start, Date end);
+    String setBookingItem(String roomId, String bookingId, String itemId, boolean split);
     
     @Administrator
-    public void deleteBooking(String bookingId);
+    PmsBookingRooms changeDates(String roomId, String bookingId, Date start, Date end);
     
     @Administrator
-    public void createChannel(String channel);
+    void deleteBooking(String bookingId);
     
     @Administrator
-    public void removeChannel(String channel);
+    void createChannel(String channel);
     
     @Administrator
-    public void saveBooking(PmsBooking booking);
-    
-    public void endRoomWithDate(String pmsRoomId, Date date);
+    void removeChannel(String channel);
     
     @Administrator
-    public PmsPricing setPrices(String code, PmsPricing prices); 
+    void saveBooking(PmsBooking booking);
+    
+    void endRoomWithDate(String pmsRoomId, Date date);
     
     @Administrator
-    public PmsPricing getPricesByCode(String code, Date start, Date end);
+    PmsPricing setPrices(String code, PmsPricing prices);
     
     @Administrator
-    public String createOrder(String bookingId, NewOrderFilter filter);
+    PmsPricing getPricesByCode(String code, Date start, Date end);
     
     @Administrator
-    public void saveConfiguration(PmsConfiguration notifications);
+    String createOrder(String bookingId, NewOrderFilter filter);
     
     @Administrator
-    public void sendCode(String prefix, String phoneNumber, String roomId);
+    void saveConfiguration(PmsConfiguration notifications);
     
     @Administrator
-    public void setGuestOnRoom(List<PmsGuests> guests, String bookingId, String roomId);
+    void sendCode(String prefix, String phoneNumber, String roomId);
     
     @Administrator
-    public void setGuestOnRoomWithoutModifyingAddons(List<PmsGuests> guests, String bookingId, String roomId);
+    void setGuestOnRoom(List<PmsGuests> guests, String bookingId, String roomId);
     
     @Administrator
-    public void updateAddonsBasedOnGuestCount(String pmsRoomId);
+    void setGuestOnRoomWithoutModifyingAddons(List<PmsGuests> guests, String bookingId, String roomId);
     
     @Administrator
-    public void resetPriceForRoom(String pmsRoomId);
+    void updateAddonsBasedOnGuestCount(String pmsRoomId);
     
     @Administrator
-    public void confirmBooking(String bookingId, String message);
+    void resetPriceForRoom(String pmsRoomId);
     
     @Administrator
-    public void unConfirmBooking(String bookingId, String message);
+    void confirmBooking(String bookingId, String message);
+    
+    @Administrator
+    void unConfirmBooking(String bookingId, String message);
     
     @Administrator
     @ForceAsync
-    public PmsStatistics getStatistics(PmsBookingFilter filter);
+    PmsStatistics getStatistics(PmsBookingFilter filter);
     
-    public Date convertTextDate(String text);
+    Date convertTextDate(String text);
     
     @Administrator
-    public List<PmsBookingAddonItem> getAddonsAvailable();
+    List<PmsBookingAddonItem> getAddonsAvailable();
     
     @Customer
-    public String removeFromBooking(String bookingId, String roomId) throws Exception;
+    String removeFromBooking(String bookingId, String roomId) throws Exception;
     
     @Editor
-    public String getContract(String bookingId) throws Exception;
+    String getContract(String bookingId) throws Exception;
     
-    public String getContractByLanguage(String language) throws Exception;
-    
-    @Editor
-    public PmsIntervalResult getIntervalAvailability(PmsIntervalFilter filter);
+    String getContractByLanguage(String language) throws Exception;
     
     @Editor
-    public Boolean isClean(String itemId);
+    PmsIntervalResult getIntervalAvailability(PmsIntervalFilter filter);
     
     @Editor
-    public Boolean isUsedToday(String itemId);
+    Boolean isClean(String itemId);
     
     @Editor
-    public List<PmsAdditionalItemInformation> getAllAdditionalInformationOnRooms();
+    Boolean isUsedToday(String itemId);
     
     @Editor
-    public List<RoomCleanedInformation> getAllRoomsNeedCleaningToday();
+    List<PmsAdditionalItemInformation> getAllAdditionalInformationOnRooms();
+    
+    @Editor
+    List<RoomCleanedInformation> getAllRoomsNeedCleaningToday();
     
     @Administrator
-    public void updateAdditionalInformationOnRooms(PmsAdditionalItemInformation info);
+    void updateAdditionalInformationOnRooms(PmsAdditionalItemInformation info);
     
-    public HashMap<String, String> getChannelMatrix();
+    HashMap<String, String> getChannelMatrix();
     
     @Editor
-    public List<PmsBookingRooms> getRoomsNeedingIntervalCleaning(Date day);
+    List<PmsBookingRooms> getRoomsNeedingIntervalCleaning(Date day);
     
     @Editor
     @ForceAsync
-    public List<PmsBookingRooms> getRoomsNeedingCheckoutCleaning(Date day);
+    List<PmsBookingRooms> getRoomsNeedingCheckoutCleaning(Date day);
     
     @Administrator
-    public String addBookingItem(String bookingId, String item, Date start, Date end);
+    String addBookingItem(String bookingId, String item, Date start, Date end);
     
     @Administrator
-    public String addBookingItemType(String bookingId, String item, Date start, Date end, String guestInfoFromRoom);
+    String addBookingItemType(String bookingId, String item, Date start, Date end, String guestInfoFromRoom);
     
     @Editor
-    public String getDefaultMessage(String bookingId);
+    String getDefaultMessage(String bookingId);
     
     @Editor
-    public void doNotification(String key, String bookingId);
+    void doNotification(String key, String bookingId);
     
     @Editor
-    public void addComment(String bookingId, String comment);
+    void addComment(String bookingId, String comment);
     
     @Editor
-    public void addCommentToRoom(String roomId, String comment);
+    void addCommentToRoom(String roomId, String comment);
     
     @Administrator
-    public String createPrepaymentOrder(String bookingId);
+    String createPrepaymentOrder(String bookingId);
     
     @Administrator
-    public void sendPaymentLink(String orderId, String bookingId, String email, String prefix, String phone);
+    void sendPaymentLink(String orderId, String bookingId, String email, String prefix, String phone);
     
     @Administrator
-    public void sendPaymentLinkWithText(String orderId, String bookingId, String email, String prefix, String phone, String message);
+    void sendPaymentLinkWithText(String orderId, String bookingId, String email, String prefix, String phone, String message);
     
     @Administrator
-    public void sendPaymentRequest(String bookingId, String email, String prefix, String phone, String message);
+    void sendPaymentRequest(String bookingId, String email, String prefix, String phone, String message);
     
     @Administrator
-    public String getMessage(String bookingId, String key);
+    String getMessage(String bookingId, String key);
     
     @Administrator
-    public void failedChargeCard(String orderId, String bookingId);
+    void failedChargeCard(String orderId, String bookingId);
     
     /**
      * Whenever a card has been fetched using the automated process this function is called 
@@ -424,167 +408,167 @@ public interface IPmsManager {
      * @param bookingId 
      */
     @Administrator
-    public void doChargeCardFromAutoBooking(String bookingId);
+    void doChargeCardFromAutoBooking(String bookingId);
     
     @Administrator
-    public void sendMissingPayment(String orderId, String bookingId);
+    void sendMissingPayment(String orderId, String bookingId);
     
     @Editor
-    public List<PmsLog> getLogEntries(PmsLog filter);
+    List<PmsLog> getLogEntries(PmsLog filter);
     
     @Administrator
-    public List<PmsBookingRooms> updateRepeatingDataForBooking(PmsRepeatingData data, String bookingId);
+    List<PmsBookingRooms> updateRepeatingDataForBooking(PmsRepeatingData data, String bookingId);
      
     @Administrator
-    public void setNewCleaningIntervalOnRoom(String roomId, Integer interval);
+    void setNewCleaningIntervalOnRoom(String roomId, Integer interval);
     @Administrator
-    public PmsBookingRooms getRoomForItem(String itemId, Date atTime);
+    PmsBookingRooms getRoomForItem(String itemId, Date atTime);
     
     @Administrator
-    public PmsBooking getBookingFromBookingEngineId(String bookingEngineId);
+    PmsBooking getBookingFromBookingEngineId(String bookingEngineId);
     
     @Administrator
-    public void undeleteBooking(String bookingId);
+    void undeleteBooking(String bookingId);
     
     @Administrator
-    public List<PmsRoomSimple> getSimpleRooms(PmsBookingFilter filter);
+    List<PmsRoomSimple> getSimpleRooms(PmsBookingFilter filter);
     
     @Administrator
-    public List<PmsRoomSimple> getSimpleRoomsForGroup(String bookingEngineId);
+    List<PmsRoomSimple> getSimpleRoomsForGroup(String bookingEngineId);
     
     @Administrator
-    public void sendMessageToAllTodaysGuests(String message);
+    void sendMessageToAllTodaysGuests(String message);
     
     @Administrator
-    public void markKeyDeliveredForAllEndedRooms();
+    void markKeyDeliveredForAllEndedRooms();
     
     @Administrator
-    public void changeInvoiceDate(String roomId, Date newDate);
+    void changeInvoiceDate(String roomId, Date newDate);
     
     @Administrator
     @ForceAsync
-    public void checkIfGuestHasArrived() throws Exception;
+    void checkIfGuestHasArrived() throws Exception;
     
     @Administrator
-    public void sendStatistics() throws Exception;
+    void sendStatistics() throws Exception;
     
     @Administrator
-    public void markRoomDirty(String itemId) throws Exception;
+    void markRoomDirty(String itemId) throws Exception;
     
     @Administrator
-    public void setBookingByAdmin(PmsBooking booking, boolean keepRoomPrices) throws Exception;
+    void setBookingByAdmin(PmsBooking booking, boolean keepRoomPrices) throws Exception;
     
     @Administrator
-    public PmsActivityLines getActivitiesEntries(Date start, Date end);
+    PmsActivityLines getActivitiesEntries(Date start, Date end);
 
     @Administrator
-    public boolean updatePrices(List<PmsPricingDayObject> prices);
+    boolean updatePrices(List<PmsPricingDayObject> prices);
     
-    public void freezeSubscription(String pmsBookingRoomId, Date freezeUntil);
+    void freezeSubscription(String pmsBookingRoomId, Date freezeUntil);
     
-    public PmsPricing getPrices(Date start, Date end); 
-    public PmsBooking getBooking(String bookingId);
-    public PmsConfiguration getConfiguration();
-    public void processor();
-    public void hourlyProcessor();
-    public String getCurrenctContract() throws Exception;
-    public void removeFromCurrentBooking(String roomId) throws Exception;
-    public List<PmsBooking> getAllBookingsUnsecure(PmsBookingFilter state);
-    public List<PmsBooking> getAllBookingsForLoggedOnUser();
-    public RegistrationRules initBookingRules();
-    public void addRepeatingData(PmsRepeatingData data) throws Exception;
-    public List<Integer> getAvailabilityForType(String bookingItemId, Date startTime, Date endTime, Integer intervalInMinutes);
-    public PmsBookingDateRange getDefaultDateRange();
-    public List<PmsBookingRooms> getAllRoomTypes(Date start, Date end);
-    public void setBooking(PmsBooking addons) throws Exception;
-    public PmsBooking getCurrentBooking();
-    public PmsBooking startBooking();
-    public PmsBooking completeCurrentBooking();
-    public void returnedKey(String roomId);
-    public Integer getNumberOfAvailable(String itemType, Date start, Date end);
-    public void checkDoorStatusControl() throws Exception;
-    public List<Integer> updateRoomByUser(String bookingId, PmsBookingRooms room) throws Exception;
+    PmsPricing getPrices(Date start, Date end);
+    PmsBooking getBooking(String bookingId);
+    PmsConfiguration getConfiguration();
+    void processor();
+    void hourlyProcessor();
+    String getCurrenctContract() throws Exception;
+    void removeFromCurrentBooking(String roomId) throws Exception;
+    List<PmsBooking> getAllBookingsUnsecure(PmsBookingFilter state);
+    List<PmsBooking> getAllBookingsForLoggedOnUser();
+    RegistrationRules initBookingRules();
+    void addRepeatingData(PmsRepeatingData data) throws Exception;
+    List<Integer> getAvailabilityForType(String bookingItemId, Date startTime, Date endTime, Integer intervalInMinutes);
+    PmsBookingDateRange getDefaultDateRange();
+    List<PmsBookingRooms> getAllRoomTypes(Date start, Date end);
+    void setBooking(PmsBooking addons) throws Exception;
+    PmsBooking getCurrentBooking();
+    PmsBooking startBooking();
+    PmsBooking completeCurrentBooking();
+    void returnedKey(String roomId);
+    Integer getNumberOfAvailable(String itemType, Date start, Date end);
+    void checkDoorStatusControl() throws Exception;
+    List<Integer> updateRoomByUser(String bookingId, PmsBookingRooms room) throws Exception;
     
-    public PmsAdditionalTypeInformation getAdditionalTypeInformationById(String typeId) throws Exception;
+    PmsAdditionalTypeInformation getAdditionalTypeInformationById(String typeId) throws Exception;
     
-    public List<PmsAdditionalTypeInformation> getAdditionalTypeInformation() throws Exception;
+    List<PmsAdditionalTypeInformation> getAdditionalTypeInformation() throws Exception;
     
     @Administrator
-    public void saveAdditionalTypeInformation(PmsAdditionalTypeInformation info) throws Exception;
+    void saveAdditionalTypeInformation(PmsAdditionalTypeInformation info) throws Exception;
         
     @Administrator
-    public void massUpdatePrices(PmsPricing price, String bookingId) throws Exception;
+    void massUpdatePrices(PmsPricing price, String bookingId) throws Exception;
     
     @Administrator
-    public void mergeBookingsOnOrders();
+    void mergeBookingsOnOrders();
     
     @Administrator
-    public void checkForRoomsToClose();
+    void checkForRoomsToClose();
     
     @Administrator
-    public boolean closeItem(String id, Date start, Date end, String source);
+    boolean closeItem(String id, Date start, Date end, String source);
     
     @Administrator
-    public List<String> getpriceCodes();
+    List<String> getpriceCodes();
     
     @Administrator
-    public void createNewPricePlan(String code);
+    void createNewPricePlan(String code);
     
     @Administrator
-    public void deletePricePlan(String code);
+    void deletePricePlan(String code);
         
     @Administrator
-    public ConferenceData getConferenceData(String bookingId);
+    ConferenceData getConferenceData(String bookingId);
     
     @Administrator
-    public void saveConferenceData(ConferenceData data);
+    void saveConferenceData(ConferenceData data);
     
     @Administrator
-    public List<ConferenceData> getFutureConferenceData(Date fromDate);
+    List<ConferenceData> getFutureConferenceData(Date fromDate);
         
     /**
      * Key = date / day
      * @return 
      */
     @Administrator
-    public Map<Long, List<ConferenceData>> getGroupedConferenceData(Date fromDate);
+    Map<Long, List<ConferenceData>> getGroupedConferenceData(Date fromDate);
     
     @Administrator
-    public void detachOrderFromBooking(String bookingId, String orderId);
+    void detachOrderFromBooking(String bookingId, String orderId);
     
-    public LinkedList<TimeRepeaterDateRange> generateRepeatDateRanges(TimeRepeaterData data);
-    
-    @Administrator
-    public PmsRoomTypeAccessory saveAccessory(PmsRoomTypeAccessory accessory);
-    
-    public List<PmsRoomTypeAccessory> getAccesories();
+    LinkedList<TimeRepeaterDateRange> generateRepeatDateRanges(TimeRepeaterData data);
     
     @Administrator
-    public PmsBookingRooms getPrecastedRoom(String roomId, String bookingItemTypeId, Date from, Date to);
+    PmsRoomTypeAccessory saveAccessory(PmsRoomTypeAccessory accessory);
+    
+    List<PmsRoomTypeAccessory> getAccesories();
     
     @Administrator
-    public void setNewStartDateAndAssignToRoom(String roomId, Date newStartDate, String bookingItemId);
+    PmsBookingRooms getPrecastedRoom(String roomId, String bookingItemTypeId, Date from, Date to);
     
     @Administrator
-    public List<PmsGuestOption> findRelatedGuests(PmsGuests guest);
+    void setNewStartDateAndAssignToRoom(String roomId, Date newStartDate, String bookingItemId);
     
     @Administrator
-    public List<PmsGuestOption> findRelatedByUserId(String userId);
+    List<PmsGuestOption> findRelatedGuests(PmsGuests guest);
     
     @Administrator
-    public List<String> addSuggestedUserToBooking(String userId);
+    List<PmsGuestOption> findRelatedByUserId(String userId);
     
     @Administrator
-    public void transferTicketsAsAddons();
+    List<String> addSuggestedUserToBooking(String userId);
     
     @Administrator
-    public List<PmsBookingAddonItem> createAddonsThatCanBeAddedToRoom(String productId, String pmsBookingRoomId);
+    void transferTicketsAsAddons();
+    
+    @Administrator
+    List<PmsBookingAddonItem> createAddonsThatCanBeAddedToRoom(String productId, String pmsBookingRoomId);
 
     @Administrator
-    public List<PmsRoomSimple> getAllRoomsThatHasAddonsOfType(String type);
+    List<PmsRoomSimple> getAllRoomsThatHasAddonsOfType(String type);
 
     @Administrator
-    public void updateAddons(List<PmsBookingAddonItem> items, String bookingId) throws Exception;
+    void updateAddons(List<PmsBookingAddonItem> items, String bookingId) throws Exception;
     
     /**
      * Use -1 as count to make it depend on guest count addons (1 if not depends on guest count)
@@ -593,81 +577,81 @@ public interface IPmsManager {
      * @param count 
      */
     @Administrator
-    public void addProductToRoom(String productId, String pmsRoomId, Integer count);
+    void addProductToRoom(String productId, String pmsRoomId, Integer count);
    
     @Administrator
-    public void addAddonToRoom(PmsBookingAddonItem addon, String pmsRoomId);
+    void addAddonToRoom(PmsBookingAddonItem addon, String pmsRoomId);
     
     @Administrator
-    public List<PmsBookingAddonItem> getAddonsForRoom(String roomId);
+    List<PmsBookingAddonItem> getAddonsForRoom(String roomId);
     
     @Administrator
-    public void checkForDeadCodesApac();
+    void checkForDeadCodesApac();
             
-    public List<PmsBookingAddonItem> getAddonsWithDiscount(String pmsBookingRoomId);
-    public List<PmsBookingAddonItem> getAddonsWithDiscountForBooking(String pmsBookingRoomId);
-    public void toggleAddon(String itemId) throws Exception;
-    public void addAddonToCurrentBooking(String itemtypeId) throws Exception;
-    public void addAddonsToBooking(Integer type, String roomId, boolean remove);
+    List<PmsBookingAddonItem> getAddonsWithDiscount(String pmsBookingRoomId);
+    List<PmsBookingAddonItem> getAddonsWithDiscountForBooking(String pmsBookingRoomId);
+    void toggleAddon(String itemId) throws Exception;
+    void addAddonToCurrentBooking(String itemtypeId) throws Exception;
+    void addAddonsToBooking(Integer type, String roomId, boolean remove);
     
     @Administrator
-    public void addAddonsToBookingIgnoreRestriction(Integer type, String roomId, boolean remove);
+    void addAddonsToBookingIgnoreRestriction(Integer type, String roomId, boolean remove);
     
-    public void updateAddonsCountToBooking(Integer type, String roomId, Integer count);
+    void updateAddonsCountToBooking(Integer type, String roomId, Integer count);
 
 
-    public void orderCreated(String orderId);
-    public void orderChanged(String orderId);    
-    public boolean hasNoBookings();    
+    void orderCreated(String orderId);
+    void orderChanged(String orderId);
+    boolean hasNoBookings();
     
     @Administrator
-    public void transferFromOldCodeToNew(String pmsBookingRoomId);
+    void transferFromOldCodeToNew(String pmsBookingRoomId);
     
     @Administrator
-    public void generatePgaAccess(String pmsBookingId, String pmsBookingRoomId);
+    void generatePgaAccess(String pmsBookingId, String pmsBookingRoomId);
     
     @Administrator
-    public void removePgaAccess(String pmsBookingId, String pmsBookingRoomId);
+    void removePgaAccess(String pmsBookingId, String pmsBookingRoomId);
     
     @Administrator
-    public void printCode(String gdsDeviceId, String pmsBookingRoomId);
+    void printCode(String gdsDeviceId, String pmsBookingRoomId);
     
     @Administrator
-    public void markIgnoreUnsettledAmount(String bookingId);
+    void markIgnoreUnsettledAmount(String bookingId);
     
     @Administrator
-    public void markOtaPaymentsAutomaticallyPaidOnCheckin(Date start, Date end);
+    void markOtaPaymentsAutomaticallyPaidOnCheckin(Date start, Date end);
     
     @Administrator
-    public void cleanupOrdersThatDoesNoLongerExists();
+    void cleanupOrdersThatDoesNoLongerExists();
     
     @Administrator
-    public List<PmsWubookCCardData> getCardsToSave();
+    List<PmsWubookCCardData> getCardsToSave();
         
     @Administrator
-    public void wubookCreditCardIsInvalid(String bookingId, String reason);
+    void wubookCreditCardIsInvalid(String bookingId, String reason);
 
     @Administrator
-    public List<PmsBooking> getBookingsWithUnsettledAmountBetween(Date start, Date end);
+    List<PmsBooking> getBookingsWithUnsettledAmountBetween(Date start, Date end);
     
     @Administrator
-    public List<UnsettledRoomQuery> getAllRoomsWithUnsettledAmount(Date start, Date end);
+    List<UnsettledRoomQuery> getAllRoomsWithUnsettledAmount(Date start, Date end);
     
     /**
      * If the autoassigned routines has failed for some reason, this will reset the status
      * and let the system retry to autoassigned the failed rooms.
      */
     @Administrator
-    public void resetCheckingAutoAssignedStatus();
+    void resetCheckingAutoAssignedStatus();
     
     @Administrator
-    public void resetDeparmentsOnOrders();
+    void resetDeparmentsOnOrders();
     
     @Administrator
-    public List<String> getExtraOrderIds(String pmsBookingId);
+    List<String> getExtraOrderIds(String pmsBookingId);
     
     @Administrator
-    public List<PmsBooking> getBookingsFromGroupInvoicing(String orderId);
+    List<PmsBooking> getBookingsFromGroupInvoicing(String orderId);
     
     /**
      * Returns true if there are anything in
@@ -678,43 +662,44 @@ public interface IPmsManager {
      * @return 
      */
     @Administrator
-    public boolean doesOrderCorrolateToRoom(String pmsBookingRoomsId, String orderId);
+    boolean doesOrderCorrolateToRoom(String pmsBookingRoomsId, String orderId);
     
     @Administrator
-    public PmsRoomPaymentSummary getSummary(String pmsBookingId, String pmsBookingRoomId);
+    PmsRoomPaymentSummary getSummary(String pmsBookingId, String pmsBookingRoomId);
     
     @Administrator
-    public PmsRoomPaymentSummary getSummaryWithoutAccrued(String pmsBookingId, String pmsBookingRoomId);
+    PmsRoomPaymentSummary getSummaryWithoutAccrued(String pmsBookingId, String pmsBookingRoomId);
     
     @Administrator
-    public String createOrderFromCheckout(List<PmsOrderCreateRow> row, String paymentMethodId, String userId);
+    @ForceAsync
+    String createOrderFromCheckout(List<PmsOrderCreateRow> row, String paymentMethodId, String userId);
     
     @Administrator
-    public void recheckOrdersAddedToBooking();
+    void recheckOrdersAddedToBooking();
     
     @Administrator
-    public void toggleAutoCreateOrders(String bookingId, String roomId);
+    void toggleAutoCreateOrders(String bookingId, String roomId);
 
     @Administrator
-    public List<PmsRoomPaymentSummary> getSummaryForAllRooms(String pmsBookingId);
+    List<PmsRoomPaymentSummary> getSummaryForAllRooms(String pmsBookingId);
     
     @Administrator
-    public void attachOrderToBooking(String bookingId, String orderId);
+    void attachOrderToBooking(String bookingId, String orderId);
     
     @Administrator
-    public boolean moveRoomToBooking(String roomId, String bookingId);
+    boolean moveRoomToBooking(String roomId, String bookingId);
     
-    public String setBestCouponChoiceForCurrentBooking() throws Exception;
-    
-    @Administrator
-    public Order updateOrderDetails(String bookingId, String orderId, boolean preview);
+    String setBestCouponChoiceForCurrentBooking() throws Exception;
     
     @Administrator
-    public void moveAllOnUserToUser(String tomainuser, String secondaryuser);
+    Order updateOrderDetails(String bookingId, String orderId, boolean preview);
     
     @Administrator
-    public List<PmsBooking> getConferenceBookings(PmsConferenceFilter filter);
+    void moveAllOnUserToUser(String tomainuser, String secondaryuser);
     
     @Administrator
-    public PmsBooking getconferenceBooking(String conferenceId);
+    List<PmsBooking> getConferenceBookings(PmsConferenceFilter filter);
+    
+    @Administrator
+    PmsBooking getconferenceBooking(String conferenceId);
 }

@@ -8,9 +8,6 @@ import com.thundashop.core.jomres.dto.UpdateAvailabilityResponse;
 import com.thundashop.core.sedox.autocryptoapi.Exception;
 import okhttp3.Response;
 import org.apache.oltu.oauth2.client.response.OAuthResourceResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,10 +15,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ResponseDataParser {
-    private static final Logger logger = LoggerFactory.getLogger(ResponseDataParser.class);
 
     public Map<String, Double> parseDailyPriceMatrixBetweenDates(Response response, Date start, Date end) throws Exception {
         try {
+            if(response.code()==401){
+                throw new Exception("statuse code: 401, unauthorized request\nCheck credentials...");
+            }
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             Map<String, Double> dailyPriceMatrix = new HashMap<>();
             Calendar calender = Calendar.getInstance();
@@ -72,6 +71,9 @@ public class ResponseDataParser {
 
     public Map<String, Double> parseDailyPriceMatrix(Response response) throws Exception {
         try {
+            if(response.code()==401){
+                throw new Exception("statuse code: 401, unauthorized request\nCheck credentials...");
+            }
             System.out.println("Started parsing daily price matrix");
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             Map<String, Double> dailyPriceMatrix = new HashMap<>();
@@ -109,6 +111,9 @@ public class ResponseDataParser {
     }
 
     public int parseBookingGuestsNumber(OAuthResourceResponse response) throws Exception {
+        if(response.getResponseCode()==401){
+            throw new Exception("statuse code: 401, unauthorized request\nCheck credentials...");
+        }
 
         Gson gson = new Gson();
         try {
@@ -136,6 +141,10 @@ public class ResponseDataParser {
     }
 
     public JomresGuest parseBookingGuestDetails(OAuthResourceResponse response) throws Exception {
+        if(response.getResponseCode()==401){
+            throw new Exception("statuse code: 401, unauthorized request\nCheck credentials...");
+        }
+
         Gson gson = new Gson();
         try {
             JsonObject responseBody = gson.fromJson(response.getBody(), JsonObject.class);
@@ -161,6 +170,10 @@ public class ResponseDataParser {
     }
 
     public List<JomresBooking> parseBookingsFromList(OAuthResourceResponse response) throws Exception {
+        if(response.getResponseCode()==401){
+            throw new Exception("statuse code: 401, unauthorized request\nCheck credentials...");
+        }
+
         Gson gson = new Gson();
         try {
             System.out.println("Started parsing Jomres booking list between dates");
@@ -190,7 +203,11 @@ public class ResponseDataParser {
         }
     }
 
-    public List<Long> parseAllPropertyIds(OAuthResourceResponse response, boolean channelProperties) {
+    public List<Long> parseAllPropertyIds(OAuthResourceResponse response, boolean channelProperties) throws Exception{
+        if(response.getResponseCode()==401){
+            throw new Exception("statuse code: 401, unauthorized request\nCheck credentials...");
+        }
+
         List<Long> propertyUIDs = new ArrayList<Long>();
         Gson gson = new Gson();
 
@@ -215,6 +232,10 @@ public class ResponseDataParser {
     }
 
     public long parseChannelId(Response response) throws IOException {
+        if(response.code()==401){
+            throw new Exception("statuse code: 401, unauthorized request\nCheck credentials...");
+        }
+
         Gson gson = new Gson();
         JsonObject responseBody = gson.fromJson(response.body().string(), JsonObject.class);
         JsonObject data = responseBody.getAsJsonObject("data");
@@ -222,6 +243,9 @@ public class ResponseDataParser {
     }
 
     public UpdateAvailabilityResponse parseChangeAvailabilityResponse(Response response) throws IOException {
+        if(response.code()==401){
+            throw new Exception("statuse code: 401, unauthorized request\nCheck credentials...");
+        }
         Gson gson = new Gson();
         try {
             JsonObject responseBody = gson.fromJson(response.body().string(), JsonObject.class);

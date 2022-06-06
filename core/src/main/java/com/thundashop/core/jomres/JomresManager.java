@@ -97,6 +97,18 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         return connectToApi();
     }
 
+    public void invalidateToken(){
+        cmfClientAccessToken=null;
+    }
+
+    public void checkIfUnauthorizedExceptionOccurred(Exception e) throws Exception{
+        if(e.getMessage1().contains("code: 401")|| e.getMessage1().contains("invalid token") || e.getMessage1().contains("unauthorized")){
+            logText("Invalid Token! Check credentials... Operation aborted..");
+            invalidateToken();
+            throw e;
+        }
+    }
+
     @Override
     public boolean changeCredentials(String clientId, String clientSecret){
         jomresConfiguration.cmfRestApiClientId = clientId;
@@ -230,6 +242,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                     logText(e.getMessage1());
                     logText("Failed to Update availability for Jomres Property Id: "+roomData.jomresPropertyId
                             +", Pms BookingItemId: "+roomData.bookingItemId);
+                    checkIfUnauthorizedExceptionOccurred(e);
                 } catch (java.lang.Exception e) {
                     logPrintException(e);
                     logText("Failed to Update availability for Jomres Property Id: "+roomData.jomresPropertyId
@@ -262,6 +275,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             logger.error(e.getMessage1());
             logger.error("Failed to create channel...");
             logPrintException(e);
+            checkIfUnauthorizedExceptionOccurred(e);
         }
 
     }
@@ -297,18 +311,14 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         logger.debug("FetchBooking process for 60 days is starting...");
         for (int propertyUID : propertyUIDs) {
             try {
-                //System.out.println("Started fetch booking for PropertyId: "+propertyUID);
                 bookings = bookingService.getJomresBookingsBetweenDates(
                         jomresConfiguration.clientBaseUrl,
                         propertyUID,
                         cmfClientAccessToken,
                         start, end
                 );
-                //System.out.println("ended fetch booking for PropertyId: "+propertyUID);
-                //System.out.println("Started fetch daily price matrix for PropertyId: "+propertyUID);
                 dailyPriceMatrix = priceService.getDailyPrice(jomresConfiguration.clientBaseUrl, cmfClientAccessToken,
                         jomresConfiguration.channelName, propertyUID);
-                //System.out.println("ended fetch daily price matrix for PropertyId: "+propertyUID);
 
                 Map<String, Double> finalDailyPriceMatrix = dailyPriceMatrix;
                 for (JomresBooking jomresBooking : bookings) {
@@ -396,6 +406,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                         logText(e.getMessage1());
                         logText("Booking synchronization failed, BookingId: "+jomresBooking.bookingId
                                 +", Property Id: "+jomresBooking.propertyUid);
+                        checkIfUnauthorizedExceptionOccurred(e);
                     } catch (java.lang.Exception e) {
                         logPrintException(e);
                         logText("Booking synchronization failed, BookingId: "+jomresBooking.bookingId
@@ -409,6 +420,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 logPrintException(e);
                 logText(e.getMessage1());
                 logText("Booking synchronization has been failed for property id: "+propertyUID);
+                checkIfUnauthorizedExceptionOccurred(e);
             }
         }
         logText("Ended Jomres fetch bookings for 60 days");
@@ -487,7 +499,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     }
 
     JomresBookingData updatePmsBooking(JomresBooking booking, Map<String, Double> priceMatrix, JomresBookingData bookingData,
-                                       BookingItem pmsRoom, BookingItemType pmsRoomCategory) {
+                                       BookingItem pmsRoom, BookingItemType pmsRoomCategory) throws Exception {
         try {
             PmsBooking newbooking = findCorrelatedBooking(booking);
             if (newbooking == null) {
@@ -527,8 +539,6 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             logger.error("Falied to update booking, Jomres booking Id: "+booking.bookingId+", Jomres Property Id: "+booking.propertyUid);
             logText(e.getMessage1());
             logText("Falied to update booking, Jomres booking Id: "+booking.bookingId+", Jomres Property Id: "+booking.propertyUid);
-
-            e.printStackTrace();
             return null;
 
         } catch (java.lang.Exception e) {
@@ -587,7 +597,6 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
     public boolean connectToApi() {
         if(jomresConfiguration==null){
-            //System.out.println("No Jomres configuration is found for this hotel");
             logText("No Jomres configuration is found for this hotel");
             return false;
         }
@@ -617,7 +626,6 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             logText("Failed to connect with Jomres, please see log files.");
             return false;
         }
-
     }
 
     private PmsBooking findCorrelatedBooking(JomresBooking booking) {

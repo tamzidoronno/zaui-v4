@@ -58,7 +58,6 @@ public class BookingService extends BaseService {
             return booking;
 
         }catch (Exception e){
-            e.printStackTrace();
             logger.error(e.getMessage1());
             return null;
 
@@ -71,30 +70,5 @@ public class BookingService extends BaseService {
         }
 
     }
-
-//    public JomresBooking getBookingDetailsByBookingId(String baseUrl, int propertyUID, String token, long bookingId,
-//                                                      String channel) throws Exception {
-//        try {
-//            createOAuthClient();
-//            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-////            String startDate = dateFormat.format(start);
-////            String endDate = dateFormat.format(end);
-//
-//            String url = baseUrl + BOOKING_DETAILS_BY_ID + propertyUID + "/" + bookingId;
-//
-//            OAuthClientRequest request = getBearerTokenRequest(url, token);
-//            request.addHeader("X-JOMRES-channel-name", channel);
-//
-//            OAuthResourceResponse response = tokenClient.resource(request, "GET", OAuthResourceResponse.class);
-//            return responseDataParser.parseBookingDetails(response);
-//
-//        } catch (Exception e) {
-//            throw new Exception("Failed:\n\t" + e.getMessage1());
-//        } catch (IOException | OAuthSystemException | OAuthProblemException e) {
-//            throw new Exception("Failed to execute the \"Get Booking Between Dates\" Availability REST" +
-//                    " API request:\n\t" + e.getMessage());
-//        }
-//
-//    }
 
 }

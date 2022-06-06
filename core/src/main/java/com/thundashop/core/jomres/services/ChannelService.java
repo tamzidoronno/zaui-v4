@@ -64,7 +64,7 @@ public class ChannelService extends BaseService{
         } catch (Exception e) {
             logger.error("Failed to announce the channel...");
             logger.error("Channel Name: "+channelName);
-            throw new Exception("Failed to announce the channel...\n\t"+ "Channel Name: "+channelName);
+            throw new Exception("Failed to announce the channel...\n\t"+ "Channel Name: "+channelName+"\n\t"+e.getMessage1());
 
         } catch (IOException e) {
             logger.error("Failed to annouce the challen, IOException Occuered");
@@ -72,26 +72,4 @@ public class ChannelService extends BaseService{
             throw new Exception("Failed to announce the channel due to IOException\n\t"+ "Channel Name: "+channelName);
         }
     }
-
-//    public void assignPropertiesToChannel(String baseUrl, String channelName, ArrayList<Integer>propertyIds, int channelId, int cmsUserId){
-//        try {
-//            createHttpClient();
-//            inspect(new JomresBooking());
-//            Map<String, String> formData = new HashMap<String, String>();
-//            formData.put("params","{\"has_dictionaries\":true}");
-//
-//            Request request = getHttpTokenRequest(baseUrl+ CHANNEL_ANNOUNCEMENT_URL + channelName +"/"
-//                    +friendlyChannelName, token,null, formData, "POST");
-//
-//            Response response = httpClient.newCall(request).execute();
-//
-//            return responseDataParser.parseChannelId(response);
-
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            logger.error("Failed to announce the channel...");
-//            logger.error("Channel Name: "+channelName);
-//
-//        }
-//    }
 }

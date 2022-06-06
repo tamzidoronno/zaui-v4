@@ -123,7 +123,6 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             return false;
         }
         if(jomresPropertyToRoomDataMap.isEmpty()){
-            //System.out.println("No room to Jomres Property mapping found for this hotel. No need to update availability");
             logText("No Room<->Jomres Property mapping found for this hotel.");
             logText("No need to update availability");
             logger.info("No Room<->Jomres Property mapping found for this hotel.");

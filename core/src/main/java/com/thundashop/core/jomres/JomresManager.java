@@ -131,109 +131,117 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             PmsIntervalResult timeline = pmsManager.getIntervalAvailability(filter);
             LinkedHashMap<String, LinkedHashMap<Long, IntervalResultEntry>> itemTimeLines = timeline.itemTimeLines;
             for (JomresRoomData roomData : pmsItemToJomresRoomDataMap.values()) {
-                Date unavailableStartingDay = null;
-                Date availableStartingDay = null;
-                calendar.setTime(startDate);
+                try{
+                    Date unavailableStartingDay = null;
+                    Date availableStartingDay = null;
+                    calendar.setTime(startDate);
 
-                AvailabilityService availabilityService = new AvailabilityService();
-                Map<Date, Date> unavailableStartToEndDates = new HashMap<>();
-                Map<Date, Date> availableStartToEndDates = new HashMap<>();
-                Date unavailableEndingDay, availableEndingDay;
-                String updateAvailabilityStatus;
-                if (bookingEngine.getBookingItem(roomData.bookingItemId) == null) {
-                    logText("The room is not found in Pms for Jomres PropertyId: " + roomData.jomresPropertyId
-                            +", pms bookingItemId: "+roomData.bookingItemId);
-                    logText("Room is deleted from Pms or mapping is removed.");
-                    logger.debug("The room is not found in Pms for Jomres PropertyId: " + roomData.jomresPropertyId
-                            +", pms bookingItemId: "+roomData.bookingItemId);
-                    logger.debug("Room is deleted from Pms or mapping is removed.");
-                    continue;
-                }
-
-                for (IntervalResultEntry availabilityInfo : itemTimeLines.get(roomData.bookingItemId).values()) {
-                    if (availabilityInfo.count == 0 && (availabilityInfo.bookingIds == null || availabilityInfo.bookingIds.isEmpty())) {
-                        if (availableStartingDay == null) availableStartingDay = calendar.getTime();
-
-                        if (unavailableStartingDay != null) {
-                            //subtracting one day from checkout day for getting date of last night staying
-                            calendar.add(Calendar.DATE, -1);
-                            unavailableEndingDay = calendar.getTime();
-
-                            //restoring current date in calendar
-                            calendar.add(Calendar.DATE, 1);
-                            unavailableStartToEndDates.put(unavailableStartingDay, unavailableEndingDay);
-
-                            unavailableStartingDay = null;
-                        }
-                    } else if (availabilityInfo.bookingIds != null && !availabilityInfo.bookingIds.isEmpty()) {
-                        boolean needToMakeUnavailable = true;
-                        for (String bookingId : availabilityInfo.bookingIds) {
-                            //we don't need to decrease availability for the bookings we fetched from jomres
-                            if (pmsToJomresBookingMap.get(bookingId) != null) needToMakeUnavailable = false;
-                        }
-                        if (needToMakeUnavailable && unavailableStartingDay == null)
-                            unavailableStartingDay = calendar.getTime(); //it is the starting day of this unavailability
-                        if (needToMakeUnavailable && availableStartingDay != null) {
-                            //there is an ending of an availability date range if avaialbity starting day has some values.
-                            calendar.add(Calendar.DATE, -1);
-                            availableEndingDay = calendar.getTime();
-
-                            //restoring current date in calendar
-                            calendar.add(Calendar.DATE, 1);
-                            availableStartToEndDates.put(availableStartingDay, availableEndingDay);
-
-                            availableStartingDay = null;
-                        }
-
+                    AvailabilityService availabilityService = new AvailabilityService();
+                    Map<Date, Date> unavailableStartToEndDates = new HashMap<>();
+                    Map<Date, Date> availableStartToEndDates = new HashMap<>();
+                    Date unavailableEndingDay, availableEndingDay;
+                    String updateAvailabilityStatus;
+                    if (bookingEngine.getBookingItem(roomData.bookingItemId) == null) {
+                        logText("The room is not found in Pms for Jomres PropertyId: " + roomData.jomresPropertyId
+                                +", pms bookingItemId: "+roomData.bookingItemId);
+                        logText("Room is deleted from Pms or mapping is removed.");
+                        logger.debug("The room is not found in Pms for Jomres PropertyId: " + roomData.jomresPropertyId
+                                +", pms bookingItemId: "+roomData.bookingItemId);
+                        logger.debug("Room is deleted from Pms or mapping is removed.");
+                        continue;
                     }
-                    calendar.add(Calendar.DATE, 1);
-                }
 
-                if (unavailableStartingDay != null) {
-                    calendar.add(Calendar.DATE, -1);
-                    unavailableEndingDay = calendar.getTime();
-                    unavailableStartToEndDates.put(unavailableStartingDay, unavailableEndingDay);
-                }
-                logger.debug("Started unavailability update, Jomres property id: " + roomData.jomresPropertyId);
-                updateAvailabilityStatus = availabilityService.changePropertyAvailability(
-                        jomresConfiguration.clientBaseUrl,
-                        cmfClientAccessToken,
-                        jomresConfiguration.channelName,
-                        roomData.jomresPropertyId,
-                        unavailableStartToEndDates,
-                        false
-                );
-                logger.debug("Ended unavailability update, Jomres property id: " + roomData.jomresPropertyId);
-                logger.debug(updateAvailabilityStatus);
-                logText("Unavailability update status of Jomres Property "+roomData.jomresPropertyId+" is "+updateAvailabilityStatus);
-                if (availableStartingDay != null) {
-                    calendar.add(Calendar.DATE, -1);
-                    availableEndingDay = calendar.getTime();
-                    availableStartToEndDates.put(availableStartingDay, availableEndingDay);
-                }
+                    for (IntervalResultEntry availabilityInfo : itemTimeLines.get(roomData.bookingItemId).values()) {
+                        if (availabilityInfo.count == 0 && (availabilityInfo.bookingIds == null || availabilityInfo.bookingIds.isEmpty())) {
+                            if (availableStartingDay == null) availableStartingDay = calendar.getTime();
 
-                logger.debug("Started availability update, Jomres property id: " + roomData.jomresPropertyId);
-                updateAvailabilityStatus = availabilityService.changePropertyAvailability(
-                        jomresConfiguration.clientBaseUrl,
-                        cmfClientAccessToken,
-                        jomresConfiguration.channelName,
-                        roomData.jomresPropertyId,
-                        availableStartToEndDates,
-                        true
-                );
-                logger.debug("Ended availability update, Jomres property id: " + roomData.jomresPropertyId);
-                logger.debug(updateAvailabilityStatus);
-                logText("Availability update status of Jomres Property "+roomData.jomresPropertyId+" is "+updateAvailabilityStatus);
+                            if (unavailableStartingDay != null) {
+                                //subtracting one day from checkout day for getting date of last night staying
+                                calendar.add(Calendar.DATE, -1);
+                                unavailableEndingDay = calendar.getTime();
+
+                                //restoring current date in calendar
+                                calendar.add(Calendar.DATE, 1);
+                                unavailableStartToEndDates.put(unavailableStartingDay, unavailableEndingDay);
+
+                                unavailableStartingDay = null;
+                            }
+                        } else if (availabilityInfo.bookingIds != null && !availabilityInfo.bookingIds.isEmpty()) {
+                            boolean needToMakeUnavailable = true;
+                            for (String bookingId : availabilityInfo.bookingIds) {
+                                //we don't need to decrease availability for the bookings we fetched from jomres
+                                if (pmsToJomresBookingMap.get(bookingId) != null) needToMakeUnavailable = false;
+                            }
+                            if (needToMakeUnavailable && unavailableStartingDay == null)
+                                unavailableStartingDay = calendar.getTime(); //it is the starting day of this unavailability
+                            if (needToMakeUnavailable && availableStartingDay != null) {
+                                //there is an ending of an availability date range if avaialbity starting day has some values.
+                                calendar.add(Calendar.DATE, -1);
+                                availableEndingDay = calendar.getTime();
+
+                                //restoring current date in calendar
+                                calendar.add(Calendar.DATE, 1);
+                                availableStartToEndDates.put(availableStartingDay, availableEndingDay);
+
+                                availableStartingDay = null;
+                            }
+
+                        }
+                        calendar.add(Calendar.DATE, 1);
+                    }
+
+                    if (unavailableStartingDay != null) {
+                        calendar.add(Calendar.DATE, -1);
+                        unavailableEndingDay = calendar.getTime();
+                        unavailableStartToEndDates.put(unavailableStartingDay, unavailableEndingDay);
+                    }
+                    logger.debug("Started unavailability update, Jomres property id: " + roomData.jomresPropertyId);
+                    updateAvailabilityStatus = availabilityService.changePropertyAvailability(
+                            jomresConfiguration.clientBaseUrl,
+                            cmfClientAccessToken,
+                            jomresConfiguration.channelName,
+                            roomData.jomresPropertyId,
+                            unavailableStartToEndDates,
+                            false
+                    );
+                    logger.debug("Ended unavailability update, Jomres property id: " + roomData.jomresPropertyId);
+                    logger.debug(updateAvailabilityStatus);
+                    logText("Unavailability update status of Jomres Property "+roomData.jomresPropertyId+" is "+updateAvailabilityStatus);
+                    if (availableStartingDay != null) {
+                        calendar.add(Calendar.DATE, -1);
+                        availableEndingDay = calendar.getTime();
+                        availableStartToEndDates.put(availableStartingDay, availableEndingDay);
+                    }
+
+                    logger.debug("Started availability update, Jomres property id: " + roomData.jomresPropertyId);
+                    updateAvailabilityStatus = availabilityService.changePropertyAvailability(
+                            jomresConfiguration.clientBaseUrl,
+                            cmfClientAccessToken,
+                            jomresConfiguration.channelName,
+                            roomData.jomresPropertyId,
+                            availableStartToEndDates,
+                            true
+                    );
+                    logger.debug("Ended availability update, Jomres property id: " + roomData.jomresPropertyId);
+                    logger.debug(updateAvailabilityStatus);
+                    logText("Availability update status of Jomres Property "+roomData.jomresPropertyId+" is "+updateAvailabilityStatus);
+                } catch (Exception e) {
+                    logger.error(e.getMessage1());
+                    logger.error(e.getMessage());
+                    logText(e.getMessage1());
+                    logText("Failed to Update availability for Jomres Property Id: "+roomData.jomresPropertyId
+                            +", Pms BookingItemId: "+roomData.bookingItemId);
+                } catch (java.lang.Exception e) {
+                    logger.error(e.getMessage());
+                    logText("Failed to Update availability for Jomres Property Id: "+roomData.jomresPropertyId
+                            +", Pms BookingItemId: "+roomData.bookingItemId);
+                    logText("Please check log files");
+                }
             }
             logText("Ended Jomres Update availability");
             return true;
-        } catch (Exception e) {
-            logger.error(e.getMessage1());
-            logger.error(e.getMessage());
-            logText(e.getMessage1());
-            logText("Failed to Update availability...");
-            return false;
         } catch (java.lang.Exception e) {
+            e.printStackTrace();
             logger.error(e.getMessage());
             logText("Failed to Update availability... Check log files");
             return false;

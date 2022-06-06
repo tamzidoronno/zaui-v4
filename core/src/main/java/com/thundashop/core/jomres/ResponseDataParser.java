@@ -8,6 +8,9 @@ import com.thundashop.core.jomres.dto.UpdateAvailabilityResponse;
 import com.thundashop.core.sedox.autocryptoapi.Exception;
 import okhttp3.Response;
 import org.apache.oltu.oauth2.client.response.OAuthResourceResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,6 +18,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ResponseDataParser {
+    private static final Logger logger = LoggerFactory.getLogger(ResponseDataParser.class);
 
     public Map<String, Double> parseDailyPriceMatrixBetweenDates(Response response, Date start, Date end) throws Exception {
         try {
@@ -74,7 +78,7 @@ public class ResponseDataParser {
             if(response.code()==401){
                 throw new Exception("statuse code: 401, unauthorized request\nCheck credentials...");
             }
-            System.out.println("Started parsing daily price matrix");
+            logger.debug("Started parsing daily price matrix");
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             Map<String, Double> dailyPriceMatrix = new HashMap<>();
 
@@ -99,7 +103,7 @@ public class ResponseDataParser {
                 }
 
             }
-            System.out.println("Started parsing daily price matrix");
+            logger.debug("Ended parsing daily price matrix");
             return dailyPriceMatrix;
 
         } catch (Exception e) {
@@ -176,7 +180,7 @@ public class ResponseDataParser {
 
         Gson gson = new Gson();
         try {
-            System.out.println("Started parsing Jomres booking list between dates");
+            logger.debug("Started parsing Jomres booking list between dates");
             JsonObject responseBody = gson.fromJson(response.getBody(), JsonObject.class);
 
             if (responseBody.get("error_message") != null) {
@@ -193,10 +197,10 @@ public class ResponseDataParser {
                 try {
                     jomresBookings.add(new JomresBooking(booking));
                 } catch (ParseException e) {
-                    System.out.println("Falied to parse the booking for BookignId: "+booking.get("contract_uid").toString());
+                    logger.error("Falied to parse the booking for BookignId: "+booking.get("contract_uid").toString());
                 }
             }
-            System.out.println("Ended parsing Jomres booking list between dates");
+            logger.debug("Ended parsing Jomres booking list between dates");
             return jomresBookings;
         } catch (Exception e) {
             throw e;

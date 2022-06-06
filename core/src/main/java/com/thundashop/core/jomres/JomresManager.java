@@ -239,9 +239,9 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 } catch (Exception e) {
                     logger.error(e.getMessage1());
                     logPrintException(e);
-                    logText(e.getMessage1());
                     logText("Failed to Update availability for Jomres Property Id: "+roomData.jomresPropertyId
                             +", Pms BookingItemId: "+roomData.bookingItemId);
+                    logText(e.getMessage1());
                     checkIfUnauthorizedExceptionOccurred(e);
                 } catch (java.lang.Exception e) {
                     logPrintException(e);
@@ -255,6 +255,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         } catch (java.lang.Exception e) {
             logPrintException(e);
             logText("Failed to Update availability... Check log files");
+            invalidateToken();
             return false;
         }
     }
@@ -270,12 +271,12 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                     ) + ""
             );
         } catch (Exception e) {
-            logText(e.getMessage1());
             logText("Failed to create channel...");
+            logText(e.getMessage1());
             logger.error(e.getMessage1());
             logger.error("Failed to create channel...");
             logPrintException(e);
-            checkIfUnauthorizedExceptionOccurred(e);
+            invalidateToken();
         }
 
     }
@@ -403,9 +404,9 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                     } catch (Exception e) {
                         logger.error(e.getMessage1());
                         logPrintException(e);
-                        logText(e.getMessage1());
                         logText("Booking synchronization failed, BookingId: "+jomresBooking.bookingId
                                 +", Property Id: "+jomresBooking.propertyUid);
+                        logText(e.getMessage1());
                         checkIfUnauthorizedExceptionOccurred(e);
                     } catch (java.lang.Exception e) {
                         logPrintException(e);
@@ -420,7 +421,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 logPrintException(e);
                 logText(e.getMessage1());
                 logText("Booking synchronization has been failed for property id: "+propertyUID);
-                checkIfUnauthorizedExceptionOccurred(e);
+                invalidateToken();
             }
         }
         logText("Ended Jomres fetch bookings for 60 days");
@@ -490,8 +491,13 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                     logger.debug("Booking didn't modified, BookingId: " + booking.bookingId + ", PropertyId: " + booking.propertyUid);
                     return bookingData;
                 }
-                booking.setNumberOfGuests(newbooking.rooms.get(0).numberOfGuests);
-                booking.setCustomer(getJomresCustomerFromPmsBooking(newbooking));
+                BookingService bookingService = new BookingService();
+                booking = bookingService.getCompleteBooking(
+                        jomresConfiguration.clientBaseUrl,
+                        cmfClientAccessToken,
+                        jomresConfiguration.channelName,
+                        booking
+                );
                 for (PmsBookingRooms room : newbooking.getActiveRooms()) {
                     if (room.isStarted()) {
                         pmsManager.logEntry(
@@ -517,8 +523,8 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             logPrintException(e);
             logger.error(e.getMessage1());
             logger.error("Falied to update booking, Jomres booking Id: "+booking.bookingId+", Jomres Property Id: "+booking.propertyUid);
-            logText(e.getMessage1());
             logText("Falied to update booking, Jomres booking Id: "+booking.bookingId+", Jomres Property Id: "+booking.propertyUid);
+            logText(e.getMessage1());
             return null;
 
         } catch (java.lang.Exception e) {
@@ -819,8 +825,8 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             logger.error(e.getMessage1());
             logger.error("Failed to Sync/Add booking, BookingId: " + booking.bookingId + ", PropertyId: " + booking.propertyUid);
             logPrintException(e);
-            logText(e.getMessage1());
             logText("Failed to Sync/Add booking, BookingId: " + booking.bookingId + ", PropertyId: " + booking.propertyUid);
+            logText(e.getMessage1());
             return null;
         } catch (java.lang.Exception e) {
             logPrintException(e);

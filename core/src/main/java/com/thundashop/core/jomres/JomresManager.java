@@ -89,8 +89,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
     @Override
     public List<JomresLog> getLogEntries() {
-        List<JomresLog> jomresLogs = jomresLogManager.get().collect(Collectors.toList());
-        return jomresLogs;
+        return jomresLogManager.get().collect(Collectors.toList());
     }
 
     @Override
@@ -313,7 +312,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
                 Map<String, Double> finalDailyPriceMatrix = dailyPriceMatrix;
                 for (JomresBooking jomresBooking : bookings) {
-                    String bookingStatus = "", pmsBookingId = "";
+                    String bookingStatus, pmsBookingId = "";
 
                     JomresBookingData jomresBookingData = null;
                     JomresRoomData jomresRoomData;
@@ -331,7 +330,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                         if (pmsRoom != null) {
                             roomName = pmsRoom.bookingItemName;
                             pmsRoomCategory = bookingEngine.getBookingItemType(pmsRoom.bookingItemTypeId);
-                        } else if (pmsRoom == null) {
+                        } else {
                             logger.debug("The room is not found in Pms for Jomres BookingId: " + jomresBooking.bookingId);
                             logger.debug("Room is deleted from Pms or mapping is removed.");
                         }
@@ -541,8 +540,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     }
 
     void deletePmsBooking(JomresBooking booking) throws java.lang.Exception {
-        PmsBooking newbooking = null;
-        newbooking = findCorrelatedBooking(booking);
+        PmsBooking newbooking = findCorrelatedBooking(booking);
         if (newbooking == null) {
             logger.debug("Did not find booking to delete.");
             logText("Didn't find to delete, BookingId: " + booking.bookingId + ", PropertyId: " + booking.propertyUid);
@@ -831,7 +829,6 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                             + pmsManager.dumpBooking(newbooking, true);
                     text += "<br><br>";
                     text += "For more information about overbooking, see: https://getshop.com/double_booking_error.html";
-                    String email = getStoreEmailAddress();
                     String content = "Possible overbooking happened:<br>" + text;
                     messageManager.sendJomresMessageToStoreOwner(content, "Warning: possible overbooking happened");
                 }

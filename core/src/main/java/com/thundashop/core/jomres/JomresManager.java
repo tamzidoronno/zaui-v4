@@ -431,42 +431,22 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     JomresGuest getJomresCustomerFromPmsBooking(PmsBooking booking){
         JomresGuest customer = new JomresGuest();
         customer.name = booking.registrationData.resultAdded.get("user_fullName");
-        //TODO: will restore this lines when in real environment
-//        customer.telMobile = booking.registrationData.resultAdded.get("user_cellPhone");
-
-        //TODO: will remove this lines when in real environment
-        customer.telMobile = "+8801521484996";
-
+        customer.telMobile = booking.registrationData.resultAdded.get("user_cellPhone");
         customer.address = booking.registrationData.resultAdded.get("user_address_address");
         customer.city = booking.registrationData.resultAdded.get("user_address_city");
-
-        //TODO: will restore this lines when in real environment
-//        customer.email = booking.registrationData.resultAdded.get("user_emailAddress");
-
-        //TODO: will remove this lines when in real environment
-        customer.email = "asma@zaui.com";
+        customer.email = booking.registrationData.resultAdded.get("user_emailAddress");
 
         customer.postcode = booking.registrationData.resultAdded.get("user_address_postCode");
         return customer;
     }
 
     boolean isBookerInfoUpdated(JomresGuest customer,PmsBooking booking){
-        //TODO: will restore when real booker info will be used
-//        if(!customer.name.equals(booking.registrationData.resultAdded.get("user_fullName")))
-//            return true;
-
-        //TODO: will restore these lines when in real environment
-//        if(!customer.telMobile.equals(booking.registrationData.resultAdded.get("user_cellPhone")))
-//            return true;
-//        if(!customer.email.equals(booking.registrationData.resultAdded.get("user_emailAddress")))
-//            return true;
-
-        //TODO: this is temporary, will remove after testing
-        String cellPhone = "+8801521484996";
-        String tempEmail = "asma@zaui.com";
-        if(!cellPhone.equals(booking.registrationData.resultAdded.get("user_cellPhone")))
+        if(!customer.name.equals(booking.registrationData.resultAdded.get("user_fullName")))
             return true;
-        if(!tempEmail.equals(booking.registrationData.resultAdded.get("user_emailAddress")))
+
+        if(!customer.telMobile.equals(booking.registrationData.resultAdded.get("user_cellPhone")))
+            return true;
+        if(!customer.email.equals(booking.registrationData.resultAdded.get("user_emailAddress")))
             return true;
         return false;
     }
@@ -714,22 +694,10 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             }
 
             newbooking.registrationData.resultAdded.put("user_fullName", booking.customer.name);
-
-            //TODO: will restore this lines when in real environment
-//            newbooking.registrationData.resultAdded.put("user_cellPhone", booking.customer.telMobile);
-
-            //TODO: will remove this lines when in real environment
-            newbooking.registrationData.resultAdded.put("user_cellPhone", "+8801521484996");
-
+            newbooking.registrationData.resultAdded.put("user_cellPhone", booking.customer.telMobile);
             newbooking.registrationData.resultAdded.put("user_address_address", booking.customer.address);
             newbooking.registrationData.resultAdded.put("user_address_city", booking.customer.city);
-
-            //TODO: will restore this lines when in real environment
-//            newbooking.registrationData.resultAdded.put("user_emailAddress", booking.customer.email);
-
-            //TODO: will remove this lines when in real environment
-            newbooking.registrationData.resultAdded.put("user_emailAddress", "asma@zaui.com");
-
+            newbooking.registrationData.resultAdded.put("user_emailAddress", booking.customer.email);
             newbooking.registrationData.resultAdded.put("user_address_postCode", booking.customer.postcode);
             newbooking.jomresLastModified = booking.lastModified;
 
@@ -743,15 +711,9 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             room.bookingItemTypeId = pmsRoom.bookingItemTypeId;
 
             PmsGuests guest = new PmsGuests();
-            //TODO: this line will restore after ending email prevention testing.
-//            guest.email = booking.customer.email;
-            //TODO: this line will remove after ending email prevention testing.
-            guest.email = "asma@zaui.com";
+            guest.email = booking.customer.email;
             guest.name = booking.customer.name;
-            //TODO: this line will restore after ending email prevention testing.
-//            guest.phone = booking.customer.telLandline;
-            //TODO: this line will remove after ending email prevention testing.
-            guest.phone = "+8801521484996";
+            guest.phone = booking.customer.telLandline;
 
             room.guests.add(guest);
 

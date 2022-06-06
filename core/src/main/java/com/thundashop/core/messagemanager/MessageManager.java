@@ -338,11 +338,8 @@ public class MessageManager extends ManagerBase implements IMessageManager {
     public void sendJomresMessageToStoreOwner(String message, String subject){
         String emailMessage =  message.replace("\n", "<br />");
         String fromEmail = "post@getshop.com";
-        //TODO: will restore this line after testing
-//        String toEmail =getStoreEmailAddress();
+        String toEmail =getStoreEmailAddress();
 
-        //TODO: will remove this developers email, added now just for testing
-        String toEmail ="asma@cefalo.com";
         mailFactory.send(fromEmail, toEmail, subject, emailMessage);
     }
     

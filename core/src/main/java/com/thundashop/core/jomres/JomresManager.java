@@ -227,12 +227,12 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                     logText("Availability update status of Jomres Property "+roomData.jomresPropertyId+" is "+updateAvailabilityStatus);
                 } catch (Exception e) {
                     logger.error(e.getMessage1());
-                    logger.error(e.getMessage());
+                    logPrintException(e);
                     logText(e.getMessage1());
                     logText("Failed to Update availability for Jomres Property Id: "+roomData.jomresPropertyId
                             +", Pms BookingItemId: "+roomData.bookingItemId);
                 } catch (java.lang.Exception e) {
-                    logger.error(e.getMessage());
+                    logPrintException(e);
                     logText("Failed to Update availability for Jomres Property Id: "+roomData.jomresPropertyId
                             +", Pms BookingItemId: "+roomData.bookingItemId);
                     logText("Please check log files");
@@ -241,8 +241,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             logText("Ended Jomres Update availability");
             return true;
         } catch (java.lang.Exception e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
+            logPrintException(e);
             logText("Failed to Update availability... Check log files");
             return false;
         }
@@ -259,8 +258,11 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                     ) + ""
             );
         } catch (Exception e) {
-            logText("Failed to create channel...");
             logText(e.getMessage1());
+            logText("Failed to create channel...");
+            logger.error(e.getMessage1());
+            logger.error("Failed to create channel...");
+            logPrintException(e);
         }
 
     }
@@ -391,22 +393,21 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                                 "BookingId: "+jomresBooking.bookingId+", PropertyId: "+jomresBooking.propertyUid);
                     } catch (Exception e) {
                         logger.error(e.getMessage1());
-                        logger.error(e.getMessage());
-                        e.printStackTrace();
+                        logPrintException(e);
                         logText(e.getMessage1());
                         logText("Booking synchronization failed, BookingId: "+jomresBooking.bookingId
                                 +", Property Id: "+jomresBooking.propertyUid);
                     } catch (java.lang.Exception e) {
-                        e.printStackTrace();
-                        logger.error(e.getMessage());
+                        logPrintException(e);
                         logText("Booking synchronization failed, BookingId: "+jomresBooking.bookingId
                                 +", Property Id: "+jomresBooking.propertyUid);
                     }
                 }
                 logger.debug("Booking has been synced for Jomres Property Id: " + propertyUID);
             } catch (Exception e) {
-                e.printStackTrace();
                 logger.error(e.getMessage1());
+                logText("Booking synchronization has been failed for property id: "+propertyUID);
+                logPrintException(e);
                 logText(e.getMessage1());
                 logText("Booking synchronization has been failed for property id: "+propertyUID);
             }
@@ -522,8 +523,9 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 return addBookingToPms(booking, priceMatrix, null, pmsRoom, pmsRoomCategory);
             }
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logPrintException(e);
             logger.error(e.getMessage1());
+            logger.error("Falied to update booking, Jomres booking Id: "+booking.bookingId+", Jomres Property Id: "+booking.propertyUid);
             logText(e.getMessage1());
             logText("Falied to update booking, Jomres booking Id: "+booking.bookingId+", Jomres Property Id: "+booking.propertyUid);
 
@@ -532,8 +534,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
         } catch (java.lang.Exception e) {
             logText("Falied to update booking, Jomres booking Id: "+booking.bookingId+", Jomres Property Id: "+booking.propertyUid);
-            logger.error(e.getMessage());
-            e.printStackTrace();
+            logPrintException(e);
             return null;
         }
 
@@ -614,7 +615,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 return true;
             }
         } catch (java.lang.Exception e) {
-            logger.error(e.getMessage());
+            logPrintException(e);
             logText("Failed to connect with Jomres, please see log files.");
             return false;
         }
@@ -849,14 +850,15 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             return jomresBookingData;
         } catch (Exception e) {
             logger.error(e.getMessage1());
-            logger.error(e.getMessage());
+            logger.error("Failed to Sync/Add booking, BookingId: " + booking.bookingId + ", PropertyId: " + booking.propertyUid);
+            logPrintException(e);
             logText(e.getMessage1());
             logText("Failed to Sync/Add booking, BookingId: " + booking.bookingId + ", PropertyId: " + booking.propertyUid);
             return null;
         } catch (java.lang.Exception e) {
-            logger.error(e.getMessage());
-            logText("Failed to Sync/Add booking, BookingId: " + booking.bookingId + ", PropertyId: " + booking.propertyUid);
+            logPrintException(e);
             logText(e.getMessage());
+            logText("Failed to Sync/Add booking, BookingId: " + booking.bookingId + ", PropertyId: " + booking.propertyUid);
             return null;
         }
     }

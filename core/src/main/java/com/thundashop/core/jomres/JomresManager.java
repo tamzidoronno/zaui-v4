@@ -434,7 +434,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         String guestEmail = Optional.ofNullable(guest.email).orElse("");
         String guestPhone = Optional.ofNullable(guest.phone).orElse("");
 
-        if(!customer.telMobile.equals(guestPhone))
+        if(!customer.telMobile.contains(guestPhone))
             return true;
         if(!customer.email.equals(guestEmail))
             return true;

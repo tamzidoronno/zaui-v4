@@ -122,11 +122,11 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         if (!connectToApi()) {
             return false;
         }
-        if(jomresPropertyToRoomDataMap.isEmpty()){
+        if(jomresPropertyToRoomDataMap.isEmpty() || jomresConfiguration==null){
             logText("No Room<->Jomres Property mapping found for this hotel.");
             logText("No need to update availability");
             logger.info("No Room<->Jomres Property mapping found for this hotel.");
-            return true;
+            return false;
         }
         try {
             logText("Started Jomres Update availability");
@@ -285,7 +285,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         if (!connectToApi()) {
             return new ArrayList<>();
         }
-        if(jomresPropertyToRoomDataMap.isEmpty()){
+        if(jomresPropertyToRoomDataMap.isEmpty() || jomresConfiguration==null){
             logger.info("No room to Jomres Property mapping found for this hotel. No need to fetch bookings...");
             logText("No room to Jomres Property mapping found for this hotel.");
             logText("No need to fecth bookings...");

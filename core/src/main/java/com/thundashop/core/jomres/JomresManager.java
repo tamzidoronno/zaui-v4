@@ -428,25 +428,15 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
     }
 
-    JomresGuest getJomresCustomerFromPmsBooking(PmsBooking booking){
-        JomresGuest customer = new JomresGuest();
-        customer.name = booking.registrationData.resultAdded.get("user_fullName");
-        customer.telMobile = booking.registrationData.resultAdded.get("user_cellPhone");
-        customer.address = booking.registrationData.resultAdded.get("user_address_address");
-        customer.city = booking.registrationData.resultAdded.get("user_address_city");
-        customer.email = booking.registrationData.resultAdded.get("user_emailAddress");
+    boolean isGuestInfoUpdated(JomresGuest customer, PmsBooking booking){
+        PmsBookingRooms room = Optional.ofNullable(booking.rooms.get(0)).orElse(new PmsBookingRooms());
+        PmsGuests guest = Optional.ofNullable(room.guests.get(0)).orElse(new PmsGuests());
+        String guestEmail = Optional.ofNullable(guest.email).orElse("");
+        String guestPhone = Optional.ofNullable(guest.phone).orElse("");
 
-        customer.postcode = booking.registrationData.resultAdded.get("user_address_postCode");
-        return customer;
-    }
-
-    boolean isBookerInfoUpdated(JomresGuest customer,PmsBooking booking){
-        if(!customer.name.equals(booking.registrationData.resultAdded.get("user_fullName")))
+        if(!customer.telMobile.equals(guestPhone))
             return true;
-
-        if(!customer.telMobile.equals(booking.registrationData.resultAdded.get("user_cellPhone")))
-            return true;
-        if(!customer.email.equals(booking.registrationData.resultAdded.get("user_emailAddress")))
+        if(!customer.email.equals(guestEmail))
             return true;
         return false;
     }
@@ -466,7 +456,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         if(room.deleted)
             return true;
 
-        if(isBookerInfoUpdated(jBooking.customer, pBooking))
+        if(isGuestInfoUpdated(jBooking.customer, pBooking))
             return true;
 
         return false;

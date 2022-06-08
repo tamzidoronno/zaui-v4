@@ -1070,7 +1070,8 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         return null;
     }
     
-    private boolean forceUniqueEmailAddress(User user) throws ErrorException {
+    @Override
+    public boolean forceUniqueEmailAddress(User user) throws ErrorException {
         
         if(user.emailAddress == null || user.emailAddress.isEmpty()) {
             return false;

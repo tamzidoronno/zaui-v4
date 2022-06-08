@@ -2,8 +2,10 @@ package com.thundashop.core.jomres.dto;
 
 import com.google.gson.JsonObject;
 import com.google.gson.internal.LinkedTreeMap;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 public class JomresGuest implements Serializable {
     public String name;
@@ -20,8 +22,12 @@ public class JomresGuest implements Serializable {
         String surName = guest.get("enc_surname").toString();
         this.name = firstName + " " + surName;
 
-        this.telLandline = guest.get("enc_tel_landline").toString();
-        this.telMobile = guest.get("enc_tel_mobile").toString();
+        String rawLandLine = Optional.ofNullable(guest.get("enc_tel_landline").toString()).orElse("");
+        String rawMobile = Optional.ofNullable(guest.get("enc_tel_mobile").toString()).orElse("");
+        String landLine = StringUtils.substringAfter(rawLandLine,";");
+        String mobile = StringUtils.substringAfterLast(rawMobile,";");
+        this.telLandline = landLine.isEmpty()? rawLandLine:landLine;
+        this.telMobile = mobile.isEmpty()? rawMobile:mobile;
         this.email = guest.get("enc_email").toString();
 
         this.house = guest.get("enc_house").toString();

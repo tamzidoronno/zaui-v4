@@ -1,6 +1,7 @@
 package com.thundashop.core.jomres.dto;
 
 import com.google.gson.internal.LinkedTreeMap;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.text.ParseException;
@@ -45,8 +46,12 @@ public class JomresBooking implements Serializable {
         String surName =Optional.ofNullable(booking.get("surname").toString()).orElse("");
         this.customer.name = firstName+ " " + surName;
 
-        this.customer.telLandline = Optional.ofNullable(booking.get("tel_landline").toString()).orElse("");
-        this.customer.telMobile = Optional.ofNullable(booking.get("tel_mobile").toString()).orElse("");
+        String rawLandLine = Optional.ofNullable(booking.get("tel_landline").toString()).orElse("");
+        String rawMobile = Optional.ofNullable(booking.get("tel_mobile").toString()).orElse("");
+        String landLine = StringUtils.substringAfter(rawLandLine,";");
+        String mobile = StringUtils.substringAfterLast(rawMobile,";");
+        this.customer.telLandline = landLine.isEmpty()? rawLandLine:landLine;
+        this.customer.telMobile = mobile.isEmpty()? rawMobile:mobile;
         this.customer.email = Optional.ofNullable(booking.get("email").toString()).orElse("");
 
         this.status = Optional.ofNullable(booking.get("TxtStatus").toString()).orElse("Approved");

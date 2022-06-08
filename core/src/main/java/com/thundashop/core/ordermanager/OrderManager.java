@@ -5,7 +5,9 @@ import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionScope;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.mongodb.*;
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.BasicDBObjectBuilder;
 import com.thundashop.core.applications.GetShopApplicationPool;
 import com.thundashop.core.applications.StoreApplicationInstancePool;
 import com.thundashop.core.applications.StoreApplicationPool;
@@ -58,6 +60,7 @@ import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCard;
+import com.thundashop.core.utils.NullSafeConcurrentHashMap;
 import com.thundashop.core.verifonemanager.VerifoneFeedback;
 import com.thundashop.core.warehousemanager.WareHouseManager;
 import com.thundashop.core.webmanager.WebManager;
@@ -72,8 +75,6 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -84,29 +85,28 @@ import java.util.stream.Collectors;
 @Component
 @GetShopSession
 public class OrderManager extends ManagerBase implements IOrderManager {
-
     private long incrementingOrderId = 100000;
+
+    public NullSafeConcurrentHashMap<String, Order> orders = new NullSafeConcurrentHashMap<>();
+
+    public NullSafeConcurrentHashMap<String, VirtualOrder> virtualOrders = new NullSafeConcurrentHashMap();
     
-    public HashMap<String, Order> orders = new HashMap(); 
-   
-    public HashMap<String, VirtualOrder> virtualOrders = new HashMap();
-    
-    public HashMap<String, ClosedOrderPeriode> closedPeriodes = new HashMap();
-    
+    public NullSafeConcurrentHashMap<String, ClosedOrderPeriode> closedPeriodes = new NullSafeConcurrentHashMap();
+
     public HashMap<String, AccountingFreePost> accountingFreePosts = new HashMap();
-    
+
     private Set<String> ordersChanged = new TreeSet();
-    
+
     private Set<String> ordersCreated = new TreeSet();
-    
+
     public OrdersToAutoSend ordersToAutoSend = new OrdersToAutoSend();
-    
+
     private OrderManagerSettings orderManagerSettings = null;
-    
+
     private List<String> fullyIntegratedPaymentMethods = new ArrayList();
-    
+
     private HashMap<String, Boolean> orderIsCredittedAndPaidFor = new HashMap();
-    
+
     private boolean useCacheForOrderIsCredittedAndPaidFor = false;
 
     private static final Logger logger = LoggerFactory.getLogger(OrderManager.class);
@@ -5380,7 +5380,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
      * If dryRun = true, the system function will return true/false if the if the order needs to be corrected
      * 
      * @param order
-     * @param dryRun
      * @return 
      */
     private boolean correctOrderCartItems(Order order) {

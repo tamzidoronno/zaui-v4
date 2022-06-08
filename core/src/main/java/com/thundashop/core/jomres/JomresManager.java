@@ -708,7 +708,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             PmsGuests guest = new PmsGuests();
             guest.email = booking.customer.email;
             guest.name = booking.customer.name;
-            guest.phone = booking.customer.telLandline;
+            guest.phone = booking.customer.telMobile;
 
             room.guests.add(guest);
 

@@ -5,16 +5,9 @@
  */
 package com.thundashop.core.pmsmanager;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
-import com.thundashop.core.common.GetShopLogHandler;
-import com.thundashop.core.utils.NullSafeConcurrentHashMap;
-import org.joda.time.DateTime;
+import com.thundashop.core.common.NullSafeConcurrentHashMap;
 import org.junit.*;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static org.junit.Assert.*;

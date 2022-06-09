@@ -56,7 +56,6 @@ import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCard;
 import com.thundashop.core.utils.BrRegEngine;
 import com.thundashop.core.utils.Constants;
-import com.thundashop.core.utils.NullSafeConcurrentHashMap;
 import com.thundashop.core.utils.UtilManager;
 import com.thundashop.core.webmanager.WebManager;
 import com.thundashop.core.wubook.WubookManager;
@@ -10386,7 +10385,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         processor();
     }
 
-    private void removeAccrudePayments(PmsBooking booking, String pmsBookingRoomId) {
+    void removeAccrudePayments(PmsBooking booking, String pmsBookingRoomId) {
         List<String> accrudeOrdres = getAllOrderIds(booking.id)
                     .stream()
                     .map(id -> orderManager.getOrderDirect(id))
@@ -10422,7 +10421,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             saveBooking(book);
         }
     }
-    private void removeAccrudePaymentsForConference(String conferenceId,  List<PmsOrderCreateRowItemLine> items) {
+    void removeAccrudePaymentsForConference(String conferenceId,  List<PmsOrderCreateRowItemLine> items) {
         List<String> cartProductIds = items.stream().map(i -> i.createOrderOnProductId).collect(Collectors.toList());
         List<String> accruedOrders = orderManager.getOrderIdsOfconference(conferenceId)
                     .stream()

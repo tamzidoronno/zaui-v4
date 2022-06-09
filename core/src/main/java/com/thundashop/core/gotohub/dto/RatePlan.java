@@ -1,16 +1,45 @@
 package com.thundashop.core.gotohub.dto;
 
-import com.thundashop.core.common.DataCommon;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+import lombok.Data;
 
-public class RatePlan extends DataCommon {
-    public String rate_plan_code="";
-    public String name="";
-    public String description="";
-    public String about="";
-    public String meal_included="";
-    public String restriction="";
-    public String effective_date="";
-    public String expire_date="";
-    public String cancelation_policy="";
+import java.io.Serializable;
 
+@Data
+public class RatePlan implements Serializable {
+
+    @SerializedName("rate_plan_code")
+    @Expose
+    private String ratePlanCode;
+    @SerializedName("name")
+    @Expose
+    private String name;
+    @SerializedName("description")
+    @Expose
+    private String description;
+    @SerializedName("about")
+    @Expose
+    private String about;
+    @SerializedName("meal_included")
+    @Expose
+    private boolean mealIncluded;
+    @SerializedName("restriction")
+    @Expose
+    private String restriction;
+    @SerializedName("effective_date")
+    @Expose
+    private String effectiveDate;
+    @SerializedName("expire_date")
+    @Expose
+    private String expireDate;
+    @SerializedName("cancelation_policy")
+    @Expose
+    private String cancelationPolicy;
+    @SerializedName("guest_count")
+    @Expose
+    private String guestCount;
+    @SerializedName("cancelation_poloicy")
+    @Expose
+    private String cancelationPoloicy;
 }

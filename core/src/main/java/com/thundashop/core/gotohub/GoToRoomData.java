@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class GoToRoomData extends DataCommon {
+public class GoToRoomData {
     public String goToRoomTypeCode="-1";
     public String bookingEngineTypeId="";
     public String name="";

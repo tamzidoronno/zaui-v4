@@ -1,5 +1,7 @@
 package com.thundashop.core.youtubemanager;
 
+import com.getshop.scope.GetShopSession;
+import com.getshop.scope.GetShopSessionBeanNamed;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.client.http.HttpTransport;
@@ -20,19 +22,20 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 
 @Component
-public class YouTubeManager extends ManagerBase implements IYouTubeManager {
+@GetShopSession
+public class YouTubeManager extends GetShopSessionBeanNamed implements IYouTubeManager {
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
     private static final long NUMBER_OF_VIDEOS_RETURNED = 10;
-	private GsonFactory factory = new GsonFactory();
+    private GsonFactory factory = new GsonFactory();
     private static YouTube youtube;
-    
+
     @PostConstruct
     public void init() {
         isSingleton = true;
         storeId = "all";
         initialize();
     }
-    
+
     @Override
     public List<SearchResult> searchYoutube(String queryTerm) throws ErrorException {
 //        // Is this still in use? Should we even support this?
@@ -79,7 +82,7 @@ public class YouTubeManager extends ManagerBase implements IYouTubeManager {
 //            e.printStackTrace();
 //            throw new ErrorException(1017);
 //        }
-        
+
         return new ArrayList();
     }
 }

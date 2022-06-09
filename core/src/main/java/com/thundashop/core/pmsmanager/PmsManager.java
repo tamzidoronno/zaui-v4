@@ -101,6 +101,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private HashMap<String, PmsPricing> priceMap = new HashMap<>();
     private HashMap<String, ConferenceData> conferenceDatas = new HashMap<>();
     private HashMap<String, FailedWubookInsertion> failedWubooks = new HashMap<>();
+    
+    private HashMap<Long, FailedJomresInsertion> failedJomresBookings = new HashMap<>();
+    
+    
     private HashMap<String, PmsRoomTypeAccessory> accesories = new HashMap<>();
     private PmsConfiguration configuration = new PmsConfiguration();
     private List<String> repicientList = new ArrayList<>();
@@ -293,6 +297,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (dataCommon instanceof FailedWubookInsertion) {
                 FailedWubookInsertion failure = (FailedWubookInsertion) dataCommon;
                 failedWubooks.put(failure.wubookResId, failure);
+            }
+            if (dataCommon instanceof FailedJomresInsertion) {
+                FailedJomresInsertion failure = (FailedJomresInsertion) dataCommon;
+                failedJomresBookings.put(failure.jomresBookingId, failure);
             }
             if (dataCommon instanceof PmsBookingAutoIncrement) {
                 autoIncrement = (PmsBookingAutoIncrement) dataCommon;
@@ -887,8 +895,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         for (PmsBookingRooms room : booking.getActiveRooms()) {
-            for (PmsBookingAddonItem item : room.addons) {
-                item.finalize();
+            if(!booking.channel.contains("jomres")){
+                for (PmsBookingAddonItem item : room.addons) {
+                    item.finalize();
+                }
             }
 
             if (room.bookingItemTypeId != null
@@ -2276,8 +2286,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     .orElse(null);
 
             gsTiming("Before looping");
-            LinkedHashMap<Long, IntervalResultEntry> retLines = getTimeLine(line, filter);
-            res.itemTimeLines.put(item.id, retLines);
+            if(line==null){
+                System.out.println("Didn't find the booking timeline flatten line for room "+item.bookingItemName+"..");
+                System.out.println("Assigning an empty time line hash map");
+                res.itemTimeLines.put(item.id, new LinkedHashMap<>());
+            } else{
+                LinkedHashMap<Long, IntervalResultEntry> retLines = getTimeLine(line, filter);
+                res.itemTimeLines.put(item.id, retLines);
+            }
         }
         
         List<BookingTimeLineFlatten> overflowedLines = lines.stream()
@@ -2296,7 +2312,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private LinkedHashMap<Long, IntervalResultEntry> getTimeLine(BookingTimeLineFlatten line, PmsIntervalFilter filter) throws ErrorException {
         if(line == null) {
-            System.out.println("ok?");
+            System.out.println("Didn't find the booking timeline flatten line.. returning");
+            return new LinkedHashMap<>();
         }
         List<BookingTimeLine> timelines = line.getTimelines(filter.interval - 21600, 21600);
         LinkedHashMap<Long, IntervalResultEntry> itemCountLine = new LinkedHashMap<>();
@@ -7174,9 +7191,21 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         saveObject(failed);
         failedWubooks.put(failed.wubookResId, failed);
     }
+    
+    public void markSentErrorMessageForJomresBooking(long  jomresBookingId) {
+        FailedJomresInsertion failed = new FailedJomresInsertion();
+        failed.jomresBookingId = jomresBookingId;
+        failed.when = new Date();
+        saveObject(failed);
+        failedJomresBookings.put(failed.jomresBookingId, failed);
+    }
 
     public boolean hasSentErrorNotificationForWubookId(String wubookId) {
         return failedWubooks.containsKey(wubookId);
+    }
+    
+    public boolean hasSentErrorNotificationForJomresBooking(long jomresBookingId) {
+        return failedJomresBookings.containsKey(jomresBookingId);
     }
 
     @Override
@@ -10511,7 +10540,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void saveObject(DataCommon data) throws ErrorException {
         if (data instanceof PmsBooking && data.id != null && !data.id.isEmpty() && !avoidCalculateUnsettledAmount) {
-            calculateUnsettledAmountForRooms((PmsBooking)data);
+            if(!((PmsBooking)data).channel.contains("jomres"))
+                calculateUnsettledAmountForRooms((PmsBooking)data);
         }
         
         super.saveObject(data); //To change body of generated methods, choose Tools | Templates.

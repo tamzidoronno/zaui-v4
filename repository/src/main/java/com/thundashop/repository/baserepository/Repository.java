@@ -64,6 +64,7 @@ public abstract class Repository<T> implements IRepository<T> {
     public List<T> getAll(SessionInfo sessionInfo) {
         DBObject query = new BasicDBObject();
         query.put("className", getClassName());
+        query.put("deleted", null);
         return this.getDatabase().query(sessionInfo.getManagerName(), getCollectionName(sessionInfo), getEntityClass(), query);
     }
 

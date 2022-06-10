@@ -249,9 +249,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private PmsLogManager pmsLogManager;
 
     @Autowired
-    private ConferenceDataManager conferenceDataManager;
-
-    @Autowired
     private PmsPricingManager pmsPricingManager;
     
     @Qualifier("pingServerExecutor")
@@ -6461,7 +6458,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public ConferenceData getConferenceData(String bookingId) {
-        ConferenceData data = conferenceDataManager.findByBookingId(bookingId);
+        ConferenceData data = conferenceDatas.values()
+                .stream()
+                .filter(conf -> conf.bookingId != null && conf.bookingId.equals(bookingId))
+                .findFirst()
+                .orElse(new ConferenceData());
+
+        data.bookingId = bookingId;
+
         finalize(data);
         return data;
     }
@@ -6495,7 +6499,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public void saveConferenceData(ConferenceData data) {
         ConferenceData old = getConferenceData(data.bookingId);
         data.id = old.id;
-        conferenceDataManager.save(data);
+        saveObject(data);
         conferenceDatas.put(data.id, data);
     }
 

@@ -5,25 +5,26 @@ import com.thundashop.core.gotohub.dto.RatePlan;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Data
 public class GoToRoomData {
-    public String goToRoomTypeCode="-1";
-    public String bookingEngineTypeId="";
-    public String name="";
-    public String description="";
-    public String about="";
-    public int numberOfUnits;
-    public String roomCategory="";
-    public String sizeMeasurement="";
-    public String nonSmoking="";
-    public int maxGuest=1;
-    public int numberOfAdults;
-    public int numberOfChildren;
-    public String status="";
-    public List<String> images = new ArrayList<String>();
-    public List<RatePlan> ratePlans = new ArrayList<RatePlan>();
-    public boolean newRoomPriceSystem=false;
-
+    private String goToRoomTypeCode;
+    private String bookingEngineTypeId;
+    private String name;
+    private String description;
+    private String about;
+    private int numberOfUnits;
+    private String roomCategory;
+    private String sizeMeasurement;
+    private String nonSmoking;
+    private int maxGuest;
+    private int numberOfAdults;
+    private int numberOfChildren;
+    private boolean status;
+    private List<String> images;
+    private List<RatePlan> ratePlans;
+    private HashMap<Integer, Double> pricesByGuests;
+    private long availableRooms;
 }

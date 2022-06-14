@@ -9,9 +9,8 @@ package com.thundashop.core.bookingengine.data;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.Translation;
 import com.thundashop.core.pmsmanager.TimeRepeaterData;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+
+import java.util.*;
 
 /**
  *
@@ -51,6 +50,18 @@ public class BookingItemType extends DataCommon {
         public static Integer CABIN = 4;
         public static Integer HOSTELBED = 5;
         public static Integer APARTMENT = 6;
+        public static final Map<Integer, String> categories;
+        static {
+            Map<Integer, String> aMap = new HashMap<>();
+            aMap.put(0, "ROOM");
+            aMap.put(1, "CONFERENCE");
+            aMap.put(2, "RESTAURANT");
+            aMap.put(3, "CAMPING");
+            aMap.put(4, "CABIN");
+            aMap.put(5, "HOSTELBED");
+            aMap.put(6, "APARTMENT");
+            categories = Collections.unmodifiableMap(aMap);
+        }
     }
     
     @Translation

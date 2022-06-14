@@ -22,6 +22,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Level;
@@ -56,17 +58,6 @@ public class GoToManager extends ManagerBase implements IGoToManager {
     private GoToSettings settings = new GoToSettings();
     private static SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 
-    public enum RoomCategory {
-        ROOM("0"),
-        CONFERENCE("1"),
-        RESTAURANT("2"),
-        CAMPING("3"),
-        CABIN("4"),
-        HOSTELBED("5"),
-        APARTMENT("6");
-        RoomCategory(String s) {
-        }
-    }
     public synchronized void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataCommon : data.data) {
             if(dataCommon instanceof GoToSettings) {
@@ -127,13 +118,7 @@ public class GoToManager extends ManagerBase implements IGoToManager {
     }
 
     private String getRoomType(Integer type) {
-        try {
-            RoomCategory rm = RoomCategory.valueOf(type.toString());
-            return rm.name();
-        } catch (Exception e) {
-            log.error("invalid room type {}", type);
-            return RoomCategory.ROOM.name();
-        }
+        return BookingItemType.BookingSystemCategory.categories.get(type) != null ?  BookingItemType.BookingSystemCategory.categories.get(type) : "ROOM";
     }
 
     public  List<GoToRoomData> getGoToRoomData(boolean needPricing) throws Exception {
@@ -260,11 +245,11 @@ public class GoToManager extends ManagerBase implements IGoToManager {
                 PriceAllotment al = new PriceAllotment();
                 al.setStartDate(df.format(range.start));
                 al.setEndDate(df.format(range.end));
-                RatePlan plan = roomData.getRatePlans().get(priceEntry.getKey());
-                al.setRatePlanCode(plan != null ? plan.getRatePlanCode() : "");
+                al.setRatePlanCode(roomData.getName() + "-" + priceEntry.getKey());
                 al.setRoomTypeCode(roomData.getGoToRoomTypeCode());
                 al.setPrice(priceEntry.getValue());
                 al.setAllotment(roomData.getAvailableRooms());
+                allotments.add(al);
             }
         }
         return allotments;
@@ -279,6 +264,7 @@ public class GoToManager extends ManagerBase implements IGoToManager {
         roomType.setNumberOfAdults(roomData.getNumberOfAdults());
         roomType.setNumberOfUnit(roomData.getNumberOfAdults());
         roomType.setNumberOfChildren(roomData.getNumberOfChildren());
+        roomType.setRoomCategory(roomData.getRoomCategory());
         List<RatePlan> ratePlans = new ArrayList<>();
         StartBooking range = getBookingArgument();
         for(int guest=1; guest<=roomData.getMaxGuest(); guest++){

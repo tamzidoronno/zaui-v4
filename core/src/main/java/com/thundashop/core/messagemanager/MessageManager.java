@@ -333,7 +333,15 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         toAdd.put("storeid", (String)storeId);
         
         grafanaManager.addPoint("webdata", "sms", toAdd);
-    }    
+    }
+
+    public void sendJomresMessageToStoreOwner(String message, String subject){
+        String emailMessage =  message.replace("\n", "<br />");
+        String fromEmail = "post@getshop.com";
+        String toEmail =getStoreEmailAddress();
+
+        mailFactory.send(fromEmail, toEmail, subject, emailMessage);
+    }
     
     @Override
     public void sendMessageToStoreOwner(String message, String subject) {

@@ -25,6 +25,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -46,7 +48,9 @@ public class CartManager extends ManagerBase implements ICartManager {
     
     @Autowired
     private PageManager pageManager;
-    private boolean nextCouponValid;
+    private boolean nextCouponValid = false;
+
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(CartManager.class);
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -398,14 +402,14 @@ public class CartManager extends ManagerBase implements ICartManager {
         }
     }
     
-    public boolean couponIsValid(Date registrationDate, String couponCode, Date start, Date end, String productId, int days) {
+    public boolean couponIsValid(Date registrationDate, String couponCode, Date startOfBooking, Date endOfBooking, String productId, int days) {
         if(nextCouponValid) {
+            logger.info("Checking if coupon code {} is valid - enforced that it is valid.", couponCode);
             return true;
         }
-        
-        nextCouponValid = false;
-        
-        if(start == null || end == null) {
+
+        if(startOfBooking == null || endOfBooking == null) {
+            logger.info("Checking if coupon code {} is valid - startOfBooking or endOfBooking is null.", couponCode);
             return true;
         }
         Coupon coupon = getCoupon(couponCode);
@@ -422,39 +426,46 @@ public class CartManager extends ManagerBase implements ICartManager {
             }
         }
         
-        PmsRepeatingData when = coupon.whenAvailable;
+        PmsRepeatingData whenCouponIsValid = coupon.whenAvailable;
         if(coupon.minDays > 0 && coupon.minDays > days) {
             return false;
         }
         if(coupon.maxDays > 0 && coupon.maxDays < days) {
             return false;
         }
+
+        if(coupon.whenAvailable != null &&
+                coupon.whenAvailable.data != null &&
+                coupon.whenAvailable.data.endingAt != null &&
+                coupon.whenAvailable.data.endingAt.compareTo(new Date()) < 0){
+            return false;
+        }
         
         if(coupon.pmsWhenAvailable != null && !coupon.pmsWhenAvailable.isEmpty() && coupon.pmsWhenAvailable.equals("REGISTERED")) {
             if(registrationDate != null) {
-                start = registrationDate;
-                end = registrationDate;
+                startOfBooking = registrationDate;
+                endOfBooking = registrationDate;
             } else {
-                start = new Date();
-                end = new Date();
+                startOfBooking = new Date();
+                endOfBooking = new Date();
             }
         }
         
         TimeRepeater repeater = new TimeRepeater();
-        LinkedList<TimeRepeaterDateRange> res = repeater.generateRange(when.data);
+        LinkedList<TimeRepeaterDateRange> rangeOfCoupon = repeater.generateRange(whenCouponIsValid.data);
         
-        if(when.repeattype != null && when.repeattype.equals("repeat")) {
-            if(PmsBookingRooms.getNumberOfDays(start, end) > 7) {
+        if(whenCouponIsValid.repeattype != null && whenCouponIsValid.repeattype.equals("repeat")) {
+            if(PmsBookingRooms.getNumberOfDays(startOfBooking, endOfBooking) > 7) {
                 return false;
             }
             
-            Date toCheckStart = start;
-            Date toCheckEnd = end;
+            Date toCheckStart = startOfBooking;
+            Date toCheckEnd = endOfBooking;
             
             if(coupon.pmsWhenAvailable != null && !coupon.pmsWhenAvailable.isEmpty() && coupon.pmsWhenAvailable.equals("REGISTERED")) {
                 if(registrationDate != null) {
-                    toCheckStart = start;
-                    toCheckEnd = end;
+                    toCheckStart = startOfBooking;
+                    toCheckEnd = endOfBooking;
                 } else {
                     toCheckStart = new Date();
                     toCheckEnd = new Date();
@@ -464,14 +475,14 @@ public class CartManager extends ManagerBase implements ICartManager {
             boolean foundStart = false;
             boolean foundEnd = false;
             
-            for(TimeRepeaterDateRange range : res) {
+            for(TimeRepeaterDateRange range : rangeOfCoupon) {
                 if(range.isBetweenTime(toCheckStart)) { foundStart = true; }
                 if(range.isBetweenTime(toCheckEnd)) { foundEnd = true; }
             }
             return foundStart && foundEnd;
         } else {
-            for(TimeRepeaterDateRange range : res) {
-                if((range.start.before(start) || range.start.equals(start)) && (range.end.after(end) || end.equals(range.end))) {
+            for(TimeRepeaterDateRange range : rangeOfCoupon) {
+                if((range.start.before(startOfBooking) || range.start.equals(startOfBooking)) && (range.end.after(endOfBooking) || endOfBooking.equals(range.end))) {
                     return true;
                 }
             }

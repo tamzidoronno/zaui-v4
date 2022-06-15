@@ -359,7 +359,11 @@ app.PmsBookingGroupRoomView = {
     },
     changeConfirmationEmailContent : function() {
         var event = thundashop.Ajax.createEvent('','getConfirmationContent',$(this), { type : $(this).val() });
-        thundashop.Ajax.postWithCallBack(event, function(res) { $('[gsname="confirmationemailcontent"]').val(res); });
+        thundashop.Ajax.postWithCallBack(event, function(res) { 
+            res = JSON.parse(res);
+            $('[gsname="confirmationemailtitle"]').val(res.title);
+            $('[gsname="confirmationemailcontent"]').val(res.content);
+        });
     },
     cartItemRowSaved: function(res, from) {
         var eventId = $(from).closest('.cart_item_row').find('[gsname="eventid"]').val();

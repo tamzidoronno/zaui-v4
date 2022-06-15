@@ -358,7 +358,8 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
          
        foreach($msgs as $conf) {
             if($conf->id == $_POST['data']['type']) {
-                echo $conf->content;
+                $data = array('title' => $conf->title, 'content' => $conf->content);
+                echo json_encode($data);
             }
         }
     }

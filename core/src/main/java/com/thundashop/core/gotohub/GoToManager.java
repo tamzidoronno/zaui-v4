@@ -131,7 +131,7 @@ public class GoToManager extends ManagerBase implements IGoToManager {
             isAdministrator = true;
         }
 
-        StartBooking arg = getBookingArgument();
+        StartBooking arg = getBookingArgument(0);
         long totalRooms = 0;
         for(BookingItemType type : bookingItemTypes) {
             if(!type.visibleForBooking) {
@@ -153,6 +153,7 @@ public class GoToManager extends ManagerBase implements IGoToManager {
                 room.maxGuests = type.size;
                 if (needPricing) {
                     for (int i = 1; i <= type.size; i++) {
+                        room.roomsSelectedByGuests.put(i, i);
                         Double price = getPriceForRoom(room, arg.start, arg.end, i, "");
                         room.pricesByGuests.put(i, price);
                     }
@@ -175,14 +176,14 @@ public class GoToManager extends ManagerBase implements IGoToManager {
         room.numberOfGuests = numberofguests;
 
         PmsBooking booking = new PmsBooking();
-        booking.priceType = PmsBooking.PriceType.monthly;
+        booking.priceType = PmsBooking.PriceType.daily;
         booking.couponCode = discountcode;
         booking.userId = bookingProcessRoom.userId;
         pmsManager.setPriceOnRoom(room, true, booking);
         return room.price;
     }
 
-    private StartBooking getBookingArgument() {
+    private StartBooking getBookingArgument(int i) {
         StartBooking arg = new StartBooking();
 
         Calendar cal = Calendar.getInstance();
@@ -190,12 +191,12 @@ public class GoToManager extends ManagerBase implements IGoToManager {
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 1);
-        cal.set(Calendar.DAY_OF_MONTH, 18);
+        cal.add(Calendar.DAY_OF_YEAR, i);
 
         Date start = cal.getTime();
         arg.start = start;
 
-        cal.add(Calendar.DAY_OF_WEEK, 1);
+        cal.add(Calendar.DAY_OF_YEAR, 1);
         cal.set(Calendar.HOUR_OF_DAY, 11);
         cal.set(Calendar.MINUTE, 59);
         cal.set(Calendar.SECOND, 59);
@@ -209,11 +210,6 @@ public class GoToManager extends ManagerBase implements IGoToManager {
 
         return arg;
     }
-    private StartBookingResult getAvailability() {
-        StartBooking arg = getBookingArgument();
-        return pmsProcess.startBooking(arg);
-    }
-    
     @Override
     public List<RoomType> getRoomTypeDetails() throws Exception {
         List<GoToRoomData> goToRoomData = getGoToRoomData(false);
@@ -235,21 +231,24 @@ public class GoToManager extends ManagerBase implements IGoToManager {
 
     private List<PriceAllotment> getPriceAllotments() throws Exception {
         List<GoToRoomData> goToRoomData = getGoToRoomData(true);
-        StartBooking range = getBookingArgument();
+
         List<PriceAllotment> allotments = new ArrayList<>();
-        for (GoToRoomData roomData : goToRoomData) {
-            if ("-1".equals(roomData.getRoomCategory()) || "-2".equals(roomData.getRoomCategory()) || roomData.getPricesByGuests() == null) {
-                continue;
-            }
-            for(Map.Entry<Integer, Double> priceEntry : roomData.getPricesByGuests().entrySet()) {
-                PriceAllotment al = new PriceAllotment();
-                al.setStartDate(df.format(range.start));
-                al.setEndDate(df.format(range.end));
-                al.setRatePlanCode(roomData.getName() + "-" + priceEntry.getKey());
-                al.setRoomTypeCode(roomData.getGoToRoomTypeCode());
-                al.setPrice(priceEntry.getValue());
-                al.setAllotment(roomData.getAvailableRooms());
-                allotments.add(al);
+        for(int i = 0; i < 30; i++) {
+            StartBooking range = getBookingArgument(i);
+            for (GoToRoomData roomData : goToRoomData) {
+                if ("-1".equals(roomData.getRoomCategory()) || "-2".equals(roomData.getRoomCategory()) || roomData.getPricesByGuests() == null) {
+                    continue;
+                }
+                for (Map.Entry<Integer, Double> priceEntry : roomData.getPricesByGuests().entrySet()) {
+                    PriceAllotment al = new PriceAllotment();
+                    al.setStartDate(df.format(range.start));
+                    al.setEndDate(df.format(range.end));
+                    al.setRatePlanCode(roomData.getName() + "-" + priceEntry.getKey());
+                    al.setRoomTypeCode(roomData.getGoToRoomTypeCode());
+                    al.setPrice(priceEntry.getValue());
+                    al.setAllotment(roomData.getAvailableRooms());
+                    allotments.add(al);
+                }
             }
         }
         return allotments;
@@ -266,7 +265,7 @@ public class GoToManager extends ManagerBase implements IGoToManager {
         roomType.setNumberOfChildren(roomData.getNumberOfChildren());
         roomType.setRoomCategory(roomData.getRoomCategory());
         List<RatePlan> ratePlans = new ArrayList<>();
-        StartBooking range = getBookingArgument();
+        StartBooking range = getBookingArgument(0);
         for(int guest=1; guest<=roomData.getMaxGuest(); guest++){
             RatePlan newRatePlan = createNewRatePlan(guest, range, roomData.getName());
             ratePlans.add(newRatePlan);

@@ -19,58 +19,23 @@ import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.CartTax;
 import com.thundashop.core.central.GetShopCentral;
 import com.thundashop.core.common.*;
+import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.department.Department;
 import com.thundashop.core.department.DepartmentManager;
 import com.thundashop.core.dibs.DibsManager;
 import com.thundashop.core.epay.EpayManager;
 import com.thundashop.core.getshop.GetShopPullService;
-import com.thundashop.core.getshopaccounting.AccountingBalance;
-import com.thundashop.core.getshopaccounting.DayEntry;
-import com.thundashop.core.getshopaccounting.DayIncome;
-import com.thundashop.core.getshopaccounting.DayIncomeFilter;
-import com.thundashop.core.getshopaccounting.DayIncomeReport;
-import com.thundashop.core.getshopaccounting.DayIncomeTransferToAaccountingInformation;
-import com.thundashop.core.getshopaccounting.DiffReport;
-import com.thundashop.core.getshopaccounting.DoublePostAccountingTransfer;
-import com.thundashop.core.getshopaccounting.GetShopAccountingManager;
-import com.thundashop.core.getshopaccounting.OrderDailyBreaker;
-import com.thundashop.core.getshopaccounting.OrderUnsettledAmountForAccount;
+import com.thundashop.core.getshopaccounting.*;
 import com.thundashop.core.giftcard.GiftCardManager;
-import com.thundashop.core.gsd.GdsManager;
-import com.thundashop.core.gsd.GdsPaymentAction;
-import com.thundashop.core.gsd.GetShopDevice;
-import com.thundashop.core.gsd.TerminalReceiptText;
-import com.thundashop.core.gsd.TerminalResponse;
+import com.thundashop.core.gsd.*;
 import com.thundashop.core.listmanager.ListManager;
 import com.thundashop.core.listmanager.data.TreeNode;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ocr.OcrFileLines;
 import com.thundashop.core.ocr.StoreOcrManager;
-import com.thundashop.core.ordermanager.data.AccountingFreePost;
-import com.thundashop.core.ordermanager.data.CartItemDates;
-import com.thundashop.core.ordermanager.data.ChangedCloseDateLog;
-import com.thundashop.core.ordermanager.data.ClosedOrderPeriode;
-import com.thundashop.core.ordermanager.data.EhfSentLog;
-import com.thundashop.core.ordermanager.data.Order;
-import com.thundashop.core.ordermanager.data.OrderFilter;
-import com.thundashop.core.ordermanager.data.OrderLight;
-import com.thundashop.core.ordermanager.data.OrderLoss;
-import com.thundashop.core.ordermanager.data.OrderManagerSettings;
-import com.thundashop.core.ordermanager.data.OrderResult;
-import com.thundashop.core.ordermanager.data.OrderShipmentLogEntry;
-import com.thundashop.core.ordermanager.data.OrderTaxCorrectionResult;
-import com.thundashop.core.ordermanager.data.OrderTaxCorrectionResultValue;
-import com.thundashop.core.ordermanager.data.OrderTransaction;
-import com.thundashop.core.ordermanager.data.OrderTransactionDTO;
-import com.thundashop.core.ordermanager.data.OrdersToAutoSend;
-import com.thundashop.core.ordermanager.data.Payment;
-import com.thundashop.core.ordermanager.data.PaymentTerminalInformation;
-import com.thundashop.core.ordermanager.data.PmiResult;
-import com.thundashop.core.ordermanager.data.SalesStats;
-import com.thundashop.core.ordermanager.data.Statistic;
-import com.thundashop.core.ordermanager.data.VirtualOrder;
+import com.thundashop.core.ordermanager.data.*;
 import com.thundashop.core.paymentmanager.GeneralPaymentConfig;
 import com.thundashop.core.paymentmanager.PaymentManager;
 import com.thundashop.core.pdf.InvoiceManager;
@@ -82,11 +47,7 @@ import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.pos.PosConference;
 import com.thundashop.core.pos.PosManager;
 import com.thundashop.core.pos.ZReport;
-import com.thundashop.core.printmanager.PrintJob;
-import com.thundashop.core.printmanager.PrintManager;
-import com.thundashop.core.printmanager.Printer;
-import com.thundashop.core.printmanager.ReceiptGenerator;
-import com.thundashop.core.printmanager.StorePrintManager;
+import com.thundashop.core.printmanager.*;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.AccountingDetail;
 import com.thundashop.core.productmanager.data.Product;
@@ -99,9 +60,17 @@ import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCard;
+import com.thundashop.core.utils.NullSafeConcurrentHashMap;
 import com.thundashop.core.verifonemanager.VerifoneFeedback;
 import com.thundashop.core.warehousemanager.WareHouseManager;
 import com.thundashop.core.webmanager.WebManager;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
+
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -111,38 +80,33 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 
 @Component
 @GetShopSession
 public class OrderManager extends ManagerBase implements IOrderManager {
-
     private long incrementingOrderId = 100000;
+
+    public NullSafeConcurrentHashMap<String, Order> orders = new NullSafeConcurrentHashMap<>();
+
+    public NullSafeConcurrentHashMap<String, VirtualOrder> virtualOrders = new NullSafeConcurrentHashMap();
     
-    public HashMap<String, Order> orders = new HashMap(); 
-   
-    public HashMap<String, VirtualOrder> virtualOrders = new HashMap();
-    
-    public HashMap<String, ClosedOrderPeriode> closedPeriodes = new HashMap();
-    
+    public NullSafeConcurrentHashMap<String, ClosedOrderPeriode> closedPeriodes = new NullSafeConcurrentHashMap();
+
     public HashMap<String, AccountingFreePost> accountingFreePosts = new HashMap();
-    
+
     private Set<String> ordersChanged = new TreeSet();
-    
+
     private Set<String> ordersCreated = new TreeSet();
-    
+
     public OrdersToAutoSend ordersToAutoSend = new OrdersToAutoSend();
-    
+
     private OrderManagerSettings orderManagerSettings = null;
-    
+
     private List<String> fullyIntegratedPaymentMethods = new ArrayList();
-    
+
     private HashMap<String, Boolean> orderIsCredittedAndPaidFor = new HashMap();
-    
+
     private boolean useCacheForOrderIsCredittedAndPaidFor = false;
 
     private static final Logger logger = LoggerFactory.getLogger(OrderManager.class);
@@ -240,6 +204,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Autowired
     private GetShopCentral central;
+
+    @Autowired
+    private Environment env;
     
     private List<String> terminalMessages = new ArrayList();
     private Order orderToPay;
@@ -309,13 +276,38 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         saveOrder(order);
     }
-    
-    
-    
+
+    @Override
+    public List<DataCommon> retreiveData(Credentials credentials) {
+        String dateAfterDataToRetrieve = env.getProperty("data.filter."  + storeId);
+        if(StringUtils.isBlank(dateAfterDataToRetrieve)) return super.retreiveData(credentials, null);
+        Date dt = null;
+        try {
+            dt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateAfterDataToRetrieve);
+        } catch (ParseException e) {
+            logger.error("Fail to covert date of client {} {}, original exception {}", storeId, dateAfterDataToRetrieve, e);
+            return super.retreiveData(credentials, null);
+        }
+        //Only Order with date filtering
+        BasicDBObject orderQuery = new BasicDBObject();
+        orderQuery.put("rowCreatedDate", new BasicDBObject("$gte", dt));
+        orderQuery.put("className", "com.thundashop.core.ordermanager.data.Order");
+        List<DataCommon> orders = super.retreiveData(credentials, orderQuery);
+
+        //without date filtering and not including Order
+        BasicDBObject otherQuery = new BasicDBObject();
+        otherQuery.put("className", new BasicDBObject("$ne", "com.thundashop.core.ordermanager.data.Order"));
+        List<DataCommon> otherData = super.retreiveData(credentials, otherQuery);
+
+        orders.addAll(otherData);
+
+        return orders;
+    }
+
     @Override
     public void dataFromDatabase(DataRetreived data) {
         addPaymentMethodsNotAllowedToMarkAsPaid();
-        
+
         for (DataCommon dataFromDatabase : data.data) {
 
             if (dataFromDatabase instanceof VirtualOrder) {
@@ -5388,7 +5380,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
      * If dryRun = true, the system function will return true/false if the if the order needs to be corrected
      * 
      * @param order
-     * @param dryRun
      * @return 
      */
     private boolean correctOrderCartItems(Order order) {

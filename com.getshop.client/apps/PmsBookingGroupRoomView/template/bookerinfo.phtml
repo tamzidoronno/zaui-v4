@@ -7,7 +7,7 @@ $bookingEngineBooking = $this->getBookingEngineBooking();
 
 $extraArgs = array();
 $extraArgs['userid'] = $user->id;
-if($bookingEngineBooking) {
+if ($bookingEngineBooking) {
     $extraArgs['id'] = $bookingEngineBooking->id;
 }
 $extraArgs['roomId'] = $pmsSelectedRoom->pmsBookingRoomId;
@@ -15,7 +15,7 @@ $codes = $this->getApi()->getCartManager()->getCoupons();
 $config = $this->getApi()->getPmsManager()->getConfiguration($this->getSelectedMultilevelDomainName());
 $segments = $this->getApi()->getPmsCoverageAndIncomeReportManager()->getSegments($this->getSelectedMultilevelDomainName());
 $title = "Avoid autodelete disabled";
-if($pmsBooking->avoidAutoDelete) {
+if ($pmsBooking->avoidAutoDelete) {
     $title = "Avoid autodelete done";
 }
 $channelList = $this->getApi()->getPmsManager()->getChannelMatrix($this->getSelectedMultilevelDomainName());
@@ -26,17 +26,17 @@ $channelNames = $formater->getChannels();
     <div class="row odd">
         <div class="col col1" title="<?php echo $title; ?>"><? echo $this->__f("GetShop booking id"); ?></div>
         <?php
-        $disabled = stristr($pmsBooking->channel, "wubook_") ? "DISABLED" :"";
+        $disabled = stristr($pmsBooking->channel, "wubook_") ? "DISABLED" : "";
         $style = $disabled ? "color:gray;background-image:none;" : "";
         ?>
         <div class="col col2"><? echo $pmsBooking->incrementBookingId; ?>
-           <select class="changechannel gsniceselect1" style="width:50%; float:right;<?php echo $style;?>" <?php echo $disabled; ?> >
+            <select class="changechannel gsniceselect1" style="width:50%; float:right;<?php echo $style; ?>" <?php echo $disabled; ?>>
                 <?php
                 echo "<option value=''>No source</option>";
-                foreach($channelList as $idx => $channel) {
+                foreach ($channelList as $idx => $channel) {
                     $name = $channelNames[$idx] ? $channelNames[$idx] : $channel;
                     $selected = $idx == $pmsBooking->channel ? "SELECTED" : "";
-                    if(stristr($idx, "wubook_")) {
+                    if (stristr($idx, "wubook_")) {
                         continue;
                     }
                     echo "<option value='$idx' $selected>$name</option>";
@@ -49,34 +49,34 @@ $channelNames = $formater->getChannels();
     <div class="row odd">
         <div class="col col1"><? echo $this->__f("Discount code / segment"); ?></div>
         <div class="col col2">
-            
+
             <div class='checkifneedupdateprices' style='position:absolute; background-color: #fff; border: solid 1px #bbb;padding: 3px; display:none;'>
                 <div>Update prices as well?</div>
                 <span class='shop_button doChangeDiscount' updateprices='true' style='width:50%;box-sizing: border-box;float:left;background-color:green;'>Yes</span>
                 <span class='shop_button doChangeDiscount' updateprices='false' style='width:50%;box-sizing: border-box;background-color:red;'>No</span>
             </div>
-            
+
             <span class="codeselection">
                 <select class="changediscountcode gsniceselect1" style="width:48%">
                     <option value="">Not set</option>
                     <?php
-                    foreach($codes as $code) {
+                    foreach ($codes as $code) {
                         $selected = (strtolower($code->code) == strtolower($pmsBooking->couponCode)) ? "SELECTED" : "";
-                        echo "<option value='".$code->code."' $selected>" . $code->code . "</option>";
+                        echo "<option value='" . $code->code . "' $selected>" . $code->code . "</option>";
                     }
                     ?>
                 </select>
                 <select class="changesegment gsniceselect1" style="width:50%; float:right;">
                     <option value="">Not set</option>
                     <?php
-                    foreach($segments as $segment) {
+                    foreach ($segments as $segment) {
                         $selected = ($segment->id == $pmsBooking->segmentId) ? "SELECTED" : "";
-                        echo "<option value='".$segment->id."' $selected>" . $segment->name . "</option>";
+                        echo "<option value='" . $segment->id . "' $selected>" . $segment->name . "</option>";
                     }
                     ?>
                 </select>
             </span>
-        </div>    
+        </div>
     </div>
 
     <div class="row odd">
@@ -88,58 +88,58 @@ $channelNames = $formater->getChannels();
         <div class="col col1"><? echo $this->__f("Room non refundable"); ?></div>
         <?php
         if ($pmsSelectedRoom->nonrefundable) {
-            ?>
-            <div class="col col2">Yes, <span style='cursor:pointer;' class='bookinghighlightcolor' roomid='<?php echo $pmsSelectedRoom->pmsBookingRoomId; ?>' gsclick='togglerefundable'>make it refundable</span></div>    
-            <?php
+        ?>
+            <div class="col col2">Yes, <span style='cursor:pointer;' class='bookinghighlightcolor' roomid='<?php echo $pmsSelectedRoom->pmsBookingRoomId; ?>' gsclick='togglerefundable'>make it refundable</span></div>
+        <?php
         } else {
-            ?>
-            <div class="col col2">No, <span style='cursor:pointer;' class='bookinghighlightcolor' roomid='<?php echo $pmsSelectedRoom->pmsBookingRoomId; ?>' gsclick='togglerefundable'>make it non refundable</span></div>    
-            <?php
+        ?>
+            <div class="col col2">No, <span style='cursor:pointer;' class='bookinghighlightcolor' roomid='<?php echo $pmsSelectedRoom->pmsBookingRoomId; ?>' gsclick='togglerefundable'>make it non refundable</span></div>
+        <?php
         }
         ?>
     </div>
-    
-    <div class="row odd">
-        <div class="col col1"><? 
-        echo "<i class='fa fa-edit bookinghighlightcolor adduserdescription' style='cursor:pointer;'></i> ";
-        echo $this->__f("Pinned comment"); 
-        
-        ?></div>
-        <div class="col col2"><? 
-        if($user->description) {
-            echo "<i class='fa fa-trash-o' style='cursor:pointer;' gsclick='deleteUserDescription' roomid='".$pmsSelectedRoom->pmsBookingRoomId."'></i> ";
-        }
-        echo $user->description; ?></div>    
-    </div>    
 
     <div class="row odd">
-        <div class="col col1"><? 
-        echo " <i class='fa fa-edit bookinghighlightcolor addordernote' style='cursor:pointer;'></i> ";
-        echo $this->__f("Order note");
-        ?></div>
-        <div class="col col2"><? 
-        if($pmsBooking->invoiceNote) {
-            echo "<i class='fa fa-trash-o' style='cursor:pointer;' gsclick='deleteInvoiceNote' roomid='".$pmsSelectedRoom->pmsBookingRoomId."'></i> ";
-        }
+        <div class="col col1"><?
+                                echo "<i class='fa fa-edit bookinghighlightcolor adduserdescription' style='cursor:pointer;'></i> ";
+                                echo $this->__f("Pinned comment");
 
-        echo $pmsBooking->invoiceNote; ?>
-        </div>    
+                                ?></div>
+        <div class="col col2"><?
+                                if ($user->description) {
+                                    echo "<i class='fa fa-trash-o' style='cursor:pointer;' gsclick='deleteUserDescription' roomid='" . $pmsSelectedRoom->pmsBookingRoomId . "'></i> ";
+                                }
+                                echo $user->description; ?></div>
     </div>
-    
+
+    <div class="row odd">
+        <div class="col col1"><?
+                                echo " <i class='fa fa-edit bookinghighlightcolor addordernote' style='cursor:pointer;'></i> ";
+                                echo $this->__f("Order note");
+                                ?></div>
+        <div class="col col2"><?
+                                if ($pmsBooking->invoiceNote) {
+                                    echo "<i class='fa fa-trash-o' style='cursor:pointer;' gsclick='deleteInvoiceNote' roomid='" . $pmsSelectedRoom->pmsBookingRoomId . "'></i> ";
+                                }
+
+                                echo $pmsBooking->invoiceNote; ?>
+        </div>
+    </div>
+
     <?php
-    if($config->wubookAutoCharging) {
+    if ($config->wubookAutoCharging) {
     ?>
         <div class="row odd">
             <div class="col col1"><? echo $this->__f("Autocharge card"); ?></div>
             <?php
             if ($pmsBooking->tryAutoCharge) {
-                ?>
-                <div class="col col2">Yes, <span style='cursor:pointer;' class='bookinghighlightcolor' gsclick='toggleautocharging'>stop autocharging</span></div>    
-                <?php
+            ?>
+                <div class="col col2">Yes, <span style='cursor:pointer;' class='bookinghighlightcolor' gsclick='toggleautocharging'>stop autocharging</span></div>
+            <?php
             } else {
-                ?>
-                <div class="col col2">No, <span style='cursor:pointer;' class='bookinghighlightcolor' gsclick='toggleautocharging'>retry autocharging</span></div>    
-                <?php
+            ?>
+                <div class="col col2">No, <span style='cursor:pointer;' class='bookinghighlightcolor' gsclick='toggleautocharging'>retry autocharging</span></div>
+            <?php
             }
             ?>
         </div>
@@ -150,59 +150,64 @@ $channelNames = $formater->getChannels();
     <?php
     $autosend = $this->getApi()->getPmsInvoiceManager()->autoSendPaymentLink($this->getSelectedMultilevelDomainName(), $pmsBooking->id);
     echo "<div style='margin-top: 3px;float:left;'>";
-    if($autosend) {
+    if ($autosend) {
         $date = $this->getApi()->getPmsInvoiceManager()->getPaymentLinkSendingDate($this->getSelectedMultilevelDomainName(), $pmsBooking->id);
         $date = date("d.m.Y", strtotime($date));
         echo "* A payment link will automatically be sent to the guest at " . $date;
-        echo " <span class='bookinghighlightcolor' gsclick='toggleAutosendPaymentLink' style='cursor:pointer;' roomid='".$pmsSelectedRoom->pmsBookingRoomId."'>stop autosending</span>";
+        echo " <span class='bookinghighlightcolor' gsclick='toggleAutosendPaymentLink' style='cursor:pointer;' roomid='" . $pmsSelectedRoom->pmsBookingRoomId . "'>stop autosending</span>";
     } else {
         $reason = $this->getApi()->getPmsInvoiceManager()->getReasonForNotSendingPaymentLink($this->getSelectedMultilevelDomainName(), $pmsBooking->id);
         echo "<i class='fa fa-warning bookinghighlightcolor'></i> No payment link will be sent, " . $this->translateNotSendPaymentLinkReason($reason);
-        if($reason == 3) {
-            echo " <span class='bookinghighlightcolor' gsclick='toggleAutosendPaymentLink' style='cursor:pointer;' roomid='".$pmsSelectedRoom->pmsBookingRoomId."'>force autosending</span>";
+        if ($reason == 3) {
+            echo " <span class='bookinghighlightcolor' gsclick='toggleAutosendPaymentLink' style='cursor:pointer;' roomid='" . $pmsSelectedRoom->pmsBookingRoomId . "'>force autosending</span>";
         }
     }
     echo "</div>";
-    ?>    
+    ?>
 </div>
-    
+
 <div class='col_box_width_2 second'>
     <div class="row">
         <div class="col col1">
             <? echo $this->__f("Date created"); ?>
-        <a class='bookinghighlightcolor' onclick='$(".menubutton[subsection=\"log\"]").click();' style='cursor:pointer;'> - show log</a></div>
+            <a class='bookinghighlightcolor' onclick='$(".menubutton[subsection=\"log\"]").click();' style='cursor:pointer;'> - show log</a>
+        </div>
         <?php
         $browser = "";
-        if($pmsBooking->browserUsed) {
+        if ($pmsBooking->browserUsed) {
             $browser = "Booked by browser : " . $pmsBooking->browserUsed->name . ", version: " . $pmsBooking->browserUsed->version;
         }
         ?>
-        
-        <div class="col col2" title="<?php echo $browser; ?>"><div class='ellipsis'><b><? echo date("d.m.Y H:i", strtotime($pmsBooking->rowCreatedDate)); ?> by 
-            <?php if($pmsBooking->bookedByUserId) { 
 
-                if($pmsBooking->bookedByUserId == "gs_system_scheduler_user") {
+        <div class="col col2" title="<?php echo $browser; ?>">
+            <div class='ellipsis'><b><? echo date("d.m.Y H:i", strtotime($pmsBooking->rowCreatedDate)); ?> by
+                    <?php if ($pmsBooking->bookedByUserId) {
+
+                        if ($pmsBooking->bookedByUserId == "gs_system_scheduler_user") {
                     ?>
-                    <div class="col col2">OTA</div>    
-                    <?php            
-                } else {
-                    $name = $this->getApi()->getUserManager()->getUserById($pmsBooking->bookedByUserId)->fullName;
-                    if(!$name) { $name = "No name"; }
-                    echo $name; 
-                } 
-            } else {
-                echo $user->fullName;
-            } ?>
+                            <div class="col col2">OTA</div>
+                    <?php
+                        } else {
+                            $name = $this->getApi()->getUserManager()->getUserById($pmsBooking->bookedByUserId)->fullName;
+                            if (!$name) {
+                                $name = "No name";
+                            }
+                            echo $name;
+                        }
+                    } else {
+                        echo $user->fullName;
+                    } ?>
                 </b><?php
-                 if( $pmsBooking->channel && isset( $channelNames[$pmsBooking->channel] ) ) echo '<br />Channel: ' . $channelNames[$pmsBooking->channel];
-                ?></div>
-        </div>  
+                    if ($pmsBooking->channel && isset($channelNames[$pmsBooking->channel])) echo '<br />Channel: ' . $channelNames[$pmsBooking->channel];
+                    ?></div>
+        </div>
     </div>
 
     <div class="row odd">
         <div class="col col1"><span><? echo $this->__f("Booked for"); ?></span> (
-            <span class='bookinghighlightcolor' style='cursor:pointer;'  onclick='$(".change_user_form").hide();$(".edit_details_of_user").toggle();'>edit</span> or 
-            <span class='bookinghighlightcolor' style='cursor:pointer;' onclick='$(".edit_details_of_user").hide();$(".change_user_form").toggle();'>change</span>)</div>
+            <span class='bookinghighlightcolor' style='cursor:pointer;' onclick='$(".change_user_form").hide();$(".edit_details_of_user").toggle();'>edit</span> or
+            <span class='bookinghighlightcolor' style='cursor:pointer;' onclick='$(".edit_details_of_user").hide();$(".change_user_form").toggle();'>change</span>)
+        </div>
         <div class="col col2">
             <?
             $extraArgs = array();
@@ -231,8 +236,8 @@ $channelNames = $formater->getChannels();
             <?php
             if (isset($user->address)) {
                 echo $user->address->address . " ";
-                if ($user->address->postCode || $user->address->city ) {
-                    echo " / ".$user->address->postCode . " " . $user->address->city . "<br>";
+                if ($user->address->postCode || $user->address->city) {
+                    echo " / " . $user->address->postCode . " " . $user->address->city . "<br>";
                 }
             }
             ?>
@@ -252,24 +257,26 @@ $channelNames = $formater->getChannels();
     </div>
     <div style='clear:both;'></div>
     <div class='commentarea'>
-        <div class='commentsheader'>Comments - <span class='bookinghighlightcolor' style='cursor:pointer;' onclick='$(".PmsBookingGroupRoomView .addcommentarea").toggle();$(".addcommenttobooking").focus();'>add comment</span> - 
-            <span class='bookinghighlightcolor' style='cursor:pointer;' onclick='$(".notforroom").show();$(".hiddencomment").show();'>show all comments (<?php echo sizeof((array)$pmsBooking->comments); ?></span>)</div>
+        <div class='commentsheader'>Comments - <span class='bookinghighlightcolor' style='cursor:pointer;' onclick='$(".PmsBookingGroupRoomView .addcommentarea").toggle();$(".addcommenttobooking").focus();'>add comment</span> -
+            <span class='bookinghighlightcolor' style='cursor:pointer;' onclick='$(".notforroom").show();$(".hiddencomment").show();'>show all comments (<?php echo sizeof((array)$pmsBooking->comments); ?></span>)
+        </div>
         <?php
         $counter = 0;
         $comments = (array)$pmsBooking->comments;
         krsort($comments);
-        foreach($comments as $time => $comment) {
+        foreach ($comments as $time => $comment) {
             /* @var $comment core_pmsmanager_PmsBookingComment */
             $notForRoom = "";
-            
+
             $hiddenclass = $counter >= 3 ? "hiddencomment" : "";
             $deletedClass = "";
-            
-            if($comment->deleted) {
+
+            if ($comment->deleted) {
                 $hiddenclass = "hiddencomment";
                 $deletedClass = "deletedcomment";
-            } else if($comment->pmsBookingRoomId) {
-                if($comment->pmsBookingRoomId != $this->getSelectedRoomId()) {
+            }
+            if ($comment->pmsBookingRoomId) {
+                if ($comment->pmsBookingRoomId != $this->getSelectedRoomId()) {
                     $notForRoom = "notforroom";
                 } else {
                     $notForRoom = "forroom";
@@ -278,17 +285,17 @@ $channelNames = $formater->getChannels();
             } else {
                 $counter++;
             }
-            
+
             $user = $this->getApi()->getUserManager()->getUserById($comment->userId);
-            if(!$user) {
+            if (!$user) {
                 $user = new core_usermanager_data_User();
             }
-            
-            echo "<div class='$notForRoom $hiddenclass $deletedClass commentrow' roomid='".$pmsSelectedRoom->pmsBookingRoomId."' commentid='".$comment->commentId."'>";
+
+            echo "<div class='$notForRoom $hiddenclass $deletedClass commentrow' roomid='" . $pmsSelectedRoom->pmsBookingRoomId . "' commentid='" . $comment->commentId . "'>";
             echo "<span class='commenttime'>";
-            echo "<i class='fa fa-trash-o' gsclick='deleteComment' style='cursor:pointer;' gs_confirm='Are you sure?' roomid='".$pmsSelectedRoom->pmsBookingRoomId."' commentid='".$comment->commentId."'></i> ";
-            echo "<i class='fa fa-edit editcomment' style='cursor:pointer'></i> " . date("d.m.y h:i", $time/1000) . "</span>";
-            echo "<span class='commenttext' title='".htmlentities($comment->comment)."'>" . htmlentities($comment->comment) . "</span>";
+            echo "<i class='fa fa-trash-o' gsclick='deleteComment' style='cursor:pointer;' gs_confirm='Are you sure?' roomid='" . $pmsSelectedRoom->pmsBookingRoomId . "' commentid='" . $comment->commentId . "'></i> ";
+            echo "<i class='fa fa-edit editcomment' style='cursor:pointer'></i> " . date("d.m.y h:i", $time / 1000) . "</span>";
+            echo "<span class='commenttext' title='" . htmlentities($comment->comment) . "'>" . htmlentities($comment->comment) . "</span>";
             echo "<span class='commentby'>" . $user->fullName . "</span>";
             echo "</div>";
         }
@@ -300,6 +307,6 @@ $channelNames = $formater->getChannels();
         <span class='shop_button addcommentbtn' gstype='submit' gsvalue='group' style='float:right;'>Add to group</span>
         <span class='shop_button addcommentbtn' gstype='submit' gsvalue='room'>Add to room</span>
     </div>
-    
+
     <span class='shop_button savecomment'>Save comment</span>
 </div>

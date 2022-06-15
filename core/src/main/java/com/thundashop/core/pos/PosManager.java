@@ -30,6 +30,7 @@ import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.pmsmanager.*;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.*;
+import com.thundashop.core.usermanager.data.Address;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -1537,6 +1538,12 @@ public class PosManager extends ManagerBase implements IPosManager {
         for (String pmsConferenceId : retMap.keySet()) {
             List<CartItem> cartItemsInDifference = retMap.get(pmsConferenceId);
             Order order = createOrder(cartItemsInDifference, accuredPayment, null, cashPointId);
+            PmsConference conference =  pmsConferenceManager.getConference(pmsConferenceId);
+            order.cart.address = new Address();
+            order.cart.address.fullName = conference.meetingTitle.isEmpty() ? conference.forUserFullName : conference.meetingTitle;
+            if (!conference.forUser.isEmpty()){
+                order.userId = conference.forUser;
+            }
             order.autoCreatedOrderForConferenceId = pmsConferenceId;
             orderManager.saveOrder(order);
             boolean shouldInclude = order.isOrderFinanciallyRelatedToDatesIgnoreCreationDate(new Date(0), new Date());

@@ -397,7 +397,9 @@ public interface IUserManager {
      * @throws ErrorException 
      */
     public boolean isImpersonating() throws ErrorException;
-    
+
+    public boolean forceUniqueEmailAddress(User user) throws ErrorException;
+
     @Administrator
     public void upgradeUserToGetShopAdmin(String password);
     

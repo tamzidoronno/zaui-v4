@@ -87,6 +87,11 @@ public class PmsBooking extends DataCommon {
     public boolean tryAutoCharge = false;
     public HashMap<String, String> recieptEmail = new HashMap();
     
+    //Jomres Related Properties
+    public long jomresBookingId=0;
+    public long jomresChannelId=0;
+    public String jomresReservationCode="";
+    public Date jomresLastModified=null;
     
     @Administrator
     public String secretBookingId = "";
@@ -546,6 +551,10 @@ public class PmsBooking extends DataCommon {
     }
 
     public void calculateTotalCost() {
+        if(channel.contains("jomres")){
+            totalPrice = rooms.get(0).totalCost;
+            return;
+        }
         if(!priceType.equals(PmsBooking.PriceType.daily)) {
             return;
         }

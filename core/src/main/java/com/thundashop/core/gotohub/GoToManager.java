@@ -3,74 +3,45 @@ package com.thundashop.core.gotohub;
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItemType;
-import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ManagerBase;
-import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.gotohub.dto.*;
-import com.thundashop.core.listmanager.data.Entry;
 import com.thundashop.core.pmsbookingprocess.BookingProcessRooms;
 import com.thundashop.core.pmsbookingprocess.PmsBookingProcess;
 import com.thundashop.core.pmsbookingprocess.StartBooking;
-import com.thundashop.core.pmsbookingprocess.StartBookingResult;
 import com.thundashop.core.pmsmanager.*;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.data.User;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Component
 @GetShopSession
 @Slf4j
 public class GoToManager extends ManagerBase implements IGoToManager {
+    @Autowired PmsManager pmsManager;
+    @Autowired StoreManager storeManager;
+    @Autowired StorePool storePool;
+    @Autowired BookingEngine bookingEngine;
+    @Autowired PmsInvoiceManager pmsInvoiceManager;
+    @Autowired PmsBookingProcess pmsProcess;
 
-    @Autowired
-    PmsManager pmsManager;
-    @Autowired
-    StoreManager storeManager;
-    @Autowired
-    StorePool storePool;
-    @Autowired
-    BookingEngine bookingEngine;
-    @Autowired
-    PmsInvoiceManager pmsInvoiceManager;
-
-
-    @Autowired
-    PmsBookingProcess pmsProcess;
-
-
-    private static final String MANAGER = GoToManager.class.getSimpleName();
     private GoToSettings settings = new GoToSettings();
-    private static SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+    private static final SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 
-    public synchronized void dataFromDatabase(DataRetreived data) {
-        for (DataCommon dataCommon : data.data) {
-            if(dataCommon instanceof GoToSettings) {
-                settings = (GoToSettings) dataCommon;
-            }
-           /* else if(dataCommon instanceof GoToRoomData) {
-                goToRoomData.put(((GoToRoomData) dataCommon).bookingEngineTypeId, (GoToRoomData) dataCommon);
-            }*/
-            /*else if(dataCommon instanceof RatePlan) {
-                ratePlans.put(((RatePlan) dataCommon).rate_plan_code, (RatePlan) dataCommon);
-            }*/
-        }
-    }
 
     @Override
     public boolean changeToken(String newToken) {
@@ -85,13 +56,33 @@ public class GoToManager extends ManagerBase implements IGoToManager {
     }
 
     @Override
-    public String testConnection() throws Exception {
+    public String testConnection() {
         return settings.authToken;
     }
 
     @Override
     public Hotel getHotelInformation() {
         return mapStoreToGoToHotel(storeManager.getMyStore(), pmsManager.getConfiguration());
+    }
+
+    @Override
+    public List<RoomType> getRoomTypeDetails() throws Exception {
+        StartBooking arg = getBookingArgument(0);
+        List<GoToRoomData> goToRoomData = getGoToRoomData(false, arg);
+        List<RoomType> roomTypes = new ArrayList<>();
+        for(GoToRoomData roomData: goToRoomData){
+            if("-2".equals(roomData.getGoToRoomTypeCode())){
+                continue;
+            }
+            RoomType roomType = getRoomTypesFromRoomData(roomData);
+            roomTypes.add(roomType);
+        }
+        return roomTypes;
+    }
+
+    @Override
+    public List<PriceAllotment> getPriceAndAllotment() throws Exception {
+        return getPriceAllotments();
     }
 
     private GoToRoomData mapBookingItemTypeToGoToRoomData(BookingItemType bookingItemType, BookingProcessRooms room, PmsAdditionalTypeInformation additionalInfo){
@@ -121,18 +112,10 @@ public class GoToManager extends ManagerBase implements IGoToManager {
         return BookingItemType.BookingSystemCategory.categories.get(type) != null ?  BookingItemType.BookingSystemCategory.categories.get(type) : "ROOM";
     }
 
-    public  List<GoToRoomData> getGoToRoomData(boolean needPricing) throws Exception {
+    private List<GoToRoomData> getGoToRoomData(boolean needPricing, StartBooking arg) throws Exception {
         List<GoToRoomData> goToRoomData = new ArrayList<>();
         List<BookingItemType> bookingItemTypes = bookingEngine.getBookingItemTypesWithSystemType(null);
-
-        boolean isAdministrator = false;
         User user = getSession() != null && getSession().currentUser != null ? getSession().currentUser : new User();
-        if(getSession() != null && getSession().currentUser != null && getSession().currentUser.isAdministrator()) {
-            isAdministrator = true;
-        }
-
-        StartBooking arg = getBookingArgument(0);
-        long totalRooms = 0;
         for(BookingItemType type : bookingItemTypes) {
             if(!type.visibleForBooking) {
                 continue;
@@ -144,7 +127,6 @@ public class GoToManager extends ManagerBase implements IGoToManager {
             room.id = type.id;
             room.systemCategory = type.systemCategory;
             room.visibleForBooker = type.visibleForBooking;
-            totalRooms += room.availableRooms;
             PmsAdditionalTypeInformation typeInfo = pmsManager.getAdditionalTypeInformationById(type.id);
             try {
                 room.images.addAll(typeInfo.images);
@@ -210,31 +192,12 @@ public class GoToManager extends ManagerBase implements IGoToManager {
 
         return arg;
     }
-    @Override
-    public List<RoomType> getRoomTypeDetails() throws Exception {
-        List<GoToRoomData> goToRoomData = getGoToRoomData(false);
-        List<RoomType> roomTypes = new ArrayList<>();
-        for(GoToRoomData roomData: goToRoomData){
-            if("-2".equals(roomData.getGoToRoomTypeCode())){
-                continue;
-            }
-            RoomType roomType = getRoomTypesFromRoomData(roomData);
-            roomTypes.add(roomType);
-        }
-        return roomTypes;
-    }
-
-    @Override
-    public List<PriceAllotment> getPriceAndAllotment() throws Exception {
-        return getPriceAllotments();
-    }
 
     private List<PriceAllotment> getPriceAllotments() throws Exception {
-        List<GoToRoomData> goToRoomData = getGoToRoomData(true);
-
         List<PriceAllotment> allotments = new ArrayList<>();
         for(int i = 0; i < 30; i++) {
             StartBooking range = getBookingArgument(i);
+            List<GoToRoomData> goToRoomData = getGoToRoomData(true, range);
             for (GoToRoomData roomData : goToRoomData) {
                 if ("-1".equals(roomData.getRoomCategory()) || "-2".equals(roomData.getRoomCategory()) || roomData.getPricesByGuests() == null) {
                     continue;
@@ -253,6 +216,7 @@ public class GoToManager extends ManagerBase implements IGoToManager {
         }
         return allotments;
     }
+
     private RoomType getRoomTypesFromRoomData(GoToRoomData roomData) {
         RoomType roomType = new RoomType();
         roomType.setHotelCode(storeManager.getMyStore().webAddressPrimary);
@@ -265,28 +229,29 @@ public class GoToManager extends ManagerBase implements IGoToManager {
         roomType.setNumberOfChildren(roomData.getNumberOfChildren());
         roomType.setRoomCategory(roomData.getRoomCategory());
         List<RatePlan> ratePlans = new ArrayList<>();
-        StartBooking range = getBookingArgument(0);
-        for(int guest=1; guest<=roomData.getMaxGuest(); guest++){
-            RatePlan newRatePlan = createNewRatePlan(guest, range, roomData.getName());
+        String start = LocalDate.now().format(formatter);
+        String end = LocalDate.now().plusYears(1).format(formatter);
+        for(int guest=1; guest <= roomData.getMaxGuest(); guest++){
+            RatePlan newRatePlan = createNewRatePlan(guest, roomData.getName(), start, end);
             ratePlans.add(newRatePlan);
         }
         roomType.setRatePlans(ratePlans);
         return roomType;
     }
 
-    private RatePlan createNewRatePlan(int numberOfGuests, StartBooking range, String name){
+    private RatePlan createNewRatePlan(int numberOfGuests, String name, String start, String end){
         RatePlan ratePlan = new RatePlan();
         ratePlan.setRatePlanCode(name + "-" + numberOfGuests);
         ratePlan.setRestriction("");
-        ratePlan.setName("Rate Plan - "+ name + " - " + String.valueOf(numberOfGuests));
-        ratePlan.setDescription("Rate Plan for "+String.valueOf(numberOfGuests)+" guests");
-        String about = "Rate Plan "+String.valueOf(numberOfGuests)+" is mainly for "+String.valueOf(numberOfGuests)+" guests.";
-        about += " Price may vary for this rate plan and this rate plan will be applied";
-        about += " when someone book a room for "+String.valueOf(numberOfGuests)+" guests";
-        ratePlan.setAbout(about);
+        ratePlan.setName("Rate Plan - " + name + " - " + numberOfGuests);
+        ratePlan.setDescription("Rate Plan for " + numberOfGuests + " guests");
+        StringBuilder about = new StringBuilder().append("Rate Plan ").append(numberOfGuests).append(" is mainly for ").append(numberOfGuests).append(" guests.")
+        .append(" Price may vary for this rate plan and this rate plan will be applied")
+        .append(" when someone book a room for ").append(numberOfGuests).append(" guests");
+        ratePlan.setAbout(about.toString());
         ratePlan.setGuestCount(String.valueOf(numberOfGuests));
-        ratePlan.setEffectiveDate(df.format(range.start));
-        ratePlan.setExpireDate(df.format(range.end));
+        ratePlan.setEffectiveDate(start);
+        ratePlan.setExpireDate(end);
         return ratePlan;
     }
 
@@ -319,6 +284,7 @@ public class GoToManager extends ManagerBase implements IGoToManager {
         hotel.setStatus(store.deactivated ? "Deactivated" : "Active");
         return hotel;
     }
+
     private String getHotelWebAddress(Store store){
         String webAddress = store.getDefaultWebAddress();
         if(webAddress.contains("getshop.com")) return webAddress;

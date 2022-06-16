@@ -1,5 +1,6 @@
 package com.thundashop.core.gotohub;
 
+import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.gotohub.dto.Hotel;
 import com.thundashop.core.gotohub.dto.PriceAllotment;
@@ -16,6 +17,7 @@ public interface IGoToManager {
      * @param newToken
      * @return <code>true</code> if modfied, <code>false/code> if failed to change
      */
+    @Administrator
     public boolean changeToken(String newToken);
 
     /**

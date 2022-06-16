@@ -25,6 +25,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Component
@@ -71,7 +72,7 @@ public class GoToManager extends ManagerBase implements IGoToManager {
         List<GoToRoomData> goToRoomData = getGoToRoomData(false, arg);
         List<RoomType> roomTypes = new ArrayList<>();
         for(GoToRoomData roomData: goToRoomData){
-            if("-2".equals(roomData.getGoToRoomTypeCode())){
+            if(isBlank(roomData.getGoToRoomTypeCode())){
                 continue;
             }
             RoomType roomType = getRoomTypesFromRoomData(roomData);
@@ -199,7 +200,7 @@ public class GoToManager extends ManagerBase implements IGoToManager {
             StartBooking range = getBookingArgument(i);
             List<GoToRoomData> goToRoomData = getGoToRoomData(true, range);
             for (GoToRoomData roomData : goToRoomData) {
-                if ("-1".equals(roomData.getRoomCategory()) || "-2".equals(roomData.getRoomCategory()) || roomData.getPricesByGuests() == null) {
+                if (roomData.getPricesByGuests() == null) {
                     continue;
                 }
                 for (Map.Entry<Integer, Double> priceEntry : roomData.getPricesByGuests().entrySet()) {

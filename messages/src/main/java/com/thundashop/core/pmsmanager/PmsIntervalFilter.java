@@ -11,6 +11,13 @@ public class PmsIntervalFilter implements Serializable {
     Integer interval;
     boolean compactMode = false;
     String selectedDefinedFilter = "";
+
+    public PmsIntervalFilter(Date start, Date end, Integer interval) {
+        this.start = start;
+        this.end = end;
+        this.interval = interval;
+    }
+
     public List<String> types = new ArrayList();
     
     /**

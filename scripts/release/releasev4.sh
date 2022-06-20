@@ -9,6 +9,7 @@ if [ $releaseAnswer = "1" ]; then
 	echo "What server do you want to release to?"
 	echo "3 = Server 3 ( First server ever created )";
 	echo "4 = Server 4 ( Created: 8 june 2017 )";
+echo "41 = Server 41 ( Created: 2022 - Bergstaden )";
 	echo "5 = Server Kronen ( Created: 19 aug 2018 )";
   echo "6 = Server cluster 6 ( Created: 19 juli 2019 )";
   echo "9 = Server cluster 9 ( Created: 26 nov 2020 )";
@@ -20,6 +21,8 @@ if [ $releaseAnswer = "1" ]; then
 		#ssh naxa@jenkins.getshop.com '/home/naxa/scripts/release.sh'
 	elif [ $serverQuestion = "4" ]; then
 		ssh naxa@jenkins2021.getshop.com '/home/naxa/scripts/releaseSoftwareV4.sh 10.0.4.33 10.0.4.32'
+        elif [ $serverQuestion = "41" ]; then
+                ssh naxa@jenkins2021.getshop.com '/home/naxa/scripts/releaseSoftwareV4.sh 10.0.41.33 10.0.41.32'
 	elif [ $serverQuestion = "5" ]; then
 		ssh naxa@jenkins2021.getshop.com '/home/naxa/scripts/releaseSoftwareV4.sh 10.0.5.33 10.0.5.32'
   elif [ $serverQuestion = "6" ]; then

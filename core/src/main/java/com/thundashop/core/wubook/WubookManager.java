@@ -2738,7 +2738,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement(table);
 
         Vector result = executeClient(UPDATE_PLAN_PRICES.value(), params);
-        if ((Integer) result.get(0) != 0) {
+        if ((Integer) result.get(0) != SUCCESS_STATUS_CODE) {
             logText("Unable to update prices:" + result.get(1));
             logText("parameters sent:");
             logText(params.toString());

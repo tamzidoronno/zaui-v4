@@ -1,26 +1,10 @@
 package com.thundashop.core.pmsmanager;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
-
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
+import biweekly.Biweekly;
+import biweekly.ICalendar;
+import biweekly.component.VEvent;
+import biweekly.property.Summary;
+import biweekly.util.Duration;
 import com.braintreegateway.org.apache.commons.codec.binary.Base64;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
@@ -32,39 +16,20 @@ import com.thundashop.core.appmanager.data.Application;
 import com.thundashop.core.arx.AccessLog;
 import com.thundashop.core.arx.DoorManager;
 import com.thundashop.core.bookingengine.BookingEngine;
-import com.thundashop.core.bookingengine.data.Booking;
-import com.thundashop.core.bookingengine.data.BookingItem;
-import com.thundashop.core.bookingengine.data.BookingItemType;
-import com.thundashop.core.bookingengine.data.BookingTimeLine;
-import com.thundashop.core.bookingengine.data.BookingTimeLineFlatten;
-import com.thundashop.core.bookingengine.data.RegistrationRules;
+import com.thundashop.core.bookingengine.data.*;
 import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.AddonsInclude;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.Coupon;
 import com.thundashop.core.checklist.ChecklistManager;
-import com.thundashop.core.common.Administrator;
-import com.thundashop.core.common.BookingEngineException;
-import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.common.ErrorException;
-import com.thundashop.core.common.FilterOptions;
-import com.thundashop.core.common.FilteredData;
-import com.thundashop.core.common.FrameworkConfig;
-import com.thundashop.core.common.GrafanaFeederImpl;
-import com.thundashop.core.common.GrafanaManager;
-import com.thundashop.core.common.Session;
-import com.thundashop.core.common.Setting;
-import com.thundashop.core.common.ZReportProcessor;
+import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.Database;
+import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.getshoplock.GetShopDeviceLog;
 import com.thundashop.core.getshoplock.GetShopLockManager;
-import com.thundashop.core.getshoplocksystem.AccessHistoryResult;
-import com.thundashop.core.getshoplocksystem.GetShopLockSystemManager;
-import com.thundashop.core.getshoplocksystem.LockCode;
-import com.thundashop.core.getshoplocksystem.LockGroup;
-import com.thundashop.core.getshoplocksystem.MasterUserSlot;
+import com.thundashop.core.getshoplocksystem.*;
 import com.thundashop.core.gsd.DevicePrintRoomCode;
 import com.thundashop.core.gsd.GdsManager;
 import com.thundashop.core.messagemanager.MessageManager;
@@ -95,7 +60,6 @@ import com.thundashop.core.utils.NullSafeConcurrentHashMap;
 import com.thundashop.core.utils.UtilManager;
 import com.thundashop.core.webmanager.WebManager;
 import com.thundashop.core.wubook.WubookManager;
-
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -104,14 +68,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.env.Environment;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 
-import biweekly.Biweekly;
-import biweekly.ICalendar;
-import biweekly.component.VEvent;
-import biweekly.property.Summary;
-import biweekly.util.Duration;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 /**
  *
@@ -132,6 +102,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private HashMap<String, PmsPricing> priceMap = new HashMap<>();
     private HashMap<String, ConferenceData> conferenceDatas = new HashMap<>();
     private HashMap<String, FailedWubookInsertion> failedWubooks = new HashMap<>();
+    
+    private HashMap<Long, FailedJomresInsertion> failedJomresBookings = new HashMap<>();
+    
+    
     private HashMap<String, PmsRoomTypeAccessory> accesories = new HashMap<>();
     private PmsConfiguration configuration = new PmsConfiguration();
     private List<String> repicientList = new ArrayList<>();
@@ -249,6 +223,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     
     @Autowired
     Database dataBase;
+
+    @Autowired
+    private Environment env;
     private Date virtualOrdersCreated;
     private Date startedDate;
 
@@ -276,6 +253,31 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
+    public List<DataCommon> retreiveData(Credentials credentials) {
+        String dateAfterDataToRetrieve = env.getProperty("data.filter."  + storeId);
+        if(StringUtils.isBlank(dateAfterDataToRetrieve)) return super.retreiveData(credentials, null);
+        Date dt = null;
+        try {
+            dt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateAfterDataToRetrieve);
+        } catch (ParseException e) {
+            logger.error("Fail to covert date of client {} {}, original exception {}", storeId, dateAfterDataToRetrieve, e);
+            return super.retreiveData(credentials, null);
+        }
+        //only PmsBooking with date filtering
+        BasicDBObject bookingQuery = new BasicDBObject();
+        bookingQuery.put("rowCreatedDate", new BasicDBObject("$gte", dt));
+        bookingQuery.put("className", "com.thundashop.core.pmsmanager.PmsBooking");
+        List<DataCommon> bookingData = super.retreiveData(credentials, bookingQuery);
+
+        BasicDBObject otherQuery = new BasicDBObject();
+        otherQuery.put("className", new BasicDBObject("$ne", "com.thundashop.core.pmsmanager.PmsBooking"));
+        List<DataCommon> otherData = super.retreiveData(credentials, otherQuery);
+
+        bookingData.addAll(otherData);
+
+        return bookingData;
+    }
+    @Override
     public void dataFromDatabase(DataRetreived data) {
         Calendar toCheck = Calendar.getInstance();
 
@@ -296,6 +298,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (dataCommon instanceof FailedWubookInsertion) {
                 FailedWubookInsertion failure = (FailedWubookInsertion) dataCommon;
                 failedWubooks.put(failure.wubookResId, failure);
+            }
+            if (dataCommon instanceof FailedJomresInsertion) {
+                FailedJomresInsertion failure = (FailedJomresInsertion) dataCommon;
+                failedJomresBookings.put(failure.jomresBookingId, failure);
             }
             if (dataCommon instanceof PmsBookingAutoIncrement) {
                 autoIncrement = (PmsBookingAutoIncrement) dataCommon;
@@ -890,8 +896,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         for (PmsBookingRooms room : booking.getActiveRooms()) {
-            for (PmsBookingAddonItem item : room.addons) {
-                item.finalize();
+            if(!booking.channel.contains("jomres")){
+                for (PmsBookingAddonItem item : room.addons) {
+                    item.finalize();
+                }
             }
 
             if (room.bookingItemTypeId != null
@@ -2279,8 +2287,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     .orElse(null);
 
             gsTiming("Before looping");
-            LinkedHashMap<Long, IntervalResultEntry> retLines = getTimeLine(line, filter);
-            res.itemTimeLines.put(item.id, retLines);
+            if(line==null){
+                System.out.println("Didn't find the booking timeline flatten line for room "+item.bookingItemName+"..");
+                System.out.println("Assigning an empty time line hash map");
+                res.itemTimeLines.put(item.id, new LinkedHashMap<>());
+            } else{
+                LinkedHashMap<Long, IntervalResultEntry> retLines = getTimeLine(line, filter);
+                res.itemTimeLines.put(item.id, retLines);
+            }
         }
         
         List<BookingTimeLineFlatten> overflowedLines = lines.stream()
@@ -2299,7 +2313,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     private LinkedHashMap<Long, IntervalResultEntry> getTimeLine(BookingTimeLineFlatten line, PmsIntervalFilter filter) throws ErrorException {
         if(line == null) {
-            System.out.println("ok?");
+            System.out.println("Didn't find the booking timeline flatten line.. returning");
+            return new LinkedHashMap<>();
         }
         List<BookingTimeLine> timelines = line.getTimelines(filter.interval - 21600, 21600);
         LinkedHashMap<Long, IntervalResultEntry> itemCountLine = new LinkedHashMap<>();
@@ -7177,9 +7192,21 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         saveObject(failed);
         failedWubooks.put(failed.wubookResId, failed);
     }
+    
+    public void markSentErrorMessageForJomresBooking(long  jomresBookingId) {
+        FailedJomresInsertion failed = new FailedJomresInsertion();
+        failed.jomresBookingId = jomresBookingId;
+        failed.when = new Date();
+        saveObject(failed);
+        failedJomresBookings.put(failed.jomresBookingId, failed);
+    }
 
     public boolean hasSentErrorNotificationForWubookId(String wubookId) {
         return failedWubooks.containsKey(wubookId);
+    }
+    
+    public boolean hasSentErrorNotificationForJomresBooking(long jomresBookingId) {
+        return failedJomresBookings.containsKey(jomresBookingId);
     }
 
     @Override
@@ -10514,7 +10541,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void saveObject(DataCommon data) throws ErrorException {
         if (data instanceof PmsBooking && data.id != null && !data.id.isEmpty() && !avoidCalculateUnsettledAmount) {
-            calculateUnsettledAmountForRooms((PmsBooking)data);
+            if(!((PmsBooking)data).channel.contains("jomres"))
+                calculateUnsettledAmountForRooms((PmsBooking)data);
         }
         
         super.saveObject(data); //To change body of generated methods, choose Tools | Templates.

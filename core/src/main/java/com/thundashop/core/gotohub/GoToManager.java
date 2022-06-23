@@ -93,13 +93,14 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
     @Override
     public boolean saveConfiguration(GoToConfiguration configuration) {
-        saveObject(goToConfiguration);
+        saveObject(configuration);
+        goToConfiguration = configuration;
         return true;
     }
 
     @Override
     public GoToConfiguration getConfiguration() {
-        return null;
+        return goToConfiguration;
     }
 
     @Override

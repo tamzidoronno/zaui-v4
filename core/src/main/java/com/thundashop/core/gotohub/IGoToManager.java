@@ -54,7 +54,7 @@ public interface IGoToManager {
      * Get GoTo related configurations
      * @return {@link GoToManager}
      */
-    @Administrator
+    //@Administrator
     public GoToConfiguration getConfiguration();
 
     /**
@@ -62,6 +62,6 @@ public interface IGoToManager {
      * @param configuration
      * @return <code>true</code> if saved, <code>false</code> if failed
      */
-    @Administrator
+    //@Administrator
     public boolean saveConfiguration(GoToConfiguration configuration);
 }

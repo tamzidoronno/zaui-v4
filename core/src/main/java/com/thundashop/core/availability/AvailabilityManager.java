@@ -82,8 +82,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import static org.apache.commons.lang3.StringUtils.*;
 
 /**
  * @author Naim Murad (naim)
@@ -96,15 +95,16 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
 
     @Autowired private  StoreManager storeManager;
     @Autowired private PmsManager pmsManager;
-    @Autowired private UserManager userManager;
+    @Autowired private UserManager usStartBookingerManager;
     @Autowired private PmsInvoiceManager pmsInvoiceManager;
     @Autowired private BookingEngine bookingEngine;
     @Autowired private CartManager cartManager;
     @Autowired private ProductManager productManager;
+    @Autowired private UserManager userManager;
 
     @Override
-    public StartBookingResult startBooking(StartBooking arg) {
-        if(arg.discountCode != null) {
+    public StartBookingResult checkAvailability(StartBooking arg) {
+        if(isNotBlank(arg.discountCode)) {
             arg.discountCode = arg.discountCode.replaceAll("&amp;", "&");
         }
 
@@ -239,7 +239,7 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
             result.prefilledContactUser = userManager.getUserById(booking.userId).fullName;
         }
 
-        addCouponPricesToRoom(result, arg);
+        //TODO need for pricing addCouponPricesToRoom(result, arg);
         checkIfCouponIsValid(result, arg);
         checkForRestrictions(result, arg);
         addAddonsIncluded(result,arg);
@@ -317,7 +317,7 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
                     }
                 }
             }
-        }catch(Exception e) {
+        } catch(Exception e) {
             logPrintException(e);
         }
         return 1;
@@ -375,58 +375,51 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
     }
 
     private void checkIfCouponIsValid(StartBookingResult result, StartBooking arg) {
+        if(isBlank(arg.discountCode)) return;
+        Coupon coupon = cartManager.getCoupon(arg.discountCode);
+        if(coupon == null) return;
+
         boolean removeAvailability = false;
         List<String> roomsToRemove = new ArrayList();
-        if(arg.discountCode != null && !arg.discountCode.isEmpty()) {
-            Coupon coupon = cartManager.getCoupon(arg.discountCode);
-            if(coupon != null) {
-                for(BookingProcessRooms r : result.rooms) {
-                    BookingItemType type = bookingEngine.getBookingItemType(r.id);
-                    if(!cartManager.couponIsValid(new Date(), arg.discountCode, arg.start,arg.end, type.productId, arg.getNumberOfDays())) {
-                        roomsToRemove.add(r.id);
-                        removeAvailability = true;
-                    }
-
-                    if(removeAvailability && roomsToRemove.size() == result.rooms.size()) {
-                        result.errorMessage = "outsideperiode::";
-                    }
-
-                }
-
-
-                if(coupon.minDays > 0 && coupon.minDays > arg.getNumberOfDays()) {
-                    result.errorMessage = "min_days:{arg}:" + coupon.minDays;
-                    removeAvailability = true;
-                }
-                if(coupon.maxDays > 0 && coupon.maxDays < arg.getNumberOfDays()) {
-                    result.errorMessage = "max_days:{arg}:" + coupon.maxDays;
-                    removeAvailability = true;
-                }
+        for(BookingProcessRooms r : result.rooms) {
+            BookingItemType type = bookingEngine.getBookingItemType(r.id);
+            if(!cartManager.couponIsValid(new Date(), arg.discountCode, arg.start,arg.end, type.productId, arg.getNumberOfDays())) {
+                roomsToRemove.add(r.id);
+                removeAvailability = true;
             }
-            if(removeAvailability) {
-                removeAllRooms(result, roomsToRemove);
+
+            if(removeAvailability && roomsToRemove.size() == result.rooms.size()) {
+                result.errorMessage = "outsideperiode::";
             }
+
+        }
+
+
+        if(coupon.minDays > 0 && coupon.minDays > arg.getNumberOfDays()) {
+            result.errorMessage = "min_days:{arg}:" + coupon.minDays;
+            removeAvailability = true;
+        }
+        if(coupon.maxDays > 0 && coupon.maxDays < arg.getNumberOfDays()) {
+            result.errorMessage = "max_days:{arg}:" + coupon.maxDays;
+            removeAvailability = true;
+        }
+        if(removeAvailability) {
+            removeAllRooms(result, roomsToRemove);
         }
     }
 
     private void addCouponPricesToRoom(StartBookingResult result, StartBooking arg) {
-        if(arg.discountCode != null && !arg.discountCode.isEmpty()) {
-            Coupon coupon = cartManager.getCoupon(arg.discountCode);
-            if(coupon != null && coupon.addonsToInclude != null) {
-                for(AddonsInclude inc : coupon.addonsToInclude) {
-                    if(inc.includeInRoomPrice) {
-                        continue;
-                    }
-
-                    Product product = productManager.getProduct(inc.productId);
-
-                    for(BookingProcessRooms tmp : result.rooms) {
-                        for(Integer guests : tmp.pricesByGuests.keySet()) {
-                            double price = tmp.pricesByGuests.get(guests);
-                            price += product.price * guests;
-                            tmp.pricesByGuests.put(guests, price);
-                        }
-                    }
+        if(isBlank(arg.discountCode)) return;
+        Coupon coupon = cartManager.getCoupon(arg.discountCode);
+        if(coupon == null || coupon.addonsToInclude == null || coupon.addonsToInclude.isEmpty()) return;
+        List<AddonsInclude> addons = coupon.addonsToInclude.stream().filter(e -> e.includeInRoomPrice).collect(Collectors.toList());
+        for(AddonsInclude inc : addons) {
+            Product product = productManager.getProduct(inc.productId);
+            for(BookingProcessRooms tmp : result.rooms) {
+                for(Integer guests : tmp.pricesByGuests.keySet()) {
+                    double price = tmp.pricesByGuests.get(guests);
+                    price += product.price * guests;
+                    tmp.pricesByGuests.put(guests, price);
                 }
             }
         }

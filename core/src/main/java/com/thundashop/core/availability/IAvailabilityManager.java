@@ -20,5 +20,5 @@ import java.util.*;
 public interface IAvailabilityManager {
 
     @Administrator
-    public StartBookingResult startBooking(StartBooking arg);
+    public StartBookingResult checkAvailability(StartBooking arg);
 }

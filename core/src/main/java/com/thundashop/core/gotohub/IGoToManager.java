@@ -2,6 +2,7 @@ package com.thundashop.core.gotohub;
 
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.gotohub.dto.GoToConfiguration;
 import com.thundashop.core.gotohub.dto.Hotel;
 import com.thundashop.core.gotohub.dto.PriceAllotment;
 import com.thundashop.core.gotohub.dto.RoomType;
@@ -15,7 +16,7 @@ public interface IGoToManager {
     /**
      * To change to access token internally
      * @param newToken
-     * @return <code>true</code> if modfied, <code>false/code> if failed to change
+     * @return <code>true</code> if modfied, <code>false</code> if failed to change
      */
     @Administrator
     public boolean changeToken(String newToken);
@@ -48,4 +49,19 @@ public interface IGoToManager {
      * @throws Exception
      */
     public List<PriceAllotment> getPriceAndAllotment() throws Exception;
+
+    /**
+     * Get GoTo related configurations
+     * @return {@link GoToManager}
+     */
+    @Administrator
+    public GoToConfiguration getConfiguration();
+
+    /**
+     * Save goto related configuration
+     * @param configuration
+     * @return <code>true</code> if saved, <code>false</code> if failed
+     */
+    @Administrator
+    public boolean saveConfiguration(GoToConfiguration configuration);
 }

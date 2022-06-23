@@ -1,9 +1,11 @@
 package com.thundashop.core.gotohub;
 
 import com.getshop.scope.GetShopSession;
+import com.getshop.scope.GetShopSessionBeanNamed;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItemType;
-import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.gotohub.dto.*;
 import com.thundashop.core.pmsbookingprocess.BookingProcessRooms;
 import com.thundashop.core.pmsbookingprocess.PmsBookingProcess;
@@ -31,7 +33,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 @Component
 @GetShopSession
 @Slf4j
-public class GoToManager extends ManagerBase implements IGoToManager {
+public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager {
     @Autowired PmsManager pmsManager;
     @Autowired StoreManager storeManager;
     @Autowired StorePool storePool;
@@ -42,6 +44,9 @@ public class GoToManager extends ManagerBase implements IGoToManager {
     private GoToSettings settings = new GoToSettings();
     private static final SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+
+    public GoToConfiguration goToConfiguration = null;
+
 
 
     @Override
@@ -84,6 +89,26 @@ public class GoToManager extends ManagerBase implements IGoToManager {
     @Override
     public List<PriceAllotment> getPriceAndAllotment() throws Exception {
         return getPriceAllotments();
+    }
+
+    @Override
+    public boolean saveConfiguration(GoToConfiguration configuration) {
+        saveObject(goToConfiguration);
+        return true;
+    }
+
+    @Override
+    public GoToConfiguration getConfiguration() {
+        return null;
+    }
+
+    @Override
+    public void dataFromDatabase(DataRetreived data) {
+        for (DataCommon dataCommon : data.data) {
+            if (dataCommon instanceof GoToConfiguration) {
+                goToConfiguration = (GoToConfiguration) dataCommon;
+            }
+        }
     }
 
     private GoToRoomData mapBookingItemTypeToGoToRoomData(BookingItemType bookingItemType, BookingProcessRooms room, PmsAdditionalTypeInformation additionalInfo){

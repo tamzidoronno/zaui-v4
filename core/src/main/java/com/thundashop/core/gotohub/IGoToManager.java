@@ -2,6 +2,7 @@ package com.thundashop.core.gotohub;
 
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.gotohub.dto.Booking;
 import com.thundashop.core.gotohub.dto.Hotel;
 import com.thundashop.core.gotohub.dto.PriceAllotment;
 import com.thundashop.core.gotohub.dto.RoomType;
@@ -48,4 +49,5 @@ public interface IGoToManager {
      * @throws Exception
      */
     public List<PriceAllotment> getPriceAndAllotment() throws Exception;
+    public boolean saveBooking(Booking booking);
 }

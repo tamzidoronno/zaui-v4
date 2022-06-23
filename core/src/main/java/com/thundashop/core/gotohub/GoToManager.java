@@ -1,10 +1,16 @@
 package com.thundashop.core.gotohub;
 
 import com.getshop.scope.GetShopSession;
+import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.gotohub.dto.*;
+import com.thundashop.core.gotohub.dto.Room;
+import com.thundashop.core.jomres.JomresManager;
+import com.thundashop.core.messagemanager.MessageManager;
+import com.thundashop.core.ordermanager.OrderManager;
+import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pmsbookingprocess.BookingProcessRooms;
 import com.thundashop.core.pmsbookingprocess.PmsBookingProcess;
 import com.thundashop.core.pmsbookingprocess.StartBooking;
@@ -14,9 +20,12 @@ import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.data.User;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -38,10 +47,16 @@ public class GoToManager extends ManagerBase implements IGoToManager {
     @Autowired BookingEngine bookingEngine;
     @Autowired PmsInvoiceManager pmsInvoiceManager;
     @Autowired PmsBookingProcess pmsProcess;
+    @Autowired StoreApplicationPool storeApplicationPool;
+    @Autowired OrderManager orderManager;
+    @Autowired MessageManager messageManager;
 
     private GoToSettings settings = new GoToSettings();
     private static final SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+    private static final SimpleDateFormat bookingDateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(JomresManager.class);
 
 
     @Override
@@ -86,13 +101,260 @@ public class GoToManager extends ManagerBase implements IGoToManager {
         return getPriceAllotments();
     }
 
+    private PmsBooking getBooking(Booking booking) throws Exception {
+        PmsBooking pmsBooking = findCorrelatedBooking(booking.getReservationId());
+        if (pmsBooking == null) {
+            pmsBooking = pmsManager.startBooking();
+        }
+
+        pmsBooking = mapBookingToPmsBooking(booking, pmsBooking);
+        pmsBooking = setPaymentMethod(pmsBooking);
+        pmsManager.setBooking(pmsBooking);
+        pmsInvoiceManager.clearOrdersOnBooking(pmsBooking);
+        pmsBooking = pmsManager.doCompleteBooking(pmsBooking);
+        return pmsBooking;
+    }
+
+    private String getBookingDetailsTextForMail(Booking booking){
+        String text = "Booking Details:<br><br>";
+        text += "&emsp Arrival Date: "+ booking.getCheckInDate();
+        text += "<br><br>";
+        text += "&emsp Departure Date: "+ booking.getCheckOutDate();
+        text += "<br><br>";
+        text += "&emsp Rooms:";
+        text += "<br><br>";
+        for(Room room: booking.getRooms()){
+            BookingItemType type = bookingEngine.getBookingItemType(room.getRoomCode());
+            if(type!=null) text += "&emsp &emsp "+type.name+"<br><br>";
+            else text += "&emsp &emsp Room Type (BookingItemType) isn't found for Id: "+room.getRoomCode()+"<br><br>";
+
+        }
+        return text;
+    }
+
+    private void handleOverbooking(PmsBooking pmsBooking, String emailText){
+        pmsManager.deleteBooking(pmsBooking.id);
+
+        String email = getStoreEmailAddress();
+        String content = "Booking creation has been failed due to overbooking:<br>" + emailText;
+        messageManager.sendMail(email, email, "Goto Booking Failed, Reason: Overbooking", content, email,
+                email);
+    }
+    private boolean checkForPaidOrders(PmsBooking newbooking) {
+        boolean hasPaidOrders = false;
+
+        if (newbooking.orderIds == null) {
+            newbooking.orderIds = new ArrayList<>();
+        }
+
+        for (String orderId : newbooking.orderIds) {
+            Order ord = orderManager.getOrder(orderId);
+            if (ord.status == Order.Status.PAYMENT_COMPLETED) {
+                hasPaidOrders = true;
+            }
+        }
+        return hasPaidOrders;
+    }
+
+    private void handlePaymentOrder(PmsBooking pmsBooking, String checkoutDate) throws ParseException {
+        Date endInvoiceAt = new Date();
+        if (bookingDateFormatter.parse(checkoutDate).after(endInvoiceAt))
+            endInvoiceAt = bookingDateFormatter.parse(checkoutDate);
+
+        NewOrderFilter filter = new NewOrderFilter();
+        filter.createNewOrder = false;
+        filter.prepayment = true;
+        filter.endInvoiceAt = endInvoiceAt;
+
+        if (pmsBooking.paymentType != null && !pmsBooking.paymentType.isEmpty()) {
+            pmsInvoiceManager.autoCreateOrderForBookingAndRoom(pmsBooking.id, pmsBooking.paymentType);
+        }
+
+
+        boolean hasPaidOrders = checkForPaidOrders(pmsBooking);
+        if (hasPaidOrders) {
+            String orderId = pmsInvoiceManager.autoCreateOrderForBookingAndRoom(pmsBooking.id,
+                    pmsBooking.paymentType);
+            Order ord = orderManager.getOrder(orderId);
+            Double amount = orderManager.getTotalAmount(ord);
+            if (amount == 0.0) {
+                pmsInvoiceManager.markOrderAsPaid(pmsBooking.id, orderId);
+            }
+        }
+    }
+
+    public boolean saveBooking(Booking booking) {
+        try {
+            if (!isCurrencySameWithSystem(booking.getCurrency())) {
+                handleDifferentCurrencyBooking(booking);
+                return false;
+            }
+            PmsBooking pmsBooking = getBooking(booking);
+            if (pmsBooking == null) {
+                String errorText = "Failed to add new Goto Booking, Arrival: "+ booking.getCheckInDate()
+                        + ", Departure: " + booking.getCheckOutDate();
+                logger.error(errorText);
+                String emailDetails = "Booking Creation/Updation has been failed.<br><br>"+
+                        "Some possible reason: <br>"+
+                        "1. Maybe there is one or more invalid room to book"+
+                        "2. The payment method is not valid or failed to activate"+
+                        "Please notify admin to check<br>"
+                        +getBookingDetailsTextForMail(booking);
+                String email = getStoreEmailAddress();
+                messageManager.sendMail(email, email, "Goto Booking Failure", emailDetails, email,
+                        email);
+                return false;
+            }
+            pmsManager.saveBooking(pmsBooking);
+            pmsInvoiceManager.clearOrdersOnBooking(pmsBooking);
+            if (pmsBooking.hasOverBooking()) {
+                handleOverbooking(pmsBooking, getBookingDetailsTextForMail(booking));
+                return false;
+            }
+//            handlePaymentOrder(pmsBooking, booking.getCheckOutDate());
+            return true;
+
+        } catch (Exception e) {
+            logPrintException(e);
+            messageManager.sendMessageToStoreOwner("Unexpected Error Occured.. <br><br>"
+                    +getBookingDetailsTextForMail(booking),
+                    "Goto Booking Creation Failed"
+            );
+            return false;
+        }
+    }
+
+    private boolean isCurrencySameWithSystem(String currencyCode){
+        return currencyCode.equals(storeManager.getStoreSettingsApplicationKey("currencycode"));
+    }
+
+    private void handleDifferentCurrencyBooking(Booking booking){
+        String emailContent = "Booking failed due to different currency. <br><br>"+getBookingDetailsTextForMail(booking);
+        String email = getStoreEmailAddress();
+        messageManager.sendMail(email, email, "Goto Booking Failed, Reason: Overbooking", emailContent, email,
+                email);
+
+    }
+
+    private void activatePaymentMethod(String pmethod) {
+        if (!storeApplicationPool.isActivated(pmethod)) {
+            storeApplicationPool.activateApplication(pmethod);
+        }
+    }
+
+    private String getPaymentTypeId(){
+        //TODO will return specific payment type id for goto, will get from configuration
+        return "70ace3f0-3981-11e3-aa6e-0800200c9a66";
+    }
+
+    private Date fixTime(String dateStr, String time) throws ParseException {
+        Date date = bookingDateFormatter.parse(dateStr);
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        String[] hourAndSecond = time.split(":");
+        cal.set(Calendar.HOUR_OF_DAY, new Integer(hourAndSecond[0]));
+        cal.set(Calendar.MINUTE, new Integer(hourAndSecond[1]));
+
+        return cal.getTime();
+    }
+
+    private PmsBookingRooms setCorrectStartEndTime(PmsBookingRooms room, Booking booking) throws Exception {
+        room.date = new PmsBookingDateRange();
+        try {
+            room.date.start = fixTime(booking.getCheckInDate(), pmsManager.getConfigurationSecure().getDefaultStart());
+            room.date.end = fixTime(booking.getCheckOutDate(), pmsManager.getConfigurationSecure().getDefaultEnd());
+            return room;
+        } catch (ParseException e) {
+            throw new Exception("Checkin / Checkout Date parsing failed");
+        }
+
+    }
+
+    private PmsBookingRooms mapRoomToPmsRoom(Booking booking, Room gotoBookingRoom) throws Exception {
+        PmsBookingRooms pmsBookingRoom = new PmsBookingRooms();
+//        @SerializedName("cancelationDeadline")
+//        @Expose
+//        private String cancelationDeadline;
+
+        pmsBookingRoom = setCorrectStartEndTime(pmsBookingRoom, booking);
+        pmsBookingRoom.numberOfGuests = gotoBookingRoom.getAdults() + gotoBookingRoom.getChildrenAges().size();
+        pmsBookingRoom.bookingItemTypeId = gotoBookingRoom.getRoomCode();
+
+        if (bookingEngine.getBookingItemType(gotoBookingRoom.getRoomCode())==null) {
+            logger.error("booking room type does not exist, BookingItemTypeId: "+gotoBookingRoom.getRoomCode());
+            return null;
+        }
+        PmsGuests guest = new PmsGuests();
+        guest.email = booking.getOrderer().getEmail();
+        guest.name = booking.getOrderer().getFirstName()+" "+booking.getOrderer().getLastName();
+        guest.phone = booking.getOrderer().getMobile().getAreaCode()+booking.getOrderer().getMobile().getPhoneNumber();
+
+        pmsBookingRoom.guests.add(guest);
+        return pmsBookingRoom;
+    }
+
+    private PmsBooking setPaymentMethod(PmsBooking pmsBooking){
+        String paymentMethodId = getPaymentTypeId();
+        activatePaymentMethod(paymentMethodId);
+        pmsBooking.paymentType = paymentMethodId;
+        pmsBooking.isPrePaid = true;
+        return pmsBooking;
+    }
+    private PmsBooking mapBookingToPmsBooking(Booking booking, PmsBooking pmsBooking) throws Exception {
+        for (PmsBookingRooms room : pmsBooking.getAllRooms()) {
+            room.unmarkOverBooking();
+        }
+        pmsBooking.channel = "goto";
+        pmsBooking.language = booking.getLanguage();
+        pmsBooking.isPrePaid = true;
+        if (StringUtils.isNotBlank(booking.getComment())) {
+            PmsBookingComment comment = new PmsBookingComment();
+            comment.userId = "";
+            comment.comment = booking.getComment();
+            comment.added = new Date();
+            pmsBooking.comments.put(System.currentTimeMillis(), comment);
+        }
+
+        Orderer booker = booking.getOrderer();
+        String user_fullName = booker.getFirstName()+ " " + booker.getLastName();
+        String user_cellPhone = booker.getMobile().getAreaCode()+booker.getMobile().getPhoneNumber();
+
+        pmsBooking.registrationData.resultAdded.put("user_fullName", user_fullName);
+        pmsBooking.registrationData.resultAdded.put("user_cellPhone", user_cellPhone);
+        pmsBooking.registrationData.resultAdded.put("user_emailAddress", booker.getEmail());
+
+        List<Room> bookingRooms = booking.getRooms();
+
+        for (Room gotoBookingRoom : bookingRooms) {
+            PmsBookingRooms room = mapRoomToPmsRoom(booking, gotoBookingRoom);
+            if(room==null) return null;
+            pmsBooking.addRoom(room);
+        }
+
+        if (pmsBooking.rooms.isEmpty()) {
+            logger.debug("Returning since there are no rooms to add id:");
+            return null;
+        }
+        return pmsBooking;
+    }
+
+    private PmsBooking findCorrelatedBooking(String reservationId){
+        if(StringUtils.isNotBlank(reservationId))
+            return pmsManager.getBooking(reservationId);
+        return null;
+    }
+
     private GoToRoomData mapBookingItemTypeToGoToRoomData(BookingItemType bookingItemType, BookingProcessRooms room, PmsAdditionalTypeInformation additionalInfo){
         GoToRoomData roomData = new GoToRoomData();
 
         roomData.setBookingEngineTypeId(bookingItemType.id);
         roomData.setDescription(bookingItemType.description);
         roomData.setName(bookingItemType.name);
-        roomData.setGoToRoomTypeCode(bookingItemType.name);
+        roomData.setGoToRoomTypeCode(bookingItemType.id);
         roomData.setRoomCategory(getRoomType(bookingItemType.systemCategory));
         roomData.setMaxGuest(bookingItemType.size);
         roomData.setNumberOfAdults(additionalInfo.numberOfAdults);

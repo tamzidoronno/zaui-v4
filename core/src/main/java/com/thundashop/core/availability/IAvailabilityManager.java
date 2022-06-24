@@ -1,5 +1,7 @@
 package com.thundashop.core.availability;
 
+import com.thundashop.core.availability.dto.AvailabilityRequest;
+import com.thundashop.core.availability.dto.AvailabilityResponse;
 import com.thundashop.core.bookingengine.data.RegistrationRules;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.*;
@@ -20,5 +22,5 @@ import java.util.*;
 public interface IAvailabilityManager {
 
     @Administrator
-    public StartBookingResult checkAvailability(StartBooking arg);
+    public AvailabilityResponse checkAvailability(AvailabilityRequest arg);
 }

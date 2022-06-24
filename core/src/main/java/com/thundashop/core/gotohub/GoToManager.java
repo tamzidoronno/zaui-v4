@@ -54,10 +54,10 @@ public class GoToManager extends ManagerBase implements IGoToManager {
     private GoToSettings settings = new GoToSettings();
     private static final SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-    private static final SimpleDateFormat bookingDateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+    private static final SimpleDateFormat checkinOutDateFormatter = new SimpleDateFormat("yyyy-MM-dd");
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(JomresManager.class);
-
+    private static final int HOUR_FOR_CANCELLATION_BEFORE_CHECKIN = 5;
 
     @Override
     public boolean changeToken(String newToken) {
@@ -132,13 +132,12 @@ public class GoToManager extends ManagerBase implements IGoToManager {
         return text;
     }
 
-    private void handleOverbooking(PmsBooking pmsBooking, String emailText){
-        pmsManager.deleteBooking(pmsBooking.id);
+    private void handleOverbooking(PmsBooking pmsBooking) throws Exception{
+        if (!pmsBooking.hasOverBooking())  return;
 
-        String email = getStoreEmailAddress();
-        String content = "Booking creation has been failed due to overbooking:<br>" + emailText;
-        messageManager.sendMail(email, email, "Goto Booking Failed, Reason: Overbooking", content, email,
-                email);
+        pmsManager.deleteBooking(pmsBooking.id);
+        logger.error("Goto Booking Failed, Reason: Overbooking");
+        throw new GotoException(1005, "Goto Booking Failed, Reason: Overbooking");
     }
     private boolean checkForPaidOrders(PmsBooking newbooking) {
         boolean hasPaidOrders = false;
@@ -158,8 +157,8 @@ public class GoToManager extends ManagerBase implements IGoToManager {
 
     private void handlePaymentOrder(PmsBooking pmsBooking, String checkoutDate) throws ParseException {
         Date endInvoiceAt = new Date();
-        if (bookingDateFormatter.parse(checkoutDate).after(endInvoiceAt))
-            endInvoiceAt = bookingDateFormatter.parse(checkoutDate);
+        if (checkinOutDateFormatter.parse(checkoutDate).after(endInvoiceAt))
+            endInvoiceAt = checkinOutDateFormatter.parse(checkoutDate);
 
         NewOrderFilter filter = new NewOrderFilter();
         filter.createNewOrder = false;
@@ -182,63 +181,123 @@ public class GoToManager extends ManagerBase implements IGoToManager {
             }
         }
     }
+    private void handleBookingError(Booking booking, String errorMessage){
+        String emailDetails = "Booking has been failed.<br><br>"+
+                "Some other possible reason also could happen: <br>"+
+                "1. Maybe there is one or more invalid room to book"+
+                "2. The payment method is not valid or failed to activate"+
+                "Please notify admin to check<br>"
+                +getBookingDetailsTextForMail(booking);
+        logger.debug(errorMessage);
+        logger.debug("Email is sending to the Hotel owner...");
+        logger.debug(emailDetails);
+        messageManager.sendMessageToStoreOwner(emailDetails, errorMessage);
+        logger.debug("Email sent");
+    }
 
-    public boolean saveBooking(Booking booking) {
+    @Override
+    public FinalResponse saveBooking(Booking booking) {
         try {
-            if (!isCurrencySameWithSystem(booking.getCurrency())) {
-                handleDifferentCurrencyBooking(booking);
-                return false;
-            }
+            handleDifferentCurrencyBooking(booking.getCurrency());
             PmsBooking pmsBooking = getBooking(booking);
             if (pmsBooking == null) {
-                String errorText = "Failed to add new Goto Booking, Arrival: "+ booking.getCheckInDate()
-                        + ", Departure: " + booking.getCheckOutDate();
-                logger.error(errorText);
-                String emailDetails = "Booking Creation/Updation has been failed.<br><br>"+
-                        "Some possible reason: <br>"+
-                        "1. Maybe there is one or more invalid room to book"+
-                        "2. The payment method is not valid or failed to activate"+
-                        "Please notify admin to check<br>"
-                        +getBookingDetailsTextForMail(booking);
-                String email = getStoreEmailAddress();
-                messageManager.sendMail(email, email, "Goto Booking Failure", emailDetails, email,
-                        email);
-                return false;
+                throw new GotoException(1009, "Goto Booking Failed, Reason: Unknown");
             }
             pmsManager.saveBooking(pmsBooking);
             pmsInvoiceManager.clearOrdersOnBooking(pmsBooking);
-            if (pmsBooking.hasOverBooking()) {
-                handleOverbooking(pmsBooking, getBookingDetailsTextForMail(booking));
-                return false;
-            }
-//            handlePaymentOrder(pmsBooking, booking.getCheckOutDate());
-            return true;
+            handleOverbooking(pmsBooking);
+            //            handlePaymentOrder(pmsBooking, booking.getCheckOutDate());
 
-        } catch (Exception e) {
-            logPrintException(e);
-            messageManager.sendMessageToStoreOwner("Unexpected Error Occured.. <br><br>"
-                    +getBookingDetailsTextForMail(booking),
-                    "Goto Booking Creation Failed"
-            );
-            return false;
+            BookingResponse bookingResponse = getBookingResponse(pmsBooking.id, booking, pmsBooking.getTotalPrice());
+            FinalResponse response = new FinalResponse();
+            response.setStatus("true");
+            response.setStatusCode(1000);
+            response.setMessgae("Successfully received the HoldBooking");
+            response.setResponse(bookingResponse);
+            return response;
+        } catch (GotoException e){
+            handleBookingError(booking,e.getMessage());
+            FinalResponse response = new FinalResponse();
+            response.setStatus("false");
+            response.setStatusCode(e.getStatusCode());
+            response.setMessgae(e.getMessage());
+            response.setResponse(null);
+            return response;
         }
+        catch (Exception e) {
+            logPrintException(e);
+            handleBookingError(booking,"Goto Booking Failed, Reason: Unknown");
+            FinalResponse response = new FinalResponse();
+            response.setStatus("false");
+            response.setStatusCode(1009);
+            response.setMessgae("Goto Booking Failed, Reason: Unknown");
+            response.setResponse(null);
+            return response;
+        }
+    }
+
+    private String getCancellationDeadLine(String checkin) throws Exception {
+        SimpleDateFormat cancellationDateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        Date checkinDate, cancellationDate;
+        String cancellationDeadLine;
+        Calendar calendar = Calendar.getInstance();
+
+        checkinDate = fixTime(checkin, pmsManager.getConfigurationSecure().getDefaultStart());
+        calendar.setTime(checkinDate);
+        calendar.add(Calendar.HOUR_OF_DAY, -HOUR_FOR_CANCELLATION_BEFORE_CHECKIN);
+        cancellationDate = calendar.getTime();
+        cancellationDeadLine = cancellationDateFormatter.format(cancellationDate);
+        return cancellationDeadLine;
+    }
+
+    private BookingResponse getBookingResponse(String reservationId, Booking booking, double totalPrice) throws Exception {
+        List<RatePlanCode> ratePlans = new ArrayList<>();
+        List<RoomTypeCode> roomTypes = new ArrayList<>();
+        String cancellationDeadLine = getCancellationDeadLine(booking.getCheckInDate());
+
+        for(Room room: booking.getRooms()){
+            room.setCancelationDeadline(cancellationDeadLine);
+            ratePlans.add(new RatePlanCode(room.getRatePlanCode()));
+            roomTypes.add(new RoomTypeCode(room.getRoomCode()));
+
+        }
+
+        PriceTotal priceTotal = new PriceTotal();
+        priceTotal.setAmount(totalPrice);
+        priceTotal.setCurrency(booking.getCurrency());
+
+        BookingResponse bookingResponse = new BookingResponse();
+        bookingResponse.setReservationId(reservationId);
+        bookingResponse.setHotelCode(booking.getHotelCode());
+        bookingResponse.setCheckInDate(booking.getCheckInDate());
+        bookingResponse.setCheckOutDate(booking.getCheckOutDate());
+        bookingResponse.setRooms(booking.getRooms());
+        bookingResponse.setRatePlans(ratePlans);
+        bookingResponse.setRoomTypes(roomTypes);
+        bookingResponse.setPriceTotal(priceTotal);
+        return bookingResponse;
     }
 
     private boolean isCurrencySameWithSystem(String currencyCode){
         return currencyCode.equals(storeManager.getStoreSettingsApplicationKey("currencycode"));
     }
 
-    private void handleDifferentCurrencyBooking(Booking booking){
-        String emailContent = "Booking failed due to different currency. <br><br>"+getBookingDetailsTextForMail(booking);
-        String email = getStoreEmailAddress();
-        messageManager.sendMail(email, email, "Goto Booking Failed, Reason: Overbooking", emailContent, email,
-                email);
+    private void handleDifferentCurrencyBooking(String bookingCurrency) throws GotoException {
+        if (StringUtils.isBlank(bookingCurrency) || isCurrencySameWithSystem(bookingCurrency)) return;
+        logger.error("Booking currency didn't match with system currency..");
+        logger.error("Booking currency: "+bookingCurrency);
+        throw new GotoException(1001, "Goto Booking Failed, Reason: Different Currency");
 
     }
 
-    private void activatePaymentMethod(String pmethod) {
-        if (!storeApplicationPool.isActivated(pmethod)) {
-            storeApplicationPool.activateApplication(pmethod);
+    private void activatePaymentMethod(String pmethod) throws GotoException {
+        try{
+            if (!storeApplicationPool.isActivated(pmethod)) {
+                storeApplicationPool.activateApplication(pmethod);
+            }
+        }catch (Exception e){
+            logger.error("Error occurred while activate payment method, id: "+pmethod);
+            throw new GotoException(1004,"Goto Booking Failed, Reason: Payment method activation failed");
         }
     }
 
@@ -247,19 +306,25 @@ public class GoToManager extends ManagerBase implements IGoToManager {
         return "70ace3f0-3981-11e3-aa6e-0800200c9a66";
     }
 
-    private Date fixTime(String dateStr, String time) throws ParseException {
-        Date date = bookingDateFormatter.parse(dateStr);
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
+    private Date fixTime(String dateStr, String time) throws Exception{
+        try{
+            Date date = checkinOutDateFormatter.parse(dateStr);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
 
-        String[] hourAndSecond = time.split(":");
-        cal.set(Calendar.HOUR_OF_DAY, new Integer(hourAndSecond[0]));
-        cal.set(Calendar.MINUTE, new Integer(hourAndSecond[1]));
+            String[] hourAndSecond = time.split(":");
+            cal.set(Calendar.HOUR_OF_DAY, new Integer(hourAndSecond[0]));
+            cal.set(Calendar.MINUTE, new Integer(hourAndSecond[1]));
 
-        return cal.getTime();
+            return cal.getTime();
+        } catch (Exception e){
+            logPrintException(e);
+            logger.error("Date parsing failed.. Date in string-> "+dateStr);
+            throw new GotoException(1000, "Goto Booking Failed, Reason: Invalid checkin/ checkout date format");
+        }
     }
 
     private PmsBookingRooms setCorrectStartEndTime(PmsBookingRooms room, Booking booking) throws Exception {
@@ -276,17 +341,14 @@ public class GoToManager extends ManagerBase implements IGoToManager {
 
     private PmsBookingRooms mapRoomToPmsRoom(Booking booking, Room gotoBookingRoom) throws Exception {
         PmsBookingRooms pmsBookingRoom = new PmsBookingRooms();
-//        @SerializedName("cancelationDeadline")
-//        @Expose
-//        private String cancelationDeadline;
-
         pmsBookingRoom = setCorrectStartEndTime(pmsBookingRoom, booking);
         pmsBookingRoom.numberOfGuests = gotoBookingRoom.getAdults() + gotoBookingRoom.getChildrenAges().size();
         pmsBookingRoom.bookingItemTypeId = gotoBookingRoom.getRoomCode();
 
         if (bookingEngine.getBookingItemType(gotoBookingRoom.getRoomCode())==null) {
             logger.error("booking room type does not exist, BookingItemTypeId: "+gotoBookingRoom.getRoomCode());
-            return null;
+            throw new GotoException(1002, "Goto Booking Failed, Reason: Room type not found for roomCode-> "
+                    +gotoBookingRoom.getRoomCode());
         }
         PmsGuests guest = new PmsGuests();
         guest.email = booking.getOrderer().getEmail();
@@ -297,7 +359,7 @@ public class GoToManager extends ManagerBase implements IGoToManager {
         return pmsBookingRoom;
     }
 
-    private PmsBooking setPaymentMethod(PmsBooking pmsBooking){
+    private PmsBooking setPaymentMethod(PmsBooking pmsBooking) throws Exception {
         String paymentMethodId = getPaymentTypeId();
         activatePaymentMethod(paymentMethodId);
         pmsBooking.paymentType = paymentMethodId;
@@ -331,13 +393,12 @@ public class GoToManager extends ManagerBase implements IGoToManager {
 
         for (Room gotoBookingRoom : bookingRooms) {
             PmsBookingRooms room = mapRoomToPmsRoom(booking, gotoBookingRoom);
-            if(room==null) return null;
             pmsBooking.addRoom(room);
         }
 
         if (pmsBooking.rooms.isEmpty()) {
-            logger.debug("Returning since there are no rooms to add id:");
-            return null;
+            logger.debug("Booking is not saved since there are no rooms to add");
+            throw new GotoException(1003, "Goto Booking Failed, Reason: Empty room list");
         }
         return pmsBooking;
     }

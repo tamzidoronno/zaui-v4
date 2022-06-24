@@ -30,9 +30,9 @@ public class BookingResponse {
     private List<Room> rooms = null;
     @SerializedName("ratePlans")
     @Expose
-    private List<RatePlan> ratePlans = null;
+    private List<RatePlanCode> ratePlans = null;
     @SerializedName("roomTypes")
     @Expose
-    private List<RoomType> roomTypes = null;
+    private List<RoomTypeCode> roomTypes = null;
 
 }

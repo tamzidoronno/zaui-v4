@@ -14,6 +14,6 @@ public class PriceTotal {
     private String currency;
     @SerializedName("amount")
     @Expose
-    private Integer amount;
+    private Double amount;
 
 }

@@ -51,30 +51,12 @@ public class GoToManager extends ManagerBase implements IGoToManager {
     @Autowired OrderManager orderManager;
     @Autowired MessageManager messageManager;
 
-    private GoToSettings settings = new GoToSettings();
     private static final SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
     private static final SimpleDateFormat checkinOutDateFormatter = new SimpleDateFormat("yyyy-MM-dd");
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(JomresManager.class);
     private static final int HOUR_FOR_CANCELLATION_BEFORE_CHECKIN = 5;
-
-    @Override
-    public boolean changeToken(String newToken) {
-        try{
-            settings.authToken = newToken;
-            saveObject(settings);
-            return true;
-        } catch (Exception e){
-            log.error(e.getMessage());
-            return false;
-        }
-    }
-
-    @Override
-    public String testConnection() {
-        return settings.authToken;
-    }
 
     @Override
     public Hotel getHotelInformation() {
@@ -139,47 +121,128 @@ public class GoToManager extends ManagerBase implements IGoToManager {
         logger.error("Goto Booking Failed, Reason: Overbooking");
         throw new GotoException(1005, "Goto Booking Failed, Reason: Overbooking");
     }
-    private boolean checkForPaidOrders(PmsBooking newbooking) {
-        boolean hasPaidOrders = false;
 
-        if (newbooking.orderIds == null) {
-            newbooking.orderIds = new ArrayList<>();
-        }
-
-        for (String orderId : newbooking.orderIds) {
-            Order ord = orderManager.getOrder(orderId);
-            if (ord.status == Order.Status.PAYMENT_COMPLETED) {
-                hasPaidOrders = true;
+    @Override
+    public FinalResponse saveBooking(Booking booking) {
+        try {
+            handleDifferentCurrencyBooking(booking.getCurrency());
+            PmsBooking pmsBooking = getBooking(booking);
+            if (pmsBooking == null) {
+                throw new GotoException(1009, "Goto Booking Failed, Reason: Unknown");
             }
+            pmsManager.saveBooking(pmsBooking);
+            pmsInvoiceManager.clearOrdersOnBooking(pmsBooking);
+            handleOverbooking(pmsBooking);
+
+            BookingResponse bookingResponse = getBookingResponse(pmsBooking.id, booking, pmsBooking.getTotalPrice());
+            FinalResponse response = new FinalResponse("true",
+                    1000,
+                    "Successfully received the HoldBooking",
+                    bookingResponse);
+            return response;
+        } catch (GotoException e){
+            handleBookingError(booking,e.getMessage());
+            FinalResponse response = new FinalResponse("false", e.getStatusCode(), e.getMessage(), null);
+            return response;
         }
-        return hasPaidOrders;
+        catch (Exception e) {
+            logPrintException(e);
+            handleBookingError(booking,"Goto Booking Failed, Reason: Unknown");
+            FinalResponse response = new FinalResponse("false", 1009, "Goto Booking Failed, Reason: Unknown", null);
+            return response;
+        }
     }
 
-    private void handlePaymentOrder(PmsBooking pmsBooking, String checkoutDate) throws ParseException {
-        Date endInvoiceAt = new Date();
-        if (checkinOutDateFormatter.parse(checkoutDate).after(endInvoiceAt))
-            endInvoiceAt = checkinOutDateFormatter.parse(checkoutDate);
+    @Override
+    public FinalResponse confirmBooking(String reservationId){
+        try{
+            PmsBooking pmsBooking = findCorrelatedBooking(reservationId);
+            if(pmsBooking == null){
+                throw new GotoException(1101, "Goto Booking Confirmation Failed, Reason: Booking Not Found");
+            }
 
-        NewOrderFilter filter = new NewOrderFilter();
-        filter.createNewOrder = false;
-        filter.prepayment = true;
-        filter.endInvoiceAt = endInvoiceAt;
-
-        if (pmsBooking.paymentType != null && !pmsBooking.paymentType.isEmpty()) {
-            pmsInvoiceManager.autoCreateOrderForBookingAndRoom(pmsBooking.id, pmsBooking.paymentType);
+            handlePaymentOrder(pmsBooking, getCheckoutDateFromPmsBookingRooms(pmsBooking.rooms));
+            FinalResponse response = new FinalResponse("true", 1100, "Goto Booking has been Confirmed", null);
+            return response;
+        } catch (GotoException e){
+            FinalResponse response = new FinalResponse("false", e.getStatusCode(), e.getMessage(), null);
+            return response;
+        } catch (Exception e){
+            logPrintException(e);
+            FinalResponse response = new FinalResponse("false", 1109, "Goto Booking Confirmation Failed, Reason: Unknown", null);
+            return response;
         }
 
+    }
 
-        boolean hasPaidOrders = checkForPaidOrders(pmsBooking);
-        if (hasPaidOrders) {
+    private void handleOrderForCancelledBooking(String reservationId) throws Exception{
+        try{
+            PmsBooking pmsBooking = pmsManager.getBooking(reservationId);
+            List<String> orderIds = new ArrayList<>(pmsBooking.orderIds);
+            for (String orderId : orderIds) {
+                Order order = orderManager.getOrderSecure(orderId);
+                if (order.isCreditNote || !order.creditOrderId.isEmpty()) {
+                    continue;
+                }
+                List<PmsBooking> bookings = pmsManager.getBookingsFromOrderId(orderId);
+                if (bookings.size() > 1) {
+                    continue;
+                }
+                pmsInvoiceManager.creditOrder(pmsBooking.id, orderId);
+            }
+        } catch (Exception e){
+            throw new GotoException(1202, "Goto Booking Cancellation Failed, Reason: Order Synchronization Failed");
+        }
+
+    }
+
+    @Override
+    public FinalResponse cancelBooking(String reservationId) {
+        try{
+            PmsBooking pmsBooking = findCorrelatedBooking(reservationId);
+            if(pmsBooking == null){
+                throw new GotoException(1201, "Goto Booking Cancellation Failed, Reason: Booking Not Found");
+            }
+            pmsManager.logEntry("Deleted by channel manager", pmsBooking.id, null);
+            pmsManager.deleteBooking(pmsBooking.id);
+            FinalResponse response = new FinalResponse("true", 1100, "Goto Booking has been Cancelled", null);
+            handleOrderForCancelledBooking(reservationId);
+            return response;
+        } catch(GotoException e){
+            FinalResponse response = new FinalResponse("false", e.getStatusCode(), e.getMessage(), null);
+            return response;
+
+        } catch (Exception e){
+            logPrintException(e);
+            FinalResponse response = new FinalResponse("false", 1209, "Goto Booking Cancellation Failed, Reason: Unknown", null);
+            return response;
+        }
+    }
+
+    private void handlePaymentOrder(PmsBooking pmsBooking, String checkoutDate) throws Exception {
+        try{
+            Date endInvoiceAt = new Date();
+            if (checkinOutDateFormatter.parse(checkoutDate).after(endInvoiceAt))
+                endInvoiceAt = checkinOutDateFormatter.parse(checkoutDate);
+
+            NewOrderFilter filter = new NewOrderFilter();
+            filter.createNewOrder = false;
+            filter.prepayment = true;
+            filter.endInvoiceAt = endInvoiceAt;
+
+            if (pmsBooking.paymentType != null && !pmsBooking.paymentType.isEmpty()) {
+                pmsInvoiceManager.autoCreateOrderForBookingAndRoom(pmsBooking.id, pmsBooking.paymentType);
+            }
             String orderId = pmsInvoiceManager.autoCreateOrderForBookingAndRoom(pmsBooking.id,
                     pmsBooking.paymentType);
-            Order ord = orderManager.getOrder(orderId);
-            Double amount = orderManager.getTotalAmount(ord);
-            if (amount == 0.0) {
-                pmsInvoiceManager.markOrderAsPaid(pmsBooking.id, orderId);
-            }
+            pmsInvoiceManager.markOrderAsPaid(pmsBooking.id, orderId);
+        } catch (Exception e){
+            logPrintException(e);
+            logger.error("Error occured while processing payment for goto booking..");
+            logger.error("Please check exception logs...");
+            throw new GotoException(1102, "Goto Booking Confirmation Failed, Reason: Payment failed");
         }
+
     }
     private void handleBookingError(Booking booking, String errorMessage){
         String emailDetails = "Booking has been failed.<br><br>"+
@@ -195,45 +258,16 @@ public class GoToManager extends ManagerBase implements IGoToManager {
         logger.debug("Email sent");
     }
 
-    @Override
-    public FinalResponse saveBooking(Booking booking) {
-        try {
-            handleDifferentCurrencyBooking(booking.getCurrency());
-            PmsBooking pmsBooking = getBooking(booking);
-            if (pmsBooking == null) {
-                throw new GotoException(1009, "Goto Booking Failed, Reason: Unknown");
-            }
-            pmsManager.saveBooking(pmsBooking);
-            pmsInvoiceManager.clearOrdersOnBooking(pmsBooking);
-            handleOverbooking(pmsBooking);
-            //            handlePaymentOrder(pmsBooking, booking.getCheckOutDate());
 
-            BookingResponse bookingResponse = getBookingResponse(pmsBooking.id, booking, pmsBooking.getTotalPrice());
-            FinalResponse response = new FinalResponse();
-            response.setStatus("true");
-            response.setStatusCode(1000);
-            response.setMessgae("Successfully received the HoldBooking");
-            response.setResponse(bookingResponse);
-            return response;
-        } catch (GotoException e){
-            handleBookingError(booking,e.getMessage());
-            FinalResponse response = new FinalResponse();
-            response.setStatus("false");
-            response.setStatusCode(e.getStatusCode());
-            response.setMessgae(e.getMessage());
-            response.setResponse(null);
-            return response;
+    private String getCheckoutDateFromPmsBookingRooms(List<PmsBookingRooms> rooms){
+        Date checkOutDate = null;
+        for(PmsBookingRooms room: rooms){
+            if(checkOutDate == null)
+                checkOutDate = room.date.end;
+            else if(checkOutDate.before(room.date.end))
+                checkOutDate = room.date.end;
         }
-        catch (Exception e) {
-            logPrintException(e);
-            handleBookingError(booking,"Goto Booking Failed, Reason: Unknown");
-            FinalResponse response = new FinalResponse();
-            response.setStatus("false");
-            response.setStatusCode(1009);
-            response.setMessgae("Goto Booking Failed, Reason: Unknown");
-            response.setResponse(null);
-            return response;
-        }
+        return checkinOutDateFormatter.format(checkOutDate);
     }
 
     private String getCancellationDeadLine(String checkin) throws Exception {

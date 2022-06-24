@@ -11,4 +11,5 @@ import lombok.Data;
 public class GoToConfiguration extends DataCommon {
     public String authToken = "B?E(H+MbQeThVmYq";
     public String paymentTypeId;
+    public int cuttOffHours;
 }

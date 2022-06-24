@@ -6,16 +6,16 @@ import lombok.Data;
 public class FinalResponse {
     private String status;
     private long statusCode;
-    private String messgae;
+    private String message;
     private Object response;
 
     public FinalResponse() {
     }
 
-    public FinalResponse(String status, long statusCode, String messgae, Object response) {
+    public FinalResponse(String status, long statusCode, String message, Object response) {
         this.status = status;
         this.statusCode = statusCode;
-        this.messgae = messgae;
+        this.message = message;
         this.response = response;
     }
 }

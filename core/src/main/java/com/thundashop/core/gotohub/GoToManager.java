@@ -135,21 +135,18 @@ public class GoToManager extends ManagerBase implements IGoToManager {
             handleOverbooking(pmsBooking);
 
             BookingResponse bookingResponse = getBookingResponse(pmsBooking.id, booking, pmsBooking.getTotalPrice());
-            FinalResponse response = new FinalResponse("true",
+            return new FinalResponse(true,
                     1000,
                     "Successfully received the HoldBooking",
                     bookingResponse);
-            return response;
         } catch (GotoException e){
             handleBookingError(booking,e.getMessage());
-            FinalResponse response = new FinalResponse("false", e.getStatusCode(), e.getMessage(), null);
-            return response;
+            return new FinalResponse(false, e.getStatusCode(), e.getMessage(), null);
         }
         catch (Exception e) {
             logPrintException(e);
             handleBookingError(booking,"Goto Booking Failed, Reason: Unknown");
-            FinalResponse response = new FinalResponse("false", 1009, "Goto Booking Failed, Reason: Unknown", null);
-            return response;
+            return new FinalResponse(false, 1009, "Goto Booking Failed, Reason: Unknown", null);
         }
     }
 
@@ -162,15 +159,12 @@ public class GoToManager extends ManagerBase implements IGoToManager {
             }
 
             handlePaymentOrder(pmsBooking, getCheckoutDateFromPmsBookingRooms(pmsBooking.rooms));
-            FinalResponse response = new FinalResponse("true", 1100, "Goto Booking has been Confirmed", null);
-            return response;
+            return new FinalResponse(true, 1100, "Goto Booking has been Confirmed", null);
         } catch (GotoException e){
-            FinalResponse response = new FinalResponse("false", e.getStatusCode(), e.getMessage(), null);
-            return response;
+            return new FinalResponse(false, e.getStatusCode(), e.getMessage(), null);
         } catch (Exception e){
             logPrintException(e);
-            FinalResponse response = new FinalResponse("false", 1109, "Goto Booking Confirmation Failed, Reason: Unknown", null);
-            return response;
+            return new FinalResponse(false, 1109, "Goto Booking Confirmation Failed, Reason: Unknown", null);
         }
 
     }
@@ -205,17 +199,15 @@ public class GoToManager extends ManagerBase implements IGoToManager {
             }
             pmsManager.logEntry("Deleted by channel manager", pmsBooking.id, null);
             pmsManager.deleteBooking(pmsBooking.id);
-            FinalResponse response = new FinalResponse("true", 1100, "Goto Booking has been Cancelled", null);
+            FinalResponse response = new FinalResponse(true, 1100, "Goto Booking has been Cancelled", null);
             handleOrderForCancelledBooking(reservationId);
             return response;
         } catch(GotoException e){
-            FinalResponse response = new FinalResponse("false", e.getStatusCode(), e.getMessage(), null);
-            return response;
+            return new FinalResponse(false, e.getStatusCode(), e.getMessage(), null);
 
         } catch (Exception e){
             logPrintException(e);
-            FinalResponse response = new FinalResponse("false", 1209, "Goto Booking Cancellation Failed, Reason: Unknown", null);
-            return response;
+            return new FinalResponse(false, 1209, "Goto Booking Cancellation Failed, Reason: Unknown", null);
         }
     }
 

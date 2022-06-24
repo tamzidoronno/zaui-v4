@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class FinalResponse {
-    private String status;
+    private boolean success;
     private long statusCode;
     private String message;
     private Object response;
@@ -12,8 +12,8 @@ public class FinalResponse {
     public FinalResponse() {
     }
 
-    public FinalResponse(String status, long statusCode, String message, Object response) {
-        this.status = status;
+    public FinalResponse(boolean success, long statusCode, String message, Object response) {
+        this.success = success;
         this.statusCode = statusCode;
         this.message = message;
         this.response = response;

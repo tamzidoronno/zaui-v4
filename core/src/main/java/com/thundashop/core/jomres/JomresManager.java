@@ -52,7 +52,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
     private static final Logger logger = LoggerFactory.getLogger(JomresManager.class);
 
-    JomresConfiguration jomresConfiguration = null;
+    JomresConfiguration jomresConfiguration = new JomresConfiguration();
 
     Map<String, JomresRoomData> pmsItemToJomresRoomDataMap = new HashMap<>();
     Map<Long, JomresBookingData> jomresToPmsBookingMap = new HashMap<>();
@@ -701,7 +701,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     private void sendErrorForBooking(JomresBooking booking, String pmsRoomName) {
         boolean isSentErrorMail = pmsManager.hasSentErrorNotificationForJomresBooking(booking.bookingId);
         if (!isSentErrorMail) {
-            logger.debug("Error mail wan't send for booking, Jomres BookingId: "+booking.bookingId+" Property ID: "+booking.propertyUid);
+            logger.debug("Error mail wasn't sent for booking, Jomres BookingId: "+booking.bookingId+" Property ID: "+booking.propertyUid);
             String emailMessage = getJomresBookingErrorMessageForOwner(booking, pmsRoomName);
             String subject = "Jomres Booking Creation Failed";
             logger.debug("email sending...");

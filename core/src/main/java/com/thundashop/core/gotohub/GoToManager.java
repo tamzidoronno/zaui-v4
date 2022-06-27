@@ -9,7 +9,6 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.gotohub.dto.*;
 import com.thundashop.core.gotohub.dto.Room;
-import com.thundashop.core.jomres.JomresManager;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
@@ -23,7 +22,6 @@ import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.data.User;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,8 +29,6 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -55,9 +51,8 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     private static final SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
     private static final SimpleDateFormat checkinOutDateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+    public GoToConfiguration goToConfiguration = new GoToConfiguration();
 
-    private static final int HOUR_FOR_CANCELLATION_BEFORE_CHECKIN = 5;
-    public GoToConfiguration goToConfiguration = null;
 
     @Override
     public Hotel getHotelInformation() {
@@ -91,7 +86,6 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         }
 
         pmsBooking = mapBookingToPmsBooking(booking, pmsBooking);
-        pmsBooking = setPaymentMethod(pmsBooking);
         pmsManager.setBooking(pmsBooking);
         pmsInvoiceManager.clearOrdersOnBooking(pmsBooking);
         pmsBooking = pmsManager.doCompleteBooking(pmsBooking);
@@ -120,7 +114,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
         pmsManager.deleteBooking(pmsBooking.id);
         log.error("Goto Booking Failed, Reason: Overbooking");
-        throw new GotoException(1005, "Goto Booking Failed, Reason: Overbooking");
+        throw new GotoException(1004, "Goto Booking Failed, Reason: Overbooking");
     }
 
     @Override
@@ -141,12 +135,12 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                     "Successfully received the HoldBooking",
                     bookingResponse);
         } catch (GotoException e){
-            handleBookingError(booking,e.getMessage());
+            handleNewBookingError(booking,e.getMessage(), e.getStatusCode());
             return new FinalResponse(false, e.getStatusCode(), e.getMessage(), null);
         }
         catch (Exception e) {
             logPrintException(e);
-            handleBookingError(booking,"Goto Booking Failed, Reason: Unknown");
+            handleNewBookingError(booking,"Goto Booking Failed, Reason: Unknown", 1009);
             return new FinalResponse(false, 1009, "Goto Booking Failed, Reason: Unknown", null);
         }
     }
@@ -158,13 +152,15 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             if(pmsBooking == null){
                 throw new GotoException(1101, "Goto Booking Confirmation Failed, Reason: Booking Not Found");
             }
-
+            pmsBooking = setPaymentMethod(pmsBooking);
             handlePaymentOrder(pmsBooking, getCheckoutDateFromPmsBookingRooms(pmsBooking.rooms));
             return new FinalResponse(true, 1100, "Goto Booking has been Confirmed", null);
         } catch (GotoException e){
+            handleUpdateBookingError(reservationId, e.getMessage(), e.getStatusCode());
             return new FinalResponse(false, e.getStatusCode(), e.getMessage(), null);
         } catch (Exception e){
             logPrintException(e);
+            handleUpdateBookingError(reservationId, "Goto Booking Confirmation Failed, Reason: Unknown", 1209);
             return new FinalResponse(false, 1109, "Goto Booking Confirmation Failed, Reason: Unknown", null);
         }
 
@@ -200,14 +196,16 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             }
             pmsManager.logEntry("Deleted by channel manager", pmsBooking.id, null);
             pmsManager.deleteBooking(pmsBooking.id);
-            FinalResponse response = new FinalResponse(true, 1100, "Goto Booking has been Cancelled", null);
             handleOrderForCancelledBooking(reservationId);
+            FinalResponse response = new FinalResponse(true, 1200, "Goto Booking has been Cancelled", null);
             return response;
         } catch(GotoException e){
+            handleUpdateBookingError(reservationId, e.getMessage(), e.getStatusCode());
             return new FinalResponse(false, e.getStatusCode(), e.getMessage(), null);
 
         } catch (Exception e){
             logPrintException(e);
+            handleUpdateBookingError(reservationId, "Goto Booking Confirmation Failed, Reason: Unknown", 1209);
             return new FinalResponse(false, 1209, "Goto Booking Cancellation Failed, Reason: Unknown", null);
         }
     }
@@ -238,15 +236,28 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         }
 
     }
-    private void handleBookingError(Booking booking, String errorMessage){
+    private void handleNewBookingError(Booking booking, String errorMessage, long errorCode){
         String emailDetails = "Booking has been failed.<br><br>"+
                 "Some other possible reason also could happen: <br>"+
                 "1. Maybe there is one or more invalid room to book <br>"+
-                "2. The payment method is not valid or failed to activate<br>"+
-                "3. Overbooking would have happened for this booking<br>"+
+                "2. Overbooking would have happened for this booking<br>"+
                 "Please notify admin to check<br>"
                 +getBookingDetailsTextForMail(booking);
-        log.debug(errorMessage);
+        log.debug("error code: "+errorCode+", error message: "+errorMessage);
+        log.debug("Email is sending to the Hotel owner...");
+        log.debug(emailDetails);
+        messageManager.sendMessageToStoreOwner(emailDetails, errorMessage);
+        log.debug("Email sent");
+    }
+
+    private void handleUpdateBookingError(String reservationId, String errorMessage, long errorCode){
+        String emailDetails = "Booking Related Operation has been failed.<br><br>"+
+                "Some other possible reason also could happen: <br>"+
+                "1. The payment method is not valid or failed to activate<br>"+
+                "2. Payment method is not saved in Goto Configuration<br>"+
+                "Please notify admin to check<br>"+
+                "<br>Booking Reservation ID: "+reservationId;
+        log.debug("error code: "+errorCode+", error message: "+errorMessage);
         log.debug("Email is sending to the Hotel owner...");
         log.debug(emailDetails);
         messageManager.sendMessageToStoreOwner(emailDetails, errorMessage);
@@ -273,7 +284,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
         checkinDate = fixTime(checkin, pmsManager.getConfigurationSecure().getDefaultStart());
         calendar.setTime(checkinDate);
-        calendar.add(Calendar.HOUR_OF_DAY, -HOUR_FOR_CANCELLATION_BEFORE_CHECKIN);
+        calendar.add(Calendar.HOUR_OF_DAY, -goToConfiguration.cuttOffHours);
         cancellationDate = calendar.getTime();
         cancellationDeadLine = cancellationDateFormatter.format(cancellationDate);
         return cancellationDeadLine;
@@ -326,13 +337,14 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             }
         }catch (Exception e){
             log.error("Error occurred while activate payment method, id: "+pmethod);
-            throw new GotoException(1004,"Goto Booking Failed, Reason: Payment method activation failed");
+            throw new GotoException(1104,"Goto Booking Failed, Reason: Payment method activation failed");
         }
     }
 
-    private String getPaymentTypeId(){
-        //TODO will return specific payment type id for goto, will get from configuration
-        return "70ace3f0-3981-11e3-aa6e-0800200c9a66";
+    private String getPaymentTypeId() throws GotoException{
+        if(StringUtils.isBlank(goToConfiguration.getPaymentTypeId()))
+            throw new GotoException(1103,"Goto Booking Payment Confirmation Failed, Reason: No Payment Method found in Goto Configuration");
+        return goToConfiguration.paymentTypeId;
     }
 
     private Date fixTime(String dateStr, String time) throws Exception{
@@ -353,7 +365,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         } catch (Exception e){
             logPrintException(e);
             log.error("Date parsing failed.. Date in string-> "+dateStr);
-            throw new GotoException(1006, "Goto Booking Failed, Reason: Invalid checkin/ checkout date format");
+            throw new GotoException(1005, "Goto Booking Failed, Reason: Invalid checkin/ checkout date format");
         }
     }
 
@@ -389,6 +401,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         activatePaymentMethod(paymentMethodId);
         pmsBooking.paymentType = paymentMethodId;
         pmsBooking.isPrePaid = true;
+        pmsManager.saveBooking(pmsBooking);
         return pmsBooking;
     }
     private PmsBooking mapBookingToPmsBooking(Booking booking, PmsBooking pmsBooking) throws Exception {
@@ -436,6 +449,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
     @Override
     public boolean saveConfiguration(GoToConfiguration configuration) {
+        deleteObject(goToConfiguration);
         saveObject(configuration);
         goToConfiguration = configuration;
         return true;

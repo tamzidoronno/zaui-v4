@@ -55,9 +55,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     private static final SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
     private static final SimpleDateFormat checkinOutDateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-
-    private static final int HOUR_FOR_CANCELLATION_BEFORE_CHECKIN = 5;
-    public GoToConfiguration goToConfiguration = null;
+    public GoToConfiguration goToConfiguration = new GoToConfiguration();
 
     @Override
     public Hotel getHotelInformation() {
@@ -273,7 +271,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
         checkinDate = fixTime(checkin, pmsManager.getConfigurationSecure().getDefaultStart());
         calendar.setTime(checkinDate);
-        calendar.add(Calendar.HOUR_OF_DAY, -HOUR_FOR_CANCELLATION_BEFORE_CHECKIN);
+        calendar.add(Calendar.HOUR_OF_DAY, -goToConfiguration.cuttOffHours);
         cancellationDate = calendar.getTime();
         cancellationDeadLine = cancellationDateFormatter.format(cancellationDate);
         return cancellationDeadLine;
@@ -436,6 +434,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
     @Override
     public boolean saveConfiguration(GoToConfiguration configuration) {
+        deleteObject(goToConfiguration);
         saveObject(configuration);
         goToConfiguration = configuration;
         return true;

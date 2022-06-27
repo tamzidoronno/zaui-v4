@@ -7,7 +7,7 @@ $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelected
 <br>
 <br>
 <h2>Rooms <span class='openitemsorting' style='cursor:pointer;'>(open sorting)</span></h2>
-<span gstype='form' method='createRoom'>
+<span gstype='form'>
     <select gsname='type' class="gsniceselect1" style="height:34px;">
         <?php
         foreach($types as $type) {
@@ -25,8 +25,8 @@ $items = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelected
         echo "<option value='gsconference' $selected>Conference room</option>";
         ?>
     </select>
-    <input type="txt" class="gsniceinput1" placeholder='101' gsname='name'>
-    <span gstype='submit' class='shop_button'>Create a new room</span>
+    <input type="txt" class="gsniceinput1" placeholder='101' gsname='roomname'>
+    <span gstype='submit' class='shop_button createRoom'>Create a new room</span>
 </span>
 
 

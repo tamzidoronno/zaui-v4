@@ -3,9 +3,9 @@
 $types = $this->getApi()->getBookingEngine()->getBookingItemTypesWithSystemType($this->getSelectedMultilevelDomainName(), null);
 ?>
 <h2>Room types <span class='opentypesorting' style='cursor:pointer;'>(open sorting)</span> - <span class='opentypesortingavailability' style='cursor:pointer;'>(sort categories for availability)</span></h2>
-<span gstype='form' method='createType'>
+<span gstype='form'>
     <input type="txt" class="gsniceinput1" placeholder='Double room' gsname='name'>
-    <span class='shop_button' gstype='submit'>Create a new room type</span>
+    <span class='shop_button createType' gstype='submit'>Create a new room type</span>
 </span>
 <?php
     $taxes = $this->getApi()->getProductManager()->getTaxes();

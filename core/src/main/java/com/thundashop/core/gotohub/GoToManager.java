@@ -57,6 +57,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     private static final SimpleDateFormat checkinOutDateFormatter = new SimpleDateFormat("yyyy-MM-dd");
     public GoToConfiguration goToConfiguration = new GoToConfiguration();
 
+
     @Override
     public Hotel getHotelInformation() {
         return mapStoreToGoToHotel(storeManager.getMyStore(), pmsManager.getConfiguration());

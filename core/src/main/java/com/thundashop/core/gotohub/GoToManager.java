@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -214,6 +213,7 @@ public class GoToManager extends ManagerBase implements IGoToManager {
     private void handlePaymentOrder(PmsBooking pmsBooking, String checkoutDate) throws Exception {
         try{
             Date endInvoiceAt = new Date();
+            checkinOutDateFormatter.setLenient(false);
             if (checkinOutDateFormatter.parse(checkoutDate).after(endInvoiceAt))
                 endInvoiceAt = checkinOutDateFormatter.parse(checkoutDate);
 
@@ -239,8 +239,9 @@ public class GoToManager extends ManagerBase implements IGoToManager {
     private void handleBookingError(Booking booking, String errorMessage){
         String emailDetails = "Booking has been failed.<br><br>"+
                 "Some other possible reason also could happen: <br>"+
-                "1. Maybe there is one or more invalid room to book"+
-                "2. The payment method is not valid or failed to activate"+
+                "1. Maybe there is one or more invalid room to book <br>"+
+                "2. The payment method is not valid or failed to activate<br>"+
+                "3. Overbooking would have happened for this booking<br>"+
                 "Please notify admin to check<br>"
                 +getBookingDetailsTextForMail(booking);
         logger.debug(errorMessage);
@@ -334,6 +335,7 @@ public class GoToManager extends ManagerBase implements IGoToManager {
 
     private Date fixTime(String dateStr, String time) throws Exception{
         try{
+            checkinOutDateFormatter.setLenient(false);
             Date date = checkinOutDateFormatter.parse(dateStr);
             Calendar cal = Calendar.getInstance();
             cal.setTime(date);
@@ -355,14 +357,9 @@ public class GoToManager extends ManagerBase implements IGoToManager {
 
     private PmsBookingRooms setCorrectStartEndTime(PmsBookingRooms room, Booking booking) throws Exception {
         room.date = new PmsBookingDateRange();
-        try {
-            room.date.start = fixTime(booking.getCheckInDate(), pmsManager.getConfigurationSecure().getDefaultStart());
-            room.date.end = fixTime(booking.getCheckOutDate(), pmsManager.getConfigurationSecure().getDefaultEnd());
-            return room;
-        } catch (ParseException e) {
-            throw new Exception("Checkin / Checkout Date parsing failed");
-        }
-
+        room.date.start = fixTime(booking.getCheckInDate(), pmsManager.getConfigurationSecure().getDefaultStart());
+        room.date.end = fixTime(booking.getCheckOutDate(), pmsManager.getConfigurationSecure().getDefaultEnd());
+        return room;
     }
 
     private PmsBookingRooms mapRoomToPmsRoom(Booking booking, Room gotoBookingRoom) throws Exception {

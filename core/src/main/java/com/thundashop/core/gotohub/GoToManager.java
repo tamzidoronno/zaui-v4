@@ -351,7 +351,7 @@ public class GoToManager extends ManagerBase implements IGoToManager {
         } catch (Exception e){
             logPrintException(e);
             logger.error("Date parsing failed.. Date in string-> "+dateStr);
-            throw new GotoException(1000, "Goto Booking Failed, Reason: Invalid checkin/ checkout date format");
+            throw new GotoException(1006, "Goto Booking Failed, Reason: Invalid checkin/ checkout date format");
         }
     }
 

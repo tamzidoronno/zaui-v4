@@ -9,7 +9,6 @@ import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.gotohub.dto.*;
 import com.thundashop.core.gotohub.dto.Room;
-import com.thundashop.core.jomres.JomresManager;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
@@ -23,7 +22,6 @@ import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.data.User;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,8 +29,6 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -329,9 +325,10 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         }
     }
 
-    private String getPaymentTypeId(){
-        //TODO will return specific payment type id for goto, will get from configuration
-        return "70ace3f0-3981-11e3-aa6e-0800200c9a66";
+    private String getPaymentTypeId() throws GotoException{
+        if(StringUtils.isBlank(goToConfiguration.getPaymentTypeId()))
+            throw new GotoException(1007,"Goto Booking Failed, Reason: No Payment Method found in Goto Configuration");
+        return goToConfiguration.paymentTypeId;
     }
 
     private Date fixTime(String dateStr, String time) throws Exception{

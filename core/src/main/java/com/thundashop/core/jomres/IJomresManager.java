@@ -10,6 +10,7 @@ import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
 import com.thundashop.core.jomres.dto.FetchBookingResponse;
+import com.thundashop.core.jomres.dto.JomresProperty;
 
 import java.util.List;
 
@@ -22,13 +23,22 @@ import java.util.List;
 public interface IJomresManager {
     @Administrator
     List<JomresLog> getLogEntries();
-
     @Administrator
     public boolean testConnection();
     @Administrator
     public boolean updateAvailability() throws Exception;
     @Administrator
     public List<FetchBookingResponse> fetchBookings() throws Exception;
+
+    public boolean changeConfiguration(JomresConfiguration newConfiguration);
+
     @Administrator
-    public boolean changeCredentials(String clientId, String clientSecret) throws Exception;
+    public List<JomresProperty> getJomresChannelProperties() throws Exception;
+    @Administrator
+    public boolean saveMapping(List<JomresRoomData> mappingRoomData) throws Exception;
+    @Administrator
+    public JomresConfiguration getConfigurationData() throws Exception;
+    @Administrator
+    public List<JomresRoomData> getMappingData() throws Exception;
+
 }

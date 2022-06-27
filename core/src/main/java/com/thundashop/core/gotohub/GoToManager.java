@@ -2,9 +2,11 @@ package com.thundashop.core.gotohub;
 
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.applications.StoreApplicationPool;
+import com.getshop.scope.GetShopSessionBeanNamed;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItemType;
-import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.gotohub.dto.*;
 import com.thundashop.core.gotohub.dto.Room;
 import com.thundashop.core.jomres.JomresManager;
@@ -39,7 +41,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 @Component
 @GetShopSession
 @Slf4j
-public class GoToManager extends ManagerBase implements IGoToManager {
+public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager {
     @Autowired PmsManager pmsManager;
     @Autowired StoreManager storeManager;
     @Autowired StorePool storePool;
@@ -54,8 +56,8 @@ public class GoToManager extends ManagerBase implements IGoToManager {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
     private static final SimpleDateFormat checkinOutDateFormatter = new SimpleDateFormat("yyyy-MM-dd");
 
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(JomresManager.class);
     private static final int HOUR_FOR_CANCELLATION_BEFORE_CHECKIN = 5;
+    public GoToConfiguration goToConfiguration = null;
 
     @Override
     public Hotel getHotelInformation() {
@@ -117,7 +119,7 @@ public class GoToManager extends ManagerBase implements IGoToManager {
         if (!pmsBooking.hasOverBooking())  return;
 
         pmsManager.deleteBooking(pmsBooking.id);
-        logger.error("Goto Booking Failed, Reason: Overbooking");
+        log.error("Goto Booking Failed, Reason: Overbooking");
         throw new GotoException(1005, "Goto Booking Failed, Reason: Overbooking");
     }
 
@@ -230,8 +232,8 @@ public class GoToManager extends ManagerBase implements IGoToManager {
             pmsInvoiceManager.markOrderAsPaid(pmsBooking.id, orderId);
         } catch (Exception e){
             logPrintException(e);
-            logger.error("Error occured while processing payment for goto booking..");
-            logger.error("Please check exception logs...");
+            log.error("Error occured while processing payment for goto booking..");
+            log.error("Please check exception logs...");
             throw new GotoException(1102, "Goto Booking Confirmation Failed, Reason: Payment failed");
         }
 
@@ -244,11 +246,11 @@ public class GoToManager extends ManagerBase implements IGoToManager {
                 "3. Overbooking would have happened for this booking<br>"+
                 "Please notify admin to check<br>"
                 +getBookingDetailsTextForMail(booking);
-        logger.debug(errorMessage);
-        logger.debug("Email is sending to the Hotel owner...");
-        logger.debug(emailDetails);
+        log.debug(errorMessage);
+        log.debug("Email is sending to the Hotel owner...");
+        log.debug(emailDetails);
         messageManager.sendMessageToStoreOwner(emailDetails, errorMessage);
-        logger.debug("Email sent");
+        log.debug("Email sent");
     }
 
 
@@ -311,8 +313,8 @@ public class GoToManager extends ManagerBase implements IGoToManager {
 
     private void handleDifferentCurrencyBooking(String bookingCurrency) throws GotoException {
         if (StringUtils.isBlank(bookingCurrency) || isCurrencySameWithSystem(bookingCurrency)) return;
-        logger.error("Booking currency didn't match with system currency..");
-        logger.error("Booking currency: "+bookingCurrency);
+        log.error("Booking currency didn't match with system currency..");
+        log.error("Booking currency: "+bookingCurrency);
         throw new GotoException(1001, "Goto Booking Failed, Reason: Different Currency");
 
     }
@@ -323,7 +325,7 @@ public class GoToManager extends ManagerBase implements IGoToManager {
                 storeApplicationPool.activateApplication(pmethod);
             }
         }catch (Exception e){
-            logger.error("Error occurred while activate payment method, id: "+pmethod);
+            log.error("Error occurred while activate payment method, id: "+pmethod);
             throw new GotoException(1004,"Goto Booking Failed, Reason: Payment method activation failed");
         }
     }
@@ -350,7 +352,7 @@ public class GoToManager extends ManagerBase implements IGoToManager {
             return cal.getTime();
         } catch (Exception e){
             logPrintException(e);
-            logger.error("Date parsing failed.. Date in string-> "+dateStr);
+            log.error("Date parsing failed.. Date in string-> "+dateStr);
             throw new GotoException(1006, "Goto Booking Failed, Reason: Invalid checkin/ checkout date format");
         }
     }
@@ -369,7 +371,7 @@ public class GoToManager extends ManagerBase implements IGoToManager {
         pmsBookingRoom.bookingItemTypeId = gotoBookingRoom.getRoomCode();
 
         if (bookingEngine.getBookingItemType(gotoBookingRoom.getRoomCode())==null) {
-            logger.error("booking room type does not exist, BookingItemTypeId: "+gotoBookingRoom.getRoomCode());
+            log.error("booking room type does not exist, BookingItemTypeId: "+gotoBookingRoom.getRoomCode());
             throw new GotoException(1002, "Goto Booking Failed, Reason: Room type not found for roomCode-> "
                     +gotoBookingRoom.getRoomCode());
         }
@@ -420,7 +422,7 @@ public class GoToManager extends ManagerBase implements IGoToManager {
         }
 
         if (pmsBooking.rooms.isEmpty()) {
-            logger.debug("Booking is not saved since there are no rooms to add");
+            log.debug("Booking is not saved since there are no rooms to add");
             throw new GotoException(1003, "Goto Booking Failed, Reason: Empty room list");
         }
         return pmsBooking;
@@ -430,6 +432,27 @@ public class GoToManager extends ManagerBase implements IGoToManager {
         if(StringUtils.isNotBlank(reservationId))
             return pmsManager.getBooking(reservationId);
         return null;
+    }
+
+    @Override
+    public boolean saveConfiguration(GoToConfiguration configuration) {
+        saveObject(configuration);
+        goToConfiguration = configuration;
+        return true;
+    }
+
+    @Override
+    public GoToConfiguration getConfiguration() {
+        return goToConfiguration;
+    }
+
+    @Override
+    public void dataFromDatabase(DataRetreived data) {
+        for (DataCommon dataCommon : data.data) {
+            if (dataCommon instanceof GoToConfiguration) {
+                goToConfiguration = (GoToConfiguration) dataCommon;
+            }
+        }
     }
 
     private GoToRoomData mapBookingItemTypeToGoToRoomData(BookingItemType bookingItemType, BookingProcessRooms room, PmsAdditionalTypeInformation additionalInfo){
@@ -488,7 +511,7 @@ public class GoToManager extends ManagerBase implements IGoToManager {
                     }
                 }
             } catch (Exception ex) {
-                Logger.getLogger(PmsBookingProcess.class.getName()).log(Level.SEVERE, null, ex);
+                log.error("failed {} {}", ex.getMessage(), ex);
             }
 
             goToRoomData.add(mapBookingItemTypeToGoToRoomData(type, room, typeInfo));

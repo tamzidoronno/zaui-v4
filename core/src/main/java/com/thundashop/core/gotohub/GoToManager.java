@@ -19,6 +19,7 @@ import com.thundashop.core.pmsmanager.*;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.storemanager.data.Store;
+import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -47,6 +48,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     @Autowired StoreApplicationPool storeApplicationPool;
     @Autowired OrderManager orderManager;
     @Autowired MessageManager messageManager;
+    @Autowired UserManager userManager;
 
     private static final SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
@@ -56,11 +58,13 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
     @Override
     public Hotel getHotelInformation() {
+        saveSchedulerAsCurrentUser();
         return mapStoreToGoToHotel(storeManager.getMyStore(), pmsManager.getConfiguration());
     }
 
     @Override
     public List<RoomType> getRoomTypeDetails() throws Exception {
+        saveSchedulerAsCurrentUser();
         StartBooking arg = getBookingArgument(0);
         List<GoToRoomData> goToRoomData = getGoToRoomData(false, arg);
         List<RoomType> roomTypes = new ArrayList<>();
@@ -76,6 +80,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
     @Override
     public List<PriceAllotment> getPriceAndAllotment() throws Exception {
+        saveSchedulerAsCurrentUser();
         return getPriceAllotments();
     }
 
@@ -120,6 +125,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     @Override
     public FinalResponse saveBooking(Booking booking) {
         try {
+            saveSchedulerAsCurrentUser();
             handleDifferentCurrencyBooking(booking.getCurrency());
             PmsBooking pmsBooking = getBooking(booking);
             if (pmsBooking == null) {
@@ -148,6 +154,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     @Override
     public FinalResponse confirmBooking(String reservationId){
         try{
+            saveSchedulerAsCurrentUser();
             PmsBooking pmsBooking = findCorrelatedBooking(reservationId);
             if(pmsBooking == null){
                 throw new GotoException(1101, "Goto Booking Confirmation Failed, Reason: Booking Not Found");
@@ -190,6 +197,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     @Override
     public FinalResponse cancelBooking(String reservationId) {
         try{
+            saveSchedulerAsCurrentUser();
             PmsBooking pmsBooking = findCorrelatedBooking(reservationId);
             if(pmsBooking == null){
                 throw new GotoException(1201, "Goto Booking Cancellation Failed, Reason: Booking Not Found");
@@ -208,6 +216,11 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             handleUpdateBookingError(reservationId, "Goto Booking Confirmation Failed, Reason: Unknown", 1209);
             return new FinalResponse(false, 1209, "Goto Booking Cancellation Failed, Reason: Unknown", null);
         }
+    }
+
+    private void saveSchedulerAsCurrentUser(){
+        User user = userManager.getUserById("gs_system_scheduler_user");
+        getSession().currentUser = user;
     }
 
     private void handlePaymentOrder(PmsBooking pmsBooking, String checkoutDate) throws Exception {

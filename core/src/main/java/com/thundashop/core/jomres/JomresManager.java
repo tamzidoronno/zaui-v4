@@ -116,6 +116,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     public boolean changeConfiguration(JomresConfiguration newConfiguration){
         jomresConfiguration.updateConfiguration(newConfiguration);
         saveObject(jomresConfiguration);
+        invalidateToken();
         return true;
     }
 

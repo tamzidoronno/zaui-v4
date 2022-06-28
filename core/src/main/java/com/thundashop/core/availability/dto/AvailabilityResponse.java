@@ -1,8 +1,10 @@
 package com.thundashop.core.availability.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -10,10 +12,12 @@ import java.util.List;
  * @since 6/15/22
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class AvailabilityResponse {
 
-    private LocalDate start;
-    private LocalDate end;
+    private Date start;
+    private Date end;
     private long rooms;
     private long adults;
     private long children;

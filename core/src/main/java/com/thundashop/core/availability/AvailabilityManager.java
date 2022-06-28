@@ -13,8 +13,10 @@ import com.google.gson.reflect.TypeToken;
 import com.mongodb.BasicDBObject;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
+import com.thundashop.core.appmanager.data.AvailableApplications;
 import com.thundashop.core.arx.AccessLog;
 import com.thundashop.core.arx.DoorManager;
+import com.thundashop.core.availability.dto.Availability;
 import com.thundashop.core.availability.dto.AvailabilityRequest;
 import com.thundashop.core.availability.dto.AvailabilityResponse;
 import com.thundashop.core.bookingengine.BookingEngine;
@@ -66,9 +68,6 @@ import com.thundashop.core.webmanager.WebManager;
 import com.thundashop.core.wubook.WubookManager;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
-import org.joda.time.DateTime;
-import org.joda.time.Days;
-import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.env.Environment;
@@ -77,8 +76,11 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -106,13 +108,16 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
 
     @Override
     public AvailabilityResponse checkAvailability(AvailabilityRequest arg) {
-        if(isNotBlank(arg.getDiscountCode())) {
+        if (isNotBlank(arg.getDiscountCode())) {
             arg.setDiscountCode(arg.getDiscountCode().replaceAll("&amp;", "&"));
         }
 
-        if(arg.getStart() == null || arg.getEnd() == null) {
+        if (arg.getStart() == null || arg.getEnd() == null) {
             return new AvailabilityResponse();
         }
+        /*List<Availability> av = new ArrayList<>();
+
+        av.add()*/
         long timediff = arg.getEnd().getTime() - arg.getStart().getTime();
         timediff = timediff / (86400*1000);
         if(timediff > 1825 || timediff < 0) {
@@ -134,28 +139,28 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
 
         Gson gson = new Gson();
         logPrint(gson.toJson(arg));
-        if(arg.getGuests() < arg.rooms) {
+        if(arg.getGuests() < arg.getRooms()) {
             return new AvailabilityResponse();
         }
-        PmsBooking booking = pmsManager.getStart()Booking();
-        if(arg.language != null && !arg.language.isEmpty()) {
-            setSessionLanguage(arg.language);
+        PmsBooking booking = pmsManager.startBooking();
+        if(isNotEmpty(arg.getLanguage())) {
+            setSessionLanguage(arg.getLanguage());
         }
 
         if(booking.language == null || booking.language.isEmpty()) {
             booking.language = getSession().language;
         }
-        if(arg.discountCode != null && !arg.discountCode.isEmpty()) {
-            User discountUser = userManager.getUserByReference(arg.discountCode);
+        if(arg.getDiscountCode() != null && !arg.getDiscountCode().isEmpty()) {
+            User discountUser = userManager.getUserByReference(arg.getDiscountCode());
             if(discountUser != null) {
                 booking.userId = discountUser.id;
                 booking.couponCode = pmsInvoiceManager.getDiscountsForUser(discountUser.id).attachedDiscountCode;
             } else {
-                booking.couponCode = arg.discountCode;
+                booking.couponCode = arg.getDiscountCode();
             }
         }
 
-        booking.browserUsed = arg.browser;
+        booking.browserUsed = arg.getBrowser();
 
         try {
             pmsManager.setBooking(booking);
@@ -163,14 +168,15 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
             logPrintException(e);
         }
 
-        arg.getStart() = pmsManager.getConfigurationSecure().getDefaultStart(arg.getStart());
-        arg.getEnd() = pmsManager.getConfigurationSecure().getDefaultEnd(arg.getEnd());
+        arg.setStart(arg.getStart());
+        arg.setEnd(pmsManager.getConfigurationSecure().getDefaultEnd(arg.getEnd()));
 
         if(arg.getStart().after(arg.getEnd())) {
-            arg.getEnd() = correctToDayAfter(arg);
+            arg.setEnd(correctToDayAfter(arg));
         }
 
-        AvailabilityResponse result = new AvailabilityResponse();
+        //AvailabilityResponse result = new AvailabilityResponse();
+        StartBookingResult result = new StartBookingResult();
         List<BookingItemType> types = bookingEngine.getBookingItemTypesWithSystemType(null);
         result.numberOfDays = pmsInvoiceManager.getNumberOfDays(arg.getStart(), arg.getEnd());
 
@@ -188,7 +194,7 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
             isAdministrator = true;
         }
 
-        pmsInvoiceManager.getStart()CacheCoverage();
+        pmsInvoiceManager.startCacheCoverage();
         for(BookingItemType type : types) {
             if(!type.visibleForBooking && !isAdministrator) {
                 continue;
@@ -234,7 +240,7 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
         result.supportPayLaterButton = checkIfSupportPayLater(arg);
         result.supportedPaymentMethods = checkForSupportedPaymentMethods(booking);
         result.prefilledContactUser = "";
-        result.getStart()Yesterday = isMidleOfNight() && PmsBookingRooms.isSameDayStatic(arg.getStart(), new Date());
+        result.startYesterday = isMidleOfNight() && PmsBookingRooms.isSameDayStatic(arg.getStart(), new Date());
         result.bookingId = existing.id;
 
         if(booking.userId != null && !booking.userId.isEmpty()) {
@@ -246,10 +252,38 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
         checkForRestrictions(result, arg);
         addAddonsIncluded(result,arg);
         result.hasAvailableRooms = result.hasAvailableRooms();
-        return result;
+        //TODO return result;
+
+        List<Availability> av = getAvailability(result);
+       // for(BookingProcessRooms r : result.rooms) {
+           // av.add(getAvailability(result));
+        //}
+        return new AvailabilityResponse(arg.getStart(), arg.getEnd(), arg.getRooms(), arg.getAdults(), arg.getChildren(), arg.getDiscountCode(), av);
     }
 
-    private boolean denyPayLaterButton(BookingProcessRooms r, StartBooking arg, AvailabilityResponse result) {
+    private List<Availability> getAvailability(StartBookingResult result) {
+        List<Availability> avs = new ArrayList<>();
+        LocalDate d = java.time.LocalDate.now();
+        for(int i = 0; i < result.numberOfDays; i++) {
+            Availability av = new Availability();
+            av.setDate("2022-06-29");
+            av.setCurrencyCode("NOK");
+            av.setLowestPrice(BigDecimal.ONE);
+
+            Map<String, Integer> rm = new HashMap<>();
+            for(BookingProcessRooms r : result.rooms) {
+                av.setTotalNoOfRooms((long) r.availableRooms);
+                rm.put(r.name, r.availableRooms);
+            }
+            av.setTotalNoOfRoomsByCategory(rm);
+
+
+            avs.add(av);
+        }
+        return avs;
+    }
+
+    private boolean denyPayLaterButton(BookingProcessRooms r, AvailabilityRequest arg, StartBookingResult result) {
         try {
             List<TimeRepeaterData> mingueststimes = bookingEngine.getOpeningHoursWithType(r.id, TimeRepeaterData.TimePeriodeType.denyPayLater);
 
@@ -271,7 +305,7 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
         return false;
     }
 
-    private void checkForRestrictions(AvailabilityResponse result, StartBooking arg) {
+    private void checkForRestrictions(StartBookingResult result, AvailabilityRequest arg) {
         boolean remove = false;
         List<String> types = new ArrayList();
 
@@ -301,7 +335,7 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
         }
     }
 
-    private Integer getMinGuestsCount(BookingProcessRooms r, StartBooking arg, AvailabilityResponse result) {
+    private Integer getMinGuestsCount(BookingProcessRooms r, AvailabilityRequest arg, StartBookingResult result) {
         try {
             List<TimeRepeaterData> mingueststimes = bookingEngine.getOpeningHoursWithType(r.id, TimeRepeaterData.TimePeriodeType.minGuests);
 
@@ -325,7 +359,7 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
         return 1;
     }
 
-    private void addAddonsIncluded(AvailabilityResponse result, StartBooking arg) {
+    private void addAddonsIncluded(StartBookingResult result, AvailabilityRequest arg) {
 
         if(!storeId.equals("ba845b2d-2293-4afc-91f1-eef47db7f8ca")) {
             return;
@@ -356,7 +390,7 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
 
         }
     }
-    private void removeAllRooms(AvailabilityResponse result, List<String> types) {
+    private void removeAllRooms(StartBookingResult result, List<String> types) {
         for(BookingProcessRooms r : result.rooms) {
             if(!types.isEmpty() && !types.contains(r.id)) {
                 continue;
@@ -376,16 +410,16 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
         }
     }
 
-    private void checkIfCouponIsValid(AvailabilityResponse result, StartBooking arg) {
-        if(isBlank(arg.discountCode)) return;
-        Coupon coupon = cartManager.getCoupon(arg.discountCode);
+    private void checkIfCouponIsValid(StartBookingResult result, AvailabilityRequest arg) {
+        if(isBlank(arg.getDiscountCode())) return;
+        Coupon coupon = cartManager.getCoupon(arg.getDiscountCode());
         if(coupon == null) return;
 
         boolean removeAvailability = false;
         List<String> roomsToRemove = new ArrayList();
         for(BookingProcessRooms r : result.rooms) {
             BookingItemType type = bookingEngine.getBookingItemType(r.id);
-            if(!cartManager.couponIsValid(new Date(), arg.discountCode, arg.getStart(),arg.getEnd(), type.productId, arg.getNumberOfDays())) {
+            if(!cartManager.couponIsValid(new Date(), arg.getDiscountCode(), arg.getStart(),arg.getEnd(), type.productId, arg.getNumberOfDays())) {
                 roomsToRemove.add(r.id);
                 removeAvailability = true;
             }
@@ -410,9 +444,9 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
         }
     }
 
-    private void addCouponPricesToRoom(AvailabilityResponse result, StartBooking arg) {
-        if(isBlank(arg.discountCode)) return;
-        Coupon coupon = cartManager.getCoupon(arg.discountCode);
+    private void addCouponPricesToRoom(StartBookingResult result, AvailabilityRequest arg) {
+        if(isBlank(arg.getDiscountCode())) return;
+        Coupon coupon = cartManager.getCoupon(arg.getDiscountCode());
         if(coupon == null || coupon.addonsToInclude == null || coupon.addonsToInclude.isEmpty()) return;
         List<AddonsInclude> addons = coupon.addonsToInclude.stream().filter(e -> e.includeInRoomPrice).collect(Collectors.toList());
         for(AddonsInclude inc : addons) {
@@ -451,7 +485,7 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
         return new ArrayList();
     }
 
-    private boolean checkIfSupportPayLater(StartBooking arg) {
+    private boolean checkIfSupportPayLater(AvailabilityRequest arg) {
         PmsBooking booking = pmsManager.getCurrentBooking();
         if(booking == null) {
             return false;
@@ -489,8 +523,8 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
         return false;
     }
 
-    private void selectMostSuitableRooms(AvailabilityResponse result, StartBooking arg) {
-        logPrint("Need to find: " + arg.rooms + " rooms for :" + arg.getGuests());
+    private void selectMostSuitableRooms(StartBookingResult result, AvailabilityRequest arg) {
+        //logPrint("Need to find: " + arg.rooms + " rooms for :" + arg.getGuests());
 
         List<PmsBookingProcessorCalculator> toUse = new ArrayList();
 
@@ -522,11 +556,11 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
         });
 
         List<PmsBookingProcessorCalculator> listOfRooms = new ArrayList();
-        int guestLeft = arg.getGuests();
-        int roomsLeft = arg.rooms;
+        int guestLeft = (int) arg.getGuests();
+        int roomsLeft = arg.getRooms();
         int breaker = 0;
         while(true) {
-            for(Integer roomIdx = 0; roomIdx < arg.rooms; roomIdx++) {
+            for(Integer roomIdx = 0; roomIdx < arg.getRooms(); roomIdx++) {
                 for(PmsBookingProcessorCalculator lowest : toUse) {
                     if(maxRooms.get(lowest.room.id) == 0) {
                         continue;
@@ -597,7 +631,7 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
         }
 
         logPrint("---------------: " + guestLeft + "-----------");
-        int childToSet = arg.children;
+        int childToSet = arg.getChildren();
         if(!failed) {
             for(PmsBookingProcessorCalculator check : listOfRooms) {
                 logPrint(check.guests + " : "+ check.room.availableRooms + " : " + check.price + " : " + check.room.name);
@@ -612,8 +646,8 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
                 toAddToCurrentBooking.bookingItemTypeId = check.room.id;
                 toAddToCurrentBooking.numberOfGuests = check.guests;
                 toAddToCurrentBooking.date = new PmsBookingDateRange();
-                toAddToCurrentBooking.date.getStart() = normalizeDate(arg.getStart(), true);
-                toAddToCurrentBooking.date.getEnd() = normalizeDate(arg.getEnd(), false);
+                toAddToCurrentBooking.date.start = normalizeDate(arg.getStart(), true);
+                toAddToCurrentBooking.date.end = normalizeDate(arg.getEnd(), false);
                 if(childToSet > 0) {
                     childToSet -= toAddToCurrentBooking.setGuestAsChildren(childToSet);
                 }
@@ -657,7 +691,7 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
         }
         storeManager.setSessionLanguage(language);
     }
-    private Date correctToDayAfter(StartBooking arg) {
+    private Date correctToDayAfter(AvailabilityRequest arg) {
         Date start = arg.getStart();
         Calendar startCal = Calendar.getInstance();
         startCal.setTime(start);
@@ -673,8 +707,8 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
         PmsBookingRooms room = new PmsBookingRooms();
         room.bookingItemTypeId = bookingProcessRoom.id;
         room.date = new PmsBookingDateRange();
-        room.date.getStart() = start;
-        room.date.getEnd() = end;
+        room.date.start = start;
+        room.date.end = end;
         room.numberOfGuests = numberofguests;
 
         PmsBooking booking = new PmsBooking();

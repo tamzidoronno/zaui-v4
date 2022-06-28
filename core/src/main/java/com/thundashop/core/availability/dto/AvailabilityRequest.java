@@ -1,9 +1,11 @@
 package com.thundashop.core.availability.dto;
 
+import com.thundashop.core.pmsmanager.BrowserVersion;
+import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.util.Date;
 
 /**
  * @author Naim Murad (naim)
@@ -12,14 +14,20 @@ import java.time.LocalDate;
 @Data
 public class AvailabilityRequest implements Serializable {
 
-    private LocalDate start;
-    private LocalDate end;
-    private long rooms;
-    private long adults;
-    private long children;
+    private Date start;
+    private Date end;
+    private int rooms;
+    private int adults;
+    private int children;
     private String discountCode;
+    private String language;
+    public BrowserVersion browser;
 
     public long getGuests() {
         return getAdults() + getChildren();
+    }
+
+    public int getNumberOfDays() {
+        return PmsBookingRooms.getNumberOfDays(start, end);
     }
 }

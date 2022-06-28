@@ -167,8 +167,17 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         }
     }
 
+    private void deleteExistingMapping(){
+        for(JomresRoomData roomData: jomresPropertyToRoomDataMap.values()){
+            deleteObject(roomData);
+        }
+        jomresPropertyToRoomDataMap = new HashMap<>();
+        pmsItemToJomresRoomDataMap = new HashMap<>();
+        return;
+    }
     @Override
     public boolean saveMapping(List<JomresRoomData> mappingRoomData) throws Exception {
+        deleteExistingMapping();
         for (JomresRoomData roomData : mappingRoomData) {
             handleExistingRoomDataWhileMapping(roomData);
             saveNewRoomData(roomData);
@@ -492,6 +501,9 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             }
         }
         logText("Ended Jomres fetch bookings for 60 days");
+        allBookings = allBookings.stream()
+                .sorted(Comparator.comparingLong(FetchBookingResponse::getBookingId).reversed())
+                .collect(Collectors.toList());
         return allBookings;
 
     }

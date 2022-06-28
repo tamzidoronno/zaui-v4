@@ -1,17 +1,29 @@
 package com.thundashop.core.jomres.dto;
 
+import com.google.gson.annotations.Expose;
+import lombok.Data;
+
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+@Data
 public class FetchBookingResponse implements Serializable {
+    @Expose
     long bookingId;
+    @Expose
     String pmsBookingId;
+    @Expose
     String status;
+    @Expose
     String pmsRoomName;
+    @Expose
     String pmsRoomCategoryName;
+    @Expose
     String guestName;
+    @Expose
     String arrivalDate;
+    @Expose
     String departureDate;
     public FetchBookingResponse(long bookingId, String status, String guestName, Date arrivalDate, Date departureDate,
                                 String pmsBookingId,String pmsRoomName, String pmsRoomCategoryName) {

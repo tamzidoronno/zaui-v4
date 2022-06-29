@@ -81,6 +81,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -106,6 +108,9 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
     @Autowired private ProductManager productManager;
     @Autowired private UserManager userManager;
 
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+
     @Override
     public AvailabilityResponse checkAvailability(AvailabilityRequest arg) {
         if (isNotBlank(arg.getDiscountCode())) {
@@ -115,9 +120,6 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
         if (arg.getStart() == null || arg.getEnd() == null) {
             return new AvailabilityResponse();
         }
-        /*List<Availability> av = new ArrayList<>();
-
-        av.add()*/
         long timediff = arg.getEnd().getTime() - arg.getStart().getTime();
         timediff = timediff / (86400*1000);
         if(timediff > 1825 || timediff < 0) {
@@ -175,7 +177,6 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
             arg.setEnd(correctToDayAfter(arg));
         }
 
-        //AvailabilityResponse result = new AvailabilityResponse();
         StartBookingResult result = new StartBookingResult();
         List<BookingItemType> types = bookingEngine.getBookingItemTypesWithSystemType(null);
         result.numberOfDays = pmsInvoiceManager.getNumberOfDays(arg.getStart(), arg.getEnd());
@@ -214,7 +215,7 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
                 room.name = type.getTranslatedName(getSession().language);
                 room.maxGuests = type.size;
 
-                for(int i = 1; i <= type.size;i++) {
+               /* for(int i = 1; i <= type.size;i++) {
                     int count = 0;
                     for(PmsBookingRooms existingRoom : existing.rooms) {
                         if(existingRoom.bookingItemTypeId.equals(type.id) && existingRoom.numberOfGuests == i) {
@@ -224,7 +225,7 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
                     room.roomsSelectedByGuests.put(i, count);
                     Double price = getPriceForRoom(room, arg.getStart(), arg.getEnd(), i, booking.couponCode);
                     room.pricesByGuests.put(i, price);
-                }
+                }*/
             } catch (Exception ex) {
                 Logger.getLogger(PmsBookingProcess.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -251,34 +252,35 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
         checkIfCouponIsValid(result, arg);
         checkForRestrictions(result, arg);
         addAddonsIncluded(result,arg);
-        result.hasAvailableRooms = result.hasAvailableRooms();
-        //TODO return result;
+        //result.hasAvailableRooms = result.hasAvailableRooms();
 
-        List<Availability> av = getAvailability(result);
-       // for(BookingProcessRooms r : result.rooms) {
-           // av.add(getAvailability(result));
-        //}
+        List<Availability> av = getAvailability(result, arg);
         return new AvailabilityResponse(arg.getStart(), arg.getEnd(), arg.getRooms(), arg.getAdults(), arg.getChildren(), arg.getDiscountCode(), av);
     }
 
-    private List<Availability> getAvailability(StartBookingResult result) {
+    private List<Availability> getAvailability(StartBookingResult result, AvailabilityRequest arg) {
         List<Availability> avs = new ArrayList<>();
-        LocalDate d = java.time.LocalDate.now();
+        LocalDate start = arg.getStart().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        if(result.startYesterday) {
+            start = start.minusDays(1);
+        }
         for(int i = 0; i < result.numberOfDays; i++) {
             Availability av = new Availability();
-            av.setDate("2022-06-29");
+            av.setDate(start.format(DATE_FORMATTER));
             av.setCurrencyCode("NOK");
-            av.setLowestPrice(BigDecimal.ONE);
+            BookingProcessRooms frst = result.rooms.stream().findFirst().orElse(new BookingProcessRooms());
+            double lowest = frst.totalPriceForRoom;
 
             Map<String, Integer> rm = new HashMap<>();
             for(BookingProcessRooms r : result.rooms) {
                 av.setTotalNoOfRooms((long) r.availableRooms);
                 rm.put(r.name, r.availableRooms);
+                if(r.availableRooms > 0 && r.totalPriceForRoom < lowest) lowest = r.totalPriceForRoom;
             }
+            av.setLowestPrice(BigDecimal.valueOf(lowest));
             av.setTotalNoOfRoomsByCategory(rm);
-
-
             avs.add(av);
+            start = start.plusDays(1);
         }
         return avs;
     }

@@ -39,6 +39,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -660,7 +662,7 @@ public class BookingEngineNew extends GetShopSessionBeanNamed implements IBookin
         BookingItemType type = getBookingItemType(itemId);
         if(type != null) { itemId = ""; }
         
-        if (bookingItem == null && !itemId.isEmpty()) {
+        if (bookingItem == null && StringUtils.isNotBlank(itemId)) {
             throw new BookingEngineException("Can not change to a bookingItem that does not exists");
         }
         

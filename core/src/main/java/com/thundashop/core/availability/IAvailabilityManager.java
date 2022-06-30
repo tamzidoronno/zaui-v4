@@ -20,7 +20,5 @@ import java.util.*;
 @GetShopApi
 @GetShopMultiLayerSession
 public interface IAvailabilityManager {
-
-    @Administrator
     public AvailabilityResponse checkAvailability(AvailabilityRequest arg);
 }

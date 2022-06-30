@@ -23,7 +23,7 @@ public class AvailabilityRequest implements Serializable {
     private String language;
     public BrowserVersion browser;
 
-    public long getGuests() {
+    public int getGuests() {
         return getAdults() + getChildren();
     }
 

@@ -16,5 +16,6 @@ public class Availability {
     private BigDecimal lowestPrice;
     private String currencyCode;
     private long totalNoOfRooms;
+    private boolean allCategoryAvailable;
     private Map<String, Integer> totalNoOfRoomsByCategory;
 }

@@ -108,7 +108,7 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
     @Autowired private ProductManager productManager;
     @Autowired private UserManager userManager;
 
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    private SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("dd-MM-yyyy");
 
 
     @Override
@@ -144,33 +144,21 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
         if(arg.getGuests() < arg.getRooms()) {
             return new AvailabilityResponse();
         }
-        PmsBooking booking = pmsManager.startBooking();
         if(isNotEmpty(arg.getLanguage())) {
             setSessionLanguage(arg.getLanguage());
         }
-
-        if(booking.language == null || booking.language.isEmpty()) {
-            booking.language = getSession().language;
-        }
+        User discountUser = null;
+        String userId = "";
+        String couponCode = arg.getDiscountCode();
         if(arg.getDiscountCode() != null && !arg.getDiscountCode().isEmpty()) {
-            User discountUser = userManager.getUserByReference(arg.getDiscountCode());
+            discountUser = userManager.getUserByReference(arg.getDiscountCode());
             if(discountUser != null) {
-                booking.userId = discountUser.id;
-                booking.couponCode = pmsInvoiceManager.getDiscountsForUser(discountUser.id).attachedDiscountCode;
-            } else {
-                booking.couponCode = arg.getDiscountCode();
+                userId = discountUser.id;
+                couponCode = pmsInvoiceManager.getDiscountsForUser(discountUser.id).attachedDiscountCode;
             }
         }
 
-        booking.browserUsed = arg.getBrowser();
-
-        try {
-            pmsManager.setBooking(booking);
-        }catch(Exception e) {
-            logPrintException(e);
-        }
-
-        arg.setStart(arg.getStart());
+        //arg.setStart(arg.getStart());
         arg.setEnd(pmsManager.getConfigurationSecure().getDefaultEnd(arg.getEnd()));
 
         if(arg.getStart().after(arg.getEnd())) {
@@ -187,102 +175,73 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
             }
         });
 
-        PmsBooking existing = pmsManager.getCurrentBooking();
-
         boolean isAdministrator = false;
-
         if(getSession() != null && getSession().currentUser != null && getSession().currentUser.isAdministrator()) {
             isAdministrator = true;
+            userId = userId == null ? getSession().currentUser.id : userId;
         }
 
         pmsInvoiceManager.startCacheCoverage();
-        for(BookingItemType type : types) {
-            if(!type.visibleForBooking && !isAdministrator) {
-                continue;
-            }
-            BookingProcessRooms room = new BookingProcessRooms();
-            room.userId = booking.userId;
-            room.description = type.getTranslatedDescription(getSession().language);
-            room.availableRooms = pmsManager.getNumberOfAvailable(type.id, arg.getStart(), arg.getEnd(), true, true);
-            room.id = type.id;
-            room.systemCategory = type.systemCategory;
-            room.visibleForBooker = type.visibleForBooking;
-            result.totalRooms += room.availableRooms;
-            try {
-                PmsAdditionalTypeInformation typeInfo = pmsManager.getAdditionalTypeInformationById(type.id);
-                room.images.addAll(typeInfo.images);
-                room.sortDefaultImageFirst();
-                room.name = type.getTranslatedName(getSession().language);
-                room.maxGuests = type.size;
-
-               /* for(int i = 1; i <= type.size;i++) {
-                    int count = 0;
-                    for(PmsBookingRooms existingRoom : existing.rooms) {
-                        if(existingRoom.bookingItemTypeId.equals(type.id) && existingRoom.numberOfGuests == i) {
-                            count++;
-                        }
-                    }
-                    room.roomsSelectedByGuests.put(i, count);
-                    Double price = getPriceForRoom(room, arg.getStart(), arg.getEnd(), i, booking.couponCode);
-                    room.pricesByGuests.put(i, price);
-                }*/
-            } catch (Exception ex) {
-                Logger.getLogger(PmsBookingProcess.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            result.rooms.add(room);
-        }
-
-        PmsConfiguration pmsConfig = pmsManager.getConfigurationSecure();
-        if(!pmsConfig.doNotRecommendBestPrice) {
-            selectMostSuitableRooms(result, arg);
-        }
-        result.totalAmount = pmsManager.getCurrentBooking().getTotalPrice();
-        result.supportPayLaterButton = checkIfSupportPayLater(arg);
-        result.supportedPaymentMethods = checkForSupportedPaymentMethods(booking);
-        result.prefilledContactUser = "";
         result.startYesterday = isMidleOfNight() && PmsBookingRooms.isSameDayStatic(arg.getStart(), new Date());
-        result.bookingId = existing.id;
 
-        if(booking.userId != null && !booking.userId.isEmpty()) {
-            result.prefilledContactUser = userManager.getUserById(booking.userId).fullName;
-        }
-
-        //TODO need for pricing addCouponPricesToRoom(result, arg);
-        checkIfCouponIsValid(result, arg);
-        checkForRestrictions(result, arg);
-        addAddonsIncluded(result,arg);
-        //result.hasAvailableRooms = result.hasAvailableRooms();
-
-        List<Availability> av = getAvailability(result, arg);
-        return new AvailabilityResponse(arg.getStart(), arg.getEnd(), arg.getRooms(), arg.getAdults(), arg.getChildren(), arg.getDiscountCode(), av);
-    }
-
-    private List<Availability> getAvailability(StartBookingResult result, AvailabilityRequest arg) {
         List<Availability> avs = new ArrayList<>();
-        LocalDate start = arg.getStart().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        if(result.startYesterday) {
-            start = start.minusDays(1);
-        }
+        Calendar dt = Calendar.getInstance();
+        dt.setTime(arg.getStart());
         for(int i = 0; i < result.numberOfDays; i++) {
             Availability av = new Availability();
-            av.setDate(start.format(DATE_FORMATTER));
+            av.setDate(DATE_FORMATTER.format(dt.getTime()));
             av.setCurrencyCode("NOK");
-            BookingProcessRooms frst = result.rooms.stream().findFirst().orElse(new BookingProcessRooms());
-            double lowest = frst.totalPriceForRoom;
 
+            int totalAvailableOfDay = 0;
+            double lowestPriceOfDay = 0;
+            boolean atleastOneCategoryIsNotAvailable = false;
             Map<String, Integer> rm = new HashMap<>();
-            for(BookingProcessRooms r : result.rooms) {
-                av.setTotalNoOfRooms((long) r.availableRooms);
-                rm.put(r.name, r.availableRooms);
-                if(r.availableRooms > 0 && r.totalPriceForRoom < lowest) lowest = r.totalPriceForRoom;
+
+            Calendar end = Calendar.getInstance();
+            end.setTime(dt.getTime());
+            end.add(Calendar.DATE, 1);
+
+            for (BookingItemType type : types) {
+                if (!type.visibleForBooking && !isAdministrator) {
+                    continue;
+                }
+                BookingProcessRooms room = new BookingProcessRooms();
+                room.userId = userId;
+                room.description = type.getTranslatedDescription(getSession().language);
+
+                room.availableRooms = pmsManager.getNumberOfAvailable(type.id, dt.getTime(), end.getTime(), true, true);
+                room.id = type.id;
+                try {
+                    PmsAdditionalTypeInformation typeInfo = pmsManager.getAdditionalTypeInformationById(type.id);
+                    room.images.addAll(typeInfo.images);
+                    room.sortDefaultImageFirst();
+                    room.name = type.getTranslatedName(getSession().language);
+                    room.maxGuests = type.size;
+
+                    room.roomsSelectedByGuests.put(arg.getGuests(), 0);
+                    Double price = getPriceForRoom(room, arg.getStart(), end.getTime(), arg.getGuests(), couponCode);
+                    room.pricesByGuests.put(arg.getGuests(), price);
+                } catch (Exception ex) {
+                    Logger.getLogger(PmsBookingProcess.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                room.systemCategory = type.systemCategory;
+                room.visibleForBooker = type.visibleForBooking;
+                result.totalRooms += room.availableRooms;
+                totalAvailableOfDay += room.availableRooms;
+                if(room.availableRooms > 0 && room.totalPriceForRoom < lowestPriceOfDay) lowestPriceOfDay = room.totalPriceForRoom;
+                if(room.availableRooms < 1) atleastOneCategoryIsNotAvailable = true;
+                rm.put(room.name, room.availableRooms);
+
+                result.rooms.add(room);
             }
-            av.setLowestPrice(BigDecimal.valueOf(lowest));
+            av.setTotalNoOfRooms((long) totalAvailableOfDay);
+            av.setLowestPrice(BigDecimal.valueOf(lowestPriceOfDay));
             av.setTotalNoOfRoomsByCategory(rm);
+            dt.add(Calendar.DATE, 1);
             avs.add(av);
-            start = start.plusDays(1);
         }
-        return avs;
+
+        return new AvailabilityResponse(arg.getStart(), arg.getEnd(), arg.getRooms(), arg.getAdults(), arg.getChildren(), arg.getDiscountCode(), avs);
     }
 
     private boolean denyPayLaterButton(BookingProcessRooms r, AvailabilityRequest arg, StartBookingResult result) {

@@ -187,19 +187,18 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
         List<Availability> avs = new ArrayList<>();
         Calendar dt = Calendar.getInstance();
         dt.setTime(arg.getStart());
-        for(int i = 0; i < result.numberOfDays; i++) {
+        for(int i = 0; i <= result.numberOfDays; i++) {
             Availability av = new Availability();
-            av.setDate(DATE_FORMATTER.format(dt.getTime()));
+            Calendar dtToShow = Calendar.getInstance();
+            dtToShow.setTime(dt.getTime());
+            dtToShow.add(Calendar.DAY_OF_YEAR, -1);
+            av.setDate(DATE_FORMATTER.format(dtToShow.getTime()));
             av.setCurrencyCode("NOK");
 
             int totalAvailableOfDay = 0;
             double lowestPriceOfDay = 0;
-            boolean atleastOneCategoryIsNotAvailable = false;
+            boolean atleastOneCategoryUnAvailable = false;
             Map<String, Integer> rm = new HashMap<>();
-
-            Calendar end = Calendar.getInstance();
-            end.setTime(dt.getTime());
-            end.add(Calendar.DATE, 1);
 
             for (BookingItemType type : types) {
                 if (!type.visibleForBooking && !isAdministrator) {
@@ -209,7 +208,7 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
                 room.userId = userId;
                 room.description = type.getTranslatedDescription(getSession().language);
 
-                room.availableRooms = pmsManager.getNumberOfAvailable(type.id, dt.getTime(), end.getTime(), true, true);
+                room.availableRooms = pmsManager.getNumberOfAvailable(type.id, dt.getTime(), dt.getTime(), true, true);
                 room.id = type.id;
                 try {
                     /*PmsAdditionalTypeInformation typeInfo = pmsManager.getAdditionalTypeInformationById(type.id);
@@ -229,7 +228,7 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
                 result.totalRooms += room.availableRooms;
                 totalAvailableOfDay += room.availableRooms;
                 if(room.availableRooms > 0 && room.totalPriceForRoom < lowestPriceOfDay) lowestPriceOfDay = room.totalPriceForRoom;
-                if(room.availableRooms < 1) atleastOneCategoryIsNotAvailable = true;
+                if(room.availableRooms < 1) atleastOneCategoryUnAvailable = true;
                 rm.put(room.name, room.availableRooms);
 
                 result.rooms.add(room);
@@ -237,7 +236,7 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
             av.setTotalNoOfRooms((long) totalAvailableOfDay);
             av.setLowestPrice(BigDecimal.valueOf(lowestPriceOfDay));
             av.setTotalNoOfRoomsByCategory(rm);
-            av.setAllCategoryAvailable(atleastOneCategoryIsNotAvailable);
+            av.setAllCategoryAvailable(!atleastOneCategoryUnAvailable);
             dt.add(Calendar.DATE, 1);
             avs.add(av);
         }

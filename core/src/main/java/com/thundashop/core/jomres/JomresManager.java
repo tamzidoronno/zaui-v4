@@ -283,17 +283,17 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                         unavailableStartToEndDates.put(unavailableStartingDay, unavailableEndingDay);
                     }
                     logger.debug("Started unavailability update, Jomres property id: " + roomData.jomresPropertyId);
-//                    updateAvailabilityStatus = availabilityService.changePropertyAvailability(
-//                            jomresConfiguration.clientBaseUrl,
-//                            cmfClientAccessToken,
-//                            jomresConfiguration.channelName,
-//                            roomData.jomresPropertyId,
-//                            unavailableStartToEndDates,
-//                            false
-//                    );
+                    updateAvailabilityStatus = availabilityService.changePropertyAvailability(
+                            jomresConfiguration.clientBaseUrl,
+                            cmfClientAccessToken,
+                            jomresConfiguration.channelName,
+                            roomData.jomresPropertyId,
+                            unavailableStartToEndDates,
+                            false
+                    );
                     logger.debug("Ended unavailability update, Jomres property id: " + roomData.jomresPropertyId);
-//                    logger.debug(updateAvailabilityStatus);
-//                    logText("Unavailability update status of Jomres Property "+roomData.jomresPropertyId+" is "+updateAvailabilityStatus);
+                    logger.debug(updateAvailabilityStatus);
+                    logText("Unavailability update status of Jomres Property "+roomData.jomresPropertyId+" is "+updateAvailabilityStatus);
                     if (availableStartingDay != null) {
                         calendar.add(Calendar.DATE, -1);
                         availableEndingDay = calendar.getTime();
@@ -301,24 +301,24 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                     }
 
                     logger.debug("Started availability update, Jomres property id: " + roomData.jomresPropertyId);
-//                    updateAvailabilityStatus = availabilityService.changePropertyAvailability(
-//                            jomresConfiguration.clientBaseUrl,
-//                            cmfClientAccessToken,
-//                            jomresConfiguration.channelName,
-//                            roomData.jomresPropertyId,
-//                            availableStartToEndDates,
-//                            true
-//                    );
+                    updateAvailabilityStatus = availabilityService.changePropertyAvailability(
+                            jomresConfiguration.clientBaseUrl,
+                            cmfClientAccessToken,
+                            jomresConfiguration.channelName,
+                            roomData.jomresPropertyId,
+                            availableStartToEndDates,
+                            true
+                    );
                     logger.debug("Ended availability update, Jomres property id: " + roomData.jomresPropertyId);
-//                    logger.debug(updateAvailabilityStatus);
-//                    logText("Availability update status of Jomres Property "+roomData.jomresPropertyId+" is "+updateAvailabilityStatus);
-//                } catch (Exception e) {
-//                    logger.error(e.getMessage1());
-//                    logPrintException(e);
-//                    logText("Failed to Update availability for Jomres Property Id: "+roomData.jomresPropertyId
-//                            +", Pms BookingItemId: "+roomData.bookingItemId);
-//                    logText(e.getMessage1());
-//                    handleIfUnauthorizedExceptionOccurred(e);
+                    logger.debug(updateAvailabilityStatus);
+                    logText("Availability update status of Jomres Property "+roomData.jomresPropertyId+" is "+updateAvailabilityStatus);
+                } catch (Exception e) {
+                    logger.error(e.getMessage1());
+                    logPrintException(e);
+                    logText("Failed to Update availability for Jomres Property Id: "+roomData.jomresPropertyId
+                            +", Pms BookingItemId: "+roomData.bookingItemId);
+                    logText(e.getMessage1());
+                    handleIfUnauthorizedExceptionOccurred(e);
                 } catch (java.lang.Exception e) {
                     logPrintException(e);
                     logText("Failed to Update availability for Jomres Property Id: "+roomData.jomresPropertyId

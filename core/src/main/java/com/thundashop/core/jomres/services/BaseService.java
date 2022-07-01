@@ -59,10 +59,6 @@ public class BaseService {
         return accessToken;
     }
 
-    public void logText(String string) {
-        jomresLogManager.save(string, System.currentTimeMillis());
-    }
-
     List<CompletableFuture<? extends Object>> getAsyncTaskResults(List<Supplier<? extends Object>> tasks){
         ExecutorService es = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
@@ -85,8 +81,7 @@ public class BaseService {
     public OAuthClientRequest getBearerTokenRequest(String url, String accessToken)
             throws IOException, OAuthSystemException {
         System.out.println("Request to "+url);
-        logText("Request to "+url);
-        logger.debug("Creating request url: "+url);
+        logger.debug("Request to "+url);
         OAuthClientRequest request =  new OAuthBearerClientRequest(url)
                 .setAccessToken(accessToken)
                 .buildHeaderMessage();
@@ -104,9 +99,9 @@ public class BaseService {
         System.out.println("Method: "+method+", Header: "+headers);
         System.out.println("Body: "+formData);
 
-        logText("Request to "+url);
-        logText("Method: "+method+", Header: "+headers);
-        logText("Body: "+formData);
+        logger.debug("Request to "+url);
+        logger.debug("Method: "+method+", Header: "+headers);
+        logger.debug("Body: "+formData);
         Request.Builder requestBuilder = new Request.Builder()
                 .url(url)
                 .method(method, body)

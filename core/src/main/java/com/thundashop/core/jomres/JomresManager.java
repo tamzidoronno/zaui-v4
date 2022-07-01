@@ -54,13 +54,13 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
     private static final Logger logger = LoggerFactory.getLogger(JomresManager.class);
 
+    BaseService jomresService = new BaseService();
     JomresConfiguration jomresConfiguration = new JomresConfiguration();
 
     Map<String, JomresRoomData> pmsItemToJomresRoomDataMap = new HashMap<>();
     Map<Long, JomresBookingData> jomresToPmsBookingMap = new HashMap<>();
     Map<String, JomresBookingData> pmsToJomresBookingMap = new HashMap<>();
     Map<Integer, JomresRoomData> jomresPropertyToRoomDataMap = new HashMap<>();
-    BaseService jomresService = new BaseService();
     String cmfClientAccessToken = null;
     Date cmfClientTokenGenerationTime = new Date();
 
@@ -208,6 +208,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         try {
             logText("Started Jomres Update availability");
             logger.debug("Started Jomres Update availability");
+            AvailabilityService availabilityService = new AvailabilityService();
             Calendar calendar = Calendar.getInstance();
             Date startDate = calendar.getTime();
             calendar.add(Calendar.DATE, 60);
@@ -223,7 +224,6 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                     Date availableStartingDay = null;
                     calendar.setTime(startDate);
 
-                    AvailabilityService availabilityService = new AvailabilityService();
                     Map<Date, Date> unavailableStartToEndDates = new HashMap<>();
                     Map<Date, Date> availableStartToEndDates = new HashMap<>();
                     Date unavailableEndingDay, availableEndingDay;

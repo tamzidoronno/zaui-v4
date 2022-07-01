@@ -212,15 +212,15 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
                 room.availableRooms = pmsManager.getNumberOfAvailable(type.id, dt.getTime(), end.getTime(), true, true);
                 room.id = type.id;
                 try {
-                    PmsAdditionalTypeInformation typeInfo = pmsManager.getAdditionalTypeInformationById(type.id);
+                    /*PmsAdditionalTypeInformation typeInfo = pmsManager.getAdditionalTypeInformationById(type.id);
                     room.images.addAll(typeInfo.images);
-                    room.sortDefaultImageFirst();
+                    room.sortDefaultImageFirst();*/
                     room.name = type.getTranslatedName(getSession().language);
                     room.maxGuests = type.size;
 
-                    room.roomsSelectedByGuests.put(arg.getGuests(), 0);
+                    /*room.roomsSelectedByGuests.put(arg.getGuests(), 0);
                     Double price = getPriceForRoom(room, arg.getStart(), end.getTime(), arg.getGuests(), couponCode);
-                    room.pricesByGuests.put(arg.getGuests(), price);
+                    room.pricesByGuests.put(arg.getGuests(), price);*/
                 } catch (Exception ex) {
                     Logger.getLogger(PmsBookingProcess.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -237,6 +237,7 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
             av.setTotalNoOfRooms((long) totalAvailableOfDay);
             av.setLowestPrice(BigDecimal.valueOf(lowestPriceOfDay));
             av.setTotalNoOfRoomsByCategory(rm);
+            av.setAllCategoryAvailable(atleastOneCategoryIsNotAvailable);
             dt.add(Calendar.DATE, 1);
             avs.add(av);
         }

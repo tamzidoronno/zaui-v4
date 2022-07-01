@@ -2,11 +2,13 @@ package com.thundashop.core.jomres;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
+import com.mongodb.BasicDBObject;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.jomres.dto.FetchBookingResponse;
 import com.thundashop.core.jomres.dto.JomresBooking;
@@ -26,8 +28,6 @@ import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.*;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Component
@@ -49,6 +49,8 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     JomresLogManager jomresLogManager;
     @Autowired
     StoreApplicationPool storeApplicationPool;
+    @Autowired
+    Database db;
 
     private static final Logger logger = LoggerFactory.getLogger(JomresManager.class);
 
@@ -112,8 +114,20 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         }
     }
 
+    private void deleteAllDbObjectWithSameClass(DataCommon sampleData){
+        if(sampleData!=null){
+            BasicDBObject queryObect = getQueryObjectWithClassName(sampleData);
+            String collectionPrefix = "col_";
+            db.getMongo()
+                    .getDB(sampleData.gs_manager)
+                    .getCollection( collectionPrefix + sampleData.storeId)
+                    .remove(queryObect);
+        }
+    }
+
     @Override
     public boolean changeConfiguration(JomresConfiguration newConfiguration){
+        deleteAllDbObjectWithSameClass(jomresConfiguration);
         jomresConfiguration.updateConfiguration(newConfiguration);
         saveObject(jomresConfiguration);
         invalidateToken();
@@ -140,36 +154,22 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         }
     }
 
-    void deleteJomresRoomData(JomresRoomData roomData){
-        jomresPropertyToRoomDataMap.remove(roomData.jomresPropertyId);
-        pmsItemToJomresRoomDataMap.remove(roomData.bookingItemId);
-        deleteObject(roomData);
-    }
-
     void saveNewRoomData(JomresRoomData roomData) throws Exception{
         jomresPropertyToRoomDataMap.put(roomData.jomresPropertyId, roomData);
         pmsItemToJomresRoomDataMap.put(roomData.bookingItemId, roomData);
         saveObject(roomData);
     }
 
-    void handleExistingRoomDataWhileMapping(JomresRoomData roomData){
-        JomresRoomData existingPropertyMapping =jomresPropertyToRoomDataMap.get(roomData.jomresPropertyId);
-        if(existingPropertyMapping!=null) {
-            logText("Jomres Property Uid  "+roomData.jomresPropertyId+ " is already mapped with roomId: "+roomData.bookingItemId);
-            deleteJomresRoomData(existingPropertyMapping);
-            logText("Deleted existing room mapping for Property Id: "+roomData.jomresPropertyId);
-        }
-        JomresRoomData existingItemMapping =pmsItemToJomresRoomDataMap.get(roomData.bookingItemId);
-        if(existingItemMapping!=null) {
-            logText("Pms room id "+roomData.bookingItemId+ " is already mapped with Jomres property id "+roomData.jomresPropertyId);
-            deleteJomresRoomData(existingItemMapping);
-            logText("Deleted existing room mapping for pms room id: "+roomData.bookingItemId);
-        }
+    private BasicDBObject getQueryObjectWithClassName(DataCommon sampleData){
+        BasicDBObject queryObject = new BasicDBObject();
+        queryObject.append("className", sampleData.className);
+        return queryObject;
     }
 
     private void deleteExistingMapping(){
-        for(JomresRoomData roomData: jomresPropertyToRoomDataMap.values()){
-            deleteObject(roomData);
+        if(jomresPropertyToRoomDataMap!= null && !jomresPropertyToRoomDataMap.isEmpty()){
+            JomresRoomData firstRoomData = jomresPropertyToRoomDataMap.values().stream().findFirst().get();
+            deleteAllDbObjectWithSameClass(firstRoomData);
         }
         jomresPropertyToRoomDataMap = new HashMap<>();
         pmsItemToJomresRoomDataMap = new HashMap<>();
@@ -179,7 +179,6 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     public boolean saveMapping(List<JomresRoomData> mappingRoomData) throws Exception {
         deleteExistingMapping();
         for (JomresRoomData roomData : mappingRoomData) {
-            handleExistingRoomDataWhileMapping(roomData);
             saveNewRoomData(roomData);
         }
         return true;
@@ -284,17 +283,17 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                         unavailableStartToEndDates.put(unavailableStartingDay, unavailableEndingDay);
                     }
                     logger.debug("Started unavailability update, Jomres property id: " + roomData.jomresPropertyId);
-                    updateAvailabilityStatus = availabilityService.changePropertyAvailability(
-                            jomresConfiguration.clientBaseUrl,
-                            cmfClientAccessToken,
-                            jomresConfiguration.channelName,
-                            roomData.jomresPropertyId,
-                            unavailableStartToEndDates,
-                            false
-                    );
+//                    updateAvailabilityStatus = availabilityService.changePropertyAvailability(
+//                            jomresConfiguration.clientBaseUrl,
+//                            cmfClientAccessToken,
+//                            jomresConfiguration.channelName,
+//                            roomData.jomresPropertyId,
+//                            unavailableStartToEndDates,
+//                            false
+//                    );
                     logger.debug("Ended unavailability update, Jomres property id: " + roomData.jomresPropertyId);
-                    logger.debug(updateAvailabilityStatus);
-                    logText("Unavailability update status of Jomres Property "+roomData.jomresPropertyId+" is "+updateAvailabilityStatus);
+//                    logger.debug(updateAvailabilityStatus);
+//                    logText("Unavailability update status of Jomres Property "+roomData.jomresPropertyId+" is "+updateAvailabilityStatus);
                     if (availableStartingDay != null) {
                         calendar.add(Calendar.DATE, -1);
                         availableEndingDay = calendar.getTime();
@@ -302,24 +301,24 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                     }
 
                     logger.debug("Started availability update, Jomres property id: " + roomData.jomresPropertyId);
-                    updateAvailabilityStatus = availabilityService.changePropertyAvailability(
-                            jomresConfiguration.clientBaseUrl,
-                            cmfClientAccessToken,
-                            jomresConfiguration.channelName,
-                            roomData.jomresPropertyId,
-                            availableStartToEndDates,
-                            true
-                    );
+//                    updateAvailabilityStatus = availabilityService.changePropertyAvailability(
+//                            jomresConfiguration.clientBaseUrl,
+//                            cmfClientAccessToken,
+//                            jomresConfiguration.channelName,
+//                            roomData.jomresPropertyId,
+//                            availableStartToEndDates,
+//                            true
+//                    );
                     logger.debug("Ended availability update, Jomres property id: " + roomData.jomresPropertyId);
-                    logger.debug(updateAvailabilityStatus);
-                    logText("Availability update status of Jomres Property "+roomData.jomresPropertyId+" is "+updateAvailabilityStatus);
-                } catch (Exception e) {
-                    logger.error(e.getMessage1());
-                    logPrintException(e);
-                    logText("Failed to Update availability for Jomres Property Id: "+roomData.jomresPropertyId
-                            +", Pms BookingItemId: "+roomData.bookingItemId);
-                    logText(e.getMessage1());
-                    handleIfUnauthorizedExceptionOccurred(e);
+//                    logger.debug(updateAvailabilityStatus);
+//                    logText("Availability update status of Jomres Property "+roomData.jomresPropertyId+" is "+updateAvailabilityStatus);
+//                } catch (Exception e) {
+//                    logger.error(e.getMessage1());
+//                    logPrintException(e);
+//                    logText("Failed to Update availability for Jomres Property Id: "+roomData.jomresPropertyId
+//                            +", Pms BookingItemId: "+roomData.bookingItemId);
+//                    logText(e.getMessage1());
+//                    handleIfUnauthorizedExceptionOccurred(e);
                 } catch (java.lang.Exception e) {
                     logPrintException(e);
                     logText("Failed to Update availability for Jomres Property Id: "+roomData.jomresPropertyId

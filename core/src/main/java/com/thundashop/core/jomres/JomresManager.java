@@ -18,6 +18,7 @@ import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pmsmanager.*;
 import com.thundashop.core.sedox.autocryptoapi.Exception;
 import com.thundashop.core.storemanager.StoreManager;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -155,6 +156,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                         logText("The room is not found in Pms for Jomres PropertyId: " + roomData.jomresPropertyId
                                 +", pms bookingItemId: "+roomData.bookingItemId);
                         logText("Room is deleted from Pms or mapping is removed.");
+
                         logger.debug("The room is not found in Pms for Jomres PropertyId: " + roomData.jomresPropertyId
                                 +", pms bookingItemId: "+roomData.bookingItemId);
                         logger.debug("Room is deleted from Pms or mapping is removed.");
@@ -634,18 +636,35 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     private void sendErrorForBooking(JomresBooking booking, String pmsRoomName) {
         boolean isSentErrorMail = pmsManager.hasSentErrorNotificationForJomresBooking(booking.bookingId);
         if (!isSentErrorMail) {
-            logger.debug("Error mail wan't send for booking, Jomres BookingId: "+booking.bookingId+" Property ID: "+booking.propertyUid);
             String emailMessage = getJomresBookingErrorMessageForOwner(booking, pmsRoomName);
             String subject = "Jomres Booking Creation Failed";
-            logger.debug("email sending...");
+            logger.debug("Sending Email...");
             logText("Error email is sending for Jomres bookingId: "+booking.bookingId+", property id: "+booking.propertyUid);
             messageManager.sendJomresMessageToStoreOwner(
                     emailMessage, subject);
-            logText("Error email sent");
+            logText("Sent email");
             logger.debug("Booking Error Email has been sent");
             pmsManager.markSentErrorMessageForJomresBooking(booking.bookingId);
             logger.debug("Marked that the mail has been sent for this booking");
         }
+    }
+    private void sentErrorUpdateAvailability(int jomresPropertyId, String start, String end, String availability){
+        String hashValueForErrorAvailability = jomresPropertyId+"";
+        if(StringUtils.isNotBlank(start)) hashValueForErrorAvailability+= start;
+        if(StringUtils.isNotBlank(end)) hashValueForErrorAvailability+= end;
+        hashValueForErrorAvailability+= availability;
+        if(!pmsManager.hasSentErrorNotificationForJomresAvailability(availability)){
+            logger.debug("Email is being sent...");
+            String emailMessgae = "Availability Details:<br>" +
+                    "Jomres Property UId: "+jomresPropertyId+"<br>"+
+                    "Availability Start Date: "+start+"<br>+" +
+                    "Availability End Date: "+end+"<br>";
+            messageManager.sendJomresMessageToStoreOwner(emailMessgae, "Update Availability Failed");
+            logger.debug("Sent");
+            pmsManager.markSentErrorMessageForJomresAvail(hashValueForErrorAvailability);
+            logText("Update Availability Error email is sending to Owner");
+        }
+
     }
 
     private JomresBookingData addBookingToPms(JomresBooking booking, Map<String, Double> priceMatrix, PmsBooking newbooking,

@@ -204,10 +204,15 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
                 if (!type.visibleForBooking && !isAdministrator) {
                     continue;
                 }
+                if(BookingItemType.BookingSystemCategory.CONFERENCE.equals(type.systemCategory)) {
+                    continue;
+                }
                 BookingProcessRooms room = new BookingProcessRooms();
                 room.userId = userId;
                 room.description = type.getTranslatedDescription(getSession().language);
 
+                List<BookingItem> allocatedRooms = bookingEngine.getBookingItemsByType(type.id);
+                if(allocatedRooms.isEmpty()) continue;
                 room.availableRooms = pmsManager.getNumberOfAvailable(type.id, dt.getTime(), dt.getTime(), true, true);
                 room.id = type.id;
                 try {

@@ -1709,7 +1709,9 @@ public class PosManager extends ManagerBase implements IPosManager {
                         }
 
                         CartItem item = new CartItem();
-                        item.setProduct(productManager.getProduct(productId).clone());
+                        Product pd = productManager.getProduct(productId);
+                        if(pd == null) continue;
+                        item.setProduct(pd.clone());
                         item.setCount(countToCreateFor);
                         item.getProduct().price = toCreateOrderFor.doubleValue() / (double) countToCreateFor;
                         try {

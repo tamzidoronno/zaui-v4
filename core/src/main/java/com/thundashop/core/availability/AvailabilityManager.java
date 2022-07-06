@@ -184,16 +184,25 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
         pmsInvoiceManager.startCacheCoverage();
         result.startYesterday = isMidleOfNight() && PmsBookingRooms.isSameDayStatic(arg.getStart(), new Date());
 
+        PmsConfiguration config = pmsManager.getConfiguration();
         List<Availability> avs = new ArrayList<>();
         Calendar dt = Calendar.getInstance();
         dt.setTime(arg.getStart());
-        for(int i = 0; i <= result.numberOfDays; i++) {
+        for(int i = 0; i <= result.numberOfDays + 1; i++) {
             Availability av = new Availability();
             Calendar dtToShow = Calendar.getInstance();
             dtToShow.setTime(dt.getTime());
             dtToShow.add(Calendar.DAY_OF_YEAR, -1);
             av.setDate(DATE_FORMATTER.format(dtToShow.getTime()));
             av.setCurrencyCode("NOK");
+            if(isClosed(config.closedOfPeriode, dt.getTime())) {
+                av.setTotalNoOfRooms(0L);
+                av.setTotalNoOfRoomsByCategory(new HashMap<>());
+                av.setClosed(true);
+                dt.add(Calendar.DATE, 1);
+                avs.add(av);
+                continue;
+            }
 
             int totalAvailableOfDay = 0;
             double lowestPriceOfDay = 0;
@@ -246,7 +255,23 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
             avs.add(av);
         }
 
+        checkIfCouponIsValid(result, arg);
+        checkForRestrictions(result, arg);
+
         return new AvailabilityResponse(arg.getStart(), arg.getEnd(), arg.getRooms(), arg.getAdults(), arg.getChildren(), arg.getDiscountCode(), avs);
+    }
+    
+    private boolean isClosed(List<TimeRepeaterData> closedPeriods, Date date) {
+        if(closedPeriods.isEmpty()) return false;
+        LocalDate dateToCheck = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        for(TimeRepeaterData period : closedPeriods) {
+            Date start = period.firstEvent.start;
+            Date end = period.firstEvent.end;
+            if(!(date.before(start) || date.after(end))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean denyPayLaterButton(BookingProcessRooms r, AvailabilityRequest arg, StartBookingResult result) {

@@ -207,12 +207,12 @@ public class ResponseDataParser {
         }
     }
 
-    public List<Long> parseAllPropertyIds(OAuthResourceResponse response, boolean channelProperties) throws Exception{
+    public List<Integer> parseAllPropertyIds(OAuthResourceResponse response, boolean channelProperties) throws Exception{
         if(response.getResponseCode()==401){
             throw new Exception("statuse code: 401, unauthorized request\nCheck credentials...");
         }
 
-        List<Long> propertyUIDs = new ArrayList<Long>();
+        List<Integer> propertyUIDs = new ArrayList<>();
         Gson gson = new Gson();
 
         JsonObject responseBody = gson.fromJson(response.getBody(), JsonObject.class);
@@ -221,14 +221,14 @@ public class ResponseDataParser {
         if (channelProperties) {
             JsonObject properties = data.getAsJsonObject("response");
             for (Map.Entry<String, JsonElement> property : properties.entrySet()) {
-                propertyUIDs.add(Long.valueOf(property.getKey()));
+                propertyUIDs.add(Integer.valueOf(property.getKey()));
             }
         } else {
             String properties = data.get("ids").toString();
             propertyUIDs = Arrays.stream(properties.replaceAll("\\[", "")
                             .replaceAll("]", "")
                             .split(","))
-                    .map(propertyId -> Long.parseLong(propertyId))
+                    .map(propertyId -> Integer.parseInt(propertyId))
                     .collect(Collectors.toList());
 
         }
@@ -244,6 +244,25 @@ public class ResponseDataParser {
         JsonObject responseBody = gson.fromJson(response.body().string(), JsonObject.class);
         JsonObject data = responseBody.getAsJsonObject("data");
         return data.get("response").getAsLong();
+    }
+
+    public String parsePropertyNameFromPropertyDetails(OAuthResourceResponse response) throws Exception {
+        if(response.getResponseCode()==401){
+            throw new Exception("statuse code: 401, unauthorized request\nCheck credentials...");
+        }
+        Gson gson = new Gson();
+        JsonObject responseBody = null;
+        responseBody = gson.fromJson(response.getBody(), JsonObject.class);
+        if (responseBody.get("error_message") != null) {
+            String errorMessage = responseBody.get("error_message").getAsString();
+            logger.error(errorMessage);
+            throw new Exception("Failed to load Property name, error: errorMessage");
+        }
+
+        JsonObject data = responseBody.getAsJsonObject("data").getAsJsonObject("response");
+        String propertyName = data.get("property_name").getAsString();
+        return propertyName;
+
     }
 
     public UpdateAvailabilityResponse parseChangeAvailabilityResponse(Response response) throws IOException {

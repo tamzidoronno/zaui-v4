@@ -8,4 +8,11 @@ public class JomresConfiguration extends DataCommon {
     String cmfRestApiClientId = "";
     String cmfRestApiClientSecret = "";
     String channelName = "";
+    void updateConfiguration(JomresConfiguration newConfiguration){
+        cmfClientTokenUrl = newConfiguration.cmfClientTokenUrl;
+        clientBaseUrl = newConfiguration.clientBaseUrl;
+        cmfRestApiClientId = newConfiguration.cmfRestApiClientId;
+        cmfRestApiClientSecret = newConfiguration.cmfRestApiClientSecret;
+        channelName = newConfiguration.channelName;
+    }
 }

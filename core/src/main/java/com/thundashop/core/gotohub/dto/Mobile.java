@@ -1,0 +1,19 @@
+
+package com.thundashop.core.gotohub.dto;
+
+import javax.annotation.Generated;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+import lombok.Data;
+
+@Data
+public class Mobile {
+
+    @SerializedName("areaCode")
+    @Expose
+    private String areaCode;
+    @SerializedName("phoneNumber")
+    @Expose
+    private String phoneNumber;
+
+}

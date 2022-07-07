@@ -16,13 +16,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 public class BaseService {
 
@@ -35,7 +30,7 @@ public class BaseService {
 
     public String getAccessToken(String clientId, String clientSecret, String tokenURL) throws Exception {
         createOAuthClient();
-        String accessToken = null;
+        String accessToken;
         try {
             OAuthClientRequest request = createTokenRequest(clientId, clientSecret, tokenURL);
 
@@ -65,10 +60,9 @@ public class BaseService {
             throws IOException, OAuthSystemException {
         System.out.println("Request to "+url);
         logger.debug("Request to "+url);
-        OAuthClientRequest request =  new OAuthBearerClientRequest(url)
+        return new OAuthBearerClientRequest(url)
                 .setAccessToken(accessToken)
                 .buildHeaderMessage();
-        return request;
 
     }
 
@@ -122,14 +116,14 @@ public class BaseService {
                 bodyBuilder.addFormDataPart(entry.getKey(), entry.getValue());
             }
             return bodyBuilder.build();
-        } else if(method =="GET"|| method == "DELETE"){
+        } else if(Objects.equals(method, "GET") || Objects.equals(method, "DELETE")){
             return null;
         } else return bodyBuilder.addFormDataPart("", "")
                 .build();
     }
 
     Map<String, String> addChannelIntoHeaders(Map<String, String> existingHeaders, String channel){
-        if(existingHeaders==null) existingHeaders = new HashMap<String, String>();
+        if(existingHeaders==null) existingHeaders = new HashMap<>();
         existingHeaders.put("X-JOMRES-channel-name", channel);
         return existingHeaders;
     }

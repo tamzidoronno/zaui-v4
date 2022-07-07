@@ -10,9 +10,7 @@ public class Constants {
     static String MAKE_PROPERTY_AVAILABLE = "blackbookings/";
     public static String AVAILABILITY_SENDING_DATE_FORMAT = "yyyy-MM-dd";
     public static String ARRIVAL_DEPARTURE_IN_LIST_DATE_FORMAT = "yyyy/MM/dd";
-    public static String ARRIVAL_DEPARTURE_IN_DETAILS_DATE_FORMAT = "yyyy-MM-dd";
     public static String CREATED_MODIFIED_IN_DETAILS_DATE_FORMAT = "yyyy-MM-dd' 'HH:mm:ss";
-    public static String PRICE_GETTING_DATE_FORMAT = "yyyy-MM-dd";
     static String PRICE_GETTING_URL = "cmf/property/list/prices/";
 }
 

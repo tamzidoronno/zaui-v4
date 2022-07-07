@@ -1,8 +1,10 @@
 package com.thundashop.core.jomres;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.internal.LinkedTreeMap;
-import com.thundashop.core.jomres.dto.JomresBlankBooking;
 import com.thundashop.core.jomres.dto.JomresBooking;
 import com.thundashop.core.jomres.dto.JomresGuest;
 import com.thundashop.core.jomres.dto.UpdateAvailabilityResponse;
@@ -209,7 +211,7 @@ public class ResponseDataParser {
             throw new Exception("statuse code: 401, unauthorized request\nCheck credentials...");
         }
 
-        List<Long> propertyUIDs = new ArrayList<Long>();
+        List<Long> propertyUIDs = new ArrayList<>();
 
         JsonObject responseBody = gson.fromJson(response.getBody(), JsonObject.class);
         JsonObject data = responseBody.getAsJsonObject("data");
@@ -224,7 +226,7 @@ public class ResponseDataParser {
             propertyUIDs = Arrays.stream(properties.replaceAll("\\[", "")
                             .replaceAll("]", "")
                             .split(","))
-                    .map(propertyId -> Long.parseLong(propertyId))
+                    .map(Long::parseLong)
                     .collect(Collectors.toList());
 
         }
@@ -252,8 +254,7 @@ public class ResponseDataParser {
                 throw new Exception(errorMessage);
             }
             JsonObject data = responseBody.getAsJsonObject("data").getAsJsonObject("response");
-            UpdateAvailabilityResponse finalRes =gson.fromJson(data.toString(), UpdateAvailabilityResponse.class);
-            return finalRes;
+            return gson.fromJson(data.toString(), UpdateAvailabilityResponse.class);
 
         } catch (Exception e) {
             throw e;

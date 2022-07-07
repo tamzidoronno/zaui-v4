@@ -71,7 +71,7 @@ public class AvailabilityService extends BaseService {
         DateFormat formatter = new SimpleDateFormat(AVAILABILITY_SENDING_DATE_FORMAT);
         String startDate = formatter.format(start);
         String endDate = formatter.format(end);
-        Map<String, String> formData = new HashMap<String, String>();
+        Map<String, String> formData = new HashMap<>();
         formData.put("property_uid", String.valueOf(propertyId));
         String availability;
         UnavailabilityDate unavailabilityDate = new UnavailabilityDate(startDate, endDate);

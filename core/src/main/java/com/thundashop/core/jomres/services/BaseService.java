@@ -58,7 +58,6 @@ public class BaseService {
 
     public OAuthClientRequest getBearerTokenRequest(String url, String accessToken)
             throws IOException, OAuthSystemException {
-        System.out.println("Request to "+url);
         logger.debug("Request to "+url);
         return new OAuthBearerClientRequest(url)
                 .setAccessToken(accessToken)
@@ -70,10 +69,6 @@ public class BaseService {
             String url, String accessToken, Map<String, String> headers, Map<String, String> formData, String method){
 
         RequestBody body = getFormDataRequestBody(formData, method);
-
-        System.out.println("Request to Url: "+url);
-        System.out.println("Method: "+method+", Header: "+headers);
-        System.out.println("Body: "+formData);
 
         logger.debug("Request to "+url);
         logger.debug("Method: "+method+", Header: "+headers);

@@ -15,10 +15,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class BaseService {
 
@@ -120,8 +124,7 @@ public class BaseService {
             return bodyBuilder.build();
         } else if(method =="GET"|| method == "DELETE"){
             return null;
-        }
-        else return  bodyBuilder.addFormDataPart("", "")
+        } else return bodyBuilder.addFormDataPart("", "")
                 .build();
     }
 

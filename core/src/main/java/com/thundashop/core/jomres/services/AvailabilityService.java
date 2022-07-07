@@ -1,7 +1,9 @@
 package com.thundashop.core.jomres.services;
 
 import com.google.gson.Gson;
-import com.thundashop.core.jomres.dto.Availability;
+import com.thundashop.core.bookingengine.data.Booking;
+import com.thundashop.core.jomres.dto.JomresBlankBooking;
+import com.thundashop.core.jomres.dto.UnavailabilityDate;
 import com.thundashop.core.jomres.dto.UpdateAvailabilityResponse;
 import com.thundashop.core.sedox.autocryptoapi.Exception;
 import okhttp3.Request;
@@ -9,64 +11,75 @@ import okhttp3.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static com.thundashop.core.jomres.services.Constants.AVAILABILITY_SENDING_DATE_FORMAT;
-import static com.thundashop.core.jomres.services.Constants.MAKE_PROPERTY_UNAVAILABLE;
+import static com.thundashop.core.jomres.services.Constants.*;
 
 public class AvailabilityService extends BaseService {
     private static final Logger logger = LoggerFactory.getLogger(AvailabilityService.class);
 
-    //SRP stands for "Single Room Property"
-    public String changePropertyAvailability(String baseUrl, String token, String channel, int jomresPropertyId,
-                                              Map<Date, Date> dateRanges, boolean availabilityStatus) throws Exception {
+    public UpdateAvailabilityResponse deleteBlankBooking(String baseUrl, String token, JomresBlankBooking booking) {
+        UpdateAvailabilityResponse res = new UpdateAvailabilityResponse();
         try {
-            if (dateRanges == null || dateRanges.isEmpty()) {
-                return "";
-            }
-            createHttpClient();
-            DateFormat formatter = new SimpleDateFormat(AVAILABILITY_SENDING_DATE_FORMAT);
-            String availabilities = "[";
-            for (Date start : dateRanges.keySet()) {
-                Date end = dateRanges.get(start);
-                String startDateString = formatter.format(start);
-                String endDateString = formatter.format(end);
-                Availability availability = new Availability(startDateString, endDateString, availabilityStatus);
-                Gson gson = new Gson();
-                String availabilityInString = gson.toJson(availability, Availability.class);
-                availabilities += availabilityInString + ",";
-            }
-
-            //removing last extra ","
-            availabilities = availabilities.substring(0, availabilities.length() - 1);
-
-            availabilities += "]";
-
-
-            Map<String, String> formData = new HashMap<String, String>();
-            formData.put("property_uid", String.valueOf(jomresPropertyId));
-            formData.put("availability", availabilities);
-
-            logger.debug("Form Data Body:\n\tProperty id: " + jomresPropertyId + "\n\tAvailability: " + availabilities);
-            Request request = getHttpBearerTokenRequest(baseUrl + MAKE_PROPERTY_UNAVAILABLE, token,
-                    addChannelIntoHeaders(null, channel), formData, "PUT");
-
+            String url = baseUrl + MAKE_PROPERTY_AVAILABLE+booking.getPropertyId()+"/"+booking.getContractId();
+            Request request = getHttpBearerTokenRequest(url, token,
+                    null, null, "DELETE");
             Response response = httpClient.newCall(request).execute();
-            UpdateAvailabilityResponse res = responseDataParser.parseChangeAvailabilityResponse(response);
-            if (res.success) {
-                return "Successfully Updated Availability";
-            }
-            else {
-                logger.error("Failed  to update the availability for property: "+jomresPropertyId+"\n"+res.errorMessage);
-                return "Failed  to update the availability for property: "+jomresPropertyId+"\n"+res.errorMessage;
-            }
+            res = responseDataParser.parseChangeAvailabilityResponse(response);
+            res.setPropertyId(booking.getPropertyId());
         } catch (Exception e) {
-            throw new Exception("Failed:\n\t" + e.getMessage1());
-        } catch (IOException e) {
-            throw new Exception("Failed to execute the update Availability REST API request:\n\t" + e.getMessage());
+            res.setSuccess(false);
+            res.setMessage(e.getMessage1());
+        } catch (java.lang.Exception e) {
+            e.printStackTrace();
+            res.setSuccess(false);
+            res.setMessage("Got Unexpected Error, Please Check Log stacktrace..\n" + e.getMessage() + "\n");
         }
+        res.setAvailable(true);
+        return res;
+    }
+
+    public UpdateAvailabilityResponse createBlankBooking(String baseUrl, String token, String channel, int jomresPropertyId, Booking booking) {
+        UpdateAvailabilityResponse res = new UpdateAvailabilityResponse();
+        try {
+            String url = baseUrl + MAKE_PROPERTY_UNAVAILABLE;
+            Map<String, String> formData =
+                    getFormDataForAvailability(jomresPropertyId, booking.startDate, booking.endDate);
+            Request request = getHttpBearerTokenRequest(url, token,
+                    addChannelIntoHeaders(null, channel), formData, "PUT");
+            Response response = httpClient.newCall(request).execute();
+            res = responseDataParser.parseChangeAvailabilityResponse(response);
+            res.setStart(booking.startDate);
+            res.setPropertyId(jomresPropertyId);
+            res.setEnd(booking.endDate);
+        } catch (Exception e) {
+            res.setSuccess(false);
+            res.setMessage(e.getMessage1());
+        } catch (java.lang.Exception e) {
+            e.printStackTrace();
+            res.setSuccess(false);
+            res.setMessage("Got Unexpected Error, Please Check Log stacktrace..\n" + e.getMessage() + "\n");
+        }
+        res.setAvailable(false);
+        return res;
+    }
+
+    private Map<String, String> getFormDataForAvailability(int propertyId, Date start, Date end) {
+        Gson gson = new Gson();
+        DateFormat formatter = new SimpleDateFormat(AVAILABILITY_SENDING_DATE_FORMAT);
+        String startDate = formatter.format(start);
+        String endDate = formatter.format(end);
+        Map<String, String> formData = new HashMap<String, String>();
+        formData.put("property_uid", String.valueOf(propertyId));
+        String availability;
+        UnavailabilityDate unavailabilityDate = new UnavailabilityDate(startDate, endDate);
+        availability = gson.toJson(unavailabilityDate, UnavailabilityDate.class);
+        formData.put("availability", availability);
+        formData.put("room_ids", "[]");
+        formData.put("remote_booking_id", "");
+        formData.put("text", "ZauiStay");
+        return formData;
     }
 }

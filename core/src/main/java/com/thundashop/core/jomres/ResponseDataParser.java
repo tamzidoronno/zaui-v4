@@ -2,6 +2,7 @@ package com.thundashop.core.jomres;
 
 import com.google.gson.*;
 import com.google.gson.internal.LinkedTreeMap;
+import com.thundashop.core.jomres.dto.JomresBlankBooking;
 import com.thundashop.core.jomres.dto.JomresBooking;
 import com.thundashop.core.jomres.dto.JomresGuest;
 import com.thundashop.core.jomres.dto.UpdateAvailabilityResponse;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 
 public class ResponseDataParser {
     private static final Logger logger = LoggerFactory.getLogger(ResponseDataParser.class);
+    Gson gson = new Gson();
 
     public Map<String, Double> parseDailyPriceMatrixBetweenDates(Response response, Date start, Date end) throws Exception {
         try {
@@ -34,7 +36,6 @@ public class ResponseDataParser {
             calender.setTime(end);
             calender.add(Calendar.DATE, 1);
             end = calender.getTime();
-            Gson gson = new Gson();
             JsonObject responseBody = gson.fromJson(response.body().string(), JsonObject.class);
             if (responseBody.get("error_message") != null) {
                 String errorMessage = responseBody.get("error_message").getAsString();
@@ -82,7 +83,6 @@ public class ResponseDataParser {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             Map<String, Double> dailyPriceMatrix = new HashMap<>();
 
-            Gson gson = new Gson();
             JsonObject responseBody = gson.fromJson(response.body().string(), JsonObject.class);
             if (responseBody.get("error_message") != null) {
                 String errorMessage = responseBody.get("error_message").getAsString();
@@ -119,7 +119,6 @@ public class ResponseDataParser {
             throw new Exception("statuse code: 401, unauthorized request\nCheck credentials...");
         }
 
-        Gson gson = new Gson();
         try {
             JsonObject responseBody = gson.fromJson(response.getBody(), JsonObject.class);
 
@@ -149,7 +148,6 @@ public class ResponseDataParser {
             throw new Exception("statuse code: 401, unauthorized request\nCheck credentials...");
         }
 
-        Gson gson = new Gson();
         try {
             JsonObject responseBody = gson.fromJson(response.getBody(), JsonObject.class);
 
@@ -178,7 +176,6 @@ public class ResponseDataParser {
             throw new Exception("statuse code: 401, unauthorized request\nCheck credentials...");
         }
 
-        Gson gson = new Gson();
         try {
             logger.debug("Started parsing Jomres booking list between dates");
             JsonObject responseBody = gson.fromJson(response.getBody(), JsonObject.class);
@@ -213,7 +210,6 @@ public class ResponseDataParser {
         }
 
         List<Long> propertyUIDs = new ArrayList<Long>();
-        Gson gson = new Gson();
 
         JsonObject responseBody = gson.fromJson(response.getBody(), JsonObject.class);
         JsonObject data = responseBody.getAsJsonObject("data");
@@ -240,31 +236,23 @@ public class ResponseDataParser {
             throw new Exception("statuse code: 401, unauthorized request\nCheck credentials...");
         }
 
-        Gson gson = new Gson();
         JsonObject responseBody = gson.fromJson(response.body().string(), JsonObject.class);
         JsonObject data = responseBody.getAsJsonObject("data");
         return data.get("response").getAsLong();
     }
 
-    public UpdateAvailabilityResponse parseChangeAvailabilityResponse(Response response) throws IOException {
+    public UpdateAvailabilityResponse parseChangeAvailabilityResponse(Response response) throws Exception {
         if(response.code()==401){
             throw new Exception("statuse code: 401, unauthorized request\nCheck credentials...");
         }
-        Gson gson = new Gson();
         try {
             JsonObject responseBody = gson.fromJson(response.body().string(), JsonObject.class);
             if (responseBody.get("error_message") != null) {
                 String errorMessage = responseBody.get("error_message").getAsString();
                 throw new Exception(errorMessage);
             }
-
             JsonObject data = responseBody.getAsJsonObject("data").getAsJsonObject("response");
-            boolean success = data.get("success").getAsBoolean();
-            UpdateAvailabilityResponse finalRes = new UpdateAvailabilityResponse();
-            finalRes.success = success;
-            if(!success){
-                finalRes.errorMessage = data.get("message").getAsString();
-            }
+            UpdateAvailabilityResponse finalRes =gson.fromJson(data.toString(), UpdateAvailabilityResponse.class);
             return finalRes;
 
         } catch (Exception e) {

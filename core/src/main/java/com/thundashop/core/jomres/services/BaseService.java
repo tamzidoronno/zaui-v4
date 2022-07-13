@@ -1,6 +1,5 @@
 package com.thundashop.core.jomres.services;
 
-import com.thundashop.core.jomres.JomresManager;
 import com.thundashop.core.jomres.ResponseDataParser;
 import okhttp3.*;
 import org.apache.oltu.oauth2.client.OAuthClient;
@@ -60,8 +59,7 @@ public class BaseService {
 
     public OAuthClientRequest getBearerTokenRequest(String url, String accessToken)
             throws IOException, OAuthSystemException {
-        System.out.println("Request to "+url);
-        logger.debug("Creating request url: "+url);
+        logger.debug("Request to "+url);
         OAuthClientRequest request =  new OAuthBearerClientRequest(url)
                 .setAccessToken(accessToken)
                 .buildHeaderMessage();
@@ -74,8 +72,9 @@ public class BaseService {
 
         RequestBody body = getFormDataRequestBody(formData, method);
 
-        logger.debug("Creating request for URL: "+url);
-        System.out.println("Request to Url: "+url);
+        logger.debug("Request to "+url);
+        logger.debug("Method: "+method+", Header: "+headers);
+        logger.debug("Body: "+formData);
         Request.Builder requestBuilder = new Request.Builder()
                 .url(url)
                 .method(method, body)
@@ -125,20 +124,6 @@ public class BaseService {
         if(existingHeaders==null) existingHeaders = new HashMap<String, String>();
         existingHeaders.put("X-JOMRES-channel-name", channel);
         return existingHeaders;
-    }
-
-    static <T> void inspect(Object o) throws IllegalAccessException {
-        Field[] fields = o.getClass().getDeclaredFields();
-        System.out.printf("%d fields:%n", fields.length);
-        for (Field field : fields) {
-            System.out.printf("%s %s %s %s%n",
-                    Modifier.toString(field.getModifiers()),
-                    field.getType().getSimpleName(),
-                    field.getName(),
-                    field.get(o).toString()
-            );
-
-        }
     }
 
 }

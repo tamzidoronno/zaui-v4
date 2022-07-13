@@ -499,6 +499,7 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
                 echo "Category " . $category->name . " is not available in the time span " . date("d.m.Y H:i", strtotime($start)) . " - " . date("d.m.Y H:i", strtotime($end));
             }
         }
+        return $canAdd;
     }
     
     public function addAnotherRoom() {
@@ -592,6 +593,7 @@ class PmsBookingGroupRoomView extends \WebshopApplication implements \Applicatio
     }
     
     public function updateStayTime() {
+        if(!$this->canChangeStay()) return;
         $catsanditems = $_POST['data']['roomtypeanditem'];
         $catsanditems = explode("_", $catsanditems);
         $typeId = $catsanditems[0];

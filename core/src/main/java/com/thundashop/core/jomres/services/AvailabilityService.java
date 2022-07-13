@@ -22,12 +22,15 @@ public class AvailabilityService extends BaseService {
 
     public UpdateAvailabilityResponse deleteBlankBooking(String baseUrl, String token, JomresBlankBooking booking) {
         UpdateAvailabilityResponse res = new UpdateAvailabilityResponse();
+        createHttpClient();
         try {
             String url = baseUrl + MAKE_PROPERTY_AVAILABLE+booking.getPropertyId()+"/"+booking.getContractId();
             Request request = getHttpBearerTokenRequest(url, token,
                     null, null, "DELETE");
             Response response = httpClient.newCall(request).execute();
             res = responseDataParser.parseChangeAvailabilityResponse(response);
+            res.setStart(booking.getDateFrom());
+            res.setEnd(booking.getDateTo());
             res.setPropertyId(booking.getPropertyId());
         } catch (Exception e) {
             res.setSuccess(false);
@@ -43,17 +46,22 @@ public class AvailabilityService extends BaseService {
 
     public UpdateAvailabilityResponse createBlankBooking(String baseUrl, String token, String channel, int jomresPropertyId, Booking booking) {
         UpdateAvailabilityResponse res = new UpdateAvailabilityResponse();
+        createHttpClient();
         try {
             String url = baseUrl + MAKE_PROPERTY_UNAVAILABLE;
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(booking.endDate);
+            calendar.add(Calendar.DATE, -1);
+            Date lastNightStay = calendar.getTime();
             Map<String, String> formData =
-                    getFormDataForAvailability(jomresPropertyId, booking.startDate, booking.endDate);
+                    getFormDataForAvailability(jomresPropertyId, booking.startDate, lastNightStay);
             Request request = getHttpBearerTokenRequest(url, token,
                     addChannelIntoHeaders(null, channel), formData, "PUT");
             Response response = httpClient.newCall(request).execute();
             res = responseDataParser.parseChangeAvailabilityResponse(response);
             res.setStart(booking.startDate);
             res.setPropertyId(jomresPropertyId);
-            res.setEnd(booking.endDate);
+            res.setEnd(lastNightStay);
         } catch (Exception e) {
             res.setSuccess(false);
             res.setMessage(e.getMessage1());

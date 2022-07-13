@@ -905,8 +905,10 @@ app.PmsBookingGroupRoomView = {
             "roomtypeanditem" : $('.PmsBookingGroupRoomView .changedatespanel .roomtypeanditem').val(),
             "roomid" : app.PmsBookingGroupRoomView.getRoomId()
         });
-        thundashop.Ajax.postWithCallBack(event, function() {
-            thundashop.framework.reloadOverLayType2();
+        thundashop.Ajax.postWithCallBack(event, function(res) {
+            $('.warningstayperiode').html(res);
+            if(res=='')
+              thundashop.framework.reloadOverLayType2();
         });
     },
     showChangeDatePanel : function(type) {

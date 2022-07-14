@@ -22,6 +22,7 @@ import com.thundashop.core.gsd.GdsManager;
 import com.thundashop.core.gsd.GetShopCentralMessage;
 import com.thundashop.core.gsd.KitchenPrintMessage;
 import com.thundashop.core.gsd.RoomReceipt;
+import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.*;
 import com.thundashop.core.paymentmanager.PaymentManager;
@@ -31,6 +32,7 @@ import com.thundashop.core.pmsmanager.*;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.*;
 import com.thundashop.core.usermanager.data.Address;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -94,6 +96,9 @@ public class PosManager extends ManagerBase implements IPosManager {
 
     @Autowired
     private GetShopCentral central;
+
+    @Autowired
+    private MessageManager messageManager;
 
     /**
      * Never access this variable directly! Always go trough the getSettings
@@ -471,14 +476,21 @@ public class PosManager extends ManagerBase implements IPosManager {
      */
     @Override
     public void createZReport(String cashPointId) {
-        List<String> autoCreatedOrders = autoCreateOrders(cashPointId);
-        List<String> orderdIdsFromConfernceSystem = autoCreateOrdersForConferenceTabs(cashPointId);
+        try{
+            List<String> autoCreatedOrders = autoCreateOrders(cashPointId);
+            List<String> orderdIdsFromConfernceSystem = autoCreateOrdersForConferenceTabs(cashPointId);
 
-        List<String> orderIds = new ArrayList();
-        orderIds.addAll(orderdIdsFromConfernceSystem);
-        orderIds.addAll(autoCreatedOrders);
+            List<String> orderIds = new ArrayList();
+            orderIds.addAll(orderdIdsFromConfernceSystem);
+            orderIds.addAll(autoCreatedOrders);
 
-        createZReportInternal(cashPointId, orderIds);
+            createZReportInternal(cashPointId, orderIds);
+        } catch (Exception e){
+            String text = "Z report completion failed.. Check if Z report has been created";
+            messageManager.sendErrorNotificationToEmail(getStoreEmailAddress(), text, e);
+            messageManager.sendErrorNotification( text, e);
+            throw e;
+        }
     }
 
     private void createZReportInternal(String cashPointId, List<String> orderIds) throws ErrorException {
@@ -1540,7 +1552,7 @@ public class PosManager extends ManagerBase implements IPosManager {
             Order order = createOrder(cartItemsInDifference, accuredPayment, null, cashPointId);
             PmsConference conference =  pmsConferenceManager.getConference(pmsConferenceId);
             order.cart.address = new Address();
-            order.cart.address.fullName = conference.meetingTitle.isEmpty() ? conference.forUserFullName : conference.meetingTitle;
+            order.cart.address.fullName = StringUtils.isBlank(conference.meetingTitle) ? conference.forUserFullName : conference.meetingTitle;
             if (!conference.forUser.isEmpty()){
                 order.userId = conference.forUser;
             }

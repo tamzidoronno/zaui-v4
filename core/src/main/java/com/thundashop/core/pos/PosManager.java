@@ -479,6 +479,7 @@ public class PosManager extends ManagerBase implements IPosManager {
         String text = "Z report completion failed.. Check if Z report has been created";
         messageManager.sendErrorNotificationToEmail(getStoreEmailAddress(), text, e);
         messageManager.sendErrorNotification(text, e);
+        logPrintException(e);
     }
 
     @Override

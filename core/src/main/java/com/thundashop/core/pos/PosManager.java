@@ -474,21 +474,38 @@ public class PosManager extends ManagerBase implements IPosManager {
      * Generates ZReport.
      * For some bookings like "PayAfterStay" it will create orders with accruedPayments
      */
+
+    private void handleCreateZReportException(Exception e) {
+        String text = "Z report completion failed.. Check if Z report has been created";
+        messageManager.sendErrorNotificationToEmail(getStoreEmailAddress(), text, e);
+        messageManager.sendErrorNotification(text, e);
+    }
+
     @Override
     public void createZReport(String cashPointId) {
+        List<String> autoCreatedOrders = new ArrayList<>();
+        List<String> orderdIdsFromConfernceSystem = new ArrayList<>();
         try {
-            List<String> autoCreatedOrders = autoCreateOrders(cashPointId);
-            List<String> orderdIdsFromConfernceSystem = autoCreateOrdersForConferenceTabs(cashPointId);
+            autoCreatedOrders = autoCreateOrders(cashPointId);
+        } catch (Exception e) {
+            handleCreateZReportException(e);
+            throw e;
+        }
+        try {
+            orderdIdsFromConfernceSystem = autoCreateOrdersForConferenceTabs(cashPointId);
+        } catch (Exception e) {
+            handleCreateZReportException(e);
+            throw e;
+        }
 
-            List<String> orderIds = new ArrayList();
-            orderIds.addAll(orderdIdsFromConfernceSystem);
-            orderIds.addAll(autoCreatedOrders);
+        List<String> orderIds = new ArrayList();
+        orderIds.addAll(orderdIdsFromConfernceSystem);
+        orderIds.addAll(autoCreatedOrders);
 
+        try {
             createZReportInternal(cashPointId, orderIds);
         } catch (Exception e) {
-            String text = "Z report completion failed.. Check if Z report has been created";
-            messageManager.sendErrorNotificationToEmail(getStoreEmailAddress(), text, e);
-            messageManager.sendErrorNotification(text, e);
+            handleCreateZReportException(e);
             throw e;
         }
     }

@@ -74,7 +74,9 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         if (jomresPropertyToRoomDataMap.isEmpty()) {
             logText("No Jomres room mapping found from database for this hotel, store id: " + this.storeId);
         }
-        createScheduler("jomresprocessor", "*/5 * * * *", JomresManagerProcessor.class);
+
+        //TODO will change it to 5 minutes
+        createScheduler("jomresprocessor", "*/2 * * * *", JomresManagerProcessor.class);
     }
 
     public void logText(String string) {
@@ -173,6 +175,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                     }
                     existingBookingIds.add(booking.id);
                 }
+                blankBookings = getBlankBookingsForProperty(roomData.jomresPropertyId);
                 deleteIfExtraBlankBookingExist(existingBookingIds, blankBookings, startDate, endDate);
                 logger.debug("Update availability ended");
                 logText("Update availability ended");

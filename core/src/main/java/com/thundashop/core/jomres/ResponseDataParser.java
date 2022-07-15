@@ -253,7 +253,8 @@ public class ResponseDataParser {
                 String errorMessage = responseBody.get("error_message").getAsString();
                 throw new Exception(errorMessage);
             }
-            JsonObject data = responseBody.getAsJsonObject("data").getAsJsonObject("response");
+            JsonObject data = responseBody.getAsJsonObject("data");
+            data = Optional.ofNullable(data.getAsJsonObject("response")).orElse(data);
             return gson.fromJson(data.toString(), UpdateAvailabilityResponse.class);
 
         } catch (Exception e) {

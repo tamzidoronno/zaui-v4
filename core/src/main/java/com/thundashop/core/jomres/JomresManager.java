@@ -227,12 +227,19 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
     private void deleteBlankBookingCompletely(JomresBlankBooking booking) {
         logger.debug("Deleting blank Booking...");
-        deleteObject(booking);
-        pmsBlankBookings.get(booking.getPropertyId()).remove(booking);
         AvailabilityService service = new AvailabilityService();
         UpdateAvailabilityResponse res =
                 service.deleteBlankBooking(jomresConfiguration.clientBaseUrl, cmfClientAccessToken, booking);
-        if(!res.isSuccess()) sendErrorUpdateAvailability(res);
+        if(!res.isSuccess()) {
+            sendErrorUpdateAvailability(res);
+            if(!isBlankBookingNeedToDeleteFromDb(res)) return;
+        }
+        deleteObject(booking);
+        pmsBlankBookings.get(booking.getPropertyId()).remove(booking);
+    }
+
+    private boolean isBlankBookingNeedToDeleteFromDb(UpdateAvailabilityResponse res){
+        return (StringUtils.isNotBlank(res.getMessage()) && res.getMessage().contains("does not exist"));
     }
 
     private void deleteIfExtraBlankBookingExist(
@@ -240,16 +247,13 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String startDate = formatter.format(start);
         String endDate = formatter.format(end);
-        AvailabilityService service = new AvailabilityService();
         List<JomresBlankBooking> bBookingsForDeletion = blankBookingMap.values()
                 .stream()
                 .filter(o-> o.getDateFrom().compareTo(endDate) <=0 && o.getDateTo().compareTo(startDate) >=0)
                 .filter(o-> !existingBookingIds.contains(o.getFlatBookingId()))
                 .collect(Collectors.toList());
         for (JomresBlankBooking booking: bBookingsForDeletion){
-            UpdateAvailabilityResponse res =
-                    service.deleteBlankBooking(jomresConfiguration.clientBaseUrl, cmfClientAccessToken, booking);
-            if(!res.isSuccess()) sendErrorUpdateAvailability(res);
+            deleteBlankBookingCompletely(booking);
         }
     }
 

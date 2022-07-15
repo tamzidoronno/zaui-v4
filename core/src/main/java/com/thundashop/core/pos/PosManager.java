@@ -476,7 +476,7 @@ public class PosManager extends ManagerBase implements IPosManager {
      */
     @Override
     public void createZReport(String cashPointId) {
-        try{
+        try {
             List<String> autoCreatedOrders = autoCreateOrders(cashPointId);
             List<String> orderdIdsFromConfernceSystem = autoCreateOrdersForConferenceTabs(cashPointId);
 
@@ -485,10 +485,10 @@ public class PosManager extends ManagerBase implements IPosManager {
             orderIds.addAll(autoCreatedOrders);
 
             createZReportInternal(cashPointId, orderIds);
-        } catch (Exception e){
+        } catch (Exception e) {
             String text = "Z report completion failed.. Check if Z report has been created";
             messageManager.sendErrorNotificationToEmail(getStoreEmailAddress(), text, e);
-            messageManager.sendErrorNotification( text, e);
+            messageManager.sendErrorNotification(text, e);
             throw e;
         }
     }

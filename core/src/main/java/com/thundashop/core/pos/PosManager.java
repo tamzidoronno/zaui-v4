@@ -1572,6 +1572,7 @@ public class PosManager extends ManagerBase implements IPosManager {
             List<CartItem> cartItemsInDifference = retMap.get(pmsConferenceId);
             Order order = createOrder(cartItemsInDifference, accuredPayment, null, cashPointId);
             PmsConference conference =  pmsConferenceManager.getConference(pmsConferenceId);
+            if(conference == null) continue;
             order.cart.address = new Address();
             order.cart.address.fullName = isBlank(conference.meetingTitle) ? conference.forUserFullName : conference.meetingTitle;
             if (isNotBlank(conference.forUser)){

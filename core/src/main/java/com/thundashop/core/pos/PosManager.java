@@ -479,7 +479,6 @@ public class PosManager extends ManagerBase implements IPosManager {
         String text = "Z report completion failed.. Check if Z report has been created";
         messageManager.sendErrorNotificationToEmail(getStoreEmailAddress(), text, e);
         messageManager.sendErrorNotification(text, e);
-        logPrintException(e);
     }
 
     @Override
@@ -490,12 +489,14 @@ public class PosManager extends ManagerBase implements IPosManager {
             autoCreatedOrders = autoCreateOrders(cashPointId);
         } catch (Exception e) {
             handleCreateZReportException(e);
+            logPrintException(e);
             throw e;
         }
         try {
             orderdIdsFromConfernceSystem = autoCreateOrdersForConferenceTabs(cashPointId);
         } catch (Exception e) {
             handleCreateZReportException(e);
+            logPrintException(e);
             throw e;
         }
 
@@ -507,6 +508,7 @@ public class PosManager extends ManagerBase implements IPosManager {
             createZReportInternal(cashPointId, orderIds);
         } catch (Exception e) {
             handleCreateZReportException(e);
+            logPrintException(e);
             throw e;
         }
     }

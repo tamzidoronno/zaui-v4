@@ -10,9 +10,10 @@ public class JomresManagerProcessor extends GetShopSchedulerBase {
 
     @Override
     public void execute() throws Exception {
-        if(!getApi().getStoreManager().isProductMode()) {
-            return;
-        }
+        //TODO commenting this lines just for testing
+//        if(!getApi().getStoreManager().isProductMode()) {
+//            return;
+//        }
 
         String storeId = getApi().getStoreManager().getStoreId();
 

@@ -22,6 +22,7 @@ import com.thundashop.core.gsd.GdsManager;
 import com.thundashop.core.gsd.GetShopCentralMessage;
 import com.thundashop.core.gsd.KitchenPrintMessage;
 import com.thundashop.core.gsd.RoomReceipt;
+import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.*;
 import com.thundashop.core.paymentmanager.PaymentManager;
@@ -42,6 +43,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 
 /**
@@ -94,6 +97,9 @@ public class PosManager extends ManagerBase implements IPosManager {
 
     @Autowired
     private GetShopCentral central;
+
+    @Autowired
+    private MessageManager messageManager;
 
     /**
      * Never access this variable directly! Always go trough the getSettings
@@ -323,7 +329,7 @@ public class PosManager extends ManagerBase implements IPosManager {
     public void finishTabAndOrder(String tabId, Order order, String kitchenDeviceId, String cashPointDeviceId) throws ErrorException {
         PosTab tab = getTab(tabId);
 
-        if (tab != null && kitchenDeviceId != null && !kitchenDeviceId.isEmpty()) {
+        if (tab != null && isNotBlank(kitchenDeviceId)) {
             sendToKitchenInternal(kitchenDeviceId, tab, order.cart.getItems());
         }
 
@@ -359,7 +365,7 @@ public class PosManager extends ManagerBase implements IPosManager {
      */
     @Override
     public ZReport getZReport(String zReportId, String cashPointId) {
-        if (zReportId != null && !zReportId.isEmpty()) {
+        if (isNotBlank(zReportId)) {
             return zReports.get(zReportId);
         }
 
@@ -396,7 +402,7 @@ public class PosManager extends ManagerBase implements IPosManager {
             orderIds = orderManager.getOrdersByFilter(getOrderFilter())
                     .stream()
                     .filter(order -> (order.getMarkedPaidDate() != null && order.hasCreatedOrPaymentDateAfter(prevZReportDate) && order.paymentDateNotInFuture()))
-                    .filter(order -> order.orderId != null && !order.orderId.isEmpty())
+                    .filter(order -> isNotBlank(order.orderId))
                     .filter(order -> order.isConnectedToCashPointId(cashPointId) || (isMasterCashPoint(cashPointId) && order.isConnectedToCashPointId("")))
                     .sorted((OrderResult o1, OrderResult o2) -> {
                         return o1.paymentDate.compareTo(o2.paymentDate);
@@ -458,7 +464,7 @@ public class PosManager extends ManagerBase implements IPosManager {
     private Date getPreviouseZReportDate(String cashPointId) {
         Date start = new Date(0);
         for (ZReport rep : zReports.values()) {
-            if (rep.rowCreatedDate.after(start) && (rep.cashPointId.equals(cashPointId) || rep.cashPointId.isEmpty())) {
+            if (isBlank(rep.cashPointId) || rep.rowCreatedDate.after(start) && (rep.cashPointId.equals(cashPointId))) {
                 start = rep.rowCreatedDate;
             }
         }
@@ -469,16 +475,43 @@ public class PosManager extends ManagerBase implements IPosManager {
      * Generates ZReport.
      * For some bookings like "PayAfterStay" it will create orders with accruedPayments
      */
+
+    private void handleCreateZReportException(Exception e) {
+        String text = "Z report completion failed.. Check if Z report has been created";
+        messageManager.sendErrorNotificationToEmail(getStoreEmailAddress(), text, e);
+        messageManager.sendErrorNotification(text, e);
+    }
+
     @Override
     public void createZReport(String cashPointId) {
-        List<String> autoCreatedOrders = autoCreateOrders(cashPointId);
-        List<String> orderdIdsFromConfernceSystem = autoCreateOrdersForConferenceTabs(cashPointId);
+        List<String> autoCreatedOrders = new ArrayList<>();
+        List<String> orderdIdsFromConfernceSystem = new ArrayList<>();
+        try {
+            autoCreatedOrders = autoCreateOrders(cashPointId);
+        } catch (Exception e) {
+            handleCreateZReportException(e);
+            logPrintException(e);
+            throw e;
+        }
+        try {
+            orderdIdsFromConfernceSystem = autoCreateOrdersForConferenceTabs(cashPointId);
+        } catch (Exception e) {
+            handleCreateZReportException(e);
+            logPrintException(e);
+            throw e;
+        }
 
         List<String> orderIds = new ArrayList();
         orderIds.addAll(orderdIdsFromConfernceSystem);
         orderIds.addAll(autoCreatedOrders);
 
-        createZReportInternal(cashPointId, orderIds);
+        try {
+            createZReportInternal(cashPointId, orderIds);
+        } catch (Exception e) {
+            handleCreateZReportException(e);
+            logPrintException(e);
+            throw e;
+        }
     }
 
     private void createZReportInternal(String cashPointId, List<String> orderIds) throws ErrorException {
@@ -880,7 +913,7 @@ public class PosManager extends ManagerBase implements IPosManager {
             return;
         }
 
-        if (taxGroupNumber == null || taxGroupNumber.isEmpty()) {
+        if (isBlank(taxGroupNumber)) {
             tab.cartItems.stream()
                     .forEach(cartItem -> {
                         cartItem.getProduct().resetAdditionalTaxGroup();
@@ -1060,7 +1093,7 @@ public class PosManager extends ManagerBase implements IPosManager {
 
         if (!isConnectedToCentral()) {
             canClose.fReportErrorCount = incomes.stream()
-                    .filter(o -> o != null && o.errorMsg != null && !o.errorMsg.isEmpty())
+                    .filter(o -> o != null && isNotBlank(o.errorMsg))
                     .count();
         }
 
@@ -1129,7 +1162,7 @@ public class PosManager extends ManagerBase implements IPosManager {
         CashPointTag tag = new CashPointTag();
         tag.cashPointId = cashPointId;
 
-        if (cashPointId != null && !cashPointId.isEmpty()) {
+        if (isNotBlank(cashPointId)) {
             tag.departmentId = getCashPoint(cashPointId).departmentId;
         }
 
@@ -1248,7 +1281,7 @@ public class PosManager extends ManagerBase implements IPosManager {
             return false;
         }
 
-        if (config.offsetAccountingId_accrude == null || config.offsetAccountingId_accrude.isEmpty()) {
+        if (isBlank(config.offsetAccountingId_accrude)) {
             return false;
         }
 
@@ -1256,7 +1289,7 @@ public class PosManager extends ManagerBase implements IPosManager {
             return false;
         }
 
-        if (config.userCustomerNumber == null || config.userCustomerNumber.isEmpty()) {
+        if (isBlank(config.userCustomerNumber)) {
             return false;
         }
 
@@ -1416,7 +1449,7 @@ public class PosManager extends ManagerBase implements IPosManager {
         conf.pmsConferenceId = confId;
         conf.expiryDate = pmsConferenceManager.getExpiryDate(confId);
 
-        if (conf.tabId == null || conf.tabId.isEmpty()) {
+        if (isBlank(conf.tabId)) {
             conf.tabId = createNewTab(pmsConference.meetingTitle);
         }
 
@@ -1512,7 +1545,7 @@ public class PosManager extends ManagerBase implements IPosManager {
         List<PmsOrderCreateRow> createOrder = new ArrayList();
         createOrder.add(createOrderForRoom);
 
-        String userId = booking.userId != null && !booking.userId.isEmpty() ? booking.userId : getSession().currentUser.id;
+        String userId = isNotBlank(booking.userId) ? booking.userId : getSession().currentUser.id;
         return pmsManager.createOrderFromCheckout(createOrder, roomId, userId);
     }
 
@@ -1540,8 +1573,8 @@ public class PosManager extends ManagerBase implements IPosManager {
             Order order = createOrder(cartItemsInDifference, accuredPayment, null, cashPointId);
             PmsConference conference =  pmsConferenceManager.getConference(pmsConferenceId);
             order.cart.address = new Address();
-            order.cart.address.fullName = conference.meetingTitle.isEmpty() ? conference.forUserFullName : conference.meetingTitle;
-            if (!conference.forUser.isEmpty()){
+            order.cart.address.fullName = isBlank(conference.meetingTitle) ? conference.forUserFullName : conference.meetingTitle;
+            if (isNotBlank(conference.forUser)){
                 order.userId = conference.forUser;
             }
             order.autoCreatedOrderForConferenceId = pmsConferenceId;
@@ -1881,7 +1914,7 @@ public class PosManager extends ManagerBase implements IPosManager {
     private Date getDateForConfernce(String pmsConferenceId, String eventId) {
         PmsConferenceEvent event = pmsConferenceManager.getConferenceEventDirectFromDB(eventId);
 
-        if (event == null || event.from == null || eventId == null || eventId.isEmpty() || eventId.equals("overview")) {
+        if (event == null || event.from == null || isBlank(eventId) || eventId.equals("overview")) {
             PmsConference conference = pmsConferenceManager.getConferenceDirectFromDB(pmsConferenceId);
             if (conference != null && conference.conferenceDate != null) {
                 return conference.conferenceDate;

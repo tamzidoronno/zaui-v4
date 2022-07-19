@@ -128,18 +128,18 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     public boolean updateAvailability() {
         if (!connectToApi()) return false;
         if (handleEmptyJomresCOnfiguration()) return false;
-        try {
-            logText("Started Jomres Update availability");
-            logger.debug("Started Jomres Update availability");
-            Calendar calendar = Calendar.getInstance();
-            Date startDate = calendar.getTime();
-            calendar.add(Calendar.DATE, 60);
-            Date endDate = calendar.getTime();
+        logText("Started Jomres Update availability");
+        logger.debug("Started Jomres Update availability");
+        Calendar calendar = Calendar.getInstance();
+        Date startDate = calendar.getTime();
+        calendar.add(Calendar.DATE, 60);
+        Date endDate = calendar.getTime();
 
-            Set<String> jomresBookingRoomIds =
-                    jomresToPmsBookingMap.values().stream().map(o -> o.pmsRoomId).collect(Collectors.toSet());
+        Set<String> jomresBookingRoomIds =
+                jomresToPmsBookingMap.values().stream().map(o -> o.pmsRoomId).collect(Collectors.toSet());
 
-            for (JomresRoomData roomData : pmsItemToJomresRoomDataMap.values()) {
+        for (JomresRoomData roomData : pmsItemToJomresRoomDataMap.values()) {
+            try {
                 calendar.setTime(startDate);
                 BookingItem bookingItem = bookingEngine.getBookingItem(roomData.bookingItemId);
                 if (bookingItem == null) {
@@ -150,10 +150,10 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                             + ", pms bookingItemId: " + roomData.bookingItemId);
                     continue;
                 }
-                logger.debug("Started updating availability for room: "+bookingItem.bookingItemName+
-                        ", PropertyId: "+roomData.jomresPropertyId);
-                logText("Started updating availability for room: "+bookingItem.bookingItemName+
-                        ", PropertyId: "+roomData.jomresPropertyId);
+                logger.debug("Started updating availability for room: " + bookingItem.bookingItemName +
+                        ", PropertyId: " + roomData.jomresPropertyId);
+                logText("Started updating availability for room: " + bookingItem.bookingItemName +
+                        ", PropertyId: " + roomData.jomresPropertyId);
 
                 Map<String, JomresBlankBooking> blankBookings = getBlankBookingsForProperty(roomData.jomresPropertyId);
 
@@ -168,8 +168,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                     if (jomresBookingRoomIds.contains(booking.externalReference)) continue;
                     if (bBooking == null) {
                         createBlankBooking(booking, roomData.jomresPropertyId);
-                    }
-                    else if (isBlankBookingUpdated(bBooking, booking)) {
+                    } else if (isBlankBookingUpdated(bBooking, booking)) {
                         deleteBlankBookingCompletely(bBooking);
                         createBlankBooking(booking, roomData.jomresPropertyId);
                     }
@@ -179,9 +178,13 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 deleteIfExtraBlankBookingExist(existingBookingIds, blankBookings, startDate, endDate);
                 logger.debug("Update availability ended");
                 logText("Update availability ended");
+            } catch (RuntimeException e) {
+                logPrintException(e);
+                logText("Failed to update availability for JomresPropertyId: " + roomData.jomresPropertyId
+                        + ", PmsRoomId: " + roomData.bookingItemId);
+                logger.debug("Failed to update availability for JomresPropertyId: " + roomData.jomresPropertyId
+                        + ", PmsRoomId: " + roomData.bookingItemId);
             }
-        } catch (RuntimeException e) {
-            e.printStackTrace();
         }
         return true;
     }

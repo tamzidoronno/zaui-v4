@@ -76,7 +76,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         }
 
         //TODO will change it to 5 minutes
-        createScheduler("jomresprocessor", "*/2 * * * *", JomresManagerProcessor.class);
+        createScheduler("jomresprocessor", "*/5 * * * *", JomresManagerProcessor.class);
     }
 
     public void logText(String string) {

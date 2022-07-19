@@ -52,12 +52,12 @@ import java.util.stream.Collectors;
 @GetShopSession
 @Component
 public class PosManager extends ManagerBase implements IPosManager {
-    public HashMap<String, PosTab> tabs = new HashMap();
-    public HashMap<String, ZReport> zReports = new HashMap();
-    public HashMap<String, CashPoint> cashPoints = new HashMap();
-    public HashMap<String, PosView> views = new HashMap();
-    public HashMap<String, PosTable> tables = new HashMap();
-    public HashMap<String, PosConference> conferences = new HashMap();
+    public HashMap<String, PosTab> tabs = new HashMap<>();
+    public HashMap<String, ZReport> zReports = new HashMap<>();
+    public HashMap<String, CashPoint> cashPoints = new HashMap<>();
+    public HashMap<String, PosView> views = new HashMap<>();
+    public HashMap<String, PosTable> tables = new HashMap<>();
+    public HashMap<String, PosConference> conferences = new HashMap<>();
 
     private PosConferenceCache posConferenceCache = null;
 
@@ -199,7 +199,7 @@ public class PosManager extends ManagerBase implements IPosManager {
 
     @Override
     public List<PosTab> getAllTabs() {
-        return new ArrayList(tabs.values());
+        return new ArrayList<>(tabs.values());
     }
 
     @Override
@@ -376,7 +376,7 @@ public class PosManager extends ManagerBase implements IPosManager {
 
         List<Order> allOrders = orderManager.getAllOrders();
 
-        report.orderIds = filterOrdersForZreport(cashPointId, prevZReportDate, report, allOrders);;
+        report.orderIds = filterOrdersForZreport(cashPointId, prevZReportDate, report, allOrders);
         report.createdAfterConnectedToACentral = isConnectedToCentral();
         report.roomsThatWillBeAutomaticallyCreatedOrdersFor = getRoomsNeedToCreateOrdersFor();
 
@@ -500,7 +500,7 @@ public class PosManager extends ManagerBase implements IPosManager {
             throw e;
         }
 
-        List<String> orderIds = new ArrayList();
+        List<String> orderIds = new ArrayList<>();
         orderIds.addAll(orderdIdsFromConfernceSystem);
         orderIds.addAll(autoCreatedOrders);
 
@@ -628,7 +628,7 @@ public class PosManager extends ManagerBase implements IPosManager {
             return;
         }
 
-        List<CartItem> clonedItems = new ArrayList();
+        List<CartItem> clonedItems = new ArrayList<>();
 
         tab.cartItems.stream().forEach(o -> {
             try {
@@ -667,7 +667,7 @@ public class PosManager extends ManagerBase implements IPosManager {
 
     @Override
     public List<CashPoint> getCashPoints() {
-        return new ArrayList(cashPoints.values());
+        return new ArrayList<>(cashPoints.values());
     }
 
     @Override
@@ -723,7 +723,7 @@ public class PosManager extends ManagerBase implements IPosManager {
         }
 
         int i = 0;
-        List<String> newList = new ArrayList();
+        List<String> newList = new ArrayList<>();
         for (String id : view.productListsIds) {
             if (i == number) {
                 newList.add(listId);
@@ -793,7 +793,7 @@ public class PosManager extends ManagerBase implements IPosManager {
 
     @Override
     public List<PosTable> getTables() {
-        ArrayList<PosTable> retList = new ArrayList(tables.values());
+        ArrayList<PosTable> retList = new ArrayList<>(tables.values());
 
         retList.sort((PosTable o1, PosTable o2) -> {
             Integer a = new Integer(o1.tableNumber);
@@ -806,7 +806,7 @@ public class PosManager extends ManagerBase implements IPosManager {
 
     @Override
     public List<PosView> getViews() {
-        return new ArrayList(views.values());
+        return new ArrayList<>(views.values());
     }
 
     @Override
@@ -1231,7 +1231,7 @@ public class PosManager extends ManagerBase implements IPosManager {
 
     private List<String> autoCreateOrders(String cashPointId) {
         List<PmsBookingRooms> roomsNeedToCreateOrdersFor = getRoomsNeedToCreateOrdersFor();
-        List<String> retList = new ArrayList();
+        List<String> retList = new ArrayList<>();
 
         if (roomsNeedToCreateOrdersFor!=null && !roomsNeedToCreateOrdersFor.isEmpty()) {
             checkIfAccrudePaymentIsActivated();
@@ -1325,7 +1325,7 @@ public class PosManager extends ManagerBase implements IPosManager {
         Calendar checker = Calendar.getInstance();
         day.setTime(filter.start);
         SalesPosResult toReturn = new SalesPosResult();
-        List<CartItem> itemsToIncludeInReport = new ArrayList();
+        List<CartItem> itemsToIncludeInReport = new ArrayList<>();
         while (true) {
             for (Order ord : orders) {
                 if (ord.status != Order.Status.PAYMENT_COMPLETED) {
@@ -1383,7 +1383,7 @@ public class PosManager extends ManagerBase implements IPosManager {
     @Override
     public List<PosConference> getPosConferences() {
         syncConferences();
-        return new ArrayList(conferences.values());
+        return new ArrayList<>(conferences.values());
     }
 
     public void syncConferences() {
@@ -1541,7 +1541,7 @@ public class PosManager extends ManagerBase implements IPosManager {
 
         PmsOrderCreateRow createOrderForRoom = getCreateOrderForRoom(booking, room, pmsManager);
 
-        List<PmsOrderCreateRow> createOrder = new ArrayList();
+        List<PmsOrderCreateRow> createOrder = new ArrayList<>();
         createOrder.add(createOrderForRoom);
 
         String userId = booking.userId != null && !booking.userId.isEmpty() ? booking.userId : getSession().currentUser.id;
@@ -1560,10 +1560,10 @@ public class PosManager extends ManagerBase implements IPosManager {
         }
 
         if (!isActive) {
-            return new ArrayList();
+            return new ArrayList<>();
         }
 
-        ArrayList<String> orderIds = new ArrayList();
+        ArrayList<String> orderIds = new ArrayList<>();
 
         Map<String, List<CartItem>> retMap = getOrderSummaryToCreateForSummary();
 
@@ -1594,7 +1594,7 @@ public class PosManager extends ManagerBase implements IPosManager {
     }
 
     private Map<String, List<CartItem>> getOrderSummaryToCreateForSummary() {
-        Map<String, List<CartItem>> retMap = new HashMap();
+        Map<String, List<CartItem>> retMap = new HashMap<>();
         PosConferenceCache cache = getPosConferenceCache();
         for (PosConferenceCacheDirty dirtyCache : cache.getDirtyConferences()) {
             List<CartItem> cartItems = getConferenceDiffCartItems(dirtyCache.pmsConferenceId, dirtyCache.tabId);
@@ -1649,12 +1649,12 @@ public class PosManager extends ManagerBase implements IPosManager {
                 .distinct()
                 .collect(Collectors.groupingBy(o -> createKey(o, pmsConferenceId)));
 
-        List<String> allGroups = new ArrayList(cartItemsFromOrdersGroupedByDay.keySet());
+        List<String> allGroups = new ArrayList<>(cartItemsFromOrdersGroupedByDay.keySet());
         allGroups.addAll(allProductIdsFromTabGroupedByDay.keySet());
 
         allGroups = allGroups.stream().distinct().collect(Collectors.toList());
 
-        List<CartItem> retList = new ArrayList();
+        List<CartItem> retList = new ArrayList<>();
 
         SimpleDateFormat simpleDateFormatter = new SimpleDateFormat("dd.MM.yyyy");
 
@@ -1670,8 +1670,8 @@ public class PosManager extends ManagerBase implements IPosManager {
                 departmentId = splittedEventKey[2];
             }
 
-            Map<Integer, List<CartItem>> cartItemsFromOrdersGroupedByTaxGroup = new HashMap();
-            Map<Integer, List<CartItem>> allCartItemsFromTabGroupedByTaxGroup = new HashMap();
+            Map<Integer, List<CartItem>> cartItemsFromOrdersGroupedByTaxGroup = new HashMap<>();
+            Map<Integer, List<CartItem>> allCartItemsFromTabGroupedByTaxGroup = new HashMap<>();
 
             if (cartItemsFromOrdersGroupedByDay.get(eventIdKey) != null) {
                 cartItemsFromOrdersGroupedByTaxGroup = cartItemsFromOrdersGroupedByDay.get(eventIdKey)
@@ -1691,14 +1691,14 @@ public class PosManager extends ManagerBase implements IPosManager {
                         ));
             }
 
-            List<Integer> allTaxGroups = new ArrayList(cartItemsFromOrdersGroupedByTaxGroup.keySet());
+            List<Integer> allTaxGroups = new ArrayList<>(cartItemsFromOrdersGroupedByTaxGroup.keySet());
             allTaxGroups.addAll(allCartItemsFromTabGroupedByTaxGroup.keySet());
             allTaxGroups = allTaxGroups.stream().distinct().collect(Collectors.toList());
 
             for (Integer taxGroup : allTaxGroups) {
 
-                List<String> allProductIdsFromOrder = new ArrayList();
-                List<CartItem> cartItemsFromOrders = new ArrayList();
+                List<String> allProductIdsFromOrder = new ArrayList<>();
+                List<CartItem> cartItemsFromOrders = new ArrayList<>();
                 if (cartItemsFromOrdersGroupedByTaxGroup.get(taxGroup) != null) {
                     cartItemsFromOrders = cartItemsFromOrdersGroupedByTaxGroup.get(taxGroup);
                     allProductIdsFromOrder = cartItemsFromOrders.stream()
@@ -1708,9 +1708,9 @@ public class PosManager extends ManagerBase implements IPosManager {
                             .collect(Collectors.toList());
                 }
 
-                List<String> allProductIdsFromTab = new ArrayList();
+                List<String> allProductIdsFromTab = new ArrayList<>();
 
-                List<CartItem> allCartItemsFromTab = new ArrayList();
+                List<CartItem> allCartItemsFromTab = new ArrayList<>();
 
                 if (allCartItemsFromTabGroupedByTaxGroup.get(taxGroup) != null) {
                     allCartItemsFromTab = allCartItemsFromTabGroupedByTaxGroup.get(taxGroup);
@@ -1721,7 +1721,7 @@ public class PosManager extends ManagerBase implements IPosManager {
                             .collect(Collectors.toList());
                 }
 
-                List<String> allProductsIds = new ArrayList();
+                List<String> allProductsIds = new ArrayList<>();
                 allProductsIds.addAll(allProductIdsFromOrder);
                 allProductsIds.addAll(allProductIdsFromTab);
                 allProductsIds = allProductsIds.stream().distinct().collect(Collectors.toList());
@@ -1864,7 +1864,7 @@ public class PosManager extends ManagerBase implements IPosManager {
     public List<ZReportConferenceSummary> getSummaryListForConferences() {
         Map<String, List<CartItem>> retMap = getOrderSummaryToCreateForSummary();
 
-        ArrayList<ZReportConferenceSummary> retList = new ArrayList();
+        ArrayList<ZReportConferenceSummary> retList = new ArrayList<>();
 
         for (String pmsConferenceId : retMap.keySet()) {
             ZReportConferenceSummary rep = new ZReportConferenceSummary();

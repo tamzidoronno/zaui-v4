@@ -55,7 +55,6 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     private static final SimpleDateFormat checkinOutDateFormatter = new SimpleDateFormat("yyyy-MM-dd");
     public GoToConfiguration goToConfiguration = new GoToConfiguration();
 
-
     @Override
     public Hotel getHotelInformation() {
         saveSchedulerAsCurrentUser();
@@ -205,8 +204,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             pmsManager.logEntry("Deleted by channel manager", pmsBooking.id, null);
             pmsManager.deleteBooking(pmsBooking.id);
             handleOrderForCancelledBooking(reservationId);
-            FinalResponse response = new FinalResponse(true, 1200, "Goto Booking has been Cancelled", null);
-            return response;
+            return new FinalResponse(true, 1200, "Goto Booking has been Cancelled", null);
         } catch(GotoException e){
             handleUpdateBookingError(reservationId, e.getMessage(), e.getStatusCode());
             return new FinalResponse(false, e.getStatusCode(), e.getMessage(), null);

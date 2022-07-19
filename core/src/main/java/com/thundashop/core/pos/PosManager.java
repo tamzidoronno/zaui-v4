@@ -135,7 +135,7 @@ public class PosManager extends ManagerBase implements IPosManager {
                         posConferenceCache = (PosConferenceCache) dataCommon;
                     }
                 });
-       }
+    }
 
     private PosConferenceCache getPosConferenceCache() {
         if (posConferenceCache == null) {
@@ -1051,14 +1051,14 @@ public class PosManager extends ManagerBase implements IPosManager {
 
     private void removeZReportParametersFromRegisteredPaymentsOnInvoices(List<String> invoicesWithNewPaymentsOrderIds, String reportId) {
         invoicesWithNewPaymentsOrderIds.forEach(orderId -> {
-                    Order order = orderManager.getOrder(orderId);
-                    order.orderTransactions.forEach(t -> {
-                        if (t.addedToZreport.equals(reportId)){
-                            t.addedToZreport = "";
-                        }
-                    });
-                    orderManager.saveOrder(order);
+            Order order = orderManager.getOrder(orderId);
+            order.orderTransactions.forEach(t -> {
+                if (t.addedToZreport.equals(reportId)){
+                    t.addedToZreport = "";
+                }
             });
+            orderManager.saveOrder(order);
+        });
     }
 
     /**
@@ -2009,7 +2009,7 @@ public class PosManager extends ManagerBase implements IPosManager {
     }
 
     public void updateAccruedAmountForRoomBookings(List<PmsBookingRooms> roomsToBeRecalculated, PmsManager pmsManager) {
-        
+
         for(PmsBookingRooms room : roomsToBeRecalculated) {
             PmsBooking booking = pmsManager.getBookingFromRoom(room.pmsBookingRoomId);
             room.unsettledAmountIncAccrued = recalculateAccruedAmountForRoomBooking(pmsManager, booking.id, room.pmsBookingRoomId);

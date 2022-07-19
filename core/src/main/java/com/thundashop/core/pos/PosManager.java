@@ -463,7 +463,7 @@ public class PosManager extends ManagerBase implements IPosManager {
     private Date getPreviouseZReportDate(String cashPointId) {
         Date start = new Date(0);
         for (ZReport rep : zReports.values()) {
-            if (rep.rowCreatedDate.after(start) && (rep.cashPointId.equals(cashPointId) || rep.cashPointId.isEmpty())) {
+            if (rep.rowCreatedDate.after(start) && (rep.cashPointId == null || rep.cashPointId.equals(cashPointId) || rep.cashPointId.isEmpty())) {
                 start = rep.rowCreatedDate;
             }
         }
@@ -833,7 +833,7 @@ public class PosManager extends ManagerBase implements IPosManager {
 
     @Override
     public boolean hasTables() {
-        return !tables.isEmpty();
+        return  tables != null && !tables.isEmpty();
     }
 
     @Override
@@ -883,7 +883,7 @@ public class PosManager extends ManagerBase implements IPosManager {
                 .filter(item -> item.getProduct() != null && item.getProduct().isFood)
                 .collect(Collectors.toList());
 
-        if (itemsToPrint.isEmpty()) {
+        if (itemsToPrint == null || itemsToPrint.isEmpty()) {
             return;
         }
 
@@ -1233,7 +1233,7 @@ public class PosManager extends ManagerBase implements IPosManager {
         List<PmsBookingRooms> roomsNeedToCreateOrdersFor = getRoomsNeedToCreateOrdersFor();
         List<String> retList = new ArrayList();
 
-        if (!roomsNeedToCreateOrdersFor.isEmpty()) {
+        if (roomsNeedToCreateOrdersFor!=null && !roomsNeedToCreateOrdersFor.isEmpty()) {
             checkIfAccrudePaymentIsActivated();
         }
 
@@ -1312,7 +1312,7 @@ public class PosManager extends ManagerBase implements IPosManager {
                 .map(o -> o.id)
                 .collect(Collectors.toList());
 
-        if (!bookingsWithNoneSegments.isEmpty()) {
+        if (bookingsWithNoneSegments!= null && !bookingsWithNoneSegments.isEmpty()) {
             canClose.canClose = false;
             canClose.bookingsWithNoneSegments = bookingsWithNoneSegments;
         }
@@ -1428,7 +1428,7 @@ public class PosManager extends ManagerBase implements IPosManager {
             return true;
         }
 
-        return tab.cartItems.isEmpty();
+        return tab.cartItems == null || tab.cartItems.isEmpty();
     }
 
     public void updatePosConference(String confId) {
@@ -1571,9 +1571,10 @@ public class PosManager extends ManagerBase implements IPosManager {
             List<CartItem> cartItemsInDifference = retMap.get(pmsConferenceId);
             Order order = createOrder(cartItemsInDifference, accuredPayment, null, cashPointId);
             PmsConference conference =  pmsConferenceManager.getConference(pmsConferenceId);
+            if(order == null || conference == null) continue;
             order.cart.address = new Address();
             order.cart.address.fullName = StringUtils.isBlank(conference.meetingTitle) ? conference.forUserFullName : conference.meetingTitle;
-            if (!conference.forUser.isEmpty()){
+            if (conference.forUser != null && !conference.forUser.isEmpty()){
                 order.userId = conference.forUser;
             }
             order.autoCreatedOrderForConferenceId = pmsConferenceId;
@@ -1856,7 +1857,7 @@ public class PosManager extends ManagerBase implements IPosManager {
 
     @Override
     public boolean hasLockedPeriods() {
-        return !zReports.isEmpty();
+        return zReports!=null &&  !zReports.isEmpty();
     }
 
     @Override

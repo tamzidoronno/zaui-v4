@@ -46,7 +46,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     JomresConfiguration jomresConfiguration = null;
 
     Map<String, JomresRoomData> pmsItemToJomresRoomDataMap = new HashMap<>();
-    Map<Integer, Set<BlankBookingPMS>> pmsBlankBookings = new HashMap<>();
+    Map<Integer, Set<PMSBlankBooking>> pmsBlankBookings = new HashMap<>();
     Map<Long, JomresBookingData> jomresToPmsBookingMap = new HashMap<>();
     Map<String, JomresBookingData> pmsToJomresBookingMap = new HashMap<>();
     Map<Integer, JomresRoomData> jomresPropertyToRoomDataMap = new HashMap<>();
@@ -65,10 +65,10 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             } else if (dataCommon instanceof JomresBookingData) {
                 jomresToPmsBookingMap.put(((JomresBookingData) dataCommon).jomresBookingId, (JomresBookingData) dataCommon);
                 pmsToJomresBookingMap.put(((JomresBookingData) dataCommon).pmsBookingId, (JomresBookingData) dataCommon);
-            } else if (dataCommon instanceof BlankBookingPMS) {
-                int proprertyId = ((BlankBookingPMS) dataCommon).getPropertyId();
+            } else if (dataCommon instanceof PMSBlankBooking) {
+                int proprertyId = ((PMSBlankBooking) dataCommon).getPropertyId();
                 pmsBlankBookings.put(proprertyId, pmsBlankBookings.computeIfAbsent(proprertyId, k -> new HashSet<>()));
-                pmsBlankBookings.get(((BlankBookingPMS) dataCommon).getPropertyId()).add((BlankBookingPMS) dataCommon);
+                pmsBlankBookings.get(((PMSBlankBooking) dataCommon).getPropertyId()).add((PMSBlankBooking) dataCommon);
             }
         }
         if (jomresPropertyToRoomDataMap.isEmpty()) {
@@ -155,7 +155,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 logText("Started updating availability for room: " + bookingItem.bookingItemName +
                         ", PropertyId: " + roomData.jomresPropertyId);
 
-                Map<String, BlankBookingPMS> blankBookings = getBlankBookingsForProperty(roomData.jomresPropertyId);
+                Map<String, PMSBlankBooking> blankBookings = getBlankBookingsForProperty(roomData.jomresPropertyId);
 
                 calendar.setTime(startDate);
                 BookingTimeLineFlatten itemTimeline = bookingEngine.getTimeLinesForItem(startDate, endDate, roomData.bookingItemId);
@@ -164,7 +164,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 Collections.sort(bookings, Booking.sortByStartDate());
 
                 for (Booking booking : itemTimeline.getBookings()) {
-                    BlankBookingPMS bBooking = blankBookings.get(booking.id);
+                    PMSBlankBooking bBooking = blankBookings.get(booking.id);
                     if (jomresBookingRoomIds.contains(booking.externalReference)) continue;
                     if (bBooking == null) {
                         createBlankBooking(booking, roomData.jomresPropertyId);
@@ -189,22 +189,22 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         return true;
     }
 
-    private Map<String, BlankBookingPMS> getBlankBookingsForProperty(int propertyId) {
+    private Map<String, PMSBlankBooking> getBlankBookingsForProperty(int propertyId) {
         if (pmsBlankBookings.get(propertyId) == null)
             return new HashMap<>();
         else
             return pmsBlankBookings.get(propertyId)
                     .stream()
-                    .sorted(Comparator.comparing(BlankBookingPMS::getDateFrom))
+                    .sorted(Comparator.comparing(PMSBlankBooking::getDateFrom))
                     .collect(Collectors
-                            .toMap(BlankBookingPMS::getFlatBookingId,
+                            .toMap(PMSBlankBooking::getFlatBookingId,
                                     Function.identity(),
                                     (oldValue, newValue) -> oldValue,
                                     LinkedHashMap::new)
                     );
     }
 
-    private boolean isBlankBookingUpdated(BlankBookingPMS blankBooking, Booking booking) {
+    private boolean isBlankBookingUpdated(PMSBlankBooking blankBooking, Booking booking) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         if (blankBooking.getDateFrom().compareTo(formatter.format(booking.startDate)) != 0) return true;
         if (blankBooking.getDateTo().compareTo(formatter.format(booking.endDate)) != 0) return true;
@@ -221,14 +221,14 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             sendErrorUpdateAvailability(response);
             return;
         }
-        BlankBookingPMS newBlankBooking =
-                new BlankBookingPMS(response.getContractId(), booking.id, propertyId, booking.startDate, booking.endDate);
+        PMSBlankBooking newBlankBooking =
+                new PMSBlankBooking(response.getContractId(), booking.id, propertyId, booking.startDate, booking.endDate);
         saveObject(newBlankBooking);
         pmsBlankBookings.put(propertyId, pmsBlankBookings.computeIfAbsent(propertyId, k-> new HashSet<>()));
         pmsBlankBookings.get(propertyId).add(newBlankBooking);
     }
 
-    private void deleteBlankBookingCompletely(BlankBookingPMS booking) {
+    private void deleteBlankBookingCompletely(PMSBlankBooking booking) {
         logger.debug("Deleting blank Booking...");
         AvailabilityService service = new AvailabilityService();
         UpdateAvailabilityResponse res =
@@ -246,16 +246,16 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     }
 
     private void deleteIfExtraBlankBookingExist(
-            Set<String> existingBookingIds, Map<String, BlankBookingPMS> blankBookingMap, Date start, Date end) {
+            Set<String> existingBookingIds, Map<String, PMSBlankBooking> blankBookingMap, Date start, Date end) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String startDate = formatter.format(start);
         String endDate = formatter.format(end);
-        List<BlankBookingPMS> bBookingsForDeletion = blankBookingMap.values()
+        List<PMSBlankBooking> bBookingsForDeletion = blankBookingMap.values()
                 .stream()
                 .filter(o-> o.getDateFrom().compareTo(endDate) <=0 && o.getDateTo().compareTo(startDate) >=0)
                 .filter(o-> !existingBookingIds.contains(o.getFlatBookingId()))
                 .collect(Collectors.toList());
-        for (BlankBookingPMS booking: bBookingsForDeletion){
+        for (PMSBlankBooking booking: bBookingsForDeletion){
             deleteBlankBookingCompletely(booking);
         }
     }

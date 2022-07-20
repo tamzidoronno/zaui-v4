@@ -2,7 +2,7 @@ package com.thundashop.core.jomres.services;
 
 import com.google.gson.Gson;
 import com.thundashop.core.bookingengine.data.Booking;
-import com.thundashop.core.jomres.dto.JomresBlankBooking;
+import com.thundashop.core.jomres.dto.BlankBookingPMS;
 import com.thundashop.core.jomres.dto.UnavailabilityDate;
 import com.thundashop.core.jomres.dto.UpdateAvailabilityResponse;
 import com.thundashop.core.sedox.autocryptoapi.Exception;
@@ -20,7 +20,7 @@ import static com.thundashop.core.jomres.services.Constants.*;
 public class AvailabilityService extends BaseService {
     private static final Logger logger = LoggerFactory.getLogger(AvailabilityService.class);
 
-    public UpdateAvailabilityResponse deleteBlankBooking(String baseUrl, String token, JomresBlankBooking booking) {
+    public UpdateAvailabilityResponse deleteBlankBooking(String baseUrl, String token, BlankBookingPMS booking) {
         UpdateAvailabilityResponse res = new UpdateAvailabilityResponse();
         createHttpClient();
         try {

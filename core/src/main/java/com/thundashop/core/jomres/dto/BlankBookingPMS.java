@@ -11,7 +11,7 @@ import java.util.Date;
 
 @PermenantlyDeleteData
 @Data
-public class JomresBlankBooking extends DataCommon {
+public class BlankBookingPMS extends DataCommon {
     private long contractId=-1;
     private int propertyId;
     private String flatBookingId;
@@ -23,17 +23,17 @@ public class JomresBlankBooking extends DataCommon {
     private String dateTo;
 
 
-    public JomresBlankBooking() {
+    public BlankBookingPMS() {
     }
 
-    public JomresBlankBooking(long contractId, String flatBookingId, int propertyId, String dateFrom, String dateTo) {
+    public BlankBookingPMS(long contractId, String flatBookingId, int propertyId, String dateFrom, String dateTo) {
         this.propertyId = propertyId;
         this.flatBookingId = flatBookingId;
         this.contractId = contractId;
         this.dateFrom = dateFrom;
         this.dateTo = dateTo;
     }
-    public JomresBlankBooking(long contractId, String flatBookingId, int propertyId, Date dateFrom, Date dateTo) {
+    public BlankBookingPMS(long contractId, String flatBookingId, int propertyId, Date dateFrom, Date dateTo) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         this.propertyId = propertyId;
         this.flatBookingId = flatBookingId;

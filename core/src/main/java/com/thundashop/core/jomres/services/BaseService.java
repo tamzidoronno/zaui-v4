@@ -1,6 +1,5 @@
 package com.thundashop.core.jomres.services;
 
-import com.thundashop.core.jomres.JomresLogManager;
 import com.thundashop.core.jomres.ResponseDataParser;
 import okhttp3.*;
 import org.apache.oltu.oauth2.client.OAuthClient;
@@ -14,11 +13,8 @@ import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.types.GrantType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,9 +25,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class BaseService {
-
-    @Autowired
-    JomresLogManager jomresLogManager;
 
     OAuthClient tokenClient =  null;
     OkHttpClient httpClient = null;
@@ -80,7 +73,7 @@ public class BaseService {
 
     public OAuthClientRequest getBearerTokenRequest(String url, String accessToken)
             throws IOException, OAuthSystemException {
-        System.out.println("Request to "+url);
+
         logger.debug("Request to "+url);
         OAuthClientRequest request =  new OAuthBearerClientRequest(url)
                 .setAccessToken(accessToken)
@@ -93,11 +86,6 @@ public class BaseService {
             String url, String accessToken, Map<String, String> headers, Map<String, String> formData, String method){
 
         RequestBody body = getFormDataRequestBody(formData, method);
-
-        logger.debug("Creating request for URL: "+url);
-        System.out.println("Request to Url: "+url);
-        System.out.println("Method: "+method+", Header: "+headers);
-        System.out.println("Body: "+formData);
 
         logger.debug("Request to "+url);
         logger.debug("Method: "+method+", Header: "+headers);
@@ -151,20 +139,6 @@ public class BaseService {
         if(existingHeaders==null) existingHeaders = new HashMap<String, String>();
         existingHeaders.put("X-JOMRES-channel-name", channel);
         return existingHeaders;
-    }
-
-    static <T> void inspect(Object o) throws IllegalAccessException {
-        Field[] fields = o.getClass().getDeclaredFields();
-        System.out.printf("%d fields:%n", fields.length);
-        for (Field field : fields) {
-            System.out.printf("%s %s %s %s%n",
-                    Modifier.toString(field.getModifiers()),
-                    field.getType().getSimpleName(),
-                    field.getName(),
-                    field.get(o).toString()
-            );
-
-        }
     }
 
 }

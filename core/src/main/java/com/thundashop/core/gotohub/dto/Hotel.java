@@ -31,6 +31,9 @@ public class Hotel {
     @SerializedName("long")
     @Expose
     private double _long;
+    @SerializedName("currency_type")
+    @Expose
+    private String currencyType;
     @SerializedName("checkin_time")
     @Expose
     private String checkinTime;

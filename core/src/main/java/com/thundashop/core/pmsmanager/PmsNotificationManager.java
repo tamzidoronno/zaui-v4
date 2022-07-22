@@ -243,7 +243,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
     private boolean isIgnoreJomresNotification(String key, PmsBooking booking) {
         if(booking == null || booking.channel == null) return false;
         if(!booking.channel.contains("jomres")) return false;
-        return !key.contains("room_added_to_arx");
+        return key != null && !key.contains("room_added_to_arx");
     }
 
     private void notifyBySms(String key, PmsBooking booking, PmsBookingRooms room) {

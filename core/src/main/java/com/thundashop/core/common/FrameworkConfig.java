@@ -23,7 +23,7 @@ import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 @Component
 public class FrameworkConfig {
 
-    public boolean productionMode = true;
+    public boolean productionMode = false;
     private String storeCreationIP = "";
 
     @PostConstruct

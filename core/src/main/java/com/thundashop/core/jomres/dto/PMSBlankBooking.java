@@ -4,13 +4,18 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.PermenantlyDeleteData;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @PermenantlyDeleteData
 @Data
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class PMSBlankBooking extends DataCommon {
     private long contractId=-1;
     private int propertyId;

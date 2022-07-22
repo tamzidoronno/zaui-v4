@@ -47,11 +47,13 @@ public class JomresBooking implements Serializable {
         this.customer.name = firstName+ " " + surName;
 
         String rawLandLine = Optional.ofNullable(booking.get("tel_landline").toString()).orElse("");
+        String landLine = rawLandLine.replaceAll("[^0-9]", "");
+
         String rawMobile = Optional.ofNullable(booking.get("tel_mobile").toString()).orElse("");
-        String landLine = StringUtils.substringAfter(rawLandLine,";");
-        String mobile = StringUtils.substringAfterLast(rawMobile,";");
-        this.customer.telLandline = landLine.isEmpty()? rawLandLine:landLine;
-        this.customer.telMobile = mobile.isEmpty()? rawMobile:mobile;
+        String mobile = rawMobile.replaceAll("[^0-9]", "");
+
+        this.customer.telLandline = landLine;
+        this.customer.telMobile = mobile;
         this.customer.email = Optional.ofNullable(booking.get("email").toString()).orElse("");
 
         this.status = Optional.ofNullable(booking.get("TxtStatus").toString()).orElse("Approved");

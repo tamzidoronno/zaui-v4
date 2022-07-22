@@ -92,6 +92,8 @@ public class Order extends DataCommon implements Comparable<Order> {
     public Date paymentDate = null;
     public Date markedPaidDate = null;
     public String markedAsPaidByUserId = "";
+    public boolean paymentInitiated = false;
+    public Date paymentInitiatedDate;
     public Integer paymentTerms = 15;
     public String parentOrder = "";
     public boolean sentToCustomer = false;

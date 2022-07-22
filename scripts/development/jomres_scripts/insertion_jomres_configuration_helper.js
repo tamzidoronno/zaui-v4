@@ -21,5 +21,5 @@ let jomresConfiguration = {
     "translationId": ""
 }
 
-collection.deleteOne({'className': className});
+collection.deleteMany({'className': className});
 collection.insertOne(jomresConfiguration);

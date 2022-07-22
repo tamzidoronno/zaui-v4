@@ -18,9 +18,9 @@ public class BookingProcessRooms {
     public HashMap<String, String> utilities = new HashMap();
     public boolean visibleForBooker = false;
     public double totalPriceForRoom = 0.0;
-    String userId = "";
+    public String userId = "";
 
-    void sortDefaultImageFirst() {
+    public void sortDefaultImageFirst() {
         PmsTypeImages defaultImg = null;
         for(PmsTypeImages img : images) {
             if(img.isDefault) {

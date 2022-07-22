@@ -10,10 +10,6 @@ import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.bookingengine.data.BookingTimeLineFlatten;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.data.DataRetreived;
-import com.thundashop.core.jomres.dto.FetchBookingResponse;
-import com.thundashop.core.jomres.dto.JomresBooking;
-import com.thundashop.core.jomres.dto.JomresGuest;
-import com.thundashop.core.jomres.dto.JomresProperty;
 import com.thundashop.core.jomres.dto.*;
 import com.thundashop.core.jomres.services.*;
 import com.thundashop.core.messagemanager.MessageManager;
@@ -30,8 +26,6 @@ import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.*;
-import java.util.function.Supplier;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -52,13 +46,13 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     JomresConfiguration jomresConfiguration = new JomresConfiguration();
 
     Map<String, JomresRoomData> pmsItemToJomresRoomDataMap = new HashMap<>();
+    Map<Integer, Set<PMSBlankBooking>> pmsBlankBookings = new HashMap<>();
     Map<Long, JomresBookingData> jomresToPmsBookingMap = new HashMap<>();
     Map<String, JomresBookingData> pmsToJomresBookingMap = new HashMap<>();
     Map<Integer, JomresRoomData> jomresPropertyToRoomDataMap = new HashMap<>();
     BaseService jomresService = new BaseService();
     String cmfClientAccessToken = null;
     Date cmfClientTokenGenerationTime = new Date();
-
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -82,9 +76,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         }
 
         createScheduler("jomresprocessor", "*/5 * * * *", JomresManagerProcessor.class);
-
     }
-
 
     public void logText(String string) {
         jomresLogManager.save(string, System.currentTimeMillis());
@@ -119,6 +111,16 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         saveObject(jomresConfiguration);
         invalidateToken();
         return true;
+    }
+
+    private boolean handleEmptyJomresCOnfiguration() {
+        if (jomresPropertyToRoomDataMap.isEmpty() || jomresConfiguration == null) {
+            logger.info("No room to Jomres Property mapping found for this hotel. No need to fetch bookings...");
+            logText("No room to Jomres Property mapping found for this hotel.");
+            logText("No need to fecth bookings...");
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -488,9 +490,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
         if(!customer.telMobile.contains(guestPhone))
             return true;
-        if(!customer.email.equals(guestEmail))
-            return true;
-        return false;
+        return !customer.email.equals(guestEmail);
     }
 
     boolean isBookingNeedToBeSynced(JomresBooking jBooking, PmsBooking pBooking){
@@ -514,7 +514,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         return false;
     }
 
-    void deleteJomresBookingData(JomresBookingData bookingData){
+    private void deleteJomresBookingData(JomresBookingData bookingData) {
         pmsToJomresBookingMap.remove(bookingData.pmsBookingId);
         jomresToPmsBookingMap.remove(bookingData.jomresBookingId);
         deleteObject(bookingData);
@@ -675,12 +675,11 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         SimpleDateFormat format = new SimpleDateFormat("E, dd MMM yyyy");
         arrival = format.format(booking.arrivalDate);
         departure = format.format(booking.departure);
-        String message = "Failed to add new booking in pms from Jomres.\n" +
+        return  "Failed to add new booking in pms from Jomres.\n" +
                 "Booking Id: "+booking.bookingId+", Room: "+pmsRoomName+".\n"+
                 "Arraival: " + arrival + ", Departure: " + departure+".\n"+
                 "Maybe there is a manual booking for this room or the room is closed by the system for a while.\n"+
                 "Booking will be created in Pms Automatically as soon as the room is open.";
-        return message;
     }
 
     private void sendErrorForBooking(JomresBooking booking, String pmsRoomName) {

@@ -203,13 +203,12 @@ public class ResponseDataParser {
         }
     }
 
-    public List<Integer> parseAllPropertyIds(OAuthResourceResponse response, boolean channelProperties) throws Exception{
+    public List<Long> parseAllPropertyIds(OAuthResourceResponse response, boolean channelProperties) throws Exception{
         if(response.getResponseCode()==401){
             throw new Exception("statuse code: 401, unauthorized request\nCheck credentials...");
         }
 
-        List<Integer> propertyUIDs = new ArrayList<>();
-        Gson gson = new Gson();
+        List<Long> propertyUIDs = new ArrayList<>();
 
         JsonObject responseBody = gson.fromJson(response.getBody(), JsonObject.class);
         JsonObject data = responseBody.getAsJsonObject("data");
@@ -217,14 +216,14 @@ public class ResponseDataParser {
         if (channelProperties) {
             JsonObject properties = data.getAsJsonObject("response");
             for (Map.Entry<String, JsonElement> property : properties.entrySet()) {
-                propertyUIDs.add(Integer.valueOf(property.getKey()));
+                propertyUIDs.add(Long.valueOf(property.getKey()));
             }
         } else {
             String properties = data.get("ids").toString();
             propertyUIDs = Arrays.stream(properties.replaceAll("\\[", "")
                             .replaceAll("]", "")
                             .split(","))
-                    .map(propertyId -> Integer.parseInt(propertyId))
+                    .map(Long::parseLong)
                     .collect(Collectors.toList());
 
         }

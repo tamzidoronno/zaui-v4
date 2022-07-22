@@ -14,8 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import static com.thundashop.core.jomres.services.Constants.BOOKING_DETAILS_BY_ID;
-import static com.thundashop.core.jomres.services.Constants.LIST_BOOKING_URL;
+import static com.thundashop.core.jomres.services.Constants.*;
 
 public class BookingService extends BaseService {
 
@@ -38,14 +37,13 @@ public class BookingService extends BaseService {
         } catch (Exception e) {
             throw new Exception("Failed:\n\t" + e.getMessage1());
         } catch (IOException | OAuthSystemException | OAuthProblemException e) {
-            throw new Exception("Failed to execute the \"Get Booking Between Dates\" Availability REST" +
-                    " API request:\n\t" + e.getMessage());
+            throw new Exception("Failed to execute the \"Get Booking Between Dates\", Cause: " + e.getMessage());
         }
 
     }
 
-    public JomresBooking getCompleteBooking(String baseUrl, String token, String channel, JomresBooking booking){
-        try{
+    public JomresBooking getCompleteBooking(String baseUrl, String token, String channel, JomresBooking booking) {
+        try {
             createOAuthClient();
             String url = baseUrl + BOOKING_DETAILS_BY_ID + booking.propertyUid + "/" + booking.bookingId;
 
@@ -57,7 +55,7 @@ public class BookingService extends BaseService {
             booking.setCustomer(responseDataParser.parseBookingGuestDetails(response));
             return booking;
 
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error(e.getMessage1());
             return null;
 

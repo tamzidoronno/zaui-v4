@@ -1,8 +1,6 @@
 package com.thundashop.core.paymentmanager.EasyByNets;
 
 import com.thundashop.core.common.FrameworkConfig;
-import com.thundashop.core.ordermanager.data.Order;
-import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.paymentmanager.EasyByNets.DTO.RetrievePayment;
 import com.thundashop.core.paymentmanager.EasyByNets.DTO.Summary;
 import lombok.extern.slf4j.Slf4j;
@@ -14,10 +12,6 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Naim Murad (naim)
@@ -82,20 +76,6 @@ public class EasyByNetService {
             return summary.getChargedAmount();
         }
         return val;
-    }
-
-    public List<Order> getPendingPaymentOrders(List<Order> pendingOrders) {
-        if(pendingOrders == null || pendingOrders.isEmpty()) return Collections.emptyList();
-        return pendingOrders.stream()
-                .filter(this::isOrderPendingForEasyByNet)
-                .collect(Collectors.toList());
-    }
-
-    private boolean isOrderPendingForEasyByNet(Order o) {
-        Payment payment = o.payment;
-        if(payment == null || StringUtils.isNotBlank(payment.paymentType)) return false;
-        if(!payment.paymentType.endsWith("EasyByNets") || StringUtils.isBlank(payment.transactionPaymentId)) return false;
-        return true;
     }
 
 }

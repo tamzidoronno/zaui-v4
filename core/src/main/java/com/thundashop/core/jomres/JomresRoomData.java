@@ -8,6 +8,8 @@ import java.util.List;
 
 @PermenantlyDeleteData
 public class JomresRoomData extends DataCommon {
+
+    //TODO: add readable name of room and property for log
     String bookingItemId = "";
-    int jomresPropertyId;
+    int jomresPropertyId=0;
 }

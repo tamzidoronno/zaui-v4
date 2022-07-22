@@ -104,7 +104,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private HashMap<String, FailedWubookInsertion> failedWubooks = new HashMap<>();
     
     private HashMap<Long, FailedJomresInsertion> failedJomresBookings = new HashMap<>();
-    
+    private HashMap<String, FailedJomresAvailInsertion> failedJomresAvailability = new HashMap<>();
+
     
     private HashMap<String, PmsRoomTypeAccessory> accesories = new HashMap<>();
     private PmsConfiguration configuration = new PmsConfiguration();
@@ -302,6 +303,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (dataCommon instanceof FailedJomresInsertion) {
                 FailedJomresInsertion failure = (FailedJomresInsertion) dataCommon;
                 failedJomresBookings.put(failure.jomresBookingId, failure);
+            }
+            if (dataCommon instanceof FailedJomresAvailInsertion) {
+                FailedJomresAvailInsertion failure = (FailedJomresAvailInsertion) dataCommon;
+                failedJomresAvailability.put(failure.availabilityString, failure);
             }
             if (dataCommon instanceof PmsBookingAutoIncrement) {
                 autoIncrement = (PmsBookingAutoIncrement) dataCommon;
@@ -7201,12 +7206,24 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         failedJomresBookings.put(failed.jomresBookingId, failed);
     }
 
+    public void markSentErrorMessageForJomresAvail(String  availabilityString) {
+        FailedJomresAvailInsertion failed = new FailedJomresAvailInsertion();
+        failed.availabilityString = availabilityString;
+        failed.when = new Date();
+        saveObject(failed);
+        failedJomresAvailability.put(failed.availabilityString, failed);
+    }
+
     public boolean hasSentErrorNotificationForWubookId(String wubookId) {
         return failedWubooks.containsKey(wubookId);
     }
     
     public boolean hasSentErrorNotificationForJomresBooking(long jomresBookingId) {
         return failedJomresBookings.containsKey(jomresBookingId);
+    }
+
+    public boolean hasSentErrorNotificationForJomresAvailability(String availabilityString) {
+        return failedJomresAvailability.containsKey(availabilityString);
     }
 
     @Override

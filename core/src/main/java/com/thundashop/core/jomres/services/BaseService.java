@@ -18,7 +18,13 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class BaseService {
 
@@ -46,6 +52,16 @@ public class BaseService {
             throw e;
         }
         return accessToken;
+    }
+
+    List<CompletableFuture<? extends Object>> getAsyncTaskResults(List<Supplier<? extends Object>> tasks){
+        ExecutorService es = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+
+        List<CompletableFuture<? extends Object>>futures = tasks.stream()
+                .map(task -> CompletableFuture.supplyAsync(task, es))
+                .collect(Collectors.toList());
+        es.shutdown();
+        return futures;
     }
 
     public OAuthClientRequest createTokenRequest(String clientId, String clientSecret, String tokenURL)
@@ -117,7 +133,7 @@ public class BaseService {
             return null;
         }
         else return  bodyBuilder.addFormDataPart("", "")
-                .build();
+                    .build();
     }
 
     Map<String, String> addChannelIntoHeaders(Map<String, String> existingHeaders, String channel){

@@ -150,6 +150,13 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         }
     }
 
+    private void handleIfBookingDeleted(PmsBooking pmsBooking) throws Exception{
+        for(PmsBookingRooms room : pmsBooking.rooms){
+            if(!room.deleted) return;
+        }
+        throw new GotoException(1105, "Goto Booking Confirmation Failed, Reason: Booking Has Been Deleted");
+    }
+
     @Override
     public FinalResponse confirmBooking(String reservationId){
         try{
@@ -158,6 +165,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             if(pmsBooking == null){
                 throw new GotoException(1101, "Goto Booking Confirmation Failed, Reason: Booking Not Found");
             }
+            handleIfBookingDeleted(pmsBooking);
             pmsBooking = setPaymentMethod(pmsBooking);
             handlePaymentOrder(pmsBooking, getCheckoutDateFromPmsBookingRooms(pmsBooking.rooms));
             return new FinalResponse(true, 1100, "Goto Booking has been Confirmed", null);

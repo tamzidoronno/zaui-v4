@@ -15,8 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +25,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class BaseService {
-
     OAuthClient tokenClient =  null;
     OkHttpClient httpClient = null;
     private static final Logger logger = LoggerFactory.getLogger(BaseService.class);
@@ -75,6 +72,7 @@ public class BaseService {
 
     public OAuthClientRequest getBearerTokenRequest(String url, String accessToken)
             throws IOException, OAuthSystemException {
+
         logger.debug("Request to "+url);
         OAuthClientRequest request =  new OAuthBearerClientRequest(url)
                 .setAccessToken(accessToken)

@@ -627,7 +627,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                     al.setRoomTypeCode(roomData.getGoToRoomTypeCode());
                     al.setPrice(priceEntry.getValue());
                     al.setAllotment(roomData.getAvailableRooms());
-                    al.setCurrencyType(storeManager.getStoreSettingsApplicationKey("currencycode"));
+                    al.setCurrencyCode(storeManager.getStoreSettingsApplicationKey("currencycode"));
                     allotments.add(al);
                 }
             }
@@ -684,7 +684,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         }
         address += store.configuration.Adress;
         hotel.setAddress(address);
-        hotel.setCurrencyType(storeManager.getStoreSettingsApplicationKey("currencycode"));
+        hotel.setCurrencyCode(storeManager.getStoreSettingsApplicationKey("currencycode"));
         hotel.setCheckinTime(pmsConfiguration.getDefaultStart());
         hotel.setCheckoutTime(pmsConfiguration.getDefaultEnd());
         contact.setEmail(store.configuration.emailAdress);

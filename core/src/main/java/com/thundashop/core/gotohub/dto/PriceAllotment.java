@@ -17,9 +17,9 @@ public class PriceAllotment implements Serializable {
     @SerializedName("room_type_code")
     @Expose
     public String roomTypeCode;
-    @SerializedName("currency_type")
+    @SerializedName("currency_code")
     @Expose
-    private String currencyType;
+    private String currencyCode;
     @SerializedName("rate_plan_code")
     @Expose
     public String ratePlanCode;

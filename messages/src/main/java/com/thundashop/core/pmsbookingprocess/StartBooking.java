@@ -13,16 +13,16 @@ public class StartBooking implements Serializable {
     public Integer children;
     public String discountCode;
     public BrowserVersion browser;
-    String bookingId = "";
-    String roomId = "";
-    String language = "";
-    String browserLanguage = "";
+    public String bookingId = "";
+    public String roomId = "";
+    public String language = "";
+    public String browserLanguage = "";
 
-    int getGuests() {
+    public int getGuests() {
         return adults+children;
     }
     
-    int getNumberOfDays() {
+    public int getNumberOfDays() {
         return PmsBookingRooms.getNumberOfDays(start, end);
     }
 }

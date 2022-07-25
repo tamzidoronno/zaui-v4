@@ -25,7 +25,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class BaseService {
-
     OAuthClient tokenClient =  null;
     OkHttpClient httpClient = null;
     private static final Logger logger = LoggerFactory.getLogger(BaseService.class);

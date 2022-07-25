@@ -209,7 +209,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                     );
             cancellationDeadLine = trimTillHour(cancellationDeadLine);
             if(deletionRequestTime.after(cancellationDeadLine)){
-                throw new GotoException(1203, "Goto Booking Confirmation Failed, Reason: Cancellation DeadLine Has Passed");
+                throw new GotoException(1203, "Goto Booking Confirmation Failed.. Reason: Cancellation DeadLine Has Passed");
             }
         }
     }
@@ -235,7 +235,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
         } catch (Exception e){
             logPrintException(e);
-            handleUpdateBookingError(reservationId, "Goto Booking Confirmation Failed, Reason: Unknown", 1209);
+            handleUpdateBookingError(reservationId, "Goto Booking Confirmation Failed.. Reason: Unknown", 1209);
             return new FinalResponse(false, 1209, "Goto Booking Cancellation Failed, Reason: Unknown", null);
         }
     }

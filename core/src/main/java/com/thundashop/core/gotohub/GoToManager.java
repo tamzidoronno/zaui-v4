@@ -217,8 +217,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     private void saveSchedulerAsCurrentUser(){
-        User user = userManager.getUserById("gs_system_scheduler_user");
-        getSession().currentUser = user;
+        getSession().currentUser = userManager.getUserById("gs_system_scheduler_user");
     }
 
     private void handlePaymentOrder(PmsBooking pmsBooking, String checkoutDate) throws Exception {

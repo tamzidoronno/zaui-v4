@@ -32,8 +32,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.*;
 
 @Component
 @GetShopSession
@@ -53,6 +52,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     private static final SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
     private static final SimpleDateFormat checkinOutDateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat cancellationDateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
     public GoToConfiguration goToConfiguration = new GoToConfiguration();
 
     @Override
@@ -169,7 +169,6 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             handleUpdateBookingError(reservationId, "Goto Booking Confirmation Failed, Reason: Unknown", 1209);
             return new FinalResponse(false, 1109, "Goto Booking Confirmation Failed, Reason: Unknown", null);
         }
-
     }
 
     private void handleOrderForCancelledBooking(String reservationId) throws Exception{
@@ -190,18 +189,43 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         } catch (Exception e){
             throw new GotoException(1202, "Goto Booking Cancellation Failed, Reason: Order Synchronization Failed");
         }
+    }
 
+    private Date trimTillHour(Date date){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        return calendar.getTime();
+    }
+    private void handleDeletionIfCutOffHourPassed(String reservationId, Date deletionRequestTime) throws Exception{
+        PmsBooking booking = findCorrelatedBooking(reservationId);
+        deletionRequestTime = trimTillHour(deletionRequestTime);
+        for(PmsBookingRooms room : booking.rooms){
+            Date cancellationDeadLine = cancellationDateFormatter.parse(
+                            getCancellationDeadLine(
+                                    checkinOutDateFormatter.format(room.date.start)
+                            )
+                    );
+            cancellationDeadLine = trimTillHour(cancellationDeadLine);
+            if(deletionRequestTime.after(cancellationDeadLine)){
+                throw new GotoException(1203, "Goto Booking Confirmation Failed, Reason: Cancellation DeadLine Has Passed");
+            }
+        }
     }
 
     @Override
     public FinalResponse cancelBooking(String reservationId) {
         try{
+            Date deletionRequestTime = new Date();
             saveSchedulerAsCurrentUser();
             PmsBooking pmsBooking = findCorrelatedBooking(reservationId);
             if(pmsBooking == null){
                 throw new GotoException(1201, "Goto Booking Cancellation Failed, Reason: Booking Not Found");
             }
+            handleDeletionIfCutOffHourPassed(pmsBooking.id, deletionRequestTime);
             pmsManager.logEntry("Deleted by channel manager", pmsBooking.id, null);
+
             pmsManager.deleteBooking(pmsBooking.id);
             handleOrderForCancelledBooking(reservationId);
             return new FinalResponse(true, 1200, "Goto Booking has been Cancelled", null);
@@ -287,7 +311,6 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     private String getCancellationDeadLine(String checkin) throws Exception {
-        SimpleDateFormat cancellationDateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
         Date checkinDate, cancellationDate;
         String cancellationDeadLine;
         Calendar calendar = Calendar.getInstance();

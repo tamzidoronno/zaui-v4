@@ -62,12 +62,12 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             saveSchedulerAsCurrentUser();
             Hotel hotel = mapStoreToGoToHotel(storeManager.getMyStore(), pmsManager.getConfiguration());
             return new FinalResponse(true,
-                    1400,
+                    1000,
                     "Successfully Returned Hotel Information",
                     hotel);
         } catch (Exception e){
             logPrintException(e);
-            return new FinalResponse(false, 1409, "Unknown", null);
+            return new FinalResponse(false, 1009, "Failed to Fetch Hotel Information.. Reason: Unknown", null);
         }
     }
 
@@ -86,12 +86,12 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                 roomTypes.add(roomType);
             }
             return new FinalResponse(true,
-                    1500,
+                    1100,
                     "Successfully Returned RoomType Information",
                     roomTypes);
         } catch (Exception e){
             logPrintException(e);
-            return new FinalResponse(false, 1509, "Unknown", null);
+            return new FinalResponse(false, 1109, "Failed to Fetch Room Type Information.. Reason: Unknown", null);
         }
 
     }
@@ -102,7 +102,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             saveSchedulerAsCurrentUser();
             List <PriceAllotment>priceAllotments = getPriceAllotments(from, to);
             return new FinalResponse(true,
-                    1300,
+                    1200,
                     "Successfully Returned Price and Allotment List",
                     priceAllotments);
         } catch (GotoException e){
@@ -110,7 +110,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             return new FinalResponse(false, e.getStatusCode(), e.getMessage(), null);
         } catch (Exception e){
             logPrintException(e);
-            return new FinalResponse(false, 1309, "Unknown", null);
+            return new FinalResponse(false, 1209, "Failed to Fetch Price-Allotment.. Reason: Unknown", null);
         }
     }
 
@@ -129,16 +129,16 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
     private String getBookingDetailsTextForMail(Booking booking){
         String text = "Booking Details:<br><br>";
-        text += "&emsp Arrival Date: "+ booking.getCheckInDate();
+        text += "   Arrival Date: "+ booking.getCheckInDate();
         text += "<br><br>";
-        text += "&emsp Departure Date: "+ booking.getCheckOutDate();
+        text += "   Departure Date: "+ booking.getCheckOutDate();
         text += "<br><br>";
-        text += "&emsp Rooms:";
+        text += "   Rooms:";
         text += "<br><br>";
         for(Room room: booking.getRooms()){
             BookingItemType type = bookingEngine.getBookingItemType(room.getRoomCode());
-            if(type!=null) text += "&emsp &emsp "+type.name+"<br><br>";
-            else text += "&emsp &emsp Room Type (BookingItemType) isn't found for Id: "+room.getRoomCode()+"<br><br>";
+            if(type!=null) text += "      "+type.name+"<br><br>";
+            else text += "      Room Type (BookingItemType) isn't found for Id: "+room.getRoomCode()+"<br><br>";
 
         }
         return text;
@@ -149,7 +149,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
         pmsManager.deleteBooking(pmsBooking.id);
         log.error("Goto Booking Failed, Reason: Overbooking");
-        throw new GotoException(1004, "Goto Booking Failed, Reason: Overbooking");
+        throw new GotoException(1304, "Goto Booking Failed.. Reason: Overbooking");
     }
 
     @Override
@@ -159,7 +159,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             handleDifferentCurrencyBooking(booking.getCurrency());
             PmsBooking pmsBooking = getBooking(booking);
             if (pmsBooking == null) {
-                throw new GotoException(1009, "Goto Booking Failed, Reason: Unknown");
+                throw new GotoException(1309, "Goto Booking Failed.. Reason: Unknown");
             }
             pmsManager.saveBooking(pmsBooking);
             pmsInvoiceManager.clearOrdersOnBooking(pmsBooking);
@@ -167,7 +167,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
             BookingResponse bookingResponse = getBookingResponse(pmsBooking.id, booking, pmsBooking.getTotalPrice());
             return new FinalResponse(true,
-                    1000,
+                    1300,
                     "Successfully received the HoldBooking",
                     bookingResponse);
         } catch (GotoException e){
@@ -176,8 +176,8 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         }
         catch (Exception e) {
             logPrintException(e);
-            handleNewBookingError(booking,"Goto Booking Failed, Reason: Unknown", 1009);
-            return new FinalResponse(false, 1009, "Goto Booking Failed, Reason: Unknown", null);
+            handleNewBookingError(booking,"Goto Booking Failed, Reason: Unknown", 1309);
+            return new FinalResponse(false, 1309, "Goto Booking Failed.. Reason: Unknown", null);
         }
     }
 
@@ -185,7 +185,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         for(PmsBookingRooms room : pmsBooking.rooms){
             if(!room.deleted) return;
         }
-        throw new GotoException(1105, "Goto Booking Confirmation Failed, Reason: Booking Has Been Deleted");
+        throw new GotoException(1405, "Goto Booking Confirmation Failed.. Reason: Booking Has Been Deleted");
     }
 
     @Override
@@ -194,19 +194,19 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             saveSchedulerAsCurrentUser();
             PmsBooking pmsBooking = findCorrelatedBooking(reservationId);
             if(pmsBooking == null){
-                throw new GotoException(1101, "Goto Booking Confirmation Failed, Reason: Booking Not Found");
+                throw new GotoException(1401, "Goto Booking Confirmation Failed.. Reason: Booking Not Found");
             }
             handleIfBookingDeleted(pmsBooking);
             pmsBooking = setPaymentMethod(pmsBooking);
             handlePaymentOrder(pmsBooking, getCheckoutDateFromPmsBookingRooms(pmsBooking.rooms));
-            return new FinalResponse(true, 1100, "Goto Booking has been Confirmed", null);
+            return new FinalResponse(true, 1400, "Goto Booking has been Confirmed", null);
         } catch (GotoException e){
             handleUpdateBookingError(reservationId, e.getMessage(), e.getStatusCode());
             return new FinalResponse(false, e.getStatusCode(), e.getMessage(), null);
         } catch (Exception e){
             logPrintException(e);
-            handleUpdateBookingError(reservationId, "Goto Booking Confirmation Failed, Reason: Unknown", 1209);
-            return new FinalResponse(false, 1109, "Goto Booking Confirmation Failed, Reason: Unknown", null);
+            handleUpdateBookingError(reservationId, "Goto Booking Confirmation Failed, Reason: Unknown", 1409);
+            return new FinalResponse(false, 1409, "Goto Booking Confirmation Failed.. Reason: Unknown", null);
         }
     }
 
@@ -226,7 +226,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                 pmsInvoiceManager.creditOrder(pmsBooking.id, orderId);
             }
         } catch (Exception e){
-            throw new GotoException(1202, "Goto Booking Cancellation Failed, Reason: Order Synchronization Failed");
+            throw new GotoException(1502, "Goto Booking Cancellation Failed.. Reason: Order Synchronization Failed");
         }
     }
 
@@ -248,7 +248,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                     );
             cancellationDeadLine = trimTillHour(cancellationDeadLine);
             if(deletionRequestTime.after(cancellationDeadLine)){
-                throw new GotoException(1203, "Goto Booking Confirmation Failed.. Reason: Cancellation DeadLine Has Passed");
+                throw new GotoException(1503, "Goto Booking Cancellation Failed.. Reason: Cancellation DeadLine Has Passed");
             }
         }
     }
@@ -260,22 +260,22 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             saveSchedulerAsCurrentUser();
             PmsBooking pmsBooking = findCorrelatedBooking(reservationId);
             if(pmsBooking == null){
-                throw new GotoException(1201, "Goto Booking Cancellation Failed, Reason: Booking Not Found");
+                throw new GotoException(1501, "Goto Booking Cancellation Failed.. Reason: Booking Not Found");
             }
             handleDeletionIfCutOffHourPassed(pmsBooking.id, deletionRequestTime);
             pmsManager.logEntry("Deleted by channel manager", pmsBooking.id, null);
 
             pmsManager.deleteBooking(pmsBooking.id);
             handleOrderForCancelledBooking(reservationId);
-            return new FinalResponse(true, 1200, "Goto Booking has been Cancelled", null);
+            return new FinalResponse(true, 1500, "Goto Booking has been Cancelled", null);
         } catch(GotoException e){
             handleUpdateBookingError(reservationId, e.getMessage(), e.getStatusCode());
             return new FinalResponse(false, e.getStatusCode(), e.getMessage(), null);
 
         } catch (Exception e){
             logPrintException(e);
-            handleUpdateBookingError(reservationId, "Goto Booking Confirmation Failed.. Reason: Unknown", 1209);
-            return new FinalResponse(false, 1209, "Goto Booking Cancellation Failed, Reason: Unknown", null);
+            handleUpdateBookingError(reservationId, "Goto Booking Confirmation Failed.. Reason: Unknown", 1509);
+            return new FinalResponse(false, 1509, "Goto Booking Cancellation Failed.. Reason: Unknown", null);
         }
     }
 
@@ -305,7 +305,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             logPrintException(e);
             log.error("Error occured while processing payment for goto booking..");
             log.error("Please check exception logs...");
-            throw new GotoException(1102, "Goto Booking Confirmation Failed, Reason: Payment failed");
+            throw new GotoException(1402, "Goto Booking Confirmation Failed.. Reason: Payment failed");
         }
 
     }
@@ -398,7 +398,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         if (StringUtils.isBlank(bookingCurrency) || isCurrencySameWithSystem(bookingCurrency)) return;
         log.error("Booking currency didn't match with system currency..");
         log.error("Booking currency: "+bookingCurrency);
-        throw new GotoException(1001, "Goto Booking Failed, Reason: Different Currency");
+        throw new GotoException(1301, "Goto Booking Failed.. Reason: Different Currency");
 
     }
 
@@ -409,13 +409,14 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             }
         }catch (Exception e){
             log.error("Error occurred while activate payment method, id: "+pmethod);
-            throw new GotoException(1104,"Goto Booking Failed, Reason: Payment method activation failed");
+            throw new GotoException(1404,"Goto Booking Confirmation Failed.. Reason: Payment method activation failed");
         }
     }
 
     private String getPaymentTypeId() throws GotoException{
         if(StringUtils.isBlank(goToConfiguration.getPaymentTypeId()))
-            throw new GotoException(1103,"Goto Booking Payment Confirmation Failed, Reason: No Payment Method found in Goto Configuration");
+            throw new GotoException(1403,"Goto Booking Payment Confirmation Failed.." +
+                    " Reason: No Payment Method found in Goto Configuration");
         return goToConfiguration.paymentTypeId;
     }
 
@@ -437,7 +438,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         } catch (Exception e){
             logPrintException(e);
             log.error("Date parsing failed.. Date in string-> "+dateStr);
-            throw new GotoException(1005, "Goto Booking Failed, Reason: Invalid checkin/ checkout date format");
+            throw new GotoException(1305, "Goto Booking Failed.. Reason: Invalid checkin/ checkout date format");
         }
     }
 
@@ -456,7 +457,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
         if (bookingEngine.getBookingItemType(gotoBookingRoom.getRoomCode())==null) {
             log.error("booking room type does not exist, BookingItemTypeId: "+gotoBookingRoom.getRoomCode());
-            throw new GotoException(1002, "Goto Booking Failed, Reason: Room type not found for roomCode-> "
+            throw new GotoException(1302, "Goto Booking Failed.. Reason: Room type not found for roomCode-> "
                     +gotoBookingRoom.getRoomCode());
         }
         PmsGuests guest = new PmsGuests();
@@ -508,7 +509,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
         if (pmsBooking.rooms.isEmpty()) {
             log.debug("Booking is not saved since there are no rooms to add");
-            throw new GotoException(1003, "Goto Booking Failed, Reason: Empty room list");
+            throw new GotoException(1303, "Goto Booking Failed.. Reason: Empty room list");
         }
         return pmsBooking;
     }
@@ -653,7 +654,8 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     private List<PriceAllotment> getPriceAllotments(Date from, Date to) throws Exception {
         List<PriceAllotment> allotments = new ArrayList<>();
         long numberOfDays = getDateDifference(from, to);
-        if(numberOfDays>30) new GotoException(1301, "Date Range is Larger than one month..");
+        if(numberOfDays>30) new GotoException(1201, "Failed to Fetch Price-Allotment.." +
+                "Reason: Date Range is Larger than one month..");
         for(int i = 0; i <= numberOfDays; i++) {
             StartBooking range = getBookingArgument(from, i);
             List<GoToRoomData> goToRoomData = getGoToRoomData(true, range);

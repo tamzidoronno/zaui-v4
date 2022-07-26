@@ -81,38 +81,40 @@ public class EasyByNetService {
 
     public void checkAndUpdatePaymentStatus(List<Order> orders) {
         if(orders == null || orders.isEmpty()) return;
+        log.info("Pending payment order size {}", orders.size());
         orders.stream()
                 .filter(this::isOrderPendingForEasyByNet)
                 .forEach(o -> {
                     Double val = paidValue(o.payment.transactionPaymentId);
-                    orderManager.markAsPaidWithTransactionType(o.id, new Date(), val, Order.OrderTransactionType.SCHEDULER, "", "Automatically by Easy by net scheduler");
+                    log.info("Pending payment order no: {}, paid value {}", o.incrementOrderId, val);
+                    if(val == null) return;
+                    orderManager.markAsPaidWithTransactionType(o.id, new Date(), val, Order.OrderTransactionType.SCHEDULER, "", "Automatically marking as paid by Easy by net scheduler");
                 });
     }
     private Double paidValue(String paymentId) {
         RetrievePayment pay =  retrievePayment(paymentId);
-        double val = 0;
         if(pay == null || pay.getPayment() == null) {
             log.error("Payment not found with payment id {}", paymentId);
-            return val;
+            return null;
         }
         Summary summary = pay.getPayment().getSummary();
         if(summary == null) {
             log.error("Payment summary not found with payment id {}", paymentId);
-            return val;
+            return null;
         }
         if(summary.getRefundedAmount() > 0) {
             log.error("Payment has refunded {} with payment id {}", summary.getRefundedAmount(), paymentId);
-            return val;
+            return null;
         }
         if(summary.getCancelledAmount() > 0) {
             log.error("Payment has cancelled {} with payment id {}", summary.getCancelledAmount(), paymentId);
-            return val;
+            return null;
         }
         if(summary.getChargedAmount() > 0 && pay.getPayment().getCharges() != null && !pay.getPayment().getCharges().isEmpty()) {
             log.info("Payment has total {} no of charges with amount {} with payment id {}", pay.getPayment().getCharges().size(), summary.getChargedAmount(), paymentId);
             return summary.getChargedAmount();
         }
-        return val;
+        return null;
     }
 
     private boolean isOrderPendingForEasyByNet(Order o) {

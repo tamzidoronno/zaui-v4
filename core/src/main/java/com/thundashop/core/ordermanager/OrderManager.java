@@ -77,7 +77,7 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -358,7 +358,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 //        printOrdersThatHasWrongCreditNotes();
        
         createScheduler("ordercapturecheckprocessor", "2,7,12,17,22,27,32,37,42,47,52,57 * * * *", CheckOrdersNotCaptured.class);
-        createScheduler("checkorderpaymentstatus", "0 */1 * * *", PaymentStatusCheckScheduler.class);
+        createScheduler("checkorderpaymentstatus", "0 0 */1 * *", PaymentStatusCheckScheduler.class);
         if(storeId.equals("c444ff66-8df2-4cbb-8bbe-dc1587ea00b7")) {
             checkChargeAfterDate();
         }
@@ -2424,11 +2424,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public void checkPaymentStatusAndUpdatePayment() {
-        System.err.println("Here checkPaymentStatusAndUpdatePayment : ======== " + LocalTime.now());
+        logger.error("Scheduler for check pending-payment orders at " + LocalDateTime.now());
         List<Order> pendindPaymentOrders = getAllOrders().stream()
                 .filter(o -> o.markedPaidDate == null || o.warnedNotPaid)
                 .filter(o -> o.payment != null && o.payment.paymentInitiated && o.payment.paymentInitiatedDate != null && isToday(o.payment.paymentInitiatedDate.getTime()))
                 .collect(Collectors.toList());
+        logger.info("Pending payment order size" + pendindPaymentOrders.size());
         easyByNetService.checkAndUpdatePaymentStatus(pendindPaymentOrders);
     }
 

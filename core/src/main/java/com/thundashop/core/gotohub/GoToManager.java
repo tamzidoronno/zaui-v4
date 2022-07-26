@@ -63,7 +63,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             Hotel hotel = mapStoreToGoToHotel(storeManager.getMyStore(), pmsManager.getConfiguration());
             return new FinalResponse(true,
                     1500,
-                    "Successfully Returned Price and Allotment List",
+                    "Successfully Returned Hotel Information",
                     hotel);
         } catch (Exception e){
             logPrintException(e);
@@ -87,7 +87,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             }
             return new FinalResponse(true,
                     1500,
-                    "Successfully Returned Price and Allotment List",
+                    "Successfully Returned RoomType Information",
                     roomTypes);
         } catch (Exception e){
             logPrintException(e);

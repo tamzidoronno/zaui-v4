@@ -1,13 +1,9 @@
 package com.thundashop.core.gotohub;
 
-import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.gotohub.dto.*;
-import com.thundashop.core.gotohub.dto.GoToConfiguration;
-import com.thundashop.core.gotohub.dto.Hotel;
-import com.thundashop.core.gotohub.dto.PriceAllotment;
-import com.thundashop.core.gotohub.dto.RoomType;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -15,25 +11,28 @@ import java.util.List;
 public interface IGoToManager {
     /**
      * Get hotel information
+     *
      * @return
      */
-    public Hotel getHotelInformation();
+    public FinalResponse getHotelInformation();
 
     /**
      * Get all {@link com.thundashop.core.gotohub.dto.RatePlan} of all types of room using virtual room methodology!
      * TODO need parameter for Date range on future
+     *
      * @return {@link List} of {@link RoomType}
      * @throws Exception
      */
-    public List<RoomType> getRoomTypeDetails() throws Exception;
+    public FinalResponse getRoomTypeDetails() throws Exception;
 
     /**
      * Inventory allotment within date of the hotel
      * TODO need parameter for Date range on future
+     *
      * @return {@link List} of {@link PriceAllotment}
      * @throws Exception
      */
-    public List<PriceAllotment> getPriceAndAllotment() throws Exception;
+    public FinalResponse getPriceAndAllotment(Date from, Date to) throws Exception;
 
     public FinalResponse saveBooking(Booking booking);
     public FinalResponse confirmBooking(String reservationId);

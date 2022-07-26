@@ -30,6 +30,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.*;
@@ -56,31 +57,61 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     public GoToConfiguration goToConfiguration = new GoToConfiguration();
 
     @Override
-    public Hotel getHotelInformation() {
-        saveSchedulerAsCurrentUser();
-        return mapStoreToGoToHotel(storeManager.getMyStore(), pmsManager.getConfiguration());
-    }
-
-    @Override
-    public List<RoomType> getRoomTypeDetails() throws Exception {
-        saveSchedulerAsCurrentUser();
-        StartBooking arg = getBookingArgument(0);
-        List<GoToRoomData> goToRoomData = getGoToRoomData(false, arg);
-        List<RoomType> roomTypes = new ArrayList<>();
-        for(GoToRoomData roomData: goToRoomData){
-            if(isBlank(roomData.getGoToRoomTypeCode())){
-                continue;
-            }
-            RoomType roomType = getRoomTypesFromRoomData(roomData);
-            roomTypes.add(roomType);
+    public FinalResponse getHotelInformation() {
+        try{
+            saveSchedulerAsCurrentUser();
+            Hotel hotel = mapStoreToGoToHotel(storeManager.getMyStore(), pmsManager.getConfiguration());
+            return new FinalResponse(true,
+                    1500,
+                    "Successfully Returned Price and Allotment List",
+                    hotel);
+        } catch (Exception e){
+            logPrintException(e);
+            return new FinalResponse(false, 1409, "Unknown", null);
         }
-        return roomTypes;
     }
 
     @Override
-    public List<PriceAllotment> getPriceAndAllotment() throws Exception {
-        saveSchedulerAsCurrentUser();
-        return getPriceAllotments();
+    public FinalResponse getRoomTypeDetails() throws Exception {
+        try{
+            saveSchedulerAsCurrentUser();
+            StartBooking arg = getBookingArgument(new Date(), 0);
+            List<GoToRoomData> goToRoomData = getGoToRoomData(false, arg);
+            List<RoomType> roomTypes = new ArrayList<>();
+            for(GoToRoomData roomData: goToRoomData){
+                if(isBlank(roomData.getGoToRoomTypeCode())){
+                    continue;
+                }
+                RoomType roomType = getRoomTypesFromRoomData(roomData);
+                roomTypes.add(roomType);
+            }
+            return new FinalResponse(true,
+                    1500,
+                    "Successfully Returned Price and Allotment List",
+                    roomTypes);
+        } catch (Exception e){
+            logPrintException(e);
+            return new FinalResponse(false, 1509, "Unknown", null);
+        }
+
+    }
+
+    @Override
+    public FinalResponse getPriceAndAllotment(Date from, Date to) throws Exception {
+        try{
+            saveSchedulerAsCurrentUser();
+            List <PriceAllotment>priceAllotments = getPriceAllotments(from, to);
+            return new FinalResponse(true,
+                    1300,
+                    "Successfully Returned Price and Allotment List",
+                    priceAllotments);
+        } catch (GotoException e){
+            logPrintException(e);
+            return new FinalResponse(false, e.getStatusCode(), e.getMessage(), null);
+        } catch (Exception e){
+            logPrintException(e);
+            return new FinalResponse(false, 1309, "Unknown", null);
+        }
     }
 
     private PmsBooking getBooking(Booking booking) throws Exception {
@@ -590,10 +621,11 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         return room.price;
     }
 
-    private StartBooking getBookingArgument(int i) {
+    private StartBooking getBookingArgument(Date from,int i) {
         StartBooking arg = new StartBooking();
 
         Calendar cal = Calendar.getInstance();
+        cal.setTime(from);
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
@@ -618,10 +650,12 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         return arg;
     }
 
-    private List<PriceAllotment> getPriceAllotments() throws Exception {
+    private List<PriceAllotment> getPriceAllotments(Date from, Date to) throws Exception {
         List<PriceAllotment> allotments = new ArrayList<>();
-        for(int i = 0; i < 30; i++) {
-            StartBooking range = getBookingArgument(i);
+        long numberOfDays = getDateDifference(from, to);
+        if(numberOfDays>30) new GotoException(1301, "Date Range is Larger than one month..");
+        for(int i = 0; i <= numberOfDays; i++) {
+            StartBooking range = getBookingArgument(from, i);
             List<GoToRoomData> goToRoomData = getGoToRoomData(true, range);
             for (GoToRoomData roomData : goToRoomData) {
                 if (roomData.getPricesByGuests() == null) {
@@ -641,6 +675,14 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             }
         }
         return allotments;
+    }
+
+    private long getDateDifference(Date start, Date end){
+        long difference_In_Time
+                = start.getTime() - end.getTime();
+        return TimeUnit
+                .MILLISECONDS
+                .toDays(difference_In_Time);
     }
 
     private RoomType getRoomTypesFromRoomData(GoToRoomData roomData) {

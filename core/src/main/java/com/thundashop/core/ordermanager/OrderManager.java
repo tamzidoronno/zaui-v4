@@ -2424,7 +2424,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public void checkPaymentStatusAndUpdatePayment() {
-        logger.error("Scheduler for check pending-payment orders at " + LocalDateTime.now());
+        logger.info("Scheduler for check pending-payment orders at " + LocalDateTime.now());
         List<Order> pendindPaymentOrders = getAllOrders().stream()
                 .filter(o -> o.markedPaidDate == null || o.warnedNotPaid)
                 .filter(o -> o.payment != null && o.payment.paymentInitiated && o.payment.paymentInitiatedDate != null && isToday(o.payment.paymentInitiatedDate.getTime()))

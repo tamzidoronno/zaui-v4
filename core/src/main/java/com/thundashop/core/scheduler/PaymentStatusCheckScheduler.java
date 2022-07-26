@@ -17,7 +17,7 @@ public class PaymentStatusCheckScheduler extends GetShopSchedulerBase {
 
     @Override
     public void execute() throws Exception {
-        getApi().getOrderManager().checkForOrdersFailedCollecting();
+        getApi().getOrderManager().checkPaymentStatusAndUpdatePayment();
     }
 
 }

@@ -21,7 +21,7 @@ public class EasyByNetTest {
 
     @Test
     public void testGetNextIncrementalStoreId() {
-        easyByNetService.retrievePayment("","sss");
+        easyByNetService.retrievePayment("sss");
         //Assert.assertEquals(3, nextIncrementalStoreId);
     }
 }

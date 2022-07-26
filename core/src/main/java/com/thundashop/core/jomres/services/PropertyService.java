@@ -70,6 +70,8 @@ public class PropertyService extends BaseService{
                 jomresProperties.add((JomresProperty) result.get());
             } catch (ExecutionException | InterruptedException e) {
                 logger.error(Throwables.getStackTraceAsString(e));
+                logger.debug("Failed to get a property, check log files");
+                logger.debug(e.getMessage());
             }
         }
         return jomresProperties.stream()

@@ -77,6 +77,7 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -2423,6 +2424,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public void checkPaymentStatusAndUpdatePayment() {
+        System.err.println("Here checkPaymentStatusAndUpdatePayment : ======== " + LocalTime.now());
         List<Order> pendindPaymentOrders = getAllOrders().stream()
                 .filter(o -> o.markedPaidDate == null || o.warnedNotPaid)
                 .filter(o -> o.payment != null && o.payment.paymentInitiated && o.payment.paymentInitiatedDate != null && isToday(o.payment.paymentInitiatedDate.getTime()))

@@ -32,7 +32,9 @@ import com.thundashop.core.pmsmanager.*;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.*;
 import com.thundashop.core.usermanager.data.Address;
+
 import static org.apache.commons.lang3.StringUtils.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -390,7 +392,7 @@ public class PosManager extends ManagerBase implements IPosManager {
                     .stream()
                     .filter(o -> !o.isNullOrder())
                     .filter(o -> o.paymentDateNotInFuture())
-                    .filter(o-> o.hasCreatedOrPaymentDateAfter(prevZReportDate))
+                    .filter(o -> o.hasCreatedOrPaymentDateAfter(prevZReportDate))
                     .filter(o -> o.isOrderFinanciallyRelatedToDatesIgnoreCreationDate(new Date(0), new Date()))
                     .map(o -> o.id)
                     .collect(Collectors.toList());
@@ -429,12 +431,14 @@ public class PosManager extends ManagerBase implements IPosManager {
         });
     }
 
-    /** Since invoice payments are getting processed individually here only for the case when isConnectedtoCentral()
-     *  in the moment when we connect an old customer to central  not all the transactions from history should be processed because some of them
-     *  are a part of finished, closed, marked-as-paid orders.**/
+    /**
+     * Since invoice payments are getting processed individually here only for the case when isConnectedtoCentral()
+     * in the moment when we connect an old customer to central  not all the transactions from history should be processed because some of them
+     * are a part of finished, closed, marked-as-paid orders.
+     **/
     public List<String> getInvoicePayments(Date fromWhenToTakeIntoAccount) {
         return orderManager.getAllOrders().stream()
-                .filter(o ->  o.markedPaidDate == null || o.markedPaidDate.after(fromWhenToTakeIntoAccount))
+                .filter(o -> o.markedPaidDate == null || o.markedPaidDate.after(fromWhenToTakeIntoAccount))
                 .filter(o -> o.isInvoice() && o.hasNewOrderTransactions())
                 .map(o -> o.id)
                 .collect(Collectors.toList());
@@ -470,6 +474,7 @@ public class PosManager extends ManagerBase implements IPosManager {
 
         return start;
     }
+
     /**
      * Generates ZReport.
      * For some bookings like "PayAfterStay" it will create orders with accruedPayments
@@ -547,7 +552,7 @@ public class PosManager extends ManagerBase implements IPosManager {
         report.invoicesWithNewPayments.forEach(orderId -> {
             Order order = orderManager.getOrder(orderId);
             order.orderTransactions.forEach(t -> {
-                if (t.date.after(report.start) || t.rowCreatedDate.after(report.start)){
+                if (t.date.after(report.start) || t.rowCreatedDate.after(report.start)) {
                     t.addedToZreport = report.id;
                 }
             });
@@ -586,7 +591,7 @@ public class PosManager extends ManagerBase implements IPosManager {
                 .map(orderId -> orderManager.getOrder(orderId))
                 .mapToDouble(order -> orderManager.getTotalAmount(order))
                 .sum();
-        for (String invoiceId : report.invoicesWithNewPayments){
+        for (String invoiceId : report.invoicesWithNewPayments) {
             Order order = orderManager.getOrder(invoiceId);
             totalAmount += order.orderTransactions.stream().filter(t -> t.rowCreatedDate.after(report.start) && t.rowCreatedDate.before(report.end))
                     .mapToDouble(OrderTransaction::getAmount).sum();
@@ -833,7 +838,7 @@ public class PosManager extends ManagerBase implements IPosManager {
 
     @Override
     public boolean hasTables() {
-        return  tables != null && !tables.isEmpty();
+        return tables != null && !tables.isEmpty();
     }
 
     @Override
@@ -1030,7 +1035,7 @@ public class PosManager extends ManagerBase implements IPosManager {
 
     @Override
     public void deleteZReport(String zreportId, String password) {
-        System.out.println("Deleting a z-report here " + zreportId + " pass sent in was " + password );
+        System.out.println("Deleting a z-report here " + zreportId + " pass sent in was " + password);
         if (password != null && password.equals("as9d08f90213841nkajsdfi2u3h4kasjdf")) {
             System.out.println("password is correct.... find and delete the zreport");
             ZReport report = zReports.remove(zreportId);
@@ -1053,7 +1058,7 @@ public class PosManager extends ManagerBase implements IPosManager {
         invoicesWithNewPaymentsOrderIds.forEach(orderId -> {
             Order order = orderManager.getOrder(orderId);
             order.orderTransactions.forEach(t -> {
-                if (t.addedToZreport.equals(reportId)){
+                if (t.addedToZreport.equals(reportId)) {
                     t.addedToZreport = "";
                 }
             });
@@ -1233,7 +1238,7 @@ public class PosManager extends ManagerBase implements IPosManager {
         List<PmsBookingRooms> roomsNeedToCreateOrdersFor = getRoomsNeedToCreateOrdersFor();
         List<String> retList = new ArrayList<>();
 
-        if (roomsNeedToCreateOrdersFor!=null && !roomsNeedToCreateOrdersFor.isEmpty()) {
+        if (roomsNeedToCreateOrdersFor != null && !roomsNeedToCreateOrdersFor.isEmpty()) {
             checkIfAccrudePaymentIsActivated();
         }
 
@@ -1312,7 +1317,7 @@ public class PosManager extends ManagerBase implements IPosManager {
                 .map(o -> o.id)
                 .collect(Collectors.toList());
 
-        if (bookingsWithNoneSegments!= null && !bookingsWithNoneSegments.isEmpty()) {
+        if (bookingsWithNoneSegments != null && !bookingsWithNoneSegments.isEmpty()) {
             canClose.canClose = false;
             canClose.bookingsWithNoneSegments = bookingsWithNoneSegments;
         }
@@ -1570,11 +1575,11 @@ public class PosManager extends ManagerBase implements IPosManager {
         for (String pmsConferenceId : retMap.keySet()) {
             List<CartItem> cartItemsInDifference = retMap.get(pmsConferenceId);
             Order order = createOrder(cartItemsInDifference, accuredPayment, null, cashPointId);
-            PmsConference conference =  pmsConferenceManager.getConference(pmsConferenceId);
-            if(order == null || conference == null) continue;
+            PmsConference conference = pmsConferenceManager.getConference(pmsConferenceId);
+            if (order == null || conference == null) continue;
             order.cart.address = new Address();
             order.cart.address.fullName = isBlank(conference.meetingTitle) ? conference.forUserFullName : conference.meetingTitle;
-            if (isNotEmpty(conference.forUser)){
+            if (isNotEmpty(conference.forUser)) {
                 order.userId = conference.forUser;
             }
             order.autoCreatedOrderForConferenceId = pmsConferenceId;
@@ -1743,7 +1748,7 @@ public class PosManager extends ManagerBase implements IPosManager {
 
                         CartItem item = new CartItem();
                         Product pd = productManager.getProduct(productId);
-                        if(pd == null) continue;
+                        if (pd == null) continue;
                         item.setProduct(pd.clone());
                         item.setCount(countToCreateFor);
                         item.getProduct().price = toCreateOrderFor.doubleValue() / (double) countToCreateFor;
@@ -1857,7 +1862,7 @@ public class PosManager extends ManagerBase implements IPosManager {
 
     @Override
     public boolean hasLockedPeriods() {
-        return zReports!=null &&  !zReports.isEmpty();
+        return zReports != null && !zReports.isEmpty();
     }
 
     @Override
@@ -1984,7 +1989,7 @@ public class PosManager extends ManagerBase implements IPosManager {
          * When its connected to the getshop central we also do accrude payments for future booking to make a forcast.
          */
         boolean connectedToCentral = isConnectedToCentral();
-        Date fromWhenToTakeIntoAccount  = (connectedToCentral) ? isConnectedToCentralSince() : null;
+        Date fromWhenToTakeIntoAccount = (connectedToCentral) ? isConnectedToCentralSince() : null;
 
         PmsManager pmsManager = scope.getNamedSessionBean(getEngineName(), PmsManager.class);
 
@@ -2010,7 +2015,7 @@ public class PosManager extends ManagerBase implements IPosManager {
 
     public void updateAccruedAmountForRoomBookings(List<PmsBookingRooms> roomsToBeRecalculated, PmsManager pmsManager) {
 
-        for(PmsBookingRooms room : roomsToBeRecalculated) {
+        for (PmsBookingRooms room : roomsToBeRecalculated) {
             PmsBooking booking = pmsManager.getBookingFromRoom(room.pmsBookingRoomId);
             room.unsettledAmountIncAccrued = recalculateAccruedAmountForRoomBooking(pmsManager, booking.id, room.pmsBookingRoomId);
         }

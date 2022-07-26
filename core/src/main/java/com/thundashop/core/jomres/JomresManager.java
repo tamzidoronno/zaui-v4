@@ -2,6 +2,7 @@ package com.thundashop.core.jomres;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
+import com.mongodb.BasicDBObject;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.Booking;
@@ -9,6 +10,7 @@ import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.bookingengine.data.BookingTimeLineFlatten;
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.jomres.dto.*;
 import com.thundashop.core.jomres.services.*;
@@ -32,6 +34,7 @@ import java.util.stream.Collectors;
 @Component
 @GetShopSession
 public class JomresManager extends GetShopSessionBeanNamed implements IJomresManager {
+    @Autowired Database db;
     @Autowired PmsManager pmsManager;
     @Autowired BookingEngine bookingEngine;
     @Autowired PmsInvoiceManager pmsInvoiceManager;
@@ -43,6 +46,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
     private static final Logger logger = LoggerFactory.getLogger(JomresManager.class);
 
+    BaseService jomresService = new BaseService();
     JomresConfiguration jomresConfiguration = new JomresConfiguration();
 
     Map<String, JomresRoomData> pmsItemToJomresRoomDataMap = new HashMap<>();
@@ -50,7 +54,6 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     Map<Long, JomresBookingData> jomresToPmsBookingMap = new HashMap<>();
     Map<String, JomresBookingData> pmsToJomresBookingMap = new HashMap<>();
     Map<Integer, JomresRoomData> jomresPropertyToRoomDataMap = new HashMap<>();
-    BaseService jomresService = new BaseService();
     String cmfClientAccessToken = null;
     Date cmfClientTokenGenerationTime = new Date();
 
@@ -105,8 +108,20 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         }
     }
 
+    private void deleteAllDbObjectWithSameClass(DataCommon sampleData){
+        if(sampleData!=null){
+            BasicDBObject queryObect = getQueryObjectWithClassName(sampleData);
+            String collectionPrefix = "col_";
+            db.getMongo()
+                    .getDB(sampleData.gs_manager)
+                    .getCollection( collectionPrefix + sampleData.storeId)
+                    .remove(queryObect);
+        }
+    }
+
     @Override
     public boolean changeConfiguration(JomresConfiguration newConfiguration){
+        deleteAllDbObjectWithSameClass(jomresConfiguration);
         jomresConfiguration.updateConfiguration(newConfiguration);
         saveObject(jomresConfiguration);
         invalidateToken();
@@ -143,36 +158,35 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         }
     }
 
-    void deleteJomresRoomData(JomresRoomData roomData){
-        jomresPropertyToRoomDataMap.remove(roomData.jomresPropertyId);
-        pmsItemToJomresRoomDataMap.remove(roomData.bookingItemId);
-        deleteObject(roomData);
-    }
-
     void saveNewRoomData(JomresRoomData roomData) throws Exception{
         jomresPropertyToRoomDataMap.put(roomData.jomresPropertyId, roomData);
         pmsItemToJomresRoomDataMap.put(roomData.bookingItemId, roomData);
         saveObject(roomData);
     }
 
+    private BasicDBObject getQueryObjectWithClassName(DataCommon sampleData){
+        BasicDBObject queryObject = new BasicDBObject();
+        queryObject.append("className", sampleData.className);
+        return queryObject;
+    }
+
     void handleExistingRoomDataWhileMapping(JomresRoomData roomData){
         JomresRoomData existingPropertyMapping =jomresPropertyToRoomDataMap.get(roomData.jomresPropertyId);
         if(existingPropertyMapping!=null) {
             logText("Jomres Property Uid  "+roomData.jomresPropertyId+ " is already mapped with roomId: "+roomData.bookingItemId);
-            deleteJomresRoomData(existingPropertyMapping);
             logText("Deleted existing room mapping for Property Id: "+roomData.jomresPropertyId);
         }
         JomresRoomData existingItemMapping =pmsItemToJomresRoomDataMap.get(roomData.bookingItemId);
         if(existingItemMapping!=null) {
             logText("Pms room id "+roomData.bookingItemId+ " is already mapped with Jomres property id "+roomData.jomresPropertyId);
-            deleteJomresRoomData(existingItemMapping);
             logText("Deleted existing room mapping for pms room id: "+roomData.bookingItemId);
         }
     }
 
     private void deleteExistingMapping(){
-        for(JomresRoomData roomData: jomresPropertyToRoomDataMap.values()){
-            deleteObject(roomData);
+        if(jomresPropertyToRoomDataMap!= null && !jomresPropertyToRoomDataMap.isEmpty()){
+            JomresRoomData firstRoomData = jomresPropertyToRoomDataMap.values().stream().findFirst().get();
+            deleteAllDbObjectWithSameClass(firstRoomData);
         }
         jomresPropertyToRoomDataMap = new HashMap<>();
         pmsItemToJomresRoomDataMap = new HashMap<>();

@@ -62,7 +62,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             saveSchedulerAsCurrentUser();
             Hotel hotel = mapStoreToGoToHotel(storeManager.getMyStore(), pmsManager.getConfiguration());
             return new FinalResponse(true,
-                    1500,
+                    1400,
                     "Successfully Returned Hotel Information",
                     hotel);
         } catch (Exception e){

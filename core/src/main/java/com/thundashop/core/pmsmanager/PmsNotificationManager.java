@@ -28,6 +28,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -413,7 +415,8 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
                 }
                 message = message.replace("{selfmanagelink}", pmsInvoiceManager.getPaymentLinkConfig().webAdress + "/?page=booking_self_management&id=" + booking.secretBookingId);
             } else {
-                String link = pmsInvoiceManager.getPaymentLinkConfig().webAdress + "/pr.php?id=" + booking.id;
+                String id = StringUtils.isNotBlank(booking.shortId) ? booking.shortId : booking.id;
+                String link = pmsInvoiceManager.getPaymentLinkConfig().webAdress + "/pr.php?id=" + id;
                 if (type.equals("email")) {
                     message = message.replace("{paymentlink}", "<a href='" + link + "'>" + link + "</a>");
                 } else {

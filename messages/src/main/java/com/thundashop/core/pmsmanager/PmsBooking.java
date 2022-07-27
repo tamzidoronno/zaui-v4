@@ -22,7 +22,8 @@ public class PmsBooking extends DataCommon {
  
     public List<PmsBookingRooms> rooms = new ArrayList(); 
     public List<String> notificationsSent = new ArrayList();
-    public HashMap<Long, PmsBookingComment> comments = new HashMap(); 
+    public HashMap<Long, PmsBookingComment> comments = new HashMap();
+    public String shortId = "";
     public String sessionId = null;
     public Date sessionStartDate = null;
     public Date sessionEndDate = null;

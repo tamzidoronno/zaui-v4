@@ -415,7 +415,14 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
                 }
                 message = message.replace("{selfmanagelink}", pmsInvoiceManager.getPaymentLinkConfig().webAdress + "/?page=booking_self_management&id=" + booking.secretBookingId);
             } else {
-                String id = StringUtils.isNotBlank(booking.shortId) ? booking.shortId : booking.id;
+                String id = "";
+                if(StringUtils.isNotBlank(booking.shortId)) {
+                    id = booking.shortId;
+                } else {
+                    id = pmsManager.getShortUniqueId(booking.id);
+                    booking.shortId = id;
+                    pmsManager.saveBooking(booking);
+                }
                 String link = pmsInvoiceManager.getPaymentLinkConfig().webAdress + "/pr.php?id=" + id;
                 if (type.equals("email")) {
                     message = message.replace("{paymentlink}", "<a href='" + link + "'>" + link + "</a>");

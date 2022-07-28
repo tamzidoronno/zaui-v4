@@ -61,7 +61,6 @@ import com.thundashop.core.utils.UtilManager;
 import com.thundashop.core.webmanager.WebManager;
 import com.thundashop.core.wubook.WubookManager;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -77,12 +76,10 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import static org.apache.commons.lang3.StringUtils.*;
 
 /**
  *
@@ -260,7 +257,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public List<DataCommon> retreiveData(Credentials credentials) {
         String dateAfterDataToRetrieve = env.getProperty("data.filter."  + storeId);
-        if(StringUtils.isBlank(dateAfterDataToRetrieve)) return super.retreiveData(credentials, null);
+        if(isBlank(dateAfterDataToRetrieve)) return super.retreiveData(credentials, null);
         Date dt = null;
         try {
             dt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateAfterDataToRetrieve);
@@ -288,14 +285,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         for (DataCommon dataCommon : data.data) {
             if (dataCommon instanceof PmsBooking) {
-                
                 PmsBooking booking = (PmsBooking) dataCommon;
-//                if(booking.orderIds.contains("7efc86d1-4147-4c78-8cc1-c0d57c33fdc8")) {
-//                    includeAlways = booking;
-//                }
                 if(booking.nonrefundable) { booking.setAllRoomsNonRefundable(); }
                 bookings.put(booking.id, booking);
-                if(StringUtils.isNotBlank(booking.shortId)) bookingIdsFromShortId.put(booking.shortId, booking.id);
+                if(isNotBlank(booking.shortId)) bookingIdsFromShortId.put(booking.shortId, booking.id);
+                if(!booking.rooms.isEmpty()) {
+                    booking.rooms.stream().filter(r -> isNotBlank(r.shortId))
+                                            .forEach(r -> bookingIdsFromShortId.put(r.shortId, r.pmsBookingRoomId));
+                }
             }
             if (dataCommon instanceof ConferenceData) {
                 ConferenceData conferenceRoomData = (ConferenceData) dataCommon;
@@ -749,11 +746,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     public String getRoomBookingIdFromShortId(String shortId) {
-        String bookingId = bookingIdsFromShortId.get(shortId);
-        if (bookingId != null) {
-            return bookingId;
-        }
-        return shortId;
+        return bookingIdsFromShortId.getOrDefault(shortId, shortId);
     }
 
     @Override
@@ -4331,7 +4324,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         doNotification("booking_sendpaymentlink", bookingId);
     }
 
-    private String getShortUniqueId(String bookingId) {
+    public String getShortUniqueId(String bookingId) {
         String shortId = RandomStringUtils.randomAlphanumeric(12);
         while(bookingIdsFromShortId.get(shortId) != null) {
             shortId = RandomStringUtils.randomAlphanumeric(12);
@@ -4350,18 +4343,31 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         pmsNotificationManager.setPrefixToSendTo(prefix);
         pmsNotificationManager.setPhoneToSendTo(phone);
         pmsNotificationManager.setMessageToSend(message);
-        String shortId = getShortUniqueId(bookingId);
-        pmsNotificationManager.setPaymentRequestId(shortId);
 
+        String shortId = "";
         PmsBooking booking = getBooking(bookingId);
+        boolean isIdForBooking = booking != null;
         if(booking == null) {
+            //the id is for PmsBookingRoom
             booking = getBookingFromRoom(bookingId);
+            if(booking != null) {
+                PmsBookingRooms room = booking.getRoom(bookingId);
+                if(room != null) {
+                    shortId = isNotBlank(room.shortId) ? room.shortId : getShortUniqueId(bookingId);
+                    room.shortId = shortId;
+                }
+            }
         }
-        booking.shortId = shortId;
-        booking.recieptEmail.put(bookingId, email);
-        saveBooking(booking);
-        
-        
+        if(booking != null) {
+            if (isIdForBooking) {
+                shortId = isNotBlank(booking.shortId) ? booking.shortId : getShortUniqueId(bookingId);
+                booking.shortId = shortId;
+            }
+            booking.recieptEmail.put(bookingId, email);
+            saveBooking(booking);
+        }
+
+        pmsNotificationManager.setPaymentRequestId(shortId);
         if(pmsNotificationManager.isActive()) {
             pmsNotificationManager.doNotification("booking_sendpaymentlink", bookingId);
             return;
@@ -10317,7 +10323,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         
         rows.stream()
             .forEach(o -> {
-            if ( StringUtils.isEmpty(o.conferenceId) && StringUtils.isEmpty(o.roomId) ) {
+            if ( isEmpty(o.conferenceId) && isEmpty(o.roomId) ) {
                     return;
             }
             PmsBooking booking = getBookingFromRoomSecure(o.roomId);
@@ -10326,7 +10332,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     return;
             }
             if (booking != null ){
-                if(!StringUtils.isEmpty(booking.invoiceNote) && !StringUtils.isEmpty(booking.invoiceNote)) {
+                if(!isEmpty(booking.invoiceNote) && !isEmpty(booking.invoiceNote)) {
                     order.invoiceNote = booking.invoiceNote;
                     ordersToSave.put(order.id, order);
                 }

@@ -415,15 +415,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
                 }
                 message = message.replace("{selfmanagelink}", pmsInvoiceManager.getPaymentLinkConfig().webAdress + "/?page=booking_self_management&id=" + booking.secretBookingId);
             } else {
-                String id = "";
-                if(StringUtils.isNotBlank(booking.shortId)) {
-                    id = booking.shortId;
-                } else {
-                    id = pmsManager.getShortUniqueId(booking.id);
-                    booking.shortId = id;
-                    pmsManager.saveBooking(booking);
-                }
-                String link = pmsInvoiceManager.getPaymentLinkConfig().webAdress + "/pr.php?id=" + id;
+                String link = pmsInvoiceManager.getPaymentLinkConfig().webAdress + "/pr.php?id=" + getShortIdFromBooking(booking);
                 if (type.equals("email")) {
                     message = message.replace("{paymentlink}", "<a href='" + link + "'>" + link + "</a>");
                 } else {
@@ -433,6 +425,15 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         }        
         
         return message;    
+    }
+
+    private String getShortIdFromBooking(PmsBooking booking) {
+        if(StringUtils.isNotBlank(booking.shortId)) {
+            return booking.shortId;
+        }
+        booking.shortId = pmsManager.getShortUniqueId(booking.id);
+        pmsManager.saveBooking(booking);
+        return booking.shortId;
     }
 
     private String checkIfNeedOverride(String key, PmsBooking booking, PmsBookingRooms room, String messageForm) {

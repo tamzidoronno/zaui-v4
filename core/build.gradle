@@ -65,7 +65,3 @@ task infoSourceSets(){
     println(sourceSets.main.output.classesDirs)
     println(sourceSets.main.compileClasspath.asPath)
 }
-
-repositories {
-    mavenCentral()
-}

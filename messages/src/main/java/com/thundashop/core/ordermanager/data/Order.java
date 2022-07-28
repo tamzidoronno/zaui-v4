@@ -92,8 +92,6 @@ public class Order extends DataCommon implements Comparable<Order> {
     public Date paymentDate = null;
     public Date markedPaidDate = null;
     public String markedAsPaidByUserId = "";
-    public boolean paymentInitiated = false;
-    public Date paymentInitiatedDate;
     public Integer paymentTerms = 15;
     public String parentOrder = "";
     public boolean sentToCustomer = false;
@@ -1731,6 +1729,7 @@ public class Order extends DataCommon implements Comparable<Order> {
         public static Integer AGIO = 5;
         public static Integer ROUNDING = 6;
         public static Integer DISAGIO = 7;
+        public static Integer SCHEDULER = 8;
     }
     
     

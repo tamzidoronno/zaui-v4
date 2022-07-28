@@ -360,7 +360,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 //        printOrdersThatHasWrongCreditNotes();
        
         createScheduler("ordercapturecheckprocessor", "2,7,12,17,22,27,32,37,42,47,52,57 * * * *", CheckOrdersNotCaptured.class);
-        createScheduler("checkorderpaymentstatus", "0 0 */1 * *", PaymentStatusCheckScheduler.class);
+        createScheduler("checkorderpaymentstatus", "0 */30 * * *", PaymentStatusCheckScheduler.class);
         if(storeId.equals("c444ff66-8df2-4cbb-8bbe-dc1587ea00b7")) {
             checkChargeAfterDate();
         }

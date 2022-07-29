@@ -171,6 +171,9 @@ class CommunicationHelper {
             $result = array();
             $result['error'] = $object->errorCode . "," . $handler->getErrorMessage($object->errorCode);
             $result['error_text'] = $handler->getErrorMessage($object->errorCode);
+            if (isset($object->errorMessage)) {
+                $result['error_text'] = $object->errorMessage;
+            }
             $result['error_additional_info'] = $object->additionalInformation;
             $result['error_method'] = $event['method'];
             $result['interfaceName'] = $event['interfaceName'];

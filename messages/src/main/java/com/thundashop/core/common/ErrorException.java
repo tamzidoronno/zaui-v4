@@ -10,7 +10,7 @@ package com.thundashop.core.common;
 public class ErrorException extends RuntimeException {
     public String additionalInformation;
     public int code;
-    public String errorMessage = "Helllo";
+    public String errorMessage;
 
     public ErrorException(int code) {
         this.code = code;

@@ -28,6 +28,9 @@ public class Payment implements Serializable {
     public String paymentId = "";
     //This is used to navigate the user to a differente payment id (specially used for otaPayments).
     public String goToPaymentId = "";
+    public String transactionPaymentId = "";
+    public boolean paymentInitiated = false;
+    public Date paymentInitiatedDate;
     
     public String readablePaymentType() {
         if(paymentType.contains("\\")) {

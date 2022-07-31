@@ -29,6 +29,7 @@ public class PmsBookingRooms implements Serializable {
         return room.getNumberOfNights();
     }
 
+    public String shortId = "";
     public String bookingItemTypeId = "";
     public String bookingItemId = "";
     public String preferredBookingItemId = "";

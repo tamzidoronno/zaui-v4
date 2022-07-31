@@ -2,7 +2,9 @@ package com.thundashop.core.pmsmanager;
 
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 import java.lang.reflect.Method;
@@ -23,6 +25,19 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.tuple.Pair;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.env.Environment;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.stereotype.Component;
 
 import com.braintreegateway.org.apache.commons.codec.binary.Base64;
 import com.getshop.scope.GetShopSession;
@@ -100,19 +115,6 @@ import com.thundashop.core.utils.UtilManager;
 import com.thundashop.core.webmanager.WebManager;
 import com.thundashop.core.wubook.WubookManager;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
-import org.joda.time.DateTime;
-import org.joda.time.Days;
-import org.joda.time.LocalDate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.env.Environment;
-import org.springframework.core.task.TaskExecutor;
-import org.springframework.stereotype.Component;
-
 import biweekly.Biweekly;
 import biweekly.ICalendar;
 import biweekly.component.VEvent;
@@ -130,7 +132,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private static final Logger logger = LoggerFactory.getLogger(PmsManager.class);
 
     private NullSafeConcurrentHashMap<String, PmsBooking> bookings = new NullSafeConcurrentHashMap<>();
+
     private HashMap<String, String> bookingIdMap = new HashMap<>();
+
+    private HashMap<String, String> bookingIdsFromShortId = new HashMap<>();
     private HashMap<String, Product> fetchedProducts = new HashMap<>();
     private HashMap<String, PmsAddonDeliveryLogEntry> deliveredAddons = new HashMap<>();
     private HashMap<String, PmsCareTaker> careTaker = new HashMap<>();
@@ -290,7 +295,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public List<DataCommon> retreiveData(Credentials credentials) {
         String dateAfterDataToRetrieve = env.getProperty("data.filter."  + storeId);
-        if(StringUtils.isBlank(dateAfterDataToRetrieve)) return super.retreiveData(credentials, null);
+        if(isBlank(dateAfterDataToRetrieve)) return super.retreiveData(credentials, null);
         Date dt = null;
         try {
             dt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateAfterDataToRetrieve);
@@ -318,12 +323,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         for (DataCommon dataCommon : data.data) {
             if (dataCommon instanceof PmsBooking) {
-                
                 PmsBooking booking = (PmsBooking) dataCommon;
 
                 // TODO: nonrefundable seems always false.
                 if(booking.nonrefundable) { booking.setAllRoomsNonRefundable(); }
                 bookings.put(booking.id, booking);
+                if(isNotBlank(booking.shortId)) bookingIdsFromShortId.put(booking.shortId, booking.id);
+                if(!booking.rooms.isEmpty()) {
+                    booking.rooms.stream().filter(r -> isNotBlank(r.shortId))
+                                            .forEach(r -> bookingIdsFromShortId.put(r.shortId, r.pmsBookingRoomId));
+                }
             }
             if (dataCommon instanceof ConferenceData) {
                 ConferenceData conferenceRoomData = (ConferenceData) dataCommon;
@@ -752,6 +761,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return null;
         }
         return finalize(booking);
+    }
+
+    public String getRoomBookingIdFromShortId(String shortId) {
+        return bookingIdsFromShortId.getOrDefault(shortId, shortId);
     }
 
     @Override
@@ -4245,6 +4258,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         doNotification("booking_sendpaymentlink", bookingId);
     }
 
+    public String getShortUniqueId(String bookingId) {
+        String shortId = RandomStringUtils.randomAlphanumeric(12);
+        while(bookingIdsFromShortId.get(shortId) != null) {
+            shortId = RandomStringUtils.randomAlphanumeric(12);
+        }
+        bookingIdsFromShortId.put(shortId, bookingId);
+        return shortId;
+    }
+
     @Override
     public void sendPaymentRequest(String bookingId, String email, String prefix, String phone, String message) {
         if(!message.contains("{paymentlink}")) {
@@ -4255,16 +4277,31 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         pmsNotificationManager.setPrefixToSendTo(prefix);
         pmsNotificationManager.setPhoneToSendTo(phone);
         pmsNotificationManager.setMessageToSend(message);
-        pmsNotificationManager.setPaymentRequestId(bookingId);
 
+        String shortId = "";
         PmsBooking booking = getBooking(bookingId);
+        boolean isIdForBooking = booking != null;
         if(booking == null) {
+            //the id is for PmsBookingRoom
             booking = getBookingFromRoom(bookingId);
+            if(booking != null) {
+                PmsBookingRooms room = booking.getRoom(bookingId);
+                if(room != null) {
+                    shortId = isNotBlank(room.shortId) ? room.shortId : getShortUniqueId(bookingId);
+                    room.shortId = shortId;
+                }
+            }
         }
-        booking.recieptEmail.put(bookingId, email);
-        saveBooking(booking);
-        
-        
+        if(booking != null) {
+            if (isIdForBooking) {
+                shortId = isNotBlank(booking.shortId) ? booking.shortId : getShortUniqueId(bookingId);
+                booking.shortId = shortId;
+            }
+            booking.recieptEmail.put(bookingId, email);
+            saveBooking(booking);
+        }
+
+        pmsNotificationManager.setPaymentRequestId(shortId);
         if(pmsNotificationManager.isActive()) {
             pmsNotificationManager.doNotification("booking_sendpaymentlink", bookingId);
             return;

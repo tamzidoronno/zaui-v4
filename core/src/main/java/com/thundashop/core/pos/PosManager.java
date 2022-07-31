@@ -33,6 +33,8 @@ import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.*;
 import com.thundashop.core.usermanager.data.Address;
 import static org.apache.commons.lang3.StringUtils.*;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -51,6 +53,7 @@ import java.util.stream.Collectors;
  */
 @GetShopSession
 @Component
+@Slf4j
 public class PosManager extends ManagerBase implements IPosManager {
     public HashMap<String, PosTab> tabs = new HashMap<>();
     public HashMap<String, ZReport> zReports = new HashMap<>();
@@ -1030,18 +1033,16 @@ public class PosManager extends ManagerBase implements IPosManager {
 
     @Override
     public void deleteZReport(String zreportId, String password) {
-        System.out.println("Deleting a z-report here " + zreportId + " pass sent in was " + password );
-        if (password != null && password.equals("as9d08f90213841nkajsdfi2u3h4kasjdf")) {
-            System.out.println("password is correct.... find and delete the zreport");
-            ZReport report = zReports.remove(zreportId);
-            removeZReportParametersFromCorrelatedOrders(report.orderIds);
-            removeZReportParametersFromRegisteredPaymentsOnInvoices(report.invoicesWithNewPayments, report.id);
+        log.info("Deleting a z-report here: {} and  pass sent in was: {}", zreportId, password );
+        if(password == null || !password.equals("as9d08f90213841nkajsdfi2u3h4kasjdf")) return;
+        log.info("password is correct.... find and delete the zreport for {}", zreportId);
+        ZReport report = zReports.remove(zreportId);
+        removeZReportParametersFromCorrelatedOrders(report.orderIds);
+        removeZReportParametersFromRegisteredPaymentsOnInvoices(report.invoicesWithNewPayments, report.id);
 
-            if (report != null) {
-                System.out.println("found the report here... deleting it");
-                deleteObject(report);
-            }
-        }
+        log.info("found the report here... deleting it: {}", zreportId);
+        deleteObject(report);
+        log.info("Deleted the report: {}", zreportId);
     }
 
 
@@ -1052,11 +1053,8 @@ public class PosManager extends ManagerBase implements IPosManager {
     private void removeZReportParametersFromRegisteredPaymentsOnInvoices(List<String> invoicesWithNewPaymentsOrderIds, String reportId) {
         invoicesWithNewPaymentsOrderIds.forEach(orderId -> {
             Order order = orderManager.getOrder(orderId);
-            order.orderTransactions.forEach(t -> {
-                if (t.addedToZreport.equals(reportId)){
-                    t.addedToZreport = "";
-                }
-            });
+            if(order == null) return;
+            order.orderTransactions.stream().filter(t -> t.addedToZreport.equals(reportId)).forEach(t -> {t.addedToZreport = "";});
             orderManager.saveOrder(order);
         });
     }

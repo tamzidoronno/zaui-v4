@@ -1,22 +1,29 @@
 
 package com.thundashop.core.pmsmanager;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
+
+import org.mongodb.morphia.annotations.Transient;
+
 import com.google.gson.Gson;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.bookingengine.data.RegistrationRules;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
-import org.mongodb.morphia.annotations.Transient;
-
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 public class PmsBooking extends DataCommon {
  
     public List<PmsBookingRooms> rooms = new ArrayList<>();
     public List<String> notificationsSent = new ArrayList<>();
-    public HashMap<Long, PmsBookingComment> comments = new HashMap<>();
+    public HashMap<Long, PmsBookingComment> comments = new HashMap<>();   
+    public String shortId = "";
     public String sessionId = null;
     public Date sessionStartDate = null;
     public Date sessionEndDate = null;

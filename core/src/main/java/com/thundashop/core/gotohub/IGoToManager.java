@@ -32,7 +32,8 @@ public interface IGoToManager {
      * @return {@link List} of {@link PriceAllotment}
      * @throws Exception
      */
-    public FinalResponse getPriceAndAllotment(Date from, Date to) throws Exception;
+    public FinalResponse getPriceAndAllotmentWithDate(Date from, Date to) throws Exception;
+    public FinalResponse getPriceAndAllotment() throws Exception;
 
     public FinalResponse saveBooking(Booking booking);
     public FinalResponse confirmBooking(String reservationId);

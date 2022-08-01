@@ -97,10 +97,21 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     @Override
-    public FinalResponse getPriceAndAllotment(Date from, Date to) throws Exception {
+    public FinalResponse getPriceAndAllotment() throws Exception {
+        Date from = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(from);
+        cal.add(Calendar.DATE, 30);
+        Date to = cal.getTime();
+        return getPriceAndAllotmentWithDate(from, to);
+    }
+
+    @Override
+    public FinalResponse getPriceAndAllotmentWithDate(Date from, Date to) throws Exception {
         try{
             saveSchedulerAsCurrentUser();
             List <PriceAllotment>priceAllotments = getPriceAllotments(from, to);
+            checkDateRangeValidity(from, to);
             return new FinalResponse(true,
                     1200,
                     "Successfully Returned Price and Allotment List",
@@ -111,6 +122,12 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         } catch (Exception e){
             logPrintException(e);
             return new FinalResponse(false, 1209, "Failed to Fetch Price-Allotment.. Reason: Unknown", null);
+        }
+    }
+
+    private void checkDateRangeValidity(Date from, Date to) throws Exception{
+        if(from.after(to)){
+            throw new GotoException(1202, "Failes to Fetch Price-Allotment.. Reason: Date range is not valid.");
         }
     }
 

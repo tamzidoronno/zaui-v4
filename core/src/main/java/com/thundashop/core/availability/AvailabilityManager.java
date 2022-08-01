@@ -222,16 +222,19 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
 
                 List<BookingItem> allocatedRooms = bookingEngine.getBookingItemsByType(type.id);
                 if(allocatedRooms.isEmpty()) continue;
-                room.availableRooms = pmsManager.getNumberOfAvailable(type.id, dt.getTime(), dt.getTime(), true, true);
-                if(room.availableRooms > 0) {
-                    for(BookingItem item : allocatedRooms) {
-                        PmsAdditionalItemInformation additional = pmsManager.getAdditionalInfo(item.id);
-                        if(Boolean.FALSE.equals(additional.isClean())) {
-                            room.availableRooms = room.availableRooms -1;
-                        }
-                        if(room.availableRooms == 0) break;
-                    }
-                }
+                Calendar startDate = Calendar.getInstance();
+                startDate.setTime(dt.getTime());
+                startDate.set(Calendar.SECOND,0);
+
+                Calendar endDate = Calendar.getInstance();
+                endDate.setTime(dt.getTime());
+                endDate.add(Calendar.DAY_OF_YEAR, 1);
+                endDate.set(Calendar.SECOND,0);
+
+                room.availableRooms = pmsManager.getNumberOfAvailable(type.id,
+                        config.getDefaultStart(startDate.getTime()),
+                        config.getDefaultEnd(endDate.getTime()),
+                        true, true);
                 room.id = type.id;
                 try {
                     /*PmsAdditionalTypeInformation typeInfo = pmsManager.getAdditionalTypeInformationById(type.id);

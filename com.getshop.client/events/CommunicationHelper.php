@@ -170,10 +170,7 @@ class CommunicationHelper {
             $handler = new LanguageHandler();
             $result = array();
             $result['error'] = $object->errorCode . "," . $handler->getErrorMessage($object->errorCode);
-            $result['error_text'] = $handler->getErrorMessage($object->errorCode);
-            if (isset($object->errorMessage)) {
-                $result['error_text'] = $object->errorMessage;
-            }
+            $result['error_text'] = $this->getErrorMessage($object, $handler);
             $result['error_additional_info'] = $object->additionalInformation;
             $result['error_method'] = $event['method'];
             $result['interfaceName'] = $event['interfaceName'];
@@ -192,7 +189,12 @@ class CommunicationHelper {
         }
     }
 
-   
+    private function getErrorMessage($object, $handler) {
+        if (isset($object->errorMessage)) {
+            return $object->errorMessage;
+        }
+        return $handler->getErrorMessage($object->errorCode);
+    }
 }
 
 ?>

@@ -54,6 +54,6 @@ if [ $STOREID = "NONE" ]; then
 fi;
 
 
-mongoimport --port=27018 --db UserManager --collection "col_${STOREID}" --file pms_user.json
+mongoimport --port=27018 --db UserManager --collection "col_${STOREID}" --file pms_user_data.json
 
 echo -e " Done!"

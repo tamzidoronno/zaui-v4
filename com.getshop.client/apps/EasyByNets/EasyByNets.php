@@ -242,6 +242,11 @@ class EasyByNets extends \PaymentApplication implements \Application {
             $result = json_decode($result);
             $address = $result->hostedPaymentPageUrl;
             if($result->hostedPaymentPageUrl) {
+                $paymentId = $result->paymentId;
+                $order->payment->transactionPaymentId = $paymentId;
+                $order->payment->paymentInitiated = true;
+                $order->payment->paymentInitiatedDate = $this->convertToJavaDate(time());
+                $this->getApi()->getOrderManager()->saveOrder($order);
                 echo "<div style='text-align:center; font-size: 30px;'>";
                 echo "<i class='fa fa-spin fa-spinner'></i>";
                 echo "</div>";

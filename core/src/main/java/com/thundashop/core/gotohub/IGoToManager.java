@@ -13,7 +13,6 @@ import java.util.List;
 
 @GetShopApi
 public interface IGoToManager {
-
     /**
      * Get hotel information
      * @return
@@ -54,5 +53,4 @@ public interface IGoToManager {
      */
     //@Administrator
     public boolean saveConfiguration(GoToConfiguration configuration);
-
 }

@@ -178,7 +178,5 @@ if(stristr($booking->channel, "wubook_")) {
     });
     
     $('.roomtypeanditem').on('change', function() { app.PmsBookingGroupRoomView.validateStayPeriode(); });
-    $('.starttime').on('keyup', function() { app.PmsBookingGroupRoomView.validateStayPeriode(); });
-    $('.endtime').on('keyup', function() { app.PmsBookingGroupRoomView.validateStayPeriode(); });
     getshop_loadDatePicker($('.PmsBookingGroupRoomView .splitstaydate'), { dependant : $('.enddate'), jump : 1 });    
 </script>

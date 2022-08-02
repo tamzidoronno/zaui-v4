@@ -1,4 +1,7 @@
 <?php
+
+use ns_9a6ea395_8dc9_4f27_99c5_87ccc6b5793d\EcommerceOrderList;
+
 chdir("../../");
 include '../loader.php';
 $factory = IocContainer::getFactorySingelton();
@@ -25,6 +28,7 @@ $invoiceingoverduelist = new ns_b7fb195b_8cea_4d7b_922e_dee665940de2\InvoicingOv
 $amount = $invoiceingoverduelist->getTotalAmountForOrder($order);
 $paidAmount = $invoiceingoverduelist->getTotalPaidAmount($order);
 $user = $factory->getApi()->getUserManager()->getUserById($order->userId);
+$orderList = new \ns_9a6ea395_8dc9_4f27_99c5_87ccc6b5793d\EcommerceOrderList();
 
 //tax details calculation
 $productData = [];
@@ -41,7 +45,7 @@ foreach($order->cart->items as $item){
         'accountingNumber' => $item->product->activeAccountingInformation->accountingNumber
     ];
     $totalTaxAmount += $taxAmount;
-    $totalAmountExTax += $amountExTax;    
+    $totalAmountExTax += $amountExTax;
 }
 
 
@@ -67,6 +71,8 @@ $result->kid = $order->kid;
 $result->language = $order->language;
 $result->email = $user->emailAddress;
 $result->invoiceNumber = $user->incrementOrderId;
+$result->paymentMethod = $orderList->formatPaymentType($order);
+$result->paymentDate = date("d.m.Y", strtotime($order->paymentDate));
 if(isset($user->company->vatNumber)) {
     $result->vatNumber = $user->company->vatNumber;
 } else {

@@ -18,4 +18,5 @@ public class Availability {
     private long totalNoOfRooms;
     private boolean allCategoryAvailable;
     private Map<String, Integer> totalNoOfRoomsByCategory;
+    private boolean closed;
 }

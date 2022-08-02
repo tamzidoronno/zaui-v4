@@ -1,36 +1,88 @@
 package com.thundashop.core.availability;
 
+import biweekly.Biweekly;
+import biweekly.ICalendar;
+import biweekly.component.VEvent;
+import biweekly.property.Summary;
+import biweekly.util.Duration;
+import com.braintreegateway.org.apache.commons.codec.binary.Base64;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.mongodb.BasicDBObject;
+import com.thundashop.core.applications.StoreApplicationPool;
+import com.thundashop.core.appmanager.data.Application;
+import com.thundashop.core.appmanager.data.AvailableApplications;
+import com.thundashop.core.arx.AccessLog;
+import com.thundashop.core.arx.DoorManager;
 import com.thundashop.core.availability.dto.Availability;
 import com.thundashop.core.availability.dto.AvailabilityRequest;
 import com.thundashop.core.availability.dto.AvailabilityResponse;
 import com.thundashop.core.bookingengine.BookingEngine;
-import com.thundashop.core.bookingengine.data.BookingItem;
-import com.thundashop.core.bookingengine.data.BookingItemType;
+import com.thundashop.core.bookingengine.data.*;
 import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.AddonsInclude;
+import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.Coupon;
-import com.thundashop.core.pmsbookingprocess.BookingProcessRooms;
-import com.thundashop.core.pmsbookingprocess.PmsBookingProcess;
-import com.thundashop.core.pmsbookingprocess.PmsBookingProcessorCalculator;
-import com.thundashop.core.pmsbookingprocess.StartBookingResult;
+import com.thundashop.core.checklist.ChecklistManager;
+import com.thundashop.core.common.*;
+import com.thundashop.core.databasemanager.Database;
+import com.thundashop.core.databasemanager.data.Credentials;
+import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.getshop.GetShop;
+import com.thundashop.core.getshoplock.GetShopDeviceLog;
+import com.thundashop.core.getshoplock.GetShopLockManager;
+import com.thundashop.core.getshoplocksystem.*;
+import com.thundashop.core.gsd.DevicePrintRoomCode;
+import com.thundashop.core.gsd.GdsManager;
+import com.thundashop.core.messagemanager.MessageManager;
+import com.thundashop.core.messagemanager.SmsHandlerAbstract;
+import com.thundashop.core.ordermanager.OrderManager;
+import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.ordermanager.data.OrderShipmentLogEntry;
+import com.thundashop.core.pdf.InvoiceManager;
+import com.thundashop.core.pmsbookingprocess.*;
+import com.thundashop.core.pmseventmanager.PmsEvent;
+import com.thundashop.core.pmseventmanager.PmsEventManager;
 import com.thundashop.core.pmsmanager.*;
+import com.thundashop.core.pos.PosManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.productmanager.data.TaxGroup;
 import com.thundashop.core.storemanager.StoreManager;
+import com.thundashop.core.storemanager.data.StoreConfiguration;
+import com.thundashop.core.stripe.StripeManager;
+import com.thundashop.core.ticket.Ticket;
+import com.thundashop.core.ticket.TicketManager;
 import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.Address;
+import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
-import lombok.AllArgsConstructor;
+import com.thundashop.core.usermanager.data.UserCard;
+import com.thundashop.core.utils.BrRegEngine;
+import com.thundashop.core.utils.Constants;
+import com.thundashop.core.utils.NullSafeConcurrentHashMap;
+import com.thundashop.core.utils.UtilManager;
+import com.thundashop.core.webmanager.WebManager;
+import com.thundashop.core.wubook.WubookManager;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.env.Environment;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -43,9 +95,6 @@ import static org.apache.commons.lang3.StringUtils.*;
  * @since 6/21/22
  */
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
 @Component
 @GetShopSession
 public class AvailabilityManager extends GetShopSessionBeanNamed implements IAvailabilityManager {
@@ -135,16 +184,25 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
         pmsInvoiceManager.startCacheCoverage();
         result.startYesterday = isMidleOfNight() && PmsBookingRooms.isSameDayStatic(arg.getStart(), new Date());
 
+        PmsConfiguration config = pmsManager.getConfiguration();
         List<Availability> avs = new ArrayList<>();
         Calendar dt = Calendar.getInstance();
         dt.setTime(arg.getStart());
-        for(int i = 0; i <= result.numberOfDays; i++) {
+        for(int i = 0; i <= result.numberOfDays + 1; i++) {
             Availability av = new Availability();
             Calendar dtToShow = Calendar.getInstance();
             dtToShow.setTime(dt.getTime());
             dtToShow.add(Calendar.DAY_OF_YEAR, -1);
             av.setDate(DATE_FORMATTER.format(dtToShow.getTime()));
             av.setCurrencyCode("NOK");
+            if(isClosed(config.closedOfPeriode, dt.getTime())) {
+                av.setTotalNoOfRooms(0L);
+                av.setTotalNoOfRoomsByCategory(new HashMap<>());
+                av.setClosed(true);
+                dt.add(Calendar.DATE, 1);
+                avs.add(av);
+                continue;
+            }
 
             int totalAvailableOfDay = 0;
             double lowestPriceOfDay = 0;
@@ -164,7 +222,19 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
 
                 List<BookingItem> allocatedRooms = bookingEngine.getBookingItemsByType(type.id);
                 if(allocatedRooms.isEmpty()) continue;
-                room.availableRooms = pmsManager.getNumberOfAvailable(type.id, dt.getTime(), dt.getTime(), true, true);
+                Calendar startDate = Calendar.getInstance();
+                startDate.setTime(dt.getTime());
+                startDate.set(Calendar.SECOND,0);
+
+                Calendar endDate = Calendar.getInstance();
+                endDate.setTime(dt.getTime());
+                endDate.add(Calendar.DAY_OF_YEAR, 1);
+                endDate.set(Calendar.SECOND,0);
+
+                room.availableRooms = pmsManager.getNumberOfAvailable(type.id,
+                        config.getDefaultStart(startDate.getTime()),
+                        config.getDefaultEnd(endDate.getTime()),
+                        true, true);
                 room.id = type.id;
                 try {
                     /*PmsAdditionalTypeInformation typeInfo = pmsManager.getAdditionalTypeInformationById(type.id);
@@ -197,7 +267,23 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
             avs.add(av);
         }
 
+        checkIfCouponIsValid(result, arg);
+        checkForRestrictions(result, arg);
+
         return new AvailabilityResponse(arg.getStart(), arg.getEnd(), arg.getRooms(), arg.getAdults(), arg.getChildren(), arg.getDiscountCode(), avs);
+    }
+    
+    private boolean isClosed(List<TimeRepeaterData> closedPeriods, Date date) {
+        if(closedPeriods.isEmpty()) return false;
+        LocalDate dateToCheck = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        for(TimeRepeaterData period : closedPeriods) {
+            Date start = period.firstEvent.start;
+            Date end = period.firstEvent.end;
+            if(!(date.before(start) || date.after(end))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean denyPayLaterButton(BookingProcessRooms r, AvailabilityRequest arg, StartBookingResult result) {

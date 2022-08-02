@@ -88,6 +88,9 @@ public interface IOrderManager {
     public void checkPaymentStatusAndUpdatePayment();
     
     @Administrator
+    public void checkPaymentStatusAndUpdatePayment();
+
+    @Administrator
     public void deleteOrderTransaction(String transactionId);
     
     @Administrator

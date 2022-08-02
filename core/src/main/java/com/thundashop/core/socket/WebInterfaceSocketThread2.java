@@ -33,7 +33,7 @@ public class WebInterfaceSocketThread2 implements Runnable {
             Object result = storePool.ExecuteMethod(message, addr);
             sendMessage(result);
         } catch (ErrorException d) {
-            log.error("Error while executing, message `{}`, addr `{}`", message, addr, d);
+            log.error("Error while executing, message `{}`, addr `{}` error `{}`", message, addr, d);
 
             Gson gson = new GsonBuilder()
                     .serializeNulls()

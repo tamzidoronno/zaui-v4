@@ -243,6 +243,8 @@ class EasyByNets extends \PaymentApplication implements \Application {
             $address = $result->hostedPaymentPageUrl;
             if($result->hostedPaymentPageUrl) {
                 $paymentId = $result->paymentId;
+
+                $order->payment->transactionLog->{time()*1000} = "Transferred to payment window with EasyByNet PaymentID: " . $paymentId;
                 $order->payment->transactionPaymentId = $paymentId;
                 $order->payment->paymentInitiated = true;
                 $order->payment->paymentInitiatedDate = $this->convertToJavaDate(time());

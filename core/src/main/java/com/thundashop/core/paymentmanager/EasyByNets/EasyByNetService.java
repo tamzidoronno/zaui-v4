@@ -1,11 +1,8 @@
 package com.thundashop.core.paymentmanager.EasyByNets;
 
-import com.thundashop.core.applications.GetShopApplicationPool;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
-import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FrameworkConfig;
-import com.thundashop.core.messagemanager.NewsLetterManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.Payment;
@@ -15,20 +12,14 @@ import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import javax.annotation.PostConstruct;
-import java.time.LocalTime;
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Naim Murad (naim)

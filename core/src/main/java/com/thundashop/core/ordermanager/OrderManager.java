@@ -77,7 +77,9 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -358,7 +360,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 //        printOrdersThatHasWrongCreditNotes();
        
         createScheduler("ordercapturecheckprocessor", "2,7,12,17,22,27,32,37,42,47,52,57 * * * *", CheckOrdersNotCaptured.class);
-        createScheduler("checkorderpaymentstatus", "0 0 */1 * *", PaymentStatusCheckScheduler.class);
+        createScheduler("checkorderpaymentstatus", "*/30 * * * *", PaymentStatusCheckScheduler.class);
         if(storeId.equals("c444ff66-8df2-4cbb-8bbe-dc1587ea00b7")) {
             checkChargeAfterDate();
         }
@@ -2427,18 +2429,17 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         logger.info("Scheduler for check pending-payment orders at " + LocalDateTime.now());
         List<Order> pendindPaymentOrders = getAllOrders().stream()
                 .filter(o -> o.markedPaidDate == null || o.warnedNotPaid)
-                .filter(o -> o.payment != null && o.payment.paymentInitiated && o.payment.paymentInitiatedDate != null && isToday(o.payment.paymentInitiatedDate.getTime()))
+                .filter(o -> o.payment != null && o.payment.paymentInitiated && o.payment.paymentInitiatedDate != null && isInitiatedByLastSevenDays(o.payment.paymentInitiatedDate))
                 .collect(Collectors.toList());
-        logger.info("Pending payment order size" + pendindPaymentOrders.size());
+        logger.info("Pending payment order size: " + pendindPaymentOrders.size());
         easyByNetService.checkAndUpdatePaymentStatus(pendindPaymentOrders);
     }
 
-    private static boolean isToday(long timestamp) {
-        Calendar now = Calendar.getInstance();
-        Calendar timeToCheck = Calendar.getInstance();
-        timeToCheck.setTimeInMillis(timestamp);
-        return (now.get(Calendar.YEAR) == timeToCheck.get(Calendar.YEAR)
-                && now.get(Calendar.DAY_OF_YEAR) == timeToCheck.get(Calendar.DAY_OF_YEAR));
+    private static boolean isInitiatedByLastSevenDays(Date initatedDate) {
+        LocalDate initiated = initatedDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate seven = LocalDate.now();
+        seven = seven.minusDays(8);
+        return initiated.isAfter(seven);
     }
 
     public List<Order> getOrdersToTransferToAccount(Date endDate) {

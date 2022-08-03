@@ -404,7 +404,6 @@ public class CartManager extends ManagerBase implements ICartManager {
     
     public boolean couponIsValid(Date registrationDate, String couponCode, Date startOfBooking, Date endOfBooking, String productId, int days) {
         if(nextCouponValid) {
-            logger.info("Checking if coupon code {} is valid - enforced that it is valid.", couponCode);
             return true;
         }
 

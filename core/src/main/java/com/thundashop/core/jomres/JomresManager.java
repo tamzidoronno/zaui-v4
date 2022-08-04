@@ -85,7 +85,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         }
 
         //TODO will change it to 5 minutes
-        createScheduler("jomresprocessor", "*/5 * * * *", JomresManagerProcessor.class);
+        createScheduler("jomresprocessor", "*/2 * * * *", JomresManagerProcessor.class);
     }
 
     public void logText(String string) {
@@ -296,7 +296,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         return response;
     }
 
-    private JomresBookingData addNewJomresBooking(JomresBooking booking, Map<String, Double> dailyPriceMatrix) throws Exception {
+    private void addNewJomresBooking(JomresBooking booking, Map<String, Double> dailyPriceMatrix) throws Exception {
         logger.debug("started fetch complete booking, BookingId: " + booking.bookingId);
         BookingService bookingService = new BookingService();
 
@@ -311,8 +311,8 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         logger.debug("Started adding Booking into pms BookingId: " + booking.bookingId);
         BookingItem pmsBookingItem = bookingEngine.getBookingItem(jomresPropertyToRoomDataMap.get(booking.propertyUid).bookingItemId);
         JomresBookingData jomresBookingData = addBookingToPms(booking, dailyPriceMatrix, null, pmsBookingItem.bookingItemTypeId);
+        saveJomresBookingData(jomresBookingData);
         logger.debug("ended adding Booking into pms BookingId: " + booking.bookingId);
-        return jomresBookingData;
     }
 
     public List<FetchBookingResponse> fetchBookings() throws Exception {
@@ -361,24 +361,23 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
                         if (jomresBooking.status.equals("Cancelled") || jomresBooking.statusCode == 6) {
                             response.setStatus("Cancelled");
-                            response.setPmsBookingId(pmsBooking == null ? pmsBooking.id : "");
+                            response.setPmsBookingId(pmsBooking == null ? "" : pmsBooking.id);
                             logger.debug("Started deleting Booking Id: " + jomresBooking.bookingId);
-                            deletePmsBooking(jomresBooking);
+                            deletePmsBooking(jomresBooking, pmsBooking);
                             logger.debug("ended deleting Booking Id: " + jomresBooking.bookingId);
                             allBookings.add(response);
                             continue;
                         }
                         if (pmsBooking == null) {
                             response.setStatus("Added");
-                            jomresBookingData = addNewJomresBooking(jomresBooking, dailyPriceMatrix);
+                            addNewJomresBooking(jomresBooking, dailyPriceMatrix);
                         } else if (pmsBooking.rooms.get(0).deleted) {
                             response.setStatus("Added");
-                            deleteJomresBookingData(jomresBookingData);
-                            deletePmsBooking(jomresBooking);
-                            jomresBookingData = addNewJomresBooking(jomresBooking, dailyPriceMatrix);
+                            deletePmsBooking(jomresBooking, pmsBooking);
+                            addNewJomresBooking(jomresBooking, dailyPriceMatrix);
                         } else {
                             response.setStatus("Modified/Synced");
-                            updatePmsBookingNew(jomresBooking, pmsBooking, dailyPriceMatrix);
+                            updatePmsBooking(jomresBooking, pmsBooking, dailyPriceMatrix);
                         }
                     } catch (Exception e) {
                         String errorMessage = "Failed to Sync/Add booking, BookingId: " + jomresBooking.bookingId + ", PropertyId: " + jomresBooking.propertyUid;
@@ -420,11 +419,19 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             return true;
         return !customer.email.equals(guestEmail);
     }
+
     private void deleteJomresBookingData(JomresBookingData bookingData) {
         pmsToJomresBookingMap.remove(bookingData.pmsBookingId);
         jomresToPmsBookingMap.remove(bookingData.jomresBookingId);
         deleteObject(bookingData);
     }
+
+    private void saveJomresBookingData(JomresBookingData bookingData) {
+        pmsToJomresBookingMap.put(bookingData.pmsBookingId, bookingData);
+        jomresToPmsBookingMap.put(bookingData.jomresBookingId, bookingData);
+        saveObject(bookingData);
+    }
+
     private PmsGuests mapJomresGuestToPmsGuest(JomresGuest jGuest, PmsGuests pGuest) {
         pGuest.email = jGuest.email;
         pGuest.name = jGuest.name;
@@ -447,34 +454,69 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         return pBooking;
     }
 
-    private boolean isJStayDateChanged(PmsBookingRooms pmsRoom, Date jArrival, Date jDeparture) {
+    private boolean isStayDateChanged(PmsBookingRooms pmsRoom, Date jArrival, Date jDeparture) {
         if (!DateUtils.isSameDay(pmsRoom.date.start, jArrival)) return true;
         return !DateUtils.isSameDay(pmsRoom.date.end, jDeparture);
     }
 
     private boolean isBookingRoomChanged(PmsBookingRooms pmsRoom, JomresBooking jBooking) {
         JomresRoomData roomData = jomresPropertyToRoomDataMap.get(jBooking.propertyUid);
-        return pmsRoom.bookingItemId != roomData.bookingItemId;
+        return !pmsRoom.bookingItemId.equals(roomData.bookingItemId);
     }
 
-    private void handleJomresBookingPriceChange(Map<String, Double> priceMatrix){
+    private void handleJomresBookingPriceChange(PmsBooking pmsBooking, Double totalPrice, Map<String, Double> priceMatrix) {
+        setBookingPrice(pmsBooking, totalPrice, priceMatrix);
         //TODO: Credit ORder
-        //TODO: Debit order
+        creditExistingOrders(pmsBooking.id, new ArrayList<>(pmsBooking.orderIds));
+//        //TODO: Debit order
+        createNewOrder(pmsBooking.id, pmsBooking.paymentType);
+//        pmsBooking = setBookingPrice(pmsBooking, totalPrice, priceMatrix);
+//        String userId = pmsBooking.userId;
+//        pmsManager.createOrderFromCheckout(new ArrayList<>(), pmsBooking.paymentType, userId);
     }
 
-    private void updatePmsBookingNew(JomresBooking jBooking, PmsBooking pBooking, Map<String, Double> priceMatrix) throws Exception {
+    private void createNewOrder(String pmsBookingId, String paymentType) {
+        String orderId = pmsInvoiceManager.autoCreateOrderForBookingAndRoom(pmsBookingId, paymentType);
+        pmsInvoiceManager.markOrderAsPaid(pmsBookingId, orderId);
+    }
+
+    private void creditExistingOrders(String pmsBookingId, List<String> orderIds) {
+        Set<String> ignoreOrderIds = new HashSet<>();
+//        Order latestOrder = null;
+        for (String orderId : orderIds) {
+            Order order = orderManager.getOrderSecure(orderId);
+            if(order == null) continue;
+            if(order.creditOrderId!= null && !order.creditOrderId.isEmpty()){
+                ignoreOrderIds.add(orderId);
+                ignoreOrderIds.addAll(order.creditOrderId);
+            }
+            if(ignoreOrderIds.contains(orderId)) continue;
+            pmsInvoiceManager.creditOrder(pmsBookingId, orderId);
+            pmsInvoiceManager.markOrderAsPaid(pmsBookingId, orderId);
+//            if(latestOrder == null) latestOrder = order;
+//            if(latestOrder.markedPaidDate == null) latestOrder = order;
+//            if(order.markedPaidDate != null && latestOrder.markedPaidDate.before(order.markedPaidDate))
+//                latestOrder = order;
+        }
+    }
+
+    private void updatePmsBooking(JomresBooking jBooking, PmsBooking pBooking, Map<String, Double> priceMatrix) throws Exception {
         try {
             if (isGuestInfoUpdated(jBooking.customer, pBooking)) {
                 pBooking = updateJomresGuestInfo(jBooking, pBooking);
             }
             PmsBookingRooms pmsRoom = pBooking.rooms.get(0);
-            if (isJStayDateChanged(pmsRoom, jBooking.arrivalDate, jBooking.departure)) {
-                pmsManager.changeDates(pmsRoom.pmsBookingRoomId, pBooking.id,
+            if (isStayDateChanged(pmsRoom, jBooking.arrivalDate, jBooking.departure)) {
+                pmsRoom = pmsManager.changeDates(pmsRoom.pmsBookingRoomId, pBooking.id,
                         setCorrectTime(jBooking.arrivalDate, true), setCorrectTime(jBooking.departure, false));
-                pmsManager.saveBooking(pBooking);
+                if (pmsRoom == null)
+                    throw new Exception("Failed to update Checkin/out date for booking id: " + jBooking.bookingId);
+//                pBooking.rooms.clear();
+//                pBooking.rooms.add(pmsRoom);
+//                pmsManager.saveBooking(pBooking);
                 //TODO: credit order
                 //TODO: debit order
-                handleJomresBookingPriceChange(priceMatrix);
+                handleJomresBookingPriceChange(pBooking, jBooking.totalPrice, priceMatrix);
             }
             if (isBookingRoomChanged(pmsRoom, jBooking)) {
                 pmsManager.setBookingItemAndDate(pmsRoom.pmsBookingRoomId, pmsRoom.bookingItemId, false,
@@ -482,7 +524,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 pmsManager.saveBooking(pBooking);
                 //TODO: Credit ORder
                 //TODO: Debit order
-                handleJomresBookingPriceChange(priceMatrix);
+                handleJomresBookingPriceChange(pBooking, jBooking.totalPrice, priceMatrix);
 
             }
         } catch (java.lang.Exception e) {
@@ -492,17 +534,16 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         }
     }
 
-    void deletePmsBooking(JomresBooking booking) throws java.lang.Exception {
-        PmsBooking newbooking = findCorrelatedBooking(jomresToPmsBookingMap.get(booking.bookingId));
+    void deletePmsBooking(JomresBooking booking, PmsBooking newbooking) throws java.lang.Exception {
         if (newbooking == null) {
-            logger.debug("Did not find booking to delete.");
-            logText("Didn't find to delete, BookingId: " + booking.bookingId + ", PropertyId: " + booking.propertyUid);
+
+            logger.debug("Didn't find to delete, BookingId: " + booking.bookingId + ", PropertyId: " + booking.propertyUid);
             return;
-        } else {
-            pmsManager.logEntry("Deleted by channel manager", newbooking.id, null);
-            pmsManager.deleteBooking(newbooking.id);
-            deleteJomresBookingData(jomresToPmsBookingMap.get(booking.bookingId));
         }
+        pmsManager.logEntry("Deleted by channel manager", newbooking.id, null);
+        pmsManager.deleteBooking(newbooking.id);
+
+        deleteJomresBookingData(jomresToPmsBookingMap.get(booking.bookingId));
         newbooking = pmsManager.getBooking(newbooking.id);
         List<String> orderIds = new ArrayList<>(newbooking.orderIds);
         for (String orderId : orderIds) {
@@ -516,8 +557,6 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             }
             pmsInvoiceManager.creditOrder(newbooking.id, orderId);
         }
-        return;
-
     }
 
     private Date setCorrectTime(Date arrivalDate, boolean start) {
@@ -575,7 +614,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         if (jomresBookingData != null && StringUtils.isNotBlank(jomresBookingData.pmsBookingId)) {
             return pmsManager.getBooking(jomresBookingData.pmsBookingId);
         }
-        if (jomresBookingData == null) deleteJomresBookingData(jomresBookingData);
+        if (jomresBookingData != null) deleteJomresBookingData(jomresBookingData);
 
         return null;
     }
@@ -680,7 +719,6 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             newbooking.registrationData.resultAdded.put("user_address_postCode", booking.customer.postcode);
             newbooking.jomresLastModified = booking.lastModified;
 
-            Calendar calStart = Calendar.getInstance();
             PmsBookingRooms room = new PmsBookingRooms();
 
             room.date = new PmsBookingDateRange();
@@ -723,62 +761,11 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             );
             newbooking = pmsManager.doCompleteBooking(newbooking);
 
-            boolean doNormalPricing = true;
             if (newbooking == null) {
                 throw new Exception("Jomres Booking Completion Failed");
             }
-
-            String orderId = null;
-
-            if ((pmsManager.getConfigurationSecure().usePricesFromChannelManager || storeManager.isPikStore()) && newbooking != null && doNormalPricing) {
-                Date end = new Date();
-                calStart.setTime(room.date.start);
-
-                if (room.date.end.after(end)) {
-                    end = room.date.end;
-                }
-                Date current = room.date.start;
-                calStart.setTime(current);
-                while (!current.after(room.date.end)) {
-                    String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(current);
-                    String offset = PmsBookingRooms.getOffsetKey(calStart, PmsBooking.PriceType.daily);
-                    room.priceMatrix.put(offset, priceMatrix.get(currentDate));
-                    calStart.add(Calendar.DATE, 1);
-                    current = calStart.getTime();
-                }
-                room.price = booking.totalPrice;
-                room.totalCost = booking.totalPrice;
-
-                pmsManager.saveBooking(newbooking);
-                NewOrderFilter filter = new NewOrderFilter();
-                filter.createNewOrder = false;
-                filter.prepayment = true;
-                filter.endInvoiceAt = end;
-                pmsInvoiceManager.clearOrdersOnBooking(newbooking);
-                if (!newbooking.hasOverBooking()) {
-                    if (newbooking.paymentType != null && !newbooking.paymentType.isEmpty()) {
-                        orderId = pmsInvoiceManager.autoCreateOrderForBookingAndRoom(newbooking.id, newbooking.paymentType);
-                    }
-                } else {
-                    newbooking.rowCreatedDate = new Date();
-                    PmsBookingRooms newBookingRoom = newbooking.rooms.get(0);
-                    if (newBookingRoom.isOverBooking()) {
-                        try {
-                            pmsManager.removeFromBooking(newbooking.id, newBookingRoom.pmsBookingRoomId);
-                        } catch (java.lang.Exception e) {
-                            //Okay, it failed, that's okay.
-                        }
-                    }
-                    String text = "An overbooking occured go to your booking admin panel handle it.<br><bR><br>booking dump:<br>"
-                            + pmsManager.dumpBooking(newbooking, true);
-                    text += "<br><br>";
-                    text += "For more information about overbooking, see: https://getshop.com/double_booking_error.html";
-                    String content = "Possible overbooking happened:<br>" + text;
-                    messageManager.sendJomresMessageToStoreOwner(content, "Warning: possible overbooking happened");
-                }
-            }
-            if (orderId == null)
-                orderId = pmsInvoiceManager.autoCreateOrderForBookingAndRoom(newbooking.id, newbooking.paymentType);
+            newbooking = setBookingPrice(newbooking, booking.totalPrice, priceMatrix);
+            String orderId = pmsInvoiceManager.autoCreateOrderForBookingAndRoom(newbooking.id, newbooking.paymentType);
             pmsInvoiceManager.markOrderAsPaid(newbooking.id, orderId);
 
             JomresBookingData jomresBookingData = new JomresBookingData();
@@ -797,5 +784,50 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             logPrintException(e);
             throw new Exception("Unexpected Error while adding new booking");
         }
+    }
+
+    private PmsBooking setBookingPrice(PmsBooking pmsBooking, Double totalPrice, Map<String, Double>priceMatrix){
+        Calendar calStart = Calendar.getInstance();
+        PmsBookingRooms room = pmsBooking.rooms.get(0);
+        if ((pmsManager.getConfigurationSecure().usePricesFromChannelManager || storeManager.isPikStore()) && pmsBooking != null) {
+            Date end = new Date();
+            calStart.setTime(room.date.start);
+
+            if (room.date.end.after(end)) {
+                end = room.date.end;
+            }
+            Date current = room.date.start;
+            calStart.setTime(current);
+            while (!current.after(room.date.end)) {
+                String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(current);
+                String offset = PmsBookingRooms.getOffsetKey(calStart, PmsBooking.PriceType.daily);
+                room.priceMatrix.put(offset, priceMatrix.get(currentDate));
+                calStart.add(Calendar.DATE, 1);
+                current = calStart.getTime();
+            }
+            room.price = totalPrice;
+            room.totalCost = totalPrice;
+
+            pmsManager.saveBooking(pmsBooking);
+            pmsInvoiceManager.clearOrdersOnBooking(pmsBooking);
+            if (pmsBooking.hasOverBooking()) {
+                pmsBooking.rowCreatedDate = new Date();
+                PmsBookingRooms newBookingRoom = pmsBooking.rooms.get(0);
+                if (newBookingRoom.isOverBooking()) {
+                    try {
+                        pmsManager.removeFromBooking(pmsBooking.id, newBookingRoom.pmsBookingRoomId);
+                    } catch (java.lang.Exception e) {
+                        //Okay, it failed, that's okay.
+                    }
+                }
+                String text = "An overbooking occured go to your booking admin panel handle it.<br><bR><br>booking dump:<br>"
+                        + pmsManager.dumpBooking(pmsBooking, true);
+                text += "<br><br>";
+                text += "For more information about overbooking, see: https://getshop.com/double_booking_error.html";
+                String content = "Possible overbooking happened:<br>" + text;
+                messageManager.sendJomresMessageToStoreOwner(content, "Warning: possible overbooking happened");
+            }
+        }
+        return pmsBooking;
     }
 }

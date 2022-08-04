@@ -47,14 +47,8 @@ public class JomresBooking implements Serializable {
         String surName = Optional.ofNullable(booking.get("surname").toString()).orElse("");
         this.customer.name = firstName + " " + surName;
 
-        String rawLandLine = Optional.ofNullable(booking.get("tel_landline").toString()).orElse("");
-        String landLine = rawLandLine.replaceAll("[^0-9]", "");
-
-        String rawMobile = Optional.ofNullable(booking.get("tel_mobile").toString()).orElse("");
-        String mobile = rawMobile.replaceAll("[^0-9]", "");
-
-        this.customer.telLandline = landLine;
-        this.customer.telMobile = mobile;
+        this.customer.telLandline = Optional.ofNullable(booking.get("tel_landline").toString()).orElse("");
+        this.customer.telMobile = Optional.ofNullable(booking.get("tel_mobile").toString()).orElse("");
         this.customer.email = Optional.ofNullable(booking.get("email").toString()).orElse("");
 
         this.status = Optional.ofNullable(booking.get("TxtStatus").toString()).orElse("Approved");
@@ -75,7 +69,7 @@ public class JomresBooking implements Serializable {
         this.depositAmount = (long) Double.parseDouble(Optional.ofNullable(booking.get("deposit_required").toString()).orElse("0.0"));
         this.propertyUid = (int) Double.parseDouble(booking.get("property_uid").toString());
         this.invoiceId = (long) Double.parseDouble(Optional.ofNullable(booking.get("invoice_uid").toString()).orElse("0"));
-        fixPrefix();
+        fixPhoneNumber();
     }
 
     public void setNumberOfGuests(int numberOfGuests) {
@@ -84,17 +78,25 @@ public class JomresBooking implements Serializable {
 
     public void setCustomer(JomresGuest customer) {
         this.customer = customer;
-        fixPrefix();
+        fixPhoneNumber();
     }
 
-    private void fixPrefix() {
+    private String extractValidPhoneNumber(String rawPhoneNumber) {
+        String validPhoneNumber = StringUtils.substringAfterLast(rawPhoneNumber, ";");
+        if (StringUtils.isBlank(validPhoneNumber)) validPhoneNumber = rawPhoneNumber;
+        return validPhoneNumber.replaceAll("[^0-9]", "");
+    }
+
+    private void fixPhoneNumber() {
         if (this.customer == null) return;
+        if (this.customer.telLandline != null)
+            this.customer.telLandline = extractValidPhoneNumber(this.customer.telLandline);
         if (this.customer.telMobile == null) return;
+        this.customer.telMobile = extractValidPhoneNumber(this.customer.telMobile);
         if (this.customer.telMobile.length() < 2) return;
         if (this.customer.telMobile.charAt(0) == '0' && this.customer.telMobile.charAt(1) != '0') {
             this.customer.mobilePrefix = "49";
             this.customer.telMobile = this.customer.telMobile.substring(1);
         }
-
     }
 }

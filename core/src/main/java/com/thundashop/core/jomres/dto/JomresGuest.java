@@ -22,13 +22,8 @@ public class JomresGuest implements Serializable {
         String surName = guest.get("enc_surname").toString();
         this.name = firstName + " " + surName;
 
-        String rawLandLine = Optional.ofNullable(guest.get("enc_tel_landline").toString()).orElse("");
-        String rawMobile = Optional.ofNullable(guest.get("enc_tel_mobile").toString()).orElse("");
-        String landLine = rawLandLine.replaceAll("[^0-9]", "");
-        String mobile = rawMobile.replaceAll("[^0-9]", "");
-
-        this.telLandline = landLine.isEmpty()? rawLandLine:landLine;
-        this.telMobile = mobile.isEmpty()? rawMobile:mobile;
+        this.telLandline = Optional.ofNullable(guest.get("enc_tel_landline").toString()).orElse("");
+        this.telMobile = Optional.ofNullable(guest.get("enc_tel_mobile").toString()).orElse("");
         this.email = guest.get("enc_email").toString();
 
         this.house = guest.get("enc_house").toString();

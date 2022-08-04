@@ -83,9 +83,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         if (jomresPropertyToRoomDataMap.isEmpty()) {
             logText("No Jomres room mapping found from database for this hotel, store id: " + this.storeId);
         }
-
-        //TODO will change it to 5 minutes
-        createScheduler("jomresprocessor", "*/2 * * * *", JomresManagerProcessor.class);
+        createScheduler("jomresprocessor", "*/5 * * * *", JomresManagerProcessor.class);
     }
 
     public void logText(String string) {
@@ -409,13 +407,15 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         return null;
     }
 
-    boolean isGuestInfoUpdated(JomresGuest customer, PmsBooking booking) {
+    boolean isGuestInfoChanged(JomresGuest customer, PmsBooking booking) {
         PmsBookingRooms room = Optional.ofNullable(booking.rooms.get(0)).orElse(new PmsBookingRooms());
         PmsGuests guest = Optional.ofNullable(room.guests.get(0)).orElse(new PmsGuests());
         String guestEmail = Optional.ofNullable(guest.email).orElse("");
         String guestPhone = Optional.ofNullable(guest.phone).orElse("");
 
         if (!customer.telMobile.contains(guestPhone))
+            return true;
+        if(customer.telMobile.equals(guestPhone) && !guest.prefix.equals(customer.mobilePrefix))
             return true;
         return !customer.email.equals(guestEmail);
     }
@@ -432,13 +432,6 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         saveObject(bookingData);
     }
 
-    private PmsGuests mapJomresGuestToPmsGuest(JomresGuest jGuest, PmsGuests pGuest) {
-        pGuest.email = jGuest.email;
-        pGuest.name = jGuest.name;
-        pGuest.phone = jGuest.telMobile;
-        return pGuest;
-    }
-
     private PmsBooking updateJomresGuestInfo(JomresBooking jBooking, PmsBooking pBooking) {
         pBooking.registrationData.resultAdded.put("user_fullName", jBooking.customer.name);
         pBooking.registrationData.resultAdded.put("user_cellPhone", jBooking.customer.telMobile);
@@ -448,7 +441,9 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         pBooking.registrationData.resultAdded.put("user_address_postCode", jBooking.customer.postcode);
         PmsBookingRooms pmsRoom = pBooking.rooms.get(0);
         List<PmsGuests> updatedGuestList = new ArrayList<>();
-        updatedGuestList.add(mapJomresGuestToPmsGuest(jBooking.customer, pmsRoom.guests.get(0)));
+        PmsGuests guest = pmsRoom.guests.get(0);
+        guest.prefix = StringUtils.isBlank(jBooking.customer.mobilePrefix) ? guest.prefix : jBooking.customer.mobilePrefix;
+        updatedGuestList.add(getPmsGuestFromJomresCustomer(guest, jBooking.customer));
         pmsManager.setGuestOnRoomWithoutModifyingAddons(updatedGuestList, pBooking.id, pmsRoom.pmsBookingRoomId);
         pmsManager.saveBooking(pBooking);
         return pBooking;
@@ -466,13 +461,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
     private void handleJomresBookingPriceChange(PmsBooking pmsBooking, Double totalPrice, Map<String, Double> priceMatrix) {
         setBookingPrice(pmsBooking, totalPrice, priceMatrix);
-        //TODO: Credit ORder
-        creditExistingOrders(pmsBooking.id, new ArrayList<>(pmsBooking.orderIds));
-//        //TODO: Debit order
         createNewOrder(pmsBooking.id, pmsBooking.paymentType);
-//        pmsBooking = setBookingPrice(pmsBooking, totalPrice, priceMatrix);
-//        String userId = pmsBooking.userId;
-//        pmsManager.createOrderFromCheckout(new ArrayList<>(), pmsBooking.paymentType, userId);
     }
 
     private void createNewOrder(String pmsBookingId, String paymentType) {
@@ -485,12 +474,12 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 //        Order latestOrder = null;
         for (String orderId : orderIds) {
             Order order = orderManager.getOrderSecure(orderId);
-            if(order == null) continue;
-            if(order.creditOrderId!= null && !order.creditOrderId.isEmpty()){
+            if (order == null) continue;
+            if (order.creditOrderId != null && !order.creditOrderId.isEmpty()) {
                 ignoreOrderIds.add(orderId);
                 ignoreOrderIds.addAll(order.creditOrderId);
             }
-            if(ignoreOrderIds.contains(orderId)) continue;
+            if (ignoreOrderIds.contains(orderId)) continue;
             pmsInvoiceManager.creditOrder(pmsBookingId, orderId);
             pmsInvoiceManager.markOrderAsPaid(pmsBookingId, orderId);
 //            if(latestOrder == null) latestOrder = order;
@@ -502,7 +491,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
     private void updatePmsBooking(JomresBooking jBooking, PmsBooking pBooking, Map<String, Double> priceMatrix) throws Exception {
         try {
-            if (isGuestInfoUpdated(jBooking.customer, pBooking)) {
+            if (isGuestInfoChanged(jBooking.customer, pBooking)) {
                 pBooking = updateJomresGuestInfo(jBooking, pBooking);
             }
             PmsBookingRooms pmsRoom = pBooking.rooms.get(0);
@@ -511,19 +500,12 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                         setCorrectTime(jBooking.arrivalDate, true), setCorrectTime(jBooking.departure, false));
                 if (pmsRoom == null)
                     throw new Exception("Failed to update Checkin/out date for booking id: " + jBooking.bookingId);
-//                pBooking.rooms.clear();
-//                pBooking.rooms.add(pmsRoom);
-//                pmsManager.saveBooking(pBooking);
-                //TODO: credit order
-                //TODO: debit order
                 handleJomresBookingPriceChange(pBooking, jBooking.totalPrice, priceMatrix);
             }
             if (isBookingRoomChanged(pmsRoom, jBooking)) {
                 pmsManager.setBookingItemAndDate(pmsRoom.pmsBookingRoomId, pmsRoom.bookingItemId, false,
                         setCorrectTime(jBooking.arrivalDate, true), setCorrectTime(jBooking.departure, false));
                 pmsManager.saveBooking(pBooking);
-                //TODO: Credit ORder
-                //TODO: Debit order
                 handleJomresBookingPriceChange(pBooking, jBooking.totalPrice, priceMatrix);
 
             }
@@ -727,11 +709,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             room.numberOfGuests = booking.numberOfGuests;
             room.bookingItemTypeId = pmsBookingItemTypeId;
 
-            PmsGuests guest = new PmsGuests();
-            guest.email = booking.customer.email;
-            guest.name = booking.customer.name;
-            guest.phone = booking.customer.telMobile;
-
+            PmsGuests guest = getPmsGuestFromJomresCustomer(new PmsGuests(), booking.customer);
             room.guests.add(guest);
 
             newbooking.rooms.clear();
@@ -786,7 +764,15 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         }
     }
 
-    private PmsBooking setBookingPrice(PmsBooking pmsBooking, Double totalPrice, Map<String, Double>priceMatrix){
+    private PmsGuests getPmsGuestFromJomresCustomer(PmsGuests guest, JomresGuest customer) {
+        guest.email = customer.email;
+        guest.name = customer.name;
+        guest.phone = customer.telMobile;
+        guest.prefix = StringUtils.isBlank(customer.mobilePrefix) ? "" : customer.mobilePrefix;
+        return guest;
+    }
+
+    private PmsBooking setBookingPrice(PmsBooking pmsBooking, Double totalPrice, Map<String, Double> priceMatrix) {
         Calendar calStart = Calendar.getInstance();
         PmsBookingRooms room = pmsBooking.rooms.get(0);
         if ((pmsManager.getConfigurationSecure().usePricesFromChannelManager || storeManager.isPikStore()) && pmsBooking != null) {

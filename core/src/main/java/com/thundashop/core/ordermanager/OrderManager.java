@@ -36,6 +36,7 @@ import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ocr.OcrFileLines;
 import com.thundashop.core.ocr.StoreOcrManager;
 import com.thundashop.core.ordermanager.data.*;
+import com.thundashop.core.paymentmanager.EasyByNets.EasyByNetService;
 import com.thundashop.core.paymentmanager.GeneralPaymentConfig;
 import com.thundashop.core.paymentmanager.PaymentManager;
 import com.thundashop.core.pdf.InvoiceManager;
@@ -52,6 +53,7 @@ import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.AccountingDetail;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.TaxGroup;
+import com.thundashop.core.scheduler.PaymentStatusCheckScheduler;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.stripe.StripeManager;
@@ -75,6 +77,9 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -110,7 +115,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     private boolean useCacheForOrderIsCredittedAndPaidFor = false;
 
     private static final Logger logger = LoggerFactory.getLogger(OrderManager.class);
-    
+
     @Autowired
     public MailFactory mailFactory;
     
@@ -164,10 +169,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     @Autowired
     private PrintManager printManager;
-    
+
     @Autowired
-    private GetShopApplicationPool getShopApplicationPool; 
-    
+    private GetShopApplicationPool getShopApplicationPool;
+
     @Autowired
     private GiftCardManager giftCardManager;
     
@@ -207,6 +212,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Autowired
     private Environment env;
+
+    @Autowired private EasyByNetService easyByNetService;
     
     private List<String> terminalMessages = new ArrayList();
     private Order orderToPay;
@@ -353,6 +360,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 //        printOrdersThatHasWrongCreditNotes();
        
         createScheduler("ordercapturecheckprocessor", "2,7,12,17,22,27,32,37,42,47,52,57 * * * *", CheckOrdersNotCaptured.class);
+        createScheduler("checkorderpaymentstatus", "*/30 * * * *", PaymentStatusCheckScheduler.class);
         if(storeId.equals("c444ff66-8df2-4cbb-8bbe-dc1587ea00b7")) {
             checkChargeAfterDate();
         }
@@ -2415,6 +2423,25 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
         }
     }
+
+    @Override
+    public void checkPaymentStatusAndUpdatePayment() {
+        logger.info("Scheduler for check pending-payment orders at " + LocalDateTime.now());
+        List<Order> pendindPaymentOrders = getAllOrders().stream()
+                .filter(o -> o.markedPaidDate == null || o.warnedNotPaid)
+                .filter(o -> o.payment != null && o.payment.paymentInitiated && o.payment.paymentInitiatedDate != null && isInitiatedByLastSevenDays(o.payment.paymentInitiatedDate))
+                .collect(Collectors.toList());
+        logger.info("Pending payment order size: " + pendindPaymentOrders.size());
+        easyByNetService.checkAndUpdatePaymentStatus(pendindPaymentOrders);
+    }
+
+    private static boolean isInitiatedByLastSevenDays(Date initatedDate) {
+        LocalDate initiated = initatedDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate seven = LocalDate.now();
+        seven = seven.minusDays(8);
+        return initiated.isAfter(seven);
+    }
+
     public List<Order> getOrdersToTransferToAccount(Date endDate) {
         updateTransferToAccountingDate();
         

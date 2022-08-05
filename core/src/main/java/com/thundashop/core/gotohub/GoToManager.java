@@ -671,8 +671,6 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     private List<PriceAllotment> getPriceAllotments(Date from, Date to) throws Exception {
         List<PriceAllotment> allotments = new ArrayList<>();
         long numberOfDays = getDateDifference(from, to);
-        if(numberOfDays>30) new GotoException(1201, "Failed to Fetch Price-Allotment.." +
-                "Reason: Date Range is Larger than one month..");
         for(int i = 0; i <= numberOfDays; i++) {
             StartBooking range = getBookingArgument(from, i);
             List<GoToRoomData> goToRoomData = getGoToRoomData(true, range);
@@ -696,12 +694,17 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         return allotments;
     }
 
-    private long getDateDifference(Date start, Date end){
+    private long getDateDifference(Date start, Date end) throws GotoException{
         long difference_In_Time
-                = start.getTime() - end.getTime();
-        return TimeUnit
+                = end.getTime() - start.getTime();
+        long numberOfDays = TimeUnit
                 .MILLISECONDS
                 .toDays(difference_In_Time);
+        if(numberOfDays>30) throw new GotoException(1201, "Failed to Fetch Price-Allotment.." +
+                "Reason: Date Range is Larger than one month..");
+        if(numberOfDays<0) throw new GotoException(1202, "Failed to Fetch Price-Allotment.." +
+                "Reason: Invalid Date range");
+        return numberOfDays;
     }
 
     private RoomType getRoomTypesFromRoomData(GoToRoomData roomData) {

@@ -80,6 +80,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         }
 
         createScheduler("jomresprocessor", "*/5 * * * *", JomresManagerProcessor.class);
+        createScheduler("jomresupdateavailability", "*/30 * * * *", JomresHalfHourlyScheduler.class);
     }
 
     public void logText(String string) {

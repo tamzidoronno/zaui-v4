@@ -16,9 +16,9 @@ public class FetchBookingResponse implements Serializable {
     @Expose
     String status;
     @Expose
-    String pmsRoomName = "Not Found";
+    String pmsRoomName;
     @Expose
-    String pmsRoomCategoryName = "Not Found";
+    String pmsRoomCategoryName;
     @Expose
     String guestName;
     @Expose

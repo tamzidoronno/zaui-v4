@@ -343,19 +343,23 @@ app.PmsAvailability = {
     
     onDragDrop: function(event) {
         event.preventDefault();
-        
+
+        var newStartDate = app.PmsAvailability.findDragStartDate();
+        if(newStartDate===undefined){
+            return;
+        }
         var outerTarget = event.target;
         if (!$(outerTarget).hasClass('col_outer')) {
             outerTarget = $(outerTarget).closest('.col_outer');
         }
-        
+
         var data = {
             bookingId : $(app.PmsAvailability.currentlyDraggingElement.target).closest('.col_data').attr('bookingid'),
             roomId : $(app.PmsAvailability.currentlyDraggingElement.target).closest('.col_data').attr('roomid'),
             bookingitemid : $($('.showdroppossible')[0]).attr('bookingitemid'),
-            newStartDate : app.PmsAvailability.findDragStartDate()
+            newStartDate : newStartDate
         }
-        
+
         var event = thundashop.Ajax.createEvent(null, "setNewStartDateAndRoomId", event.target, data);
         thundashop.Ajax.post(event);
     },

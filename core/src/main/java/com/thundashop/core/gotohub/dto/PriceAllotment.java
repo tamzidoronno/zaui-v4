@@ -5,8 +5,6 @@ import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 public class PriceAllotment implements Serializable {
@@ -19,6 +17,9 @@ public class PriceAllotment implements Serializable {
     @SerializedName("room_type_code")
     @Expose
     public String roomTypeCode;
+    @SerializedName("currency_code")
+    @Expose
+    private String currencyCode;
     @SerializedName("rate_plan_code")
     @Expose
     public String ratePlanCode;

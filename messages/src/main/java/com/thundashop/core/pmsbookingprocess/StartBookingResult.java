@@ -14,8 +14,8 @@ public class StartBookingResult {
     public boolean supportPayLaterButton = false;
     public boolean startYesterday = false;
     public List<String> supportedPaymentMethods = new ArrayList();
-    String prefilledContactUser = "";
-    String bookingId = "";
+    public String prefilledContactUser = "";
+    public String bookingId = "";
     public String errorMessage = "";
     public boolean hasAvailableRooms = false;
 
@@ -30,7 +30,7 @@ public class StartBookingResult {
         return res;
     }
 
-    boolean hasAvailableRooms() {
+    public boolean hasAvailableRooms() {
         for(BookingProcessRooms room : rooms) {
             if(room.availableRooms > 0) {
                 return true;

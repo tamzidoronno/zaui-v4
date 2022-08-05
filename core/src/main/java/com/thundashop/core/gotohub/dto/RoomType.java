@@ -10,9 +10,6 @@ import java.util.List;
 
 @Data
 public class RoomType implements Serializable {
-    @SerializedName("hotel_code")
-    @Expose
-    private String hotelCode;
     @SerializedName("room_type_code")
     @Expose
     private String roomTypeCode;

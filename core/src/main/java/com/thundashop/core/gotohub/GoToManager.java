@@ -706,7 +706,6 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
     private RoomType getRoomTypesFromRoomData(GoToRoomData roomData) {
         RoomType roomType = new RoomType();
-        roomType.setHotelCode(storeManager.getMyStore().webAddressPrimary);
         roomType.setRoomTypeCode(roomData.getGoToRoomTypeCode());
         roomType.setDescription(roomData.getDescription());
         roomType.setName(roomData.getName());
@@ -763,7 +762,6 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         if(isNotBlank(website)) contact.setWebsite(website);
 
         hotel.setContactDetails(contact);
-        hotel.setHotelCode(store.webAddressPrimary);
         hotel.setDescription("");
 
         String imageUrlPrefix = "https://" + store.webAddressPrimary + "//displayImage.php?id=";

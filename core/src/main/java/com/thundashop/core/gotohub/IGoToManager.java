@@ -14,7 +14,7 @@ public interface IGoToManager {
      *
      * @return
      */
-    public FinalResponse getHotelInformation();
+    public GoToApiResponse getHotelInformation();
 
     /**
      * Get all {@link com.thundashop.core.gotohub.dto.RatePlan} of all types of room using virtual room methodology!
@@ -23,7 +23,7 @@ public interface IGoToManager {
      * @return {@link List} of {@link RoomType}
      * @throws Exception
      */
-    public FinalResponse getRoomTypeDetails() throws Exception;
+    public GoToApiResponse getRoomTypeDetails() throws Exception;
 
     /**
      * Inventory allotment within date of the hotel
@@ -32,12 +32,12 @@ public interface IGoToManager {
      * @return {@link List} of {@link PriceAllotment}
      * @throws Exception
      */
-    public FinalResponse getPriceAndAllotmentWithDate(Date from, Date to) throws Exception;
-    public FinalResponse getPriceAndAllotment() throws Exception;
+    public GoToApiResponse getPriceAndAllotmentWithDate(Date from, Date to) throws Exception;
+    public GoToApiResponse getPriceAndAllotment() throws Exception;
 
-    public FinalResponse saveBooking(Booking booking);
-    public FinalResponse confirmBooking(String reservationId);
-    public FinalResponse cancelBooking(String reservationId);
+    public GoToApiResponse saveBooking(Booking booking);
+    public GoToApiResponse confirmBooking(String reservationId);
+    public GoToApiResponse cancelBooking(String reservationId);
 
     /**
      * Get GoTo related configurations

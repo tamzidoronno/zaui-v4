@@ -57,22 +57,22 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     public GoToConfiguration goToConfiguration = new GoToConfiguration();
 
     @Override
-    public FinalResponse getHotelInformation() {
+    public GoToApiResponse getHotelInformation() {
         try{
             saveSchedulerAsCurrentUser();
             Hotel hotel = mapStoreToGoToHotel(storeManager.getMyStore(), pmsManager.getConfiguration());
-            return new FinalResponse(true,
+            return new GoToApiResponse(true,
                     1000,
                     "Successfully Returned Hotel Information",
                     hotel);
         } catch (Exception e){
             logPrintException(e);
-            return new FinalResponse(false, 1009, "Failed to Fetch Hotel Information.. Reason: Unknown", null);
+            return new GoToApiResponse(false, 1009, "Failed to Fetch Hotel Information.. Reason: Unknown", null);
         }
     }
 
     @Override
-    public FinalResponse getRoomTypeDetails() throws Exception {
+    public GoToApiResponse getRoomTypeDetails() throws Exception {
         try{
             saveSchedulerAsCurrentUser();
             StartBooking arg = getBookingArgument(new Date(), 0);
@@ -85,19 +85,19 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                 RoomType roomType = getRoomTypesFromRoomData(roomData);
                 roomTypes.add(roomType);
             }
-            return new FinalResponse(true,
+            return new GoToApiResponse(true,
                     1100,
                     "Successfully Returned RoomType Information",
                     roomTypes);
         } catch (Exception e){
             logPrintException(e);
-            return new FinalResponse(false, 1109, "Failed to Fetch Room Type Information.. Reason: Unknown", null);
+            return new GoToApiResponse(false, 1109, "Failed to Fetch Room Type Information.. Reason: Unknown", null);
         }
 
     }
 
     @Override
-    public FinalResponse getPriceAndAllotment() throws Exception {
+    public GoToApiResponse getPriceAndAllotment() throws Exception {
         Date from = new Date();
         Calendar cal = Calendar.getInstance();
         cal.setTime(from);
@@ -107,25 +107,25 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     @Override
-    public FinalResponse getPriceAndAllotmentWithDate(Date from, Date to) throws Exception {
+    public GoToApiResponse getPriceAndAllotmentWithDate(Date from, Date to) throws Exception {
         try{
             saveSchedulerAsCurrentUser();
             List <PriceAllotment>priceAllotments = getPriceAllotments(from, to);
             checkDateRangeValidity(from, to);
-            return new FinalResponse(true,
+            return new GoToApiResponse(true,
                     1200,
                     "Successfully Returned Price and Allotment List",
                     priceAllotments);
         } catch (GotoException e){
             logPrintException(e);
-            return new FinalResponse(false, e.getStatusCode(), e.getMessage(), null);
+            return new GoToApiResponse(false, e.getStatusCode(), e.getMessage(), null);
         } catch (Exception e){
             logPrintException(e);
-            return new FinalResponse(false, 1209, "Failed to Fetch Price-Allotment.. Reason: Unknown", null);
+            return new GoToApiResponse(false, 1209, "Failed to Fetch Price-Allotment.. Reason: Unknown", null);
         }
     }
 
-    private void checkDateRangeValidity(Date from, Date to) throws Exception{
+    private void checkDateRangeValidity(Date from, Date to) throws GotoException{
         if(from.after(to)){
             throw new GotoException(1202, "Failes to Fetch Price-Allotment.. Reason: Date range is not valid.");
         }
@@ -170,7 +170,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     @Override
-    public FinalResponse saveBooking(Booking booking) {
+    public GoToApiResponse saveBooking(Booking booking) {
         try {
             saveSchedulerAsCurrentUser();
             handleDifferentCurrencyBooking(booking.getCurrency());
@@ -183,18 +183,18 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             handleOverbooking(pmsBooking);
 
             BookingResponse bookingResponse = getBookingResponse(pmsBooking.id, booking, pmsBooking.getTotalPrice());
-            return new FinalResponse(true,
+            return new GoToApiResponse(true,
                     1300,
                     "Successfully received the HoldBooking",
                     bookingResponse);
         } catch (GotoException e){
             handleNewBookingError(booking,e.getMessage(), e.getStatusCode());
-            return new FinalResponse(false, e.getStatusCode(), e.getMessage(), null);
+            return new GoToApiResponse(false, e.getStatusCode(), e.getMessage(), null);
         }
         catch (Exception e) {
             logPrintException(e);
             handleNewBookingError(booking,"Goto Booking Failed, Reason: Unknown", 1309);
-            return new FinalResponse(false, 1309, "Goto Booking Failed.. Reason: Unknown", null);
+            return new GoToApiResponse(false, 1309, "Goto Booking Failed.. Reason: Unknown", null);
         }
     }
 
@@ -206,7 +206,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     @Override
-    public FinalResponse confirmBooking(String reservationId){
+    public GoToApiResponse confirmBooking(String reservationId){
         try{
             saveSchedulerAsCurrentUser();
             PmsBooking pmsBooking = findCorrelatedBooking(reservationId);
@@ -216,14 +216,14 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             handleIfBookingDeleted(pmsBooking);
             pmsBooking = setPaymentMethod(pmsBooking);
             handlePaymentOrder(pmsBooking, getCheckoutDateFromPmsBookingRooms(pmsBooking.rooms));
-            return new FinalResponse(true, 1400, "Goto Booking has been Confirmed", null);
+            return new GoToApiResponse(true, 1400, "Goto Booking has been Confirmed", null);
         } catch (GotoException e){
             handleUpdateBookingError(reservationId, e.getMessage(), e.getStatusCode());
-            return new FinalResponse(false, e.getStatusCode(), e.getMessage(), null);
+            return new GoToApiResponse(false, e.getStatusCode(), e.getMessage(), null);
         } catch (Exception e){
             logPrintException(e);
             handleUpdateBookingError(reservationId, "Goto Booking Confirmation Failed, Reason: Unknown", 1409);
-            return new FinalResponse(false, 1409, "Goto Booking Confirmation Failed.. Reason: Unknown", null);
+            return new GoToApiResponse(false, 1409, "Goto Booking Confirmation Failed.. Reason: Unknown", null);
         }
     }
 
@@ -271,7 +271,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     @Override
-    public FinalResponse cancelBooking(String reservationId) {
+    public GoToApiResponse cancelBooking(String reservationId) {
         try{
             Date deletionRequestTime = new Date();
             saveSchedulerAsCurrentUser();
@@ -284,15 +284,15 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
             pmsManager.deleteBooking(pmsBooking.id);
             handleOrderForCancelledBooking(reservationId);
-            return new FinalResponse(true, 1500, "Goto Booking has been Cancelled", null);
+            return new GoToApiResponse(true, 1500, "Goto Booking has been Cancelled", null);
         } catch(GotoException e){
             handleUpdateBookingError(reservationId, e.getMessage(), e.getStatusCode());
-            return new FinalResponse(false, e.getStatusCode(), e.getMessage(), null);
+            return new GoToApiResponse(false, e.getStatusCode(), e.getMessage(), null);
 
         } catch (Exception e){
             logPrintException(e);
             handleUpdateBookingError(reservationId, "Goto Booking Confirmation Failed.. Reason: Unknown", 1509);
-            return new FinalResponse(false, 1509, "Goto Booking Cancellation Failed.. Reason: Unknown", null);
+            return new GoToApiResponse(false, 1509, "Goto Booking Cancellation Failed.. Reason: Unknown", null);
         }
     }
 

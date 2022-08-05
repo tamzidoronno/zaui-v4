@@ -10,16 +10,16 @@ public class JomresManagerProcessor extends GetShopSchedulerBase {
 
     @Override
     public void execute() throws Exception {
-        if(!getApi().getStoreManager().isProductMode()) {
-            return;
-        }
+//        if(!getApi().getStoreManager().isProductMode()) {
+//            return;
+//        }
 
         String storeId = getApi().getStoreManager().getStoreId();
 
         String multilevelname = getMultiLevelName();
         try {
             getApi().getJomresManager().fetchBookings(multilevelname);
-//            getApi().getJomresManager().updateAvailability(multilevelname);
+            getApi().getJomresManager().updateAvailability(multilevelname);
         }catch(Exception e) {
             GetShopLogHandler.logPrintStatic("Failed to handle jomres api call, " + e.getMessage() + " multilevelname: " + multilevelname, storeId);
             GetShopLogHandler.logStack(e, storeId);

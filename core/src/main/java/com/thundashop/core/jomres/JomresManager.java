@@ -132,7 +132,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     }
 
     @Override
-    public boolean updateAvailability() {
+    public boolean updateAvailability() throws Exception{
         if (!connectToApi()) return false;
         if (handleEmptyJomresCOnfiguration()) return false;
         logText("Started Jomres Update availability");
@@ -185,12 +185,13 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 deleteIfExtraBlankBookingExist(existingBookingIds, blankBookings, startDate, endDate);
                 logger.debug("Update availability ended");
                 logText("Update availability ended");
-            } catch (RuntimeException e) {
+            } catch (Exception e) {
                 logPrintException(e);
                 logText("Failed to update availability for JomresPropertyId: " + roomData.jomresPropertyId
                         + ", PmsRoomId: " + roomData.bookingItemId);
                 logger.debug("Failed to update availability for JomresPropertyId: " + roomData.jomresPropertyId
                         + ", PmsRoomId: " + roomData.bookingItemId);
+                checkIfUnauthorizedExceptionOccurred(e);
             }
         }
         return true;
@@ -218,7 +219,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         return booking.bookingDeleted;
     }
 
-    private void createBlankBooking(Booking booking, int propertyId) {
+    private void createBlankBooking(Booking booking, int propertyId) throws Exception{
         if (booking.bookingDeleted) return;
         AvailabilityService service = new AvailabilityService();
         logger.debug("Creating new blankBooking..");
@@ -235,7 +236,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         pmsBlankBookings.get(propertyId).add(newBlankBooking);
     }
 
-    private void deleteBlankBookingCompletely(PMSBlankBooking booking) {
+    private void deleteBlankBookingCompletely(PMSBlankBooking booking) throws Exception{
         logger.debug("Deleting blank Booking...");
         AvailabilityService service = new AvailabilityService();
         UpdateAvailabilityResponse res =
@@ -252,8 +253,8 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         return (StringUtils.isNotBlank(res.getMessage()) && res.getMessage().contains("does not exist"));
     }
 
-    private void deleteIfExtraBlankBookingExist(
-            Set<String> existingBookingIds, Map<String, PMSBlankBooking> blankBookingMap, Date start, Date end) {
+    private void deleteIfExtraBlankBookingExist (
+            Set<String> existingBookingIds, Map<String, PMSBlankBooking> blankBookingMap, Date start, Date end)  throws Exception{
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String startDate = formatter.format(start);
         String endDate = formatter.format(end);
@@ -401,7 +402,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 logText("Booking synchronization has been failed for property id: " + propertyUID);
                 logger.error("Booking synchronization has been failed for property id: " + propertyUID);
                 logPrintException(e);
-                invalidateToken();
+                checkIfUnauthorizedExceptionOccurred(e);
             }
         }
         return null;
@@ -467,26 +468,6 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     private void createNewOrder(String pmsBookingId, String paymentType) {
         String orderId = pmsInvoiceManager.autoCreateOrderForBookingAndRoom(pmsBookingId, paymentType);
         pmsInvoiceManager.markOrderAsPaid(pmsBookingId, orderId);
-    }
-
-    private void creditExistingOrders(String pmsBookingId, List<String> orderIds) {
-        Set<String> ignoreOrderIds = new HashSet<>();
-//        Order latestOrder = null;
-        for (String orderId : orderIds) {
-            Order order = orderManager.getOrderSecure(orderId);
-            if (order == null) continue;
-            if (order.creditOrderId != null && !order.creditOrderId.isEmpty()) {
-                ignoreOrderIds.add(orderId);
-                ignoreOrderIds.addAll(order.creditOrderId);
-            }
-            if (ignoreOrderIds.contains(orderId)) continue;
-            pmsInvoiceManager.creditOrder(pmsBookingId, orderId);
-            pmsInvoiceManager.markOrderAsPaid(pmsBookingId, orderId);
-//            if(latestOrder == null) latestOrder = order;
-//            if(latestOrder.markedPaidDate == null) latestOrder = order;
-//            if(order.markedPaidDate != null && latestOrder.markedPaidDate.before(order.markedPaidDate))
-//                latestOrder = order;
-        }
     }
 
     private void updatePmsBooking(JomresBooking jBooking, PmsBooking pBooking, Map<String, Double> priceMatrix) throws Exception {

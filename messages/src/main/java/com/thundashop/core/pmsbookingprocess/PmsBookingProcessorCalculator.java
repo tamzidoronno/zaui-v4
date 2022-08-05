@@ -7,5 +7,5 @@ public class PmsBookingProcessorCalculator {
     public Integer guests;
     public Double price;
     public Double guestPrice;
-    Integer maxRooms;
+    public Integer maxRooms;
 }

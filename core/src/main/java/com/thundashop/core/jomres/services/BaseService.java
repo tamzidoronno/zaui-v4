@@ -16,11 +16,15 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class BaseService {
-
     OAuthClient tokenClient =  null;
     OkHttpClient httpClient = null;
     private static final Logger logger = LoggerFactory.getLogger(BaseService.class);
@@ -30,7 +34,7 @@ public class BaseService {
 
     public String getAccessToken(String clientId, String clientSecret, String tokenURL) throws Exception {
         createOAuthClient();
-        String accessToken;
+        String accessToken = null;
         try {
             OAuthClientRequest request = createTokenRequest(clientId, clientSecret, tokenURL);
 
@@ -47,6 +51,16 @@ public class BaseService {
         return accessToken;
     }
 
+    List<CompletableFuture<? extends Object>> getAsyncTaskResults(List<Supplier<? extends Object>> tasks){
+        ExecutorService es = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+
+        List<CompletableFuture<? extends Object>>futures = tasks.stream()
+                .map(task -> CompletableFuture.supplyAsync(task, es))
+                .collect(Collectors.toList());
+        es.shutdown();
+        return futures;
+    }
+
     public OAuthClientRequest createTokenRequest(String clientId, String clientSecret, String tokenURL)
             throws OAuthSystemException {
         return OAuthClientRequest.tokenLocation(tokenURL)
@@ -58,10 +72,12 @@ public class BaseService {
 
     public OAuthClientRequest getBearerTokenRequest(String url, String accessToken)
             throws IOException, OAuthSystemException {
+
         logger.debug("Request to "+url);
-        return new OAuthBearerClientRequest(url)
+        OAuthClientRequest request =  new OAuthBearerClientRequest(url)
                 .setAccessToken(accessToken)
                 .buildHeaderMessage();
+        return request;
 
     }
 
@@ -111,14 +127,15 @@ public class BaseService {
                 bodyBuilder.addFormDataPart(entry.getKey(), entry.getValue());
             }
             return bodyBuilder.build();
-        } else if(Objects.equals(method, "GET") || Objects.equals(method, "DELETE")){
+        } else if(method =="GET"|| method == "DELETE"){
             return null;
-        } else return bodyBuilder.addFormDataPart("", "")
-                .build();
+        }
+        else return  bodyBuilder.addFormDataPart("", "")
+                    .build();
     }
 
     Map<String, String> addChannelIntoHeaders(Map<String, String> existingHeaders, String channel){
-        if(existingHeaders==null) existingHeaders = new HashMap<>();
+        if(existingHeaders==null) existingHeaders = new HashMap<String, String>();
         existingHeaders.put("X-JOMRES-channel-name", channel);
         return existingHeaders;
     }

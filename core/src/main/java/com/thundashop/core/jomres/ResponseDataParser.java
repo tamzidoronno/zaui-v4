@@ -1,9 +1,6 @@
 package com.thundashop.core.jomres;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.*;
 import com.google.gson.internal.LinkedTreeMap;
 import com.thundashop.core.jomres.dto.JomresBooking;
 import com.thundashop.core.jomres.dto.JomresGuest;
@@ -206,12 +203,12 @@ public class ResponseDataParser {
         }
     }
 
-    public List<Long> parseAllPropertyIds(OAuthResourceResponse response, boolean channelProperties) throws Exception{
+    public List<Integer> parseAllPropertyIds(OAuthResourceResponse response, boolean channelProperties) throws Exception{
         if(response.getResponseCode()==401){
             throw new Exception("statuse code: 401, unauthorized request\nCheck credentials...");
         }
 
-        List<Long> propertyUIDs = new ArrayList<>();
+        List<Integer> propertyUIDs = new ArrayList<>();
 
         JsonObject responseBody = gson.fromJson(response.getBody(), JsonObject.class);
         JsonObject data = responseBody.getAsJsonObject("data");
@@ -219,14 +216,14 @@ public class ResponseDataParser {
         if (channelProperties) {
             JsonObject properties = data.getAsJsonObject("response");
             for (Map.Entry<String, JsonElement> property : properties.entrySet()) {
-                propertyUIDs.add(Long.valueOf(property.getKey()));
+                propertyUIDs.add(Integer.valueOf(property.getKey()));
             }
         } else {
             String properties = data.get("ids").toString();
             propertyUIDs = Arrays.stream(properties.replaceAll("\\[", "")
                             .replaceAll("]", "")
                             .split(","))
-                    .map(Long::parseLong)
+                    .map(Integer::parseInt)
                     .collect(Collectors.toList());
 
         }
@@ -243,7 +240,26 @@ public class ResponseDataParser {
         return data.get("response").getAsLong();
     }
 
-    public UpdateAvailabilityResponse parseChangeAvailabilityResponse(Response response) throws Exception {
+    public String parsePropertyNameFromPropertyDetails(OAuthResourceResponse response) throws Exception {
+        if(response.getResponseCode()==401){
+            throw new Exception("statuse code: 401, unauthorized request\nCheck credentials...");
+        }
+        Gson gson = new Gson();
+        JsonObject responseBody = null;
+        responseBody = gson.fromJson(response.getBody(), JsonObject.class);
+        if (responseBody.get("error_message") != null) {
+            String errorMessage = responseBody.get("error_message").getAsString();
+            logger.error(errorMessage);
+            throw new Exception("Failed to load Property name, error: errorMessage");
+        }
+
+        JsonObject data = responseBody.getAsJsonObject("data").getAsJsonObject("response");
+        String propertyName = data.get("property_name").getAsString();
+        return propertyName;
+
+    }
+
+    public UpdateAvailabilityResponse parseChangeAvailabilityResponse(Response response) throws IOException {
         if(response.code()==401){
             throw new Exception("statuse code: 401, unauthorized request\nCheck credentials...");
         }

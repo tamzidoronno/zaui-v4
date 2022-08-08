@@ -99,7 +99,7 @@ public class ManagerSubBase {
     public ManagerSubBase() {
     }
 
-    public void createScheduler(String schedulerReference, String scheduler, Class schedulerType) {
+    public void  createScheduler(String schedulerReference, String scheduler, Class schedulerType) {
         GetShopScheduler gsscheduler = new GetShopScheduler();
         gsscheduler.storeId = storeId;
         gsscheduler.schedulerClassName = schedulerType;

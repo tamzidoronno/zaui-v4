@@ -83,7 +83,7 @@ public interface IOrderManager {
     
     @Administrator
     public void checkForOrdersFailedCollecting();
-    
+
     @Administrator
     public void checkPaymentStatusAndUpdatePayment();
 

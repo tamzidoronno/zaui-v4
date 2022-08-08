@@ -554,8 +554,11 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     }
 
     private void handleJomresBookingPriceChange(PmsBooking pmsBooking, Double totalPrice, Map<String, Double> priceMatrix) {
+        double oldPrice = pmsBooking.getTotalPrice();
         setBookingPrice(pmsBooking, totalPrice, priceMatrix);
-        createNewOrder(pmsBooking.id, pmsBooking.paymentType);
+        double currentPrice = pmsBooking.getTotalPrice();
+        if(oldPrice != currentPrice)
+            createNewOrder(pmsBooking.id, pmsBooking.paymentType);
     }
 
     private void createNewOrder(String pmsBookingId, String paymentType) {
@@ -577,7 +580,8 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 handleJomresBookingPriceChange(pBooking, jBooking.totalPrice, priceMatrix);
             }
             if (isBookingRoomChanged(pmsRoom, jBooking)) {
-                pmsManager.setBookingItemAndDate(pmsRoom.pmsBookingRoomId, pmsRoom.bookingItemId, false,
+                String newBookingItemId = jomresPropertyToRoomDataMap.get(jBooking.propertyUid).bookingItemId;
+                pmsManager.setBookingItemAndDate(pmsRoom.pmsBookingRoomId, newBookingItemId, false,
                         setCorrectTime(jBooking.arrivalDate, true), setCorrectTime(jBooking.departure, false));
                 pmsManager.saveBooking(pBooking);
                 handleJomresBookingPriceChange(pBooking, jBooking.totalPrice, priceMatrix);

@@ -1,81 +1,52 @@
-(function ( $ ) {
-    $.fn.getshopbooking = function( options ) {
-        if(options.endpoint === "https://lofoten.booking.fasthotels.no/") { options.domain = "demo"; }
-        if(options.endpoint === "https://svolver.booking.fasthotels.no/") { options.domain = "demo"; }
-        if(options.endpoint === "http://lofoten.booking.fasthotels.no/") { options.domain = "demo"; }
-        if(options.endpoint === "http://svolver.booking.fasthotels.no/") { options.domain = "demo"; }
+(function ($) {
+  $.fn.getshopbooking = function (options) {
+    old_url = options.jsendpoint;
+    let splitted = old_url.split(".");
+    let hotelCode = splitted[0].replace("https://", "");
+    let glueware_url = getGluewareUrl(hotelCode);
+    options.webaddress = options.endpoint;
+    options.endpoint = glueware_url;
+    $.getScript(`${glueware_url}/js/getshop.bookingembed.js`, function () {
+      $("#bookingprocess").getshopbooking(options);
+    });
+  };
+})(jQuery);
 
-        
-        var box = $(this);
-        getshop_endpoint = options.endpoint;
-        getshop_viewmode = options.viewmode;
-        getshop_terminalid = options.terminalid;
-        getshop_nextPage = options.nextPage;
-        getshop_successcallback = options.success;
-        getshop_failurecallback = options.failure;
-        getshop_websockethost = options.websocket;
-        getshop_overridetranslation = options.translation;
-        getshop_display_countryselect = options.showCountrySelect;
-        getshop_zaui_integration = options.zauiIntegration
+function getGluewareUrl(hotelCode) {
+  let gluewareUrl = "";
+  let suffix = "";
 
-        sessionStorage.setItem('getshop_endpoint',options.endpoint);
-        sessionStorage.setItem('getshop_domain',options.domain);
-        sessionStorage.setItem('getshop_booking_form_options', JSON.stringify(options));
-        sessionStorage.setItem('getshop_display_countryselect',options.showCountrySelect);
-        sessionStorage.setItem('getshop_zaui_integration', options.zauiIntegration);
-        
-        if(!options.language) {
-            sessionStorage.setItem('getshop_language',"");
-        } else {
-            sessionStorage.setItem('getshop_language',options.language);
-        }
-        console.log(options);
-        var jsendpoint = "https://system.getshop.com/";
-        if(options.jsendpoint) {
-            jsendpoint = options.jsendpoint;
-        }
+  if (hotelCode.endsWith(ClusterSuffix.Cluster9)) {
+    gluewareUrl = GLUEWARE_URL_LIST[ClusterSuffix.Cluster9];
+    suffix = ClusterSuffix.Cluster9;
+  } else if (hotelCode.endsWith(ClusterSuffix.Cluster4)) {
+    gluewareUrl = GLUEWARE_URL_LIST[ClusterSuffix.Cluster4];
+    suffix = ClusterSuffix.Cluster4;
+  } else if (hotelCode.endsWith(ClusterSuffix.Cluster6)) {
+    gluewareUrl = GLUEWARE_URL_LIST[ClusterSuffix.Cluster6];
+    suffix = ClusterSuffix.Cluster6;
+  } else if (hotelCode.endsWith(ClusterSuffix.Qp)) {
+    gluewareUrl = GLUEWARE_URL_LIST[ClusterSuffix.Qp];
+    suffix = ClusterSuffix.Qp;
+  } else if (hotelCode.endsWith(ClusterSuffix.Local)) {
+    gluewareUrl = GLUEWARE_URL_LIST[ClusterSuffix.Local];
+    suffix = ClusterSuffix.Local;
+  }
 
-        $('<link/>', {
-           rel: 'stylesheet',
-           type: 'text/css',
-           href: jsendpoint+'scripts/booking/bookingstyles.php'
-        }).appendTo('head');
+  return gluewareUrl;
+}
+const ClusterSuffix = {
+  Cluster9: "c9",
+  Cluster4: "c4",
+  Cluster6: "c6",
+  Qp: "qp",
+  Local: "local",
+};
 
-        let bookingembed_url = jsendpoint+'scripts/booking/bookingcontent.php';
-        if(getshop_display_countryselect === true) bookingembed_url += '?display_countryselect=1';
-        $.ajax({
-            "type": "get",
-            async: false,
-            "url": bookingembed_url,
-            success: function (form) {
-                box.html("<span class='GslBooking'>" + form + "</span>");
-            }
-        });
-        
-    };
-
-    $('<link/>', {
-       rel: 'stylesheet',
-       type: 'text/css',
-       href: 'https://20420.getshop.com/icomoon/style.css?tyxklk'
-    }).appendTo('head');
-
-    $('<link/>', {
-       rel: 'stylesheet',
-       type: 'text/css',
-       href: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css'
-    }).appendTo('head');
-
-    $('<link/>', {
-       rel: 'stylesheet',
-       type: 'text/css',
-       href: 'https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css'
-    }).appendTo('head');
-
-    $('<link/>', {
-       rel: 'stylesheet',
-       type: 'text/css',
-       href: 'https://www.getshop.com/js/daterangepicker/daterangepicker.css'
-    }).appendTo('head');
-    
-}( jQuery ));
+const GLUEWARE_URL_LIST = {
+  [ClusterSuffix.Cluster9]: "https://gluegc9.getshop.com/",
+  [ClusterSuffix.Cluster6]: "https://glueware4.zauistay.com/",
+  [ClusterSuffix.Cluster4]: "https://glueware6.zauistay.com/",
+  [ClusterSuffix.Qp]: "https://glue.mdev.getshop.com/",
+  [ClusterSuffix.Local]: "http://localhost:3000/",
+};

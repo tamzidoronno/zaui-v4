@@ -127,7 +127,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
     private void checkDateRangeValidity(Date from, Date to) throws GotoException{
         if(from.after(to)){
-            throw new GotoException(1202, "Failes to Fetch Price-Allotment.. Reason: Date range is not valid.");
+            throw new GotoException(1202, "Failed to Fetch Price-Allotment.. Reason: Invalid Date range");
         }
     }
 
@@ -700,9 +700,9 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         long numberOfDays = TimeUnit
                 .MILLISECONDS
                 .toDays(difference_In_Time);
-        if(numberOfDays>30) throw new GotoException(1201, "Failed to Fetch Price-Allotment.." +
+        if(numberOfDays>30) throw new GotoException(1201, "Failed to Fetch Price-Allotment.. " +
                 "Reason: Date Range is Larger than one month..");
-        if(numberOfDays<0) throw new GotoException(1202, "Failed to Fetch Price-Allotment.." +
+        if(numberOfDays<0) throw new GotoException(1202, "Failed to Fetch Price-Allotment.. " +
                 "Reason: Invalid Date range");
         return numberOfDays;
     }

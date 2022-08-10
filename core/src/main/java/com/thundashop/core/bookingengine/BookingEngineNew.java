@@ -675,7 +675,6 @@ public class BookingEngineNew extends GetShopSessionBeanNamed implements IBookin
             if (count > 0 && shouldThrowException()) {
                 throw new BookingEngineException("Can not delete a bookingitemtype that already has booking items, Existing items: " + count);
             }
-            // deleteObject(type);
             bookingItemTypeService.deleteBookingItemType(type, getSessionInfo());
         }
     }
@@ -1138,6 +1137,7 @@ public class BookingEngineNew extends GetShopSessionBeanNamed implements IBookin
         
     }
 
+    // need to move to bookingItemTypeService
     @Override
     public List<BookingItemType> getBookingItemTypesIncludeDeleted() {
         if (allTypesIncludedDeletedSinceStartup != null) {

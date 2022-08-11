@@ -25,9 +25,6 @@ public class FetchBookingResponse implements Serializable {
     String arrivalDate;
     @Expose
     String departureDate;
-    public  FetchBookingResponse(){
-
-    }
     public FetchBookingResponse(long bookingId, String status, String guestName, Date arrivalDate, Date departureDate,
                                 String pmsBookingId,String pmsRoomName, String pmsRoomCategoryName) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -40,14 +37,4 @@ public class FetchBookingResponse implements Serializable {
         this.pmsRoomCategoryName = pmsRoomCategoryName;
         this.pmsBookingId = pmsBookingId;
     }
-    public void setArrivalDate(Date arrivalDate){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        this.arrivalDate = dateFormat.format(arrivalDate);
-    }
-
-    public void setDepartureDate(Date departureDate){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        this.departureDate = dateFormat.format(departureDate);
-    }
-
 }

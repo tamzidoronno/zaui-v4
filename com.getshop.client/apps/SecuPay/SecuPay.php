@@ -239,6 +239,7 @@ class SecuPay extends \PaymentApplication implements \Application {
         
         //Execute the request
         $result = curl_exec($ch);
+        $original_result = $result;
         $result = json_decode($result,true);
 
         if($result['status'] != "ok") {
@@ -246,10 +247,15 @@ class SecuPay extends \PaymentApplication implements \Application {
             echo $result['errors']['message'];
             exit(0);
         } else {
-            $order = $this->order;
-            $order->payment->transactionLog->{time()*1000} = "Transferred to payment window";
-            $this->getApi()->getOrderManager()->saveOrder($order);
-            
+
+            $paymentLog = new \core_ordermanager_data_PaymentLog();
+            $paymentLog->orderId = $this->order->id;
+            $paymentLog->transactionPaymentId = "TODO";
+            $paymentLog->isPaymentInitiated = true;
+            $paymentLog->paymentTypeId = "be004408-e969-4dba-9b23-5922b8f1d7e2";
+            $paymentLog->paymentResponse = $original_result;
+            $this->getApi()->getOrderManager()->saveOrderPaymenDetails($paymentLog);
+
             $url = $result['data']['iframe_url'];
             echo "<script>";
             echo "window.location.href='$url';";

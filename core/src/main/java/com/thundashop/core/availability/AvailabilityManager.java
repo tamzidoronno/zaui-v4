@@ -67,6 +67,7 @@ import com.thundashop.core.utils.UtilManager;
 import com.thundashop.core.webmanager.WebManager;
 import com.thundashop.core.wubook.WubookManager;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -97,6 +98,7 @@ import static org.apache.commons.lang3.StringUtils.*;
 @Data
 @Component
 @GetShopSession
+@EqualsAndHashCode(callSuper=false)
 public class AvailabilityManager extends GetShopSessionBeanNamed implements IAvailabilityManager {
 
     @Autowired private  StoreManager storeManager;

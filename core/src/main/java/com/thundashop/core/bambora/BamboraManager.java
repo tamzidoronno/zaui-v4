@@ -21,6 +21,7 @@ import com.thundashop.core.getshop.GetShopPullService;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.ordermanager.data.PaymentLog;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.webmanager.WebManager;
@@ -59,6 +60,8 @@ public class BamboraManager extends ManagerBase implements IBamboraManager  {
     
     @Autowired
     MessageManager messageManager;
+
+    private static final String BAMBORA_APPLICATION_ID = "a92d56c0-04c7-4b8e-a02d-ed79f020bcca";
     
     @Override
     public void checkForOrdersToCapture() {
@@ -124,20 +127,20 @@ public class BamboraManager extends ManagerBase implements IBamboraManager  {
         
         String addr = getStoreDefaultAddress();
         
-        data.setCallbacks(addr, "a92d56c0-04c7-4b8e-a02d-ed79f020bcca", getCallBackId(), storeId, frameworkConfig.productionMode);
+        data.setCallbacks(addr, BAMBORA_APPLICATION_ID, getCallBackId(), storeId, frameworkConfig.productionMode);
         Gson test = new Gson();
         String url = createCheckoutUrl(data);
         return url;
     }
 
     private String getAccessToken() {
-        Application bamboraApp = storeApplicationPool.getApplicationWithSecuredSettings("a92d56c0-04c7-4b8e-a02d-ed79f020bcca");
+        Application bamboraApp = storeApplicationPool.getApplicationWithSecuredSettings(BAMBORA_APPLICATION_ID);
         Setting setting = bamboraApp.settings.get("access_token");
         return setting.value;
     }
 
     private String getCallBackId() {
-        Application bamboraApp = storeApplicationPool.getApplicationWithSecuredSettings("a92d56c0-04c7-4b8e-a02d-ed79f020bcca");
+        Application bamboraApp = storeApplicationPool.getApplicationWithSecuredSettings(BAMBORA_APPLICATION_ID);
         if(bamboraApp == null) {
             return null;
         }
@@ -149,19 +152,19 @@ public class BamboraManager extends ManagerBase implements IBamboraManager  {
     }
 
     private String getMd5() {
-        Application bamboraApp = storeApplicationPool.getApplicationWithSecuredSettings("a92d56c0-04c7-4b8e-a02d-ed79f020bcca");
+        Application bamboraApp = storeApplicationPool.getApplicationWithSecuredSettings(BAMBORA_APPLICATION_ID);
         Setting setting = bamboraApp.settings.get("md5");
         return setting.value;
     }
 
     private String getSecretToken() {
-        Application bamboraApp = storeApplicationPool.getApplicationWithSecuredSettings("a92d56c0-04c7-4b8e-a02d-ed79f020bcca");
+        Application bamboraApp = storeApplicationPool.getApplicationWithSecuredSettings(BAMBORA_APPLICATION_ID);
         Setting setting = bamboraApp.settings.get("secret_token");
         return setting.value;
     }
     
     private String getMerchantId() {
-        Application bamboraApp = storeApplicationPool.getApplicationWithSecuredSettings("a92d56c0-04c7-4b8e-a02d-ed79f020bcca");
+        Application bamboraApp = storeApplicationPool.getApplicationWithSecuredSettings(BAMBORA_APPLICATION_ID);
         Setting setting = bamboraApp.settings.get("merchant_id");
         return setting.value;
     }
@@ -178,8 +181,19 @@ public class BamboraManager extends ManagerBase implements IBamboraManager  {
         String toPost = gson.toJson(data);
         try {
             String res = webManager.htmlPostBasicAuth(endpoint, toPost, true, "ISO-8859-1", tokenToUse);
-            BamboraResponse gsonResp = gson.fromJson(res, BamboraResponse.class);
-            return gsonResp.url;
+            BamboraResponse resp = gson.fromJson(res, BamboraResponse.class);
+
+            Order order = orderManager.getOrderByincrementOrderId(resp.orderid);
+
+            PaymentLog pays = new PaymentLog();
+            pays.orderId = order.id;
+            pays.transactionPaymentId = String.valueOf(resp.refrence);
+            pays.isPaymentInitiated = true;
+            pays.paymentTypeId = BAMBORA_APPLICATION_ID;
+            pays.paymentResponse = new Gson().toJson(resp);
+            orderManager.saveOrderPaymenDetails(pays);
+
+            return resp.url;
         }catch(Exception ex) {
             logPrintException(ex);
             return "";

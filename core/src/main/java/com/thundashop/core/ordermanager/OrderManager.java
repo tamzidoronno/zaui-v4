@@ -794,13 +794,27 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             order.payment.transactionLog.put(System.currentTimeMillis(), "Marking order for autosending");
             order.markAsAutosent();
             markOrderForAutoSending(order.id);
-        } else if(order.payment != null && order.payment.transactionLog != null) {
-            order.payment.transactionLog.put(System.currentTimeMillis(), "Avoid autosending, ispaid: " + isPaid + ", notified:" + isNotified + ", paymenlink:" + isPaymentLinkType);
         }
         
         validateOrder(order);
         saveOrderInternal(order);
 
+    }
+
+    @Override
+    public void saveOrderPaymenDetails(PaymentLog pays) throws ErrorException {
+        log.info("Saving PaymenDetails {}", pays.orderId);
+        Order order = orders.get(pays.orderId);
+        if(order == null) return;
+        order.payment.transactionPaymentId = pays.transactionPaymentId;
+        order.payment.paymentInitiated = pays.isPaymentInitiated;
+        order.payment.paymentInitiatedDate = new Date();
+        order.payment.paymentTypeId = pays.paymentTypeId;
+        order.payment.paymentResponse.put(System.currentTimeMillis(), pays.paymentResponse);
+        Application paymentType = storeApplicationPool.getApplication(pays.paymentTypeId);
+        String paymentTypeName = paymentType != null ? paymentType.appName : "";
+        order.payment.transactionLog.put(System.currentTimeMillis(), "Transferred to payment window with " + paymentTypeName + " payment id " + pays.transactionPaymentId + " at " + LocalDateTime.now());
+        saveOrder(order);
     }
     
     public void markOrderForAutoSending(String orderId) {

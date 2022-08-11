@@ -13,9 +13,6 @@ public class Hotel {
     @SerializedName("name")
     @Expose
     private String name;
-    @SerializedName("hotel_code")
-    @Expose
-    private String hotelCode;
     @SerializedName("description")
     @Expose
     private String description;

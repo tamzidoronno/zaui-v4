@@ -12,7 +12,7 @@ public class JomresGuest implements Serializable {
     public String house, street, city, region, country, postcode;
     public String address;
     public String countryCode;
-    public String telLandline, telMobile, email, mobilePrefix = "";
+    public String telLandline, telMobile, email;
     public String vatNumber;
 
     public JomresGuest() {
@@ -22,8 +22,12 @@ public class JomresGuest implements Serializable {
         String surName = guest.get("enc_surname").toString();
         this.name = firstName + " " + surName;
 
-        this.telLandline = Optional.ofNullable(guest.get("enc_tel_landline").toString()).orElse("");
-        this.telMobile = Optional.ofNullable(guest.get("enc_tel_mobile").toString()).orElse("");
+        String rawLandLine = Optional.ofNullable(guest.get("enc_tel_landline").toString()).orElse("");
+        String rawMobile = Optional.ofNullable(guest.get("enc_tel_mobile").toString()).orElse("");
+        String landLine = StringUtils.substringAfter(rawLandLine,";");
+        String mobile = StringUtils.substringAfterLast(rawMobile,";");
+        this.telLandline = landLine.isEmpty()? rawLandLine:landLine;
+        this.telMobile = mobile.isEmpty()? rawMobile:mobile;
         this.email = guest.get("enc_email").toString();
 
         this.house = guest.get("enc_house").toString();

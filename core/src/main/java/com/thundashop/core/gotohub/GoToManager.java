@@ -669,8 +669,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         cal.set(Calendar.MILLISECOND, 1);
         cal.add(Calendar.DAY_OF_YEAR, i);
 
-        Date start = cal.getTime();
-        arg.start = start;
+        arg.start = cal.getTime();
 
         cal.add(Calendar.DAY_OF_YEAR, 1);
         cal.set(Calendar.HOUR_OF_DAY, 11);
@@ -678,8 +677,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         cal.set(Calendar.SECOND, 59);
         cal.set(Calendar.MILLISECOND, 0);
 
-        Date end = cal.getTime();
-        arg.end = end;
+        arg.end = cal.getTime();
         arg.rooms  = 0;
         arg.adults  = 1;
         arg.children = 0;

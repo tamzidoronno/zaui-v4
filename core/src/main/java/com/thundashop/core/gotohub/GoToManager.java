@@ -29,7 +29,9 @@ import org.springframework.stereotype.Component;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -714,11 +716,10 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     private long getDateDifference(Date start, Date end) throws GotoException {
-        long difference_In_Time
-                = end.getTime() - start.getTime();
-        long numberOfDays = TimeUnit
-                .MILLISECONDS
-                .toDays(difference_In_Time);
+        ZoneId defaultZoneId = ZoneId.systemDefault();
+        LocalDate localStart = start.toInstant().atZone(defaultZoneId).toLocalDate();
+        LocalDate localEnd = end.toInstant().atZone(defaultZoneId).toLocalDate();
+        long numberOfDays = ChronoUnit.DAYS.between(localStart, localEnd);
         if (numberOfDays > 30)
             throw new GotoException(GoToStatusCodes.LARGER_DATE_RANGE.code, GoToStatusCodes.LARGER_DATE_RANGE.message);
         if (numberOfDays < 0)

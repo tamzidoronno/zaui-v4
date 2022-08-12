@@ -32,15 +32,19 @@ public interface IGoToManager {
      * @return {@link List} of {@link PriceAllotment}
      * @throws Exception
      */
-    public GoToApiResponse getPriceAndAllotmentWithDate(Date from, Date to) throws Exception;
-    public GoToApiResponse getPriceAndAllotment() throws Exception;
+    public GoToApiResponse getPriceAndAllotmentWithDate(Date from, Date to);
+
+    public GoToApiResponse getPriceAndAllotment();
 
     public GoToApiResponse saveBooking(Booking booking);
+
     public GoToApiResponse confirmBooking(String reservationId);
+
     public GoToApiResponse cancelBooking(String reservationId);
 
     /**
      * Get GoTo related configurations
+     *
      * @return {@link GoToManager}
      */
     //@Administrator
@@ -48,6 +52,7 @@ public interface IGoToManager {
 
     /**
      * Save goto related configuration
+     *
      * @param configuration
      * @return <code>true</code> if saved, <code>false</code> if failed
      */

@@ -33,7 +33,6 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.*;
@@ -42,16 +41,26 @@ import static org.apache.commons.lang3.StringUtils.*;
 @GetShopSession
 @Slf4j
 public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager {
-    @Autowired PmsManager pmsManager;
-    @Autowired StoreManager storeManager;
-    @Autowired StorePool storePool;
-    @Autowired BookingEngine bookingEngine;
-    @Autowired PmsInvoiceManager pmsInvoiceManager;
-    @Autowired PmsBookingProcess pmsProcess;
-    @Autowired StoreApplicationPool storeApplicationPool;
-    @Autowired OrderManager orderManager;
-    @Autowired MessageManager messageManager;
-    @Autowired UserManager userManager;
+    @Autowired
+    PmsManager pmsManager;
+    @Autowired
+    StoreManager storeManager;
+    @Autowired
+    StorePool storePool;
+    @Autowired
+    BookingEngine bookingEngine;
+    @Autowired
+    PmsInvoiceManager pmsInvoiceManager;
+    @Autowired
+    PmsBookingProcess pmsProcess;
+    @Autowired
+    StoreApplicationPool storeApplicationPool;
+    @Autowired
+    OrderManager orderManager;
+    @Autowired
+    MessageManager messageManager;
+    @Autowired
+    UserManager userManager;
 
     private static final SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -78,7 +87,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     @Override
-    public GoToApiResponse getRoomTypeDetails() throws Exception {
+    public GoToApiResponse getRoomTypeDetails() {
         try {
             saveSchedulerAsCurrentUser();
             StartBooking arg = getBookingArgument(new Date(), 0);
@@ -106,7 +115,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     @Override
-    public GoToApiResponse getPriceAndAllotment() throws Exception {
+    public GoToApiResponse getPriceAndAllotment() {
         Date from = new Date();
         Calendar cal = Calendar.getInstance();
         cal.setTime(from);
@@ -116,7 +125,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     @Override
-    public GoToApiResponse getPriceAndAllotmentWithDate(Date from, Date to) throws Exception {
+    public GoToApiResponse getPriceAndAllotmentWithDate(Date from, Date to) {
         try {
             saveSchedulerAsCurrentUser();
             List<PriceAllotment> priceAllotments = getPriceAllotments(from, to);

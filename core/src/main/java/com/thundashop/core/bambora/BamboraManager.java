@@ -128,9 +128,7 @@ public class BamboraManager extends ManagerBase implements IBamboraManager  {
         String addr = getStoreDefaultAddress();
         
         data.setCallbacks(addr, BAMBORA_APPLICATION_ID, getCallBackId(), storeId, frameworkConfig.productionMode);
-        Gson test = new Gson();
-        String url = createCheckoutUrl(data);
-        return url;
+        return createCheckoutUrl(data);
     }
 
     private String getAccessToken() {

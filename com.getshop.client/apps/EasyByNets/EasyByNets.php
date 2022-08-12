@@ -219,6 +219,7 @@ class EasyByNets extends \PaymentApplication implements \Application {
         
         /* @var $order \core_ordermanager_data_Order */
         $order = $this->order;
+        $order->payment->transactionLog->{time()*1000} = "Transferred to payment window";
         $this->getApi()->getOrderManager()->saveOrder($order);
 
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");

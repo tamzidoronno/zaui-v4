@@ -258,6 +258,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private PmsPricingManager pmsPricingManager;
     
     @Qualifier("pingServerExecutor")
+    @Autowired
     private TaskExecutor pingServerExecutor;
 
     @Autowired

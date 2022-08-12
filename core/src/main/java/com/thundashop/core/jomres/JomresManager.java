@@ -195,6 +195,10 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
     @Override
     public boolean saveMapping(List<JomresRoomData> mappingRoomData) throws Exception {
+        if(!jomresConfiguration.isEnable){
+            logger.error("Jomres connection is disabled");
+            return false;
+        }
         deleteExistingMapping();
         for (JomresRoomData roomData : mappingRoomData) {
             handleExistingRoomDataWhileMapping(roomData);
@@ -210,6 +214,10 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
     @Override
     public List<JomresRoomData> getMappingData() throws Exception {
+        if(!jomresConfiguration.isEnable){
+            logger.error("Jomres connection is disabled");
+            return new ArrayList<>();
+        }
         return jomresPropertyToRoomDataMap.values().stream().collect(Collectors.toList());
     }
 
@@ -638,6 +646,11 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     public boolean connectToApi() {
         if (jomresConfiguration == null) {
             logText("No Jomres configuration is found for this hotel");
+            return false;
+        }
+        if (!jomresConfiguration.isEnable) {
+            logger.debug("Jomres connection is disabled for now");
+            logText("Jomres connection is disabled for now");
             return false;
         }
         Date currentTime = new Date();

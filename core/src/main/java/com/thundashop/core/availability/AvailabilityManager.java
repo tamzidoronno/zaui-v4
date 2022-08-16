@@ -95,10 +95,8 @@ import static org.apache.commons.lang3.StringUtils.*;
  * @author Naim Murad (naim)
  * @since 6/21/22
  */
-@Data
 @Component
 @GetShopSession
-@EqualsAndHashCode(callSuper=false)
 public class AvailabilityManager extends GetShopSessionBeanNamed implements IAvailabilityManager {
 
     @Autowired private  StoreManager storeManager;

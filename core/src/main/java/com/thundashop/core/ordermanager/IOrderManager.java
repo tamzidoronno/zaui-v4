@@ -233,7 +233,7 @@ public interface IOrderManager {
      */
     public void saveOrder(Order order) throws ErrorException;
 
-    public void saveOrderPaymenDetails(PaymentLog paymentLog) throws ErrorException;
+    public void saveOrderPaymentDetails(PaymentLog paymentLog) throws ErrorException;
 
     @Editor
     public void markAsPaid(String orderId, Date date, Double amount);

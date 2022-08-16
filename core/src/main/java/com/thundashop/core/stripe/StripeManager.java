@@ -451,7 +451,7 @@ public class StripeManager extends ManagerBase implements IStripeManager {
             pays.isPaymentInitiated = true;
             pays.paymentTypeId = STRIPE_APPLICATION_ID;
             pays.paymentResponse = new Gson().toJson(session);
-            orderManager.saveOrderPaymenDetails(pays);
+            orderManager.saveOrderPaymentDetails(pays);
             return session.getId();
         } catch (Exception e) {
             messageManager.sendErrorNotification("Error in new payment stripe integration", e);

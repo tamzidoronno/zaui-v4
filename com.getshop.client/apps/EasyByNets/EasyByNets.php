@@ -251,7 +251,7 @@ class EasyByNets extends \PaymentApplication implements \Application {
                 $paymentLog->isPaymentInitiated = true;
                 $paymentLog->paymentTypeId = "be004408-e969-4dba-9b23-5922b8f1d7e2";
                 $paymentLog->paymentResponse = $original_result;
-                $this->getApi()->getOrderManager()->saveOrderPaymenDetails($paymentLog);
+                $this->getApi()->getOrderManager()->saveOrderPaymentDetails($paymentLog);
 
                 echo "<div style='text-align:center; font-size: 30px;'>";
                 echo "<i class='fa fa-spin fa-spinner'></i>";

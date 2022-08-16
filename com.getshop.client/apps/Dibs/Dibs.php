@@ -184,7 +184,7 @@ class Dibs extends \PaymentApplication implements \Application {
         $paymentLog->isPaymentInitiated = true;
         $paymentLog->paymentTypeId = "be004408-e969-4dba-9b23-5922b8f1d7e2";
         $paymentLog->paymentResponse = $full_res;
-        $this->getApi()->getOrderManager()->saveOrderPaymenDetails($paymentLog);
+        $this->getApi()->getOrderManager()->saveOrderPaymentDetails($paymentLog);
 
     }
 

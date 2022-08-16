@@ -802,10 +802,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     @Override
-    public void saveOrderPaymenDetails(PaymentLog pays) throws ErrorException {
+    public void saveOrderPaymentDetails(PaymentLog pays) throws ErrorException {
         log.info("Saving PaymenDetails {}", pays.orderId);
         Order order = orders.get(pays.orderId);
-        if(order == null) return;
+        if(order == null) {
+            log.error("Order not found: {}", pays.orderId);
+            return;
+        }
         order.payment.transactionPaymentId = pays.transactionPaymentId;
         order.payment.paymentInitiated = pays.isPaymentInitiated;
         order.payment.paymentInitiatedDate = new Date();

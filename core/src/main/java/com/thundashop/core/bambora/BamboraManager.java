@@ -189,7 +189,7 @@ public class BamboraManager extends ManagerBase implements IBamboraManager  {
             pays.isPaymentInitiated = true;
             pays.paymentTypeId = BAMBORA_APPLICATION_ID;
             pays.paymentResponse = new Gson().toJson(resp);
-            orderManager.saveOrderPaymenDetails(pays);
+            orderManager.saveOrderPaymentDetails(pays);
 
             return resp.url;
         }catch(Exception ex) {

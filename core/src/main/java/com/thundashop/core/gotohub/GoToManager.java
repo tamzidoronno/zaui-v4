@@ -52,7 +52,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     @Autowired MessageManager messageManager;
     @Autowired UserManager userManager;
 
-    private static final SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+    private static final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     private static final SimpleDateFormat checkinOutDateFormatter = new SimpleDateFormat("yyyy-MM-dd");
     SimpleDateFormat cancellationDateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");

@@ -31,8 +31,11 @@ public class BackupServerSyncManager {
     @Autowired
     GetShopSessionScope getShopSessionScope;
 
+    private static final String backupSystemURL = "https://api.pibackup.zauistay.tech/api/sync";
+    private static final String backupSystemApiKey = "z@uiBack$tay2022";
     @Async("backupServerSyncExecutor")
     public void doubleCheckTransferServersToBackupSystem(String storeId) {
+
         getShopSessionScope.setStoreId(storeId, "", null);
 
         try {
@@ -70,7 +73,7 @@ public class BackupServerSyncManager {
                     info.webaddr = storeManager.getMyStore().getDefaultWebAddress();
                     info.storeId = storeId;
                     String toSend = new Gson().toJson(info);
-                    String result = webManager.htmlPostBasicAuth("https://api.pibackup.zauistay.tech/api/sync" ,toSend,true,"UTF-8", "z@uiBack$tay2022");
+                    String result = webManager.htmlPostBasicAuth(backupSystemURL ,toSend,true,"UTF-8", backupSystemApiKey);
                     if(StringUtils.isBlank(result)) {
                         storeManager.logPrintException(new ErrorException(500, "Result not found!"));
                         continue;

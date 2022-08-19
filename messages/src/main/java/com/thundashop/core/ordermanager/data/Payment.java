@@ -31,6 +31,8 @@ public class Payment implements Serializable {
     public String transactionPaymentId = "";
     public boolean paymentInitiated = false;
     public Date paymentInitiatedDate;
+    public String paymentTypeId;
+    public HashMap<Long, String> paymentResponse = new HashMap<>();
     
     public String readablePaymentType() {
         if(paymentType.contains("\\")) {

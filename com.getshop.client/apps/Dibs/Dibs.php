@@ -176,11 +176,16 @@ class Dibs extends \PaymentApplication implements \Application {
         echo "<script>";
         echo "$('#dibsform').submit();";
         echo "</script>";
-        
-        /* @var $order core_ordermanager_data_Order */
-        $order = $this->order;
-        $order->payment->transactionLog->{time()*1000} = "Transferred to payment window";
-        $this->getApi()->getOrderManager()->saveOrder($order);
+
+        $full_res = $redirect_url . " || and useflexiwin: " . $useflexwin;
+        $paymentLog = new \core_ordermanager_data_PaymentLog();
+        $paymentLog->orderId = $order->id;
+        $paymentLog->transactionPaymentId = $order->id;
+        $paymentLog->isPaymentInitiated = true;
+        $paymentLog->paymentTypeId = "be004408-e969-4dba-9b23-5922b8f1d7e2";
+        $paymentLog->paymentResponse = $full_res;
+        $this->getApi()->getOrderManager()->saveOrderPaymentDetails($paymentLog);
+
     }
 
     /**

@@ -388,10 +388,10 @@ public interface IPmsManager {
      * It will update the comment if it finds with <code>commentId</code>, otherwise it will add the comment.
      * It will find {@link PmsBooking} from <code>bookingId</code>, which the comment is associated. if <code>bookingId</code> is null/blank, it will find booking from other parameter's <code>pmsBookingRoomId</code>
      * @param bookingId, the id of the {@link PmsBooking} for which the comment is associated.
-     * @return <code>true</code> if it can save the comment, otherwise <code>false</code>
+     * @return {@link PmsBookingComment}, saved and updated comment object if <code>succeed</code>, otherwise <code>null</code> if it fails.
      */
     @Editor
-    boolean saveComment(String bookingId, PmsBookingComment comment);
+    PmsBookingComment saveComment(String bookingId, PmsBookingComment comment);
     
     @Administrator
     String createPrepaymentOrder(String bookingId);

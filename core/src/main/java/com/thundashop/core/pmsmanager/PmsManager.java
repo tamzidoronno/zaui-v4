@@ -3156,10 +3156,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Editor
-    public boolean saveComment(String bookingId, PmsBookingComment comment) {
+    public PmsBookingComment saveComment(String bookingId, PmsBookingComment comment) {
         if(comment == null) {
             logger.error("Comment is null");
-            return false;
+            return null;
         }
         PmsBooking booking = null;
         if(isNotBlank(bookingId)) {
@@ -3170,7 +3170,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         if(booking == null) {
             logger.error("Booking not found! bookingId: {}, pmsBookingRoomId: {}", bookingId, comment.pmsBookingRoomId);
-            return false;
+            return null;
         }
         Long existedTimeStamp = null;
         if(isNotBlank(comment.commentId)) {
@@ -3191,13 +3191,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             comment.modifiedByUser.put(System.currentTimeMillis(), getSession().currentUser.id);
             booking.comments.put(existedTimeStamp, comment);
             saveBooking(booking);
-            return true;
+            return booking.comments.get(existedTimeStamp);
         }
         comment.userId = userManager.getLoggedOnUser().id;
         comment.added = new Date();
-        booking.comments.put(new Date().getTime(), comment);
+        comment.commentId = UUID.randomUUID().toString();
+        long timeStamp = new Date().getTime();
+        booking.comments.put(timeStamp, comment);
         saveBooking(booking);
-        return true;
+        return booking.comments.get(timeStamp);
     }
 
     void autoAssignItem(PmsBookingRooms room) {

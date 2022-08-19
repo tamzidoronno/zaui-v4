@@ -20,17 +20,19 @@ public class Payment implements Serializable {
     public String paymentType = "";
     public double paymentFee = 0D;
     public TaxGroup paymentFeeTaxGroup = null;
-    public HashMap<Long, String> transactionLog = new HashMap();
-    public List<Date> triedAutoPay = new ArrayList();
+    public HashMap<Long, String> transactionLog = new HashMap<>();
+    public List<Date> triedAutoPay = new ArrayList<>();
     public boolean captured = false;
-    public HashMap<String, String> callBackParameters = new HashMap();
-    public Map<String, String> metaData = new HashMap();
+    public HashMap<String, String> callBackParameters = new HashMap<>();
+    public Map<String, String> metaData = new HashMap<>();
     public String paymentId = "";
     //This is used to navigate the user to a differente payment id (specially used for otaPayments).
     public String goToPaymentId = "";
     public String transactionPaymentId = "";
     public boolean paymentInitiated = false;
     public Date paymentInitiatedDate;
+    public String paymentTypeId;
+    public HashMap<Long, String> paymentResponse = new HashMap<>();
     
     public String readablePaymentType() {
         if(paymentType.contains("\\")) {

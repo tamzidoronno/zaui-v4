@@ -3155,6 +3155,51 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         saveBooking(booking);
     }
 
+    @Editor
+    public boolean saveComment(String bookingId, PmsBookingComment comment) {
+        if(comment == null) {
+            logger.error("Comment is null");
+            return false;
+        }
+        PmsBooking booking = null;
+        if(isNotBlank(bookingId)) {
+            booking = getBookingUnsecure(bookingId);
+        }
+        if(booking == null && isNotBlank(comment.pmsBookingRoomId)) {
+            booking = getBookingFromRoom(comment.pmsBookingRoomId);
+        }
+        if(booking == null) {
+            logger.error("Booking not found! bookingId: {}, pmsBookingRoomId: {}", bookingId, comment.pmsBookingRoomId);
+            return false;
+        }
+        Long existedTimeStamp = null;
+        if(isNotBlank(comment.commentId)) {
+            Map.Entry<Long, PmsBookingComment> ent = booking.comments.entrySet()
+                    .stream()
+                    .filter(entry -> entry.getValue().commentId.equals(comment.commentId))
+                    .findFirst()
+                    .orElse(null);
+            if(ent != null) existedTimeStamp = ent.getKey();
+        }
+        if(existedTimeStamp != null) {
+            PmsBookingComment existedComment = booking.comments.get(existedTimeStamp);
+            /*Default data keeps same from existed comment*/
+            comment.userId = existedComment.userId;
+            comment.added = existedComment.added;
+            comment.modifiedByUser = existedComment.modifiedByUser;
+
+            comment.modifiedByUser.put(System.currentTimeMillis(), getSession().currentUser.id);
+            booking.comments.put(existedTimeStamp, comment);
+            saveBooking(booking);
+            return true;
+        }
+        comment.userId = userManager.getLoggedOnUser().id;
+        comment.added = new Date();
+        booking.comments.put(new Date().getTime(), comment);
+        saveBooking(booking);
+        return true;
+    }
+
     void autoAssignItem(PmsBookingRooms room) {
     
         room.triedToAutoAssign = true;

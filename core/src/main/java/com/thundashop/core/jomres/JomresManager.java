@@ -245,25 +245,10 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                         ", PropertyId: " + roomData.jomresPropertyId);
 
                 calendar.setTime(startDate);
-//                BookingTimeLineFlatten itemTimeline = bookingEngine.getTimeLinesForItem(startDate, endDate, roomData.bookingItemId);
-//                Set<String> existingBookingIds = new HashSet<>();
-//                List<Booking> bookings = itemTimeline.getBookings();
-//                Collections.sort(bookings, Booking.sortByStartDate());
 
                 Set<String> existingBookingIds = updateAndGetPmsBookingIdsOfBlankBookings(
                         startDate, endDate, roomData.jomresPropertyId, roomData.bookingItemId);
-                
-//                for (Booking booking : itemTimeline.getBookings()) {
-//                    PMSBlankBooking bBooking = blankBookings.get(booking.id);
-//                    if (jomresBookingRoomIds.contains(booking.externalReference)) continue;
-//                    if (bBooking == null) {
-//                        createBlankBooking(booking, roomData.jomresPropertyId);
-//                    } else if (isBlankBookingUpdated(bBooking, booking)) {
-//                        deleteBlankBookingCompletely(bBooking);
-//                        createBlankBooking(booking, roomData.jomresPropertyId);
-//                    }
-//                    existingBookingIds.add(booking.id);
-//                }
+
                 Map<String, PMSBlankBooking> blankBookings = getBlankBookingsForProperty(roomData.jomresPropertyId);
                 deleteIfExtraBlankBookingExist(existingBookingIds, blankBookings, startDate, endDate);
                 logger.debug("Update availability ended");
@@ -288,7 +273,6 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         BookingTimeLineFlatten itemTimeline = bookingEngine.getTimeLinesForItem(start, end, bookingItemId);
         List<Booking> bookings = itemTimeline.getBookings();
         Collections.sort(bookings, Booking.sortByStartDate());
-        Set<String> existingBookingIds = new HashSet<>();
         List<Supplier<?>> tasks = new ArrayList<>();
 
         for (Booking booking : itemTimeline.getBookings()) {
@@ -309,7 +293,6 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             createBlankBooking(booking, propertyId);
         }
         return booking.id;
-//        existingBookingIds.add(booking.id);
     }
 
     private Map<String, PMSBlankBooking> getBlankBookingsForProperty(int propertyId) {
@@ -768,9 +751,9 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
             messageManager.sendJomresMessageToStoreOwner(emailMessage, subject);
             logger.debug("Sent");
+            logger.info("Email Message: " + emailMessage);
             pmsManager.markSentErrorMessageForJomresAvail(hashValueForErrorAvailability);
             logText("Update Availability Error email sent to Owner");
-            logText("Email Message: " + emailMessage);
         }
 
     }

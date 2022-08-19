@@ -213,7 +213,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
     @Override
     public List<JomresRoomData> getMappingData() throws Exception {
-        return jomresPropertyToRoomDataMap.values().stream().collect(Collectors.toList());
+        return new ArrayList<>(jomresPropertyToRoomDataMap.values());
     }
 
     @Override
@@ -271,8 +271,6 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
         Map<String, PMSBlankBooking> blankBookings = getBlankBookingsForProperty(propertyId);
         BookingTimeLineFlatten itemTimeline = bookingEngine.getTimeLinesForItem(start, end, bookingItemId);
-        List<Booking> bookings = itemTimeline.getBookings();
-        Collections.sort(bookings, Booking.sortByStartDate());
         List<Supplier<?>> tasks = new ArrayList<>();
 
         for (Booking booking : itemTimeline.getBookings()) {
@@ -405,7 +403,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
         logger.debug("Started adding Booking into pms BookingId: " + booking.bookingId);
         BookingItem pmsBookingItem = bookingEngine.getBookingItem(jomresPropertyToRoomDataMap.get(booking.propertyUid).bookingItemId);
-        JomresBookingData jomresBookingData = addBookingToPms(booking, dailyPriceMatrix, null, pmsBookingItem.bookingItemTypeId);
+        JomresBookingData jomresBookingData = addBookingToPms(booking, dailyPriceMatrix, pmsBookingItem.bookingItemTypeId);
         saveJomresBookingData(jomresBookingData);
         logger.debug("ended adding Booking into pms BookingId: " + booking.bookingId);
         return jomresBookingData.pmsBookingId;
@@ -691,9 +689,9 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         return null;
     }
 
-    private void checkIfPaymentMethodIsActive(String pmethod) {
-        if (!storeApplicationPool.isActivated(pmethod)) {
-            storeApplicationPool.activateApplication(pmethod);
+    private void checkIfPaymentMethodIsActive(String pMethod) {
+        if (!storeApplicationPool.isActivated(pMethod)) {
+            storeApplicationPool.activateApplication(pMethod);
         }
     }
 
@@ -758,14 +756,12 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
     }
 
-    private JomresBookingData addBookingToPms(JomresBooking booking, Map<String, Double> priceMatrix, PmsBooking newbooking,
-                                              String pmsBookingItemTypeId) throws Exception {
+    private JomresBookingData addBookingToPms(JomresBooking booking, Map<String, Double> priceMatrix, String pmsBookingItemTypeId)
+            throws Exception {
         try {
             long start = System.currentTimeMillis();
+            PmsBooking newbooking = pmsManager.startBooking();
 
-            if (newbooking == null) {
-                newbooking = pmsManager.startBooking();
-            }
 
             for (PmsBookingRooms room : newbooking.getAllRooms()) {
                 room.unmarkOverBooking();
@@ -865,13 +861,9 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     private PmsBooking setBookingPrice(PmsBooking pmsBooking, Double totalPrice, Map<String, Double> priceMatrix) {
         Calendar calStart = Calendar.getInstance();
         PmsBookingRooms room = pmsBooking.rooms.get(0);
-        if ((pmsManager.getConfigurationSecure().usePricesFromChannelManager || storeManager.isPikStore()) && pmsBooking != null) {
-            Date end = new Date();
+        if ((pmsManager.getConfigurationSecure().usePricesFromChannelManager || storeManager.isPikStore())) {
             calStart.setTime(room.date.start);
 
-            if (room.date.end.after(end)) {
-                end = room.date.end;
-            }
             Date current = room.date.start;
             calStart.setTime(current);
             while (!current.after(room.date.end)) {

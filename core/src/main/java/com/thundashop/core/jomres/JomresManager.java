@@ -218,6 +218,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
     @Override
     public boolean updateAvailability() throws Exception{
+        long startSec = System.currentTimeMillis();
         if (!connectToApi()) return false;
         if (handleEmptyJomresCOnfiguration()) return false;
         logText("Started Jomres Update availability");
@@ -262,6 +263,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 handleIfUnauthorizedExceptionOccurred(e);
             }
         }
+        logger.debug("Time takes to complete one booking: " + (System.currentTimeMillis() - startSec) / 1000 + "s");
         return true;
     }
 
@@ -410,6 +412,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     }
 
     public List<FetchBookingResponse> fetchBookings() throws Exception {
+        long startSec = System.currentTimeMillis();
         if (!connectToApi()) return new ArrayList<>();
         if (handleEmptyJomresCOnfiguration()) return new ArrayList<>();
         BookingService bookingService = new BookingService();
@@ -507,6 +510,8 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         allBookings = allBookings.stream()
                 .sorted(Comparator.comparingLong(FetchBookingResponse::getBookingId).reversed())
                 .collect(Collectors.toList());
+
+        logger.debug("Time takes to complete one booking: " + (System.currentTimeMillis() - startSec) / 1000 + "s");
         return allBookings;
 
     }

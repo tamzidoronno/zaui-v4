@@ -1,5 +1,6 @@
 package com.thundashop.core.jomres.services;
 
+import com.google.common.base.Throwables;
 import com.google.gson.Gson;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.jomres.dto.PMSBlankBooking;
@@ -14,6 +15,8 @@ import org.slf4j.LoggerFactory;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import static com.thundashop.core.jomres.services.Constants.*;
 
@@ -89,5 +92,19 @@ public class AvailabilityService extends BaseService {
         formData.put("remote_booking_id", "");
         formData.put("text", "ZauiStay");
         return formData;
+    }
+
+    public Set<String> getPmsBookingIdsFromFutureResults(List<CompletableFuture<?>> results) {
+        Set<String> bookingIds = new HashSet<>();
+        for(CompletableFuture<?> result: results) {
+            try{
+                bookingIds.add((String) result.get());
+            } catch (ExecutionException | InterruptedException e) {
+                logger.error(Throwables.getStackTraceAsString(e));
+                logger.debug("Failed to get a property, check log files");
+                logger.debug(e.getMessage());
+            }
+        }
+        return bookingIds;
     }
 }

@@ -51,7 +51,7 @@ public class BaseService {
         return accessToken;
     }
 
-    List<CompletableFuture<? extends Object>> getAsyncTaskResults(List<Supplier<? extends Object>> tasks){
+    public List<CompletableFuture<? extends Object>> getAsyncTaskResults(List<Supplier<? extends Object>> tasks){
         ExecutorService es = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
         List<CompletableFuture<? extends Object>>futures = tasks.stream()

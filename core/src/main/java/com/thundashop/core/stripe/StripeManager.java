@@ -6,6 +6,7 @@
 package com.thundashop.core.stripe;
 
 import com.getshop.scope.GetShopSession;
+import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.stripe.Stripe;
 import com.stripe.exception.SignatureVerificationException;
@@ -22,6 +23,7 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.ordermanager.data.PaymentLog;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
@@ -58,6 +60,7 @@ public class StripeManager extends ManagerBase implements IStripeManager {
 
     private StripeSettings settings = new StripeSettings();
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(GetShopLogHandler.class);
+    private static final String STRIPE_APPLICATION_ID = "3d02e22a-b0ae-4173-ab92-892a94b457ae";
 
     @Override
     public synchronized void dataFromDatabase(DataRetreived data) {
@@ -347,7 +350,7 @@ public class StripeManager extends ManagerBase implements IStripeManager {
 
     private String getStripeKey() {
         if (isProdMode()) {
-            Application stripeApp = storeApplicationPool.getApplication("3d02e22a-b0ae-4173-ab92-892a94b457ae");
+            Application stripeApp = storeApplicationPool.getApplication(STRIPE_APPLICATION_ID);
             return stripeApp.getSetting("key");
         }
         return "sk_test_K7lzjnniaCB8MjTZjpodqriy";
@@ -371,7 +374,7 @@ public class StripeManager extends ManagerBase implements IStripeManager {
     @Override
     public String getStripePublicKey() {
         if (isProdMode()) {
-            Application stripeApp = storeApplicationPool.getApplication("3d02e22a-b0ae-4173-ab92-892a94b457ae");
+            Application stripeApp = storeApplicationPool.getApplication(STRIPE_APPLICATION_ID);
             return stripeApp.getSetting("pkey");
         }
         return "pk_test_4LQngWyMqLjFLNwXEVro6DRL";
@@ -442,10 +445,13 @@ public class StripeManager extends ManagerBase implements IStripeManager {
 
             Session session = Session.create(params);
             log.info("Stripe payment session has been created for order: " + orderId + " Session id: ", session.getId());
-
-            order.payment.transactionLog.put(System.currentTimeMillis(), "Transferred to payment window");
-            orderManager.saveOrder(order);
-
+            PaymentLog pays = new PaymentLog();
+            pays.orderId = orderId;
+            pays.transactionPaymentId = session.getId();
+            pays.isPaymentInitiated = true;
+            pays.paymentTypeId = STRIPE_APPLICATION_ID;
+            pays.paymentResponse = new Gson().toJson(session);
+            orderManager.saveOrderPaymentDetails(pays);
             return session.getId();
         } catch (Exception e) {
             messageManager.sendErrorNotification("Error in new payment stripe integration", e);

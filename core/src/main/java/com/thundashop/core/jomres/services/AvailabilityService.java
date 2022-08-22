@@ -47,22 +47,23 @@ public class AvailabilityService extends BaseService {
         return res;
     }
 
-    public UpdateAvailabilityResponse createBlankBooking(String baseUrl, String token, String channel, int jomresPropertyId, Booking booking) {
+    public UpdateAvailabilityResponse createBlankBooking(
+            String baseUrl, String token, String channel, int jomresPropertyId, Date start, Date end) {
         UpdateAvailabilityResponse res = new UpdateAvailabilityResponse();
         createHttpClient();
         try {
             String url = baseUrl + MAKE_PROPERTY_UNAVAILABLE;
             Calendar calendar = Calendar.getInstance();
-            calendar.setTime(booking.endDate);
+            calendar.setTime(end);
             calendar.add(Calendar.DATE, -1);
             Date lastNightStay = calendar.getTime();
             Map<String, String> formData =
-                    getFormDataForAvailability(jomresPropertyId, booking.startDate, lastNightStay);
+                    getFormDataForAvailability(jomresPropertyId, start, lastNightStay);
             Request request = getHttpBearerTokenRequest(url, token,
                     addChannelIntoHeaders(null, channel), formData, "PUT");
             Response response = httpClient.newCall(request).execute();
             res = responseDataParser.parseChangeAvailabilityResponse(response);
-            res.setStart(booking.startDate);
+            res.setStart(start);
             res.setPropertyId(jomresPropertyId);
             res.setEnd(lastNightStay);
         } catch (Exception e) {

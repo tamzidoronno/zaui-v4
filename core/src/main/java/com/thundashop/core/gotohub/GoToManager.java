@@ -496,12 +496,13 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         if (bookingEngine.getBookingItemType(gotoBookingRoom.getRoomCode()) == null) {
             log.error("booking room type does not exist, BookingItemTypeId: " + gotoBookingRoom.getRoomCode());
             throw new GotoException(GoToStatusCodes.ROOM_TYPE_NOT_FOUND.code,
-                    GoToStatusCodes.ROOM_TYPE_NOT_FOUND.additionalInfo(gotoBookingRoom.getRoomCode()).message);
+                    GoToStatusCodes.ROOM_TYPE_NOT_FOUND.message + gotoBookingRoom.getRoomCode());
         }
         PmsGuests guest = new PmsGuests();
         guest.email = booking.getOrderer().getEmail();
         guest.name = booking.getOrderer().getFirstName() + " " + booking.getOrderer().getLastName();
-        guest.phone = booking.getOrderer().getMobile().getAreaCode() + booking.getOrderer().getMobile().getPhoneNumber();
+        guest.phone = booking.getOrderer().getMobile().getPhoneNumber();
+        guest.prefix = booking.getOrderer().getMobile().getAreaCode();
 
         pmsBookingRoom.guests.add(guest);
         return pmsBookingRoom;

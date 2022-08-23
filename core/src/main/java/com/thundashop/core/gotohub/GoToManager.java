@@ -502,6 +502,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         guest.email = booking.getOrderer().getEmail();
         guest.name = booking.getOrderer().getFirstName() + " " + booking.getOrderer().getLastName();
         guest.phone = booking.getOrderer().getMobile().getAreaCode() + booking.getOrderer().getMobile().getPhoneNumber();
+        guest.prefix = "";
 
         pmsBookingRoom.guests.add(guest);
         return pmsBookingRoom;

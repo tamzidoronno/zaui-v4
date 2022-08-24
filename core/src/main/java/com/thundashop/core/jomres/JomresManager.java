@@ -84,8 +84,14 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             logText("No Jomres room mapping found from database for this hotel, store id: " + this.storeId);
         }
 
-        createScheduler("jomresprocessor", "*/5 * * * *", JomresManagerProcessor.class);
-        createScheduler("jomresupdateavailability", "*/30 * * * *", JomresHalfHourlyScheduler.class);
+        stopScheduler("jomresprocessor");
+        stopScheduler("jomresupdateavailability");
+        stopScheduler("jomresUpdateAvailability");
+        stopScheduler("jomresFetchBooking");
+
+
+        createScheduler("jomresFetchBooking", "*/4 * * * *", JomresFetchBookingScheduler.class);
+        createScheduler("jomresUpdateAvailability", "*/7 * * * *", JomresUpdateAvailabilityScheduler.class);
     }
 
     public void logText(String string) {

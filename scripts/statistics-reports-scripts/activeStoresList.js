@@ -1,4 +1,4 @@
-mongoServerAddress = '10.0.6.33';
+mongoServerAddress = 'localhost';
 conn = new Mongo(mongoServerAddress + ":27018");
 userDb = conn.getDB("UserManager");
 storeDb = conn.getDB("StoreManager");
@@ -43,21 +43,23 @@ storeDb.getCollection('col_all')
         webAddress: 1,
         webAddressPrimary: 1,
         additionalDomainNames: 1,
-        rowCreatedDate: 1
+        rowCreatedDate: 1,
+        "configuration.defaultPrefix": 1
     })
     .forEach(store => {
         if(activeStoreIds.includes(store._id)){
-            address = store.webAddress ? store.webAddress + ',' : '';
-            if(store.webAddressPrimary){
-                address = address + store.webAddressPrimary + ',';
+            address = store.webAddress ? store.webAddress : '';
+            if(store.webAddressPrimary && store.webAddressPrimary !== store.webAddress){
+                address = address + ', ' + store.webAddressPrimary;
             }
-            if(store.additionalDomainNames && store.additionalDomainNames.length > 0){
-                address = address + store.additionalDomainNames.join(',')
+            if(!address && store.additionalDomainNames && store.additionalDomainNames.length > 0){
+                address = address + ', ' + store.additionalDomainNames.join(', ')
             }
             activeStores.push({
                 id: store._id,
-                address: address.split(',').filter(x=> x.length > 0).join(", "),
-                creationDate: store.rowCreatedDate.toISOString()
+                address: address,
+                creationDate: store.rowCreatedDate.toISOString(),
+                defaultPrefix: store.configuration.defaultPrefix
             })
         }
     })
@@ -65,6 +67,7 @@ storeDb.getCollection('col_all')
 now = new Date();
 
 activeStoreIds.forEach(storeId => {
+    store = activeStores.find( x => x.id === storeId);
     ehfLog = {};
     smsSent = {};
 
@@ -88,24 +91,43 @@ activeStoreIds.forEach(storeId => {
                                       '$lte': ISODate(lastSixMonthAgoLastDayOfMonth.toISOString())
                                   }
                               })
-        sentSmsCount = messageDb.getCollection('col_' + storeId + '_log')
-                             .count({
-                                 'className': 'com.thundashop.core.messagemanager.SmsMessage',
-                                 'rowCreatedDate': {
-                                     '$gte': ISODate(lastSixMonthAgoFirstDayOfMonth.toISOString()),
-                                     '$lte': ISODate(lastSixMonthAgoLastDayOfMonth.toISOString())
-                                 }
-                             })
+        domesticSmsCount = 0;
+        internationalSmsCount = 0;
+        messageDb.getCollection('col_' + storeId + '_log')
+             .find({
+                 'className': 'com.thundashop.core.messagemanager.SmsMessage',
+                 'rowCreatedDate': {
+                     '$gte': ISODate(lastSixMonthAgoFirstDayOfMonth.toISOString()),
+                     '$lte': ISODate(lastSixMonthAgoLastDayOfMonth.toISOString())
+                 }
+             },
+             {
+             message: 1,
+             prefix: 1
+             }).forEach(sms => {
+                if(sms.prefix.trim() == store.defaultPrefix){
+                    domesticSmsCount = domesticSmsCount + Math.ceil(sms.message.length/130);
+                }
+                else{
+                    internationalSmsCount = internationalSmsCount + Math.ceil(sms.message.length/130);
+                }
+
+             })
+
         ehfLog[key] = ehfLogCount;
-        smsSent[key] = sentSmsCount;
+        smsSent[key] = {
+            domestic: domesticSmsCount,
+            international: internationalSmsCount,
+            total: domesticSmsCount + internationalSmsCount
+        };
 
         lastSixMonthAgoFirstDayOfMonth.setMonth(lastSixMonthAgoFirstDayOfMonth.getMonth() + 1);
         lastSixMonthAgoLastDayOfMonth.setMonth(lastSixMonthAgoLastDayOfMonth.getMonth() + 1);
     }
 
-    store = activeStores.find( x => x.id === storeId);
     store.EHF = ehfLog;
     store.SMS = smsSent;
+    delete store.defaultPrefix;
     printjson(store);
 })
 

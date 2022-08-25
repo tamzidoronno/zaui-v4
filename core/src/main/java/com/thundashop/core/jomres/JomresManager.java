@@ -20,6 +20,7 @@ import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pmsmanager.*;
 import com.thundashop.core.sedox.autocryptoapi.Exception;
 import com.thundashop.core.storemanager.StoreManager;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -206,6 +207,10 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
     @Override
     public boolean saveMapping(List<JomresRoomData> mappingRoomData) throws Exception {
+        if(!jomresConfiguration.isEnable){
+            logger.info("Jomres connection is disabled");
+            return false;
+        }
         deleteExistingMapping();
         for (JomresRoomData roomData : mappingRoomData) {
             handleExistingRoomDataWhileMapping(roomData);
@@ -221,6 +226,10 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
     @Override
     public List<JomresRoomData> getMappingData() throws Exception {
+        if(!jomresConfiguration.isEnable){
+            logger.info("Jomres connection is disabled");
+            return new ArrayList<>();
+        }
         return new ArrayList<>(jomresPropertyToRoomDataMap.values());
     }
 
@@ -670,6 +679,9 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     public boolean connectToApi() {
         if (jomresConfiguration == null) {
             logText("No Jomres configuration is found for this hotel");
+            return false;
+        }
+        if (!jomresConfiguration.isEnable) {
             return false;
         }
         Date currentTime = new Date();

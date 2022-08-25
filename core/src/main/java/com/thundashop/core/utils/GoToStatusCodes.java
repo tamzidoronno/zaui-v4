@@ -31,15 +31,11 @@ public enum GoToStatusCodes {
     BOOKING_CANCELLATION_FAILED(1509, "Goto Booking Cancellation Failed.. Reason: Unknown");
 
     public final long code;
-    public String message;
+    public final String message;
 
     private GoToStatusCodes(long code, String message) {
         this.code = code;
         this.message = message;
     }
 
-    public GoToStatusCodes additionalInfo(String additionalInfo) {
-        this.message = this.message + additionalInfo;
-        return this;
-    }
 }

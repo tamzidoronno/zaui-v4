@@ -395,6 +395,15 @@ public interface IPmsManager {
     
     @Editor
     void addCommentToRoom(String roomId, String comment);
+
+    /**
+     * It will update the comment if it finds with <code>commentId</code>, otherwise it will add the comment.
+     * It will find {@link PmsBooking} from <code>bookingId</code>, which the comment is associated. if <code>bookingId</code> is null/blank, it will find booking from other parameter's <code>pmsBookingRoomId</code>
+     * @param bookingId, the id of the {@link PmsBooking} for which the comment is associated.
+     * @return {@link PmsBookingComment}, saved and updated comment object if <code>succeed</code>, otherwise <code>null</code> if it fails.
+     */
+    @Editor
+    PmsBookingComment saveComment(String bookingId, PmsBookingComment comment);
     
     @Administrator
     String createPrepaymentOrder(String bookingId);

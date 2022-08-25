@@ -16,7 +16,7 @@ public class Session {
     public User currentUser;
     public String storeId;
     public String id;
-    private HashMap<String, Object> storedSessionObjects = new HashMap();
+    private HashMap<String, Object> storedSessionObjects = new HashMap<>();
     public Date lastActive;
     public String language;
     

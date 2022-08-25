@@ -93,7 +93,7 @@ public class DayEntry implements Serializable, Cloneable {
      * If this record is connected to multiple 
      * The transactionids are listed here.
      */
-    public List<String> orderTransactionIds = new ArrayList();
+    public List<String> orderTransactionIds = new ArrayList<>();
     
     /**
      * If this is set to other then blank or zero all payments
@@ -107,7 +107,7 @@ public class DayEntry implements Serializable, Cloneable {
     
     
     @Transient
-    public HashMap<String, String> metaData = new HashMap();
+    public HashMap<String, String> metaData = new HashMap<>();
     
 
     @Override
@@ -121,14 +121,6 @@ public class DayEntry implements Serializable, Cloneable {
     
     public String getOrderId() {
         return orderId;
-    }
-
-    public boolean isForBatch(String batchId) {
-        if (this.batchId != null) {
-            return this.batchId.equals(batchId);
-        }
-        
-        return false;
     }
 
     public BigDecimal getAmountExTaxes() {

@@ -8,7 +8,7 @@ import java.util.List;
 @GetShopRemoteObject
 public class JsTreeList extends DataCommon {
     public String treeName = "";
-    public List<TreeNode> nodes = new ArrayList();
+    public List<TreeNode> nodes = new ArrayList<>();
 
     public TreeNode getNode(String nodeId) {
         for (TreeNode node : nodes) {

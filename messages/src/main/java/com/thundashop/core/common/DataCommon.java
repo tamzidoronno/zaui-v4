@@ -5,7 +5,6 @@
 package com.thundashop.core.common;
 
 import com.thundashop.core.productmanager.data.Product;
-import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.Calendar;
@@ -19,7 +18,7 @@ import org.mongodb.morphia.annotations.PostLoad;
  * @author hjemme
  */
 @Entity("Credentials")
-public class DataCommon extends TranslationHandler implements Serializable, Cloneable {
+public class DataCommon extends TranslationHandler implements Cloneable {
 
     @Id
     public String id = "";

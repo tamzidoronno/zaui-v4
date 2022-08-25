@@ -14,18 +14,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  *
  * @author ktonder
  */
 public class BookingValidator {
-    private Map<String, BookingItem> items = new HashMap();
-    private HashMap<String, Booking> savedBookings = new HashMap();
-    private HashMap<String, List<Booking>> groupedBookings = new HashMap();
-    private List<Booking> unsavedBookings = new ArrayList();
-    private List<Booking> allBookings = new ArrayList();
+    private Map<String, BookingItem> items = new HashMap<>();
+    private HashMap<String, Booking> savedBookings = new HashMap<>();
+    private HashMap<String, List<Booking>> groupedBookings = new HashMap<>();
+    private List<Booking> unsavedBookings = new ArrayList<>();
+    private List<Booking> allBookings = new ArrayList<>();
 
     public BookingValidator(Map<String, BookingItem> items) {
         this.items = items;
@@ -49,7 +48,7 @@ public class BookingValidator {
         
         List<Booking> toUse = groupedBookings.get(booking.bookingItemTypeId);
         if (toUse == null) {
-            toUse = new ArrayList();
+            toUse = new ArrayList<>();
             groupedBookings.put(booking.bookingItemTypeId, toUse);
         }
         

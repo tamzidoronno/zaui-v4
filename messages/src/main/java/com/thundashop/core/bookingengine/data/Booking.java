@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
  *
  * @author ktonder
  */
+//
 public class Booking extends DataCommon implements Comparable<Booking> {
     public String bookingItemId = "";
     public int incrementalBookingId = 0;

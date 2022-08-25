@@ -22,5 +22,5 @@ public class ApplicationModule {
     /**
      * If empty = all stores allowed to this module.
      */
-    public List<String> allowedStoreIds = new ArrayList();
+    public List<String> allowedStoreIds = new ArrayList<>();
 }

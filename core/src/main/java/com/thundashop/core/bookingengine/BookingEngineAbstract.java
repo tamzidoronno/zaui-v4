@@ -8,7 +8,6 @@ package com.thundashop.core.bookingengine;
 import com.thundashop.core.bookingengine.data.BookingTimeLineFlatten;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
-import com.thundashop.app.contentmanager.data.ContentData;
 import static com.thundashop.core.bookingengine.BookingEngine.useNewEngine;
 import com.thundashop.core.bookingengine.data.Availability;
 import com.thundashop.core.bookingengine.data.Booking;
@@ -63,13 +62,13 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed implements IB
     @Autowired
     public DepartmentManager departmentManager;
     
-    public static ArrayList<String> usingNewSystem = new ArrayList();
-    public static ArrayList<String> usingNewSystem2 = new ArrayList();
+    public static ArrayList<String> usingNewSystem = new ArrayList<>();
+    public static ArrayList<String> usingNewSystem2 = new ArrayList<>();
     
-    private final Map<String, Booking> bookings = new HashMap();
-    private final Map<String, Availability> availabilities = new HashMap();
-    private final Map<String, BookingItem> items = new HashMap();
-    private Map<String, BookingItemType> types = new HashMap();
+    private final Map<String, Booking> bookings = new HashMap<>();
+    private final Map<String, Availability> availabilities = new HashMap<>();
+    private final Map<String, BookingItem> items = new HashMap<>();
+    private Map<String, BookingItemType> types = new HashMap<>();
     
     private BookingEngineConfiguration config = new BookingEngineConfiguration();
     
@@ -79,7 +78,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed implements IB
     
     @Override
     public List<BookingItemType> getBookingItemTypes() {
-        List<BookingItemType> normalBookingTypes = new ArrayList();
+        List<BookingItemType> normalBookingTypes = new ArrayList<>();
         normalBookingTypes.addAll(getBookingItemTypesWithSystemType(0));
         normalBookingTypes.addAll(getBookingItemTypesWithSystemType(3));
         return normalBookingTypes; 
@@ -87,7 +86,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed implements IB
     
     @Override
     public List<BookingItemType> getBookingItemTypesWithSystemType(Integer systemType) {
-        List<BookingItemType> result = new ArrayList(types.values());
+        List<BookingItemType> result = new ArrayList<>(types.values());
         Comparator<BookingItemType> comparator = new Comparator<BookingItemType>() {
             public int compare(BookingItemType c1, BookingItemType c2) {
                 if(c1.name == null) {

@@ -3,17 +3,16 @@ package com.thundashop.core.bookingengine.data;
 
 import com.thundashop.core.common.Translation;
 import com.thundashop.core.common.TranslationHandler;
-import java.io.Serializable;
+
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.TransferHandler;
 
 public class RegistrationRulesField extends TranslationHandler {
     public boolean required = false;
     public boolean active = false;
     public boolean visible = false;
     public String type = "";
-    public List<String> additional = new ArrayList();
+    public List<String> additional = new ArrayList<>();
     public String dependsOnCondition = "";
     @Translation
     public String title = "";

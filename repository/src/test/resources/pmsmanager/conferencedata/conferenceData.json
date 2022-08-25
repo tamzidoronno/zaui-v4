@@ -1,0 +1,25 @@
+{
+  "note" : "Bryllups middag ",
+  "nameOfEvent" : "Sverre Borgen Olsen",
+  "days" : [
+    {
+      "day" : "03.07.2020",
+      "conferences" : [
+        {
+          "rowId" : "54a9b978-dc54-4352-ba5f-27aabb716621",
+          "from" : "19:01",
+          "to" : "22:01",
+          "actionName" : "Sverre Borgen Olsen",
+          "attendeesCount" : "7"
+        }
+      ]
+    }
+  ],
+  "bookingId" : "a6072d8b-bbd8-48a5-9dc2-bc2c021d5639",
+  "storeId" : "1ed4ab1f-c726-4364-bf04-8dcddb2fb2b1",
+  "gs_manager" : "PmsManager_default",
+  "lastModifiedByUserId" : "2c98aa22-42c0-42b7-9a67-c8f3d4403ccb",
+  "getshopModule" : "",
+  "deepFreeze" : false,
+  "translationId" : "c6c3cd7d-efd8-4df8-92fd-ac418130c351"
+}

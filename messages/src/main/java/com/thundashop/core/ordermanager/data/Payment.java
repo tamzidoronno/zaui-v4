@@ -72,32 +72,11 @@ public class Payment implements Serializable {
         type = type.replace("_", "-");
         return type;
     }
-    
 
-    public String getIssuer() {
-        for (String log : transactionLog.values()) {
-            if (log.contains("Result:") && log.contains("32\n")) {
-                return log.split(";")[22];
-            }
-        }
-        
-        return "";
-    }
-    
     public String getTransactionId() {
         for (String log : transactionLog.values()) {
             if (log.contains("Result:") && log.contains("32\n")) {
                 return log.split(";")[4];
-            }
-        }
-        
-        return "";
-    }
-    
-    public String getCardInfo() {
-        for (String log : transactionLog.values()) {
-            if (log.contains("Result:") && log.contains("32\n")) {
-                return log.split(";")[5];
             }
         }
         

@@ -6,10 +6,12 @@
 package com.thundashop.core.pmsmanager;
 
 import com.thundashop.core.common.DataCommon;
+
+import org.mongodb.morphia.annotations.Transient;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import org.mongodb.morphia.annotations.Transient;
 
 /**
  *
@@ -29,12 +31,12 @@ public class ConferenceData extends DataCommon {
     @Transient
     public Date date;
     
-    List<ConferenceDataDay> days = new ArrayList();
+    public List<ConferenceDataDay> days = new ArrayList<>();
     
     public String bookingId;
     
     public List<ConferenceData> getForEachDay() {
-        List<ConferenceData> data = new ArrayList();
+        List<ConferenceData> data = new ArrayList<>();
         
         for (ConferenceDataDay day : days) {
             ConferenceData singleDay = new ConferenceData();

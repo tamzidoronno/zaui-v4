@@ -4,35 +4,32 @@
  */
 package com.thundashop.core.common;
 
-import com.getshop.scope.GetShopSession;
-import com.getshop.scope.GetShopSessionBeanNamed;
-import com.getshop.scope.GetShopSessionObject;
-import com.getshop.scope.GetShopSessionScope;
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.thundashop.core.applications.StoreApplicationPool;
-import com.thundashop.core.appmanager.data.Application;
-import com.thundashop.core.databasemanager.Database;
-import com.thundashop.core.socket.GsonUTCDateAdapter;
-import com.thundashop.core.usermanager.IUserManager;
-import com.thundashop.core.usermanager.UserManager;
-import com.thundashop.core.usermanager.data.User;
-import com.thundashop.core.usermanager.data.UserPrivilege;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
-import org.springframework.core.type.filter.AnnotationTypeFilter;
+ import com.getshop.scope.GetShopSession;
+ import com.getshop.scope.GetShopSessionBeanNamed;
+ import com.getshop.scope.GetShopSessionObject;
+ import com.getshop.scope.GetShopSessionScope;
+ import com.google.common.reflect.TypeToken;
+ import com.google.gson.Gson;
+ import com.google.gson.GsonBuilder;
+ import com.thundashop.core.applications.StoreApplicationPool;
+ import com.thundashop.core.appmanager.data.Application;
+ import com.thundashop.core.databasemanager.Database;
+ import com.thundashop.core.socket.GsonUTCDateAdapter;
+ import com.thundashop.core.usermanager.IUserManager;
+ import com.thundashop.core.usermanager.UserManager;
+ import com.thundashop.core.usermanager.data.User;
+ import com.thundashop.core.usermanager.data.UserPrivilege;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ import org.springframework.beans.BeansException;
+ import org.springframework.beans.factory.config.BeanDefinition;
+ import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
+ import org.springframework.core.type.filter.AnnotationTypeFilter;
+
+ import java.lang.annotation.Annotation;
+ import java.lang.reflect.InvocationTargetException;
+ import java.lang.reflect.Method;
+ import java.util.*;
 
 /**
  *
@@ -40,10 +37,12 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
  */
 public class StoreHandler {
 
-    private List<String> inittedNamedBeans = new ArrayList();
+    private static final Logger logger = LoggerFactory.getLogger(StoreHandler.class);
+
+    private final List<String> inittedNamedBeans = new ArrayList<>();
     private List<ManagerBase> messageHandler;
-    private String storeId;
-    private HashMap<String, Session> sessions = new HashMap();
+    private final String storeId;
+    private final HashMap<String, Session> sessions = new HashMap<>();
     private GetShopSessionScope scope;
     private ArrayList<GetShopSessionObject> sessionScopedBeans;
 
@@ -52,7 +51,7 @@ public class StoreHandler {
         try {
             scope = AppContext.appContext.getBean(GetShopSessionScope.class);
         } catch (BeansException ex) {
-            GetShopLogHandler.logPrintStatic("Throws bean exception?", null);
+            logger.error("", ex);
         }
     }
         
@@ -101,8 +100,8 @@ public class StoreHandler {
 
             try {
                 result = cloneResult(result, user);
-            }catch(Exception e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                logger.error("", e);
             }
             return result;
         } catch (ErrorException ex) {
@@ -115,7 +114,7 @@ public class StoreHandler {
                     userInfo += " email: " + user.emailAddress;
                 }
 
-                GetShopLogHandler.logPrintStatic("Access denied, store: " + storeId + " , user={" + userInfo + "} method={" + aClass.getSimpleName() + "." + inObject.method + "}", null);
+                logger.error("Access denied storeId {} , userInfo {} , class {} , method {}", storeId, userInfo, aClass.getSimpleName(), inObject.method);
             }
             throw ex;
         } finally {
@@ -142,7 +141,7 @@ public class StoreHandler {
         } catch (ClassNotFoundException ex) {
             ErrorException gex = new ErrorException(81);
             gex.additionalInformation = ex.getMessage();
-            ex.printStackTrace();
+            logger.error("", ex);
             throw gex;
         }
     }
@@ -198,15 +197,14 @@ public class StoreHandler {
             if (cause instanceof ErrorException) {
                 throw (ErrorException) cause;
             } else {
-                printStack(cause, scopedStoreId);
-                ex.printStackTrace();
+                logger.error("", ex);
             }
 
             ErrorException aex = new ErrorException(86);
             aex.additionalInformation = cause.getLocalizedMessage() + " <br> " + stackTraceToString(cause);
             throw aex;
         } catch (Exception ex) {
-            printStack(ex, scopedStoreId);
+            logger.error("storeId-{}", storeId, ex);
             throw ex;
         }
     }
@@ -260,7 +258,7 @@ public class StoreHandler {
         try {
             messageHandler = new ArrayList<ManagerBase>(AppContext.appContext.getBeansOfType(ManagerBase.class).values());
         } catch (BeansException ex) {
-            GetShopLogHandler.logPrintStatic("Throws bean exception?", null);
+            logger.error("", ex);
         }
         for (ManagerBase base : messageHandler) {
             base.setSession(session);
@@ -273,7 +271,7 @@ public class StoreHandler {
                 base.setSession(session);
             }
         } catch (BeansException ex) {
-            GetShopLogHandler.logPrintStatic("Throws bean exception?", null);
+            logger.error("", ex);
         }
 
         for (GetShopSessionBeanNamed bean : scope.getSessionNamedObjects()) {
@@ -407,6 +405,8 @@ public class StoreHandler {
         } catch (ErrorException e) {
             // Errorhiding is an antipattern! :P
             // http://en.wikipedia.org/wiki/Error_hiding
+            // Then why did you do this? ;)
+            logger.error("", e);
         }
         return new User();
     }
@@ -420,7 +420,7 @@ public class StoreHandler {
 //            }
             
         } catch (BeansException ex) {
-            GetShopLogHandler.logPrintStatic("Throws bean exception?", null);
+            logger.error("", ex);
         }
 
         return null;
@@ -429,36 +429,6 @@ public class StoreHandler {
     private boolean checkApplicationsAccessByApp(User user, Method executeMethod, Class aClass) {
 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-
-//        for(ApplicationSettings setting : pool.applications.values()) {
-//            for(String id : user.applicationAccessList.keySet()) {
-//                if(setting.id.equals(id)) {
-//                    int writeType = user.applicationAccessList.get(id);
-//                    for(ApiCallsInUse inuse : setting.apiCallsInUse) {
-//                        boolean isWriting = false;
-//                        for(Annotation anno : executeMethod.getAnnotations()) {
-//                            if(anno instanceof Writing) {
-//                                isWriting = true;
-//                            }
-//                        }
-//                        
-//                        //Write access only
-//                        if((writeType == 2) && !isWriting) {
-//                            continue;
-//                        }
-//                        //Read access only
-//                        if((writeType == 1) && isWriting) {
-//                            continue;
-//                        }
-//                        
-//                        if(inuse.manager.equals(aClass.getCanonicalName()) && inuse.method.equals(executeMethod.getName())) {
-//                            return true;
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        return false;
     }
 
     /**
@@ -524,21 +494,8 @@ public class StoreHandler {
                 }
             }
         } catch (Exception ex) {
-            // Should be impossible
-            ex.printStackTrace();
+            logger.error("", ex);
         }
-    }
-
-    boolean isEditor(String sessionId, JsonObject2 object) {
-        scope.setStoreId(storeId, object.multiLevelName, getSession(sessionId));
-
-        UserManager manager = getManager(UserManager.class, null, null);
-        User user = manager.getUserBySessionId(sessionId);
-        if (user != null) {
-            return user.isEditor();
-        }
-
-        return false;
     }
 
     private void setDefaultLanguageIfNotSet(Session session) {
@@ -551,16 +508,6 @@ public class StoreHandler {
         }
     }
 
-    private synchronized void printStack(Throwable ex, String scopedStoreId) {
-        ex.printStackTrace();
-        
-        StringWriter errors = new StringWriter();
-        ex.printStackTrace(new PrintWriter(errors));
-        String stack = errors.toString();
-
-        GetShopLogHandler.logPrintStatic(stack, scopedStoreId);
-    }
-    
     public String getStoreId() {
         return storeId;
     }
@@ -579,7 +526,7 @@ public class StoreHandler {
         try {
             thread.execute();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error("", ex);
         }
         
         try {

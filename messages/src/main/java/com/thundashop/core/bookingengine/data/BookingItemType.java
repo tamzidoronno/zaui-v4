@@ -67,7 +67,7 @@ public class BookingItemType extends DataCommon {
     @Translation
     public String name;
     public String productId;
-    public List<String> historicalProductIds = new ArrayList();
+    public List<String> historicalProductIds = new ArrayList<>();
     public String pageId;
     public Boolean visibleForBooking = true;
     public Boolean autoConfirm = false;
@@ -75,13 +75,13 @@ public class BookingItemType extends DataCommon {
     public Integer size = 0;
     public RegistrationRules rules = null;
     public TimeRepeaterData openingHours;
-    public HashMap<String, TimeRepeaterData> openingHoursData = new HashMap();
+    public HashMap<String, TimeRepeaterData> openingHoursData = new HashMap<>();
     public Integer order = 0;
     public Integer orderAvailability = 0;
     @Translation
     public String description = "";
-    public HashMap<String, String> descriptionTranslations = new HashMap();
-    public HashMap<String, String> nameTranslations = new HashMap();
+    public HashMap<String, String> descriptionTranslations = new HashMap<>();
+    public HashMap<String, String> nameTranslations = new HashMap<>();
     public String group = "";
     public Integer capacity = 0;
     public Integer minStay = 0;

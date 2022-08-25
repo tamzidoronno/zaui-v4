@@ -15,6 +15,7 @@ import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.common.StoreComponent;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.start.Runner;
+import com.thundashop.repository.db.MongoClientProvider;
 import org.mongodb.morphia.Morphia;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

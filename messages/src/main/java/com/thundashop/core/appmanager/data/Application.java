@@ -1,14 +1,13 @@
 package com.thundashop.core.appmanager.data;
 
-import com.google.gson.Gson;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.Setting;
+import org.mongodb.morphia.annotations.Transient;
+
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import org.mongodb.morphia.annotations.Transient;
 
 public class Application extends DataCommon implements Comparator<Application> {
     public static class Type {
@@ -35,7 +34,7 @@ public class Application extends DataCommon implements Comparator<Application> {
      * This maps has the widgetid as key and the value as the function on this
      * application it should try to run.
      */
-    public HashMap<String, String> connectedWidgets = new HashMap();
+    public HashMap<String, String> connectedWidgets = new HashMap<>();
 
     public String appName;
     public String description;
@@ -54,8 +53,8 @@ public class Application extends DataCommon implements Comparator<Application> {
     public boolean pageSingelton;
     public boolean hasDashBoard = true;
     public boolean defaultActivate = false;
-    public List<String> allowedStoreIds = new ArrayList();
-    public List<ApiCallsInUse> apiCallsInUse = new ArrayList();
+    public List<String> allowedStoreIds = new ArrayList<>();
+    public List<ApiCallsInUse> apiCallsInUse = new ArrayList<>();
     
     @Transient
     public ApplicationModule applicationModule;
@@ -71,7 +70,7 @@ public class Application extends DataCommon implements Comparator<Application> {
 
     public void complete() {
         if (type != null && type.equals(Type.Theme)) {
-            allowedAreas = new ArrayList();
+            allowedAreas = new ArrayList<>();
             allowedAreas.add("themes");
         }
     }

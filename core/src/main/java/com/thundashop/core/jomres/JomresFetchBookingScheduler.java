@@ -10,9 +10,9 @@ public class JomresFetchBookingScheduler extends GetShopSchedulerBase {
 
     @Override
     public void execute() throws Exception {
-//        if(!getApi().getStoreManager().isProductMode()) {
-//            return;
-//        }
+        if(!getApi().getStoreManager().isProductMode()) {
+            return;
+        }
         String storeId = getApi().getStoreManager().getStoreId();
 
         String multilevelname = getMultiLevelName();

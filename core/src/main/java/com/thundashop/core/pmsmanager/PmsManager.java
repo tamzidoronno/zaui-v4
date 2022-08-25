@@ -3123,7 +3123,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         saveBooking(booking);
     }
 
-    @Editor
+    @Override
     public PmsBookingComment saveComment(String bookingId, PmsBookingComment comment) {
         if(comment == null) {
             logger.error("Comment is null");

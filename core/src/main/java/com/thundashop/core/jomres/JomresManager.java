@@ -67,11 +67,10 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     @Override
     public void initialize() throws SecurityException {
         super.initialize();
-        stopScheduler("jomresprocessor");
         stopScheduler("jomresFetchBooking");
         stopScheduler("jomresUpdateAvailability");
 
-        createScheduler("jomresFetchBooking", "*/4 * * * *", JomresFetchBookingScheduler.class);
+        createScheduler("jomresFetchBooking", "*/6 * * * *", JomresFetchBookingScheduler.class);
         createScheduler("jomresUpdateAvailability", "*/7 * * * *", JomresUpdateAvailabilityScheduler.class);
     }
     @Override

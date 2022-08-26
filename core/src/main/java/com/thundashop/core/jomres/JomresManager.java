@@ -65,6 +65,16 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     Date cmfClientTokenGenerationTime = new Date();
 
     @Override
+    public void initialize() throws SecurityException {
+        super.initialize();
+        stopScheduler("jomresprocessor");
+        stopScheduler("jomresFetchBooking");
+        stopScheduler("jomresUpdateAvailability");
+
+        createScheduler("jomresFetchBooking", "*/4 * * * *", JomresFetchBookingScheduler.class);
+        createScheduler("jomresUpdateAvailability", "*/7 * * * *", JomresUpdateAvailabilityScheduler.class);
+    }
+    @Override
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataCommon : data.data) {
             if (dataCommon instanceof JomresRoomData) {
@@ -84,15 +94,6 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         if (jomresPropertyToRoomDataMap.isEmpty()) {
             logText("No Jomres room mapping found from database for this hotel, store id: " + this.storeId);
         }
-
-        stopScheduler("jomresprocessor");
-        stopScheduler("jomresupdateavailability");
-        stopScheduler("jomresUpdateAvailability");
-        stopScheduler("jomresFetchBooking");
-
-
-        createScheduler("jomresFetchBooking", "*/4 * * * *", JomresFetchBookingScheduler.class);
-        createScheduler("jomresUpdateAvailability", "*/7 * * * *", JomresUpdateAvailabilityScheduler.class);
     }
 
     public void logText(String string) {

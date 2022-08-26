@@ -218,6 +218,7 @@ public class PmsConfiguration extends DataCommon {
     //Lock system
     public HashMap<String, PmsLockServer> lockServerConfigs = new HashMap();
     public boolean useNewQueueCheck = false;
+    public SecurityListSchedule securityListSchedule = new SecurityListSchedule();
     
     public PmsLockServer getDefaultLockServer() {
         PmsLockServer defaultsv = lockServerConfigs.get("default");

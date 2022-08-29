@@ -6,6 +6,7 @@ orderDb = conn.getDB("OrderManager");
 messageDb = conn.getDB("MessageManager");
 pmsManager = conn.getDB("PmsManager_default");
 
+n = 0; // no of month we want the report. value starts from 0. 0 means running month
 customerUser = 10;
 now = new Date();
 
@@ -83,17 +84,17 @@ function getEHFAndSMSDataForActiveStores(){
         smsSent = {};
 
         lastSixMonthAgoFirstDayOfMonth = new Date(now);
-        lastSixMonthAgoFirstDayOfMonth.setMonth(now.getMonth() - 1);
+        lastSixMonthAgoFirstDayOfMonth.setMonth(now.getMonth() - n);
         lastSixMonthAgoFirstDayOfMonth.setDate(1);
         lastSixMonthAgoFirstDayOfMonth.setUTCHours(0,0,0,0);
 
         lastSixMonthAgoLastDayOfMonth = new Date(now);
-        lastSixMonthAgoLastDayOfMonth.setMonth(now.getMonth() - 0);
+        lastSixMonthAgoLastDayOfMonth.setMonth(now.getMonth() - (n -1));
         lastSixMonthAgoLastDayOfMonth.setDate(0);
         lastSixMonthAgoLastDayOfMonth.setUTCHours(23,59,59);
 
         while(lastSixMonthAgoFirstDayOfMonth.getMonth() <= now.getMonth()){
-            key = lastSixMonthAgoFirstDayOfMonth.getFullYear() + '.' + (lastSixMonthAgoFirstDayOfMonth.getMonth() + 1);
+            key = lastSixMonthAgoFirstDayOfMonth.getFullYear() + '-' + (lastSixMonthAgoFirstDayOfMonth.getMonth() + 1).toString().padStart(2, '0');
             ehfLogCount = orderDb.getCollection('col_' + storeId)
                                   .count({
                                       'className': 'com.thundashop.core.ordermanager.data.EhfSentLog',
@@ -148,7 +149,6 @@ function calculateRevenueForEveryStore(){
     activeStoreIds.forEach(storeId => {
         // if(storeId !== '668ae391-3ef4-4cae-a0ef-f9ed25515d73') return;
         store = activeStores.find( x => x.id === storeId);
-        n = 1;
         lastNMonthAgoFirstDayOfMonth = new Date(now);
         lastNMonthAgoFirstDayOfMonth.setMonth(now.getMonth() - n);
         lastNMonthAgoFirstDayOfMonth.setDate(1);
@@ -162,7 +162,7 @@ function calculateRevenueForEveryStore(){
 
         while(lastNMonthAgoFirstDayOfMonth.getMonth() <= now.getMonth()){
             revenueForThisMonth = 0;
-            key = lastNMonthAgoFirstDayOfMonth.getFullYear() + '.' + (lastNMonthAgoFirstDayOfMonth.getMonth() + 1);
+            key = lastNMonthAgoFirstDayOfMonth.getFullYear() + '-' + (lastNMonthAgoFirstDayOfMonth.getMonth() + 1).toString().padStart(2, '0');
 
             dayOfMonth = new Date(lastNMonthAgoFirstDayOfMonth);
             dayWiseRevenue = {};

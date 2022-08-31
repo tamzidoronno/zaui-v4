@@ -10,7 +10,7 @@ package com.thundashop.core.pmsmanager;
  * @author boggi
  */
 public class PmsPricingDayObject {
-    String typeId;
-    String date;
-    Double newPrice;
+    public String typeId;
+    public String date;
+    public Double newPrice;
 }

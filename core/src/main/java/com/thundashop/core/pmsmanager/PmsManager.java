@@ -27,6 +27,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -1959,6 +1960,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         processor();
     }
 
+    private boolean isGotoBooking (PmsBooking pmsBooking) {
+        if(pmsBooking == null) return false;
+        if(StringUtils.isBlank(pmsBooking.channel)) return false;
+        return pmsBooking.channel.equals("goto");
+    }
+
     @Override
     public String removeFromBooking(String bookingId, String roomId) throws Exception {
         PmsBooking booking = getBookingUnsecure(bookingId);
@@ -2020,6 +2027,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         bookingUpdated(bookingId, "room_removed", roomId);
 
         processor();
+
+        if(isGotoBooking(booking)){
+            String message = "A Goto booking has been deleted from PMS by admin. <br>" +
+                    "Booking reservation Id: " + booking.id + ".<br>" +
+                    "Booking incremental Id: " + booking.incrementBookingId + ".<br> <br>" +
+                    "Please take action and notify responsible person if it is unexpected.<br>";
+            String subject = "WARNING: GOTO Booking Has Benn Canceled!!";
+            messageManager.sendMessageToStoreOwner(message, subject);
+        }
 
         return addResult;
     }

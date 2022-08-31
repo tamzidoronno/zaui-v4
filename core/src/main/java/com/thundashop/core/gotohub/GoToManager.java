@@ -57,6 +57,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     private static final SimpleDateFormat checkinOutDateFormatter = new SimpleDateFormat("yyyy-MM-dd");
     SimpleDateFormat cancellationDateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
     public GoToConfiguration goToConfiguration = new GoToConfiguration();
+    private String CURRENCY_CODE = "currencycode";
 
     @Override
     public GoToApiResponse getHotelInformation() {
@@ -136,6 +137,92 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         }
     }
 
+    @Override
+    public GoToApiResponse saveBooking(Booking booking) {
+        try {
+            saveSchedulerAsCurrentUser();
+            handleDifferentCurrencyBooking(booking.getCurrency());
+            PmsBooking pmsBooking = getBooking(booking);
+            if (pmsBooking == null) {
+                throw new GotoException(GoToStatusCodes.SAVE_BOOKING_FAIL.code, GoToStatusCodes.SAVE_BOOKING_FAIL.message);
+            }
+            pmsManager.saveBooking(pmsBooking);
+            pmsInvoiceManager.clearOrdersOnBooking(pmsBooking);
+            handleOverbooking(pmsBooking);
+
+            BookingResponse bookingResponse = getBookingResponse(pmsBooking.id, booking, pmsBooking.getTotalPrice());
+            return new GoToApiResponse(true,
+                    GoToStatusCodes.SAVE_BOOKING_SUCCESS.code,
+                    GoToStatusCodes.SAVE_BOOKING_SUCCESS.message,
+                    bookingResponse);
+        } catch (GotoException e) {
+            handleNewBookingError(booking, e.getMessage(), e.getStatusCode());
+            return new GoToApiResponse(false, e.getStatusCode(), e.getMessage(), null);
+        } catch (Exception e) {
+            logPrintException(e);
+            handleNewBookingError(booking, GoToStatusCodes.SAVE_BOOKING_FAIL.message, GoToStatusCodes.SAVE_BOOKING_FAIL.code);
+            return new GoToApiResponse(false, GoToStatusCodes.SAVE_BOOKING_FAIL.code, GoToStatusCodes.SAVE_BOOKING_FAIL.message, null);
+        }
+    }
+
+    @Override
+    public GoToApiResponse confirmBooking(String reservationId) {
+        try {
+            saveSchedulerAsCurrentUser();
+            PmsBooking pmsBooking = findCorrelatedBooking(reservationId);
+            if (pmsBooking == null) {
+                throw new GotoException(GoToStatusCodes.BOOKING_NOT_FOUND.code, GoToStatusCodes.BOOKING_NOT_FOUND.message);
+            }
+            handleIfBookingDeleted(pmsBooking);
+            pmsBooking = setPaymentMethod(pmsBooking);
+            handlePaymentOrder(pmsBooking, getCheckoutDateFromPmsBookingRooms(pmsBooking.rooms));
+            return new GoToApiResponse(true,
+                    GoToStatusCodes.BOOKING_CONFIRMATION_SUCCESS.code,
+                    GoToStatusCodes.BOOKING_CONFIRMATION_SUCCESS.message,
+                    null);
+        } catch (GotoException e) {
+            handleUpdateBookingError(reservationId, e.getMessage(), e.getStatusCode());
+            return new GoToApiResponse(false, e.getStatusCode(), e.getMessage(), null);
+        } catch (Exception e) {
+            logPrintException(e);
+            handleUpdateBookingError(reservationId, GoToStatusCodes.BOOKING_CONFIRMATION_FAILED.message,
+                    GoToStatusCodes.BOOKING_CONFIRMATION_FAILED.code);
+            return new GoToApiResponse(false,
+                    GoToStatusCodes.BOOKING_CONFIRMATION_FAILED.code,
+                    GoToStatusCodes.BOOKING_CONFIRMATION_FAILED.message,
+                    null);
+        }
+    }
+
+    @Override
+    public GoToApiResponse cancelBooking(String reservationId) {
+        try {
+            Date deletionRequestTime = new Date();
+            saveSchedulerAsCurrentUser();
+            PmsBooking pmsBooking = findCorrelatedBooking(reservationId);
+            if (pmsBooking == null) {
+                throw new GotoException(GoToStatusCodes.BOOKING_CANCELLATION_NOT_FOUND.code, GoToStatusCodes.BOOKING_CANCELLATION_NOT_FOUND.message);
+            }
+            handleDeletionIfCutOffHourPassed(pmsBooking.id, deletionRequestTime);
+            pmsManager.logEntry("Deleted by channel manager", pmsBooking.id, null);
+
+            pmsManager.deleteBooking(pmsBooking.id);
+            handleOrderForCancelledBooking(reservationId);
+            return new GoToApiResponse(true, GoToStatusCodes.BOOKING_CANCELLATION_SUCCESS.code,
+                    GoToStatusCodes.BOOKING_CANCELLATION_SUCCESS.message, null);
+        } catch (GotoException e) {
+            handleUpdateBookingError(reservationId, e.getMessage(), e.getStatusCode());
+            return new GoToApiResponse(false, e.getStatusCode(), e.getMessage(), null);
+
+        } catch (Exception e) {
+            logPrintException(e);
+            handleUpdateBookingError(reservationId, GoToStatusCodes.BOOKING_CANCELLATION_FAILED.message,
+                    GoToStatusCodes.BOOKING_CANCELLATION_FAILED.code);
+            return new GoToApiResponse(false, GoToStatusCodes.BOOKING_CANCELLATION_FAILED.code,
+                    GoToStatusCodes.BOOKING_CANCELLATION_FAILED.message, null);
+        }
+    }
+
     private void checkDateRangeValidity(Date from, Date to) throws GotoException {
         if (from.after(to)) {
             throw new GotoException(GoToStatusCodes.INVALID_DATE_RANGE.code, GoToStatusCodes.INVALID_DATE_RANGE.message);
@@ -180,68 +267,11 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         throw new GotoException(GoToStatusCodes.OVERBOOKING.code, GoToStatusCodes.OVERBOOKING.message);
     }
 
-    @Override
-    public GoToApiResponse saveBooking(Booking booking) {
-        try {
-            saveSchedulerAsCurrentUser();
-            handleDifferentCurrencyBooking(booking.getCurrency());
-            PmsBooking pmsBooking = getBooking(booking);
-            if (pmsBooking == null) {
-                throw new GotoException(GoToStatusCodes.SAVE_BOOKING_FAIL.code, GoToStatusCodes.SAVE_BOOKING_FAIL.message);
-            }
-            pmsManager.saveBooking(pmsBooking);
-            pmsInvoiceManager.clearOrdersOnBooking(pmsBooking);
-            handleOverbooking(pmsBooking);
-
-            BookingResponse bookingResponse = getBookingResponse(pmsBooking.id, booking, pmsBooking.getTotalPrice());
-            return new GoToApiResponse(true,
-                    GoToStatusCodes.SAVE_BOOKING_SUCCESS.code,
-                    GoToStatusCodes.SAVE_BOOKING_SUCCESS.message,
-                    bookingResponse);
-        } catch (GotoException e) {
-            handleNewBookingError(booking, e.getMessage(), e.getStatusCode());
-            return new GoToApiResponse(false, e.getStatusCode(), e.getMessage(), null);
-        } catch (Exception e) {
-            logPrintException(e);
-            handleNewBookingError(booking, GoToStatusCodes.SAVE_BOOKING_FAIL.message, GoToStatusCodes.SAVE_BOOKING_FAIL.code);
-            return new GoToApiResponse(false, GoToStatusCodes.SAVE_BOOKING_FAIL.code, GoToStatusCodes.SAVE_BOOKING_FAIL.message, null);
-        }
-    }
-
     private void handleIfBookingDeleted(PmsBooking pmsBooking) throws Exception {
         for (PmsBookingRooms room : pmsBooking.rooms) {
             if (!room.deleted) return;
         }
         throw new GotoException(GoToStatusCodes.BOOKING_DELETED.code, GoToStatusCodes.BOOKING_DELETED.message);
-    }
-
-    @Override
-    public GoToApiResponse confirmBooking(String reservationId) {
-        try {
-            saveSchedulerAsCurrentUser();
-            PmsBooking pmsBooking = findCorrelatedBooking(reservationId);
-            if (pmsBooking == null) {
-                throw new GotoException(GoToStatusCodes.BOOKING_NOT_FOUND.code, GoToStatusCodes.BOOKING_NOT_FOUND.message);
-            }
-            handleIfBookingDeleted(pmsBooking);
-            pmsBooking = setPaymentMethod(pmsBooking);
-            handlePaymentOrder(pmsBooking, getCheckoutDateFromPmsBookingRooms(pmsBooking.rooms));
-            return new GoToApiResponse(true,
-                    GoToStatusCodes.BOOKING_CONFIRMATION_SUCCESS.code,
-                    GoToStatusCodes.BOOKING_CONFIRMATION_SUCCESS.message,
-                    null);
-        } catch (GotoException e) {
-            handleUpdateBookingError(reservationId, e.getMessage(), e.getStatusCode());
-            return new GoToApiResponse(false, e.getStatusCode(), e.getMessage(), null);
-        } catch (Exception e) {
-            logPrintException(e);
-            handleUpdateBookingError(reservationId, GoToStatusCodes.BOOKING_CONFIRMATION_FAILED.message,
-                    GoToStatusCodes.BOOKING_CONFIRMATION_FAILED.code);
-            return new GoToApiResponse(false,
-                    GoToStatusCodes.BOOKING_CONFIRMATION_FAILED.code,
-                    GoToStatusCodes.BOOKING_CONFIRMATION_FAILED.message,
-                    null);
-        }
     }
 
     private void handleOrderForCancelledBooking(String reservationId) throws Exception {
@@ -285,35 +315,6 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             if (deletionRequestTime.after(cancellationDeadLine)) {
                 throw new GotoException(GoToStatusCodes.CANCELLATION_DEADLINE_PASSED.code, GoToStatusCodes.CANCELLATION_DEADLINE_PASSED.message);
             }
-        }
-    }
-
-    @Override
-    public GoToApiResponse cancelBooking(String reservationId) {
-        try {
-            Date deletionRequestTime = new Date();
-            saveSchedulerAsCurrentUser();
-            PmsBooking pmsBooking = findCorrelatedBooking(reservationId);
-            if (pmsBooking == null) {
-                throw new GotoException(GoToStatusCodes.BOOKING_CANCELLATION_NOT_FOUND.code, GoToStatusCodes.BOOKING_CANCELLATION_NOT_FOUND.message);
-            }
-            handleDeletionIfCutOffHourPassed(pmsBooking.id, deletionRequestTime);
-            pmsManager.logEntry("Deleted by channel manager", pmsBooking.id, null);
-
-            pmsManager.deleteBooking(pmsBooking.id);
-            handleOrderForCancelledBooking(reservationId);
-            return new GoToApiResponse(true, GoToStatusCodes.BOOKING_CANCELLATION_SUCCESS.code,
-                    GoToStatusCodes.BOOKING_CANCELLATION_SUCCESS.message, null);
-        } catch (GotoException e) {
-            handleUpdateBookingError(reservationId, e.getMessage(), e.getStatusCode());
-            return new GoToApiResponse(false, e.getStatusCode(), e.getMessage(), null);
-
-        } catch (Exception e) {
-            logPrintException(e);
-            handleUpdateBookingError(reservationId, GoToStatusCodes.BOOKING_CANCELLATION_FAILED.message,
-                    GoToStatusCodes.BOOKING_CANCELLATION_FAILED.code);
-            return new GoToApiResponse(false, GoToStatusCodes.BOOKING_CANCELLATION_FAILED.code,
-                    GoToStatusCodes.BOOKING_CANCELLATION_FAILED.message, null);
         }
     }
 
@@ -430,7 +431,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     private boolean isCurrencySameWithSystem(String currencyCode) {
-        return currencyCode.equals(storeManager.getStoreSettingsApplicationKey("currencycode"));
+        return currencyCode.equals(storeManager.getStoreSettingsApplicationKey(CURRENCY_CODE));
     }
 
     private void handleDifferentCurrencyBooking(String bookingCurrency) throws GotoException {
@@ -490,7 +491,8 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     private PmsBookingRooms mapRoomToPmsRoom(Booking booking, Room gotoBookingRoom) throws Exception {
         PmsBookingRooms pmsBookingRoom = new PmsBookingRooms();
         pmsBookingRoom = setCorrectStartEndTime(pmsBookingRoom, booking);
-        pmsBookingRoom.numberOfGuests = gotoBookingRoom.getAdults() + gotoBookingRoom.getChildrenAges().size();
+        int numberOfChildren = gotoBookingRoom.getChildrenAges().size();
+        pmsBookingRoom.numberOfGuests = gotoBookingRoom.getAdults() + numberOfChildren;
         pmsBookingRoom.bookingItemTypeId = gotoBookingRoom.getRoomCode();
 
         if (bookingEngine.getBookingItemType(gotoBookingRoom.getRoomCode()) == null) {
@@ -503,8 +505,16 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         guest.name = booking.getOrderer().getFirstName() + " " + booking.getOrderer().getLastName();
         guest.phone = booking.getOrderer().getMobile().getPhoneNumber();
         guest.prefix = booking.getOrderer().getMobile().getAreaCode();
-
         pmsBookingRoom.guests.add(guest);
+
+        for(int i = 1; i< pmsBookingRoom.numberOfGuests; i++){
+            PmsGuests extGuest = new PmsGuests();
+            if(numberOfChildren != 0) {
+                extGuest.isChild = true;
+                numberOfChildren--;
+            }
+            pmsBookingRoom.guests.add(extGuest);
+        }
         return pmsBookingRoom;
     }
 

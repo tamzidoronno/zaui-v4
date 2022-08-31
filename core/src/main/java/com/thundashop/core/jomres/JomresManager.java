@@ -760,7 +760,11 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
         if (!pmsManager.hasSentErrorNotificationForJomresAvailability(hashValueForErrorAvailability)) {
             logger.debug("Email is being sent...");
+            String bookingItemId = jomresPropertyToRoomDataMap.get(response.getPropertyId()).bookingItemId;
+            String bookingItemName = bookingEngine.getBookingItem(bookingItemId).bookingItemName;
+
             String emailMessage = "Availability Update has been failed for a date range. \n" +
+                    "Jomres Property Name: " + bookingItemName + "\n" +
                     "Jomres Property UId: " + response.getPropertyId() + "\n" +
                     "Availability Start Date: " + response.getStart() + "\n" +
                     "Availability Resume Date: " + response.getEnd() + "\n" +

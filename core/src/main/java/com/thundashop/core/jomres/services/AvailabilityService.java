@@ -1,5 +1,6 @@
 package com.thundashop.core.jomres.services;
 
+import com.google.common.base.Throwables;
 import com.google.gson.Gson;
 import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.jomres.dto.PMSBlankBooking;
@@ -29,17 +30,16 @@ public class AvailabilityService extends BaseService {
                     null, null, "DELETE");
             Response response = httpClient.newCall(request).execute();
             res = responseDataParser.parseChangeAvailabilityResponse(response);
-            res.setStart(booking.getDateFrom());
-            res.setEnd(booking.getDateTo());
-            res.setPropertyId(booking.getPropertyId());
         } catch (Exception e) {
-            res.setSuccess(false);
+            logger.error(Throwables.getStackTraceAsString(e));
             res.setMessage(e.getMessage1());
         } catch (java.lang.Exception e) {
-            e.printStackTrace();
-            res.setSuccess(false);
+            logger.error(Throwables.getStackTraceAsString(e));
             res.setMessage("Got Unexpected Error, Please Check Log stacktrace..\n" + e.getMessage() + "\n");
         }
+        res.setStart(booking.getDateFrom());
+        res.setEnd(booking.getDateTo());
+        res.setPropertyId(booking.getPropertyId());
         res.setAvailable(true);
         return res;
     }
@@ -47,29 +47,28 @@ public class AvailabilityService extends BaseService {
     public UpdateAvailabilityResponse createBlankBooking(String baseUrl, String token, String channel, int jomresPropertyId, Booking booking) {
         UpdateAvailabilityResponse res = new UpdateAvailabilityResponse();
         createHttpClient();
+        String url = baseUrl + MAKE_PROPERTY_UNAVAILABLE;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(booking.endDate);
+        calendar.add(Calendar.DATE, -1);
+        Date lastNightStay = calendar.getTime();
         try {
-            String url = baseUrl + MAKE_PROPERTY_UNAVAILABLE;
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(booking.endDate);
-            calendar.add(Calendar.DATE, -1);
-            Date lastNightStay = calendar.getTime();
             Map<String, String> formData =
                     getFormDataForAvailability(jomresPropertyId, booking.startDate, lastNightStay);
             Request request = getHttpBearerTokenRequest(url, token,
                     addChannelIntoHeaders(null, channel), formData, "PUT");
             Response response = httpClient.newCall(request).execute();
             res = responseDataParser.parseChangeAvailabilityResponse(response);
-            res.setStart(booking.startDate);
-            res.setPropertyId(jomresPropertyId);
-            res.setEnd(lastNightStay);
         } catch (Exception e) {
-            res.setSuccess(false);
+            logger.error(Throwables.getStackTraceAsString(e));
             res.setMessage(e.getMessage1());
         } catch (java.lang.Exception e) {
-            e.printStackTrace();
-            res.setSuccess(false);
+            logger.error(Throwables.getStackTraceAsString(e));
             res.setMessage("Got Unexpected Error, Please Check Log stacktrace..\n" + e.getMessage() + "\n");
         }
+        res.setStart(booking.startDate);
+        res.setPropertyId(jomresPropertyId);
+        res.setEnd(booking.endDate);
         res.setAvailable(false);
         return res;
     }

@@ -762,15 +762,16 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             logger.debug("Email is being sent...");
             String emailMessage = "Availability Update has been failed for a date range. \n" +
                     "Jomres Property UId: " + response.getPropertyId() + "\n" +
-                    "Availability Start Date: " + response.getStart() + "\n+" +
-                    "Availability End Date: " + response.getEnd() + "\n" +
+                    "Availability Start Date: " + response.getStart() + "\n" +
+                    "Availability Resume Date: " + response.getEnd() + "\n" +
                     "Property Availability in PMS: " + (response.isAvailable() ? "available" : "unavailable") + "\n\n" +
                     (StringUtils.isNotBlank(response.getMessage()) ? "Possible Reason: " + response.getMessage() : "") + "\n";
 
             if (!response.isAvailable()) {
                 emailMessage += "Some other possible reason:\n" +
                         "   1. There is a booking in Jomres for this time period.\n" +
-                        "   2. There is already a blank booking for this time period.\n";
+                        "   2. There is already a blank booking for this time period.\n" +
+                        "   3. Jomres connection problem.\n";
             }
 
             messageManager.sendJomresMessageToStoreOwner(emailMessage, subject);

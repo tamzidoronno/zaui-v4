@@ -13,10 +13,10 @@ import java.util.HashMap;
  * @author ktonder
  */
 public class ProductCriteria extends DataCommon {
-    public ArrayList<String> parentPageIds = new ArrayList();
-    public ArrayList<String> pageIds = new ArrayList();
-    public ArrayList<String> ids = new ArrayList();
-    public HashMap<String,String> attributeFilter = new HashMap();
+    public ArrayList<String> parentPageIds = new ArrayList<>();
+    public ArrayList<String> pageIds = new ArrayList<>();
+    public ArrayList<String> ids = new ArrayList<>();
+    public HashMap<String,String> attributeFilter = new HashMap<>();
     
     public String listId; //Fetch products from the listmanager.
     public String search = "";

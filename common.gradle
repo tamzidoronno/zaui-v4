@@ -30,6 +30,8 @@ dependencies {
     implementation 'org.springframework:spring-web:4.2.9.RELEASE'
     implementation 'org.springframework:spring-expression:4.2.1.RELEASE'
     implementation 'org.springframework.hateoas:spring-hateoas:0.24.0.RELEASE'
+    compileOnly group: 'org.projectlombok', name: 'lombok', version: '1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
 
     testImplementation 'org.springframework:spring-test:4.2.1.RELEASE'
 

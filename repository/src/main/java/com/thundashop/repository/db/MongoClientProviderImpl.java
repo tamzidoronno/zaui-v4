@@ -1,4 +1,4 @@
-package com.thundashop.core.databasemanager;
+package com.thundashop.repository.db;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;

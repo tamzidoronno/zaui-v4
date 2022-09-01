@@ -2,10 +2,9 @@ package com.thundashop.core.databasemanager;
 
 import com.mongodb.*;
 import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.common.GetShopLogHandler;
+import com.thundashop.repository.db.MongoClientProvider;
 import org.mongodb.morphia.Morphia;
 
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 

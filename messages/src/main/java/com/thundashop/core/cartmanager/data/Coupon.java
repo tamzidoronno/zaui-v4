@@ -19,22 +19,22 @@ public class Coupon extends DataCommon {
     public String code;
     public CouponType type;
     public int amount;
-    public HashMap<String, Double> dailyPriceAmountByType = new HashMap();
+    public HashMap<String, Double> dailyPriceAmountByType = new HashMap<>();
     public int timesLeft;
     public String channel = "";
     public String description = "";
     public PmsRepeatingData whenAvailable = null;
     public String pmsWhenAvailable = "";
-    public List<String> productsToSupport = new ArrayList();
-    public List<AddonsInclude> addonsToInclude = new ArrayList();
+    public List<String> productsToSupport = new ArrayList<>();
+    public List<AddonsInclude> addonsToInclude = new ArrayList<>();
     public String priceCode = "default";
     public int minDays = 0;
     public int maxDays = 0;
     
     public boolean activeCampaign = false;
     public boolean presentCampaignOnFrontPage = false;
-    public HashMap<String, String> campaignTitle = new HashMap();
-    public HashMap<String, String> campaignDescription = new HashMap();
+    public HashMap<String, String> campaignTitle = new HashMap<>();
+    public HashMap<String, String> campaignDescription = new HashMap<>();
     public boolean excludeDefaultAddons = false;
 
     public boolean containsAddonProductToInclude(String productId) {

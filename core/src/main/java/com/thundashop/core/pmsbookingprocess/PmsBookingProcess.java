@@ -5,6 +5,18 @@
  */
 package com.thundashop.core.pmsbookingprocess;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.google.gson.Gson;
@@ -19,8 +31,6 @@ import com.thundashop.core.cartmanager.data.Coupon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.gsd.GdsManager;
 import com.thundashop.core.gsd.GetShopDevice;
-import com.thundashop.core.gsd.RoomReceipt;
-import com.thundashop.core.messagemanager.SmsHandlerAbstract;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.paymentterminalmanager.PaymentTerminalManager;
@@ -37,16 +47,13 @@ import com.thundashop.core.pmsmanager.PmsConfiguration;
 import com.thundashop.core.pmsmanager.PmsCoverageAndIncomeReportManager;
 import com.thundashop.core.pmsmanager.PmsGuests;
 import com.thundashop.core.pmsmanager.PmsInvoiceManager;
-import com.thundashop.core.pmsmanager.PmsInvoiceManagerNew;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.pmsmanager.PmsPricing;
-import com.thundashop.core.pmsmanager.PmsSegment;
 import com.thundashop.core.pmsmanager.PmsUserDiscount;
 import com.thundashop.core.pmsmanager.TimeRepeater;
 import com.thundashop.core.pmsmanager.TimeRepeaterData;
 import com.thundashop.core.pmsmanager.TimeRepeaterDateRange;
 import com.thundashop.core.pos.PosManager;
-import com.thundashop.core.printmanager.PrintJob;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.storemanager.StoreManager;
@@ -55,18 +62,7 @@ import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.verifonemanager.VerifoneManager;
 import com.thundashop.core.webmanager.WebManager;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import org.joda.time.Days;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -103,8 +99,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     PmsCoverageAndIncomeReportManager pmsCoverageAndIncomeReportManager;
     
     @Autowired
-    UserManager userManager;
-    private ArrayList itemsTaken;
+    UserManager userManager;    
     
     @Autowired
     OrderManager orderManager;
@@ -125,11 +120,12 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     GdsManager gdsManager;
     
     @Autowired
-    private InvoiceManager invoiceManager;
+    InvoiceManager invoiceManager;
     
     public boolean testTerminalPrinter = false;
     public boolean testTerminalPaymentTerminal = false;
     private boolean isVerifone;
+    private ArrayList<String> itemsTaken;
     
     @Override
     public StartBookingResult startBooking(StartBooking arg) {
@@ -320,10 +316,10 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     private void selectMostSuitableRooms(StartBookingResult result, StartBooking arg) {
         logPrint("Need to find: " + arg.rooms + " rooms for :" + arg.getGuests());
         
-        List<PmsBookingProcessorCalculator> toUse = new ArrayList();
+        List<PmsBookingProcessorCalculator> toUse = new ArrayList<>();
         
         PmsBooking booking = pmsManager.getCurrentBooking();
-        HashMap<String, Integer> maxRooms = new HashMap();
+        HashMap<String, Integer> maxRooms = new HashMap<>();
         
         for(BookingProcessRooms room : result.rooms) {
             if(!room.visibleForBooker) {
@@ -349,7 +345,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             }
         });
        
-        List<PmsBookingProcessorCalculator> listOfRooms = new ArrayList();
+        List<PmsBookingProcessorCalculator> listOfRooms = new ArrayList<>();
         int guestLeft = arg.getGuests();
         int roomsLeft = arg.rooms;
         int breaker = 0;
@@ -467,8 +463,8 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
 
     private void updateRoomsOnCurrentBooking(List<RoomsSelected> result) {
         PmsBooking booking = pmsManager.getCurrentBooking();
-        HashMap<String, Integer> typesCount = new HashMap();
-        HashMap<String, Integer> currentBookingTypesCount = new HashMap();
+        HashMap<String, Integer> typesCount = new HashMap<>();
+        HashMap<String, Integer> currentBookingTypesCount = new HashMap<>();
         
         for(RoomsSelected room : result) {
             for(Integer guests : room.roomsSelectedByGuests.keySet()) {
@@ -516,7 +512,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         PmsBooking booking = pmsManager.getCurrentBooking();
         result.fields = booking.registrationData.resultAdded;
         result.profileType = booking.registrationData.profileType;
-        itemsTaken = new ArrayList();
+        itemsTaken = new ArrayList<>();
         for(PmsBookingRooms room : booking.rooms) {
             RoomInfo returnroom = new RoomInfo();
             returnroom.start = room.date.start;
@@ -572,13 +568,13 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     }
 
     private void addItemSupported(GuestAddonsSummary result) {
-        HashMap<String, AddonItem> itemsMap = new HashMap();
+        HashMap<String, AddonItem> itemsMap = new HashMap<>();
         for(RoomInfo r : result.rooms) {
             for(AddonItem item : r.addonsAvailable.values()) {
                 itemsMap.put(item.productId, item);
             }
         }
-        result.items = new ArrayList(itemsMap.values());
+        result.items = new ArrayList<>(itemsMap.values());
     }
 
     private void addTextualSummary(GuestAddonsSummary result) {
@@ -610,7 +606,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         } else {
             result.textualSummary.add(numberOfChildren + " x {children}");
         }
-        HashMap<Integer, Integer> typeCounter = new HashMap();
+        HashMap<Integer, Integer> typeCounter = new HashMap<>();
         for(PmsBookingRooms room : booking.getActiveRooms()) {
             BookingItemType type = bookingEngine.getBookingItemType(room.bookingItemTypeId);
             Integer typecount = typeCounter.get(type.systemCategory);
@@ -657,7 +653,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         if(arg.roomId == null || arg.roomId.isEmpty()) {
             PmsBooking booking = null;
             booking = pmsManager.getCurrentBooking();
-            itemsTaken = new ArrayList();
+            itemsTaken = new ArrayList<>();
             for(PmsBookingRooms room : booking.getActiveRooms()) {
                 if(canAddToRoom(arg.productId, room)) {
                     if(arg.count > 0) {
@@ -680,7 +676,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
 
     @Override
     public GuestAddonsSummary removeAddons(AddAddons arg) {
-        List<String> roomsToRemoveFrom = new ArrayList();
+        List<String> roomsToRemoveFrom = new ArrayList<>();
         PmsBooking booking = pmsManager.getCurrentBooking();
         if(arg.roomId == null || arg.roomId.isEmpty()) {
             for(PmsBookingRooms r : booking.getActiveRooms()) {
@@ -695,7 +691,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 continue;
             }
             
-            List<PmsBookingAddonItem> remove = new ArrayList();
+            List<PmsBookingAddonItem> remove = new ArrayList<>();
             for(PmsBookingAddonItem item : r.addons) {
                 if(item.productId.equals(arg.productId)) {
                     remove.add(item);
@@ -719,7 +715,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         for(RoomInformation info : arg) {
             PmsBookingRooms room = booking.getRoom(info.roomId);
             room.numberOfGuests = info.numberOfGuests;
-            List<PmsGuests> updatedGuestInfo = new ArrayList();
+            List<PmsGuests> updatedGuestInfo = new ArrayList<>();
             for(GuestInfo ginfo : info.guests) {
                 PmsGuests newGuest = new PmsGuests();
                 newGuest.email = ginfo.email;
@@ -777,21 +773,6 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         addActiveCampaigns(result);
         validateFields(result);
         return result;
-    }
-
-    private void isAddedToBooking(AddonItem toAddAddon, PmsBooking booking, PmsBookingAddonItem item) {
-        int addedCount = 0;
-        for(PmsBookingRooms room : booking.getActiveRooms()) {
-            for(PmsBookingAddonItem tmp : room.addons) {
-                if(tmp.productId.equals(item.productId)) {
-                    addedCount++;
-                }
-            }
-        }
-        if(addedCount > 0) {
-            toAddAddon.isAdded = true;
-            toAddAddon.addedCount = addedCount;
-        }
     }
 
     private void checkIsAddedToRoom(AddonItem toAddAddon, PmsBookingRooms room, PmsBookingAddonItem item) {
@@ -1069,7 +1050,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     public GuestAddonsSummary changeNumberOnType(BookingTypeChange change) {
         PmsBooking booking = pmsManager.getCurrentBooking();
         int current = 0;
-        List<PmsBookingRooms> roomsAdded = new ArrayList();
+        List<PmsBookingRooms> roomsAdded = new ArrayList<>();
         for(PmsBookingRooms room : booking.rooms) {
             if(!room.bookingItemTypeId.equals(change.id)) {
                 continue;
@@ -1082,7 +1063,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         
         if(current > change.numberOfRooms) {
             //Remove rooms.
-            List<PmsBookingRooms> toRemove = new ArrayList();
+            List<PmsBookingRooms> toRemove = new ArrayList<>();
             for(int i = 0; i < current-change.numberOfRooms;i++) {
                 toRemove.add(roomsAdded.get(i));
             }
@@ -1147,7 +1128,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         Integer guests = arg.guestCount;
         
         PmsBooking booking = pmsManager.getCurrentBooking();
-        List<PmsBookingRooms> toRemove = new ArrayList();
+        List<PmsBookingRooms> toRemove = new ArrayList<>();
         for(PmsBookingRooms room : booking.getActiveRooms()) {
             if(room.bookingItemTypeId.equals(roomId) && room.numberOfGuests.equals(guests)) {
                 toRemove.add(room);
@@ -1191,7 +1172,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         retval.doNotRecommendBestPrice = config.doNotRecommendBestPrice;
 
         List<BookingItemType> bookingItemTypes = bookingEngine.getBookingItemTypesWithSystemType(null);
-        HashMap<Integer, String> typesActive = new HashMap();
+        HashMap<Integer, String> typesActive = new HashMap<>();
         for(BookingItemType type : bookingItemTypes) {
             typesActive.put(type.systemCategory, "");
         }
@@ -1268,16 +1249,12 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         
         BookingResult res = new BookingResult();
         res.success = 1;
-        if(res == null) {
-            res.success = 0;
+        res.bookingid = booking.id;
+        if(orderId != null) {
+            res.continuetopayment = 1;
+            res.orderid = orderId;
         } else {
-            res.bookingid = booking.id;
-            if(orderId != null) {
-                res.continuetopayment = 1;
-                res.orderid = orderId;
-            } else {
-                res.continuetopayment = 0;
-            }
+            res.continuetopayment = 0;
         }
         
         
@@ -1313,7 +1290,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             return null;
         }
         
-        List<PmsBooking> tmpList = new ArrayList();
+        List<PmsBooking> tmpList = new ArrayList<>();
         for(PmsBooking b : bookings) {
             boolean notEnded = false;
             for(PmsBookingRooms r : b.getActiveRooms()) {
@@ -1430,7 +1407,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             return bookinguser.enabledPaymentOptions;
         }
         
-        return new ArrayList();
+        return new ArrayList<>();
     }
 
     private boolean isMidleOfNight() {
@@ -1462,7 +1439,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
 
     @Override
     public List<String> getTerminalMessages() {
-        ArrayList retList = null;
+        ArrayList<String> retList = null;
         if(isVerifone) {
             retList = new ArrayList<String>(verifoneManager.getTerminalMessages());
             verifoneManager.getTerminalMessages().clear();
@@ -1503,8 +1480,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     @Override
     public List<BookingProcessRoomStatus> getBooking(String pmsBookingId) {
         PmsBooking booking = pmsManager.getBookingUnsecure(pmsBookingId);
-        Date now = new Date();
-        List<BookingProcessRoomStatus> retList = new ArrayList();
+        List<BookingProcessRoomStatus> retList = new ArrayList<>();
         
         if (booking != null) {
             booking.rooms.stream()
@@ -1775,7 +1751,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
 
     private void checkIfCouponIsValid(StartBookingResult result, StartBooking arg) {
         boolean removeAvailability = false;
-        List<String> roomsToRemove = new ArrayList();
+        List<String> roomsToRemove = new ArrayList<>();
         if(arg.discountCode != null && !arg.discountCode.isEmpty()) {
             Coupon coupon = cartManager.getCoupon(arg.discountCode);
             if(coupon != null) {
@@ -1814,7 +1790,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 continue;
             }
             r.availableRooms = 0;
-            r.roomsSelectedByGuests = new HashMap();
+            r.roomsSelectedByGuests = new HashMap<>();
         }
         result.roomsSelected = 0;
         
@@ -1829,8 +1805,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     }
 
     private void checkForRestrictions(StartBookingResult result, StartBooking arg) {
-        boolean remove = false;
-        List<String> types = new ArrayList();
+        List<String> types = new ArrayList<>();
         
         boolean denyPayLater = false;
         for(BookingProcessRooms r : result.rooms) {
@@ -1839,12 +1814,10 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 denyPayLater = denyPayLaterButton(r, arg, result);
             }
             if (pmsManager.isRestricted(r.id, arg.start, arg.end, TimeRepeaterData.TimePeriodeType.min_stay)) {
-                remove = true;
                 result.errorMessage = "min_days:{arg}:" + pmsManager.getLatestRestrictionTime();
                 types.add(r.id);
             }
             if (pmsManager.isRestricted(r.id, arg.start, arg.end, TimeRepeaterData.TimePeriodeType.max_stay)) {
-                remove = true;
                 result.errorMessage = "max_days:{arg}:" + pmsManager.getLatestRestrictionTime();
                 types.add(r.id);
             }
@@ -1924,7 +1897,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
 
     @Override
     public HashMap<Integer, Double> getPricesForRoom(Date start, Date end, String itemId) {
-        HashMap<Integer,Double> result = new HashMap();
+        HashMap<Integer,Double> result = new HashMap<>();
         BookingItem item = bookingEngine.getBookingItem(itemId);
         BookingItemType type = bookingEngine.getBookingItemType(item.bookingItemTypeId);
         Double price = pmsManager.getPriceForRoomWhenBooking(start, end, item.bookingItemTypeId);
@@ -1961,7 +1934,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         List<Coupon> coupons = cartManager.getCoupons();
         PmsBooking currentBooking = pmsManager.getCurrentBooking();
         
-        result.campaigns = new ArrayList();
+        result.campaigns = new ArrayList<>();
         for(Coupon coupon : coupons) {
             if(!coupon.activeCampaign) {
                 continue;

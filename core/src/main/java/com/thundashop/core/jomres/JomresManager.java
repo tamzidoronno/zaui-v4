@@ -1,5 +1,28 @@
 package com.thundashop.core.jomres;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.mongodb.BasicDBObject;
@@ -12,25 +35,29 @@ import com.thundashop.core.bookingengine.data.BookingTimeLineFlatten;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
-import com.thundashop.core.jomres.dto.*;
-import com.thundashop.core.jomres.services.*;
+import com.thundashop.core.jomres.dto.FetchBookingResponse;
+import com.thundashop.core.jomres.dto.JomresBooking;
+import com.thundashop.core.jomres.dto.JomresGuest;
+import com.thundashop.core.jomres.dto.JomresProperty;
+import com.thundashop.core.jomres.dto.PMSBlankBooking;
+import com.thundashop.core.jomres.dto.UpdateAvailabilityResponse;
+import com.thundashop.core.jomres.services.AvailabilityService;
+import com.thundashop.core.jomres.services.BaseService;
+import com.thundashop.core.jomres.services.BookingService;
+import com.thundashop.core.jomres.services.PriceService;
+import com.thundashop.core.jomres.services.PropertyService;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
-import com.thundashop.core.pmsmanager.*;
+import com.thundashop.core.pmsmanager.PmsBooking;
+import com.thundashop.core.pmsmanager.PmsBookingComment;
+import com.thundashop.core.pmsmanager.PmsBookingDateRange;
+import com.thundashop.core.pmsmanager.PmsBookingRooms;
+import com.thundashop.core.pmsmanager.PmsGuests;
+import com.thundashop.core.pmsmanager.PmsInvoiceManager;
+import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.sedox.autocryptoapi.Exception;
 import com.thundashop.core.storemanager.StoreManager;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Component
 @GetShopSession
@@ -195,6 +222,10 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
     @Override
     public boolean saveMapping(List<JomresRoomData> mappingRoomData) throws Exception {
+        if(!jomresConfiguration.isEnable){
+            logger.info("Jomres connection is disabled");
+            return false;
+        }
         deleteExistingMapping();
         for (JomresRoomData roomData : mappingRoomData) {
             handleExistingRoomDataWhileMapping(roomData);
@@ -210,6 +241,10 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
     @Override
     public List<JomresRoomData> getMappingData() throws Exception {
+        if(!jomresConfiguration.isEnable){
+            logger.info("Jomres connection is disabled");
+            return new ArrayList<>();
+        }
         return jomresPropertyToRoomDataMap.values().stream().collect(Collectors.toList());
     }
 
@@ -640,6 +675,9 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             logText("No Jomres configuration is found for this hotel");
             return false;
         }
+        if (!jomresConfiguration.isEnable) {
+            return false;
+        }
         Date currentTime = new Date();
         long timeDiff = currentTime.getTime() - cmfClientTokenGenerationTime.getTime();
         try {
@@ -722,17 +760,22 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
         if (!pmsManager.hasSentErrorNotificationForJomresAvailability(hashValueForErrorAvailability)) {
             logger.debug("Email is being sent...");
+            String bookingItemId = jomresPropertyToRoomDataMap.get(response.getPropertyId()).bookingItemId;
+            String bookingItemName = bookingEngine.getBookingItem(bookingItemId).bookingItemName;
+
             String emailMessage = "Availability Update has been failed for a date range. \n" +
+                    "Jomres Property Name: " + bookingItemName + "\n" +
                     "Jomres Property UId: " + response.getPropertyId() + "\n" +
-                    "Availability Start Date: " + response.getStart() + "\n+" +
-                    "Availability End Date: " + response.getEnd() + "\n" +
+                    "Availability Start Date: " + response.getStart() + "\n" +
+                    "Availability Resume Date: " + response.getEnd() + "\n" +
                     "Property Availability in PMS: " + (response.isAvailable() ? "available" : "unavailable") + "\n\n" +
                     (StringUtils.isNotBlank(response.getMessage()) ? "Possible Reason: " + response.getMessage() : "") + "\n";
 
             if (!response.isAvailable()) {
                 emailMessage += "Some other possible reason:\n" +
                         "   1. There is a booking in Jomres for this time period.\n" +
-                        "   2. There is already a blank booking for this time period.\n";
+                        "   2. There is already a blank booking for this time period.\n" +
+                        "   3. Jomres connection problem.\n";
             }
 
             messageManager.sendJomresMessageToStoreOwner(emailMessage, subject);

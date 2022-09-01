@@ -32,7 +32,7 @@ public class Page extends DataCommon implements Cloneable {
     public int userLevel = 0;
     @Translation
     public String description = "";
-    public LinkedList<Long> layoutBackups = new LinkedList();
+    public LinkedList<Long> layoutBackups = new LinkedList<>();
     public PageLayout layout = new PageLayout();
     @Translation
     public String title;
@@ -52,7 +52,7 @@ public class Page extends DataCommon implements Cloneable {
      * Key 1 = CellID
      * Value 2 = ApplicationInstanceId
      */
-    public HashMap<String, String> overrideApps = new HashMap();
+    public HashMap<String, String> overrideApps = new HashMap<>();
     
     public Page() {
     }
@@ -62,7 +62,7 @@ public class Page extends DataCommon implements Cloneable {
     }
 
     public void deletePageAreas() {
-        layout.setNewList(new ArrayList(), "body", false);
+        layout.setNewList(new ArrayList<>(), "body", false);
     }
 
     public void finalizePage(CommonPageData pagedata) {
@@ -81,7 +81,7 @@ public class Page extends DataCommon implements Cloneable {
             }
             
             if (pagedata.modals.get(key) == null) {
-                pagedata.modals.put(key, new ArrayList());
+                pagedata.modals.put(key, new ArrayList<>());
             }
             
             layout.setNewList(pagedata.modals.get(key), key, true);
@@ -95,40 +95,6 @@ public class Page extends DataCommon implements Cloneable {
 
     public List<PageCell> getCellsFlatList() {
         return layout.getCellsFlatList();
-    }
-
-    public void dumpLayout() {
-        GetShopLogHandler.logPrintStatic("\n\n PAGE", null);
-        for (String area : layout.getAreas().keySet()) {
-            GetShopLogHandler.logPrintStatic("-----------------------------------------------", null);
-            GetShopLogHandler.logPrintStatic(area, null);
-            ArrayList<PageCell> rows = layout.getAreas().get(area);
-            if(rows != null) {
-                GetShopLogHandler.logPrintStatic("Number of rows: " + rows.size(), null);
-                dumpRows(rows, 1);
-            }
-            GetShopLogHandler.logPrintStatic("-----------------------------------------------\n", null);
-        }
-    }
-
-    private void dumpRows(ArrayList<PageCell> rows, int depth) {
-        for (PageCell row : rows) {
-            for (int i = 0; i < depth; i++) {
-                GetShopLogHandler.logPrintStaticSingle("\t", null);
-            }
-            GetShopLogHandler.logPrintStaticSingle(row.cellId, null);
-            GetShopLogHandler.logPrintStaticSingle(" subcells: " + row.cells.size(), null);
-            GetShopLogHandler.logPrintStaticSingle(", mode: " + row.mode, null);
-            GetShopLogHandler.logPrintStaticSingle(", type: " + row.type, null);
-            GetShopLogHandler.logPrintStaticSingle(", styles: " + row.styles.replaceAll("\\\n", ""), null);
-            if (row.cellName != null && !row.cellName.isEmpty()) {
-                GetShopLogHandler.logPrintStatic("(" + row.cellName + ")", null);
-            }
-            GetShopLogHandler.logPrintStatic("", null);
-            if (row.cells.size() > 0) {
-                dumpRows(row.cells, depth + 1);
-            }
-        }
     }
 
     public Page jsonClone() {

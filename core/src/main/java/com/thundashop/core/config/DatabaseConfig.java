@@ -1,7 +1,11 @@
 package com.thundashop.core.config;
 
 import com.thundashop.core.common.FrameworkConfig;
-import com.thundashop.core.databasemanager.*;
+import com.thundashop.core.databasemanager.Database3;
+import com.thundashop.core.databasemanager.DatabaseRemoteConnectionStringProvider;
+import com.thundashop.repository.db.LazyMongoClientProvider;
+import com.thundashop.repository.db.MongoClientProvider;
+import com.thundashop.repository.db.MongoClientProviderImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

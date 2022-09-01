@@ -11,7 +11,7 @@ import java.util.Date;
 public class UpdateAvailabilityResponse {
     @SerializedName("success")
     @Expose
-    private boolean success = true;
+    private boolean success = false;
     @SerializedName("contract_id")
     @Expose
     private long contractId = 0;

@@ -1,4 +1,4 @@
-package com.thundashop.core.databasemanager;
+package com.thundashop.repository.db;
 
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;

@@ -20,5 +20,5 @@ public class FilterOptions {
     public Date startDate = null;
     public Date endDate = null;
     public boolean removeNullOrders = false;
-    public Map<String, String> extra = new HashMap();
+    public Map<String, String> extra = new HashMap<>();
 }

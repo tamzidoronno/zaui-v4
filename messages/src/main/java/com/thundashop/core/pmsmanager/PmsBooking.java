@@ -1,13 +1,6 @@
 
 package com.thundashop.core.pmsmanager;
 
-import com.google.gson.Gson;
-import com.thundashop.core.bookingengine.data.Booking;
-import com.thundashop.core.bookingengine.data.BookingItemType;
-import com.thundashop.core.bookingengine.data.RegistrationRules;
-import com.thundashop.core.common.Administrator;
-import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.common.GetShopLogHandler;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -15,14 +8,21 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Stream;
+
 import org.mongodb.morphia.annotations.Transient;
+
+import com.google.gson.Gson;
+import com.thundashop.core.bookingengine.data.Booking;
+import com.thundashop.core.bookingengine.data.BookingItemType;
+import com.thundashop.core.bookingengine.data.RegistrationRules;
+import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.DataCommon;
 
 public class PmsBooking extends DataCommon {
  
-    public List<PmsBookingRooms> rooms = new ArrayList(); 
-    public List<String> notificationsSent = new ArrayList();
-    public HashMap<Long, PmsBookingComment> comments = new HashMap();
+    public List<PmsBookingRooms> rooms = new ArrayList<>();
+    public List<String> notificationsSent = new ArrayList<>();
+    public HashMap<Long, PmsBookingComment> comments = new HashMap<>();   
     public String shortId = "";
     public String sessionId = null;
     public Date sessionStartDate = null;
@@ -30,7 +30,7 @@ public class PmsBooking extends DataCommon {
     public boolean silentNotification = false;
     public boolean autoSendPaymentLink = false;
     
-    public List<String> bookingEngineAddons = new ArrayList();
+    public List<String> bookingEngineAddons = new ArrayList<>();
     public RegistrationRules registrationData = new RegistrationRules();
     public String language = "";
     public String browserLanguage = "";
@@ -38,9 +38,9 @@ public class PmsBooking extends DataCommon {
     public String bookedByUserId = "";
     public String conferenceId = "";
     public Integer state = 0;
-    public List<String> orderIds = new ArrayList();
-    public List<String> suggestedUserIds = new ArrayList();
-    public HashMap<String, Long> incOrderIds = new HashMap();
+    public List<String> orderIds = new ArrayList<>();
+    public List<String> suggestedUserIds = new ArrayList<>();
+    public HashMap<String, Long> incOrderIds = new HashMap<>();
     public Integer priceType = 1;
     public boolean confirmed = false;
     public Date confirmedDate = null;
@@ -63,7 +63,7 @@ public class PmsBooking extends DataCommon {
     public String wubookchannelreservationcode = "";
     public String wubookreservationid = "";
     public String alternativeOrginasation = "";
-    public List<String> wubookModifiedResId = new ArrayList();
+    public List<String> wubookModifiedResId = new ArrayList<>();
     public boolean wubookNoShow = false;
     public boolean transferredToRateManager = false;
     public boolean avoidAutoDelete = false;
@@ -86,7 +86,7 @@ public class PmsBooking extends DataCommon {
     Double unsettled;
     public boolean nonrefundable = false;
     public boolean tryAutoCharge = false;
-    public HashMap<String, String> recieptEmail = new HashMap();
+    public HashMap<String, String> recieptEmail = new HashMap<>();
     
     //Jomres Related Properties
     public long jomresBookingId=0;
@@ -156,7 +156,7 @@ public class PmsBooking extends DataCommon {
     }
         
     public List<PmsBookingRooms> getRoomsWithForcedAccess() {
-        List<PmsBookingRooms> res = new ArrayList();
+        List<PmsBookingRooms> res = new ArrayList<>();
         for(PmsBookingRooms r : getActiveRooms()) {
             if(r.forceAccess) {
                 res.add(r);
@@ -189,7 +189,7 @@ public class PmsBooking extends DataCommon {
     }
 
     public List<PmsBookingRooms> getOverBookedRooms() {
-        List<PmsBookingRooms> res = new ArrayList();
+        List<PmsBookingRooms> res = new ArrayList<>();
         for(PmsBookingRooms room : rooms) {
             if(room.isOverBooking()) {
                 res.add(room);
@@ -310,15 +310,6 @@ public class PmsBooking extends DataCommon {
         
         return res;
     }
-    
-    boolean hasStayAfter(Date startInvoiceFrom) {
-        for(PmsBookingRooms room : rooms) {
-            if(room.date.end.after(startInvoiceFrom)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     boolean isEnded() {
         for(PmsBookingRooms room : rooms) {
@@ -420,7 +411,7 @@ public class PmsBooking extends DataCommon {
     }
 
     public List<PmsBookingRooms> getActiveRooms() {
-        List<PmsBookingRooms> result = new ArrayList();
+        List<PmsBookingRooms> result = new ArrayList<>();
         for(PmsBookingRooms room : rooms) {
             if(room.isDeleted()) {
                 continue;
@@ -431,11 +422,7 @@ public class PmsBooking extends DataCommon {
     }
 
     public List<PmsBookingRooms> getAllRooms() {
-        List<PmsBookingRooms> result = new ArrayList();
-        for(PmsBookingRooms room : rooms) {
-            result.add(room);
-        }
-        return result;
+        return new ArrayList<>(rooms);
     }
 
     public void addRoom(PmsBookingRooms room) {
@@ -578,11 +565,11 @@ public class PmsBooking extends DataCommon {
     }
 
     public List<String> getTypes() {
-        HashMap<String, Integer> typesToReturn = new HashMap();
+        HashMap<String, Integer> typesToReturn = new HashMap<>();
         for(PmsBookingRooms r : getActiveRooms()) {
             typesToReturn.put(r.bookingItemTypeId, 1);
         }
-        return new ArrayList(typesToReturn.keySet());
+        return new ArrayList<>(typesToReturn.keySet());
     }
 
     boolean hasRequestedEnding(Date startDate, Date endDate) {
@@ -601,17 +588,6 @@ public class PmsBooking extends DataCommon {
         return false;
     }
 
-    void unmarkOverBooking() {
-        for(PmsBookingRooms room : getAllRoomsIncInactive()) {
-            room.unmarkOverBooking();
-        }
-        for(PmsBookingRooms room : getAllRoomsIncInactive()) {
-            if(room.isDeleted() && !room.deletedByChannelManagerForModification) {
-                return;
-            }
-        }
-    }
-
     boolean hasWaitingRooms() {
         for(PmsBookingRooms room : rooms) {
             if(room.addedToWaitingList) {
@@ -619,16 +595,6 @@ public class PmsBooking extends DataCommon {
             }
         }
         return false;
-    }
-
-    public List<PmsBookingRooms> getWaitingListRooms() {
-        List<PmsBookingRooms> res = new ArrayList();
-        for(PmsBookingRooms room : rooms) {
-            if(room.addedToWaitingList) {
-                res.add(room);
-            }
-        }
-        return res;
     }
 
     boolean containsType(String type) {
@@ -641,20 +607,6 @@ public class PmsBooking extends DataCommon {
                 return true;
             }
         }
-        return false;
-    }
-
-    /**
-     * This function is only working
-     * @return 
-     */
-    boolean hasActiveApacCodes() {
-        for (PmsBookingRooms room : rooms) {
-            if (room.codeObject != null) {
-                return true;
-            }
-        }
-        
         return false;
     }
 
@@ -775,17 +727,6 @@ public class PmsBooking extends DataCommon {
         return diff < 60000;
     }
 
-    boolean autosendPaymentLink() {
-        //Send payment link on all bookings registered by ota not prepaid,
-        if(channel != null && channel.startsWith("wubook_") || avoidAutoDelete || payLater) {
-            if(paymentType == null || paymentType.isEmpty()) {
-                return true;
-            }
-        }
-        
-        return false;
-    }
-
     public double getUnpaidAmount() {
         double amount = 0;
         for(PmsBookingRooms r : getActiveRooms()) {
@@ -809,17 +750,8 @@ public class PmsBooking extends DataCommon {
         return false;
     }
 
-    public boolean hasUnpaidAmount() {
-        double unpaid = 0.0;
-        for(PmsBookingRooms r : rooms) {
-            unpaid += r.unpaidAmount;
-        }
-        
-        return unpaid != 0.0;
-    }
-
     boolean isInvoice() {
-        return (paymentType != null && "70ace3f0-3981-11e3-aa6e-0800200c9a66".equals(paymentType));
+        return ("70ace3f0-3981-11e3-aa6e-0800200c9a66".equals(paymentType));
     }
 
     String getPmsConferenceRoomId() {
@@ -834,7 +766,7 @@ public class PmsBooking extends DataCommon {
 
     Iterable<PmsBookingRooms> getActiveRoomsIncNonRefundable() {
 
-        List<PmsBookingRooms> result = new ArrayList();
+        List<PmsBookingRooms> result = new ArrayList<>();
         for(PmsBookingRooms room : rooms) {
             if(room.isDeleted() && !room.nonrefundable && !nonrefundable) {
                 continue;
@@ -918,19 +850,7 @@ public class PmsBooking extends DataCommon {
         }
         return false;
     }   
-    
-    public void printInvoicedTo() {
-        for(PmsBookingRooms room : rooms) {
-            if(room.invoicedTo != null) {
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(room.invoicedTo);
-                if(cal.get(Calendar.MONTH) == 2) {
-                    GetShopLogHandler.logPrintStatic(room.invoicedTo, null);
-                }
-            }
-        }
-    }
-    
+
     public boolean hasAddonOfType(String type) {
         return rooms.stream().anyMatch(room -> room.hasAddonOfType(type));
     }
@@ -938,7 +858,6 @@ public class PmsBooking extends DataCommon {
     public int getTotalGuestCount() {
         return getActiveRooms().stream().mapToInt(room -> room.guests.size()).sum();
     }
-    
     
     String getHigestReservationCode() {
         long highestCode = -1;

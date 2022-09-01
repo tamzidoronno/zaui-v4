@@ -14,5 +14,5 @@ import java.util.List;
  * @author ktonder
  */
 public class GroupAddonSettings implements Serializable {
-    public List<String> groupProductIds = new ArrayList();
+    public List<String> groupProductIds = new ArrayList<>();
 }

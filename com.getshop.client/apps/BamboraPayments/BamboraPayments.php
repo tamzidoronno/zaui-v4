@@ -37,7 +37,6 @@ class BamboraPayments extends \PaymentApplication implements \Application {
             echo "<script>";
             echo "window.location.href='$url';";
             echo "</script>";
-            $order->payment->transactionLog->{time()*1000} = "Transferred to payment window : $url";
         } else {
             $order->payment->transactionLog->{time()*1000} = "Failed transferring to payment window";
         }

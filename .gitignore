@@ -185,8 +185,7 @@ downloaded/
 repository/build/
 !gradle/wrapper/gradle-wrapper.jar
 
-
-// needed for vscode
+# needed for vscode
 bin/*
 .classpath
 *.class
@@ -201,4 +200,3 @@ core/bin/main/*.xml
 core/bin/main/com/thundashop/app/content/*.html
 cron4jonoff
 core/bin/main/com/thundashop/core/start/*
-

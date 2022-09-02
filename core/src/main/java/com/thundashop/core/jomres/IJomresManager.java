@@ -7,6 +7,7 @@
 package com.thundashop.core.jomres;
 
 import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.ForceAsync;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
 import com.thundashop.core.jomres.dto.FetchBookingResponse;
@@ -26,6 +27,7 @@ public interface IJomresManager {
     @Administrator
     public boolean testConnection();
     @Administrator
+    @ForceAsync
     public boolean updateAvailability() throws Exception;
     @Administrator
     public List<FetchBookingResponse> fetchBookings() throws Exception;

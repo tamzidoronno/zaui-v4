@@ -33,6 +33,8 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -382,9 +384,16 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 .filter(o -> o.getDateFrom().compareTo(endDate) <= 0 && o.getDateTo().compareTo(startDate) >= 0)
                 .filter(o -> !existingBookingIds.contains(o.getFlatBookingId()))
                 .collect(Collectors.toList());
+        ExecutorService es = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        List<Runnable> tasks = new ArrayList<>();
         for (PMSBlankBooking booking : bBookingsForDeletion) {
-            deleteBlankBookingCompletely(booking);
+            tasks.add(()->deleteBlankBookingCompletely(booking));
         }
+        CompletableFuture<?>[] futures = tasks.stream()
+                .map(task -> CompletableFuture.runAsync(task, es))
+                .toArray(CompletableFuture[]::new);
+        CompletableFuture.allOf(futures).join();
+        es.shutdown();
     }
 
     private FetchBookingResponse handleInvalidRoomForBooking(JomresBooking booking, FetchBookingResponse response) throws Exception {

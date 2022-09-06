@@ -85,6 +85,9 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     String cmfClientAccessToken = null;
     Date cmfClientTokenGenerationTime = new Date();
 
+    //Change this message if Jomres change their error message for delete request of non-existing black bookings
+    String JOMRES_BLACK_BOOKING_DOES_NOT_EXIST_ERROR_MESSAGE = "black booking does not exist";
+
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataCommon : data.data) {
@@ -367,7 +370,8 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     }
 
     private boolean isBlankBookingNeedToDeleteFromDb(UpdateAvailabilityResponse res) {
-        return (StringUtils.isNotBlank(res.getMessage()) && res.getMessage().contains("does not exist"));
+        return (StringUtils.isNotBlank(res.getMessage()) &&
+                res.getMessage().toLowerCase().contains(JOMRES_BLACK_BOOKING_DOES_NOT_EXIST_ERROR_MESSAGE));
     }
 
     private void deleteIfExtraBlankBookingExist (
@@ -772,10 +776,15 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                     (StringUtils.isNotBlank(response.getMessage()) ? "Possible Reason: " + response.getMessage() : "") + "\n";
 
             if (!response.isAvailable()) {
-                emailMessage += "Some other possible reason:\n" +
-                        "   1. There is a booking in Jomres for this time period.\n" +
-                        "   2. There is already a blank booking for this time period.\n" +
-                        "   3. Jomres connection problem.\n";
+                emailMessage += "Possible Solutions:\n" +
+                        "   1. Please check if there is any booking in Jomres for this time period.\n" +
+                        "   2. Please check if there is already a blank booking for this time period. " +
+                            "If there is, the existing blank booking of Jomres won't be sync with PMS.\n" +
+                        "   3. If 1 and 2 don't help, please check server connection with Jomres.\n";
+            } else {
+                emailMessage += "Possible solutions:\n" +
+                        "   1. Blank Booking is already deleted from Jomres.. in that case Jomres is synced with PMS, nothing to worry about.\n" +
+                        "   2. If 1 doesn't help, please check server connection with Jomres.\n";
             }
 
             messageManager.sendJomresMessageToStoreOwner(emailMessage, subject);

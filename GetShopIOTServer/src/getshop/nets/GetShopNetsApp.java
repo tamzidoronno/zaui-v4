@@ -175,7 +175,7 @@ public class GetShopNetsApp implements PaymentOperator {
 
     @Override
     public void startTransaction(Integer amount, String orderId) {
-        logger.info("Starting transaction (nets) {} for order {} :" , amount , orderId);
+        logger.info("TERMINALTRANSACTION-NETS Starting transaction {} for order {} :" , amount , orderId);
         try {
             controller.totalAmount = amount;
             if (amount < 0) {
@@ -186,7 +186,7 @@ public class GetShopNetsApp implements PaymentOperator {
             }
             this.orderId = orderId;
         } catch (Exception e){
-            logger.error("start transaction error (nets) {} {}" ,e.getMessage(),e);
+            logger.error("TERMINALTRANSACTION-NETS start transaction error {} {}" ,e.getMessage(),e);
         }
 
     }

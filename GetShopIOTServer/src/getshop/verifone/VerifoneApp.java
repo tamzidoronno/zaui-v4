@@ -52,7 +52,7 @@ public class VerifoneApp implements PaymentOperator {
 
     @Override
     public void startTransaction(Integer amount, String orderId) {
-        logger.info("Starting transaction (verifone) {} for order {} :" , amount/100 , orderId);
+        logger.info("TERMINALTRANSACTION-VERIFONE Starting transaction {} for order {} :" , amount , orderId);
         try {
             createListener();
             String ipAddr = operator.getSetupMessage().paymentterminalip;
@@ -71,7 +71,7 @@ public class VerifoneApp implements PaymentOperator {
             this.orderId = orderId;
         }
         catch (Exception e) {
-            logger.error("start transaction error (verifone) {} {}" ,e.getMessage(),e);
+            logger.error("TERMINALTRANSACTION-VERIFONE start transaction error {} {}" ,e.getMessage(),e);
         }
 
     }

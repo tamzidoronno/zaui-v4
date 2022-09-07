@@ -2,12 +2,16 @@ package getshop.nets;
 
 import com.thundashop.core.gsd.TerminalReceiptText;
 import eu.nets.baxi.client.LocalModeEventArgs;
+
+import java.util.Arrays;
 import java.util.Scanner;
 import com.thundashop.core.gsd.TerminalResponse;
 import eu.nets.baxi.client.PrintTextEventArgs;
 import getshopiotserver.GetShopIOTOperator;
 import getshopiotserver.PaymentOperator;
 import getshopiotserver.SetupMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by mcamp on 14.03.2017.
@@ -27,6 +31,7 @@ public class GetShopNetsApp implements PaymentOperator {
     
     private boolean isInitialized = false;
     private String orderId;
+    private static final Logger logger = LoggerFactory.getLogger(GetShopNetsApp.class);
 
     public GetShopNetsApp(GetShopIOTOperator operator) {
         this.operator = operator;
@@ -166,18 +171,24 @@ public class GetShopNetsApp implements PaymentOperator {
         this.orderId = null;
     }
 
+
+
     @Override
     public void startTransaction(Integer amount, String orderId) {
-        System.out.println("Starting transaction on amount: " + amount + " for order: " + orderId);
-        
-        controller.totalAmount = amount;
-        if (amount < 0) {
-            controller.totalAmount = amount * -1;
-            controller.transferAmount("Return of Goods");
-        } else {
-            controller.transferAmount("Purchase");
+        logger.info("Starting transaction (nets) {} for order {} :" , amount , orderId);
+        try {
+            controller.totalAmount = amount;
+            if (amount < 0) {
+                controller.totalAmount = amount * -1;
+                controller.transferAmount("Return of Goods");
+            } else {
+                controller.transferAmount("Purchase");
+            }
+            this.orderId = orderId;
+        } catch (Exception e){
+            logger.error("start transaction error (nets) {} {}" ,e.getMessage(),e);
         }
-        this.orderId = orderId;
+
     }
 
     public void cancelTransaction() {

@@ -737,6 +737,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         roomType.setNumberOfUnit(roomData.getNumberOfAdults());
         roomType.setNumberOfChildren(roomData.getNumberOfChildren());
         roomType.setRoomCategory(roomData.getRoomCategory());
+        roomType.setStatus(roomData.isStatus());
         List<RatePlan> ratePlans = new ArrayList<>();
         String start = LocalDate.now().format(formatter);
         String end = LocalDate.now().plusYears(1).format(formatter);

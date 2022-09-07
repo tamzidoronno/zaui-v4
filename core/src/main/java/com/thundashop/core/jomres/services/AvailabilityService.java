@@ -31,6 +31,7 @@ public class AvailabilityService extends BaseService {
                     null, null, "DELETE");
             Response response = httpClient.newCall(request).execute();
             res = responseDataParser.parseChangeAvailabilityResponse(response);
+            res.setMessage("");
         } catch (Exception e) {
             logger.error(Throwables.getStackTraceAsString(e));
             res.setMessage(e.getMessage1());
@@ -61,6 +62,7 @@ public class AvailabilityService extends BaseService {
                     addChannelIntoHeaders(null, channel), formData, "PUT");
             Response response = httpClient.newCall(request).execute();
             res = responseDataParser.parseChangeAvailabilityResponse(response);
+            res.setMessage("");
         } catch (Exception e) {
             logger.error(Throwables.getStackTraceAsString(e));
             res.setMessage(e.getMessage1());

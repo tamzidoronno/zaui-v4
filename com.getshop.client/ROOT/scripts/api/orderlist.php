@@ -48,7 +48,6 @@ $filterOptions->pageNumber = $_GET['pageNumber'];
 $filterOptions->pageSize = $_GET['pageSize'];
 $filterOptions->removeNullOrders = true;
 $filterOptions->extra = array();
-$filterOptions->extra['paymenttype'] = "70ace3f0_3981_11e3_aa6e_0800200c9a66";
 $resData = $factory->getFactory()->getApi()->getOrderManager()->getOrdersFiltered($filterOptions);
 
 $rows = array();

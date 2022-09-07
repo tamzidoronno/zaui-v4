@@ -86,7 +86,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     Date cmfClientTokenGenerationTime = new Date();
 
     //Change this message if Jomres change their error message for delete request of non-existing black bookings
-    String JOMRES_BLACK_BOOKING_DOES_NOT_EXIST_ERROR_MESSAGE = "black booking does not exist";
+    String JOMRES_BLACK_BOOKING_DOES_NOT_EXIST_ERROR_MESSAGE = "Black booking does not exist";
 
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -371,7 +371,8 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
     private boolean isBlankBookingNeedToDeleteFromDb(UpdateAvailabilityResponse res) {
         return (StringUtils.isNotBlank(res.getMessage()) &&
-                res.getMessage().toLowerCase().contains(JOMRES_BLACK_BOOKING_DOES_NOT_EXIST_ERROR_MESSAGE));
+                res.getMessage().toLowerCase()
+                        .contains(JOMRES_BLACK_BOOKING_DOES_NOT_EXIST_ERROR_MESSAGE.toLowerCase()));
     }
 
     private void deleteIfExtraBlankBookingExist (

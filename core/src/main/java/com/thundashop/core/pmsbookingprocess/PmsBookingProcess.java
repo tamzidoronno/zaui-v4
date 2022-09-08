@@ -1000,6 +1000,10 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                     result.fieldsValidation.put("guest_" + room.pmsBookingRoomId + "_phone", "Invalid phone");
                     result.isValid = false;
                 }
+                if(guest.prefix.isEmpty() || guest.prefix.length() > 6) {
+                    result.fieldsValidation.put("guest_" + room.pmsBookingRoomId + "_prefix", "Invalid phone prefix");
+                    result.isValid = false;
+                }
                 break;
             }
         }
@@ -1012,10 +1016,27 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             }
             for(String key : result.fields.keySet()) {
                 String value = result.fields.get(key);
-                if(key.startsWith(prefix) && (value == null || value.trim().isEmpty())) {
-                    result.fieldsValidation.put(key, "Field is required");
-                    result.isValid = false;
+                if(key.startsWith(prefix)){
+                    if(value == null || value.trim().isEmpty()) {
+                        result.fieldsValidation.put(key, "Field is required");
+                        result.isValid = false;
+                    }
+                    if(key.endsWith("_emailAddress") || key.endsWith("_email")) {
+                        assert value != null;
+                        if (!value.contains("@")) {
+                            result.fieldsValidation.put(key, "Invalid email");
+                            result.isValid = false;
+                        }
+                    }
+                    if(key.endsWith("_prefix")) {
+                        assert value != null;
+                        if (value.length()>6) {
+                            result.fieldsValidation.put(key, "Invalid prefix");
+                            result.isValid = false;
+                        }
+                    }
                 }
+
             }
         }
         

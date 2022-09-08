@@ -1,12 +1,17 @@
 package com.thundashop.core.gotohub;
 
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.common.GetShopMultiLayerSession;
 import com.thundashop.core.gotohub.dto.*;
 
 import java.util.Date;
 
+/**
+ * Goto management system.<br>
+ */
 
 @GetShopApi
+@GetShopMultiLayerSession
 public interface IGoToManager {
     /**
      * Get hotel information
@@ -77,4 +82,12 @@ public interface IGoToManager {
      */
     //@Administrator
     public boolean saveConfiguration(GoToConfiguration configuration);
+
+    /**
+     * Save goto related configuration
+     *
+     * @param reservationId: GoTo booking reservation id
+     * @param incrementBookingId: pms booking incremental id
+     */
+    public void sendEmailForCancelledBooking(String reservationId, int incrementBookingId);
 }

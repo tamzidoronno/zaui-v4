@@ -28,6 +28,7 @@ public enum GoToStatusCodes {
     BOOKING_CANCELLATION_NOT_FOUND(1501, "Goto Booking Cancellation Failed.. Reason: Booking Not Found"),
     ORDER_SYNCHRONIZATION_FAILED(1502, "Goto Booking Cancellation Failed.. Reason: Order Synchronization Failed"),
     CANCELLATION_DEADLINE_PASSED(1503, "Goto Booking Cancellation Failed.. Reason: Cancellation DeadLine Has Passed"),
+    BOOKING_CANCELLATION_ALREADY_CANCELLED(1504, "Goto Booking Cancellation Failed.. Reason: Booking is Already Cancelled"),
     BOOKING_CANCELLATION_FAILED(1509, "Goto Booking Cancellation Failed.. Reason: Unknown");
 
     public final long code;

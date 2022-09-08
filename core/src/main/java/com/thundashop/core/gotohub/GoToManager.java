@@ -201,8 +201,12 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             saveSchedulerAsCurrentUser();
             PmsBooking pmsBooking = findCorrelatedBooking(reservationId);
             if (pmsBooking == null) {
-                throw new GotoException(GoToStatusCodes.BOOKING_CANCELLATION_NOT_FOUND.code, GoToStatusCodes.BOOKING_CANCELLATION_NOT_FOUND.message);
+                throw new GotoException(GoToStatusCodes.BOOKING_CANCELLATION_NOT_FOUND.code,
+                        GoToStatusCodes.BOOKING_CANCELLATION_NOT_FOUND.message);
             }
+            if(pmsBooking.getActiveRooms().isEmpty())
+                throw new GotoException(GoToStatusCodes.BOOKING_CANCELLATION_ALREADY_CANCELLED.code,
+                        GoToStatusCodes.BOOKING_CANCELLATION_ALREADY_CANCELLED.message);
             handleDeletionIfCutOffHourPassed(pmsBooking.id, deletionRequestTime);
             pmsManager.logEntry("Deleted by channel manager", pmsBooking.id, null);
 
@@ -221,6 +225,18 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             return new GoToApiResponse(false, GoToStatusCodes.BOOKING_CANCELLATION_FAILED.code,
                     GoToStatusCodes.BOOKING_CANCELLATION_FAILED.message, null);
         }
+    }
+
+    @Override
+    public void sendEmailForCancelledBooking(String reservationId, int incrementBookingId) {
+        String message = "A Goto booking has been cancelled. \n" +
+                "Booking reservation Id: " + reservationId + ".\n" +
+                "Booking incremental Id: " + incrementBookingId + ".\n\n" +
+                "Please take action and notify responsible person if it is unexpected.\n";
+        String subject = "WARNING: GOTO Booking Has Been Canceled!!";
+        String toEmail = goToConfiguration.getEmail();
+        messageManager.sendPlainMessageFromOwner(message, subject, toEmail);
+
     }
 
     private void checkDateRangeValidity(Date from, Date to) throws GotoException {

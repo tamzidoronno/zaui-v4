@@ -2119,13 +2119,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         logEntry("Deleted booking", bookingId, null);
         saveBooking(booking);
         if(isGotoBooking(booking)){
-            String message = "A Goto booking has been deleted from PMS by admin. <br>" +
-                    "Booking reservation Id: " + booking.id + ".<br>" +
-                    "Booking incremental Id: " + booking.incrementBookingId + ".<br> <br>" +
-                    "Please take action and notify responsible person if it is unexpected.<br>";
-            String subject = "WARNING: GOTO Booking Has Benn Canceled!!";
-            String toEmail = gotoManager.goToConfiguration.getEmail();
-            messageManager.sendPlainMessageFromOwner(message, subject, toEmail);
+            gotoManager.sendEmailForCancelledBooking(booking.id, booking.incrementBookingId);
         }
     }
 

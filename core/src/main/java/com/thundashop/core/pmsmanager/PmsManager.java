@@ -26,6 +26,7 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.thundashop.core.gotohub.GoToManager;
 import com.thundashop.services.pmspricing.IPmsPricingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -166,7 +167,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Autowired
     WubookManager wubookManager;
-
+    @Autowired
+    GoToManager gotoManager;
     @Autowired
     BookingEngine bookingEngine;
 
@@ -2028,15 +2030,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         processor();
 
-        if(isGotoBooking(booking)){
-            String message = "A Goto booking has been deleted from PMS by admin. <br>" +
-                    "Booking reservation Id: " + booking.id + ".<br>" +
-                    "Booking incremental Id: " + booking.incrementBookingId + ".<br> <br>" +
-                    "Please take action and notify responsible person if it is unexpected.<br>";
-            String subject = "WARNING: GOTO Booking Has Benn Canceled!!";
-            messageManager.sendMessageToStoreOwner(message, subject);
-        }
-
         return addResult;
     }
 
@@ -2123,9 +2116,17 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 logPrint("A booking from wubook has been deleted; " + booking.id);
             }
         }
-
         logEntry("Deleted booking", bookingId, null);
         saveBooking(booking);
+        if(isGotoBooking(booking)){
+            String message = "A Goto booking has been deleted from PMS by admin. <br>" +
+                    "Booking reservation Id: " + booking.id + ".<br>" +
+                    "Booking incremental Id: " + booking.incrementBookingId + ".<br> <br>" +
+                    "Please take action and notify responsible person if it is unexpected.<br>";
+            String subject = "WARNING: GOTO Booking Has Benn Canceled!!";
+            String toEmail = gotoManager.goToConfiguration.getEmail();
+            messageManager.sendPlainMessageFromOwner(message, subject, toEmail);
+        }
     }
 
     private void hardDeleteBooking(PmsBooking booking, String source) {

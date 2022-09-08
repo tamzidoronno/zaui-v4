@@ -78,4 +78,5 @@ public interface IMessageManager  {
     public SmsMessagePage getIncomingMessages(int pageNumber);
     
     public void sendErrorNotify(String inText);
+    public void sendPlainMessageFromOwner(String message, String subject, String toEmail);
 }

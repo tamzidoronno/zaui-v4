@@ -1959,6 +1959,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(!booking.isWubook()) {
             doNotification("room_cancelled", booking, remove);
         }
+
+        if(isGotoBooking(booking)){
+            gotoManager.sendEmailForCancelledBooking(booking.id, remove.bookingItemTypeId, roomName);
+        }
         processor();
     }
 
@@ -2026,9 +2030,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         if (booking.getActiveRooms().isEmpty()) {
             deleteBooking(booking.id);
-        }
-        else if(isGotoBooking(booking)){
-            gotoManager.sendEmailForCancelledBooking(bookingId, roomTypeIdToDelete, roomName);
         }
 
         bookingUpdated(bookingId, "room_removed", roomId);

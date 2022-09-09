@@ -870,6 +870,11 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             PmsGuests guest = getPmsGuestFromJomresCustomer(new PmsGuests(), booking.customer);
             room.guests.add(guest);
 
+            for(int i = 1; i<room.numberOfGuests ; i ++){
+                PmsGuests guestWithoutInfo = new PmsGuests();
+                room.guests.add(guestWithoutInfo);
+            }
+
             newbooking.rooms.clear();
             newbooking.addRoom(room);
 

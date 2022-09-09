@@ -87,7 +87,8 @@ public interface IGoToManager {
      * Save goto related configuration
      *
      * @param reservationId: GoTo booking reservation id
-     * @param incrementBookingId: pms booking incremental id
+     * @param roomTypeCode: GoTo booking roomTypeId
+     * @param roomTypeNameWithDateRange: GoTo booking room type name with check in / out date
      */
-    public void sendEmailForCancelledBooking(String reservationId, int incrementBookingId);
+    void sendEmailForCancelledBooking(String reservationId, String roomTypeCode, String roomTypeNameWithDateRange);
 }

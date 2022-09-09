@@ -57,7 +57,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     private static final SimpleDateFormat checkinOutDateFormatter = new SimpleDateFormat("yyyy-MM-dd");
     SimpleDateFormat cancellationDateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
     public GoToConfiguration goToConfiguration = new GoToConfiguration();
-    private String CURRENCY_CODE = "currencycode";
+    private final String CURRENCY_CODE = "currencycode";
 
     @Override
     public GoToApiResponse getHotelInformation() {
@@ -228,15 +228,19 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     @Override
-    public void sendEmailForCancelledBooking(String reservationId, int incrementBookingId) {
-        String message = "A Goto booking has been cancelled. \n" +
+    public void sendEmailForCancelledBooking(String reservationId, String roomTypeCode, String roomTypeNameWithDateRange) {
+        String subject;
+        String message = "A " +
+                (isNotBlank(roomTypeCode) || isNotBlank(roomTypeNameWithDateRange) ? "Room of " : "") +
+                "Goto booking has been cancelled. \n" +
                 "Booking reservation Id: " + reservationId + ".\n" +
-                "Booking incremental Id: " + incrementBookingId + ".\n\n" +
-                "Please take action and notify responsible person if it is unexpected.\n";
-        String subject = "WARNING: GOTO Booking Has Been Canceled!!";
+                (isNotBlank(roomTypeCode) ? "Room Type Code: " + roomTypeCode + ".\n " : "") +
+                (isNotBlank(roomTypeNameWithDateRange) ? "Room Type Name: " + roomTypeNameWithDateRange + ".\n" : "") +
+                "\n" +
+                "Please take action and notify hotel administrator if it is unexpected.\n";
+        subject = "WARNING: GOTO Booking Has Been Canceled!!";
         String toEmail = goToConfiguration.getEmail();
         messageManager.sendPlainMessageFromOwner(message, subject, toEmail);
-
     }
 
     private void checkDateRangeValidity(Date from, Date to) throws GotoException {
@@ -259,20 +263,25 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     private String getBookingDetailsTextForMail(Booking booking) {
-        String text = "Booking Details:<br><br>";
-        text += "   Arrival Date: " + booking.getCheckInDate();
-        text += "<br><br>";
-        text += "   Departure Date: " + booking.getCheckOutDate();
-        text += "<br><br>";
-        text += "   Rooms:";
-        text += "<br><br>";
+        StringBuilder textBuilder = new StringBuilder();
+        textBuilder.append("Booking Details:<br><br>")
+                .append("   Arrival Date: ")
+                .append(booking.getCheckInDate())
+                .append("<br><br>")
+                .append("   Departure Date: ")
+                .append(booking.getCheckOutDate())
+                .append("<br><br>")
+                .append("   Rooms:")
+                .append("<br><br>");
         for (Room room : booking.getRooms()) {
             BookingItemType type = bookingEngine.getBookingItemType(room.getRoomCode());
-            if (type != null) text += "      " + type.name + "<br><br>";
-            else text += "      Room Type (BookingItemType) isn't found for Id: " + room.getRoomCode() + "<br><br>";
+            if (type != null) textBuilder.append("      " + type.name + "<br><br>");
+            else textBuilder.append("      Room Type (BookingItemType) isn't found for Id: ")
+                    .append(room.getRoomCode())
+                    .append("<br><br>");
 
         }
-        return text;
+        return textBuilder.toString();
     }
 
     private void handleOverbooking(PmsBooking pmsBooking) throws Exception {

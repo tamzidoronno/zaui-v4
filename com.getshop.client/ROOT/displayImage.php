@@ -14,25 +14,26 @@ ob_start();
 include '../loader.php';
 session_cache_limiter('none');
 
-if (!is_string($_GET['id']) || (preg_match('/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i', $_GET['id']) !== 1)) {
+if (!is_string($_GET['id']) || (preg_match('/^[\d_]*[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}[.\w]*$/i', $_GET['id']) !== 1)) {
     echo "Invalid id";
     return;
 }
+$id = explode('.',$_GET['id']);
+$extension = $id[1] ? $id[1]: 'png';
+$imageId = $id[0];
 
 $factory = IocContainer::getFactorySingelton();
-if(!$factory->getApi()->getUUIDSecurityManager()->hasAccess($_GET['id'], true, false)) {
+if(!$factory->getApi()->getUUIDSecurityManager()->hasAccess($imageId, true, false)) {
     echo "Access denied";
     return;
 }
 
+
 ob_start();
 
 $imageLoader = new ImageLoader();
-$imageLoader->load($_GET['id']);
+$imageLoader->load($imageId);
 
-if (!$imageLoader->found()) {
-//    $factory->getApi()->ge
-}
 
 if (isset($_GET['rotation'])) {
     $imageLoader->rotate($_GET['rotation']);
@@ -54,7 +55,7 @@ if(isset($_GET['width']) && isset($_GET['height'])) {
 }
 
 if (!$imageLoader->found()) {
-    $img = $factory->getApi()->getImageManager()->getBase64EncodedImageLocally($_GET['id']);
+    $img = $factory->getApi()->getImageManager()->getBase64EncodedImageLocally($imageId);
     $img = str_replace("data:image/png;base64,", "", $img);
     echo base64_decode($img);
 } else {
@@ -64,8 +65,8 @@ if (!$imageLoader->found()) {
 
 $PageContent = ob_get_contents();
 $HashID = md5($PageContent);
- 
-header("Content-type: image/png");
+
+header("Content-type: image/$extension");
 
 header("Cache-Control: max-age=360");
 header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + 360));

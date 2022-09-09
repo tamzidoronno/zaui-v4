@@ -31,7 +31,7 @@ public class TimeRepeaterData implements Serializable {
     
     Integer repeatPeride = TimeRepeaterData.RepeatPeriodeTypes.daily;
     
-    TimeRepeaterDateRange firstEvent;
+    public TimeRepeaterDateRange firstEvent;
     
     public String repeaterId = UUID.randomUUID().toString();
     
@@ -58,7 +58,7 @@ public class TimeRepeaterData implements Serializable {
     
     boolean avoidFirstEvent = false;
     
-    List<String> categories = new ArrayList();
+    List<String> categories = new ArrayList<>();
     
     Date createdDate = new Date();
 

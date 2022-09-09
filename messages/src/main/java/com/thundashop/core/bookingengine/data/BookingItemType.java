@@ -9,9 +9,8 @@ package com.thundashop.core.bookingengine.data;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.Translation;
 import com.thundashop.core.pmsmanager.TimeRepeaterData;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+
+import java.util.*;
 
 /**
  *
@@ -51,12 +50,24 @@ public class BookingItemType extends DataCommon {
         public static Integer CABIN = 4;
         public static Integer HOSTELBED = 5;
         public static Integer APARTMENT = 6;
+        public static final Map<Integer, String> categories;
+        static {
+            Map<Integer, String> aMap = new HashMap<>();
+            aMap.put(0, "ROOM");
+            aMap.put(1, "CONFERENCE");
+            aMap.put(2, "RESTAURANT");
+            aMap.put(3, "CAMPING");
+            aMap.put(4, "CABIN");
+            aMap.put(5, "HOSTELBED");
+            aMap.put(6, "APARTMENT");
+            categories = Collections.unmodifiableMap(aMap);
+        }
     }
     
     @Translation
     public String name;
     public String productId;
-    public List<String> historicalProductIds = new ArrayList();
+    public List<String> historicalProductIds = new ArrayList<>();
     public String pageId;
     public Boolean visibleForBooking = true;
     public Boolean autoConfirm = false;
@@ -64,13 +75,13 @@ public class BookingItemType extends DataCommon {
     public Integer size = 0;
     public RegistrationRules rules = null;
     public TimeRepeaterData openingHours;
-    public HashMap<String, TimeRepeaterData> openingHoursData = new HashMap();
+    public HashMap<String, TimeRepeaterData> openingHoursData = new HashMap<>();
     public Integer order = 0;
     public Integer orderAvailability = 0;
     @Translation
     public String description = "";
-    public HashMap<String, String> descriptionTranslations = new HashMap();
-    public HashMap<String, String> nameTranslations = new HashMap();
+    public HashMap<String, String> descriptionTranslations = new HashMap<>();
+    public HashMap<String, String> nameTranslations = new HashMap<>();
     public String group = "";
     public Integer capacity = 0;
     public Integer minStay = 0;

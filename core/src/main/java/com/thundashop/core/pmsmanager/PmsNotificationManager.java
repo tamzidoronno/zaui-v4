@@ -28,6 +28,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -214,7 +216,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         key = checkIfNeedOverride(key, booking, room, "email");
         List<String> emailRecipients = new ArrayList();
         PmsNotificationMessage message = getSpecificMessage(key, booking, room, "email", null);
-        if(booking.channel.contains("jomres") && !key.contains("room_added_to_arx")) {
+        if(isIgnoreJomresNotification(key, booking)) {
             return;
         }
         if(message != null) {
@@ -239,11 +241,17 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
             }
         }
     }
-    
+
+    private boolean isIgnoreJomresNotification(String key, PmsBooking booking) {
+        if(booking == null || booking.channel == null) return false;
+        if(!booking.channel.contains("jomres")) return false;
+        return key != null && !key.contains("room_added_to_arx");
+    }
+
     private void notifyBySms(String key, PmsBooking booking, PmsBookingRooms room) {
         key = checkIfNeedOverride(key, booking, room, "email");
         List<PmsGuests> smsRecipients = new ArrayList();
-        if(booking.channel.contains("jomres") && !key.contains("room_added_to_arx")) {
+        if(isIgnoreJomresNotification(key, booking)) {
             return;
         }
         if(key.startsWith("room_")) {
@@ -407,7 +415,7 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
                 }
                 message = message.replace("{selfmanagelink}", pmsInvoiceManager.getPaymentLinkConfig().webAdress + "/?page=booking_self_management&id=" + booking.secretBookingId);
             } else {
-                String link = pmsInvoiceManager.getPaymentLinkConfig().webAdress + "/pr.php?id=" + booking.id;
+                String link = pmsInvoiceManager.getPaymentLinkConfig().webAdress + "/pr.php?id=" + getShortIdFromBooking(booking);
                 if (type.equals("email")) {
                     message = message.replace("{paymentlink}", "<a href='" + link + "'>" + link + "</a>");
                 } else {
@@ -417,6 +425,15 @@ public class PmsNotificationManager extends GetShopSessionBeanNamed implements I
         }        
         
         return message;    
+    }
+
+    private String getShortIdFromBooking(PmsBooking booking) {
+        if(StringUtils.isNotBlank(booking.shortId)) {
+            return booking.shortId;
+        }
+        booking.shortId = pmsManager.getShortUniqueId(booking.id);
+        pmsManager.saveBooking(booking);
+        return booking.shortId;
     }
 
     private String checkIfNeedOverride(String key, PmsBooking booking, PmsBookingRooms room, String messageForm) {

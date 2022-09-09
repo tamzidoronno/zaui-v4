@@ -783,8 +783,6 @@ public class ProductManager extends AProductManager implements IProductManager {
     public TaxGroup getTaxGroup(String productId, int taxgroup, Date o) {
         TaxGroup taxGroup = getTaxGroup(taxgroup);
         
-        taxGroup.addTestGroup();
-        
         if (o == null) {
             return taxGroup;
         }

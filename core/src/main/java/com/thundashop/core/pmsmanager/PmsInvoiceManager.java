@@ -3672,6 +3672,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             paymentMethod = ecommerceSettingsApplication.getSetting("defaultPaymentMethod");
         }
 
+        roomBookingId = pmsManager.getRoomBookingIdFromShortId(roomBookingId);
         PmsBooking booking = pmsManager.getBookingUnsecure(roomBookingId);
         PmsBookingRooms room = null;
         

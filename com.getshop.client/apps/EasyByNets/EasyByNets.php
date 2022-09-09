@@ -239,9 +239,20 @@ class EasyByNets extends \PaymentApplication implements \Application {
             echo "failed to excute: " . $addr;
             printf("cUrl error (#%d): %s<br>\n", curl_errno($ch), htmlspecialchars(curl_error($ch)));
         } else {
+            $original_result = $result;
             $result = json_decode($result);
             $address = $result->hostedPaymentPageUrl;
             if($result->hostedPaymentPageUrl) {
+                $paymentId = $result->paymentId;
+
+                $paymentLog = new \core_ordermanager_data_PaymentLog();
+                $paymentLog->orderId = $order->id;
+                $paymentLog->transactionPaymentId = $paymentId;
+                $paymentLog->isPaymentInitiated = true;
+                $paymentLog->paymentTypeId = "be004408-e969-4dba-9b23-5922b8f1d7e2";
+                $paymentLog->paymentResponse = $original_result;
+                $this->getApi()->getOrderManager()->saveOrderPaymentDetails($paymentLog);
+
                 echo "<div style='text-align:center; font-size: 30px;'>";
                 echo "<i class='fa fa-spin fa-spinner'></i>";
                 echo "</div>";

@@ -42,7 +42,7 @@ public class PmsAdditionalItemInformation extends DataCommon {
     public boolean closed = false;
     public boolean closedByCleaningProgram = false;
 
-    Boolean isClean() {
+    public Boolean isClean() {
         isCleanNotToday = isClean(false);
         return isClean(true);
     }

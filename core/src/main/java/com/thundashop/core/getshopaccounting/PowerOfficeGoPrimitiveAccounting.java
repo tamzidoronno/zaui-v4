@@ -12,6 +12,7 @@ import com.powerofficego.data.ApiOrderTransferResponse;
 import com.powerofficego.data.PowerOfficeGoImportLine;
 import com.powerofficego.data.PowerOfficeGoSalesOrder;
 import com.thundashop.core.accountingmanager.SavedOrderFile;
+import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.ordermanager.data.Order;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -183,6 +184,7 @@ public class PowerOfficeGoPrimitiveAccounting extends AccountingSystemBase {
                         logPrint("nullpointer occurded when it should not.");
                         addToLog("nullpointer occurded when it should not on account: " + toAdd.accountNumber);
                         messageManager.sendErrorNotify("Null exception, acount does not exists on account: " + toAdd.accountNumber);
+                        throw new ErrorException(86, "Account number " + toAdd.accountNumber + " does not exists on the system!");
                     }
                     toAdd.vatCode = detail.taxgroup + "";
                 } else {

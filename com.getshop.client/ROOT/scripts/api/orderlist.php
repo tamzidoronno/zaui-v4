@@ -7,6 +7,15 @@ if($timezone) {
     date_default_timezone_set($timezone);
 }
 
+$validParameters = ['username','password','date', 'startDate', 'endDate', 'pageNumber', 'pageSize'];
+
+foreach(array_keys($_GET) as $param){
+    if(!in_array($param,$validParameters)){
+        echo "Invalid Query Parameter";
+        return;
+    };
+}
+
 if(isset($_GET['username'])) {
     $username = $_GET['username'];
     $password = $_GET['password'];
@@ -18,7 +27,7 @@ if(isset($_GET['username'])) {
 }
 
  $invoiceingoverduelist = new ns_b7fb195b_8cea_4d7b_922e_dee665940de2\InvoicingOverdueList();
- 
+
 if(isset($_GET['date'])) {
     $start = strtotime($_GET['date'].' 00:00:00');
     $end = strtotime($_GET['date'].' 23:59:59');
@@ -35,9 +44,10 @@ else {
 $filterOptions = new \core_common_FilterOptions();
 $filterOptions->startDate = date("c", $start);
 $filterOptions->endDate = date("c", $end);
+$filterOptions->pageNumber = $_GET['pageNumber'];
+$filterOptions->pageSize = $_GET['pageSize'];
 $filterOptions->removeNullOrders = true;
 $filterOptions->extra = array();
-$filterOptions->extra['paymenttype'] = "70ace3f0_3981_11e3_aa6e_0800200c9a66";
 $resData = $factory->getFactory()->getApi()->getOrderManager()->getOrdersFiltered($filterOptions);
 
 $rows = array();

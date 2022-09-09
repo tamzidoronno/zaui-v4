@@ -12,20 +12,13 @@ import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.getshoplocksystem.LockCode;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pmsmanager.PmsBooking.PriceType;
+import org.mongodb.morphia.annotations.Transient;
+
 import java.io.Serializable;
 import java.security.MessageDigest;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date; 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Stream;
-import org.mongodb.morphia.annotations.Transient;
+import java.util.*;
 
 public class PmsBookingRooms implements Serializable {
 
@@ -36,23 +29,24 @@ public class PmsBookingRooms implements Serializable {
         return room.getNumberOfNights();
     }
 
+    public String shortId = "";
     public String bookingItemTypeId = "";
     public String bookingItemId = "";
     public String preferredBookingItemId = "";
     public String orderUnderConstructionId = "";
     public String pmsBookingRoomId = UUID.randomUUID().toString();
     @ExcludePersonalInformation
-    public List<PmsGuests> guests = new ArrayList();
+    public List<PmsGuests> guests = new ArrayList<>();
     public PmsBookingDateRange date = new PmsBookingDateRange();
     public Integer numberOfGuests = 1;
     public double count = 1;
     public Double price = 0.0;
     Double priceWithoutDiscount = 0.0;
     public Date roomCreatedDate = new Date();
-    public LinkedHashMap<String, Double> priceMatrix = new LinkedHashMap();
+    public LinkedHashMap<String, Double> priceMatrix = new LinkedHashMap<>();
     public double taxes = 8;
     public String bookingId;
-    public List<PmsBookingAddonItem> addons = new ArrayList();
+    public List<PmsBookingAddonItem> addons = new ArrayList<>();
     public String currency = "NOK";
     public String cleaningComment = "";
     
@@ -72,7 +66,7 @@ public class PmsBookingRooms implements Serializable {
     public LockCode codeObject = null;
     
     @Editor
-    public List<LockCode> codeObjectHistory = new ArrayList();
+    public List<LockCode> codeObjectHistory = new ArrayList<>();
     
     public String cardformat = "";
     public Integer intervalCleaning = null;
@@ -85,7 +79,7 @@ public class PmsBookingRooms implements Serializable {
     public boolean ended = false;
     public boolean sentCloseSignal = false;
     public boolean prioritizeInWaitingList = false;
-    public List<String> notificationsSent = new ArrayList();
+    public List<String> notificationsSent = new ArrayList<>();
     public boolean addedToArx = false;
     boolean canBeAdded = true;
     boolean isAddon = false;
@@ -264,10 +258,9 @@ public class PmsBookingRooms implements Serializable {
         try {
             SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
             return formatter.parse(offset);
-        }catch(Exception e) {
-            GetShopLogHandler.logStack(e, null);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
         }
-        return null;
     }
     
     boolean isActiveOnDay(Date time) {
@@ -645,7 +638,7 @@ public class PmsBookingRooms implements Serializable {
     }
 
     List<PmsBookingAddonItem> getAllAddons(String productId, Date startDate, Date endDate) {
-        List<PmsBookingAddonItem> result = new ArrayList();
+        List<PmsBookingAddonItem> result = new ArrayList<>();
         for(PmsBookingAddonItem addon : addons) {
             if(addon.productId.equals(productId)) {
                 if(addon.addonType != null && addon.addonType.equals(PmsBookingAddonItem.AddonTypes.EARLYCHECKIN)) {
@@ -689,7 +682,6 @@ public class PmsBookingRooms implements Serializable {
         deleted = true;
         deletedDate = new Date();
         overbooking = false;
-//        addedToWaitingList = false;
     }
 
     public boolean isDeleted() {
@@ -724,17 +716,6 @@ public class PmsBookingRooms implements Serializable {
                 item.count = numberOfGuests;
             }
         }
-    }
-
-    void removeAddonByType(Integer addonType) {
-        List<PmsBookingAddonItem> toRemove = new ArrayList();
-        for(PmsBookingAddonItem item : addons) {
-            if(item.addonType.equals(addonType)) {
-                toRemove.add(item);
-            }
-        }
-        
-        addons.removeAll(toRemove);
     }
 
     void updateAddonCount(Integer type, Integer count) {
@@ -911,34 +892,6 @@ public class PmsBookingRooms implements Serializable {
                 }
             }
         }
-    }
-
-    boolean needToGenerateCode() {
-        Date now = new Date();
-        if (isActiveOnDay(now)) {
-            if (codeObject == null)
-                return true;
-            
-            if (code == null || code.isEmpty())
-                return true;
-            
-        }
-        
-        return false;
-    }
-    
-    boolean needToRemoveCode() {
-        Date now = new Date();
-        if (!isActiveOnDay(now)) {
-            if (codeObject != null)
-                return true;
-
-            if (code != null && !code.isEmpty()) {
-                return true;
-            }
-        }
-        
-        return false;
     }
 
     public void removeCode() {

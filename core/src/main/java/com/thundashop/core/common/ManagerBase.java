@@ -4,7 +4,6 @@
  */ 
 package com.thundashop.core.common;
 
-import com.thundashop.core.appmanager.data.Application;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

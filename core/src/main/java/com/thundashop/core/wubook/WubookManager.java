@@ -819,13 +819,13 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             return "Failed to connect to api";
         }
         WubookRoomData rdata = getWubookRoomData(type.id);
-        Vector<String> params = new Vector<String>();
+        Vector<Object> params = new Vector<>();
         params.addElement(token);
         params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
         params.addElement("0");
         params.addElement(type.name);
-        params.addElement(type.size + "");
-        params.addElement("9999");
+        params.addElement(type.size);
+        params.addElement(9999);
         params.addElement("0");
         params.addElement("r" + rdata.code);
         params.addElement("nb");
@@ -886,14 +886,14 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     private String updateRoom(BookingItemType type) throws XmlRpcException, IOException {
         List<BookingItem> items = bookingEngine.getBookingItemsByType(type.id);
         WubookRoomData rdata = getWubookRoomData(type.id);
-        Vector<String> params = new Vector<>();
+        Vector<Object> params = new Vector<>();
         params.addElement(token);
         params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
         params.addElement(rdata.wubookroomid + "");
         params.addElement(type.name);
-        params.addElement(type.size + "");
-        params.addElement("9999");
-        params.addElement(items.size() + "");
+        params.addElement(type.size);
+        params.addElement(9999);
+        params.addElement(items.size());
         params.addElement("r" + rdata.code);
         params.addElement("nb");
         Vector result = executeClient(MOD_ROOM.value(), params);
@@ -2551,10 +2551,16 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     private boolean checkIfNeedToAddTaxes(Hashtable roomtable) {
         try {
             Hashtable anc = (Hashtable) roomtable.get("ancillary");
-            boolean tax_inclusive = (boolean) anc.get("tax_inclusive");
+            if(anc == null) {
+                return false;
+            }
+            Boolean tax_inclusive = (Boolean) anc.get("tax_inclusive");
+            if(tax_inclusive == null) {
+                return false;
+            }
             return !tax_inclusive;
         } catch (Exception e) {
-            logger.error("", e);
+            logger.error("`ancillary` or `tax_inclusive` tag not found {}", e.getLocalizedMessage());
         }
         return false;
     }
@@ -2738,7 +2744,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement(table);
 
         Vector result = executeClient(UPDATE_PLAN_PRICES.value(), params);
-        if ((Integer) result.get(0) != 0) {
+        if ((Integer) result.get(0) != SUCCESS_STATUS_CODE) {
             logText("Unable to update prices:" + result.get(1));
             logText("parameters sent:");
             logText(params.toString());

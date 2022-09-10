@@ -102,7 +102,6 @@ public class AvailabilityService extends BaseService {
             } catch (ExecutionException | InterruptedException e) {
                 logger.error(Throwables.getStackTraceAsString(e));
                 logger.error("Failed to get a property, check log files");
-                logger.error(e.getMessage());
             }
         }
         return bookingIds;

@@ -235,7 +235,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                 "Goto booking has been cancelled. \n" +
                 "Booking reservation Id: " + reservationId + ".\n" +
                 (isNotBlank(roomTypeCode) ? "Room Type Code: " + roomTypeCode + ".\n " : "") +
-                (isNotBlank(roomTypeNameWithDateRange) ? "Room Type Name: " + roomTypeNameWithDateRange + ".\n" : "") +
+                (isNotBlank(roomTypeNameWithDateRange) ? "Room/Room-Type Name: " + roomTypeNameWithDateRange + ".\n" : "") +
                 "\n" +
                 "Please take action and notify hotel administrator if it is unexpected.\n";
         subject = "WARNING: GOTO Booking Has Been Canceled!!";

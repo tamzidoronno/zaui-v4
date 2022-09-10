@@ -1979,6 +1979,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<PmsBookingRooms> toRemove = new ArrayList<>();
         String roomName = "";
         String roomTypeIdToDelete = "";
+        boolean isRoomCancelled = false;
         String addResult = "";
         for (PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
             if (room.pmsBookingRoomId.equals(roomId)) {
@@ -1996,6 +1997,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (!remove.isDeleted() && !remove.isOverBooking()) {
                 bookingEngine.deleteBooking(remove.bookingId);
                 deleteRoom(remove);
+                isRoomCancelled = true;
                 logEntry(roomName + " removed from booking ", bookingId, null);
                 if(!booking.isWubook()) {
                     doNotification("room_cancelled", booking, remove);
@@ -2033,6 +2035,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         bookingUpdated(bookingId, "room_removed", roomId);
+        if(isGotoBooking(booking) && isRoomCancelled){
+            gotoManager.sendEmailForCancelledBooking(booking.id, roomTypeIdToDelete, roomName);
+        }
 
         processor();
 

@@ -19,7 +19,6 @@ if (!is_string($_GET['id']) || (preg_match('/^[\d_]*[0-9A-F]{8}-[0-9A-F]{4}-4[0-
     return;
 }
 $id = explode('.',$_GET['id']);
-$extension = $id[1] ? $id[1]: 'png';
 $imageId = $id[0];
 
 $factory = IocContainer::getFactorySingelton();
@@ -66,7 +65,7 @@ if (!$imageLoader->found()) {
 $PageContent = ob_get_contents();
 $HashID = md5($PageContent);
 
-header("Content-type: image/$extension");
+header("Content-type: image/png");
 
 header("Cache-Control: max-age=360");
 header('Expires: '.gmdate('D, d M Y H:i:s \G\M\T', time() + 360));

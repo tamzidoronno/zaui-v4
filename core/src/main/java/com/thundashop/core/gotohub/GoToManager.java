@@ -228,7 +228,8 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     @Override
-    public void sendEmailForCancelledBooking(String reservationId, String roomTypeCode, String roomTypeNameWithDateRange) {
+    public void sendEmailForCancelledBooking(String reservationId, String channel, String roomTypeCode, String roomTypeNameWithDateRange) {
+        if(isBlank(channel) || !channel.contains("goto")) return;
         String subject;
         String message = "A " +
                 (isNotBlank(roomTypeCode) || isNotBlank(roomTypeNameWithDateRange) ? "Room of " : "") +

@@ -1960,16 +1960,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             doNotification("room_cancelled", booking, remove);
         }
 
-        if(isGotoBooking(booking)){
-            gotoManager.sendEmailForCancelledBooking(booking.id, remove.bookingItemTypeId, roomName);
-        }
+        gotoManager.sendEmailForCancelledBooking(booking.id, booking.channel, remove.bookingItemTypeId, roomName);
         processor();
-    }
-
-    private boolean isGotoBooking (PmsBooking pmsBooking) {
-        if(pmsBooking == null) return false;
-        if(StringUtils.isBlank(pmsBooking.channel)) return false;
-        return pmsBooking.channel.equals("goto");
     }
 
     @Override
@@ -1978,8 +1970,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         checkSecurity(booking);
         List<PmsBookingRooms> toRemove = new ArrayList<>();
         String roomName = "";
-        String roomTypeIdToDelete = "";
-        boolean isRoomCancelled = false;
         String addResult = "";
         for (PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
             if (room.pmsBookingRoomId.equals(roomId)) {
@@ -1988,7 +1978,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     roomName = bookingEngine.getBookingItem(room.bookingItemId).bookingItemName + " (" + convertToStandardTime(room.date.start) + " - " + convertToStandardTime(room.date.end) + ")";
                 } else if (room.bookingItemTypeId != null && !room.bookingItemTypeId.isEmpty()) {
                     roomName = bookingEngine.getBookingItemType(room.bookingItemTypeId).name + " (" + convertToStandardTime(room.date.start) + " - " + convertToStandardTime(room.date.end) + ")";
-                    roomTypeIdToDelete = room.bookingItemTypeId;
                 }
                 toRemove.add(room);
             }
@@ -1997,7 +1986,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if (!remove.isDeleted() && !remove.isOverBooking()) {
                 bookingEngine.deleteBooking(remove.bookingId);
                 deleteRoom(remove);
-                isRoomCancelled = true;
                 logEntry(roomName + " removed from booking ", bookingId, null);
                 if(!booking.isWubook()) {
                     doNotification("room_cancelled", booking, remove);
@@ -2033,11 +2021,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (booking.getActiveRooms().isEmpty()) {
             deleteBooking(booking.id);
         }
-
         bookingUpdated(bookingId, "room_removed", roomId);
-        if(isGotoBooking(booking) && isRoomCancelled){
-            gotoManager.sendEmailForCancelledBooking(booking.id, roomTypeIdToDelete, roomName);
-        }
+
+        gotoManager.sendEmailForCancelledBooking(booking.id, booking.channel, toRemove.get(0).bookingItemTypeId, roomName);
 
         processor();
 
@@ -2129,9 +2115,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         logEntry("Deleted booking", bookingId, null);
         saveBooking(booking);
-        if(isGotoBooking(booking)){
-            gotoManager.sendEmailForCancelledBooking(booking.id, "", "");
-        }
+        if(booking != null)
+            gotoManager.sendEmailForCancelledBooking(bookingId, booking.channel, null, null);
     }
 
     private void hardDeleteBooking(PmsBooking booking, String source) {

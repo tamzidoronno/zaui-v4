@@ -90,5 +90,5 @@ public interface IGoToManager {
      * @param roomTypeCode: GoTo booking roomTypeId
      * @param roomTypeNameWithDateRange: GoTo booking room type name with check in / out date
      */
-    void sendEmailForCancelledBooking(String reservationId, String roomTypeCode, String roomTypeNameWithDateRange);
+    void sendEmailForCancelledBooking(String reservationId, String channel, String roomTypeCode, String roomTypeNameWithDateRange);
 }

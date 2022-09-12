@@ -1,5 +1,6 @@
 package getshop.nets;
 
+import com.google.common.base.Throwables;
 import com.thundashop.core.gsd.TerminalReceiptText;
 import eu.nets.baxi.client.LocalModeEventArgs;
 
@@ -187,6 +188,7 @@ public class GetShopNetsApp implements PaymentOperator {
             this.orderId = orderId;
         } catch (Exception e){
             logger.error("TERMINALTRANSACTION-NETS start transaction error {} {}" ,e.getMessage(),e);
+            logger.error(Throwables.getStackTraceAsString(e));
         }
 
     }

@@ -1134,6 +1134,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             logPrintException(e);
         }
 
+        booking.isConference = isNotBlank(booking.conferenceId);
         saveObject(booking);
         bookingUpdated(booking.id, "modified", null);
 
@@ -2310,10 +2311,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 Booking bookingEngineBooking = bookingEngine.getBooking(tmpres.bookingIds.get(0));
                 tmpres.state = bookingEngineBooking.getSourceState();
 
+                PmsBooking booking = getBookingFromBookingEngineId(tmpres.bookingIds.get(0));
+                if (booking != null && isNotBlank(booking.conferenceId)) {
+                    tmpres.conference = pmsConferenceManager.getConference(booking.conferenceId);
+                }
+
                 if (bookingEngineBooking.source != null && !bookingEngineBooking.source.isEmpty()) {
                     tmpres.name = bookingEngineBooking.source;
                 } else {
-                    PmsBooking booking = getBookingFromBookingEngineId(tmpres.bookingIds.get(0));
                     if (booking != null && booking.userId != null) {
                         User user = userManager.getUserById(booking.userId);
                         if (user != null) {

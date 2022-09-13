@@ -1134,7 +1134,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             logPrintException(e);
         }
 
-        booking.isConference = isNotBlank(booking.conferenceId);
         saveObject(booking);
         bookingUpdated(booking.id, "modified", null);
 

@@ -1,6 +1,5 @@
 package getshop.nets;
 
-import com.google.common.base.Throwables;
 import com.thundashop.core.gsd.TerminalReceiptText;
 import eu.nets.baxi.client.LocalModeEventArgs;
 

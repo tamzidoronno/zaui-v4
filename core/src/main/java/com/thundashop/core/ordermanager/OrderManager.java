@@ -4528,7 +4528,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if(tokenInUse == null || !tokenId.equals(tokenInUse)) {
             return;
         }
-
         if (response.isAdministrativeTask()) {
             logger.info("Received an adminsitrative task: {}", response);
             return;

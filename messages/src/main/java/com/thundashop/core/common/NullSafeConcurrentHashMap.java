@@ -1,4 +1,4 @@
-package com.thundashop.core.utils;
+package com.thundashop.core.common;
 
 import java.util.concurrent.ConcurrentHashMap;
 

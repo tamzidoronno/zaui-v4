@@ -5,12 +5,12 @@ import com.thundashop.core.common.AppContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ExecutorServiceTask implements  Runnable{
+public class GetshopExecutorService implements  Runnable{
     protected GetShopSessionScope scope;
-    protected static final Logger logger = LoggerFactory.getLogger(ExecutorServiceTask.class);
+    protected static final Logger logger = LoggerFactory.getLogger(GetshopExecutorService.class);
     long threadId;
 
-    public ExecutorServiceTask(){
+    public GetshopExecutorService(){
         scope = AppContext.appContext.getBean(GetShopSessionScope.class);
         this.threadId = Thread.currentThread().getId();
     }

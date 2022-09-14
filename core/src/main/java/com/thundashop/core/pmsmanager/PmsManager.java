@@ -10240,7 +10240,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         processor();
     }
 
-    void removeAccrudePayments(PmsBooking booking, String pmsBookingRoomId) {
+    private void removeAccrudePayments(PmsBooking booking, String pmsBookingRoomId) {
         List<String> accrudeOrdres = getAllOrderIds(booking.id)
                     .stream()
                     .map(id -> orderManager.getOrderDirect(id))
@@ -10276,7 +10276,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             saveBooking(book);
         }
     }
-    void removeAccrudePaymentsForConference(String conferenceId,  List<PmsOrderCreateRowItemLine> items) {
+    private void removeAccrudePaymentsForConference(String conferenceId,  List<PmsOrderCreateRowItemLine> items) {
         List<String> cartProductIds = items.stream().map(i -> i.createOrderOnProductId).collect(Collectors.toList());
         List<String> accruedOrders = orderManager.getOrderIdsOfconference(conferenceId)
                     .stream()

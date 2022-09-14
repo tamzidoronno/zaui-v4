@@ -60,6 +60,7 @@ import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
+import com.thundashop.core.utils.Constants;
 import com.thundashop.core.verifonemanager.VerifoneManager;
 import com.thundashop.core.webmanager.WebManager;
 
@@ -1000,7 +1001,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                     result.fieldsValidation.put("guest_" + room.pmsBookingRoomId + "_phone", "Invalid phone");
                     result.isValid = false;
                 }
-                if(guest.prefix.isEmpty() || guest.prefix.length() > 6) {
+                if(guest.prefix.isEmpty() || guest.prefix.length() > Constants.MAX_PHONE_PREFIX_DIGIT) {
                     result.fieldsValidation.put("guest_" + room.pmsBookingRoomId + "_prefix", "Invalid phone prefix");
                     result.isValid = false;
                 }
@@ -1020,17 +1021,16 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                     if(value == null || value.trim().isEmpty()) {
                         result.fieldsValidation.put(key, "Field is required");
                         result.isValid = false;
+                        continue;
                     }
                     if(key.endsWith("_emailAddress") || key.endsWith("_email")) {
-                        assert value != null;
                         if (!value.contains("@")) {
                             result.fieldsValidation.put(key, "Invalid email");
                             result.isValid = false;
                         }
                     }
                     if(key.endsWith("_prefix")) {
-                        assert value != null;
-                        if (value.length()>6) {
+                        if (value.length()> Constants.MAX_PHONE_PREFIX_DIGIT) {
                             result.fieldsValidation.put(key, "Invalid prefix");
                             result.isValid = false;
                         }

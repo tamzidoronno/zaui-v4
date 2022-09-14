@@ -18,6 +18,8 @@ import no.point.paypoint.PayPoint;
 import no.point.paypoint.PayPointEvent;
 import no.point.paypoint.PayPointResultEvent;
 import no.point.paypoint.PayPointStatusEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -30,6 +32,7 @@ public class VerifoneApp implements PaymentOperator {
     private VerifoneTerminalListener verifoneListener;
     private final VerifonePaymentApp verifonePaymentApp;
     private String orderId;
+    private static final Logger logger = LoggerFactory.getLogger(GetShopNetsApp.class);
     
     public VerifoneApp(GetShopIOTOperator operator) {
         this.operator = operator;
@@ -49,22 +52,28 @@ public class VerifoneApp implements PaymentOperator {
 
     @Override
     public void startTransaction(Integer amount, String orderId) {
-        System.out.println("starting transaction (verifone) amount : " + (amount/100));
-        createListener();
-        String ipAddr = operator.getSetupMessage().paymentterminalip;
-        if(ipAddr == null || ipAddr.isEmpty()) {
-            logPrint("Ip address not set in configuration object, please fill the paymentterminalip field");
-            return;
+        logger.info("TERMINALTRANSACTION-VERIFONE Starting transaction {} for order {} :" , amount , orderId);
+        try {
+            createListener();
+            String ipAddr = operator.getSetupMessage().paymentterminalip;
+            if(ipAddr == null || ipAddr.isEmpty()) {
+                logPrint("Ip address not set in configuration object, please fill the paymentterminalip field");
+                return;
+            }
+            verifonePaymentApp.openCom(ipAddr, verifoneListener);
+
+            if (amount < 0) {
+                amount = amount * -1;
+                verifonePaymentApp.performTransaction(PayPoint.TRANS_RETURN_GOODS, amount, amount);
+            } else {
+                verifonePaymentApp.performTransaction(PayPoint.TRANS_CARD_PURCHASE, amount, amount);
+            }
+            this.orderId = orderId;
         }
-        verifonePaymentApp.openCom(ipAddr, verifoneListener);
-        
-        if (amount < 0) {
-            amount = amount * -1;
-            verifonePaymentApp.performTransaction(PayPoint.TRANS_RETURN_GOODS, amount, amount);
-        } else {
-            verifonePaymentApp.performTransaction(PayPoint.TRANS_CARD_PURCHASE, amount, amount);
+        catch (Exception e) {
+            logger.error("TERMINALTRANSACTION-VERIFONE start transaction error {} {}" ,e.getMessage(),e);
         }
-        this.orderId = orderId;
+
     }
     
     private void createListener() {

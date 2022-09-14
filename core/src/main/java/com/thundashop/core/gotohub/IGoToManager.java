@@ -3,6 +3,7 @@ package com.thundashop.core.gotohub;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
 import com.thundashop.core.gotohub.dto.*;
+import com.thundashop.core.pmsmanager.PmsBookingRooms;
 
 import java.util.Date;
 
@@ -87,8 +88,7 @@ public interface IGoToManager {
      * Save goto related configuration
      *
      * @param reservationId: GoTo booking reservation id
-     * @param roomTypeCode: GoTo booking roomTypeId
-     * @param roomTypeNameWithDateRange: GoTo booking room type name with check in / out date
+     * @param room: Cancelled PmsBookingRooms
      */
-    void sendEmailForCancelledBooking(String reservationId, String channel, String roomTypeCode, String roomTypeNameWithDateRange);
+    void sendEmailForCancelledBooking(String reservationId, String channel, PmsBookingRooms room);
 }

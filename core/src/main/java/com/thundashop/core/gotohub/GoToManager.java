@@ -228,19 +228,25 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     @Override
-    public void sendEmailForCancelledBooking(String reservationId, String channel, String roomTypeCode, String roomTypeNameWithDateRange) {
+    public void sendEmailForCancelledBooking(String reservationId, String channel, PmsBookingRooms room) {
         if(isBlank(channel) || !channel.contains("goto")) return;
-        String subject;
-        String message = "A " +
-                (isNotBlank(roomTypeCode) || isNotBlank(roomTypeNameWithDateRange) ? "Room of " : "") +
-                "Goto booking has been cancelled. \n" +
+
+        String toEmail = goToConfiguration.getEmail();
+        if(isBlank(toEmail)) return;
+
+        BookingItemType roomType = bookingEngine.getBookingItemType(room.bookingItemTypeId);
+        String roomTypeNameWithDateRange = roomType.name
+                + " ( " + checkinOutDateFormatter.format(room.date.start)
+                + " <-> " + checkinOutDateFormatter.format(room.date.end) + " )";
+        String subject = "WARNING: GOTO Booking Has Been Canceled!!";
+        String message = "A room of Goto booking has been cancelled. \n" +
                 "Booking reservation Id: " + reservationId + ".\n" +
-                (isNotBlank(roomTypeCode) ? "Room Type Code: " + roomTypeCode + ".\n " : "") +
+                (isNotBlank(room.bookingItemTypeId) ? "Room Type Code: " + room.bookingItemTypeId + ".\n " : "") +
                 (isNotBlank(roomTypeNameWithDateRange) ? "Room/Room-Type Name: " + roomTypeNameWithDateRange + ".\n" : "") +
                 "\n" +
                 "Please take action and notify hotel administrator if it is unexpected.\n";
-        subject = "WARNING: GOTO Booking Has Been Canceled!!";
-        String toEmail = goToConfiguration.getEmail();
+
+
         messageManager.sendPlainMessageFromOwner(message, subject, toEmail);
     }
 

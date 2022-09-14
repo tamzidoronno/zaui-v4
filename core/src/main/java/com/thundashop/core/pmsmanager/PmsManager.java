@@ -1959,8 +1959,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if(!booking.isWubook()) {
             doNotification("room_cancelled", booking, remove);
         }
-
-        gotoManager.sendEmailForCancelledBooking(booking.id, booking.channel, remove.bookingItemTypeId, roomName);
         processor();
     }
 
@@ -2022,9 +2020,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             deleteBooking(booking.id);
         }
         bookingUpdated(bookingId, "room_removed", roomId);
-
-        gotoManager.sendEmailForCancelledBooking(booking.id, booking.channel, toRemove.get(0).bookingItemTypeId, roomName);
-
         processor();
 
         return addResult;
@@ -2115,8 +2110,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
         logEntry("Deleted booking", bookingId, null);
         saveBooking(booking);
-        if(booking != null)
-            gotoManager.sendEmailForCancelledBooking(bookingId, booking.channel, null, null);
     }
 
     private void hardDeleteBooking(PmsBooking booking, String source) {
@@ -9814,6 +9807,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<String> roomIds = new ArrayList<>();
         roomIds.add(remove.pmsBookingRoomId);
         pmsInvoiceManager.removeOrderLinesOnOrdersForBooking(booking.id, roomIds);
+        gotoManager.sendEmailForCancelledBooking(booking.id, booking.channel, remove );
     }
 
     @Override

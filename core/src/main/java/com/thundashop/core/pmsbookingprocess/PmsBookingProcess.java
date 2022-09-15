@@ -984,28 +984,25 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         }
         
         for(PmsBookingRooms room : booking.getActiveRooms()) {
-            for(int i = 0; i < room.numberOfGuests; i++) {
-                PmsGuests guest = new PmsGuests();
-                if(room.guests.size() > i) {
-                    guest = room.guests.get(i);
-                }
+            int guestKey = 0;
+            for(PmsGuests guest : room.guests) {
                 if(guest.email == null || guest.email.trim().isEmpty() || !guest.email.contains("@")) {
-                    result.fieldsValidation.put("guest_" + room.pmsBookingRoomId + "_email", "Invalid email");
+                    result.fieldsValidation.put("guest_" + guestKey + '_' + room.pmsBookingRoomId + "_email", "Invalid email");
                     result.isValid = false;
                 }
                 if(guest.name == null || guest.name.trim().isEmpty()) {
-                    result.fieldsValidation.put("guest_" + room.pmsBookingRoomId + "_name", "Invalid name");
+                    result.fieldsValidation.put("guest_" + guestKey + '_' + room.pmsBookingRoomId + "_name", "Invalid name");
                     result.isValid = false;
                 }
                 if(guest.phone == null || guest.phone.trim().isEmpty()) {
-                    result.fieldsValidation.put("guest_" + room.pmsBookingRoomId + "_phone", "Invalid phone");
+                    result.fieldsValidation.put("guest_" + guestKey + '_' + room.pmsBookingRoomId + "_phone", "Invalid phone");
                     result.isValid = false;
                 }
                 if(guest.prefix.isEmpty() || guest.prefix.length() > Constants.MAX_PHONE_PREFIX_DIGIT) {
-                    result.fieldsValidation.put("guest_" + room.pmsBookingRoomId + "_prefix", "Invalid phone prefix");
+                    result.fieldsValidation.put("guest_" + guestKey + '_' + room.pmsBookingRoomId + "_prefix", "Invalid phone prefix");
                     result.isValid = false;
                 }
-                break;
+                guestKey++;
             }
         }
         

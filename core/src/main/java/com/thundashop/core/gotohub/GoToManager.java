@@ -541,7 +541,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
         for(int i = 1; i< pmsBookingRoom.numberOfGuests; i++){
             PmsGuests extGuest = new PmsGuests();
-            if(numberOfChildren != 0) {
+            if(numberOfChildren > 0) {
                 extGuest.isChild = true;
                 numberOfChildren--;
             }

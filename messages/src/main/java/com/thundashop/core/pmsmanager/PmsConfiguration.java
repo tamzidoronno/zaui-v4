@@ -1,17 +1,17 @@
 package com.thundashop.core.pmsmanager;
 
-import com.thundashop.core.common.Administrator;
-import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.pmsbookingprocess.AddonItem;
-import com.thundashop.core.productmanager.data.Product;
-import com.thundashop.core.storemanager.data.Store;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.TimeZone;
+
 import org.mongodb.morphia.annotations.Transient;
+
+import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.storemanager.data.Store;
 
 public class PmsConfiguration extends DataCommon {
 
@@ -105,19 +105,19 @@ public class PmsConfiguration extends DataCommon {
         public static Integer MONTHLY = 4;
     }
     
-    public HashMap<String, String> emails = new HashMap();
-    public HashMap<String, String> emailTitles = new HashMap();
-    public HashMap<String, String> smses = new HashMap();
-    public HashMap<String, String> adminmessages = new HashMap();
-    public HashMap<String, String> defaultMessage = new HashMap();
-    public HashMap<String, String> priceCalcPlugins = new HashMap();
+    public HashMap<String, String> emails = new HashMap<>();
+    public HashMap<String, String> emailTitles = new HashMap<>();
+    public HashMap<String, String> smses = new HashMap<>();
+    public HashMap<String, String> adminmessages = new HashMap<>();
+    public HashMap<String, String> defaultMessage = new HashMap<>();
+    public HashMap<String, String> priceCalcPlugins = new HashMap<>();
     public String emailTemplate = "{content}";
-    public HashMap<Integer, PmsBudget> budget = new HashMap();
+    public HashMap<Integer, PmsBudget> budget = new HashMap<>();
     public boolean sendMessagesRegardlessOfPayments = false;
-    public List<TimeRepeaterData> closedOfPeriode = new ArrayList();
-    public List<PmsBlockedUser> blockedUsers = new ArrayList();
+    public List<TimeRepeaterData> closedOfPeriode = new ArrayList<>();
+    public List<PmsBlockedUser> blockedUsers = new ArrayList<>();
     
-    public HashMap<String, String> contracts = new HashMap();
+    public HashMap<String, String> contracts = new HashMap<>();
     public String fireinstructions = "";
     public String otherinstructions = "";
     public String cleaninginstruction = "";
@@ -154,13 +154,13 @@ public class PmsConfiguration extends DataCommon {
     public boolean functionsEnabled = false;
     public boolean needConfirmationInWeekEnds = false;
     public Date closedUntil = null;
-    public HashMap<Integer, PmsBookingAddonItem> addonConfiguration = new HashMap();
-    public HashMap<String, PmsInventory> inventoryList = new HashMap();
-    public HashMap<String, CleaningStatistics> cleaningPriceConfig = new HashMap();
-    public HashMap<String, List<String>> emailsToNotify = new HashMap();
-    public HashMap<String, Double> extraCleaningCost = new HashMap();
-    public HashMap<String, PmsMobileView> mobileViews = new HashMap();
-    public HashMap<String, List<String>> mobileViewRestrictions = new HashMap();
+    public HashMap<Integer, PmsBookingAddonItem> addonConfiguration = new HashMap<>();
+    public HashMap<String, PmsInventory> inventoryList = new HashMap<>();
+    public HashMap<String, CleaningStatistics> cleaningPriceConfig = new HashMap<>();
+    public HashMap<String, List<String>> emailsToNotify = new HashMap<>();
+    public HashMap<String, Double> extraCleaningCost = new HashMap<>();
+    public HashMap<String, PmsMobileView> mobileViews = new HashMap<>();
+    public HashMap<String, List<String>> mobileViewRestrictions = new HashMap<>();
     public String bookingProfile = "hotel";
     public boolean markDirtyEvenWhenCodeNotPressed = false;
     public boolean doNotRecommendBestPrice = false;
@@ -216,8 +216,10 @@ public class PmsConfiguration extends DataCommon {
     
     
     //Lock system
-    public HashMap<String, PmsLockServer> lockServerConfigs = new HashMap();
+    public HashMap<String, PmsLockServer> lockServerConfigs = new HashMap<>();
     public boolean useNewQueueCheck = false;
+
+    public SecurityListSchedulerConfig securityListSchedule = new SecurityListSchedulerConfig();
     
     public PmsLockServer getDefaultLockServer() {
         PmsLockServer defaultsv = lockServerConfigs.get("default");
@@ -302,7 +304,7 @@ public class PmsConfiguration extends DataCommon {
     //Cleaning options
     private Integer closeRoomNotCleanedAtHour = 16;
     public Integer cleaningInterval = 0;
-    public HashMap<Integer, Boolean> cleaningDays = new HashMap();
+    public HashMap<Integer, Boolean> cleaningDays = new HashMap<>();
     public Integer numberOfCheckoutCleanings = 0;
     public Integer numberOfIntervalCleaning = 0;
     public boolean cleaningNextDay = false;
@@ -334,7 +336,7 @@ public class PmsConfiguration extends DataCommon {
     public String wubooklcode = "";
     public boolean wubookcallbackactivated = false;
     public int numberOfRoomsToRemoveFromBookingCom = 1;
-    public HashMap<String, Integer> maxNumberForEachCategory = new HashMap();
+    public HashMap<String, Integer> maxNumberForEachCategory = new HashMap<>();
     public boolean usePricesFromChannelManager = false;
     public boolean useGetShopPricesOnExpedia = false;
     public boolean ignoreNoShow = false;
@@ -344,7 +346,7 @@ public class PmsConfiguration extends DataCommon {
     public String tripTeaseHotelId = "";
 
     
-    public HashMap<String, PmsChannelConfig> channelConfiguration = new HashMap();
+    public HashMap<String, PmsChannelConfig> channelConfiguration = new HashMap<>();
     
     public boolean isGetShopHotelLock() {
         if(locktype != null && !locktype.isEmpty() && locktype.equals("getshophotellock")) {
@@ -422,13 +424,13 @@ public class PmsConfiguration extends DataCommon {
                 item.addonType = next;
             }
         }
-        HashMap<Integer, PmsBookingAddonItem> newAddons = new HashMap();
+        HashMap<Integer, PmsBookingAddonItem> newAddons = new HashMap<>();
         for(PmsBookingAddonItem item : addonConfiguration.values()) {
             newAddons.put(item.addonType, item);
         }
         
         
-        List<String> replace = new ArrayList();
+        List<String> replace = new ArrayList<>();
         for(String key : channelConfiguration.keySet()) {
             if(key.contains(".")) {
                 replace.add(key);

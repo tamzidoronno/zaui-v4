@@ -4523,10 +4523,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public void paymentResponse(String tokenId, TerminalResponse response) {
+        logger.info("Terminal response: " + response);
         if(tokenInUse == null || !tokenId.equals(tokenInUse)) {
             return;
         }
-        
         if (response.isAdministrativeTask()) {
             logger.info("Received an adminsitrative task: {}", response);
             return;

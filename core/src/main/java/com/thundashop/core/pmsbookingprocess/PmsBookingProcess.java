@@ -60,6 +60,7 @@ import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
+import com.thundashop.core.utils.Constants;
 import com.thundashop.core.verifonemanager.VerifoneManager;
 import com.thundashop.core.webmanager.WebManager;
 
@@ -983,24 +984,25 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         }
         
         for(PmsBookingRooms room : booking.getActiveRooms()) {
-            for(int i = 0; i < room.numberOfGuests; i++) {
-                PmsGuests guest = new PmsGuests();
-                if(room.guests.size() > i) {
-                    guest = room.guests.get(i);
-                }
+            int guestKey = 0;
+            for(PmsGuests guest : room.guests) {
                 if(guest.email == null || guest.email.trim().isEmpty() || !guest.email.contains("@")) {
-                    result.fieldsValidation.put("guest_" + room.pmsBookingRoomId + "_email", "Invalid email");
+                    result.fieldsValidation.put("guest_" + guestKey + '_' + room.pmsBookingRoomId + "_email", "Invalid email");
                     result.isValid = false;
                 }
                 if(guest.name == null || guest.name.trim().isEmpty()) {
-                    result.fieldsValidation.put("guest_" + room.pmsBookingRoomId + "_name", "Invalid name");
+                    result.fieldsValidation.put("guest_" + guestKey + '_' + room.pmsBookingRoomId + "_name", "Invalid name");
                     result.isValid = false;
                 }
                 if(guest.phone == null || guest.phone.trim().isEmpty()) {
-                    result.fieldsValidation.put("guest_" + room.pmsBookingRoomId + "_phone", "Invalid phone");
+                    result.fieldsValidation.put("guest_" + guestKey + '_' + room.pmsBookingRoomId + "_phone", "Invalid phone");
                     result.isValid = false;
                 }
-                break;
+                if(guest.prefix.isEmpty() || guest.prefix.length() > Constants.MAX_PHONE_PREFIX_DIGIT) {
+                    result.fieldsValidation.put("guest_" + guestKey + '_' + room.pmsBookingRoomId + "_prefix", "Invalid phone prefix");
+                    result.isValid = false;
+                }
+                guestKey++;
             }
         }
         
@@ -1012,10 +1014,26 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             }
             for(String key : result.fields.keySet()) {
                 String value = result.fields.get(key);
-                if(key.startsWith(prefix) && (value == null || value.trim().isEmpty())) {
-                    result.fieldsValidation.put(key, "Field is required");
-                    result.isValid = false;
+                if(key.startsWith(prefix)){
+                    if(value == null || value.trim().isEmpty()) {
+                        result.fieldsValidation.put(key, "Field is required");
+                        result.isValid = false;
+                        continue;
+                    }
+                    if(key.endsWith("_emailAddress") || key.endsWith("_email")) {
+                        if (!value.contains("@")) {
+                            result.fieldsValidation.put(key, "Invalid email");
+                            result.isValid = false;
+                        }
+                    }
+                    if(key.endsWith("_prefix")) {
+                        if (value.length()> Constants.MAX_PHONE_PREFIX_DIGIT) {
+                            result.fieldsValidation.put(key, "Invalid prefix");
+                            result.isValid = false;
+                        }
+                    }
                 }
+
             }
         }
         

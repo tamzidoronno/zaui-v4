@@ -66,8 +66,6 @@ import com.thundashop.core.utils.UtilManager;
 import com.warrenstrange.googleauth.GoogleAuthenticator;
 import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
 
-import io.netty.util.Constant;
-
 /**
  * @author hjemme
  */

@@ -15,6 +15,9 @@ task fatJar(type: Jar) {
         exclude "META-INF/*.RSA"
 }
 buildscript {
+        repositories {
+            mavenCentral()
+        }
         // this is used only for startGenerator script
         dependencies {
             classpath group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.30'

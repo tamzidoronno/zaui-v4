@@ -13,4 +13,5 @@ public class IntervalResultEntry implements Serializable {
     public String state = "";
     public String roomId = "";
     public String typeId = "";
+    public PmsConference conference;
 }

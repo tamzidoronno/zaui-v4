@@ -239,15 +239,15 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                 + " ( " + checkinOutDateFormatter.format(room.date.start)
                 + " <-> " + checkinOutDateFormatter.format(room.date.end) + " )";
         String subject = "WARNING: GOTO Booking Has Been Canceled!!";
-        String message = "A room of Goto booking has been cancelled. \n" +
-                "Booking reservation Id: " + reservationId + ".\n" +
-                (isNotBlank(room.bookingItemTypeId) ? "Room Type Code: " + room.bookingItemTypeId + ".\n " : "") +
-                (isNotBlank(roomTypeNameWithDateRange) ? "Room/Room-Type Name: " + roomTypeNameWithDateRange + ".\n" : "") +
-                "\n" +
-                "Please take action and notify hotel administrator if it is unexpected.\n";
+        String message = "A room of Goto booking has been cancelled. <br>" +
+                "Booking reservation Id: " + reservationId + ".<br>" +
+                (isNotBlank(room.bookingItemTypeId) ? "Room Type Code: " + room.bookingItemTypeId + ".<br> " : "") +
+                (isNotBlank(roomTypeNameWithDateRange) ? "Room/Room-Type Name: " + roomTypeNameWithDateRange + ".<br>" : "") +
+                "<br>" +
+                "Please take action and notify hotel administrator if it is unexpected.<br>";
 
-
-        messageManager.sendPlainMessageFromOwner(message, subject, toEmail);
+        String fromEmail = pmsManager.getConfiguration().senderEmail;
+        messageManager.sendMail(toEmail, "", subject, message, fromEmail, "");
     }
 
     private void checkDateRangeValidity(Date from, Date to) throws GotoException {

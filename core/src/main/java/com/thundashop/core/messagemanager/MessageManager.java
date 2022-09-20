@@ -7,7 +7,6 @@ import com.mongodb.BasicDBObjectBuilder;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FrameworkConfig;
-import com.thundashop.core.common.GrafanaFeederImpl;
 import com.thundashop.core.common.GrafanaManager;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.Database;
@@ -35,19 +34,13 @@ import java.util.logging.Level;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static java.util.stream.Collectors.toMap;
 import static java.lang.Math.min;
-import static java.util.stream.Collectors.toMap;
-import static java.lang.Math.min;
+
 import java.util.Calendar;
-import static java.util.stream.Collectors.toMap;
-import static java.lang.Math.min;
-import static java.util.stream.Collectors.toMap;
-import static java.lang.Math.min;
 
 /**
  */
@@ -342,14 +335,6 @@ public class MessageManager extends ManagerBase implements IMessageManager {
         String fromEmail = "post@getshop.com";
         String toEmail =getStoreEmailAddress();
 
-        mailFactory.send(fromEmail, toEmail, subject, emailMessage);
-    }
-
-    @Override
-    public void sendPlainMessageFromOwner(String message, String subject, String toEmail){
-        if(StringUtils.isBlank(toEmail)) return;
-        String emailMessage =  message.replace("\n", "<br />");
-        String fromEmail = getStoreEmailAddress();
         mailFactory.send(fromEmail, toEmail, subject, emailMessage);
     }
     

@@ -2620,9 +2620,18 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     @Override
     public Session getGuestSession() {   
-        User user = getUserByIdUnfinalized(Constants.SYSTEM_SCHEDULER_USER);
-        logonEncrypted(user.username, user.password, false);
-        return getSession();   
+        try{
+            User user = getUserByIdUnfinalized(Constants.SYSTEM_SCHEDULER_USER);
+            if(user == null){
+                throw new ErrorException(10);
+            }
+            logonEncrypted(user.username, user.password, false);
+            return getSession();
+        }
+        catch(Exception ex){
+            logPrintException(ex);
+            return null;
+        }   
     }
 
 }

@@ -1,15 +1,43 @@
 package com.thundashop.core.usermanager;
 
+import java.lang.reflect.Field;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import org.mongodb.morphia.Morphia;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.getshop.scope.GetShopSession;
 import com.google.gson.Gson;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
-import com.thundashop.core.common.*;
+import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.FilterOptions;
+import com.thundashop.core.common.FilteredData;
+import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.common.Session;
+import com.thundashop.core.common.SessionFactory;
+import com.thundashop.core.common.StoreInitialized;
 import com.thundashop.core.databasemanager.BigDecimalConverter;
 import com.thundashop.core.databasemanager.Database;
-import static com.thundashop.core.databasemanager.Database.mongoPort;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.messagemanager.MailFactory;
@@ -17,7 +45,6 @@ import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.messagemanager.SmsHandlerAbstract;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.pagemanager.GetShopModules;
-import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.GetShopModule;
 import com.thundashop.core.start.Runner;
 import com.thundashop.core.storemanager.StoreManager;
@@ -34,30 +61,10 @@ import com.thundashop.core.usermanager.data.UserCard;
 import com.thundashop.core.usermanager.data.UserCounter;
 import com.thundashop.core.usermanager.data.UserPrivilege;
 import com.thundashop.core.usermanager.data.UserRole;
+import com.thundashop.core.utils.Constants;
 import com.thundashop.core.utils.UtilManager;
 import com.warrenstrange.googleauth.GoogleAuthenticator;
 import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
-import java.lang.reflect.Field;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Predicate;
-import java.util.logging.Level;
-import java.util.stream.Collectors;
-import org.mongodb.morphia.Morphia;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * @author hjemme
@@ -68,24 +75,21 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     public SessionFactory sessionFactory = new SessionFactory();
     public ConcurrentHashMap<String, UserStoreCollection> userStoreCollections = new ConcurrentHashMap<String, UserStoreCollection>();
 
-    private List<UserDeletedEventListener> userDeletedListeners = new ArrayList();
+    private List<UserDeletedEventListener> userDeletedListeners = new ArrayList<>();
     
     private UserCounter counter = new UserCounter();
 
     private SecureRandom random = new SecureRandom();
     
-    private HashMap<String, Company> companies = new HashMap();
+    private HashMap<String, Company> companies = new HashMap<>();
     
     private LoginHistory loginHistory = new LoginHistory();
     
-    private Map<String, UserRole> roles = new HashMap();
+    private Map<String, UserRole> roles = new HashMap<>();
     
-    private Map<String, LoginToken> tokens = new HashMap();
+    private Map<String, LoginToken> tokens = new HashMap<>();
     
     private GetShopModules modules = new GetShopModules();
-    
-    @Autowired
-    private PageManager pageManager;
     
     @Autowired
     private OrderManager orderManager;
@@ -115,7 +119,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
      * Key = storeid
      * Value = user
      */
-    public static HashMap<String, User> internalApiUsers = new HashMap();
+    public static HashMap<String, User> internalApiUsers = new HashMap<>();
     
     /**
      * Key = storeid
@@ -126,8 +130,6 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     @Autowired
     private TotpHandler totpHandler;
     private Date lastSaved;
-    
-    private boolean hasBeenNotifiedAboutFailedApiUserLogin = false;
     
     @Override
     public void dataFromDatabase(DataRetreived data) {
@@ -395,7 +397,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     @Override
     public List<User> getUserList(ArrayList<String> userIds) throws ErrorException {
         UserStoreCollection collection = getUserStoreCollection(storeId);
-        List<User> retUsers = new ArrayList();
+        List<User> retUsers = new ArrayList<>();
         for (String userId : userIds) {
             User user = collection.getUser(userId);
             if (user != null) {
@@ -920,7 +922,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     public void applicationInstanceDeleted(String instanceId) throws ErrorException {
         List<User> users = getUserStoreCollection(storeId).getAllUsers();
-        ArrayList<User> deleteUsers = new ArrayList();
+        ArrayList<User> deleteUsers = new ArrayList<>();
         for (User user : users) {
             if (user.appId.equals(instanceId)) {
                 deleteUsers.add(user);
@@ -977,7 +979,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     @Override
     public List<User> getAllUsersWithCommentToApp(String appId) throws ErrorException {
-        List<User> retUsers = new ArrayList();
+        List<User> retUsers = new ArrayList<>();
         
         for (User user : getAllUsers()) {
             if (user.comments.size() > 0) {
@@ -1149,7 +1151,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     @Override
     public List<Integer> getLogins(int year) {
-        List<Integer> logins = new ArrayList();
+        List<Integer> logins = new ArrayList<>();
         for (int i=0; i<12; i++) {
             logins.add(loginHistory.getLogins(year, i));
         }
@@ -1267,7 +1269,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             return collection.getUsersBasedOnGroupId(groupId);
         }
         
-        return new ArrayList();
+        return new ArrayList<>();
     }
 
     @Override
@@ -1294,7 +1296,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             return collection.searchForGroup(searchCriteria);
         }
         
-        return new ArrayList();
+        return new ArrayList<>();
     }
 
     private void sendWelcomeEmail(User user, String uncryptedPassword) {
@@ -1405,7 +1407,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     @Override
     public List<Company> getAllCompanies() {
-        return new ArrayList(companies.values());
+        return new ArrayList<>(companies.values());
     }
 
     @Override
@@ -1455,39 +1457,6 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         return res;
     }
 
-    private Comparator<User> compareByReg(boolean desc) {
-        return (User a, User b) -> {
-            if (a == null || a.rowCreatedDate == null)
-                return 1;
-            
-            if (b == null || b.rowCreatedDate == null)
-                return -1;
-            
-            if(desc) {
-                return b.rowCreatedDate.compareTo(a.rowCreatedDate);
-            }
-            return a.rowCreatedDate.compareTo(b.rowCreatedDate);
-        };
-    }
-    
-    private Comparator<User> compareByName() {
-        return (User a, User b) -> {
-            if (a == null || a.fullName == null || a.fullName.isEmpty())
-                return 1;
-            
-            if (b == null || b.fullName == null || b.fullName.isEmpty())
-                return -1;
-            
-            if (Character.isDigit(a.fullName.charAt(0)))
-                return 1;
-                    
-            if (Character.isDigit(b.fullName.charAt(0))) 
-                return -1;
-            
-            return a.fullName.trim().toLowerCase().compareTo(b.fullName.trim().toLowerCase());
-        };
-    }
-    
     private Comparator<User> compareByOrderAmount(boolean desc) {
         if(desc) {
             return (User a, User b) -> {
@@ -1608,11 +1577,11 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     @Override
     public List<User> getUsersByCompanyId(String companyId) {
         if(getSession() == null || getSession().currentUser == null) {
-            return new ArrayList();
+            return new ArrayList<>();
         }
         Company company = getCompany(companyId);
         if (company == null) {
-            return new ArrayList();
+            return new ArrayList<>();
         }
         
         if (getSession().currentUser.type > 10) {
@@ -1620,11 +1589,11 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         }
         
         if (!getSession().currentUser.isCompanyOwner) {
-            return new ArrayList();
+            return new ArrayList<>();
         }
         
         if (getSession().currentUser.company == null || getSession().currentUser.company.isEmpty()) {
-            return new ArrayList();
+            return new ArrayList<>();
         }
         
         Company userCompany = getSession().currentUser.company
@@ -1635,7 +1604,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                 .orElse(null);
         
         if (userCompany == null) {
-            return new ArrayList();
+            return new ArrayList<>();
         }
         
         return getUsersThatHasCompany(companyId);
@@ -1668,7 +1637,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         if (internalApiUsers.get(storeId) == null) {
 
             User internalApiUser = new User();
-            internalApiUser.id = "gs_system_scheduler_user";
+            internalApiUser.id = Constants.SYSTEM_SCHEDULER_USER;
             internalApiUser.type = 100;
             internalApiUser.fullName = "System Scheduled";
             internalApiUser.storeId = storeId;
@@ -1705,9 +1674,9 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     
     public List<Company> getCompaniesByVatNumber(String vat) {
         if(vat == null) {
-            return new ArrayList();
+            return new ArrayList<>();
         }
-        List<Company> result = new ArrayList();
+        List<Company> result = new ArrayList<>();
         for(Company com : companies.values()) {
             if(com.vatNumber != null && com.vatNumber.equalsIgnoreCase(vat)) {
                 result.add(com);
@@ -1951,7 +1920,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     @Override
     public void mergeUsers(List<String> userIds, HashMap<String,String> properties) {
         User mergedUser = new User();
-        Map<String, User> users = new HashMap();
+        Map<String, User> users = new HashMap<>();
         
         for(String userId : userIds) {
             users.put(userId, this.getUserById(userId));
@@ -2040,13 +2009,6 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
                 .orElse(null);
     }
 
-    private String csvsave(String fullName) {
-        if (fullName != null)
-            fullName = fullName.replace(";", "");
-        
-        return fullName;
-    }
-
     public void deleteAllUsers() {
 
         //Delete all users
@@ -2087,8 +2049,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     @Override
     public FilteredData getAllCompanyFiltered(FilterOptions filter) {
-        List<Company> copmanies = getAllCompanies();
-        List<Company> result = new ArrayList();
+        List<Company> result = new ArrayList<>();
         for(Company comp : companies.values()) {
             if(filter.searchWord != null && !filter.searchWord.isEmpty()) {
                 if(comp.name.toLowerCase().contains(filter.searchWord.toLowerCase())) {
@@ -2123,7 +2084,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     }
 
     public HashMap<String, User> getAllUsersMap() {
-        HashMap<String, User> users =new HashMap();
+        HashMap<String, User> users =new HashMap<>();
         for(User user : getAllUsers()) {
             users.put(user.id, user);
         }
@@ -2163,7 +2124,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     @Override
     public List<UserRole> getUserRoles() {
-        return new ArrayList(roles.values());
+        return new ArrayList<>(roles.values());
     }
 
     @Override
@@ -2187,7 +2148,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     @Override
     public List<SimpleUser> getAllUsersSimple() {
-        List<SimpleUser> result = new ArrayList();
+        List<SimpleUser> result = new ArrayList<>();
         for(User user : getAllUsers()) {
             if(user.suspended) {
                 continue;
@@ -2210,7 +2171,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 
     @Override
     public List<User> getSubUsers(String userId) {
-        List<User> result = new ArrayList();
+        List<User> result = new ArrayList<>();
         List<User> users = getAllUsers();
         for(User usr : users) {
             if(usr.subUsers.contains(userId)) {
@@ -2224,14 +2185,14 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
     public List<GetShopModule> getModulesForUser(String userId) {
         User user = getUserByIdUnfinalized(userId);
         if (user == null) {
-            return new ArrayList();
+            return new ArrayList<>();
         }
         
         if (user.emailAddress != null && user.emailAddress.toLowerCase().endsWith("@getshop.com")) {
             return modules.getModules();
         }
         
-        Map<String, GetShopModule> retModulesMap = new HashMap();
+        Map<String, GetShopModule> retModulesMap = new HashMap<>();
         
         user.hasAccessToModules.stream().forEach(moduleId -> {
             GetShopModule mod = modules.getModule(moduleId);
@@ -2242,7 +2203,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
 //            retModulesMap.put("cms", modules.getModule("cms"));
         }
         
-        return new ArrayList(retModulesMap.values());
+        return new ArrayList<>(retModulesMap.values());
     }
 
     @Override
@@ -2639,7 +2600,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
             return result;
         }
         
-        List<User> getshopUsers = new ArrayList();
+        List<User> getshopUsers = new ArrayList<>();
         for(User usr : result) {
             if(usr.isGetShopAdministrator()) {
                 getshopUsers.add(usr);
@@ -2655,6 +2616,22 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         
         result.removeAll(getshopUsers);
         return result;
+    }
+
+    @Override
+    public Session getGuestSession() {   
+        try{
+            User user = getUserByIdUnfinalized(Constants.SYSTEM_SCHEDULER_USER);
+            if(user == null){
+                throw new ErrorException(10);
+            }
+            logonEncrypted(user.username, user.password, false);
+            return getSession();
+        }
+        catch(Exception ex){
+            logPrintException(ex);
+            return null;
+        }   
     }
 
 }

@@ -7,12 +7,12 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.FilterOptions;
 import com.thundashop.core.common.FilteredData;
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.common.Session;
 import com.thundashop.core.common.Writing;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.Comment;
 import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.Group;
-import com.thundashop.core.usermanager.data.GroupInformation;
 import com.thundashop.core.usermanager.data.LoginToken;
 import com.thundashop.core.usermanager.data.SimpleUser;
 
@@ -544,4 +544,6 @@ public interface IUserManager {
     
     @Editor
     public Company saveOrCreateCompanyAndUpdatePrimaryUser(Company company);
+    
+    public Session getGuestSession();
 }

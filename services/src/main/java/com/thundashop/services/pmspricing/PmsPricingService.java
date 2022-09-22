@@ -30,10 +30,11 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 public class PmsPricingService implements IPmsPricingService {
     private static final String defaultCode = "default";
     private final PmsPricingRepository pmsPricingRepository;
-    private static final Map<String, PmsPricing> pricingMap = new ConcurrentHashMap<>();
+    private final Map<String, Map<String, PmsPricing>> storeWisePricingMap = new HashMap<>();
 
     @Override
     public PmsPricing getByCodeOrDefaultCode(String code, SessionInfo sessionInfo) {
+        Map<String, PmsPricing> pricingMap = storeWisePricingMap.getOrDefault(sessionInfo.getStoreId(), new HashMap<>());
         if (isEmpty(code)) {
             // New booking has empty string price code
             return pricingMap.computeIfAbsent(defaultCode, k -> getByDefaultCode(sessionInfo));
@@ -55,6 +56,11 @@ public class PmsPricingService implements IPmsPricingService {
 
     @Override
     public int deleteByCode(String code, SessionInfo sessionInfo) {
+        Map<String, PmsPricing> pricingMap = storeWisePricingMap.getOrDefault(sessionInfo.getStoreId(), new HashMap<>());
+        if(!pricingMap.containsKey(code)) {
+            log.warn("Code: {} does not found in store {}", code, sessionInfo.getStoreId());
+            return 0;
+        }
         pricingMap.remove(code);
         return pmsPricingRepository.markDeleteByCode(code, sessionInfo);
     }
@@ -71,6 +77,7 @@ public class PmsPricingService implements IPmsPricingService {
 
     @Override
     public PmsPricing save(PmsPricing pmsPricing, SessionInfo sessionInfo) {
+        Map<String, PmsPricing> pricingMap = storeWisePricingMap.getOrDefault(sessionInfo.getStoreId(), new HashMap<>());
         pricingMap.remove(pmsPricing.code); // TODO remove
         pricingMap.put(pmsPricing.code, pmsPricing);
         pmsPricingRepository.save(pmsPricing, sessionInfo);

@@ -16,7 +16,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -35,25 +34,20 @@ public class PmsPricingService implements IPmsPricingService {
     @Override
     public PmsPricing getByCodeOrDefaultCode(String code, SessionInfo sessionInfo) {
         Map<String, PmsPricing> pricingMap = storeWisePricingMap.getOrDefault(sessionInfo.getStoreId(), new HashMap<>());
-        if (isEmpty(code) || defaultCode.equals(code)) {
-            // New booking has empty string price code
-            PmsPricing pricing = pricingMap.computeIfAbsent(defaultCode, k -> getByDefaultCodeFromRepo(sessionInfo));
-            storeWisePricingMap.putIfAbsent(sessionInfo.getStoreId(), pricingMap);
-            return pricing;
-        }
-        PmsPricing pricing = pricingMap.computeIfAbsent(code, k -> getPmsPricing(code, sessionInfo));
+        String pricingCode = isEmpty(code) ? defaultCode : code;
+        PmsPricing pricing = pricingMap.computeIfAbsent(pricingCode, k -> getPmsPricing(pricingCode, sessionInfo));
         storeWisePricingMap.putIfAbsent(sessionInfo.getStoreId(), pricingMap);
         return pricing;
     }
 
     private PmsPricing getPmsPricing(String code, SessionInfo sessionInfo) {
         return pmsPricingRepository.findPmsPricingByCode(code, sessionInfo)
-                .orElseGet(() -> getByDefaultCodeFromRepo(sessionInfo));
-    }
-
-    private PmsPricing getByDefaultCodeFromRepo(SessionInfo sessionInfo) {
-        return pmsPricingRepository.findPmsPricingByCode(defaultCode, sessionInfo)
-                .orElse(null);
+                .orElseGet(() -> {
+                    PmsPricing price = pmsPricingRepository.findPmsPricingByCode(defaultCode, sessionInfo)
+                            .orElse(null);
+                    if(price == null) log.warn("No default code found for PmsPricing");
+                    return price;
+                });
     }
 
     @Override

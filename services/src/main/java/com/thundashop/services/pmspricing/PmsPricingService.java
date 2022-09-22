@@ -35,9 +35,9 @@ public class PmsPricingService implements IPmsPricingService {
     @Override
     public PmsPricing getByCodeOrDefaultCode(String code, SessionInfo sessionInfo) {
         Map<String, PmsPricing> pricingMap = storeWisePricingMap.getOrDefault(sessionInfo.getStoreId(), new HashMap<>());
-        if (isEmpty(code)) {
+        if (isEmpty(code) || defaultCode.equals(code)) {
             // New booking has empty string price code
-            PmsPricing pricing = pricingMap.computeIfAbsent(defaultCode, k -> getByDefaultCode(sessionInfo));
+            PmsPricing pricing = pricingMap.computeIfAbsent(defaultCode, k -> getByDefaultCodeFromRepo(sessionInfo));
             storeWisePricingMap.putIfAbsent(sessionInfo.getStoreId(), pricingMap);
             return pricing;
         }
@@ -48,14 +48,17 @@ public class PmsPricingService implements IPmsPricingService {
 
     private PmsPricing getPmsPricing(String code, SessionInfo sessionInfo) {
         return pmsPricingRepository.findPmsPricingByCode(code, sessionInfo)
-                .orElseGet(() -> pmsPricingRepository.findPmsPricingByCode(defaultCode, sessionInfo)
-                        .orElse(null));
+                .orElseGet(() -> getByDefaultCodeFromRepo(sessionInfo));
+    }
+
+    private PmsPricing getByDefaultCodeFromRepo(SessionInfo sessionInfo) {
+        return pmsPricingRepository.findPmsPricingByCode(defaultCode, sessionInfo)
+                .orElse(null);
     }
 
     @Override
     public PmsPricing getByDefaultCode(SessionInfo sessionInfo) {
-        return pmsPricingRepository.findPmsPricingByCode(defaultCode, sessionInfo)
-                .orElse(null);
+        return getByCodeOrDefaultCode(defaultCode, sessionInfo);
     }
 
     @Override

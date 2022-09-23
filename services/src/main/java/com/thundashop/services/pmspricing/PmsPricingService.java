@@ -16,7 +16,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
@@ -30,31 +29,39 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 public class PmsPricingService implements IPmsPricingService {
     private static final String defaultCode = "default";
     private final PmsPricingRepository pmsPricingRepository;
-    private static final Map<String, PmsPricing> pricingMap = new ConcurrentHashMap<>();
+    private final Map<String, Map<String, PmsPricing>> storeWisePricingMap = new HashMap<>();
 
     @Override
     public PmsPricing getByCodeOrDefaultCode(String code, SessionInfo sessionInfo) {
-        if (isEmpty(code)) {
-            // New booking has empty string price code
-            return pricingMap.computeIfAbsent(defaultCode, k -> getByDefaultCode(sessionInfo));
-        }
-        return pricingMap.computeIfAbsent(code, k -> getPmsPricing(code, sessionInfo));
+        Map<String, PmsPricing> pricingMap = storeWisePricingMap.getOrDefault(sessionInfo.getStoreId(), new HashMap<>());
+        String pricingCode = isEmpty(code) ? defaultCode : code;
+        PmsPricing pricing = pricingMap.computeIfAbsent(pricingCode, k -> getPmsPricing(pricingCode, sessionInfo));
+        storeWisePricingMap.putIfAbsent(sessionInfo.getStoreId(), pricingMap);
+        return pricing;
     }
 
     private PmsPricing getPmsPricing(String code, SessionInfo sessionInfo) {
         return pmsPricingRepository.findPmsPricingByCode(code, sessionInfo)
-                .orElseGet(() -> pmsPricingRepository.findPmsPricingByCode(defaultCode, sessionInfo)
-                        .orElse(null));
+                .orElseGet(() -> {
+                    PmsPricing price = pmsPricingRepository.findPmsPricingByCode(defaultCode, sessionInfo)
+                            .orElse(null);
+                    if(price == null) log.warn("No default code found for PmsPricing");
+                    return price;
+                });
     }
 
     @Override
     public PmsPricing getByDefaultCode(SessionInfo sessionInfo) {
-        return pmsPricingRepository.findPmsPricingByCode(defaultCode, sessionInfo)
-                .orElse(null);
+        return getByCodeOrDefaultCode(defaultCode, sessionInfo);
     }
 
     @Override
     public int deleteByCode(String code, SessionInfo sessionInfo) {
+        Map<String, PmsPricing> pricingMap = storeWisePricingMap.getOrDefault(sessionInfo.getStoreId(), new HashMap<>());
+        if(!pricingMap.containsKey(code)) {
+            log.warn("Code: {} does not found in store {}", code, sessionInfo.getStoreId());
+            return 0;
+        }
         pricingMap.remove(code);
         return pmsPricingRepository.markDeleteByCode(code, sessionInfo);
     }
@@ -71,8 +78,9 @@ public class PmsPricingService implements IPmsPricingService {
 
     @Override
     public PmsPricing save(PmsPricing pmsPricing, SessionInfo sessionInfo) {
-        pricingMap.remove(pmsPricing.code); // TODO remove
+        Map<String, PmsPricing> pricingMap = storeWisePricingMap.getOrDefault(sessionInfo.getStoreId(), new HashMap<>());
         pricingMap.put(pmsPricing.code, pmsPricing);
+        storeWisePricingMap.putIfAbsent(sessionInfo.getStoreId(), pricingMap);
         pmsPricingRepository.save(pmsPricing, sessionInfo);
         return pmsPricing;
     }

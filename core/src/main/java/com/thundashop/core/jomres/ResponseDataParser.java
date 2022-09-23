@@ -207,11 +207,15 @@ public class ResponseDataParser {
         if(response.getResponseCode()==401){
             throw new Exception("statuse code: 401, unauthorized request\nCheck credentials...");
         }
-
         List<Integer> propertyUIDs = new ArrayList<>();
 
         JsonObject responseBody = gson.fromJson(response.getBody(), JsonObject.class);
         JsonObject data = responseBody.getAsJsonObject("data");
+
+        if (responseBody.get("error_message") != null) {
+            String errorMessage = responseBody.get("error_message").getAsString();
+            throw new Exception(errorMessage);
+        }
 
         if (channelProperties) {
             JsonObject properties = data.getAsJsonObject("response");

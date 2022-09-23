@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.google.common.math.DoubleMath;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -62,15 +63,24 @@ import com.thundashop.core.storemanager.StoreManager;
 @Component
 @GetShopSession
 public class JomresManager extends GetShopSessionBeanNamed implements IJomresManager {
-    @Autowired Database db;
-    @Autowired PmsManager pmsManager;
-    @Autowired BookingEngine bookingEngine;
-    @Autowired PmsInvoiceManager pmsInvoiceManager;
-    @Autowired MessageManager messageManager;
-    @Autowired StoreManager storeManager;
-    @Autowired OrderManager orderManager;
-    @Autowired JomresLogManager jomresLogManager;
-    @Autowired StoreApplicationPool storeApplicationPool;
+    @Autowired
+    Database db;
+    @Autowired
+    PmsManager pmsManager;
+    @Autowired
+    BookingEngine bookingEngine;
+    @Autowired
+    PmsInvoiceManager pmsInvoiceManager;
+    @Autowired
+    MessageManager messageManager;
+    @Autowired
+    StoreManager storeManager;
+    @Autowired
+    OrderManager orderManager;
+    @Autowired
+    JomresLogManager jomresLogManager;
+    @Autowired
+    StoreApplicationPool storeApplicationPool;
 
     private static final Logger logger = LoggerFactory.getLogger(JomresManager.class);
 
@@ -141,14 +151,12 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     }
 
     private void deleteAllDbObjectWithSameClass(DataCommon sampleData) {
-        if (sampleData != null) {
-            BasicDBObject queryObect = getQueryObjectWithClassName(sampleData);
-            String collectionPrefix = "col_";
-            db.getMongo()
-                    .getDB(sampleData.gs_manager)
-                    .getCollection(collectionPrefix + sampleData.storeId)
-                    .remove(queryObect);
-        }
+        if (sampleData == null) return;
+        saveObject(sampleData);
+        BasicDBObject queryObect = getQueryObjectWithClassName(sampleData);
+        String collectionPrefix = "col_";
+        db.getMongo().getDB(sampleData.gs_manager).getCollection(collectionPrefix + sampleData.storeId)
+                .remove(queryObect);
     }
 
     @Override
@@ -185,6 +193,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         } catch (java.lang.Exception e) {
             logPrintException(e);
             logText("Failed to load Jomres Properties...");
+            if (e instanceof Exception) logText(((Exception) e).getMessage1());
             return new ArrayList<>();
         }
     }
@@ -225,7 +234,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
     @Override
     public boolean saveMapping(List<JomresRoomData> mappingRoomData) throws Exception {
-        if(!jomresConfiguration.isEnable){
+        if (!jomresConfiguration.isEnable) {
             logger.info("Jomres connection is disabled");
             return false;
         }
@@ -244,7 +253,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
     @Override
     public List<JomresRoomData> getMappingData() throws Exception {
-        if(!jomresConfiguration.isEnable){
+        if (!jomresConfiguration.isEnable) {
             logger.info("Jomres connection is disabled");
             return new ArrayList<>();
         }
@@ -252,7 +261,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     }
 
     @Override
-    public boolean updateAvailability() throws Exception{
+    public boolean updateAvailability() throws Exception {
         if (!connectToApi()) return false;
         if (handleEmptyJomresCOnfiguration()) return false;
         logText("Started Jomres Update availability");
@@ -375,8 +384,8 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                         .contains(JOMRES_BLACK_BOOKING_DOES_NOT_EXIST_ERROR_MESSAGE.toLowerCase()));
     }
 
-    private void deleteIfExtraBlankBookingExist (
-            Set<String> existingBookingIds, Map<String, PMSBlankBooking> blankBookingMap, Date start, Date end)  throws Exception{
+    private void deleteIfExtraBlankBookingExist(
+            Set<String> existingBookingIds, Map<String, PMSBlankBooking> blankBookingMap, Date start, Date end) throws Exception {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String startDate = formatter.format(start);
         String endDate = formatter.format(end);
@@ -546,7 +555,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         String guestPhone = Optional.ofNullable(guest.prefix).orElse("") + Optional.ofNullable(guest.phone).orElse("");
         String customerPhone = customer.mobilePrefix + customer.telMobile;
 
-        if(StringUtils.isNotBlank(customer.name) && StringUtils.isNotBlank(guest.name)
+        if (StringUtils.isNotBlank(customer.name) && StringUtils.isNotBlank(guest.name)
                 && !customer.name.equals(guest.name))
             return true;
 
@@ -575,9 +584,11 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         pBooking.registrationData.resultAdded.put("user_emailAddress", customer.email);
         pBooking.registrationData.resultAdded.put("user_address_postCode", customer.postcode);
         PmsBookingRooms pmsRoom = pBooking.rooms.get(0);
-        List<PmsGuests> updatedGuestList = new ArrayList<>();
+        // at first taking the old list, then will replace the first guest info with updated one
+        List<PmsGuests> updatedGuestList = pmsRoom.guests;
         PmsGuests guest = pmsRoom.guests.get(0);
-        updatedGuestList.add(getPmsGuestFromJomresCustomer(guest, customer));
+        //only 0th index contain the valid guest info, so replacing 0th guest with updated guest info
+        updatedGuestList.set(0, getPmsGuestFromJomresCustomer(guest, customer));
         pmsManager.setGuestOnRoomWithoutModifyingAddons(updatedGuestList, pBooking.id, pmsRoom.pmsBookingRoomId);
         pmsManager.saveBooking(pBooking);
         return pBooking;
@@ -593,11 +604,13 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         return !pmsRoom.bookingItemId.equals(roomData.bookingItemId);
     }
 
-    private void handleJomresBookingPriceChange(PmsBooking pmsBooking, Double totalPrice, Map<String, Double> priceMatrix) {
-        double oldPrice = pmsBooking.getTotalPrice();
+    private void handleJomresBookingPriceChange(PmsBooking pmsBooking, int oldDayOfStay, Double oldPriceFromMatrix, Double totalPrice, Map<String, Double> priceMatrix) {
+        double oldTotalPrice = pmsBooking.getTotalPrice();
         setBookingPrice(pmsBooking, totalPrice, priceMatrix);
         double currentPrice = pmsBooking.getTotalPrice();
-        if(oldPrice != currentPrice)
+
+        double epsilon = getEpsilonForPirce(oldTotalPrice, oldDayOfStay);
+        if(oldTotalPrice != currentPrice || !DoubleMath.fuzzyEquals(oldPriceFromMatrix, currentPrice, epsilon))
             createNewOrder(pmsBooking.id, pmsBooking.paymentType);
     }
 
@@ -613,18 +626,22 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             }
             PmsBookingRooms pmsRoom = pBooking.rooms.get(0);
             if (isStayDateChanged(pmsRoom, jBooking.arrivalDate, jBooking.departure)) {
+                double oldPriceFromMatrix = calculatePmsBookingPriceFromMatrix(pBooking.rooms.get(0).priceMatrix);
                 pmsRoom = pmsManager.changeDates(pmsRoom.pmsBookingRoomId, pBooking.id,
                         setCorrectTime(jBooking.arrivalDate, true), setCorrectTime(jBooking.departure, false));
                 if (pmsRoom == null)
                     throw new Exception("Failed to update Checkin/out date for booking id: " + jBooking.bookingId);
-                handleJomresBookingPriceChange(pBooking, jBooking.totalPrice, priceMatrix);
+                handleJomresBookingPriceChange(
+                        pBooking, pBooking.rooms.get(0).priceMatrix.size(), oldPriceFromMatrix, jBooking.totalPrice, priceMatrix);
             }
             if (isBookingRoomChanged(pmsRoom, jBooking)) {
+                double oldPriceFromMatrix = calculatePmsBookingPriceFromMatrix(pBooking.rooms.get(0).priceMatrix);
                 String newBookingItemId = jomresPropertyToRoomDataMap.get(jBooking.propertyUid).bookingItemId;
                 pmsManager.setBookingItemAndDate(pmsRoom.pmsBookingRoomId, newBookingItemId, false,
                         setCorrectTime(jBooking.arrivalDate, true), setCorrectTime(jBooking.departure, false));
                 pmsManager.saveBooking(pBooking);
-                handleJomresBookingPriceChange(pBooking, jBooking.totalPrice, priceMatrix);
+                handleJomresBookingPriceChange(
+                        pBooking, pBooking.rooms.get(0).priceMatrix.size(), oldPriceFromMatrix, jBooking.totalPrice, priceMatrix);
 
             }
         } catch (java.lang.Exception e) {
@@ -781,7 +798,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 emailMessageBuilder.append("Possible Solutions:\n" +
                         "   1. Please check if there is any booking in Jomres for this time period.\n" +
                         "   2. Please check if there is already a blank booking for this time period. " +
-                            "If there is, the existing blank booking of Jomres won't be sync with PMS.\n" +
+                        "If there is, the existing blank booking of Jomres won't be sync with PMS.\n" +
                         "   3. If 1 and 2 don't help, please check server connection with Jomres.\n");
             } else {
                 emailMessageBuilder.append("Possible solutions:\n" +
@@ -892,6 +909,19 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             logPrintException(e);
             throw new Exception("Unexpected Error while adding new booking");
         }
+    }
+
+    private double calculatePmsBookingPriceFromMatrix(LinkedHashMap<String, Double> priceMatrix) {
+        double totalPriceFromMatrix = 0.0;
+        for (String key : priceMatrix.keySet()) {
+            totalPriceFromMatrix = totalPriceFromMatrix + priceMatrix.get(key);
+        }
+        return totalPriceFromMatrix;
+    }
+
+    private double getEpsilonForPirce(double price, int daysOfStay) {
+        double dailyEplision = Math.ulp(price);
+        return dailyEplision * daysOfStay;
     }
 
     private PmsGuests getPmsGuestFromJomresCustomer(PmsGuests guest, JomresGuest customer) {

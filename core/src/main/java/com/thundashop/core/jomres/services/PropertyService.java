@@ -36,7 +36,7 @@ public class PropertyService extends BaseService{
 
         } catch (Exception e){
             logger.error(e.getMessage());
-            return new ArrayList<>();
+            throw e;
         } catch (OAuthProblemException | IOException | OAuthSystemException e) {
             logger.error(Throwables.getStackTraceAsString(e));
             throw new Exception(e.getMessage());

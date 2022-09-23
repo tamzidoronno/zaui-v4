@@ -19,9 +19,6 @@ function getGluewareUrl(hotelCode) {
   if (hotelCode.endsWith(ClusterSuffix.Cluster9)) {
     gluewareUrl = GLUEWARE_URL_LIST[ClusterSuffix.Cluster9];
     suffix = ClusterSuffix.Cluster9;
-  } else if (hotelCode.endsWith(ClusterSuffix.Cluster4)) {
-    gluewareUrl = GLUEWARE_URL_LIST[ClusterSuffix.Cluster4];
-    suffix = ClusterSuffix.Cluster4;
   } else if (hotelCode.endsWith(ClusterSuffix.Cluster5)) {
     gluewareUrl = GLUEWARE_URL_LIST[ClusterSuffix.Cluster5];
     suffix = ClusterSuffix.Cluster5;
@@ -41,6 +38,11 @@ function getGluewareUrl(hotelCode) {
   else if (hotelCode.endsWith(ClusterSuffix.Local)) {
     gluewareUrl = GLUEWARE_URL_LIST[ClusterSuffix.Local];
     suffix = ClusterSuffix.Local;
+  }
+  else {
+  // as all named domain hotels reside at c4
+    gluewareUrl = GLUEWARE_URL_LIST[ClusterSuffix.Cluster4];
+    suffix = ClusterSuffix.Cluster4;
   }
 
   return gluewareUrl;

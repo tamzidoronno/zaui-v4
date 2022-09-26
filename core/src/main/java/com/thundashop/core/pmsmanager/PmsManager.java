@@ -3718,6 +3718,48 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         return false;
     }
+    public int isRestrictedForAllCategories(String itemType, Date start, Date end, Integer periodType) {
+        int days = pmsInvoiceManager.getNumberOfDays(start, end);
+        boolean isBetween = false;
+        List<TimeRepeaterData> openingshours = bookingEngine.getOpeningHoursWithType(itemType, periodType);
+        TimeRepeater repeater = new TimeRepeater();
+        for (TimeRepeaterData res : openingshours) {
+            if(res.categories.isEmpty()){
+                LinkedList<TimeRepeaterDateRange> ranges = repeater.generateRange(res);
+                for (TimeRepeaterDateRange range : ranges) {
+                    if ((periodType.equals(TimeRepeaterData.TimePeriodeType.max_stay)
+                            || periodType.equals(TimeRepeaterData.TimePeriodeType.min_stay))) {
+                        isBetween = range.isBetweenTime(start);
+                    }
+                    if (isBetween) {
+                        if (periodType.equals(TimeRepeaterData.TimePeriodeType.min_stay)) {
+                            daysInRestrioction = 1;
+                            try {
+                                daysInRestrioction = new Integer(res.timePeriodeTypeAttribute);
+                            } catch (Exception e) {
+
+                            }
+                            if (daysInRestrioction > days) {
+                                return daysInRestrioction;
+                            }
+                        } else if (periodType.equals(TimeRepeaterData.TimePeriodeType.max_stay)) {
+                            daysInRestrioction = 1;
+                            try {
+                                daysInRestrioction = new Integer(res.timePeriodeTypeAttribute);
+                            } catch (Exception e) {
+
+                            }
+                            if (daysInRestrioction < days) {
+                                return daysInRestrioction;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return 0;
+    }
 
     public Integer getLatestRestrictionTime() {
         return daysInRestrioction;

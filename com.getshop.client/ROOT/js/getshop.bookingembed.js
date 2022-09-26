@@ -11,31 +11,38 @@
       });
     };
   })(jQuery);
-
+  
   function getGluewareUrl(hotelCode) {
     let gluewareUrl = "";
+    let suffix = "";
+  
     if (hotelCode.endsWith(ClusterSuffix.Cluster9)) {
       gluewareUrl = GLUEWARE_URL_LIST[ClusterSuffix.Cluster9];
+      suffix = ClusterSuffix.Cluster9;
+    } else if (hotelCode.endsWith(ClusterSuffix.Cluster4)) {
+      gluewareUrl = GLUEWARE_URL_LIST[ClusterSuffix.Cluster4];
+      suffix = ClusterSuffix.Cluster4;
     } else if (hotelCode.endsWith(ClusterSuffix.Cluster5)) {
       gluewareUrl = GLUEWARE_URL_LIST[ClusterSuffix.Cluster5];
+      suffix = ClusterSuffix.Cluster5;
     }
     else if (hotelCode.endsWith(ClusterSuffix.Cluster6)) {
       gluewareUrl = GLUEWARE_URL_LIST[ClusterSuffix.Cluster6];
+      suffix = ClusterSuffix.Cluster6;
     }
     else if (hotelCode.endsWith(ClusterSuffix.Cluster41)) {
       gluewareUrl = GLUEWARE_URL_LIST[ClusterSuffix.Cluster41];
+      suffix = ClusterSuffix.Cluster41;
     }
     else if (hotelCode.endsWith(ClusterSuffix.Qp)) {
       gluewareUrl = GLUEWARE_URL_LIST[ClusterSuffix.Qp];
+      suffix = ClusterSuffix.Qp;
     }
     else if (hotelCode.endsWith(ClusterSuffix.Local)) {
       gluewareUrl = GLUEWARE_URL_LIST[ClusterSuffix.Local];
+      suffix = ClusterSuffix.Local;
     }
-    else {
-    // as all named domain hotels reside at c4
-      gluewareUrl = GLUEWARE_URL_LIST[ClusterSuffix.Cluster4];
-    }
-
+  
     return gluewareUrl;
   }
   const ClusterSuffix = {
@@ -47,7 +54,7 @@
     Qp: "qp",
     Local: "local",
   };
-
+  
   const GLUEWARE_URL_LIST = {
     [ClusterSuffix.Cluster9]: "https://gluegc9.getshop.com/",
     [ClusterSuffix.Cluster6]: "https://glueware6.zauistay.com/",

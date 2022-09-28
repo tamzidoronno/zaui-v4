@@ -44,7 +44,7 @@
     Cluster5: "c5",
     Cluster6: "c6",
     Cluster41: "c41",
-    Qp: "qp",
+    Qp: "mdev",
     Local: "local",
   };
 

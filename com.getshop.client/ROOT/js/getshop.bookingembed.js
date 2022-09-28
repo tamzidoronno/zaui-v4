@@ -25,12 +25,6 @@
     else if (hotelCode.endsWith(ClusterSuffix.Cluster41)) {
       gluewareUrl = GLUEWARE_URL_LIST[ClusterSuffix.Cluster41];
     }
-    else if (hotelCode.endsWith(ClusterSuffix.Qp)) {
-      gluewareUrl = GLUEWARE_URL_LIST[ClusterSuffix.Qp];
-    }
-    else if (hotelCode.endsWith(ClusterSuffix.Local)) {
-      gluewareUrl = GLUEWARE_URL_LIST[ClusterSuffix.Local];
-    }
     else {
     // as all named domain hotels reside at c4
       gluewareUrl = GLUEWARE_URL_LIST[ClusterSuffix.Cluster4];
@@ -43,9 +37,7 @@
     Cluster4: "c4",
     Cluster5: "c5",
     Cluster6: "c6",
-    Cluster41: "c41",
-    Qp: "mdev",
-    Local: "local",
+    Cluster41: "c41"
   };
 
   const GLUEWARE_URL_LIST = {
@@ -53,7 +45,5 @@
     [ClusterSuffix.Cluster6]: "https://glueware6.zauistay.com/",
     [ClusterSuffix.Cluster4]: "https://glueware4.zauistay.com/",
     [ClusterSuffix.Cluster5]: "https://glueware5.zauistay.com/",
-    [ClusterSuffix.Cluster41]: "https://glueware41.zauistay.com/",
-    [ClusterSuffix.Qp]: "https://glue.mdev.getshop.com/",
-    [ClusterSuffix.Local]: "http://localhost:3000/",
+    [ClusterSuffix.Cluster41]: "https://glueware41.zauistay.com/"
   };

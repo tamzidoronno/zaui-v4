@@ -63,24 +63,15 @@ import com.thundashop.core.storemanager.StoreManager;
 @Component
 @GetShopSession
 public class JomresManager extends GetShopSessionBeanNamed implements IJomresManager {
-    @Autowired
-    Database db;
-    @Autowired
-    PmsManager pmsManager;
-    @Autowired
-    BookingEngine bookingEngine;
-    @Autowired
-    PmsInvoiceManager pmsInvoiceManager;
-    @Autowired
-    MessageManager messageManager;
-    @Autowired
-    StoreManager storeManager;
-    @Autowired
-    OrderManager orderManager;
-    @Autowired
-    JomresLogManager jomresLogManager;
-    @Autowired
-    StoreApplicationPool storeApplicationPool;
+    @Autowired Database db;
+    @Autowired PmsManager pmsManager;
+    @Autowired BookingEngine bookingEngine;
+    @Autowired PmsInvoiceManager pmsInvoiceManager;
+    @Autowired MessageManager messageManager;
+    @Autowired StoreManager storeManager;
+    @Autowired OrderManager orderManager;
+    @Autowired JomresLogManager jomresLogManager;
+    @Autowired StoreApplicationPool storeApplicationPool;
 
     private static final Logger logger = LoggerFactory.getLogger(JomresManager.class);
 

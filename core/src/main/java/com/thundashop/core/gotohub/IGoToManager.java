@@ -90,5 +90,5 @@ public interface IGoToManager {
      * @param reservationId: GoTo booking reservation id
      * @param room: Cancelled PmsBookingRooms
      */
-    void sendEmailForCancelledBooking(String reservationId, String channel, PmsBookingRooms room);
+    void sendEmailForCancelledRooms(String reservationId, String channel, PmsBookingRooms room);
 }

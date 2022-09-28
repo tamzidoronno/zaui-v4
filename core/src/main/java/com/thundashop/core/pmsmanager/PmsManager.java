@@ -9811,7 +9811,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<String> roomIds = new ArrayList<>();
         roomIds.add(remove.pmsBookingRoomId);
         pmsInvoiceManager.removeOrderLinesOnOrdersForBooking(booking.id, roomIds);
-        gotoManager.sendEmailForCancelledBooking(booking.id, booking.channel, remove );
+        gotoManager.sendEmailForCancelledRooms(booking.id, booking.channel, remove );
     }
 
     @Override

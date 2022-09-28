@@ -25,6 +25,7 @@ public class PmsPricingRepository extends Repository<PmsPricing> implements IPms
         DBObject query = new BasicDBObject();
         query.put("className", getClassName());
         query.put("code", code);
+        query.put("deleted", null);
         return getOne(query, sessionInfo);
     }    
 

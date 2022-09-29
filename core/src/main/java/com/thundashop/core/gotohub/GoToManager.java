@@ -289,17 +289,22 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             return;
         };
 
-        // BookingItemType roomType = bookingEngine.getBookingItemType(room.bookingItemTypeId);
-        // String roomTypeNameWithDateRange = roomType.name
-        //         + " ( " + checkinOutDateFormatter.format(room.date.start)
-        //         + " <-> " + checkinOutDateFormatter.format(room.date.end) + " )";
         String subject = "WARNING: GOTO Booking Has Been Canceled!!";
+        String checkinOutDateRange = getCheckinOutDateForCancelledBooking(booking);
         String message = "A Goto booking has been cancelled. <br>" +
                 "Booking reservation Id: " + booking.id + ".<br>" +
+                (isNotBlank(checkinOutDateRange) ? "Stay: " + checkinOutDateRange + ".<br>" : "" ) +
                 "<br>" +
                 "Please take action and notify hotel administrator if it is unexpected.<br>";
         
         messageManager.sendMail(toEmail, "", subject, message, "post@getshop.com", "");
+    }
+
+    private String getCheckinOutDateForCancelledBooking(PmsBooking booking) {
+        if(booking.rooms.isEmpty())
+            return "";
+        return checkinOutDateFormatter.format(booking.getAllRooms().get(0).date.start)
+                + " <-> " + checkinOutDateFormatter.format(booking.getAllRooms().get(0).date.end);
     }
 
     private void checkDateRangeValidity(Date from, Date to) throws GotoException {

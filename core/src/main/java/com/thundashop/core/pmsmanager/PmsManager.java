@@ -1107,13 +1107,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void saveBooking(PmsBooking booking) throws ErrorException {
-
         checkIfSegmentIsClosed(booking);
 
         if (booking.id == null || booking.id.isEmpty()) {
             throw new ErrorException(1000015);
         }
 
+        if (isNotBlank(booking.channel) && booking.channel.contains("jomres_") && booking.ignoreSaveJomresBooking) {
+            throw new ErrorException(1000018);
+        }
         bookings.put(booking.id, booking);
 
         try {

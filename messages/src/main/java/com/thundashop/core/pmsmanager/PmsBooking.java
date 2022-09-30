@@ -90,6 +90,9 @@ public class PmsBooking extends DataCommon {
     
     //Jomres Related Properties
     public long jomresBookingId=0;
+
+    @Transient
+    public boolean ignoreSaveJomresBooking = true;
     public long jomresChannelId=0;
     public String jomresReservationCode="";
     public Date jomresLastModified=null;

@@ -16,7 +16,6 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import com.google.common.math.DoubleMath;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -595,13 +594,11 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         return !pmsRoom.bookingItemId.equals(roomData.bookingItemId);
     }
 
-    private void handleJomresBookingPriceChange(PmsBooking pmsBooking, int oldDayOfStay, Double oldPriceFromMatrix, Double totalPrice, Map<String, Double> priceMatrix) {
+    private void handleJomresBookingPriceChange(PmsBooking pmsBooking, Double totalPrice, Map<String, Double> priceMatrix) {
         double oldTotalPrice = pmsBooking.getTotalPrice();
         setBookingPrice(pmsBooking, totalPrice, priceMatrix);
         double currentPrice = pmsBooking.getTotalPrice();
-
-        double epsilon = getEpsilonForPirce(oldTotalPrice, oldDayOfStay);
-        if(oldTotalPrice != currentPrice || !DoubleMath.fuzzyEquals(oldPriceFromMatrix, currentPrice, epsilon))
+        if(oldTotalPrice != currentPrice)
             createNewOrder(pmsBooking.id, pmsBooking.paymentType);
     }
 
@@ -611,33 +608,33 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     }
 
     private void updatePmsBooking(JomresBooking jBooking, PmsBooking pBooking, Map<String, Double> priceMatrix) throws Exception {
+        pBooking.ignoreSaveJomresBooking = false;
         try {
             if (isGuestInfoChanged(jBooking.customer, pBooking)) {
                 pBooking = updateJomresGuestInfo(jBooking.customer, pBooking);
             }
             PmsBookingRooms pmsRoom = pBooking.rooms.get(0);
             if (isStayDateChanged(pmsRoom, jBooking.arrivalDate, jBooking.departure)) {
-                double oldPriceFromMatrix = calculatePmsBookingPriceFromMatrix(pBooking.rooms.get(0).priceMatrix);
                 pmsRoom = pmsManager.changeDates(pmsRoom.pmsBookingRoomId, pBooking.id,
                         setCorrectTime(jBooking.arrivalDate, true), setCorrectTime(jBooking.departure, false));
                 if (pmsRoom == null)
                     throw new Exception("Failed to update Checkin/out date for booking id: " + jBooking.bookingId);
-                handleJomresBookingPriceChange(
-                        pBooking, pBooking.rooms.get(0).priceMatrix.size(), oldPriceFromMatrix, jBooking.totalPrice, priceMatrix);
+                handleJomresBookingPriceChange(pBooking, jBooking.totalPrice, priceMatrix);
             }
             if (isBookingRoomChanged(pmsRoom, jBooking)) {
-                double oldPriceFromMatrix = calculatePmsBookingPriceFromMatrix(pBooking.rooms.get(0).priceMatrix);
                 String newBookingItemId = jomresPropertyToRoomDataMap.get(jBooking.propertyUid).bookingItemId;
                 pmsManager.setBookingItemAndDate(pmsRoom.pmsBookingRoomId, newBookingItemId, false,
                         setCorrectTime(jBooking.arrivalDate, true), setCorrectTime(jBooking.departure, false));
                 pmsManager.saveBooking(pBooking);
                 handleJomresBookingPriceChange(
-                        pBooking, pBooking.rooms.get(0).priceMatrix.size(), oldPriceFromMatrix, jBooking.totalPrice, priceMatrix);
+                        pBooking, jBooking.totalPrice, priceMatrix);
 
             }
         } catch (java.lang.Exception e) {
             logPrintException(e);
             throw new Exception("Falied to update booking, Jomres booking Id: " + jBooking.bookingId + ", Jomres Property Id: " + jBooking.propertyUid);
+        } finally {
+            pBooking.ignoreSaveJomresBooking = true;
         }
     }
 
@@ -900,19 +897,6 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             logPrintException(e);
             throw new Exception("Unexpected Error while adding new booking");
         }
-    }
-
-    private double calculatePmsBookingPriceFromMatrix(LinkedHashMap<String, Double> priceMatrix) {
-        double totalPriceFromMatrix = 0.0;
-        for (String key : priceMatrix.keySet()) {
-            totalPriceFromMatrix = totalPriceFromMatrix + priceMatrix.get(key);
-        }
-        return totalPriceFromMatrix;
-    }
-
-    private double getEpsilonForPirce(double price, int daysOfStay) {
-        double dailyEplision = Math.ulp(price);
-        return dailyEplision * daysOfStay;
     }
 
     private PmsGuests getPmsGuestFromJomresCustomer(PmsGuests guest, JomresGuest customer) {

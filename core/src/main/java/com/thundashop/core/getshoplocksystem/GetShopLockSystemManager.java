@@ -5,6 +5,20 @@
  */
 package com.thundashop.core.getshoplocksystem;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.stereotype.Component;
+
 import com.getshop.scope.GetShopSession;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
@@ -16,23 +30,8 @@ import com.thundashop.core.common.FilteredData;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.GetShop;
-import com.thundashop.core.messagemanager.MailMessage;
 import com.thundashop.core.messagemanager.MessageManager;
-import com.thundashop.core.messagemanager.SmsMessage;
 import com.thundashop.core.storemanager.StoreManager;
-import com.thundashop.core.webmanager.WebManager;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.task.TaskExecutor;
-import org.springframework.stereotype.Component;
 
 /**
  *
@@ -41,19 +40,15 @@ import org.springframework.stereotype.Component;
 @Component
 @GetShopSession
 public class GetShopLockSystemManager extends ManagerBase implements IGetShopLockSystemManager {
-    private HashMap<String, LockServer> lockServers = new HashMap();
-    private HashMap<String, LockGroup> groups = new HashMap();
-    private HashMap<String, AccessGroupUserAccess> users = new HashMap();
-    private HashMap<String, SmsMessage> smsMessage = new HashMap();
-    private HashMap<String, MailMessage> mailMessage = new HashMap();
-    private HashMap<String, List<UserSlot>> cacheSlotsInUse = new HashMap();
+    private HashMap<String, LockServer> lockServers = new HashMap<>();
+    private HashMap<String, LockGroup> groups = new HashMap<>();
+    private HashMap<String, AccessGroupUserAccess> users = new HashMap<>();
+    private HashMap<String, List<UserSlot>> cacheSlotsInUse = new HashMap<>();
     private GetShopLockSystemSettings settings = new GetShopLockSystemSettings();
     
     @Autowired
     private MessageManager messageManager;
-     
-    @Autowired
-    private WebManager webManager;
+
     private int lastsavedcounter = 0;
     
     @Autowired
@@ -177,7 +172,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
     @Override
     public List<LockServer> getLockServers() {
         lockServers.values().stream().forEach(s -> s.finalizeServer());
-        return new ArrayList(lockServers.values());
+        return new ArrayList<>(lockServers.values());
     }
 
     @Override
@@ -321,7 +316,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
 
     @Override
     public List<LockGroup> getAllGroupsUnfinalized() {
-        List<LockGroup> retGroups = new ArrayList(this.groups.values());
+        List<LockGroup> retGroups = new ArrayList<>(this.groups.values());
         Collections.sort(retGroups, (LockGroup group1, LockGroup group2) -> {
             return group1.name.compareToIgnoreCase(group2.name);
         });
@@ -331,7 +326,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
 
     @Override
     public List<LockGroup> getAllGroups() {
-        List<LockGroup> retGroups = new ArrayList(getFinalizedGroups().values());
+        List<LockGroup> retGroups = new ArrayList<>(getFinalizedGroups().values());
         Collections.sort(retGroups, (LockGroup group1, LockGroup group2) -> {
             return group1.name.compareToIgnoreCase(group2.name);
         });
@@ -399,7 +394,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
 
     
     private void releaseSlotsNotConnectedToGroup(LockGroup group, Map<String, List<String>> inServers) {
-        List<String> allLockIds = new ArrayList();
+        List<String> allLockIds = new ArrayList<>();
         inServers.values().stream().forEach(list -> allLockIds.addAll(list));
         
         getLockServers().stream().forEach(server -> {
@@ -415,7 +410,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
     public void deleteGroup(String groupId) {
         LockGroup group = getGroup(groupId);
         if (group != null) {
-            Map<String, List<String>> servers = new HashMap();
+            Map<String, List<String>> servers = new HashMap<>();
             releaseSlotsNotConnectedToGroup(group, servers);
             getFinalizedGroups().remove(group.id);
             deleteObject(group);
@@ -637,13 +632,13 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
 
     @Override
     public FilteredData getAllAccessUsers(FilterOptions options) {
-        ArrayList<AccessGroupUserAccess> data = new ArrayList(users.values());
+        ArrayList<AccessGroupUserAccess> data = new ArrayList<>(users.values());
         return pageIt(data, options);
     }
     
     @Override
     public List<AccessGroupUserAccess> getAllAccessUsersFlat() {
-        ArrayList<AccessGroupUserAccess> data = new ArrayList(users.values());
+        ArrayList<AccessGroupUserAccess> data = new ArrayList<>(users.values());
         return data;
     }
 
@@ -782,10 +777,10 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
     public List<AccessHistoryResult> getAccessHistory(String groupId, Date start, Date end, int groupSlotId) {
         LockGroup group = getGroup(groupId);
         
-        List<AccessHistoryResult> history = new ArrayList();
-        Map<String, List<Integer>> groupedLocksAndSlots = new HashMap();
+        List<AccessHistoryResult> history = new ArrayList<>();
+        Map<String, List<Integer>> groupedLocksAndSlots = new HashMap<>();
         
-        List<String> locks = new ArrayList();
+        List<String> locks = new ArrayList<>();
         for(List<String> connected : group.connectedToLocks.values()) {
             if(connected != null) {
                 locks.addAll(connected);
@@ -797,7 +792,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
             for (UserSlot subSlot : masterUserSlot.subSlots) {
                 List<Integer> slots = groupedLocksAndSlots.get(subSlot.connectedToLockId);
                 if (slots == null) {
-                    slots = new ArrayList();
+                    slots = new ArrayList<>();
                     groupedLocksAndSlots.put(subSlot.connectedToLockId, slots);
                 }
 
@@ -815,7 +810,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
             
             List<Integer> userSlots = groupedLocksAndSlots.get(lockId);
             if(userSlots == null) {
-                userSlots = new ArrayList();
+                userSlots = new ArrayList<>();
                 userSlots.add(groupSlotId);
             }
             
@@ -886,7 +881,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
             return cacheSlotsInUse.get(serverId+"_"+lockId);
         }
         
-        List<UserSlot> slotsToReturn = new ArrayList();
+        List<UserSlot> slotsToReturn = new ArrayList<>();
         
         for (LockGroup group : groups.values()) {
             group.finalize(lockServers);
@@ -895,7 +890,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
                 continue;
             }
             
-            List<MasterUserSlot> add = new ArrayList();
+            List<MasterUserSlot> add = new ArrayList<>();
             if(fetchAll) {
                 add = group.getGroupLockCodes().values().stream().collect(Collectors.toList());
             } else {
@@ -983,7 +978,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
     }
 
     public List<AccessEvent> getAccessEvents() {
-        List<AccessEvent> retList = new ArrayList();
+        List<AccessEvent> retList = new ArrayList<>();
         lockServers.values()
                 .stream()
                 .forEach(server -> {
@@ -1042,21 +1037,22 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         query.put("className", AccessHistory.class.getCanonicalName());
         query.put("lockId", lockId);
         query.put("serverId", serverId);
-        
+
+        List<LockGroup> connectedToGroups = getAllGroups().stream()
+                .filter(o -> o.isConnectedToLock(serverId, lockId))
+                .collect(Collectors.toList());
+
+        String doorName = getDoorName(serverId, lockId);        
+
         List<AccessHistoryResult> hist = database.query(getClass().getSimpleName(), getStoreId(), query).stream()
             .map(o -> (AccessHistory)o)
-            .map(o -> o.toResult(getDoorName(o.serverId, o.lockId), getName(o)))
+            .map(o -> o.toResult(doorName, getName(o, connectedToGroups)))
             .collect(Collectors.toList());
 
         return pageIt(hist, filterOptions);
     }
 
-    private String getName(AccessHistory history) {
-        
-        List<LockGroup> connectedToGroups = getAllGroups().stream()
-                .filter(o -> o.isConnectedToLock(history.serverId, history.lockId))
-                .collect(Collectors.toList());
-        
+    private String getName(AccessHistory history, List<LockGroup> connectedToGroups) {        
         for (LockGroup connectedToLockGroup : connectedToGroups) {
             for (Integer slotId : connectedToLockGroup.getGroupLockCodes().keySet()) {
                 MasterUserSlot masterUserSlot = connectedToLockGroup.getGroupLockCodes().get(slotId);
@@ -1093,16 +1089,16 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
     @Override
     public Map<Integer, List<UserSlot>> getCodesByToken(String tokenId) {
         if (tokenId == null || tokenId.isEmpty())
-            return new HashMap();
+            return new HashMap<>();
         
         LockServer server = getServerByToken(tokenId);
         
         if (server == null) {
-            return new HashMap();
+            return new HashMap<>();
         }
         
         
-        HashMap<Integer, List<UserSlot>> retMap = new HashMap();
+        HashMap<Integer, List<UserSlot>> retMap = new HashMap<>();
         
         for (Lock lock : server.getLocks()) {
             boolean fetchAll = tokenId.equals("349792c3-0d08-4d96-8c3e-841ffb2aaf54") || tokenId.equals("8f15a818-80e9-49f9-966b-479e9b642739");
@@ -1155,11 +1151,11 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
     }
 
     public List<LockServer> getLockServersUnfinalized() {
-        return new ArrayList(lockServers.values());
+        return new ArrayList<>(lockServers.values());
     }
 
     private List<Integer> getAllCodesInUse() {
-        List<Integer> codes = new ArrayList();
+        List<Integer> codes = new ArrayList<>();
         List<LockGroup> tmpgroups = getAllGroupsUnfinalized();
         for(LockGroup grp : tmpgroups) {
             for(MasterUserSlot slot : grp.getGroupLockCodes().values()) {
@@ -1218,21 +1214,6 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
         server.setManger(this);
         saveObject(server);
         lockServers.put(server.id, server);
-    }
-
-    private boolean oldLoraServersExists() {
-        boolean result = lockServers.values()
-                .stream()
-                .filter(o -> {
-                    boolean test = o instanceof GetShopLoraServer;
-                    return test;
-                })
-                .count() > 0;
-        
-        if (result ) {
-            System.out.println("Thhere are ");
-        }
-        return result;
     }
 
     @Override

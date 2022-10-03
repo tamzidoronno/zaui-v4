@@ -1,6 +1,6 @@
 package com.thundashop.core.pmsmanager;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.*;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -813,21 +813,19 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
 
     @Override
     public List<PmsBookingWithConferenceDto> getBookingConferences(PmsConferenceFilter filter) {
-        Map<String, PmsBookingWithConferenceDto> bookings = new HashMap<>();
+        List<PmsBookingWithConferenceDto> bookings = new ArrayList<>();
 
-        getAllConferences(filter).stream().forEach(conference -> {
-            PmsConferenceWithEvents conferenceWithEvents = (PmsConferenceWithEvents) conference;
-            conferenceWithEvents.events = getConferenceEvents(conference.id);
-
-            if(isNotBlank(conference.pmsBookingId) && !bookings.containsKey(conference.pmsBookingId)){
-                PmsBooking booking = pmsManager.getBooking(conference.pmsBookingId);
-                if(booking != null){
-                    PmsBookingWithConferenceDto conferenceBooking = (PmsBookingWithConferenceDto)booking;
-                    conferenceBooking.conference = conferenceWithEvents;
-                }
+        getAllConferences(filter).stream().forEach(conference -> {  
+            PmsBooking booking = pmsManager.getconferenceBooking(conference.id);
+            if(booking != null){
+                PmsBookingWithConferenceDto conferenceBooking =  new PmsBookingWithConferenceDto(booking);
+                PmsConferenceWithEvents conferenceWithEvents = new PmsConferenceWithEvents(conference); 
+                conferenceWithEvents.events = getConferenceEvents(conference.id); 
+                conferenceBooking.conference = conferenceWithEvents;
+                bookings.add(conferenceBooking);
             }
         });
 
-        return new ArrayList<>(bookings.values());
+        return new ArrayList<>(bookings);
     }
 }

@@ -594,11 +594,12 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         return !pmsRoom.bookingItemId.equals(roomData.bookingItemId);
     }
 
-    private void handleJomresBookingPriceChange(PmsBooking pmsBooking, Double totalPrice, Map<String, Double> priceMatrix) {
-        double oldTotalPrice = pmsBooking.getTotalPrice();
-        setBookingPrice(pmsBooking, totalPrice, priceMatrix);
+    private void handleJomresBookingPriceChange(
+            PmsBooking pmsBooking, Double oldTotPrice, Double currentTotPrice, Map<String, Double> priceMatrix) {
+
+        setBookingPrice(pmsBooking, currentTotPrice, priceMatrix);
         double currentPrice = pmsBooking.getTotalPrice();
-        if(oldTotalPrice != currentPrice)
+        if(oldTotPrice != currentPrice)
             createNewOrder(pmsBooking.id, pmsBooking.paymentType);
     }
 
@@ -608,33 +609,30 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     }
 
     private void updatePmsBooking(JomresBooking jBooking, PmsBooking pBooking, Map<String, Double> priceMatrix) throws Exception {
-        pBooking.ignoreSaveJomresBooking = false;
         try {
             if (isGuestInfoChanged(jBooking.customer, pBooking)) {
                 pBooking = updateJomresGuestInfo(jBooking.customer, pBooking);
             }
             PmsBookingRooms pmsRoom = pBooking.rooms.get(0);
             if (isStayDateChanged(pmsRoom, jBooking.arrivalDate, jBooking.departure)) {
+                Double oldTotPrice = pBooking.getTotalPrice();
                 pmsRoom = pmsManager.changeDates(pmsRoom.pmsBookingRoomId, pBooking.id,
                         setCorrectTime(jBooking.arrivalDate, true), setCorrectTime(jBooking.departure, false));
                 if (pmsRoom == null)
                     throw new Exception("Failed to update Checkin/out date for booking id: " + jBooking.bookingId);
-                handleJomresBookingPriceChange(pBooking, jBooking.totalPrice, priceMatrix);
+                handleJomresBookingPriceChange(pBooking, oldTotPrice, jBooking.totalPrice, priceMatrix);
             }
             if (isBookingRoomChanged(pmsRoom, jBooking)) {
+                Double oldTotPrice = pBooking.getTotalPrice();
                 String newBookingItemId = jomresPropertyToRoomDataMap.get(jBooking.propertyUid).bookingItemId;
                 pmsManager.setBookingItemAndDate(pmsRoom.pmsBookingRoomId, newBookingItemId, false,
                         setCorrectTime(jBooking.arrivalDate, true), setCorrectTime(jBooking.departure, false));
                 pmsManager.saveBooking(pBooking);
-                handleJomresBookingPriceChange(
-                        pBooking, jBooking.totalPrice, priceMatrix);
-
+                handleJomresBookingPriceChange(pBooking, oldTotPrice, jBooking.totalPrice, priceMatrix);
             }
         } catch (java.lang.Exception e) {
             logPrintException(e);
             throw new Exception("Falied to update booking, Jomres booking Id: " + jBooking.bookingId + ", Jomres Property Id: " + jBooking.propertyUid);
-        } finally {
-            pBooking.ignoreSaveJomresBooking = true;
         }
     }
 
@@ -645,7 +643,6 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         }
         pmsManager.logEntry("Deleted by channel manager", newbooking.id, null);
         pmsManager.deleteBooking(newbooking.id);
-
         deleteJomresBookingData(jomresToPmsBookingMap.get(booking.bookingId));
         newbooking = pmsManager.getBooking(newbooking.id);
         List<String> orderIds = new ArrayList<>(newbooking.orderIds);
@@ -815,6 +812,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             for (PmsBookingRooms room : newbooking.getAllRooms()) {
                 room.unmarkOverBooking();
             }
+            newbooking.ignoreOverrideTotPrice = true;
             newbooking.channel = "jomres_" + jomresConfiguration.channelName;
             newbooking.jomresBookingId = booking.bookingId;
             newbooking.countryCode = booking.customer.countryCode;
@@ -885,7 +883,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             jomresBookingData.pmsBookingId = newbooking.id;
             jomresBookingData.jomresBookingId = booking.bookingId;
             jomresBookingData.pmsRoomId = newbooking.rooms.get(0).pmsBookingRoomId;
-
+            newbooking.ignoreOverrideTotPrice = false;
             logger.debug("Time takes to complete one booking: " + (System.currentTimeMillis() - start) / 1000 + "s");
             return jomresBookingData;
         } catch (Exception e) {

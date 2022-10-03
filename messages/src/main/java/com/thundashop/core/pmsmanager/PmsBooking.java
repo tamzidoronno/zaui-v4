@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
 import org.mongodb.morphia.annotations.Transient;
 
 import com.google.gson.Gson;
@@ -90,9 +91,8 @@ public class PmsBooking extends DataCommon {
     
     //Jomres Related Properties
     public long jomresBookingId=0;
-
     @Transient
-    public boolean ignoreSaveJomresBooking = true;
+    public boolean ignoreOverrideTotPrice = false;
     public long jomresChannelId=0;
     public String jomresReservationCode="";
     public Date jomresLastModified=null;
@@ -542,7 +542,7 @@ public class PmsBooking extends DataCommon {
     }
 
     public void calculateTotalCost() {
-        if(channel.contains("jomres")){
+        if(StringUtils.isNotBlank(channel) && channel.contains("jomres") && ignoreOverrideTotPrice){
             totalPrice = rooms.get(0).totalCost;
             return;
         }

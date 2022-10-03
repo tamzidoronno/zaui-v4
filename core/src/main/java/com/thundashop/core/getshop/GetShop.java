@@ -1006,7 +1006,17 @@ public class GetShop extends ManagerBase implements IGetShop {
 
     @Override
     public boolean canInvoiceOverEhf(String vatNumber) {
+        // returning forcefully true for now for sync mismatch issue
         return true;
+//        Long vatLong = null;
+//
+//        try {
+//            vatLong = Long.parseLong(vatNumber);
+//        } catch (Exception ex) {
+//            return false;
+//        }
+//
+//        return getEhfCompany(vatLong) != null;
     }
 
     @Override

@@ -1,8 +1,21 @@
 package com.thundashop.core.pmsmanager;
 
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionScope;
-import java.util.Calendar;
 import com.mongodb.BasicDBObject;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
@@ -22,14 +35,6 @@ import com.thundashop.core.productmanager.data.TaxGroup;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 @Component
 @GetShopSession
@@ -55,15 +60,18 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
     
     @Autowired
     private ProductManager productManager;
+
+    @Autowired
+    private PmsManager pmsManager;
     
-    HashMap<String, PmsConferenceItem> items = new HashMap();
-    HashMap<String, PmsConference> conferences = new HashMap();
-    HashMap<String, PmsConferenceEvent> conferenceEvents = new HashMap();
-    HashMap<String, PmsConferenceEventEntry> conferenceEventEntries = new HashMap();
+    HashMap<String, PmsConferenceItem> items = new HashMap<>();
+    HashMap<String, PmsConference> conferences = new HashMap<>();
+    HashMap<String, PmsConferenceEvent> conferenceEvents = new HashMap<>();
+    HashMap<String, PmsConferenceEventEntry> conferenceEventEntries = new HashMap<>();
 
     
     public List<PmsConferenceEventEntry> getAllEventEntries() {
-        return new ArrayList(conferenceEventEntries.values());
+        return new ArrayList<>(conferenceEventEntries.values());
     }
     
     public void dataFromDatabase(DataRetreived data) {
@@ -79,9 +87,9 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
     
     @Override
     public List<PmsConferenceItem> getAllItem(String toItem) {
-        List<PmsConferenceItem> result = new ArrayList();
+        List<PmsConferenceItem> result = new ArrayList<>();
         if(toItem != null && toItem.equals("-1")) {
-            result = new ArrayList(items.values());
+            result = new ArrayList<>(items.values());
         } else {
             for(PmsConferenceItem item : items.values()) {
                 if(item.toItemId.equals(toItem)) {
@@ -98,8 +106,6 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
             }
         
         result.sort(Comparator.comparing(a -> a.name));
-
-        
         return result;
     }
 
@@ -109,7 +115,7 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
         items.remove(item.id);
         deleteObject(item);
         
-        HashMap<String, PmsConferenceItem> checkitems = new HashMap(items);
+        HashMap<String, PmsConferenceItem> checkitems = new HashMap<>(items);
         for(PmsConferenceItem itm : checkitems.values()) {
             if(itm.toItemId.equals(itemId)) {
                 deleteItem(itm.id);
@@ -142,13 +148,12 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
 
         deleteObject(conference);
         
-        HashMap<String, PmsConferenceEvent> confevents = new HashMap(conferenceEvents);        
+        HashMap<String, PmsConferenceEvent> confevents = new HashMap<>(conferenceEvents);        
         for(PmsConferenceEvent evnt : confevents.values()) {
             if(evnt.pmsConferenceId.equals(conferenceId)) {
                 deleteConferenceEvent(evnt.id);
             }
-        }
-        
+        }       
 
     }
 
@@ -183,7 +188,7 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
         PmsConferenceEvent conferenceevent = conferenceEvents.get(id);
         deleteObject(conferenceevent);
         conferenceEvents.remove(id);
-        HashMap<String, PmsConferenceEventEntry> eventlog = new HashMap(conferenceEventEntries);
+        HashMap<String, PmsConferenceEventEntry> eventlog = new HashMap<>(conferenceEventEntries);
         
         for(PmsConferenceEventEntry evntlog : eventlog.values()) {
             if(!evntlog.pmsEventId.equals(id)) {
@@ -209,7 +214,7 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
 
     @Override
     public List<PmsConferenceEvent> getConferenceEvents(String confernceId) {
-        List<PmsConferenceEvent> result = new ArrayList();
+        List<PmsConferenceEvent> result = new ArrayList<>();
         for(PmsConferenceEvent evnt : conferenceEvents.values()) {
             if(evnt.pmsConferenceId.equals(confernceId)) {
                 result.add(evnt);
@@ -226,7 +231,7 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
 
     @Override
     public List<PmsConferenceEventEntry> getEventEntries(String eventId) {
-        List<PmsConferenceEventEntry> result = new ArrayList();
+        List<PmsConferenceEventEntry> result = new ArrayList<>();
         PmsConferenceEvent event = getConferenceEvent(eventId);
         for(PmsConferenceEventEntry entry : conferenceEventEntries.values()) {
             if(entry.pmsEventId.equals(eventId)) {
@@ -280,7 +285,7 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
 
     @Override
     public List<PmsConferenceEvent> getConferenceEventsBetweenTime(Date start, Date end) {
-        List<PmsConferenceEvent> result = new ArrayList();
+        List<PmsConferenceEvent> result = new ArrayList<>();
         for(PmsConferenceEvent evnt : conferenceEvents.values()) {
             if(evnt.betweenTime(start, end)) {
                 PmsConference conference = getConference(evnt.pmsConferenceId);
@@ -315,7 +320,7 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
 
     @Override
     public List<PmsConferenceEvent> getConferenceEventsByFilter(PmsConferenceEventFilter filter) {
-        List<PmsConferenceEvent> result = new ArrayList();
+        List<PmsConferenceEvent> result = new ArrayList<>();
         if(filter.start != null && filter.end != null) {
             List<PmsConferenceEvent> eventsToAdd = getConferenceEventsBetweenTime(filter.start, filter.end);
             result.addAll(eventsToAdd);
@@ -340,7 +345,7 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
         
        
         if(!filter.itemIds.isEmpty()) {
-            List<PmsConferenceEvent> allEvents = new ArrayList();
+            List<PmsConferenceEvent> allEvents = new ArrayList<>();
             for(PmsConferenceEvent event : result) {
                 if(filter.itemIds.contains(event.pmsConferenceItemId)) {
                     allEvents.add(event);
@@ -363,7 +368,7 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
     @Override
     public List<PmsConferenceGuests> getAllGuestsForEvent(String eventId) {
         List<String> multiLevelNames = database.getMultilevelNames("PmsManager", storeId);
-        List<PmsConferenceGuests> result = new ArrayList();
+        List<PmsConferenceGuests> result = new ArrayList<>();
         for (String multilevelName : multiLevelNames) {
             PmsManager pmsManager = getShopSpringScope.getNamedSessionBean(multilevelName, PmsManager.class);
             BookingEngine engine = getShopSpringScope.getNamedSessionBean(multilevelName, BookingEngine.class);
@@ -400,7 +405,6 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
       List<String> multiLevelNames = database.getMultilevelNames("PmsManager", storeId);
         for (String multilevelName : multiLevelNames) {
             PmsManager pmsManager = getShopSpringScope.getNamedSessionBean(multilevelName, PmsManager.class);
-            BookingEngine engine = getShopSpringScope.getNamedSessionBean(multilevelName, BookingEngine.class);
             List<PmsBooking> allbookings = pmsManager.getAllBookings(null);
             allbookings.stream().forEach(booking -> {
                 booking.rooms.stream().forEach(room -> {
@@ -421,7 +425,6 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
     List<String> multiLevelNames = database.getMultilevelNames("PmsManager", storeId);
         for (String multilevelName : multiLevelNames) {
             PmsManager pmsManager = getShopSpringScope.getNamedSessionBean(multilevelName, PmsManager.class);
-            BookingEngine engine = getShopSpringScope.getNamedSessionBean(multilevelName, BookingEngine.class);
             List<PmsBooking> allbookings = pmsManager.getAllBookings(null);
             allbookings.stream().forEach(booking -> {
                 booking.rooms.stream().forEach(room -> {
@@ -439,7 +442,7 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
 
     @Override
     public List<PmsConferenceEventEntry> getEventEntriesByFilter(PmsConferenceEventFilter filter) {
-        List<PmsConferenceEventEntry> result = new ArrayList();
+        List<PmsConferenceEventEntry> result = new ArrayList<>();
         for(PmsConferenceEventEntry entry : conferenceEventEntries.values()) {
             if(entry.inTime(filter)) {
                 PmsConferenceEvent event = getConferenceEvent(entry.pmsEventId);
@@ -496,7 +499,7 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
     }
 
     private ArrayList<PmsConference> getFilterResult(PmsConferenceFilter filter) {
-        ArrayList<PmsConference> retList = new ArrayList(conferences.values());
+        ArrayList<PmsConference> retList = new ArrayList<>(conferences.values());
         
         if(filter != null) {
             if(filter.title != null && !filter.title.isEmpty()) {
@@ -537,7 +540,7 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
     }
 
     public List<String> getConferencesIds() {
-        return new ArrayList(conferences.keySet());
+        return new ArrayList<>(conferences.keySet());
     }
 
     public Date getExpiryDate(String confId) {
@@ -560,7 +563,7 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
     @Override
     public List<PmsConference> searchConferences(String searchWord) {
         if (searchWord == null || searchWord.isEmpty())
-            return new ArrayList();
+            return new ArrayList<>();
         
         return conferences.values()
                 .stream()
@@ -710,7 +713,7 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
         PosTab tab = getTabForConference(conferenceId);
         
         if (tab == null) {
-            return new ArrayList();
+            return new ArrayList<>();
         }
         
         List<CartItem> retList = tab.cartItems.stream()
@@ -741,7 +744,7 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
         if (tab != null && cartItem != null) {
             removeCartItemFromConference(conferenceId, cartItem.getCartItemId());
             
-            List<CartItem> cartItems = new ArrayList();
+            List<CartItem> cartItems = new ArrayList<>();
             cartItems.add(cartItem);
             
             addCartItemsToConference(conferenceId, cartItem.conferenceEventId, cartItems);
@@ -806,5 +809,25 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
         }
         
         return o.conferenceDate.before(start) || o.conferenceDate.after(end);
+    }
+
+    @Override
+    public List<PmsBookingWithConferenceDto> getBookingConferences(PmsConferenceFilter filter) {
+        Map<String, PmsBookingWithConferenceDto> bookings = new HashMap<>();
+
+        getAllConferences(filter).stream().forEach(conference -> {
+            PmsConferenceWithEvents conferenceWithEvents = (PmsConferenceWithEvents) conference;
+            conferenceWithEvents.events = getConferenceEvents(conference.id);
+
+            if(isNotBlank(conference.pmsBookingId) && !bookings.containsKey(conference.pmsBookingId)){
+                PmsBooking booking = pmsManager.getBooking(conference.pmsBookingId);
+                if(booking != null){
+                    PmsBookingWithConferenceDto conferenceBooking = (PmsBookingWithConferenceDto)booking;
+                    conferenceBooking.conference = conferenceWithEvents;
+                }
+            }
+        });
+
+        return new ArrayList<>(bookings.values());
     }
 }

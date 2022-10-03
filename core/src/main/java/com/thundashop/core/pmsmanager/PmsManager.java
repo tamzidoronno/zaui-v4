@@ -26,10 +26,12 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.thundashop.core.gotohub.GoToManager;
 import com.thundashop.services.pmspricing.IPmsPricingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -165,7 +167,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Autowired
     WubookManager wubookManager;
-
+    @Autowired
+    GoToManager gotoManager;
     @Autowired
     BookingEngine bookingEngine;
 
@@ -2014,9 +2017,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (booking.getActiveRooms().isEmpty()) {
             deleteBooking(booking.id);
         }
-
         bookingUpdated(bookingId, "room_removed", roomId);
-
         processor();
 
         return addResult;
@@ -2105,7 +2106,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 logPrint("A booking from wubook has been deleted; " + booking.id);
             }
         }
-
         logEntry("Deleted booking", bookingId, null);
         saveBooking(booking);
     }
@@ -9809,6 +9809,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         List<String> roomIds = new ArrayList<>();
         roomIds.add(remove.pmsBookingRoomId);
         pmsInvoiceManager.removeOrderLinesOnOrdersForBooking(booking.id, roomIds);
+        gotoManager.sendEmailForCancelledRooms(booking.id, booking.channel, remove );
     }
 
     @Override

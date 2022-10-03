@@ -1,12 +1,10 @@
 package com.thundashop.core.messagemanager;
 
 import com.thundashop.core.common.Administrator;
-import com.thundashop.core.common.ErrorMessage;
 import com.thundashop.core.common.GetShopApi;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Send emails using the messagemanager.
@@ -66,7 +64,7 @@ public interface IMessageManager  {
     
     @Administrator
     List<SmsMessage> getSmsMessagesSentTo(String prefix, String phoneNumber, Date fromDate, Date toDate);
-    
+
     public void sendMessageToStoreOwner(String message, String subject);
     
     @Administrator

@@ -56,8 +56,8 @@ import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.pmsmanager.PmsGuests;
 import com.thundashop.core.pmsmanager.PmsInvoiceManager;
 import com.thundashop.core.pmsmanager.PmsManager;
-import com.thundashop.core.sedox.autocryptoapi.Exception;
 import com.thundashop.core.storemanager.StoreManager;
+import com.thundashop.repository.utils.SessionInfo;
 
 @Component
 @GetShopSession
@@ -133,7 +133,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     }
 
     public void handleIfUnauthorizedExceptionOccurred(Exception e) throws Exception {
-        if (e.getMessage1().contains("code: 401") || e.getMessage1().contains("invalid token") || e.getMessage1().contains("unauthorized")) {
+        if (e.getMessage().contains("code: 401") || e.getMessage().contains("invalid token") || e.getMessage().contains("unauthorized")) {
             logText("Invalid Token! Check credentials... Operation aborted..");
             invalidateToken();
             throw e;
@@ -142,11 +142,12 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
     private void deleteAllDbObjectWithSameClass(DataCommon sampleData) {
         if (sampleData == null) return;
-        saveObject(sampleData);
+        SessionInfo session = getSessionInfo();
         BasicDBObject queryObect = getQueryObjectWithClassName(sampleData);
         String collectionPrefix = "col_";
-        db.getMongo().getDB(sampleData.gs_manager).getCollection(collectionPrefix + sampleData.storeId)
-                .remove(queryObect);
+        db.getMongo().getDB(session.getManagerName())
+            .getCollection(collectionPrefix + session.getStoreId())
+            .remove(queryObect);
     }
 
     @Override
@@ -180,10 +181,9 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             );
             return propertyService.getPropertiesFromIds(
                     jomresConfiguration.clientBaseUrl, cmfClientAccessToken, jomresConfiguration.channelName, propertyIds);
-        } catch (java.lang.Exception e) {
+        } catch (Exception e) {
             logPrintException(e);
-            logText("Failed to load Jomres Properties...");
-            if (e instanceof Exception) logText(((Exception) e).getMessage1());
+            logText("Failed to load Jomres Properties..." + e.getMessage());            
             return new ArrayList<>();
         }
     }
@@ -504,28 +504,20 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                     } catch (Exception e) {
                         String errorMessage = "Failed to Sync/Add booking, BookingId: " + jomresBooking.bookingId + ", PropertyId: " + jomresBooking.propertyUid;
                         logPrintException(e);
-                        logText(e.getMessage1());
+                        logText(e.getMessage());
                         logText(errorMessage);
                         logger.error(errorMessage);
                         sendErrorForBooking(jomresBooking, response.getPmsRoomName());
                         response.setStatus("Ignored");
                         allBookings.add(response);
                         handleIfUnauthorizedExceptionOccurred(e);
-                    } catch (java.lang.Exception e) {
-                        String errorMessage = "Failed to Sync/Add booking, BookingId: " + jomresBooking.bookingId + ", PropertyId: " + jomresBooking.propertyUid;
-                        logPrintException(e);
-                        logText(errorMessage);
-                        logger.error(errorMessage);
-                        sendErrorForBooking(jomresBooking, response.getPmsRoomName());
-                        response.setStatus("Ignored");
-                        allBookings.add(response);
                     }
                 }
                 logger.debug("Booking has been synced for Jomres Property Id: " + propertyUID);
             } catch (Exception e) {
-                logger.error(e.getMessage1());
+                logger.error(e.getMessage());
                 logPrintException(e);
-                logText(e.getMessage1());
+                logText(e.getMessage());
                 logText("Booking synchronization has been failed for property id: " + propertyUID);
                 handleIfUnauthorizedExceptionOccurred(e);
             }
@@ -887,13 +879,10 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             logger.debug("Time takes to complete one booking: " + (System.currentTimeMillis() - start) / 1000 + "s");
             return jomresBookingData;
         } catch (Exception e) {
-            logger.error(e.getMessage1());
-            logText(e.getMessage1());
+            logger.error(e.getMessage());
+            logText(e.getMessage());
             logPrintException(e);
             throw e;
-        } catch (java.lang.Exception e) {
-            logPrintException(e);
-            throw new Exception("Unexpected Error while adding new booking");
         }
     }
 

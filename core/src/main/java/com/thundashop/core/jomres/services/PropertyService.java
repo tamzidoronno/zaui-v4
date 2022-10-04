@@ -2,7 +2,6 @@ package com.thundashop.core.jomres.services;
 
 import com.google.common.base.Throwables;
 import com.thundashop.core.jomres.dto.JomresProperty;
-import com.thundashop.core.sedox.autocryptoapi.Exception;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
 import org.apache.oltu.oauth2.client.response.OAuthResourceResponse;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
@@ -23,6 +22,7 @@ import static com.thundashop.core.jomres.services.Constants.*;
 
 public class PropertyService extends BaseService{
     private static final Logger logger = LoggerFactory.getLogger(PropertyService.class);
+    
     public List<Integer> getChannelsPropertyIDs(String baseUrl, String token, String channelName) throws Exception {
         try {
             createOAuthClient();
@@ -34,13 +34,14 @@ public class PropertyService extends BaseService{
 
             return responseDataParser.parseAllPropertyIds(response, true);
 
-        } catch (Exception e){
-            logger.error(e.getMessage());
-            throw e;
         } catch (OAuthProblemException | IOException | OAuthSystemException e) {
             logger.error(Throwables.getStackTraceAsString(e));
             throw new Exception(e.getMessage());
         }
+        catch (Exception e){
+            logger.error(e.getMessage());
+            throw e;
+        } 
     }
 
     private List<Supplier<?>> getJomresPropertyTask(
@@ -103,11 +104,12 @@ public class PropertyService extends BaseService{
 
             return jomresProperty;
 
-        } catch (Exception e) {
-            throw new Exception("From property service: "+e.getMessage1());
-        } catch (IOException | OAuthSystemException |OAuthProblemException e){
+        }  catch (IOException | OAuthSystemException |OAuthProblemException e){
             logger.error(Throwables.getStackTraceAsString(e));
             throw new Exception("From property service: ");
+        }
+        catch (Exception e) {
+            throw new Exception("From property service: "+e.getMessage());
         }
     }
 

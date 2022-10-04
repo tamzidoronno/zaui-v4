@@ -25,6 +25,9 @@
     else if (hotelCode.endsWith(ClusterSuffix.Cluster41)) {
       gluewareUrl = GLUEWARE_URL_LIST[ClusterSuffix.Cluster41];
     }
+    else if(hotelCode === "bergstaden") {
+      gluewareUrl = GLUEWARE_URL_LIST[ClusterSuffix.Cluster41];
+    }
     else {
     // as all named domain hotels reside at c4
       gluewareUrl = GLUEWARE_URL_LIST[ClusterSuffix.Cluster4];

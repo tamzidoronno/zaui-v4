@@ -22,10 +22,7 @@
     else if (hotelCode.endsWith(ClusterSuffix.Cluster6)) {
       gluewareUrl = GLUEWARE_URL_LIST[ClusterSuffix.Cluster6];
     }
-    else if (hotelCode.endsWith(ClusterSuffix.Cluster41)) {
-      gluewareUrl = GLUEWARE_URL_LIST[ClusterSuffix.Cluster41];
-    }
-    else if(hotelCode === "bergstaden") {
+    else if (hotelCode.endsWith(ClusterSuffix.Cluster41) || hotelCode === "bergstaden") {
       gluewareUrl = GLUEWARE_URL_LIST[ClusterSuffix.Cluster41];
     }
     else {

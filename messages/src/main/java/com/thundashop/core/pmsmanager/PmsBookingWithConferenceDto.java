@@ -6,6 +6,6 @@ public class PmsBookingWithConferenceDto extends PmsBooking{
     public PmsConferenceWithEvents conference;
 
     public PmsBookingWithConferenceDto(PmsBooking booking){
-        BeanUtils.copyProperties(booking, this);
+        BeanUtils.copyProperties(this, booking);
     }
 }

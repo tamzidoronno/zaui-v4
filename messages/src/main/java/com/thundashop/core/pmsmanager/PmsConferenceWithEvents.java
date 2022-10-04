@@ -9,6 +9,6 @@ public class PmsConferenceWithEvents extends PmsConference{
     public List<PmsConferenceEvent> events = new ArrayList<>();    
 
     public PmsConferenceWithEvents(PmsConference conference){
-        BeanUtils.copyProperties(conference, this);
+        BeanUtils.copyProperties(this, conference);
     }
 }

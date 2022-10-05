@@ -818,11 +818,7 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
         getAllConferences(filter).stream().forEach(conference -> {  
             PmsBooking booking = pmsManager.getconferenceBooking(conference.id);
             if(booking != null){
-                PmsBookingWithConferenceDto conferenceBooking =  new PmsBookingWithConferenceDto(booking);
-                PmsConferenceWithEvents conferenceWithEvents = new PmsConferenceWithEvents(conference); 
-                conferenceWithEvents.events = getConferenceEvents(conference.id); 
-                conferenceBooking.conference = conferenceWithEvents;
-                bookings.add(conferenceBooking);
+                bookings.add(new PmsBookingWithConferenceDto(booking, conference, getConferenceEvents(conference.id)));
             }
         });
 

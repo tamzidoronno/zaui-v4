@@ -17,7 +17,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class GoToConfiguration extends DataCommon {
-    public String authToken = "B?E(H+MbQeThVmYq";
+    public String authToken;
     public String paymentTypeId;
     public int cuttOffHours;
+    private String email = "";
 }

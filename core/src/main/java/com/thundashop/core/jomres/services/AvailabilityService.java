@@ -5,7 +5,6 @@ import com.google.gson.Gson;
 import com.thundashop.core.jomres.dto.PMSBlankBooking;
 import com.thundashop.core.jomres.dto.UnavailabilityDate;
 import com.thundashop.core.jomres.dto.UpdateAvailabilityResponse;
-import com.thundashop.core.sedox.autocryptoapi.Exception;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.slf4j.Logger;
@@ -32,13 +31,11 @@ public class AvailabilityService extends BaseService {
             Response response = httpClient.newCall(request).execute();
             res = responseDataParser.parseChangeAvailabilityResponse(response);
             res.setMessage("");
-        } catch (Exception e) {
-            logger.error(Throwables.getStackTraceAsString(e));
-            res.setMessage(e.getMessage1());
-        } catch (java.lang.Exception e) {
+        }  catch (Exception e) {
             logger.error(Throwables.getStackTraceAsString(e));
             res.setMessage("Got Unexpected Error, Please Check Log stacktrace..\n" + e.getMessage() + "\n");
         }
+        
         res.setStart(booking.getDateFrom());
         res.setEnd(booking.getDateTo());
         res.setPropertyId(booking.getPropertyId());
@@ -64,9 +61,6 @@ public class AvailabilityService extends BaseService {
             res = responseDataParser.parseChangeAvailabilityResponse(response);
             res.setMessage("");
         } catch (Exception e) {
-            logger.error(Throwables.getStackTraceAsString(e));
-            res.setMessage(e.getMessage1());
-        } catch (java.lang.Exception e) {
             logger.error(Throwables.getStackTraceAsString(e));
             res.setMessage("Got Unexpected Error, Please Check Log stacktrace..\n" + e.getMessage() + "\n");
         }

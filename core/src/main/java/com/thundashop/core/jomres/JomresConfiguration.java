@@ -1,7 +1,9 @@
 package com.thundashop.core.jomres;
 
 import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.PermenantlyDeleteData;
 
+@PermenantlyDeleteData
 public class JomresConfiguration extends DataCommon {
     String cmfClientTokenUrl = "";
     String clientBaseUrl = "";

@@ -6,14 +6,13 @@
 
 package com.thundashop.core.jomres;
 
+import java.util.List;
+
 import com.thundashop.core.common.Administrator;
-import com.thundashop.core.common.ForceAsync;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
 import com.thundashop.core.jomres.dto.FetchBookingResponse;
 import com.thundashop.core.jomres.dto.JomresProperty;
-
-import java.util.List;
 
 /**
  * Jomres management system.<br>
@@ -24,22 +23,28 @@ import java.util.List;
 public interface IJomresManager {
     @Administrator
     List<JomresLog> getLogEntries();
+
     @Administrator
     public boolean testConnection();
+
     @Administrator
-    @ForceAsync
     public boolean updateAvailability() throws Exception;
+
     @Administrator
     public List<FetchBookingResponse> fetchBookings() throws Exception;
 
+    @Administrator
     public boolean changeConfiguration(JomresConfiguration newConfiguration);
 
     @Administrator
     public List<JomresProperty> getJomresChannelProperties() throws Exception;
+
     @Administrator
     public boolean saveMapping(List<JomresRoomData> mappingRoomData) throws Exception;
+
     @Administrator
     public JomresConfiguration getConfigurationData() throws Exception;
+    
     @Administrator
     public List<JomresRoomData> getMappingData() throws Exception;
 

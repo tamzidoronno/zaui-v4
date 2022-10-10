@@ -1,5 +1,34 @@
 package com.thundashop.core.jomres;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.mongodb.BasicDBObject;
@@ -12,33 +41,30 @@ import com.thundashop.core.bookingengine.data.BookingTimeLineFlatten;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
-import com.thundashop.core.jomres.dto.*;
-import com.thundashop.core.jomres.services.*;
+import com.thundashop.core.jomres.dto.FetchBookingResponse;
+import com.thundashop.core.jomres.dto.JomresBooking;
+import com.thundashop.core.jomres.dto.JomresGuest;
+import com.thundashop.core.jomres.dto.JomresProperty;
+import com.thundashop.core.jomres.dto.PMSBlankBooking;
+import com.thundashop.core.jomres.dto.UpdateAvailabilityResponse;
+import com.thundashop.core.jomres.services.AvailabilityService;
+import com.thundashop.core.jomres.services.BaseService;
+import com.thundashop.core.jomres.services.BookingService;
+import com.thundashop.core.jomres.services.PriceService;
+import com.thundashop.core.jomres.services.PropertyService;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
-import com.thundashop.core.pmsmanager.*;
+import com.thundashop.core.pmsmanager.PmsBooking;
+import com.thundashop.core.pmsmanager.PmsBookingComment;
+import com.thundashop.core.pmsmanager.PmsBookingDateRange;
+import com.thundashop.core.pmsmanager.PmsBookingRooms;
+import com.thundashop.core.pmsmanager.PmsGuests;
+import com.thundashop.core.pmsmanager.PmsInvoiceManager;
+import com.thundashop.core.pmsmanager.PmsManager;
+import com.thundashop.core.pmsmanager.TimeRepeaterData;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.repository.utils.SessionInfo;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 @Component
 @GetShopSession
@@ -148,7 +174,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         return true;
     }
 
-    private boolean handleEmptyJomresCOnfiguration() {
+    private boolean handleEmptyJomresConfiguration() {
         if (jomresPropertyToRoomDataMap.isEmpty() || jomresConfiguration == null) {
             logger.info("No room to Jomres Property mapping found for this hotel. No need to fetch bookings...");
             logText("No room to Jomres Property mapping found for this hotel.");
@@ -243,7 +269,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     public boolean updateAvailability() throws Exception {
         LocalTime startTime = LocalTime.now();
         if (!connectToApi()) return false;
-        if (handleEmptyJomresCOnfiguration()) return false;
+        if (handleEmptyJomresConfiguration()) return false;
         logText("Started Jomres Update availability");
         logger.info("Started Jomres Update availability");
         Calendar calendar = Calendar.getInstance();
@@ -471,7 +497,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     public List<FetchBookingResponse> fetchBookings() throws Exception {
         LocalTime startTime = LocalTime.now();
         if (!connectToApi()) return new ArrayList<>();
-        if (handleEmptyJomresCOnfiguration()) return new ArrayList<>();
+        if (handleEmptyJomresConfiguration()) return new ArrayList<>();
         BookingService bookingService = new BookingService();
         PriceService priceService = new PriceService();
 
@@ -735,7 +761,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 logText("Successfully connected with jomres.");
                 return true;
             }
-        } catch (java.lang.Exception e) {
+        } catch (Exception e) {
             logPrintException(e);
             logText("Failed to connect with Jomres, please see log files.");
             return false;

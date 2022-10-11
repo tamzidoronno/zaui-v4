@@ -36,8 +36,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.env.Environment;
@@ -287,7 +285,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private Date cachedAvailableAddonsLastCached;
     private boolean avoidCalculateUnsettledAmount = false;
     private boolean initFinalized = false;
-    private static final Logger logger = LoggerFactory.getLogger(PmsManager.class);
 
     @Autowired
     public void setOrderManager(OrderManager orderManager) {

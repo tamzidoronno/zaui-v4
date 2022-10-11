@@ -2241,12 +2241,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
 
         List<String> bookingIdsForBooking = filter.pmsBookingIds == null ? Collections.emptyList() : filter.pmsBookingIds.stream()
-                    .map(id -> getBooking(id))
-                    .filter(booking -> booking != null && booking.rooms != null)
-                    .flatMap(booking -> booking.rooms.stream())
-                    .filter(room-> room!=null && room.bookingId != null)
-                    .map(o -> o.bookingId)
-                    .collect(Collectors.toList());
+                .map(id -> getBooking(id))
+                .filter(booking -> booking != null && booking.rooms != null)
+                .flatMap(booking -> booking.rooms.stream())
+                .filter(room -> room != null && StringUtils.isNotBlank(room.bookingId))
+                .map(o -> o.bookingId)
+                .collect(Collectors.toList());
 
         if (!bookingIdsForBooking.isEmpty()) {
             lines.stream().forEach(line -> {

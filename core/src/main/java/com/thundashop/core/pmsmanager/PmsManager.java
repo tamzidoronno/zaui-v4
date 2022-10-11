@@ -2242,20 +2242,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         List<BookingTimeLineFlatten> lines = bookingEngine.getTimeLinesForItemWithOptimalIngoreErrorsWithTypes(filter.start, filter.end, filter.types);
 
-        logger.info("This is the log for debugging NPE of Akershave hotel");
-        logger.info("Pmsbooking ids......");
-        if(filter.pmsBookingIds == null) {
-            logger.info("Filter pmsBookingIds is null");
-            logPrint("Filter pmsBookingIds is null");
-        }
-        filter.pmsBookingIds.forEach((id) -> {
-            logger.info("This is id:....");
-            logPrint("This is id:....");
-            PmsBooking booking = getBooking(id);
-            if(booking == null) logger.info("booking is  null");
-        });
 
-        List<String> bookingIdsForBooking = filter.pmsBookingIds.stream()
+        List<String> bookingIdsForBooking = filter.pmsBookingIds == null ? Collections.emptyList() : filter.pmsBookingIds.stream()
                     .map(id -> getBooking(id))
                     .filter(booking -> booking != null && booking.rooms != null)
                     .flatMap(booking -> booking.rooms.stream())

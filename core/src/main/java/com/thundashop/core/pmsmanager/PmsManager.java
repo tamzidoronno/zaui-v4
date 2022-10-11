@@ -2259,7 +2259,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                     .map(id -> getBooking(id))
                     .filter(booking -> booking != null && booking.rooms != null)
                     .flatMap(booking -> booking.rooms.stream())
-                    .filter(o -> o.bookingId != null)
+                    .filter(room-> room!=null && room.bookingId != null)
                     .map(o -> o.bookingId)
                     .collect(Collectors.toList());
 

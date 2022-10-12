@@ -1,7 +1,6 @@
 package com.thundashop.core.jomres.services;
 
 import com.thundashop.core.jomres.dto.JomresBooking;
-import com.thundashop.core.sedox.autocryptoapi.Exception;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
 import org.apache.oltu.oauth2.client.response.OAuthResourceResponse;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
@@ -34,10 +33,11 @@ public class BookingService extends BaseService {
             OAuthResourceResponse response = tokenClient.resource(request, "GET", OAuthResourceResponse.class);
             return responseDataParser.parseBookingsFromList(response);
 
-        } catch (Exception e) {
-            throw new Exception("Failed:\n\t" + e.getMessage1());
         } catch (IOException | OAuthSystemException | OAuthProblemException e) {
             throw new Exception("Failed to execute the \"Get Booking Between Dates\", Cause: " + e.getMessage());
+        }
+        catch (Exception e) {
+            throw new Exception("Failed:\n\t" + e.getMessage());
         }
 
     }
@@ -55,16 +55,17 @@ public class BookingService extends BaseService {
             booking.setCustomer(responseDataParser.parseBookingGuestDetails(response));
             return booking;
 
-        } catch (Exception e) {
-            logger.error(e.getMessage1());
-            return null;
-
-        } catch (IOException | OAuthSystemException | OAuthProblemException e) {
+        }  catch (IOException | OAuthSystemException | OAuthProblemException e) {
             logger.error("Failed to execute the \"Get Booking Between Dates\" Availability REST" +
                     " API request:\n\t" + e.getMessage());
             System.out.println("Failed to execute the \"Get Booking Between Dates\" Availability REST" +
                     " API request:\n\t" + e.getMessage());
             return null;
+        }
+        catch (Exception e) {
+            logger.error(e.getMessage());
+            return null;
+
         }
 
     }

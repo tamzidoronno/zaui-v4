@@ -286,7 +286,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     private boolean avoidCalculateUnsettledAmount = false;
     private boolean initFinalized = false;
 
-
     @Autowired
     public void setOrderManager(OrderManager orderManager) {
         this.orderManager = orderManager;
@@ -1110,13 +1109,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public void saveBooking(PmsBooking booking) throws ErrorException {
-
         checkIfSegmentIsClosed(booking);
 
         if (booking.id == null || booking.id.isEmpty()) {
             throw new ErrorException(1000015);
         }
-
         bookings.put(booking.id, booking);
 
         try {
@@ -2242,11 +2239,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         List<BookingTimeLineFlatten> lines = bookingEngine.getTimeLinesForItemWithOptimalIngoreErrorsWithTypes(filter.start, filter.end, filter.types);
 
-        List<String> bookingIdsForBooking = filter.pmsBookingIds.stream()
-                    .map(id -> getBooking(id))
-                    .flatMap(booking -> booking.rooms.stream())
-                    .map(o -> o.bookingId)
-                    .collect(Collectors.toList());
+
+        List<String> bookingIdsForBooking = filter.pmsBookingIds == null ? Collections.emptyList() : filter.pmsBookingIds.stream()
+                .map(id -> getBooking(id))
+                .filter(booking -> booking != null && booking.rooms != null)
+                .flatMap(booking -> booking.rooms.stream())
+                .filter(room -> room != null && StringUtils.isNotBlank(room.bookingId))
+                .map(o -> o.bookingId)
+                .collect(Collectors.toList());
 
         if (!bookingIdsForBooking.isEmpty()) {
             lines.stream().forEach(line -> {

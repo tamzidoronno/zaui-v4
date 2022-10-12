@@ -186,6 +186,7 @@
 "1000015","Booking does not exists"
 "1000016","Can not add a destination to a route that should not have it."
 "1000017","Det finnes allerede en annen bil med samme mobilnr."
+"1000018","Can't update Jomres Booking"
 
 "2000001","You must selected the original encrypted file + the tuningfile you wish to send."
 "2000002","Failed to decrypt file, please check the windows computer where the CMD program is running if it has a error or something."

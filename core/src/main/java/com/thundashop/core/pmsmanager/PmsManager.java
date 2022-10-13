@@ -3720,44 +3720,46 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
     public int isRestrictedForAllCategories(String itemType, Date start, Date end, Integer periodType) {
         int days = pmsInvoiceManager.getNumberOfDays(start, end);
-        boolean isBetween = false;
         List<TimeRepeaterData> openingshours = bookingEngine.getOpeningHoursWithType(itemType, periodType);
         TimeRepeater repeater = new TimeRepeater();
         for (TimeRepeaterData res : openingshours) {
-            if(res.categories.isEmpty()){
-                LinkedList<TimeRepeaterDateRange> ranges = repeater.generateRange(res);
-                for (TimeRepeaterDateRange range : ranges) {
-                    if ((periodType.equals(TimeRepeaterData.TimePeriodeType.max_stay)
-                            || periodType.equals(TimeRepeaterData.TimePeriodeType.min_stay))) {
-                        isBetween = range.isBetweenTime(start);
+            if (!res.categories.isEmpty()) {
+                continue;
+            }
+            LinkedList<TimeRepeaterDateRange> ranges = repeater.generateRange(res);
+            boolean isMinMaxRestriction = periodType.equals(TimeRepeaterData.TimePeriodeType.max_stay)
+                    || periodType.equals(TimeRepeaterData.TimePeriodeType.min_stay);
+            if (!isMinMaxRestriction) {
+                continue;
+            }
+            for (TimeRepeaterDateRange range : ranges) {
+                boolean isBetween = range.isBetweenTime(start);
+                if (!isBetween) {
+                    continue;
+                }
+                if (periodType.equals(TimeRepeaterData.TimePeriodeType.min_stay)) {
+                    daysInRestrioction = 1;
+                    try {
+                        daysInRestrioction = new Integer(res.timePeriodeTypeAttribute);
+                    } catch (Exception e) {
+
                     }
-                    if (isBetween) {
-                        if (periodType.equals(TimeRepeaterData.TimePeriodeType.min_stay)) {
-                            daysInRestrioction = 1;
-                            try {
-                                daysInRestrioction = new Integer(res.timePeriodeTypeAttribute);
-                            } catch (Exception e) {
+                    if (daysInRestrioction > days) {
+                        return daysInRestrioction;
+                    }
+                } else if (periodType.equals(TimeRepeaterData.TimePeriodeType.max_stay)) {
+                    daysInRestrioction = 1;
+                    try {
+                        daysInRestrioction = new Integer(res.timePeriodeTypeAttribute);
+                    } catch (Exception e) {
 
-                            }
-                            if (daysInRestrioction > days) {
-                                return daysInRestrioction;
-                            }
-                        } else if (periodType.equals(TimeRepeaterData.TimePeriodeType.max_stay)) {
-                            daysInRestrioction = 1;
-                            try {
-                                daysInRestrioction = new Integer(res.timePeriodeTypeAttribute);
-                            } catch (Exception e) {
-
-                            }
-                            if (daysInRestrioction < days) {
-                                return daysInRestrioction;
-                            }
-                        }
+                    }
+                    if (daysInRestrioction < days) {
+                        return daysInRestrioction;
                     }
                 }
             }
         }
-
         return 0;
     }
 

@@ -24,19 +24,19 @@ public class BookingItemTypeService implements IBookingItemTypeService {
 
     @Override
     public List<String> getBookingItemTypeIds(SessionInfo sessionInfo) {
-        if(storeWiseTypes.containsKey(sessionInfo.getStoreId()) && storeWiseTypes.get(sessionInfo.getStoreId()).size() < 1){
+        if(storeWiseTypes.containsKey(getStoreKey(sessionInfo)) && storeWiseTypes.get(getStoreKey(sessionInfo)).size() < 1){
             this.getAllBookingItemTypes(sessionInfo);
         }
-        return new ArrayList<>(storeWiseTypes.get(sessionInfo.getStoreId()).keySet());
+        return new ArrayList<>(storeWiseTypes.get(getStoreKey(sessionInfo)).keySet());
     }
 
     @Override
     public BookingItemType getBookingItemTypeById(String id, SessionInfo sessionInfo) {
-        if(!storeWiseTypes.containsKey(sessionInfo.getStoreId())){
+        if(!storeWiseTypes.containsKey(getStoreKey(sessionInfo))){
             this.getAllBookingItemTypes(sessionInfo);
         }
-        if(storeWiseTypes.containsKey(sessionInfo.getStoreId()) && storeWiseTypes.get(sessionInfo.getStoreId()).containsKey(id)){
-            return storeWiseTypes.get(sessionInfo.getStoreId()).get(id);
+        if(storeWiseTypes.containsKey(getStoreKey(sessionInfo)) && storeWiseTypes.get(getStoreKey(sessionInfo)).containsKey(id)){
+            return storeWiseTypes.get(getStoreKey(sessionInfo)).get(id);
         }
         return bookingItemTypeRepository.getById(id, sessionInfo);
     }
@@ -83,13 +83,13 @@ public class BookingItemTypeService implements IBookingItemTypeService {
         bookingItemTypeRepository.save(type, sessionInfo);
         Map<String, BookingItemType> types = new HashMap<>();
 
-        if(storeWiseTypes.containsKey(sessionInfo.getStoreId())){
-            types = storeWiseTypes.get(sessionInfo.getStoreId());
+        if(storeWiseTypes.containsKey(getStoreKey(sessionInfo))){
+            types = storeWiseTypes.get(getStoreKey(sessionInfo));
         }
 
         if(types != null && types.size() > 1){
             types.put(type.id, type);
-            storeWiseTypes.put(sessionInfo.getStoreId(), types);
+            storeWiseTypes.put(getStoreKey(sessionInfo), types);
         }
     }
 
@@ -97,8 +97,8 @@ public class BookingItemTypeService implements IBookingItemTypeService {
     @Override
     public List<BookingItemType> getAllBookingItemTypes(SessionInfo sessionInfo) {
         Map<String, BookingItemType> types = new HashMap<>();
-        if(storeWiseTypes.containsKey(sessionInfo.getStoreId())){
-            types = storeWiseTypes.get(sessionInfo.getStoreId());
+        if(storeWiseTypes.containsKey(getStoreKey(sessionInfo))){
+            types = storeWiseTypes.get(getStoreKey(sessionInfo));
         }
         if(types != null && types.size() > 1){
             return new ArrayList<>(types.values());
@@ -110,7 +110,7 @@ public class BookingItemTypeService implements IBookingItemTypeService {
                 types.put(type.id, type);
             }
         }
-        storeWiseTypes.put(sessionInfo.getStoreId(), types);
+        storeWiseTypes.put(getStoreKey(sessionInfo), types);
         return bookingItemTypeList;
     }
 
@@ -125,9 +125,13 @@ public class BookingItemTypeService implements IBookingItemTypeService {
         data.deleted = new Date();
         bookingItemTypeRepository.save(data, sessionInfo);
         if (sessionInfo != null) {
-            storeWiseTypes.remove(sessionInfo.getStoreId());
+            storeWiseTypes.remove(getStoreKey(sessionInfo));
         }
         return true;
+    }
+
+    private String getStoreKey(SessionInfo sessionInfo) {
+        return sessionInfo.getStoreId() + "_" + sessionInfo.getManagerName();
     }
     
 }

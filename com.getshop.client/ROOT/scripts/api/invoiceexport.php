@@ -35,6 +35,7 @@ $result->dueDate = date("d.m.Y", strtotime($order->dueDate));
 $result->amount = $amount;
 $result->paidAmount = $paidAmount;
 $result->customerId = $user->customerId;
+$result->invoiceNote = $order->invoiceNote;
 $result->name = $order->cart->address->fullName;
 $result->address1 = $order->cart->address->address;
 $result->address2 = $order->cart->address->address2;

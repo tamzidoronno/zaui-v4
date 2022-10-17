@@ -7,7 +7,7 @@ import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.thundashop.core.webmanager.OkHttpRequest;
+import com.thundashop.core.webmanager.ZauiHttpRequest;
 import com.thundashop.core.webmanager.OkHttpResponse;
 
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
@@ -25,7 +25,7 @@ public class ZauiHttpService implements IZauiHttpService {
         this.okHttpClient = okHttpClient;
     }
 
-    public OkHttpResponse post(OkHttpRequest httpRequest) {
+    public OkHttpResponse post(ZauiHttpRequest httpRequest) {
 
         RequestBody requestBody = httpRequest.isJsonPost()
                 ? RequestBody.Companion.create(httpRequest.getPayload(), JSON)
@@ -49,7 +49,7 @@ public class ZauiHttpService implements IZauiHttpService {
         return execute(request);
     }
 
-    public OkHttpResponse get(OkHttpRequest httpRequest) {
+    public OkHttpResponse get(ZauiHttpRequest httpRequest) {
 
         Request.Builder requestBuilder = new Request.Builder();
         if (isNotEmpty(httpRequest.getAuth())) {

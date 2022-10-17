@@ -44,7 +44,7 @@ public class WebManager extends ManagerBase implements IWebManager {
     
     @Override
     public String htmlGet(String url) {
-        OkHttpRequest request = OkHttpRequest.builder()
+        ZauiHttpRequest request = ZauiHttpRequest.builder()
                 .setUrl(url)
                 .build();
         
@@ -92,7 +92,7 @@ public class WebManager extends ManagerBase implements IWebManager {
 
         // ignore the `encoding` param. payload always will be utf-8 encoded.
 
-        OkHttpRequest request = OkHttpRequest.builder()
+        ZauiHttpRequest request = ZauiHttpRequest.builder()
                 .setAuth(authorization(auth, basic, base64EncodeAuth))
                 .setPayload(data)
                 .setUrl(url)

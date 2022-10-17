@@ -4,14 +4,14 @@ import java.util.Map;
 
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
-public class OkHttpRequest {
+public class ZauiHttpRequest {
     private final String auth;
     private final String payload;
     private final String url;
     private final boolean jsonPost;
     private Map<String, String> headers;
 
-    private OkHttpRequest(String auth, String payload, String url, boolean jsonPost, Map<String, String> headers) {
+    private ZauiHttpRequest(String auth, String payload, String url, boolean jsonPost, Map<String, String> headers) {
         this.auth = auth;
         this.payload = payload;
         this.url = url;
@@ -82,8 +82,8 @@ public class OkHttpRequest {
             return this;
         }
 
-        public OkHttpRequest build() {
-            return new OkHttpRequest(auth, payload, url, jsonPost, headers);
+        public ZauiHttpRequest build() {
+            return new ZauiHttpRequest(auth, payload, url, jsonPost, headers);
         }
     }
 

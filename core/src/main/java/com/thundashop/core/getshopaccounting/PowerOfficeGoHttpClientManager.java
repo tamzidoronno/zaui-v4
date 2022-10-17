@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.thundashop.core.webmanager.OkHttpRequest;
+import com.thundashop.core.webmanager.ZauiHttpRequest;
 import com.thundashop.core.webmanager.OkHttpResponse;
 import com.thundashop.services.core.httpservice.ZauiHttpService;
 
@@ -22,7 +22,7 @@ public class PowerOfficeGoHttpClientManager {
     }
 
     public String post(String data, String token, String endpoint) {
-        OkHttpRequest request = OkHttpRequest.builder()
+        ZauiHttpRequest request = ZauiHttpRequest.builder()
                 .setUrl(endpoint)
                 .setAuth("Bearer " + token)
                 .setPayload(data)

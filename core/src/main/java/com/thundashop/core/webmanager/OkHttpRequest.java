@@ -1,17 +1,12 @@
 package com.thundashop.core.webmanager;
 
-import okhttp3.OkHttpClient;
-
 public class OkHttpRequest {
-
-    private final OkHttpClient client;
     private final String auth;
     private final String payload;
     private final String url;
     private final boolean jsonPost;
 
-    private OkHttpRequest(OkHttpClient client, String auth, String payload, String url, boolean jsonPost) {
-        this.client = client;
+    private OkHttpRequest(String auth, String payload, String url, boolean jsonPost) {
         this.auth = auth;
         this.payload = payload;
         this.url = url;
@@ -20,11 +15,7 @@ public class OkHttpRequest {
 
     public static OkHttpRequestBuilder builder() {
         return new OkHttpRequestBuilder();
-    }
-
-    public OkHttpClient getClient() {
-        return client;
-    }
+    }   
 
     public String getAuth() {
         return auth;
@@ -43,16 +34,10 @@ public class OkHttpRequest {
     }
 
     public static class OkHttpRequestBuilder {
-        private OkHttpClient client;
         private String  auth;
         private String payload;
         private String url;
-        private boolean jsonPost;
-
-        public OkHttpRequestBuilder setClient(OkHttpClient client) {
-            this.client = client;
-            return this;
-        }
+        private boolean jsonPost;        
 
         public OkHttpRequestBuilder setAuth(String  auth) {
             this.auth = auth;
@@ -75,7 +60,7 @@ public class OkHttpRequest {
         }
 
         public OkHttpRequest build() {
-            return new OkHttpRequest(client, auth, payload, url, jsonPost);
+            return new OkHttpRequest(auth, payload, url, jsonPost);
         }
     }
 

@@ -1,15 +1,18 @@
-package com.thundashop.core.webmanager;
-
-import okhttp3.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+package com.thundashop.services.core.httpservice;
 
 import java.io.IOException;
 
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import com.thundashop.core.webmanager.OkHttpRequest;
+import com.thundashop.core.webmanager.OkHttpResponse;
+
+import okhttp3.OkHttpClient;
 
 @Service
-public class OkHttpService {
+public class ZauiHttpService implements IZauiHttpService {
 
     private static final MediaType JSON = MediaType.parse("application/json");
     private static final MediaType TEXT = MediaType.parse("text/plain");
@@ -17,12 +20,11 @@ public class OkHttpService {
     private final OkHttpClient okHttpClient;
 
     @Autowired
-    public OkHttpService(OkHttpClient okHttpClient) {
+    public ZauiHttpService(OkHttpClient okHttpClient) {
         this.okHttpClient = okHttpClient;
     }
 
     public OkHttpResponse post(OkHttpRequest httpRequest) {
-        OkHttpClient client = httpRequest.getClient() != null ? httpRequest.getClient() : okHttpClient;
 
         RequestBody requestBody = httpRequest.isJsonPost()
                 ? RequestBody.Companion.create(httpRequest.getPayload(), JSON)
@@ -39,23 +41,22 @@ public class OkHttpService {
                 .post(requestBody)
                 .build();
 
-        return execute(client, request);
+        return execute(request);
     }
 
     public OkHttpResponse get(OkHttpRequest httpRequest) {
-        OkHttpClient client = httpRequest.getClient() != null ? httpRequest.getClient() : okHttpClient;
 
         Request request = new Request.Builder()
                 .url(httpRequest.getUrl())
                 .get()
                 .build();
 
-        return execute(client, request);
+        return execute(request);
     }
 
-    private OkHttpResponse execute(OkHttpClient client, Request request) {
-        try (Response response = client.newCall(request).execute()) {
-            return new OkHttpResponse(response, response.body().string());
+    private OkHttpResponse execute(Request request) {
+        try (Response response = okHttpClient.newCall(request).execute()) {
+            return new OkHttpResponse(response.body().string(), response.code(), response.isSuccessful(), response.headers().toMultimap());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

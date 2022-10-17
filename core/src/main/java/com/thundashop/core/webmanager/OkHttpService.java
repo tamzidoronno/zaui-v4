@@ -21,6 +21,12 @@ public class OkHttpService {
         this.okHttpClient = okHttpClient;
     }
 
+    public Response getHttpResponse(Request request) throws IOException {
+        OkHttpClient client = okHttpClient != null ? okHttpClient : new OkHttpClient().newBuilder()
+                .build();
+        return client.newCall(request).execute();
+    }
+
     public OkHttpResponse post(OkHttpRequest httpRequest) {
         OkHttpClient client = httpRequest.getClient() != null ? httpRequest.getClient() : okHttpClient;
 

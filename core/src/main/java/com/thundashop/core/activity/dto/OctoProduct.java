@@ -1,26 +1,28 @@
 package com.thundashop.core.activity.dto;
 
+import com.thundashop.core.common.DataCommon;
+
 import java.io.Serializable;
 import java.util.List;
 
-public class OctoProduct implements Serializable {
-    public Integer id;
-    public String title;
-    public List<ActivityOption> options;
-    public String country;
-    public String location;
-    public String coverImage;
-    public String shortDescription;
-    public String primaryDescription;
+public class OctoProduct extends DataCommon {
+    private Integer id;
+    private String title;
+    private List<ActivityOption> options;
+    private String country;
+    private String location;
+    private String coverImage;
+    private String shortDescription;
+    private String primaryDescription;
 
     public class ActivityOption {
-        public String id;
-        public String internalName;
-        public List<Unit> units;
+        private String id;
+        private String internalName;
+        private List<Unit> units;
     }
     public class Unit {
-        public String id;
-        public String title;
-        public String internalName;
+        private String id;
+        private String title;
+        private String internalName;
     }
 }

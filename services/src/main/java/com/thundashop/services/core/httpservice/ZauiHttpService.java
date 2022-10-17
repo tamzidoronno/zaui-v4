@@ -1,15 +1,16 @@
 package com.thundashop.services.core.httpservice;
 
 import java.io.IOException;
+import java.util.Map;
 
+import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.thundashop.core.webmanager.OkHttpRequest;
 import com.thundashop.core.webmanager.OkHttpResponse;
 
-import okhttp3.OkHttpClient;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 @Service
 public class ZauiHttpService implements IZauiHttpService {
@@ -36,6 +37,10 @@ public class ZauiHttpService implements IZauiHttpService {
             requestBuilder.addHeader("Authorization", httpRequest.getAuth());
         }
 
+        Map<String, String> headers = httpRequest.getHeaders();
+        if(headers != null)
+            headers.keySet().forEach(key -> requestBuilder.addHeader(key, headers.get(key)));
+
         Request request = requestBuilder
                 .url(httpRequest.getUrl())
                 .post(requestBody)
@@ -45,6 +50,15 @@ public class ZauiHttpService implements IZauiHttpService {
     }
 
     public OkHttpResponse get(OkHttpRequest httpRequest) {
+
+        Request.Builder requestBuilder = new Request.Builder();
+        if (isNotEmpty(httpRequest.getAuth())) {
+            requestBuilder.addHeader("Authorization", httpRequest.getAuth());
+        }
+
+        Map<String, String> headers = httpRequest.getHeaders();
+        if(headers != null)
+            headers.keySet().forEach(key -> requestBuilder.addHeader(key, headers.get(key)));
 
         Request request = new Request.Builder()
                 .url(httpRequest.getUrl())
@@ -61,5 +75,4 @@ public class ZauiHttpService implements IZauiHttpService {
             throw new RuntimeException(e);
         }
     }
-
 }

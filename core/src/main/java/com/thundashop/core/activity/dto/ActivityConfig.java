@@ -10,4 +10,8 @@ public class ActivityConfig extends DataCommon {
         supplierId = activityConfig.supplierId;
         resellerId = activityConfig.resellerId;
     }
+
+    public Integer getSupplierId() {
+        return supplierId;
+    }
 }

@@ -3689,6 +3689,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 }
                 if ((periodeType.equals(TimeRepeaterData.TimePeriodeType.max_stay)
                         || periodeType.equals(TimeRepeaterData.TimePeriodeType.min_stay))) {
+                    log.info("Asma, range start: "+range.start.toString());
+                    log.info("Asma, range end: "+range.end.toString());
+                    log.info("Asma, our start: "+start.toString());
                     isBetween = range.isBetweenTime(start);
                 } else {
                     isBetween = range.isBetweenTime(start) || range.isBetweenTime(end);

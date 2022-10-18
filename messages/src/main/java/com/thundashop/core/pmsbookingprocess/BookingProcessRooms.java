@@ -19,6 +19,7 @@ public class BookingProcessRooms {
     public boolean visibleForBooker = false;
     public double totalPriceForRoom = 0.0;
     public String userId = "";
+    public String errorMessage = "";
 
     public void sortDefaultImageFirst() {
         PmsTypeImages defaultImg = null;

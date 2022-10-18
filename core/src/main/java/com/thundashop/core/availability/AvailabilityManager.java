@@ -179,7 +179,7 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
                 room.availableRooms = pmsManager.getNumberOfAvailable(type.id,
                         config.getDefaultStart(startDate.getTime()),
                         config.getDefaultEnd(endDate.getTime()),
-                        true, true);
+                        false, true);
                 room.id = type.id;
                 try {
                     /*PmsAdditionalTypeInformation typeInfo = pmsManager.getAdditionalTypeInformationById(type.id);
@@ -213,7 +213,6 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
         }
 
         checkIfCouponIsValid(result, arg);
-        checkForRestrictions(result, arg);
 
         return new AvailabilityResponse(arg.getStart(), arg.getEnd(), arg.getRooms(), arg.getAdults(), arg.getChildren(), arg.getDiscountCode(), avs);
     }
@@ -251,36 +250,6 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
             logPrintException(e);
         }
         return false;
-    }
-
-    private void checkForRestrictions(StartBookingResult result, AvailabilityRequest arg) {
-        boolean remove = false;
-        List<String> types = new ArrayList();
-
-        boolean denyPayLater = false;
-        for(BookingProcessRooms r : result.rooms) {
-            r.minGuests = getMinGuestsCount(r, arg, result);
-            if(!denyPayLater) {
-                denyPayLater = denyPayLaterButton(r, arg, result);
-            }
-            if (pmsManager.isRestricted(r.id, arg.getStart(), arg.getEnd(), TimeRepeaterData.TimePeriodeType.min_stay)) {
-                remove = true;
-                result.errorMessage = "min_days:{arg}:" + pmsManager.getLatestRestrictionTime();
-                types.add(r.id);
-            }
-            if (pmsManager.isRestricted(r.id, arg.getStart(), arg.getEnd(), TimeRepeaterData.TimePeriodeType.max_stay)) {
-                remove = true;
-                result.errorMessage = "max_days:{arg}:" + pmsManager.getLatestRestrictionTime();
-                types.add(r.id);
-            }
-        }
-        if(denyPayLater) {
-            result.supportPayLaterButton = false;
-        }
-
-        if(types.size() > 0) {
-            removeAllRooms(result, types);
-        }
     }
 
     private Integer getMinGuestsCount(BookingProcessRooms r, AvailabilityRequest arg, StartBookingResult result) {

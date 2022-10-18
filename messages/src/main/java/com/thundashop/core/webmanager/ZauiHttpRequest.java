@@ -19,8 +19,8 @@ public class ZauiHttpRequest {
         this.headers = headers;
     }
 
-    public static OkHttpRequestBuilder builder() {
-        return new OkHttpRequestBuilder();
+    public static ZauiHttpRequestBuilder builder() {
+        return new ZauiHttpRequestBuilder();
     }   
 
     public String getAuth() {
@@ -43,41 +43,41 @@ public class ZauiHttpRequest {
         return headers;
     }
 
-    public static class OkHttpRequestBuilder {
+    public static class ZauiHttpRequestBuilder {
         private String  auth;
         private String payload;
         private String url;
         private boolean jsonPost;
         private Map<String, String> headers;
 
-        public OkHttpRequestBuilder setAuth(String  auth) {
+        public ZauiHttpRequestBuilder setAuth(String  auth) {
             this.auth = auth;
             return this;
         }
 
-        public OkHttpRequestBuilder setPayload(String payload) {
+        public ZauiHttpRequestBuilder setPayload(String payload) {
             this.payload = payload;
             return this;
         }
 
-        public OkHttpRequestBuilder setUrl(String url) {
+        public ZauiHttpRequestBuilder setUrl(String url) {
             this.url = url;
             return this;
         }
 
-        public OkHttpRequestBuilder jsonPost(boolean jsonPost) {
+        public ZauiHttpRequestBuilder jsonPost(boolean jsonPost) {
             this.jsonPost = jsonPost;
             return this;
         }
 
-        public OkHttpRequestBuilder addHeader(String key, String value) {
+        public ZauiHttpRequestBuilder addHeader(String key, String value) {
             String currentValue = headers.get(key);
             if(isNotEmpty(currentValue)) value = currentValue + ", " + value;
             headers.put(key, value);
             return this;
         }
 
-        public OkHttpRequestBuilder setHeaders(Map<String, String> headers) {
+        public ZauiHttpRequestBuilder setHeaders(Map<String, String> headers) {
             this.headers = headers;
             return this;
         }

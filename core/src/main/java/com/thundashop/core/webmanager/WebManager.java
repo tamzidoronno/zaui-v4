@@ -48,7 +48,7 @@ public class WebManager extends ManagerBase implements IWebManager {
                 .setUrl(url)
                 .build();
         
-        OkHttpResponse response = okHttpService.get(request);
+        ZauiHttpResponse response = okHttpService.get(request);
         
         if (!response.isSuccessful()) {
             logger.error("Unsuccessful GET request, response: {}", response);
@@ -99,7 +99,7 @@ public class WebManager extends ManagerBase implements IWebManager {
                 .jsonPost(jsonPost)
                 .build();
 
-        OkHttpResponse response = okHttpService.post(request);
+        ZauiHttpResponse response = okHttpService.post(request);
 
         if (!response.isSuccessful()) {
             logger.error("Unsuccessful POST request {}, response: {}", request, response);

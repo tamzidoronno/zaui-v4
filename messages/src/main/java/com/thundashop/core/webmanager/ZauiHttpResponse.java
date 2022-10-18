@@ -4,13 +4,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class OkHttpResponse {
+public class ZauiHttpResponse {
     private final String body;
     private final int code;
     private final boolean isSuccessful;
     private final Map<String, List<String>> headers;
 
-    public OkHttpResponse(String body, int code, boolean isSuccessful, Map<String, List<String>> headers) {
+    public ZauiHttpResponse(String body, int code, boolean isSuccessful, Map<String, List<String>> headers) {
         this.body = body;
         this.code = code;
         this.isSuccessful = isSuccessful;

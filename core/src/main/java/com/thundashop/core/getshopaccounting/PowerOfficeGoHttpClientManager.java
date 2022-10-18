@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.thundashop.core.webmanager.ZauiHttpRequest;
-import com.thundashop.core.webmanager.OkHttpResponse;
+import com.thundashop.core.webmanager.ZauiHttpResponse;
 import com.thundashop.services.core.httpservice.ZauiHttpService;
 
 @Service
@@ -29,7 +29,7 @@ public class PowerOfficeGoHttpClientManager {
                 .jsonPost(true)
                 .build();
 
-        OkHttpResponse response = okHttpService.post(request);
+        ZauiHttpResponse response = okHttpService.post(request);
 
         if (!response.isSuccessful()) {
             logger.warn("PowerOfficeGo api error response: {}", response);

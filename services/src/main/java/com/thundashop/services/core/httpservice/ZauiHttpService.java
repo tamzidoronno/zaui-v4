@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.thundashop.core.webmanager.ZauiHttpRequest;
-import com.thundashop.core.webmanager.OkHttpResponse;
+import com.thundashop.core.webmanager.ZauiHttpResponse;
 
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
@@ -25,7 +25,7 @@ public class ZauiHttpService implements IZauiHttpService {
         this.okHttpClient = okHttpClient;
     }
 
-    public OkHttpResponse post(ZauiHttpRequest httpRequest) {
+    public ZauiHttpResponse post(ZauiHttpRequest httpRequest) {
 
         RequestBody requestBody = httpRequest.isJsonPost()
                 ? RequestBody.Companion.create(httpRequest.getPayload(), JSON)
@@ -49,7 +49,7 @@ public class ZauiHttpService implements IZauiHttpService {
         return execute(request);
     }
 
-    public OkHttpResponse get(ZauiHttpRequest httpRequest) {
+    public ZauiHttpResponse get(ZauiHttpRequest httpRequest) {
 
         Request.Builder requestBuilder = new Request.Builder();
         if (isNotEmpty(httpRequest.getAuth())) {
@@ -68,9 +68,9 @@ public class ZauiHttpService implements IZauiHttpService {
         return execute(request);
     }
 
-    private OkHttpResponse execute(Request request) {
+    private ZauiHttpResponse execute(Request request) {
         try (Response response = okHttpClient.newCall(request).execute()) {
-            return new OkHttpResponse(response.body().string(), response.code(), response.isSuccessful(), response.headers().toMultimap());
+            return new ZauiHttpResponse(response.body().string(), response.code(), response.isSuccessful(), response.headers().toMultimap());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

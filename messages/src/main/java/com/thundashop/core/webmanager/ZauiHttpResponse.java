@@ -1,20 +1,20 @@
 package com.thundashop.core.webmanager;
 
-
-import okhttp3.Response;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class OkHttpResponse {
-
-    private final Response response;
+public class ZauiHttpResponse {
     private final String body;
+    private final int code;
+    private final boolean isSuccessful;
+    private final Map<String, List<String>> headers;
 
-    public OkHttpResponse(Response response, String body) {
-        this.response = response;
+    public ZauiHttpResponse(String body, int code, boolean isSuccessful, Map<String, List<String>> headers) {
         this.body = body;
+        this.code = code;
+        this.isSuccessful = isSuccessful;
+        this.headers = headers;
     }
 
     public String getBody() {
@@ -22,22 +22,22 @@ public class OkHttpResponse {
     }
 
     public int statusCode() {
-        return response.code();
+        return code;
     }
 
     public boolean isSuccessful() {
-        return response.isSuccessful();
+        return isSuccessful;
     }
 
     public Map<String, String> headers() {
         Map<String, String> headers = new HashMap<>();
 
-        for (Map.Entry<String, List<String>> it : response.headers().toMultimap().entrySet()) {
+        for (String key : this.headers.keySet()) {
             StringBuilder values = new StringBuilder();
-            for (String value : it.getValue()) {
+            for (String value : this.headers.get(key)) {
                 values.append(value).append(",");
             }
-            headers.put(it.getKey(), values.toString());
+            headers.put(key, values.toString());
         }
 
         return headers;
@@ -45,8 +45,7 @@ public class OkHttpResponse {
 
     @Override
     public String toString() {
-        return "OkHttpResponse{" +
-                "response=" + response +
+        return "OkHttpResponse{" +                
                 ", responseBody='" + body + '\'' +
                 '}';
     }

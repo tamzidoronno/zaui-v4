@@ -5,16 +5,8 @@
  */
 package com.thundashop.core.webmanager;
 
-import com.braintreegateway.org.apache.commons.codec.binary.Base64;
-import com.getshop.scope.GetShopSession;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.thundashop.core.common.ManagerBase;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.Request;
-import okhttp3.RequestBody;
+import java.util.HashMap;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +14,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import com.braintreegateway.org.apache.commons.codec.binary.Base64;
+import com.getshop.scope.GetShopSession;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.thundashop.core.common.ManagerBase;
+import com.thundashop.services.core.httpservice.ZauiHttpService;
 
 /**
  *
@@ -44,43 +39,16 @@ public class WebManager extends ManagerBase implements IWebManager {
     private TaskExecutor webManagerExecutor;
 
     @Autowired
-    private OkHttpService okHttpService;
-
-    @Override
-    public String getResponseWithHeaders(
-            String url, String accessToken, Map<String, String> headers, Object requestBody, Class classType, String method) throws IOException {
-
-        RequestBody body = getRequestBody(requestBody, classType);
-        logger.debug("Request to " + url);
-        logger.debug("Method: " + method + ", Header: " + headers);
-
-        Request.Builder requestBuilder = new Request.Builder()
-                .url(url)
-                .method(method, body)
-                .addHeader("Authorization", "Bearer " + accessToken);
-
-        if (headers != null) {
-            for (Map.Entry<String, String> entry : headers.entrySet()) {
-                requestBuilder.addHeader(entry.getKey(), entry.getValue());
-            }
-        }
-        return okHttpService.getHttpResponse(requestBuilder.build()).body().string();
-    }
-
-    private RequestBody getRequestBody(Object requestBody, Class classType) {
-        if(requestBody == null) return null;
-        Gson gson = new Gson();
-        String requestBodyJson = gson.toJson(requestBody, classType);
-        return RequestBody.create(requestBodyJson, MediaType.parse("application/json"));
-    }
-
+    private ZauiHttpService okHttpService;
+    
+    
     @Override
     public String htmlGet(String url) {
-        OkHttpRequest request = OkHttpRequest.builder()
+        ZauiHttpRequest request = ZauiHttpRequest.builder()
                 .setUrl(url)
                 .build();
         
-        OkHttpResponse response = okHttpService.get(request);
+        ZauiHttpResponse response = okHttpService.get(request);
         
         if (!response.isSuccessful()) {
             logger.error("Unsuccessful GET request, response: {}", response);
@@ -102,7 +70,7 @@ public class WebManager extends ManagerBase implements IWebManager {
     }       
     
     public void htmlPostThreaded(String url, String data, boolean jsonPost, String encoding) throws Exception {
-        WebManagerPostThread thread = new WebManagerPostThread(url, data, jsonPost, encoding, "", "Basic", true, "POST", new HashMap());
+        WebManagerPostThread thread = new WebManagerPostThread(url, data, jsonPost, encoding, "", "Basic", true, "POST", new HashMap<>());
         webManagerExecutor.execute(thread);
     }       
     
@@ -117,21 +85,21 @@ public class WebManager extends ManagerBase implements IWebManager {
     }
 
     public String htmlPostBasicAuth(String url, String data, boolean jsonPost, String encoding, String auth, String basic, boolean base64EncodeAuth, String htmlType)  throws Exception {
-        return htmlPostBasicAuth(url, data, jsonPost, encoding, auth, basic, base64EncodeAuth, htmlType, new HashMap());
+        return htmlPostBasicAuth(url, data, jsonPost, encoding, auth, basic, base64EncodeAuth, htmlType, new HashMap<>());
     }
 
     public String htmlPostBasicAuth(String url, String data, boolean jsonPost, String encoding, String auth, String basic, boolean base64EncodeAuth, String htmlType, HashMap<String, String> headerData) throws Exception {
 
         // ignore the `encoding` param. payload always will be utf-8 encoded.
 
-        OkHttpRequest request = OkHttpRequest.builder()
+        ZauiHttpRequest request = ZauiHttpRequest.builder()
                 .setAuth(authorization(auth, basic, base64EncodeAuth))
                 .setPayload(data)
                 .setUrl(url)
                 .jsonPost(jsonPost)
                 .build();
 
-        OkHttpResponse response = okHttpService.post(request);
+        ZauiHttpResponse response = okHttpService.post(request);
 
         if (!response.isSuccessful()) {
             logger.error("Unsuccessful POST request {}, response: {}", request, response);

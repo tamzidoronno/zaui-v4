@@ -1,14 +1,20 @@
 package com.thundashop.core.getshopaccounting;
 
 
-import com.thundashop.core.webmanager.OkHttpService;
-import com.thundashop.core.webmanager.WebManager;
-import okhttp3.*;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
+import com.thundashop.core.webmanager.WebManager;
+import com.thundashop.services.core.httpservice.ZauiHttpService;
+
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class PowerOfficeGoAccountingSystemTest {
 
@@ -70,8 +76,8 @@ public class PowerOfficeGoAccountingSystemTest {
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(3, TimeUnit.MINUTES)
                 .build();
-        OkHttpService httpService = new OkHttpService(client);
-        PowerOfficeGoHttpClientManager manager = new PowerOfficeGoHttpClientManager(client, httpService);
+        ZauiHttpService httpService = new ZauiHttpService(client);
+        PowerOfficeGoHttpClientManager manager = new PowerOfficeGoHttpClientManager(httpService);
 
         String response = manager.post(data, token, endpoint);
 

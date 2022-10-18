@@ -5,7 +5,6 @@ import com.google.gson.internal.LinkedTreeMap;
 import com.thundashop.core.jomres.dto.JomresBooking;
 import com.thundashop.core.jomres.dto.JomresGuest;
 import com.thundashop.core.jomres.dto.UpdateAvailabilityResponse;
-import com.thundashop.core.sedox.autocryptoapi.Exception;
 import okhttp3.Response;
 import org.apache.oltu.oauth2.client.response.OAuthResourceResponse;
 import org.slf4j.Logger;
@@ -65,11 +64,12 @@ public class ResponseDataParser {
             }
             return dailyPriceMatrix;
 
-        } catch (Exception e) {
-            throw e;
         } catch (JsonSyntaxException | IOException | ParseException e) {
             throw new Exception(e.getMessage() + "\n\tGot Invalid Response while updating availability\n\t" + "Code: "
                     + response.code() + ", Message: " + response.message());
+        }
+        catch (Exception e) {
+            throw e;
         }
     }
 
@@ -105,12 +105,13 @@ public class ResponseDataParser {
             logger.debug("Ended parsing daily price matrix");
             return dailyPriceMatrix;
 
-        } catch (Exception e) {
-            throw e;
         } catch (JsonSyntaxException | IOException | ParseException e) {
             throw new Exception(e.getMessage() + "\n\tGot Invalid Response while updating availability\n\t" + "Code: "
                     + response.code() + ", Message: " + response.message());
         }
+        catch (Exception e) {
+            throw e;
+        } 
     }
 
     public int parseBookingGuestsNumber(OAuthResourceResponse response) throws Exception {
@@ -207,11 +208,15 @@ public class ResponseDataParser {
         if(response.getResponseCode()==401){
             throw new Exception("statuse code: 401, unauthorized request\nCheck credentials...");
         }
-
         List<Integer> propertyUIDs = new ArrayList<>();
 
         JsonObject responseBody = gson.fromJson(response.getBody(), JsonObject.class);
         JsonObject data = responseBody.getAsJsonObject("data");
+
+        if (responseBody.get("error_message") != null) {
+            String errorMessage = responseBody.get("error_message").getAsString();
+            throw new Exception(errorMessage);
+        }
 
         if (channelProperties) {
             JsonObject properties = data.getAsJsonObject("response");
@@ -230,7 +235,7 @@ public class ResponseDataParser {
         return propertyUIDs;
     }
 
-    public long parseChannelId(Response response) throws IOException {
+    public long parseChannelId(Response response) throws Exception {
         if(response.code()==401){
             throw new Exception("statuse code: 401, unauthorized request\nCheck credentials...");
         }
@@ -259,7 +264,7 @@ public class ResponseDataParser {
 
     }
 
-    public UpdateAvailabilityResponse parseChangeAvailabilityResponse(Response response) throws IOException {
+    public UpdateAvailabilityResponse parseChangeAvailabilityResponse(Response response) throws Exception {
         if(response.code()==401){
             throw new Exception("statuse code: 401, unauthorized request\nCheck credentials...");
         }
@@ -273,12 +278,13 @@ public class ResponseDataParser {
             data = Optional.ofNullable(data.getAsJsonObject("response")).orElse(data);
             return gson.fromJson(data.toString(), UpdateAvailabilityResponse.class);
 
-        } catch (Exception e) {
-            throw e;
         } catch (JsonSyntaxException | IOException e) {
             throw new Exception(e.getMessage() + "\n\tGot Invalid Response while updating availability\n\t" + "Code: "
                     + response.code() + ", Message: " + response.message());
         }
+        catch (Exception e) {
+            throw e;
+        } 
 
     }
 }

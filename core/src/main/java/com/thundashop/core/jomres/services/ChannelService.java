@@ -1,28 +1,26 @@
 package com.thundashop.core.jomres.services;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.thundashop.core.jomres.dto.JomresBooking;
-import com.thundashop.core.sedox.autocryptoapi.Exception;
-import okhttp3.Request;
-import okhttp3.Response;
-import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
-import org.apache.oltu.oauth2.client.response.OAuthResourceResponse;
-import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
-import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static com.thundashop.core.jomres.services.Constants.CHANNEL_ANNOUNCEMENT_URL;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.thundashop.core.jomres.services.Constants.CHANNEL_ANNOUNCEMENT_URL;
+import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
+import org.apache.oltu.oauth2.client.response.OAuthResourceResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class ChannelService extends BaseService{
 
     private static final Logger logger = LoggerFactory.getLogger(ChannelService.class);
+    
     public long getChannelId(String baseUrl, String channelName, String token){
         try {
             createOAuthClient();
@@ -38,12 +36,6 @@ public class ChannelService extends BaseService{
             logger.error("Failed to get the channel...");
             logger.error("Channel Name: "+channelName);
             return 0;
-        } catch (OAuthProblemException e) {
-            throw new RuntimeException(e);
-        } catch (OAuthSystemException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -61,15 +53,16 @@ public class ChannelService extends BaseService{
 
             return responseDataParser.parseChannelId(response);
 
-        } catch (Exception e) {
-            logger.error("Failed to announce the channel...");
-            logger.error("Channel Name: "+channelName);
-            throw new Exception("Failed to announce the channel...\n\t"+ "Channel Name: "+channelName+"\n\t"+e.getMessage1());
-
-        } catch (IOException e) {
+        }  catch (IOException e) {
             logger.error("Failed to annouce the challen, IOException Occuered");
             logger.error(e.getMessage());
             throw new Exception("Failed to announce the channel due to IOException\n\t"+ "Channel Name: "+channelName);
+        }
+        catch (Exception e) {
+            logger.error("Failed to announce the channel...");
+            logger.error("Channel Name: "+channelName);
+            throw new Exception("Failed to announce the channel...\n\t"+ "Channel Name: "+channelName+"\n\t"+e.getMessage());
+
         }
     }
 }

@@ -3664,6 +3664,12 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         List<TimeRepeaterData> openingshours = bookingEngine.getOpeningHoursWithType(itemType, periodeType);
+        if(openingshours!= null && !openingshours.isEmpty()) {
+            log.info("Asma: Opening Hours start -> " +openingshours.get(0).firstEvent.start.toString());
+            log.info("Asma: Opening Hours end -> " +openingshours.get(0).firstEvent.end.toString());
+            log.info("Asma: Our start -> " + start.toString());
+            log.info("Asma: Our end -> " + end.toString());
+        }
 
         if (periodeType.equals(TimeRepeaterData.TimePeriodeType.open)) {
             return true;

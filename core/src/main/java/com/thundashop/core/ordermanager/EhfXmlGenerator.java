@@ -5,13 +5,6 @@
  */
 package com.thundashop.core.ordermanager;
 
-import com.thundashop.core.cartmanager.data.CartItem;
-import com.thundashop.core.common.ErrorException;
-import com.thundashop.core.common.TwoDecimalRounder;
-import com.thundashop.core.ordermanager.data.Order;
-import com.thundashop.core.pdf.data.AccountingDetails;
-import com.thundashop.core.productmanager.data.TaxGroup;
-import com.thundashop.core.usermanager.data.User;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -30,7 +23,16 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.joda.time.DateTime;
+
+import com.thundashop.core.cartmanager.data.CartItem;
+import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.TwoDecimalRounder;
+import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.pdf.data.AccountingDetails;
+import com.thundashop.core.productmanager.data.TaxGroup;
+import com.thundashop.core.usermanager.data.User;
 
 /**
  *
@@ -54,15 +56,19 @@ public class EhfXmlGenerator {
     }
 
     public String generateXml(boolean productionMode) {
+       return generateXml(productionMode, "", "");
+    }
+
+    public String generateXml(boolean productionMode, String storeId, String incrementOrderId){
         String xml = generateXmlInternal();
         
         if (!validateXml(xml)) {
-            writeDebugFile(xml);
+            writeDebugFile(xml, storeId, incrementOrderId);
             throw new ErrorException(1050);
         }
         
         if (!productionMode) {
-            writeDebugFile(xml);
+            writeDebugFile(xml, storeId, incrementOrderId);
         }
         
         return xml;
@@ -524,9 +530,9 @@ public class EhfXmlGenerator {
     }
 
     private Map<TaxGroup, BigDecimal> mergeByPercent(Map<TaxGroup, BigDecimal> taxes) {
-        Map<TaxGroup, BigDecimal> retSet = new HashMap();
+        Map<TaxGroup, BigDecimal> retSet = new HashMap<>();
         
-        Map<Double, Map<TaxGroup, BigDecimal>> grouped = new HashMap();
+        Map<Double, Map<TaxGroup, BigDecimal>> grouped = new HashMap<>();
         for (TaxGroup group : taxes.keySet()) {
             Map<TaxGroup, BigDecimal> rets = grouped.get(group.taxRate);
             if (rets == null) {
@@ -550,9 +556,9 @@ public class EhfXmlGenerator {
     }
     
     private Map<TaxGroup, BigDecimal> mergeByPercentToGetTotal(Map<TaxGroup, BigDecimal> taxes) {
-        Map<TaxGroup, BigDecimal> retSet = new HashMap();
+        Map<TaxGroup, BigDecimal> retSet = new HashMap<>();
         
-        Map<Double, Map<TaxGroup, BigDecimal>> grouped = new HashMap();
+        Map<Double, Map<TaxGroup, BigDecimal>> grouped = new HashMap<>();
         
         for (TaxGroup group : taxes.keySet()) {
             Map<TaxGroup, BigDecimal> rets = grouped.get(group.taxRate);
@@ -576,10 +582,11 @@ public class EhfXmlGenerator {
         return retSet;
     }
 
-    private void writeDebugFile(String xml) {
+    private void writeDebugFile(String xml, String storeId, String incrementOrderId) {
         PrintWriter writer = null;
         try {
-            writer = new PrintWriter("/tmp/debugehf.xml", "UTF-8");
+            String fileName = "/tmp/debugehf_" + storeId + "_" + incrementOrderId + ".xml";
+            writer = new PrintWriter(fileName, "UTF-8");
             writer.println(xml);
             writer.close();
         } catch (FileNotFoundException ex) {
@@ -587,7 +594,9 @@ public class EhfXmlGenerator {
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(EhfXmlGenerator.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            writer.close();
+            if(writer != null){
+                writer.close();
+            }
         }    
     }
 

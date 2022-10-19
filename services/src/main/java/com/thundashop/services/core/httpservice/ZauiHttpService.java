@@ -60,7 +60,7 @@ public class ZauiHttpService implements IZauiHttpService {
         if(headers != null)
             headers.keySet().forEach(key -> requestBuilder.addHeader(key, headers.get(key)));
 
-        Request request = new Request.Builder()
+        Request request = requestBuilder
                 .url(httpRequest.getUrl())
                 .get()
                 .build();

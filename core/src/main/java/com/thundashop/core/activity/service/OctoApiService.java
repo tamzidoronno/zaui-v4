@@ -1,9 +1,15 @@
 package com.thundashop.core.activity.service;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import com.thundashop.core.activity.dto.OctoAvailabilityRequest;
 import com.thundashop.core.activity.dto.OctoProduct;
-import com.thundashop.core.webmanager.WebManager;
+import com.thundashop.core.webmanager.ZauiHttpRequest;
+import com.thundashop.core.webmanager.ZauiHttpResponse;
+import com.thundashop.services.core.httpservice.ZauiHttpService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,14 +22,50 @@ import java.util.Map;
 @Service
 public class OctoApiService {
     @Autowired
-    private WebManager webManager;
+    private ZauiHttpService zauiHttpService;
+    private static final Logger logger = LoggerFactory.getLogger(OctoApiService.class);
+
+    public JsonObject getSupplier(Integer supplierId) {
+        String url = Constants.OCTO_API_ENDPOINT +"/suppliers/"+supplierId;
+        String result = getHttpResponseBody(url,null,"GET", null);
+        Type listType = new TypeToken<List<JsonObject>>(){}.getType();
+        List<JsonObject> suppliers =  new Gson().fromJson(result, listType);
+        return suppliers.get(0);
+    }
 
     public List<OctoProduct> getProducts(Integer supplierId) throws IOException {
+        String url = Constants.OCTO_API_ENDPOINT +"/suppliers/"+supplierId+"/products";
         Map<String,String> headers = new HashMap<>();
         headers.put(Constants.OCTO_CONTENT.getLeft(), Constants.OCTO_CONTENT.getRight());
-        String result = webManager.getResponseWithHeaders(Constants.OCTO_API_ENDPOINT +"/suppliers/"+supplierId+"/products",Constants.OCTO_API_KEY,headers,null, null, "GET");
+        String result = getHttpResponseBody(url,headers,"GET", null);
         Type listType = new TypeToken<List<OctoProduct>>(){}.getType();
-
         return new Gson().fromJson(result, listType);
+    }
+
+    public JsonObject getAvailability(Integer supplierId, OctoAvailabilityRequest octoAvailabilityRequest) {
+        String url = Constants.OCTO_API_ENDPOINT +"/suppliers/"+supplierId+ "/availability";
+        Map<String,String> headers = new HashMap<>();
+        headers.put(Constants.OCTO_PRICING.getLeft(), Constants.OCTO_PRICING.getRight());
+        String result = getHttpResponseBody(url,headers,"POST", octoAvailabilityRequest.toString());
+        Type listType = new TypeToken<List<JsonObject>>(){}.getType();
+        List<JsonObject> suppliers =  new Gson().fromJson(result, listType);
+        return suppliers.get(0);
+    }
+
+
+    private String getHttpResponseBody(String url, Map<String,String> headers, String method, String payload) {
+        ZauiHttpRequest request = ZauiHttpRequest.builder()
+                .setAuth("Bearer " + Constants.OCTO_API_KEY)
+                .setUrl(url)
+                .setHeaders(headers)
+                .setPayload(payload)
+                .build();
+        ZauiHttpResponse response = method == "POST" ?  zauiHttpService.post(request) : zauiHttpService.get(request);
+        if (!response.isSuccessful()) {
+            logger.error("Unsuccessful request {}, response: {}", request, response);
+            throw new RuntimeException(String.format("Unsuccessful request url: [%s] , code: [%s]",
+                    url, response.statusCode()));
+        }
+        return response.getBody();
     }
 }

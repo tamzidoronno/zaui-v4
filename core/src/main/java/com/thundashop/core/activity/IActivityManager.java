@@ -16,4 +16,6 @@ public interface IActivityManager {
     void updateActivityConfig(ActivityConfig newActivityConfig);
 
     List<OctoProduct> getActivities() throws IOException;
+
+    String getSupplierName();
 }

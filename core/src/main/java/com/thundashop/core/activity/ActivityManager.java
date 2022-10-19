@@ -2,6 +2,7 @@ package com.thundashop.core.activity;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
+import com.google.gson.JsonObject;
 import com.thundashop.core.activity.dto.ActivityConfig;
 import com.thundashop.core.activity.dto.OctoProduct;
 import com.thundashop.core.activity.service.OctoApiService;
@@ -45,5 +46,14 @@ public class ActivityManager extends GetShopSessionBeanNamed implements IActivit
             return new ArrayList<>();
         }
         return octoApiService.getProducts(activityConfig.getSupplierId());
+    }
+
+    @Override
+    public String getSupplierName() {
+        if(activityConfig.getSupplierId() == null) {
+            return "";
+        }
+        JsonObject supplierData =  octoApiService.getSupplier(activityConfig.getSupplierId());
+        return String.valueOf(supplierData.get("name"));
     }
 }

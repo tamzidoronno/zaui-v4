@@ -118,6 +118,9 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                     GoToStatusCodes.FETCHING_ROOM_TYPE_INFO_SUCCESS.code,
                     GoToStatusCodes.FETCHING_ROOM_TYPE_INFO_SUCCESS.message,
                     roomTypes);
+        } catch (GotoException e) {
+            logPrintException(e);
+            return new GoToApiResponse(false, e.getStatusCode(), e.getMessage(), null);
         } catch (Exception e) {
             logPrintException(e);
             return new GoToApiResponse(false,

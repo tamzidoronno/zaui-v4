@@ -150,9 +150,6 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                     GoToStatusCodes.FETCHING_PRICE_ALLOTMENT_SUCCESS.code,
                     GoToStatusCodes.FETCHING_PRICE_ALLOTMENT_SUCCESS.message,
                     priceAllotments);
-        } catch (GotoException e) {
-            logPrintException(e);
-            return new GoToApiResponse(false, e.getStatusCode(), e.getMessage(), null);
         } catch (Exception e) {
             logPrintException(e);
             return new GoToApiResponse(false,
@@ -484,8 +481,8 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         Date checkinDate, cancellationDate;
         String cancellationDeadLine;
         Calendar calendar = Calendar.getInstance();
-
-        checkinDate = fixTime(checkin, pmsManager.getConfigurationSecure().getDefaultStart());
+        Date date = checkinOutDateFormatter.parse(checkin);
+        checkinDate = pmsManager.getConfiguration().getDefaultStart(date);
         calendar.setTime(checkinDate);
         calendar.add(Calendar.HOUR_OF_DAY, -goToConfiguration.cuttOffHours);
         cancellationDate = calendar.getTime();
@@ -549,38 +546,14 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         return goToConfiguration.paymentTypeId;
     }
 
-    private Date fixTime(String dateStr, String time) throws GotoException {
-        try{
-            checkinOutDateFormatter.setLenient(false);
-            Date date = checkinOutDateFormatter.parse(dateStr);
-            return fixTime(date, time);
-
-        }  catch (Exception e) {
-            logPrintException(e);
-            log.error("Date parsing failed.. Date in string-> " + dateStr);
-            throw new GotoException(GoToStatusCodes.INVALID_CHECKIN_CHECKOUT_FORMAT.code,
-                    GoToStatusCodes.INVALID_CHECKIN_CHECKOUT_FORMAT.message);
-        }
-    }
-
-    private Date fixTime(Date date, String time) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
-
-        String[] hourAndSecond = time.split(":");
-        cal.set(Calendar.HOUR_OF_DAY, new Integer(hourAndSecond[0]));
-        cal.set(Calendar.MINUTE, new Integer(hourAndSecond[1]));
-
-        return cal.getTime();
-    }
-
     private PmsBookingRooms setCorrectStartEndTime(PmsBookingRooms room, Booking booking) throws Exception {
+        Date checkin = checkinOutDateFormatter.parse(booking.getCheckOutDate());
+        Date checkout = checkinOutDateFormatter.parse(booking.getCheckOutDate());
+        PmsConfiguration config = pmsManager.getConfiguration();
+
         room.date = new PmsBookingDateRange();
-        room.date.start = fixTime(booking.getCheckInDate(), pmsManager.getConfigurationSecure().getDefaultStart());
-        room.date.end = fixTime(booking.getCheckOutDate(), pmsManager.getConfigurationSecure().getDefaultEnd());
+        room.date.start = config.getDefaultStart(checkin);
+        room.date.end = config.getDefaultEnd(checkout);
         return room;
     }
 
@@ -746,29 +719,20 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         return room.price;
     }
 
-    private StartBooking getBookingArgument(Date from, int i) throws GotoException {
+    private StartBooking getBookingArgument(Date from, int i) {
         StartBooking arg = new StartBooking();
+        PmsConfiguration config = pmsManager.getConfiguration();
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(from);
-//        cal.set(Calendar.HOUR_OF_DAY, 0);
-//        cal.set(Calendar.MINUTE, 0);
-//        cal.set(Calendar.SECOND, 0);
-//        cal.set(Calendar.MILLISECOND, 1);
         cal.add(Calendar.DAY_OF_YEAR, i);
 
-//        arg.start = cal.getTime();
-
-        arg.start = fixTime(cal.getTime(), pmsManager.getConfigurationSecure().getDefaultStart());
+        arg.start = config.getDefaultStart(cal.getTime());
 
         cal.add(Calendar.DAY_OF_YEAR, 1);
-//        cal.set(Calendar.HOUR_OF_DAY, 11);
-//        cal.set(Calendar.MINUTE, 59);
-//        cal.set(Calendar.SECOND, 59);
-//        cal.set(Calendar.MILLISECOND, 0);
 
-//        arg.end = cal.getTime();
-        arg.end = fixTime(cal.getTime(), pmsManager.getConfigurationSecure().getDefaultEnd());
+        arg.end = config.getDefaultEnd(cal.getTime());
+
         arg.rooms = 0;
         arg.adults = 1;
         arg.children = 0;

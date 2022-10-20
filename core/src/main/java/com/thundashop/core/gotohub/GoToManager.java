@@ -125,7 +125,6 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                     GoToStatusCodes.FETCHING_ROOM_TYPE_INFO_FAIL.message,
                     null);
         }
-
     }
 
     @Override
@@ -265,7 +264,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         if(isBlank(toEmail)) {
             log.info("Coundn't send email because email config is not set.");
             return;
-        };
+        }
 
         BookingItemType roomType = bookingEngine.getBookingItemType(room.bookingItemTypeId);
         String roomTypeNameWithDateRange = roomType.name
@@ -287,7 +286,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         if(isBlank(toEmail)) {
             log.info("Coundn't send email because email config is not set.");
             return;
-        };
+        }
 
         String subject = "WARNING: GOTO Booking Has Been Canceled!!";
         String checkinOutDateRange = getCheckinOutDateForCancelledBooking(booking);
@@ -339,7 +338,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                 .append("<br><br>");
         for (Room room : booking.getRooms()) {
             BookingItemType type = bookingEngine.getBookingItemType(room.getRoomCode());
-            if (type != null) textBuilder.append("      " + type.name + "<br><br>");
+            if (type != null) textBuilder.append("      ").append(type.name).append("<br><br>");
             else textBuilder.append("      Room Type (BookingItemType) isn't found for Id: ")
                     .append(room.getRoomCode())
                     .append("<br><br>");
@@ -482,8 +481,8 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         Date checkinDate, cancellationDate;
         String cancellationDeadLine;
         Calendar calendar = Calendar.getInstance();
-
-        checkinDate = fixTime(checkin, pmsManager.getConfigurationSecure().getDefaultStart());
+        Date date = checkinOutDateFormatter.parse(checkin);
+        checkinDate = pmsManager.getConfiguration().getDefaultStart(date);
         calendar.setTime(checkinDate);
         calendar.add(Calendar.HOUR_OF_DAY, -goToConfiguration.cuttOffHours);
         cancellationDate = calendar.getTime();
@@ -547,33 +546,14 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         return goToConfiguration.paymentTypeId;
     }
 
-    private Date fixTime(String dateStr, String time) throws Exception {
-        try {
-            checkinOutDateFormatter.setLenient(false);
-            Date date = checkinOutDateFormatter.parse(dateStr);
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(date);
-            cal.set(Calendar.MINUTE, 0);
-            cal.set(Calendar.SECOND, 0);
-            cal.set(Calendar.MILLISECOND, 0);
-
-            String[] hourAndSecond = time.split(":");
-            cal.set(Calendar.HOUR_OF_DAY, new Integer(hourAndSecond[0]));
-            cal.set(Calendar.MINUTE, new Integer(hourAndSecond[1]));
-
-            return cal.getTime();
-        } catch (Exception e) {
-            logPrintException(e);
-            log.error("Date parsing failed.. Date in string-> " + dateStr);
-            throw new GotoException(GoToStatusCodes.INVALID_CHECKIN_CHECKOUT_FORMAT.code,
-                    GoToStatusCodes.INVALID_CHECKIN_CHECKOUT_FORMAT.message);
-        }
-    }
-
     private PmsBookingRooms setCorrectStartEndTime(PmsBookingRooms room, Booking booking) throws Exception {
+        Date checkin = checkinOutDateFormatter.parse(booking.getCheckOutDate());
+        Date checkout = checkinOutDateFormatter.parse(booking.getCheckOutDate());
+        PmsConfiguration config = pmsManager.getConfiguration();
+
         room.date = new PmsBookingDateRange();
-        room.date.start = fixTime(booking.getCheckInDate(), pmsManager.getConfigurationSecure().getDefaultStart());
-        room.date.end = fixTime(booking.getCheckOutDate(), pmsManager.getConfigurationSecure().getDefaultEnd());
+        room.date.start = config.getDefaultStart(checkin);
+        room.date.end = config.getDefaultEnd(checkout);
         return room;
     }
 
@@ -741,24 +721,18 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
     private StartBooking getBookingArgument(Date from, int i) {
         StartBooking arg = new StartBooking();
+        PmsConfiguration config = pmsManager.getConfiguration();
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(from);
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 1);
         cal.add(Calendar.DAY_OF_YEAR, i);
 
-        arg.start = cal.getTime();
+        arg.start = config.getDefaultStart(cal.getTime());
 
         cal.add(Calendar.DAY_OF_YEAR, 1);
-        cal.set(Calendar.HOUR_OF_DAY, 11);
-        cal.set(Calendar.MINUTE, 59);
-        cal.set(Calendar.SECOND, 59);
-        cal.set(Calendar.MILLISECOND, 0);
 
-        arg.end = cal.getTime();
+        arg.end = config.getDefaultEnd(cal.getTime());
+
         arg.rooms = 0;
         arg.adults = 1;
         arg.children = 0;

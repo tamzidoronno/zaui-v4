@@ -3,8 +3,7 @@ package com.thundashop.core.activity;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.google.gson.JsonObject;
-import com.thundashop.core.activity.dto.ActivityConfig;
-import com.thundashop.core.activity.dto.OctoProduct;
+import com.thundashop.core.activity.dto.*;
 import com.thundashop.core.activity.service.OctoApiService;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -17,7 +16,7 @@ import java.util.List;
 
 @Service
 @GetShopSession
-public class ActivityManager extends GetShopSessionBeanNamed implements IActivityManager {
+public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZauiActivityManager {
 
     @Autowired
     OctoApiService octoApiService;
@@ -30,14 +29,24 @@ public class ActivityManager extends GetShopSessionBeanNamed implements IActivit
             }
         }
     }
+
     @Override
     public ActivityConfig getActivityConfig() {
         return activityConfig;
     }
+
     @Override
     public void updateActivityConfig(ActivityConfig newActivityConfig) {
         activityConfig.setActivityConfig(newActivityConfig);
         saveObject(activityConfig);
+    }
+
+    @Override
+    public String getSupplierName() {
+        if(activityConfig.getSupplierId() == null) {
+            return "";
+        }
+        return octoApiService.getSupplierName(activityConfig.getSupplierId());
     }
 
     @Override
@@ -49,11 +58,34 @@ public class ActivityManager extends GetShopSessionBeanNamed implements IActivit
     }
 
     @Override
-    public String getSupplierName() {
+    public List<Availability> getAvailability(AvailabilityRequest availabilityRequest) {
         if(activityConfig.getSupplierId() == null) {
-            return "";
+            return new ArrayList<>();
         }
-        JsonObject supplierData =  octoApiService.getSupplier(activityConfig.getSupplierId());
-        return String.valueOf(supplierData.get("name"));
+        return octoApiService.getAvailability(activityConfig.getSupplierId(), availabilityRequest);
+    }
+
+    @Override
+    public List<BookingReserve> reserveBooking(BookingReserveRequest bookingReserveRequest) {
+        if(activityConfig.getSupplierId() == null) {
+            return new ArrayList<>();
+        }
+        return octoApiService.reserveBooking(activityConfig.getSupplierId(), bookingReserveRequest);
+    }
+
+    @Override
+    public List<BookingConfirm> confirmBooking(String bookingId, BookingConfirmRequest bookingConfirmRequest) {
+        if(activityConfig.getSupplierId() == null) {
+            return new ArrayList<>();
+        }
+        return octoApiService.confirmBooking(activityConfig.getSupplierId(), bookingId, bookingConfirmRequest);
+    }
+
+    @Override
+    public List<BookingConfirm> cancelBooking(String bookingId) {
+        if(activityConfig.getSupplierId() == null) {
+            return new ArrayList<>();
+        }
+        return octoApiService.cancelBooking(activityConfig.getSupplierId(), bookingId);
     }
 }

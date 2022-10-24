@@ -17,6 +17,7 @@ import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.repository.db.MongoClientProvider;
 import org.mongodb.morphia.Morphia;
+import org.mongodb.morphia.mapping.MappingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -142,16 +143,16 @@ public class Database extends StoreComponent {
     private void addDataCommonToDatabase(DataCommon data, Credentials credentials) {
 //        logSavedMessge(data, credentials.manangerName, collectionPrefix + data.storeId);
         data.gs_manager = credentials.manangerName;
-        DBObject dbObject = morphia.toDBObject(data);
-        
         if (data.deepFreeze) {
             return;
         }
-        
         try {
+            DBObject dbObject = morphia.toDBObject(data);
             mongo.getDB(credentials.manangerName).getCollection(collectionPrefix + data.storeId).save(dbObject);
-        }catch(Exception e) {
-            log.error("", e);
+        } catch (MappingException e) {
+            log.error("Morphia mapping exception {} {}", e.getMessage(), e);
+        } catch(Exception e) {
+            log.error("Error due to: {}, actual error: {}", e.getMessage(), e);
             throw e;
         }
     }

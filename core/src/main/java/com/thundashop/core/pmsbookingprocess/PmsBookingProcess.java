@@ -5,14 +5,7 @@
  */
 package com.thundashop.core.pmsbookingprocess;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -1803,20 +1796,19 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     }
 
     private void removeAllRooms(StartBookingResult result, List<String> types) {
+        PmsBooking currentBooking = pmsManager.getCurrentBooking();
         for(BookingProcessRooms r : result.rooms) {
             if(!types.isEmpty() && !types.contains(r.id)) {
                 continue;
             }
             r.availableRooms = 0;
             r.roomsSelectedByGuests = new HashMap<>();
+            currentBooking.rooms.removeIf(element -> Objects.equals(element.bookingItemTypeId,r.id));
         }
         result.roomsSelected = 0;
-        
-        
-        PmsBooking currentbooking = pmsManager.getCurrentBooking();
-        currentbooking.rooms.clear();
+
         try {
-            pmsManager.setBooking(currentbooking);
+            pmsManager.setBooking(currentBooking);
         }catch(Exception e) {
             logPrintException(e);
         }     
@@ -1831,12 +1823,22 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             if(!denyPayLater) {
                 denyPayLater = denyPayLaterButton(r, arg, result);
             }
-            if (pmsManager.isRestricted(r.id, arg.start, arg.end, TimeRepeaterData.TimePeriodeType.min_stay)) {
+            if (pmsManager.isRestrictedForAllCategories(r.id, arg.start, arg.end, TimeRepeaterData.TimePeriodeType.min_stay) > 0) {
                 result.errorMessage = "min_days:{arg}:" + pmsManager.getLatestRestrictionTime();
+                types.add(r.id);
+                break;
+            }
+            if (pmsManager.isRestrictedForAllCategories(r.id, arg.start, arg.end, TimeRepeaterData.TimePeriodeType.max_stay) > 0) {
+                result.errorMessage = "max_days:{arg}:" + pmsManager.getLatestRestrictionTime();
+                types.add(r.id);
+                break;
+            }
+            if (pmsManager.isRestricted(r.id, arg.start, arg.end, TimeRepeaterData.TimePeriodeType.min_stay)) {
+                r.errorMessage =  "min_days:{arg}:" + pmsManager.getLatestRestrictionTime();
                 types.add(r.id);
             }
             if (pmsManager.isRestricted(r.id, arg.start, arg.end, TimeRepeaterData.TimePeriodeType.max_stay)) {
-                result.errorMessage = "max_days:{arg}:" + pmsManager.getLatestRestrictionTime();
+                r.errorMessage =  "max_days:{arg}:" + pmsManager.getLatestRestrictionTime();
                 types.add(r.id);
             }
         }

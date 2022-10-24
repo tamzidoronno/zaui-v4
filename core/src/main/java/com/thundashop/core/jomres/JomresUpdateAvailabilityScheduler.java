@@ -3,8 +3,8 @@ package com.thundashop.core.jomres;
 import com.getshop.scope.GetShopSchedulerBase;
 import com.thundashop.core.common.GetShopLogHandler;
 
-public class JomresHalfHourlyScheduler extends GetShopSchedulerBase {
-    public JomresHalfHourlyScheduler(String webAddress, String username, String password, String scheduler, String multiLevelName) throws Exception {
+public class JomresUpdateAvailabilityScheduler extends GetShopSchedulerBase {
+    public JomresUpdateAvailabilityScheduler(String webAddress, String username, String password, String scheduler, String multiLevelName) throws Exception {
         super(webAddress, username, password, scheduler, multiLevelName);
     }
 

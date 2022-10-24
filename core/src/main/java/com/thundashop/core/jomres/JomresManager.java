@@ -1,9 +1,11 @@
 package com.thundashop.core.jomres;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -13,7 +15,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -56,6 +62,7 @@ import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.pmsmanager.PmsGuests;
 import com.thundashop.core.pmsmanager.PmsInvoiceManager;
 import com.thundashop.core.pmsmanager.PmsManager;
+import com.thundashop.core.pmsmanager.TimeRepeaterData;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.repository.utils.SessionInfo;
 
@@ -75,6 +82,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     private static final Logger logger = LoggerFactory.getLogger(JomresManager.class);
 
     BaseService jomresService = new BaseService();
+    AvailabilityService availabilityService = new AvailabilityService();
     JomresConfiguration jomresConfiguration = new JomresConfiguration();
 
     Map<String, JomresRoomData> pmsItemToJomresRoomDataMap = new HashMap<>();
@@ -84,7 +92,18 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     Map<Integer, JomresRoomData> jomresPropertyToRoomDataMap = new HashMap<>();
     String cmfClientAccessToken = null;
     Date cmfClientTokenGenerationTime = new Date();
+    private List<UpdateAvailabilityResponse> failedAvailabilityToSendEmail = new ArrayList<>();
+    Integer NUMBER_OF_DAYS_TO_BE_PROCESSED = 366;
 
+    @Override
+    public void initialize() throws SecurityException {
+        super.initialize();
+        stopScheduler("jomresFetchBooking");
+        stopScheduler("jomresUpdateAvailability");
+
+        createScheduler("jomresFetchBooking", "*/6 * * * *", JomresFetchBookingScheduler.class);
+        createScheduler("jomresUpdateAvailability", "*/7 * * * *", JomresUpdateAvailabilityScheduler.class);
+    }
     //Change this message if Jomres change their error message for delete request of non-existing black bookings
     String JOMRES_BLACK_BOOKING_DOES_NOT_EXIST_ERROR_MESSAGE = "Black booking does not exist";
 
@@ -108,9 +127,6 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         if (jomresPropertyToRoomDataMap.isEmpty()) {
             logText("No Jomres room mapping found from database for this hotel, store id: " + this.storeId);
         }
-
-        createScheduler("jomresprocessor", "*/5 * * * *", JomresManagerProcessor.class);
-        createScheduler("jomresupdateavailability", "*/30 * * * *", JomresHalfHourlyScheduler.class);
     }
 
     public void logText(String string) {
@@ -159,7 +175,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         return true;
     }
 
-    private boolean handleEmptyJomresCOnfiguration() {
+    private boolean handleEmptyJomresConfiguration() {
         if (jomresPropertyToRoomDataMap.isEmpty() || jomresConfiguration == null) {
             logger.info("No room to Jomres Property mapping found for this hotel. No need to fetch bookings...");
             logText("No room to Jomres Property mapping found for this hotel.");
@@ -170,7 +186,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     }
 
     @Override
-    public List<JomresProperty> getJomresChannelProperties() throws Exception {
+    public List<JomresProperty> getJomresChannelProperties() {
         if (!connectToApi()) {
             return new ArrayList<>();
         }
@@ -183,12 +199,12 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                     jomresConfiguration.clientBaseUrl, cmfClientAccessToken, jomresConfiguration.channelName, propertyIds);
         } catch (Exception e) {
             logPrintException(e);
-            logText("Failed to load Jomres Properties..." + e.getMessage());            
+            logText("Failed to load Jomres Properties..." + e.getMessage());
             return new ArrayList<>();
         }
     }
 
-    void saveNewRoomData(JomresRoomData roomData) throws Exception {
+    void saveNewRoomData(JomresRoomData roomData) {
         jomresPropertyToRoomDataMap.put(roomData.jomresPropertyId, roomData);
         pmsItemToJomresRoomDataMap.put(roomData.bookingItemId, roomData);
         saveObject(roomData);
@@ -223,8 +239,8 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     }
 
     @Override
-    public boolean saveMapping(List<JomresRoomData> mappingRoomData) throws Exception {
-        if (!jomresConfiguration.isEnable) {
+    public boolean saveMapping(List<JomresRoomData> mappingRoomData) {
+        if(!jomresConfiguration.isEnable){
             logger.info("Jomres connection is disabled");
             return false;
         }
@@ -237,32 +253,30 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     }
 
     @Override
-    public JomresConfiguration getConfigurationData() throws Exception {
+    public JomresConfiguration getConfigurationData() {
         return jomresConfiguration;
     }
 
     @Override
-    public List<JomresRoomData> getMappingData() throws Exception {
-        if (!jomresConfiguration.isEnable) {
+    public List<JomresRoomData> getMappingData() {
+        if(!jomresConfiguration.isEnable){
             logger.info("Jomres connection is disabled");
             return new ArrayList<>();
         }
-        return jomresPropertyToRoomDataMap.values().stream().collect(Collectors.toList());
+        return new ArrayList<>(jomresPropertyToRoomDataMap.values());
     }
 
     @Override
     public boolean updateAvailability() throws Exception {
+        LocalTime startTime = LocalTime.now();
         if (!connectToApi()) return false;
-        if (handleEmptyJomresCOnfiguration()) return false;
+        if (handleEmptyJomresConfiguration()) return false;
         logText("Started Jomres Update availability");
-        logger.debug("Started Jomres Update availability");
+        logger.info("Started Jomres Update availability");
         Calendar calendar = Calendar.getInstance();
         Date startDate = calendar.getTime();
-        calendar.add(Calendar.DATE, 60);
+        calendar.add(Calendar.DATE, NUMBER_OF_DAYS_TO_BE_PROCESSED);
         Date endDate = calendar.getTime();
-
-        Set<String> jomresBookingRoomIds =
-                jomresToPmsBookingMap.values().stream().map(o -> o.pmsRoomId).collect(Collectors.toSet());
 
         for (JomresRoomData roomData : pmsItemToJomresRoomDataMap.values()) {
             try {
@@ -272,48 +286,84 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                     logText("The room is not found in Pms for Jomres PropertyId: " + roomData.jomresPropertyId
                             + ", pms bookingItemId: " + roomData.bookingItemId);
                     logText("Room is deleted from Pms or mapping is removed.");
-                    logger.debug("The room is not found in Pms for Jomres PropertyId: " + roomData.jomresPropertyId
-                            + ", pms bookingItemId: " + roomData.bookingItemId);
+                    logger.info("The room is not found in Pms for Jomres PropertyId: {}, pms bookingItemId: {}",
+                            roomData.jomresPropertyId, roomData.bookingItemId);
                     continue;
                 }
-                logger.debug("Started updating availability for room: " + bookingItem.bookingItemName +
-                        ", PropertyId: " + roomData.jomresPropertyId);
+                logger.info("Started updating availability for room: {}, PropertyId: {}", bookingItem.bookingItemName, roomData.jomresPropertyId);
                 logText("Started updating availability for room: " + bookingItem.bookingItemName +
                         ", PropertyId: " + roomData.jomresPropertyId);
 
-                Map<String, PMSBlankBooking> blankBookings = getBlankBookingsForProperty(roomData.jomresPropertyId);
-
                 calendar.setTime(startDate);
-                BookingTimeLineFlatten itemTimeline = bookingEngine.getTimeLinesForItem(startDate, endDate, roomData.bookingItemId);
-                Set<String> existingBookingIds = new HashSet<>();
-                List<Booking> bookings = itemTimeline.getBookings();
-                Collections.sort(bookings, Booking.sortByStartDate());
 
-                for (Booking booking : itemTimeline.getBookings()) {
-                    PMSBlankBooking bBooking = blankBookings.get(booking.id);
-                    if (jomresBookingRoomIds.contains(booking.externalReference)) continue;
-                    if (bBooking == null) {
-                        createBlankBooking(booking, roomData.jomresPropertyId);
-                    } else if (isBlankBookingUpdated(bBooking, booking)) {
-                        deleteBlankBookingCompletely(bBooking);
-                        createBlankBooking(booking, roomData.jomresPropertyId);
-                    }
-                    existingBookingIds.add(booking.id);
-                }
-                blankBookings = getBlankBookingsForProperty(roomData.jomresPropertyId);
+                Set<String> existingBookingIds = updateAndGetPmsBookingIdsOfBlankBookings(
+                        startDate, endDate, roomData.jomresPropertyId, roomData.bookingItemId);
+
+                Map<String, PMSBlankBooking> blankBookings = getBlankBookingsForProperty(roomData.jomresPropertyId);
                 deleteIfExtraBlankBookingExist(existingBookingIds, blankBookings, startDate, endDate);
-                logger.debug("Update availability ended");
+                sendEmailForFailedAvailResponses();
+                logger.info("Update availability ended");
                 logText("Update availability ended");
             } catch (Exception e) {
                 logPrintException(e);
+                BookingItem item = bookingEngine.getBookingItem(roomData.bookingItemId);
                 logText("Failed to update availability for JomresPropertyId: " + roomData.jomresPropertyId
-                        + ", PmsRoomId: " + roomData.bookingItemId);
-                logger.debug("Failed to update availability for JomresPropertyId: " + roomData.jomresPropertyId
-                        + ", PmsRoomId: " + roomData.bookingItemId);
-                handleIfUnauthorizedExceptionOccurred(e);
+                        + ", Room/RoomType Name: " + item.bookingItemName);
+                logger.info("Failed to update availability for JomresPropertyId: {}, PmsRoomId: {}, Room/RoomType Name: {}",
+                        roomData.jomresPropertyId, roomData.bookingItemId, item.bookingItemName);
+                handleIfUnauthorizedExceptionOccurred((Exception) e);
+                logText("Possible Reason: "+((Exception) e).getMessage());
+
             }
         }
+        LocalTime endTime = LocalTime.now();
+        logger.info("Time takes to update availability of " + NUMBER_OF_DAYS_TO_BE_PROCESSED + " : {}s"
+                , ChronoUnit.SECONDS.between(startTime, endTime));
         return true;
+    }
+
+    private Set<String> updateAndGetPmsBookingIdsOfBlankBookings(Date start, Date end, int propertyId, String bookingItemId)
+            throws Exception, ParseException {
+        Set<String> jomresBookingRoomIds =
+                jomresToPmsBookingMap.values().stream().map(o -> o.pmsRoomId).collect(Collectors.toSet());
+
+        Map<String, PMSBlankBooking> blankBookings = getBlankBookingsForProperty(propertyId);
+        BookingTimeLineFlatten itemTimeline = bookingEngine.getTimeLinesForItem(start, end, bookingItemId);
+        List<Supplier<?>> tasks = new ArrayList<>();
+
+        for (Booking booking : itemTimeline.getBookings()) {
+            PMSBlankBooking bBooking = blankBookings.get(booking.id);
+            if (jomresBookingRoomIds.contains(booking.externalReference)) continue;
+            tasks.add( ()-> updateAvailabilityForPmsBooking(
+                                    bBooking, propertyId, booking.id, booking.bookingDeleted, booking.startDate, booking.endDate)
+            );
+        }
+        SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        Date startBegin = df.parse(df.format(start));
+        Date endBegin = df.parse(df.format(end));
+        List<TimeRepeaterData> closedPeriods = pmsManager.getConfiguration().closedOfPeriode
+                .stream()
+                .filter(tData -> !startBegin.after(tData.firstEvent.end) && !endBegin.before(tData.firstEvent.start))
+                .collect(Collectors.toList());
+        for(TimeRepeaterData globalCloser: closedPeriods){
+            PMSBlankBooking bBooking = blankBookings.get(globalCloser.repeaterId);
+            tasks.add( () -> updateAvailabilityForPmsBooking(bBooking, propertyId, globalCloser.repeaterId, false,
+                    globalCloser.firstEvent.start, globalCloser.firstEvent.end)
+            );
+        }
+        List<CompletableFuture<?>> results = jomresService.getAsyncTaskResults(tasks);
+        return availabilityService.getPmsBookingIdsFromFutureResults(results);
+    }
+
+    private String updateAvailabilityForPmsBooking(
+            PMSBlankBooking bBooking, int propertyId, String bookingId, boolean isDeleted, Date start, Date end) {
+        logger.info("Started Update Availability to Jomres (Async) {}", LocalTime.now());
+        if (bBooking != null && isBlankBookingUpdated(bBooking, isDeleted, start, end)) {
+            deleteBlankBookingCompletely(bBooking);
+        }
+        createBlankBooking(bookingId, propertyId, isDeleted, start, end);
+        logger.info("Ended Update Availability to Jomres (Async) {}", LocalTime.now());
+        return bookingId;
     }
 
     private Map<String, PMSBlankBooking> getBlankBookingsForProperty(int propertyId) {
@@ -331,41 +381,45 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                     );
     }
 
-    private boolean isBlankBookingUpdated(PMSBlankBooking blankBooking, Booking booking) {
+    private boolean isBlankBookingUpdated(PMSBlankBooking blankBooking, boolean isDeleted, Date start, Date end) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        if (blankBooking.getDateFrom().compareTo(formatter.format(booking.startDate)) != 0) return true;
-        if (blankBooking.getDateTo().compareTo(formatter.format(booking.endDate)) != 0) return true;
-        return booking.bookingDeleted;
+        if (blankBooking.getDateFrom().compareTo(formatter.format(start)) != 0) return true;
+        if (blankBooking.getDateTo().compareTo(formatter.format(end)) != 0) return true;
+        return isDeleted;
     }
 
-    private void createBlankBooking(Booking booking, int propertyId) throws Exception {
-        if (booking.bookingDeleted) return;
-        AvailabilityService service = new AvailabilityService();
-        logger.debug("Creating new blankBooking..");
-        UpdateAvailabilityResponse response = service.createBlankBooking(jomresConfiguration.clientBaseUrl,
-                cmfClientAccessToken, jomresConfiguration.channelName, propertyId, booking);
+    private void createBlankBooking(String bookingId, int propertyId, boolean isDeleted, Date start, Date end) {
+        if (isDeleted) return;
+        logger.info("Creating new blankBooking..");
+        UpdateAvailabilityResponse response = availabilityService.createBlankBooking(jomresConfiguration.clientBaseUrl,
+                cmfClientAccessToken, jomresConfiguration.channelName, propertyId, start, end);
         if (!response.isSuccess()) {
-            sendErrorUpdateAvailability(response);
+            //error email will be sent after completing all tasks
+            failedAvailabilityToSendEmail.add(response);
             return;
         }
         PMSBlankBooking newBlankBooking =
-                new PMSBlankBooking(response.getContractId(), booking.id, propertyId, booking.startDate, booking.endDate);
+                new PMSBlankBooking(response.getContractId(), bookingId, propertyId, start, end);
         saveObject(newBlankBooking);
         pmsBlankBookings.put(propertyId, pmsBlankBookings.computeIfAbsent(propertyId, k -> new HashSet<>()));
         pmsBlankBookings.get(propertyId).add(newBlankBooking);
     }
 
-    private void deleteBlankBookingCompletely(PMSBlankBooking booking) throws Exception {
-        logger.debug("Deleting blank Booking...");
-        AvailabilityService service = new AvailabilityService();
+    private void deleteBlankBookingCompletely(PMSBlankBooking booking) {
+        logger.info("Deleting blank Booking...");
         UpdateAvailabilityResponse res =
-                service.deleteBlankBooking(jomresConfiguration.clientBaseUrl, cmfClientAccessToken, booking);
+                availabilityService.deleteBlankBooking(jomresConfiguration.clientBaseUrl, cmfClientAccessToken, booking);
         if (!res.isSuccess()) {
-            sendErrorUpdateAvailability(res);
+            //error email will be sent after completing all tasks
+            failedAvailabilityToSendEmail.add(res);
+
+            //if the blank booking is already deleted from Jomres, we are synced anyhow
+            //otherwise we won't delete this blank booking id so that try to delete from Jomres in the next schedule
             if (!isBlankBookingNeedToDeleteFromDb(res)) return;
         }
         deleteObject(booking);
         pmsBlankBookings.get(booking.getPropertyId()).remove(booking);
+        logger.info("Deleted Unnecessary Blank Bookings");
     }
 
     private boolean isBlankBookingNeedToDeleteFromDb(UpdateAvailabilityResponse res) {
@@ -375,7 +429,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     }
 
     private void deleteIfExtraBlankBookingExist(
-            Set<String> existingBookingIds, Map<String, PMSBlankBooking> blankBookingMap, Date start, Date end) throws Exception {
+            Set<String> existingBookingIds, Map<String, PMSBlankBooking> blankBookingMap, Date start, Date end)  throws Exception{
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String startDate = formatter.format(start);
         String endDate = formatter.format(end);
@@ -384,16 +438,23 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 .filter(o -> o.getDateFrom().compareTo(endDate) <= 0 && o.getDateTo().compareTo(startDate) >= 0)
                 .filter(o -> !existingBookingIds.contains(o.getFlatBookingId()))
                 .collect(Collectors.toList());
+        ExecutorService es = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        List<Runnable> tasks = new ArrayList<>();
         for (PMSBlankBooking booking : bBookingsForDeletion) {
-            deleteBlankBookingCompletely(booking);
+            tasks.add(()-> deleteBlankBookingCompletely(booking));
         }
+        CompletableFuture<?>[] futures = tasks.stream()
+                .map(task -> CompletableFuture.runAsync(task, es))
+                .toArray(CompletableFuture[]::new);
+        CompletableFuture.allOf(futures).join();
+        es.shutdown();
     }
 
     private FetchBookingResponse handleInvalidRoomForBooking(JomresBooking booking, FetchBookingResponse response) throws Exception {
         JomresRoomData jomresRoomData = jomresPropertyToRoomDataMap.get(booking.propertyUid);
         if (jomresRoomData == null) {
-            logger.debug("The room mapping is not found in Pms for Jomres BookingId: " + booking.bookingId);
-            logger.debug("Property Id: " + booking.propertyUid);
+            logger.info("The room mapping is not found in Pms for Jomres BookingId: {}", booking.bookingId);
+            logger.info("Property Id: {}", booking.propertyUid);
             throw new Exception("Message: Room Map is not Found in PMS");
         }
         String bookingItemId = jomresRoomData.bookingItemId;
@@ -401,15 +462,15 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         BookingItem pmsBookingItem = bookingEngine.getBookingItem(bookingItemId);
 
         if (pmsBookingItem == null) {
-            logger.debug("The room is not found in Pms for Jomres BookingId: " + booking.bookingId + ", PMS BookingItemId: "
-                    + jomresRoomData.bookingItemId);
+            logger.info("The room is not found in Pms for Jomres BookingId: {}, PMS BookingItemId: {}", booking.bookingId,
+                    jomresRoomData.bookingItemId);
             throw new Exception("Message: Room is not Found (Maybe Deleted) in PMS");
         }
         response.setPmsRoomName(pmsBookingItem.bookingItemName);
         BookingItemType pmsRoomCategory = bookingEngine.getBookingItemType(pmsBookingItem.bookingItemTypeId);
         if (pmsRoomCategory == null) {
-            logger.debug("The room category is not found in Pms for Jomres BookingId: " + booking.bookingId + ", PMS BookingItemTypeId: "
-                    + pmsBookingItem.bookingItemTypeId);
+            logger.info("The room category is not found in Pms for Jomres BookingId: {}, PMS BookingItemTypeId: {}"
+                    , booking.bookingId, pmsBookingItem.bookingItemTypeId);
             throw new Exception("Message: Room Type is not Found (Maybe Deleted) in PMS");
         }
         response.setPmsRoomCategoryName(pmsRoomCategory.name);
@@ -417,7 +478,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     }
 
     private String addNewJomresBooking(JomresBooking booking, Map<String, Double> dailyPriceMatrix) throws Exception {
-        logger.debug("started fetch complete booking, BookingId: " + booking.bookingId);
+        logger.info("started fetch complete booking, BookingId: {}", booking.bookingId);
         BookingService bookingService = new BookingService();
 
         booking = bookingService.getCompleteBooking(
@@ -426,19 +487,20 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 jomresConfiguration.channelName,
                 booking
         );
-        logger.debug("Ended fetch complete booking, BookingId: " + booking.bookingId);
+        logger.info("Ended fetch complete booking, BookingId: {}", booking.bookingId);
 
-        logger.debug("Started adding Booking into pms BookingId: " + booking.bookingId);
+        logger.info("Started adding Booking into pms BookingId: {}", booking.bookingId);
         BookingItem pmsBookingItem = bookingEngine.getBookingItem(jomresPropertyToRoomDataMap.get(booking.propertyUid).bookingItemId);
-        JomresBookingData jomresBookingData = addBookingToPms(booking, dailyPriceMatrix, null, pmsBookingItem.bookingItemTypeId);
+        JomresBookingData jomresBookingData = addBookingToPms(booking, dailyPriceMatrix, pmsBookingItem.bookingItemTypeId);
         saveJomresBookingData(jomresBookingData);
-        logger.debug("ended adding Booking into pms BookingId: " + booking.bookingId);
+        logger.info("ended adding Booking into pms BookingId: {}", booking.bookingId);
         return jomresBookingData.pmsBookingId;
     }
 
     public List<FetchBookingResponse> fetchBookings() throws Exception {
+        LocalTime startTime = LocalTime.now();
         if (!connectToApi()) return new ArrayList<>();
-        if (handleEmptyJomresCOnfiguration()) return new ArrayList<>();
+        if (handleEmptyJomresConfiguration()) return new ArrayList<>();
         BookingService bookingService = new BookingService();
         PriceService priceService = new PriceService();
 
@@ -450,11 +512,11 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         Date start = new Date();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(start);
-        calendar.add(Calendar.DATE, 60);
+        calendar.add(Calendar.DATE, NUMBER_OF_DAYS_TO_BE_PROCESSED);
         Date end = calendar.getTime();
 
-        logText("FetchBooking process for 60 days is starting...");
-        logger.debug("FetchBooking process for 60 days is starting...");
+        logText("FetchBooking process for "+ NUMBER_OF_DAYS_TO_BE_PROCESSED + " days is starting...");
+        logger.info("FetchBooking process for " + NUMBER_OF_DAYS_TO_BE_PROCESSED + "days is starting...");
         for (int propertyUID : propertyUIDs) {
             try {
                 bookings = bookingService.getJomresBookingsBetweenDates(
@@ -467,7 +529,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                         jomresConfiguration.channelName, propertyUID);
 
                 for (JomresBooking jomresBooking : bookings) {
-                    logger.debug("Started Syncing Booking Id: " + jomresBooking.bookingId + ", PropertyId: " + propertyUID);
+                    logger.info("Started Syncing Booking Id: {}, PropertyId: {}",jomresBooking.bookingId, propertyUID);
                     FetchBookingResponse response = new FetchBookingResponse();
                     try {
                         response.setBookingId(jomresBooking.bookingId);
@@ -482,9 +544,9 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                         if (jomresBooking.status.equals("Cancelled") || jomresBooking.statusCode == 6) {
                             response.setStatus("Cancelled");
                             response.setPmsBookingId(pmsBooking == null ? "" : pmsBooking.id);
-                            logger.debug("Started deleting Booking Id: " + jomresBooking.bookingId);
+                            logger.info("Started deleting Booking Id: {}", jomresBooking.bookingId);
                             deletePmsBooking(jomresBooking, pmsBooking);
-                            logger.debug("ended deleting Booking Id: " + jomresBooking.bookingId);
+                            logger.info("ended deleting Booking Id: {}", jomresBooking.bookingId);
                             allBookings.add(response);
                             continue;
                         }
@@ -513,7 +575,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                         handleIfUnauthorizedExceptionOccurred(e);
                     }
                 }
-                logger.debug("Booking has been synced for Jomres Property Id: " + propertyUID);
+                logger.info("Booking has been synced for Jomres Property Id: {}", propertyUID);
             } catch (Exception e) {
                 logger.error(e.getMessage());
                 logPrintException(e);
@@ -522,10 +584,13 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 handleIfUnauthorizedExceptionOccurred(e);
             }
         }
-        logText("Ended Jomres fetch bookings for 60 days");
+        logText("Ended Jomres fetch bookings for "+ NUMBER_OF_DAYS_TO_BE_PROCESSED + "days");
         allBookings = allBookings.stream()
                 .sorted(Comparator.comparingLong(FetchBookingResponse::getBookingId).reversed())
                 .collect(Collectors.toList());
+
+        LocalTime endTime = LocalTime.now();
+        logger.info("Time takes to complete fetch bookings: {}s", ChronoUnit.SECONDS.between(startTime, endTime));
         return allBookings;
 
     }
@@ -628,13 +693,14 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         }
     }
 
-    void deletePmsBooking(JomresBooking booking, PmsBooking newbooking) throws java.lang.Exception {
+    void deletePmsBooking(JomresBooking booking, PmsBooking newbooking) {
         if (newbooking == null) {
-            logger.debug("Didn't find to delete, BookingId: " + booking.bookingId + ", PropertyId: " + booking.propertyUid);
+            logger.info("Didn't find to delete, BookingId: {}, PropertyId: {}", booking.bookingId, booking.propertyUid);
             return;
         }
         pmsManager.logEntry("Deleted by channel manager", newbooking.id, null);
         pmsManager.deleteBooking(newbooking.id);
+
         deleteJomresBookingData(jomresToPmsBookingMap.get(booking.bookingId));
         newbooking = pmsManager.getBooking(newbooking.id);
         List<String> orderIds = new ArrayList<>(newbooking.orderIds);
@@ -698,7 +764,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 logText("Successfully connected with jomres.");
                 return true;
             }
-        } catch (java.lang.Exception e) {
+        } catch (Exception e) {
             logPrintException(e);
             logText("Failed to connect with Jomres, please see log files.");
             return false;
@@ -714,9 +780,9 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         return null;
     }
 
-    private void checkIfPaymentMethodIsActive(String pmethod) {
-        if (!storeApplicationPool.isActivated(pmethod)) {
-            storeApplicationPool.activateApplication(pmethod);
+    private void checkIfPaymentMethodIsActive(String pMethod) {
+        if (!storeApplicationPool.isActivated(pMethod)) {
+            storeApplicationPool.activateApplication(pMethod);
         }
     }
 
@@ -737,69 +803,71 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         if (!isSentErrorMail) {
             String emailMessage = getJomresBookingErrorMessageForOwner(booking, pmsRoomName);
             String subject = "Jomres Booking Creation Failed";
-            logger.debug("Sending Email...");
+            logger.info("Sending Email...");
             logText("Error email is sending for Jomres bookingId: " + booking.bookingId + ", property id: " + booking.propertyUid);
             messageManager.sendJomresMessageToStoreOwner(
                     emailMessage, subject);
             logText("Sent email");
-            logger.debug("Booking Error Email has been sent");
+            logger.info("Booking Error Email has been sent");
             pmsManager.markSentErrorMessageForJomresBooking(booking.bookingId);
-            logger.debug("Marked that the mail has been sent for this booking");
+            logger.info("Marked that the mail has been sent for this booking");
         }
+    }
+
+    void sendEmailForFailedAvailResponses() {
+        for(UpdateAvailabilityResponse response: failedAvailabilityToSendEmail){
+            sendErrorUpdateAvailability(response);
+        }
+        //All emails have been sent, so the list need to be empty
+        failedAvailabilityToSendEmail.clear();
     }
 
     private void sendErrorUpdateAvailability(UpdateAvailabilityResponse response) {
-        String hashValueForErrorAvailability = response.getPropertyId() + "";
-
-        if (StringUtils.isNotBlank(response.getStart())) hashValueForErrorAvailability += response.getStart();
-        if (StringUtils.isNotBlank(response.getEnd())) hashValueForErrorAvailability += response.getEnd();
-        hashValueForErrorAvailability += response.isAvailable();
-
+        StringBuilder hashValueForErrorAvailBuilder = new StringBuilder();
+        hashValueForErrorAvailBuilder.append(response.getPropertyId() + "");
+        if (StringUtils.isNotBlank(response.getStart())) hashValueForErrorAvailBuilder.append(response.getStart());
+        if (StringUtils.isNotBlank(response.getEnd())) hashValueForErrorAvailBuilder.append(response.getEnd());
+        hashValueForErrorAvailBuilder.append(response.isAvailable());
+        String hashValueForErrorAvail = hashValueForErrorAvailBuilder.toString();
+        if (pmsManager.hasSentErrorNotificationForJomresAvailability(hashValueForErrorAvail))
+            return;
+        String bookingItemId = jomresPropertyToRoomDataMap.get(response.getPropertyId()).bookingItemId;
+        String bookingItemName = bookingEngine.getBookingItem(bookingItemId).bookingItemName;
+        StringBuilder emailMessageBuilder = new StringBuilder();
         String subject = response.isAvailable() ? "Blank Booking Deletion Failed" : "Blank Booking Creation Failed";
 
-        if (!pmsManager.hasSentErrorNotificationForJomresAvailability(hashValueForErrorAvailability)) {
-            logger.debug("Email is being sent...");
-            String bookingItemId = jomresPropertyToRoomDataMap.get(response.getPropertyId()).bookingItemId;
-            String bookingItemName = bookingEngine.getBookingItem(bookingItemId).bookingItemName;
-            StringBuilder emailMessageBuilder = new StringBuilder();
+        emailMessageBuilder.append("Availability Update has been failed for a date range. \n" +
+                "Jomres Property Name: " + bookingItemName + "\n" +
+                "Jomres Property UId: " + response.getPropertyId() + "\n" +
+                "Availability Start Date: " + response.getStart() + "\n" +
+                "Availability Resume Date: " + response.getEnd() + "\n" +
+                "Property Availability in PMS: " + (response.isAvailable() ? "available" : "unavailable") + "\n\n" +
+                (StringUtils.isNotBlank(response.getMessage()) ? "Possible Reason: " + response.getMessage() : "") + "\n");
 
-            emailMessageBuilder.append("Availability Update has been failed for a date range. \n" +
-                    "Jomres Property Name: " + bookingItemName + "\n" +
-                    "Jomres Property UId: " + response.getPropertyId() + "\n" +
-                    "Availability Start Date: " + response.getStart() + "\n" +
-                    "Availability Resume Date: " + response.getEnd() + "\n" +
-                    "Property Availability in PMS: " + (response.isAvailable() ? "available" : "unavailable") + "\n\n" +
-                    (StringUtils.isNotBlank(response.getMessage()) ? "Possible Reason: " + response.getMessage() : "") + "\n");
-
-            if (!response.isAvailable()) {
-                emailMessageBuilder.append("Possible Solutions:\n" +
-                        "   1. Please check if there is any booking in Jomres for this time period.\n" +
-                        "   2. Please check if there is already a blank booking for this time period. " +
+        if (!response.isAvailable()) {
+            emailMessageBuilder.append("Possible Solutions:\n" +
+                    "   1. Please check if there is any booking in Jomres for this time period.\n" +
+                    "   2. Please check if there is already a blank booking for this time period. " +
                         "If there is, the existing blank booking of Jomres won't be sync with PMS.\n" +
-                        "   3. If 1 and 2 don't help, please check server connection with Jomres.\n");
-            } else {
-                emailMessageBuilder.append("Possible solutions:\n" +
-                        "   1. Blank Booking is already deleted from Jomres.. in that case Jomres is synced with PMS, nothing to worry about.\n" +
-                        "   2. If 1 doesn't help, please check server connection with Jomres.\n");
-            }
-            String emailMessage = emailMessageBuilder.toString();
-            messageManager.sendJomresMessageToStoreOwner(emailMessage, subject);
-            logger.debug("Sent");
-            pmsManager.markSentErrorMessageForJomresAvail(hashValueForErrorAvailability);
-            logText("Update Availability Error email sent to Owner");
-            logText("Email Message: " + emailMessage);
+                    "   3. If 1 and 2 don't help, please check server connection with Jomres.\n");
+        } else {
+            emailMessageBuilder.append("Possible solutions:\n" +
+                    "   1. Blank Booking is already deleted from Jomres.. in that case Jomres is synced with PMS, nothing to worry about.\n" +
+                    "   2. If 1 doesn't help, please check server connection with Jomres.\n");
         }
-
+        String emailMessage = emailMessageBuilder.toString();
+        messageManager.sendJomresMessageToStoreOwner(emailMessage, subject);
+        logger.info("Sent");
+        logger.info("Email Message: " + emailMessage);
+        pmsManager.markSentErrorMessageForJomresAvail(hashValueForErrorAvail);
+        logText("Update Availability Error email sent to Owner");
     }
 
-    private JomresBookingData addBookingToPms(JomresBooking booking, Map<String, Double> priceMatrix, PmsBooking newbooking,
-                                              String pmsBookingItemTypeId) throws Exception {
+    private JomresBookingData addBookingToPms(JomresBooking booking, Map<String, Double> priceMatrix, String pmsBookingItemTypeId)
+            throws Exception {
         try {
-            long start = System.currentTimeMillis();
-
-            if (newbooking == null) {
-                newbooking = pmsManager.startBooking();
-            }
+            LocalTime startTime = LocalTime.now();
+            PmsBooking newbooking = pmsManager.startBooking();
 
             for (PmsBookingRooms room : newbooking.getAllRooms()) {
                 room.unmarkOverBooking();
@@ -837,11 +905,16 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             PmsGuests guest = getPmsGuestFromJomresCustomer(new PmsGuests(), booking.customer);
             room.guests.add(guest);
 
+            for(int i = 1; i<room.numberOfGuests ; i ++){
+                PmsGuests guestWithoutInfo = new PmsGuests();
+                room.guests.add(guestWithoutInfo);
+            }
+
             newbooking.rooms.clear();
             newbooking.addRoom(room);
 
             if (newbooking.rooms.isEmpty()) {
-                logger.debug("Returning since there are no rooms to add id: " + booking.bookingId);
+                logger.info("Returning since there are no rooms to add id: {}", booking.bookingId);
                 return null;
             }
 
@@ -849,7 +922,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             newbooking.paymentType = "70ace3f0-3981-11e3-aa6e-0800200c9a66";
 
             if (room.bookingItemTypeId == null) {
-                logger.error("Failed to find room type for booking: " + booking.bookingId);
+                logger.error("Failed to find room type for booking: {}", booking.bookingId);
                 logText("Failed to find room type for booking: " + booking.bookingId);
             }
 
@@ -876,7 +949,8 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             jomresBookingData.jomresBookingId = booking.bookingId;
             jomresBookingData.pmsRoomId = newbooking.rooms.get(0).pmsBookingRoomId;
             newbooking.ignoreOverrideTotPrice = false;
-            logger.debug("Time takes to complete one booking: " + (System.currentTimeMillis() - start) / 1000 + "s");
+            LocalTime endTime = LocalTime.now();
+            logger.info("Time takes to complete one booking: {}s", ChronoUnit.SECONDS.between(startTime, endTime));
             return jomresBookingData;
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -897,13 +971,9 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     private PmsBooking setBookingPrice(PmsBooking pmsBooking, Double totalPrice, Map<String, Double> priceMatrix) {
         Calendar calStart = Calendar.getInstance();
         PmsBookingRooms room = pmsBooking.rooms.get(0);
-        if ((pmsManager.getConfigurationSecure().usePricesFromChannelManager || storeManager.isPikStore()) && pmsBooking != null) {
-            Date end = new Date();
+        if ((pmsManager.getConfigurationSecure().usePricesFromChannelManager || storeManager.isPikStore())) {
             calStart.setTime(room.date.start);
 
-            if (room.date.end.after(end)) {
-                end = room.date.end;
-            }
             Date current = room.date.start;
             calStart.setTime(current);
             while (!current.after(room.date.end)) {

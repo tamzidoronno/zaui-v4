@@ -93,6 +93,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     String cmfClientAccessToken = null;
     Date cmfClientTokenGenerationTime = new Date();
     private List<UpdateAvailabilityResponse> failedAvailabilityToSendEmail = new ArrayList<>();
+    Integer NUMBER_OF_DAYS_TO_BE_PROCESSED = 366;
 
     @Override
     public void initialize() throws SecurityException {
@@ -274,7 +275,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         logger.info("Started Jomres Update availability");
         Calendar calendar = Calendar.getInstance();
         Date startDate = calendar.getTime();
-        calendar.add(Calendar.DATE, 60);
+        calendar.add(Calendar.DATE, NUMBER_OF_DAYS_TO_BE_PROCESSED);
         Date endDate = calendar.getTime();
 
         for (JomresRoomData roomData : pmsItemToJomresRoomDataMap.values()) {
@@ -316,11 +317,13 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             }
         }
         LocalTime endTime = LocalTime.now();
-        logger.info("Time takes to update availability: {}s", ChronoUnit.SECONDS.between(startTime, endTime));
+        logger.info("Time takes to update availability of " + NUMBER_OF_DAYS_TO_BE_PROCESSED + " : {}s"
+                , ChronoUnit.SECONDS.between(startTime, endTime));
         return true;
     }
 
-    private Set<String> updateAndGetPmsBookingIdsOfBlankBookings(Date start, Date end, int propertyId, String bookingItemId) throws Exception, ParseException {
+    private Set<String> updateAndGetPmsBookingIdsOfBlankBookings(Date start, Date end, int propertyId, String bookingItemId)
+            throws Exception, ParseException {
         Set<String> jomresBookingRoomIds =
                 jomresToPmsBookingMap.values().stream().map(o -> o.pmsRoomId).collect(Collectors.toSet());
 
@@ -509,11 +512,11 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         Date start = new Date();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(start);
-        calendar.add(Calendar.DATE, 60);
+        calendar.add(Calendar.DATE, NUMBER_OF_DAYS_TO_BE_PROCESSED);
         Date end = calendar.getTime();
 
-        logText("FetchBooking process for 60 days is starting...");
-        logger.info("FetchBooking process for 60 days is starting...");
+        logText("FetchBooking process for "+ NUMBER_OF_DAYS_TO_BE_PROCESSED + " days is starting...");
+        logger.info("FetchBooking process for " + NUMBER_OF_DAYS_TO_BE_PROCESSED + "days is starting...");
         for (int propertyUID : propertyUIDs) {
             try {
                 bookings = bookingService.getJomresBookingsBetweenDates(
@@ -581,7 +584,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 handleIfUnauthorizedExceptionOccurred(e);
             }
         }
-        logText("Ended Jomres fetch bookings for 60 days");
+        logText("Ended Jomres fetch bookings for "+ NUMBER_OF_DAYS_TO_BE_PROCESSED + "days");
         allBookings = allBookings.stream()
                 .sorted(Comparator.comparingLong(FetchBookingResponse::getBookingId).reversed())
                 .collect(Collectors.toList());

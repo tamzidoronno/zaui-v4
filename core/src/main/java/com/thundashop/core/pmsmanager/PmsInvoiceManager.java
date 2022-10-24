@@ -1959,6 +1959,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             }
         }
         cal.set(Calendar.MILLISECOND, 0);
+        cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MINUTE, 0);
         return cal.getTime();
         
@@ -2434,7 +2435,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         
         startDate = adjustDateForCount(startDate, PmsBooking.PriceType.daily, true);
-        endDate = adjustDateForCount(endDate, PmsBooking.PriceType.daily, true);
+        endDate = adjustDateForCount(endDate, PmsBooking.PriceType.daily, false);
         
         Calendar cal = Calendar.getInstance();
         cal.setTime(startDate);

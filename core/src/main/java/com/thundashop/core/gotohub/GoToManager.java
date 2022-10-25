@@ -522,6 +522,24 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         return currencyCode.equals(storeManager.getStoreSettingsApplicationKey(CURRENCY_CODE));
     }
 
+    Map<String, Map<TimeRepeaterData, LinkedList<TimeRepeaterDateRange>>> getAllRestrictions(Integer restrictionTypeId) {
+        List<BookingItemType> bookingItemTypes = bookingEngine.getBookingItemTypesWithSystemType(null);
+        Map<String, Map<TimeRepeaterData, LinkedList<TimeRepeaterDateRange>>> restrictionData = new HashMap<>();
+        TimeRepeater repeater = new TimeRepeater();
+
+        bookingItemTypes.forEach(bookingItemType-> {
+            Map<TimeRepeaterData, LinkedList<TimeRepeaterDateRange>> restrictionToRangesMap = new HashMap<>();
+            List<TimeRepeaterData> restrictionsForThisType = bookingEngine.getOpeningHoursWithType(bookingItemType.id, restrictionTypeId);
+
+            restrictionsForThisType.forEach(singleRestriction -> {
+                LinkedList<TimeRepeaterDateRange> ranges = repeater.generateRange(singleRestriction);
+                restrictionToRangesMap.put(singleRestriction, ranges);
+            });
+            restrictionData.put(bookingItemType.id, restrictionToRangesMap);
+        });
+        return restrictionData;
+    }
+
     private void handleDifferentCurrencyBooking(String bookingCurrency) throws GotoException {
         if (StringUtils.isBlank(bookingCurrency) || isCurrencySameWithSystem(bookingCurrency)) return;
         log.error("Booking currency didn't match with system currency..");
@@ -697,7 +715,6 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             } catch (Exception ex) {
                 log.error("failed {} {}", ex.getMessage(), ex);
             }
-
             goToRoomData.add(mapBookingItemTypeToGoToRoomData(type, room, typeInfo));
         }
         return goToRoomData;
@@ -743,6 +760,14 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     private List<PriceAllotment> getPriceAllotments(Date from, Date to) throws Exception {
         List<PriceAllotment> allotments = new ArrayList<>();
         long numberOfDays = getDateDifference(from, to);
+        Map<String, Map<TimeRepeaterData, LinkedList<TimeRepeaterDateRange>>> minStayInfo = getAllRestrictions(
+                TimeRepeaterData.TimePeriodeType.min_stay);
+        Map<String, Map<TimeRepeaterData, LinkedList<TimeRepeaterDateRange>>> maxStayInfo = getAllRestrictions(
+                TimeRepeaterData.TimePeriodeType.max_stay);
+        Map<String, Map<TimeRepeaterData, LinkedList<TimeRepeaterDateRange>>> noCheckInInfo = getAllRestrictions(
+                TimeRepeaterData.TimePeriodeType.noCheckIn);
+        Map<String, Map<TimeRepeaterData, LinkedList<TimeRepeaterDateRange>>> noCheckOutInfo = getAllRestrictions(
+                TimeRepeaterData.TimePeriodeType.noCheckOut);
         for (int i = 0; i <= numberOfDays; i++) {
             StartBooking range = getBookingArgument(from, i);
             List<GoToRoomData> goToRoomData = getGoToRoomData(true, range);
@@ -750,6 +775,11 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                 if (roomData.getPricesByGuests() == null) {
                     continue;
                 }
+                int minStayRestriction = isInTimeRepeaterDateRanges(minStayInfo.get(roomData.getGoToRoomTypeCode()), range.start);
+                int maxStayRestriction = isInTimeRepeaterDateRanges(maxStayInfo.get(roomData.getGoToRoomTypeCode()), range.start);
+                int noCheckInRestriction = isInTimeRepeaterDateRanges(noCheckInInfo.get(roomData.getGoToRoomTypeCode()), range.start);
+                int noCheckOutRestriction = isInTimeRepeaterDateRanges(noCheckOutInfo.get(roomData.getGoToRoomTypeCode()), range.start);
+
                 for (Map.Entry<Integer, Double> priceEntry : roomData.getPricesByGuests().entrySet()) {
                     PriceAllotment al = new PriceAllotment();
                     al.setStartDate(df.format(range.start));
@@ -759,11 +789,38 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                     al.setPrice(priceEntry.getValue());
                     al.setAllotment(roomData.getAvailableRooms());
                     al.setCurrencyCode(storeManager.getStoreSettingsApplicationKey("currencycode"));
+                    if(minStayRestriction != -1) {
+                        al.setAllotment(0);
+                    }
+                    if(maxStayRestriction != -1) {
+                        al.setAllotment(0);
+                    }
+                    if(noCheckInRestriction != -1) {
+                        al.setAllotment(0);
+                    }
+                    if(noCheckOutRestriction != -1) {
+                        al.setAllotment(0);
+                    }
                     allotments.add(al);
                 }
             }
         }
         return allotments;
+    }
+
+    private Integer isInTimeRepeaterDateRanges(Map<TimeRepeaterData, LinkedList<TimeRepeaterDateRange>> restrictionToRanges, Date dateToCheck) {
+        int numberOfDays = -1;
+        for (TimeRepeaterData restriction : restrictionToRanges.keySet()) {
+            LinkedList<TimeRepeaterDateRange> ranges = restrictionToRanges.get(restriction);
+            for(TimeRepeaterDateRange range : ranges) {
+                if(range.start.after(dateToCheck)) break;
+                if(range.isBetweenTime(dateToCheck)) {
+                    numberOfDays = new Integer(restriction.timePeriodeTypeAttribute);
+                    break;
+                }
+            }
+        }
+        return numberOfDays;
     }
 
     private long getDateDifference(Date start, Date end) throws GotoException {

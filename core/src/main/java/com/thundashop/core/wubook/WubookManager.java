@@ -227,7 +227,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     @Override
     public boolean updateAvailabilityFromButton() throws Exception {
         forceUpdate = true;
-        return updateAvailabilityInternal(720);
+        return updateAvailabilityInternal(2);
     }
 
     private boolean isWubookActive() {

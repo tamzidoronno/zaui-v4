@@ -227,7 +227,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     @Override
     public boolean updateAvailabilityFromButton() throws Exception {
         forceUpdate = true;
-        return updateAvailabilityInternal(2);
+        return updateAvailabilityInternal(720);
     }
 
     private boolean isWubookActive() {
@@ -701,7 +701,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 continue;
             }
             BookingItemType type = bookingEngine.getBookingItemType(rdata.bookingEngineTypeId);
-            if (type == null) {
+            if (type == null || type.deleted != null) {
                 // Type has been deleted.
                 continue;
             }
@@ -1892,7 +1892,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 continue;
             }
             BookingItemType type = bookingEngine.getBookingItemType(rdata.bookingEngineTypeId);
-            if (type == null) {
+            if (type == null || type.deleted != null) {
                 // Type has been deleted.
                 continue;
             }
@@ -1986,7 +1986,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 continue;
             }
             BookingItemType type = bookingEngine.getBookingItemType(rdata.bookingEngineTypeId);
-            if (type == null) {
+            if (type == null || type.deleted != null) {
                 // Type has been deleted.
                 continue;
             }
@@ -2049,7 +2049,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 continue;
             }
             BookingItemType type = bookingEngine.getBookingItemType(rdata.bookingEngineTypeId);
-            if (type == null) {
+            if (type == null || type.deleted != null) {
                 // Type has been deleted.
                 continue;
             }
@@ -2615,7 +2615,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
     private void addTaxesToRoom(WubookBookedRoom room) {
         WubookRoomData rdata = getWubookRoomData(room.roomId);
         BookingItemType type = bookingEngine.getBookingItemType(rdata.bookingEngineTypeId);
-        if (type == null) {
+        if (type == null || type.deleted != null) {
             return;
         }
         Product prod = productManager.getProduct(type.productId);
@@ -2748,7 +2748,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 continue;
             }
             BookingItemType type = bookingEngine.getBookingItemType(rdata.bookingEngineTypeId);
-            if (type == null) {
+            if (type == null || type.deleted != null) {
                 // Type has been deleted.
                 continue;
             }
@@ -2815,7 +2815,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
 
     private boolean doesTypeExists(String bookingItemTypeId) {
         BookingItemType type = bookingEngine.getBookingItemType(bookingItemTypeId);
-        if (type == null) {
+        if (type == null || type.deleted != null) {
             return false;
         }
         return true;

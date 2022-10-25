@@ -3,8 +3,8 @@ package com.thundashop.core.jomres;
 import com.getshop.scope.GetShopSchedulerBase;
 import com.thundashop.core.common.GetShopLogHandler;
 
-public class JomresManagerProcessor extends GetShopSchedulerBase {
-    public JomresManagerProcessor(String webAddress, String username, String password, String scheduler, String multiLevelName) throws Exception {
+public class JomresFetchBookingScheduler extends GetShopSchedulerBase {
+    public JomresFetchBookingScheduler(String webAddress, String username, String password, String scheduler, String multiLevelName) throws Exception {
         super(webAddress, username, password, scheduler, multiLevelName);
     }
 

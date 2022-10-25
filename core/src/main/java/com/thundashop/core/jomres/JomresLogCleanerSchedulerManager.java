@@ -40,7 +40,7 @@ public class JomresLogCleanerSchedulerManager {
     private int deleteByQuery(String collectionName) {
         long cutOff = JomresLogManager.getCutOff();
         int count = database.deleteByQuery(MANAGER, collectionName, new BasicDBObject("timeStamp", new BasicDBObject("$lt", cutOff)));
-        logger.debug("Deleted {} entries from collection {}", count, collectionName);
+        logger.info("Deleted {} entries from collection {}", count, collectionName);
         return count;
     }
 
@@ -49,7 +49,7 @@ public class JomresLogCleanerSchedulerManager {
     public void jomresLogCleanerScheduler() {
         try {
             int deleteCount = delete();
-            logger.debug("At {} , {} documents deleted from jomresLogManager database", now(), deleteCount);
+            logger.info("At {} , {} documents deleted from jomresLogManager database", now(), deleteCount);
         } catch (Exception e) {
             logger.error("Error while deleting jomres log", e);
         }

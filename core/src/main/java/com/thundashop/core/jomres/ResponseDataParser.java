@@ -78,7 +78,7 @@ public class ResponseDataParser {
             if(response.code()==401){
                 throw new Exception("statuse code: 401, unauthorized request\nCheck credentials...");
             }
-            logger.debug("Started parsing daily price matrix");
+            logger.info("Started parsing daily price matrix");
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             Map<String, Double> dailyPriceMatrix = new HashMap<>();
 
@@ -102,7 +102,7 @@ public class ResponseDataParser {
                 }
 
             }
-            logger.debug("Ended parsing daily price matrix");
+            logger.info("Ended parsing daily price matrix");
             return dailyPriceMatrix;
 
         } catch (JsonSyntaxException | IOException | ParseException e) {
@@ -177,7 +177,7 @@ public class ResponseDataParser {
         }
 
         try {
-            logger.debug("Started parsing Jomres booking list between dates");
+            logger.info("Started parsing Jomres booking list between dates");
             JsonObject responseBody = gson.fromJson(response.getBody(), JsonObject.class);
 
             if (responseBody.get("error_message") != null) {
@@ -197,7 +197,7 @@ public class ResponseDataParser {
                     logger.error("Falied to parse the booking for BookignId: "+booking.get("contract_uid").toString());
                 }
             }
-            logger.debug("Ended parsing Jomres booking list between dates");
+            logger.info("Ended parsing Jomres booking list between dates");
             return jomresBookings;
         } catch (Exception e) {
             throw e;

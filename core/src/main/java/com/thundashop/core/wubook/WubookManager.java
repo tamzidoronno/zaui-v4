@@ -16,9 +16,9 @@ import static com.thundashop.core.wubook.WuBookApiCalls.NEW_ROOM;
 import static com.thundashop.core.wubook.WuBookApiCalls.NEW_VIRTUAL_ROOM;
 import static com.thundashop.core.wubook.WuBookApiCalls.PUSH_ACTIVATION;
 import static com.thundashop.core.wubook.WuBookApiCalls.RPLAN_UPDATE_RPLAN_VALUES;
+import static com.thundashop.core.wubook.WuBookApiCalls.UPDATE_AVAIL;
 import static com.thundashop.core.wubook.WuBookApiCalls.UPDATE_PLAN_PRICES;
-import static com.thundashop.core.wubook.WuBookApiCalls.UPDATE_ROOMS_VALUES;
-import static com.thundashop.core.wubook.WuBookApiCalls.UPDATE_SPARSE_ROOMS_VALUES;
+import static com.thundashop.core.wubook.WuBookApiCalls.UPDATE_SPARSE_AVAIL;
 import static org.apache.commons.lang3.StringUtils.containsAny;
 
 import java.io.IOException;
@@ -1958,7 +1958,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         params.addElement(todayString);
         params.addElement(tosend);
         logText("Doing update of " + numberOfDays + " days");
-        WubookManagerUpdateThread updateThread = new WubookManagerUpdateThread(UPDATE_ROOMS_VALUES.value(), client, this,
+        WubookManagerUpdateThread updateThread = new WubookManagerUpdateThread(UPDATE_AVAIL.value(), client, this,
                 params, storeId, MDC.getCopyOfContextMap());
         updateThread
                 .setName("Wubook update thread, storeid: " + storeId + " threadId: " + incrThreadId.incrementAndGet());
@@ -2083,7 +2083,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             params.addElement(pmsManager.getConfigurationSecure().wubooklcode);
             params.addElement(tosend);
 
-            Vector result = executeClient(UPDATE_SPARSE_ROOMS_VALUES.value(), params);
+            Vector result = executeClient(UPDATE_SPARSE_AVAIL.value(), params);
             if ((Integer) result.get(0) != 0) {
                 logText("Failed to update availability->");
                 logText("(" + result.get(0) + ") " + result.get(1));

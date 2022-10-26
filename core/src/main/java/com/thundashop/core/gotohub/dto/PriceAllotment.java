@@ -29,4 +29,7 @@ public class PriceAllotment implements Serializable {
     @SerializedName("price")
     @Expose
     public double price;
+    @SerializedName("restriction")
+    @Expose
+    private Restriction restriction;
 }

@@ -775,10 +775,16 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                 if (roomData.getPricesByGuests() == null) {
                     continue;
                 }
-                int minStayRestriction = isInTimeRepeaterDateRanges(minStayInfo.get(roomData.getGoToRoomTypeCode()), range.start);
-                int maxStayRestriction = isInTimeRepeaterDateRanges(maxStayInfo.get(roomData.getGoToRoomTypeCode()), range.start);
-                int noCheckInRestriction = isInTimeRepeaterDateRanges(noCheckInInfo.get(roomData.getGoToRoomTypeCode()), range.start);
-                int noCheckOutRestriction = isInTimeRepeaterDateRanges(noCheckOutInfo.get(roomData.getGoToRoomTypeCode()), range.start);
+                Integer minStayRestriction = isInTimeRepeaterDateRanges(minStayInfo.get(roomData.getGoToRoomTypeCode()), range.start);
+                Integer maxStayRestriction = isInTimeRepeaterDateRanges(maxStayInfo.get(roomData.getGoToRoomTypeCode()), range.start);
+                Integer noCheckInRestriction = isInTimeRepeaterDateRanges(noCheckInInfo.get(roomData.getGoToRoomTypeCode()), range.start);
+                Integer noCheckOutRestriction = isInTimeRepeaterDateRanges(noCheckOutInfo.get(roomData.getGoToRoomTypeCode()), range.start);
+
+                Restriction restriction = new Restriction();
+                restriction.setMinStay(minStayRestriction);
+                restriction.setMaxStay(maxStayRestriction);
+                restriction.setNoCheckin(noCheckInRestriction);
+                restriction.setNoCheckout(noCheckOutRestriction);
 
                 for (Map.Entry<Integer, Double> priceEntry : roomData.getPricesByGuests().entrySet()) {
                     PriceAllotment al = new PriceAllotment();
@@ -789,18 +795,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                     al.setPrice(priceEntry.getValue());
                     al.setAllotment(roomData.getAvailableRooms());
                     al.setCurrencyCode(storeManager.getStoreSettingsApplicationKey("currencycode"));
-                    if(minStayRestriction != -1) {
-                        al.setAllotment(0);
-                    }
-                    if(maxStayRestriction != -1) {
-                        al.setAllotment(0);
-                    }
-                    if(noCheckInRestriction != -1) {
-                        al.setAllotment(0);
-                    }
-                    if(noCheckOutRestriction != -1) {
-                        al.setAllotment(0);
-                    }
+                    al.setRestriction(restriction);
                     allotments.add(al);
                 }
             }
@@ -809,7 +804,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     private Integer isInTimeRepeaterDateRanges(Map<TimeRepeaterData, LinkedList<TimeRepeaterDateRange>> restrictionToRanges, Date dateToCheck) {
-        int numberOfDays = -1;
+        Integer numberOfDays = null;
         for (TimeRepeaterData restriction : restrictionToRanges.keySet()) {
             LinkedList<TimeRepeaterDateRange> ranges = restrictionToRanges.get(restriction);
             for(TimeRepeaterDateRange range : ranges) {
@@ -863,10 +858,10 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         ratePlan.setRestriction("");
         ratePlan.setName("Rate Plan - " + name + " - " + numberOfGuests);
         ratePlan.setDescription("Rate Plan for " + numberOfGuests + " guests");
-        StringBuilder about = new StringBuilder().append("Rate Plan ").append(numberOfGuests).append(" is mainly for ").append(numberOfGuests).append(" guests.")
-                .append(" Price may vary for this rate plan and this rate plan will be applied")
-                .append(" when someone book a room for ").append(numberOfGuests).append(" guests");
-        ratePlan.setAbout(about.toString());
+        String about = "Rate Plan " + numberOfGuests + " is mainly for " + numberOfGuests + " guests." +
+                " Price may vary for this rate plan and this rate plan will be applied" +
+                " when someone book a room for " + numberOfGuests + " guests";
+        ratePlan.setAbout(about);
         ratePlan.setGuestCount(String.valueOf(numberOfGuests));
         ratePlan.setEffectiveDate(start);
         ratePlan.setExpireDate(end);

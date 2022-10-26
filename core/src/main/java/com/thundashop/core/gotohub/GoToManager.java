@@ -522,7 +522,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         return currencyCode.equals(storeManager.getStoreSettingsApplicationKey(CURRENCY_CODE));
     }
 
-    Map<String, Map<TimeRepeaterData, LinkedList<TimeRepeaterDateRange>>> getAllRestrictions(Integer restrictionTypeId) {
+    Map<String, Map<TimeRepeaterData, LinkedList<TimeRepeaterDateRange>>> getRestrictionData(Integer restrictionTypeId) {
         List<BookingItemType> bookingItemTypes = bookingEngine.getBookingItemTypesWithSystemType(null);
         Map<String, Map<TimeRepeaterData, LinkedList<TimeRepeaterDateRange>>> restrictionData = new HashMap<>();
         TimeRepeater repeater = new TimeRepeater();
@@ -760,11 +760,11 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     private List<PriceAllotment> getPriceAllotments(Date from, Date to) throws Exception {
         List<PriceAllotment> allotments = new ArrayList<>();
         long numberOfDays = getDateDifference(from, to);
-        Map<String, Map<TimeRepeaterData, LinkedList<TimeRepeaterDateRange>>> minStayInfo = getAllRestrictions(
+        Map<String, Map<TimeRepeaterData, LinkedList<TimeRepeaterDateRange>>> minStayInfo = getRestrictionData(
                 TimeRepeaterData.TimePeriodeType.min_stay);
-        Map<String, Map<TimeRepeaterData, LinkedList<TimeRepeaterDateRange>>> noCheckInInfo = getAllRestrictions(
+        Map<String, Map<TimeRepeaterData, LinkedList<TimeRepeaterDateRange>>> noCheckInInfo = getRestrictionData(
                 TimeRepeaterData.TimePeriodeType.noCheckIn);
-        Map<String, Map<TimeRepeaterData, LinkedList<TimeRepeaterDateRange>>> noCheckOutInfo = getAllRestrictions(
+        Map<String, Map<TimeRepeaterData, LinkedList<TimeRepeaterDateRange>>> noCheckOutInfo = getRestrictionData(
                 TimeRepeaterData.TimePeriodeType.noCheckOut);
         for (int i = 0; i <= numberOfDays; i++) {
             StartBooking range = getBookingArgument(from, i);

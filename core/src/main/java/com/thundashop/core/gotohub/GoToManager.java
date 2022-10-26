@@ -773,9 +773,9 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                 if (roomData.getPricesByGuests() == null) {
                     continue;
                 }
-                Integer minStayRestriction = isInTimeRepeaterDateRanges(minStayInfo.get(roomData.getGoToRoomTypeCode()), range.start);
-                Integer noCheckInRestriction = isInTimeRepeaterDateRanges(noCheckInInfo.get(roomData.getGoToRoomTypeCode()), range.start);
-                Integer noCheckOutRestriction = isInTimeRepeaterDateRanges(noCheckOutInfo.get(roomData.getGoToRoomTypeCode()), range.start);
+                Integer minStayRestriction = getRestrictionValueForADay(minStayInfo.get(roomData.getGoToRoomTypeCode()), range.start);
+                Integer noCheckInRestriction = getRestrictionValueForADay(noCheckInInfo.get(roomData.getGoToRoomTypeCode()), range.start);
+                Integer noCheckOutRestriction = getRestrictionValueForADay(noCheckOutInfo.get(roomData.getGoToRoomTypeCode()), range.start);
 
                 Restriction restriction = new Restriction();
                 restriction.setMinStay(minStayRestriction);
@@ -799,7 +799,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         return allotments;
     }
 
-    private Integer isInTimeRepeaterDateRanges(Map<TimeRepeaterData, LinkedList<TimeRepeaterDateRange>> restrictionToRanges, Date dateToCheck) {
+    private Integer getRestrictionValueForADay(Map<TimeRepeaterData, LinkedList<TimeRepeaterDateRange>> restrictionToRanges, Date dateToCheck) {
         Integer numberOfDays = null;
         for (TimeRepeaterData restriction : restrictionToRanges.keySet()) {
             LinkedList<TimeRepeaterDateRange> ranges = restrictionToRanges.get(restriction);

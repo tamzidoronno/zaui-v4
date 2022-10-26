@@ -762,8 +762,6 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         long numberOfDays = getDateDifference(from, to);
         Map<String, Map<TimeRepeaterData, LinkedList<TimeRepeaterDateRange>>> minStayInfo = getAllRestrictions(
                 TimeRepeaterData.TimePeriodeType.min_stay);
-        Map<String, Map<TimeRepeaterData, LinkedList<TimeRepeaterDateRange>>> maxStayInfo = getAllRestrictions(
-                TimeRepeaterData.TimePeriodeType.max_stay);
         Map<String, Map<TimeRepeaterData, LinkedList<TimeRepeaterDateRange>>> noCheckInInfo = getAllRestrictions(
                 TimeRepeaterData.TimePeriodeType.noCheckIn);
         Map<String, Map<TimeRepeaterData, LinkedList<TimeRepeaterDateRange>>> noCheckOutInfo = getAllRestrictions(
@@ -776,13 +774,11 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                     continue;
                 }
                 Integer minStayRestriction = isInTimeRepeaterDateRanges(minStayInfo.get(roomData.getGoToRoomTypeCode()), range.start);
-                Integer maxStayRestriction = isInTimeRepeaterDateRanges(maxStayInfo.get(roomData.getGoToRoomTypeCode()), range.start);
                 Integer noCheckInRestriction = isInTimeRepeaterDateRanges(noCheckInInfo.get(roomData.getGoToRoomTypeCode()), range.start);
                 Integer noCheckOutRestriction = isInTimeRepeaterDateRanges(noCheckOutInfo.get(roomData.getGoToRoomTypeCode()), range.start);
 
                 Restriction restriction = new Restriction();
                 restriction.setMinStay(minStayRestriction);
-                restriction.setMaxStay(maxStayRestriction);
                 restriction.setNoCheckin(noCheckInRestriction);
                 restriction.setNoCheckout(noCheckOutRestriction);
 

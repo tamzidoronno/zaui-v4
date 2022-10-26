@@ -781,6 +781,8 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                 restriction.setMinStay(minStayRestriction);
                 restriction.setNoCheckin(noCheckInRestriction);
                 restriction.setNoCheckout(noCheckOutRestriction);
+                if(minStayRestriction != null || noCheckInRestriction != null || noCheckInRestriction != null)
+                    roomData.setAvailableRooms(0);
 
                 for (Map.Entry<Integer, Double> priceEntry : roomData.getPricesByGuests().entrySet()) {
                     PriceAllotment al = new PriceAllotment();

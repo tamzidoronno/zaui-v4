@@ -150,10 +150,11 @@ public class Database extends StoreComponent {
             DBObject dbObject = morphia.toDBObject(data);
             mongo.getDB(credentials.manangerName).getCollection(collectionPrefix + data.storeId).save(dbObject);
         } catch (MappingException e) {
-            log.error("Morphia mapping exception {} {}", e.getMessage(), e);
+            log.error("Morphia mapping exception message: {}.  Entity id {}, className {}. Original error: {}", e.getMessage(), data.id, data.className, e);
+            log.error("Failed to save data: {}", data);
         } catch(Exception e) {
-            log.error("Error due to: {}, actual error: {}", e.getMessage(), e);
-            throw e;
+            log.error("Error due to: {}, Entity id {}, className {}. actual error: {}", e.getMessage(), data.id, data.className, e);
+            log.error("Failed to save data: {}", data);
         }
     }
 

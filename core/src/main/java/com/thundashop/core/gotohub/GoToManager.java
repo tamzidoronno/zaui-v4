@@ -782,7 +782,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
                 Restriction restriction = new Restriction();
                 restriction.setMinStay(minStayRestriction);
-                restriction.setMaxStay(minStayRestriction);
+                restriction.setMaxStay(maxStayRestriction);
                 restriction.setNoCheckin(noCheckInRestriction == 1 ? true : false);
                 restriction.setNoCheckout(noCheckOutRestriction == 1 ? true : false);
 
@@ -804,7 +804,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     private Integer getRestrictionValueForADay(Map<TimeRepeaterData, LinkedList<TimeRepeaterDateRange>> restrictionToRanges, Date dateToCheck) {
-        Integer numberOfDays = null;
+        Integer numberOfDays = 0;
         for (TimeRepeaterData restriction : restrictionToRanges.keySet()) {
             LinkedList<TimeRepeaterDateRange> ranges = restrictionToRanges.get(restriction);
             for(TimeRepeaterDateRange range : ranges) {

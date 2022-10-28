@@ -84,7 +84,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     @Override
     public GoToApiResponse getHotelInformation() {
         try {
-            saveSchedulerAsCurrentUser();
+            removeCurrentUser();
             Hotel hotel = mapStoreToGoToHotel(storeManager.getMyStore(), pmsManager.getConfiguration());
             return new GoToApiResponse(true,
                     GoToStatusCodes.FETCHING_HOTEL_INFO_SUCCESS.code,
@@ -102,7 +102,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     @Override
     public GoToApiResponse getRoomTypeDetails() {
         try {
-            saveSchedulerAsCurrentUser();
+            removeCurrentUser();
             StartBooking arg = getBookingArgument(new Date(), 0);
             List<GoToRoomData> goToRoomData = getGoToRoomData(false, arg);
             List<RoomType> roomTypes = new ArrayList<>();
@@ -139,7 +139,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     @Override
     public GoToApiResponse getPriceAndAllotmentWithDate(Date from, Date to) {
         try {
-            saveSchedulerAsCurrentUser();
+            removeCurrentUser();
             List<PriceAllotment> priceAllotments = getPriceAllotments(from, to);
             checkDateRangeValidity(from, to);
             return new GoToApiResponse(true,

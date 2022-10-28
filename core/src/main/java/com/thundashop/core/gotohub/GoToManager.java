@@ -695,7 +695,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             BookingProcessRooms room = new BookingProcessRooms();
             room.userId = user.id;
             room.description = type.getTranslatedDescription(getSession().language);
-            room.availableRooms = pmsManager.getNumberOfAvailable(type.id, arg.start, arg.end, true, true);
+            room.availableRooms = pmsManager.getNumberOfAvailable(type.id, arg.start, arg.end, false, true);
             room.id = type.id;
             room.systemCategory = type.systemCategory;
             room.visibleForBooker = type.visibleForBooking;
@@ -762,6 +762,8 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         long numberOfDays = getDateDifference(from, to);
         Map<String, Map<TimeRepeaterData, LinkedList<TimeRepeaterDateRange>>> minStayInfo = getRestrictionData(
                 TimeRepeaterData.TimePeriodeType.min_stay);
+        Map<String, Map<TimeRepeaterData, LinkedList<TimeRepeaterDateRange>>> maxStayInfo = getRestrictionData(
+                TimeRepeaterData.TimePeriodeType.max_stay);
         Map<String, Map<TimeRepeaterData, LinkedList<TimeRepeaterDateRange>>> noCheckInInfo = getRestrictionData(
                 TimeRepeaterData.TimePeriodeType.noCheckIn);
         Map<String, Map<TimeRepeaterData, LinkedList<TimeRepeaterDateRange>>> noCheckOutInfo = getRestrictionData(
@@ -774,11 +776,13 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                     continue;
                 }
                 int minStayRestriction = getRestrictionValueForADay(minStayInfo.get(roomData.getGoToRoomTypeCode()), range.start);
+                int maxStayRestriction = getRestrictionValueForADay(maxStayInfo.get(roomData.getGoToRoomTypeCode()), range.start);
                 int noCheckInRestriction = getRestrictionValueForADay(noCheckInInfo.get(roomData.getGoToRoomTypeCode()), range.start);
                 int noCheckOutRestriction = getRestrictionValueForADay(noCheckOutInfo.get(roomData.getGoToRoomTypeCode()), range.start);
 
                 Restriction restriction = new Restriction();
                 restriction.setMinStay(minStayRestriction);
+                restriction.setMaxStay(minStayRestriction);
                 restriction.setNoCheckin(noCheckInRestriction == 1 ? true : false);
                 restriction.setNoCheckout(noCheckOutRestriction == 1 ? true : false);
 

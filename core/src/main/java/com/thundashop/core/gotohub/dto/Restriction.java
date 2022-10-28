@@ -11,6 +11,9 @@ public class Restriction implements Serializable {
     @SerializedName("min_stay")
     @Expose
     private Integer minStay;
+    @SerializedName("max_stay")
+    @Expose
+    private Integer maxStay;
     @SerializedName("no_checkin")
     @Expose
     private Boolean noCheckin;

@@ -773,16 +773,14 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                 if (roomData.getPricesByGuests() == null) {
                     continue;
                 }
-                Integer minStayRestriction = getRestrictionValueForADay(minStayInfo.get(roomData.getGoToRoomTypeCode()), range.start);
-                Integer noCheckInRestriction = getRestrictionValueForADay(noCheckInInfo.get(roomData.getGoToRoomTypeCode()), range.start);
-                Integer noCheckOutRestriction = getRestrictionValueForADay(noCheckOutInfo.get(roomData.getGoToRoomTypeCode()), range.start);
+                int minStayRestriction = getRestrictionValueForADay(minStayInfo.get(roomData.getGoToRoomTypeCode()), range.start);
+                int noCheckInRestriction = getRestrictionValueForADay(noCheckInInfo.get(roomData.getGoToRoomTypeCode()), range.start);
+                int noCheckOutRestriction = getRestrictionValueForADay(noCheckOutInfo.get(roomData.getGoToRoomTypeCode()), range.start);
 
                 Restriction restriction = new Restriction();
                 restriction.setMinStay(minStayRestriction);
-                restriction.setNoCheckin(noCheckInRestriction);
-                restriction.setNoCheckout(noCheckOutRestriction);
-                if(minStayRestriction != null || noCheckInRestriction != null || noCheckOutRestriction != null)
-                    roomData.setAvailableRooms(0);
+                restriction.setNoCheckin(noCheckInRestriction == 1 ? true : false);
+                restriction.setNoCheckout(noCheckOutRestriction == 1 ? true : false);
 
                 for (Map.Entry<Integer, Double> priceEntry : roomData.getPricesByGuests().entrySet()) {
                     PriceAllotment al = new PriceAllotment();
@@ -793,7 +791,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                     al.setPrice(priceEntry.getValue());
                     al.setAllotment(roomData.getAvailableRooms());
                     al.setCurrencyCode(storeManager.getStoreSettingsApplicationKey("currencycode"));
-                    al.setRestriction(restriction);
+                    al.setRestrictions(restriction);
                     allotments.add(al);
                 }
             }

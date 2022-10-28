@@ -13,8 +13,8 @@ public class Restriction implements Serializable {
     private Integer minStay;
     @SerializedName("no_checkin")
     @Expose
-    private Integer noCheckin;
+    private Boolean noCheckin;
     @SerializedName("no_checkout")
     @Expose
-    private Integer noCheckout;
+    private Boolean noCheckout;
 }

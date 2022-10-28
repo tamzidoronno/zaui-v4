@@ -23,7 +23,6 @@ import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.utils.GoToStatusCodes;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -162,7 +161,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     @Override
     public GoToApiResponse saveBooking(Booking booking) {
         try {
-            saveSchedulerAsCurrentUser();
+            removeCurrentUser();
             handleDifferentCurrencyBooking(booking.getCurrency());
             PmsBooking pmsBooking = getBooking(booking);
             if (pmsBooking == null) {
@@ -410,6 +409,10 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         getSession().currentUser = userManager.getUserById("gs_system_scheduler_user");
     }
 
+    private void removeCurrentUser() {
+        getSession().currentUser = null;
+    }
+
     private void handlePaymentOrder(PmsBooking pmsBooking, String checkoutDate) throws Exception {
         try {
             Date endInvoiceAt = new Date();
@@ -541,10 +544,28 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     private void handleDifferentCurrencyBooking(String bookingCurrency) throws GotoException {
-        if (StringUtils.isBlank(bookingCurrency) || isCurrencySameWithSystem(bookingCurrency)) return;
+        if (isBlank(bookingCurrency) || isCurrencySameWithSystem(bookingCurrency)) return;
         log.error("Booking currency didn't match with system currency..");
         log.error("Booking currency: " + bookingCurrency);
         throw new GotoException(GoToStatusCodes.DIFFERENT_CURRENCY.code, GoToStatusCodes.DIFFERENT_CURRENCY.message);
+    }
+
+    private void handleInvalidGuestRatePlanoBooking(
+            Integer bookingNumberOfGuests, String roomTypeName, String ratePlaneCode, Integer maxNumberOfGuests) throws GotoException {
+        if(isBlank(ratePlaneCode)) throw new GotoException(
+                GoToStatusCodes.INVALID_RATE_PLAN_CODE.code, GoToStatusCodes.INVALID_RATE_PLAN_CODE.message);
+
+        Integer ratePlanNumberOfGuest = new Integer(substringAfterLast(ratePlaneCode, "-"));
+        String typeNameFromRatePlan = substringBeforeLast(ratePlaneCode, "-");
+        if(isBlank(typeNameFromRatePlan) || !typeNameFromRatePlan.equals(roomTypeName)
+                || ratePlanNumberOfGuest > maxNumberOfGuests || ratePlanNumberOfGuest < 1) throw new GotoException(
+                GoToStatusCodes.INVALID_RATE_PLAN_CODE.code, GoToStatusCodes.INVALID_RATE_PLAN_CODE.message);
+
+        if(!ratePlanNumberOfGuest.equals(bookingNumberOfGuests)) throw new GotoException(
+                GoToStatusCodes.NUMBER_OF_GUESTS_RATE_PLAN_CODE_MISMATCHED.code,
+                GoToStatusCodes.NUMBER_OF_GUESTS_RATE_PLAN_CODE_MISMATCHED.message);
+        if(bookingNumberOfGuests > maxNumberOfGuests) throw new GotoException(
+                GoToStatusCodes.OVERFLOW_MAX_NUMBER_OF_GUESTS.code, GoToStatusCodes.OVERFLOW_MAX_NUMBER_OF_GUESTS.message);
     }
 
     private void activatePaymentMethod(String pmethod) throws GotoException {
@@ -559,7 +580,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     private String getPaymentTypeId() throws GotoException {
-        if (StringUtils.isBlank(goToConfiguration.getPaymentTypeId()))
+        if (isBlank(goToConfiguration.getPaymentTypeId()))
             throw new GotoException(GoToStatusCodes.PAYMENT_METHOD_NOT_FOUND.code, GoToStatusCodes.PAYMENT_METHOD_NOT_FOUND.message);
         return goToConfiguration.paymentTypeId;
     }
@@ -576,17 +597,20 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     private PmsBookingRooms mapRoomToPmsRoom(Booking booking, Room gotoBookingRoom) throws Exception {
+        BookingItemType type = bookingEngine.getBookingItemType(gotoBookingRoom.getRoomCode());
         PmsBookingRooms pmsBookingRoom = new PmsBookingRooms();
         pmsBookingRoom = setCorrectStartEndTime(pmsBookingRoom, booking);
         int numberOfChildren = gotoBookingRoom.getChildrenAges().size();
         pmsBookingRoom.numberOfGuests = gotoBookingRoom.getAdults() + numberOfChildren;
         pmsBookingRoom.bookingItemTypeId = gotoBookingRoom.getRoomCode();
 
-        if (bookingEngine.getBookingItemType(gotoBookingRoom.getRoomCode()) == null) {
+        if (type == null || type.deleted != null) {
             log.error("booking room type does not exist, BookingItemTypeId: " + gotoBookingRoom.getRoomCode());
             throw new GotoException(GoToStatusCodes.ROOM_TYPE_NOT_FOUND.code,
                     GoToStatusCodes.ROOM_TYPE_NOT_FOUND.message + gotoBookingRoom.getRoomCode());
         }
+        handleInvalidGuestRatePlanoBooking(pmsBookingRoom.numberOfGuests, type.name, gotoBookingRoom.getRatePlanCode(), type.size);
+
         PmsGuests guest = new PmsGuests();
         guest.email = booking.getOrderer().getEmail();
         guest.name = booking.getOrderer().getFirstName() + " " + booking.getOrderer().getLastName();
@@ -621,7 +645,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         pmsBooking.channel = "goto";
         pmsBooking.language = booking.getLanguage();
         pmsBooking.isPrePaid = true;
-        if (StringUtils.isNotBlank(booking.getComment())) {
+        if (isNotBlank(booking.getComment())) {
             PmsBookingComment comment = new PmsBookingComment();
             comment.userId = "";
             comment.comment = booking.getComment();
@@ -652,7 +676,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     private PmsBooking findCorrelatedBooking(String reservationId) {
-        if (StringUtils.isNotBlank(reservationId))
+        if (isNotBlank(reservationId))
             return pmsManager.getBooking(reservationId);
         return null;
     }    
@@ -854,7 +878,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
     private RatePlan createNewRatePlan(int numberOfGuests, String name, String start, String end) {
         RatePlan ratePlan = new RatePlan();
-        ratePlan.setRatePlanCode(name + "-" + numberOfGuests);
+        ratePlan.setRatePlanCode(makeAndGetRatePlanCode(numberOfGuests, name));
         ratePlan.setRestriction("");
         ratePlan.setName("Rate Plan - " + name + " - " + numberOfGuests);
         ratePlan.setDescription("Rate Plan for " + numberOfGuests + " guests");
@@ -866,6 +890,10 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         ratePlan.setEffectiveDate(start);
         ratePlan.setExpireDate(end);
         return ratePlan;
+    }
+
+    private String makeAndGetRatePlanCode(int numberOfGuests, String roomTypeName) {
+        return roomTypeName + "-" + numberOfGuests;
     }
 
     private Hotel mapStoreToGoToHotel(Store store, PmsConfiguration pmsConfiguration) {

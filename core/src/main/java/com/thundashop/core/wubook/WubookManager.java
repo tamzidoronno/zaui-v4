@@ -1430,6 +1430,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             for (WubookRoomData rdata : wubookdata.values()) {
                 if (rdata.bookingEngineTypeId.equals(type.id)) {
                     found = true;
+                    break;
                 }
             }
 

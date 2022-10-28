@@ -22,6 +22,7 @@ import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.utils.GoToStatusCodes;
+import com.thundashop.core.wubook.WubookManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -50,6 +51,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     @Autowired OrderManager orderManager;
     @Autowired MessageManager messageManager;
     @Autowired UserManager userManager;
+    @Autowired WubookManager wubookManager;
 
     private static final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -724,6 +726,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             room.systemCategory = type.systemCategory;
             room.visibleForBooker = type.visibleForBooking;
             PmsAdditionalTypeInformation typeInfo = pmsManager.getAdditionalTypeInformationById(type.id);
+            if(wubookManager.isRestrictedForOta(type.id, arg.start, arg.end)) room.availableRooms = 0;
             try {
                 room.images.addAll(typeInfo.images);
                 room.sortDefaultImageFirst();

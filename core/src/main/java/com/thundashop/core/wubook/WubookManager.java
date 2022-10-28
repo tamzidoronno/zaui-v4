@@ -1748,6 +1748,10 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         return false;
     }
 
+    @Override
+    public  boolean isRestrictedForOta(String bookingItemTypeId, Date start, Date end) {
+        return isRestricted(bookingItemTypeId, start, end);
+    }
     private boolean checkNonRefundable(Hashtable table) {
         try {
             Gson gson = new Gson();

@@ -810,8 +810,8 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                 Restriction restriction = new Restriction();
                 restriction.setMinStay(minStayRestriction);
                 restriction.setMaxStay(maxStayRestriction);
-                restriction.setNoCheckin(noCheckInRestriction == 1 ? true : false);
-                restriction.setNoCheckout(noCheckOutRestriction == 1 ? true : false);
+                restriction.setNoCheckin(noCheckInRestriction == 1);
+                restriction.setNoCheckout(noCheckOutRestriction == 1);
 
                 for (Map.Entry<Integer, Double> priceEntry : roomData.getPricesByGuests().entrySet()) {
                     PriceAllotment al = new PriceAllotment();
@@ -831,7 +831,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     private Integer getRestrictionValueForADay(Map<TimeRepeaterData, LinkedList<TimeRepeaterDateRange>> restrictionToRanges, Date dateToCheck) {
-        Integer numberOfDays = 0;
+        int numberOfDays = 0;
         for (TimeRepeaterData restriction : restrictionToRanges.keySet()) {
             LinkedList<TimeRepeaterDateRange> ranges = restrictionToRanges.get(restriction);
             for(TimeRepeaterDateRange range : ranges) {

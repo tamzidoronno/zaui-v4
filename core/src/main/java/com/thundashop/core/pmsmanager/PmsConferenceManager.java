@@ -692,7 +692,7 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
     }
 
     @Override
-    public PmsConference createConferenceForV5(String engine, Date date, String name) {
+    public PmsConference createConferenceForV5(String engine, Date date, String name) throws Exception {
         PmsManager pmsManager = getShopSpringScope.getNamedSessionBean(engine, PmsManager.class);
         pmsManager.startBooking();
         
@@ -706,13 +706,7 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
         room.deletedDate = new Date();
         booking.rooms.add(room);
         
-        try {
-            pmsManager.setBooking(booking);
-        } catch (Exception ex) {
-            logPrintException(ex);
-        }
-        
-        pmsManager.completeConferenceBooking();
+        pmsManager.setBooking(booking);
         
         PmsConference conference = new PmsConference();
         conference.conferenceDate = date;
@@ -725,6 +719,12 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
         pmsManager.saveBooking(booking);
 
         return conference;
+    }
+
+    @Override
+    public PmsBooking completeConferenceForV5(String engine) {
+        PmsManager pmsManager = getShopSpringScope.getNamedSessionBean(engine, PmsManager.class);
+        return pmsManager.completeConferenceBooking();
     }
 
     private PosTab getTabForConference(String conferenceId) {

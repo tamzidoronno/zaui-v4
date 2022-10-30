@@ -26,10 +26,6 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.thundashop.core.gotohub.GoToManager;
-import com.thundashop.services.pmspricing.IPmsPricingService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -88,6 +84,7 @@ import com.thundashop.core.getshoplocksystem.GetShopLockSystemManager;
 import com.thundashop.core.getshoplocksystem.LockCode;
 import com.thundashop.core.getshoplocksystem.LockGroup;
 import com.thundashop.core.getshoplocksystem.MasterUserSlot;
+import com.thundashop.core.gotohub.GoToManager;
 import com.thundashop.core.gsd.DevicePrintRoomCode;
 import com.thundashop.core.gsd.GdsManager;
 import com.thundashop.core.messagemanager.MessageManager;
@@ -117,12 +114,15 @@ import com.thundashop.core.utils.Constants;
 import com.thundashop.core.utils.UtilManager;
 import com.thundashop.core.webmanager.WebManager;
 import com.thundashop.core.wubook.WubookManager;
+import com.thundashop.services.pmspricing.IPmsPricingService;
 
 import biweekly.Biweekly;
 import biweekly.ICalendar;
 import biweekly.component.VEvent;
 import biweekly.property.Summary;
 import biweekly.util.Duration;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  *
@@ -5668,7 +5668,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         return result;
     }
 
-    public void completeConferenceBooking() {
+    public PmsBooking completeConferenceBooking() {
         PmsBooking booking = getCurrentBooking();
         booking.avoidAutoDelete = true;
         booking.sessionId = "";
@@ -5678,6 +5678,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         booking.confirmedDate = new Date();
 
         saveBooking(booking);
+        return booking;
     }
 
     public PmsBooking doCompleteBooking(PmsBooking booking) {

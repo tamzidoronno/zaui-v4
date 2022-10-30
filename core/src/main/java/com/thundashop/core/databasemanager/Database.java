@@ -174,7 +174,7 @@ public class Database extends StoreComponent {
     }
 
     public List<DataCommon> getAllDataForStore(String storeId) {
-        ArrayList<DataCommon> datas = new ArrayList();
+        ArrayList<DataCommon> datas = new ArrayList<>();
 
         for (String db : mongo.getDatabaseNames()) {
             DB mongoDb = mongo.getDB(db);
@@ -200,7 +200,7 @@ public class Database extends StoreComponent {
         DBCursor cur = collection.find(query);
         List<DataCommon> all = new ArrayList<DataCommon>();
         
-        List<DBObject> dbObjects = new ArrayList();
+        List<DBObject> dbObjects = new ArrayList<>();
         
         while (cur.hasNext()) {
             dbObjects.add(cur.next());
@@ -238,6 +238,7 @@ public class Database extends StoreComponent {
     private BasicDBObject createQuery() {
         BasicDBObject andQuery = new BasicDBObject();
         List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
+
         if(!includeDeleted) {
             obj.add(new BasicDBObject("deleted", null));
         }
@@ -271,15 +272,11 @@ public class Database extends StoreComponent {
     }
 
     public synchronized void delete(DataCommon data, Credentials credentials) throws ErrorException {
-        if (sandbox) {
+        if (data == null || sandbox || isDeepFreezed(data)) {
             return;
-        }
-
-        if (isDeepFreezed(data)) {
-            return;
-        }
+        }       
         
-        if (data != null && data.getClass().getAnnotation(PermenantlyDeleteData.class) != null) {
+        if (data.getClass().getAnnotation(PermenantlyDeleteData.class) != null) {
             permanentlyDeleteData(data.id, credentials.manangerName, data.storeId);
             return;
         }
@@ -440,7 +437,7 @@ public class Database extends StoreComponent {
                 .filter(name -> name.startsWith(simpleName))
                 .collect(Collectors.toList());
 
-        List<String> retValues = new ArrayList();
+        List<String> retValues = new ArrayList<>();
         for (String dbName : dbsToCheck) {
             DB db = mongo.getDB(dbName);
             if (db.collectionExists(collectionPrefix + storeId)) {

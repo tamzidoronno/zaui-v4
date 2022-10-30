@@ -692,7 +692,7 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
     }
 
     @Override
-    public PmsConference createConferenceForV5(String engine, Date date, String name) throws Exception {
+    public PmsConference createConferenceForV5(String engine, Date date, String name, int noOfGuest) throws Exception {
         PmsManager pmsManager = getShopSpringScope.getNamedSessionBean(engine, PmsManager.class);
         pmsManager.startBooking();
         
@@ -712,6 +712,7 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
         conference.conferenceDate = date;
         conference.meetingTitle = name;
         conference.pmsBookingId = booking.id;
+        conference.attendeeCount = noOfGuest;
 
         saveConference(conference);
 

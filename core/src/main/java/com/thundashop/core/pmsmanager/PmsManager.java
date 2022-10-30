@@ -5673,7 +5673,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         booking.avoidAutoDelete = true;
         booking.sessionId = "";
         booking.completedDate = new Date();
-        booking.userId = getSession().currentUser.id;
+
+        if(isEmpty(booking.userId)){
+            booking.userId = getSession().currentUser.id;
+        }
+        
         booking.confirmed = true;
         booking.confirmedDate = new Date();
 

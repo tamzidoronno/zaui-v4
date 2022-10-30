@@ -1,14 +1,11 @@
 package com.thundashop.core.pmsmanager;
 
-import static org.apache.commons.lang3.StringUtils.*;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -478,7 +475,7 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
             if(evt != null && evt.id != null && event != null && event.id != null && evt.id.equals(event.id)) {
                 continue;
             }
-            if(evt.betweenTime(event.from, event.to) && event.pmsConferenceItemId.equals(evt.pmsConferenceItemId)) {
+            if(evt != null && evt.betweenTime(event.from, event.to) && event.pmsConferenceItemId.equals(evt.pmsConferenceItemId)) {
                 return false;
             }
         }
@@ -658,6 +655,7 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
     }
         
 
+    @Override
     public String createConference(String engine, Date date, String name) {
         PmsManager pmsManager = getShopSpringScope.getNamedSessionBean(engine, PmsManager.class);
         pmsManager.startBooking();
@@ -691,6 +689,42 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
         pmsManager.saveBooking(booking);
 
         return room.pmsBookingRoomId;
+    }
+
+    @Override
+    public PmsConference createConferenceForV5(String engine, Date date, String name) {
+        PmsManager pmsManager = getShopSpringScope.getNamedSessionBean(engine, PmsManager.class);
+        pmsManager.startBooking();
+        
+        PmsBooking booking = pmsManager.getCurrentBooking();
+        
+        PmsBookingRooms room = new PmsBookingRooms();
+        room.bookingItemTypeId = "gspmsconference";
+        room.date.start = date;
+        room.date.end = date;
+        room.deleted = true;
+        room.deletedDate = new Date();
+        booking.rooms.add(room);
+        
+        try {
+            pmsManager.setBooking(booking);
+        } catch (Exception ex) {
+            logPrintException(ex);
+        }
+        
+        pmsManager.completeConferenceBooking();
+        
+        PmsConference conference = new PmsConference();
+        conference.conferenceDate = date;
+        conference.meetingTitle = name;
+        conference.pmsBookingId = booking.id;
+
+        saveConference(conference);
+
+        booking.conferenceId = conference.id;
+        pmsManager.saveBooking(booking);
+
+        return conference;
     }
 
     private PosTab getTabForConference(String conferenceId) {

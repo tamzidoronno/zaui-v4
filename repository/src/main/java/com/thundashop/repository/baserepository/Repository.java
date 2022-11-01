@@ -69,7 +69,7 @@ public abstract class Repository<T> implements IRepository<T> {
     }
 
     public Optional<T> getFirst(DBObject query, SessionInfo sessionInfo) {
-        return getDatabase().findFirst(getClassName(), getClassName(), query);
+        return Optional.of(getDatabase().findFirst(sessionInfo.getManagerName(), getCollectionName(sessionInfo), query));
     }
 
     public Optional<T> getOne(DBObject query, SessionInfo sessionInfo) {

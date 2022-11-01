@@ -36,7 +36,7 @@ class DatabaseTest {
                 .setPort(config.getAsInt("mongo.port"))
                 .build();
 
-        database = new Database(provider, new DbTestEntityMappers());
+        database = new Database(provider);
     }
 
     @AfterEach
@@ -61,7 +61,7 @@ class DatabaseTest {
         BasicDBObject query = new BasicDBObject();
         query.put("_id", id);
 
-        List<DbTest> result = database.query(testDbName, testCollection, DbTest.class, query);
+        List<DbTest> result = database.query(testDbName, testCollection, query);
 
         assertThat(result).isNotNull();
         assertThat(result.size()).isEqualTo(1);
@@ -97,7 +97,7 @@ class DatabaseTest {
         sort.put("order", -1);
         int expectedLimit = 2;
 
-        List<DbTest> result = database.query(testDbName, testCollection, DbTest.class, new BasicDBObject(), sort, expectedLimit);
+        List<DbTest> result = database.query(testDbName, testCollection, new BasicDBObject(), sort, expectedLimit);
 
         assertThat(result).isNotEmpty().size().isEqualTo(expectedLimit);
         assertThat(result).extracting(DbTest::getOrder)
@@ -123,7 +123,7 @@ class DatabaseTest {
         database.updateMultiple(testDbName, testCollection, query, setQuery);
 
         // then
-        List<DbTest> list = database.query(testDbName, testCollection, DbTest.class, new BasicDBObject("_id", dbTest.id));
+        List<DbTest> list = database.query(testDbName, testCollection, new BasicDBObject("_id", dbTest.id));
         assertThat(list).isNotEmpty();
 
         DbTest actual = list.get(0);
@@ -149,7 +149,7 @@ class DatabaseTest {
         int updateDocNumber = database.updateMultiple(testDbName, testCollection, query, setQuery);
 
         // then
-        List<DbTest> list = database.query(testDbName, testCollection, DbTest.class, new BasicDBObject("strMatch", "code_1"));
+        List<DbTest> list = database.query(testDbName, testCollection, new BasicDBObject("strMatch", "code_1"));
         assertThat(list).isNotEmpty().size().isEqualTo(2);
         assertThat(list).extracting(DbTest::getTestDate, DbTest::getOrder)
                 .containsExactly(tuple(testDate, 100), tuple(testDate, 100));

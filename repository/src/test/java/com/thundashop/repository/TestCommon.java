@@ -7,7 +7,6 @@ import com.thundashop.repository.config.Config;
 import com.thundashop.repository.db.Database;
 import com.thundashop.repository.db.MongoClientProvider;
 import com.thundashop.repository.db.MongoClientProviderImpl;
-import com.thundashop.repository.entitymapper.EntityMapper;
 import com.thundashop.repository.testutils.TestConfig;
 import com.thundashop.repository.utils.SessionInfo;
 
@@ -24,7 +23,7 @@ public abstract class TestCommon {
                     .setPort(config.getAsInt("mongo.port"))
                     .build();
 
-            database = new Database(provider, new EntityMapper());
+            database = new Database(provider);
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
         }

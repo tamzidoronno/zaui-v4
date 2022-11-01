@@ -22,23 +22,30 @@ public class ZauiMorphia {
     }
 
     public DataCommon fromDBObject(DBObject object){
+        if(object == null){
+            return null;
+        }
+
         try{            
             return morphia.fromDBObject(DataCommon.class, object);
         }
         catch(MappingException ex){
-            log.error("Morphia mapping exception occured. Exception: {0}", ex);
-            log.error("Failed to map DBObject to data. DBObject: {0}", object.toString());
+            log.error("Morphia mapping exception occured. Exception: {}", ex);
+            log.error("Failed to map DBObject to data. DBObject: {}", object.toString());
             throw ex;
         }
     }
 
-    public DBObject toDBObject(DataCommon data){        
+    public DBObject toDBObject(DataCommon data){    
+        if(data == null){
+            return null;
+        }    
         try{            
             return morphia.toDBObject(data);
         }
         catch(MappingException ex){
-            log.error("Morphia mapping exception occured. Exception: {0}", ex);
-            log.error("Failed to map data to DBObject. Data: {0}", data.toString());
+            log.error("Morphia mapping exception occured. Exception: {}", ex);
+            log.error("Failed to map data to DBObject. Data: {}", data.toString());
             throw ex;
         }
     }

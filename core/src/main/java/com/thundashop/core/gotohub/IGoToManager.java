@@ -1,11 +1,14 @@
 package com.thundashop.core.gotohub;
 
+import java.util.Date;
+
+import com.thundashop.core.common.ForceAsync;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
-import com.thundashop.core.gotohub.dto.*;
+import com.thundashop.core.gotohub.dto.Booking;
+import com.thundashop.core.gotohub.dto.GoToApiResponse;
+import com.thundashop.core.gotohub.dto.GoToConfiguration;
 import com.thundashop.core.pmsmanager.PmsBookingRooms;
-
-import java.util.Date;
 
 /**
  * Goto management system.<br>
@@ -34,6 +37,7 @@ public interface IGoToManager {
      * @param from, to
      * @return GoToApiResponse
      */
+    @ForceAsync
     public GoToApiResponse getPriceAndAllotmentWithDate(Date from, Date to);
 
     /**
@@ -41,6 +45,7 @@ public interface IGoToManager {
      *
      * @return GoToApiResponse
      */
+    @ForceAsync
     public GoToApiResponse getPriceAndAllotment();
 
     /**

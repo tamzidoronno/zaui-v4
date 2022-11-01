@@ -9,6 +9,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.Calendar;
 import java.util.Date;
+
+import lombok.ToString;
 import org.mongodb.morphia.annotations.Entity;
 import org.mongodb.morphia.annotations.Id;
 import org.mongodb.morphia.annotations.PostLoad;
@@ -18,6 +20,7 @@ import org.mongodb.morphia.annotations.PostLoad;
  * @author hjemme
  */
 @Entity("Credentials")
+@ToString
 public class DataCommon extends TranslationHandler implements Cloneable {
 
     @Id

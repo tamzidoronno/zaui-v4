@@ -16,7 +16,10 @@ import com.thundashop.core.ordermanager.data.VirtualOrder;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.repository.db.MongoClientProvider;
+import com.thundashop.repository.utils.ZauiMorphia;
+
 import org.mongodb.morphia.Morphia;
+import org.mongodb.morphia.mapping.MappingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,10 +46,13 @@ public class Database extends StoreComponent {
     public static int mongoPort = 27018;
 
     private Mongo mongo;
-    private Morphia morphia;
+   
     private String collectionPrefix = "col_";
     private boolean sandbox = false;
     private boolean includeDeleted = false;
+
+    @Autowired
+    private ZauiMorphia morphia;
 
     @Autowired
     private StorePool storePool;
@@ -74,10 +80,7 @@ public class Database extends StoreComponent {
         if (!foundInEnvVars){ host = "localhost"; }
 
         log.debug("Connecting to mongo host: `{}`", host);
-        mongo = provider.getMongoClient();
-        morphia = new Morphia();
-        morphia.getMapper().getConverters().addConverter(BigDecimalConverter.class);
-        morphia.map(DataCommon.class);
+        mongo = provider.getMongoClient();        
     }
 
     public void dropTables(Credentials credentials) throws SQLException {
@@ -142,17 +145,14 @@ public class Database extends StoreComponent {
     private void addDataCommonToDatabase(DataCommon data, Credentials credentials) {
 //        logSavedMessge(data, credentials.manangerName, collectionPrefix + data.storeId);
         data.gs_manager = credentials.manangerName;
-        DBObject dbObject = morphia.toDBObject(data);
-        
         if (data.deepFreeze) {
             return;
         }
-        
         try {
+            DBObject dbObject = morphia.toDBObject(data);
             mongo.getDB(credentials.manangerName).getCollection(collectionPrefix + data.storeId).save(dbObject);
-        }catch(Exception e) {
-            log.error("", e);
-            throw e;
+        } catch(Exception e) {
+            log.error("Failed to save data: {}. Exception: {}", data.toString(), e);
         }
     }
 
@@ -172,7 +172,7 @@ public class Database extends StoreComponent {
     }
 
     public List<DataCommon> getAllDataForStore(String storeId) {
-        ArrayList<DataCommon> datas = new ArrayList();
+        ArrayList<DataCommon> datas = new ArrayList<>();
 
         for (String db : mongo.getDatabaseNames()) {
             DB mongoDb = mongo.getDB(db);
@@ -182,7 +182,7 @@ public class Database extends StoreComponent {
                     DBCursor cur = collection.find();
 
                     while (cur.hasNext()) {
-                        DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, cur.next());
+                        DataCommon dataCommon = morphia.fromDBObject(cur.next());
                         dataCommon.gs_manager = mongoDb.getName();
                         dataCommon.colection = collection.getName();
                         datas.add(dataCommon);
@@ -198,7 +198,7 @@ public class Database extends StoreComponent {
         DBCursor cur = collection.find(query);
         List<DataCommon> all = new ArrayList<DataCommon>();
         
-        List<DBObject> dbObjects = new ArrayList();
+        List<DBObject> dbObjects = new ArrayList<>();
         
         while (cur.hasNext()) {
             dbObjects.add(cur.next());
@@ -216,7 +216,7 @@ public class Database extends StoreComponent {
             }
 
             try {
-                DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, dbObject);
+                DataCommon dataCommon = morphia.fromDBObject(dbObject);
                 if (dataCommon.deleted == null && !includeDeleted) {
                     dataCommon.colection = collection.getName();
                     dataCommon.gs_manager = collection.getDB().getName();
@@ -236,6 +236,7 @@ public class Database extends StoreComponent {
     private BasicDBObject createQuery() {
         BasicDBObject andQuery = new BasicDBObject();
         List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
+
         if(!includeDeleted) {
             obj.add(new BasicDBObject("deleted", null));
         }
@@ -269,15 +270,11 @@ public class Database extends StoreComponent {
     }
 
     public synchronized void delete(DataCommon data, Credentials credentials) throws ErrorException {
-        if (sandbox) {
+        if (data == null || sandbox || isDeepFreezed(data)) {
             return;
-        }
-
-        if (isDeepFreezed(data)) {
-            return;
-        }
+        }       
         
-        if (data != null && data.getClass().getAnnotation(PermenantlyDeleteData.class) != null) {
+        if (data.getClass().getAnnotation(PermenantlyDeleteData.class) != null) {
             permanentlyDeleteData(data.id, credentials.manangerName, data.storeId);
             return;
         }
@@ -304,7 +301,7 @@ public class Database extends StoreComponent {
         }
 
         try {
-            return morphia.fromDBObject(DataCommon.class, found);
+            return morphia.fromDBObject(found);
         } catch (Exception ex) {
             log.error("", ex);
         }
@@ -381,7 +378,7 @@ public class Database extends StoreComponent {
     public Stream<DataCommon> getAll(String dbName, String storeId) {
         DBCollection col = mongo.getDB(dbName).getCollection("col_" + storeId);
         return col.find().toArray().stream()
-                .map(o -> morphia.fromDBObject(DataCommon.class, o));
+                .map(o -> morphia.fromDBObject(o));
     }
 
     public void refreshDatabase(List<DataCommon> datas) {
@@ -438,7 +435,7 @@ public class Database extends StoreComponent {
                 .filter(name -> name.startsWith(simpleName))
                 .collect(Collectors.toList());
 
-        List<String> retValues = new ArrayList();
+        List<String> retValues = new ArrayList<>();
         for (String dbName : dbsToCheck) {
             DB db = mongo.getDB(dbName);
             if (db.collectionExists(collectionPrefix + storeId)) {
@@ -458,7 +455,7 @@ public class Database extends StoreComponent {
         try (DBCursor res = col.find(query)) {
             while (res.hasNext()) {
                 DBObject nx = res.next();
-                DataCommon data = morphia.fromDBObject(DataCommon.class, nx);
+                DataCommon data = morphia.fromDBObject(nx);
                 retObjects.add(data);
             }
         }
@@ -474,7 +471,7 @@ public class Database extends StoreComponent {
         try (DBCursor res = col.find(query).sort(orderBy).limit(limit)) {
             while (res.hasNext()) {
                 DBObject nx = res.next();
-                DataCommon data = morphia.fromDBObject(DataCommon.class, nx);
+                DataCommon data = morphia.fromDBObject(nx);
                 retObjects.add(data);
             }
         }
@@ -575,7 +572,7 @@ public class Database extends StoreComponent {
             DBObject dbObject = cursor.next();
 
             try {
-                DataCommon dataCommon = morphia.fromDBObject(DataCommon.class, dbObject);
+                DataCommon dataCommon = morphia.fromDBObject(dbObject);
                 boolean add = dataCommon.deleted == null;
                 if(incDeleted) {
                     add = true;
@@ -594,7 +591,7 @@ public class Database extends StoreComponent {
     }
 
     public DataCommon convert(DBObject next) {
-        return morphia.fromDBObject(DataCommon.class, next);
+        return morphia.fromDBObject(next);
     }
 }
 

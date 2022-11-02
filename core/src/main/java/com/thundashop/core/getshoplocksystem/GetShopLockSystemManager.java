@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.mongodb.morphia.mapping.MappingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.TaskExecutor;
@@ -34,15 +33,10 @@ import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.storemanager.StoreManager;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
 /**
  *
  * @author ktonder
  */
-@Slf4j
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Component
 @GetShopSession
 public class GetShopLockSystemManager extends ManagerBase implements IGetShopLockSystemManager {
@@ -513,21 +507,10 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
 
     @Override
     public void saveObject(DataCommon data) throws ErrorException {
-        try{
-            if (data instanceof LockGroup) {
-                syncGroup((LockGroup)data, true);
-            }
-            super.saveObject(data);
+        if (data instanceof LockGroup) {
+            syncGroup((LockGroup)data, true);
         }
-        catch(MappingException ex){
-            log.error("Morphia mapping exception occured. Entity id {}, className {}. Original exception {}", data.id, data.className, ex);     
-            if(data instanceof LockServerBase){
-                log.error("Failed to save data: {}", data.toString());
-            }       
-        }
-        catch(Exception ex){
-            log.error("Failed to save data. Entity id {}, className {}. Original exception: {}", data.id, data.className, ex);
-        }
+        super.saveObject(data);
     }
     
     @Override

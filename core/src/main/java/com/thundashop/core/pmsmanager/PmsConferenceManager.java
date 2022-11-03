@@ -564,7 +564,7 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
         
         return conferences.values()
                 .stream()
-                .filter(o -> o.meetingTitle.toLowerCase().contains(searchWord))
+                .filter(o -> o.meetingTitle.toLowerCase().contains(searchWord.trim().toLowerCase()))
                 .collect(Collectors.toList());
     }   
 

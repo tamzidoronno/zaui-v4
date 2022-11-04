@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import com.thundashop.core.common.ConferenceDiffLog;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.common.NullSafeConcurrentHashMap;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.dbbackupmanager.DBBackupManager;
 import com.thundashop.core.pos.PosConference;
@@ -61,10 +63,10 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
     @Autowired
     private PmsManager pmsManager;
     
-    HashMap<String, PmsConferenceItem> items = new HashMap<>();
-    HashMap<String, PmsConference> conferences = new HashMap<>();
-    HashMap<String, PmsConferenceEvent> conferenceEvents = new HashMap<>();
-    HashMap<String, PmsConferenceEventEntry> conferenceEventEntries = new HashMap<>();
+    Map<String, PmsConferenceItem> items = new NullSafeConcurrentHashMap<>();
+    Map<String, PmsConference> conferences = new NullSafeConcurrentHashMap<>();
+    Map<String, PmsConferenceEvent> conferenceEvents = new NullSafeConcurrentHashMap<>();
+    Map<String, PmsConferenceEventEntry> conferenceEventEntries = new NullSafeConcurrentHashMap<>();
 
     
     public List<PmsConferenceEventEntry> getAllEventEntries() {
@@ -565,6 +567,11 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
         return conferences.values()
                 .stream()
                 .filter(o -> o.meetingTitle.toLowerCase().contains(searchWord.trim().toLowerCase()))
+                .filter(o -> {
+                    // filter out conferences that does not have anything to pay
+                    PosConference conf = posManager.getPosConference(o.id);
+                    return posManager.getTab(conf.tabId).cartItems.isEmpty();
+                })
                 .collect(Collectors.toList());
     }   
 
@@ -627,11 +634,13 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
         }
         
         PosConference posConference = posManager.getPosConference(confernceId);
-        
+
         if (posConference == null) {
-            posManager.updatePosConference(posConference.id);
-            posConference = posManager.getPosConference(posConference.id);
+            return;   
         }
+        
+        posManager.updatePosConference(posConference.id);
+        posConference = posManager.getPosConference(posConference.id);
         
         final String tabId = posConference.tabId;
         

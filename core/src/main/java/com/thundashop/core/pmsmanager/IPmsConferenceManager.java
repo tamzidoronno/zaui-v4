@@ -11,6 +11,7 @@ import java.util.List;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.ConferenceDiffLog;
+import com.thundashop.core.common.ForceAsync;
 import com.thundashop.core.common.GetShopApi;
 
 /**
@@ -120,6 +121,7 @@ public interface IPmsConferenceManager {
     public CartItem getCartItem(String conferenceId, String cartItemId);
     
     @Administrator
+    @ForceAsync
     public Double getTotalPriceForCartItems(String conferenceId, String eventId);
 
     @Administrator

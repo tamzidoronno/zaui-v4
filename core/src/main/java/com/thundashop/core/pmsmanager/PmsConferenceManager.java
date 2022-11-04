@@ -636,11 +636,9 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
         PosConference posConference = posManager.getPosConference(confernceId);
 
         if (posConference == null) {
-            return;   
+            log.info("Failed to add cart items to conference. No posconference found with id {}", confernceId);
+            return;
         }
-        
-        posManager.updatePosConference(posConference.id);
-        posConference = posManager.getPosConference(posConference.id);
         
         final String tabId = posConference.tabId;
         

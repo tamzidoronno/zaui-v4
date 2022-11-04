@@ -570,7 +570,7 @@ public class PmsConferenceManager extends ManagerBase implements IPmsConferenceM
                 .filter(o -> {
                     // filter out conferences that does not have anything to pay
                     PosConference conf = posManager.getPosConference(o.id);
-                    return posManager.getTab(conf.tabId).cartItems.isEmpty();
+                    return !posManager.getTab(conf.tabId).cartItems.isEmpty();
                 })
                 .collect(Collectors.toList());
     }   

@@ -960,7 +960,6 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     private RatePlan createNewRatePlan(int numberOfGuests, String name, String start, String end) {
         RatePlan ratePlan = new RatePlan();
         ratePlan.setRatePlanCode(makeAndGetRatePlanCode(numberOfGuests, name));
-        ratePlan.setRestriction("");
         ratePlan.setName("Rate Plan - " + name + " - " + numberOfGuests);
         ratePlan.setDescription("Rate Plan for " + numberOfGuests + " guests");
         String about = "Rate Plan " + numberOfGuests + " is mainly for " + numberOfGuests + " guests." +

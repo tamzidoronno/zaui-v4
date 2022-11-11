@@ -5,6 +5,9 @@
  */
 package com.thundashop.core.pmsbookingprocess;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -164,14 +167,14 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             return new StartBookingResult();
         }
         PmsBooking booking = pmsManager.startBooking();
-        if (arg.language != null && !arg.language.isEmpty()) {
+        if (isNotBlank(arg.language)) {
             setSessionLanguage(arg.language);
         }
 
-        if (booking.language == null || booking.language.isEmpty()) {
+        if (isBlank(booking.language)) {
             booking.language = getSession().language;
         }
-        if (arg.discountCode != null && !arg.discountCode.isEmpty()) {
+        if (isNotBlank(arg.discountCode)) {
             User discountUser = userManager.getUserByReference(arg.discountCode);
             if (discountUser != null) {
                 booking.userId = discountUser.id;

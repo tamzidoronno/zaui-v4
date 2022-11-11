@@ -112,5 +112,6 @@ public interface IWubookManager {
     
     @Administrator
     public String updatePricesBetweenDates(Date now, Date end) throws Exception;
-    
+    boolean isRestrictedForOta(String bookingItemTypeId, Date start, Date end);
+
 }

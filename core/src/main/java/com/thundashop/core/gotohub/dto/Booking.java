@@ -2,8 +2,10 @@
 package com.thundashop.core.gotohub.dto;
 
 import java.util.List;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
 import lombok.Data;
 
 @Data
@@ -16,13 +18,7 @@ public class Booking {
     private String language;
     @SerializedName("currency")
     @Expose
-    private String currency;
-    @SerializedName("checkInDate")
-    @Expose
-    private String checkInDate;
-    @SerializedName("checkOutDate")
-    @Expose
-    private String checkOutDate;
+    private String currency;    
     @SerializedName("hotelCode")
     @Expose
     private String hotelCode;
@@ -35,5 +31,4 @@ public class Booking {
     @SerializedName("rooms")
     @Expose
     private List<Room> rooms = null;
-
 }

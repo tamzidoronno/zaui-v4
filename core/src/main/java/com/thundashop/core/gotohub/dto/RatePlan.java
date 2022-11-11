@@ -28,10 +28,7 @@ public class RatePlan implements Serializable {
     @SerializedName("meal_included")
     @Expose
     private boolean mealIncluded;
-
-    @SerializedName("restriction")
-    @Expose
-    private String restriction;
+   
 
     @SerializedName("effective_date")
     @Expose

@@ -1430,6 +1430,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             for (WubookRoomData rdata : wubookdata.values()) {
                 if (rdata.bookingEngineTypeId.equals(type.id)) {
                     found = true;
+                    break;
                 }
             }
 
@@ -1748,6 +1749,10 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         return false;
     }
 
+    @Override
+    public  boolean isRestrictedForOta(String bookingItemTypeId, Date start, Date end) {
+        return isRestricted(bookingItemTypeId, start, end);
+    }
     private boolean checkNonRefundable(Hashtable table) {
         try {
             Gson gson = new Gson();

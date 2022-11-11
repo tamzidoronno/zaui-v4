@@ -1,12 +1,11 @@
 package com.thundashop.core.gotohub;
 
-import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.gotohub.dto.RatePlan;
-import lombok.Data;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import com.thundashop.core.gotohub.dto.RatePlan;
+
+import lombok.Data;
 
 @Data
 public class GoToRoomData {

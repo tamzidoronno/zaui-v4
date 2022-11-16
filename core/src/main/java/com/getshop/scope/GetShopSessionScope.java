@@ -233,6 +233,5 @@ public class GetShopSessionScope implements Scope {
         this.threadSessionBeanNames.put(threadId2, this.threadSessionBeanNames.get(threadId1));
         this.threadSessions.put(threadId2, this.threadSessions.get(threadId1));
         this.originalSessionBeanName.put(threadId2, this.originalSessionBeanName.get(threadId1));
-        System.out.println("Thread sharing has been done between" + threadId1 + " and " + threadId2);
     }
 }

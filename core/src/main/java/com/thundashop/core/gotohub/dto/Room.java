@@ -5,11 +5,17 @@ import java.util.List;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
 import lombok.Data;
 
 @Data
 public class Room {
-
+    @SerializedName("checkInDate")
+    @Expose
+    private String checkInDate;
+    @SerializedName("checkOutDate")
+    @Expose
+    private String checkOutDate;
     @SerializedName("roomCode")
     @Expose
     private String roomCode;

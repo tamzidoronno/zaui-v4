@@ -5,6 +5,28 @@
  */
 package com.thundashop.core.pos;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionScope;
 import com.thundashop.core.applications.StoreApplicationPool;
@@ -13,7 +35,12 @@ import com.thundashop.core.cartmanager.CartManager;
 import com.thundashop.core.cartmanager.data.Cart;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.central.GetShopCentral;
-import com.thundashop.core.common.*;
+import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.FilterOptions;
+import com.thundashop.core.common.FilteredData;
+import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.common.NullSafeConcurrentHashMap;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshopaccounting.DayIncome;
 import com.thundashop.core.getshopaccounting.GetShopAccountingManager;
@@ -24,28 +51,33 @@ import com.thundashop.core.gsd.KitchenPrintMessage;
 import com.thundashop.core.gsd.RoomReceipt;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
-import com.thundashop.core.ordermanager.data.*;
+import com.thundashop.core.ordermanager.data.CashPointTag;
+import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.ordermanager.data.OrderFilter;
+import com.thundashop.core.ordermanager.data.OrderResult;
+import com.thundashop.core.ordermanager.data.OrderTag;
+import com.thundashop.core.ordermanager.data.OrderTransaction;
 import com.thundashop.core.paymentmanager.PaymentManager;
 import com.thundashop.core.paymentmanager.StorePaymentConfig;
 import com.thundashop.core.pdf.InvoiceManager;
-import com.thundashop.core.pmsmanager.*;
+import com.thundashop.core.pmsmanager.PmsBooking;
+import com.thundashop.core.pmsmanager.PmsBookingRooms;
+import com.thundashop.core.pmsmanager.PmsConference;
+import com.thundashop.core.pmsmanager.PmsConferenceEvent;
+import com.thundashop.core.pmsmanager.PmsConferenceFilter;
+import com.thundashop.core.pmsmanager.PmsConferenceManager;
+import com.thundashop.core.pmsmanager.PmsManager;
+import com.thundashop.core.pmsmanager.PmsOrderCreateRow;
+import com.thundashop.core.pmsmanager.PmsRoomPaymentSummary;
 import com.thundashop.core.productmanager.ProductManager;
-import com.thundashop.core.productmanager.data.*;
+import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.productmanager.data.ProductList;
+import com.thundashop.core.productmanager.data.ProductPriceOverride;
+import com.thundashop.core.productmanager.data.ProductPriceOverrideType;
+import com.thundashop.core.productmanager.data.TaxGroup;
 import com.thundashop.core.usermanager.data.Address;
-import static org.apache.commons.lang3.StringUtils.*;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 
 /**
@@ -55,12 +87,12 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 public class PosManager extends ManagerBase implements IPosManager {
-    public HashMap<String, PosTab> tabs = new HashMap<>();
+    public Map<String, PosTab> tabs = new NullSafeConcurrentHashMap<>();
     public HashMap<String, ZReport> zReports = new HashMap<>();
     public HashMap<String, CashPoint> cashPoints = new HashMap<>();
     public HashMap<String, PosView> views = new HashMap<>();
     public HashMap<String, PosTable> tables = new HashMap<>();
-    public HashMap<String, PosConference> conferences = new HashMap<>();
+    public Map<String, PosConference> conferences = new NullSafeConcurrentHashMap<>();
 
     private PosConferenceCache posConferenceCache = null;
 
@@ -331,7 +363,12 @@ public class PosManager extends ManagerBase implements IPosManager {
     public void finishTabAndOrder(String tabId, Order order, String kitchenDeviceId, String cashPointDeviceId) throws ErrorException {
         PosTab tab = getTab(tabId);
 
-        if (tab != null && isNotEmpty(kitchenDeviceId)) {
+        if(tab == null){
+            log.info("No postab found with id {}", tabId);
+            return;
+        }
+
+        if (isNotEmpty(kitchenDeviceId)) {
             sendToKitchenInternal(kitchenDeviceId, tab, order.cart.getItems());
         }
 
@@ -1231,9 +1268,11 @@ public class PosManager extends ManagerBase implements IPosManager {
         List<PmsBookingRooms> roomsNeedToCreateOrdersFor = getRoomsNeedToCreateOrdersFor();
         List<String> retList = new ArrayList<>();
 
-        if (roomsNeedToCreateOrdersFor!=null && !roomsNeedToCreateOrdersFor.isEmpty()) {
-            checkIfAccrudePaymentIsActivated();
+        if(roomsNeedToCreateOrdersFor == null || roomsNeedToCreateOrdersFor.isEmpty()){
+            return retList;
         }
+
+        checkIfAccrudePaymentIsActivated();
 
         roomsNeedToCreateOrdersFor.stream().forEach(o -> {
             String orderId = createOrder(o);

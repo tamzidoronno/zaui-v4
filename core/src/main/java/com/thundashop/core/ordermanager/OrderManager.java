@@ -3793,8 +3793,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             dayEntries = getPaymentRecords(paymentId, startDate, endDate);
         } else {
             dayEntries = getDayIncomes(startDate, endDate);;
-        }
-        
+        } 
+
         Map<String, List<DayEntry>> groupedEntries = dayEntries.stream()
                 .flatMap(dayEntry -> dayEntry.dayEntries.stream())
                 .filter(dayEntry -> dayEntry.accountingNumber != null)
@@ -3817,8 +3817,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             
             if (orderWithUnsettledAmount.amount < 1 && orderWithUnsettledAmount.amount > -1) {
                 continue;
+            }            
+            boolean stayInFuture = false;
+            try{
+                stayInFuture = orderWithUnsettledAmount.order.cart.getItems().stream().anyMatch(i->i.endDate != null && i.endDate.after(endDate));
             }
-            boolean stayInFuture = orderWithUnsettledAmount.order.cart.getItems().stream().filter(i->i.endDate.after(endDate)).collect(Collectors.toList()).size()>0;
+            catch(Exception ex){
+                logger.error("Exception occured for order: {}, Actual Exception: {} ", orderId, ex);
+            }
             boolean isPrepaidAccount =  paymentManager.getStorePaymentConfig().values().stream().filter(o->o.offsetAccountingId_prepayment.equals(accountNumber)).collect(Collectors.toList()).size()>0;
             if ((orderWithUnsettledAmount.order.markedPaidDate == null || stayInFuture && isPrepaidAccount) && (orderWithUnsettledAmount.order.restAmount > 0.5 ||  orderWithUnsettledAmount.order.restAmount < -0.5 ) ){
                 retList.add(orderWithUnsettledAmount);

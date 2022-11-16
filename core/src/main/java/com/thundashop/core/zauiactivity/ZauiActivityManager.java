@@ -1,12 +1,12 @@
-package com.thundashop.core.activity;
+package com.thundashop.core.zauiactivity;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
-import com.google.gson.JsonObject;
-import com.thundashop.core.activity.dto.*;
-import com.thundashop.core.activity.service.OctoApiService;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.services.octoapiservice.OctoApiService;
+import com.thundashop.core.zauiactivity.dto.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +17,9 @@ import java.util.List;
 @Service
 @GetShopSession
 public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZauiActivityManager {
-
     @Autowired
     OctoApiService octoApiService;
+
     ActivityConfig activityConfig = new ActivityConfig();
 
     public void dataFromDatabase(DataRetreived data) {
@@ -43,7 +43,7 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
 
     @Override
     public String getSupplierName() {
-        if(activityConfig.getSupplierId() == null) {
+        if (activityConfig.getSupplierId() == null) {
             return "";
         }
         return octoApiService.getSupplierName(activityConfig.getSupplierId());
@@ -51,7 +51,7 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
 
     @Override
     public List<OctoProduct> getActivities() throws IOException {
-        if(activityConfig.getSupplierId() == null) {
+        if (activityConfig.getSupplierId() == null) {
             return new ArrayList<>();
         }
         return octoApiService.getProducts(activityConfig.getSupplierId());
@@ -59,7 +59,7 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
 
     @Override
     public List<Availability> getAvailability(AvailabilityRequest availabilityRequest) {
-        if(activityConfig.getSupplierId() == null) {
+        if (activityConfig.getSupplierId() == null) {
             return new ArrayList<>();
         }
         return octoApiService.getAvailability(activityConfig.getSupplierId(), availabilityRequest);
@@ -67,7 +67,7 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
 
     @Override
     public List<BookingReserve> reserveBooking(BookingReserveRequest bookingReserveRequest) {
-        if(activityConfig.getSupplierId() == null) {
+        if (activityConfig.getSupplierId() == null) {
             return new ArrayList<>();
         }
         return octoApiService.reserveBooking(activityConfig.getSupplierId(), bookingReserveRequest);
@@ -75,7 +75,7 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
 
     @Override
     public List<BookingConfirm> confirmBooking(String bookingId, BookingConfirmRequest bookingConfirmRequest) {
-        if(activityConfig.getSupplierId() == null) {
+        if (activityConfig.getSupplierId() == null) {
             return new ArrayList<>();
         }
         return octoApiService.confirmBooking(activityConfig.getSupplierId(), bookingId, bookingConfirmRequest);
@@ -83,7 +83,7 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
 
     @Override
     public List<BookingConfirm> cancelBooking(String bookingId) {
-        if(activityConfig.getSupplierId() == null) {
+        if (activityConfig.getSupplierId() == null) {
             return new ArrayList<>();
         }
         return octoApiService.cancelBooking(activityConfig.getSupplierId(), bookingId);

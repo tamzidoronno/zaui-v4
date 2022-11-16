@@ -1,8 +1,8 @@
-package com.thundashop.core.activity.dto;
+package com.thundashop.core.zauiactivity.dto;
 
 import java.util.List;
 
-public class BookingConfirm {
+public class BookingReserve {
     private String id;
     private String uuid;
     private String supplierReference;
@@ -21,15 +21,33 @@ public class BookingConfirm {
     private Availability availability;
     private Contact contact;
     private List<String> deliveryMethods = null;
-    private List<Voucher> voucher = null;
+    private List<String> voucher = null;
     private List<UnitItem> unitItems = null;
     private Cancellation cancellation;
-    private Pricing pricing;
+}
+class Contact {
+    private String fullName;
+    private String firstName;
+    private String lastName;
+    private String emailAddress;
+    private String phoneNumber;
+    private List<Object> locales = null;
+    private String country;
+    private String notes;
+}
+class DeliveryOption {
+    private String deliveryFormat;
+    private String deliveryValue;
 }
 
-class Voucher {
+class Ticket {
     private String redemptionMethod;
-    private List<DeliveryOption> deliveryOptions = null;
     private String utcDeliveredAt;
     private String utcRedeemedAt;
+    private List<DeliveryOption> deliveryOptions = null;
 }
+class Cancellation {
+    private Boolean cancelled;
+    private String utcCancelledAt;
+}
+

@@ -1,4 +1,4 @@
-package com.thundashop.core.activity.dto;
+package com.thundashop.core.zauiactivity.dto;
 
 public class UnitItem {
     private String uuid;

@@ -1,8 +1,8 @@
-package com.thundashop.core.activity;
+package com.thundashop.core.zauiactivity;
 
 import com.getshop.scope.GetShopSession;
-import com.thundashop.core.activity.dto.*;
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.zauiactivity.dto.*;
 
 import java.io.IOException;
 import java.util.List;

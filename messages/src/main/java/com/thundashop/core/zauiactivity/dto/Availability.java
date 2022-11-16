@@ -1,4 +1,4 @@
-package com.thundashop.core.activity.dto;
+package com.thundashop.core.zauiactivity.dto;
 
 import java.util.List;
 
@@ -13,6 +13,7 @@ public class Availability {
     private List<UnitPricing> unitPricing = null;
     private Pricing pricing;
 }
+
 class Pricing {
     private String currency;
     private Integer currencyPrecision;
@@ -20,6 +21,7 @@ class Pricing {
     private Integer tax;
     private Integer total;
 }
+
 class UnitPricing {
     private String unitId;
     private String currency;

@@ -13,7 +13,6 @@ dependencies {
     compile project(":repository")
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
-    implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.9.3'
 }
 
 test {

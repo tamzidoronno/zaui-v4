@@ -1,4 +1,4 @@
-package com.thundashop.core.zauiactivity.constant;
+package com.thundashop.zauiactivity.constant;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;

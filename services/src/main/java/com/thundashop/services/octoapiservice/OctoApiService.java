@@ -5,10 +5,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.thundashop.core.webmanager.ZauiHttpRequest;
 import com.thundashop.core.webmanager.ZauiHttpResponse;
-import com.thundashop.core.zauiactivity.constant.ZauiConstants;
-import com.thundashop.core.zauiactivity.dto.*;
+import com.thundashop.zauiactivity.constant.ZauiConstants;
 import com.thundashop.services.core.httpservice.ZauiHttpService;
 
+import com.thundashop.zauiactivity.dto.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

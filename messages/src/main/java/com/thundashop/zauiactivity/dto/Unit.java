@@ -1,4 +1,4 @@
-package com.thundashop.core.zauiactivity.dto;
+package com.thundashop.zauiactivity.dto;
 
 public class Unit {
     private String id;

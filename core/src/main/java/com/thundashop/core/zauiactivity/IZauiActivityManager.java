@@ -5,14 +5,14 @@ import java.util.List;
 
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.GetShopApi;
-import com.thundashop.core.zauiactivity.dto.ActivityConfig;
-import com.thundashop.core.zauiactivity.dto.Availability;
-import com.thundashop.core.zauiactivity.dto.AvailabilityRequest;
-import com.thundashop.core.zauiactivity.dto.BookingConfirm;
-import com.thundashop.core.zauiactivity.dto.BookingConfirmRequest;
-import com.thundashop.core.zauiactivity.dto.BookingReserve;
-import com.thundashop.core.zauiactivity.dto.BookingReserveRequest;
-import com.thundashop.core.zauiactivity.dto.OctoProduct;
+import com.thundashop.zauiactivity.dto.ActivityConfig;
+import com.thundashop.zauiactivity.dto.Availability;
+import com.thundashop.zauiactivity.dto.AvailabilityRequest;
+import com.thundashop.zauiactivity.dto.BookingConfirm;
+import com.thundashop.zauiactivity.dto.BookingConfirmRequest;
+import com.thundashop.zauiactivity.dto.BookingReserve;
+import com.thundashop.zauiactivity.dto.BookingReserveRequest;
+import com.thundashop.zauiactivity.dto.OctoProduct;
 
 /**
  * The ZauiActivityManager is responsible for handling all zaui do

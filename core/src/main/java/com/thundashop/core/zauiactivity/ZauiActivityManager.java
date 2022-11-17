@@ -1,20 +1,27 @@
 package com.thundashop.core.zauiactivity;
 
-import com.getshop.scope.GetShopSession;
-import com.getshop.scope.GetShopSessionBeanNamed;
-import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.databasemanager.data.DataRetreived;
-import com.thundashop.services.octoapiservice.OctoApiService;
-import com.thundashop.core.zauiactivity.dto.*;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.getshop.scope.GetShopSession;
+import com.getshop.scope.GetShopSessionBeanNamed;
+import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.zauiactivity.dto.ActivityConfig;
+import com.thundashop.core.zauiactivity.dto.Availability;
+import com.thundashop.core.zauiactivity.dto.AvailabilityRequest;
+import com.thundashop.core.zauiactivity.dto.BookingConfirm;
+import com.thundashop.core.zauiactivity.dto.BookingConfirmRequest;
+import com.thundashop.core.zauiactivity.dto.BookingReserve;
+import com.thundashop.core.zauiactivity.dto.BookingReserveRequest;
+import com.thundashop.core.zauiactivity.dto.OctoProduct;
+import com.thundashop.services.octoapiservice.OctoApiService;
+
+@Component
 @GetShopSession
 public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZauiActivityManager {
     @Autowired

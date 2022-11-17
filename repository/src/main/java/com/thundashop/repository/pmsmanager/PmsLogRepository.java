@@ -46,7 +46,7 @@ public class PmsLogRepository extends Repository<PmsLog> implements IPmsLogRepos
         sort.put("rowCreatedDate", -1);
         int limit = filter.includeAll ? Integer.MAX_VALUE : 100;
 
-        return getDatabase().query(sessionInfo.getManagerName(), getCollectionName(sessionInfo), getEntityClass(), query, sort, limit);
+        return getDatabase().query(sessionInfo.getManagerName(), getCollectionName(sessionInfo), query, sort, limit);
     }
 
     @Override

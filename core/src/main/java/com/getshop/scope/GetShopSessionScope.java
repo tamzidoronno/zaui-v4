@@ -26,9 +26,7 @@ import java.util.stream.Collectors;
  */
 @Component
 public class GetShopSessionScope implements Scope {
-
     private static final Logger log = LoggerFactory.getLogger(GetShopSessionScope.class);
-
     private StorePool storePool = null;
     private final Map<Long, String> threadStoreIds = new ConcurrentHashMap<>();
     private final Map<Long, String> threadSessionBeanNames = new ConcurrentHashMap<>();
@@ -59,7 +57,6 @@ public class GetShopSessionScope implements Scope {
     }
     
     public Object get(String name, ObjectFactory<?> objectFactory) {
-       
         long threadId = Thread.currentThread().getId();
         String storeId = threadStoreIds.get(threadId);
         String sessionBeanName = threadSessionBeanNames.get(threadId);
@@ -119,6 +116,10 @@ public class GetShopSessionScope implements Scope {
                     ManagerBase managerBase = (ManagerBase) object;
                     managerBase.setStoreId(storeId);
                     managerBase.initialize();
+
+                    if (threadSessions.get(threadId) != null) {
+                        managerBase.setSession(threadSessions.get(threadId));
+                    }
                 }
                 
                 if (object instanceof StoreComponent) {
@@ -137,7 +138,6 @@ public class GetShopSessionScope implements Scope {
         }
 
         return objectMap.get(nameWithStoreId);
-
     }
     
     public List<GetShopSessionBeanNamed> getSessionNamedObjects() {
@@ -148,6 +148,10 @@ public class GetShopSessionScope implements Scope {
                 .map(i -> (GetShopSessionBeanNamed) i)
                 .filter(o -> o.getStoreId().equals(storeId))
                 .collect(Collectors.toList());
+    }
+
+    public Session getSessionFromThreadSessions(long threadId){
+        return threadSessions.get(threadId);
     }
 
     public Object remove(String name) {
@@ -222,5 +226,12 @@ public class GetShopSessionScope implements Scope {
         toRemove.forEach(threadSessions::remove);
 
         log.debug("Thread sessions after removal : `{}`", threadSessions.size());
+    }
+
+    public void shareThreadContext(long threadId1, long threadId2){
+        this.threadStoreIds.put(threadId2, this.threadStoreIds.get(threadId1));
+        this.threadSessionBeanNames.put(threadId2, this.threadSessionBeanNames.get(threadId1));
+        this.threadSessions.put(threadId2, this.threadSessions.get(threadId1));
+        this.originalSessionBeanName.put(threadId2, this.originalSessionBeanName.get(threadId1));
     }
 }

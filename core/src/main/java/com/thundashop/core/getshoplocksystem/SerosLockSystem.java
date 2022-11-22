@@ -8,6 +8,8 @@ package com.thundashop.core.getshoplocksystem;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.thundashop.core.common.AppContext;
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
@@ -23,7 +25,9 @@ import java.util.List;
  *
  * @author ktonder
  */
+@Slf4j
 public class SerosLockSystem extends LockServerBase implements LockServer {
+
 
     private HashMap<String, SerosLock> locks = new HashMap();
 
@@ -68,7 +72,7 @@ public class SerosLockSystem extends LockServerBase implements LockServer {
         internalSyncGroup(group, masterUserSlot, slot);
     }
 
-    
+
     @Override
     public List<Lock> getLocks() {
         return new ArrayList(locks.values());
@@ -137,12 +141,12 @@ public class SerosLockSystem extends LockServerBase implements LockServer {
     @Override
     public void addTransactionHistory(String tokenId, String lockId, Date accessTime, int userSlot) {
     }
-    
-    
+
+
     void addTransactionHistorySeros(String tokenId, String lockId, String keyId, Date accessTime, int userSlot) {
         if (checkToken(tokenId))
             return;
-        
+
         //LockId == serosKeyId
         SerosApiKey apiKey = getSerosApiKeyById(keyId);
         if (apiKey != null) {
@@ -182,13 +186,13 @@ public class SerosLockSystem extends LockServerBase implements LockServer {
 
     public String getHtml(String action, String extras) {
         String systemToken = "0688a225-25a2-4f92-b291-a135ef005baf";
-        
+
         String url = "https://" + hostname + "/scripts/api.php?action=" + action + "&systemtoken=" + systemToken + "&customertoken=" + token;
         if (!extras.isEmpty()) {
             url += extras;
         }
-        
-        
+
+
 
         try {
             URL urlObj = new URL(url);
@@ -236,19 +240,23 @@ public class SerosLockSystem extends LockServerBase implements LockServer {
 
         if (apiKey == null) {
             createKey(group, slot);
-        } 
-        
+        }
+
         apiKey = getSerosLockKey(group.id, slot);
         if (apiKey == null || apiKey.lastReceivedSerosKey == null) {
             return;
         }
-        
+
         changeCode(masterUserSlot, apiKey, group, slot);
         addLocksMissingInKey(group, apiKey, slot);
         removeLocksThatHasBeenRemovedFromGroup(apiKey, group, slot);
     }
 
     private void removeLocksThatHasBeenRemovedFromGroup(SerosApiKey apiKey, LockGroup group, Integer slot) {
+        if(apiKey.lastReceivedSerosKey.lockIds == null) {
+            log.warn("Lock ids is null during remove: {} for ", apiKey.serosKeyId);
+            return;
+        }
         for (String lockId : apiKey.lastReceivedSerosKey.lockIds) {
             if (!locksInGroup.get(group.id).contains(lockId)) {
                 doRequest(group.id, slot, "removeLockFromKey", "&keyId="+apiKey.lastReceivedSerosKey.id+"&lockId="+lockId);
@@ -257,11 +265,16 @@ public class SerosLockSystem extends LockServerBase implements LockServer {
     }
 
     private void addLocksMissingInKey(LockGroup group, SerosApiKey apiKey, Integer slot) {
-     
+
         if (!locksInGroup.containsKey(group.id)) {
             return;
         }
-        
+
+        if(apiKey.lastReceivedSerosKey.lockIds == null) {
+            log.warn("Lock ids is null during add: {} for ", apiKey.serosKeyId);
+            return;
+        }
+
         for (String lockIdInGroup : locksInGroup.get(group.id)) {
             if (!apiKey.lastReceivedSerosKey.lockIds.contains(lockIdInGroup)) {
                 doRequest(group.id, slot, "addLockToKey", "&keyId="+apiKey.lastReceivedSerosKey.id+"&lockId="+lockIdInGroup);
@@ -293,7 +306,7 @@ public class SerosLockSystem extends LockServerBase implements LockServer {
         if (apiKey == null) {
             return;
         }
-        
+
         doRequest(group.id, slot, "deleteKey", "&keyId="+apiKey.serosKeyId);
         serosKeys.values().removeIf(o -> o.equals(apiKey));
     }
@@ -307,30 +320,30 @@ public class SerosLockSystem extends LockServerBase implements LockServer {
     }
 
     private void doRequest(String lockGroupId, Integer slot, String action, String extra) {
-        
+
         if (AppContext.devMode) {
             System.out.println("Request towards seros lock system has been disabled in dev mode");
             return;
         }
-        
+
         String res = getHtml(action, extra);
-        
+
         Gson gson = new Gson();
         SerosApiKeyResult result = gson.fromJson(res, SerosApiKeyResult.class);
-        
+
         SerosApiKey apiKey = getSerosLockKey(lockGroupId, slot);
         if (apiKey == null) {
             apiKey = new SerosApiKey();
             apiKey.getShopLockGroupId = lockGroupId;
             apiKey.getShopSlotNumber = slot;
         }
-        
+
         if (result != null) {
             apiKey.serosKeyId = result.id;
             apiKey.lastReceivedSerosKey = result;
             serosKeys.put(apiKey.lastReceivedSerosKey.id, apiKey);
-            save();    
-        }        
+            save();
+        }
     }
 
     private SerosApiKey getSerosApiKeyById(String lockId) {

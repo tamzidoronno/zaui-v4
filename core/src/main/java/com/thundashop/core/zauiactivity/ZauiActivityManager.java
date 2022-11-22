@@ -11,15 +11,15 @@ import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.data.DataRetreived;
-import com.thundashop.zauiactivity.dto.ActivityConfig;
-import com.thundashop.zauiactivity.dto.Availability;
-import com.thundashop.zauiactivity.dto.AvailabilityRequest;
+import com.thundashop.services.octoapiservice.OctoApiService;
 import com.thundashop.zauiactivity.dto.BookingConfirm;
 import com.thundashop.zauiactivity.dto.BookingConfirmRequest;
 import com.thundashop.zauiactivity.dto.BookingReserve;
 import com.thundashop.zauiactivity.dto.BookingReserveRequest;
 import com.thundashop.zauiactivity.dto.OctoProduct;
-import com.thundashop.services.octoapiservice.OctoApiService;
+import com.thundashop.zauiactivity.dto.OctoProductAvailability;
+import com.thundashop.zauiactivity.dto.OctoProductAvailabilityRequestDto;
+import com.thundashop.zauiactivity.dto.ZauiActivityConfig;
 
 @Component
 @GetShopSession
@@ -27,23 +27,23 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
     @Autowired
     OctoApiService octoApiService;
 
-    ActivityConfig activityConfig = new ActivityConfig();
+    ZauiActivityConfig activityConfig = new ZauiActivityConfig();
 
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataCommon : data.data) {
-            if (dataCommon instanceof ActivityConfig) {
-                activityConfig = (ActivityConfig) dataCommon;
+            if (dataCommon instanceof ZauiActivityConfig) {
+                activityConfig = (ZauiActivityConfig) dataCommon;
             }
         }
     }
 
     @Override
-    public ActivityConfig getActivityConfig() {
+    public ZauiActivityConfig getActivityConfig() {
         return activityConfig;
     }
 
     @Override
-    public void updateActivityConfig(ActivityConfig newActivityConfig) {
+    public void updateActivityConfig(ZauiActivityConfig newActivityConfig) {
         activityConfig.setActivityConfig(newActivityConfig);
         saveObject(activityConfig);
     }
@@ -65,7 +65,7 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
     }
 
     @Override
-    public List<Availability> getAvailability(AvailabilityRequest availabilityRequest) {
+    public List<OctoProductAvailability> getAvailability(OctoProductAvailabilityRequestDto availabilityRequest) {
         if (activityConfig.getSupplierId() == null) {
             return new ArrayList<>();
         }

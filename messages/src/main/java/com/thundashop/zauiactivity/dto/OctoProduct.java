@@ -1,9 +1,8 @@
 package com.thundashop.zauiactivity.dto;
 
-import com.thundashop.core.common.DataCommon;
-
-import java.io.Serializable;
 import java.util.List;
+
+import com.thundashop.core.common.DataCommon;
 
 public class OctoProduct extends DataCommon {
     private Integer id;

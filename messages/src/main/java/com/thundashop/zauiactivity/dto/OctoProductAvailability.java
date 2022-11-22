@@ -2,7 +2,7 @@ package com.thundashop.zauiactivity.dto;
 
 import java.util.List;
 
-public class Availability {
+public class OctoProductAvailability {
     private String id;
     private String localDateTimeStart;
     private String localDateTimeEnd;

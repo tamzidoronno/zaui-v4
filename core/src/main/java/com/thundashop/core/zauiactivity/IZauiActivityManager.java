@@ -5,14 +5,14 @@ import java.util.List;
 
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.GetShopApi;
-import com.thundashop.zauiactivity.dto.ActivityConfig;
-import com.thundashop.zauiactivity.dto.Availability;
-import com.thundashop.zauiactivity.dto.AvailabilityRequest;
 import com.thundashop.zauiactivity.dto.BookingConfirm;
 import com.thundashop.zauiactivity.dto.BookingConfirmRequest;
 import com.thundashop.zauiactivity.dto.BookingReserve;
 import com.thundashop.zauiactivity.dto.BookingReserveRequest;
 import com.thundashop.zauiactivity.dto.OctoProduct;
+import com.thundashop.zauiactivity.dto.OctoProductAvailability;
+import com.thundashop.zauiactivity.dto.OctoProductAvailabilityRequestDto;
+import com.thundashop.zauiactivity.dto.ZauiActivityConfig;
 
 /**
  * The ZauiActivityManager is responsible for handling all zaui do
@@ -21,13 +21,13 @@ import com.thundashop.zauiactivity.dto.OctoProduct;
 @GetShopApi
 @GetShopSession
 public interface IZauiActivityManager {
-    ActivityConfig getActivityConfig();
+    ZauiActivityConfig getActivityConfig();
 
-    void updateActivityConfig(ActivityConfig newActivityConfig);
+    void updateActivityConfig(ZauiActivityConfig newActivityConfig);
 
     List<OctoProduct> getActivities() throws IOException;
 
-    List<Availability> getAvailability(AvailabilityRequest availabilityRequest);
+    List<OctoProductAvailability> getAvailability(OctoProductAvailabilityRequestDto availabilityRequest);
 
     List<BookingReserve> reserveBooking(BookingReserveRequest bookingReserveRequest);
 

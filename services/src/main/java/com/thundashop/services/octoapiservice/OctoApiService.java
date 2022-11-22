@@ -1,24 +1,30 @@
 package com.thundashop.services.octoapiservice;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
-import com.thundashop.core.webmanager.ZauiHttpRequest;
-import com.thundashop.core.webmanager.ZauiHttpResponse;
-import com.thundashop.zauiactivity.constant.ZauiConstants;
-import com.thundashop.services.core.httpservice.ZauiHttpService;
-
-import com.thundashop.zauiactivity.dto.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+import com.thundashop.core.webmanager.ZauiHttpRequest;
+import com.thundashop.core.webmanager.ZauiHttpResponse;
+import com.thundashop.services.core.httpservice.ZauiHttpService;
+import com.thundashop.zauiactivity.constant.ZauiConstants;
+import com.thundashop.zauiactivity.dto.BookingConfirm;
+import com.thundashop.zauiactivity.dto.BookingConfirmRequest;
+import com.thundashop.zauiactivity.dto.BookingReserve;
+import com.thundashop.zauiactivity.dto.BookingReserveRequest;
+import com.thundashop.zauiactivity.dto.OctoProduct;
+import com.thundashop.zauiactivity.dto.OctoProductAvailability;
+import com.thundashop.zauiactivity.dto.OctoProductAvailabilityRequestDto;
 
 @Service
 public class OctoApiService implements IOctoApiService{
@@ -44,12 +50,12 @@ public class OctoApiService implements IOctoApiService{
         return new Gson().fromJson(result, listType);
     }
 
-    public List<Availability> getAvailability(Integer supplierId, AvailabilityRequest availabilityRequest) {
+    public List<OctoProductAvailability> getAvailability(Integer supplierId, OctoProductAvailabilityRequestDto availabilityRequest) {
         String url = ZauiConstants.OCTO_API_ENDPOINT +"/suppliers/"+supplierId+ "/availability";
         Map<String,String> headers = new HashMap<>();
         headers.put(ZauiConstants.OCTO_PRICING.getLeft(), ZauiConstants.OCTO_PRICING.getRight());
         String result = getHttpResponseBody(url,headers,"POST", availabilityRequest.toString());
-        Type listType = new TypeToken<List<Availability>>(){}.getType();
+        Type listType = new TypeToken<List<OctoProductAvailability>>(){}.getType();
         return new Gson().fromJson(result, listType);
     }
 

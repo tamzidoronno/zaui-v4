@@ -18,7 +18,7 @@ public class BookingConfirm {
     private String availabilityId;
     private String notes;
     private String optionId;
-    private Availability availability;
+    private OctoProductAvailability availability;
     private Contact contact;
     private List<String> deliveryMethods = null;
     private List<Voucher> voucher = null;

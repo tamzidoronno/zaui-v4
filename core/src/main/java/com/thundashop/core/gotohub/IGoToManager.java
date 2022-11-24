@@ -5,9 +5,9 @@ import java.util.Date;
 import com.thundashop.core.common.ForceAsync;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
-import com.thundashop.core.gotohub.dto.Booking;
 import com.thundashop.core.gotohub.dto.GoToApiResponse;
 import com.thundashop.core.gotohub.dto.GoToConfiguration;
+import com.thundashop.core.gotohub.dto.GotoBookingRequest;
 import com.thundashop.core.pmsmanager.PmsBookingRooms;
 
 /**
@@ -54,7 +54,7 @@ public interface IGoToManager {
      * @param booking data
      * @return GoToApiResponse
      */
-    public GoToApiResponse saveBooking(Booking booking);
+    public GoToApiResponse saveBooking(GotoBookingRequest booking);
 
     /**
      * Confirm Goto Booking

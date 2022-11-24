@@ -9,8 +9,7 @@ import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 
 @Data
-public class BookingResponse {
-
+public class GotoBookingResponse {
     @SerializedName("reservationId")
     @Expose
     private String reservationId;
@@ -22,7 +21,7 @@ public class BookingResponse {
     private String hotelCode;    
     @SerializedName("rooms")
     @Expose
-    private List<Room> rooms = null;
+    private List<GotoRoom> rooms = null;
     @SerializedName("ratePlans")
     @Expose
     private List<RatePlanCode> ratePlans = null;

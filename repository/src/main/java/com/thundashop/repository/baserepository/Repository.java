@@ -20,7 +20,6 @@ public abstract class Repository<T> implements IRepository<T> {
     private final Database database;
 
     protected abstract String getClassName();
-    protected abstract Class<T> getEntityClass();
 
     public Repository(Database database) {
         this.database = database;

@@ -46,9 +46,4 @@ public class PmsPricingRepository extends Repository<PmsPricing> implements IPms
     protected String getClassName() {
         return PmsPricing.class.getName();
     }
-
-    @Override
-    protected Class<PmsPricing> getEntityClass() {
-        return PmsPricing.class;
-    }
 }

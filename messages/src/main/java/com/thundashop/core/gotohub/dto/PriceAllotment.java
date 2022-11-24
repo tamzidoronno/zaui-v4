@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 public class PriceAllotment implements Serializable {
@@ -32,4 +33,7 @@ public class PriceAllotment implements Serializable {
     @SerializedName("restrictions")
     @Expose
     private Restriction restrictions;
+    @SerializedName("long_term_deals")
+    @Expose
+    private List<LongTermDeal> longTermDeals;
 }

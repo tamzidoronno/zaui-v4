@@ -39,9 +39,4 @@ public class PmsBookingRepository extends Repository<PmsBooking> implements IPms
         return PmsBooking.class.getName();
     }
 
-    @Override
-    protected Class<PmsBooking> getEntityClass() {
-        return PmsBooking.class;
-    }
-
 }

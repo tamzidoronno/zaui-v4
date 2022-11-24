@@ -55,7 +55,7 @@ public interface IPmsConferenceManager {
     public String createConference(String engine, Date date, String name);
 
     @Administrator
-    public PmsConference createConference(String engine, Date date, String name, int noOfGuest) throws Exception;
+    public PmsConference createConferenceForV5(String engine, Date date, String name, int noOfGuest) throws Exception;
 
     @Administrator
     public PmsBooking completeConference(String engine);

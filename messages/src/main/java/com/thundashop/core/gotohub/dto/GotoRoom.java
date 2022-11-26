@@ -31,4 +31,8 @@ public class GotoRoom {
     @SerializedName("children")
     @Expose
     private List<Integer> childrenAges = null;
+    @SerializedName("price")
+    @Expose
+    private GotoRoomPrice price = null;
+
 }

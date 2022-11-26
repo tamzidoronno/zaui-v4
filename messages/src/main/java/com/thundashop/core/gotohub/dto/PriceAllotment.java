@@ -1,11 +1,12 @@
 package com.thundashop.core.gotohub.dto;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-import lombok.Data;
-
 import java.io.Serializable;
 import java.util.List;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import lombok.Data;
 
 @Data
 public class PriceAllotment implements Serializable {
@@ -32,8 +33,7 @@ public class PriceAllotment implements Serializable {
     public double price;
     @SerializedName("restrictions")
     @Expose
-    private Restriction restrictions;
+    private GotoRoomRestriction restrictions;
     @SerializedName("long_term_deals")
-    @Expose
     private List<LongTermDeal> longTermDeals;
 }

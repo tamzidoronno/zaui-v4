@@ -24,10 +24,13 @@ public class GotoBookingRequest {
     private String hotelCode;
     @SerializedName("orderer")
     @Expose
-    private Orderer orderer;
+    private GotoBooker orderer;
     @SerializedName("comment")
     @Expose
     private String comment;
+    @SerializedName("total_price")
+    @Expose
+    private Double totalPrice;
     @SerializedName("rooms")
     @Expose
     private List<GotoRoom> rooms = null;

@@ -1,14 +1,18 @@
 package com.thundashop.core.gotohub;
 
+import static com.thundashop.core.gotohub.constant.GotoConstants.DAILY_PRICE_DATE_FORMATTER;
+import static com.thundashop.core.gotohub.constant.GotoConstants.cancellationDateFormatter;
+import static com.thundashop.core.gotohub.constant.GotoConstants.checkinOutDateFormatter;
+import static com.thundashop.core.gotohub.constant.GotoConstants.df;
+import static com.thundashop.core.gotohub.constant.GotoConstants.formatter;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.commons.lang3.StringUtils.substringAfterLast;
 import static org.apache.commons.lang3.StringUtils.substringBeforeLast;
 
-import java.text.SimpleDateFormat;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,17 +37,18 @@ import com.thundashop.core.gotohub.dto.Contact;
 import com.thundashop.core.gotohub.dto.GoToApiResponse;
 import com.thundashop.core.gotohub.dto.GoToConfiguration;
 import com.thundashop.core.gotohub.dto.GoToRoomData;
+import com.thundashop.core.gotohub.dto.GotoBooker;
 import com.thundashop.core.gotohub.dto.GotoBookingRequest;
 import com.thundashop.core.gotohub.dto.GotoBookingResponse;
 import com.thundashop.core.gotohub.dto.GotoException;
 import com.thundashop.core.gotohub.dto.GotoRoom;
+import com.thundashop.core.gotohub.dto.GotoRoomDailyPrice;
+import com.thundashop.core.gotohub.dto.GotoRoomRestriction;
 import com.thundashop.core.gotohub.dto.Hotel;
-import com.thundashop.core.gotohub.dto.Orderer;
 import com.thundashop.core.gotohub.dto.PriceAllotment;
 import com.thundashop.core.gotohub.dto.PriceTotal;
 import com.thundashop.core.gotohub.dto.RatePlan;
 import com.thundashop.core.gotohub.dto.RatePlanCode;
-import com.thundashop.core.gotohub.dto.Restriction;
 import com.thundashop.core.gotohub.dto.RoomType;
 import com.thundashop.core.gotohub.dto.RoomTypeCode;
 import com.thundashop.core.messagemanager.MessageManager;
@@ -108,14 +113,10 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
     @Autowired
     UserManager userManager;
-    
+
     @Autowired
     WubookManager wubookManager;
 
-    private static final SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-    private static final SimpleDateFormat checkinOutDateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-    SimpleDateFormat cancellationDateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
     public GoToConfiguration goToConfiguration = new GoToConfiguration();
     private final String CURRENCY_CODE = "currencycode";
     private List<String> cancelledBookingList = new ArrayList<>();
@@ -387,7 +388,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         }
 
         pmsBooking = mapBookingToPmsBooking(booking, pmsBooking);
-        pmsManager.setBooking(pmsBooking);
+        pmsManager.setBookingByAdmin(pmsBooking, true);
         pmsInvoiceManager.clearOrdersOnBooking(pmsBooking);
         pmsBooking = pmsManager.doCompleteBooking(pmsBooking);
         return pmsBooking;
@@ -462,8 +463,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
     private void handleDeletionIfCutOffHourPassed(String reservationId, Date deletionRequestTime) throws Exception {
         PmsBooking booking = findCorrelatedBooking(reservationId);
-        if (booking == null)
-            return;
+        if(booking == null) return;
         deletionRequestTime = trimTillHour(deletionRequestTime);
 
         for (PmsBookingRooms room : booking.rooms) {
@@ -575,7 +575,8 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             ratePlans.add(new RatePlanCode(room.getRatePlanCode()));
             roomTypes.add(new RoomTypeCode(room.getRoomCode()));
         }
-
+        DecimalFormat df = new DecimalFormat("#.##");
+        totalPrice = Double.valueOf(df.format(totalPrice));
         PriceTotal priceTotal = new PriceTotal();
         priceTotal.setAmount(totalPrice);
         priceTotal.setCurrency(booking.getCurrency());
@@ -699,6 +700,17 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         guest.prefix = booking.getOrderer().getMobile().getAreaCode();
         pmsBookingRoom.guests.add(guest);
 
+        for(GotoRoomDailyPrice dailyPrice : gotoBookingRoom.getPrice().getDailyPrices()){
+            Date day = DAILY_PRICE_DATE_FORMATTER.parse(dailyPrice.getDate());
+            Calendar calendarDay = Calendar.getInstance();
+            calendarDay.setTime(day);
+            pmsBookingRoom.priceMatrix.put(
+                    PmsBookingRooms.getOffsetKey(calendarDay, PmsBooking.PriceType.daily),
+                    dailyPrice.getPrice()
+            );
+        }
+        pmsBookingRoom.totalCost = gotoBookingRoom.getPrice().getTotalRoomPrice();
+
         for (int i = 1; i < pmsBookingRoom.numberOfGuests; i++) {
             PmsGuests extGuest = new PmsGuests();
             if (numberOfChildren > 0) {
@@ -734,7 +746,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             pmsBooking.comments.put(System.currentTimeMillis(), comment);
         }
 
-        Orderer booker = booking.getOrderer();
+        GotoBooker booker = booking.getOrderer();
         String user_fullName = booker.getFirstName() + " " + booker.getLastName();
         String user_cellPhone = booker.getMobile().getAreaCode() + booker.getMobile().getPhoneNumber();
 
@@ -896,7 +908,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                 int noCheckOutRestriction = getRestrictionValueForADay(
                         noCheckOutInfo.get(roomData.getGoToRoomTypeCode()), range.start);
 
-                Restriction restriction = new Restriction();
+                GotoRoomRestriction restriction = new GotoRoomRestriction();
                 restriction.setMinStay(minStayRestriction);
                 restriction.setMaxStay(maxStayRestriction);
                 restriction.setNoCheckin(noCheckInRestriction == 1);
@@ -969,7 +981,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         }
         roomType.setRatePlans(ratePlans);
         return roomType;
-    }   
+    }
 
     private RatePlan createNewRatePlan(int numberOfGuests, String name, String start, String end) {
         RatePlan ratePlan = new RatePlan();

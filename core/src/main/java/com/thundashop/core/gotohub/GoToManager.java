@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.thundashop.core.gotohub.constant.GoToStatusCodes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -75,7 +76,6 @@ import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
-import com.thundashop.core.utils.GoToStatusCodes;
 import com.thundashop.core.wubook.WubookManager;
 
 import lombok.extern.slf4j.Slf4j;

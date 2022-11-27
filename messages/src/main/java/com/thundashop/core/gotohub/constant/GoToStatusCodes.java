@@ -1,4 +1,4 @@
-package com.thundashop.core.utils;
+package com.thundashop.core.gotohub.constant;
 
 public enum GoToStatusCodes {
     FETCHING_HOTEL_INFO_SUCCESS(1000, "Successfully Returned Hotel Information"),

@@ -1,33 +1,35 @@
 package com.thundashop.repository.pmsmanager;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.thundashop.core.pmsmanager.PmsPricing;
 import com.thundashop.repository.baserepository.Repository;
 import com.thundashop.repository.db.Database;
+import com.thundashop.repository.exceptions.NotUniqueDataException;
 import com.thundashop.repository.utils.SessionInfo;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-
-import java.util.List;
-import java.util.Optional;
 
 @org.springframework.stereotype.Repository
 public class PmsPricingRepository extends Repository<PmsPricing> implements IPmsPricingRepository {
 
     @Autowired
-    public PmsPricingRepository(@Qualifier("repositoryDatabase")Database database) {
+    public PmsPricingRepository(@Qualifier("repositoryDatabase") Database database) {
         super(database);
     }
 
-    public Optional<PmsPricing> findPmsPricingByCode(String code, SessionInfo sessionInfo) {
+    public Optional<PmsPricing> findPmsPricingByCode(String code, SessionInfo sessionInfo)
+            throws NotUniqueDataException {
         DBObject query = new BasicDBObject();
         query.put("className", getClassName());
         query.put("code", code);
         query.put("deleted", null);
         return getOne(query, sessionInfo);
-    }    
+    }
 
     public int markDeleteByCode(String code, SessionInfo sessionInfo) {
         DBObject query = new BasicDBObject().append("className", getClassName()).append("code", code);

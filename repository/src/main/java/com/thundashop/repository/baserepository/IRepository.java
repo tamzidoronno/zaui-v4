@@ -6,6 +6,7 @@ import java.util.Optional;
 import com.mongodb.DBObject;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.repository.db.Database;
+import com.thundashop.repository.exceptions.NotUniqueDataException;
 import com.thundashop.repository.utils.SessionInfo;
 
 public interface IRepository<T> {
@@ -13,7 +14,7 @@ public interface IRepository<T> {
     String getCollectionName(SessionInfo sessionInfo);
     List<T> getAll(SessionInfo sessionInfo);
     Optional<T> getFirst(DBObject query, SessionInfo sessionInfo);
-    Optional<T> getOne(DBObject query, SessionInfo sessionInfo);
+    Optional<T> getOne(DBObject query, SessionInfo sessionInfo) throws NotUniqueDataException;
     T save(DataCommon dataCommon, SessionInfo sessionInfo);
     Optional<T> findById(String id, SessionInfo sessionInfo);        
     boolean exist(DBObject query, SessionInfo sessionInfo);

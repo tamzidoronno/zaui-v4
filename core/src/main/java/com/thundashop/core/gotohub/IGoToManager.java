@@ -73,6 +73,12 @@ public interface IGoToManager {
     public GoToApiResponse cancelBooking(String reservationId);
 
     /**
+     * Cancel Unpaid Goto Bookings
+     *
+     */
+    public void cancelUnpaidBookings();
+
+    /**
      * Get GoTo related configurations
      *
      * @return GoToApiResponse

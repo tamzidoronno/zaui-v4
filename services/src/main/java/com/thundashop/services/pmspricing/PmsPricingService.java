@@ -1,23 +1,25 @@
 package com.thundashop.services.pmspricing;
 
-import com.thundashop.core.bookingengine.data.BookingItemType;
-import com.thundashop.core.pmsmanager.PmsBookingRooms;
-import com.thundashop.core.pmsmanager.PmsPricing;
-import com.thundashop.core.pmsmanager.PmsPricingDayObject;
-import com.thundashop.repository.pmsmanager.PmsPricingRepository;
-import com.thundashop.repository.utils.SessionInfo;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.tuple.Pair;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
+import org.apache.commons.lang3.tuple.Pair;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.thundashop.core.bookingengine.data.BookingItemType;
+import com.thundashop.core.pmsmanager.PmsBookingRooms;
+import com.thundashop.core.pmsmanager.PmsPricing;
+import com.thundashop.core.pmsmanager.PmsPricingDayObject;
+import com.thundashop.repository.pmsmanager.PmsPricingRepository;
+import com.thundashop.repository.utils.SessionInfo;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Naim Murad (naim)
@@ -33,7 +35,8 @@ public class PmsPricingService implements IPmsPricingService {
 
     @Override
     public PmsPricing getByCodeOrDefaultCode(String code, SessionInfo sessionInfo) {
-        Map<String, PmsPricing> pricingMap = storeWisePricingMap.getOrDefault(sessionInfo.getStoreId(), new HashMap<>());
+        Map<String, PmsPricing> pricingMap = storeWisePricingMap.getOrDefault(sessionInfo.getStoreId(),
+                new HashMap<>());
         String pricingCode = isEmpty(code) ? defaultCode : code;
         PmsPricing pricing = pricingMap.computeIfAbsent(pricingCode, k -> getPmsPricing(pricingCode, sessionInfo));
         storeWisePricingMap.putIfAbsent(sessionInfo.getStoreId(), pricingMap);
@@ -41,13 +44,27 @@ public class PmsPricingService implements IPmsPricingService {
     }
 
     private PmsPricing getPmsPricing(String code, SessionInfo sessionInfo) {
-        return pmsPricingRepository.findPmsPricingByCode(code, sessionInfo)
-                .orElseGet(() -> {
-                    PmsPricing price = pmsPricingRepository.findPmsPricingByCode(defaultCode, sessionInfo)
-                            .orElse(null);
-                    if(price == null) log.warn("No default code found for PmsPricing");
-                    return price;
-                });
+        try {
+            return pmsPricingRepository.findPmsPricingByCode(code, sessionInfo)
+                    .orElseGet(() -> {
+                        try {
+                            PmsPricing price = pmsPricingRepository.findPmsPricingByCode(defaultCode, sessionInfo)
+                                    .orElse(null);
+                            if (price == null)
+                                log.warn("No default code found for PmsPricing");
+                            return price;
+                        } catch (Exception ex) {
+                            log.error("Failed to get pmsPricing for store {} with code {}. Actual error:",
+                                    sessionInfo.getStoreId(), defaultCode, ex);
+                            return null;
+                        }
+
+                    });
+        } catch (Exception ex) {
+            log.error("Failed to get pmsPricing for store {} with code {}. Actual error:", sessionInfo.getStoreId(),
+                    code, ex);
+            return null;
+        }
     }
 
     @Override
@@ -57,8 +74,9 @@ public class PmsPricingService implements IPmsPricingService {
 
     @Override
     public int deleteByCode(String code, SessionInfo sessionInfo) {
-        Map<String, PmsPricing> pricingMap = storeWisePricingMap.getOrDefault(sessionInfo.getStoreId(), new HashMap<>());
-        if(!pricingMap.containsKey(code)) {
+        Map<String, PmsPricing> pricingMap = storeWisePricingMap.getOrDefault(sessionInfo.getStoreId(),
+                new HashMap<>());
+        if (!pricingMap.containsKey(code)) {
             log.warn("Code: {} does not found in store {}", code, sessionInfo.getStoreId());
             return 0;
         }
@@ -78,7 +96,8 @@ public class PmsPricingService implements IPmsPricingService {
 
     @Override
     public PmsPricing save(PmsPricing pmsPricing, SessionInfo sessionInfo) {
-        Map<String, PmsPricing> pricingMap = storeWisePricingMap.getOrDefault(sessionInfo.getStoreId(), new HashMap<>());
+        Map<String, PmsPricing> pricingMap = storeWisePricingMap.getOrDefault(sessionInfo.getStoreId(),
+                new HashMap<>());
         pricingMap.put(pmsPricing.code, pmsPricing);
         storeWisePricingMap.putIfAbsent(sessionInfo.getStoreId(), pricingMap);
         pmsPricingRepository.save(pmsPricing, sessionInfo);
@@ -106,7 +125,8 @@ public class PmsPricingService implements IPmsPricingService {
         for (String typeId : newPrices.dailyPrices.keySet()) {
             HashMap<String, Double> priceMap = newPrices.dailyPrices.get(typeId);
             for (String date : priceMap.keySet()) {
-                HashMap<String, Double> existingPriceRange = prices.dailyPrices.computeIfAbsent(typeId, k -> new HashMap<>());
+                HashMap<String, Double> existingPriceRange = prices.dailyPrices.computeIfAbsent(typeId,
+                        k -> new HashMap<>());
                 Double price = priceMap.get(date);
                 if (price == -999999.0) {
                     existingPriceRange.remove(date);
@@ -120,26 +140,28 @@ public class PmsPricingService implements IPmsPricingService {
     }
 
     @Override
-    public Pair<Date, Date> updatePrices(List<PmsPricingDayObject> prices, Map<String, BookingItemType> types, SessionInfo sessionInfo) {
+    public Pair<Date, Date> updatePrices(List<PmsPricingDayObject> prices, Map<String, BookingItemType> types,
+            SessionInfo sessionInfo) {
         Date start = null, end = null;
         PmsPricing pricesToUpdate = getByDefaultCode(sessionInfo);
 
-        for(PmsPricingDayObject price : prices) {
+        for (PmsPricingDayObject price : prices) {
             Date dayPrice = PmsBookingRooms.convertOffsetToDate(price.date);
 
-            if(start == null || dayPrice.before(start)) {
+            if (start == null || dayPrice.before(start)) {
                 start = dayPrice;
             }
 
-            if(end == null || dayPrice.after(end)) {
+            if (end == null || dayPrice.after(end)) {
                 end = dayPrice;
             }
 
             HashMap<String, Double> dailyPriceMatrix = pricesToUpdate.dailyPrices.get(price.typeId);
 
-            if(dailyPriceMatrix != null) {
+            if (dailyPriceMatrix != null) {
                 dailyPriceMatrix.put(price.date, price.newPrice);
-                log.info("New prices set from updatePrices: {} ,  date: {} , new price: {}", types.get(price.typeId).name, price.date, price.newPrice);
+                log.info("New prices set from updatePrices: {} ,  date: {} , new price: {}",
+                        types.get(price.typeId).name, price.date, price.newPrice);
             }
         }
 

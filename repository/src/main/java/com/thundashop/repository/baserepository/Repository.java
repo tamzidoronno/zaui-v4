@@ -1,19 +1,19 @@
 package com.thundashop.repository.baserepository;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
-import com.thundashop.core.common.DataCommon;
-import com.thundashop.repository.db.Database;
-import com.thundashop.repository.exceptions.NotUniqueDataException;
-import com.thundashop.repository.utils.SessionInfo;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+import com.thundashop.core.common.DataCommon;
+import com.thundashop.repository.db.Database;
+import com.thundashop.repository.exceptions.NotUniqueDataException;
+import com.thundashop.repository.utils.SessionInfo;
 
 public abstract class Repository<T> implements IRepository<T> {
     
@@ -72,7 +72,7 @@ public abstract class Repository<T> implements IRepository<T> {
         return result == null ? Optional.empty() : Optional.of(result);
     }
 
-    public Optional<T> getOne(DBObject query, SessionInfo sessionInfo) {
+    public Optional<T> getOne(DBObject query, SessionInfo sessionInfo) throws NotUniqueDataException {
         List<T> resultList = getDatabase().query(sessionInfo.getManagerName(), getCollectionName(sessionInfo), query);
 
         if (resultList.size() > 1) {
@@ -85,7 +85,7 @@ public abstract class Repository<T> implements IRepository<T> {
 
     public Optional<T> findById(String id, SessionInfo sessionInfo) {
         DBObject query = new BasicDBObject("_id", id);
-        return getOne(query, sessionInfo);
+        return getFirst(query, sessionInfo);
     }   
     
 

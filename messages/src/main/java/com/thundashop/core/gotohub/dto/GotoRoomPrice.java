@@ -9,10 +9,10 @@ import lombok.Data;
 @Data
 
 public class GotoRoomPrice {
-    @SerializedName("total_room_price")
+    @SerializedName("totalRoomPrice")
     @Expose
     private Double totalRoomPrice;
-    @SerializedName("daily_prices")
+    @SerializedName("dailyPrices")
     @Expose
     private List<GotoRoomDailyPrice> dailyPrices;
 }

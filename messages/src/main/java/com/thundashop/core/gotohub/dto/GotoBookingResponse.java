@@ -21,7 +21,7 @@ public class GotoBookingResponse {
     private String hotelCode;    
     @SerializedName("rooms")
     @Expose
-    private List<GotoRoom> rooms = null;
+    private List<GotoRoomResponse> rooms = null;
     @SerializedName("ratePlans")
     @Expose
     private List<RatePlanCode> ratePlans = null;

@@ -10,9 +10,6 @@ import lombok.Data;
 
 @Data
 public class GotoBookingRequest {
-    @SerializedName("reservationId")
-    @Expose
-    private String reservationId;
     @SerializedName("language")
     @Expose
     private String language;
@@ -28,10 +25,7 @@ public class GotoBookingRequest {
     @SerializedName("comment")
     @Expose
     private String comment;
-    @SerializedName("total_price")
-    @Expose
-    private Double totalPrice;
     @SerializedName("rooms")
     @Expose
-    private List<GotoRoom> rooms = null;
+    private List<GotoRoomRequest> rooms = null;
 }

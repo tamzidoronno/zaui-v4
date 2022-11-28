@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 
 @Data
-public class GotoRoom {
+public class GotoRoomRequest {
     @SerializedName("checkInDate")
     @Expose
     private String checkInDate;
@@ -25,14 +25,10 @@ public class GotoRoom {
     @SerializedName("adults")
     @Expose
     private Integer adults;
-    @SerializedName("cancelationDeadline")
-    @Expose
-    private String cancelationDeadline;
     @SerializedName("children")
     @Expose
     private List<Integer> childrenAges = null;
     @SerializedName("price")
     @Expose
     private GotoRoomPrice price = null;
-
 }

@@ -574,6 +574,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             roomRes.setAdults(room.getAdults());
             roomRes.setChildrenAges(room.getChildrenAges());
             roomRes.setCancelationDeadline(getCancellationDeadLine(room.getCheckInDate()));
+            roomRes.setPrice(room.getPrice());
             roomsResponse.add(roomRes);
             ratePlans.add(new RatePlanCode(room.getRatePlanCode()));
             roomTypes.add(new RoomTypeCode(room.getRoomCode()));

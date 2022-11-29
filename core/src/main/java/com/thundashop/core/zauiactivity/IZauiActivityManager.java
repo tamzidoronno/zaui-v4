@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.repository.exceptions.ZauiException;
 import com.thundashop.zauiactivity.dto.BookingConfirm;
 import com.thundashop.zauiactivity.dto.BookingConfirmRequest;
 import com.thundashop.zauiactivity.dto.BookingReserve;
@@ -36,4 +37,6 @@ public interface IZauiActivityManager {
     String getSupplierName();
 
     List<BookingConfirm> cancelBooking(String bookingId);
+
+    void fetchZauiActivities(Integer supplierId) throws ZauiException;
 }

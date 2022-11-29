@@ -11,6 +11,8 @@ import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsLog;
 import com.thundashop.core.pmsmanager.PmsPricing;
 
+import com.thundashop.zauiactivity.dto.ZauiActivity;
+import com.thundashop.zauiactivity.dto.ZauiActivityConfig;
 import org.springframework.stereotype.Component;
 
 @SuppressWarnings("rawtypes")
@@ -36,7 +38,9 @@ public class EntityMapper implements IEntityMapper {
                 PmsBooking.class,
                 PmsLog.class,
                 BookingItemType.class,
-                Booking.class
+                Booking.class,
+                ZauiActivityConfig.class,
+                ZauiActivity.class
         );
     }
 

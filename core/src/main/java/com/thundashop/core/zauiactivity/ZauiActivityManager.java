@@ -4,13 +4,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.thundashop.repository.exceptions.ZauiException;
+import com.thundashop.services.zauiactivityservice.IZauiActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
-import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.databasemanager.data.DataRetreived;
+
 import com.thundashop.services.octoapiservice.OctoApiService;
 import com.thundashop.zauiactivity.dto.BookingConfirm;
 import com.thundashop.zauiactivity.dto.BookingConfirmRequest;
@@ -26,73 +27,73 @@ import com.thundashop.zauiactivity.dto.ZauiActivityConfig;
 public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZauiActivityManager {
     @Autowired
     OctoApiService octoApiService;
-
-    ZauiActivityConfig activityConfig = new ZauiActivityConfig();
-
-    public void dataFromDatabase(DataRetreived data) {
-        for (DataCommon dataCommon : data.data) {
-            if (dataCommon instanceof ZauiActivityConfig) {
-                activityConfig = (ZauiActivityConfig) dataCommon;
-            }
-        }
-    }
+    @Autowired
+    IZauiActivityService zauiActivityService;
 
     @Override
     public ZauiActivityConfig getActivityConfig() {
-        return activityConfig;
+        return getZauiActivityConfig();
     }
 
     @Override
     public void updateActivityConfig(ZauiActivityConfig newActivityConfig) {
-        activityConfig.setActivityConfig(newActivityConfig);
-        saveObject(activityConfig);
+        zauiActivityService.setZauiActivityConfig(newActivityConfig,getSessionInfo());
     }
 
     @Override
     public String getSupplierName() {
-        if (activityConfig.getSupplierId() == null) {
+        if (getZauiActivityConfig().getSupplierId() == null) {
             return "";
         }
-        return octoApiService.getSupplierName(activityConfig.getSupplierId());
+        return octoApiService.getSupplierName(getZauiActivityConfig().getSupplierId());
     }
 
     @Override
     public List<OctoProduct> getActivities() throws IOException {
-        if (activityConfig.getSupplierId() == null) {
+        if (getZauiActivityConfig().getSupplierId() == null) {
             return new ArrayList<>();
         }
-        return octoApiService.getProducts(activityConfig.getSupplierId());
+        return octoApiService.getProducts(getZauiActivityConfig().getSupplierId());
     }
 
     @Override
     public List<OctoProductAvailability> getAvailability(OctoProductAvailabilityRequestDto availabilityRequest) {
-        if (activityConfig.getSupplierId() == null) {
+        if (getZauiActivityConfig().getSupplierId() == null) {
             return new ArrayList<>();
         }
-        return octoApiService.getAvailability(activityConfig.getSupplierId(), availabilityRequest);
+        return octoApiService.getAvailability(getZauiActivityConfig().getSupplierId(), availabilityRequest);
     }
 
     @Override
     public List<BookingReserve> reserveBooking(BookingReserveRequest bookingReserveRequest) {
-        if (activityConfig.getSupplierId() == null) {
+        if (getZauiActivityConfig().getSupplierId() == null) {
             return new ArrayList<>();
         }
-        return octoApiService.reserveBooking(activityConfig.getSupplierId(), bookingReserveRequest);
+        return octoApiService.reserveBooking(getZauiActivityConfig().getSupplierId(), bookingReserveRequest);
     }
 
     @Override
     public List<BookingConfirm> confirmBooking(String bookingId, BookingConfirmRequest bookingConfirmRequest) {
-        if (activityConfig.getSupplierId() == null) {
+        if (getZauiActivityConfig().getSupplierId() == null) {
             return new ArrayList<>();
         }
-        return octoApiService.confirmBooking(activityConfig.getSupplierId(), bookingId, bookingConfirmRequest);
+        return octoApiService.confirmBooking(getZauiActivityConfig().getSupplierId(), bookingId, bookingConfirmRequest);
     }
 
     @Override
     public List<BookingConfirm> cancelBooking(String bookingId) {
-        if (activityConfig.getSupplierId() == null) {
+        if (getZauiActivityConfig().getSupplierId() == null) {
             return new ArrayList<>();
         }
-        return octoApiService.cancelBooking(activityConfig.getSupplierId(), bookingId);
+        return octoApiService.cancelBooking(getZauiActivityConfig().getSupplierId(), bookingId);
+    }
+
+    private ZauiActivityConfig getZauiActivityConfig() {
+        return zauiActivityService.getZauiActivityConfig(getSessionInfo());
+    }
+
+    @Override
+    public void fetchZauiActivities(Integer supplierId) throws ZauiException {
+        zauiActivityService.importZauiActivities(supplierId, getSessionInfo());
     }
 }

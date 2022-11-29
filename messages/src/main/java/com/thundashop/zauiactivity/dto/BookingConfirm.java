@@ -1,7 +1,10 @@
 package com.thundashop.zauiactivity.dto;
 
+import lombok.Data;
+
 import java.util.List;
 
+@Data
 public class BookingConfirm {
     private String id;
     private String uuid;

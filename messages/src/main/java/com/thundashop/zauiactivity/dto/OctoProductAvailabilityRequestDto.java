@@ -8,6 +8,6 @@ public class OctoProductAvailabilityRequestDto {
     private String localDateStart;
     private String localDateEnd;
     private String currency;
-    private List<Unit> units = null;
+    private List<OctoProductUnit> units = null;
 }
 

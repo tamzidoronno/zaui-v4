@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.thundashop.repository.exceptions.ZauiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +43,7 @@ public class OctoApiService implements IOctoApiService {
         return String.valueOf(supplier.get("name"));
     }
 
-    public List<OctoProduct> getProducts(Integer supplierId) throws IOException {
+    public List<OctoProduct> getProducts(Integer supplierId) {
         String url = ZauiConstants.OCTO_API_ENDPOINT + "/suppliers/" + supplierId + "/products";
         Map<String, String> headers = new HashMap<>();
         headers.put(ZauiConstants.OCTO_CONTENT.getLeft(), ZauiConstants.OCTO_CONTENT.getRight());

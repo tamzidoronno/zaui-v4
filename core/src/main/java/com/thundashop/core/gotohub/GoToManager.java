@@ -464,7 +464,8 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
     private void handleDeletionIfCutOffHourPassed(String reservationId, Date deletionRequestTime) throws Exception {
         PmsBooking booking = findCorrelatedBooking(reservationId);
-        if (booking == null)
+        //cancellation deadline would be applied only for paid bookings
+        if (booking == null || booking.orderIds == null || booking.orderIds.isEmpty())
             return;
         deletionRequestTime = trimTillHour(deletionRequestTime);
 

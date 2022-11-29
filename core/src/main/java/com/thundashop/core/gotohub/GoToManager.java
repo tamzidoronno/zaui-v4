@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.gotohub.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -114,6 +115,10 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
         stopScheduler("AutoExpireBookings");
         createScheduler("AutoExpireBookings", "*/5 * * * *", GotoExpireBookingScheduler.class);
+    }
+
+    @Override
+    public void dataFromDatabase(DataRetreived data) {
     }
 
     @Override

@@ -315,7 +315,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     public void cancelUnpaidBookings() {
         if (goToConfiguration.getUnpaidBookingExpirationTime() < 1)
             return;
-        gotoService.getUnpaidGotoBookings(goToConfiguration.getUnpaidBookingExpirationTime(), getSessionInfo())
+        gotoService.getUnpaidGotoBookings(goToConfiguration.getUnpaidBookingExpirationTime(), pmsManager.getSessionInfo())
                 .forEach(booking -> {
                     pmsManager.logEntry("Autodeleted Goto Booking because it has expired.", booking.id, null);
                     cancelBooking(booking.id);

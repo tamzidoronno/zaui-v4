@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.thundashop.repository.exceptions.ZauiException;
+import com.thundashop.zauiactivity.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,13 +18,6 @@ import com.thundashop.core.webmanager.ZauiHttpRequest;
 import com.thundashop.core.webmanager.ZauiHttpResponse;
 import com.thundashop.services.core.httpservice.ZauiHttpService;
 import com.thundashop.zauiactivity.constant.ZauiConstants;
-import com.thundashop.zauiactivity.dto.BookingConfirm;
-import com.thundashop.zauiactivity.dto.BookingConfirmRequest;
-import com.thundashop.zauiactivity.dto.BookingReserve;
-import com.thundashop.zauiactivity.dto.BookingReserveRequest;
-import com.thundashop.zauiactivity.dto.OctoProduct;
-import com.thundashop.zauiactivity.dto.OctoProductAvailability;
-import com.thundashop.zauiactivity.dto.OctoProductAvailabilityRequestDto;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,14 +27,12 @@ public class OctoApiService implements IOctoApiService {
     @Autowired
     private ZauiHttpService zauiHttpService;
 
-    public String getSupplierName(Integer supplierId) {
-        String url = ZauiConstants.OCTO_API_ENDPOINT + "/suppliers/" + supplierId;
+    public List<OctoSupplier> getAllSuppliers() {
+        String url = ZauiConstants.OCTO_API_ENDPOINT + "/suppliers";
         String result = getHttpResponseBody(url, null, "GET", null);
-        Type listType = new TypeToken<List<JsonObject>>() {
+        Type listType = new TypeToken<List<OctoSupplier>>() {
         }.getType();
-        List<JsonObject> suppliers = new Gson().fromJson(result, listType);
-        JsonObject supplier = suppliers.get(0);
-        return String.valueOf(supplier.get("name"));
+        return new Gson().fromJson(result, listType);
     }
 
     public List<OctoProduct> getProducts(Integer supplierId) {

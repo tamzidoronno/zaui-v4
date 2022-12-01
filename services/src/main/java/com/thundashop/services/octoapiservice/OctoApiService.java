@@ -1,23 +1,27 @@
 package com.thundashop.services.octoapiservice;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.thundashop.repository.exceptions.ZauiException;
-import com.thundashop.zauiactivity.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.thundashop.core.webmanager.ZauiHttpRequest;
 import com.thundashop.core.webmanager.ZauiHttpResponse;
-import com.thundashop.services.core.httpservice.ZauiHttpService;
+import com.thundashop.services.core.httpservice.IZauiHttpService;
 import com.thundashop.zauiactivity.constant.ZauiConstants;
+import com.thundashop.zauiactivity.dto.BookingConfirm;
+import com.thundashop.zauiactivity.dto.BookingConfirmRequest;
+import com.thundashop.zauiactivity.dto.BookingReserve;
+import com.thundashop.zauiactivity.dto.BookingReserveRequest;
+import com.thundashop.zauiactivity.dto.OctoProduct;
+import com.thundashop.zauiactivity.dto.OctoProductAvailability;
+import com.thundashop.zauiactivity.dto.OctoProductAvailabilityRequestDto;
+import com.thundashop.zauiactivity.dto.OctoSupplier;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class OctoApiService implements IOctoApiService {
     @Autowired
-    private ZauiHttpService zauiHttpService;
+    private IZauiHttpService zauiHttpService;
 
     public List<OctoSupplier> getAllSuppliers() {
         String url = ZauiConstants.OCTO_API_ENDPOINT + "/suppliers";

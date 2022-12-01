@@ -1,39 +1,39 @@
 package com.thundashop.repository.zauiactivity;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.thundashop.repository.baserepository.Repository;
 import com.thundashop.repository.db.Database;
+import com.thundashop.repository.exceptions.NotUniqueDataException;
 import com.thundashop.repository.utils.SessionInfo;
 import com.thundashop.zauiactivity.dto.ZauiActivityConfig;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-
-import java.util.List;
-import java.util.Optional;
 
 @org.springframework.stereotype.Repository
-public class ZauiActivityConfigRepository extends Repository<ZauiActivityConfig> implements IZauiActivityConfigRepository {
+public class ZauiActivityConfigRepository extends Repository<ZauiActivityConfig>
+        implements IZauiActivityConfigRepository {
 
     @Autowired
-    public ZauiActivityConfigRepository(@Qualifier("repositoryDatabase")Database database) {
+    public ZauiActivityConfigRepository(@Qualifier("repositoryDatabase") Database database) {
         super(database);
     }
 
     @Override
-    public Optional<ZauiActivityConfig> getZauiActivityConfig(SessionInfo sessionInfo) {
+    public Optional<ZauiActivityConfig> getZauiActivityConfig(SessionInfo sessionInfo) throws NotUniqueDataException {
         DBObject query = new BasicDBObject();
         query.put("className", ZauiActivityConfig.class.getName());
-        return getFirst(query, sessionInfo);
-    }
-    @Override
-    protected String getClassName() {
-        return ZauiActivityConfig.class.getName();
+        query.put("deleted", null);
+        return getOne(query, sessionInfo);
     }
 
     @Override
-    public Class<ZauiActivityConfig> getEntityClass() {
-        return null;
+    protected String getClassName() {
+        return ZauiActivityConfig.class.getName();
     }
 
     @Override

@@ -54,9 +54,4 @@ public class PmsLogRepository extends Repository<PmsLog> implements IPmsLogRepos
         return PmsLog.class.getName();
     }
 
-    @Override
-    protected Class<PmsLog> getEntityClass() {
-        return PmsLog.class;
-    }
-
 }

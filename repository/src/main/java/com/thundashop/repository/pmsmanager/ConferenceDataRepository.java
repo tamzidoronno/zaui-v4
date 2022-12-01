@@ -33,9 +33,4 @@ public class ConferenceDataRepository extends Repository<ConferenceData> impleme
         return ConferenceData.class.getName();
     }
 
-    @Override
-    protected Class<ConferenceData> getEntityClass() {
-        return ConferenceData.class;
-    }
-
 }

@@ -8,4 +8,6 @@ import java.util.Optional;
 
 public interface IZauiActivityConfigRepository extends IRepository<ZauiActivityConfig> {
     Optional<ZauiActivityConfig> getZauiActivityConfig(SessionInfo sessionInfo);
+
+    Class<ZauiActivityConfig> getEntityClass();
 }

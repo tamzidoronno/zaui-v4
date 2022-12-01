@@ -1,9 +1,7 @@
-package com.thundashop.core.gotohub;
+package com.thundashop.core.gotohub.dto;
 
 import java.util.HashMap;
 import java.util.List;
-
-import com.thundashop.core.gotohub.dto.RatePlan;
 
 import lombok.Data;
 

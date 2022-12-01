@@ -67,7 +67,7 @@ public class PmsPricingRepositoryTest extends TestCommon {
     }
 
     @Test
-    void testFindPmsPricingByCode() {
+    void testFindPmsPricingByCode() throws NotUniqueDataException {
         PmsPricing pmsPricing = repository.save(toPojo(type, jsonPath + "pmspricing.json"), sessionInfo);
 
         Optional<PmsPricing> actual = repository.findPmsPricingByCode("default", sessionInfo);
@@ -77,7 +77,7 @@ public class PmsPricingRepositoryTest extends TestCommon {
     }
 
     @Test
-    void testGetEmptyOptionalIfCodeNotFound() {
+    void testGetEmptyOptionalIfCodeNotFound() throws NotUniqueDataException {
         repository.save(toPojo(type, jsonPath + "pmspricing.json"), sessionInfo);
 
         Optional<PmsPricing> actual = repository.findPmsPricingByCode("codeShouldNotExist", sessionInfo);

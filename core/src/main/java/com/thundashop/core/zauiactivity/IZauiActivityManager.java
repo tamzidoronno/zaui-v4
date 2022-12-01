@@ -27,8 +27,6 @@ public interface IZauiActivityManager {
 
     List<BookingReserve> reserveBooking(Integer supplierId, BookingReserveRequest bookingReserveRequest);
 
-    List<BookingConfirm> confirmBooking(String bookingId, BookingConfirmRequest bookingConfirmRequest);
-
     List<BookingConfirm> confirmBooking(Integer supplierId, String bookingId, BookingConfirmRequest bookingConfirmRequest);
 
     List<BookingConfirm> cancelBooking(Integer supplierId, String bookingId);

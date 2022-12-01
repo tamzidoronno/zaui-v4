@@ -7,5 +7,8 @@ public class BookingReserveRequest {
     private String optionId;
     private String availabilityId;
     private String notes;
-    private List<UnitItem> unitItems = null;
+    private List<UnitItemReserveRequest> unitItems = null;
+}
+class UnitItemReserveRequest {
+    private String unitId;
 }

@@ -273,6 +273,9 @@ class PaymentApplication extends ApplicationBase {
     public function hasPaymentProcess() {
         return false;
     }
+
+    public function renderDefault() {
+    }
 }
 
 ?>

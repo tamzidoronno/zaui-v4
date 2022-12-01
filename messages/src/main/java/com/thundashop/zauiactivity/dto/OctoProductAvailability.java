@@ -15,11 +15,11 @@ public class OctoProductAvailability {
 }
 
 class Pricing {
-    private String currency;
-    private Integer currencyPrecision;
-    private Integer subtotal;
-    private Integer tax;
-    private Integer total;
+    String currency;
+    Integer currencyPrecision;
+    Integer subtotal;
+    Integer tax;
+    Integer total;
 }
 
 class UnitPricing {

@@ -3,10 +3,11 @@ package com.thundashop.core.gotohub.dto;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
 import lombok.Data;
 
 @Data
-public class Orderer {
+public class GotoBooker {
 
     @SerializedName("email")
     @Expose
@@ -19,6 +20,6 @@ public class Orderer {
     private String firstName;
     @SerializedName("mobile")
     @Expose
-    private Mobile mobile;
+    private GotoBookerMobile mobile;
 
 }

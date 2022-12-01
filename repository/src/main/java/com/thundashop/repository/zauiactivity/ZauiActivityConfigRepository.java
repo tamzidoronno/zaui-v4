@@ -24,7 +24,7 @@ public class ZauiActivityConfigRepository extends Repository<ZauiActivityConfig>
     public Optional<ZauiActivityConfig> getZauiActivityConfig(SessionInfo sessionInfo) {
         DBObject query = new BasicDBObject();
         query.put("className", ZauiActivityConfig.class.getName());
-        return getOne(query, sessionInfo);
+        return getFirst(query, sessionInfo);
     }
     @Override
     protected String getClassName() {
@@ -32,7 +32,7 @@ public class ZauiActivityConfigRepository extends Repository<ZauiActivityConfig>
     }
 
     @Override
-    protected Class<ZauiActivityConfig> getEntityClass() {
+    public Class<ZauiActivityConfig> getEntityClass() {
         return null;
     }
 

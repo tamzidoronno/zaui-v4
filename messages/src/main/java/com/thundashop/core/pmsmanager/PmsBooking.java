@@ -512,6 +512,10 @@ public class PmsBooking extends DataCommon {
         return cal.getTime().before(new Date());
     }
 
+    public boolean isOlderThan(int minute) {
+        return isOld(minute);
+    }
+
     boolean hasSentNotification(String notice) {
         notice = notice.toLowerCase();
         for(String sent : notificationsSent) {

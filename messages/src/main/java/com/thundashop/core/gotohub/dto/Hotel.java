@@ -1,15 +1,15 @@
 package com.thundashop.core.gotohub.dto;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-import lombok.Data;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import lombok.Data;
+
 @Data
 public class Hotel {
-
     @SerializedName("name")
     @Expose
     private String name;

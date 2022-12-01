@@ -9,10 +9,7 @@ import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 
 @Data
-public class Booking {
-    @SerializedName("reservationId")
-    @Expose
-    private String reservationId;
+public class GotoBookingRequest {
     @SerializedName("language")
     @Expose
     private String language;
@@ -24,11 +21,11 @@ public class Booking {
     private String hotelCode;
     @SerializedName("orderer")
     @Expose
-    private Orderer orderer;
+    private GotoBooker orderer;
     @SerializedName("comment")
     @Expose
     private String comment;
     @SerializedName("rooms")
     @Expose
-    private List<Room> rooms = null;
+    private List<GotoRoomRequest> rooms = null;
 }

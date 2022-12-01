@@ -3,6 +3,9 @@ package com.thundashop.core.zauiactivity;
 import java.io.IOException;
 import java.util.List;
 
+import com.thundashop.core.bookingengine.data.Booking;
+import com.thundashop.core.pmsmanager.PmsBooking;
+import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.repository.exceptions.ZauiException;
 import com.thundashop.services.zauiactivityservice.IZauiActivityService;
 import com.thundashop.zauiactivity.dto.*;
@@ -21,6 +24,7 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
     OctoApiService octoApiService;
     @Autowired
     IZauiActivityService zauiActivityService;
+
 
     @Override
     public ZauiActivityConfig getActivityConfig() {
@@ -51,11 +55,6 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
     @Override
     public List<BookingReserve> reserveBooking(Integer supplierId, BookingReserveRequest bookingReserveRequest) {
         return octoApiService.reserveBooking(supplierId, bookingReserveRequest);
-    }
-
-    @Override
-    public List<BookingConfirm> confirmBooking(String bookingId, BookingConfirmRequest bookingConfirmRequest) {
-        return null;
     }
 
     @Override

@@ -25,8 +25,16 @@ public class BookingReserve {
     private Contact contact;
     private List<String> deliveryMethods = null;
     private List<String> voucher = null;
-    private List<UnitItem> unitItems = null;
+    private List<UnitItemReserveResponse> unitItems = null;
     private Cancellation cancellation;
+}
+
+class UnitItemReserveResponse {
+    private String uuid;
+    private String unitId;
+    private Object resellerReference;
+    private Object supplierReference;
+    private Ticket ticket;
 }
 class Contact {
     private String fullName;

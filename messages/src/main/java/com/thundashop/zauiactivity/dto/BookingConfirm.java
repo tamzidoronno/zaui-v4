@@ -36,3 +36,7 @@ class Voucher {
     private String utcDeliveredAt;
     private String utcRedeemedAt;
 }
+
+class UnitItem {
+    private String unitId;
+}

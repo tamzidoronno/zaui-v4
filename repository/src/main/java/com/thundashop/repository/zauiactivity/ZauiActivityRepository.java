@@ -6,7 +6,6 @@ import com.thundashop.repository.baserepository.Repository;
 import com.thundashop.repository.db.Database;
 import com.thundashop.repository.utils.SessionInfo;
 import com.thundashop.zauiactivity.dto.ZauiActivity;
-import com.thundashop.zauiactivity.dto.ZauiActivity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -22,19 +21,19 @@ public class ZauiActivityRepository extends Repository<ZauiActivity> implements 
     }
 
     @Override
+    public Class<ZauiActivity> getEntityClass() {
+        return null;
+    }
+
+    @Override
     public Optional<ZauiActivity> getZauiActivity(SessionInfo sessionInfo) {
         DBObject query = new BasicDBObject();
         query.put("className", ZauiActivity.class.getName());
-        return getOne(query, sessionInfo);
+        return getFirst(query, sessionInfo);
     }
     @Override
     protected String getClassName() {
         return ZauiActivity.class.getName();
-    }
-
-    @Override
-    protected Class<ZauiActivity> getEntityClass() {
-        return null;
     }
 
     @Override

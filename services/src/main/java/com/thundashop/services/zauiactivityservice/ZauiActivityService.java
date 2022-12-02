@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import com.thundashop.repository.exceptions.ZauiException;
 import com.thundashop.repository.utils.SessionInfo;
 import com.thundashop.repository.utils.ZauiStatusCodes;
-import com.thundashop.repository.zauiactivity.ZauiActivityConfigRepository;
-import com.thundashop.repository.zauiactivity.ZauiActivityRepository;
+import com.thundashop.repository.zauiactivityrepository.ZauiActivityConfigRepository;
+import com.thundashop.repository.zauiactivityrepository.ZauiActivityRepository;
 import com.thundashop.services.octoapiservice.OctoApiService;
 import com.thundashop.zauiactivity.dto.OctoProduct;
 import com.thundashop.zauiactivity.dto.ZauiActivity;
@@ -35,21 +35,20 @@ public class ZauiActivityService implements IZauiActivityService {
         }
     }
 
+    public ZauiActivityConfig setZauiActivityConfig(ZauiActivityConfig zauiActivityConfig, SessionInfo sessionInfo) {
+        return zauiActivityConfigRepository.save(zauiActivityConfig, sessionInfo);
+    }
+
     public void fetchZauiActivities(Integer supplierId, SessionInfo sessionInfo) throws ZauiException {
         List<OctoProduct> octoProducts = null;
         try {
-            octoProducts = octoApiService.getProducts(supplierId);
+            octoProducts = octoApiService.getOctoProducts(supplierId);
         } catch (Exception e) {
             throw new ZauiException(ZauiStatusCodes.OCTO_FAILED);
         }
         octoProducts
                 .forEach(octoProduct -> zauiActivityRepository.save(mapOctoToZauiActivity(octoProduct), sessionInfo));
-    }
-
-    @Override
-    public void setZauiActivityConfig(ZauiActivityConfig zauiActivityConfig, SessionInfo sessionInfo) {
-        zauiActivityConfigRepository.save(zauiActivityConfig, sessionInfo);
-    }
+    }   
 
     private ZauiActivity mapOctoToZauiActivity(OctoProduct octoProduct) {
         ZauiActivity zauiActivity = new ZauiActivity();

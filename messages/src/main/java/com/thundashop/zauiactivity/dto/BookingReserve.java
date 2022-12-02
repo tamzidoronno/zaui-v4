@@ -22,7 +22,7 @@ public class BookingReserve {
     private String notes;
     private String optionId;
     private OctoProductAvailability availability;
-    private Contact contact;
+    private OctoSupplierContact contact;
     private List<String> deliveryMethods = null;
     private List<String> voucher = null;
     private List<UnitItemReserveResponse> unitItems = null;

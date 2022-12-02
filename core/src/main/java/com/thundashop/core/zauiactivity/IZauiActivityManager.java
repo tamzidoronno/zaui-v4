@@ -1,12 +1,19 @@
 package com.thundashop.core.zauiactivity;
 
-import java.io.IOException;
 import java.util.List;
 
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.repository.exceptions.ZauiException;
-import com.thundashop.zauiactivity.dto.*;
+import com.thundashop.zauiactivity.dto.BookingConfirm;
+import com.thundashop.zauiactivity.dto.BookingConfirmRequest;
+import com.thundashop.zauiactivity.dto.BookingReserve;
+import com.thundashop.zauiactivity.dto.BookingReserveRequest;
+import com.thundashop.zauiactivity.dto.OctoProduct;
+import com.thundashop.zauiactivity.dto.OctoProductAvailability;
+import com.thundashop.zauiactivity.dto.OctoProductAvailabilityRequestDto;
+import com.thundashop.zauiactivity.dto.OctoSupplier;
+import com.thundashop.zauiactivity.dto.ZauiActivityConfig;
 
 /**
  * The ZauiActivityManager is responsible for handling all zaui do
@@ -17,13 +24,13 @@ import com.thundashop.zauiactivity.dto.*;
 public interface IZauiActivityManager {
     ZauiActivityConfig getActivityConfig();
 
-    void updateActivityConfig(ZauiActivityConfig newActivityConfig);
+    ZauiActivityConfig updateActivityConfig(ZauiActivityConfig newActivityConfig);
 
     List<OctoSupplier> getAllSuppliers();
 
-    List<OctoProduct> getActivities(Integer supplierId) throws IOException;
+    List<OctoProduct> getZauiActivities(Integer supplierId);
 
-    List<OctoProductAvailability> getAvailability(Integer supplierId, OctoProductAvailabilityRequestDto availabilityRequest);
+    List<OctoProductAvailability> getZauiActivityAvailability(Integer supplierId, OctoProductAvailabilityRequestDto availabilityRequest);
 
     List<BookingReserve> reserveBooking(Integer supplierId, BookingReserveRequest bookingReserveRequest);
 

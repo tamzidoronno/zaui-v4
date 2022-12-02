@@ -34,5 +34,3 @@ public class OctoProduct {
     @Expose
     private String primaryDescription;
 }
-
-

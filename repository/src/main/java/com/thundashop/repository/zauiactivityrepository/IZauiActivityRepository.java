@@ -1,4 +1,4 @@
-package com.thundashop.repository.zauiactivity;
+package com.thundashop.repository.zauiactivityrepository;
 
 import java.util.Optional;
 

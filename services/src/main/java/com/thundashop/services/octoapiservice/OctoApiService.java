@@ -1,6 +1,7 @@
 package com.thundashop.services.octoapiservice;
 
 import java.lang.reflect.Type;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,13 +34,21 @@ public class OctoApiService implements IOctoApiService {
 
     public List<OctoSupplier> getAllSuppliers() {
         String url = ZauiConstants.OCTO_API_ENDPOINT + "/suppliers";
-        String result = getHttpResponseBody(url, null, "GET", null);
+        String result = getHttpResponseBody(url, Collections.emptyMap(), "GET", null);
         Type listType = new TypeToken<List<OctoSupplier>>() {
         }.getType();
         return new Gson().fromJson(result, listType);
     }
 
-    public List<OctoProduct> getProducts(Integer supplierId) {
+    public OctoSupplier getSupplierById(Integer supplierId) {
+        String url = ZauiConstants.OCTO_API_ENDPOINT + "/suppliers/" + supplierId;
+        String result = getHttpResponseBody(url, Collections.emptyMap(), "GET", null);
+        Type listType = new TypeToken<OctoSupplier>() {
+        }.getType();
+        return new Gson().fromJson(result, listType);
+    }
+
+    public List<OctoProduct> getOctoProducts(Integer supplierId) {
         String url = ZauiConstants.OCTO_API_ENDPOINT + "/suppliers/" + supplierId + "/products";
         Map<String, String> headers = new HashMap<>();
         headers.put(ZauiConstants.OCTO_CONTENT.getLeft(), ZauiConstants.OCTO_CONTENT.getRight());
@@ -49,7 +58,17 @@ public class OctoApiService implements IOctoApiService {
         return new Gson().fromJson(result, listType);
     }
 
-    public List<OctoProductAvailability> getAvailability(Integer supplierId,
+    public OctoProduct getOctoProductById(Integer supplierId, Integer productId) {
+        String url = ZauiConstants.OCTO_API_ENDPOINT + "/suppliers/" + supplierId + "/products/" + productId;
+        Map<String, String> headers = new HashMap<>();
+        headers.put(ZauiConstants.OCTO_CONTENT.getLeft(), ZauiConstants.OCTO_CONTENT.getRight());
+        String result = getHttpResponseBody(url, headers, "GET", null);
+        Type listType = new TypeToken<OctoProduct>() {
+        }.getType();
+        return new Gson().fromJson(result, listType);
+    }
+
+    public List<OctoProductAvailability> getOctoProductAvailability(Integer supplierId,
             OctoProductAvailabilityRequestDto availabilityRequest) {
         String url = ZauiConstants.OCTO_API_ENDPOINT + "/suppliers/" + supplierId + "/availability";
         Map<String, String> headers = new HashMap<>();

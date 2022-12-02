@@ -1,6 +1,5 @@
-package com.thundashop.repository.zauiactivity;
+package com.thundashop.repository.zauiactivityrepository;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,7 @@ public class ZauiActivityConfigRepository extends Repository<ZauiActivityConfig>
     @Override
     public Optional<ZauiActivityConfig> getZauiActivityConfig(SessionInfo sessionInfo) throws NotUniqueDataException {
         DBObject query = new BasicDBObject();
-        query.put("className", ZauiActivityConfig.class.getName());
+        query.put("className", getClassName());
         query.put("deleted", null);
         return getOne(query, sessionInfo);
     }
@@ -34,10 +33,5 @@ public class ZauiActivityConfigRepository extends Repository<ZauiActivityConfig>
     @Override
     protected String getClassName() {
         return ZauiActivityConfig.class.getName();
-    }
-
-    @Override
-    public List distinct(String field, DBObject query, SessionInfo sessionInfo) {
-        return null;
     }
 }

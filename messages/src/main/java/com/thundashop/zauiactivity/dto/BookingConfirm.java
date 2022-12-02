@@ -22,7 +22,7 @@ public class BookingConfirm {
     private String notes;
     private String optionId;
     private OctoProductAvailability availability;
-    private Contact contact;
+    private OctoSupplierContact contact;
     private List<String> deliveryMethods = null;
     private List<Voucher> voucher = null;
     private List<UnitItem> unitItems = null;

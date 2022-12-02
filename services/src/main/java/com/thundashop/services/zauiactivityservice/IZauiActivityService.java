@@ -7,7 +7,7 @@ import com.thundashop.zauiactivity.dto.ZauiActivityConfig;
 public interface IZauiActivityService {
     ZauiActivityConfig getZauiActivityConfig(SessionInfo sessionInfo);
 
-    void fetchZauiActivities(Integer supplierId, SessionInfo sessionInfo) throws ZauiException;
+    ZauiActivityConfig setZauiActivityConfig(ZauiActivityConfig zauiActivityConfig, SessionInfo sessionInfo);
 
-    void setZauiActivityConfig(ZauiActivityConfig zauiActivityConfig, SessionInfo sessionInfo);
+    void fetchZauiActivities(Integer supplierId, SessionInfo sessionInfo) throws ZauiException;    
 }

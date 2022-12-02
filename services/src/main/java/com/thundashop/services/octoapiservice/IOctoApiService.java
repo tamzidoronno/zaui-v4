@@ -1,22 +1,30 @@
 package com.thundashop.services.octoapiservice;
 
-import java.io.IOException;
 import java.util.List;
 
-import com.thundashop.zauiactivity.dto.*;
+import com.thundashop.zauiactivity.dto.BookingConfirm;
+import com.thundashop.zauiactivity.dto.BookingConfirmRequest;
+import com.thundashop.zauiactivity.dto.BookingReserve;
+import com.thundashop.zauiactivity.dto.BookingReserveRequest;
+import com.thundashop.zauiactivity.dto.OctoProduct;
+import com.thundashop.zauiactivity.dto.OctoProductAvailability;
+import com.thundashop.zauiactivity.dto.OctoProductAvailabilityRequestDto;
+import com.thundashop.zauiactivity.dto.OctoSupplier;
 
 public interface IOctoApiService {
-    public List<OctoSupplier> getAllSuppliers();
+        List<OctoSupplier> getAllSuppliers();
 
-    public List<OctoProduct> getProducts(Integer supplierId) throws IOException;
+        OctoSupplier getSupplierById(Integer supplierId);
 
-    public List<OctoProductAvailability> getAvailability(Integer supplierId,
-            OctoProductAvailabilityRequestDto availabilityRequest);
+        List<OctoProduct> getOctoProducts(Integer supplierId);
 
-    public List<BookingReserve> reserveBooking(Integer supplierId, BookingReserveRequest bookingReserveRequest);
+        OctoProduct getOctoProductById(Integer supplierId, Integer productId);
 
-    public List<BookingConfirm> confirmBooking(Integer supplierId, String bookingId,
-            BookingConfirmRequest bookingConfirmRequest);
+        List<OctoProductAvailability> getOctoProductAvailability(Integer supplierId, OctoProductAvailabilityRequestDto availabilityRequest);
 
-    public List<BookingConfirm> cancelBooking(Integer supplierId, String bookingId);
+        List<BookingReserve> reserveBooking(Integer supplierId, BookingReserveRequest bookingReserveRequest);
+
+        List<BookingConfirm> confirmBooking(Integer supplierId, String bookingId, BookingConfirmRequest bookingConfirmRequest);
+
+        List<BookingConfirm> cancelBooking(Integer supplierId, String bookingId);
 }

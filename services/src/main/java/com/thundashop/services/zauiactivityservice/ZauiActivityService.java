@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 import com.thundashop.repository.exceptions.ZauiException;
 import com.thundashop.repository.utils.SessionInfo;
 import com.thundashop.repository.utils.ZauiStatusCodes;
-import com.thundashop.repository.zauiactivityrepository.ZauiActivityConfigRepository;
-import com.thundashop.repository.zauiactivityrepository.ZauiActivityRepository;
-import com.thundashop.services.octoapiservice.OctoApiService;
+import com.thundashop.repository.zauiactivityrepository.IZauiActivityConfigRepository;
+import com.thundashop.repository.zauiactivityrepository.IZauiActivityRepository;
+import com.thundashop.services.octoapiservice.IOctoApiService;
 import com.thundashop.zauiactivity.dto.OctoProduct;
 import com.thundashop.zauiactivity.dto.ZauiActivity;
 import com.thundashop.zauiactivity.dto.ZauiActivityConfig;
@@ -19,12 +19,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Service
 public class ZauiActivityService implements IZauiActivityService {
-    private ZauiActivityConfigRepository zauiActivityConfigRepository;
-    private ZauiActivityRepository zauiActivityRepository;
-    private OctoApiService octoApiService;
+    @Autowired
+    private IZauiActivityConfigRepository zauiActivityConfigRepository;
+    @Autowired
+    private IZauiActivityRepository zauiActivityRepository;
+    @Autowired
+    private IOctoApiService octoApiService;
 
     public ZauiActivityConfig getZauiActivityConfig(SessionInfo sessionInfo) {
         try{

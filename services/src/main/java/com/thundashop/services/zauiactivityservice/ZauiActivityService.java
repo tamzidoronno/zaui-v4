@@ -1,5 +1,7 @@
 package com.thundashop.services.zauiactivityservice;
 
+import com.thundashop.core.pmsmanager.PmsBooking;
+import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.pmsmanager.PmsPricing;
 import com.thundashop.repository.exceptions.ZauiException;
 import com.thundashop.repository.utils.SessionInfo;
@@ -7,17 +9,17 @@ import com.thundashop.repository.utils.ZauiStatusCodes;
 import com.thundashop.repository.zauiactivity.ZauiActivityConfigRepository;
 import com.thundashop.repository.zauiactivity.ZauiActivityRepository;
 import com.thundashop.services.octoapiservice.OctoApiService;
-import com.thundashop.zauiactivity.dto.OctoProduct;
-import com.thundashop.zauiactivity.dto.ZauiActivity;
-import com.thundashop.zauiactivity.dto.ZauiActivityConfig;
+import com.thundashop.zauiactivity.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -46,6 +48,31 @@ public class ZauiActivityService implements IZauiActivityService {
     public void setZauiActivityConfig(ZauiActivityConfig zauiActivityConfig, SessionInfo sessionInfo) {
         zauiActivityConfigRepository.save(zauiActivityConfig,sessionInfo);
     }
+
+    private PmsBookingRooms createTempRoom(PmsBooking booking) {
+        PmsBookingRooms room = new PmsBookingRooms();
+        room.bookingItemTypeId = "zauiActivity";
+        room.date.start = booking.startDate;
+        room.date.end = booking.endDate;
+        room.deleted = true;
+        room.deletedDate = new Date();
+        booking.rooms.add(room);
+        return room;
+    }
+    @Override
+    public void addActivityToBooking(BookingZauiActivityItem activityItem, PmsBooking booking) throws ZauiException {
+        if(activityItem.units == null)
+            throw new ZauiException(ZauiStatusCodes.MISSING_PARAMS);
+        OctoBookingReserveRequest bookingReserveRequest = new OctoBookingReserveRequest()
+                .setProductId(activityItem.octoProductId)
+                .setOptionId(activityItem.optionId)
+                .setAvailabilityId(activityItem.availabilityId)
+                .setNotes("Zaui Stay Booking")
+                .setUnitItems(activityItem.units.stream().map(o -> new UnitItemReserveRequest(o.id)).collect(Collectors.toList()));
+        OctoBookingReserve octoBookingReserve = octoApiService.reserveBooking(activityItem.supplierId,bookingReserveRequest);
+        booking.bookingZauiActivityItem.add(activityItem);
+    }
+
 
     private ZauiActivity mapOctoToZauiActivity(OctoProduct octoProduct) {
         ZauiActivity zauiActivity = new ZauiActivity();

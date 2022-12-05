@@ -13,10 +13,10 @@ public interface IOctoApiService {
     public List<OctoProductAvailability> getAvailability(Integer supplierId,
             OctoProductAvailabilityRequestDto availabilityRequest);
 
-    public List<BookingReserve> reserveBooking(Integer supplierId, BookingReserveRequest bookingReserveRequest);
+    public OctoBookingReserve reserveBooking(Integer supplierId, OctoBookingReserveRequest bookingReserveRequest);
 
-    public List<BookingConfirm> confirmBooking(Integer supplierId, String bookingId,
-            BookingConfirmRequest bookingConfirmRequest);
+    public OctoBookingConfirm confirmBooking(Integer supplierId, String bookingId,
+            OctoBookingConfirmRequest octoBookingConfirmRequest);
 
-    public List<BookingConfirm> cancelBooking(Integer supplierId, String bookingId);
+    public OctoBookingConfirm cancelBooking(Integer supplierId, String bookingId);
 }

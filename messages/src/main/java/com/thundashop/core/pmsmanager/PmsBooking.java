@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
 import org.apache.commons.lang3.StringUtils;
 import org.mongodb.morphia.annotations.Transient;
 
@@ -96,6 +97,9 @@ public class PmsBooking extends DataCommon {
     public long jomresChannelId=0;
     public String jomresReservationCode="";
     public Date jomresLastModified=null;
+
+    // Zaui Activity related Properties
+    public List<BookingZauiActivityItem> bookingZauiActivityItem = new ArrayList<>();
     
     @Administrator
     public String secretBookingId = "";

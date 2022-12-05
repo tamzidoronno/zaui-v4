@@ -1,6 +1,6 @@
 package com.thundashop.zauiactivity.dto;
 
 public class Unit {
-    private String id;
-    private Integer quantity;
+    public String id;
+    public Integer quantity;
 }

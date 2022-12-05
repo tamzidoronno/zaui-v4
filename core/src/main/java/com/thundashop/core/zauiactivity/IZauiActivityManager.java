@@ -25,11 +25,16 @@ public interface IZauiActivityManager {
 
     List<OctoProductAvailability> getAvailability(Integer supplierId, OctoProductAvailabilityRequestDto availabilityRequest);
 
-    List<BookingReserve> reserveBooking(Integer supplierId, BookingReserveRequest bookingReserveRequest);
+    OctoBookingReserve reserveBooking(Integer supplierId, OctoBookingReserveRequest bookingReserveRequest);
 
-    List<BookingConfirm> confirmBooking(Integer supplierId, String bookingId, BookingConfirmRequest bookingConfirmRequest);
+    OctoBookingConfirm confirmBooking(Integer supplierId, String bookingId, OctoBookingConfirmRequest octoBookingConfirmRequest);
 
-    List<BookingConfirm> cancelBooking(Integer supplierId, String bookingId);
+    OctoBookingConfirm cancelBooking(Integer supplierId, String bookingId);
 
     void fetchZauiActivities(Integer supplierId) throws ZauiException;
+
+    void addActivityToBooking(BookingZauiActivityItem activityItem, String pmsBookingId) throws ZauiException;
+
+
+    void testActivity(BookingZauiActivityItem activityItem, String pmsBookingId) throws ZauiException;
 }

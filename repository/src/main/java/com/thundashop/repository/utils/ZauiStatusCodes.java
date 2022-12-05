@@ -2,7 +2,8 @@ package com.thundashop.repository.utils;
 
 public enum ZauiStatusCodes {
 
-    OCTO_FAILED(500,"Octo API call failed");
+    OCTO_FAILED(500,"Octo API call failed"),
+    MISSING_PARAMS(500, "Missing parameters");
     public final long code;
     public final String message;
 

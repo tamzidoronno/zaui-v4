@@ -3,7 +3,6 @@ package com.thundashop.core.zauiactivity;
 import java.io.IOException;
 import java.util.List;
 
-import com.thundashop.core.bookingengine.data.Booking;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.repository.exceptions.ZauiException;
@@ -25,6 +24,8 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
     @Autowired
     IZauiActivityService zauiActivityService;
 
+    @Autowired
+    PmsManager pmsManager;
 
     @Override
     public ZauiActivityConfig getActivityConfig() {
@@ -53,17 +54,17 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
     }
 
     @Override
-    public List<BookingReserve> reserveBooking(Integer supplierId, BookingReserveRequest bookingReserveRequest) {
-        return octoApiService.reserveBooking(supplierId, bookingReserveRequest);
+    public OctoBookingReserve reserveBooking(Integer supplierId, OctoBookingReserveRequest OctoBookingReserveRequest) {
+        return octoApiService.reserveBooking(supplierId, OctoBookingReserveRequest);
     }
 
     @Override
-    public List<BookingConfirm> confirmBooking(Integer supplierId, String bookingId, BookingConfirmRequest bookingConfirmRequest) {
-        return octoApiService.confirmBooking(supplierId, bookingId, bookingConfirmRequest);
+    public OctoBookingConfirm confirmBooking(Integer supplierId, String bookingId, OctoBookingConfirmRequest octoBookingConfirmRequest) {
+        return octoApiService.confirmBooking(supplierId, bookingId, octoBookingConfirmRequest);
     }
 
     @Override
-    public List<BookingConfirm> cancelBooking(Integer supplierId, String bookingId) {
+    public OctoBookingConfirm cancelBooking(Integer supplierId, String bookingId) {
         return octoApiService.cancelBooking(supplierId, bookingId);
     }
 
@@ -74,5 +75,17 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
     @Override
     public void fetchZauiActivities(Integer supplierId) throws ZauiException {
         zauiActivityService.importZauiActivities(supplierId, getSessionInfo());
+    }
+
+    @Override
+    public void addActivityToBooking(BookingZauiActivityItem activityItem, String pmsBookingId) throws ZauiException {
+        PmsBooking booking = pmsManager.getBooking(pmsBookingId);
+        zauiActivityService.addActivityToBooking(activityItem,booking);
+        pmsManager.saveBooking(booking);
+    }
+
+    @Override
+    public void testActivity(BookingZauiActivityItem activityItem, String pmsBookingId) throws ZauiException {
+        addActivityToBooking(activityItem,pmsBookingId);
     }
 }

@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class BookingConfirm {
+public class OctoBookingConfirm {
     private String id;
     private String uuid;
     private String supplierReference;

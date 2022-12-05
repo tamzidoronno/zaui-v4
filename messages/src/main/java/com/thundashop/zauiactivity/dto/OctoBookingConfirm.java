@@ -1,8 +1,8 @@
 package com.thundashop.zauiactivity.dto;
 
-import lombok.Data;
-
 import java.util.List;
+
+import lombok.Data;
 
 @Data
 public class OctoBookingConfirm {
@@ -22,7 +22,7 @@ public class OctoBookingConfirm {
     private String notes;
     private String optionId;
     private OctoProductAvailability availability;
-    private Contact contact;
+    private OctoSupplierContact contact;
     private List<String> deliveryMethods = null;
     private List<Voucher> voucher = null;
     private List<UnitItem> unitItems = null;
@@ -30,6 +30,7 @@ public class OctoBookingConfirm {
     private Pricing pricing;
 }
 
+@Data
 class Voucher {
     private String redemptionMethod;
     private List<DeliveryOption> deliveryOptions = null;
@@ -37,6 +38,7 @@ class Voucher {
     private String utcRedeemedAt;
 }
 
+@Data
 class UnitItem {
     private String unitId;
 }

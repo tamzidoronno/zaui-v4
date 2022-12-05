@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class OctoBookingConfirmRequest {
     private String resellerReference;
-    private Contact contact;
+    private OctoSupplierContact contact;
     private Boolean emailConfirmation;
 }

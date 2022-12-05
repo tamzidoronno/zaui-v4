@@ -1,10 +1,9 @@
 package com.thundashop.core.zauiactivity;
 
-import java.io.IOException;
 import java.util.List;
 
-import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.GetShopApi;
+import com.thundashop.core.common.GetShopMultiLayerSession;
 import com.thundashop.repository.exceptions.ZauiException;
 import com.thundashop.zauiactivity.dto.*;
 
@@ -13,17 +12,17 @@ import com.thundashop.zauiactivity.dto.*;
  * activities.<br>
  */
 @GetShopApi
-@GetShopSession
+@GetShopMultiLayerSession
 public interface IZauiActivityManager {
     ZauiActivityConfig getActivityConfig();
 
-    void updateActivityConfig(ZauiActivityConfig newActivityConfig);
+    ZauiActivityConfig updateActivityConfig(ZauiActivityConfig newActivityConfig);
 
     List<OctoSupplier> getAllSuppliers();
 
-    List<OctoProduct> getActivities(Integer supplierId) throws IOException;
+    List<OctoProduct> getZauiActivities(Integer supplierId);
 
-    List<OctoProductAvailability> getAvailability(Integer supplierId, OctoProductAvailabilityRequestDto availabilityRequest);
+    List<OctoProductAvailability> getZauiActivityAvailability(Integer supplierId, OctoProductAvailabilityRequestDto availabilityRequest);
 
     OctoBookingReserve reserveBooking(Integer supplierId, OctoBookingReserveRequest bookingReserveRequest);
 

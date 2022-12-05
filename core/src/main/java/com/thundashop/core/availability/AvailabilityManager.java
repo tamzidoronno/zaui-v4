@@ -135,10 +135,7 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
         dt.setTime(arg.getStart());
         for(int i = 0; i <= result.numberOfDays + 1; i++) {
             Availability av = new Availability();
-            Calendar dtToShow = Calendar.getInstance();
-            dtToShow.setTime(dt.getTime());
-            dtToShow.add(Calendar.DAY_OF_YEAR, -1);
-            av.setDate(DATE_FORMATTER.format(dtToShow.getTime()));
+            av.setDate(DATE_FORMATTER.format(dt.getTime()));
             av.setCurrencyCode("NOK");
             if(isClosed(config.closedOfPeriode, dt.getTime())) {
                 av.setTotalNoOfRooms(0L);

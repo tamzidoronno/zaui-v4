@@ -4,10 +4,8 @@ import java.util.List;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.thundashop.core.common.DataCommon;
-import lombok.Data;
 
-import javax.jdo.annotations.Serialized;
+import lombok.Data;
 
 @Data
 public class OctoProduct {
@@ -36,5 +34,3 @@ public class OctoProduct {
     @Expose
     private String primaryDescription;
 }
-
-

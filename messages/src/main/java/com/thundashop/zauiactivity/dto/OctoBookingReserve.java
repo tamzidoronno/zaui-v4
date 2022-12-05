@@ -1,8 +1,8 @@
 package com.thundashop.zauiactivity.dto;
 
-import lombok.Data;
-
 import java.util.List;
+
+import lombok.Data;
 
 @Data
 public class OctoBookingReserve {
@@ -22,13 +22,14 @@ public class OctoBookingReserve {
     private String notes;
     private String optionId;
     private OctoProductAvailability availability;
-    private Contact contact;
+    private OctoSupplierContact contact;
     private List<String> deliveryMethods = null;
     private List<String> voucher = null;
     private List<UnitItemReserveResponse> unitItems = null;
     private Cancellation cancellation;
 }
 
+@Data
 class UnitItemReserveResponse {
     private String uuid;
     private String unitId;
@@ -36,6 +37,8 @@ class UnitItemReserveResponse {
     private Object supplierReference;
     private Ticket ticket;
 }
+
+@Data
 class Contact {
     private String fullName;
     private String firstName;
@@ -46,17 +49,22 @@ class Contact {
     private String country;
     private String notes;
 }
+
+@Data
 class DeliveryOption {
     private String deliveryFormat;
     private String deliveryValue;
 }
 
+@Data
 class Ticket {
     private String redemptionMethod;
     private String utcDeliveredAt;
     private String utcRedeemedAt;
     private List<DeliveryOption> deliveryOptions = null;
 }
+
+@Data
 class Cancellation {
     private Boolean cancelled;
     private String utcCancelledAt;

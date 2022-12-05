@@ -7,13 +7,12 @@ import com.thundashop.repository.utils.SessionInfo;
 import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
 import com.thundashop.zauiactivity.dto.ZauiActivityConfig;
 
-
 public interface IZauiActivityService {
     ZauiActivityConfig getZauiActivityConfig(SessionInfo sessionInfo);
 
-    void importZauiActivities(Integer supplierId, SessionInfo sessionInfo) throws ZauiException;
-
-    void setZauiActivityConfig(ZauiActivityConfig zauiActivityConfig, SessionInfo sessionInfo);
+    ZauiActivityConfig setZauiActivityConfig(ZauiActivityConfig zauiActivityConfig, SessionInfo sessionInfo);
 
     void addActivityToBooking(BookingZauiActivityItem activityItem, PmsBooking booking) throws ZauiException;
+
+    void fetchZauiActivities(Integer supplierId, SessionInfo sessionInfo) throws ZauiException;
 }

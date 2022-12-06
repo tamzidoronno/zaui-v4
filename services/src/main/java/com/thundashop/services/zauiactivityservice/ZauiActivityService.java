@@ -1,5 +1,6 @@
 package com.thundashop.services.zauiactivityservice;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,15 +40,19 @@ public class ZauiActivityService implements IZauiActivityService {
         return zauiActivityConfigRepository.save(zauiActivityConfig, sessionInfo);
     }
 
-    public void fetchZauiActivities(Integer supplierId, SessionInfo sessionInfo) throws ZauiException {
-        List<OctoProduct> octoProducts = null;
-        try {
-            octoProducts = octoApiService.getOctoProducts(supplierId);
-        } catch (Exception e) {
-            throw new ZauiException(ZauiStatusCodes.OCTO_FAILED);
+    public List<ZauiActivity> getZauiActivities(SessionInfo sessionInfo) {
+        return zauiActivityRepository.getAll(sessionInfo);
+    }
+
+    public void fetchZauiActivities(SessionInfo sessionInfo) throws ZauiException {
+        ZauiActivityConfig zauiActivityConfig = zauiActivityConfigRepository.getZauiActivityConfig(sessionInfo).orElse(null);
+        if (zauiActivityConfig == null) {
+            return;
         }
-        octoProducts
-                .forEach(octoProduct -> zauiActivityRepository.save(mapOctoToZauiActivity(octoProduct), sessionInfo));
+        zauiActivityConfig.getSupplierIds().forEach(supplierId ->
+                octoApiService.getOctoProducts(supplierId).forEach(
+                        octoProduct -> zauiActivityRepository.save(mapOctoToZauiActivity(octoProduct, supplierId), sessionInfo)));
+
     }
     @Override
     public void addActivityToBooking(BookingZauiActivityItem activityItem, PmsBooking booking) throws ZauiException {
@@ -65,14 +70,16 @@ public class ZauiActivityService implements IZauiActivityService {
     }
 
 
-    private ZauiActivity mapOctoToZauiActivity(OctoProduct octoProduct) {
+    private ZauiActivity mapOctoToZauiActivity(OctoProduct octoProduct, Integer supplierId) {
         ZauiActivity zauiActivity = new ZauiActivity();
         zauiActivity.name = octoProduct.getTitle();
+        zauiActivity.productId = octoProduct.getId();
+        zauiActivity.supplierId = supplierId;
         zauiActivity.shortDescription = octoProduct.getShortDescription();
         zauiActivity.description = octoProduct.getPrimaryDescription();
         zauiActivity.activityOptionList = octoProduct.getOptions();
         zauiActivity.mainImage = octoProduct.getCoverImage();
-        zauiActivity.tag = "addon";
+        zauiActivity.tag = "zaui-activity";
         return zauiActivity;
     }
 }

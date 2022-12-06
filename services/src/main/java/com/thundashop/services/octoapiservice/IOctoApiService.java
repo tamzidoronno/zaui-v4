@@ -2,6 +2,7 @@ package com.thundashop.services.octoapiservice;
 
 import java.util.List;
 
+import com.thundashop.repository.utils.SessionInfo;
 import com.thundashop.zauiactivity.dto.*;
 import com.thundashop.zauiactivity.dto.OctoBookingConfirm;
 import com.thundashop.zauiactivity.dto.OctoBookingConfirmRequest;
@@ -21,7 +22,6 @@ public interface IOctoApiService {
     OctoProduct getOctoProductById(Integer supplierId, Integer productId);
 
     List<OctoProductAvailability> getOctoProductAvailability(Integer supplierId, OctoProductAvailabilityRequestDto availabilityRequest);
-
 
     OctoBookingConfirm cancelBooking(Integer supplierId, String bookingId);
 }

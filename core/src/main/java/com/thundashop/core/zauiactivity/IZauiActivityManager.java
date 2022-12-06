@@ -20,7 +20,7 @@ public interface IZauiActivityManager {
 
     List<OctoSupplier> getAllSuppliers();
 
-    List<OctoProduct> getZauiActivities(Integer supplierId);
+    List<OctoProduct> getOctoProducts(Integer supplierId);
 
     List<OctoProductAvailability> getZauiActivityAvailability(Integer supplierId, OctoProductAvailabilityRequestDto availabilityRequest);
 
@@ -30,7 +30,9 @@ public interface IZauiActivityManager {
 
     OctoBookingConfirm cancelBooking(Integer supplierId, String bookingId);
 
-    void fetchZauiActivities(Integer supplierId) throws ZauiException;
+    List<ZauiActivity> getZauiActivities() throws ZauiException;
+
+    void fetchZauiActivities() throws ZauiException;
 
     void addActivityToBooking(BookingZauiActivityItem activityItem, String pmsBookingId) throws ZauiException;
 

@@ -13,10 +13,7 @@ import org.springframework.stereotype.Component;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
-import com.thundashop.repository.exceptions.ZauiException;
 import com.thundashop.services.octoapiservice.IOctoApiService;
-import com.thundashop.services.zauiactivityservice.IZauiActivityService;
-import com.thundashop.zauiactivity.dto.BookingReserveRequest;
 import com.thundashop.zauiactivity.dto.OctoProduct;
 import com.thundashop.zauiactivity.dto.OctoProductAvailability;
 import com.thundashop.zauiactivity.dto.OctoProductAvailabilityRequestDto;
@@ -50,7 +47,7 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
     }
 
     @Override
-    public List<OctoProduct> getZauiActivities(Integer supplierId) {
+    public List<OctoProduct> getOctoProducts(Integer supplierId) {
         return octoApiService.getOctoProducts(supplierId);
     }
 
@@ -76,8 +73,13 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
     }
 
     @Override
-    public void fetchZauiActivities(Integer supplierId) throws ZauiException {
-        zauiActivityService.fetchZauiActivities(supplierId, getSessionInfo());
+    public List<ZauiActivity> getZauiActivities() throws ZauiException {
+        return zauiActivityService.getZauiActivities(getSessionInfo());
+    }
+
+    @Override
+    public void fetchZauiActivities() throws ZauiException {
+        zauiActivityService.fetchZauiActivities(getSessionInfo());
     }
 
     @Override

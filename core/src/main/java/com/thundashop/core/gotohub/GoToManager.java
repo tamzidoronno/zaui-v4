@@ -23,8 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.thundashop.core.databasemanager.data.DataRetreived;
-import com.thundashop.core.gotohub.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,8 +31,27 @@ import com.getshop.scope.GetShopSessionBeanNamed;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItemType;
+import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.gotohub.constant.GoToStatusCodes;
 import com.thundashop.core.gotohub.constant.GotoConstants;
+import com.thundashop.core.gotohub.dto.GoToApiResponse;
+import com.thundashop.core.gotohub.dto.GoToConfiguration;
+import com.thundashop.core.gotohub.dto.GoToRoomData;
+import com.thundashop.core.gotohub.dto.GotoBooker;
+import com.thundashop.core.gotohub.dto.GotoBookingRequest;
+import com.thundashop.core.gotohub.dto.GotoBookingResponse;
+import com.thundashop.core.gotohub.dto.GotoException;
+import com.thundashop.core.gotohub.dto.GotoRoomDailyPrice;
+import com.thundashop.core.gotohub.dto.GotoRoomRequest;
+import com.thundashop.core.gotohub.dto.GotoRoomResponse;
+import com.thundashop.core.gotohub.dto.GotoRoomRestriction;
+import com.thundashop.core.gotohub.dto.Hotel;
+import com.thundashop.core.gotohub.dto.PriceAllotment;
+import com.thundashop.core.gotohub.dto.PriceTotal;
+import com.thundashop.core.gotohub.dto.RatePlan;
+import com.thundashop.core.gotohub.dto.RatePlanCode;
+import com.thundashop.core.gotohub.dto.RoomType;
+import com.thundashop.core.gotohub.dto.RoomTypeCode;
 import com.thundashop.core.gotohub.schedulers.GotoExpireBookingScheduler;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
@@ -60,7 +77,8 @@ import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.wubook.WubookManager;
-import com.thundashop.services.gotoservice.GotoService;
+import com.thundashop.services.gotoservice.IGotoHotelInformationService;
+import com.thundashop.services.gotoservice.IGotoService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -102,7 +120,10 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     WubookManager wubookManager;
 
     @Autowired
-    GotoService gotoService;
+    IGotoService gotoService;
+
+    @Autowired
+    IGotoHotelInformationService gotoHotelInformationService;
 
     private GoToConfiguration goToConfiguration;
     private final String CURRENCY_CODE = "currencycode";
@@ -138,7 +159,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     public GoToApiResponse getHotelInformation() {
         try {
             removeCurrentUser();
-            Hotel hotel = gotoService.getHotelInformation(storeManager.getMyStore(), pmsManager.getConfiguration(),
+            Hotel hotel = gotoHotelInformationService.getHotelInformation(storeManager.getMyStore(), pmsManager.getConfiguration(),
                     storeManager.getStoreSettingsApplicationKey("currencycode"));
             return new GoToApiResponse(true,
                     GoToStatusCodes.FETCHING_HOTEL_INFO_SUCCESS.code,

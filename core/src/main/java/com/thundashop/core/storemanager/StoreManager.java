@@ -1,6 +1,5 @@
 package com.thundashop.core.storemanager;
 
-
 import com.getshop.javaapi.GetShopApi;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
@@ -29,6 +28,8 @@ import com.thundashop.core.storemanager.data.StoreConfiguration;
 import com.thundashop.core.storemanager.data.StoreCriticalMessage;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.webmanager.WebManager;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -48,34 +49,34 @@ import java.util.zip.GZIPOutputStream;
 public class StoreManager extends ManagerBase implements IStoreManager {
     @Autowired
     public StorePool storePool;
-    
+
     @Autowired
     public Database database;
-    
+
     @Autowired
     public MailFactory mailFactory;
-    
+
     @Autowired
-    public GSEnvironments environments; 
-    
+    public GSEnvironments environments;
+
     @Autowired
     public FrameworkConfig FrameworkConfig;
-//    
+
     @Autowired
     public GetShopSessionScope getShopScope;
-    
+
     @Autowired
     public OrderManager orderManager;
-    
+
     @Autowired
     public GetShopLockSystemManager getShopLockSystemManager;
-    
+
     @Autowired
     public GdsManager gdsManager;
-    
+
     @Autowired
     public WebManager webManager;
-    
+
     @Autowired
     public GetShopSessionScope getShopSessionScope;
 
@@ -84,22 +85,21 @@ public class StoreManager extends ManagerBase implements IStoreManager {
 
     @Autowired
     private FrameworkConfig frameworkConfig;
-    
-    
-    private HashMap<String, KeyData> keyDataStore = new HashMap();
-    
-    private HashMap<String, RemoteServerMetaData> backupInfo = new HashMap();
-    
+
+    private HashMap<String, KeyData> keyDataStore = new HashMap<>();
+
+    private HashMap<String, RemoteServerMetaData> backupInfo = new HashMap<>();
+
     public String currentSecretId;
-    
+
     private GetShopModules modules = new GetShopModules();
 
     private ModuleHomePages moduleHomePages = new ModuleHomePages();
-    
-    public List<StoreCriticalMessage> messages = new ArrayList(); 
-    
+
+    public List<StoreCriticalMessage> messages = new ArrayList<>();
+
     private Date lastCheckedBackups = null;
-    
+
     @PostConstruct
     public void init() {
         initialize();
@@ -107,44 +107,46 @@ public class StoreManager extends ManagerBase implements IStoreManager {
 
     public List<BookingEngine> getBookingEngines() {
         List<String> names = getMultiLevelNames();
-        List<BookingEngine> result = new ArrayList();
-        for(String name : names) {
+        List<BookingEngine> result = new ArrayList<>();
+        for (String name : names) {
             result.add(getShopSessionScope.getNamedSessionBean(name, BookingEngine.class));
         }
-        
+
         return result;
     }
 
     public List<PmsManager> getPmsManagers() {
         List<String> names = getMultiLevelNames();
-        List<PmsManager> result = new ArrayList();
-        for(String name : names) {
+        List<PmsManager> result = new ArrayList<>();
+        for (String name : names) {
             result.add(getShopSessionScope.getNamedSessionBean(name, PmsManager.class));
         }
-        
+
         return result;
     }
-    
+
     /**
      * PikTime is the time when getshop decided to go full product is king style.
-     * The time where customers ruled getshop is over and getshop drives the development.
+     * The time where customers ruled getshop is over and getshop drives the
+     * development.
      * This will result in less special produced code for specific customers.
-     * @return 
+     * 
+     * @return
      */
     @Override
     public boolean isPikStore() {
         if (frameworkConfig.productionMode) {
             boolean doPush = false;
-            if(lastCheckedBackups == null) {
+            if (lastCheckedBackups == null) {
                 doPush = true;
             } else {
                 long diff = System.currentTimeMillis() - lastCheckedBackups.getTime();
-                if(diff > (1000*60*60*6)) {  // 6 hours
+                if (diff > (1000 * 60 * 60 * 6)) { // 6 hours
                     doPush = true;
                 }
             }
 
-            if(doPush) {
+            if (doPush) {
                 lastCheckedBackups = new Date();
                 backupServerSyncManager.doubleCheckTransferServersToBackupSystem(storeId);
             }
@@ -152,34 +154,34 @@ public class StoreManager extends ManagerBase implements IStoreManager {
 
         return getStore().isPikStore();
     }
-    
+
     @Override
     public void dataFromDatabase(DataRetreived data) {
-        for(DataCommon dcommon : data.data) {
-            if(dcommon instanceof KeyData) {
+        for (DataCommon dcommon : data.data) {
+            if (dcommon instanceof KeyData) {
                 KeyData kdata = (KeyData) dcommon;
                 keyDataStore.put(kdata.datakey, kdata);
             }
-            if(dcommon instanceof StoreCriticalMessage) {
+            if (dcommon instanceof StoreCriticalMessage) {
                 StoreCriticalMessage msg = (StoreCriticalMessage) dcommon;
                 messages.add(msg);
             }
-            if(dcommon instanceof RemoteServerMetaData) {
+            if (dcommon instanceof RemoteServerMetaData) {
                 RemoteServerMetaData msg = (RemoteServerMetaData) dcommon;
                 backupInfo.put(msg.id, msg);
             }
         }
-        
+
         try {
             modules.getModules().stream().forEach(m -> {
                 databaseRemote.getAll("StoreManager", "all", m.id).forEach(o -> {
                     if (o instanceof ModuleHomePages) {
-                        moduleHomePages = (ModuleHomePages)moduleHomePages;
+                        moduleHomePages = (ModuleHomePages) moduleHomePages;
                     }
                 });
             });
-        }catch(Exception e) {
-            
+        } catch (Exception e) {
+
         }
     }
 
@@ -190,7 +192,6 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     }
 
     public boolean isNewer(int year, int month, int day) {
-        Store store = getMyStore();
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, year);
         cal.set(Calendar.MONTH, month);
@@ -199,7 +200,6 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         return toCheck.after(cal.getTime());
     }
 
-    
     @Override
     public Store getMyStore() throws ErrorException {
         return finalize(storePool.getStore(storeId));
@@ -210,9 +210,9 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         if (config == null) {
             throw new ErrorException(95);
         }
-        
+
         Store store = getMyStore();
-        
+
         if (!isCmsModule()) {
             saveModuleHomePage(config.homePage);
         }
@@ -229,7 +229,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
 
         if (store.webAddressPrimary != null && store.webAddressPrimary.trim().length() > 0) {
             if (store.additionalDomainNames == null) {
-                store.additionalDomainNames = new ArrayList();
+                store.additionalDomainNames = new ArrayList<>();
             }
             store.additionalDomainNames.add(store.webAddressPrimary);
         }
@@ -252,13 +252,13 @@ public class StoreManager extends ManagerBase implements IStoreManager {
                 store.additionalDomainNames.remove(store.webAddressPrimary);
             }
         }
-        if (store.webAddress.equalsIgnoreCase(domainName)) {
+        if (StringUtils.isNotBlank(store.webAddress) && store.webAddress.equalsIgnoreCase(domainName)) {
             store.webAddress = "";
         }
         storePool.saveStore(store);
         return store;
     }
-    
+
     @Override
     public boolean isAddressTaken(String address) throws ErrorException {
         return storePool.isAddressTaken(address);
@@ -301,7 +301,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         Store store = getMyStore();
         return store.id;
     }
-    
+
     @Override
     public void delete() throws ErrorException {
         Store store = getMyStore();
@@ -311,20 +311,21 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     @Override
     public Store createStore(String hostname, String email, String password, boolean notify) throws ErrorException {
         /**
-         * This function is not really in use. 
-         * It skips StoreManager, and goes directly to StorePool 
+         * This function is not really in use.
+         * It skips StoreManager, and goes directly to StorePool
          * and executes the createStore function there.
          * 
          * Its added here to support our api.
          */
-        throw new UnsupportedOperationException("Not in use."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not in use."); // To change body of generated methods, choose Tools |
+                                                                // Templates.
     }
 
     private String encrypt(String password) throws ErrorException {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hash = digest.digest(password.getBytes("UTF-8"));
-            
+
             StringBuilder sb = new StringBuilder();
             for (byte b : hash) {
                 sb.append(String.format("%02X", b));
@@ -334,7 +335,6 @@ public class StoreManager extends ManagerBase implements IStoreManager {
             throw new ErrorException(88);
         }
     }
-
 
     @Override
     public int generateStoreId() throws ErrorException {
@@ -358,7 +358,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     @Override
     public void saveKey(String key, String value, boolean secure) {
         KeyData keydata = new KeyData();
-        if(keyDataStore.containsKey(key)) {
+        if (keyDataStore.containsKey(key)) {
             keydata = keyDataStore.get(key);
         }
         keydata.datakey = key;
@@ -371,17 +371,17 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     @Override
     public String getKey(String key) {
         KeyData res = keyDataStore.get(key);
-        
+
         if (res == null) {
             return "";
         }
-        
-        if(res != null && res.secure) {
-            if(!getSession().currentUser.isAdministrator()) {
+
+        if (res != null && res.secure) {
+            if (!getSession().currentUser.isAdministrator()) {
                 return "";
             }
         }
-        
+
         return res.value;
     }
 
@@ -394,7 +394,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
 
     @Override
     public String getKeySecure(String key, String password) {
-        if(password != null && password.equals("fdsafasfneo445gfsbsdfasfasf")) {
+        if (password != null && password.equals("fdsafasfneo445gfsbsdfasfasf")) {
             return keyDataStore.get(key) != null ? keyDataStore.get(key).value : "";
         }
         return "";
@@ -406,15 +406,16 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     }
 
     @Override
-    public Store initializeStoreWithModuleId(String webAddress, String initSessionId, String moduleId) throws ErrorException {
+    public Store initializeStoreWithModuleId(String webAddress, String initSessionId, String moduleId)
+            throws ErrorException {
         Store store = storePool.initialize(storeId, initSessionId);
         if (getSession() != null) {
             moduleId = moduleId == null || moduleId.isEmpty() ? "cms" : moduleId;
             getSession().put("currentGetShopModule", moduleId);
         }
-        return store; 
+        return store;
     }
-    
+
     @Override
     public void setImageIdToFavicon(String id) {
         Store store = getMyStore();
@@ -439,13 +440,13 @@ public class StoreManager extends ManagerBase implements IStoreManager {
             logPrint("This function is not allowed in production mode");
             return;
         }
-        
+
         GSEnvironment environMent = environments.get(environment);
-        
+
         try {
-            GetShopApi api = environMent.getApi(getMyStore().webAddress);    
+            GetShopApi api = environMent.getApi(getMyStore().webAddress);
             List<DataCommon> datas = database.getAllDataForStore(storeId);
-            
+
             Runnable task = () -> {
                 try {
                     User user = api.getUserManager().logOn(username, password);
@@ -455,7 +456,8 @@ public class StoreManager extends ManagerBase implements IStoreManager {
                     String dataToTransfer = StoreManager.toString((Serializable) datas);
                     byte[] bytes = compress(dataToTransfer);
                     double size = bytes.length;
-                    logPrint("Data to transfer: " + Math.floor(size/1024) + "kb, " + Math.floor(size/1024/1024) + "mb");
+                    logPrint("Data to transfer: " + Math.floor(size / 1024) + "kb, " + Math.floor(size / 1024 / 1024)
+                            + "mb");
                     api.getStoreManager().receiveSyncData(bytes);
                     logPrint("Data sent, should be availble online now!");
                 } catch (Exception ex) {
@@ -465,35 +467,35 @@ public class StoreManager extends ManagerBase implements IStoreManager {
 
             Thread thread = new Thread(task);
             thread.setName("Synchonize data thread started");
-            thread.start();     
-            
+            thread.start();
+
         } catch (Exception ex) {
-            if(ex instanceof java.lang.ClassNotFoundException) {
+            if (ex instanceof java.lang.ClassNotFoundException) {
                 logPrint("Class not found: " + ex.getMessage());
             } else {
                 ex.printStackTrace();
             }
         }
     }
-    
-    private static Object fromString( String s ) throws IOException ,
-                                                       ClassNotFoundException {
-        byte [] data = Base64.getDecoder().decode( s );
-        try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(  data ) )) {
-            Object o  = ois.readObject();
+
+    private static Object fromString(String s) throws IOException,
+            ClassNotFoundException {
+        byte[] data = Base64.getDecoder().decode(s);
+        try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data))) {
+            Object o = ois.readObject();
             return o;
         }
-   }
-
-    private static String toString( Serializable o ) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream( baos );
-        oos.writeObject( o );
-        oos.close();
-        return Base64.getEncoder().encodeToString(baos.toByteArray()); 
     }
-    
-     public byte[] compress(String data) throws IOException {
+
+    private static String toString(Serializable o) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(baos);
+        oos.writeObject(o);
+        oos.close();
+        return Base64.getEncoder().encodeToString(baos.toByteArray());
+    }
+
+    public byte[] compress(String data) throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream(data.length());
         GZIPOutputStream gzip = new GZIPOutputStream(bos);
         gzip.write(data.getBytes());
@@ -502,14 +504,14 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         bos.close();
         return compressed;
     }
-	
+
     private String decompress(byte[] compressed) throws IOException {
         ByteArrayInputStream bis = new ByteArrayInputStream(compressed);
         GZIPInputStream gis = new GZIPInputStream(bis);
         BufferedReader br = new BufferedReader(new InputStreamReader(gis, "UTF-8"));
         StringBuilder sb = new StringBuilder();
         String line;
-        while((line = br.readLine()) != null) {
+        while ((line = br.readLine()) != null) {
             sb.append(line);
         }
         br.close();
@@ -517,7 +519,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         bis.close();
         return sb.toString();
     }
-     
+
     @Override
     public void receiveSyncData(byte[] data) throws ErrorException {
         try {
@@ -536,43 +538,43 @@ public class StoreManager extends ManagerBase implements IStoreManager {
 
     @Override
     public List<String> getAllEnvironments() {
-        return new ArrayList(environments.getEnvironments().keySet());
+        return new ArrayList<>(environments.getEnvironments().keySet());
     }
 
     @Override
     public List<String> getMultiLevelNames() throws ErrorException {
-        Set<String> names = new TreeSet();
-        
-        List<String> fasthotelsOld = new ArrayList();
+        Set<String> names = new TreeSet<>();
+
+        List<String> fasthotelsOld = new ArrayList<>();
         fasthotelsOld.add("a152b5bd-80b6-417b-b661-c7c522ccf305");
         fasthotelsOld.add("3b647c76-9b41-4c2a-80db-d96212af0789");
         fasthotelsOld.add("e625c003-9754-4d66-8bab-d1452f4d5562");
 
-        List<String> oldDefaults = new ArrayList();
+        List<String> oldDefaults = new ArrayList<>();
         oldDefaults.add("123865ea-3232-4b3b-9136-7df23cf896c6");
-        
-        if(fasthotelsOld.contains(storeId)) {
+
+        if (fasthotelsOld.contains(storeId)) {
             names.clear();
             names.add("demo");
-        } else if(oldDefaults.contains(storeId)) {
+        } else if (oldDefaults.contains(storeId)) {
             names.clear();
             names.add("default");
-        } else if(isPikStore()) {
+        } else if (isPikStore()) {
             names.clear();
             names.add("default");
         } else {
             for (GetShopSessionBeanNamed named : getShopScope.getSessionNamedObjects()) {
-                if(named == null || named.getName() == null) {
+                if (named == null || named.getName() == null) {
                     logPrint("Null name");
                 } else {
-                    if(!named.getName().contains("'")) {
+                    if (!named.getName().contains("'")) {
                         names.add(named.getName());
                     }
                 }
             }
         }
 
-        return new ArrayList(names);
+        return new ArrayList<>(names);
     }
 
     @Override
@@ -580,7 +582,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         if (!password.equals("asdjfiasdfjiejrisjadfisjdf")) {
             return;
         }
-        
+
         Object ignore = getSession().get("ignoreBookingErrors");
         if (ignore != null) {
             getSession().remove("ignoreBookingErrors");
@@ -592,7 +594,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     @Override
     public void setStoreIdentifier(String identifier) {
         boolean isInUse = database.verifyThatStoreIdentifierNotInUse(identifier);
-        
+
         if (!isInUse) {
             Store store = getMyStore();
             store.identifier = identifier;
@@ -611,7 +613,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         Credentials cred = new Credentials();
         cred.storeid = "all";
         cred.manangerName = "StoreManager";
-        
+
         moduleHomePages.storeId = "all";
         databaseRemote.save(moduleHomePages, cred);
     }
@@ -620,7 +622,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         if (store != null && store.configuration != null) {
             store.configuration.moduleHomePages = moduleHomePages;
         }
-        
+
         return store;
     }
 
@@ -633,8 +635,8 @@ public class StoreManager extends ManagerBase implements IStoreManager {
 
     @Override
     public StoreCriticalMessage getCriticalMessage() {
-        for(StoreCriticalMessage msg : messages) {
-            if(msg.seenWhen == null) {
+        for (StoreCriticalMessage msg : messages) {
+            if (msg.seenWhen == null) {
                 return msg;
             }
         }
@@ -644,12 +646,14 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     @Override
     public void seenCriticalMessage(String id) {
         StoreCriticalMessage msg = null;
-        for(StoreCriticalMessage tmp : messages) {
-            if(tmp.id.equals(id)) {
+        for (StoreCriticalMessage tmp : messages) {
+            if (tmp.id.equals(id)) {
                 msg = tmp;
             }
         }
-        
+        if (msg == null)
+            return;
+
         msg.seenByUser = getSession().currentUser.id;
         msg.seenWhen = new Date();
         saveObject(msg);
@@ -661,7 +665,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
         store.defaultMultilevelName = multilevelname;
         storePool.saveStore(store);
     }
-    
+
     public void acceptGDPR() {
         Store store = getMyStore();
         store.acceptedGDPR = true;
@@ -679,7 +683,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
 
     @Override
     public List<SlaveStore> getSlaves() {
-        List<SlaveStore> retList = new ArrayList();
+        List<SlaveStore> retList = new ArrayList<>();
 
         storePool.getAllStores()
                 .stream()
@@ -690,7 +694,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
                     slaveStore.accepted = getStore().acceptedSlaveIds.contains(slaveStoreObject.id);
                     retList.add(slaveStore);
                 });
-        
+
         return retList;
     }
 
@@ -712,7 +716,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     public String getcountryCode() {
         Application settings = getStoreSettingsApplication();
         String countrycode = settings.getSetting("countrycode");
-        if(countrycode == null || countrycode.isEmpty()) {
+        if (countrycode == null || countrycode.isEmpty()) {
             countrycode = "NO";
         }
         return countrycode;
@@ -720,7 +724,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
 
     @Override
     public void toggleDeactivation(String password, boolean deactivated) {
-        if(!password.equals("gfdoten35345gfsgfdEE__!")) {
+        if (!password.equals("gfdoten35345gfsgfdEE__!")) {
             return;
         }
         Store store = getMyStore();
@@ -730,22 +734,21 @@ public class StoreManager extends ManagerBase implements IStoreManager {
 
     @Override
     public boolean supportsCreateOrderOnDemand() {
-        List<String> hasSupportForOnDemandOrders = new ArrayList();
-        hasSupportForOnDemandOrders.add("1ed4ab1f-c726-4364-bf04-8dcddb2fb2b1"); //Bergstaden
-        hasSupportForOnDemandOrders.add("61216a03-827d-44a6-a7f1-8939402c51c1"); //Svanhild
-        
-        List<String> avoidNewOrderProcess = new ArrayList();
+        List<String> hasSupportForOnDemandOrders = new ArrayList<>();
+        hasSupportForOnDemandOrders.add("1ed4ab1f-c726-4364-bf04-8dcddb2fb2b1"); // Bergstaden
+        hasSupportForOnDemandOrders.add("61216a03-827d-44a6-a7f1-8939402c51c1"); // Svanhild
+
+        List<String> avoidNewOrderProcess = new ArrayList<>();
         avoidNewOrderProcess.add("7b21932d-26ad-40a5-b3b6-c182f5ee4b2f");
         avoidNewOrderProcess.add("c63cdffc-765b-44b2-9694-3628d53726fa");
-        if(avoidNewOrderProcess.contains(storeId)) {
+        if (avoidNewOrderProcess.contains(storeId)) {
             return false;
         }
-        
-        
-        if(storeId != null && hasSupportForOnDemandOrders.contains(storeId)) {
+
+        if (storeId != null && hasSupportForOnDemandOrders.contains(storeId)) {
             return true;
         }
-        
+
         Store store = getMyStore();
         return store.newPaymentProcess;
     }
@@ -757,18 +760,18 @@ public class StoreManager extends ManagerBase implements IStoreManager {
     }
 
     public RemoteServerMetaData getBackupServerInfoByServerId(String id) {
-        for(RemoteServerMetaData tmp : backupInfo.values()) {
-            if(tmp.serverId.equals(id)) {
+        for (RemoteServerMetaData tmp : backupInfo.values()) {
+            if (tmp.serverId.equals(id)) {
                 return tmp;
             }
         }
-        
+
         return new RemoteServerMetaData();
     }
 
     public void invalidateServerBackup(String id) {
-        for(RemoteServerMetaData tmp : backupInfo.values()) {
-            if(tmp.serverId.equals(id)) {
+        for (RemoteServerMetaData tmp : backupInfo.values()) {
+            if (tmp.serverId.equals(id)) {
                 tmp.beenTransferred = false;
                 saveObject(tmp);
             }
@@ -777,7 +780,7 @@ public class StoreManager extends ManagerBase implements IStoreManager {
 
     public String getCurrency() {
         String currency = getStoreSettingsApplicationKey("currencycode");
-        if(currency == null || currency.isEmpty()) {
+        if (currency == null || currency.isEmpty()) {
             currency = "NOK";
         }
         return currency;
@@ -785,10 +788,10 @@ public class StoreManager extends ManagerBase implements IStoreManager {
 
     public String getLanguage() {
         String lang = getSession().language;
-        if(lang == null || lang.isEmpty()) {
+        if (lang == null || lang.isEmpty()) {
             lang = "no";
         }
-        if(lang.equalsIgnoreCase("nb_no")) {
+        if (lang.equalsIgnoreCase("nb_no")) {
             lang = "no";
         }
         return lang;

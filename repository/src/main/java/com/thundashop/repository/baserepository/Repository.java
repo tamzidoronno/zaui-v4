@@ -65,18 +65,16 @@ public abstract class Repository<T> implements IRepository<T> {
         DBObject query = new BasicDBObject();
         query.put("className", getClassName());
         query.put("deleted", null);
-        return this.getDatabase().query(sessionInfo.getManagerName(), getCollectionName(sessionInfo), getEntityClass(), query);
+        return getDatabase().query(sessionInfo.getManagerName(), getCollectionName(sessionInfo), query);
     }
 
     public Optional<T> getFirst(DBObject query, SessionInfo sessionInfo) {
-        return getDatabase()
-                .query(sessionInfo.getManagerName(), getCollectionName(sessionInfo), getEntityClass(), query)
-                .stream()
-                .findFirst();
+        T result = getDatabase().findFirst(sessionInfo.getManagerName(), getCollectionName(sessionInfo), query);
+        return result == null ? Optional.empty() : Optional.of(result);
     }
 
     public Optional<T> getOne(DBObject query, SessionInfo sessionInfo) {
-        List<T> resultList = getDatabase().query(sessionInfo.getManagerName(), getCollectionName(sessionInfo), getEntityClass(), query);
+        List<T> resultList = getDatabase().query(sessionInfo.getManagerName(), getCollectionName(sessionInfo), query);
 
         if (resultList.size() > 1) {
             throw new NotUniqueDataException(String.format("Found multiple data count: %s , entity: %s , query: %s",
@@ -93,7 +91,7 @@ public abstract class Repository<T> implements IRepository<T> {
     
 
     public boolean exist(DBObject query, SessionInfo sessionInfo) {
-        return !getDatabase().query(sessionInfo.getManagerName(), getCollectionName(sessionInfo), getEntityClass(), query).isEmpty();
+        return !getDatabase().query(sessionInfo.getManagerName(), getCollectionName(sessionInfo), query).isEmpty();
     }
 
     public int markDeletedByQuery(DBObject query, SessionInfo sessionInfo) {

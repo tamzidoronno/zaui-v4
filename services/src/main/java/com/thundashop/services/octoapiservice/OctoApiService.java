@@ -54,6 +54,7 @@ public class OctoApiService implements IOctoApiService {
         String url = ZauiConstants.OCTO_API_ENDPOINT + "/suppliers/" + supplierId + "/products";
         Map<String, String> headers = new HashMap<>();
         headers.put(ZauiConstants.OCTO_CONTENT.getLeft(), ZauiConstants.OCTO_CONTENT.getRight());
+        headers.put(ZauiConstants.OCTO_PRICING.getLeft(), ZauiConstants.OCTO_PRICING.getRight());
         String result = getHttpResponseBody(url, headers, "GET", null);
         Type listType = new TypeToken<List<OctoProduct>>() {
         }.getType();
@@ -85,7 +86,9 @@ public class OctoApiService implements IOctoApiService {
     @Override
     public OctoBookingReserve reserveBooking(Integer supplierId, OctoBookingReserveRequest bookingReserveRequest) {
         String url = ZauiConstants.OCTO_API_ENDPOINT + "/suppliers/" + supplierId + "/bookings";
-        String result = getHttpResponseBody(url, null, "POST", gson.toJson(bookingReserveRequest));
+        Map<String, String> headers = new HashMap<>();
+        headers.put(ZauiConstants.OCTO_PRICING.getLeft(), ZauiConstants.OCTO_PRICING.getRight());
+        String result = getHttpResponseBody(url, headers, "POST", gson.toJson(bookingReserveRequest));
         Type listType = new TypeToken<OctoBookingReserve>() {
         }.getType();
         return new Gson().fromJson(result, listType);
@@ -96,6 +99,8 @@ public class OctoApiService implements IOctoApiService {
             OctoBookingConfirmRequest octoBookingConfirmRequest) {
         String url = ZauiConstants.OCTO_API_ENDPOINT + "/suppliers/" + supplierId + "/bookings" + bookingId
                 + "/confirm";
+        Map<String, String> headers = new HashMap<>();
+        headers.put(ZauiConstants.OCTO_PRICING.getLeft(), ZauiConstants.OCTO_PRICING.getRight());
         String result = getHttpResponseBody(url, null, "POST", gson.toJson(octoBookingConfirmRequest));
         Type listType = new TypeToken<OctoBookingConfirm>() {
         }.getType();

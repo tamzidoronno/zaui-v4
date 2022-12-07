@@ -19,16 +19,18 @@ import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import com.thundashop.core.usermanager.data.Address;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
+import java.util.*;
+
+import com.thundashop.core.zauiactivity.ZauiActivityManager;
+import com.thundashop.services.zauiactivityservice.IZauiActivityService;
+import com.thundashop.zauiactivity.constant.ZauiConstants;
+import com.thundashop.zauiactivity.dto.ZauiActivity;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  *
@@ -48,6 +50,12 @@ public class CartManager extends ManagerBase implements ICartManager {
     
     @Autowired
     private PageManager pageManager;
+
+    @Autowired
+    private ZauiActivityManager zauiActivityManager;
+
+    @Autowired
+    private IZauiActivityService zauiActivityService;
     private boolean nextCouponValid = false;
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(CartManager.class);
@@ -71,6 +79,18 @@ public class CartManager extends ManagerBase implements ICartManager {
             Cart cart = getCart(getSession().id);
             return cart.createCartItem(product, count);
         } else {
+            throw new ErrorException(1011);
+        }
+    }
+
+    @Override
+    public CartItem addZauiActivityItem(String productId, int count) throws ErrorException  {
+        Optional<ZauiActivity> activity = zauiActivityService.getZauiActivityById(productId,zauiActivityManager.getSessionInfo());
+        if(activity!= null) {
+            Cart cart = getCart(getSession().id);
+            return cart.createCartItem(activity.get(), count);
+        }
+        else {
             throw new ErrorException(1011);
         }
     }
@@ -263,7 +283,8 @@ public class CartManager extends ManagerBase implements ICartManager {
         //Look for removed products.
         List<CartItem> toRemove = new ArrayList();
         for(CartItem item : cart.getItems()) {
-            if(!productManager.exists(item.getProduct().id)) {
+            Product product = item.getProduct();
+            if(!productManager.exists(product.id) && (isBlank(product.tag) || !product.tag.equals(ZauiConstants.ZAUIACTIVITY_TAG))) {
                 toRemove.add(item);
             }
         }
@@ -522,7 +543,7 @@ public class CartManager extends ManagerBase implements ICartManager {
      * If the cart with the ID does not exists, it will simply 
      * create a new one.
      * 
-     * @param cart
+     * @param cartId
      * @return 
      */
     public Cart getCartById(String cartId) {

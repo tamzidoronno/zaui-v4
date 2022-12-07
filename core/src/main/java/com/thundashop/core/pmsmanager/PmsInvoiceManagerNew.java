@@ -20,13 +20,11 @@ import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.User;
+import com.thundashop.zauiactivity.constant.ZauiConstants;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -377,11 +375,18 @@ public class PmsInvoiceManagerNew {
     }
 
     private void addCartItemsNotConnectedToARoom(PmsOrderCreateRow roomData) {
+
         for (PmsOrderCreateRowItemLine itemLine : roomData.items) {
-            CartItem item = cartManager.addProductItem(itemLine.createOrderOnProductId, itemLine.count);
+            CartItem item;
+            if(Objects.equals(itemLine.orderItemType, ZauiConstants.ZAUIACTIVITY_TAG)){
+                item = cartManager.addZauiActivityItem(itemLine.createOrderOnProductId, itemLine.count);
+            }
+            else {
+                item = cartManager.addProductItem(itemLine.createOrderOnProductId, itemLine.count);
+            }
+
             item.getProduct().price = itemLine.price;
             item.getProduct().name = itemLine.textOnOrder;
         }
-        
     }
 }

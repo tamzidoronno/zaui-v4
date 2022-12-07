@@ -21,8 +21,9 @@ public class ZauiActivityRepository extends Repository<ZauiActivity> implements 
     }
 
     @Override
-    public Optional<ZauiActivity> getZauiActivity(SessionInfo sessionInfo) {
+    public Optional<ZauiActivity> getById(String id, SessionInfo sessionInfo) {
         DBObject query = new BasicDBObject();
+        query.put("_id", id);
         query.put("className", getClassName());
         query.put("deleted", null);
         return getFirst(query, sessionInfo);

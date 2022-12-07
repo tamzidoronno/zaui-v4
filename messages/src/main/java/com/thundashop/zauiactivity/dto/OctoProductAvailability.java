@@ -18,6 +18,7 @@ public class OctoProductAvailability {
     private Pricing pricing;
 }
 
+@Data
 class Pricing {
     String currency;
     Integer currencyPrecision;

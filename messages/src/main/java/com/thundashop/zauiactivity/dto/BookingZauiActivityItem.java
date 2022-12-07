@@ -15,6 +15,7 @@ public class BookingZauiActivityItem extends PmsBookingAddonItem {
     public String availabilityId;
     public List<Unit> units;
     public Pricing pricing;
+    public double unpaidAmount;
     public String notes;
     public String localDateTimeStart;
     public String localDateTimeEnd;

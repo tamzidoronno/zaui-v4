@@ -38,7 +38,9 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
 
     @Override
     public ZauiActivityConfig updateActivityConfig(ZauiActivityConfig newActivityConfig) {
-        return zauiActivityService.setZauiActivityConfig(newActivityConfig, getSessionInfo());
+       // return zauiActivityService.setZauiActivityConfig(newActivityConfig, getSessionInfo());
+        saveObject(newActivityConfig);
+        return newActivityConfig;
     }
 
     @Override

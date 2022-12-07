@@ -1,10 +1,11 @@
 package com.thundashop.services.zauiactivityservice;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.thundashop.core.pmsmanager.PmsBooking;
+import com.thundashop.zauiactivity.constant.ZauiConstants;
 import com.thundashop.zauiactivity.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,6 +45,11 @@ public class ZauiActivityService implements IZauiActivityService {
         return zauiActivityRepository.getAll(sessionInfo);
     }
 
+    @Override
+    public Optional<ZauiActivity> getZauiActivityById(String Id, SessionInfo sessionInfo) {
+        return zauiActivityRepository.getById(Id, sessionInfo);
+    }
+
     public void fetchZauiActivities(SessionInfo sessionInfo) throws ZauiException {
         ZauiActivityConfig zauiActivityConfig = zauiActivityConfigRepository.getZauiActivityConfig(sessionInfo).orElse(null);
         if (zauiActivityConfig == null) {
@@ -66,7 +72,7 @@ public class ZauiActivityService implements IZauiActivityService {
                 .setUnitItems(activityItem.units.stream().map(o -> new UnitItemReserveRequest(o.id)).collect(Collectors.toList()));
         OctoBookingReserve octoBookingReserve = octoApiService.reserveBooking(activityItem.supplierId,bookingReserveRequest);
         activityItem.setOctoBooking(octoBookingReserve);
-        booking.bookingZauiActivityItem.add(activityItem);
+        booking.bookingZauiActivityItems.add(activityItem);
     }
 
 
@@ -79,7 +85,7 @@ public class ZauiActivityService implements IZauiActivityService {
         zauiActivity.description = octoProduct.getPrimaryDescription();
         zauiActivity.activityOptionList = octoProduct.getOptions();
         zauiActivity.mainImage = octoProduct.getCoverImage();
-        zauiActivity.tag = "zaui-activity";
+        zauiActivity.tag = ZauiConstants.ZAUIACTIVITY_TAG;
         return zauiActivity;
     }
 }

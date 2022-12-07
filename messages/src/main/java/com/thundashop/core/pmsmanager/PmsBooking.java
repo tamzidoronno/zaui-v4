@@ -99,7 +99,7 @@ public class PmsBooking extends DataCommon {
     public Date jomresLastModified=null;
 
     // Zaui Activity related Properties
-    public List<BookingZauiActivityItem> bookingZauiActivityItem = new ArrayList<>();
+    public List<BookingZauiActivityItem> bookingZauiActivityItems = new ArrayList<>();
     
     @Administrator
     public String secretBookingId = "";

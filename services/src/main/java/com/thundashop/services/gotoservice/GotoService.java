@@ -111,5 +111,4 @@ public class GotoService implements IGotoService {
                         && booking.isOlderThan(autoDeletionTime))
                 .collect(Collectors.toList());
     }
-
 }

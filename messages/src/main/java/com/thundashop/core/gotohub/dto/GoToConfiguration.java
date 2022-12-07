@@ -1,7 +1,6 @@
 package com.thundashop.core.gotohub.dto;
 
 import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.common.PermenantlyDeleteData;
 import com.thundashop.core.gotohub.constant.GotoConstants;
 
 import lombok.AllArgsConstructor;
@@ -13,7 +12,6 @@ import lombok.NoArgsConstructor;
  * @author Naim Murad (naim)
  * @since 6/23/22
  */
-@PermenantlyDeleteData
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

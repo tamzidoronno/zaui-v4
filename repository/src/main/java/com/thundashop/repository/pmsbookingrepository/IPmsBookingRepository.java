@@ -8,4 +8,6 @@ import com.thundashop.repository.utils.SessionInfo;
 
 public interface IPmsBookingRepository extends IRepository<PmsBooking> {
     List<PmsBooking> getGotoBookings(SessionInfo sessionInfo);
+
+    PmsBooking getPmsBookingByAddonId(String addonId, SessionInfo sessionInfo);
 }

@@ -100,8 +100,9 @@ import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.wubook.WubookManager;
-import com.thundashop.services.gotoservice.GotoService;
 import com.thundashop.services.gotoservice.IGotoBookingRequestValidationService;
+import com.thundashop.services.gotoservice.IGotoHotelInformationService;
+import com.thundashop.services.gotoservice.IGotoService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -146,7 +147,10 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     WubookManager wubookManager;
 
     @Autowired
-    GotoService gotoService;
+    IGotoService gotoService;
+
+    @Autowired
+    IGotoHotelInformationService gotoHotelInformationService;
 
     @Autowired
     IGotoBookingRequestValidationService bookingRequestValidationService;
@@ -185,7 +189,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     public GoToApiResponse getHotelInformation() {
         try {
             removeCurrentUser();
-            Hotel hotel = gotoService.getHotelInformation(storeManager.getMyStore(), pmsManager.getConfiguration(),
+            Hotel hotel = gotoHotelInformationService.getHotelInformation(storeManager.getMyStore(), pmsManager.getConfiguration(),
                     storeManager.getStoreSettingsApplicationKey("currencycode"));
             return new GoToApiResponse(true, FETCHING_HOTEL_INFO_SUCCESS.code, FETCHING_HOTEL_INFO_SUCCESS.message,
                     hotel);

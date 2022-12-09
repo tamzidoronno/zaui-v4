@@ -100,7 +100,7 @@ public class PmsLogManager extends ManagerBase implements IPmsLogManager {
     @Override
     public List<PmsLog> getLogEntries(PmsLog filter, Date start, Date end) {
         log.debug("PmsLog for bookingId {} filter {}", filter.bookingId, filter);
-        List<PmsLog> logEntries = pmsLogRepository.query(filter, getSessionInfo(), null, null);
+        List<PmsLog> logEntries = pmsLogRepository.query(filter, getSessionInfo(), start, end);
         log.debug("PmsLogs found for bookingId {} count {}", filter.bookingId, logEntries.size());
 
         for (PmsLog log : logEntries) {

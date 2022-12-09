@@ -42,13 +42,17 @@ public class PmsLogRepository extends Repository<PmsLog> implements IPmsLogRepos
         if (isNotEmpty(filter.roomId)) {
             query.put("roomId", filter.roomId);
         }
-        if (start != null) {            
-            query.put("dateEntry", new BasicDBObject().put("$gte", start));
+
+        BasicDBObject dateFilter = new BasicDBObject();
+        if (start != null) {
+            dateFilter.append("$gte", start);
         }
         if (end != null) {
-            query.put("dateEntry", new BasicDBObject().put("$lte", end));
+            dateFilter.append("$lte", end);
         }
-
+        if(dateFilter.size() > 0){
+            query.put("dateEntry", dateFilter);
+        }
         sort.put("rowCreatedDate", -1);
         int limit = filter.includeAll ? Integer.MAX_VALUE : 100;
 

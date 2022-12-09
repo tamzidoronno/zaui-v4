@@ -47,7 +47,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.mongodb.morphia.annotations.Transient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.getshop.scope.GetShopSession;
@@ -154,6 +156,9 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
     @Autowired
     IGotoBookingRequestValidationService bookingRequestValidationService;
+    @Transient
+    @Value("${goto.cancellation.endpoint: Default endpoint}")
+    private String postCancellationEndpoint;
 
     private GoToConfiguration goToConfiguration;
     private final String CURRENCY_CODE = "currencycode";
@@ -163,7 +168,6 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     public void initialize() throws SecurityException {
         super.initialize();
         goToConfiguration = gotoService.getGotoConfiguration(getSessionInfo());
-
         stopScheduler("AutoExpireBookings");
         createScheduler("AutoExpireBookings", "*/5 * * * *", GotoExpireBookingScheduler.class, true);
     }
@@ -326,6 +330,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             pmsManager.deleteBooking(pmsBooking.id);
             handleOrderForCancelledBooking(reservationId);
             sendEmailForCancelledBooking(pmsBooking);
+            notifyGotoAboutCancellation(pmsBooking.id);
             return new GoToApiResponse(true, BOOKING_CANCELLATION_SUCCESS.code, BOOKING_CANCELLATION_SUCCESS.message,
                     null);
         } catch (GotoException e) {
@@ -403,6 +408,11 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                 "Please take action and notify hotel administrator if it is unexpected.<br>";
 
         messageManager.sendMail(toEmail, "", subject, message, "post@getshop.com", "");
+    }
+
+    private void notifyGotoAboutCancellation(String reservationId) {
+        String url = postCancellationEndpoint + reservationId;
+
     }
 
     private String getCheckinOutDateForCancelledBooking(PmsBooking booking) {

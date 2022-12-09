@@ -19,6 +19,7 @@ import lombok.Getter;
 import org.springframework.stereotype.Component;
 
 import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  *
@@ -69,6 +70,8 @@ public class FrameworkConfig {
                 while ((line = br.readLine()) != null) {
                     String[] content = line.split(",");
                     setVariables(content);
+                    if(content.length<2 || isBlank(content[0]) || isBlank(content[1]))
+                        continue;
                     configValues.put(content[0].toLowerCase(), content[1]);
                 }
             } finally {

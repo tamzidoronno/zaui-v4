@@ -47,6 +47,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.thundashop.core.common.FrameworkConfig;
+import com.thundashop.services.gotoservice.IGotoBookingCancellationService;
 import org.mongodb.morphia.annotations.Transient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -150,6 +152,10 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
     @Autowired
     IGotoService gotoService;
+    @Autowired
+    IGotoBookingCancellationService gotoBookingCancellationService;
+    @Autowired
+    FrameworkConfig frameworkConfig;
 
     @Autowired
     IGotoHotelInformationService gotoHotelInformationService;
@@ -169,6 +175,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         super.initialize();
         goToConfiguration = gotoService.getGotoConfiguration(getSessionInfo());
         stopScheduler("AutoExpireBookings");
+        System.out.println(frameworkConfig.getGotoCancellationEndpoint() + " " + frameworkConfig.getGotoCancellationAuthKey());
         createScheduler("AutoExpireBookings", "*/5 * * * *", GotoExpireBookingScheduler.class, true);
     }
 
@@ -330,7 +337,8 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             pmsManager.deleteBooking(pmsBooking.id);
             handleOrderForCancelledBooking(reservationId);
             sendEmailForCancelledBooking(pmsBooking);
-            notifyGotoAboutCancellation(pmsBooking.id);
+            gotoBookingCancellationService.notifyGotoAboutCancellation(
+                    frameworkConfig.getGotoCancellationEndpoint(), frameworkConfig.getGotoCancellationAuthKey(), pmsBooking.id);
             return new GoToApiResponse(true, BOOKING_CANCELLATION_SUCCESS.code, BOOKING_CANCELLATION_SUCCESS.message,
                     null);
         } catch (GotoException e) {
@@ -408,11 +416,6 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                 "Please take action and notify hotel administrator if it is unexpected.<br>";
 
         messageManager.sendMail(toEmail, "", subject, message, "post@getshop.com", "");
-    }
-
-    private void notifyGotoAboutCancellation(String reservationId) {
-        String url = postCancellationEndpoint + reservationId;
-
     }
 
     private String getCheckinOutDateForCancelledBooking(PmsBooking booking) {

@@ -1,18 +1,18 @@
 package com.thundashop.repository.pmsmanager;
 
-import com.mongodb.BasicDBObject;
-import com.thundashop.core.pmsmanager.PmsLog;
-import com.thundashop.repository.utils.SessionInfo;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+
+import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+import com.mongodb.BasicDBObject;
+import com.thundashop.core.pmsmanager.PmsLog;
 import com.thundashop.repository.baserepository.Repository;
 import com.thundashop.repository.db.Database;
-
-import java.util.List;
-
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import com.thundashop.repository.utils.SessionInfo;
 
 @org.springframework.stereotype.Repository
 public class PmsLogRepository extends Repository<PmsLog> implements IPmsLogRepository {
@@ -22,7 +22,7 @@ public class PmsLogRepository extends Repository<PmsLog> implements IPmsLogRepos
         super(database);
     }
 
-    public List<PmsLog> query(PmsLog filter, SessionInfo sessionInfo) {
+    public List<PmsLog> query(PmsLog filter, SessionInfo sessionInfo, Date start, Date end) {
         BasicDBObject query = new BasicDBObject();
         BasicDBObject sort = new BasicDBObject();
 
@@ -41,6 +41,12 @@ public class PmsLogRepository extends Repository<PmsLog> implements IPmsLogRepos
         }
         if (isNotEmpty(filter.roomId)) {
             query.put("roomId", filter.roomId);
+        }
+        if (start != null) {            
+            query.put("dateEntry", new BasicDBObject().put("$gte", start));
+        }
+        if (end != null) {
+            query.put("dateEntry", new BasicDBObject().put("$lte", end));
         }
 
         sort.put("rowCreatedDate", -1);

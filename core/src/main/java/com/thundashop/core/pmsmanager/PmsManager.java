@@ -3260,7 +3260,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
     @Override
     public List<PmsLog> getLogEntries(PmsLog filter) {
-        return pmsLogManager.getLogEntries(filter);
+        return pmsLogManager.getLogEntries(filter, null, null);
     }
 
     private String convertToStandardTime(Date start) {

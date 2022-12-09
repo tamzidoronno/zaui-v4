@@ -1,5 +1,15 @@
 package com.thundashop.core.pmsmanager;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
@@ -7,44 +17,29 @@ import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
-import com.thundashop.repository.pmsmanager.PmsLogRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import com.thundashop.repository.pmsmanager.IPmsLogRepository;
 
-import java.util.List;
-
-import static org.apache.commons.lang3.StringUtils.*;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @GetShopSession
+@Slf4j
 public class PmsLogManager extends ManagerBase implements IPmsLogManager {
-
-    private static final Logger logger = LoggerFactory.getLogger(PmsLogManager.class);
-
-    private final PmsLogRepository pmsLogRepository;
-    private final UserManager userManager;
-    private final BookingEngine bookingEngine;
-    private final MessageManager messageManager;
+    @Autowired
+    private IPmsLogRepository pmsLogRepository;
 
     @Autowired
-    public PmsLogManager(PmsLogRepository pmsLogRepository, UserManager userManager,
-                         BookingEngine bookingEngine, MessageManager messageManager) {
-        this.pmsLogRepository = pmsLogRepository;
-        this.userManager = userManager;
-        this.bookingEngine = bookingEngine;
-        this.messageManager = messageManager;
-    }
+    private UserManager userManager;
+
+    @Autowired
+    private BookingEngine bookingEngine;
+
+    @Autowired
+    private MessageManager messageManager;
 
     @Override
     public void save(PmsLog pmsLog) {
         pmsLogRepository.save(pmsLog, getSessionInfo());
-    }
-
-    @Override
-    public List<PmsLog> query(PmsLog filter) {
-        return pmsLogRepository.query(filter, getStoreIdInfo());
     }
 
     @Override
@@ -103,10 +98,10 @@ public class PmsLogManager extends ManagerBase implements IPmsLogManager {
     }
 
     @Override
-    public List<PmsLog> getLogEntries(PmsLog filter) {
-        logger.debug("PmsLog for bookingId {} filter {}", filter.bookingId, filter);
-        List<PmsLog> logEntries = query(filter);
-        logger.debug("PmsLogs found for bookingId {} count {}", filter.bookingId, logEntries.size());
+    public List<PmsLog> getLogEntries(PmsLog filter, Date start, Date end) {
+        log.debug("PmsLog for bookingId {} filter {}", filter.bookingId, filter);
+        List<PmsLog> logEntries = pmsLogRepository.query(filter, getSessionInfo(), null, null);
+        log.debug("PmsLogs found for bookingId {} count {}", filter.bookingId, logEntries.size());
 
         for (PmsLog log : logEntries) {
             if (isEmpty(log.userName)) {
@@ -125,5 +120,5 @@ public class PmsLogManager extends ManagerBase implements IPmsLogManager {
         }
 
         return logEntries;
-    }
+    }    
 }

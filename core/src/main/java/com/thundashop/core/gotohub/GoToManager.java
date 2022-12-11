@@ -2,7 +2,6 @@ package com.thundashop.core.gotohub;
 
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.*;
 import static com.thundashop.core.gotohub.constant.GotoConstants.DAILY_PRICE_DATE_FORMATTER;
-import static com.thundashop.core.gotohub.constant.GotoConstants.cancellationDateFormatter;
 import static com.thundashop.core.gotohub.constant.GotoConstants.checkinOutDateFormatter;
 import static com.thundashop.core.gotohub.constant.GotoConstants.df;
 import static com.thundashop.core.gotohub.constant.GotoConstants.formatter;
@@ -25,10 +24,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.thundashop.core.common.FrameworkConfig;
-import com.thundashop.services.gotoservice.IGotoBookingCancellationService;
-import org.mongodb.morphia.annotations.Transient;
+import com.thundashop.services.bookingservice.IPmsBookingService;
+import com.thundashop.services.gotoservice.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.stereotype.Component;
 
@@ -82,9 +80,6 @@ import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.wubook.WubookManager;
-import com.thundashop.services.gotoservice.IGotoBookingRequestValidationService;
-import com.thundashop.services.gotoservice.IGotoHotelInformationService;
-import com.thundashop.services.gotoservice.IGotoService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -132,7 +127,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     @Autowired
     IGotoService gotoService;
     @Autowired
-    IGotoBookingCancellationService gotoBookingCancellationService;
+    IGotoBookingCancellationService bookingCancellationService;
     @Autowired
     FrameworkConfig frameworkConfig;
 
@@ -141,9 +136,10 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
     @Autowired
     IGotoBookingRequestValidationService bookingRequestValidationService;
-    @Transient
-    @Value("${goto.cancellation.endpoint: Default endpoint}")
-    private String postCancellationEndpoint;
+    @Autowired
+    IGotoCancellationValidationService cancellationValidationService;
+    @Autowired
+    IPmsBookingService pmsBookingService;
 
     private GoToConfiguration goToConfiguration;
     private final String CURRENCY_CODE = "currencycode";
@@ -301,22 +297,18 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             cancelledBookingList.add(reservationId);
             Date deletionRequestTime = new Date();
             saveSchedulerAsCurrentUser();
-            PmsBooking pmsBooking = findCorrelatedBooking(reservationId);
-            if (pmsBooking == null) {
-                throw new GotoException(BOOKING_CANCELLATION_NOT_FOUND.code,
-                        BOOKING_CANCELLATION_NOT_FOUND.message);
-            }
-            if (pmsBooking.getActiveRooms().isEmpty())
-                throw new GotoException(BOOKING_CANCELLATION_ALREADY_CANCELLED.code,
-                        BOOKING_CANCELLATION_ALREADY_CANCELLED.message);
-            handleDeletionIfCutOffHourPassed(pmsBooking.id, deletionRequestTime);
-            pmsManager.logEntry("Deleted by channel manager", pmsBooking.id, null);
-
-            pmsManager.deleteBooking(pmsBooking.id);
+            cancellationValidationService.validateCancellationReq(reservationId, deletionRequestTime, pmsManager.getConfiguration(),
+                    goToConfiguration.cuttOffHours, pmsManager.getSessionInfo());
+            pmsManager.deleteBooking(reservationId);
+            pmsManager.logEntry("Deleted by channel manager", reservationId, null);
             handleOrderForCancelledBooking(reservationId);
-            sendEmailForCancelledBooking(pmsBooking);
-            gotoBookingCancellationService.notifyGotoAboutCancellation(
-                    frameworkConfig.getGotoCancellationEndpoint(), frameworkConfig.getGotoCancellationAuthKey(), reservationId);
+            sendEmailForCancelledBooking(reservationId);
+            try{
+                bookingCancellationService.notifyGotoAboutCancellation(
+                        frameworkConfig.getGotoCancellationEndpoint(), frameworkConfig.getGotoCancellationAuthKey(), reservationId);
+            } catch (GotoException e) {
+                return new GoToApiResponse(true, e.getStatusCode(),e.getMessage(), null);
+            }
             return new GoToApiResponse(true, BOOKING_CANCELLATION_SUCCESS.code, BOOKING_CANCELLATION_SUCCESS.message,
                     null);
         } catch (GotoException e) {
@@ -374,7 +366,8 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         messageManager.sendMail(toEmail, "", subject, message, "post@getshop.com", "");
     }
 
-    public void sendEmailForCancelledBooking(PmsBooking booking) {
+    public void sendEmailForCancelledBooking(String id) {
+        PmsBooking booking = pmsBookingService.getPmsBookingById(id, pmsManager.getSessionInfo());
         String toEmail = goToConfiguration.getEmail();
         if (isBlank(toEmail)) {
             log.info("Coundn't send email because email config is not set.");
@@ -476,32 +469,6 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         }
     }
 
-    private Date trimTillHour(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        return calendar.getTime();
-    }
-
-    private void handleDeletionIfCutOffHourPassed(String reservationId, Date deletionRequestTime) throws Exception {
-        PmsBooking booking = findCorrelatedBooking(reservationId);
-        // cancellation deadline would be applied only for paid bookings
-        if (booking == null || booking.orderIds == null || booking.orderIds.isEmpty())
-            return;
-        deletionRequestTime = trimTillHour(deletionRequestTime);
-
-        for (PmsBookingRooms room : booking.rooms) {
-            Date cancellationDeadLine = cancellationDateFormatter.parse(
-                    getCancellationDeadLine(
-                            checkinOutDateFormatter.format(room.date.start)));
-            cancellationDeadLine = trimTillHour(cancellationDeadLine);
-            if (deletionRequestTime.after(cancellationDeadLine)) {
-                throw new GotoException(CANCELLATION_DEADLINE_PASSED.code, CANCELLATION_DEADLINE_PASSED.message);
-            }
-        }
-    }
-
     private void saveSchedulerAsCurrentUser() {
         getSession().currentUser = userManager.getUserById("gs_system_scheduler_user");
     }
@@ -552,7 +519,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     private GoToApiResponse handleUpdateBookingError(String reservationId, String errorMessage, long errorCode) {
-        if(errorCode == CANCELLATION_ACKNOWLEDGMENT_FAILED.code)
+        if(errorCode == CANCELLATION_ACK_FAILED.code)
             return new GoToApiResponse(true, errorCode, errorMessage, null);
         String emailDetails = "Booking Related Operation has been failed.<br><br>" +
                 "Some other possible reason also could happen: <br>" +
@@ -579,19 +546,6 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         return checkinOutDateFormatter.format(checkOutDate);
     }
 
-    private String getCancellationDeadLine(String checkin) throws Exception {
-        Date checkinDate, cancellationDate;
-        String cancellationDeadLine;
-        Calendar calendar = Calendar.getInstance();
-        Date date = checkinOutDateFormatter.parse(checkin);
-        checkinDate = pmsManager.getConfiguration().getDefaultStart(date);
-        calendar.setTime(checkinDate);
-        calendar.add(Calendar.HOUR_OF_DAY, -goToConfiguration.cuttOffHours);
-        cancellationDate = calendar.getTime();
-        cancellationDeadLine = cancellationDateFormatter.format(cancellationDate);
-        return cancellationDeadLine;
-    }
-
     private GotoBookingResponse getBookingResponse(String reservationId, GotoBookingRequest booking, double totalPrice)
             throws Exception {
         List<RatePlanCode> ratePlans = new ArrayList<>();
@@ -603,7 +557,8 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             roomRes.setCheckOutDate(room.getCheckOutDate());
             roomRes.setAdults(room.getAdults());
             roomRes.setChildrenAges(room.getChildrenAges());
-            roomRes.setCancelationDeadline(getCancellationDeadLine(room.getCheckInDate()));
+            roomRes.setCancelationDeadline(bookingCancellationService.getCancellationDeadLine(room.getCheckInDate(),
+                    goToConfiguration.cuttOffHours, pmsManager.getConfiguration()));
             roomRes.setPrice(room.getPrice());
             roomsResponse.add(roomRes);
             ratePlans.add(new RatePlanCode(room.getRatePlanCode()));

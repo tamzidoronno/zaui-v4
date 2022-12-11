@@ -140,6 +140,8 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     IGotoCancellationValidationService cancellationValidationService;
     @Autowired
     IPmsBookingService pmsBookingService;
+    @Autowired
+    IGotoConfirmBookingValidation confirmBookingValService;
 
     private GoToConfiguration goToConfiguration;
     private final String CURRENCY_CODE = "currencycode";
@@ -270,11 +272,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     public GoToApiResponse confirmBooking(String reservationId) {
         try {
             saveSchedulerAsCurrentUser();
-            PmsBooking pmsBooking = findCorrelatedBooking(reservationId);
-            if (pmsBooking == null) {
-                throw new GotoException(BOOKING_NOT_FOUND.code, BOOKING_NOT_FOUND.message);
-            }
-            handleIfBookingDeleted(pmsBooking);
+            PmsBooking pmsBooking = confirmBookingValService.validateConfirmBookingId(reservationId, pmsManager.getSessionInfo());
             pmsBooking = setPaymentMethod(pmsBooking);
             handlePaymentOrder(pmsBooking, getCheckoutDateFromPmsBookingRooms(pmsBooking.rooms));
             return new GoToApiResponse(true, BOOKING_CONFIRMATION_SUCCESS.code, BOOKING_CONFIRMATION_SUCCESS.message,
@@ -297,12 +295,12 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             cancelledBookingList.add(reservationId);
             Date deletionRequestTime = new Date();
             saveSchedulerAsCurrentUser();
-            cancellationValidationService.validateCancellationReq(reservationId, deletionRequestTime, pmsManager.getConfiguration(),
+            PmsBooking booking = cancellationValidationService.validateCancellationReq(reservationId, deletionRequestTime, pmsManager.getConfiguration(),
                     goToConfiguration.cuttOffHours, pmsManager.getSessionInfo());
             pmsManager.deleteBooking(reservationId);
             pmsManager.logEntry("Deleted by channel manager", reservationId, null);
             handleOrderForCancelledBooking(reservationId);
-            sendEmailForCancelledBooking(reservationId);
+            sendEmailForCancelledBooking(booking);
             try{
                 bookingCancellationService.notifyGotoAboutCancellation(
                         frameworkConfig.getGotoCancellationEndpoint(), frameworkConfig.getGotoCancellationAuthKey(), reservationId);
@@ -366,8 +364,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         messageManager.sendMail(toEmail, "", subject, message, "post@getshop.com", "");
     }
 
-    public void sendEmailForCancelledBooking(String id) {
-        PmsBooking booking = pmsBookingService.getPmsBookingById(id, pmsManager.getSessionInfo());
+    public void sendEmailForCancelledBooking(PmsBooking booking) {
         String toEmail = goToConfiguration.getEmail();
         if (isBlank(toEmail)) {
             log.info("Coundn't send email because email config is not set.");
@@ -435,14 +432,6 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         pmsManager.deleteBooking(pmsBooking.id);
         log.error("Goto Booking Failed, Reason: Overbooking");
         throw new GotoException(NO_ALLOTMENT.code, NO_ALLOTMENT.message);
-    }
-
-    private void handleIfBookingDeleted(PmsBooking pmsBooking) throws Exception {
-        for (PmsBookingRooms room : pmsBooking.rooms) {
-            if (!room.deleted)
-                return;
-        }
-        throw new GotoException(BOOKING_DELETED.code, BOOKING_DELETED.message);
     }
 
     private void handleOrderForCancelledBooking(String reservationId) throws Exception {

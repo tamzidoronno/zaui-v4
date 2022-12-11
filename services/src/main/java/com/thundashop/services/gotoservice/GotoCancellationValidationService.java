@@ -23,11 +23,12 @@ public class GotoCancellationValidationService implements IGotoCancellationValid
     @Autowired
     IGotoBookingCancellationService cancellationService;
     @Override
-    public void validateCancellationReq(String reservationId, Date deletionRequestTime, PmsConfiguration config,
-                                        int cutoffHour, SessionInfo pmsManagerSession) throws Exception {
+    public PmsBooking validateCancellationReq(String reservationId, Date deletionRequestTime, PmsConfiguration config,
+                                              int cutoffHour, SessionInfo pmsManagerSession) throws Exception {
         PmsBooking booking = pmsBookingService.getPmsBookingById(reservationId, pmsManagerSession);
         validateExistingBooking(booking);
         validateBookingCancellationDeadline(booking, deletionRequestTime, cutoffHour, config);
+        return booking;
     }
 
     private void validateExistingBooking(PmsBooking booking) throws GotoException {

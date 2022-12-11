@@ -14,7 +14,6 @@ import com.thundashop.core.gotohub.dto.LongTermDeal;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsPricing;
 import com.thundashop.repository.gotohubrepository.IGotoConfigRepository;
-import com.thundashop.repository.pmsbookingrepository.IPmsBookingRepository;
 import com.thundashop.repository.utils.SessionInfo;
 import com.thundashop.services.pmspricing.IPmsPricingService;
 

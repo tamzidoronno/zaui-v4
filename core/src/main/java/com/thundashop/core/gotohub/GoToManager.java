@@ -707,12 +707,6 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         return pmsBooking;
     }
 
-    private PmsBooking findCorrelatedBooking(String reservationId) {
-        if (isNotBlank(reservationId))
-            return pmsManager.getBooking(reservationId);
-        return null;
-    }
-
     private GoToRoomData mapBookingItemTypeToGoToRoomData(BookingItemType bookingItemType, BookingProcessRooms room,
             PmsAdditionalTypeInformation additionalInfo) {
         GoToRoomData roomData = new GoToRoomData();

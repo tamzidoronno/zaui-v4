@@ -69,7 +69,6 @@ public class FrameworkConfig {
             try {
                 while ((line = br.readLine()) != null) {
                     String[] content = line.split(",");
-                    setVariables(content);
                     if(content.length<2 || isBlank(content[0]) || isBlank(content[1]))
                         continue;
                     configValues.put(content[0].toLowerCase(), content[1]);

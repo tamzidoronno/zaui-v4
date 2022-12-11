@@ -37,8 +37,6 @@ public class FrameworkConfig {
 
     @PostConstruct
     public void readConfig() {
-        BufferedReader br = null;
-        String line = "";
         File f = getConfigFile();
         if(f == null) return;
         Map<String, String> configValues = getConfigValues(f);
@@ -62,7 +60,7 @@ public class FrameworkConfig {
 
     private Map<String, String> getConfigValues(File f) {
         BufferedReader br = null;
-        String line = "";
+        String line;
         Map<String, String> configValues = new HashMap<>();
         try {
             br = new BufferedReader(new FileReader(f));
@@ -104,8 +102,6 @@ public class FrameworkConfig {
             productionMode = content[1].toLowerCase().equals("true");
         } else if (equalsIgnoreCase(content[0], "storeCreationIP")) {
             storeCreationIP = content[1].trim();
-        } else if(true) {
-
         }
     }
 

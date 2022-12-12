@@ -17,7 +17,6 @@ import static com.thundashop.core.gotohub.constant.GoToStatusCodes.*;
 import static com.thundashop.core.gotohub.constant.GotoConstants.cancellationDateFormatter;
 import static com.thundashop.core.gotohub.constant.GotoConstants.checkinOutDateFormatter;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Service
 @Slf4j

@@ -78,7 +78,9 @@ public class GotoBookingCancellationService implements IGotoBookingCancellationS
         if(!response.isSuccessful()) {
             log.error("{}, ReservationId: {}, Response Code: {}, Response Body: {}"
                     , CANCELLATION_ACK_FAILED.message, reservationId, response.code(), responseBody);
-            throw new GotoException(CANCELLATION_ACK_FAILED.code, CANCELLATION_ACK_FAILED.message + "Response Body: " + responseBody);
+            if(!responseBody.toLowerCase().contains("no reservation found"))
+                throw new GotoException(CANCELLATION_ACK_FAILED.code, CANCELLATION_ACK_FAILED.message
+                        + "Response Body: " + responseBody);
         }
     }
 }

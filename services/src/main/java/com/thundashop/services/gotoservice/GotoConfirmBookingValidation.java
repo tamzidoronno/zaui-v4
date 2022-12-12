@@ -21,7 +21,6 @@ public class GotoConfirmBookingValidation implements IGotoConfirmBookingValidati
         PmsBooking booking = pmsBookingService.getPmsBookingById(reservationId, pmsManagerSession);
         validateBookingId(booking);
         validatePaymentMethod(paymentId);
-        validateIfAlreadyPaid(booking);
         return booking;
     }
     private void validateBookingId(PmsBooking booking) throws GotoException {
@@ -35,10 +34,6 @@ public class GotoConfirmBookingValidation implements IGotoConfirmBookingValidati
     private void validatePaymentMethod(String paymentMethodId) throws GotoException {
         if (isBlank(paymentMethodId))
             throw new GotoException(PAYMENT_METHOD_NOT_FOUND.code, PAYMENT_METHOD_NOT_FOUND.message);
-    }
-
-    private void validateIfAlreadyPaid(PmsBooking booking) {
-        booking.totalUnsettledAmount
     }
 
 }

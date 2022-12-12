@@ -63,7 +63,7 @@ public class GotoBookingRequestValidationService implements IGotoBookingRequestV
                 validateGuestNoAndRatePlan(
                         room.getAdults(), room.getChildrenAges().size(), room.getRatePlanCode(), type.name, type.size);
                 validateCheckinOutDate(room.getCheckInDate(), room.getCheckOutDate(), configuration);
-                validatePrice(room.getCheckInDate(), room.getCheckOutDate(), room.getPrice());
+                validatePrice(room.getCheckInDate(), room.getCheckOutDate(), room.getPrice(), configuration);
             } catch (GotoException e) {
                 e.setMessage(e.getMessage() + ", RoomCode: " + room.getRoomCode()
                         + ((type == null) ? "" : ", RoomType: " + type.name));
@@ -135,14 +135,14 @@ public class GotoBookingRequestValidationService implements IGotoBookingRequestV
             throw new GotoException(INVALID_DATE_RANGE_BOOKING.code, INVALID_DATE_RANGE_BOOKING.message);
     }
 
-    private void validatePrice(String checkIn, String checkOut, GotoRoomPrice price)
+    private void validatePrice(String checkIn, String checkOut, GotoRoomPrice price, PmsConfiguration config)
             throws GotoException, ParseException {
         if (price == null || price.getDailyPrices() == null || price.getDailyPrices().isEmpty()
                 || price.getTotalRoomPrice() == null) {
             throw new GotoException(PRICE_MISSING.code, PRICE_MISSING.message);
         }
-        Date checkInDate = checkinOutDateFormatter.parse(checkIn);
-        Date checkOutDate = checkinOutDateFormatter.parse(checkOut);
+        Date checkInDate = config.getDefaultStart(checkinOutDateFormatter.parse(checkIn));
+        Date checkOutDate = config.getDefaultEnd(checkinOutDateFormatter.parse(checkOut));
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(checkInDate);
         Map<String, Double> dailyPricesFromGoto;
@@ -154,7 +154,7 @@ public class GotoBookingRequestValidationService implements IGotoBookingRequestV
         } catch (Exception e) {
             throw new GotoException(INCORRECT_DAILY_PRICE_MATRIX.code, INCORRECT_DAILY_PRICE_MATRIX.message);
         }
-        while (!calendar.getTime().after(checkOutDate)) {
+        while (calendar.getTime().before(checkOutDate)) {
             String dailyPriceKey = DAILY_PRICE_DATE_FORMATTER.format(calendar.getTime());
             if (!dailyPricesFromGoto.containsKey(dailyPriceKey))
                 throw new GotoException(PRICE_MISSING.code, PRICE_MISSING.message);

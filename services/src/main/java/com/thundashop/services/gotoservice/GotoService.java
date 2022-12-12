@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.thundashop.services.bookingservice.IPmsBookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,6 @@ import com.thundashop.core.gotohub.dto.LongTermDeal;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsPricing;
 import com.thundashop.repository.gotohubrepository.IGotoConfigRepository;
-import com.thundashop.repository.pmsbookingrepository.IPmsBookingRepository;
 import com.thundashop.repository.utils.SessionInfo;
 import com.thundashop.services.pmspricing.IPmsPricingService;
 
@@ -29,7 +29,7 @@ public class GotoService implements IGotoService {
     private IGotoConfigRepository gotoConfigRepository;
 
     @Autowired
-    private IPmsBookingRepository pmsBookingRepository;
+    private IPmsBookingService pmsBookingService;
 
     @Override
     public GoToConfiguration getGotoConfiguration(SessionInfo sessionInfo) {
@@ -54,7 +54,7 @@ public class GotoService implements IGotoService {
 
     @Override
     public List<PmsBooking> getUnpaidGotoBookings(int autoDeletionTime, SessionInfo sessionInfo) {
-        return pmsBookingRepository.getGotoBookings(sessionInfo).stream()
+        return pmsBookingService.getGotoBookings(sessionInfo).stream()
                 .filter(booking -> booking.getActiveRooms() != null && !booking.getActiveRooms().isEmpty())
                 .filter(booking -> (booking.orderIds == null || booking.orderIds.isEmpty())
                         && booking.isOlderThan(autoDeletionTime))

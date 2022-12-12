@@ -41,6 +41,7 @@ public enum GoToStatusCodes {
     CANCELLATION_DEADLINE_PASSED(1503, "Goto Booking Cancellation Failed.. Reason: Cancellation DeadLine Has Passed"),
     BOOKING_CANCELLATION_ALREADY_CANCELLED(1504,
             "Goto Booking Cancellation Failed.. Reason: Booking is Already Cancelled"),
+    CANCELLATION_ACK_FAILED(1505, "Goto Booking Cancellation Succeeded but Failed to Acknowledge"),
     BOOKING_CANCELLATION_FAILED(1509, "Goto Booking Cancellation Failed.. Reason: Unknown");
 
     public final long code;

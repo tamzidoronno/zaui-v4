@@ -21,7 +21,6 @@ public class GotoConfirmBookingValidation implements IGotoConfirmBookingValidati
     public PmsBooking validateConfirmBookingReq(String reservationId, String paymentId, SessionInfo pmsManagerSession) throws GotoException {
         PmsBooking booking = pmsBookingService.getPmsBookingById(reservationId, pmsManagerSession);
         validateBookingId(booking);
-        validateIfAlreadyPaid(booking);
         validatePaymentMethod(paymentId);
         return booking;
     }
@@ -31,12 +30,6 @@ public class GotoConfirmBookingValidation implements IGotoConfirmBookingValidati
         }
         if (booking.getActiveRooms().isEmpty())
             throw new GotoException(BOOKING_DELETED.code, BOOKING_DELETED.message);
-    }
-    
-    private void validateIfAlreadyPaid(PmsBooking booking) throws GotoException {
-        double unpaidAmount = booking.getUnpaidAmountForAllRooms();
-        if(unpaidAmount < 0.1)
-            throw new GotoException(BOOKING_ALREADY_PAID.code, BOOKING_ALREADY_PAID.message);
     }
 
     private void validatePaymentMethod(String paymentMethodId) throws GotoException {

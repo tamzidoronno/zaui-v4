@@ -102,6 +102,4 @@ public interface IGoToManager {
      * @param room: Cancelled PmsBookingRooms
      */
     void sendEmailForCancelledRooms(String reservationId, String channel, PmsBookingRooms room);
-
-    void sendCancelBookingAcknowledgement(String reservationId) throws Exception;
 }

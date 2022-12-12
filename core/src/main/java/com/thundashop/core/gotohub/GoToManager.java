@@ -324,9 +324,8 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             try{
                 bookingCancellationService.notifyGotoAboutCancellation(
                         frameworkConfig.getGotoCancellationEndpoint(), frameworkConfig.getGotoCancellationAuthKey(), reservationId);
-            } catch (GotoException e) {
-                return new GoToApiResponse(true, BOOKING_CANCELLATION_SUCCESS.code, BOOKING_CANCELLATION_SUCCESS.message,
-                        null);
+            } catch (Exception e) {
+                log.error("Failed to acknowledge cancel booking.. Reason: {}, Actual error: {}", e.getMessage(), e);
             }
             return new GoToApiResponse(true, BOOKING_CANCELLATION_SUCCESS.code, BOOKING_CANCELLATION_SUCCESS.message,
                     null);
@@ -383,12 +382,6 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                 "Please take action and notify hotel administrator if it is unexpected.<br>";
 
         messageManager.sendMail(toEmail, "", subject, message, "post@getshop.com", "");
-    }
-
-    @Override
-    public void sendCancelBookingAcknowledgement(String reservationId) throws Exception {
-        bookingCancellationService.notifyGotoAboutCancellation(
-                frameworkConfig.getGotoCancellationEndpoint(), frameworkConfig.getGotoCancellationAuthKey(), reservationId);
     }
 
     public void sendEmailForCancelledBooking(PmsBooking booking) {

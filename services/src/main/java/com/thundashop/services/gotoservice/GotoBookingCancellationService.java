@@ -45,7 +45,7 @@ public class GotoBookingCancellationService implements IGotoBookingCancellationS
     }
 
     @Override
-    @Retryable(value = Exception.class, maxAttempts = 5, backoff = @Backoff(delay = 100))
+    @Retryable(value = Exception.class, maxAttempts = 3, backoff = @Backoff(delay = 5000))
     public void notifyGotoAboutCancellation(String baseUrl, String authKey, String reservationId) throws Exception {
         if(isBlank(baseUrl) || isBlank(authKey)) {
             log.info("no url or authkey has been found in config file for goto cancellation acknowledgement");

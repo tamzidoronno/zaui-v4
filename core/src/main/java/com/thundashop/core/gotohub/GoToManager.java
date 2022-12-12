@@ -513,11 +513,11 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                 "2. Overbooking would have happened for this booking<br>" +
                 "Please notify admin to check<br>"
                 + getBookingDetailsTextForMail(booking);
-        log.debug("error code: " + errorCode + ", error message: " + errorMessage);
-        log.debug("Email is sending to the Hotel owner...");
-        log.debug(emailDetails);
+        log.info("error code: " + errorCode + ", error message: " + errorMessage);
+        log.info("Email is sending to the Hotel owner...");
+        log.info(emailDetails);
         messageManager.sendMessageToStoreOwner(emailDetails, errorMessage);
-        log.debug("Email sent");
+        log.info("Email sent");
     }
 
     private GoToApiResponse handleUpdateBookingError(String reservationId, String errorMessage, long errorCode) {
@@ -527,11 +527,11 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                 "2. Payment method is not saved in Goto Configuration<br>" +
                 "Please notify admin to check<br>" +
                 "<br>Booking Reservation ID: " + reservationId;
-        log.debug("error code: " + errorCode + ", error message: " + errorMessage);
-        log.debug("Email is sending to the Hotel owner...");
-        log.debug(emailDetails);
+        log.info("error code: " + errorCode + ", error message: " + errorMessage);
+        log.info("Email is sending to the Hotel owner...");
+        log.info(emailDetails);
         messageManager.sendMessageToStoreOwner(emailDetails, errorMessage);
-        log.debug("Email sent");
+        log.info("Email sent");
         return new GoToApiResponse(false, errorCode, errorMessage, null);
     }
 

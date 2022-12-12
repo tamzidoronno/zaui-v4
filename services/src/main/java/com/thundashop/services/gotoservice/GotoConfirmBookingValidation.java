@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_DELETED;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_NOT_FOUND;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.PAYMENT_METHOD_NOT_FOUND;
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_ALREADY_PAID;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Service

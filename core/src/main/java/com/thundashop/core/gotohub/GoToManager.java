@@ -19,7 +19,6 @@ import static com.thundashop.core.gotohub.constant.GoToStatusCodes.ORDER_SYNCHRO
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.PAYMENT_FAILED;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.CANCELLATION_ACK_FAILED;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.PAYMENT_METHOD_ACTIVATION_FAILED;
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.PAYMENT_METHOD_NOT_FOUND;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.LARGER_DATE_RANGE;
 
 import static com.thundashop.core.gotohub.constant.GotoConstants.checkinOutDateFormatter;
@@ -292,7 +291,8 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     public GoToApiResponse confirmBooking(String reservationId) {
         try {
             saveSchedulerAsCurrentUser();
-            PmsBooking pmsBooking = confirmBookingValService.validateConfirmBookingId(reservationId, pmsManager.getSessionInfo());
+            PmsBooking pmsBooking = confirmBookingValService.validateConfirmBookingReq(reservationId, goToConfiguration.getPaymentTypeId(),
+                    pmsManager.getSessionInfo());
             pmsBooking = setPaymentMethod(pmsBooking);
             handlePaymentOrder(pmsBooking, getCheckoutDateFromPmsBookingRooms(pmsBooking.rooms));
             return new GoToApiResponse(true, BOOKING_CONFIRMATION_SUCCESS.code, BOOKING_CONFIRMATION_SUCCESS.message,
@@ -325,7 +325,8 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                 bookingCancellationService.notifyGotoAboutCancellation(
                         frameworkConfig.getGotoCancellationEndpoint(), frameworkConfig.getGotoCancellationAuthKey(), reservationId);
             } catch (GotoException e) {
-                return new GoToApiResponse(true, e.getStatusCode(),e.getMessage(), null);
+                return new GoToApiResponse(true, BOOKING_CANCELLATION_SUCCESS.code, BOOKING_CANCELLATION_SUCCESS.message,
+                        null);
             }
             return new GoToApiResponse(true, BOOKING_CANCELLATION_SUCCESS.code, BOOKING_CANCELLATION_SUCCESS.message,
                     null);
@@ -382,6 +383,12 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                 "Please take action and notify hotel administrator if it is unexpected.<br>";
 
         messageManager.sendMail(toEmail, "", subject, message, "post@getshop.com", "");
+    }
+
+    @Override
+    public void sendCancelBookingAcknowledgement(String reservationId) throws Exception {
+        bookingCancellationService.notifyGotoAboutCancellation(
+                frameworkConfig.getGotoCancellationEndpoint(), frameworkConfig.getGotoCancellationAuthKey(), reservationId);
     }
 
     public void sendEmailForCancelledBooking(PmsBooking booking) {
@@ -620,12 +627,6 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         }
     }
 
-    private String getPaymentTypeId() throws GotoException {
-        if (isBlank(goToConfiguration.getPaymentTypeId()))
-            throw new GotoException(PAYMENT_METHOD_NOT_FOUND.code, PAYMENT_METHOD_NOT_FOUND.message);
-        return goToConfiguration.paymentTypeId;
-    }
-
     private PmsBookingRooms setCorrectStartEndTime(PmsBookingRooms room, GotoRoomRequest gotoBookingRoom)
             throws ParseException {
         checkinOutDateFormatter.setLenient(false);
@@ -687,7 +688,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     private PmsBooking setPaymentMethod(PmsBooking pmsBooking) throws Exception {
-        String paymentMethodId = getPaymentTypeId();
+        String paymentMethodId = goToConfiguration.getPaymentTypeId();
         activatePaymentMethod(paymentMethodId);
         pmsBooking.paymentType = paymentMethodId;
         pmsBooking.isPrePaid = true;

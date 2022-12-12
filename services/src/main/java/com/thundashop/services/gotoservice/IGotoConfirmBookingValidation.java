@@ -5,5 +5,5 @@ import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.repository.utils.SessionInfo;
 
 public interface IGotoConfirmBookingValidation {
-    PmsBooking validateConfirmBookingId(String reservationId, SessionInfo pmsManagerSession) throws GotoException;
+    PmsBooking validateConfirmBookingReq(String reservationId, String paymentId, SessionInfo pmsManagerSession) throws GotoException;
 }

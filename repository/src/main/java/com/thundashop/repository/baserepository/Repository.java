@@ -86,7 +86,7 @@ public abstract class Repository<T> implements IRepository<T> {
     public Optional<T> findById(String id, SessionInfo sessionInfo) {
         DBObject query = new BasicDBObject("_id", id);
         return getFirst(query, sessionInfo);
-    }   
+    }
     
 
     public boolean exist(DBObject query, SessionInfo sessionInfo) {

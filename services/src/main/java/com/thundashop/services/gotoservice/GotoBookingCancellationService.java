@@ -49,6 +49,7 @@ public class GotoBookingCancellationService implements IGotoBookingCancellationS
             log.info("no url or authKey has been found in config file for goto cancellation acknowledgement");
             return;
         }
+        baseUrl = baseUrl.endsWith("/") ? baseUrl : baseUrl + "/";
         String url = baseUrl + reservationId;
         Request.Builder requestBuilder = new Request.Builder();
         requestBuilder.addHeader("Authorization", authKey);

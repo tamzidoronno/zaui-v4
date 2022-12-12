@@ -528,8 +528,6 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     private GoToApiResponse handleUpdateBookingError(String reservationId, String errorMessage, long errorCode) {
-        if(errorCode == CANCELLATION_ACK_FAILED.code)
-            return new GoToApiResponse(true, errorCode, errorMessage, null);
         String emailDetails = "Booking Related Operation has been failed.<br><br>" +
                 "Some other possible reason also could happen: <br>" +
                 "1. The payment method is not valid or failed to activate<br>" +

@@ -12,5 +12,8 @@ class zauiactivity_constant_ZauiConstants {
 	/** @var String */
 	public $OCTO_PRICING;
 
+	/** @var String */
+	public $ZAUI_ACTIVITY_TAG;
+
 }
 ?>

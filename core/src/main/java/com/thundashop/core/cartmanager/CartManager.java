@@ -11,20 +11,22 @@ import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.pagemanager.PageManager;
-import com.thundashop.core.pmsmanager.PmsBookingRooms;
-import com.thundashop.core.pmsmanager.PmsRepeatingData;
-import com.thundashop.core.pmsmanager.TimeRepeater;
-import com.thundashop.core.pmsmanager.TimeRepeaterDateRange;
+import com.thundashop.core.pmsmanager.*;
 import com.thundashop.core.productmanager.ProductManager;
+import com.thundashop.core.productmanager.data.AccountingDetail;
 import com.thundashop.core.productmanager.data.Product;
+import com.thundashop.core.productmanager.data.ProductAccountingInformation;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import com.thundashop.core.usermanager.data.Address;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 import com.thundashop.core.zauiactivity.ZauiActivityManager;
 import com.thundashop.services.zauiactivityservice.IZauiActivityService;
 import com.thundashop.zauiactivity.constant.ZauiConstants;
+import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
+import com.thundashop.zauiactivity.dto.TaxData;
 import com.thundashop.zauiactivity.dto.ZauiActivity;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +52,9 @@ public class CartManager extends ManagerBase implements ICartManager {
     
     @Autowired
     private PageManager pageManager;
+
+    @Autowired
+    private PmsManager pmsManager;
 
     @Autowired
     private ZauiActivityManager zauiActivityManager;
@@ -84,15 +89,81 @@ public class CartManager extends ManagerBase implements ICartManager {
     }
 
     @Override
-    public CartItem addZauiActivityItem(String productId, int count) throws ErrorException  {
+    public void addZauiActivityItem(String productId, String addonId) throws ErrorException  {
         Optional<ZauiActivity> activity = zauiActivityService.getZauiActivityById(productId,zauiActivityManager.getSessionInfo());
-        if(activity!= null) {
-            Cart cart = getCart(getSession().id);
-            return cart.createCartItem(activity.get(), count);
+        Optional<BookingZauiActivityItem> activityItem = zauiActivityService.getBookingZauiActivityItemByAddonId(addonId,pmsManager.getSessionInfo());
+        if(activityItem!= null) {
+            createZauiActivityCartItem(activity.get(), activityItem.get());
         }
         else {
             throw new ErrorException(1011);
         }
+    }
+    private void createZauiActivityCartItem(Product product, BookingZauiActivityItem activityItem) {
+        List<TaxGroup> taxes = productManager.getTaxes();
+        Cart cart = getCart(getSession().id);
+        List<CartItem> cartItems = new ArrayList<>();
+        double totalPrice = (double) activityItem.pricing.getTotal();
+        double totalPriceExTax = (double) activityItem.pricing.getSubtotal();
+        AtomicReference<Double> sumPriceExTax = new AtomicReference<>(0.0);
+        AtomicReference<Double> sumPrice = new AtomicReference<>(0.0);
+        activityItem.getOctoBooking().getIncludedTaxes().forEach(activity -> {
+
+            Product taxProduct = createZauiActivityForTax(product,activity,taxes,0,0);
+            sumPriceExTax.updateAndGet(v -> v + taxProduct.price);
+            sumPrice.updateAndGet(v -> v + taxProduct.priceExTaxes);
+
+            CartItem cartItem = new CartItem();
+            cartItem.setProduct(taxProduct);
+            cartItem.setCount(1);
+            cartItems.add(cartItem);
+        });
+
+        if(sumPrice.get() < totalPrice){
+            double price = totalPrice -  sumPrice.get();
+            double priceExTax = totalPriceExTax - sumPriceExTax.get();
+            Product taxProduct = createZauiActivityForTax(product,null,taxes,price,priceExTax);
+            CartItem cartItem = new CartItem();
+            cartItem.setProduct(taxProduct);
+            cartItem.setCount(1);
+            cartItems.add(cartItem);
+
+        }
+        cart.addCartItems(cartItems);
+    }
+
+    private Product createZauiActivityForTax(Product product, TaxData activity, List<TaxGroup> taxes, double price, double priceExTax) {
+        Product taxProduct = product.clone();
+        double taxRate;
+        String name = product.name;
+
+        if(activity!= null) {
+            price = (double) activity.getTaxAmount();
+            priceExTax = (double) activity.getPriceExcludingTax();
+            taxRate = activity.getRate().doubleValue();
+            name = product.name + " : " + activity.getName();
+        } else {
+            taxRate = 0.0;
+        }
+        TaxGroup taxGroup = taxes.stream().filter(g -> g.taxRate == taxRate)
+                .findFirst()
+                .orElse(null);
+//            if(taxGroup == null) {
+//                throw new ZauiException(ZauiStatusCodes.ACCOUNTING_ERROR);
+//            }
+        AccountingDetail account = productManager.getAccountingDetail(7777);
+        ProductAccountingInformation info = new ProductAccountingInformation();
+        info.accountingNumber = account.accountNumber + "";
+        info.taxGroupNumber = account.getShopTaxGroup;
+
+        taxProduct.accountingConfig.add(info);
+        taxProduct.taxgroup = account.getShopTaxGroup;
+        taxProduct.taxGroupObject = taxGroup;
+        taxProduct.name = name;
+        taxProduct.masterProductId = product.id;
+        taxProduct.price = price + priceExTax;
+        taxProduct.priceExTaxes = priceExTax;
+        return taxProduct;
     }
         
     private Cart getCart(String sessionId) {
@@ -284,7 +355,7 @@ public class CartManager extends ManagerBase implements ICartManager {
         List<CartItem> toRemove = new ArrayList();
         for(CartItem item : cart.getItems()) {
             Product product = item.getProduct();
-            if(!productManager.exists(product.id) && (isBlank(product.tag) || !product.tag.equals(ZauiConstants.ZAUIACTIVITY_TAG))) {
+            if(!productManager.exists(product.id) && (isBlank(product.tag) || !product.tag.equals(ZauiConstants.ZAUI_ACTIVITY_TAG))) {
                 toRemove.add(item);
             }
         }

@@ -44,33 +44,33 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
     }
 
     @Override
-    public List<OctoSupplier> getAllSuppliers() {
+    public List<OctoSupplier> getAllSuppliers() throws ZauiException {
         return octoApiService.getAllSuppliers();
     }
 
     @Override
-    public List<OctoProduct> getOctoProducts(Integer supplierId) {
+    public List<OctoProduct> getOctoProducts(Integer supplierId) throws ZauiException {
         return octoApiService.getOctoProducts(supplierId);
     }
 
     @Override
     public List<OctoProductAvailability> getZauiActivityAvailability(Integer supplierId,
-            OctoProductAvailabilityRequestDto availabilityRequest) {
+            OctoProductAvailabilityRequestDto availabilityRequest) throws ZauiException {
         return octoApiService.getOctoProductAvailability(supplierId, availabilityRequest);
     }
 
     @Override
-    public OctoBookingReserve reserveBooking(Integer supplierId, OctoBookingReserveRequest OctoBookingReserveRequest) {
+    public OctoBooking reserveBooking(Integer supplierId, OctoBookingReserveRequest OctoBookingReserveRequest) throws ZauiException {
         return octoApiService.reserveBooking(supplierId, OctoBookingReserveRequest);
     }
 
     @Override
-    public OctoBookingConfirm confirmBooking(Integer supplierId, String bookingId, OctoBookingConfirmRequest octoBookingConfirmRequest) {
+    public OctoBooking confirmBooking(Integer supplierId, String bookingId, OctoBookingConfirmRequest octoBookingConfirmRequest) throws ZauiException {
         return octoApiService.confirmBooking(supplierId, bookingId, octoBookingConfirmRequest);
     }
 
     @Override
-    public OctoBookingConfirm cancelBooking(Integer supplierId, String bookingId) {
+    public OctoBooking cancelBooking(Integer supplierId, String bookingId) throws ZauiException {
         return octoApiService.cancelBooking(supplierId, bookingId);
     }
 
@@ -89,10 +89,5 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
         PmsBooking booking = pmsManager.getBooking(pmsBookingId);
         zauiActivityService.addActivityToBooking(activityItem,booking);
         pmsManager.saveBooking(booking);
-    }
-
-    @Override
-    public void testActivity(BookingZauiActivityItem activityItem, String pmsBookingId) throws ZauiException {
-        addActivityToBooking(activityItem,pmsBookingId);
     }
 }

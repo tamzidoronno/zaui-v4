@@ -12,9 +12,9 @@ public class OctoProduct {
     @SerializedName("id")
     @Expose
     private Integer id;
-    @SerializedName("title")
+    @SerializedName("internalName")
     @Expose
-    private String title;
+    private String internalName;
     @SerializedName("options")
     @Expose
     private List<ActivityOption> options;

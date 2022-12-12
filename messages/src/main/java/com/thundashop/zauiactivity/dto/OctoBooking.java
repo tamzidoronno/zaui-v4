@@ -1,11 +1,13 @@
 package com.thundashop.zauiactivity.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 
 @Data
-public class OctoBookingReserve {
+public class OctoBooking {
     private String id;
     private String uuid;
     private String supplierReference;
@@ -22,15 +24,17 @@ public class OctoBookingReserve {
     private String notes;
     private String optionId;
     private OctoProductAvailability availability;
-    private OctoSupplierContact contact;
+    private Contact contact;
     private List<String> deliveryMethods = null;
     private List<String> voucher = null;
-    private List<UnitItemReserveResponse> unitItems = null;
+    private List<UnitItemOnBooking> unitItems = null;
     private Cancellation cancellation;
+    private Pricing pricing = null;
+    public List<TaxData> includedTaxes = new ArrayList<>();
 }
 
 @Data
-class UnitItemReserveResponse {
+class UnitItemOnBooking {
     private String uuid;
     private String unitId;
     private Object resellerReference;

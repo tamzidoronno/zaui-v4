@@ -9,5 +9,5 @@ public class ZauiConstants {
 
     public static Pair<String,String> OCTO_CONTENT = new ImmutablePair<>("OCTO-Capabilities","octo/content");
     public static Pair<String,String> OCTO_PRICING = new ImmutablePair<>("OCTO-Capabilities","octo/pricing");
-    public static String ZAUIACTIVITY_TAG = "zaui-activity";
+    public static String ZAUI_ACTIVITY_TAG = "zaui-activity";
 }

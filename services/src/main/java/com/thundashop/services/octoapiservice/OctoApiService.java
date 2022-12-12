@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.thundashop.repository.exceptions.ZauiException;
 import com.thundashop.zauiactivity.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,7 @@ public class OctoApiService implements IOctoApiService {
     private final Gson gson = new Gson();
 
     @Override
-    public List<OctoSupplier> getAllSuppliers() {
+    public List<OctoSupplier> getAllSuppliers() throws ZauiException {
         String url = ZauiConstants.OCTO_API_ENDPOINT + "/suppliers";
         String result = getHttpResponseBody(url, Collections.emptyMap(), "GET", null);
         Type listType = new TypeToken<List<OctoSupplier>>() {
@@ -41,7 +42,7 @@ public class OctoApiService implements IOctoApiService {
     }
 
     @Override
-    public OctoSupplier getSupplierById(Integer supplierId) {
+    public OctoSupplier getSupplierById(Integer supplierId) throws ZauiException {
         String url = ZauiConstants.OCTO_API_ENDPOINT + "/suppliers/" + supplierId;
         String result = getHttpResponseBody(url, Collections.emptyMap(), "GET", null);
         Type listType = new TypeToken<OctoSupplier>() {
@@ -50,7 +51,7 @@ public class OctoApiService implements IOctoApiService {
     }
 
     @Override
-    public List<OctoProduct> getOctoProducts(Integer supplierId) {
+    public List<OctoProduct> getOctoProducts(Integer supplierId) throws ZauiException {
         String url = ZauiConstants.OCTO_API_ENDPOINT + "/suppliers/" + supplierId + "/products";
         Map<String, String> headers = new HashMap<>();
         headers.put(ZauiConstants.OCTO_CONTENT.getLeft(), ZauiConstants.OCTO_CONTENT.getRight());
@@ -62,7 +63,7 @@ public class OctoApiService implements IOctoApiService {
     }
 
     @Override
-    public OctoProduct getOctoProductById(Integer supplierId, Integer productId) {
+    public OctoProduct getOctoProductById(Integer supplierId, Integer productId) throws ZauiException {
         String url = ZauiConstants.OCTO_API_ENDPOINT + "/suppliers/" + supplierId + "/products/" + productId;
         Map<String, String> headers = new HashMap<>();
         headers.put(ZauiConstants.OCTO_CONTENT.getLeft(), ZauiConstants.OCTO_CONTENT.getRight());
@@ -73,7 +74,7 @@ public class OctoApiService implements IOctoApiService {
     }
 
     @Override
-    public List<OctoProductAvailability> getOctoProductAvailability(Integer supplierId, OctoProductAvailabilityRequestDto availabilityRequest) {
+    public List<OctoProductAvailability> getOctoProductAvailability(Integer supplierId, OctoProductAvailabilityRequestDto availabilityRequest) throws ZauiException {
         String url = ZauiConstants.OCTO_API_ENDPOINT + "/suppliers/" + supplierId + "/availability";
         Map<String, String> headers = new HashMap<>();
         headers.put(ZauiConstants.OCTO_PRICING.getLeft(), ZauiConstants.OCTO_PRICING.getRight());
@@ -81,54 +82,67 @@ public class OctoApiService implements IOctoApiService {
         Type listType = new TypeToken<List<OctoProductAvailability>>() {
         }.getType();
         return new Gson().fromJson(result, listType);
+
+
     }
 
     @Override
-    public OctoBookingReserve reserveBooking(Integer supplierId, OctoBookingReserveRequest bookingReserveRequest) {
+    public OctoBooking reserveBooking(Integer supplierId, OctoBookingReserveRequest bookingReserveRequest) throws ZauiException {
         String url = ZauiConstants.OCTO_API_ENDPOINT + "/suppliers/" + supplierId + "/bookings";
         Map<String, String> headers = new HashMap<>();
         headers.put(ZauiConstants.OCTO_PRICING.getLeft(), ZauiConstants.OCTO_PRICING.getRight());
         String result = getHttpResponseBody(url, headers, "POST", gson.toJson(bookingReserveRequest));
-        Type listType = new TypeToken<OctoBookingReserve>() {
+        Type listType = new TypeToken<OctoBooking>() {
         }.getType();
         return new Gson().fromJson(result, listType);
     }
 
     @Override
-    public OctoBookingConfirm confirmBooking(Integer supplierId, String bookingId,
-            OctoBookingConfirmRequest octoBookingConfirmRequest) {
+    public OctoBooking confirmBooking(Integer supplierId, String bookingId,
+            OctoBookingConfirmRequest octoBookingConfirmRequest) throws ZauiException {
         String url = ZauiConstants.OCTO_API_ENDPOINT + "/suppliers/" + supplierId + "/bookings" + bookingId
                 + "/confirm";
         Map<String, String> headers = new HashMap<>();
         headers.put(ZauiConstants.OCTO_PRICING.getLeft(), ZauiConstants.OCTO_PRICING.getRight());
         String result = getHttpResponseBody(url, null, "POST", gson.toJson(octoBookingConfirmRequest));
-        Type listType = new TypeToken<OctoBookingConfirm>() {
+        Type listType = new TypeToken<OctoBooking>() {
         }.getType();
         return new Gson().fromJson(result, listType);
     }
 
     @Override
-    public OctoBookingConfirm cancelBooking(Integer supplierId, String bookingId) {
+    public OctoBooking cancelBooking(Integer supplierId, String bookingId) throws ZauiException {
         String url = ZauiConstants.OCTO_API_ENDPOINT + "/suppliers/" + supplierId + "/bookings" + bookingId + "/cancel";
         String result = getHttpResponseBody(url, null, "POST", null);
-        Type listType = new TypeToken<OctoBookingConfirm>() {
+        Type listType = new TypeToken<OctoBooking>() {
         }.getType();
         return new Gson().fromJson(result, listType);
     }
 
-    private String getHttpResponseBody(String url, Map<String, String> headers, String method, String payload) {
+    private String getHttpResponseBody(String url, Map<String, String> headers, String method, String payload) throws ZauiException {
         ZauiHttpRequest request = ZauiHttpRequest.builder()
                 .setAuth("Bearer " + ZauiConstants.OCTO_API_KEY)
                 .setUrl(url)
                 .setHeaders(headers)
                 .setPayload(payload)
                 .build();
-        ZauiHttpResponse response = method == "POST" ? zauiHttpService.post(request) : zauiHttpService.get(request);
+        ZauiHttpResponse response = method.equals("POST") ? zauiHttpService.post(request) : zauiHttpService.get(request);
         if (!response.isSuccessful()) {
             log.error("Unsuccessful request {}, response: {}", request, response);
-            throw new RuntimeException(String.format("Unsuccessful request url: [%s] , code: [%s]",
-                    url, response.statusCode()));
+            OctoErrorResponse errorResponse = handleError(response.getBody());
+            throw new ZauiException(response.statusCode(), errorResponse.getError());
         }
         return response.getBody();
+    }
+    private OctoErrorResponse handleError(String error) {
+        Type errorType = new TypeToken<OctoErrorResponse>() {
+        }.getType();
+
+        try {
+            return new Gson().fromJson(error, errorType);
+        }
+        catch (Exception e) {
+            throw new RuntimeException(error);
+        }
     }
 }

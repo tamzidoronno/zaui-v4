@@ -1,0 +1,26 @@
+[
+  {
+    "taxType":"VAT",
+    "name":"Guiding",
+    "accountingCode":3100,
+    "rate":0,
+    "priceExcludingTax":0,
+    "taxAmount":0
+  },
+  {
+    "taxType":"VAT",
+    "name":"Food",
+    "accountingCode":3200,
+    "rate":25,
+    "priceExcludingTax":3200,
+    "taxAmount":800
+  },
+  {
+    "taxType":"VAT",
+    "name":"Transportation",
+    "accountingCode":3300,
+    "rate":12,
+    "priceExcludingTax":10000,
+    "taxAmount":1200
+  }
+]

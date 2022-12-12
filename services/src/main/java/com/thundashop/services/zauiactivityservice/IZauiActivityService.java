@@ -23,4 +23,6 @@ public interface IZauiActivityService {
     void fetchZauiActivities(SessionInfo sessionInfo) throws ZauiException;
 
     List<ZauiActivity> getZauiActivities(SessionInfo sessionInfo) throws ZauiException;
+
+    Optional<BookingZauiActivityItem>getBookingZauiActivityItemByAddonId(String addonId, SessionInfo sessionInfo);
 }

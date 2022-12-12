@@ -25,6 +25,9 @@ class zauiactivity_dto_BookingZauiActivityItem extends core_pmsmanager_PmsBookin
 	public $pricing;
 
 	/** @var String */
+	public $unpaidAmount;
+
+	/** @var String */
 	public $notes;
 
 	/** @var String */
@@ -39,20 +42,8 @@ class zauiactivity_dto_BookingZauiActivityItem extends core_pmsmanager_PmsBookin
 	/** @var String */
 	public $supplierName;
 
-	/** @var String */
-	public $octoBookingId;
-
-	/** @var String */
-	public $status;
-
-	/** @var String */
-	public $octoExpiresAt;
-
-	/** @var String */
-	public $octoCreatedAt;
-
-	/** @var String */
-	public $octoCancellationId;
+	/** @var zauiactivity_dto_OctoBooking */
+	public $octoBooking;
 
 }
 ?>

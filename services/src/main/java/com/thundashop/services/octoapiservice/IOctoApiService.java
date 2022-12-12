@@ -2,26 +2,25 @@ package com.thundashop.services.octoapiservice;
 
 import java.util.List;
 
-import com.thundashop.repository.utils.SessionInfo;
+import com.thundashop.repository.exceptions.ZauiException;
 import com.thundashop.zauiactivity.dto.*;
-import com.thundashop.zauiactivity.dto.OctoBookingConfirm;
 import com.thundashop.zauiactivity.dto.OctoBookingConfirmRequest;
-import com.thundashop.zauiactivity.dto.OctoBookingReserve;
+import com.thundashop.zauiactivity.dto.OctoBooking;
 
 public interface IOctoApiService {
-    List<OctoSupplier> getAllSuppliers();
+    List<OctoSupplier> getAllSuppliers() throws ZauiException;
 
-    OctoSupplier getSupplierById(Integer supplierId);
+    OctoSupplier getSupplierById(Integer supplierId) throws ZauiException;
 
-    List<OctoProduct> getOctoProducts(Integer supplierId);
+    List<OctoProduct> getOctoProducts(Integer supplierId) throws ZauiException;
 
-    public OctoBookingReserve reserveBooking(Integer supplierId, OctoBookingReserveRequest bookingReserveRequest);
+    public OctoBooking reserveBooking(Integer supplierId, OctoBookingReserveRequest bookingReserveRequest) throws ZauiException;
 
-    public OctoBookingConfirm confirmBooking(Integer supplierId, String bookingId, OctoBookingConfirmRequest octoBookingConfirmRequest);
+    public OctoBooking confirmBooking(Integer supplierId, String bookingId, OctoBookingConfirmRequest octoBookingConfirmRequest) throws ZauiException;
 
-    OctoProduct getOctoProductById(Integer supplierId, Integer productId);
+    OctoProduct getOctoProductById(Integer supplierId, Integer productId) throws ZauiException;
 
-    List<OctoProductAvailability> getOctoProductAvailability(Integer supplierId, OctoProductAvailabilityRequestDto availabilityRequest);
+    List<OctoProductAvailability> getOctoProductAvailability(Integer supplierId, OctoProductAvailabilityRequestDto availabilityRequest) throws ZauiException;
 
-    OctoBookingConfirm cancelBooking(Integer supplierId, String bookingId);
+    OctoBooking cancelBooking(Integer supplierId, String bookingId) throws ZauiException;
 }

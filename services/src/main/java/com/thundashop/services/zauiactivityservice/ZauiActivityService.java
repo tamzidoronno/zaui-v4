@@ -1,10 +1,18 @@
 package com.thundashop.services.zauiactivityservice;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.thundashop.core.pmsmanager.ConferenceData;
 import com.thundashop.core.pmsmanager.PmsBooking;
+import com.thundashop.repository.pmsbookingrepository.IPmsBookingRepository;
 import com.thundashop.zauiactivity.constant.ZauiConstants;
 import com.thundashop.zauiactivity.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +33,9 @@ public class ZauiActivityService implements IZauiActivityService {
     private IZauiActivityConfigRepository zauiActivityConfigRepository;
     @Autowired
     private IZauiActivityRepository zauiActivityRepository;
+
+    @Autowired
+    private IPmsBookingRepository pmsBookingRepository;
     @Autowired
     private IOctoApiService octoApiService;
 
@@ -56,8 +67,14 @@ public class ZauiActivityService implements IZauiActivityService {
             return;
         }
         zauiActivityConfig.getSupplierIds().forEach(supplierId ->
+        {
+            try {
                 octoApiService.getOctoProducts(supplierId).forEach(
-                        octoProduct -> zauiActivityRepository.save(mapOctoToZauiActivity(octoProduct, supplierId), sessionInfo)));
+                        octoProduct -> zauiActivityRepository.save(mapOctoToZauiActivity(octoProduct, supplierId), sessionInfo));
+            } catch (ZauiException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
     }
     @Override
@@ -70,22 +87,44 @@ public class ZauiActivityService implements IZauiActivityService {
                 .setAvailabilityId(activityItem.availabilityId)
                 .setNotes("Zaui Stay Booking")
                 .setUnitItems(activityItem.units.stream().map(o -> new UnitItemReserveRequest(o.id)).collect(Collectors.toList()));
-        OctoBookingReserve octoBookingReserve = octoApiService.reserveBooking(activityItem.supplierId,bookingReserveRequest);
-        activityItem.setOctoBooking(octoBookingReserve);
+        OctoBooking octoBooking = octoApiService.reserveBooking(activityItem.supplierId,bookingReserveRequest);
+        octoBooking.setIncludedTaxes(dummyTaxData());
+        activityItem.setOctoBooking(octoBooking);
         booking.bookingZauiActivityItems.add(activityItem);
+    }
+
+    private List<TaxData> dummyTaxData() {
+        Type type = new TypeToken<List<TaxData>>() {}.getType();
+        String path = "/var/www/getshop-v4/services/src/main/java/com/thundashop/services/zauiactivityservice/tax_dummy.json";
+        JsonReader reader;
+        Gson gson = new Gson();
+        try {
+            reader = new JsonReader(new FileReader(path));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
+        return gson.fromJson(reader, type);
     }
 
 
     private ZauiActivity mapOctoToZauiActivity(OctoProduct octoProduct, Integer supplierId) {
         ZauiActivity zauiActivity = new ZauiActivity();
-        zauiActivity.name = octoProduct.getTitle();
+        zauiActivity.name = octoProduct.getInternalName();
         zauiActivity.productId = octoProduct.getId();
         zauiActivity.supplierId = supplierId;
         zauiActivity.shortDescription = octoProduct.getShortDescription();
         zauiActivity.description = octoProduct.getPrimaryDescription();
         zauiActivity.activityOptionList = octoProduct.getOptions();
         zauiActivity.mainImage = octoProduct.getCoverImage();
-        zauiActivity.tag = ZauiConstants.ZAUIACTIVITY_TAG;
+        zauiActivity.tag = ZauiConstants.ZAUI_ACTIVITY_TAG;
         return zauiActivity;
+    }
+
+    @Override
+    public Optional<BookingZauiActivityItem>getBookingZauiActivityItemByAddonId(String addonId, SessionInfo sessionInfo) {
+        PmsBooking booking = pmsBookingRepository.getPmsBookingByAddonId(addonId,sessionInfo);
+        BookingZauiActivityItem bookingZauiActivityItem = booking.bookingZauiActivityItems.stream().filter(item -> item.addonId.equals(addonId)).findFirst().get();
+        return Optional.of(bookingZauiActivityItem);
     }
 }

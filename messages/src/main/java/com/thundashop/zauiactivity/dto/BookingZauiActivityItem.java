@@ -21,6 +21,6 @@ public class BookingZauiActivityItem extends PmsBookingAddonItem {
     public String localDateTimeEnd;
     public Integer supplierId;
     public String supplierName;
-    private OctoBookingReserve octoBooking;
+    private OctoBooking octoBooking;
 
 }

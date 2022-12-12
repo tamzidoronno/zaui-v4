@@ -19,15 +19,6 @@ public class OctoProductAvailability {
 }
 
 @Data
-class Pricing {
-    String currency;
-    Integer currencyPrecision;
-    Integer subtotal;
-    Integer tax;
-    Integer total;
-}
-
-@Data
 class UnitPricing {
     private String unitId;
     private String currency;

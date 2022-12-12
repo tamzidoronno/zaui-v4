@@ -3,7 +3,8 @@ package com.thundashop.repository.utils;
 public enum ZauiStatusCodes {
 
     OCTO_FAILED(500,"Octo API call failed"),
-    MISSING_PARAMS(500, "Missing parameters");
+    MISSING_PARAMS(500, "Missing parameters"),
+    ACCOUNTING_ERROR(500, "Accounting group incompatible with Zaui Stay");
     public final long code;
     public final String message;
 

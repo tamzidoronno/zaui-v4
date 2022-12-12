@@ -18,24 +18,21 @@ public interface IZauiActivityManager {
 
     ZauiActivityConfig updateActivityConfig(ZauiActivityConfig newActivityConfig);
 
-    List<OctoSupplier> getAllSuppliers();
+    List<OctoSupplier> getAllSuppliers() throws ZauiException;
 
-    List<OctoProduct> getOctoProducts(Integer supplierId);
+    List<OctoProduct> getOctoProducts(Integer supplierId) throws ZauiException;
 
-    List<OctoProductAvailability> getZauiActivityAvailability(Integer supplierId, OctoProductAvailabilityRequestDto availabilityRequest);
+    List<OctoProductAvailability> getZauiActivityAvailability(Integer supplierId, OctoProductAvailabilityRequestDto availabilityRequest) throws ZauiException;
 
-    OctoBookingReserve reserveBooking(Integer supplierId, OctoBookingReserveRequest bookingReserveRequest);
+    OctoBooking reserveBooking(Integer supplierId, OctoBookingReserveRequest bookingReserveRequest) throws ZauiException;
 
-    OctoBookingConfirm confirmBooking(Integer supplierId, String bookingId, OctoBookingConfirmRequest octoBookingConfirmRequest);
+    OctoBooking confirmBooking(Integer supplierId, String bookingId, OctoBookingConfirmRequest octoBookingConfirmRequest) throws ZauiException;
 
-    OctoBookingConfirm cancelBooking(Integer supplierId, String bookingId);
+    OctoBooking cancelBooking(Integer supplierId, String bookingId) throws ZauiException;
 
     List<ZauiActivity> getZauiActivities() throws ZauiException;
 
     void fetchZauiActivities() throws ZauiException;
 
     void addActivityToBooking(BookingZauiActivityItem activityItem, String pmsBookingId) throws ZauiException;
-
-
-    void testActivity(BookingZauiActivityItem activityItem, String pmsBookingId) throws ZauiException;
 }

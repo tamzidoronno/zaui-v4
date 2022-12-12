@@ -378,15 +378,16 @@ public class PmsInvoiceManagerNew {
 
         for (PmsOrderCreateRowItemLine itemLine : roomData.items) {
             CartItem item;
-            if(Objects.equals(itemLine.orderItemType, ZauiConstants.ZAUIACTIVITY_TAG)){
-                item = cartManager.addZauiActivityItem(itemLine.createOrderOnProductId, itemLine.count);
+            if(Objects.equals(itemLine.orderItemType, ZauiConstants.ZAUI_ACTIVITY_TAG)){
+                cartManager.addZauiActivityItem(itemLine.createOrderOnProductId, itemLine.addonId);
             }
             else {
                 item = cartManager.addProductItem(itemLine.createOrderOnProductId, itemLine.count);
+                item.getProduct().price = itemLine.price;
+                item.getProduct().name = itemLine.textOnOrder;
             }
 
-            item.getProduct().price = itemLine.price;
-            item.getProduct().name = itemLine.textOnOrder;
+
         }
     }
 }

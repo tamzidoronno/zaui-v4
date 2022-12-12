@@ -4,7 +4,7 @@ class zauiactivity_dto_OctoProduct {
 	public $id;
 
 	/** @var String */
-	public $title;
+	public $internalName;
 
 	/** @var zauiactivity_dto_ActivityOption[] */
 	public $options;

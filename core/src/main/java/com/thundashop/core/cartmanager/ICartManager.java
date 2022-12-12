@@ -20,7 +20,7 @@ import java.util.Map;
  */
 @GetShopApi
 public interface ICartManager {
-    CartItem addZauiActivityItem(String productId, int count) throws ErrorException;
+    void addZauiActivityItem(String productId, String addonId) throws ErrorException;
 
     /**
      * Add a new product to the cart. 

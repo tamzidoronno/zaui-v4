@@ -1,25 +1,24 @@
 package com.thundashop.core.gotohub;
 
-import static com.thundashop.core.gotohub.constant.GotoConstants.DAILY_PRICE_DATE_FORMATTER;
+import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_CANCELLATION_FAILED;
+import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_CANCELLATION_SUCCESS;
+import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_CONFIRMATION_FAILED;
+import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_CONFIRMATION_SUCCESS;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.FETCHING_HOTEL_INFO_FAIL;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.FETCHING_HOTEL_INFO_SUCCESS;
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.FETCHING_ROOM_TYPE_INFO_SUCCESS;
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.FETCHING_ROOM_TYPE_INFO_FAIL;
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.FETCHING_PRICE_ALLOTMENT_SUCCESS;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.FETCHING_PRICE_ALLOTMENT_FAIL;
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.SAVE_BOOKING_FAIL;
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.SAVE_BOOKING_SUCCESS;
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_CONFIRMATION_SUCCESS;
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_CONFIRMATION_FAILED;
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_CANCELLATION_SUCCESS;
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_CANCELLATION_FAILED;
+import static com.thundashop.core.gotohub.constant.GoToStatusCodes.FETCHING_PRICE_ALLOTMENT_SUCCESS;
+import static com.thundashop.core.gotohub.constant.GoToStatusCodes.FETCHING_ROOM_TYPE_INFO_FAIL;
+import static com.thundashop.core.gotohub.constant.GoToStatusCodes.FETCHING_ROOM_TYPE_INFO_SUCCESS;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.INVALID_DATE_RANGE_ALLOTMENT;
+import static com.thundashop.core.gotohub.constant.GoToStatusCodes.LARGER_DATE_RANGE;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.NO_ALLOTMENT;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.ORDER_SYNCHRONIZATION_FAILED;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.PAYMENT_FAILED;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.PAYMENT_METHOD_ACTIVATION_FAILED;
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.LARGER_DATE_RANGE;
-
+import static com.thundashop.core.gotohub.constant.GoToStatusCodes.SAVE_BOOKING_FAIL;
+import static com.thundashop.core.gotohub.constant.GoToStatusCodes.SAVE_BOOKING_SUCCESS;
+import static com.thundashop.core.gotohub.constant.GotoConstants.DAILY_PRICE_DATE_FORMATTER;
 import static com.thundashop.core.gotohub.constant.GotoConstants.checkinOutDateFormatter;
 import static com.thundashop.core.gotohub.constant.GotoConstants.df;
 import static com.thundashop.core.gotohub.constant.GotoConstants.formatter;
@@ -41,8 +40,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.thundashop.services.bookingservice.IPmsBookingService;
-import com.thundashop.services.gotoservice.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.stereotype.Component;
@@ -97,6 +94,13 @@ import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.wubook.WubookManager;
+import com.thundashop.services.bookingservice.IPmsBookingService;
+import com.thundashop.services.gotoservice.IGotoBookingCancellationService;
+import com.thundashop.services.gotoservice.IGotoBookingRequestValidationService;
+import com.thundashop.services.gotoservice.IGotoCancellationValidationService;
+import com.thundashop.services.gotoservice.IGotoConfirmBookingValidationService;
+import com.thundashop.services.gotoservice.IGotoHotelInformationService;
+import com.thundashop.services.gotoservice.IGotoService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -143,6 +147,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
     @Autowired
     IGotoService gotoService;
+
     @Autowired
     IGotoBookingCancellationService bookingCancellationService;
 
@@ -151,12 +156,15 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
     @Autowired
     IGotoBookingRequestValidationService bookingRequestValidationService;
+
     @Autowired
     IGotoCancellationValidationService cancellationValidationService;
+
     @Autowired
     IPmsBookingService pmsBookingService;
+    
     @Autowired
-    IGotoConfirmBookingValidation confirmBookingValService;
+    IGotoConfirmBookingValidationService confirmBookingValService;
 
     private GoToConfiguration goToConfiguration;
     private final String CURRENCY_CODE = "currencycode";
@@ -191,7 +199,8 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     public GoToApiResponse getHotelInformation() {
         try {
             removeCurrentUser();
-            Hotel hotel = gotoHotelInformationService.getHotelInformation(storeManager.getMyStore(), pmsManager.getConfiguration(),
+            Hotel hotel = gotoHotelInformationService.getHotelInformation(storeManager.getMyStore(),
+                    pmsManager.getConfiguration(),
                     storeManager.getStoreSettingsApplicationKey("currencycode"));
             return new GoToApiResponse(true, FETCHING_HOTEL_INFO_SUCCESS.code, FETCHING_HOTEL_INFO_SUCCESS.message,
                     hotel);
@@ -287,7 +296,8 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     public GoToApiResponse confirmBooking(String reservationId) {
         try {
             saveSchedulerAsCurrentUser();
-            PmsBooking pmsBooking = confirmBookingValService.validateConfirmBookingReq(reservationId, goToConfiguration.getPaymentTypeId(),
+            PmsBooking pmsBooking = confirmBookingValService.validateConfirmBookingReq(reservationId,
+                    goToConfiguration.getPaymentTypeId(),
                     pmsManager.getSessionInfo());
             pmsBooking = setPaymentMethod(pmsBooking);
             handlePaymentOrder(pmsBooking, getCheckoutDateFromPmsBookingRooms(pmsBooking.rooms));
@@ -308,15 +318,17 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             cancelledBookingList.add(reservationId);
             Date deletionRequestTime = new Date();
             saveSchedulerAsCurrentUser();
-            PmsBooking booking = cancellationValidationService.validateCancellationReq(reservationId, deletionRequestTime, pmsManager.getConfiguration(),
+            PmsBooking booking = cancellationValidationService.validateCancellationReq(reservationId,
+                    deletionRequestTime, pmsManager.getConfiguration(),
                     goToConfiguration.cuttOffHours, pmsManager.getSessionInfo());
             pmsManager.deleteBooking(reservationId);
             pmsManager.logEntry("Deleted by channel manager", reservationId, null);
             handleOrderForCancelledBooking(reservationId);
             sendEmailForCancelledBooking(booking);
-            try{
+            try {
                 bookingCancellationService.notifyGotoAboutCancellation(
-                        frameworkConfig.getGotoCancellationEndpoint(), frameworkConfig.getGotoCancellationAuthKey(), reservationId);
+                        frameworkConfig.getGotoCancellationEndpoint(), frameworkConfig.getGotoCancellationAuthKey(),
+                        reservationId);
             } catch (Exception e) {
                 log.error("Failed to acknowledge cancel booking.. Reason: {}, Actual error: {}", e.getMessage(), e);
             }

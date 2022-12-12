@@ -1,28 +1,32 @@
 package com.thundashop.services.gotoservice;
 
-import com.thundashop.core.gotohub.dto.GotoException;
-import com.thundashop.core.pmsmanager.PmsBooking;
-import com.thundashop.repository.utils.SessionInfo;
-import com.thundashop.services.bookingservice.IPmsBookingService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_DELETED;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_NOT_FOUND;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.PAYMENT_METHOD_NOT_FOUND;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.thundashop.core.gotohub.dto.GotoException;
+import com.thundashop.core.pmsmanager.PmsBooking;
+import com.thundashop.repository.utils.SessionInfo;
+import com.thundashop.services.bookingservice.IPmsBookingService;
+
 @Service
-public class GotoConfirmBookingValidation implements IGotoConfirmBookingValidation{
+public class GotoConfirmBookingValidationService implements IGotoConfirmBookingValidationService {
     @Autowired
     IPmsBookingService pmsBookingService;
+
     @Override
-    public PmsBooking validateConfirmBookingReq(String reservationId, String paymentId, SessionInfo pmsManagerSession) throws GotoException {
+    public PmsBooking validateConfirmBookingReq(String reservationId, String paymentId, SessionInfo pmsManagerSession)
+            throws GotoException {
         PmsBooking booking = pmsBookingService.getPmsBookingById(reservationId, pmsManagerSession);
         validateBookingId(booking);
         validatePaymentMethod(paymentId);
         return booking;
     }
+
     private void validateBookingId(PmsBooking booking) throws GotoException {
         if (booking == null) {
             throw new GotoException(BOOKING_NOT_FOUND.code, BOOKING_NOT_FOUND.message);

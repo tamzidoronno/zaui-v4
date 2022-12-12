@@ -7,6 +7,6 @@ import com.thundashop.repository.baserepository.IRepository;
 import com.thundashop.repository.utils.SessionInfo;
 
 public interface IPmsBookingRepository extends IRepository<PmsBooking> {
-    public PmsBooking getPmsBookingById(String id, SessionInfo sessionInfo);
+    PmsBooking getPmsBookingById(String id, SessionInfo sessionInfo);
     List<PmsBooking> getGotoBookings(SessionInfo sessionInfo);
 }

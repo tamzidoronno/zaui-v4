@@ -22,7 +22,6 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 @Service
 @Slf4j
 public class GotoBookingCancellationService implements IGotoBookingCancellationService{
-
     OkHttpClient okHttpClient;
     @Autowired
     public GotoBookingCancellationService(OkHttpClient okHttpClient) {
@@ -48,8 +47,7 @@ public class GotoBookingCancellationService implements IGotoBookingCancellationS
     @Retryable(value = Exception.class, maxAttempts = 3, backoff = @Backoff(delay = 5000))
     public void notifyGotoAboutCancellation(String baseUrl, String authKey, String reservationId) throws Exception {
         if(isBlank(baseUrl) || isBlank(authKey)) {
-            log.info("no url or authkey has been found in config file for goto cancellation acknowledgement");
-            System.out.println("no url or authkey has been found in config file for goto cancellation acknowledgement");
+            log.info("no url or authKey has been found in config file for goto cancellation acknowledgement");
             return;
         }
         String url = baseUrl + reservationId;
@@ -64,25 +62,23 @@ public class GotoBookingCancellationService implements IGotoBookingCancellationS
         try {
             response = okHttpClient.newCall(request).execute();
         } catch (IOException e) {
-            String errorMessage = CANCELLATION_ACK_REQ_EXECUTION_FAILED.message + ", ReservationId: " + reservationId;
-            log.error(errorMessage);
-            throw new GotoException(CANCELLATION_ACK_REQ_EXECUTION_FAILED.code, errorMessage);
+            log.error("{}, ReservationId: {}, Reason: {}, Actual error: {}"
+                    , CANCELLATION_ACK_FAILED.message, reservationId, e.getMessage(), e);
+            throw e;
         }
         String responseBody;
         try {
             responseBody = response.body().string();
             log.info("goto booking acknowledgement response: {}", responseBody);
         } catch (IOException e) {
-            String errorMessage = CANCELLATION_ACK_GETTING_RES_BODY_FAILED.message + ", ReservationId: " + reservationId;
-            log.error(errorMessage);
-            throw new GotoException(CANCELLATION_ACK_GETTING_RES_BODY_FAILED.code, errorMessage);
+            log.error("{}, ReservationId: {}, Reason: {}, Actual error: {}"
+                    , CANCELLATION_ACK_FAILED.message, reservationId, e.getMessage(), e);
+            throw e;
         }
         if(!response.isSuccessful()) {
-            String errorMessage = CANCELLATION_ACK_FAILED.message + ", ReservationId: " + reservationId +
-                    ", Response Code: " + response.code() +
-                    (isNotBlank(responseBody) ? ", Response Body: " + responseBody : "");
-            log.error(errorMessage);
-            throw new GotoException(CANCELLATION_ACK_FAILED.code, errorMessage);
+            log.error("{}, ReservationId: {}, Response Code: {}, Response Body: {}"
+                    , CANCELLATION_ACK_FAILED.message, reservationId, response.code(), responseBody);
+            throw new GotoException(CANCELLATION_ACK_FAILED.code, CANCELLATION_ACK_FAILED.message + "Response Body: " + responseBody);
         }
     }
 }

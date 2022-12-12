@@ -17,7 +17,6 @@ import static com.thundashop.core.gotohub.constant.GoToStatusCodes.INVALID_DATE_
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.NO_ALLOTMENT;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.ORDER_SYNCHRONIZATION_FAILED;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.PAYMENT_FAILED;
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.CANCELLATION_ACK_FAILED;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.PAYMENT_METHOD_ACTIVATION_FAILED;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.LARGER_DATE_RANGE;
 
@@ -147,8 +146,6 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     IGotoService gotoService;
     @Autowired
     IGotoBookingCancellationService bookingCancellationService;
-    @Autowired
-    FrameworkConfig frameworkConfig;
 
     @Autowired
     IGotoHotelInformationService gotoHotelInformationService;
@@ -298,14 +295,11 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             return new GoToApiResponse(true, BOOKING_CONFIRMATION_SUCCESS.code, BOOKING_CONFIRMATION_SUCCESS.message,
                     null);
         } catch (GotoException e) {
-            handleUpdateBookingError(reservationId, e.getMessage(), e.getStatusCode());
-            return new GoToApiResponse(false, e.getStatusCode(), e.getMessage(), null);
+            return handleUpdateBookingError(reservationId, e.getMessage(), e.getStatusCode());
         } catch (Exception e) {
             logPrintException(e);
-            handleUpdateBookingError(reservationId, BOOKING_CONFIRMATION_FAILED.message,
+            return handleUpdateBookingError(reservationId, BOOKING_CONFIRMATION_FAILED.message,
                     BOOKING_CONFIRMATION_FAILED.code);
-            return new GoToApiResponse(false, BOOKING_CONFIRMATION_FAILED.code, BOOKING_CONFIRMATION_FAILED.message,
-                    null);
         }
     }
 

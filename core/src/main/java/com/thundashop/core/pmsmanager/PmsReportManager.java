@@ -1,6 +1,19 @@
 package com.thundashop.core.pmsmanager;
 
-import com.braintreegateway.Transaction;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.UUID;
+
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.Booking;
@@ -14,23 +27,10 @@ import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.UUID;
-import org.joda.time.DateTime;
-import org.joda.time.Days;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 @Component
 @GetShopSession
 public class PmsReportManager extends ManagerBase implements IPmsReportManager {
-
     @Autowired
     PmsManager pmsManager;
 
@@ -51,6 +51,9 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
     
     @Autowired
     MessageManager messageManager;
+
+    @Autowired
+    private PmsLogManager pmsLogManager;
     
     @Override
     public List<PmsMobileReport> getReport(Date start, Date end, String compareTo, boolean excludeClosedRooms) {
@@ -106,7 +109,7 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
         filterCompare.startDate = calStart.getTime();
         filterCompare.endDate = calEnd.getTime();
 
-        List<PmsMobileReport> result = new ArrayList();
+        List<PmsMobileReport> result = new ArrayList<>();
         
         PmsStatistics stats = pmsManager.getStatistics(filter);
         PmsStatistics compare = pmsManager.getStatistics(filterCompare);
@@ -144,13 +147,13 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
 
     @Override
     public List<PmsLog> getCleaningLog(Date start, Date end) {
-        List<PmsLog> entries = new ArrayList();
+        List<PmsLog> entries = new ArrayList<>();
         
         PmsLog filter = new PmsLog();
         filter.logType = "cleaning";
-        filter.includeAll = true;
+        filter.includeAll = true;        
         
-        List<PmsLog> allEntries = pmsManager.getLogEntries(filter);
+        List<PmsLog> allEntries = pmsLogManager.getLogEntries(filter, start, end);
         for(PmsLog entry : allEntries) {
             if(start.before(entry.dateEntry) && end.after(entry.dateEntry)) {
                 entries.add(entry);
@@ -166,9 +169,9 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
         PmsBookingFilter filter = new PmsBookingFilter();
         filter.startDate = start;
         filter.endDate = end;
-        filter.itemFilter = new ArrayList();
+        filter.itemFilter = new ArrayList<>();
         
-        List<PmsMobileRoomCoverage> result = new ArrayList();
+        List<PmsMobileRoomCoverage> result = new ArrayList<>();
         for(BookingItem item : items) {
             filter.itemFilter.clear();
             filter.itemFilter.add(item.id);
@@ -207,7 +210,7 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
 
     @Override
     public List<PmsMobileUsage> getUsage(Date start, Date end) {
-        return new ArrayList();
+        return new ArrayList<>();
     }
 
     private PmsMobileReport buildTotal(PmsStatistics stats, String totalText, StatisticsEntry compare) {
@@ -248,7 +251,6 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
     @Override
     public PmsConferenceStatistics getConferenceStatistics(Date start, Date end) {
         PmsBookingFilter filter = new PmsBookingFilter();
-        PmsConfiguration config = pmsManager.getConfigurationSecure();
         filter.startDate = start;
         filter.endDate = end;
         filter.filterType = "active";
@@ -260,8 +262,8 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
         stats.numberOfBookings = bookings.size();
         stats.numberOfRooms = 0;
         
-        List<String> usersIdsCounted = new ArrayList();
-        stats.fieldStatistics = new HashMap();
+        List<String> usersIdsCounted = new ArrayList<>();
+        stats.fieldStatistics = new HashMap<>();
         
         for(PmsBooking booking : bookings) {
             if(!usersIdsCounted.contains(booking.userId)) {
@@ -323,7 +325,7 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
         } else {
             HashMap<String, Integer> currentCounter = (HashMap<String, Integer>) stats.fieldStatistics.get(field);
             if(currentCounter == null) {
-                currentCounter = new HashMap();
+                currentCounter = new HashMap<>();
                 stats.fieldStatistics.put(field, currentCounter);
             }
             int counter = 0;
@@ -354,7 +356,7 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
 
     @Override
     public List<PmsSubscriptionReportEntry> getSubscriptionReport(Date start, Date end) {
-        List<PmsSubscriptionReportEntry> result = new ArrayList();
+        List<PmsSubscriptionReportEntry> result = new ArrayList<>();
         List<BookingItem> items = bookingEngine.getBookingItems();
         for(BookingItem item : items) {
             List<Booking> bookings = bookingEngine.getAllBookingsByBookingItem(item.id);
@@ -404,9 +406,9 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
     public PmsMonthlyOrderStatistics getMonthlyStatistics() {
         PmsOrderStatsFilter filter = new PmsOrderStatsFilter();
         
-        List<Order> ordersToUse = new ArrayList();
+        List<Order> ordersToUse = new ArrayList<>();
         
-        List<String> roomProducts = new ArrayList();
+        List<String> roomProducts = new ArrayList<>();
         for(BookingItemType type : bookingEngine.getBookingItemTypes()) {
             roomProducts.add(type.productId);
             roomProducts.addAll(type.historicalProductIds);
@@ -488,7 +490,7 @@ public class PmsReportManager extends ManagerBase implements IPmsReportManager {
     @Override
     public List<PmsBookingsFiltered> getFilteredBookings(PmsBookingFilter filter) {
         filter.filterType = "registered";
-        List<PmsBookingsFiltered> result = new ArrayList();
+        List<PmsBookingsFiltered> result = new ArrayList<>();
         List<PmsBooking> bookings = pmsManager.getAllBookings(filter);
         for(PmsBooking booking : bookings) {
             PmsBookingsFiltered filtered = new PmsBookingsFiltered();

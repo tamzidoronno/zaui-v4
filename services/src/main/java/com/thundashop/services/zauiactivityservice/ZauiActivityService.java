@@ -88,25 +88,9 @@ public class ZauiActivityService implements IZauiActivityService {
                 .setNotes("Zaui Stay Booking")
                 .setUnitItems(activityItem.units.stream().map(o -> new UnitItemReserveRequest(o.id)).collect(Collectors.toList()));
         OctoBooking octoBooking = octoApiService.reserveBooking(activityItem.supplierId,bookingReserveRequest);
-        octoBooking.setIncludedTaxes(dummyTaxData());
         activityItem.setOctoBooking(octoBooking);
         booking.bookingZauiActivityItems.add(activityItem);
     }
-
-    private List<TaxData> dummyTaxData() {
-        Type type = new TypeToken<List<TaxData>>() {}.getType();
-        String path = "/var/www/getshop-v4/services/src/main/java/com/thundashop/services/zauiactivityservice/tax_dummy.json";
-        JsonReader reader;
-        Gson gson = new Gson();
-        try {
-            reader = new JsonReader(new FileReader(path));
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
-        return gson.fromJson(reader, type);
-    }
-
 
     private ZauiActivity mapOctoToZauiActivity(OctoProduct octoProduct, Integer supplierId) {
         ZauiActivity zauiActivity = new ZauiActivity();

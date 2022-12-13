@@ -30,7 +30,6 @@ public class OctoBooking {
     private List<UnitItemOnBooking> unitItems = null;
     private Cancellation cancellation;
     private Pricing pricing = null;
-    public List<TaxData> includedTaxes = new ArrayList<>();
 }
 
 @Data

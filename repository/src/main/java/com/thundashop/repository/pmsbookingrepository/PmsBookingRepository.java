@@ -23,6 +23,15 @@ public class PmsBookingRepository extends Repository<PmsBooking> implements IPms
     }
 
     @Override
+    public PmsBooking getPmsBookingById(String id, SessionInfo sessionInfo) {
+        DBObject query = new BasicDBObject();
+        query.put("_id", id);
+        query.put("className", getClassName());
+        query.put("deleted", null);
+        return getFirst(query, sessionInfo).orElse(null);
+    }
+
+    @Override
     public List<PmsBooking> getGotoBookings(SessionInfo sessionInfo) {
        DBObject query = new BasicDBObject();
        query.put("className", getClassName());

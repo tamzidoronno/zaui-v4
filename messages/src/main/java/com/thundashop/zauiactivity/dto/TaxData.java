@@ -13,14 +13,14 @@ public class TaxData {
     private String name;
     @SerializedName("accountingCode")
 
-    private Integer accountingCode;
+    private long accountingCode;
     @SerializedName("rate")
 
     private Integer rate;
     @SerializedName("priceExcludingTax")
 
-    private Integer priceExcludingTax;
+    private Long priceExcludingTax;
     @SerializedName("taxAmount")
 
-    private Integer taxAmount;
+    private Long taxAmount;
 }

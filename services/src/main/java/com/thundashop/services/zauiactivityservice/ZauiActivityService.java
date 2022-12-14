@@ -1,16 +1,9 @@
 package com.thundashop.services.zauiactivityservice;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
-import com.thundashop.core.pmsmanager.ConferenceData;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.repository.pmsbookingrepository.IPmsBookingRepository;
 import com.thundashop.zauiactivity.constant.ZauiConstants;
@@ -39,6 +32,8 @@ public class ZauiActivityService implements IZauiActivityService {
     @Autowired
     private IOctoApiService octoApiService;
 
+
+
     public ZauiActivityConfig getZauiActivityConfig(SessionInfo sessionInfo) {
         try{
             return zauiActivityConfigRepository.getZauiActivityConfig(sessionInfo).orElse(new ZauiActivityConfig());
@@ -61,7 +56,7 @@ public class ZauiActivityService implements IZauiActivityService {
         return zauiActivityRepository.getById(Id, sessionInfo);
     }
 
-    public void fetchZauiActivities(SessionInfo sessionInfo) throws ZauiException {
+    public void fetchZauiActivities(SessionInfo sessionInfo, String currency) throws ZauiException {
         ZauiActivityConfig zauiActivityConfig = zauiActivityConfigRepository.getZauiActivityConfig(sessionInfo).orElse(null);
         if (zauiActivityConfig == null) {
             return;
@@ -70,7 +65,7 @@ public class ZauiActivityService implements IZauiActivityService {
         {
             try {
                 octoApiService.getOctoProducts(supplierId).forEach(
-                        octoProduct -> zauiActivityRepository.save(mapOctoToZauiActivity(octoProduct, supplierId), sessionInfo));
+                        octoProduct -> zauiActivityRepository.save(mapOctoToZauiActivity(octoProduct, supplierId,currency), sessionInfo));
             } catch (ZauiException e) {
                 throw new RuntimeException(e);
             }
@@ -92,7 +87,7 @@ public class ZauiActivityService implements IZauiActivityService {
         booking.bookingZauiActivityItems.add(activityItem);
     }
 
-    private ZauiActivity mapOctoToZauiActivity(OctoProduct octoProduct, Integer supplierId) {
+    private ZauiActivity mapOctoToZauiActivity(OctoProduct octoProduct, Integer supplierId,String currency) {
         ZauiActivity zauiActivity = new ZauiActivity();
         zauiActivity.name = octoProduct.getInternalName();
         zauiActivity.productId = octoProduct.getId();
@@ -102,6 +97,7 @@ public class ZauiActivityService implements IZauiActivityService {
         zauiActivity.activityOptionList = octoProduct.getOptions();
         zauiActivity.mainImage = octoProduct.getCoverImage();
         zauiActivity.tag = ZauiConstants.ZAUI_ACTIVITY_TAG;
+        zauiActivity.currency = currency;
         return zauiActivity;
     }
 

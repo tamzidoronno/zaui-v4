@@ -7,10 +7,10 @@ import java.util.List;
 
 @Data
 public class Pricing {
-    String currency;
-    Integer currencyPrecision;
-    Integer subtotal;
-    Integer tax;
-    Integer total;
-    public List<TaxData> includedTaxes = new ArrayList<>();
+    private String currency;
+    private Integer currencyPrecision;
+    private Long subtotal;
+    private Long tax;
+    private Long total;
+    private List<TaxData> includedTaxes = new ArrayList<>();
 }

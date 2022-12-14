@@ -13,6 +13,9 @@ class zauiactivity_constant_ZauiConstants {
 	public $OCTO_PRICING;
 
 	/** @var String */
+	public $OCTO_NORWEGIAN_TAX;
+
+	/** @var String */
 	public $ZAUI_ACTIVITY_TAG;
 
 }

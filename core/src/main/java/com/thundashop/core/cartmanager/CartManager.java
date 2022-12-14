@@ -26,6 +26,7 @@ import com.thundashop.core.zauiactivity.ZauiActivityManager;
 import com.thundashop.services.zauiactivityservice.IZauiActivityService;
 import com.thundashop.zauiactivity.constant.ZauiConstants;
 import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
+import com.thundashop.zauiactivity.dto.Pricing;
 import com.thundashop.zauiactivity.dto.TaxData;
 import com.thundashop.zauiactivity.dto.ZauiActivity;
 import org.slf4j.LoggerFactory;
@@ -100,65 +101,37 @@ public class CartManager extends ManagerBase implements ICartManager {
         }
     }
     private void createZauiActivityCartItem(ZauiActivity product, BookingZauiActivityItem activityItem) {
-        List<TaxGroup> taxes = productManager.getTaxes();
         Cart cart = getCart(getSession().id);
         List<CartItem> cartItems = new ArrayList<>();
-        double totalPrice = (double) activityItem.pricing.getTotal();
-        double totalTax = (double) activityItem.pricing.getTax();
-        AtomicReference<Double> sumPriceExTax = new AtomicReference<>(0.0);
-        AtomicReference<Double> sumPrice = new AtomicReference<>(0.0);
-        activityItem.getOctoBooking().getPricing().getIncludedTaxes().forEach(activity -> {
-
-            Product taxProduct = createZauiActivityForTax(product,activity,taxes,0,0);
-            sumPriceExTax.updateAndGet(v -> v + taxProduct.priceExTaxes);
-            sumPrice.updateAndGet(v -> v + taxProduct.price);
-
+        Pricing pricing = activityItem.getOctoBooking().getPricing();
+        pricing.getIncludedTaxes().forEach((activity) -> {
+            Product taxProduct = createZauiActivityForTax(product,activity,pricing.getCurrencyPrecision());
             CartItem cartItem = new CartItem();
             cartItem.setProduct(taxProduct);
             cartItem.setCount(1);
             cartItems.add(cartItem);
         });
-
-        if(sumPrice.get() < totalPrice){
-            double price = totalPrice -  sumPrice.get();
-            double priceExTax = price - totalTax;
-            Product taxProduct = createZauiActivityForTax(product,null,taxes,price,priceExTax);
-            CartItem cartItem = new CartItem();
-            cartItem.setProduct(taxProduct);
-            cartItem.setCount(1);
-            cartItems.add(cartItem);
-
-        }
         cart.addCartItems(cartItems);
     }
 
-    private Product createZauiActivityForTax(ZauiActivity product, TaxData activity, List<TaxGroup> taxes, double price, double priceExTax) {
+    private Product createZauiActivityForTax(ZauiActivity product, TaxData activity, Integer currencyPrecision) {
+        List<TaxGroup> taxes = productManager.getTaxes();
         Product taxProduct = product.clone();
-        double taxRate;
-        String name = product.name;
+        AccountingDetail account = getOctoSupplierAccount(product.getSupplierId(),activity.getRate().doubleValue());
+        double amountDivider =  Math.pow(10,currencyPrecision);
 
-        if(activity!= null) {
-            priceExTax = (double) activity.getPriceExcludingTax();
-            price = (double) activity.getTaxAmount() + priceExTax;
-            taxRate = activity.getRate().doubleValue();
-            name = product.name + " : " + activity.getName();
-        } else {
-            taxRate = 0.0;
-        }
-
-        AccountingDetail account = getOctoSupplierAccount(product.getSupplierId(),taxRate);
-        TaxGroup taxGroup = taxes.get(account.getShopTaxGroup);
         ProductAccountingInformation info = new ProductAccountingInformation();
         info.accountingNumber = account.accountNumber + "";
         info.taxGroupNumber = account.getShopTaxGroup;
 
+        TaxGroup taxGroup = taxes.get(account.getShopTaxGroup);
         taxProduct.accountingConfig.add(info);
         taxProduct.taxgroup = account.getShopTaxGroup;
         taxProduct.taxGroupObject = taxGroup;
-        taxProduct.name = name;
+        taxProduct.name = product.name + " : " + activity.getName();
         taxProduct.masterProductId = product.id;
-        taxProduct.price = price;
-        taxProduct.priceExTaxes = priceExTax;
+        taxProduct.priceExTaxes = activity.getPriceExcludingTax()/amountDivider;
+        taxProduct.price = activity.getTaxAmount()/amountDivider + taxProduct.priceExTaxes;
         return taxProduct;
     }
 

@@ -66,8 +66,5 @@ class zauiactivity_dto_OctoBooking {
 	/** @var zauiactivity_dto_Pricing */
 	public $pricing;
 
-	/** @var zauiactivity_dto_TaxData[] */
-	public $includedTaxes;
-
 }
 ?>

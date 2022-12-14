@@ -1,7 +1,6 @@
 package com.thundashop.services.zauiactivityservice;
 
 import com.thundashop.core.pmsmanager.PmsBooking;
-import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.repository.exceptions.ZauiException;
 import com.thundashop.repository.utils.SessionInfo;
 import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
@@ -20,7 +19,7 @@ public interface IZauiActivityService {
 
     Optional<ZauiActivity> getZauiActivityById(String Id, SessionInfo sessionInfo);
 
-    void fetchZauiActivities(SessionInfo sessionInfo) throws ZauiException;
+    void fetchZauiActivities(SessionInfo sessionInfo, String currency) throws ZauiException;
 
     List<ZauiActivity> getZauiActivities(SessionInfo sessionInfo) throws ZauiException;
 

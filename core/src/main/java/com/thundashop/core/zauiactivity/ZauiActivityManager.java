@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsManager;
+import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.repository.exceptions.ZauiException;
 import com.thundashop.services.zauiactivityservice.IZauiActivityService;
 import com.thundashop.zauiactivity.dto.*;
@@ -30,6 +31,9 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
     private IZauiActivityService zauiActivityService;
     @Autowired
     PmsManager pmsManager;
+
+    @Autowired
+    StoreManager storeManager;
 
     @Override
     public ZauiActivityConfig getActivityConfig() {
@@ -81,7 +85,8 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
 
     @Override
     public void fetchZauiActivities() throws ZauiException {
-        zauiActivityService.fetchZauiActivities(getSessionInfo());
+        String currency = storeManager.getStoreSettingsApplicationKey("currencycode");
+        zauiActivityService.fetchZauiActivities(getSessionInfo(),currency);
     }
 
     @Override

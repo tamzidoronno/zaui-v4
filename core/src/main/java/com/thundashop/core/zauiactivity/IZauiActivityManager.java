@@ -28,7 +28,7 @@ public interface IZauiActivityManager {
 
     OctoBooking confirmBooking(Integer supplierId, String bookingId, OctoBookingConfirmRequest octoBookingConfirmRequest) throws ZauiException;
 
-    OctoBooking cancelBooking(Integer supplierId, String bookingId) throws ZauiException;
+    void cancelActivity(String pmsBookingId, String octoBookingId) throws ZauiException;
 
     List<ZauiActivity> getZauiActivities() throws ZauiException;
 

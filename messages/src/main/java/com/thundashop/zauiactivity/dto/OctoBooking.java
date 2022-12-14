@@ -26,7 +26,7 @@ public class OctoBooking {
     private OctoProductAvailability availability;
     private Contact contact;
     private List<String> deliveryMethods = null;
-    private List<String> voucher = null;
+    private List<Ticket> voucher = null;
     private List<UnitItemOnBooking> unitItems = null;
     private Cancellation cancellation;
     private Pricing pricing = null;

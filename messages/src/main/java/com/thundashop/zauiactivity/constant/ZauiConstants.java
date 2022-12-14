@@ -11,4 +11,5 @@ public class ZauiConstants {
     public static Pair<String,String> OCTO_PRICING = new ImmutablePair<>("OCTO-Capabilities","octo/pricing");
     public static Pair<String,String> OCTO_NORWEGIAN_TAX = new ImmutablePair<>("OCTO-Capabilities","zaui/norwegiantax");
     public static String ZAUI_ACTIVITY_TAG = "zaui-activity";
+    public static String ZAUI_STAY_TAG = "zaui-stay";
 }

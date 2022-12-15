@@ -23,11 +23,11 @@ public class ZauiActivityConfigRepository extends Repository<ZauiActivityConfig>
     }
 
     @Override
-    public Optional<ZauiActivityConfig> getZauiActivityConfig(SessionInfo sessionInfo) {
+    public Optional<ZauiActivityConfig> getZauiActivityConfig(SessionInfo sessionInfo) throws NotUniqueDataException {
         DBObject query = new BasicDBObject();
         query.put("className", getClassName());
         query.put("deleted", null);
-        return getFirst(query, sessionInfo);
+        return getOne(query, sessionInfo);
     }
 
     @Override

@@ -5,18 +5,17 @@ import com.thundashop.core.gotohub.dto.*;
 import com.thundashop.core.pmsmanager.*;
 import com.thundashop.repository.utils.SessionInfo;
 import com.thundashop.services.zauiactivityservice.IZauiActivityService;
-import com.thundashop.zauiactivity.dto.ActivityOption;
-import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
-import com.thundashop.zauiactivity.dto.OctoBooking;
 import com.thundashop.zauiactivity.dto.ZauiActivity;
+import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
+import com.thundashop.zauiactivity.dto.Unit;
+import com.thundashop.zauiactivity.dto.OctoBooking;
+import com.thundashop.zauiactivity.dto.ActivityOption;
+import com.thundashop.zauiactivity.dto.UnitItemOnBooking;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.thundashop.core.gotohub.constant.GotoConstants.DAILY_PRICE_DATE_FORMATTER;
@@ -104,19 +103,18 @@ public class GotoHoldBookingService implements IGotoHoldBookingService{
         ActivityOption bookedOption = zauiActivity.activityOptionList.stream()
                 .filter(option -> option.getId().equals(octoBooking.getOptionId()))
                 .findAny().orElse(null);
-
         activityItem.setZauiActivityId(zauiActivity.id);
         activityItem.setOctoProductId(zauiActivity.getProductId());
         activityItem.setOptionTitle(bookedOption.getInternalName());
         activityItem.setOptionId(bookedOption.getId());
         activityItem.setAvailabilityId(octoBooking.getAvailabilityId());
-//        activityItem.setUnits();
+        activityItem.setUnits(getUnitFromOctoBookingUnitItems(octoBooking.getUnitItems()));
         activityItem.setUnpaidAmount(octoBooking.getPricing().getTotal());
         activityItem.setNotes(octoBooking.getNotes());
         activityItem.setLocalDateTimeStart(octoBooking.getAvailability().getLocalDateTimeStart());
         activityItem.setLocalDateTimeEnd(octoBooking.getAvailability().getLocalDateTimeEnd());
         activityItem.setSupplierId(zauiActivity.getSupplierId());
-        activityItem.setSupplierName(zauiActivity.getSupplierName());
+//        activityItem.setSupplierName(zauiActivity.getSupplierName());
         activityItem.setOctoBooking(octoBooking);
         return activityItem;
     }
@@ -140,7 +138,7 @@ public class GotoHoldBookingService implements IGotoHoldBookingService{
                 .stream()
                 .collect(
                         Collectors.toMap(GotoRoomDailyPrice::getDate, GotoRoomDailyPrice::getPrice));
-        while (!calendar.getTime().after(pmsBookingRoom.date.end)) {
+        while (calendar.getTime().before(pmsBookingRoom.date.end)) {
             String dailyPriceKey = DAILY_PRICE_DATE_FORMATTER.format(calendar.getTime());
             Double price = dailyPricesFromGoto.get(dailyPriceKey);
             pmsBookingRoom.priceMatrix.put(PmsBookingRooms.getOffsetKey(calendar, PmsBooking.PriceType.daily), price);
@@ -149,5 +147,24 @@ public class GotoHoldBookingService implements IGotoHoldBookingService{
         pmsBookingRoom.totalCost = gotoBookingRoom.getPrice().getTotalRoomPrice();
 
         return pmsBookingRoom;
+    }
+    private List<Unit> getUnitFromOctoBookingUnitItems(List<UnitItemOnBooking> unitItems) {
+        Map<String, Integer> unitQuantity = new HashMap<>();
+        for(UnitItemOnBooking unitItem : unitItems) {
+            int count = 0;
+            if(unitQuantity.containsKey(unitItem.getUnitId())) {
+                count = unitQuantity.get(unitItem.getUnitId());
+            }
+            count++;
+            unitQuantity.put(unitItem.getUnitId(), count);
+        }
+
+        return unitQuantity.keySet().stream()
+                .map(unitId-> {
+                    Unit unit = new Unit();
+                    unit.setId(unitId);
+                    unit.setQuantity(unitQuantity.get(unitId));
+                    return unit;
+                }).collect(Collectors.toList());
     }
 }

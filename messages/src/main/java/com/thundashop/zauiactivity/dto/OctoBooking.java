@@ -1,7 +1,9 @@
 package com.thundashop.zauiactivity.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 
 @Data
@@ -28,15 +30,6 @@ public class OctoBooking {
     private List<UnitItemOnBooking> unitItems = null;
     private Cancellation cancellation;
     private Pricing pricing = null;
-}
-
-@Data
-class UnitItemOnBooking {
-    private String uuid;
-    private String unitId;
-    private Object resellerReference;
-    private Object supplierReference;
-    private Ticket ticket;
 }
 
 @Data

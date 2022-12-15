@@ -251,7 +251,6 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             if (pmsBooking == null) {
                 throw new GotoException(SAVE_BOOKING_FAIL.code, SAVE_BOOKING_FAIL.message);
             }
-
             pmsManager.saveBooking(pmsBooking);
             pmsInvoiceManager.clearOrdersOnBooking(pmsBooking);
             handleOverbooking(pmsBooking);

@@ -25,16 +25,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.thundashop.core.gotohub.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.thundashop.core.bookingengine.data.BookingItemType;
-import com.thundashop.core.gotohub.dto.GotoBooker;
-import com.thundashop.core.gotohub.dto.GotoBookingRequest;
-import com.thundashop.core.gotohub.dto.GotoException;
-import com.thundashop.core.gotohub.dto.GotoRoomDailyPrice;
-import com.thundashop.core.gotohub.dto.GotoRoomPrice;
-import com.thundashop.core.gotohub.dto.GotoRoomRequest;
 import com.thundashop.core.pmsmanager.PmsConfiguration;
 import com.thundashop.repository.utils.SessionInfo;
 import com.thundashop.services.bookingitemtypeservice.IBookingItemTypeService;
@@ -54,7 +49,7 @@ public class GotoBookingRequestValidationService implements IGotoBookingRequestV
             SessionInfo bookingItemTypeSession) throws GotoException, ParseException {
         validateCurrency(bookingRequest.getCurrency(), systemCurrency);
         validateBookerInfo(bookingRequest.getOrderer());
-        validateNoOfBookingItems(bookingRequest.getRooms());
+        validateNoOfBookingItems(bookingRequest.getRooms(), bookingRequest.getActivities());
         for (GotoRoomRequest room : bookingRequest.getRooms()) {
             BookingItemType type = bookingItemTypeService.getBookingItemTypeById(room.getRoomCode(),
                     bookingItemTypeSession);
@@ -72,8 +67,9 @@ public class GotoBookingRequestValidationService implements IGotoBookingRequestV
         }
     }
 
-    public void validateNoOfBookingItems(List<GotoRoomRequest> rooms) throws GotoException {
-        if (rooms == null || rooms.isEmpty()) {
+    private void validateNoOfBookingItems(List<GotoRoomRequest> rooms, List<GotoActivityReservationDto> activities)
+            throws GotoException {
+        if ((rooms == null || rooms.isEmpty()) && (activities == null || activities.isEmpty())) {
             log.debug("Booking is not saved since there are no rooms to add");
             throw new GotoException(EMPTY_ROOM_LIST.code, EMPTY_ROOM_LIST.message);
         }

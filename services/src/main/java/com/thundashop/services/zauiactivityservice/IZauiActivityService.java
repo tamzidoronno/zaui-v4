@@ -9,6 +9,7 @@ import com.thundashop.repository.exceptions.NotUniqueDataException;
 import com.thundashop.repository.exceptions.ZauiException;
 import com.thundashop.repository.utils.SessionInfo;
 import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
+import com.thundashop.zauiactivity.dto.OctoBooking;
 import com.thundashop.zauiactivity.dto.ZauiActivity;
 import com.thundashop.zauiactivity.dto.ZauiActivityConfig;
 
@@ -21,9 +22,13 @@ public interface IZauiActivityService {
 
     void fetchZauiActivities(SessionInfo sessionInfo, ZauiActivityConfig zauiActivityConfig, String currency);
 
+    ZauiActivity getZauiActivityByOptionId(String optionId, SessionInfo sessionInfo);
+
     List<ZauiActivity> getZauiActivities(SessionInfo sessionInfo) throws ZauiException;
 
     PmsBooking addActivityToBooking(BookingZauiActivityItem activityItem, PmsBooking booking, User booker) throws ZauiException;
+
+    PmsBooking addActivityToBooking(BookingZauiActivityItem activityItem, OctoBooking octoBooking, PmsBooking booking) throws ZauiException;
 
     void cancelActivityFromBooking(BookingZauiActivityItem activityItem) throws ZauiException;
 

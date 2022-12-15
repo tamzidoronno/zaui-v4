@@ -64,6 +64,11 @@ public class ZauiActivityService implements IZauiActivityService {
         return zauiActivityRepository.getById(Id, sessionInfo);
     }
 
+    @Override
+    public ZauiActivity getZauiActivityByOptionId(String optionId, SessionInfo sessionInfo) {
+        return zauiActivityRepository.getByOptionId(optionId, sessionInfo);
+    }
+
     public void fetchZauiActivities(SessionInfo sessionInfo, ZauiActivityConfig zauiActivityConfig, String currency) {
         if (zauiActivityConfig == null || zauiActivityConfig.connectedSuppliers == null
                 || zauiActivityConfig.connectedSuppliers.size() < 1) {
@@ -87,7 +92,6 @@ public class ZauiActivityService implements IZauiActivityService {
                         supplier.getId(), e.getMessage(), e);
             }
         });
-
     }
 
     @Override
@@ -95,16 +99,32 @@ public class ZauiActivityService implements IZauiActivityService {
             throws ZauiException {
         if (activityItem.units == null)
             throw new ZauiException(ZauiStatusCodes.MISSING_PARAMS);
-        OctoBooking octoReservedBooking = reserveOctoBooking(activityItem, booking);
+        OctoBooking octoReservedBooking = reserveOctoBooking(activityItem);
         activityItem.setOctoBooking(octoReservedBooking);
+        activityItem.price = getPrecisedPrice(octoReservedBooking.getPricing().getTotal(),
+                octoReservedBooking.getPricing().getCurrencyPrecision());
+        activityItem.priceExTaxes = getPrecisedPrice(octoReservedBooking.getPricing().getSubtotal(),
+                octoReservedBooking.getPricing().getCurrencyPrecision());
         OctoBooking octoConfirmedBooking = confirmOctoBooking(activityItem, booking, booker, octoReservedBooking);
-        activityItem.setOctoBooking(octoConfirmedBooking);
+        booking = addActivityToBooking(activityItem, octoConfirmedBooking, booking);
+        return booking;
+    }
+
+    @Override
+    public PmsBooking addActivityToBooking(BookingZauiActivityItem activityItem, OctoBooking octoBooking,
+            PmsBooking booking) throws ZauiException {
+        if (activityItem.units == null)
+            throw new ZauiException(ZauiStatusCodes.MISSING_PARAMS);
+        activityItem.setOctoBooking(octoBooking);
+        activityItem.price = getPrecisedPrice(octoBooking.getPricing().getTotal(),
+                octoBooking.getPricing().getCurrencyPrecision());
+        activityItem.priceExTaxes = getPrecisedPrice(octoBooking.getPricing().getSubtotal(),
+                octoBooking.getPricing().getCurrencyPrecision());
         booking.bookingZauiActivityItems.add(activityItem);
         return booking;
     }
 
-    private OctoBooking reserveOctoBooking(BookingZauiActivityItem activityItem, PmsBooking booking)
-            throws ZauiException {
+    private OctoBooking reserveOctoBooking(BookingZauiActivityItem activityItem) throws ZauiException {
         OctoBookingReserveRequest bookingReserveRequest = new OctoBookingReserveRequest()
                 .setProductId(activityItem.octoProductId)
                 .setOptionId(activityItem.optionId)
@@ -153,8 +173,12 @@ public class ZauiActivityService implements IZauiActivityService {
     public Optional<BookingZauiActivityItem> getBookingZauiActivityItemByAddonId(String addonId,
             SessionInfo sessionInfo) {
         PmsBooking booking = pmsBookingRepository.getPmsBookingByAddonId(addonId, sessionInfo);
-        BookingZauiActivityItem bookingZauiActivityItem = booking.bookingZauiActivityItems.stream()
-                .filter(item -> item.addonId.equals(addonId)).findFirst().get();
-        return Optional.of(bookingZauiActivityItem);
+        return booking.bookingZauiActivityItems.stream()
+                .filter(item -> item.addonId.equals(addonId)).findFirst();
+    }
+
+    public static double getPrecisedPrice(Long price, Integer precision) {
+        double amountDivider = Math.pow(10, precision);
+        return price / amountDivider;
     }
 }

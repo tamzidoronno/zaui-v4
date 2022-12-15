@@ -62,22 +62,17 @@ public class ZauiActivityService implements IZauiActivityService {
         if (zauiActivityConfig == null) {
             return;
         }
-        zauiActivityConfig.getSupplierIds().forEach(supplierId ->
-        {
-            try {
-                octoApiService.getOctoProducts(supplierId).forEach(
-                        octoProduct -> zauiActivityRepository.save(mapOctoToZauiActivity(octoProduct, supplierId,currency), sessionInfo));
-            } catch (ZauiException e) {
-                throw new RuntimeException(e);
-            }
-        });
-
+        //TODO: set supplier name with zaui activity
+        for(Integer supplierId : zauiActivityConfig.getSupplierIds()) {
+            octoApiService.getOctoProducts(supplierId).forEach(
+                    octoProduct -> zauiActivityRepository.save(mapOctoToZauiActivity(octoProduct, supplierId,currency), sessionInfo));
+        }
     }
     @Override
     public PmsBooking addActivityToBooking(BookingZauiActivityItem activityItem, PmsBooking booking, User booker) throws ZauiException {
         if(activityItem.units == null)
             throw new ZauiException(ZauiStatusCodes.MISSING_PARAMS);
-        OctoBooking octoReservedBooking = reserveOctoBooking(activityItem, booking);
+        OctoBooking octoReservedBooking = reserveOctoBooking(activityItem);
         activityItem.setOctoBooking(octoReservedBooking);
         OctoBooking octoConfirmedBooking = confirmOctoBooking(activityItem, booking,booker,octoReservedBooking);
         activityItem.setOctoBooking(octoConfirmedBooking);
@@ -85,7 +80,7 @@ public class ZauiActivityService implements IZauiActivityService {
         return booking;
     }
 
-    private OctoBooking reserveOctoBooking(BookingZauiActivityItem activityItem,PmsBooking booking) throws ZauiException {
+    private OctoBooking reserveOctoBooking(BookingZauiActivityItem activityItem) throws ZauiException {
         OctoBookingReserveRequest bookingReserveRequest = new OctoBookingReserveRequest()
                 .setProductId(activityItem.octoProductId)
                 .setOptionId(activityItem.optionId)
@@ -130,7 +125,7 @@ public class ZauiActivityService implements IZauiActivityService {
     @Override
     public Optional<BookingZauiActivityItem>getBookingZauiActivityItemByAddonId(String addonId, SessionInfo sessionInfo) {
         PmsBooking booking = pmsBookingRepository.getPmsBookingByAddonId(addonId,sessionInfo);
-        BookingZauiActivityItem bookingZauiActivityItem = booking.bookingZauiActivityItems.stream().filter(item -> item.addonId.equals(addonId)).findFirst().get();
-        return Optional.of(bookingZauiActivityItem);
+        return booking.bookingZauiActivityItems.stream()
+                .filter(item -> item.addonId.equals(addonId)).findFirst();
     }
 }

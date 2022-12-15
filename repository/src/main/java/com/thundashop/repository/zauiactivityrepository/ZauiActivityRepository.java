@@ -30,6 +30,20 @@ public class ZauiActivityRepository extends Repository<ZauiActivity> implements 
     }
 
     @Override
+    public ZauiActivity getByOptionId(String optionId, SessionInfo sessionInfo) {
+        DBObject query = new BasicDBObject();
+        DBObject elemMatch = new BasicDBObject();
+        DBObject activityOption = new BasicDBObject();
+
+        activityOption.put("id", "197548ebd8d8284908d40faf2e4987dfd9639df2");
+        elemMatch.put("$elemMatch", activityOption);
+        query.put("className", getClassName());
+        query.put("activityOptionList", elemMatch);
+        query.put("deleted", null);
+        return getFirst(query, sessionInfo).orElse(null);
+    }
+
+    @Override
     protected String getClassName() {
         return ZauiActivity.class.getName();
     }

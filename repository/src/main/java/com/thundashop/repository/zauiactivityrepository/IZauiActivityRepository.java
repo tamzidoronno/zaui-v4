@@ -8,4 +8,6 @@ import com.thundashop.zauiactivity.dto.ZauiActivity;
 
 public interface IZauiActivityRepository extends IRepository<ZauiActivity> {
     Optional<ZauiActivity> getById(String id, SessionInfo sessionInfo);
+
+    ZauiActivity getByOptionId(String optionId, SessionInfo sessionInfo);
 }

@@ -57,6 +57,11 @@ public class ZauiActivityService implements IZauiActivityService {
         return zauiActivityRepository.getById(Id, sessionInfo);
     }
 
+    @Override
+    public ZauiActivity getZauiActivityByOptionId(String optionId, SessionInfo sessionInfo) {
+        return zauiActivityRepository.getByOptionId(optionId, sessionInfo);
+    }
+
     public void fetchZauiActivities(SessionInfo sessionInfo, String currency) throws ZauiException {
         ZauiActivityConfig zauiActivityConfig = zauiActivityConfigRepository.getZauiActivityConfig(sessionInfo).orElse(null);
         if (zauiActivityConfig == null) {
@@ -75,7 +80,15 @@ public class ZauiActivityService implements IZauiActivityService {
         OctoBooking octoReservedBooking = reserveOctoBooking(activityItem);
         activityItem.setOctoBooking(octoReservedBooking);
         OctoBooking octoConfirmedBooking = confirmOctoBooking(activityItem, booking,booker,octoReservedBooking);
-        activityItem.setOctoBooking(octoConfirmedBooking);
+        booking = addActivityToBooking(activityItem, octoConfirmedBooking, booking);
+        return booking;
+    }
+
+    @Override
+    public PmsBooking addActivityToBooking(BookingZauiActivityItem activityItem, OctoBooking octoBooking, PmsBooking booking) throws ZauiException {
+        if(activityItem.units == null)
+            throw new ZauiException(ZauiStatusCodes.MISSING_PARAMS);
+        activityItem.setOctoBooking(octoBooking);
         booking.bookingZauiActivityItems.add(activityItem);
         return booking;
     }

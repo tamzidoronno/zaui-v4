@@ -28,4 +28,7 @@ public class GotoBookingRequest {
     @SerializedName("rooms")
     @Expose
     private List<GotoRoomRequest> rooms = null;
+    @SerializedName("activities")
+    @Expose
+    private List<GotoActivityReservationDto> activities = null;
 }

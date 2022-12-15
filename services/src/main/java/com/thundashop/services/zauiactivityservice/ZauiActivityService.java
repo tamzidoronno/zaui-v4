@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.thundashop.core.pmsmanager.PmsBooking;
+import com.thundashop.core.usermanager.data.User;
 import com.thundashop.repository.pmsbookingrepository.IPmsBookingRepository;
 import com.thundashop.zauiactivity.constant.ZauiConstants;
 import com.thundashop.zauiactivity.dto.*;
@@ -78,18 +79,43 @@ public class ZauiActivityService implements IZauiActivityService {
 
     }
     @Override
-    public void addActivityToBooking(BookingZauiActivityItem activityItem, PmsBooking booking) throws ZauiException {
+    public PmsBooking addActivityToBooking(BookingZauiActivityItem activityItem, PmsBooking booking, User booker) throws ZauiException {
         if(activityItem.units == null)
             throw new ZauiException(ZauiStatusCodes.MISSING_PARAMS);
+        OctoBooking octoReservedBooking = reserveOctoBooking(activityItem, booking);
+        activityItem.setOctoBooking(octoReservedBooking);
+        OctoBooking octoConfirmedBooking = confirmOctoBooking(activityItem, booking,booker,octoReservedBooking);
+        activityItem.setOctoBooking(octoConfirmedBooking);
+        booking.bookingZauiActivityItems.add(activityItem);
+        return booking;
+    }
+
+    private OctoBooking reserveOctoBooking(BookingZauiActivityItem activityItem,PmsBooking booking) throws ZauiException {
         OctoBookingReserveRequest bookingReserveRequest = new OctoBookingReserveRequest()
                 .setProductId(activityItem.octoProductId)
                 .setOptionId(activityItem.optionId)
                 .setAvailabilityId(activityItem.availabilityId)
-                .setNotes("Zaui Stay Booking")
+                .setNotes(ZauiConstants.ZAUI_STAY_TAG)
                 .setUnitItems(activityItem.units.stream().map(o -> new UnitItemReserveRequest(o.id)).collect(Collectors.toList()));
-        OctoBooking octoBooking = octoApiService.reserveBooking(activityItem.supplierId,bookingReserveRequest);
-        activityItem.setOctoBooking(octoBooking);
-        booking.bookingZauiActivityItems.add(activityItem);
+        return octoApiService.reserveBooking(activityItem.supplierId,bookingReserveRequest);
+    }
+
+    private OctoBooking confirmOctoBooking(BookingZauiActivityItem activityItem,PmsBooking booking,User booker,OctoBooking octoReservedBooking) throws ZauiException {
+        OctoConfirmContact contact = new OctoConfirmContact()
+                .setFullName(booker.fullName)
+                .setEmailAddress(booker.emailAddress)
+                .setPhoneNumber(booker.prefix+booker.cellPhone)
+                .setCountry(booking.countryCode);
+        OctoBookingConfirmRequest confirmRequest = new OctoBookingConfirmRequest()
+                .setContact(contact)
+                .setEmailConfirmation(true);
+        return octoApiService.confirmBooking(activityItem.supplierId,octoReservedBooking.getId(),confirmRequest);
+    }
+
+    @Override
+    public void cancelActivityFromBooking(BookingZauiActivityItem activityItem) throws ZauiException {
+        OctoBooking octoCancelledBooking =  octoApiService.cancelBooking(activityItem.supplierId, activityItem.getOctoBooking().getId());
+        activityItem.setOctoBooking(octoCancelledBooking);
     }
 
     private ZauiActivity mapOctoToZauiActivity(OctoProduct octoProduct, Integer supplierId,String currency) {

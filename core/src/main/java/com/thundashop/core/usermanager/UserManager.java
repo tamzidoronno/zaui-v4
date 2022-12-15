@@ -2574,6 +2574,7 @@ public class UserManager extends ManagerBase implements IUserManager, StoreIniti
         for(User usr : allUsers) {
             if(usr.isAdministrator()) {
                 System.out.println(usr.emailAddress);
+                saveUserToCluster("10.0.41.33", usr);
                 saveUserToCluster("10.0.5.33", usr);
                 saveUserToCluster("10.0.6.33", usr);
                 saveUserToCluster("10.0.9.33", usr);

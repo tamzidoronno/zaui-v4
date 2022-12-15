@@ -2,36 +2,40 @@ package com.thundashop.core.zauiactivity;
 
 import java.util.List;
 
-import com.thundashop.core.pmsbookingprocess.BookerInformation;
-import com.thundashop.core.pmsmanager.PmsBooking;
-import com.thundashop.core.pmsmanager.PmsManager;
-import com.thundashop.core.storemanager.StoreManager;
-import com.thundashop.core.usermanager.UserManager;
-import com.thundashop.core.usermanager.data.User;
-import com.thundashop.repository.exceptions.ZauiException;
-import com.thundashop.services.zauiactivityservice.IZauiActivityService;
-import com.thundashop.zauiactivity.dto.*;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
+import com.thundashop.core.pmsmanager.PmsBooking;
+import com.thundashop.core.pmsmanager.PmsManager;
+import com.thundashop.core.storemanager.StoreManager;
+import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.User;
+import com.thundashop.repository.exceptions.NotUniqueDataException;
+import com.thundashop.repository.exceptions.ZauiException;
 import com.thundashop.services.octoapiservice.IOctoApiService;
+import com.thundashop.services.zauiactivityservice.IZauiActivityService;
+import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
+import com.thundashop.zauiactivity.dto.OctoBooking;
+import com.thundashop.zauiactivity.dto.OctoBookingConfirmRequest;
+import com.thundashop.zauiactivity.dto.OctoBookingReserveRequest;
 import com.thundashop.zauiactivity.dto.OctoProduct;
 import com.thundashop.zauiactivity.dto.OctoProductAvailability;
 import com.thundashop.zauiactivity.dto.OctoProductAvailabilityRequestDto;
 import com.thundashop.zauiactivity.dto.OctoSupplier;
+import com.thundashop.zauiactivity.dto.ZauiActivity;
 import com.thundashop.zauiactivity.dto.ZauiActivityConfig;
 
 @Component
 @GetShopSession
-@Slf4j
 public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZauiActivityManager {
     @Autowired
-    private IOctoApiService octoApiService;
+    IOctoApiService octoApiService;
+
     @Autowired
-    private IZauiActivityService zauiActivityService;
+    IZauiActivityService zauiActivityService;
+
     @Autowired
     PmsManager pmsManager;
 
@@ -41,15 +45,21 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
     @Autowired
     UserManager userManager;
 
+    private ZauiActivityConfig config;
+
     @Override
-    public ZauiActivityConfig getActivityConfig() {
-        return zauiActivityService.getZauiActivityConfig(getSessionInfo());
+    public ZauiActivityConfig getActivityConfig() throws NotUniqueDataException {
+        if (config != null) {
+            return config;
+        }
+        config = zauiActivityService.getZauiActivityConfig(getSessionInfo());
+        return config;
     }
 
     @Override
     public ZauiActivityConfig updateActivityConfig(ZauiActivityConfig newActivityConfig) {
-       // return zauiActivityService.setZauiActivityConfig(newActivityConfig, getSessionInfo());
         saveObject(newActivityConfig);
+        config = newActivityConfig;
         return newActivityConfig;
     }
 
@@ -70,15 +80,16 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
     }
 
     @Override
-    public OctoBooking reserveBooking(Integer supplierId, OctoBookingReserveRequest OctoBookingReserveRequest) throws ZauiException {
+    public OctoBooking reserveBooking(Integer supplierId, OctoBookingReserveRequest OctoBookingReserveRequest)
+            throws ZauiException {
         return octoApiService.reserveBooking(supplierId, OctoBookingReserveRequest);
     }
 
     @Override
-    public OctoBooking confirmBooking(Integer supplierId, String bookingId, OctoBookingConfirmRequest octoBookingConfirmRequest) throws ZauiException {
+    public OctoBooking confirmBooking(Integer supplierId, String bookingId,
+            OctoBookingConfirmRequest octoBookingConfirmRequest) throws ZauiException {
         return octoApiService.confirmBooking(supplierId, bookingId, octoBookingConfirmRequest);
     }
-
 
     @Override
     public List<ZauiActivity> getZauiActivities() throws ZauiException {
@@ -86,18 +97,19 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
     }
 
     @Override
-    public void fetchZauiActivities() throws ZauiException {
+    public void fetchZauiActivities() throws NotUniqueDataException {
         String currency = storeManager.getStoreSettingsApplicationKey("currencycode");
-        zauiActivityService.fetchZauiActivities(getSessionInfo(),currency);
+        zauiActivityService.fetchZauiActivities(getSessionInfo(), getActivityConfig(), currency);
     }
 
     @Override
     public void addActivityToBooking(BookingZauiActivityItem activityItem, String pmsBookingId) throws ZauiException {
         PmsBooking booking = pmsManager.getBooking(pmsBookingId);
         User booker = userManager.getUserById(booking.userId);
-        booking = zauiActivityService.addActivityToBooking(activityItem,booking,booker);
+        booking = zauiActivityService.addActivityToBooking(activityItem, booking, booker);
         pmsManager.saveBooking(booking);
     }
+
     @Override
     public void cancelActivity(String pmsBookingId, String octoBookingId) throws ZauiException {
         PmsBooking booking = pmsManager.getBooking(pmsBookingId);

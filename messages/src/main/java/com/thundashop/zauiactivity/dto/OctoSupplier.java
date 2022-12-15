@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class OctoSupplier {
-    private String id;
+    private int id;
     private String name;
     public String endpoint;
     public String documentation;

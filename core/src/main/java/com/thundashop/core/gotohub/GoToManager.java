@@ -40,6 +40,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.thundashop.core.zauiactivity.ZauiActivityManager;
+import com.thundashop.services.zauiactivityservice.IZauiActivityService;
+import com.thundashop.zauiactivity.dto.ZauiActivity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.stereotype.Component;
@@ -150,7 +153,10 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
     @Autowired
     IGotoBookingCancellationService bookingCancellationService;
-
+    @Autowired
+    IZauiActivityService zauiActivityService;
+    @Autowired
+    ZauiActivityManager zauiActivityManager;
     @Autowired
     IGotoHotelInformationService gotoHotelInformationService;
 

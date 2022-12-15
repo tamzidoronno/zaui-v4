@@ -56,6 +56,11 @@ public class ZauiActivityService implements IZauiActivityService {
         return zauiActivityRepository.getById(Id, sessionInfo);
     }
 
+    @Override
+    public ZauiActivity getZauiActivityByOptionId(String optionId, SessionInfo sessionInfo) {
+        return zauiActivityRepository.getByOptionId(optionId, sessionInfo);
+    }
+
     public void fetchZauiActivities(SessionInfo sessionInfo, String currency) throws ZauiException {
         ZauiActivityConfig zauiActivityConfig = zauiActivityConfigRepository.getZauiActivityConfig(sessionInfo).orElse(null);
         if (zauiActivityConfig == null) {

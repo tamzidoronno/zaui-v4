@@ -19,6 +19,8 @@ public interface IZauiActivityService {
 
     Optional<ZauiActivity> getZauiActivityById(String Id, SessionInfo sessionInfo);
 
+    ZauiActivity getZauiActivityByOptionId(String optionId, SessionInfo sessionInfo);
+
     void fetchZauiActivities(SessionInfo sessionInfo, String currency) throws ZauiException;
 
     List<ZauiActivity> getZauiActivities(SessionInfo sessionInfo) throws ZauiException;

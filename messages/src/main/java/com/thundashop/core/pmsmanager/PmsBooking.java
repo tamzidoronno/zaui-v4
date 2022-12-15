@@ -572,7 +572,7 @@ public class PmsBooking extends DataCommon {
         if(bookingZauiActivityItems.isEmpty()){
             return 0.0;
         }
-        return bookingZauiActivityItems.stream().mapToDouble(activityItem -> activityItem.price).sum();
+        return bookingZauiActivityItems.stream().filter(x-> x.price != null).mapToDouble(activityItem -> activityItem.price).sum();
     }
 
     boolean transferredToLock() {

@@ -85,7 +85,15 @@ public class ZauiActivityService implements IZauiActivityService {
         OctoBooking octoReservedBooking = reserveOctoBooking(activityItem, booking);
         activityItem.setOctoBooking(octoReservedBooking);
         OctoBooking octoConfirmedBooking = confirmOctoBooking(activityItem, booking,booker,octoReservedBooking);
-        activityItem.setOctoBooking(octoConfirmedBooking);
+        booking = addActivityToBooking(activityItem, octoConfirmedBooking, booking);
+        return booking;
+    }
+
+    @Override
+    public PmsBooking addActivityToBooking(BookingZauiActivityItem activityItem, OctoBooking octoBooking, PmsBooking booking) throws ZauiException {
+        if(activityItem.units == null)
+            throw new ZauiException(ZauiStatusCodes.MISSING_PARAMS);
+        activityItem.setOctoBooking(octoBooking);
         booking.bookingZauiActivityItems.add(activityItem);
         return booking;
     }

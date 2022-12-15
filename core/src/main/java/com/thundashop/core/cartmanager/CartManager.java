@@ -128,8 +128,8 @@ public class CartManager extends ManagerBase implements ICartManager {
         taxProduct.accountingConfig.add(info);
         taxProduct.taxgroup = account.getShopTaxGroup;
         taxProduct.taxGroupObject = taxGroup;
-        taxProduct.name = product.name;
-        taxProduct.metaData = activity.getName();
+        taxProduct.name = activity.getName();
+        taxProduct.metaData = product.name;
         taxProduct.masterProductId = product.id;
         taxProduct.priceExTaxes = activity.getPriceExcludingTax()/amountDivider;
         taxProduct.price = activity.getTaxAmount()/amountDivider + taxProduct.priceExTaxes;

@@ -55,7 +55,6 @@ public class OctoApiService implements IOctoApiService {
         String url = ZauiConstants.OCTO_API_ENDPOINT + "/suppliers/" + supplierId + "/products";
         Map<String, String> headers = new HashMap<>();
         headers.put(ZauiConstants.OCTO_CONTENT.getLeft(), ZauiConstants.OCTO_CONTENT.getRight());
-        headers.put(ZauiConstants.OCTO_PRICING.getLeft(), ZauiConstants.OCTO_PRICING.getRight());
         String result = getHttpResponseBody(url, headers, "GET", null);
         Type listType = new TypeToken<List<OctoProduct>>() {
         }.getType();

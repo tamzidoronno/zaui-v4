@@ -111,13 +111,12 @@ public class GotoHoldBookingService implements IGotoHoldBookingService{
         activityItem.setOptionId(bookedOption.getId());
         activityItem.setAvailabilityId(octoBooking.getAvailabilityId());
 //        activityItem.setUnits();
-        activityItem.setPricing(octoBooking.getPricing());
-//        activityItem.setUnpaidAmount(octoBooking.getPricing().totalEx);
+        activityItem.setUnpaidAmount(octoBooking.getPricing().getTotal());
         activityItem.setNotes(octoBooking.getNotes());
         activityItem.setLocalDateTimeStart(octoBooking.getAvailability().getLocalDateTimeStart());
         activityItem.setLocalDateTimeEnd(octoBooking.getAvailability().getLocalDateTimeEnd());
         activityItem.setSupplierId(zauiActivity.getSupplierId());
-//        activityItem.setSupplierName();
+        activityItem.setSupplierName(zauiActivity.getSupplierName());
         activityItem.setOctoBooking(octoBooking);
         return activityItem;
     }

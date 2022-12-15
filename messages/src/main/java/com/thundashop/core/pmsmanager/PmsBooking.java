@@ -562,8 +562,17 @@ public class PmsBooking extends DataCommon {
             room.calculateTotalCost(priceType);
             total += room.totalCost;
         }
+
+        total += getZauiActivitiesPrice();
         
         totalPrice = total;
+    }
+
+    private double getZauiActivitiesPrice(){
+        if(bookingZauiActivityItems.isEmpty()){
+            return 0.0;
+        }
+        return bookingZauiActivityItems.stream().mapToDouble(activityItem -> activityItem.price).sum();
     }
 
     boolean transferredToLock() {

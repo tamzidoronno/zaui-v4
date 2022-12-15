@@ -79,6 +79,8 @@ public class ZauiActivityService implements IZauiActivityService {
             throw new ZauiException(ZauiStatusCodes.MISSING_PARAMS);
         OctoBooking octoReservedBooking = reserveOctoBooking(activityItem);
         activityItem.setOctoBooking(octoReservedBooking);
+        activityItem.price = getPrecisedPrice(octoReservedBooking.getPricing().getTotal(),octoReservedBooking.getPricing().getCurrencyPrecision());
+        activityItem.priceExTaxes = getPrecisedPrice(octoReservedBooking.getPricing().getSubtotal(),octoReservedBooking.getPricing().getCurrencyPrecision());
         OctoBooking octoConfirmedBooking = confirmOctoBooking(activityItem, booking,booker,octoReservedBooking);
         booking = addActivityToBooking(activityItem, octoConfirmedBooking, booking);
         return booking;
@@ -89,6 +91,8 @@ public class ZauiActivityService implements IZauiActivityService {
         if(activityItem.units == null)
             throw new ZauiException(ZauiStatusCodes.MISSING_PARAMS);
         activityItem.setOctoBooking(octoBooking);
+        activityItem.price = getPrecisedPrice(octoBooking.getPricing().getTotal(),octoBooking.getPricing().getCurrencyPrecision());
+        activityItem.priceExTaxes = getPrecisedPrice(octoBooking.getPricing().getSubtotal(),octoBooking.getPricing().getCurrencyPrecision());
         booking.bookingZauiActivityItems.add(activityItem);
         return booking;
     }
@@ -140,5 +144,10 @@ public class ZauiActivityService implements IZauiActivityService {
         PmsBooking booking = pmsBookingRepository.getPmsBookingByAddonId(addonId,sessionInfo);
         return booking.bookingZauiActivityItems.stream()
                 .filter(item -> item.addonId.equals(addonId)).findFirst();
+    }
+
+    public static double getPrecisedPrice(Long price,Integer precision) {
+        double amountDivider =  Math.pow(10,precision);
+        return price/amountDivider;
     }
 }

@@ -136,8 +136,9 @@ public class GotoHoldBookingService implements IGotoHoldBookingService{
         calendar.setTime(pmsBookingRoom.date.start);
         Map<String, Double> dailyPricesFromGoto = gotoBookingRoom.getPrice().getDailyPrices()
                 .stream()
-                .collect(
-                        Collectors.toMap(GotoRoomDailyPrice::getDate, GotoRoomDailyPrice::getPrice));
+                .collect(Collectors
+                        .toMap(GotoRoomDailyPrice::getDate, GotoRoomDailyPrice::getPrice)
+                );
         while (calendar.getTime().before(pmsBookingRoom.date.end)) {
             String dailyPriceKey = DAILY_PRICE_DATE_FORMATTER.format(calendar.getTime());
             Double price = dailyPricesFromGoto.get(dailyPriceKey);
@@ -145,7 +146,6 @@ public class GotoHoldBookingService implements IGotoHoldBookingService{
             calendar.add(Calendar.DATE, 1);
         }
         pmsBookingRoom.totalCost = gotoBookingRoom.getPrice().getTotalRoomPrice();
-
         return pmsBookingRoom;
     }
     private List<Unit> getUnitFromOctoBookingUnitItems(List<UnitItemOnBooking> unitItems) {

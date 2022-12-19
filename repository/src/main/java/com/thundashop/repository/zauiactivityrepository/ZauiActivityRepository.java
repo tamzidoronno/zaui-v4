@@ -35,7 +35,7 @@ public class ZauiActivityRepository extends Repository<ZauiActivity> implements 
         DBObject elemMatch = new BasicDBObject();
         DBObject activityOption = new BasicDBObject();
 
-        activityOption.put("id", "197548ebd8d8284908d40faf2e4987dfd9639df2");
+        activityOption.put("id", optionId);
         elemMatch.put("$elemMatch", activityOption);
         query.put("className", getClassName());
         query.put("activityOptionList", elemMatch);

@@ -72,7 +72,7 @@ public class ZauiActivityService implements IZauiActivityService {
                         octoProduct -> {
                             try {
                                 zauiActivityRepository.save(
-                                        mapOctoToZauiActivity(octoProduct, supplier.getId(), currency), sessionInfo);
+                                        mapOctoToZauiActivity(octoProduct, supplier, currency), sessionInfo);
                             } catch (Exception ex) {
                                 log.error(
                                         "Failed to insert octo product into database. Octo product id: {}, supplier id: {}. Reason: {}, Actual error: {}",
@@ -143,11 +143,12 @@ public class ZauiActivityService implements IZauiActivityService {
         activityItem.setOctoBooking(octoCancelledBooking);
     }
 
-    private ZauiActivity mapOctoToZauiActivity(OctoProduct octoProduct, Integer supplierId, String currency) {
+    private ZauiActivity mapOctoToZauiActivity(OctoProduct octoProduct, ZauiConnectedSupplier supplier, String currency) {
         ZauiActivity zauiActivity = new ZauiActivity();
         zauiActivity.name = octoProduct.getInternalName();
         zauiActivity.productId = octoProduct.getId();
-        zauiActivity.supplierId = supplierId;
+        zauiActivity.supplierId = supplier.getId();
+        zauiActivity.supplierName = supplier.getName();
         zauiActivity.shortDescription = octoProduct.getShortDescription();
         zauiActivity.description = octoProduct.getPrimaryDescription();
         zauiActivity.activityOptionList = octoProduct.getOptions();

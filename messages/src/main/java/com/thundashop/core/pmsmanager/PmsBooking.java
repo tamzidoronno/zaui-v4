@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
 import org.apache.commons.lang3.StringUtils;
 import org.mongodb.morphia.annotations.Transient;
 
@@ -96,6 +97,9 @@ public class PmsBooking extends DataCommon {
     public long jomresChannelId=0;
     public String jomresReservationCode="";
     public Date jomresLastModified=null;
+
+    // Zaui Activity related Properties
+    public List<BookingZauiActivityItem> bookingZauiActivityItems = new ArrayList<>();
     
     @Administrator
     public String secretBookingId = "";
@@ -558,8 +562,17 @@ public class PmsBooking extends DataCommon {
             room.calculateTotalCost(priceType);
             total += room.totalCost;
         }
+
+        total += getZauiActivitiesPrice();
         
         totalPrice = total;
+    }
+
+    private double getZauiActivitiesPrice(){
+        if(bookingZauiActivityItems.isEmpty()){
+            return 0.0;
+        }
+        return bookingZauiActivityItems.stream().filter(x-> x.price != null).mapToDouble(activityItem -> activityItem.price).sum();
     }
 
     boolean transferredToLock() {

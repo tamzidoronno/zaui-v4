@@ -5,11 +5,8 @@
  */
 package com.thundashop.core.webmanager;
 
-import com.braintreegateway.org.apache.commons.codec.binary.Base64;
-import com.getshop.scope.GetShopSession;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.thundashop.core.common.ManagerBase;
+import java.util.HashMap;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +14,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
+import com.braintreegateway.org.apache.commons.codec.binary.Base64;
+import com.getshop.scope.GetShopSession;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.thundashop.core.common.ManagerBase;
+import com.thundashop.services.core.httpservice.ZauiHttpService;
 
 /**
  *
@@ -37,16 +39,16 @@ public class WebManager extends ManagerBase implements IWebManager {
     private TaskExecutor webManagerExecutor;
 
     @Autowired
-    private OkHttpService okHttpService;
+    private ZauiHttpService okHttpService;
     
     
     @Override
     public String htmlGet(String url) {
-        OkHttpRequest request = OkHttpRequest.builder()
+        ZauiHttpRequest request = ZauiHttpRequest.builder()
                 .setUrl(url)
                 .build();
         
-        OkHttpResponse response = okHttpService.get(request);
+        ZauiHttpResponse response = okHttpService.get(request);
         
         if (!response.isSuccessful()) {
             logger.error("Unsuccessful GET request, response: {}", response);
@@ -68,7 +70,7 @@ public class WebManager extends ManagerBase implements IWebManager {
     }       
     
     public void htmlPostThreaded(String url, String data, boolean jsonPost, String encoding) throws Exception {
-        WebManagerPostThread thread = new WebManagerPostThread(url, data, jsonPost, encoding, "", "Basic", true, "POST", new HashMap());
+        WebManagerPostThread thread = new WebManagerPostThread(url, data, jsonPost, encoding, "", "Basic", true, "POST", new HashMap<>());
         webManagerExecutor.execute(thread);
     }       
     
@@ -83,21 +85,21 @@ public class WebManager extends ManagerBase implements IWebManager {
     }
 
     public String htmlPostBasicAuth(String url, String data, boolean jsonPost, String encoding, String auth, String basic, boolean base64EncodeAuth, String htmlType)  throws Exception {
-        return htmlPostBasicAuth(url, data, jsonPost, encoding, auth, basic, base64EncodeAuth, htmlType, new HashMap());
+        return htmlPostBasicAuth(url, data, jsonPost, encoding, auth, basic, base64EncodeAuth, htmlType, new HashMap<>());
     }
 
     public String htmlPostBasicAuth(String url, String data, boolean jsonPost, String encoding, String auth, String basic, boolean base64EncodeAuth, String htmlType, HashMap<String, String> headerData) throws Exception {
 
         // ignore the `encoding` param. payload always will be utf-8 encoded.
 
-        OkHttpRequest request = OkHttpRequest.builder()
+        ZauiHttpRequest request = ZauiHttpRequest.builder()
                 .setAuth(authorization(auth, basic, base64EncodeAuth))
                 .setPayload(data)
                 .setUrl(url)
                 .jsonPost(jsonPost)
                 .build();
 
-        OkHttpResponse response = okHttpService.post(request);
+        ZauiHttpResponse response = okHttpService.post(request);
 
         if (!response.isSuccessful()) {
             logger.error("Unsuccessful POST request {}, response: {}", request, response);

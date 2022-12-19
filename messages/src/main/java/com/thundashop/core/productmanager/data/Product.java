@@ -190,6 +190,8 @@ public class Product extends DataCommon implements Comparable<Product>  {
      * product has been sold on.
      */
     public List<Integer> soldOnTaxGroups = new ArrayList<>();
+
+    public String masterProductId = "";
     
     public void setMainImage(String fileId) {
         mainImage = fileId;

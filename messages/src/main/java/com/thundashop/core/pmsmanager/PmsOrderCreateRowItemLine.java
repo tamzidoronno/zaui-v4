@@ -27,6 +27,7 @@ public class PmsOrderCreateRowItemLine {
     public String date = "";
     String textOnOrder = "";
     String addonId = "";
+    public String orderItemType = "";
     
     /**
      * If this should be created based on a cartitem from a tab.

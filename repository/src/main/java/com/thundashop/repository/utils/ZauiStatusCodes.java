@@ -1,0 +1,15 @@
+package com.thundashop.repository.utils;
+
+public enum ZauiStatusCodes {
+
+    OCTO_FAILED(500,"Octo API call failed"),
+    MISSING_PARAMS(500, "Missing parameters"),
+    ACCOUNTING_ERROR(500, "Accounting group incompatible with Zaui Stay");
+    public final long code;
+    public final String message;
+
+    private ZauiStatusCodes(long code, String message) {
+        this.code = code;
+        this.message = message;
+    }
+}

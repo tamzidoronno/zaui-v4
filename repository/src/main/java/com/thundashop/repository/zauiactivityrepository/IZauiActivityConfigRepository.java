@@ -8,5 +8,5 @@ import com.thundashop.repository.utils.SessionInfo;
 import com.thundashop.zauiactivity.dto.ZauiActivityConfig;
 
 public interface IZauiActivityConfigRepository extends IRepository<ZauiActivityConfig> {
-    Optional<ZauiActivityConfig> getZauiActivityConfig(SessionInfo sessionInfo);
+    Optional<ZauiActivityConfig> getZauiActivityConfig(SessionInfo sessionInfo) throws NotUniqueDataException;
 }

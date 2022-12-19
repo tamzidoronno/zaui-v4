@@ -98,7 +98,7 @@ class PmsLogRepositoryTest extends TestCommon {
         pmsLogRepository.save(pmsLog2, sessionInfo);
         pmsLogRepository.save(pmsLog3, sessionInfo);
 
-        List<PmsLog> actual = pmsLogRepository.query(filter, sessionInfo);
+        List<PmsLog> actual = pmsLogRepository.query(filter, sessionInfo, null, null);
 
         assertThat(actual).isNotNull().isNotEmpty();
         assertThat(actual.size()).isEqualTo(2);

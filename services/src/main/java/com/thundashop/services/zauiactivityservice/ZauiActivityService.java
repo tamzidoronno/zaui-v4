@@ -3,22 +3,23 @@ package com.thundashop.services.zauiactivityservice;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import com.thundashop.core.pmsmanager.PmsBooking;
-import com.thundashop.core.usermanager.data.User;
-import com.thundashop.repository.pmsbookingrepository.IPmsBookingRepository;
-import com.thundashop.zauiactivity.constant.ZauiConstants;
 import com.thundashop.zauiactivity.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.thundashop.core.pmsmanager.PmsBooking;
+import com.thundashop.core.usermanager.data.User;
+import com.thundashop.repository.exceptions.NotUniqueDataException;
 import com.thundashop.repository.exceptions.ZauiException;
+import com.thundashop.repository.pmsbookingrepository.IPmsBookingRepository;
 import com.thundashop.repository.utils.SessionInfo;
 import com.thundashop.repository.utils.ZauiStatusCodes;
 import com.thundashop.repository.zauiactivityrepository.IZauiActivityConfigRepository;
 import com.thundashop.repository.zauiactivityrepository.IZauiActivityRepository;
 import com.thundashop.services.octoapiservice.IOctoApiService;
+import com.thundashop.zauiactivity.constant.ZauiConstants;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -28,20 +29,17 @@ public class ZauiActivityService implements IZauiActivityService {
     private IZauiActivityConfigRepository zauiActivityConfigRepository;
     @Autowired
     private IZauiActivityRepository zauiActivityRepository;
-
     @Autowired
     private IPmsBookingRepository pmsBookingRepository;
     @Autowired
     private IOctoApiService octoApiService;
 
-
-
-    public ZauiActivityConfig getZauiActivityConfig(SessionInfo sessionInfo) {
-        try{
+    public ZauiActivityConfig getZauiActivityConfig(SessionInfo sessionInfo) throws NotUniqueDataException {
+        try {
             return zauiActivityConfigRepository.getZauiActivityConfig(sessionInfo).orElse(new ZauiActivityConfig());
-        } catch(Exception ex){
+        } catch (Exception ex) {
             log.error("Failed to get zaui activity config. Reason: {}, Actual Exception: {}", ex.getMessage(), ex);
-            return null;
+            throw ex;
         }
     }
 
@@ -63,20 +61,35 @@ public class ZauiActivityService implements IZauiActivityService {
         return zauiActivityRepository.getByOptionId(optionId, sessionInfo);
     }
 
-    public void fetchZauiActivities(SessionInfo sessionInfo, String currency) throws ZauiException {
-        ZauiActivityConfig zauiActivityConfig = zauiActivityConfigRepository.getZauiActivityConfig(sessionInfo).orElse(null);
-        if (zauiActivityConfig == null) {
+    public void fetchZauiActivities(SessionInfo sessionInfo, ZauiActivityConfig zauiActivityConfig, String currency) {
+        if (zauiActivityConfig == null || zauiActivityConfig.connectedSuppliers == null
+                || zauiActivityConfig.connectedSuppliers.size() < 1) {
             return;
         }
-        //TODO: set supplier name with zaui activity
-        for(Integer supplierId : zauiActivityConfig.getSupplierIds()) {
-            octoApiService.getOctoProducts(supplierId).forEach(
-                    octoProduct -> zauiActivityRepository.save(mapOctoToZauiActivity(octoProduct, supplierId,currency), sessionInfo));
-        }
+        zauiActivityConfig.connectedSuppliers.forEach(supplier -> {
+            try {
+                octoApiService.getOctoProducts(supplier.getId()).forEach(
+                        octoProduct -> {
+                            try {
+                                zauiActivityRepository.save(
+                                        mapOctoToZauiActivity(octoProduct, supplier.getId(), currency), sessionInfo);
+                            } catch (Exception ex) {
+                                log.error(
+                                        "Failed to insert octo product into database. Octo product id: {}, supplier id: {}. Reason: {}, Actual error: {}",
+                                        octoProduct.getId(), supplier.getId(), ex.getMessage(), ex);
+                            }
+                        });
+            } catch (Exception e) {
+                log.error("Failed to fetch octo products for supplier {}. Reason: {}, Actual error: {}",
+                        supplier.getId(), e.getMessage(), e);
+            }
+        });
     }
+
     @Override
-    public PmsBooking addActivityToBooking(BookingZauiActivityItem activityItem, PmsBooking booking, User booker) throws ZauiException {
-        if(activityItem.units == null)
+    public PmsBooking addActivityToBooking(BookingZauiActivityItem activityItem, PmsBooking booking, User booker)
+            throws ZauiException {
+        if (activityItem.units == null)
             throw new ZauiException(ZauiStatusCodes.MISSING_PARAMS);
         OctoBooking octoReservedBooking = reserveOctoBooking(activityItem);
         activityItem.setOctoBooking(octoReservedBooking);
@@ -88,8 +101,9 @@ public class ZauiActivityService implements IZauiActivityService {
     }
 
     @Override
-    public PmsBooking addActivityToBooking(BookingZauiActivityItem activityItem, OctoBooking octoBooking, PmsBooking booking) throws ZauiException {
-        if(activityItem.units == null)
+    public PmsBooking addActivityToBooking(BookingZauiActivityItem activityItem, OctoBooking octoBooking,
+            PmsBooking booking) throws ZauiException {
+        if (activityItem.units == null)
             throw new ZauiException(ZauiStatusCodes.MISSING_PARAMS);
         activityItem.setOctoBooking(octoBooking);
         activityItem.price = getPricingFromOctoTaxObject(activityItem.getOctoBooking().getPricing()).getTotal();
@@ -108,25 +122,27 @@ public class ZauiActivityService implements IZauiActivityService {
         return octoApiService.reserveBooking(activityItem.supplierId,bookingReserveRequest);
     }
 
-    private OctoBooking confirmOctoBooking(BookingZauiActivityItem activityItem,PmsBooking booking,User booker,OctoBooking octoReservedBooking) throws ZauiException {
+    private OctoBooking confirmOctoBooking(BookingZauiActivityItem activityItem, PmsBooking booking, User booker,
+            OctoBooking octoReservedBooking) throws ZauiException {
         OctoConfirmContact contact = new OctoConfirmContact()
                 .setFullName(booker.fullName)
                 .setEmailAddress(booker.emailAddress)
-                .setPhoneNumber(booker.prefix+booker.cellPhone)
+                .setPhoneNumber(booker.prefix + booker.cellPhone)
                 .setCountry(booking.countryCode);
         OctoBookingConfirmRequest confirmRequest = new OctoBookingConfirmRequest()
                 .setContact(contact)
                 .setEmailConfirmation(true);
-        return octoApiService.confirmBooking(activityItem.supplierId,octoReservedBooking.getId(),confirmRequest);
+        return octoApiService.confirmBooking(activityItem.supplierId, octoReservedBooking.getId(), confirmRequest);
     }
 
     @Override
     public void cancelActivityFromBooking(BookingZauiActivityItem activityItem) throws ZauiException {
-        OctoBooking octoCancelledBooking =  octoApiService.cancelBooking(activityItem.supplierId, activityItem.getOctoBooking().getId());
+        OctoBooking octoCancelledBooking = octoApiService.cancelBooking(activityItem.supplierId,
+                activityItem.getOctoBooking().getId());
         activityItem.setOctoBooking(octoCancelledBooking);
     }
 
-    private ZauiActivity mapOctoToZauiActivity(OctoProduct octoProduct, Integer supplierId,String currency) {
+    private ZauiActivity mapOctoToZauiActivity(OctoProduct octoProduct, Integer supplierId, String currency) {
         ZauiActivity zauiActivity = new ZauiActivity();
         zauiActivity.name = octoProduct.getInternalName();
         zauiActivity.productId = octoProduct.getId();
@@ -141,8 +157,9 @@ public class ZauiActivityService implements IZauiActivityService {
     }
 
     @Override
-    public Optional<BookingZauiActivityItem>getBookingZauiActivityItemByAddonId(String addonId, SessionInfo sessionInfo) {
-        PmsBooking booking = pmsBookingRepository.getPmsBookingByAddonId(addonId,sessionInfo);
+    public Optional<BookingZauiActivityItem> getBookingZauiActivityItemByAddonId(String addonId,
+            SessionInfo sessionInfo) {
+        PmsBooking booking = pmsBookingRepository.getPmsBookingByAddonId(addonId, sessionInfo);
         return booking.bookingZauiActivityItems.stream()
                 .filter(item -> item.addonId.equals(addonId)).findFirst();
     }

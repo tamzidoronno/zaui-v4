@@ -9,8 +9,7 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-public
-class OctoConfirmContact {
+public class OctoConfirmContact {
     private String fullName;
     private String emailAddress;
     private String phoneNumber;

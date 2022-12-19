@@ -2,6 +2,8 @@ package com.thundashop.core.zauiactivity;
 
 import java.util.List;
 
+import com.thundashop.core.cartmanager.data.CartItem;
+import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
 import com.thundashop.repository.exceptions.NotUniqueDataException;
@@ -45,4 +47,6 @@ public interface IZauiActivityManager {
     void fetchZauiActivities() throws NotUniqueDataException;
 
     void addActivityToBooking(BookingZauiActivityItem activityItem, String pmsBookingId) throws ZauiException;
+
+    List<CartItem> getZauiActivityCartItems(String productId, String addonId) throws ErrorException;
 }

@@ -6,5 +6,6 @@ import com.thundashop.core.webmanager.ZauiHttpResponse;
 public interface IZauiHttpService {
     ZauiHttpResponse get(ZauiHttpRequest httpRequest);
     ZauiHttpResponse post(ZauiHttpRequest httpRequest);
-    
+
+    ZauiHttpResponse delete(ZauiHttpRequest httpRequest);
 }

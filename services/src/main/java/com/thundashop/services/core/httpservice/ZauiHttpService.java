@@ -25,6 +25,7 @@ public class ZauiHttpService implements IZauiHttpService {
         this.okHttpClient = okHttpClient;
     }
 
+    @Override
     public ZauiHttpResponse post(ZauiHttpRequest httpRequest) {
 
         RequestBody requestBody = httpRequest.isJsonPost()
@@ -49,6 +50,7 @@ public class ZauiHttpService implements IZauiHttpService {
         return execute(request);
     }
 
+    @Override
     public ZauiHttpResponse get(ZauiHttpRequest httpRequest) {
 
         Request.Builder requestBuilder = new Request.Builder();
@@ -63,6 +65,26 @@ public class ZauiHttpService implements IZauiHttpService {
         Request request = requestBuilder
                 .url(httpRequest.getUrl())
                 .get()
+                .build();
+
+        return execute(request);
+    }
+
+    @Override
+    public ZauiHttpResponse delete(ZauiHttpRequest httpRequest) {
+
+        Request.Builder requestBuilder = new Request.Builder();
+        if (isNotEmpty(httpRequest.getAuth())) {
+            requestBuilder.addHeader("Authorization", httpRequest.getAuth());
+        }
+
+        Map<String, String> headers = httpRequest.getHeaders();
+        if(headers != null)
+            headers.keySet().forEach(key -> requestBuilder.addHeader(key, headers.get(key)));
+
+        Request request = requestBuilder
+                .url(httpRequest.getUrl())
+                .delete()
                 .build();
 
         return execute(request);

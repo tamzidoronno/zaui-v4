@@ -1,5 +1,6 @@
 package com.thundashop.services.zauiactivityservice;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -79,8 +80,8 @@ public class ZauiActivityService implements IZauiActivityService {
             throw new ZauiException(ZauiStatusCodes.MISSING_PARAMS);
         OctoBooking octoReservedBooking = reserveOctoBooking(activityItem);
         activityItem.setOctoBooking(octoReservedBooking);
-        activityItem.price = getPrecisedPrice(octoReservedBooking.getPricing().getTotal(),octoReservedBooking.getPricing().getCurrencyPrecision());
-        activityItem.priceExTaxes = getPrecisedPrice(octoReservedBooking.getPricing().getSubtotal(),octoReservedBooking.getPricing().getCurrencyPrecision());
+        activityItem.price = getPricingFromOctoTaxObject(activityItem.getOctoBooking().getPricing()).getTotal();
+        activityItem.priceExTaxes = getPricingFromOctoTaxObject(activityItem.getOctoBooking().getPricing()).getSubtotal();
         OctoBooking octoConfirmedBooking = confirmOctoBooking(activityItem, booking,booker,octoReservedBooking);
         booking = addActivityToBooking(activityItem, octoConfirmedBooking, booking);
         return booking;
@@ -91,8 +92,8 @@ public class ZauiActivityService implements IZauiActivityService {
         if(activityItem.units == null)
             throw new ZauiException(ZauiStatusCodes.MISSING_PARAMS);
         activityItem.setOctoBooking(octoBooking);
-        activityItem.price = getPrecisedPrice(octoBooking.getPricing().getTotal(),octoBooking.getPricing().getCurrencyPrecision());
-        activityItem.priceExTaxes = getPrecisedPrice(octoBooking.getPricing().getSubtotal(),octoBooking.getPricing().getCurrencyPrecision());
+        activityItem.price = getPricingFromOctoTaxObject(activityItem.getOctoBooking().getPricing()).getTotal();
+        activityItem.priceExTaxes = getPricingFromOctoTaxObject(activityItem.getOctoBooking().getPricing()).getSubtotal();
         booking.bookingZauiActivityItems.add(activityItem);
         return booking;
     }
@@ -103,7 +104,7 @@ public class ZauiActivityService implements IZauiActivityService {
                 .setOptionId(activityItem.optionId)
                 .setAvailabilityId(activityItem.availabilityId)
                 .setNotes(ZauiConstants.ZAUI_STAY_TAG)
-                .setUnitItems(activityItem.units.stream().map(o -> new UnitItemReserveRequest(o.id)).collect(Collectors.toList()));
+                .setUnitItems(mapUnitsForBooking(activityItem.units));
         return octoApiService.reserveBooking(activityItem.supplierId,bookingReserveRequest);
     }
 
@@ -146,8 +147,30 @@ public class ZauiActivityService implements IZauiActivityService {
                 .filter(item -> item.addonId.equals(addonId)).findFirst();
     }
 
-    public static double getPrecisedPrice(Long price,Integer precision) {
+    private Pricing getPricingFromOctoTaxObject(Pricing pricingObj){
+        Pricing pricing = new Pricing();
+        pricing.setTax(getPrecisedPrice(pricingObj.getIncludedTaxes().stream().mapToDouble(TaxData::getTaxAmount).sum(),pricingObj.getCurrencyPrecision()));
+        pricing.setSubtotal(getPrecisedPrice(pricingObj.getIncludedTaxes().stream().mapToDouble(TaxData::getPriceExcludingTax).sum(),pricingObj.getCurrencyPrecision()));
+        pricing.setTotal(pricing.getTax()+pricing.getSubtotal());
+        return pricing;
+
+    }
+    @Override
+    public double getPrecisedPrice(double price,Integer precision) {
         double amountDivider =  Math.pow(10,precision);
         return price/amountDivider;
+    }
+
+    private List<UnitItemReserveRequest> mapUnitsForBooking(List<Unit> units) {
+        List<UnitItemReserveRequest> unitItems = new ArrayList<>();
+        units.stream().filter(unit -> unit.quantity > 0).forEach(unit -> {
+            UnitItemReserveRequest item = null;
+            for (int i = 0; i < unit.quantity; i++) {
+                item = new UnitItemReserveRequest();
+                item.setUnitId(unit.getId());
+            }
+            unitItems.add(item);
+        });
+        return unitItems;
     }
 }

@@ -4,10 +4,7 @@ import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.repository.exceptions.ZauiException;
 import com.thundashop.repository.utils.SessionInfo;
-import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
-import com.thundashop.zauiactivity.dto.OctoBooking;
-import com.thundashop.zauiactivity.dto.ZauiActivity;
-import com.thundashop.zauiactivity.dto.ZauiActivityConfig;
+import com.thundashop.zauiactivity.dto.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,4 +29,6 @@ public interface IZauiActivityService {
     void cancelActivityFromBooking(BookingZauiActivityItem activityItem) throws ZauiException;
 
     Optional<BookingZauiActivityItem>getBookingZauiActivityItemByAddonId(String addonId, SessionInfo sessionInfo);
+
+    double getPrecisedPrice(double price, Integer precision);
 }

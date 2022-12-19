@@ -19,8 +19,8 @@ public class TaxData {
     private Integer rate;
     @SerializedName("priceExcludingTax")
 
-    private Long priceExcludingTax;
+    private double priceExcludingTax;
     @SerializedName("taxAmount")
 
-    private Long taxAmount;
+    private double taxAmount;
 }

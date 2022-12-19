@@ -14,9 +14,4 @@ public class RepositoryTestImpl extends Repository<DbTest> {
     protected String getClassName() {        
         return DbTest.class.getName();
     }
-
-    @Override
-    protected Class<DbTest> getEntityClass() {
-        return DbTest.class;
-    }
 }

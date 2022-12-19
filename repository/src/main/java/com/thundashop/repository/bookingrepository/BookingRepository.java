@@ -30,10 +30,5 @@ public class BookingRepository extends Repository<Booking> implements IBookingRe
     protected String getClassName() {
         return Booking.class.getName();
     }
-
-    @Override
-    protected Class<Booking> getEntityClass() {
-        return Booking.class;
-    }
     
 }

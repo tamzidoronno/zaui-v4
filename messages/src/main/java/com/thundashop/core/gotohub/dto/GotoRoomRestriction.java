@@ -1,13 +1,14 @@
 package com.thundashop.core.gotohub.dto;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-import lombok.Data;
-
 import java.io.Serializable;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import lombok.Data;
+
 @Data
-public class Restriction implements Serializable {
+public class GotoRoomRestriction implements Serializable {
     @SerializedName("min_stay")
     @Expose
     private Integer minStay;

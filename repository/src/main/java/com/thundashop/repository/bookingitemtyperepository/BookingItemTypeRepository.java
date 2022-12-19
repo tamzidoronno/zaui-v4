@@ -30,10 +30,5 @@ public class BookingItemTypeRepository extends Repository<BookingItemType> imple
     protected String getClassName() {       
         return BookingItemType.class.getName();
     }
-
-    @Override
-    protected Class<BookingItemType> getEntityClass() {
-        return BookingItemType.class;
-    }
     
 }

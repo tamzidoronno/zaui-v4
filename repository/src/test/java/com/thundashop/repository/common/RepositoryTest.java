@@ -46,7 +46,7 @@ class RepositoryTest extends TestCommon {
     }
 
     @Test
-    void getOne() {
+    void getOne() throws NotUniqueDataException {
         saveTestData("code_1", "code_2", "code_3");
         DBObject query = new BasicDBObject("strMatch", "code_1");
 
@@ -67,7 +67,7 @@ class RepositoryTest extends TestCommon {
     }
 
     @Test
-    void testWhenEmptyListReturnOptionalEmpty() {
+    void testWhenEmptyListReturnOptionalEmpty() throws NotUniqueDataException {
         saveTestData("code_1", "code_2", "code_3");
         DBObject query = new BasicDBObject("strMatch", "code_4");
 

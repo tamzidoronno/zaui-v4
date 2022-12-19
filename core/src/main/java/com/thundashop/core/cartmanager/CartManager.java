@@ -118,7 +118,6 @@ public class CartManager extends ManagerBase implements ICartManager {
         List<TaxGroup> taxes = productManager.getTaxes();
         Product taxProduct = product.clone();
         AccountingDetail account = getOctoSupplierAccount(product.getSupplierId(),activity.getRate().doubleValue());
-        double amountDivider =  Math.pow(10,currencyPrecision);
 
         ProductAccountingInformation info = new ProductAccountingInformation();
         info.accountingNumber = account.accountNumber + "";
@@ -131,8 +130,8 @@ public class CartManager extends ManagerBase implements ICartManager {
         taxProduct.name = activity.getName();
         taxProduct.metaData = product.name;
         taxProduct.masterProductId = product.id;
-        taxProduct.priceExTaxes = activity.getPriceExcludingTax()/amountDivider;
-        taxProduct.price = activity.getTaxAmount()/amountDivider + taxProduct.priceExTaxes;
+        taxProduct.priceExTaxes = zauiActivityService.getPrecisedPrice(activity.getPriceExcludingTax(),currencyPrecision);
+        taxProduct.price = zauiActivityService.getPrecisedPrice(activity.getTaxAmount(),currencyPrecision) + taxProduct.priceExTaxes;
         return taxProduct;
     }
 

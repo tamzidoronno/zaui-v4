@@ -110,8 +110,8 @@ public class OctoApiService implements IOctoApiService {
 
     @Override
     public OctoBooking cancelBooking(Integer supplierId, String bookingId) throws ZauiException {
-        String url = ZauiConstants.OCTO_API_ENDPOINT + "/suppliers/" + supplierId + "/bookings" + bookingId + "/cancel";
-        String result = getHttpResponseBody(url, null, "POST", null);
+        String url = ZauiConstants.OCTO_API_ENDPOINT + "/suppliers/" + supplierId + "/bookings/" + bookingId + "/cancel";
+        String result = getHttpResponseBody(url, null, "DELETE", null);
         Type listType = new TypeToken<OctoBooking>() {
         }.getType();
         return new Gson().fromJson(result, listType);
@@ -124,7 +124,20 @@ public class OctoApiService implements IOctoApiService {
                 .setHeaders(headers)
                 .setPayload(payload)
                 .build();
-        ZauiHttpResponse response = method.equals("POST") ? zauiHttpService.post(request) : zauiHttpService.get(request);
+        ZauiHttpResponse response;
+        switch (method) {
+            case "GET":
+            response = zauiHttpService.get(request);
+            break;
+            case "POST":
+            response = zauiHttpService.post(request);
+            break;
+            case "DELETE":
+            response = zauiHttpService.delete(request);
+            break;
+            default:
+                throw new ZauiException(500,method + " is not supported");
+        }
         if (!response.isSuccessful()) {
             log.error("Unsuccessful request {}, response: {}", request, response);
             OctoErrorResponse errorResponse = handleError(response.getBody());

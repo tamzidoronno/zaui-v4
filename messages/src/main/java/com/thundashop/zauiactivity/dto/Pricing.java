@@ -9,8 +9,8 @@ import java.util.List;
 public class Pricing {
     private String currency;
     private Integer currencyPrecision;
-    private Long subtotal;
-    private Long tax;
-    private Long total;
+    private double subtotal;
+    private double tax;
+    private double total;
     private List<TaxData> includedTaxes = new ArrayList<>();
 }

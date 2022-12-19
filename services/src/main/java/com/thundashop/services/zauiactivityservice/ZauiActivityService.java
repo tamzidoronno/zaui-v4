@@ -1,9 +1,10 @@
 package com.thundashop.services.zauiactivityservice;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
+import com.thundashop.zauiactivity.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,15 +19,6 @@ import com.thundashop.repository.zauiactivityrepository.IZauiActivityConfigRepos
 import com.thundashop.repository.zauiactivityrepository.IZauiActivityRepository;
 import com.thundashop.services.octoapiservice.IOctoApiService;
 import com.thundashop.zauiactivity.constant.ZauiConstants;
-import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
-import com.thundashop.zauiactivity.dto.OctoBooking;
-import com.thundashop.zauiactivity.dto.OctoBookingConfirmRequest;
-import com.thundashop.zauiactivity.dto.OctoBookingReserveRequest;
-import com.thundashop.zauiactivity.dto.OctoConfirmContact;
-import com.thundashop.zauiactivity.dto.OctoProduct;
-import com.thundashop.zauiactivity.dto.UnitItemReserveRequest;
-import com.thundashop.zauiactivity.dto.ZauiActivity;
-import com.thundashop.zauiactivity.dto.ZauiActivityConfig;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -101,11 +93,9 @@ public class ZauiActivityService implements IZauiActivityService {
             throw new ZauiException(ZauiStatusCodes.MISSING_PARAMS);
         OctoBooking octoReservedBooking = reserveOctoBooking(activityItem);
         activityItem.setOctoBooking(octoReservedBooking);
-        activityItem.price = getPrecisedPrice(octoReservedBooking.getPricing().getTotal(),
-                octoReservedBooking.getPricing().getCurrencyPrecision());
-        activityItem.priceExTaxes = getPrecisedPrice(octoReservedBooking.getPricing().getSubtotal(),
-                octoReservedBooking.getPricing().getCurrencyPrecision());
-        OctoBooking octoConfirmedBooking = confirmOctoBooking(activityItem, booking, booker, octoReservedBooking);
+        activityItem.price = getPricingFromOctoTaxObject(activityItem.getOctoBooking().getPricing()).getTotal();
+        activityItem.priceExTaxes = getPricingFromOctoTaxObject(activityItem.getOctoBooking().getPricing()).getSubtotal();
+        OctoBooking octoConfirmedBooking = confirmOctoBooking(activityItem, booking,booker,octoReservedBooking);
         booking = addActivityToBooking(activityItem, octoConfirmedBooking, booking);
         return booking;
     }
@@ -116,10 +106,9 @@ public class ZauiActivityService implements IZauiActivityService {
         if (activityItem.units == null)
             throw new ZauiException(ZauiStatusCodes.MISSING_PARAMS);
         activityItem.setOctoBooking(octoBooking);
-        activityItem.price = getPrecisedPrice(octoBooking.getPricing().getTotal(),
-                octoBooking.getPricing().getCurrencyPrecision());
-        activityItem.priceExTaxes = getPrecisedPrice(octoBooking.getPricing().getSubtotal(),
-                octoBooking.getPricing().getCurrencyPrecision());
+        activityItem.price = getPricingFromOctoTaxObject(activityItem.getOctoBooking().getPricing()).getTotal();
+        activityItem.priceExTaxes = getPricingFromOctoTaxObject(activityItem.getOctoBooking().getPricing()).getSubtotal();
+        activityItem.setUnpaidAmount(activityItem.price);
         booking.bookingZauiActivityItems.add(activityItem);
         return booking;
     }
@@ -130,9 +119,8 @@ public class ZauiActivityService implements IZauiActivityService {
                 .setOptionId(activityItem.optionId)
                 .setAvailabilityId(activityItem.availabilityId)
                 .setNotes(ZauiConstants.ZAUI_STAY_TAG)
-                .setUnitItems(activityItem.units.stream().map(o -> new UnitItemReserveRequest(o.id))
-                        .collect(Collectors.toList()));
-        return octoApiService.reserveBooking(activityItem.supplierId, bookingReserveRequest);
+                .setUnitItems(mapUnitsForBooking(activityItem.units));
+        return octoApiService.reserveBooking(activityItem.supplierId,bookingReserveRequest);
     }
 
     private OctoBooking confirmOctoBooking(BookingZauiActivityItem activityItem, PmsBooking booking, User booker,
@@ -177,8 +165,31 @@ public class ZauiActivityService implements IZauiActivityService {
                 .filter(item -> item.addonId.equals(addonId)).findFirst();
     }
 
-    public static double getPrecisedPrice(Long price, Integer precision) {
-        double amountDivider = Math.pow(10, precision);
-        return price / amountDivider;
+    private Pricing getPricingFromOctoTaxObject(Pricing pricingObj){
+        Pricing pricing = new Pricing();
+        pricing.setTax(getPrecisedPrice(pricingObj.getIncludedTaxes().stream().mapToDouble(TaxData::getTaxAmount).sum(),pricingObj.getCurrencyPrecision()));
+        pricing.setSubtotal(getPrecisedPrice(pricingObj.getIncludedTaxes().stream().mapToDouble(TaxData::getPriceExcludingTax).sum(),pricingObj.getCurrencyPrecision()));
+        pricing.setTotal(pricing.getTax()+pricing.getSubtotal());
+        return pricing;
+
+    }
+    @Override
+    public double getPrecisedPrice(double price,Integer precision) {
+        double amountDivider =  Math.pow(10,precision);
+        return price/amountDivider;
+    }
+
+    @Override
+    public List<UnitItemReserveRequest> mapUnitsForBooking(List<Unit> units) {
+        List<UnitItemReserveRequest> unitItems = new ArrayList<>();
+        units.stream().filter(unit -> unit.quantity > 0).forEach(unit -> {
+            UnitItemReserveRequest item = null;
+            for (int i = 0; i < unit.quantity; i++) {
+                item = new UnitItemReserveRequest();
+                item.setUnitId(unit.getId());
+            }
+            unitItems.add(item);
+        });
+        return unitItems;
     }
 }

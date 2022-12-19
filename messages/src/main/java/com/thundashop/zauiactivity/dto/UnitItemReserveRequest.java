@@ -2,10 +2,11 @@ package com.thundashop.zauiactivity.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-public
-class UnitItemReserveRequest {
+@NoArgsConstructor
+public class UnitItemReserveRequest {
     private String unitId;
 }

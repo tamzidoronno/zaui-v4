@@ -54,7 +54,7 @@ class zauiactivity_dto_OctoBooking {
 	/** @var String */
 	public $deliveryMethods;
 
-	/** @var String */
+	/** @var class com_thundashop_zauiactivity_dto_Ticket[] */
 	public $voucher;
 
 	/** @var class com_thundashop_zauiactivity_dto_UnitItemOnBooking[] */

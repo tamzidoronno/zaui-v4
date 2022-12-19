@@ -1,5 +1,17 @@
 package com.thundashop.core.cartmanager;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.cartmanager.data.Cart;
@@ -7,33 +19,25 @@ import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.CartTax;
 import com.thundashop.core.cartmanager.data.Coupon;
 import com.thundashop.core.cartmanager.data.CouponType;
-import com.thundashop.core.common.*;
+import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.common.Session;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.ordermanager.OrderManager;
-import com.thundashop.core.pagemanager.PageManager;
-import com.thundashop.core.pmsmanager.*;
+import com.thundashop.core.pmsmanager.PmsBookingRooms;
+import com.thundashop.core.pmsmanager.PmsRepeatingData;
+import com.thundashop.core.pmsmanager.TimeRepeater;
+import com.thundashop.core.pmsmanager.TimeRepeaterDateRange;
 import com.thundashop.core.productmanager.ProductManager;
-import com.thundashop.core.productmanager.data.AccountingDetail;
 import com.thundashop.core.productmanager.data.Product;
-import com.thundashop.core.productmanager.data.ProductAccountingInformation;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import com.thundashop.core.usermanager.data.Address;
-
-import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
-
 import com.thundashop.core.zauiactivity.ZauiActivityManager;
-import com.thundashop.services.zauiactivityservice.IZauiActivityService;
 import com.thundashop.zauiactivity.constant.ZauiConstants;
-import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
-import com.thundashop.zauiactivity.dto.Pricing;
-import com.thundashop.zauiactivity.dto.TaxData;
-import com.thundashop.zauiactivity.dto.ZauiActivity;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  *
@@ -41,41 +45,31 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
  */
 @Component
 @GetShopSession
+@Slf4j
 public class CartManager extends ManagerBase implements ICartManager {
-    public HashMap<String, Coupon> coupons = new HashMap();
-    private HashMap<String, Cart> carts = new HashMap();
+    public HashMap<String, Coupon> coupons = new HashMap<>();
+    private HashMap<String, Cart> carts = new HashMap<>();
 
     @Autowired
     private ProductManager productManager;
-    
-    @Autowired
-    private OrderManager orderManager;
-    
-    @Autowired
-    private PageManager pageManager;
 
     @Autowired
-    private PmsManager pmsManager;
+    private OrderManager orderManager;
 
     @Autowired
     private ZauiActivityManager zauiActivityManager;
 
-    @Autowired
-    private IZauiActivityService zauiActivityService;
     private boolean nextCouponValid = false;
 
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(CartManager.class);
-    
     @Override
     public void dataFromDatabase(DataRetreived data) {
         for (DataCommon dataObject : data.data) {
             if (dataObject instanceof Coupon) {
-                Coupon coupon = (Coupon)dataObject;
+                Coupon coupon = (Coupon) dataObject;
                 coupons.put(coupon.code, coupon);
             }
         }
     }
-
 
     @Override
     public CartItem addProductItem(String productId, int count) throws ErrorException {
@@ -90,59 +84,11 @@ public class CartManager extends ManagerBase implements ICartManager {
     }
 
     @Override
-    public void addZauiActivityItem(String productId, String addonId) throws ErrorException  {
-        Optional<ZauiActivity> activity = zauiActivityService.getZauiActivityById(productId,zauiActivityManager.getSessionInfo());
-        Optional<BookingZauiActivityItem> activityItem = zauiActivityService.getBookingZauiActivityItemByAddonId(addonId,pmsManager.getSessionInfo());
-        if(activityItem!= null) {
-            createZauiActivityCartItem(activity.get(), activityItem.get());
-        }
-        else {
-            throw new ErrorException(1011);
-        }
-    }
-    private void createZauiActivityCartItem(ZauiActivity product, BookingZauiActivityItem activityItem) {
+    public void addZauiActivityItem(String productId, String addonId) throws ErrorException {
         Cart cart = getCart(getSession().id);
-        List<CartItem> cartItems = new ArrayList<>();
-        Pricing pricing = activityItem.getOctoBooking().getPricing();
-        pricing.getIncludedTaxes().forEach((activity) -> {
-            Product taxProduct = createZauiActivityForTax(product,activity,pricing.getCurrencyPrecision());
-            CartItem cartItem = new CartItem();
-            cartItem.setProduct(taxProduct);
-            cartItem.setCount(1);
-            cartItems.add(cartItem);
-        });
-        cart.addCartItems(cartItems);
+        cart.addCartItems(zauiActivityManager.getZauiActivityCartItems(productId, addonId));
     }
 
-    private Product createZauiActivityForTax(ZauiActivity product, TaxData activity, Integer currencyPrecision) {
-        List<TaxGroup> taxes = productManager.getTaxes();
-        Product taxProduct = product.clone();
-        AccountingDetail account = getOctoSupplierAccount(product.getSupplierId(),activity.getRate().doubleValue());
-
-        ProductAccountingInformation info = new ProductAccountingInformation();
-        info.accountingNumber = account.accountNumber + "";
-        info.taxGroupNumber = account.getShopTaxGroup;
-
-        TaxGroup taxGroup = taxes.get(account.getShopTaxGroup);
-        taxProduct.accountingConfig.add(info);
-        taxProduct.taxgroup = account.getShopTaxGroup;
-        taxProduct.taxGroupObject = taxGroup;
-        taxProduct.name = activity.getName();
-        taxProduct.metaData = product.name;
-        taxProduct.masterProductId = product.id;
-        taxProduct.priceExTaxes = zauiActivityService.getPrecisedPrice(activity.getPriceExcludingTax(),currencyPrecision);
-        taxProduct.price = zauiActivityService.getPrecisedPrice(activity.getTaxAmount(),currencyPrecision) + taxProduct.priceExTaxes;
-        return taxProduct;
-    }
-
-    private AccountingDetail getOctoSupplierAccount(Integer supplierId, Double taxRate) {
-        //TODO implement from activity configuration
-        List<Integer> accountNums =  Arrays.asList(1111, 2222, 3333,4444,5555,6666,7777);
-        Random rand = new Random();
-        int accountNumber = taxRate.equals(0.0) ? 2 : rand.nextInt(7);
-        return productManager.getAccountingDetail(accountNums.get(accountNumber));
-    }
-        
     private Cart getCart(String sessionId) {
         if (!carts.containsKey(sessionId)) {
             carts.put(sessionId, new Cart());
@@ -168,7 +114,7 @@ public class CartManager extends ManagerBase implements ICartManager {
 
         if (product != null) {
             Cart cart = getCart(getSession().id);
-            for(int i = 0; i < count; i++) {
+            for (int i = 0; i < count; i++) {
                 CartItem item = cart.addProduct(product, variations);
                 item.addedBy = "cartmanager";
             }
@@ -177,7 +123,7 @@ public class CartManager extends ManagerBase implements ICartManager {
             throw new ErrorException(1011);
         }
     }
-    
+
     @Override
     public CartItem addProductWithSource(String productId, int count, String source) throws ErrorException {
         Product product = getProduct(productId, null);
@@ -192,6 +138,7 @@ public class CartManager extends ManagerBase implements ICartManager {
             throw new ErrorException(1011);
         }
     }
+
     @Override
     public Cart updateProductCount(String cartItemId, int count) throws ErrorException {
         Cart cart = getCart(getSession().id);
@@ -217,10 +164,10 @@ public class CartManager extends ManagerBase implements ICartManager {
 
     @Override
     public Double getCartTotalAmount() throws ErrorException {
-        Cart cart  = getCart(getSession().id).clone();
+        Cart cart = getCart(getSession().id).clone();
         orderManager.finalizeCart(cart);
         Double total = cart.getTotal(false);
-        if(total == null || total.isNaN()) {
+        if (total == null || total.isNaN()) {
             total = 0.0;
         }
         return total;
@@ -234,7 +181,7 @@ public class CartManager extends ManagerBase implements ICartManager {
 
     @Override
     public Double calculateTotalCost(Cart cart) throws ErrorException {
-        if(cart == null) {
+        if (cart == null) {
             return 0.0;
         }
         return cart.getTotal(false);
@@ -242,7 +189,7 @@ public class CartManager extends ManagerBase implements ICartManager {
 
     @Override
     public void setAddress(Address address) throws ErrorException {
-        Cart cart = this.getCart();        
+        Cart cart = this.getCart();
         cart.address = address;
     }
 
@@ -255,14 +202,14 @@ public class CartManager extends ManagerBase implements ICartManager {
     @Override
     public void setShippingCost(double shippingCost) throws ErrorException {
         Cart cart = this.getCart();
-        
+
         TaxGroup shippingTaxGroup = productManager.getTaxGroup(0);
         cart.setShippingCost(shippingCost, shippingTaxGroup);
     }
 
     @Override
     public Double getShippingPriceBasis() throws ErrorException {
-        Cart cart  = getCart(getSession().id).clone();
+        Cart cart = getCart(getSession().id).clone();
         orderManager.finalizeCart(cart);
         return cart.getTotal(true);
     }
@@ -280,15 +227,15 @@ public class CartManager extends ManagerBase implements ICartManager {
         if (coupon == null) {
             throw new ErrorException(99);
         }
-        
+
         Cart cart = getCart(getSession().id);
         cart.coupon = coupon;
     }
 
     @Override
     public List<Coupon> getCoupons() {
-        ArrayList<Coupon> couponslist = new ArrayList(coupons.values());
-        for(Coupon coupon : couponslist) {
+        ArrayList<Coupon> couponslist = new ArrayList<>(coupons.values());
+        for (Coupon coupon : couponslist) {
             coupon.checkAmount();
         }
         return couponslist;
@@ -327,17 +274,18 @@ public class CartManager extends ManagerBase implements ICartManager {
     }
 
     private void removeDeletedProducts(Cart cart) {
-        
-        //Look for removed products.
-        List<CartItem> toRemove = new ArrayList();
-        for(CartItem item : cart.getItems()) {
+
+        // Look for removed products.
+        List<CartItem> toRemove = new ArrayList<>();
+        for (CartItem item : cart.getItems()) {
             Product product = item.getProduct();
-            if(!productManager.exists(product.id) && (isBlank(product.tag) || !product.tag.equals(ZauiConstants.ZAUI_ACTIVITY_TAG))) {
+            if (!productManager.exists(product.id)
+                    && (isBlank(product.tag) || !product.tag.equals(ZauiConstants.ZAUI_ACTIVITY_TAG))) {
                 toRemove.add(item);
             }
         }
-        
-        for(CartItem remove : toRemove) {
+
+        for (CartItem remove : toRemove) {
             cart.removeItem(remove.getCartItemId());
         }
     }
@@ -370,7 +318,7 @@ public class CartManager extends ManagerBase implements ICartManager {
     public double getSumOfAllProductsPrices(boolean isPartner) {
         Cart cart = getCart();
         double price = 0;
-        
+
         if (!isPartner) {
             for (CartItem cartItem : cart.getItems()) {
                 price += cartItem.getProduct().price;
@@ -387,44 +335,43 @@ public class CartManager extends ManagerBase implements ICartManager {
                 i += cartItem.getCount();
             }
 
-            return price/i;
+            return price / i;
         }
-        
+
         return price;
     }
-    
+
     @Override
     public Integer calculateTotalCount(Cart cart) throws ErrorException {
         int count = 0;
-        for(CartItem item : cart.getItems()) {
+        for (CartItem item : cart.getItems()) {
             count += item.getCount();
         }
-        
+
         return count;
     }
 
-    
     @Administrator
     public Coupon getCoupon(String couponCode) {
-        if(couponCode == null) {
+        if (couponCode == null) {
             couponCode = "";
         }
-        for(String key : coupons.keySet()) {
-            if(key == null) {
+        for (String key : coupons.keySet()) {
+            if (key == null) {
                 continue;
             }
-            if(couponCode.toLowerCase().equals(key.toLowerCase())) {
+            if (couponCode.toLowerCase().equals(key.toLowerCase())) {
                 return coupons.get(key);
             }
         }
-        
+
         return null;
     }
 
     @Administrator
     public Coupon getCouponById(String couponId) {
-        for(Coupon cop :getCoupons()) {
-            if(cop.id.equals(couponId)) {
+        for (Coupon cop : getCoupons()) {
+            if (cop.id.equals(couponId)) {
                 return cop;
             }
         }
@@ -433,84 +380,86 @@ public class CartManager extends ManagerBase implements ICartManager {
     }
 
     public void summarizeItems() {
-        List<String> iterated = new ArrayList();
-        List<CartItem> removeItem = new ArrayList();
-        for(CartItem item : getCart().getItems()) {
+        List<String> iterated = new ArrayList<>();
+        List<CartItem> removeItem = new ArrayList<>();
+        for (CartItem item : getCart().getItems()) {
             iterated.add(item.getCartItemId());
-            for(CartItem item2 : getCart().getItems()) {
-                if(iterated.contains(item2.getCartItemId())) {
+            for (CartItem item2 : getCart().getItems()) {
+                if (iterated.contains(item2.getCartItemId())) {
                     continue;
                 }
                 int itemcount2 = item2.getCount();
                 int itemcount = item.getCount();
-                
-                if(itemcount2 > 0 && itemcount < 0) {
+
+                if (itemcount2 > 0 && itemcount < 0) {
                     continue;
                 }
-                if(itemcount2 < 0 && itemcount > 0) {
+                if (itemcount2 < 0 && itemcount > 0) {
                     continue;
                 }
-                
-                if(item.getProduct().externalReferenceId == null || item2.getProduct().externalReferenceId == null) {
+
+                if (item.getProduct().externalReferenceId == null || item2.getProduct().externalReferenceId == null) {
                     continue;
                 }
-                if(!item2.getProduct().externalReferenceId.equals(item.getProduct().externalReferenceId)) {
+                if (!item2.getProduct().externalReferenceId.equals(item.getProduct().externalReferenceId)) {
                     continue;
                 }
-                
-                 if(item.getProduct().id.equals(item2.getProduct().id)) {
-                     if(item.getProduct().price == item2.getProduct().price) {
-                         item.setCount(item.getCount()+item2.getCount());
-                         removeItem.add(item2);
-                     }
-                 }
+
+                if (item.getProduct().id.equals(item2.getProduct().id)) {
+                    if (item.getProduct().price == item2.getProduct().price) {
+                        item.setCount(item.getCount() + item2.getCount());
+                        removeItem.add(item2);
+                    }
+                }
             }
         }
-        for(CartItem remove : removeItem) {
+        for (CartItem remove : removeItem) {
             getCart().removeItem(remove.getCartItemId());
         }
     }
-    
-    public boolean couponIsValid(Date registrationDate, String couponCode, Date startOfBooking, Date endOfBooking, String productId, int days) {
-        if(nextCouponValid) {
+
+    public boolean couponIsValid(Date registrationDate, String couponCode, Date startOfBooking, Date endOfBooking,
+            String productId, int days) {
+        if (nextCouponValid) {
             return true;
         }
 
-        if(startOfBooking == null || endOfBooking == null) {
-            logger.info("Checking if coupon code {} is valid - startOfBooking or endOfBooking is null.", couponCode);
+        if (startOfBooking == null || endOfBooking == null) {
+            log.info("Checking if coupon code {} is valid - startOfBooking or endOfBooking is null.", couponCode);
             return true;
         }
         Coupon coupon = getCoupon(couponCode);
-        if(coupon == null) {
+        if (coupon == null) {
             return false;
         }
-        if(coupon.whenAvailable == null) {
+        if (coupon.whenAvailable == null) {
             return true;
         }
-        
-        if(productId != null && !coupon.productsToSupport.isEmpty()) {
-            if(!coupon.productsToSupport.contains(productId)) {
+
+        if (productId != null && !coupon.productsToSupport.isEmpty()) {
+            if (!coupon.productsToSupport.contains(productId)) {
                 return false;
             }
         }
-        
+
         PmsRepeatingData whenCouponIsValid = coupon.whenAvailable;
-        if(coupon.minDays > 0 && coupon.minDays > days) {
+        if (coupon.minDays > 0 && coupon.minDays > days) {
             return false;
         }
-        if(coupon.maxDays > 0 && coupon.maxDays < days) {
+        if (coupon.maxDays > 0 && coupon.maxDays < days) {
             return false;
         }
 
-        if(coupon.whenAvailable != null &&
+        if (coupon.whenAvailable != null &&
                 coupon.whenAvailable.data != null &&
                 coupon.whenAvailable.data.endingAt != null &&
-                coupon.whenAvailable.data.endingAt.compareTo(new Date()) < 0){
+                coupon.whenAvailable.data.endingAt.compareTo(new Date()) < 0) {
             return false;
         }
-        
-        if(coupon.pmsWhenAvailable != null && !coupon.pmsWhenAvailable.isEmpty() && coupon.pmsWhenAvailable.equals("REGISTERED")) {
-            if(registrationDate != null) {
+
+        if (coupon.pmsWhenAvailable != null && !coupon.pmsWhenAvailable.isEmpty()
+                && coupon.pmsWhenAvailable.equals("REGISTERED")) {
+            if (registrationDate != null) {
                 startOfBooking = registrationDate;
                 endOfBooking = registrationDate;
             } else {
@@ -518,20 +467,21 @@ public class CartManager extends ManagerBase implements ICartManager {
                 endOfBooking = new Date();
             }
         }
-        
+
         TimeRepeater repeater = new TimeRepeater();
         LinkedList<TimeRepeaterDateRange> rangeOfCoupon = repeater.generateRange(whenCouponIsValid.data);
-        
-        if(whenCouponIsValid.repeattype != null && whenCouponIsValid.repeattype.equals("repeat")) {
-            if(PmsBookingRooms.getNumberOfDays(startOfBooking, endOfBooking) > 7) {
+
+        if (whenCouponIsValid.repeattype != null && whenCouponIsValid.repeattype.equals("repeat")) {
+            if (PmsBookingRooms.getNumberOfDays(startOfBooking, endOfBooking) > 7) {
                 return false;
             }
-            
+
             Date toCheckStart = startOfBooking;
             Date toCheckEnd = endOfBooking;
-            
-            if(coupon.pmsWhenAvailable != null && !coupon.pmsWhenAvailable.isEmpty() && coupon.pmsWhenAvailable.equals("REGISTERED")) {
-                if(registrationDate != null) {
+
+            if (coupon.pmsWhenAvailable != null && !coupon.pmsWhenAvailable.isEmpty()
+                    && coupon.pmsWhenAvailable.equals("REGISTERED")) {
+                if (registrationDate != null) {
                     toCheckStart = startOfBooking;
                     toCheckEnd = endOfBooking;
                 } else {
@@ -539,18 +489,23 @@ public class CartManager extends ManagerBase implements ICartManager {
                     toCheckEnd = new Date();
                 }
             }
-            
+
             boolean foundStart = false;
             boolean foundEnd = false;
-            
-            for(TimeRepeaterDateRange range : rangeOfCoupon) {
-                if(range.isBetweenTime(toCheckStart)) { foundStart = true; }
-                if(range.isBetweenTime(toCheckEnd)) { foundEnd = true; }
+
+            for (TimeRepeaterDateRange range : rangeOfCoupon) {
+                if (range.isBetweenTime(toCheckStart)) {
+                    foundStart = true;
+                }
+                if (range.isBetweenTime(toCheckEnd)) {
+                    foundEnd = true;
+                }
             }
             return foundStart && foundEnd;
         } else {
-            for(TimeRepeaterDateRange range : rangeOfCoupon) {
-                if((range.start.before(startOfBooking) || range.start.equals(startOfBooking)) && (range.end.after(endOfBooking) || endOfBooking.equals(range.end))) {
+            for (TimeRepeaterDateRange range : rangeOfCoupon) {
+                if ((range.start.before(startOfBooking) || range.start.equals(startOfBooking))
+                        && (range.end.after(endOfBooking) || endOfBooking.equals(range.end))) {
                     return true;
                 }
             }
@@ -560,12 +515,12 @@ public class CartManager extends ManagerBase implements ICartManager {
 
     @Override
     public List<String> getPartnershipCoupons() {
-        List<String> res = new ArrayList();
-        for(Coupon cup : coupons.values()) {
-            if(cup == null || cup.code == null) {
+        List<String> res = new ArrayList<>();
+        for (Coupon cup : coupons.values()) {
+            if (cup == null || cup.code == null) {
                 continue;
             }
-            if(cup.code.contains("partnership:")) {
+            if (cup.code.contains("partnership:")) {
                 res.add(cup.code.replace("partnership:", ""));
             }
         }
@@ -574,11 +529,11 @@ public class CartManager extends ManagerBase implements ICartManager {
 
     @Override
     public boolean hasCoupons() {
-        for(Coupon cup : coupons.values()) {
-            if(cup == null || cup.code == null) {
+        for (Coupon cup : coupons.values()) {
+            if (cup == null || cup.code == null) {
                 continue;
             }
-            if(!cup.code.contains("partnership:")) {
+            if (!cup.code.contains("partnership:")) {
                 return true;
             }
         }
@@ -588,11 +543,11 @@ public class CartManager extends ManagerBase implements ICartManager {
     /**
      * Returns a cart by it ids.
      * 
-     * If the cart with the ID does not exists, it will simply 
+     * If the cart with the ID does not exists, it will simply
      * create a new one.
      * 
      * @param cartId
-     * @return 
+     * @return
      */
     public Cart getCartById(String cartId) {
         Cart cart = carts.get(cartId);
@@ -600,47 +555,49 @@ public class CartManager extends ManagerBase implements ICartManager {
             cart = new Cart();
             cart.id = cartId;
         }
-        
+
         cart.finalizeCart();
         return cart;
     }
-    
+
     public void storeCart(String cartId) {
-        
+
     }
 
     public void subtractTimesLeft(String couponCode) {
-        if(couponCode == null || couponCode.isEmpty()) {
+        if (couponCode == null || couponCode.isEmpty()) {
             return;
         }
         Coupon coupon = getCoupon(couponCode);
-        if(coupon.timesLeft > 0) {
+        if (coupon.timesLeft > 0) {
             coupon.timesLeft--;
             saveObject(coupon);
         }
     }
 
-    public double calculatePriceForCouponWithoutSubstract(String couponCode, double price, int days, Integer guestCount, String bookingTypeId) {
-        Coupon coupon = getCoupon(couponCode); 
+    public double calculatePriceForCouponWithoutSubstract(String couponCode, double price, int days, Integer guestCount,
+            String bookingTypeId) {
+        Coupon coupon = getCoupon(couponCode);
         Double newPrice = price;
-        if(coupon != null) {
-            if(coupon.timesLeft > 0) {
-                if(coupon.type == CouponType.FIXED) {
+        if (coupon != null) {
+            if (coupon.timesLeft > 0) {
+                if (coupon.type == CouponType.FIXED) {
                     newPrice = price - coupon.amount;
                 }
-                if(coupon.type == CouponType.FIXEDPRICE) {
-                    if(guestCount != null && bookingTypeId != null && coupon.dailyPriceAmountByType.containsKey(bookingTypeId+"_" +guestCount)) {
-                        newPrice = coupon.dailyPriceAmountByType.get(bookingTypeId+"_" +guestCount);
+                if (coupon.type == CouponType.FIXEDPRICE) {
+                    if (guestCount != null && bookingTypeId != null
+                            && coupon.dailyPriceAmountByType.containsKey(bookingTypeId + "_" + guestCount)) {
+                        newPrice = coupon.dailyPriceAmountByType.get(bookingTypeId + "_" + guestCount);
                     } else {
                         newPrice = price;
                     }
                 }
-                if(coupon.type == CouponType.PERCENTAGE) {
-                    double multiplier = (double)(100-coupon.amount)/(double)100;
+                if (coupon.type == CouponType.PERCENTAGE) {
+                    double multiplier = (double) (100 - coupon.amount) / (double) 100;
                     newPrice = price * multiplier;
                 }
-                if(coupon.type == CouponType.FIXEDDISCOUNTSTAY) {
-                    newPrice = price - ((double)coupon.amount / days);
+                if (coupon.type == CouponType.FIXEDDISCOUNTSTAY) {
+                    newPrice = price - ((double) coupon.amount / days);
                 }
             }
         }
@@ -685,29 +642,29 @@ public class CartManager extends ManagerBase implements ICartManager {
         cart.getItems().stream().forEach(i -> i.recalculateMetaData());
         return cart;
     }
-    
+
     @Override
     public Double getCartTotal(Cart cart) {
         orderManager.finalizeCart(cart);
-        
+
         Double total = cart.getTotal(false);
-        if(total == null || total.isNaN()) {
+        if (total == null || total.isNaN()) {
             total = 0.0;
         }
         return total;
-    }    
+    }
 
     @Override
     public void filterByDate(Date start, Date end) {
         Cart cart = getCart();
-        for(CartItem item : cart.getItems()) {
+        for (CartItem item : cart.getItems()) {
             item.keepOnlyDateRange(start, end);
         }
     }
-    
+
     public void checkIfNeedsToConvertToNewCouponSystem(List<BookingItemType> types) {
-        for(Coupon coupon : coupons.values()) {
-            if(coupon.type == CouponType.FIXEDPRICE && coupon.dailyPriceAmountByType.isEmpty()) {
+        for (Coupon coupon : coupons.values()) {
+            if (coupon.type == CouponType.FIXEDPRICE && coupon.dailyPriceAmountByType.isEmpty()) {
                 coupon.convertToNewSystem(types);
             }
         }

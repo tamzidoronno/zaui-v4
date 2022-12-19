@@ -16,5 +16,6 @@ public class ZauiActivity extends Product {
     public List<ActivityOption> activityOptionList;
     public Integer productId;
     public Integer supplierId;
+    public String supplierName;
     public String currency;
 }

@@ -21,9 +21,6 @@ class zauiactivity_dto_BookingZauiActivityItem extends core_pmsmanager_PmsBookin
 	/** @var zauiactivity_dto_Unit[] */
 	public $units;
 
-	/** @var zauiactivity_dto_Pricing */
-	public $pricing;
-
 	/** @var String */
 	public $unpaidAmount;
 

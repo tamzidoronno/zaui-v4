@@ -108,6 +108,7 @@ public class ZauiActivityService implements IZauiActivityService {
         activityItem.setOctoBooking(octoBooking);
         activityItem.price = getPricingFromOctoTaxObject(activityItem.getOctoBooking().getPricing()).getTotal();
         activityItem.priceExTaxes = getPricingFromOctoTaxObject(activityItem.getOctoBooking().getPricing()).getSubtotal();
+        activityItem.setUnpaidAmount(activityItem.price);
         booking.bookingZauiActivityItems.add(activityItem);
         return booking;
     }
@@ -178,7 +179,8 @@ public class ZauiActivityService implements IZauiActivityService {
         return price/amountDivider;
     }
 
-    private List<UnitItemReserveRequest> mapUnitsForBooking(List<Unit> units) {
+    @Override
+    public List<UnitItemReserveRequest> mapUnitsForBooking(List<Unit> units) {
         List<UnitItemReserveRequest> unitItems = new ArrayList<>();
         units.stream().filter(unit -> unit.quantity > 0).forEach(unit -> {
             UnitItemReserveRequest item = null;

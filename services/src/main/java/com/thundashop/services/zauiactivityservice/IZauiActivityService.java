@@ -32,4 +32,6 @@ public interface IZauiActivityService {
     Optional<BookingZauiActivityItem>getBookingZauiActivityItemByAddonId(String addonId, SessionInfo sessionInfo);
 
     double getPrecisedPrice(double price, Integer precision);
+
+    List<UnitItemReserveRequest> mapUnitsForBooking(List<Unit> units);
 }

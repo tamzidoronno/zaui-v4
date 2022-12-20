@@ -125,11 +125,11 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     @Autowired
     WubookManager wubookManager;
     @Autowired
+    ZauiActivityManager zauiActivityManager;
+    @Autowired
     IGotoService gotoService;
     @Autowired
     IGotoBookingCancellationService bookingCancellationService;
-    @Autowired
-    ZauiActivityManager zauiActivityManager;
     @Autowired
     IGotoHotelInformationService gotoHotelInformationService;
     @Autowired
@@ -245,7 +245,8 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                     booking,
                     storeManager.getStoreSettingsApplicationKey(CURRENCY_CODE),
                     pmsManager.getConfiguration(),
-                    bookingEngineNew.getSessionInfo());
+                    bookingEngineNew.getSessionInfo(),
+                    zauiActivityManager.getSessionInfo());
             validateBookingAllotmentRestrictions(booking);
             PmsBooking pmsBooking = getBooking(booking);
             if (pmsBooking == null) {

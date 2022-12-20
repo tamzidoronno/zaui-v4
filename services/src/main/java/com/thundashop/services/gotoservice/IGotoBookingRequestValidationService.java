@@ -8,9 +8,9 @@ import com.thundashop.repository.utils.SessionInfo;
 import java.text.ParseException;
 
 public interface IGotoBookingRequestValidationService {
-    void validateSaveBookingDto(
-            GotoBookingRequest bookingRequest,
-            String systemCurrency,
-            PmsConfiguration configuration,
-            SessionInfo bookingItemTypeSession) throws GotoException, ParseException;
+    void validateSaveBookingDto(GotoBookingRequest bookingRequest,
+                                String systemCurrency,
+                                PmsConfiguration configuration,
+                                SessionInfo bookingItemTypeSession,
+                                SessionInfo zauiActivitySessionInfo) throws GotoException, ParseException;
 }

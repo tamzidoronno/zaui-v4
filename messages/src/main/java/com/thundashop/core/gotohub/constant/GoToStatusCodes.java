@@ -12,7 +12,8 @@ public enum GoToStatusCodes {
     SAVE_BOOKING_SUCCESS(1300, "Successfully received the HoldBooking"),
     DIFFERENT_CURRENCY(1301, "Goto Booking Failed.. Reason: Different Currency"),
     ROOM_TYPE_NOT_FOUND(1302, "Goto Booking Failed.. Reason: Room type not found"),
-    EMPTY_ROOM_LIST(1303, "Goto Booking Failed.. Reason: Empty room list"),
+    EMPTY_BOOKING_ITEM(1303, "Goto Booking Failed.. Reason: Empty room and activity list," +
+            " you need to book at least one room or activity"),
     NO_ALLOTMENT(1304, "Goto Booking Failed.. Reason: No Allotment Found for the time period"),
     INVALID_CHECKIN_CHECKOUT_FORMAT(1305, "Goto Booking Failed.. Reason: Invalid checkin/checkout date format"),
     INVALID_RATE_PLAN_CODE(1306, "Goto Booking Failed.. Reason: Invalid rate-plan code"),
@@ -26,6 +27,16 @@ public enum GoToStatusCodes {
     INCORRECT_DAILY_PRICE_MATRIX(1312, "Goto Booking Failed.. Reason: Daily price matrix is incorrect"),
     EMAIL_OR_PHONE_MISSING(1313, "Goto Booking Failed.. Reason: " +
             "You must provide either orderer email address or phone number or both correctly"),
+    OCTO_RESERVATION_RESPONSE_MISSING(1314, "Goto Booking Failed.. Reason: Activity list has object " +
+            "but Octo reservation response is missing"),
+    ACTIVITY_OPTION_ID_MISSING(1315, "Goto Booking Failed.. Reason: Option Id is missing in Octo reservation response"),
+    ZAUI_ACTIVITY_NOT_AVAILABLE(1316, "Goto Booking Failed.. Reason: The option or the activity is not available in ZauiStay"),
+    ACTIVITY_AVAILABILITY_MISSING(1317, "Goto Booking Failed.. Reason: Activity availability is missing"),
+    ACTIVITY_AVAILABILITY_ID_MISSING(1318, "Goto Booking Failed.. Reason: Activity availability Id is missing"),
+    ACTIVITY_UNIT_ITEM_INCORRECT(1319, "Goto Booking Failed.. Reason: Activity unit item is missing or empty"),
+    ACTIVITY_START_TIME_MISSING(1320, "Goto Booking Failed.. Reason: Activity availability start time is missing"),
+    ACTIVITY_END_TIME_MISSING(1321, "Goto Booking Failed.. Reason: Activity availability end time is missing"),
+
     BOOKING_CONFIRMATION_SUCCESS(1400, "Goto Booking has been Confirmed"),
     BOOKING_NOT_FOUND(1401, "Goto Booking Confirmation Failed.. Reason: Booking Not Found"),
     PAYMENT_FAILED(1402, "Goto Booking Confirmation Failed.. Reason: Payment failed"),

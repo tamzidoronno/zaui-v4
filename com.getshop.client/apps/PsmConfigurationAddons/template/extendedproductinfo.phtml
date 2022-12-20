@@ -5,6 +5,7 @@ $allItems = $this->getApi()->getBookingEngine()->getBookingItems($this->getSelec
 foreach($config->addonConfiguration as $item) {
     if($item->productId == $_POST['data']['productId']) {
         $addonItem = $item;
+        $isItemBreakfast = $item->isBreakfastItem || $item->addonType == 1 ? "checked='checked'" : "";
     }
 }
 $rangetype = array();
@@ -31,6 +32,9 @@ $defaultTypes = $this->getDefaultTypes();
         Count (max selection) <input type="txt" class="settings" gsname="count" value="<?php echo $addonItem->count; ?>">
     </div>
     <div class="extendedinforow">
+        Include on breakfastlist? <input type="checkbox" class="settings" gsname="isBreakfastItem" <?php echo $isItemBreakfast; ?>>
+    </div>
+    <div class="extendedinforow">
         <?php
         echo "<select style='float:right;' gsname='producttype'>";
         echo "<option value='".$addonItem->addonType."'>No product type</option>";
@@ -40,8 +44,8 @@ $defaultTypes = $this->getDefaultTypes();
         }
         echo "</select>";
         ?>
-        Product type<br>(breakfast used to connect to booking.com, etc) 
-    </div> 
+        Product type<br>(breakfast used to connect to booking.com, etc)
+    </div>
     <div class="extendedinforow">
         <input type="button" class="settings" value="Hide" style="width:256px" onclick="$(this).closest('.settingsForProduct').find('.extendedinformation').toggle();">
     </div>
@@ -49,16 +53,16 @@ $defaultTypes = $this->getDefaultTypes();
     <hr/>
     <div class="extendedinforow">
         Group addon type ( blank = no group addon )
-        <select gsname='groupaddon' class='settings'> 
+        <select gsname='groupaddon' class='settings'>
             <? $selected = $addonItem->groupAddonType == "" ? "selected='true'" : ""; ?>
             <option <? echo $selected; ?> value=''></option>
             <? $selected = $addonItem->groupAddonType == "option" ? "selected='true'" : ""; ?>
             <option <? echo $selected; ?> value='option'>Option</option>
         </select>
-        
+
     </div>
     <hr/>
-    
+
     <?php
     echo "Only available for the following rooms:<br>";
     foreach($allItems as $item) {
@@ -102,7 +106,7 @@ echo "<br>";
     <select gsname="validtype">
         <option value="1">On stay</option>
         <option value="2">On booking</option>
-    </select> 
+    </select>
     <input type="button" class='addNewDateRange' value="Set valid date range">
 </div>
 
@@ -110,6 +114,6 @@ echo "<br>";
 <span class='shop_button' gsclick='deactivateProduct' productid='<?php echo $addonItem->productId; ?>' style='background-color:red;'>Deactivate this product</span>
 
 <script>
-     $('.start_date_input').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true});
-     $('.end_date_input').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true});
+    $('.start_date_input').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true});
+    $('.end_date_input').datepicker({ dateFormat: "dd.mm.yy", minDate: "-1d", changeMonth: true, changeYear: true, showButtonPanel: true});
 </script>

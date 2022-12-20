@@ -10,10 +10,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.HashMap;
 
-import static org.springframework.util.StringUtils.isEmpty;
-
-public class PmsBookingSimpleFilter { 
+public class PmsBookingSimpleFilter {
  
     private final PmsManager manager;
     private final PmsInvoiceManager pmsInvoiceManager;
@@ -264,8 +263,13 @@ public class PmsBookingSimpleFilter {
         simple.numberOfGuests = room.numberOfGuests;
         simple.transferredToArx = room.addedToArx;
         simple.priceType = booking.priceType;
-        
+        HashMap<Integer, PmsBookingAddonItem> addons = manager.getConfigurationSecure().addonConfiguration;
         for(PmsBookingAddonItem item : room.addons) {
+            if(!item.isBreakfastItem) {
+                //Only checking real setup is that is not marked as breakfast during booking
+                PmsBookingAddonItem originalItem = addons.get(item.addonType);
+                item.isBreakfastItem = originalItem != null && originalItem.isBreakfastItem;
+            }
             if(item.addonType == PmsBookingAddonItem.AddonTypes.LATECHECKOUT) { simple.latecheckout = true; }
             if(item.addonType == PmsBookingAddonItem.AddonTypes.EXTRABED) { simple.extrabed = true; }
             if(item.addonType == PmsBookingAddonItem.AddonTypes.EXTRACHILDBED) { simple.extrabed = true; }

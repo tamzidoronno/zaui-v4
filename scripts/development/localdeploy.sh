@@ -1,11 +1,14 @@
 #!/bin/bash
 
-echo "Deploying Frontend code to Apache docroot"
+echo "Deploying Frontend code to Apache docroot $HOME"
 #Enter your project directory
 project_directory=$HOME
+BASEDIR=$(dirname $(realpath "$0"))
+artifact_directory="$BASEDIR/../../artifacts/builds/4.1.0"
+echo "artifact_directory: $artifact_directory"
 mkdir $project_directory/getshop-php
 mkdir $project_directory/getshop-php/dist
-cp $project_directory/getshop-v4/artifacts/builds/4.1.0/php_4.1.0.tar.gz $project_directory/getshop-php/dist
+cp $artifact_directory/php_4.1.0.tar.gz $project_directory/getshop-php/dist
 cd $project_directory/getshop-php/dist
 
 FILE=php_4.1.0.tar.gz
@@ -57,7 +60,7 @@ fi;
 echo "Deploying Backend code to Apache docroot"
 mkdir $project_directory/getshop-java
 mkdir $project_directory/getshop-java/dist
-cp $project_directory/getshop-v4/artifacts/builds/4.1.0/backend_4.1.0.tar.gz $project_directory/getshop-java/dist
+cp $artifact_directory/backend_4.1.0.tar.gz $project_directory/getshop-java/dist
 cd $project_directory/getshop-java/dist
 
 FILE=backend_4.1.0.tar.gz

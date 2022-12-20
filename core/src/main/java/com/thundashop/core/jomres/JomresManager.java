@@ -334,8 +334,8 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 logger.info(
                         "Failed to update availability for JomresPropertyId: {}, PmsRoomId: {}, Room/RoomType Name: {}",
                         roomData.jomresPropertyId, roomData.bookingItemId, item.bookingItemName);
-                handleIfUnauthorizedExceptionOccurred((Exception) e);
-                logText("Possible Reason: " + ((Exception) e).getMessage());
+                handleIfUnauthorizedExceptionOccurred(e);
+                logText("Possible Reason: " + e.getMessage());
 
             }
         }
@@ -458,8 +458,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     }
 
     private void deleteIfExtraBlankBookingExist(
-            Set<String> existingBookingIds, Map<String, PMSBlankBooking> blankBookingMap, Date start, Date end)
-            throws Exception {
+            Set<String> existingBookingIds, Map<String, PMSBlankBooking> blankBookingMap, Date start, Date end) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String startDate = formatter.format(start);
         String endDate = formatter.format(end);
@@ -688,13 +687,12 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         return !pmsRoom.bookingItemId.equals(roomData.bookingItemId);
     }
 
-    private void handleJomresBookingPriceChange(
-            PmsBooking pmsBooking, Double oldTotPrice, Double currentTotPrice, Map<String, Double> priceMatrix) {
-
-        setBookingPrice(pmsBooking, currentTotPrice, priceMatrix);
-        double currentPrice = pmsBooking.getTotalPrice();
-        if (oldTotPrice != currentPrice)
-            createNewOrder(pmsBooking.id, pmsBooking.paymentType);
+    private void handleJomresBookingPriceChange(PmsBooking pmsBooking, Double oldTotPrice, Double currentTotPrice,
+                                                Map<String, Double> priceMatrix, boolean forceToCreateOrder) {
+            setBookingPrice(pmsBooking, currentTotPrice, priceMatrix);
+            double currentPrice = pmsBooking.getTotalPrice();
+            if (forceToCreateOrder || oldTotPrice != currentPrice)
+                createNewOrder(pmsBooking.id, pmsBooking.paymentType);
     }
 
     private void createNewOrder(String pmsBookingId, String paymentType) {
@@ -715,7 +713,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                         setCorrectTime(jBooking.arrivalDate, true), setCorrectTime(jBooking.departure, false));
                 if (pmsRoom == null)
                     throw new Exception("Failed to update Checkin/out date for booking id: " + jBooking.bookingId);
-                handleJomresBookingPriceChange(pBooking, oldTotPrice, jBooking.totalPrice, priceMatrix);
+                handleJomresBookingPriceChange(pBooking, oldTotPrice, jBooking.totalPrice, priceMatrix, true);
             }
             if (isBookingRoomChanged(pmsRoom, jBooking)) {
                 Double oldTotPrice = pBooking.getTotalPrice();
@@ -723,7 +721,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 pmsManager.setBookingItemAndDate(pmsRoom.pmsBookingRoomId, newBookingItemId, false,
                         setCorrectTime(jBooking.arrivalDate, true), setCorrectTime(jBooking.departure, false));
                 pmsManager.saveBooking(pBooking);
-                handleJomresBookingPriceChange(pBooking, oldTotPrice, jBooking.totalPrice, priceMatrix);
+                handleJomresBookingPriceChange(pBooking, oldTotPrice, jBooking.totalPrice, priceMatrix, false);
             }
         } catch (Exception e) {
             logPrintException(e);
@@ -739,21 +737,27 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         }
         pmsManager.logEntry("Deleted by channel manager", newbooking.id, null);
         pmsManager.deleteBooking(newbooking.id);
-
         deleteJomresBookingData(jomresToPmsBookingMap.get(booking.bookingId));
+
         newbooking = pmsManager.getBooking(newbooking.id);
+        String pmsBookingId = newbooking.id;
         List<String> orderIds = new ArrayList<>(newbooking.orderIds);
-        for (String orderId : orderIds) {
-            Order order = orderManager.getOrderSecure(orderId);
-            if (order.isCreditNote || !order.creditOrderId.isEmpty()) {
-                continue;
+
+        orderIds.stream()
+                .filter(orderId -> {
+                    Order order = orderManager.getOrderSecure(orderId);
+                    List<PmsBooking> bookings = pmsManager.getBookingsFromOrderId(orderId);
+                    return !order.isCreditNote && order.creditOrderId.isEmpty() && bookings.size() <= 1;
+                })
+                .forEach(orderId -> pmsInvoiceManager.creditOrder(pmsBookingId, orderId));
+
+        orderIds = new ArrayList<>(newbooking.orderIds);
+        orderIds.forEach(id -> {
+            Order order = orderManager.getOrderSecure(id);
+            if (order.status != Order.Status.PAYMENT_COMPLETED) {
+                pmsInvoiceManager.markOrderAsPaid(pmsBookingId, id);
             }
-            List<PmsBooking> bookings = pmsManager.getBookingsFromOrderId(orderId);
-            if (bookings.size() > 1) {
-                continue;
-            }
-            pmsInvoiceManager.creditOrder(newbooking.id, orderId);
-        }
+        });
     }
 
     private Date setCorrectTime(Date arrivalDate, boolean start) {

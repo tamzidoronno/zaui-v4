@@ -21,6 +21,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import com.thundashop.zauiactivity.constant.ZauiConstants;
+import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -472,6 +474,10 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         HashMap<String, Integer> typesCount = new HashMap<>();
         HashMap<String, Integer> currentBookingTypesCount = new HashMap<>();
 
+        if(result.isEmpty()){
+            return;
+        }
+
         for (RoomsSelected room : result) {
             for (Integer guests : room.roomsSelectedByGuests.keySet()) {
                 if (room.roomsSelectedByGuests.get(guests) > 0) {
@@ -651,6 +657,11 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 }
                 result.textualSummary.add(added + " x " + text);
             }
+        }
+
+        // add zaui activities to textual summary
+        for(BookingZauiActivityItem activityItem: booking.bookingZauiActivityItems) {
+            result.textualSummary.add( ZauiConstants.ZAUI_ACTIVITY_TAG + "1 x " + activityItem.getName());
         }
 
         result.textualSummary.add("{totalprice} {currency}" + Math.round(booking.getTotalPrice()));

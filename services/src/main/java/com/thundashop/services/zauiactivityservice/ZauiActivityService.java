@@ -110,6 +110,27 @@ public class ZauiActivityService implements IZauiActivityService {
         booking.bookingZauiActivityItems.add(activityItem);
         return booking;
     }
+    @Override
+    public PmsBooking addActivityToBooking(AddZauiActivityToWebBookingDto activity, PmsBooking booking, SessionInfo sessionInfo) throws ZauiException {
+        ZauiActivity zauiActivity = getZauiActivityByOptionId(activity.getOptionId(), sessionInfo);
+        ActivityOption bookedOption = zauiActivity.activityOptionList.stream()
+                .filter(option -> option.getId().equals(activity.getOptionId()))
+                .findFirst().orElse(null);
+        if(bookedOption==null) {
+            throw new ZauiException(ZauiStatusCodes.ACTIVITY_NOT_FOUND);
+        }
+        OctoBookingReserveRequest bookingReserveRequest = new OctoBookingReserveRequest()
+                .setProductId(zauiActivity.getProductId())
+                .setOptionId(bookedOption.getId())
+                .setAvailabilityId(activity.getAvailabilityId())
+                .setNotes(ZauiConstants.ZAUI_STAY_TAG)
+                .setUnitItems(mapUnitsForBooking(activity.getUnits()));
+        OctoBooking octoReserveBooking =  octoApiService.reserveBooking(zauiActivity.getSupplierId(),bookingReserveRequest);
+        BookingZauiActivityItem activityItem = mapActivityToBookingZauiActivityItem(octoReserveBooking,sessionInfo);
+        activityItem.setUnits(activity.getUnits());
+        booking = addActivityToBooking(activityItem,octoReserveBooking,booking);
+        return booking;
+    }
 
     private OctoBooking reserveOctoBooking(BookingZauiActivityItem activityItem) throws ZauiException {
         OctoBookingReserveRequest bookingReserveRequest = new OctoBookingReserveRequest()
@@ -190,5 +211,32 @@ public class ZauiActivityService implements IZauiActivityService {
             unitItems.add(item);
         });
         return unitItems;
+    }
+
+    @Override
+    public BookingZauiActivityItem mapActivityToBookingZauiActivityItem(OctoBooking octoBooking, SessionInfo sessionInfo) throws ZauiException {
+        BookingZauiActivityItem activityItem = new BookingZauiActivityItem();
+        ZauiActivity zauiActivity = getZauiActivityByOptionId(octoBooking.getOptionId(), sessionInfo);
+        ActivityOption bookedOption = zauiActivity.activityOptionList.stream()
+                .filter(option -> option.getId().equals(octoBooking.getOptionId()))
+                .findFirst().orElse(null);
+        if(bookedOption==null) {
+            throw new ZauiException(ZauiStatusCodes.ACTIVITY_NOT_FOUND);
+        }
+
+        activityItem.setZauiActivityId(zauiActivity.id);
+        activityItem.setOctoProductId(zauiActivity.getProductId());
+        activityItem.setName(zauiActivity.name);
+        activityItem.setOptionTitle(bookedOption.getInternalName());
+        activityItem.setOptionId(bookedOption.getId());
+        activityItem.setAvailabilityId(octoBooking.getAvailabilityId());
+//        activityItem.setUnits();
+        activityItem.setNotes(octoBooking.getNotes());
+        activityItem.setLocalDateTimeStart(octoBooking.getAvailability().getLocalDateTimeStart());
+        activityItem.setLocalDateTimeEnd(octoBooking.getAvailability().getLocalDateTimeEnd());
+        activityItem.setSupplierId(zauiActivity.getSupplierId());
+        //activityItem.setSupplierName(zauiActivity.getSupplierName());
+        activityItem.setOctoBooking(octoBooking);
+        return activityItem;
     }
 }

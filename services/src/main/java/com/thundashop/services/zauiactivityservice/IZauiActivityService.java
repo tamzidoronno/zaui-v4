@@ -34,4 +34,8 @@ public interface IZauiActivityService {
     double getPrecisedPrice(double price, Integer precision);
 
     List<UnitItemReserveRequest> mapUnitsForBooking(List<Unit> units);
+
+    PmsBooking addActivityToBooking(AddZauiActivityToWebBookingDto activity, PmsBooking booking, SessionInfo sessionInfo) throws ZauiException;
+
+    abstract BookingZauiActivityItem mapActivityToBookingZauiActivityItem(OctoBooking octoBooking, SessionInfo sessionInfo) throws ZauiException;
 }

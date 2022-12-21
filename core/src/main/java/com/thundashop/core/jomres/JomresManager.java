@@ -208,11 +208,16 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             return new ArrayList<>();
         }
         try {
+            LocalTime startTime = LocalTime.now();
             List<Integer> propertyIds = propertyService.getChannelsPropertyIDs(
                     jomresConfiguration.clientBaseUrl, cmfClientAccessToken, jomresConfiguration.channelName);
-            return propertyService.getPropertiesFromIds(
+            List<JomresProperty> properties = propertyService.getPropertiesFromIds(
                     jomresConfiguration.clientBaseUrl, cmfClientAccessToken, jomresConfiguration.channelName,
                     propertyIds);
+            LocalTime endTime = LocalTime.now();
+            logger.info("Time takes to fetch jomres properties: {}s, Number of property: {}",
+                    ChronoUnit.SECONDS.between(startTime, endTime), properties.size());
+            return properties;
         } catch (Exception e) {
             logPrintException(e);
             logText("Failed to load Jomres Properties..." + e.getMessage());
@@ -515,7 +520,6 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     private String addNewJomresBooking(JomresBooking booking, Map<String, Double> dailyPriceMatrix) throws Exception {
         logger.info("started fetch complete booking, BookingId: {}", booking.bookingId);
         BookingService bookingService = new BookingService();
-
         booking = bookingService.getCompleteBooking(
                 jomresConfiguration.clientBaseUrl,
                 cmfClientAccessToken,
@@ -599,6 +603,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                                 response.setStatus("Modified/Synced");
                                 updatePmsBooking(jomresBooking, pmsBooking, dailyPriceMatrix);
                             }
+                            logger.info("ended Syncing Booking Id: {}, PropertyId: {}", jomresBooking.bookingId, propertyUID);
                             allBookings.add(response);
                         } catch (Exception e) {
                             String errorMessage = "Failed to Sync/Add booking, BookingId: " + jomresBooking.bookingId

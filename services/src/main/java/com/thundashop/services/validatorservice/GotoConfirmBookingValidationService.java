@@ -1,4 +1,4 @@
-package com.thundashop.services.gotoservice;
+package com.thundashop.services.validatorservice;
 
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_DELETED;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_NOT_FOUND;

@@ -1,4 +1,4 @@
-package com.thundashop.services.gotoservice;
+package com.thundashop.services.validatorservice;
 
 import com.thundashop.core.gotohub.dto.GotoBookingRequest;
 import com.thundashop.core.gotohub.dto.GotoException;

@@ -43,6 +43,9 @@ import com.thundashop.core.gotohub.dto.*;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.zauiactivity.ZauiActivityManager;
 import com.thundashop.services.gotoservice.*;
+import com.thundashop.services.validatorservice.IGotoBookingRequestValidationService;
+import com.thundashop.services.validatorservice.IGotoCancellationValidationService;
+import com.thundashop.services.validatorservice.IGotoConfirmBookingValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.stereotype.Component;
@@ -256,6 +259,11 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             handleNewBookingError(booking, SAVE_BOOKING_FAIL.message, SAVE_BOOKING_FAIL.code);
             return new GoToApiResponse(false, SAVE_BOOKING_FAIL.code, SAVE_BOOKING_FAIL.message, null);
         }
+    }
+
+    @Override
+    public GoToApiResponse confirmBooking(String reservationId) {
+        return confirmBooking(reservationId, null);
     }
 
     @Override

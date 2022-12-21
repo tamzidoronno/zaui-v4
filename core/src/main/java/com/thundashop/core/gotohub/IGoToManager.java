@@ -23,14 +23,14 @@ public interface IGoToManager {
      *
      * @return GoToApiResponse
      */
-    public GoToApiResponse getHotelInformation();
+    GoToApiResponse getHotelInformation();
 
     /**
      * Get all {@link com.thundashop.core.gotohub.dto.RatePlan} of all types of room using virtual room methodology!
      *
      * @return GoToApiResponse
      */
-    public GoToApiResponse getRoomTypeDetails();
+    GoToApiResponse getRoomTypeDetails();
 
     /**
      * Inventory allotment within date of the hotel
@@ -39,7 +39,7 @@ public interface IGoToManager {
      * @return GoToApiResponse
      */
     @ForceAsync
-    public GoToApiResponse getPriceAndAllotmentWithDate(Date from, Date to);
+    GoToApiResponse getPriceAndAllotmentWithDate(Date from, Date to);
 
     /**
      * Inventory allotment of the hotel (1 month)
@@ -47,7 +47,7 @@ public interface IGoToManager {
      * @return GoToApiResponse
      */
     @ForceAsync
-    public GoToApiResponse getPriceAndAllotment();
+    GoToApiResponse getPriceAndAllotment();
 
     /**
      * Save new Goto Booking
@@ -55,7 +55,15 @@ public interface IGoToManager {
      * @param booking data
      * @return GoToApiResponse
      */
-    public GoToApiResponse saveBooking(GotoBookingRequest booking);
+    GoToApiResponse saveBooking(GotoBookingRequest booking);
+
+    /**
+     * Confirm Goto Booking
+     *
+     * @param reservationId: booking Id
+     * @return GoToApiResponse
+     */
+    GoToApiResponse confirmBooking(String reservationId);
 
     /**
      * Confirm Goto Booking
@@ -64,7 +72,7 @@ public interface IGoToManager {
      * @param confirmBookingReq: Goto Confirmed Booking Body
      * @return GoToApiResponse
      */
-    public GoToApiResponse confirmBooking(String reservationId, GotoConfirmBookingRequest confirmBookingReq);
+    GoToApiResponse confirmBooking(String reservationId, GotoConfirmBookingRequest confirmBookingReq);
 
     /**
      * Cancel Goto Booking
@@ -72,13 +80,13 @@ public interface IGoToManager {
      * @param reservationId: booking Id
      * @return GoToApiResponse
      */
-    public GoToApiResponse cancelBooking(String reservationId);
+    GoToApiResponse cancelBooking(String reservationId);
 
     /**
      * Cancel Unpaid Goto Bookings
      *
      */
-    public void cancelUnpaidBookings();
+    void cancelUnpaidBookings();
 
     /**
      * Get GoTo related configurations
@@ -86,7 +94,7 @@ public interface IGoToManager {
      * @return GoToApiResponse
      */
     //@Administrator
-    public GoToConfiguration getConfiguration();
+    GoToConfiguration getConfiguration();
 
     /**
      * Save goto related configuration
@@ -95,7 +103,7 @@ public interface IGoToManager {
      * @return <code>true</code> if saved, <code>false</code> if failed
      */
     //@Administrator
-    public boolean saveConfiguration(GoToConfiguration configuration);
+    boolean saveConfiguration(GoToConfiguration configuration);
 
     /**
      * Save goto related configuration

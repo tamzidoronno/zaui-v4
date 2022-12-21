@@ -19,6 +19,9 @@ import com.thundashop.core.pagemanager.data.SavedCommonPageData;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.ProductConfiguration;
 import com.thundashop.core.usermanager.UserManager;
+
+import lombok.extern.slf4j.Slf4j;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,6 +40,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @GetShopSession
+@Slf4j
 public class PageManager extends ManagerBase implements IPageManager {
 
     HashMap<String, Page> pages = new HashMap();
@@ -193,7 +197,12 @@ public class PageManager extends ManagerBase implements IPageManager {
             return null;
         }
         
-        page = finalizePage(page);
+        try {
+            page = finalizePage(page);
+        }
+        catch(Exception ex) {
+            log.error("Failed to finalize page. Page id: {}, Reason: {}. Actual error: {}", id, ex.getMessage(), ex);
+        }
         gsTiming("After finalize function");
         return page;
     }

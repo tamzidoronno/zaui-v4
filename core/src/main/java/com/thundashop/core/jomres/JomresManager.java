@@ -1,6 +1,5 @@
 package com.thundashop.core.jomres;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
@@ -352,7 +351,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
     private Set<String> updateAndGetPmsBookingIdsOfBlankBookings(Date start, Date end, int propertyId,
             String bookingItemId)
-            throws Exception, ParseException {
+            throws Exception {
         Set<String> jomresBookingRoomIds = jomresToPmsBookingMap.values().stream().map(o -> o.pmsRoomId)
                 .collect(Collectors.toSet());
 

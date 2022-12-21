@@ -36,6 +36,8 @@ public enum GoToStatusCodes {
     ACTIVITY_UNIT_ITEM_INCORRECT(1319, "Goto Booking Failed.. Reason: Activity unit item is missing or empty"),
     ACTIVITY_START_TIME_MISSING(1320, "Goto Booking Failed.. Reason: Activity availability start time is missing"),
     ACTIVITY_END_TIME_MISSING(1321, "Goto Booking Failed.. Reason: Activity availability end time is missing"),
+    ACTIVITY_PRICING_MISSING(1322, "Goto Booking Failed.. Reason: Activity pricing is missing"),
+    ACTIVITY_PRICING_INVALID_TAX_RATE(1323, "Goto Booking Failed.. Reason: Activity pricing has tax rates which are not in Zauistay"),
 
     BOOKING_CONFIRMATION_SUCCESS(1400, "Goto Booking has been Confirmed"),
     BOOKING_NOT_FOUND(1401, "Goto Booking Confirmation Failed.. Reason: Booking Not Found"),

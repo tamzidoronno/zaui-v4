@@ -39,6 +39,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.zauiactivity.ZauiActivityManager;
 import com.thundashop.services.gotoservice.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,9 +118,11 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     @Autowired
     StoreApplicationPool storeApplicationPool;
     @Autowired
+    MessageManager messageManager;
+    @Autowired
     OrderManager orderManager;
     @Autowired
-    MessageManager messageManager;
+    ProductManager productManager;
     @Autowired
     UserManager userManager;
     @Autowired
@@ -246,7 +249,8 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                     storeManager.getStoreSettingsApplicationKey(CURRENCY_CODE),
                     pmsManager.getConfiguration(),
                     bookingEngineNew.getSessionInfo(),
-                    zauiActivityManager.getSessionInfo());
+                    zauiActivityManager.getSessionInfo(),
+                    productManager.getSessionInfo());
             validateBookingAllotmentRestrictions(booking);
             PmsBooking pmsBooking = getBooking(booking);
             if (pmsBooking == null) {

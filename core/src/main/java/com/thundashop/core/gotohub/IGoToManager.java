@@ -8,6 +8,7 @@ import com.thundashop.core.common.GetShopMultiLayerSession;
 import com.thundashop.core.gotohub.dto.GoToApiResponse;
 import com.thundashop.core.gotohub.dto.GoToConfiguration;
 import com.thundashop.core.gotohub.dto.GotoBookingRequest;
+import com.thundashop.core.gotohub.dto.GotoConfirmBookingRequest;
 import com.thundashop.core.pmsmanager.PmsBookingRooms;
 
 /**
@@ -60,9 +61,10 @@ public interface IGoToManager {
      * Confirm Goto Booking
      *
      * @param reservationId: booking Id
+     * @param confirmBookingReq: Goto Confirmed Booking Body
      * @return GoToApiResponse
      */
-    public GoToApiResponse confirmBooking(String reservationId);
+    public GoToApiResponse confirmBooking(String reservationId, GotoConfirmBookingRequest confirmBookingReq);
 
     /**
      * Cancel Goto Booking

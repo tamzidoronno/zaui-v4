@@ -5,6 +5,7 @@ import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_NOT_F
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.PAYMENT_METHOD_NOT_FOUND;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
+import com.thundashop.core.gotohub.dto.GotoConfirmBookingRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +20,8 @@ public class GotoConfirmBookingValidationService implements IGotoConfirmBookingV
     IPmsBookingService pmsBookingService;
 
     @Override
-    public PmsBooking validateConfirmBookingReq(String reservationId, String paymentId, SessionInfo pmsManagerSession)
-            throws GotoException {
+    public PmsBooking validateConfirmBookingReq(String reservationId, String paymentId, SessionInfo pmsManagerSession,
+                                                GotoConfirmBookingRequest gotoConfirmBookingReq) throws GotoException {
         PmsBooking booking = pmsBookingService.getPmsBookingById(reservationId, pmsManagerSession);
         validateBookingId(booking);
         validatePaymentMethod(paymentId);

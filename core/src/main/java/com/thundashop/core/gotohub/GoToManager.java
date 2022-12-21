@@ -39,6 +39,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.thundashop.core.gotohub.dto.*;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.zauiactivity.ZauiActivityManager;
 import com.thundashop.services.gotoservice.*;
@@ -53,22 +54,6 @@ import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.BookingEngineNew;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.gotohub.constant.GotoConstants;
-import com.thundashop.core.gotohub.dto.GoToApiResponse;
-import com.thundashop.core.gotohub.dto.GoToConfiguration;
-import com.thundashop.core.gotohub.dto.GoToRoomData;
-import com.thundashop.core.gotohub.dto.GotoBookingRequest;
-import com.thundashop.core.gotohub.dto.GotoBookingResponse;
-import com.thundashop.core.gotohub.dto.GotoException;
-import com.thundashop.core.gotohub.dto.GotoRoomRequest;
-import com.thundashop.core.gotohub.dto.GotoRoomResponse;
-import com.thundashop.core.gotohub.dto.GotoRoomRestriction;
-import com.thundashop.core.gotohub.dto.Hotel;
-import com.thundashop.core.gotohub.dto.PriceAllotment;
-import com.thundashop.core.gotohub.dto.PriceTotal;
-import com.thundashop.core.gotohub.dto.RatePlan;
-import com.thundashop.core.gotohub.dto.RatePlanCode;
-import com.thundashop.core.gotohub.dto.RoomType;
-import com.thundashop.core.gotohub.dto.RoomTypeCode;
 import com.thundashop.core.gotohub.schedulers.GotoExpireBookingScheduler;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
@@ -274,12 +259,13 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     @Override
-    public GoToApiResponse confirmBooking(String reservationId) {
+    public GoToApiResponse confirmBooking(String reservationId, GotoConfirmBookingRequest confirmBookingReq) {
         try {
             saveSchedulerAsCurrentUser();
             PmsBooking pmsBooking = confirmBookingValService.validateConfirmBookingReq(reservationId,
                     goToConfiguration.getPaymentTypeId(),
-                    pmsManager.getSessionInfo());
+                    pmsManager.getSessionInfo(),
+                    confirmBookingReq);
             pmsBooking = setPaymentMethod(pmsBooking);
             handlePaymentOrder(pmsBooking, getCheckoutDateFromPmsBookingRooms(pmsBooking.rooms));
             return new GoToApiResponse(true, BOOKING_CONFIRMATION_SUCCESS.code, BOOKING_CONFIRMATION_SUCCESS.message,

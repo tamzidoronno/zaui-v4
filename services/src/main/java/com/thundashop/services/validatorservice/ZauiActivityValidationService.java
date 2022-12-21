@@ -84,7 +84,7 @@ public class ZauiActivityValidationService implements IZauiActivityValidationSer
                 invalidTaxRates.add(String.valueOf(rateFromBooking));
         }
         if(!invalidTaxRates.isEmpty())
-            throw new GotoException(ACTIVITY_PRICING_INVALID_TAX_RATE.code, ACTIVITY_PRICING_MISSING.message
+            throw new GotoException(ACTIVITY_PRICING_INVALID_TAX_RATE.code, ACTIVITY_PRICING_INVALID_TAX_RATE.message
             + ", invalid rates: {" + String.join(", ", invalidTaxRates) + "}");
     }
 }

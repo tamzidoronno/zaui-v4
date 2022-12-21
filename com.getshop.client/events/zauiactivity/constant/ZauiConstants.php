@@ -18,5 +18,8 @@ class zauiactivity_constant_ZauiConstants {
 	/** @var String */
 	public $ZAUI_ACTIVITY_TAG;
 
+	/** @var String */
+	public $ZAUI_STAY_TAG;
+
 }
 ?>

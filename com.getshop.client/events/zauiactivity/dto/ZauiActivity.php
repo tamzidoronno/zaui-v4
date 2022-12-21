@@ -9,5 +9,11 @@ class zauiactivity_dto_ZauiActivity extends core_productmanager_data_Product  {
 	/** @var String */
 	public $supplierId;
 
+	/** @var String */
+	public $supplierName;
+
+	/** @var String */
+	public $currency;
+
 }
 ?>

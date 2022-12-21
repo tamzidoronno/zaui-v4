@@ -111,7 +111,6 @@ public class GotoHoldBookingService implements IGotoHoldBookingService{
         activityItem.setOptionId(bookedOption.getId());
         activityItem.setAvailabilityId(octoBooking.getAvailabilityId());
 //        activityItem.setUnits();
-        activityItem.setUnpaidAmount(octoBooking.getPricing().getTotal());
         activityItem.setNotes(octoBooking.getNotes());
         activityItem.setLocalDateTimeStart(octoBooking.getAvailability().getLocalDateTimeStart());
         activityItem.setLocalDateTimeEnd(octoBooking.getAvailability().getLocalDateTimeEnd());

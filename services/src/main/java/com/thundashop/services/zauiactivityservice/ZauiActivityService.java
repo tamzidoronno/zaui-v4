@@ -93,8 +93,6 @@ public class ZauiActivityService implements IZauiActivityService {
             throw new ZauiException(ZauiStatusCodes.MISSING_PARAMS);
         OctoBooking octoReservedBooking = reserveOctoBooking(activityItem);
         activityItem.setOctoBooking(octoReservedBooking);
-        activityItem.price = getPricingFromOctoTaxObject(activityItem.getOctoBooking().getPricing()).getTotal();
-        activityItem.priceExTaxes = getPricingFromOctoTaxObject(activityItem.getOctoBooking().getPricing()).getSubtotal();
         OctoBooking octoConfirmedBooking = confirmOctoBooking(activityItem, booking,booker,octoReservedBooking);
         booking = addActivityToBooking(activityItem, octoConfirmedBooking, booking);
         return booking;

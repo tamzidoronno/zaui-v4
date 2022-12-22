@@ -63,7 +63,7 @@ public interface IGoToManager {
      * @param reservationId: booking Id
      * @return GoToApiResponse
      */
-    GoToApiResponse confirmBooking(String reservationId);
+    GoToApiResponse confirmBookingWithActivities(String reservationId);
 
     /**
      * Confirm Goto Booking
@@ -72,7 +72,7 @@ public interface IGoToManager {
      * @param confirmBookingReq: Goto Confirmed Booking Body
      * @return GoToApiResponse
      */
-    GoToApiResponse confirmBooking(String reservationId, GotoConfirmBookingRequest confirmBookingReq);
+    GoToApiResponse confirmBookingWithActivities(String reservationId, GotoConfirmBookingRequest confirmBookingReq);
 
     /**
      * Cancel Goto Booking

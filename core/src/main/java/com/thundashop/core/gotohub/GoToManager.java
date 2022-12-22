@@ -122,17 +122,19 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     @Autowired
     IGotoBookingCancellationService bookingCancellationService;
     @Autowired
-    IGotoHotelInformationService gotoHotelInformationService;
-    @Autowired
     IGotoBookingRequestValidationService bookingRequestValidationService;
     @Autowired
     IGotoCancellationValidationService cancellationValidationService;
     @Autowired
-    IPmsBookingService pmsBookingService;
-    @Autowired
     IGotoConfirmBookingValidationService confirmBookingValService;
     @Autowired
+    IGotoConfirmBookingService confirmBookingService;
+    @Autowired
+    IGotoHotelInformationService gotoHotelInformationService;
+    @Autowired
     IGotoHoldBookingService holdBookingService;
+    @Autowired
+    IPmsBookingService pmsBookingService;
 
     private GoToConfiguration goToConfiguration;
     private final String CURRENCY_CODE = "currencycode";
@@ -262,20 +264,23 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     @Override
-    public GoToApiResponse confirmBooking(String reservationId) {
-        return confirmBooking(reservationId, null);
+    public GoToApiResponse confirmBookingWithActivities(String reservationId) {
+        return confirmBookingWithActivities(reservationId, null);
     }
 
     @Override
-    public GoToApiResponse confirmBooking(String reservationId, GotoConfirmBookingRequest confirmBookingReq) {
+    public GoToApiResponse confirmBookingWithActivities(String reservationId, GotoConfirmBookingRequest confirmBookingReq) {
         try {
             saveSchedulerAsCurrentUser();
             PmsBooking pmsBooking = confirmBookingValService.validateConfirmBookingReq(reservationId,
                     goToConfiguration.getPaymentTypeId(),
                     pmsManager.getSessionInfo(),
                     confirmBookingReq);
-            pmsBooking = setPaymentMethod(pmsBooking);
-            handlePaymentOrder(pmsBooking, getCheckoutDateFromPmsBookingRooms(pmsBooking.rooms));
+            pmsBooking = confirmBookingService.confirmGotoBooking(pmsBooking.id, confirmBookingReq, pmsManager.getSessionInfo());
+            pmsManager.saveBooking(pmsBooking);
+            String paymentMethodNameFromGoto = confirmBookingReq == null ? "GOTO_PAYMENT" : confirmBookingReq.getPaymentMethod();
+            pmsBooking = confirmPayment(pmsBooking, paymentMethodNameFromGoto);
+            pmsManager.saveBooking(pmsBooking);
             return new GoToApiResponse(true, BOOKING_CONFIRMATION_SUCCESS.code, BOOKING_CONFIRMATION_SUCCESS.message,
                     null);
         } catch (GotoException e) {
@@ -467,12 +472,11 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         getSession().currentUser = null;
     }
 
-    private void handlePaymentOrder(PmsBooking pmsBooking, String checkoutDate) throws Exception {
+    private void handleOrderForGotoPayment(PmsBooking pmsBooking, Date checkoutDate) throws Exception {
         try {
             Date endInvoiceAt = new Date();
-            checkinOutDateFormatter.setLenient(false);
-            if (checkinOutDateFormatter.parse(checkoutDate).after(endInvoiceAt))
-                endInvoiceAt = checkinOutDateFormatter.parse(checkoutDate);
+            if (checkoutDate.after(endInvoiceAt))
+                endInvoiceAt = checkoutDate;
 
             NewOrderFilter filter = new NewOrderFilter();
             filter.createNewOrder = false;
@@ -523,7 +527,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         return new GoToApiResponse(false, errorCode, errorMessage, null);
     }
 
-    private String getCheckoutDateFromPmsBookingRooms(List<PmsBookingRooms> rooms) {
+    private Date getCheckoutDateFromPmsBookingRooms(List<PmsBookingRooms> rooms) {
         Date checkOutDate = null;
         for (PmsBookingRooms room : rooms) {
             if (checkOutDate == null)
@@ -531,7 +535,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             else if (checkOutDate.before(room.date.end))
                 checkOutDate = room.date.end;
         }
-        return checkinOutDateFormatter.format(checkOutDate);
+        return checkOutDate;
     }
 
     private GotoBookingResponse getBookingResponse(String reservationId, GotoBookingRequest booking, double totalPrice)
@@ -599,7 +603,19 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         }
     }
 
-    private PmsBooking setPaymentMethod(PmsBooking pmsBooking) throws Exception {
+    private PmsBooking confirmPayment(PmsBooking pmsBooking, String gotoPaymentMethodName) throws Exception {
+        if(gotoPaymentMethodName.equals("GOTO_PAYMENT"))
+            return handleGotoPayment(pmsBooking);
+        return pmsBooking;
+    }
+
+    private PmsBooking handleGotoPayment(PmsBooking pmsBooking) throws Exception {
+        pmsBooking = setDefaultPaymentMethod(pmsBooking);
+        handleOrderForGotoPayment(pmsBooking, getCheckoutDateFromPmsBookingRooms(pmsBooking.rooms));
+        return pmsBooking;
+    }
+
+    private PmsBooking setDefaultPaymentMethod(PmsBooking pmsBooking) throws Exception {
         String paymentMethodId = goToConfiguration.getPaymentTypeId();
         activatePaymentMethod(paymentMethodId);
         pmsBooking.paymentType = paymentMethodId;

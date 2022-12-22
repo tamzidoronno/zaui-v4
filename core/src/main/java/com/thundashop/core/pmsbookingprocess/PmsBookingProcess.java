@@ -21,6 +21,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import com.thundashop.repository.exceptions.ZauiException;
+import com.thundashop.services.zauiactivityservice.ZauiActivityService;
 import com.thundashop.zauiactivity.constant.ZauiConstants;
 import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,6 +130,9 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
 
     @Autowired
     InvoiceManager invoiceManager;
+
+    @Autowired
+    ZauiActivityService zauiActivityService;
 
     public boolean testTerminalPrinter = false;
     public boolean testTerminalPaymentTerminal = false;
@@ -792,7 +797,13 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         addGroupAddons(result);
         addActiveCampaigns(result);
         validateFields(result);
+        addZauiActivities(result);
         return result;
+    }
+
+    private void addZauiActivities(GuestAddonsSummary result) {
+        PmsBooking currentBooking = pmsManager.getCurrentBooking();
+        result.zauiActivityItems = currentBooking.bookingZauiActivityItems;
     }
 
     private void checkIsAddedToRoom(AddonItem toAddAddon, PmsBookingRooms room, PmsBookingAddonItem item) {
@@ -915,7 +926,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     }
 
     @Override
-    public BookingResult completeBooking(CompleteBookingInput input) {
+    public BookingResult completeBooking(CompleteBookingInput input) throws ZauiException {
         User loggedOn = userManager.getLoggedOnUser();
         PmsBooking booking = null;
         if (loggedOn != null) {
@@ -988,6 +999,13 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         res.userData = userData;
 
         // pmsManager.calculateCountryFromPhonePrefix(booking);
+
+        // confirm zaui activity booking
+        if(!booking.bookingZauiActivityItems.isEmpty()){
+            for(BookingZauiActivityItem activityItem : booking.bookingZauiActivityItems){
+                zauiActivityService.confirmOctoBooking(activityItem,booking,usr);
+            }
+        }
 
         return res;
     }

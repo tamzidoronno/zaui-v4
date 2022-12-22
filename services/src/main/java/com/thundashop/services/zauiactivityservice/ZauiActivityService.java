@@ -3,7 +3,10 @@ package com.thundashop.services.zauiactivityservice;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import com.thundashop.core.pmsmanager.PmsOrderCreateRow;
+import com.thundashop.core.pmsmanager.PmsOrderCreateRowItemLine;
 import com.thundashop.zauiactivity.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -93,7 +96,7 @@ public class ZauiActivityService implements IZauiActivityService {
             throw new ZauiException(ZauiStatusCodes.MISSING_PARAMS);
         OctoBooking octoReservedBooking = reserveOctoBooking(activityItem);
         activityItem.setOctoBooking(octoReservedBooking);
-        OctoBooking octoConfirmedBooking = confirmOctoBooking(activityItem, booking,booker,octoReservedBooking);
+        OctoBooking octoConfirmedBooking = confirmOctoBooking(activityItem, booking,booker);
         booking = addActivityToBooking(activityItem, octoConfirmedBooking, booking);
         return booking;
     }
@@ -142,8 +145,8 @@ public class ZauiActivityService implements IZauiActivityService {
         return octoApiService.reserveBooking(activityItem.supplierId,bookingReserveRequest);
     }
 
-    private OctoBooking confirmOctoBooking(BookingZauiActivityItem activityItem, PmsBooking booking, User booker,
-            OctoBooking octoReservedBooking) throws ZauiException {
+    @Override
+    public OctoBooking confirmOctoBooking(BookingZauiActivityItem activityItem, PmsBooking booking, User booker) throws ZauiException {
         OctoConfirmContact contact = new OctoConfirmContact()
                 .setFullName(booker.fullName)
                 .setEmailAddress(booker.emailAddress)
@@ -152,7 +155,7 @@ public class ZauiActivityService implements IZauiActivityService {
         OctoBookingConfirmRequest confirmRequest = new OctoBookingConfirmRequest()
                 .setContact(contact)
                 .setEmailConfirmation(true);
-        return octoApiService.confirmBooking(activityItem.supplierId, octoReservedBooking.getId(), confirmRequest);
+        return octoApiService.confirmBooking(activityItem.supplierId, activityItem.getOctoBooking().getId(), confirmRequest);
     }
 
     @Override
@@ -238,5 +241,24 @@ public class ZauiActivityService implements IZauiActivityService {
         //activityItem.setSupplierName(zauiActivity.getSupplierName());
         activityItem.setOctoBooking(octoBooking);
         return activityItem;
+    }
+
+    @Override
+    public PmsOrderCreateRow createOrderCreateRowForZauiActivities(List<BookingZauiActivityItem> activityItems) {
+        if(activityItems.isEmpty())
+            return null;
+        PmsOrderCreateRow orderCreateRow = new PmsOrderCreateRow();
+        orderCreateRow.roomId = "virtual";
+        orderCreateRow.items = activityItems.stream().map(activity -> {
+            PmsOrderCreateRowItemLine row = new PmsOrderCreateRowItemLine();
+            row.createOrderOnProductId = activity.getZauiActivityId();
+            row.count = 1;
+            row.price = activity.price;
+            row.orderItemType = ZauiConstants.ZAUI_ACTIVITY_TAG;
+            row.setAddonId(activity.addonId);
+            row.setTextOnOrder(activity.getName());
+            return row;
+        }).collect(Collectors.toList());
+        return orderCreateRow;
     }
 }

@@ -43,6 +43,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
+
+import com.thundashop.services.zauiactivityservice.IZauiActivityService;
+import com.thundashop.services.zauiactivityservice.ZauiActivityService;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,6 +82,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     
     @Autowired
     GBat10AccountingSystem gBat10AccountingSystem;
+
+    @Autowired
+    IZauiActivityService zauiActivityService;
     
     private Double getAddonsPriceIncludedInRoom(PmsBookingRooms room, Date startDate, Date endDate) {
         double res = 0.0;
@@ -3839,7 +3845,12 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         
         String userId = booking.userId != null && !booking.userId.isEmpty() ? booking.userId : getSession().currentUser.id;
-        
+
+        // add zaui activity items to order rows
+        if(!booking.bookingZauiActivityItems.isEmpty()){
+            createOrder.add(zauiActivityService.createOrderCreateRowForZauiActivities(booking.bookingZauiActivityItems));
+        }
+
         return pmsManager.createOrderFromCheckout(createOrder, roomId, userId);
     }
 }

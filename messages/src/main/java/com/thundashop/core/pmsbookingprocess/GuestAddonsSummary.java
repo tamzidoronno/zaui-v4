@@ -1,5 +1,7 @@
 package com.thundashop.core.pmsbookingprocess;
 
+import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -17,6 +19,7 @@ public class GuestAddonsSummary {
     public boolean agreedToTerms = false;
     public boolean isLoggedOn = false;
     public String loggedOnName = "";
+    public List<BookingZauiActivityItem> zauiActivityItems = new ArrayList<>();
 
     List<AddonItem> getAllItems() {
         HashMap<String, AddonItem> items = new HashMap();

@@ -265,11 +265,9 @@ public class PmsBookingSimpleFilter {
         simple.priceType = booking.priceType;
         HashMap<Integer, PmsBookingAddonItem> addons = manager.getConfigurationSecure().addonConfiguration;
         for(PmsBookingAddonItem item : room.addons) {
-            if(!item.isBreakfastItem) {
-                //Only checking real setup is that is not marked as breakfast during booking
-                PmsBookingAddonItem originalItem = addons.get(item.addonType);
-                item.isBreakfastItem = originalItem != null && originalItem.isBreakfastItem;
-            }
+            //Always checking real setup is that is not marked as breakfast
+            PmsBookingAddonItem originalItem = addons.get(item.addonType);
+            item.isBreakfastItem = originalItem != null && originalItem.isBreakfastItem;
             if(item.addonType == PmsBookingAddonItem.AddonTypes.LATECHECKOUT) { simple.latecheckout = true; }
             if(item.addonType == PmsBookingAddonItem.AddonTypes.EXTRABED) { simple.extrabed = true; }
             if(item.addonType == PmsBookingAddonItem.AddonTypes.EXTRACHILDBED) { simple.extrabed = true; }

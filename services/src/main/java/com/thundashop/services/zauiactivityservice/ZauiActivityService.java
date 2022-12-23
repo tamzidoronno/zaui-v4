@@ -1,8 +1,6 @@
 package com.thundashop.services.zauiactivityservice;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.thundashop.core.pmsmanager.PmsOrderCreateRow;
@@ -111,6 +109,7 @@ public class ZauiActivityService implements IZauiActivityService {
         activityItem.priceExTaxes = getPricingFromOctoTaxObject(activityItem.getOctoBooking().getPricing()).getSubtotal();
         activityItem.setUnpaidAmount(activityItem.price);
         booking.bookingZauiActivityItems.add(activityItem);
+        log.info("activity added to booking {}",activityItem);
         return booking;
     }
     @Override
@@ -132,6 +131,13 @@ public class ZauiActivityService implements IZauiActivityService {
         BookingZauiActivityItem activityItem = mapActivityToBookingZauiActivityItem(octoReserveBooking,sessionInfo);
         activityItem.setUnits(activity.getUnits());
         booking = addActivityToBooking(activityItem,octoReserveBooking,booking);
+        return booking;
+    }
+
+    @Override
+    public PmsBooking removeActivityFromWebBooking(AddZauiActivityToWebBookingDto activity, PmsBooking booking, SessionInfo sessionInfo) {
+        booking.bookingZauiActivityItems.removeIf(item -> item.getAvailabilityId().equals(activity.getAvailabilityId()) && item.getOptionId().equals(activity.getOptionId()));
+        log.info("activity removed from booking {}",activity);
         return booking;
     }
 
@@ -157,6 +163,7 @@ public class ZauiActivityService implements IZauiActivityService {
                 .setEmailConfirmation(true);
         return octoApiService.confirmBooking(activityItem.supplierId, activityItem.getOctoBooking().getId(), confirmRequest);
     }
+
 
     @Override
     public void cancelActivityFromBooking(BookingZauiActivityItem activityItem) throws ZauiException {
@@ -233,14 +240,34 @@ public class ZauiActivityService implements IZauiActivityService {
         activityItem.setOptionTitle(bookedOption.getInternalName());
         activityItem.setOptionId(bookedOption.getId());
         activityItem.setAvailabilityId(octoBooking.getAvailabilityId());
-//        activityItem.setUnits();
+        activityItem.setUnits(getUnitFromOctoBookingUnitItems(octoBooking.getUnitItems()));
         activityItem.setNotes(octoBooking.getNotes());
         activityItem.setLocalDateTimeStart(octoBooking.getAvailability().getLocalDateTimeStart());
         activityItem.setLocalDateTimeEnd(octoBooking.getAvailability().getLocalDateTimeEnd());
         activityItem.setSupplierId(zauiActivity.getSupplierId());
-        //activityItem.setSupplierName(zauiActivity.getSupplierName());
+        activityItem.setSupplierName(zauiActivity.getSupplierName());
         activityItem.setOctoBooking(octoBooking);
         return activityItem;
+    }
+
+    private List<Unit> getUnitFromOctoBookingUnitItems(List<UnitItemOnBooking> unitItems) {
+        Map<String, Integer> unitQuantity = new HashMap<>();
+        for(UnitItemOnBooking unitItem : unitItems) {
+            int count = 0;
+            if(unitQuantity.containsKey(unitItem.getUnitId())) {
+                count = unitQuantity.get(unitItem.getUnitId());
+            }
+            count++;
+            unitQuantity.put(unitItem.getUnitId(), count);
+        }
+
+        return unitQuantity.keySet().stream()
+                .map(unitId-> {
+                    Unit unit = new Unit();
+                    unit.setId(unitId);
+                    unit.setQuantity(unitQuantity.get(unitId));
+                    return unit;
+                }).collect(Collectors.toList());
     }
 
     @Override

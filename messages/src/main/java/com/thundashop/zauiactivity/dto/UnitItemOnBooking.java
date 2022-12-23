@@ -9,8 +9,4 @@ public class UnitItemOnBooking {
     private Object resellerReference;
     private Object supplierReference;
     private Ticket ticket;
-
-    public String getUnitId() {
-        return unitId;
-    }
 }

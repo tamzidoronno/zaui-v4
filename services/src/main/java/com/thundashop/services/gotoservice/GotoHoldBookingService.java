@@ -60,7 +60,8 @@ public class GotoHoldBookingService implements IGotoHoldBookingService{
             pmsBooking.addRoom(room);
         }
         for(GotoActivityReservationDto activity: booking.getActivities()) {
-            BookingZauiActivityItem activityItem = zauiActivityService.mapActivityToBookingZauiActivityItem(activity.getOctoReservationResponse(), zauiActivityManagerSession);
+            BookingZauiActivityItem activityItem = zauiActivityService.mapActivityToBookingZauiActivityItem(
+                    activity.getOctoReservationResponse(), zauiActivityManagerSession);
             pmsBooking = zauiActivityService.addActivityToBooking(activityItem, activity.getOctoReservationResponse(), pmsBooking);
         }
         return pmsBooking;

@@ -264,7 +264,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     @Override
-    public GoToApiResponse confirmBookingWithActivities(String reservationId) {
+    public GoToApiResponse confirmBooking(String reservationId) {
         return confirmBookingWithActivities(reservationId, null);
     }
 
@@ -277,12 +277,12 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                     pmsManager.getSessionInfo(),
                     confirmBookingReq);
             pmsBooking = confirmBookingService.confirmGotoBooking(pmsBooking.id, confirmBookingReq, pmsManager.getSessionInfo());
-            pmsManager.saveBooking(pmsBooking);
+//            pmsManager.saveBooking(pmsBooking);
             String paymentMethodNameFromGoto = confirmBookingReq == null ? "GOTO_PAYMENT" : confirmBookingReq.getPaymentMethod();
-            pmsBooking = confirmPayment(pmsBooking, paymentMethodNameFromGoto);
+            String paymentLink = confirmPayment(pmsBooking, paymentMethodNameFromGoto);
             pmsManager.saveBooking(pmsBooking);
             return new GoToApiResponse(true, BOOKING_CONFIRMATION_SUCCESS.code, BOOKING_CONFIRMATION_SUCCESS.message,
-                    null);
+                    isBlank(paymentLink)? null : new GotoConfirmBookingRes(paymentLink));
         } catch (GotoException e) {
             return handleUpdateBookingError(reservationId, e.getMessage(), e.getStatusCode());
         } catch (Exception e) {
@@ -603,10 +603,16 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         }
     }
 
-    private PmsBooking confirmPayment(PmsBooking pmsBooking, String gotoPaymentMethodName) throws Exception {
-        if(gotoPaymentMethodName.equals("GOTO_PAYMENT"))
-            return handleGotoPayment(pmsBooking);
-        return pmsBooking;
+    private String confirmPayment(PmsBooking pmsBooking, String gotoPaymentMethodName) throws Exception {
+        if(gotoPaymentMethodName.equals("GOTO_PAYMENT")) {
+            pmsManager.saveBooking(handleGotoPayment(pmsBooking));
+            return null;
+        }
+        else {
+            pmsBooking.shortId = isNotBlank(pmsBooking.shortId) ? pmsBooking.shortId : pmsManager.getShortUniqueId(pmsBooking.id);
+            pmsManager.saveBooking(pmsBooking);
+            return pmsInvoiceManager.getPaymentLinkConfig().webAdress + "pr.php?id=" + pmsBooking.shortId;
+        }
     }
 
     private PmsBooking handleGotoPayment(PmsBooking pmsBooking) throws Exception {

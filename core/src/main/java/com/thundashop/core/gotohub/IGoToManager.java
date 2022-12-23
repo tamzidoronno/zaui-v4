@@ -63,7 +63,7 @@ public interface IGoToManager {
      * @param reservationId: booking Id
      * @return GoToApiResponse
      */
-    GoToApiResponse confirmBookingWithActivities(String reservationId);
+    GoToApiResponse confirmBooking(String reservationId);
 
     /**
      * Confirm Goto Booking

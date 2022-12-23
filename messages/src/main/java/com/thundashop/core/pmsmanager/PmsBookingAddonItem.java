@@ -90,6 +90,7 @@ public class PmsBookingAddonItem extends TranslationHandler {
     public String referenceId = "";
     public Integer taxGroupNumber = null;
     public String departmentRemoteId = "";
+    public boolean isBreakfastItem = false;
     
     
     Map<String, String> variations = new HashMap<>();

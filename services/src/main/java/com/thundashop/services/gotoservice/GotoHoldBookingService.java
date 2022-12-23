@@ -5,17 +5,15 @@ import com.thundashop.core.gotohub.dto.*;
 import com.thundashop.core.pmsmanager.*;
 import com.thundashop.repository.utils.SessionInfo;
 import com.thundashop.services.zauiactivityservice.IZauiActivityService;
-import com.thundashop.zauiactivity.dto.ZauiActivity;
 import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
-import com.thundashop.zauiactivity.dto.Unit;
-import com.thundashop.zauiactivity.dto.OctoBooking;
-import com.thundashop.zauiactivity.dto.ActivityOption;
-import com.thundashop.zauiactivity.dto.UnitItemOnBooking;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.thundashop.core.gotohub.constant.GotoConstants.DAILY_PRICE_DATE_FORMATTER;
@@ -62,7 +60,7 @@ public class GotoHoldBookingService implements IGotoHoldBookingService{
             pmsBooking.addRoom(room);
         }
         for(GotoActivityReservationDto activity: booking.getActivities()) {
-            BookingZauiActivityItem activityItem = mapActivityToBookingZauiActivityItem(activity, zauiActivityManagerSession);
+            BookingZauiActivityItem activityItem = zauiActivityService.mapActivityToBookingZauiActivityItem(activity.getOctoReservationResponse(), zauiActivityManagerSession);
             pmsBooking = zauiActivityService.addActivityToBooking(activityItem, activity.getOctoReservationResponse(), pmsBooking);
         }
         return pmsBooking;
@@ -96,27 +94,6 @@ public class GotoHoldBookingService implements IGotoHoldBookingService{
         return pmsBookingRoom;
     }
 
-    private BookingZauiActivityItem mapActivityToBookingZauiActivityItem(GotoActivityReservationDto activity, SessionInfo sessionInfo) {
-        BookingZauiActivityItem activityItem = new BookingZauiActivityItem();
-        OctoBooking octoBooking = activity.getOctoReservationResponse();
-        ZauiActivity zauiActivity = zauiActivityService.getZauiActivityByOptionId(octoBooking.getOptionId(), sessionInfo);
-        ActivityOption bookedOption = zauiActivity.activityOptionList.stream()
-                .filter(option -> option.getId().equals(octoBooking.getOptionId()))
-                .findAny().orElse(null);
-        activityItem.setZauiActivityId(zauiActivity.id);
-        activityItem.setOctoProductId(zauiActivity.getProductId());
-        activityItem.setOptionTitle(bookedOption.getInternalName());
-        activityItem.setOptionId(bookedOption.getId());
-        activityItem.setAvailabilityId(octoBooking.getAvailabilityId());
-        activityItem.setUnits(getUnitFromOctoBookingUnitItems(octoBooking.getUnitItems()));
-        activityItem.setNotes(octoBooking.getNotes());
-        activityItem.setLocalDateTimeStart(octoBooking.getAvailability().getLocalDateTimeStart());
-        activityItem.setLocalDateTimeEnd(octoBooking.getAvailability().getLocalDateTimeEnd());
-        activityItem.setSupplierId(zauiActivity.getSupplierId());
-        activityItem.setSupplierName(zauiActivity.getSupplierName());
-        activityItem.setOctoBooking(octoBooking);
-        return activityItem;
-    }
 
     private PmsBookingRooms setCheckinOutDate(PmsBookingRooms room, GotoRoomRequest gotoBookingRoom, PmsConfiguration config)
             throws ParseException {
@@ -146,24 +123,5 @@ public class GotoHoldBookingService implements IGotoHoldBookingService{
         }
         pmsBookingRoom.totalCost = gotoBookingRoom.getPrice().getTotalRoomPrice();
         return pmsBookingRoom;
-    }
-    private List<Unit> getUnitFromOctoBookingUnitItems(List<UnitItemOnBooking> unitItems) {
-        Map<String, Integer> unitQuantity = new HashMap<>();
-        for(UnitItemOnBooking unitItem : unitItems) {
-            int count = 0;
-            if(unitQuantity.containsKey(unitItem.getUnitId())) {
-                count = unitQuantity.get(unitItem.getUnitId());
-            }
-            count++;
-            unitQuantity.put(unitItem.getUnitId(), count);
-        }
-
-        return unitQuantity.keySet().stream()
-                .map(unitId-> {
-                    Unit unit = new Unit();
-                    unit.setId(unitId);
-                    unit.setQuantity(unitQuantity.get(unitId));
-                    return unit;
-                }).collect(Collectors.toList());
     }
 }

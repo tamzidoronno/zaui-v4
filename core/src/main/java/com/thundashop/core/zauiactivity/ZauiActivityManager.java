@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
+import com.thundashop.core.pmsbookingprocess.GuestAddonsSummary;
+import com.thundashop.core.pmsbookingprocess.PmsBookingProcess;
+import com.thundashop.zauiactivity.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,18 +30,6 @@ import com.thundashop.repository.exceptions.NotUniqueDataException;
 import com.thundashop.repository.exceptions.ZauiException;
 import com.thundashop.services.octoapiservice.IOctoApiService;
 import com.thundashop.services.zauiactivityservice.IZauiActivityService;
-import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
-import com.thundashop.zauiactivity.dto.OctoBooking;
-import com.thundashop.zauiactivity.dto.OctoBookingConfirmRequest;
-import com.thundashop.zauiactivity.dto.OctoBookingReserveRequest;
-import com.thundashop.zauiactivity.dto.OctoProduct;
-import com.thundashop.zauiactivity.dto.OctoProductAvailability;
-import com.thundashop.zauiactivity.dto.OctoProductAvailabilityRequestDto;
-import com.thundashop.zauiactivity.dto.OctoSupplier;
-import com.thundashop.zauiactivity.dto.Pricing;
-import com.thundashop.zauiactivity.dto.TaxData;
-import com.thundashop.zauiactivity.dto.ZauiActivity;
-import com.thundashop.zauiactivity.dto.ZauiActivityConfig;
 
 @Component
 @GetShopSession
@@ -60,6 +51,9 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
 
     @Autowired
     ProductManager productManager;
+
+    @Autowired
+    PmsBookingProcess pmsBookingProcess;
 
     private ZauiActivityConfig config;
 
@@ -124,6 +118,14 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
         User booker = userManager.getUserById(booking.userId);
         booking = zauiActivityService.addActivityToBooking(activityItem, booking, booker);
         pmsManager.saveBooking(booking);
+    }
+
+    @Override
+    public GuestAddonsSummary addActivityToWebBooking(AddZauiActivityToWebBookingDto activity) throws ZauiException {
+        PmsBooking booking = pmsManager.getBooking(activity.getPmsBookingId());
+        booking = zauiActivityService.addActivityToBooking(activity, booking, getSessionInfo());
+        pmsManager.saveBooking(booking);
+        return pmsBookingProcess.getAddonsSummary(new ArrayList<>());
     }
 
     @Override

@@ -137,7 +137,7 @@ public class PmsBookingAddonItem extends TranslationHandler implements Serializa
         return false;
     }
 
-    void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
     

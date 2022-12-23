@@ -1,9 +1,10 @@
 package com.thundashop.services.zauiactivityservice;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
+import com.thundashop.core.pmsmanager.PmsOrderCreateRow;
+import com.thundashop.core.pmsmanager.PmsOrderCreateRowItemLine;
 import com.thundashop.zauiactivity.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -93,9 +94,7 @@ public class ZauiActivityService implements IZauiActivityService {
             throw new ZauiException(ZauiStatusCodes.MISSING_PARAMS);
         OctoBooking octoReservedBooking = reserveOctoBooking(activityItem);
         activityItem.setOctoBooking(octoReservedBooking);
-        activityItem.price = getPricingFromOctoTaxObject(activityItem.getOctoBooking().getPricing()).getTotal();
-        activityItem.priceExTaxes = getPricingFromOctoTaxObject(activityItem.getOctoBooking().getPricing()).getSubtotal();
-        OctoBooking octoConfirmedBooking = confirmOctoBooking(activityItem, booking,booker,octoReservedBooking);
+        OctoBooking octoConfirmedBooking = confirmOctoBooking(activityItem, booking,booker);
         booking = addActivityToBooking(activityItem, octoConfirmedBooking, booking);
         return booking;
     }
@@ -110,6 +109,35 @@ public class ZauiActivityService implements IZauiActivityService {
         activityItem.priceExTaxes = getPricingFromOctoTaxObject(activityItem.getOctoBooking().getPricing()).getSubtotal();
         activityItem.setUnpaidAmount(activityItem.price);
         booking.bookingZauiActivityItems.add(activityItem);
+        log.info("activity added to booking {}",activityItem);
+        return booking;
+    }
+    @Override
+    public PmsBooking addActivityToBooking(AddZauiActivityToWebBookingDto activity, PmsBooking booking, SessionInfo sessionInfo) throws ZauiException {
+        ZauiActivity zauiActivity = getZauiActivityByOptionId(activity.getOptionId(), sessionInfo);
+        ActivityOption bookedOption = zauiActivity.activityOptionList.stream()
+                .filter(option -> option.getId().equals(activity.getOptionId()))
+                .findFirst().orElse(null);
+        if(bookedOption==null) {
+            throw new ZauiException(ZauiStatusCodes.ACTIVITY_NOT_FOUND);
+        }
+        OctoBookingReserveRequest bookingReserveRequest = new OctoBookingReserveRequest()
+                .setProductId(zauiActivity.getProductId())
+                .setOptionId(bookedOption.getId())
+                .setAvailabilityId(activity.getAvailabilityId())
+                .setNotes(ZauiConstants.ZAUI_STAY_TAG)
+                .setUnitItems(mapUnitsForBooking(activity.getUnits()));
+        OctoBooking octoReserveBooking =  octoApiService.reserveBooking(zauiActivity.getSupplierId(),bookingReserveRequest);
+        BookingZauiActivityItem activityItem = mapActivityToBookingZauiActivityItem(octoReserveBooking,sessionInfo);
+        activityItem.setUnits(activity.getUnits());
+        booking = addActivityToBooking(activityItem,octoReserveBooking,booking);
+        return booking;
+    }
+
+    @Override
+    public PmsBooking removeActivityFromWebBooking(AddZauiActivityToWebBookingDto activity, PmsBooking booking, SessionInfo sessionInfo) {
+        booking.bookingZauiActivityItems.removeIf(item -> item.getAvailabilityId().equals(activity.getAvailabilityId()) && item.getOptionId().equals(activity.getOptionId()));
+        log.info("activity removed from booking {}",activity);
         return booking;
     }
 
@@ -123,8 +151,8 @@ public class ZauiActivityService implements IZauiActivityService {
         return octoApiService.reserveBooking(activityItem.supplierId,bookingReserveRequest);
     }
 
-    private OctoBooking confirmOctoBooking(BookingZauiActivityItem activityItem, PmsBooking booking, User booker,
-            OctoBooking octoReservedBooking) throws ZauiException {
+    @Override
+    public OctoBooking confirmOctoBooking(BookingZauiActivityItem activityItem, PmsBooking booking, User booker) throws ZauiException {
         OctoConfirmContact contact = new OctoConfirmContact()
                 .setFullName(booker.fullName)
                 .setEmailAddress(booker.emailAddress)
@@ -133,8 +161,9 @@ public class ZauiActivityService implements IZauiActivityService {
         OctoBookingConfirmRequest confirmRequest = new OctoBookingConfirmRequest()
                 .setContact(contact)
                 .setEmailConfirmation(true);
-        return octoApiService.confirmBooking(activityItem.supplierId, octoReservedBooking.getId(), confirmRequest);
+        return octoApiService.confirmBooking(activityItem.supplierId, activityItem.getOctoBooking().getId(), confirmRequest);
     }
+
 
     @Override
     public void cancelActivityFromBooking(BookingZauiActivityItem activityItem) throws ZauiException {
@@ -192,5 +221,71 @@ public class ZauiActivityService implements IZauiActivityService {
             unitItems.add(item);
         });
         return unitItems;
+    }
+
+    @Override
+    public BookingZauiActivityItem mapActivityToBookingZauiActivityItem(OctoBooking octoBooking, SessionInfo sessionInfo) throws ZauiException {
+        BookingZauiActivityItem activityItem = new BookingZauiActivityItem();
+        ZauiActivity zauiActivity = getZauiActivityByOptionId(octoBooking.getOptionId(), sessionInfo);
+        ActivityOption bookedOption = zauiActivity.activityOptionList.stream()
+                .filter(option -> option.getId().equals(octoBooking.getOptionId()))
+                .findFirst().orElse(null);
+        if(bookedOption==null) {
+            throw new ZauiException(ZauiStatusCodes.ACTIVITY_NOT_FOUND);
+        }
+
+        activityItem.setZauiActivityId(zauiActivity.id);
+        activityItem.setOctoProductId(zauiActivity.getProductId());
+        activityItem.setName(zauiActivity.name);
+        activityItem.setOptionTitle(bookedOption.getInternalName());
+        activityItem.setOptionId(bookedOption.getId());
+        activityItem.setAvailabilityId(octoBooking.getAvailabilityId());
+        activityItem.setUnits(getUnitFromOctoBookingUnitItems(octoBooking.getUnitItems()));
+        activityItem.setNotes(octoBooking.getNotes());
+        activityItem.setLocalDateTimeStart(octoBooking.getAvailability().getLocalDateTimeStart());
+        activityItem.setLocalDateTimeEnd(octoBooking.getAvailability().getLocalDateTimeEnd());
+        activityItem.setSupplierId(zauiActivity.getSupplierId());
+        activityItem.setSupplierName(zauiActivity.getSupplierName());
+        activityItem.setOctoBooking(octoBooking);
+        return activityItem;
+    }
+
+    private List<Unit> getUnitFromOctoBookingUnitItems(List<UnitItemOnBooking> unitItems) {
+        Map<String, Integer> unitQuantity = new HashMap<>();
+        for(UnitItemOnBooking unitItem : unitItems) {
+            int count = 0;
+            if(unitQuantity.containsKey(unitItem.getUnitId())) {
+                count = unitQuantity.get(unitItem.getUnitId());
+            }
+            count++;
+            unitQuantity.put(unitItem.getUnitId(), count);
+        }
+
+        return unitQuantity.keySet().stream()
+                .map(unitId-> {
+                    Unit unit = new Unit();
+                    unit.setId(unitId);
+                    unit.setQuantity(unitQuantity.get(unitId));
+                    return unit;
+                }).collect(Collectors.toList());
+    }
+
+    @Override
+    public PmsOrderCreateRow createOrderCreateRowForZauiActivities(List<BookingZauiActivityItem> activityItems) {
+        if(activityItems.isEmpty())
+            return null;
+        PmsOrderCreateRow orderCreateRow = new PmsOrderCreateRow();
+        orderCreateRow.roomId = "virtual";
+        orderCreateRow.items = activityItems.stream().map(activity -> {
+            PmsOrderCreateRowItemLine row = new PmsOrderCreateRowItemLine();
+            row.createOrderOnProductId = activity.getZauiActivityId();
+            row.count = 1;
+            row.price = activity.price;
+            row.orderItemType = ZauiConstants.ZAUI_ACTIVITY_TAG;
+            row.setAddonId(activity.addonId);
+            row.setTextOnOrder(activity.getName());
+            return row;
+        }).collect(Collectors.toList());
+        return orderCreateRow;
     }
 }

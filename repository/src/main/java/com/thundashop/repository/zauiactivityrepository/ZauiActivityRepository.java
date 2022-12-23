@@ -32,13 +32,8 @@ public class ZauiActivityRepository extends Repository<ZauiActivity> implements 
     @Override
     public ZauiActivity getByOptionId(String optionId, SessionInfo sessionInfo) {
         DBObject query = new BasicDBObject();
-        DBObject elemMatch = new BasicDBObject();
-        DBObject activityOption = new BasicDBObject();
-
-        activityOption.put("id", optionId);
-        elemMatch.put("$elemMatch", activityOption);
         query.put("className", getClassName());
-        query.put("activityOptionList", elemMatch);
+        query.put("activityOptionList.id", optionId);
         query.put("deleted", null);
         return getFirst(query, sessionInfo).orElse(null);
     }

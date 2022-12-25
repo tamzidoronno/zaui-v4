@@ -1,6 +1,6 @@
-package com.thundashop.core.jomres.services;
+package com.thundashop.services.jomresservice;
 
-import static com.thundashop.core.jomres.services.Constants.CHANNEL_ANNOUNCEMENT_URL;
+import static com.thundashop.core.jomres.constants.Constants.CHANNEL_ANNOUNCEMENT_URL;
 
 import java.io.IOException;
 import java.util.HashMap;

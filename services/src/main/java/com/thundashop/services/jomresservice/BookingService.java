@@ -1,7 +1,7 @@
-package com.thundashop.core.jomres.services;
+package com.thundashop.services.jomresservice;
 
-import static com.thundashop.core.jomres.services.Constants.BOOKING_DETAILS_BY_ID;
-import static com.thundashop.core.jomres.services.Constants.LIST_BOOKING_URL;
+import static com.thundashop.core.jomres.constants.Constants.BOOKING_DETAILS_BY_ID;
+import static com.thundashop.core.jomres.constants.Constants.LIST_BOOKING_URL;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

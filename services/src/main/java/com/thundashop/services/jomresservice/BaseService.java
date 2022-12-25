@@ -1,4 +1,4 @@
-package com.thundashop.core.jomres.services;
+package com.thundashop.services.jomresservice;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -18,8 +18,6 @@ import org.apache.oltu.oauth2.client.response.OAuthJSONAccessTokenResponse;
 import org.apache.oltu.oauth2.common.OAuth;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.types.GrantType;
-
-import com.thundashop.core.jomres.ResponseDataParser;
 
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.MultipartBody;

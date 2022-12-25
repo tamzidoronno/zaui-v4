@@ -1,7 +1,4 @@
-package com.thundashop.core.jomres.services;
-
-import static com.thundashop.core.jomres.services.Constants.GET_PROPERTY_DETAILS_URL;
-import static com.thundashop.core.jomres.services.Constants.GET_PROPERTY_IDS_URL_THROUGH_CHANNEL;
+package com.thundashop.services.jomresservice;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -11,6 +8,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import com.thundashop.core.jomres.constants.Constants;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
 import org.apache.oltu.oauth2.client.response.OAuthResourceResponse;
@@ -25,7 +23,7 @@ public class PropertyService extends BaseService {
 
     public List<Integer> getChannelsPropertyIDs(String baseUrl, String token, String channelName) throws Exception {
         try {
-            OAuthClientRequest request = getBearerTokenRequest(baseUrl + GET_PROPERTY_IDS_URL_THROUGH_CHANNEL, token);
+            OAuthClientRequest request = getBearerTokenRequest(baseUrl + Constants.GET_PROPERTY_IDS_URL_THROUGH_CHANNEL, token);
             request.addHeader("X-JOMRES-channel-name", channelName);
             OAuthResourceResponse response = tokenClient.resource(request, "GET", OAuthResourceResponse.class);
             return responseDataParser.parseAllPropertyIds(response, true);
@@ -99,7 +97,7 @@ public class PropertyService extends BaseService {
 
     private JomresProperty getPropertyNameFromPropertyId(
             String baseUrl, String token, String channelName, int propertyId) {
-        String url = baseUrl + GET_PROPERTY_DETAILS_URL + propertyId + "/";
+        String url = baseUrl + Constants.GET_PROPERTY_DETAILS_URL + propertyId + "/";
         try {
             JomresProperty jomresProperty = new JomresProperty();
             jomresProperty.setPropertyId(propertyId);

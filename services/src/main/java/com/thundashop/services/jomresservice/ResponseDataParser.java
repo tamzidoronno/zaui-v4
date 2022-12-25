@@ -1,4 +1,4 @@
-package com.thundashop.core.jomres;
+package com.thundashop.services.jomresservice;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

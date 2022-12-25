@@ -1,15 +1,13 @@
 package com.thundashop.core.jomres.dto;
 
 import com.google.gson.internal.LinkedTreeMap;
+import com.thundashop.core.jomres.constants.Constants;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
-import static com.thundashop.core.jomres.services.Constants.ARRIVAL_DEPARTURE_IN_LIST_DATE_FORMAT;
-import static com.thundashop.core.jomres.services.Constants.CREATED_MODIFIED_IN_DETAILS_DATE_FORMAT;
 
 public class JomresBooking implements Serializable {
     public Date arrivalDate = new Date();
@@ -38,8 +36,8 @@ public class JomresBooking implements Serializable {
 
     public JomresBooking(LinkedTreeMap<String, ?> booking) throws ParseException {
         if (booking == null) return;
-        SimpleDateFormat dateFormat = new SimpleDateFormat(ARRIVAL_DEPARTURE_IN_LIST_DATE_FORMAT);
-        SimpleDateFormat timestampFormat = new SimpleDateFormat(CREATED_MODIFIED_IN_DETAILS_DATE_FORMAT);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(Constants.ARRIVAL_DEPARTURE_IN_LIST_DATE_FORMAT);
+        SimpleDateFormat timestampFormat = new SimpleDateFormat(Constants.CREATED_MODIFIED_IN_DETAILS_DATE_FORMAT);
 
         this.currencyCode = Optional.ofNullable(booking.get("currency_code").toString()).orElse("");
 

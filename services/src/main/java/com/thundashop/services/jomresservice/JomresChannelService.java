@@ -17,7 +17,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 @Slf4j
-public class ChannelService extends BaseService {
+public class JomresChannelService extends JomresApiService {
     public long getChannelId(String baseUrl, String channelName, String token) {
         try {
             OAuthClientRequest request = getBearerTokenRequest(baseUrl + CHANNEL_ANNOUNCEMENT_URL + channelName, token);

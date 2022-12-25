@@ -16,7 +16,7 @@ import com.thundashop.core.jomres.dto.JomresBooking;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class BookingService extends BaseService {
+public class JomresBookingService extends JomresApiService {
 
     public List<JomresBooking> getJomresBookingsBetweenDates(String baseUrl, int propertyUID, String token, Date start, Date end) throws Exception {
         try {

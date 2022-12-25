@@ -10,7 +10,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 @Slf4j
-public class PriceService extends BaseService{
+public class JomresPricingService extends JomresApiService{
     public Map<String, Double> getDailyPriceBetweenDates(String baseUrl, String token, String channel, int jomresPropertyId,
                                               Date start, Date end) throws Exception {
         try {

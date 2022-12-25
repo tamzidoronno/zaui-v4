@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import okhttp3.Response;
 
 @Slf4j
-public class ResponseDataParser {
+public class JomresApiResponseParser {
     Gson gson = new Gson();
 
     public Map<String, Double> parseDailyPriceMatrixBetweenDates(Response response, Date start, Date end)

@@ -27,7 +27,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 @Slf4j
-public class AvailabilityService extends BaseService {
+public class JomresAvailabilityService extends JomresApiService {
 
     public UpdateAvailabilityResponse deleteBlankBooking(String baseUrl, String token, PMSBlankBooking booking) {
         UpdateAvailabilityResponse res = new UpdateAvailabilityResponse();

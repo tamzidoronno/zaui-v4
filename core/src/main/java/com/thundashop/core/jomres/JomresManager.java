@@ -44,11 +44,11 @@ import com.thundashop.core.jomres.dto.JomresGuest;
 import com.thundashop.core.jomres.dto.JomresProperty;
 import com.thundashop.core.jomres.dto.PMSBlankBooking;
 import com.thundashop.core.jomres.dto.UpdateAvailabilityResponse;
-import com.thundashop.services.jomresservice.AvailabilityService;
-import com.thundashop.services.jomresservice.BaseService;
-import com.thundashop.services.jomresservice.BookingService;
-import com.thundashop.services.jomresservice.PriceService;
-import com.thundashop.services.jomresservice.PropertyService;
+import com.thundashop.services.jomresservice.JomresAvailabilityService;
+import com.thundashop.services.jomresservice.JomresApiService;
+import com.thundashop.services.jomresservice.JomresBookingService;
+import com.thundashop.services.jomresservice.JomresPricingService;
+import com.thundashop.services.jomresservice.JomresPropertyService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -89,9 +89,9 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     @Autowired
     StoreApplicationPool storeApplicationPool;
 
-    BaseService jomresService = new BaseService();
-    AvailabilityService availabilityService = new AvailabilityService();
-    PropertyService propertyService = new PropertyService();
+    JomresApiService jomresService = new JomresApiService();
+    JomresAvailabilityService availabilityService = new JomresAvailabilityService();
+    JomresPropertyService propertyService = new JomresPropertyService();
     JomresConfiguration jomresConfiguration = new JomresConfiguration();
 
     Map<String, JomresRoomData> pmsItemToJomresRoomDataMap = new HashMap<>();
@@ -519,7 +519,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
 
     private String addNewJomresBooking(JomresBooking booking, Map<String, Double> dailyPriceMatrix) throws Exception {
         log.info("started fetch complete booking, BookingId: {}", booking.bookingId);
-        BookingService bookingService = new BookingService();
+        JomresBookingService bookingService = new JomresBookingService();
         booking = bookingService.getCompleteBooking(
                 jomresConfiguration.clientBaseUrl,
                 cmfClientAccessToken,
@@ -545,8 +545,8 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
                 return allBookings;
             if (handleEmptyJomresConfiguration())
                 return allBookings;
-            BookingService bookingService = new BookingService();
-            PriceService priceService = new PriceService();
+            JomresBookingService bookingService = new JomresBookingService();
+            JomresPricingService priceService = new JomresPricingService();
 
             Set<Integer> propertyUIDs = jomresPropertyToRoomDataMap.keySet();
             List<JomresBooking> bookings;

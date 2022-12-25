@@ -19,7 +19,7 @@ import com.thundashop.core.jomres.dto.JomresProperty;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class PropertyService extends BaseService {
+public class JomresPropertyService extends JomresApiService {
 
     public List<Integer> getChannelsPropertyIDs(String baseUrl, String token, String channelName) throws Exception {
         try {

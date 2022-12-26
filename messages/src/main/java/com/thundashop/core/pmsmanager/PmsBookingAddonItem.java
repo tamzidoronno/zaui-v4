@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.thundashop.core.common.Translation;
 import com.thundashop.core.common.TranslationHandler;
 import com.thundashop.core.productmanager.data.Product;
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -13,10 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import org.mongodb.morphia.annotations.Transient;
 
-public class PmsBookingAddonItem extends TranslationHandler implements Serializable {
-    
+public class PmsBookingAddonItem extends TranslationHandler {   
 
     public void finalize() {
         if(overrideName != null && !overrideName.isEmpty()) {
@@ -93,6 +90,7 @@ public class PmsBookingAddonItem extends TranslationHandler implements Serializa
     public String referenceId = "";
     public Integer taxGroupNumber = null;
     public String departmentRemoteId = "";
+    public boolean isBreakfastItem = false;
     
     
     Map<String, String> variations = new HashMap<>();

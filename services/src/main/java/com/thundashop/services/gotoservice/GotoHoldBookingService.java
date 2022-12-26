@@ -9,11 +9,9 @@ import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.thundashop.core.gotohub.constant.GotoConstants.DAILY_PRICE_DATE_FORMATTER;
@@ -24,10 +22,61 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 public class GotoHoldBookingService implements IGotoHoldBookingService{
     @Autowired
     IZauiActivityService zauiActivityService;
+    @Autowired
+    IGotoBookingCancellationService bookingCancellationService;
     @Override
     public PmsBooking getBooking(GotoBookingRequest gotoBooking, PmsBooking pmsBooking, PmsConfiguration config,
                                  SessionInfo zauiActivityManagerSession) throws Exception {
         return mapBookingToPmsBooking(gotoBooking, pmsBooking, config, zauiActivityManagerSession);
+    }
+    @Override
+    public GotoBookingResponse getBookingResponse(PmsBooking pmsBooking, GotoBookingRequest booking, PmsConfiguration config,
+                                                  int cuttOffHours) throws Exception {
+        List<RatePlanCode> ratePlans = new ArrayList<>();
+        List<RoomTypeCode> roomTypes = new ArrayList<>();
+        List<GotoRoomResponse> roomsResponse = new ArrayList<>();
+        for (GotoRoomRequest room : booking.getRooms()) {
+            GotoRoomResponse roomRes = mapRoomRequestToRoomRes(room, cuttOffHours, config);
+            roomsResponse.add(roomRes);
+            ratePlans.add(new RatePlanCode(room.getRatePlanCode()));
+            roomTypes.add(new RoomTypeCode(room.getRoomCode()));
+        }
+        DecimalFormat priceFormat = new DecimalFormat("#.##");
+        double totalPrice = Double.parseDouble(priceFormat.format(pmsBooking.getTotalPrice()));
+        PriceTotal priceTotal = new PriceTotal();
+        priceTotal.setAmount(totalPrice);
+        priceTotal.setCurrency(booking.getCurrency());
+
+        GotoBookingResponse bookingResponse = new GotoBookingResponse();
+        bookingResponse.setReservationId(pmsBooking.id);
+        bookingResponse.setHotelCode(booking.getHotelCode());
+        bookingResponse.setRooms(roomsResponse);
+        bookingResponse.setRatePlans(ratePlans);
+        bookingResponse.setRoomTypes(roomTypes);
+        bookingResponse.setPriceTotal(priceTotal);
+        bookingResponse.setActivities(getActivitiesFromPmsBooking(pmsBooking.bookingZauiActivityItems));
+        return bookingResponse;
+    }
+
+    private List<GotoActivityReservationDto> getActivitiesFromPmsBooking(List<BookingZauiActivityItem> activityItems) {
+        return activityItems.stream().map(activityItem -> {
+            GotoActivityReservationDto activity = new GotoActivityReservationDto();
+            activity.setOctoReservationResponse(activityItem.getOctoBooking());
+            return activity;
+        }).collect(Collectors.toList());
+    }
+
+    private GotoRoomResponse mapRoomRequestToRoomRes(GotoRoomRequest room, int cuttOffHours, PmsConfiguration config)
+            throws Exception {
+        GotoRoomResponse roomRes = new GotoRoomResponse();
+        roomRes.setCheckInDate(room.getCheckInDate());
+        roomRes.setCheckOutDate(room.getCheckOutDate());
+        roomRes.setAdults(room.getAdults());
+        roomRes.setChildrenAges(room.getChildrenAges());
+        roomRes.setCancelationDeadline(bookingCancellationService.getCancellationDeadLine(room.getCheckInDate(),
+                cuttOffHours, config));
+        roomRes.setPrice(room.getPrice());
+        return roomRes;
     }
 
     private PmsBooking mapBookingToPmsBooking(GotoBookingRequest booking, PmsBooking pmsBooking, PmsConfiguration config,

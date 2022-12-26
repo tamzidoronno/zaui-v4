@@ -611,7 +611,9 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         else {
             pmsBooking.shortId = isNotBlank(pmsBooking.shortId) ? pmsBooking.shortId : pmsManager.getShortUniqueId(pmsBooking.id);
             pmsManager.saveBooking(pmsBooking);
-            return pmsInvoiceManager.getPaymentLinkConfig().webAdress + "pr.php?id=" + pmsBooking.shortId;
+            String paymentLinkFromConfig = pmsInvoiceManager.getPaymentLinkConfig().webAdress;
+            String paymentLinkBase = paymentLinkFromConfig.endsWith("/") ? paymentLinkFromConfig : paymentLinkFromConfig + "/";
+            return paymentLinkBase + "pr.php?id=" + pmsBooking.shortId;
         }
     }
 

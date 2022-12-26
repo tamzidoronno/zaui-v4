@@ -24,7 +24,6 @@ import static com.thundashop.core.gotohub.constant.GotoConstants.formatter;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -39,7 +38,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.thundashop.core.gotohub.dto.*;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.zauiactivity.ZauiActivityManager;
 import com.thundashop.services.gotoservice.*;
@@ -57,6 +55,20 @@ import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.BookingEngineNew;
 import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.gotohub.constant.GotoConstants;
+import com.thundashop.core.gotohub.dto.GoToApiResponse;
+import com.thundashop.core.gotohub.dto.GoToConfiguration;
+import com.thundashop.core.gotohub.dto.GoToRoomData;
+import com.thundashop.core.gotohub.dto.GotoBookingRequest;
+import com.thundashop.core.gotohub.dto.GotoBookingResponse;
+import com.thundashop.core.gotohub.dto.GotoException;
+import com.thundashop.core.gotohub.dto.GotoRoomRequest;
+import com.thundashop.core.gotohub.dto.GotoConfirmBookingRequest;
+import com.thundashop.core.gotohub.dto.GotoRoomRestriction;
+import com.thundashop.core.gotohub.dto.Hotel;
+import com.thundashop.core.gotohub.dto.PriceAllotment;
+import com.thundashop.core.gotohub.dto.GotoConfirmBookingRes;
+import com.thundashop.core.gotohub.dto.RatePlan;
+import com.thundashop.core.gotohub.dto.RoomType;
 import com.thundashop.core.gotohub.schedulers.GotoExpireBookingScheduler;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
@@ -122,19 +134,19 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     @Autowired
     IGotoBookingCancellationService bookingCancellationService;
     @Autowired
+    IGotoHotelInformationService gotoHotelInformationService;
+    @Autowired
     IGotoBookingRequestValidationService bookingRequestValidationService;
     @Autowired
     IGotoCancellationValidationService cancellationValidationService;
     @Autowired
-    IGotoConfirmBookingValidationService confirmBookingValService;
-    @Autowired
     IGotoConfirmBookingService confirmBookingService;
     @Autowired
-    IGotoHotelInformationService gotoHotelInformationService;
-    @Autowired
-    IGotoHoldBookingService holdBookingService;
+    IGotoConfirmBookingValidationService confirmBookingValService;
     @Autowired
     IPmsBookingService pmsBookingService;
+    @Autowired
+    IGotoHoldBookingService holdBookingService;
 
     private GoToConfiguration goToConfiguration;
     private final String CURRENCY_CODE = "currencycode";
@@ -250,8 +262,9 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             pmsInvoiceManager.clearOrdersOnBooking(pmsBooking);
             handleOverbooking(pmsBooking);
 
-            GotoBookingResponse bookingResponse = getBookingResponse(pmsBooking.id, booking,
-                    pmsBooking.getTotalPrice());
+            GotoBookingResponse bookingResponse = holdBookingService.getBookingResponse(pmsBooking, booking,
+                    pmsManager.getConfiguration(), goToConfiguration.cuttOffHours);
+
             return new GoToApiResponse(true, SAVE_BOOKING_SUCCESS.code, SAVE_BOOKING_SUCCESS.message, bookingResponse);
         } catch (GotoException e) {
             handleNewBookingError(booking, e.getMessage(), e.getStatusCode());
@@ -536,40 +549,6 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                 checkOutDate = room.date.end;
         }
         return checkOutDate;
-    }
-
-    private GotoBookingResponse getBookingResponse(String reservationId, GotoBookingRequest booking, double totalPrice)
-            throws Exception {
-        List<RatePlanCode> ratePlans = new ArrayList<>();
-        List<RoomTypeCode> roomTypes = new ArrayList<>();
-        List<GotoRoomResponse> roomsResponse = new ArrayList<>();
-        for (GotoRoomRequest room : booking.getRooms()) {
-            GotoRoomResponse roomRes = new GotoRoomResponse();
-            roomRes.setCheckInDate(room.getCheckInDate());
-            roomRes.setCheckOutDate(room.getCheckOutDate());
-            roomRes.setAdults(room.getAdults());
-            roomRes.setChildrenAges(room.getChildrenAges());
-            roomRes.setCancelationDeadline(bookingCancellationService.getCancellationDeadLine(room.getCheckInDate(),
-                    goToConfiguration.cuttOffHours, pmsManager.getConfiguration()));
-            roomRes.setPrice(room.getPrice());
-            roomsResponse.add(roomRes);
-            ratePlans.add(new RatePlanCode(room.getRatePlanCode()));
-            roomTypes.add(new RoomTypeCode(room.getRoomCode()));
-        }
-        DecimalFormat priceFormat = new DecimalFormat("#.##");
-        totalPrice = Double.parseDouble(priceFormat.format(totalPrice));
-        PriceTotal priceTotal = new PriceTotal();
-        priceTotal.setAmount(totalPrice);
-        priceTotal.setCurrency(booking.getCurrency());
-
-        GotoBookingResponse bookingResponse = new GotoBookingResponse();
-        bookingResponse.setReservationId(reservationId);
-        bookingResponse.setHotelCode(booking.getHotelCode());
-        bookingResponse.setRooms(roomsResponse);
-        bookingResponse.setRatePlans(ratePlans);
-        bookingResponse.setRoomTypes(roomTypes);
-        bookingResponse.setPriceTotal(priceTotal);
-        return bookingResponse;
     }
 
     Map<String, Map<TimeRepeaterData, LinkedList<TimeRepeaterDateRange>>> getRestrictionData(

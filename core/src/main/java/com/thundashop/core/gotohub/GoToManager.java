@@ -503,7 +503,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             pmsInvoiceManager.markOrderAsPaid(pmsBooking.id, orderId);
         } catch (Exception e) {
             logPrintException(e);
-            log.error("Error occured while processing payment for goto booking..");
+            log.error("Error occurred while processing payment for goto booking..");
             log.error("Please check exception logs...");
             throw new GotoException(PAYMENT_FAILED.code, PAYMENT_FAILED.message);
         }

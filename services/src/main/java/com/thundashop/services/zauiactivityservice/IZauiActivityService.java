@@ -32,6 +32,8 @@ public interface IZauiActivityService {
 
     void cancelActivityFromBooking(BookingZauiActivityItem activityItem) throws ZauiException;
 
+    void cancelAllActivitiesFromBooking(PmsBooking booking);
+
     Optional<BookingZauiActivityItem>getBookingZauiActivityItemByAddonId(String addonId, SessionInfo sessionInfo);
 
     double getPrecisedPrice(double price, Integer precision);

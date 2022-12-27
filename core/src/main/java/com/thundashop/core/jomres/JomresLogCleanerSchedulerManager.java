@@ -1,14 +1,15 @@
 package com.thundashop.core.jomres;
 
-import com.mongodb.BasicDBObject;
-import com.thundashop.core.databasemanager.JomresLogCleanerDB;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static java.time.LocalDateTime.now;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import static java.time.LocalDateTime.now;
+import com.mongodb.BasicDBObject;
+import com.thundashop.core.databasemanager.JomresLogCleanerDB;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * This is not a distributed task scheduler. Per application instance will run its own scheduler.
@@ -16,10 +17,8 @@ import static java.time.LocalDateTime.now;
  */
 
 @Service
+@Slf4j
 public class JomresLogCleanerSchedulerManager {
-
-    private static final Logger logger = LoggerFactory.getLogger(JomresLogCleanerSchedulerManager.class);
-
     private final String MANAGER;
 
     private final JomresLogCleanerDB database;
@@ -40,7 +39,7 @@ public class JomresLogCleanerSchedulerManager {
     private int deleteByQuery(String collectionName) {
         long cutOff = JomresLogManager.getCutOff();
         int count = database.deleteByQuery(MANAGER, collectionName, new BasicDBObject("timeStamp", new BasicDBObject("$lt", cutOff)));
-        logger.info("Deleted {} entries from collection {}", count, collectionName);
+        log.info("Deleted {} entries from collection {}", count, collectionName);
         return count;
     }
 
@@ -49,9 +48,9 @@ public class JomresLogCleanerSchedulerManager {
     public void jomresLogCleanerScheduler() {
         try {
             int deleteCount = delete();
-            logger.info("At {} , {} documents deleted from jomresLogManager database", now(), deleteCount);
+            log.info("At {} , {} documents deleted from jomresLogManager database", now(), deleteCount);
         } catch (Exception e) {
-            logger.error("Error while deleting jomres log", e);
+            log.error("Error while deleting jomres log", e);
         }
     }
 

@@ -10,5 +10,5 @@ public interface IZauiActivityValidationService {
 
     void validateGotoBookingActivity(GotoActivityReservationDto activity, SessionInfo zauiActivitySession, SessionInfo productSession) throws GotoException;
 
-    void validateTaxRates(List<Double> taxRate, SessionInfo productSessionInfo) throws GotoException;
+    void validateTaxRates(List<Double> taxRatesFromOctoBooking, SessionInfo productSessionInfo) throws GotoException;
 }

@@ -288,4 +288,30 @@ public class ZauiActivityService implements IZauiActivityService {
         }).collect(Collectors.toList());
         return orderCreateRow;
     }
+
+    @Override
+    public boolean isAllActivityCancelled(List<BookingZauiActivityItem> activities) {
+        if(activities == null) return true;
+        return activities.stream()
+                .filter(activity -> activity.getOctoBooking() != null)
+                .filter(activity -> !activity.getOctoBooking().getStatus().equals(ZauiConstants.OCTO_CANCELLED_STATUS))
+                .collect(Collectors.toList())
+                .size() == 0 ;
+    }
+
+    @Override
+    public void cancelActivitiesFromGotoBooking(PmsBooking pmsBooking) {
+        pmsBooking.bookingZauiActivityItems = pmsBooking.bookingZauiActivityItems.stream()
+                .map(activityItem -> changeActivityItemOctoBookingStatus(activityItem))
+                .collect(Collectors.toList());
+//        return pmsBooking
+    }
+
+    private BookingZauiActivityItem changeActivityItemOctoBookingStatus(BookingZauiActivityItem activityItem) {
+        OctoBooking octoBooking = activityItem.getOctoBooking();
+        if(octoBooking == null) return activityItem;
+        octoBooking.setStatus(ZauiConstants.OCTO_CANCELLED_STATUS);
+        activityItem.setOctoBooking(octoBooking);
+        return activityItem;
+    }
 }

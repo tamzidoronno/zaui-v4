@@ -45,4 +45,8 @@ public interface IZauiActivityService {
     PmsOrderCreateRow createOrderCreateRowForZauiActivities(List<BookingZauiActivityItem> activityItems);
 
     PmsBooking removeActivityFromWebBooking(AddZauiActivityToWebBookingDto activity, PmsBooking booking, SessionInfo sessionInfo);
+
+    boolean isAllActivityCancelled(List<BookingZauiActivityItem> activities);
+
+    void cancelActivitiesFromGotoBooking(PmsBooking pmsBooking);
 }

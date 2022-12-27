@@ -7,6 +7,7 @@ import com.thundashop.core.pmsmanager.PmsConfiguration;
 import com.thundashop.repository.utils.SessionInfo;
 import com.thundashop.services.bookingservice.IPmsBookingService;
 import com.thundashop.services.gotoservice.IGotoBookingCancellationService;
+import com.thundashop.services.zauiactivityservice.IZauiActivityService;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,8 @@ public class GotoCancellationValidationService implements IGotoCancellationValid
     IPmsBookingService pmsBookingService;
     @Autowired
     IGotoBookingCancellationService cancellationService;
+    @Autowired
+    IZauiActivityService zauiActivityService;
     @Override
     public PmsBooking validateCancellationReq(String reservationId, Date deletionRequestTime, PmsConfiguration config,
                                               int cutoffHour, SessionInfo pmsManagerSession) throws Exception {
@@ -37,7 +40,7 @@ public class GotoCancellationValidationService implements IGotoCancellationValid
             throw new GotoException(BOOKING_CANCELLATION_NOT_FOUND.code,
                     BOOKING_CANCELLATION_NOT_FOUND.message);
         }
-        if (booking.getActiveRooms().isEmpty())
+        if (booking.getActiveRooms().isEmpty() && zauiActivityService.isAllActivityCancelled(booking.bookingZauiActivityItems))
             throw new GotoException(BOOKING_CANCELLATION_ALREADY_CANCELLED.code,
                     BOOKING_CANCELLATION_ALREADY_CANCELLED.message);
     }

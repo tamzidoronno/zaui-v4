@@ -79,12 +79,12 @@ public class ZauiActivityValidationService implements IZauiActivityValidationSer
     }
 
     @Override
-    public void validateTaxRates(List<Double> taxRate, SessionInfo productSessionInfo) throws GotoException {
+    public void validateTaxRates(List<Double> taxRatesFromOctoBooking, SessionInfo productSessionInfo) throws GotoException {
         Set<Double> taxRateFromSystem = productService
                 .getAllTaxGroups(productSessionInfo).stream()
                 .map(taxGroup -> taxGroup.taxRate).collect(Collectors.toSet());
         List<String> invalidTaxRates = new ArrayList<>();
-        for(Double rateFromBooking : taxRate) {
+        for(Double rateFromBooking : taxRatesFromOctoBooking) {
             if(!taxRateFromSystem.contains(rateFromBooking))
                 invalidTaxRates.add(String.valueOf(rateFromBooking));
         }

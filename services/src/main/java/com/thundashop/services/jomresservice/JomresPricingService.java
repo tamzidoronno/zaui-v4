@@ -1,6 +1,6 @@
-package com.thundashop.core.jomres.services;
+package com.thundashop.services.jomresservice;
 
-import static com.thundashop.core.jomres.services.Constants.PRICE_GETTING_URL;
+import static com.thundashop.core.jomres.constants.Constants.PRICE_GETTING_URL;
 
 import java.util.Date;
 import java.util.Map;
@@ -10,7 +10,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 @Slf4j
-public class PriceService extends BaseService{
+public class JomresPricingService extends JomresApiService{
     public Map<String, Double> getDailyPriceBetweenDates(String baseUrl, String token, String channel, int jomresPropertyId,
                                               Date start, Date end) throws Exception {
         try {

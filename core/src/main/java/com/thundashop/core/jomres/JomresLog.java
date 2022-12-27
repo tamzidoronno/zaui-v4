@@ -1,7 +1,6 @@
 package com.thundashop.core.jomres;
 
 import com.thundashop.core.common.DataCommon;
-import java.util.HashMap;
 
 public class JomresLog extends DataCommon {
     private String message;

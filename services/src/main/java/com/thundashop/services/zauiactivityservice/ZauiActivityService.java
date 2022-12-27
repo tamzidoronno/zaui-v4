@@ -179,7 +179,7 @@ public class ZauiActivityService implements IZauiActivityService {
     public void cancelAllActivitiesFromBooking(PmsBooking booking) {
         for(BookingZauiActivityItem activityItem : booking.bookingZauiActivityItems) {
             if(isNotBlank(booking.channel) && booking.channel.equals(GotoConstants.GOTO_BOOKING_CHANNEL_NAME)) {
-//                zauiActivityService.can
+                changeActivityItemOctoBookingStatus(activityItem);
             }
             else{
                 try {
@@ -320,19 +320,10 @@ public class ZauiActivityService implements IZauiActivityService {
                 .size() == 0 ;
     }
 
-    @Override
-    public void cancelActivitiesFromGotoBooking(PmsBooking pmsBooking) {
-        pmsBooking.bookingZauiActivityItems = pmsBooking.bookingZauiActivityItems.stream()
-                .map(activityItem -> changeActivityItemOctoBookingStatus(activityItem))
-                .collect(Collectors.toList());
-//        return pmsBooking
-    }
-
-    private BookingZauiActivityItem changeActivityItemOctoBookingStatus(BookingZauiActivityItem activityItem) {
+    private void changeActivityItemOctoBookingStatus(BookingZauiActivityItem activityItem) {
         OctoBooking octoBooking = activityItem.getOctoBooking();
-        if(octoBooking == null) return activityItem;
+        if(octoBooking == null) return;
         octoBooking.setStatus(ZauiConstants.OCTO_CANCELLED_STATUS);
         activityItem.setOctoBooking(octoBooking);
-        return activityItem;
     }
 }

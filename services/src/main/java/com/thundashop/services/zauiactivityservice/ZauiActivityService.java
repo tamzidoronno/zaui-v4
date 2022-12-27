@@ -3,6 +3,7 @@ package com.thundashop.services.zauiactivityservice;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import com.thundashop.core.gotohub.constant.GotoConstants;
 import com.thundashop.core.pmsmanager.PmsOrderCreateRow;
 import com.thundashop.core.pmsmanager.PmsOrderCreateRowItemLine;
 import com.thundashop.zauiactivity.dto.*;
@@ -22,6 +23,8 @@ import com.thundashop.services.octoapiservice.IOctoApiService;
 import com.thundashop.zauiactivity.constant.ZauiConstants;
 
 import lombok.extern.slf4j.Slf4j;
+
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Slf4j
 @Service
@@ -171,6 +174,24 @@ public class ZauiActivityService implements IZauiActivityService {
                 activityItem.getOctoBooking().getId());
         activityItem.setOctoBooking(octoCancelledBooking);
         activityItem.setUnpaidAmount(-activityItem.price);
+    }
+
+    @Override
+    public void cancelAllActivitiesFromBooking(PmsBooking booking) {
+        for(BookingZauiActivityItem activityItem : booking.bookingZauiActivityItems) {
+            if(isNotBlank(booking.channel) && booking.channel.equals(GotoConstants.GOTO_BOOKING_CHANNEL_NAME)) {
+//                zauiActivityService.can
+            }
+            else{
+                try {
+                    cancelActivityFromBooking(activityItem);
+                } catch (ZauiException e) {
+                    log.error("Failed to cancel octoBooking while deleting all activities");
+                    log.error("PmsBookingId: {}, Error message: {}, Error code: {}"
+                            , booking.id, e.getMessage(), e.getStatusCode());
+                }
+            }
+        }
     }
 
     private ZauiActivity mapOctoToZauiActivity(OctoProduct octoProduct, ZauiConnectedSupplier supplier, String currency) {

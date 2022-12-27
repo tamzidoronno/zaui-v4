@@ -1,8 +1,8 @@
-package com.thundashop.core.jomres.services;
+package com.thundashop.services.jomresservice;
 
-import static com.thundashop.core.jomres.services.Constants.AVAILABILITY_SENDING_DATE_FORMAT;
-import static com.thundashop.core.jomres.services.Constants.MAKE_PROPERTY_AVAILABLE;
-import static com.thundashop.core.jomres.services.Constants.MAKE_PROPERTY_UNAVAILABLE;
+import static com.thundashop.core.jomres.constants.Constants.AVAILABILITY_SENDING_DATE_FORMAT;
+import static com.thundashop.core.jomres.constants.Constants.MAKE_PROPERTY_AVAILABLE;
+import static com.thundashop.core.jomres.constants.Constants.MAKE_PROPERTY_UNAVAILABLE;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -27,7 +27,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 @Slf4j
-public class AvailabilityService extends BaseService {
+public class JomresAvailabilityService extends JomresApiService {
 
     public UpdateAvailabilityResponse deleteBlankBooking(String baseUrl, String token, PMSBlankBooking booking) {
         UpdateAvailabilityResponse res = new UpdateAvailabilityResponse();

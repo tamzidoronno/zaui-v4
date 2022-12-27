@@ -156,6 +156,7 @@ class PsmConfigurationAddons extends \WebshopApplication implements \Application
                     $addon->isIncludedInRoomPrice = $res['isIncludedInRoomPrice'] == "true";
                     $addon->isUniqueOnOrder = $res['isUniqueOnOrder'] == "true";
                     $addon->alwaysAddAddon = $res['alwaysAddAddon'] == "true";
+                    $addon->isBreakfastItem = $res['isBreakfastItem'] == "true";
 
                     $isIncluded = array();
                     foreach ($res as $id => $isSelected) {
@@ -240,6 +241,8 @@ class PsmConfigurationAddons extends \WebshopApplication implements \Application
             $addon->bookingicon = $_POST['data']['bookingicon'];
             $addon->count = $_POST['data']['count'];
             $addon->channelManagerAddonText = $_POST['data']['channelManagerAddonText'];
+            $addon->isBreakfastItem = $_POST['data']['isBreakfastItem'];
+
             $addon->groupAddonType = $_POST['data']['groupaddon'];
             $addon->addonType = $_POST['data']['producttype'];
         }

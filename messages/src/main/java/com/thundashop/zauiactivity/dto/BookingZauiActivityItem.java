@@ -1,6 +1,7 @@
 package com.thundashop.zauiactivity.dto;
 
 import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
+
 import lombok.Data;
 
 import java.util.List;
@@ -20,6 +21,5 @@ public class BookingZauiActivityItem extends PmsBookingAddonItem {
     public String localDateTimeEnd;
     public Integer supplierId;
     public String supplierName;
-    private OctoBooking octoBooking;
-
+    public OctoBooking octoBooking;
 }

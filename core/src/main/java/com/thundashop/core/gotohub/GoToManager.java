@@ -18,9 +18,7 @@ import static com.thundashop.core.gotohub.constant.GoToStatusCodes.PAYMENT_FAILE
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.PAYMENT_METHOD_ACTIVATION_FAILED;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.SAVE_BOOKING_FAIL;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.SAVE_BOOKING_SUCCESS;
-import static com.thundashop.core.gotohub.constant.GotoConstants.checkinOutDateFormatter;
-import static com.thundashop.core.gotohub.constant.GotoConstants.df;
-import static com.thundashop.core.gotohub.constant.GotoConstants.formatter;
+import static com.thundashop.core.gotohub.constant.GotoConstants.*;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -182,7 +180,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             removeCurrentUser();
             Hotel hotel = gotoHotelInformationService.getHotelInformation(storeManager.getMyStore(),
                     pmsManager.getConfiguration(),
-                    storeManager.getStoreSettingsApplicationKey("currencycode"));
+                    storeManager.getStoreSettingsApplicationKey(CURRENCY_CODE));
             return new GoToApiResponse(true, FETCHING_HOTEL_INFO_SUCCESS.code, FETCHING_HOTEL_INFO_SUCCESS.message,
                     hotel);
         } catch (Exception e) {
@@ -289,7 +287,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                     pmsManager.getSessionInfo(),
                     confirmBookingReq);
             pmsBooking = confirmBookingService.confirmGotoBooking(pmsBooking.id, confirmBookingReq, pmsManager.getSessionInfo());
-            String paymentMethodNameFromGoto = confirmBookingReq == null ? "STAY_PAYMENT" : confirmBookingReq.getPaymentMethod();
+            String paymentMethodNameFromGoto = confirmBookingReq == null ? STAY_PAYMENT : confirmBookingReq.getPaymentMethod();
             String paymentLink = confirmPayment(pmsBooking, paymentMethodNameFromGoto);
             pmsManager.saveBooking(pmsBooking);
             return new GoToApiResponse(true, BOOKING_CONFIRMATION_SUCCESS.code, BOOKING_CONFIRMATION_SUCCESS.message,

@@ -8,7 +8,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+import com.thundashop.zauiactivity.constant.ZauiConstants;
 import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
 import org.apache.commons.lang3.StringUtils;
 import org.mongodb.morphia.annotations.Transient;
@@ -569,10 +571,10 @@ public class PmsBooking extends DataCommon {
     }
 
     private double getZauiActivitiesPrice(){
-        if(bookingZauiActivityItems.isEmpty()){
+        if(getConfirmedZauiActivities().isEmpty()){
             return 0.0;
         }
-        return bookingZauiActivityItems.stream().filter(x-> x.price != null).mapToDouble(activityItem -> activityItem.price).sum();
+        return getConfirmedZauiActivities().stream().filter(x-> x.price != null).mapToDouble(activityItem -> activityItem.price).sum();
     }
 
     boolean transferredToLock() {
@@ -892,6 +894,10 @@ public class PmsBooking extends DataCommon {
             }
         }
         return highestCode + "";
+    }
+
+    public List<BookingZauiActivityItem> getConfirmedZauiActivities() {
+        return this.bookingZauiActivityItems.stream().filter(activityItem -> activityItem.getOctoBooking().getStatus().equals(ZauiConstants.OCTO_CONFIRMED_STATUS)).collect(Collectors.toList());
     }
 
 }

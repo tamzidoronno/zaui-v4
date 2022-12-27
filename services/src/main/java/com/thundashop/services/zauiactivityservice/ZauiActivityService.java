@@ -173,6 +173,7 @@ public class ZauiActivityService implements IZauiActivityService {
         OctoBooking octoCancelledBooking = octoApiService.cancelBooking(activityItem.supplierId,
                 activityItem.getOctoBooking().getId());
         activityItem.setOctoBooking(octoCancelledBooking);
+        activityItem.setUnpaidAmount(-activityItem.price);
     }
 
     @Override

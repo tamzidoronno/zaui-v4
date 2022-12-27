@@ -8,6 +8,7 @@ import java.util.Random;
 
 import com.thundashop.core.pmsbookingprocess.GuestAddonsSummary;
 import com.thundashop.core.pmsbookingprocess.PmsBookingProcess;
+import com.thundashop.repository.pmsbookingrepository.IPmsBookingRepository;
 import com.thundashop.repository.utils.ZauiStatusCodes;
 import com.thundashop.zauiactivity.constant.ZauiConstants;
 import com.thundashop.zauiactivity.dto.*;
@@ -56,6 +57,9 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
 
     @Autowired
     PmsBookingProcess pmsBookingProcess;
+
+    @Autowired
+    private IPmsBookingRepository pmsBookingRepository;
 
     private ZauiActivityConfig config;
 
@@ -141,7 +145,7 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
     @Override
     public void cancelActivity(String pmsBookingId, String octoBookingId) throws ZauiException {
         PmsBooking booking = pmsManager.getBooking(pmsBookingId);
-        BookingZauiActivityItem activityItem = booking.bookingZauiActivityItems.stream()
+        BookingZauiActivityItem activityItem = booking.getConfirmedZauiActivities().stream()
                 .filter(item -> item.getOctoBooking().getId().equals(octoBookingId))
                 .findFirst()
                 .orElse(null);
@@ -157,6 +161,7 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
         if (!activityItem.isPresent()) {
             throw new ErrorException(1011);
         }
+        setActivityItemAsPaid(activityItem.get());
         List<CartItem> cartItems = new ArrayList<>();
         Pricing pricing = activityItem.get().getOctoBooking().getPricing();
         pricing.getIncludedTaxes().forEach((tax) -> {
@@ -203,5 +208,13 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
             throw new ZauiException(ZauiStatusCodes.SUPPLIER_NOT_FOUND);
         int accountNumber = Integer.parseInt(zauiSupplier.getSupplierAccountNumberByRate(taxRate));
         return productManager.getAccountingDetail(accountNumber);
+    }
+
+    private void setActivityItemAsPaid(BookingZauiActivityItem activityItem) {
+        PmsBooking booking = pmsBookingRepository.getPmsBookingByZauiActivityItemId(activityItem.getId(), pmsManager.getSessionInfo());
+        booking.bookingZauiActivityItems.stream().filter(item -> item.getId().equals(activityItem.getId()))
+                .findFirst().get()
+                .setUnpaidAmount(0);
+        pmsManager.saveBooking(booking);
     }
 }

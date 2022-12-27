@@ -233,7 +233,6 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             return new GoToApiResponse(true, FETCHING_PRICE_ALLOTMENT_SUCCESS.code,
                     FETCHING_PRICE_ALLOTMENT_SUCCESS.message, priceAllotments);
         } catch (GotoException e) {
-            logPrintException(e);
             return new GoToApiResponse(false, e.getStatusCode(), e.getMessage(), null);
         } catch (Exception e) {
             logPrintException(e);
@@ -290,7 +289,6 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                     pmsManager.getSessionInfo(),
                     confirmBookingReq);
             pmsBooking = confirmBookingService.confirmGotoBooking(pmsBooking.id, confirmBookingReq, pmsManager.getSessionInfo());
-//            pmsManager.saveBooking(pmsBooking);
             String paymentMethodNameFromGoto = confirmBookingReq == null ? "GOTO_PAYMENT" : confirmBookingReq.getPaymentMethod();
             String paymentLink = confirmPayment(pmsBooking, paymentMethodNameFromGoto);
             pmsManager.saveBooking(pmsBooking);
@@ -361,7 +359,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
         String toEmail = goToConfiguration.getEmail();
         if (isBlank(toEmail)) {
-            log.info("Coundn't send email because email config is not set.");
+            log.info("Couldn't send email because email config is not set.");
             return;
         }
 
@@ -473,6 +471,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             });
 
         } catch (Exception e) {
+            logPrintException(e);
             throw new GotoException(ORDER_SYNCHRONIZATION_FAILED.code, ORDER_SYNCHRONIZATION_FAILED.message);
         }
     }
@@ -577,6 +576,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                 storeApplicationPool.activateApplication(pmethod);
             }
         } catch (Exception e) {
+            logPrintException(e);
             log.error("Error occurred while activate payment method, id: " + pmethod);
             throw new GotoException(PAYMENT_METHOD_ACTIVATION_FAILED.code, PAYMENT_METHOD_ACTIVATION_FAILED.message);
         }
@@ -673,7 +673,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                     }
                 }
             } catch (Exception ex) {
-                log.error("failed {} {}", ex.getMessage(), ex);
+                log.error("failed, error message: {}, actual error: {}", ex.getMessage(), ex);
             }
             goToRoomData.add(mapBookingItemTypeToGoToRoomData(type, room, typeInfo));
         }

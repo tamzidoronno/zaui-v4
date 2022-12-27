@@ -1,4 +1,4 @@
-package com.thundashop.core.jomres.services;
+package com.thundashop.services.jomresservice;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -18,9 +18,6 @@ import org.apache.oltu.oauth2.client.response.OAuthJSONAccessTokenResponse;
 import org.apache.oltu.oauth2.common.OAuth;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.types.GrantType;
-
-import com.thundashop.core.jomres.ResponseDataParser;
-
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -28,15 +25,15 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 
 @Slf4j
-public class BaseService {
+public class JomresApiService {
     OAuthClient tokenClient;
     OkHttpClient httpClient;
-    ResponseDataParser responseDataParser;
+    JomresApiResponseParser responseDataParser;
 
-    public BaseService() {
+    public JomresApiService() {
         tokenClient = new OAuthClient(new URLConnectionClient());
         httpClient = new OkHttpClient().newBuilder().build();
-        responseDataParser = new ResponseDataParser();
+        responseDataParser = new JomresApiResponseParser();
     }
 
     public String getAccessToken(String clientId, String clientSecret, String tokenURL) {

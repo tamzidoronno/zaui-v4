@@ -75,6 +75,11 @@ public class ZauiActivityValidationService implements IZauiActivityValidationSer
             throw new GotoException(ACTIVITY_PRICING_MISSING.code, ACTIVITY_PRICING_MISSING.message);
         List<Double> taxRate = pricing.getIncludedTaxes().stream()
                 .map(taxData -> new Double(taxData.getRate())).collect(Collectors.toList());
+        validateTaxRates(taxRate, productSessionInfo);
+    }
+
+    @Override
+    public void validateTaxRates(List<Double> taxRate, SessionInfo productSessionInfo) throws GotoException {
         Set<Double> taxRateFromSystem = productService
                 .getAllTaxGroups(productSessionInfo).stream()
                 .map(taxGroup -> taxGroup.taxRate).collect(Collectors.toSet());
@@ -85,6 +90,6 @@ public class ZauiActivityValidationService implements IZauiActivityValidationSer
         }
         if(!invalidTaxRates.isEmpty())
             throw new GotoException(ACTIVITY_PRICING_INVALID_TAX_RATE.code, ACTIVITY_PRICING_INVALID_TAX_RATE.message
-            + ", invalid rates: {" + String.join(", ", invalidTaxRates) + "}");
+                    + ", invalid rates: {" + String.join(", ", invalidTaxRates) + "}");
     }
 }

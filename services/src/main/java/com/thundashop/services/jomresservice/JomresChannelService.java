@@ -1,6 +1,6 @@
-package com.thundashop.core.jomres.services;
+package com.thundashop.services.jomresservice;
 
-import static com.thundashop.core.jomres.services.Constants.CHANNEL_ANNOUNCEMENT_URL;
+import static com.thundashop.core.jomres.constants.Constants.CHANNEL_ANNOUNCEMENT_URL;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -17,7 +17,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 @Slf4j
-public class ChannelService extends BaseService {
+public class JomresChannelService extends JomresApiService {
     public long getChannelId(String baseUrl, String channelName, String token) {
         try {
             OAuthClientRequest request = getBearerTokenRequest(baseUrl + CHANNEL_ANNOUNCEMENT_URL + channelName, token);

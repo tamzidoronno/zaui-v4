@@ -8,6 +8,7 @@ import static com.thundashop.core.gotohub.constant.GotoConstants.STAY_PAYMENT;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import com.thundashop.core.gotohub.dto.GotoConfirmBookingRequest;
+import com.thundashop.zauiactivity.constant.ZauiConstants;
 import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,7 +46,7 @@ public class GotoConfirmBookingValidationService implements IGotoConfirmBookingV
 
     private boolean isAllActivityCancelled(List<BookingZauiActivityItem> activities) {
         return activities.stream()
-                .filter(activity -> !activity.getOctoBooking().getStatus().equals("CANCELLED"))
+                .filter(activity -> !activity.getOctoBooking().getStatus().equals(ZauiConstants.OCTO_CANCELLED_STATUS))
                 .collect(Collectors.toList())
                 .size() == 0 ;
     }

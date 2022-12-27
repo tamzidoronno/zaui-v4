@@ -39,7 +39,7 @@ public enum GoToStatusCodes {
     ACTIVITY_PRICING_MISSING(1322, "Goto Booking Failed.. Reason: Activity pricing is missing"),
     ACTIVITY_PRICING_INVALID_TAX_RATE(1323, "Goto Booking Failed.. Reason: Activity pricing has tax rates which are not in Zauistay"),
 
-    BOOKING_CONFIRMATION_SUCCESS(1400, "Goto Booking has been Confirmed"),
+    BOOKING_CONFIRMATION_SUCCESS(1400, "Payment link has been attached"),
     BOOKING_NOT_FOUND(1401, "Goto Booking Confirmation Failed.. Reason: Booking Not Found"),
     PAYMENT_FAILED(1402, "Goto Booking Confirmation Failed.. Reason: Payment failed"),
     PAYMENT_METHOD_NOT_FOUND(1403, "Goto Booking Payment Confirmation Failed.. " +

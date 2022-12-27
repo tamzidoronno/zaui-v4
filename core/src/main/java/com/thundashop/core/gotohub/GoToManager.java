@@ -289,7 +289,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                     pmsManager.getSessionInfo(),
                     confirmBookingReq);
             pmsBooking = confirmBookingService.confirmGotoBooking(pmsBooking.id, confirmBookingReq, pmsManager.getSessionInfo());
-            String paymentMethodNameFromGoto = confirmBookingReq == null ? "GOTO_PAYMENT" : confirmBookingReq.getPaymentMethod();
+            String paymentMethodNameFromGoto = confirmBookingReq == null ? "STAY_PAYMENT" : confirmBookingReq.getPaymentMethod();
             String paymentLink = confirmPayment(pmsBooking, paymentMethodNameFromGoto);
             pmsManager.saveBooking(pmsBooking);
             return new GoToApiResponse(true, BOOKING_CONFIRMATION_SUCCESS.code, BOOKING_CONFIRMATION_SUCCESS.message,
@@ -583,7 +583,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     private String confirmPayment(PmsBooking pmsBooking, String gotoPaymentMethodName) throws Exception {
-        if(gotoPaymentMethodName.equals("GOTO_PAYMENT")) {
+        if(isNotBlank(gotoPaymentMethodName) && gotoPaymentMethodName.equals("GOTO_PAYMENT")) {
             pmsManager.saveBooking(handleGotoPayment(pmsBooking));
             return null;
         }

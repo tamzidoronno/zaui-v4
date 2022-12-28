@@ -1,9 +1,6 @@
 package com.thundashop.core.jomres.dto;
 
-import com.google.gson.JsonObject;
 import com.google.gson.internal.LinkedTreeMap;
-import org.apache.commons.lang3.StringUtils;
-
 import java.io.Serializable;
 import java.util.Optional;
 

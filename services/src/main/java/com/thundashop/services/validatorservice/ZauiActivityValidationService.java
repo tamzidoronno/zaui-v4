@@ -6,6 +6,7 @@ import com.thundashop.repository.utils.SessionInfo;
 import com.thundashop.services.productservice.IProductService;
 import com.thundashop.services.zauiactivityservice.IZauiActivityService;
 import com.thundashop.zauiactivity.dto.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import static com.thundashop.core.gotohub.constant.GoToStatusCodes.*;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Service
+@Slf4j
 public class ZauiActivityValidationService implements IZauiActivityValidationService {
     @Autowired
     IZauiActivityService zauiActivityService;
@@ -25,14 +27,15 @@ public class ZauiActivityValidationService implements IZauiActivityValidationSer
     IProductService productService;
 
     @Override
-    public void validateGotoBookingActivity(GotoActivityReservationDto activity, SessionInfo zauiActivitySession, SessionInfo productSession) throws GotoException {
+    public void validateGotoBookingActivity(GotoActivityReservationDto activity, SessionInfo zauiActivitySession,
+                                            SessionInfo productSession, String systemCurrency) throws GotoException {
         validateActivityObject(activity.getOctoReservationResponse());
         validateOptionId(activity.getOctoReservationResponse().getOptionId());
         validateZauiActivity(activity.getOctoReservationResponse().getOptionId(), zauiActivitySession);
         validateAvailabilityId(activity.getOctoReservationResponse().getAvailabilityId());
         validateAvailability(activity.getOctoReservationResponse().getAvailability());
         validateUnitItems(activity.getOctoReservationResponse().getUnitItems());
-        validatePricing(activity.getOctoReservationResponse().getPricing(), productSession);
+        validatePricing(activity.getOctoReservationResponse().getPricing(), productSession, systemCurrency);
     }
 
     private void validateActivityObject(OctoBooking octoReservationResponse) throws GotoException {
@@ -70,9 +73,15 @@ public class ZauiActivityValidationService implements IZauiActivityValidationSer
             throw new GotoException(ACTIVITY_UNIT_ITEM_INCORRECT.code, ACTIVITY_UNIT_ITEM_INCORRECT.message);
     }
 
-    private void validatePricing(Pricing pricing, SessionInfo productSessionInfo) throws GotoException {
+    private void validatePricing(Pricing pricing, SessionInfo productSessionInfo, String systemCurrency) throws GotoException {
         if(pricing == null)
             throw new GotoException(ACTIVITY_PRICING_MISSING.code, ACTIVITY_PRICING_MISSING.message);
+        if(isBlank(pricing.getCurrency()) || !pricing.getCurrency().equals(systemCurrency))
+        {
+            log.error("Activity currency didn't match with system currency..");
+            log.error("Activity currency: {}", pricing.getCurrency()!= null ? pricing.getCurrency() : "");
+            throw new GotoException(DIFFERENT_CURRENCY.code, DIFFERENT_CURRENCY.message);
+        }
         List<Double> taxRate = pricing.getIncludedTaxes().stream()
                 .map(taxData -> new Double(taxData.getRate())).collect(Collectors.toList());
         validateTaxRates(taxRate, productSessionInfo);

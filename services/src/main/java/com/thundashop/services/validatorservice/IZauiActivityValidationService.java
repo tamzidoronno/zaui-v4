@@ -8,7 +8,8 @@ import java.util.List;
 
 public interface IZauiActivityValidationService {
 
-    void validateGotoBookingActivity(GotoActivityReservationDto activity, SessionInfo zauiActivitySession, SessionInfo productSession) throws GotoException;
+    void validateGotoBookingActivity(GotoActivityReservationDto activity, SessionInfo zauiActivitySession, SessionInfo productSession
+            , String systemCurrency) throws GotoException;
 
     void validateTaxRates(List<Double> taxRatesFromOctoBooking, SessionInfo productSessionInfo) throws GotoException;
 }

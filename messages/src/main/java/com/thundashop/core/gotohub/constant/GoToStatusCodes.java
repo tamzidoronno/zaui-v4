@@ -47,6 +47,7 @@ public enum GoToStatusCodes {
     PAYMENT_METHOD_ACTIVATION_FAILED(1404,
             "Goto Booking Confirmation Failed.. Reason: Payment method activation failed"),
     BOOKING_DELETED(1405, "Goto Booking Confirmation Failed.. Reason: Booking Has Been Deleted"),
+    OCTO_RESERVATION_ID_MISMATCHED(1406, "Goto Booking Confirmation Failed.. Reason: Activity's Octo reservation ids mismatched"),
     BOOKING_CONFIRMATION_FAILED(1409, "Goto Booking Confirmation Failed.. Reason: Unknown"),
     BOOKING_CANCELLATION_SUCCESS(1500, "Goto Booking has been Cancelled"),
     BOOKING_CANCELLATION_NOT_FOUND(1501, "Goto Booking Cancellation Failed.. Reason: Booking Not Found"),

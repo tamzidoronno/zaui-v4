@@ -37,7 +37,7 @@ public class GotoBookingRequestValidationService implements IGotoBookingRequestV
         validateBookerInfo(bookingRequest.getOrderer());
         validateNoOfBookingItems(bookingRequest.getRooms(), bookingRequest.getActivities());
         validateRooms(bookingRequest.getRooms(), bookingItemTypeSession, configuration);
-        validateActivities(bookingRequest.getActivities(), zauiActivitySessionInfo, productSessionInfo);
+        validateActivities(bookingRequest.getActivities(), zauiActivitySessionInfo, productSessionInfo, systemCurrency);
     }
 
     private void validateRooms(List<GotoRoomRequest> bookingRooms, SessionInfo bookingItemTypeSession, PmsConfiguration config)
@@ -71,10 +71,11 @@ public class GotoBookingRequestValidationService implements IGotoBookingRequestV
         throw new GotoException(DIFFERENT_CURRENCY.code, DIFFERENT_CURRENCY.message);
     }
 
-    private void validateActivities(List<GotoActivityReservationDto> activities, SessionInfo activitySession, SessionInfo productSession) throws GotoException {
+    private void validateActivities(List<GotoActivityReservationDto> activities, SessionInfo activitySession,
+                                    SessionInfo productSession, String systemCurrency) throws GotoException {
         for(GotoActivityReservationDto activity : activities) {
             try {
-                zauiActivityValidationService.validateGotoBookingActivity(activity, activitySession, productSession);
+                zauiActivityValidationService.validateGotoBookingActivity(activity, activitySession, productSession, systemCurrency);
             } catch (GotoException e) {
                 if(activity.getOctoReservationResponse() != null && activity.getOctoReservationResponse().getOptionId() != null)
                     e.setMessage(e.getMessage() + ", OptionId: " + activity.getOctoReservationResponse().getOptionId());

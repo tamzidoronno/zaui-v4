@@ -415,7 +415,15 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                 booking, pmsBooking, pmsManager.getConfiguration(), zauiActivityManager.getSessionInfo());
         pmsManager.setBookingByAdmin(pmsBooking, true);
         pmsInvoiceManager.clearOrdersOnBooking(pmsBooking);
-        pmsBooking = pmsManager.doCompleteBooking(pmsBooking);
+        if(pmsBooking.rooms.stream()
+                .filter(room -> !room.bookingItemTypeId.equals("gspmsconference"))
+                .collect(Collectors.toList())
+                .size() >0
+        ) {
+            pmsBooking = pmsManager.doCompleteBooking(pmsBooking);
+        } else {
+            holdBookingService.completeGotoBooking(pmsBooking);
+        }
         return pmsBooking;
     }
 

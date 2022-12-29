@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 import static com.thundashop.core.gotohub.constant.GotoConstants.DAILY_PRICE_DATE_FORMATTER;
 import static com.thundashop.core.gotohub.constant.GotoConstants.checkinOutDateFormatter;
+import static com.thundashop.core.gotohub.constant.GotoConstants.BOOKING_ITEM_TYPE_ID_FOR_VIRTUAL_GOTO_ROOM;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Service
@@ -32,6 +33,15 @@ public class GotoHoldBookingService implements IGotoHoldBookingService{
     public PmsBooking getBooking(GotoBookingRequest gotoBooking, PmsBooking pmsBooking, PmsConfiguration config,
                                  SessionInfo zauiActivityManagerSession) throws Exception {
         return mapBookingToPmsBooking(gotoBooking, pmsBooking, config, zauiActivityManagerSession);
+    }
+
+    @Override
+    public void completeGotoBooking(PmsBooking booking) {
+        booking.sessionId = "";
+        booking.completedDate = new Date();
+
+        booking.confirmed = true;
+        booking.confirmedDate = new Date();
     }
     @Override
     public GotoBookingResponse getBookingResponse(PmsBooking pmsBooking, GotoBookingRequest booking, PmsConfiguration config,
@@ -107,11 +117,13 @@ public class GotoHoldBookingService implements IGotoHoldBookingService{
         pmsBooking.registrationData.resultAdded.put("user_cellPhone", user_cellPhone);
         pmsBooking.registrationData.resultAdded.put("user_emailAddress", booker.getEmail());
 
-        List<GotoRoomRequest> bookingRooms = booking.getRooms();
-        for (GotoRoomRequest gotoBookingRoom : bookingRooms) {
-            PmsBookingRooms room = mapRoomToPmsRoom(booking, gotoBookingRoom, config);
-            pmsBooking.addRoom(room);
+        List<PmsBookingRooms> pmsBookingRooms = mapRoomsToPmsRooms(booking.getRooms(), booking, config);
+        for(PmsBookingRooms pmsRoom : pmsBookingRooms) {
+            if(!pmsRoom.bookingItemTypeId.equals("gspmsconference"))
+                pmsBooking.addRoom(pmsRoom);
+            else pmsBooking.rooms.add(pmsRoom);
         }
+
         for(GotoActivityReservationDto activity: booking.getActivities()) {
             BookingZauiActivityItem activityItem = zauiActivityService.mapActivityToBookingZauiActivityItem(
                     activity.getOctoReservationResponse(), zauiActivityManagerSession);
@@ -119,6 +131,25 @@ public class GotoHoldBookingService implements IGotoHoldBookingService{
         }
         return pmsBooking;
     }
+
+    private List<PmsBookingRooms> mapRoomsToPmsRooms(List<GotoRoomRequest> bookingRooms, GotoBookingRequest booking, PmsConfiguration config) throws Exception {
+        List<PmsBookingRooms> pmsBookingRooms = new ArrayList<>();
+        for (GotoRoomRequest gotoBookingRoom : bookingRooms) {
+            PmsBookingRooms room = mapRoomToPmsRoom(booking, gotoBookingRoom, config);
+            pmsBookingRooms.add(room);
+        }
+        if(bookingRooms == null || bookingRooms.isEmpty()) {
+            PmsBookingRooms room = new PmsBookingRooms();
+            room.bookingItemTypeId = BOOKING_ITEM_TYPE_ID_FOR_VIRTUAL_GOTO_ROOM;
+            room.date.start = new Date();
+            room.date.end = new Date();
+            room.deleted = true;
+            room.deletedDate = new Date();
+            pmsBookingRooms.add(room);
+        }
+        return pmsBookingRooms;
+    }
+
 
     private PmsBookingRooms mapRoomToPmsRoom(GotoBookingRequest booking, GotoRoomRequest gotoBookingRoom, PmsConfiguration config)
             throws Exception {

@@ -11,4 +11,6 @@ public interface IPmsBookingRepository extends IRepository<PmsBooking> {
     List<PmsBooking> getGotoBookings(SessionInfo sessionInfo);
 
     PmsBooking getPmsBookingByAddonId(String addonId, SessionInfo sessionInfo);
+
+    PmsBooking getPmsBookingByZauiActivityItemId(String activityItemId, SessionInfo sessionInfo);
 }

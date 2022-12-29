@@ -45,7 +45,6 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import com.thundashop.services.zauiactivityservice.IZauiActivityService;
-import com.thundashop.services.zauiactivityservice.ZauiActivityService;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -3848,7 +3847,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
         // add zaui activity items to order rows
         if(!booking.bookingZauiActivityItems.isEmpty()){
-            createOrder.add(zauiActivityService.createOrderCreateRowForZauiActivities(booking.bookingZauiActivityItems));
+            createOrder.add(zauiActivityService.createOrderCreateRowForZauiActivities(booking.getConfirmedZauiActivities()));
         }
 
         return pmsManager.createOrderFromCheckout(createOrder, roomId, userId);

@@ -20,7 +20,7 @@ import com.thundashop.zauiactivity.dto.*;
 public interface IZauiActivityManager {
     ZauiActivityConfig getActivityConfig() throws NotUniqueDataException;
 
-    ZauiActivityConfig updateActivityConfig(ZauiActivityConfig newActivityConfig);
+    ZauiActivityConfig updateActivityConfig(ZauiActivityConfig newActivityConfig) throws NotUniqueDataException;
 
     List<OctoSupplier> getAllSuppliers() throws ZauiException;
 

@@ -1,16 +1,13 @@
 package com.thundashop.core.zauiactivity;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 import com.thundashop.core.pmsbookingprocess.GuestAddonsSummary;
 import com.thundashop.core.pmsbookingprocess.PmsBookingProcess;
 import com.thundashop.repository.pmsbookingrepository.IPmsBookingRepository;
 import com.thundashop.repository.utils.ZauiStatusCodes;
-import com.thundashop.zauiactivity.constant.ZauiConstants;
 import com.thundashop.zauiactivity.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -64,6 +61,13 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
     private ZauiActivityConfig config;
 
     @Override
+    public void initialize() throws SecurityException {
+        super.initialize();
+        stopScheduler("zauiActivityFetchProducts");
+        createScheduler("zauiActivityFetchProducts", "0 * * * *", ZauiActivityFetchProductsScheduler.class);
+    }
+
+    @Override
     public ZauiActivityConfig getActivityConfig() throws NotUniqueDataException {
         if (config != null) {
             return config;
@@ -73,8 +77,9 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
     }
 
     @Override
-    public ZauiActivityConfig updateActivityConfig(ZauiActivityConfig newActivityConfig) {
+    public ZauiActivityConfig updateActivityConfig(ZauiActivityConfig newActivityConfig) throws NotUniqueDataException {
         saveObject(newActivityConfig);
+        fetchZauiActivities();
         config = newActivityConfig;
         return newActivityConfig;
     }

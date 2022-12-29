@@ -32,7 +32,7 @@ public class GotoHoldBookingService implements IGotoHoldBookingService{
     }
 
     @Override
-    public void completeGotoBooking(PmsBooking booking) {
+    public void completeGotoBookingWithoutRoom(PmsBooking booking) {
         booking.sessionId = "";
         booking.completedDate = new Date();
 
@@ -115,7 +115,7 @@ public class GotoHoldBookingService implements IGotoHoldBookingService{
 
         List<PmsBookingRooms> pmsBookingRooms = mapRoomsToPmsRooms(booking.getRooms(), booking, config);
         for(PmsBookingRooms pmsRoom : pmsBookingRooms) {
-            if(!pmsRoom.bookingItemTypeId.equals("gspmsconference"))
+            if(!pmsRoom.bookingItemTypeId.equals(BOOKING_ITEM_TYPE_ID_FOR_VIRTUAL_GOTO_ROOM))
                 pmsBooking.addRoom(pmsRoom);
             else pmsBooking.rooms.add(pmsRoom);
         }

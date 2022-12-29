@@ -1,7 +1,6 @@
 package com.thundashop.repository.exceptions;
 
 import com.thundashop.repository.utils.ZauiStatusCodes;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -18,6 +17,7 @@ public class ZauiException extends Exception {
         this.statusCode = zauiStatusCodes.code;
         this.message = zauiStatusCodes.message;
     }
+    
     public ZauiException(int statusCode, String message) {
         super();
         this.statusCode = statusCode;

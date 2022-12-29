@@ -10,9 +10,12 @@ import org.springframework.stereotype.Service;
 import com.thundashop.core.webmanager.ZauiHttpRequest;
 import com.thundashop.core.webmanager.ZauiHttpResponse;
 
+import lombok.extern.slf4j.Slf4j;
+
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 @Service
+@Slf4j
 public class ZauiHttpService implements IZauiHttpService {
 
     private static final MediaType JSON = MediaType.parse("application/json");
@@ -92,9 +95,10 @@ public class ZauiHttpService implements IZauiHttpService {
 
     private ZauiHttpResponse execute(Request request) {
         try (Response response = okHttpClient.newCall(request).execute()) {
-            return new ZauiHttpResponse(response.body().string(), response.code(), response.isSuccessful(), response.headers().toMultimap());
+            return new ZauiHttpResponse(response.body().string(), response.code(), response.isSuccessful(), response.headers().toMultimap(), null);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            log.error("ZauiHttpException occured for request url {}. Reason: {}. Actual error: {}", request.url().uri(), e.getMessage(), e);
+            return new ZauiHttpResponse(null, 500, false, null, e.getMessage());
         }
     }
 }

@@ -416,7 +416,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         pmsManager.setBookingByAdmin(pmsBooking, true);
         pmsInvoiceManager.clearOrdersOnBooking(pmsBooking);
         if(booking.getRooms() == null || booking.getRooms().isEmpty()) {
-            holdBookingService.completeGotoBooking(pmsBooking);
+            holdBookingService.completeGotoBookingWithoutRoom(pmsBooking);
         } else {
             pmsBooking = pmsManager.doCompleteBooking(pmsBooking);
         }

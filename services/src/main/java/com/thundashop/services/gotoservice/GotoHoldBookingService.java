@@ -32,14 +32,6 @@ public class GotoHoldBookingService implements IGotoHoldBookingService{
     }
 
     @Override
-    public void completeGotoBookingWithoutRoom(PmsBooking booking) {
-        booking.sessionId = "";
-        booking.completedDate = new Date();
-
-        booking.confirmed = true;
-        booking.confirmedDate = new Date();
-    }
-    @Override
     public GotoBookingResponse getBookingResponse(PmsBooking pmsBooking, GotoBookingRequest booking, PmsConfiguration config,
                                                   int cuttOffHours) throws Exception {
         List<RatePlanCode> ratePlans = new ArrayList<>();
@@ -113,12 +105,7 @@ public class GotoHoldBookingService implements IGotoHoldBookingService{
         pmsBooking.registrationData.resultAdded.put("user_cellPhone", user_cellPhone);
         pmsBooking.registrationData.resultAdded.put("user_emailAddress", booker.getEmail());
 
-        List<PmsBookingRooms> pmsBookingRooms = mapRoomsToPmsRooms(booking.getRooms(), booking, config);
-        for(PmsBookingRooms pmsRoom : pmsBookingRooms) {
-            if(!pmsRoom.bookingItemTypeId.equals(BOOKING_ITEM_TYPE_ID_FOR_VIRTUAL_GOTO_ROOM))
-                pmsBooking.addRoom(pmsRoom);
-            else pmsBooking.rooms.add(pmsRoom);
-        }
+        mapRoomsToPmsRooms(booking, pmsBooking, config);
 
         for(GotoActivityReservationDto activity: booking.getActivities()) {
             BookingZauiActivityItem activityItem = zauiActivityService.mapActivityToBookingZauiActivityItem(
@@ -128,22 +115,18 @@ public class GotoHoldBookingService implements IGotoHoldBookingService{
         return pmsBooking;
     }
 
-    private List<PmsBookingRooms> mapRoomsToPmsRooms(List<GotoRoomRequest> bookingRooms, GotoBookingRequest booking, PmsConfiguration config) throws Exception {
-        List<PmsBookingRooms> pmsBookingRooms = new ArrayList<>();
-        for (GotoRoomRequest gotoBookingRoom : bookingRooms) {
+    private void mapRoomsToPmsRooms(GotoBookingRequest booking, PmsBooking pmsBooking, PmsConfiguration config) throws Exception {
+        for (GotoRoomRequest gotoBookingRoom : booking.getRooms()) {
             PmsBookingRooms room = mapRoomToPmsRoom(booking, gotoBookingRoom, config);
-            pmsBookingRooms.add(room);
+            pmsBooking.addRoom(room);
         }
-        if(bookingRooms == null || bookingRooms.isEmpty()) {
+        if(booking.getRooms() == null || booking.getRooms().isEmpty()) {
             PmsBookingRooms room = new PmsBookingRooms();
             room.bookingItemTypeId = BOOKING_ITEM_TYPE_ID_FOR_VIRTUAL_GOTO_ROOM;
             room.date.start = new Date();
             room.date.end = new Date();
-            room.deleted = true;
-            room.deletedDate = new Date();
-            pmsBookingRooms.add(room);
+            pmsBooking.addRoom(room);
         }
-        return pmsBookingRooms;
     }
 
 

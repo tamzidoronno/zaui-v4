@@ -10,8 +10,6 @@ public interface IGotoHoldBookingService {
     PmsBooking getBooking(GotoBookingRequest gotoBooking, PmsBooking pmsBooking, PmsConfiguration config,
                           SessionInfo zauiActivityManagerSession) throws Exception;
 
-    void completeGotoBookingWithoutRoom(PmsBooking booking);
-
     GotoBookingResponse getBookingResponse(PmsBooking pmsBooking, GotoBookingRequest booking, PmsConfiguration config,
                                            int cuttOffHours) throws Exception;
 }

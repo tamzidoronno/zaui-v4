@@ -10,7 +10,7 @@ class zauiactivity_dto_AddZauiActivityToWebBookingDto {
 	public $units;
 
 	/** @var String */
-	public $bookingId;
+	public $pmsBookingId;
 
 }
 ?>

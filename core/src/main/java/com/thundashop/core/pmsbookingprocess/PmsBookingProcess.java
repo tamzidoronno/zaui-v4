@@ -22,7 +22,7 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import com.thundashop.repository.exceptions.ZauiException;
-import com.thundashop.services.zauiactivityservice.ZauiActivityService;
+import com.thundashop.services.zauiactivityservice.IZauiActivityService;
 import com.thundashop.zauiactivity.constant.ZauiConstants;
 import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -132,7 +132,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     InvoiceManager invoiceManager;
 
     @Autowired
-    ZauiActivityService zauiActivityService;
+    IZauiActivityService zauiActivityService;
 
     public boolean testTerminalPrinter = false;
     public boolean testTerminalPaymentTerminal = false;

@@ -1,7 +1,9 @@
 package com.thundashop.services.validatorservice;
 
+import com.google.common.base.Throwables;
 import com.thundashop.core.gotohub.dto.GotoActivityReservationDto;
 import com.thundashop.core.gotohub.dto.GotoException;
+import com.thundashop.repository.exceptions.NotUniqueDataException;
 import com.thundashop.repository.utils.SessionInfo;
 import com.thundashop.services.productservice.IProductService;
 import com.thundashop.services.zauiactivityservice.IZauiActivityService;
@@ -12,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.*;
@@ -28,14 +30,16 @@ public class ZauiActivityValidationService implements IZauiActivityValidationSer
 
     @Override
     public void validateGotoBookingActivity(GotoActivityReservationDto activity, SessionInfo zauiActivitySession,
-                                            SessionInfo productSession, String systemCurrency) throws GotoException {
+                                            String systemCurrency) throws GotoException {
         validateActivityObject(activity.getOctoReservationResponse());
         validateOptionId(activity.getOctoReservationResponse().getOptionId());
+        validateSupplier(activity.getSupplierId(), zauiActivitySession);
         validateZauiActivity(activity.getOctoReservationResponse().getOptionId(), zauiActivitySession);
         validateAvailabilityId(activity.getOctoReservationResponse().getAvailabilityId());
         validateAvailability(activity.getOctoReservationResponse().getAvailability());
         validateUnitItems(activity.getOctoReservationResponse().getUnitItems());
-        validatePricing(activity.getOctoReservationResponse().getPricing(), productSession, systemCurrency);
+        validatePricing(
+                activity.getSupplierId(), activity.getOctoReservationResponse().getPricing(), zauiActivitySession, systemCurrency);
     }
 
     private void validateActivityObject(OctoBooking octoReservationResponse) throws GotoException {
@@ -46,6 +50,26 @@ public class ZauiActivityValidationService implements IZauiActivityValidationSer
     private void validateOptionId(String optionId) throws GotoException {
         if(isBlank(optionId))
             throw new GotoException(ACTIVITY_OPTION_ID_MISSING.code, ACTIVITY_OPTION_ID_MISSING.message);
+    }
+
+    private void validateSupplier(Integer supplierId, SessionInfo zauiActivitySession) throws GotoException {
+        if(supplierId == null)
+            throw new GotoException(ACTIVITY_SUPPLIER_ID_INVALID.code, ACTIVITY_SUPPLIER_ID_INVALID.message);
+        ZauiConnectedSupplier supplier;
+        try {
+            supplier = zauiActivityService.getZauiActivityConfig(zauiActivitySession)
+                    .connectedSuppliers
+                    .stream()
+                    .filter(s -> s.getId() == supplierId)
+                    .findFirst().orElse(null);
+
+        } catch (NotUniqueDataException e) {
+            log.error(Throwables.getStackTraceAsString(e));
+            throw new GotoException(ZAUI_ACTIVITY_CONFIG_FETCH_FAILED.code, ZAUI_ACTIVITY_CONFIG_FETCH_FAILED.message);
+        }
+        if(supplier == null)
+            throw new GotoException(ACTIVITY_SUPPLIER_ID_NOT_CONNECTED.code, ACTIVITY_SUPPLIER_ID_NOT_CONNECTED.message);
+
     }
 
     private void validateZauiActivity(String optionId, SessionInfo sessionInfo) throws GotoException {
@@ -71,9 +95,11 @@ public class ZauiActivityValidationService implements IZauiActivityValidationSer
     private void validateUnitItems(List<UnitItemOnBooking> unitItems) throws GotoException {
         if(unitItems == null || unitItems.isEmpty())
             throw new GotoException(ACTIVITY_UNIT_ITEM_INCORRECT.code, ACTIVITY_UNIT_ITEM_INCORRECT.message);
+
     }
 
-    private void validatePricing(Pricing pricing, SessionInfo productSessionInfo, String systemCurrency) throws GotoException {
+    private void validatePricing(int supplierId, Pricing pricing, SessionInfo productSessionInfo, String systemCurrency)
+            throws GotoException {
         if(pricing == null)
             throw new GotoException(ACTIVITY_PRICING_MISSING.code, ACTIVITY_PRICING_MISSING.message);
         if(isBlank(pricing.getCurrency()) || !pricing.getCurrency().equals(systemCurrency))
@@ -84,17 +110,28 @@ public class ZauiActivityValidationService implements IZauiActivityValidationSer
         }
         List<Double> taxRate = pricing.getIncludedTaxes().stream()
                 .map(taxData -> new Double(taxData.getRate())).collect(Collectors.toList());
-        validateTaxRates(taxRate, productSessionInfo);
+        validateTaxRates(supplierId, taxRate, productSessionInfo);
     }
 
     @Override
-    public void validateTaxRates(List<Double> taxRatesFromOctoBooking, SessionInfo productSessionInfo) throws GotoException {
-        Set<Double> taxRateFromSystem = productService
-                .getAllTaxGroups(productSessionInfo).stream()
-                .map(taxGroup -> taxGroup.taxRate).collect(Collectors.toSet());
+    public void validateTaxRates(int supplierId, List<Double> taxRatesFromOctoBooking, SessionInfo zauiActivitySessionInfo) throws GotoException {
+        Map<Double, String> taxRateFromActivityConfig;
+        try {
+            ZauiConnectedSupplier supplier = zauiActivityService.getZauiActivityConfig(zauiActivitySessionInfo)
+                    .connectedSuppliers
+                    .stream()
+                    .filter(s -> s.getId() == supplierId)
+                    .findFirst().get();
+
+            taxRateFromActivityConfig = supplier.getTaxRateMapping().stream()
+                    .collect(Collectors.toMap(t -> t.getTaxRate(), t -> t.getAccountNo()));
+        } catch (NotUniqueDataException e) {
+            log.error(Throwables.getStackTraceAsString(e));
+            throw new GotoException(ZAUI_ACTIVITY_CONFIG_FETCH_FAILED.code, ZAUI_ACTIVITY_CONFIG_FETCH_FAILED.message);
+        }
         List<String> invalidTaxRates = new ArrayList<>();
         for(Double rateFromBooking : taxRatesFromOctoBooking) {
-            if(!taxRateFromSystem.contains(rateFromBooking))
+            if(!taxRateFromActivityConfig.containsKey(rateFromBooking) || isBlank(taxRateFromActivityConfig.get(rateFromBooking)))
                 invalidTaxRates.add(String.valueOf(rateFromBooking));
         }
         if(!invalidTaxRates.isEmpty())

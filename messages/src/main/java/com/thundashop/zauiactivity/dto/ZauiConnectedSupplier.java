@@ -15,9 +15,3 @@ public class ZauiConnectedSupplier extends OctoSupplier {
         return taxRateMapping.getAccountNo();
     }
 }
-
-@Data
-class TaxRateMap {
-    public double TaxRate;
-    public String AccountNo;
-}

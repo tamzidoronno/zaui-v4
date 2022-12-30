@@ -1,7 +1,6 @@
 package com.thundashop.core.zauiactivity;
 import com.getshop.scope.GetShopSchedulerBase;
 import com.thundashop.core.common.GetShopLogHandler;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class ZauiActivityFetchProductsScheduler extends GetShopSchedulerBase {
     public ZauiActivityFetchProductsScheduler(String webAddress, String username, String password, String scheduler, String multiLevelName) throws Exception {

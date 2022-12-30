@@ -6,17 +6,17 @@ import lombok.Data;
 public class OctoSupplier {
     private int id;
     private String name;
-    public String endpoint;
-    public String documentation;
-    public OctoSupplierContact contact;
-    public String country;
+    private String endpoint;
+    private String documentation;
+    private OctoSupplierContact contact;
+    private String country;
 }
 
 @Data
 class OctoSupplierContact {
-    public String website;
-    public String email;
-    public String otherEmail;
-    public String telephone;
-    public String address;
+    private String website;
+    private String email;
+    private String otherEmail;
+    private String telephone;
+    private String address;
 }

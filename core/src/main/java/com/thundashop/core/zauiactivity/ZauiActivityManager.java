@@ -64,7 +64,7 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
     public void initialize() throws SecurityException {
         super.initialize();
         stopScheduler("zauiActivityFetchProducts");
-        createScheduler("zauiActivityFetchProducts", "0 * * * *", ZauiActivityFetchProductsScheduler.class);
+        createScheduler("zauiActivityFetchProducts", "0 * * * *", ZauiActivityFetchProductsScheduler.class, true);
     }
 
     @Override

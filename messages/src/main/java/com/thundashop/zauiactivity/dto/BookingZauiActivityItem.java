@@ -1,25 +1,30 @@
 package com.thundashop.zauiactivity.dto;
 
-import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
-
-import lombok.Data;
-
 import java.util.List;
 
-@Data
+import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.AccessLevel;
+
+@Getter 
+@Setter
 public class BookingZauiActivityItem extends PmsBookingAddonItem {
-    public String id = java.util.UUID.randomUUID().toString();
-    public String zauiActivityId;
-    public Integer octoProductId;
-    public String optionTitle;
-    public String optionId;
-    public String availabilityId;
-    public List<Unit> units;
-    public double unpaidAmount;
-    public String notes;
-    public String localDateTimeStart;
-    public String localDateTimeEnd;
-    public Integer supplierId;
-    public String supplierName;
-    public OctoBooking octoBooking;
+    @Setter(AccessLevel.NONE)
+    private String id = java.util.UUID.randomUUID().toString();
+
+    private String zauiActivityId;
+    private Integer octoProductId;
+    private String optionTitle;
+    private String optionId;
+    private String availabilityId;
+    private List<Unit> units;
+    private double unpaidAmount;
+    private String notes;
+    private String localDateTimeStart;
+    private String localDateTimeEnd;
+    private Integer supplierId;
+    private String supplierName;
+    private OctoBooking octoBooking;
 }

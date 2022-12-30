@@ -99,9 +99,10 @@ public class PmsBooking extends DataCommon {
     public long jomresBookingId=0;
     @Transient
     public boolean ignoreOverrideTotPrice = false;
-    public long jomresChannelId=0;
-    public String jomresReservationCode="";
     public Date jomresLastModified=null;
+
+    //Goto Related Properties
+    public String paymentMethodNameFromGoto = "";
 
     // Zaui Activity related Properties
     public List<BookingZauiActivityItem> bookingZauiActivityItems = new ArrayList<>();

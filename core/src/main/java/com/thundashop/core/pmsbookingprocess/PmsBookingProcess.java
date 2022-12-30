@@ -25,6 +25,7 @@ import com.thundashop.repository.exceptions.ZauiException;
 import com.thundashop.services.zauiactivityservice.IZauiActivityService;
 import com.thundashop.zauiactivity.constant.ZauiConstants;
 import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
+import com.thundashop.zauiactivity.dto.OctoBooking;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -781,8 +782,10 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         boolean addDefaultAddons = true;
         if (currentBooking.couponCode != null && !currentBooking.couponCode.isEmpty()) {
             Coupon coupon = cartManager.getCoupon(currentBooking.couponCode);
-            if (coupon.excludeDefaultAddons) {
-                addDefaultAddons = false;
+            if(coupon != null){
+                if (coupon.excludeDefaultAddons) {
+                    addDefaultAddons = false;
+                }
             }
         }
         if (addDefaultAddons) {
@@ -950,6 +953,13 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
 
         PmsUserDiscount discount = pmsInvoiceManager.getDiscountsForUser(booking.userId);
         User usr = userManager.getUserById(booking.userId);
+        // confirm zaui activity booking
+        if(!booking.bookingZauiActivityItems.isEmpty()){
+            for(BookingZauiActivityItem activityItem : booking.bookingZauiActivityItems){
+                OctoBooking octoConfirmedBooking = zauiActivityService.confirmOctoBooking(activityItem,booking,usr);
+                zauiActivityService.addActivityToBooking(activityItem,octoConfirmedBooking,booking);
+            }
+        }
         if (usr != null && discount != null && usr.preferredPaymentType != null
                 && usr.preferredPaymentType.equals("70ace3f0-3981-11e3-aa6e-0800200c9a66")) {
             booking.avoidAutoDelete = true;
@@ -999,13 +1009,6 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         res.userData = userData;
 
         // pmsManager.calculateCountryFromPhonePrefix(booking);
-
-        // confirm zaui activity booking
-        if(!booking.bookingZauiActivityItems.isEmpty()){
-            for(BookingZauiActivityItem activityItem : booking.bookingZauiActivityItems){
-                zauiActivityService.confirmOctoBooking(activityItem,booking,usr);
-            }
-        }
 
         return res;
     }

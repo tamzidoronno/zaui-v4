@@ -19,8 +19,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.awt.print.Book;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -103,8 +105,20 @@ public class ZauiActivityService implements IZauiActivityService {
         activityItem.price = getPricingFromOctoTaxObject(activityItem.getOctoBooking().getPricing()).getTotal();
         activityItem.priceExTaxes = getPricingFromOctoTaxObject(activityItem.getOctoBooking().getPricing()).getSubtotal();
         activityItem.setUnpaidAmount(activityItem.price);
-        booking.bookingZauiActivityItems.add(activityItem);
-        log.info("activity added to booking {}", activityItem);
+
+        int itemIndex = IntStream.range(0, booking.bookingZauiActivityItems.size())
+                .filter(i -> booking.bookingZauiActivityItems.get(i).getId().equals(activityItem.getId()))
+                .findFirst()
+                .orElse(-1);
+
+        if(itemIndex == -1) {
+            booking.bookingZauiActivityItems.add(activityItem);
+            log.info("activity added to booking {}", activityItem);
+        }
+        else {
+            booking.bookingZauiActivityItems.set(itemIndex, activityItem);
+            log.info("activity confirmed to booking {}", activityItem);
+        }
         return booking;
     }
 

@@ -169,18 +169,18 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
         setActivityItemAsPaid(activityItem.get());
         List<CartItem> cartItems = new ArrayList<>();
         Pricing pricing = activityItem.get().getOctoBooking().getPricing();
-        pricing.getIncludedTaxes().forEach((tax) -> {
-            Product taxProduct = null;
+        for(TaxData tax : pricing.getIncludedTaxes()){
             try {
-                taxProduct = createZauiActivityForTax(activity.get(), tax, pricing.getCurrencyPrecision());
+                Product taxProduct = createZauiActivityForTax(activity.get(), tax, pricing.getCurrencyPrecision());
+                CartItem cartItem = new CartItem();
+                cartItem.setProduct(taxProduct);
+                cartItem.setCount(1);
+                cartItems.add(cartItem);
             } catch (ZauiException | NotUniqueDataException e) {
                 throw new RuntimeException(e);
             }
-            CartItem cartItem = new CartItem();
-            cartItem.setProduct(taxProduct);
-            cartItem.setCount(1);
-            cartItems.add(cartItem);
-        });
+
+        }
         return cartItems;
     }
 
@@ -211,8 +211,10 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
         ZauiConnectedSupplier zauiSupplier = getActivityConfig().connectedSuppliers.stream().filter(supplier -> supplierId.equals(supplier.getId())).findFirst().orElse(null);
         if(zauiSupplier == null)
             throw new ZauiException(ZauiStatusCodes.SUPPLIER_NOT_FOUND);
-        int accountNumber = Integer.parseInt(zauiSupplier.getSupplierAccountNumberByRate(taxRate));
-        return productManager.getAccountingDetail(accountNumber);
+        String accountNumber = zauiSupplier.getSupplierAccountNumberByRate(taxRate);
+        if(accountNumber == null)
+            throw new ZauiException(ZauiStatusCodes.ACCOUNTING_ERROR);
+        return productManager.getAccountingDetail(Integer.parseInt(accountNumber));
     }
 
     private void setActivityItemAsPaid(BookingZauiActivityItem activityItem) {

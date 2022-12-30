@@ -26,6 +26,7 @@ import com.thundashop.services.zauiactivityservice.IZauiActivityService;
 import com.thundashop.zauiactivity.constant.ZauiConstants;
 import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
 import com.thundashop.zauiactivity.dto.OctoBooking;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -73,6 +74,7 @@ import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.utils.Constants;
+import com.thundashop.core.utils.DateUtils;
 import com.thundashop.core.verifonemanager.VerifoneManager;
 import com.thundashop.core.webmanager.WebManager;
 
@@ -141,7 +143,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     private ArrayList<String> itemsTaken;
 
     @Override
-    public StartBookingResult startBooking(StartBooking arg) {
+    public StartBookingResult startBooking(@NotNull StartBooking arg) {
 
         if (arg.discountCode != null) {
             arg.discountCode = arg.discountCode.replaceAll("&amp;", "&");
@@ -204,7 +206,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         arg.end = pmsManager.getConfigurationSecure().getDefaultEnd(arg.end);
 
         if (arg.start.after(arg.end)) {
-            arg.end = correctToDayAfter(arg);
+            arg.end = DateUtils.getCorrectCheckOutDate(arg.start, arg.end);
         }
 
         StartBookingResult result = new StartBookingResult();
@@ -1443,18 +1445,6 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         }
     }
 
-    private Date correctToDayAfter(StartBooking arg) {
-        Date start = arg.start;
-        Calendar startCal = Calendar.getInstance();
-        startCal.setTime(start);
-
-        Calendar endCal = Calendar.getInstance();
-        endCal.setTime(arg.end);
-        endCal.set(Calendar.DAY_OF_YEAR, startCal.get(Calendar.DAY_OF_YEAR) + 1);
-        endCal.set(Calendar.YEAR, startCal.get(Calendar.YEAR));
-        return endCal.getTime();
-    }
-
     private List<String> checkForSupportedPaymentMethods(PmsBooking booking) {
         if (getSession() != null && getSession().currentUser != null) {
             return getSession().currentUser.enabledPaymentOptions;
@@ -1779,7 +1769,6 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
 
     @Override
     public void simpleCompleteCurrentBooking() {
-        PmsBooking booking = pmsManager.getCurrentBooking();
         pmsManager.simpleCompleteCurrentBooking();
         // pmsManager.calculateCountryFromPhonePrefix(booking);
     }

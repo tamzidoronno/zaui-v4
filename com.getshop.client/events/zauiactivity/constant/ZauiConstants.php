@@ -21,5 +21,11 @@ class zauiactivity_constant_ZauiConstants {
 	/** @var String */
 	public $ZAUI_STAY_TAG;
 
+	/** @var String */
+	public $OCTO_CONFIRMED_STATUS;
+
+	/** @var String */
+	public $OCTO_CANCELLED_STATUS;
+
 }
 ?>

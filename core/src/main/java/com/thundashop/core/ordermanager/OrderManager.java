@@ -26,6 +26,7 @@ import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
+import com.thundashop.core.paymentmanager.StorePaymentConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -5361,10 +5362,54 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             .map(o -> getOrderSecure(o))
             .forEach(order -> {
                 order.transferredToCentral = true;
+                setAccountingAccountIdOnUser(order.userId);
+                logger.info("Update user {} order: {} as {}", order.userId, order.incrementOrderId, userManager.getUserByIdIncludedDeleted(order.userId).accountingId);
                 super.saveObject(order);
             });
     }
 
+    private void setAccountingAccountIdOnUser(String userId) {
+        Integer idToUse = 0;
+        Integer useOffset = paymentManager.getGeneralPaymentConfig().accountingCustomerOffset;
+
+        if (useOffset != null && useOffset > 0) {
+            idToUse = useOffset;
+        }
+
+        User user = userManager.getUserByIdIncludedDeleted(userId);
+        Integer accountingId = user.customerId;
+        if(user.accountingId != null && !user.accountingId.trim().isEmpty() && !user.accountingId.equals("0")) {
+            try {
+                accountingId = new Integer(user.accountingId);
+            }catch(Exception e) {
+                logPrint("Number exception problem on user: " + user.fullName);
+            }
+        }
+        if(accountingId >= idToUse) {
+            return;
+        } else {
+            userManager.setNextAccountingId(userId, idToUse);
+        }
+    }
+
+    private String getUniqueCustomerIdForOrder(Order order) {
+        String paymentId = order.getPaymentApplicationId();
+        return getAccountingNumberForPaymentApplicationId(paymentId);
+    }
+
+    private String getAccountingNumberForPaymentApplicationId(String paymentId) {
+        if (paymentId == null) {
+            return null;
+        }
+
+        StorePaymentConfig config = paymentManager.getStorePaymentConfiguration(paymentId);
+
+        if (config != null && !config.userCustomerNumber.isEmpty()) {
+            return config.userCustomerNumber;
+        }
+
+        return null;
+    }
     @Override
     public void deleteOrderTransaction(String transactionId) {
         

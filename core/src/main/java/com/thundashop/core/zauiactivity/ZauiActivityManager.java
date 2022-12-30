@@ -1,16 +1,13 @@
 package com.thundashop.core.zauiactivity;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
 
 import com.thundashop.core.pmsbookingprocess.GuestAddonsSummary;
 import com.thundashop.core.pmsbookingprocess.PmsBookingProcess;
 import com.thundashop.repository.pmsbookingrepository.IPmsBookingRepository;
 import com.thundashop.repository.utils.ZauiStatusCodes;
-import com.thundashop.zauiactivity.constant.ZauiConstants;
 import com.thundashop.zauiactivity.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -64,6 +61,13 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
     private ZauiActivityConfig config;
 
     @Override
+    public void initialize() throws SecurityException {
+        super.initialize();
+        stopScheduler("zauiActivityFetchProducts");
+        createScheduler("zauiActivityFetchProducts", "0 * * * *", ZauiActivityFetchProductsScheduler.class, true);
+    }
+
+    @Override
     public ZauiActivityConfig getActivityConfig() throws NotUniqueDataException {
         if (config != null) {
             return config;
@@ -73,8 +77,9 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
     }
 
     @Override
-    public ZauiActivityConfig updateActivityConfig(ZauiActivityConfig newActivityConfig) {
+    public ZauiActivityConfig updateActivityConfig(ZauiActivityConfig newActivityConfig) throws NotUniqueDataException {
         saveObject(newActivityConfig);
+        fetchZauiActivities();
         config = newActivityConfig;
         return newActivityConfig;
     }
@@ -164,18 +169,18 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
         setActivityItemAsPaid(activityItem.get());
         List<CartItem> cartItems = new ArrayList<>();
         Pricing pricing = activityItem.get().getOctoBooking().getPricing();
-        pricing.getIncludedTaxes().forEach((tax) -> {
-            Product taxProduct = null;
+        for(TaxData tax : pricing.getIncludedTaxes()){
             try {
-                taxProduct = createZauiActivityForTax(activity.get(), tax, pricing.getCurrencyPrecision());
+                Product taxProduct = createZauiActivityForTax(activity.get(), tax, pricing.getCurrencyPrecision());
+                CartItem cartItem = new CartItem();
+                cartItem.setProduct(taxProduct);
+                cartItem.setCount(1);
+                cartItems.add(cartItem);
             } catch (ZauiException | NotUniqueDataException e) {
                 throw new RuntimeException(e);
             }
-            CartItem cartItem = new CartItem();
-            cartItem.setProduct(taxProduct);
-            cartItem.setCount(1);
-            cartItems.add(cartItem);
-        });
+
+        }
         return cartItems;
     }
 
@@ -206,8 +211,10 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
         ZauiConnectedSupplier zauiSupplier = getActivityConfig().connectedSuppliers.stream().filter(supplier -> supplierId.equals(supplier.getId())).findFirst().orElse(null);
         if(zauiSupplier == null)
             throw new ZauiException(ZauiStatusCodes.SUPPLIER_NOT_FOUND);
-        int accountNumber = Integer.parseInt(zauiSupplier.getSupplierAccountNumberByRate(taxRate));
-        return productManager.getAccountingDetail(accountNumber);
+        String accountNumber = zauiSupplier.getSupplierAccountNumberByRate(taxRate);
+        if(accountNumber == null)
+            throw new ZauiException(ZauiStatusCodes.ACCOUNTING_ERROR);
+        return productManager.getAccountingDetail(Integer.parseInt(accountNumber));
     }
 
     private void setActivityItemAsPaid(BookingZauiActivityItem activityItem) {

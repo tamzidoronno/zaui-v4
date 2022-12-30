@@ -4,8 +4,10 @@ import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_DELET
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_NOT_FOUND;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.PAYMENT_METHOD_NOT_FOUND;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.OCTO_RESERVATION_ID_MISMATCHED;
+import static com.thundashop.core.gotohub.constant.GoToStatusCodes.OCTO_RESERVATION_NOT_CONFIRMED;
 import static com.thundashop.core.gotohub.constant.GotoConstants.GOTO_PAYMENT;
 import static com.thundashop.core.gotohub.constant.GotoConstants.STAY_PAYMENT;
+import static com.thundashop.zauiactivity.constant.ZauiConstants.OCTO_CONFIRMED_STATUS;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import com.thundashop.core.gotohub.dto.GotoActivityConfirmationDto;
@@ -35,6 +37,7 @@ public class GotoConfirmBookingValidationService implements IGotoConfirmBookingV
         PmsBooking booking = pmsBookingService.getPmsBookingById(reservationId, pmsManagerSession);
         validateBookingId(booking);
         validateOctoReservationIds(gotoConfirmBookingReq.getActivities(), booking.bookingZauiActivityItems);
+        validateIfActivitiesConfirmed(gotoConfirmBookingReq.getActivities());
         String requestedPaymentMethod = gotoConfirmBookingReq == null ? STAY_PAYMENT : gotoConfirmBookingReq.getPaymentMethod();
         validatePaymentMethod(paymentId, requestedPaymentMethod);
         return booking;
@@ -77,6 +80,14 @@ public class GotoConfirmBookingValidationService implements IGotoConfirmBookingV
                 .filter(activity -> !activity.getOctoBooking().getStatus().equals("CANCELLED"))
                 .collect(Collectors.toList())
                 .size() == 0 ;
+    }
+
+    private void validateIfActivitiesConfirmed(List<GotoActivityConfirmationDto> activities) throws GotoException {
+        int size = activities.stream()
+                .filter(activity-> !activity.getOctoConfirmationResponse().getStatus().equals(OCTO_CONFIRMED_STATUS))
+                .collect(Collectors.toList()).size();
+        if(size != 0)
+            throw new GotoException(OCTO_RESERVATION_NOT_CONFIRMED.code, OCTO_RESERVATION_NOT_CONFIRMED.message);
     }
 
     private void validatePaymentMethod(String paymentMethodId, String requestedPaymentMethod) throws GotoException {

@@ -21,11 +21,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import com.thundashop.repository.exceptions.ZauiException;
 import com.thundashop.services.zauiactivityservice.IZauiActivityService;
 import com.thundashop.zauiactivity.constant.ZauiConstants;
 import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
 import com.thundashop.zauiactivity.dto.OctoBooking;
+
+import lombok.extern.slf4j.Slf4j;
+
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -84,6 +86,7 @@ import com.thundashop.core.webmanager.WebManager;
  */
 @Component
 @GetShopSession
+@Slf4j
 public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBookingProcess {
 
     @Autowired
@@ -583,8 +586,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
                 if (isAvailableForRoom(item, room)) {
                     returnroom.addonsAvailable.put(toAddAddon.productId, toAddAddon);
                 }
-            }
-            System.out.println("-------------");
+            }            
             result.rooms.add(returnroom);
         }
     }
@@ -781,16 +783,8 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
 
     private GuestAddonsSummary generateSummary() {
         PmsBooking currentBooking = pmsManager.getCurrentBooking();
-        boolean addDefaultAddons = true;
-        if (currentBooking.couponCode != null && !currentBooking.couponCode.isEmpty()) {
-            Coupon coupon = cartManager.getCoupon(currentBooking.couponCode);
-            if(coupon != null){
-                if (coupon.excludeDefaultAddons) {
-                    addDefaultAddons = false;
-                }
-            }
-        }
-        if (addDefaultAddons) {
+
+        if (addDefaultAddons(currentBooking)) {
             pmsManager.addDefaultAddons(pmsManager.getCurrentBooking());
         }
 
@@ -804,6 +798,16 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         validateFields(result);
         addZauiActivities(result);
         return result;
+    }
+
+    private boolean addDefaultAddons(PmsBooking currentBooking) {
+        if (currentBooking.couponCode != null && !currentBooking.couponCode.isEmpty()) {
+            Coupon coupon = cartManager.getCoupon(currentBooking.couponCode);
+            if (coupon != null && coupon.excludeDefaultAddons) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private void addZauiActivities(GuestAddonsSummary result) {
@@ -931,7 +935,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
     }
 
     @Override
-    public BookingResult completeBooking(CompleteBookingInput input) throws ZauiException {
+    public BookingResult completeBooking(CompleteBookingInput input) {
         User loggedOn = userManager.getLoggedOnUser();
         PmsBooking booking = null;
         if (loggedOn != null) {
@@ -955,13 +959,9 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
 
         PmsUserDiscount discount = pmsInvoiceManager.getDiscountsForUser(booking.userId);
         User usr = userManager.getUserById(booking.userId);
-        // confirm zaui activity booking
-        if(!booking.bookingZauiActivityItems.isEmpty()){
-            for(BookingZauiActivityItem activityItem : booking.bookingZauiActivityItems){
-                OctoBooking octoConfirmedBooking = zauiActivityService.confirmOctoBooking(activityItem,booking,usr);
-                zauiActivityService.addActivityToBooking(activityItem,octoConfirmedBooking,booking);
-            }
-        }
+
+        confirmZauiActivites(booking, usr);
+
         if (usr != null && discount != null && usr.preferredPaymentType != null
                 && usr.preferredPaymentType.equals("70ace3f0-3981-11e3-aa6e-0800200c9a66")) {
             booking.avoidAutoDelete = true;
@@ -1013,6 +1013,22 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         // pmsManager.calculateCountryFromPhonePrefix(booking);
 
         return res;
+    }
+
+    private void confirmZauiActivites(PmsBooking booking, User user) {
+        if (booking.bookingZauiActivityItems.isEmpty()) {
+            return;
+        }
+        for (BookingZauiActivityItem activityItem : booking.bookingZauiActivityItems) {
+            try {
+                OctoBooking octoConfirmedBooking = zauiActivityService.confirmOctoBooking(activityItem, booking, user);
+                zauiActivityService.addActivityToBooking(activityItem, octoConfirmedBooking, booking);
+            } catch (Exception ex) {
+                log.error("Failed to confirm activity {} for booking {}. Reason: {}. Actual error: {}",
+                        activityItem.toString(), booking.id, ex.getMessage(), ex);
+
+            }
+        }
     }
 
     private void validateFields(GuestAddonsSummary result) {

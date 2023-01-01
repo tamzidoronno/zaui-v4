@@ -164,6 +164,8 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
         Optional<BookingZauiActivityItem> activityItem = zauiActivityService
                 .getBookingZauiActivityItemByAddonId(addonId, pmsManager.getSessionInfo());
         if (!activityItem.isPresent()) {
+            // is this needed to throw exception? what if we log it as error and return
+            // empty cart list
             throw new ErrorException(1011);
         }
         setActivityItemAsPaid(activityItem.get());
@@ -177,6 +179,7 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
                 cartItem.setCount(1);
                 cartItems.add(cartItem);
             } catch (ZauiException | NotUniqueDataException e) {
+                // same here. is this really needed?
                 throw new RuntimeException(e);
             }
 

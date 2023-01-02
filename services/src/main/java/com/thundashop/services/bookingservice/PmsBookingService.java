@@ -26,6 +26,6 @@ public class PmsBookingService implements IPmsBookingService{
 
     @Override
     public PmsBooking getPmsBookingByZauiActivityItemId(String activityItemId, SessionInfo sessionInfo) {        
-        return pmsBookingRepository.getPmsBookingById(activityItemId, sessionInfo);
+        return pmsBookingRepository.getPmsBookingByZauiActivityItemId(activityItemId, sessionInfo);
     }
 }

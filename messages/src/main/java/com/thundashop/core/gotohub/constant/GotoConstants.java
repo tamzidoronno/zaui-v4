@@ -11,5 +11,7 @@ public class GotoConstants {
     public static SimpleDateFormat cancellationDateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
     public static String GOTO_BOOKING_CHANNEL_NAME = "goto";
     public static int DEFAULT_AUTO_DELETION_TIME_FOR_GOTO_BOOKING_IN_MINUTE = 90;
+    public static String GOTO_PAYMENT= "GOTO_PAYMENT";
+    public static String STAY_PAYMENT= "STAY_PAYMENT";
     public static String BOOKING_ITEM_TYPE_ID_FOR_VIRTUAL_GOTO_ROOM = "gspmsconference";
 }

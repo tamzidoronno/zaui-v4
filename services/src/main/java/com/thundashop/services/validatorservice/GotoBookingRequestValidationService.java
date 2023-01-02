@@ -1,4 +1,4 @@
-package com.thundashop.services.gotoservice;
+package com.thundashop.services.validatorservice;
 
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.DIFFERENT_CURRENCY;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.EMAIL_OR_PHONE_MISSING;
@@ -10,8 +10,6 @@ import java.text.ParseException;
 import java.util.List;
 
 import com.thundashop.core.gotohub.dto.*;
-import com.thundashop.services.validatorservice.IGotoRoomValidationService;
-import com.thundashop.services.validatorservice.IZauiActivityValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

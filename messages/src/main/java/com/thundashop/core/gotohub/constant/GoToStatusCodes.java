@@ -47,7 +47,7 @@ public enum GoToStatusCodes {
         ACTIVITY_SUPPLIER_ID_INVALID(1325, "Goto Booking Failed.. Reason: Activity has invalid supplier id"),
         ACTIVITY_SUPPLIER_ID_NOT_CONNECTED(1326, "Goto Booking Failed.. Reason: Supplier is not connected with hotel"),
 
-        BOOKING_CONFIRMATION_SUCCESS(1400, "Goto Booking has been Confirmed"),
+        BOOKING_CONFIRMATION_SUCCESS(1400, "Payment link has been attached"),
         BOOKING_NOT_FOUND(1401, "Goto Booking Confirmation Failed.. Reason: Booking Not Found"),
         PAYMENT_FAILED(1402, "Goto Booking Confirmation Failed.. Reason: Payment failed"),
         PAYMENT_METHOD_NOT_FOUND(1403, "Goto Booking Payment Confirmation Failed.. " +
@@ -55,6 +55,10 @@ public enum GoToStatusCodes {
         PAYMENT_METHOD_ACTIVATION_FAILED(1404,
                         "Goto Booking Confirmation Failed.. Reason: Payment method activation failed"),
         BOOKING_DELETED(1405, "Goto Booking Confirmation Failed.. Reason: Booking Has Been Deleted"),
+        OCTO_RESERVATION_ID_MISMATCHED(1406,
+                        "Goto Booking Confirmation Failed.. Reason: Activity's Octo reservation ids mismatched"),
+        OCTO_RESERVATION_NOT_CONFIRMED(1407, "Goto Booking Confirmation Failed.. " +
+                        "Reason: Activities have Octo reservation in /'ON_HOLD/' status"),
         BOOKING_CONFIRMATION_FAILED(1409, "Goto Booking Confirmation Failed.. Reason: Unknown"),
         BOOKING_CANCELLATION_SUCCESS(1500, "Goto Booking has been Cancelled"),
         BOOKING_CANCELLATION_NOT_FOUND(1501, "Goto Booking Cancellation Failed.. Reason: Booking Not Found"),

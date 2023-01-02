@@ -75,13 +75,4 @@ public class Database {
         DBObject result = mongo.getDB(dbName).getCollection(collectionName).findOne(searchQuery);
         return (T) morphia.fromDBObject(result);
     }
-
-    public DataCommon update(String dbName, String collectionName, DBObject filter,  DataCommon update) {
-        notNull(update, "DataCommon should not be null");
-        DBObject dbObject = new BasicDBObject("$set", morphia.toDBObject(update));
-        mongo.getDB(dbName)
-                .getCollection(collectionName)
-                .update(filter,dbObject);
-        return update;
-    }
 }

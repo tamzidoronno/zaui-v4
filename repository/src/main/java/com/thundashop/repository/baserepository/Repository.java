@@ -103,8 +103,4 @@ public abstract class Repository<T> implements IRepository<T> {
         return getDatabase().distinct(sessionInfo.getManagerName(), getCollectionName(sessionInfo), field, query);
     }
 
-    public DataCommon update(DBObject filter, DataCommon dataCommon, SessionInfo sessionInfo) {
-        return getDatabase().update(sessionInfo.getManagerName(), getCollectionName(sessionInfo), filter, dataCommon);
-    }
-
 }

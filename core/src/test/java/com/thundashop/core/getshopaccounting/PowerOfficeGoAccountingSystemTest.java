@@ -15,8 +15,12 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class PowerOfficeGoAccountingSystemTest {
+
+    @Autowired
+    ZauiHttpService httpService;
 
     String data = "{\n" +
             "  \"code\":\"191455\",\n" +
@@ -76,7 +80,6 @@ public class PowerOfficeGoAccountingSystemTest {
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(3, TimeUnit.MINUTES)
                 .build();
-        ZauiHttpService httpService = new ZauiHttpService(client);
         PowerOfficeGoHttpClientManager manager = new PowerOfficeGoHttpClientManager(httpService);
 
         String response = manager.post(data, token, endpoint);

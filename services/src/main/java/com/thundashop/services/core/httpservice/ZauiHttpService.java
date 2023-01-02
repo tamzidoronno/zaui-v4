@@ -2,6 +2,7 @@ package com.thundashop.services.core.httpservice;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +22,11 @@ public class ZauiHttpService implements IZauiHttpService {
     private static final MediaType JSON = MediaType.parse("application/json");
     private static final MediaType TEXT = MediaType.parse("text/plain");
 
-    private final OkHttpClient okHttpClient;
-
-    @Autowired
-    public ZauiHttpService(OkHttpClient okHttpClient) {
-        this.okHttpClient = okHttpClient;
-    }
+    private final OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                                                    .connectTimeout(1,TimeUnit.MINUTES)
+                                                    .readTimeout(1,TimeUnit.MINUTES)
+                                                    .writeTimeout(1,TimeUnit.MINUTES)
+                                                    .build();
 
     @Override
     public ZauiHttpResponse post(ZauiHttpRequest httpRequest) {

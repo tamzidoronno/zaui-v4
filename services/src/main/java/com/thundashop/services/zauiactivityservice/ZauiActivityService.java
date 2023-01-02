@@ -110,6 +110,8 @@ public class ZauiActivityService implements IZauiActivityService {
                 .getSubtotal();
         activityItem.setUnpaidAmount(activityItem.price);
 
+        // Add octo tax validation with supplier
+
         int itemIndex = IntStream.range(0, booking.bookingZauiActivityItems.size())
                 .filter(i -> booking.bookingZauiActivityItems.get(i).getId().equals(activityItem.getId()))
                 .findFirst()
@@ -212,22 +214,18 @@ public class ZauiActivityService implements IZauiActivityService {
     }
 
     private void syncZauiActivities(List<OctoProduct> octoProducts, ZauiConnectedSupplier supplier, String currency,
-            SessionInfo sessionInfo) {
+                                    SessionInfo sessionInfo) {
         for (OctoProduct octoProduct : octoProducts) {
             try {
                 ZauiActivity zauiActivity = zauiActivityRepository.getBySupplierAndProductId(supplier.getId(),
                         octoProduct.getId(), sessionInfo);
                 if (zauiActivity == null) {
-                    zauiActivityRepository.save(mapOctoToZauiActivity(octoProduct, supplier, currency, null),
-                            sessionInfo);
-                } else {
-                    zauiActivityRepository.update(mapOctoToZauiActivity(octoProduct, supplier, currency, zauiActivity),
-                            sessionInfo);
+                    zauiActivity = new ZauiActivity();
                 }
+                zauiActivityRepository.save(mapOctoToZauiActivity(octoProduct, supplier, currency, zauiActivity), sessionInfo);
 
             } catch (Exception ex) {
-                log.error(
-                        "Failed to save or update octo product into database. Octo product id: {}, supplier id: {}. Reason: {}, Actual error: {}",
+                log.error("Failed to save or update octo product into database. Octo product id: {}, supplier id: {}. Reason: {}, Actual error: {}",
                         octoProduct.getId(), supplier.getId(), ex.getMessage(), ex);
             }
         }
@@ -235,9 +233,6 @@ public class ZauiActivityService implements IZauiActivityService {
 
     private ZauiActivity mapOctoToZauiActivity(OctoProduct octoProduct, ZauiConnectedSupplier supplier, String currency,
             ZauiActivity zauiActivity) {
-        if (zauiActivity == null) {
-            zauiActivity = new ZauiActivity();
-        }
         zauiActivity.name = octoProduct.getInternalName();
         zauiActivity.setProductId(octoProduct.getId());
         zauiActivity.setSupplierId(supplier.getId());

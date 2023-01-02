@@ -3846,7 +3846,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         String userId = booking.userId != null && !booking.userId.isEmpty() ? booking.userId : getSession().currentUser.id;
 
         // add zaui activity items to order rows
-        if(!booking.bookingZauiActivityItems.isEmpty()){
+        if(!booking.getConfirmedZauiActivities().isEmpty()){
             createOrder.add(zauiActivityService.createOrderCreateRowForZauiActivities(booking.getConfirmedZauiActivities()));
         }
 

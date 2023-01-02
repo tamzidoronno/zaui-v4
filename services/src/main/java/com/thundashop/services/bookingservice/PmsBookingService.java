@@ -23,4 +23,9 @@ public class PmsBookingService implements IPmsBookingService{
     public List<PmsBooking> getGotoBookings(SessionInfo sessionInfo) {
         return pmsBookingRepository.getGotoBookings(sessionInfo);
     }
+
+    @Override
+    public PmsBooking getPmsBookingByZauiActivityItemId(String activityItemId, SessionInfo sessionInfo) {        
+        return pmsBookingRepository.getPmsBookingByZauiActivityItemId(activityItemId, sessionInfo);
+    }
 }

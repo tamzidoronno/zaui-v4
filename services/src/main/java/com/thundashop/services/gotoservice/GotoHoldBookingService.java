@@ -24,20 +24,22 @@ import static com.thundashop.core.gotohub.constant.GotoConstants.BOOKING_ITEM_TY
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Service
-public class GotoHoldBookingService implements IGotoHoldBookingService{
+public class GotoHoldBookingService implements IGotoHoldBookingService {
     @Autowired
     IZauiActivityService zauiActivityService;
     @Autowired
     IGotoBookingCancellationService bookingCancellationService;
+
     @Override
     public PmsBooking getBooking(GotoBookingRequest gotoBooking, PmsBooking pmsBooking, PmsConfiguration config,
-                                 SessionInfo zauiActivityManagerSession) throws Exception {
+            SessionInfo zauiActivityManagerSession) throws Exception {
         return mapBookingToPmsBooking(gotoBooking, pmsBooking, config, zauiActivityManagerSession);
     }
 
     @Override
-    public GotoBookingResponse getBookingResponse(PmsBooking pmsBooking, GotoBookingRequest booking, PmsConfiguration config,
-                                                  int cuttOffHours) throws Exception {
+    public GotoBookingResponse getBookingResponse(PmsBooking pmsBooking, GotoBookingRequest booking,
+            PmsConfiguration config,
+            int cuttOffHours) throws Exception {
         List<RatePlanCode> ratePlans = new ArrayList<>();
         List<RoomTypeCode> roomTypes = new ArrayList<>();
         List<GotoRoomResponse> roomsResponse = new ArrayList<>();
@@ -85,8 +87,9 @@ public class GotoHoldBookingService implements IGotoHoldBookingService{
         return roomRes;
     }
 
-    private PmsBooking mapBookingToPmsBooking(GotoBookingRequest booking, PmsBooking pmsBooking, PmsConfiguration config,
-                                              SessionInfo zauiActivityManagerSession) throws Exception {
+    private PmsBooking mapBookingToPmsBooking(GotoBookingRequest booking, PmsBooking pmsBooking,
+            PmsConfiguration config,
+            SessionInfo zauiActivityManagerSession) throws Exception {
         for (PmsBookingRooms room : pmsBooking.getAllRooms()) {
             room.unmarkOverBooking();
         }
@@ -111,20 +114,22 @@ public class GotoHoldBookingService implements IGotoHoldBookingService{
 
         mapRoomsToPmsRooms(booking, pmsBooking, config);
 
-        for(GotoActivityReservationDto activity: booking.getActivities()) {
+        for (GotoActivityReservationDto activity : booking.getActivities()) {
             BookingZauiActivityItem activityItem = zauiActivityService.mapActivityToBookingZauiActivityItem(
                     activity.getOctoReservationResponse(), zauiActivityManagerSession);
-            pmsBooking = zauiActivityService.addActivityToBooking(activityItem, activity.getOctoReservationResponse(), pmsBooking);
+            pmsBooking = zauiActivityService.addActivityToBooking(activityItem, activity.getOctoReservationResponse(),
+                    pmsBooking);
         }
         return pmsBooking;
     }
 
-    private void mapRoomsToPmsRooms(GotoBookingRequest booking, PmsBooking pmsBooking, PmsConfiguration config) throws Exception {
+    private void mapRoomsToPmsRooms(GotoBookingRequest booking, PmsBooking pmsBooking, PmsConfiguration config)
+            throws Exception {
         for (GotoRoomRequest gotoBookingRoom : booking.getRooms()) {
             PmsBookingRooms room = mapRoomToPmsRoom(booking, gotoBookingRoom, config);
             pmsBooking.addRoom(room);
         }
-        if(booking.getRooms() == null || booking.getRooms().isEmpty()) {
+        if (booking.getRooms() == null || booking.getRooms().isEmpty()) {
             PmsBookingRooms room = new PmsBookingRooms();
             room.bookingItemTypeId = BOOKING_ITEM_TYPE_ID_FOR_VIRTUAL_GOTO_ROOM;
             room.date.start = new Date();
@@ -133,8 +138,8 @@ public class GotoHoldBookingService implements IGotoHoldBookingService{
         }
     }
 
-
-    private PmsBookingRooms mapRoomToPmsRoom(GotoBookingRequest booking, GotoRoomRequest gotoBookingRoom, PmsConfiguration config)
+    private PmsBookingRooms mapRoomToPmsRoom(GotoBookingRequest booking, GotoRoomRequest gotoBookingRoom,
+            PmsConfiguration config)
             throws Exception {
         PmsBookingRooms pmsBookingRoom = new PmsBookingRooms();
         pmsBookingRoom = setCheckinOutDate(pmsBookingRoom, gotoBookingRoom, config);
@@ -162,8 +167,8 @@ public class GotoHoldBookingService implements IGotoHoldBookingService{
         return pmsBookingRoom;
     }
 
-
-    private PmsBookingRooms setCheckinOutDate(PmsBookingRooms room, GotoRoomRequest gotoBookingRoom, PmsConfiguration config)
+    private PmsBookingRooms setCheckinOutDate(PmsBookingRooms room, GotoRoomRequest gotoBookingRoom,
+            PmsConfiguration config)
             throws ParseException {
         checkinOutDateFormatter.setLenient(false);
         Date checkin = checkinOutDateFormatter.parse(gotoBookingRoom.getCheckInDate());
@@ -181,8 +186,7 @@ public class GotoHoldBookingService implements IGotoHoldBookingService{
         Map<String, Double> dailyPricesFromGoto = gotoBookingRoom.getPrice().getDailyPrices()
                 .stream()
                 .collect(Collectors
-                        .toMap(GotoRoomDailyPrice::getDate, GotoRoomDailyPrice::getPrice)
-                );
+                        .toMap(GotoRoomDailyPrice::getDate, GotoRoomDailyPrice::getPrice));
         while (calendar.getTime().before(pmsBookingRoom.date.end)) {
             String dailyPriceKey = DAILY_PRICE_DATE_FORMATTER.format(calendar.getTime());
             Double price = dailyPricesFromGoto.get(dailyPriceKey);

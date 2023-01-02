@@ -1,23 +1,19 @@
 package com.thundashop.zauiactivity.dto;
 
-import lombok.Data;
-
 import java.util.List;
 
-@Data
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class ZauiConnectedSupplier extends OctoSupplier {
-    public List<TaxRateMap> taxRateMapping;
+    private List<TaxRateMap> taxRateMapping;
 
     public String getSupplierAccountNumberByRate(Double taxRate) {
-        TaxRateMap taxRateMapping =  this.getTaxRateMapping().stream().filter(rate -> taxRate.equals(rate.getTaxRate()*100)).findFirst().orElse(null);
+        TaxRateMap taxRateMapping =  this.getTaxRateMapping().stream().filter(rate -> taxRate.equals(rate.getTaxRate())).findFirst().orElse(null);
         if(taxRateMapping == null)
             return null;
         return taxRateMapping.getAccountNo();
     }
-}
-
-@Data
-class TaxRateMap {
-    public double TaxRate;
-    public String AccountNo;
 }

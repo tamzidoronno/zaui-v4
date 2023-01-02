@@ -10,4 +10,7 @@ public class GotoActivityReservationDto {
     @SerializedName("octoReservationResponse")
     @Expose
     private OctoBooking octoReservationResponse;
+    @SerializedName("supplierId")
+    @Expose
+    private Integer supplierId = null;
 }

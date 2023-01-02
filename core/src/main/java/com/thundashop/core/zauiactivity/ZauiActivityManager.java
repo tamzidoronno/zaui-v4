@@ -140,7 +140,8 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
     }
 
     @Override
-    public GuestAddonsSummary removeActivityFromWebBooking(AddZauiActivityToWebBookingDto activity) throws ZauiException {
+    public GuestAddonsSummary removeActivityFromWebBooking(AddZauiActivityToWebBookingDto activity)
+            throws ZauiException {
         PmsBooking booking = pmsManager.getBooking(activity.getPmsBookingId());
         booking = zauiActivityService.removeActivityFromWebBooking(activity, booking, getSessionInfo());
         pmsManager.saveBooking(booking);
@@ -171,7 +172,7 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
         setActivityItemAsPaid(activityItem.get());
         List<CartItem> cartItems = new ArrayList<>();
         Pricing pricing = activityItem.get().getOctoBooking().getPricing();
-        for(TaxData tax : pricing.getIncludedTaxes()){
+        for (TaxData tax : pricing.getIncludedTaxes()) {
             try {
                 Product taxProduct = createZauiActivityForTax(activity.get(), tax, pricing.getCurrencyPrecision());
                 CartItem cartItem = new CartItem();
@@ -187,7 +188,8 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
         return cartItems;
     }
 
-    private Product createZauiActivityForTax(ZauiActivity product, TaxData activity, Integer currencyPrecision) throws ZauiException, NotUniqueDataException {
+    private Product createZauiActivityForTax(ZauiActivity product, TaxData activity, Integer currencyPrecision)
+            throws ZauiException, NotUniqueDataException {
         List<TaxGroup> taxes = productManager.getTaxes();
         Product taxProduct = product.clone();
         AccountingDetail account = getOctoSupplierAccount(product.getSupplierId(), activity.getRate().doubleValue());
@@ -210,18 +212,21 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
         return taxProduct;
     }
 
-    private AccountingDetail getOctoSupplierAccount(Integer supplierId, Double taxRate) throws ZauiException, NotUniqueDataException {
-        ZauiConnectedSupplier zauiSupplier = getActivityConfig().connectedSuppliers.stream().filter(supplier -> supplierId.equals(supplier.getId())).findFirst().orElse(null);
-        if(zauiSupplier == null)
+    private AccountingDetail getOctoSupplierAccount(Integer supplierId, Double taxRate)
+            throws ZauiException, NotUniqueDataException {
+        ZauiConnectedSupplier zauiSupplier = getActivityConfig().connectedSuppliers.stream()
+                .filter(supplier -> supplierId.equals(supplier.getId())).findFirst().get();
+        if (zauiSupplier == null)
             throw new ZauiException(ZauiStatusCodes.SUPPLIER_NOT_FOUND);
         String accountNumber = zauiSupplier.getSupplierAccountNumberByRate(taxRate);
-        if(accountNumber == null)
+        if (accountNumber == null)
             throw new ZauiException(ZauiStatusCodes.ACCOUNTING_ERROR);
         return productManager.getAccountingDetail(Integer.parseInt(accountNumber));
     }
 
     private void setActivityItemAsPaid(BookingZauiActivityItem activityItem) {
-        PmsBooking booking = pmsBookingService.getPmsBookingByZauiActivityItemId(activityItem.getId(), pmsManager.getSessionInfo());
+        PmsBooking booking = pmsBookingService.getPmsBookingByZauiActivityItemId(activityItem.getId(),
+                pmsManager.getSessionInfo());
         booking.bookingZauiActivityItems.stream().filter(item -> item.getId().equals(activityItem.getId()))
                 .findFirst().get()
                 .setUnpaidAmount(0);

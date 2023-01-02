@@ -10,7 +10,8 @@ import java.util.List;
 public interface IZauiActivityValidationService {
 
     void validateGotoBookingActivity(GotoActivityReservationDto activity, SessionInfo zauiActivitySession,
-                                     String systemCurrency) throws GotoException;
+            String systemCurrency) throws GotoException;
 
-    void validateTaxRates(int supplierId, List<Double> taxRatesFromOctoBooking, SessionInfo productSessionInfo) throws GotoException, NotUniqueDataException;
+    void validateTaxRates(int supplierId, List<Double> taxRatesFromOctoBooking, SessionInfo productSessionInfo)
+            throws GotoException, NotUniqueDataException;
 }

@@ -30,10 +30,10 @@ public class GotoBookingRequestValidationService implements IGotoBookingRequestV
 
     @Override
     public void validateSaveBookingDto(GotoBookingRequest bookingRequest,
-                                       String systemCurrency,
-                                       PmsConfiguration configuration,
-                                       SessionInfo bookingItemTypeSession,
-                                       SessionInfo zauiActivitySessionInfo) throws GotoException, ParseException {
+            String systemCurrency,
+            PmsConfiguration configuration,
+            SessionInfo bookingItemTypeSession,
+            SessionInfo zauiActivitySessionInfo) throws GotoException, ParseException {
         validateCurrency(bookingRequest.getCurrency(), systemCurrency);
         validateBookerInfo(bookingRequest.getOrderer());
         validateNoOfBookingItems(bookingRequest.getRooms(), bookingRequest.getActivities());
@@ -41,7 +41,8 @@ public class GotoBookingRequestValidationService implements IGotoBookingRequestV
         validateActivities(bookingRequest.getActivities(), zauiActivitySessionInfo, systemCurrency);
     }
 
-    private void validateRooms(List<GotoRoomRequest> bookingRooms, SessionInfo bookingItemTypeSession, PmsConfiguration config)
+    private void validateRooms(List<GotoRoomRequest> bookingRooms, SessionInfo bookingItemTypeSession,
+            PmsConfiguration config)
             throws ParseException, GotoException {
 
         for (GotoRoomRequest room : bookingRooms) {
@@ -73,12 +74,13 @@ public class GotoBookingRequestValidationService implements IGotoBookingRequestV
     }
 
     private void validateActivities(List<GotoActivityReservationDto> activities, SessionInfo activitySession,
-                                    String systemCurrency) throws GotoException {
-        for(GotoActivityReservationDto activity : activities) {
+            String systemCurrency) throws GotoException {
+        for (GotoActivityReservationDto activity : activities) {
             try {
                 zauiActivityValidationService.validateGotoBookingActivity(activity, activitySession, systemCurrency);
             } catch (GotoException e) {
-                if(activity.getOctoReservationResponse() != null && activity.getOctoReservationResponse().getOptionId() != null)
+                if (activity.getOctoReservationResponse() != null
+                        && activity.getOctoReservationResponse().getOptionId() != null)
                     e.setMessage(e.getMessage() + ", OptionId: " + activity.getOctoReservationResponse().getOptionId());
                 throw e;
             }

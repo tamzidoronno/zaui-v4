@@ -31,15 +31,6 @@ public class OctoBooking {
 }
 
 @Data
-class UnitItemOnBooking {
-    private String uuid;
-    private String unitId;
-    private Object resellerReference;
-    private Object supplierReference;
-    private Ticket ticket;
-}
-
-@Data
 class Contact {
     private String fullName;
     private String firstName;

@@ -1,7 +1,9 @@
 package com.thundashop.repository.zauiactivityrepository;
 
+import java.util.List;
 import java.util.Optional;
 
+import com.thundashop.core.common.DataCommon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -32,15 +34,28 @@ public class ZauiActivityRepository extends Repository<ZauiActivity> implements 
     @Override
     public ZauiActivity getByOptionId(String optionId, SessionInfo sessionInfo) {
         DBObject query = new BasicDBObject();
-        DBObject elemMatch = new BasicDBObject();
-        DBObject activityOption = new BasicDBObject();
-
-        activityOption.put("id", "197548ebd8d8284908d40faf2e4987dfd9639df2");
-        elemMatch.put("$elemMatch", activityOption);
         query.put("className", getClassName());
-        query.put("activityOptionList", elemMatch);
+        query.put("activityOptionList.id", optionId);
         query.put("deleted", null);
         return getFirst(query, sessionInfo).orElse(null);
+    }
+
+    @Override
+    public ZauiActivity getBySupplierAndProductId(int supplierId, int productId, SessionInfo sessionInfo) {
+        DBObject query = new BasicDBObject();
+        query.put("className", getClassName());
+        query.put("supplierId", supplierId);
+        query.put("productId", productId);
+        query.put("deleted", null);
+        return getFirst(query, sessionInfo).orElse(null);
+    }
+
+    @Override
+    public int markDeleted(List<String> zauiActivityIds, SessionInfo sessionInfo) {
+        DBObject query = new BasicDBObject();
+        query.put("className",getClassName());
+        query.put("_id",new BasicDBObject("$in",zauiActivityIds));
+        return markDeletedByQuery(query, sessionInfo);
     }
 
     @Override

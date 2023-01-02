@@ -63,7 +63,7 @@ public class GotoHoldBookingService implements IGotoHoldBookingService{
             pmsBooking.addRoom(room);
         }
         for(GotoActivityReservationDto activity: booking.getActivities()) {
-            BookingZauiActivityItem activityItem = mapActivityToBookingZauiActivityItem(activity, zauiActivityManagerSession);
+            BookingZauiActivityItem activityItem = zauiActivityService.mapActivityToBookingZauiActivityItem(activity.getOctoReservationResponse(), zauiActivityManagerSession);
             pmsBooking = zauiActivityService.addActivityToBooking(activityItem, activity.getOctoReservationResponse(), pmsBooking);
         }
         return pmsBooking;
@@ -97,29 +97,6 @@ public class GotoHoldBookingService implements IGotoHoldBookingService{
         return pmsBookingRoom;
     }
 
-    private BookingZauiActivityItem mapActivityToBookingZauiActivityItem(GotoActivityReservationDto activity, SessionInfo sessionInfo) {
-        BookingZauiActivityItem activityItem = new BookingZauiActivityItem();
-        OctoBooking octoBooking = activity.getOctoReservationResponse();
-        ZauiActivity zauiActivity = zauiActivityService.getZauiActivityByOptionId(octoBooking.getOptionId(), sessionInfo);
-        ActivityOption bookedOption = zauiActivity.activityOptionList.stream()
-                .filter(option -> option.getId().equals(octoBooking.getOptionId()))
-                .findAny().orElse(null);
-
-        activityItem.setZauiActivityId(zauiActivity.id);
-        activityItem.setOctoProductId(zauiActivity.getProductId());
-        activityItem.setOptionTitle(bookedOption.getInternalName());
-        activityItem.setOptionId(bookedOption.getId());
-        activityItem.setAvailabilityId(octoBooking.getAvailabilityId());
-//        activityItem.setUnits();
-        activityItem.setUnpaidAmount(octoBooking.getPricing().getTotal());
-        activityItem.setNotes(octoBooking.getNotes());
-        activityItem.setLocalDateTimeStart(octoBooking.getAvailability().getLocalDateTimeStart());
-        activityItem.setLocalDateTimeEnd(octoBooking.getAvailability().getLocalDateTimeEnd());
-        activityItem.setSupplierId(zauiActivity.getSupplierId());
-        //activityItem.setSupplierName(zauiActivity.getSupplierName());
-        activityItem.setOctoBooking(octoBooking);
-        return activityItem;
-    }
 
     private PmsBookingRooms setCheckinOutDate(PmsBookingRooms room, GotoRoomRequest gotoBookingRoom, PmsConfiguration config)
             throws ParseException {

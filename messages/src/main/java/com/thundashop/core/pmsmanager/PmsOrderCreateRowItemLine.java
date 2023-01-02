@@ -58,4 +58,12 @@ public class PmsOrderCreateRowItemLine {
         return false;
         
     }
+
+    public void setAddonId(String addonId) {
+        this.addonId = addonId;
+    }
+
+    public void setTextOnOrder(String textOnOrder) {
+        this.textOnOrder = textOnOrder;
+    }
 }

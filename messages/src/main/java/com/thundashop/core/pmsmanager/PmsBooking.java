@@ -8,7 +8,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+import com.thundashop.zauiactivity.constant.ZauiConstants;
 import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
 import org.apache.commons.lang3.StringUtils;
 import org.mongodb.morphia.annotations.Transient;
@@ -21,17 +23,17 @@ import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
 
 public class PmsBooking extends DataCommon {
- 
+
     public List<PmsBookingRooms> rooms = new ArrayList<>();
     public List<String> notificationsSent = new ArrayList<>();
-    public HashMap<Long, PmsBookingComment> comments = new HashMap<>();   
+    public HashMap<Long, PmsBookingComment> comments = new HashMap<>();
     public String shortId = "";
     public String sessionId = null;
     public Date sessionStartDate = null;
     public Date sessionEndDate = null;
     public boolean silentNotification = false;
     public boolean autoSendPaymentLink = false;
-    
+
     public List<String> bookingEngineAddons = new ArrayList<>();
     public RegistrationRules registrationData = new RegistrationRules();
     public String language = "";
@@ -71,7 +73,7 @@ public class PmsBooking extends DataCommon {
     public boolean avoidAutoDelete = false;
     public boolean setGuestsSameAsBooker = false;
     public Integer incrementBookingId = null;
-    
+
     public String countryCode = "";
     public boolean needCapture;
     public String wubookChannelReservationId;
@@ -89,47 +91,47 @@ public class PmsBooking extends DataCommon {
     public boolean nonrefundable = false;
     public boolean tryAutoCharge = false;
     public HashMap<String, String> recieptEmail = new HashMap<>();
-    
-    //Jomres Related Properties
-    public long jomresBookingId=0;
+
+    // Jomres Related Properties
+    public long jomresBookingId = 0;
     @Transient
     public boolean ignoreOverrideTotPrice = false;
-    public long jomresChannelId=0;
-    public String jomresReservationCode="";
-    public Date jomresLastModified=null;
+    public long jomresChannelId = 0;
+    public String jomresReservationCode = "";
+    public Date jomresLastModified = null;
 
     // Zaui Activity related Properties
     public List<BookingZauiActivityItem> bookingZauiActivityItems = new ArrayList<>();
-    
+
     @Administrator
     public String secretBookingId = "";
     public boolean ignoreNoShow = false;
     boolean quickReservation = false;
     public String latestwubookreservationid = "";
     public boolean agreedToTermsAndConditions = false;
-    
+
     public boolean segmentClosed = false;
-    
+
     public BrowserVersion browserUsed;
-    
+
     /**
      * First startdate of all rooms
      */
     @Transient
     public Date startDate;
-    
+
     /**
      * Last enddate of all rooms
      */
     @Transient
     public Date endDate;
-    
+
     @Transient
     boolean isAddedToEventList;
-       
+
     @Administrator
     public String token = UUID.randomUUID().toString();
-    
+
     /**
      * If this is set to true it will not show up
      * in the checklist of tasks to do.
@@ -137,7 +139,7 @@ public class PmsBooking extends DataCommon {
     public boolean ignoreUnsettledAmount = false;
     public String segmentId = "";
     public boolean payLater = false;
-    
+
     /**
      * If collected by the gived OTA this will be set to true.
      * Normally this is virtual credit cards.
@@ -148,47 +150,46 @@ public class PmsBooking extends DataCommon {
     public boolean agreedToSpam = false;
     public boolean travellingBusiness = false;
     public int fixedBySystemProcess = 0;
-    
+
     public Double getTotalPrice() {
         return totalPrice;
     }
-    
+
     public boolean hasRoom(String roomId) {
-        for(PmsBookingRooms r : rooms) {
-            if(r.pmsBookingRoomId.equals(roomId)) {
+        for (PmsBookingRooms r : rooms) {
+            if (r.pmsBookingRoomId.equals(roomId)) {
                 return true;
             }
         }
         return false;
     }
-        
+
     public List<PmsBookingRooms> getRoomsWithForcedAccess() {
         List<PmsBookingRooms> res = new ArrayList<>();
-        for(PmsBookingRooms r : getActiveRooms()) {
-            if(r.forceAccess) {
+        for (PmsBookingRooms r : getActiveRooms()) {
+            if (r.forceAccess) {
                 res.add(r);
             }
         }
         return res;
     }
-    
+
     public boolean hasForcedAccessedRooms() {
         return !getRoomsWithForcedAccess().isEmpty();
     }
 
-    
     public boolean hasOverBooking() {
-        for(PmsBookingRooms room : rooms) {
-            if(room.isOverBooking()) {
+        for (PmsBookingRooms room : rooms) {
+            if (room.isOverBooking()) {
                 return true;
             }
         }
         return false;
     }
-    
+
     public boolean isStartingToday() {
-        for(PmsBookingRooms room : getActiveRooms()) {
-            if(room.isStartingToday()) {
+        for (PmsBookingRooms room : getActiveRooms()) {
+            if (room.isStartingToday()) {
                 return true;
             }
         }
@@ -197,18 +198,17 @@ public class PmsBooking extends DataCommon {
 
     public List<PmsBookingRooms> getOverBookedRooms() {
         List<PmsBookingRooms> res = new ArrayList<>();
-        for(PmsBookingRooms room : rooms) {
-            if(room.isOverBooking()) {
+        for (PmsBookingRooms room : rooms) {
+            if (room.isOverBooking()) {
                 res.add(room);
             }
         }
         return res;
     }
-    
-    
+
     public boolean isWeekendBooking() {
         Calendar cal = Calendar.getInstance();
-        if(rowCreatedDate != null) {
+        if (rowCreatedDate != null) {
             cal.setTime(rowCreatedDate);
         }
         if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
@@ -218,44 +218,44 @@ public class PmsBooking extends DataCommon {
             return true;
         }
         if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY) {
-            if(cal.get(Calendar.HOUR_OF_DAY) > 15) {
+            if (cal.get(Calendar.HOUR_OF_DAY) > 15) {
                 return true;
             }
         }
-        
+
         return false;
     }
-    
+
     boolean containsSearchWord(String searchWord) {
         searchWord = searchWord.toLowerCase();
-        for(PmsBookingRooms room : rooms) {
-            if(room.containsSearchWord(searchWord)) {
+        for (PmsBookingRooms room : rooms) {
+            if (room.containsSearchWord(searchWord)) {
                 return true;
             }
         }
-        if(containsOrderId(searchWord)) {
+        if (containsOrderId(searchWord)) {
             return true;
         }
-        
-        if(incrementBookingId != null && (incrementBookingId + "").equals(searchWord)) {
+
+        if (incrementBookingId != null && (incrementBookingId + "").equals(searchWord)) {
             return true;
         }
-        
-        for(String value : registrationData.resultAdded.values()) {
-            if(value != null) {
-                if(value.toLowerCase().contains(searchWord)) {
+
+        for (String value : registrationData.resultAdded.values()) {
+            if (value != null) {
+                if (value.toLowerCase().contains(searchWord)) {
                     return true;
                 }
             }
         }
-        
-        if(wubookreservationid != null && wubookreservationid.equals(searchWord)) {
+
+        if (wubookreservationid != null && wubookreservationid.equals(searchWord)) {
             return true;
         }
-        if(wubookchannelreservationcode != null && wubookchannelreservationcode.equals(searchWord)) {
+        if (wubookchannelreservationcode != null && wubookchannelreservationcode.equals(searchWord)) {
             return true;
         }
-        
+
         return false;
     }
 
@@ -269,7 +269,7 @@ public class PmsBooking extends DataCommon {
         PmsBooking result = new PmsBooking();
         result.registrationData = registrationData;
         result.id = id;
-        for(PmsBookingRooms room : rooms) {
+        for (PmsBookingRooms room : rooms) {
             PmsBookingRooms roomCopied = new PmsBookingRooms();
             roomCopied.pmsBookingRoomId = room.pmsBookingRoomId;
             roomCopied.date = room.date;
@@ -279,48 +279,48 @@ public class PmsBooking extends DataCommon {
             result.confirmed = confirmed;
             result.rooms.add(roomCopied);
         }
-        
+
         return result;
     }
 
     public String createSummary(List<BookingItemType> types) {
         String res = "Reg data: <br>\r\n";
         try {
-            for(String field : registrationData.resultAdded.keySet()) {
+            for (String field : registrationData.resultAdded.keySet()) {
                 res += field + " : " + registrationData.resultAdded.get(field) + "<br>\r\n";
             }
 
             res += "<br>Rooms:<br>\r\n";
-            for(PmsBookingRooms room : getAllRoomsIncInactive()) {
+            for (PmsBookingRooms room : getAllRoomsIncInactive()) {
                 BookingItemType typeToUse = null;
-                if(room.bookingItemTypeId != null) {
-                    for(BookingItemType type : types) {
-                        if(type.id.equals(room.bookingItemTypeId)) {
+                if (room.bookingItemTypeId != null) {
+                    for (BookingItemType type : types) {
+                        if (type.id.equals(room.bookingItemTypeId)) {
                             typeToUse = type;
                         }
                     }
                 }
                 res += room.date.start + " - " + room.date.end + " - ";
-                if(typeToUse != null) {
+                if (typeToUse != null) {
                     res += " type: " + typeToUse.name;
                 }
-                if(!room.guests.isEmpty()) {
+                if (!room.guests.isEmpty()) {
                     res += ", guest: " + room.guests.get(0).name + " - ";
                 }
-                
+
                 res += " deleted, " + room.deleted;
                 res += "<br>\r\n";
             }
-        }catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         return res;
     }
 
     boolean isEnded() {
-        for(PmsBookingRooms room : rooms) {
-            if(room.date.end.after(new Date())) {
+        for (PmsBookingRooms room : rooms) {
+            if (room.date.end.after(new Date())) {
                 return false;
             }
         }
@@ -328,8 +328,8 @@ public class PmsBooking extends DataCommon {
     }
 
     boolean isEndedBefore(Date date) {
-        for(PmsBookingRooms room : rooms) {
-            if(room.date.end.after(date)) {
+        for (PmsBookingRooms room : rooms) {
+            if (room.date.end.after(date)) {
                 return false;
             }
         }
@@ -338,44 +338,44 @@ public class PmsBooking extends DataCommon {
 
     public Date getEndDate() {
         Date endDate = null;
-        for(PmsBookingRooms room : rooms) {
-            if(endDate == null || room.date.end.after(endDate)) {
+        for (PmsBookingRooms room : rooms) {
+            if (endDate == null || room.date.end.after(endDate)) {
                 endDate = room.date.end;
             }
-            for(PmsBookingAddonItem item : room.addons) {                
-                if(endDate == null || (item.date != null && item.date.after(endDate))) {
+            for (PmsBookingAddonItem item : room.addons) {
+                if (endDate == null || (item.date != null && item.date.after(endDate))) {
                     endDate = item.date;
                 }
             }
-            
+
         }
         return endDate;
     }
-    
+
     public Date getStartDate() {
         Date startDate = null;
-        for(PmsBookingRooms room : rooms) {
-            if(startDate == null || room.date.start.before(startDate)) {
+        for (PmsBookingRooms room : rooms) {
+            if (startDate == null || room.date.start.before(startDate)) {
                 startDate = room.date.start;
             }
-            for(PmsBookingAddonItem item : room.addons) {
-                if(startDate == null || (item.date != null && item.date.before(startDate))) {
+            for (PmsBookingAddonItem item : room.addons) {
+                if (startDate == null || (item.date != null && item.date.before(startDate))) {
                     startDate = item.date;
                 }
             }
         }
-        
+
         return startDate;
     }
 
     boolean isEndedOverTwoMonthsAgo() {
         Date ended = getEndDate();
-        if(ended == null) {
+        if (ended == null) {
             return false;
         }
         Calendar now = Calendar.getInstance();
         now.add(Calendar.MONTH, -2);
-        if(now.getTime().after(ended)) {
+        if (now.getTime().after(ended)) {
             return true;
         }
         return false;
@@ -387,31 +387,31 @@ public class PmsBooking extends DataCommon {
     }
 
     public boolean isCompletedBooking() {
-        if(sessionId == null || sessionId.isEmpty()) {
+        if (sessionId == null || sessionId.isEmpty()) {
             return true;
         }
         return false;
     }
 
     public PmsBookingRooms getRoom(String pmsBookingRoomId) {
-        for(PmsBookingRooms room : rooms) {
-            if(room.pmsBookingRoomId.equals(pmsBookingRoomId)) {
+        for (PmsBookingRooms room : rooms) {
+            if (room.pmsBookingRoomId.equals(pmsBookingRoomId)) {
                 return room;
             }
         }
-        
+
         return null;
     }
 
     void updateItem(PmsBookingAddonItem item) {
-        for(PmsBookingRooms room : rooms) {
+        for (PmsBookingRooms room : rooms) {
             room.updateItem(item);
         }
     }
-    
+
     public String dump() {
         String res = "";
-        for(String key : registrationData.resultAdded.keySet()) {
+        for (String key : registrationData.resultAdded.keySet()) {
             res += key + " : " + registrationData.resultAdded.get(key) + "<bR>";
         }
         return res;
@@ -419,8 +419,8 @@ public class PmsBooking extends DataCommon {
 
     public List<PmsBookingRooms> getActiveRooms() {
         List<PmsBookingRooms> result = new ArrayList<>();
-        for(PmsBookingRooms room : rooms) {
-            if(room.isDeleted()) {
+        for (PmsBookingRooms room : rooms) {
+            if (room.isDeleted()) {
                 continue;
             }
             result.add(room);
@@ -433,7 +433,7 @@ public class PmsBooking extends DataCommon {
     }
 
     public void addRoom(PmsBookingRooms room) {
-        if(!rooms.contains(room)) {
+        if (!rooms.contains(room)) {
             rooms.add(room);
         }
     }
@@ -460,7 +460,7 @@ public class PmsBooking extends DataCommon {
 
     public int getTotalDays() {
         int total = 0;
-        for(PmsBookingRooms room : rooms) {
+        for (PmsBookingRooms room : rooms) {
             total += room.getNumberOfDays();
         }
         return total;
@@ -470,42 +470,42 @@ public class PmsBooking extends DataCommon {
         Date now = new Date();
         Calendar cal = Calendar.getInstance();
         cal.setTime(now);
-        
+
         Calendar cal2 = Calendar.getInstance();
         cal2.setTime(rowCreatedDate);
         cal2.add(Calendar.DAY_OF_YEAR, 3);
-        if(cal2.getTime().before(new Date())) {
+        if (cal2.getTime().before(new Date())) {
             return false;
         }
-        
+
         int today = cal.get(Calendar.HOUR_OF_DAY);
         int weekDay = cal.get(Calendar.DAY_OF_WEEK);
-        
+
         Calendar sameDay = Calendar.getInstance();
         sameDay.setTime(rowCreatedDate);
-        
+
         boolean isSameDay = false;
 
-        if((sameDay.get(Calendar.DAY_OF_YEAR) == cal.get(Calendar.DAY_OF_YEAR)) &&
+        if ((sameDay.get(Calendar.DAY_OF_YEAR) == cal.get(Calendar.DAY_OF_YEAR)) &&
                 (sameDay.get(Calendar.YEAR) == cal.get(Calendar.YEAR))) {
             isSameDay = true;
         }
 
-        if(weekDay == Calendar.SATURDAY || weekDay == Calendar.SUNDAY) {
+        if (weekDay == Calendar.SATURDAY || weekDay == Calendar.SUNDAY) {
             return true;
-        } else if(today > 15 && isSameDay) {
+        } else if (today > 15 && isSameDay) {
             return true;
         }
-        
-        if(weekDay == Calendar.FRIDAY && today > 15) {
+
+        if (weekDay == Calendar.FRIDAY && today > 15) {
             Calendar startCal = Calendar.getInstance();
             startCal.setTime(rowCreatedDate);
             startCal.add(Calendar.DAY_OF_YEAR, -2);
-            if(new Date().after(startCal.getTime())) {
+            if (new Date().after(startCal.getTime())) {
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -522,12 +522,12 @@ public class PmsBooking extends DataCommon {
 
     boolean hasSentNotification(String notice) {
         notice = notice.toLowerCase();
-        for(String sent : notificationsSent) {
-            if(sent == null) {
+        for (String sent : notificationsSent) {
+            if (sent == null) {
                 continue;
             }
             sent = sent.toLowerCase();
-            if(sent.contains(notice)) {
+            if (sent.contains(notice)) {
                 return true;
             }
         }
@@ -540,9 +540,9 @@ public class PmsBooking extends DataCommon {
     }
 
     public boolean containsOrderId(String searchWord) {
-        for(Long orderId : incOrderIds.values()) {
+        for (Long orderId : incOrderIds.values()) {
             String ordId = orderId + "";
-            if(ordId.equals(searchWord)) {
+            if (ordId.equals(searchWord)) {
                 return true;
             }
         }
@@ -550,34 +550,35 @@ public class PmsBooking extends DataCommon {
     }
 
     public void calculateTotalCost() {
-        if(StringUtils.isNotBlank(channel) && channel.contains("jomres") && ignoreOverrideTotPrice){
+        if (StringUtils.isNotBlank(channel) && channel.contains("jomres") && ignoreOverrideTotPrice) {
             totalPrice = rooms.get(0).totalCost;
             return;
         }
-        if(!priceType.equals(PmsBooking.PriceType.daily)) {
+        if (!priceType.equals(PmsBooking.PriceType.daily)) {
             return;
         }
         double total = 0.0;
-        for(PmsBookingRooms room : rooms) {
+        for (PmsBookingRooms room : rooms) {
             room.calculateTotalCost(priceType);
             total += room.totalCost;
         }
 
         total += getZauiActivitiesPrice();
-        
+
         totalPrice = total;
     }
 
-    private double getZauiActivitiesPrice(){
-        if(bookingZauiActivityItems.isEmpty()){
+    private double getZauiActivitiesPrice() {
+        if (getConfirmedZauiActivities().isEmpty()) {
             return 0.0;
         }
-        return bookingZauiActivityItems.stream().filter(x-> x.price != null).mapToDouble(activityItem -> activityItem.price).sum();
+        return getConfirmedZauiActivities().stream().filter(x -> x.price != null)
+                .mapToDouble(activityItem -> activityItem.price).sum();
     }
 
     boolean transferredToLock() {
-        for(PmsBookingRooms room : rooms) {
-            if(room.addedToArx) {
+        for (PmsBookingRooms room : rooms) {
+            if (room.addedToArx) {
                 return true;
             }
         }
@@ -586,15 +587,15 @@ public class PmsBooking extends DataCommon {
 
     public List<String> getTypes() {
         HashMap<String, Integer> typesToReturn = new HashMap<>();
-        for(PmsBookingRooms r : getActiveRooms()) {
+        for (PmsBookingRooms r : getActiveRooms()) {
             typesToReturn.put(r.bookingItemTypeId, 1);
         }
         return new ArrayList<>(typesToReturn.keySet());
     }
 
     boolean hasRequestedEnding(Date startDate, Date endDate) {
-        for(PmsBookingRooms room : rooms) {
-            if(room.requestedEndDate(startDate, endDate)) {
+        for (PmsBookingRooms room : rooms) {
+            if (room.requestedEndDate(startDate, endDate)) {
                 return true;
             }
         }
@@ -602,15 +603,15 @@ public class PmsBooking extends DataCommon {
     }
 
     boolean isWubook() {
-        if(channel != null && channel.contains("wubook")) {
+        if (channel != null && channel.contains("wubook")) {
             return true;
         }
         return false;
     }
 
     boolean hasWaitingRooms() {
-        for(PmsBookingRooms room : rooms) {
-            if(room.addedToWaitingList) {
+        for (PmsBookingRooms room : rooms) {
+            if (room.addedToWaitingList) {
                 return true;
             }
         }
@@ -618,12 +619,12 @@ public class PmsBooking extends DataCommon {
     }
 
     boolean containsType(String type) {
-        if(type == null) {
+        if (type == null) {
             return false;
         }
-        
-        for(PmsBookingRooms room : rooms) {
-            if(room.bookingItemTypeId != null && room.bookingItemTypeId.equals(type)) {
+
+        for (PmsBookingRooms room : rooms) {
+            if (room.bookingItemTypeId != null && room.bookingItemTypeId.equals(type)) {
                 return true;
             }
         }
@@ -631,61 +632,62 @@ public class PmsBooking extends DataCommon {
     }
 
     void makeUniqueIds() {
-        if(orderIds == null) {
-            orderIds = new ArrayList();
+        if (orderIds == null) {
+            orderIds = new ArrayList<>();
         }
-        
-        HashMap<String,Integer> ids = new HashMap();
-        for(String id : orderIds) {
+
+        HashMap<String, Integer> ids = new HashMap<>();
+        for (String id : orderIds) {
             ids.put(id, 1);
         }
-        orderIds = new ArrayList(ids.keySet());
+        orderIds = new ArrayList<>(ids.keySet());
     }
 
     /**
      * Is payment terminal kiosk.
-     * @return 
+     * 
+     * @return
      */
     boolean isTerminalBooking() {
-        if(channel != null && channel.equals("terminal")) {
+        if (channel != null && channel.equals("terminal")) {
             return true;
         }
         return false;
     }
 
     boolean hasNoRefRooms() {
-        for(PmsBookingRooms r : rooms) {
-            if(r.nonrefundable) 
+        for (PmsBookingRooms r : rooms) {
+            if (r.nonrefundable)
                 return true;
         }
         return false;
     }
 
     public void setAllRoomsNonRefundable() {
-        for(PmsBookingRooms r : rooms) {
+        for (PmsBookingRooms r : rooms) {
             r.nonrefundable = true;
         }
     }
 
     boolean hasRoomsNotAddedToBookingEngine() {
-        if(!isCompletedBooking()) {
+        if (!isCompletedBooking()) {
             return false;
         }
-        
-        for(PmsBookingRooms room : rooms) {
-            if(room.deleted) {
+
+        for (PmsBookingRooms room : rooms) {
+            if (room.deleted) {
                 continue;
             }
-            if(room.addedToWaitingList) {
+            if (room.addedToWaitingList) {
                 continue;
             }
-            if(room.isEnded()) {
+            if (room.isEnded()) {
                 continue;
             }
-            if(room.isOverBooking()) {
+            if (room.isOverBooking()) {
                 continue;
             }
-            if(!room.bookingConnected()) {
+            if (!room.bookingConnected()) {
                 return true;
             }
         }
@@ -693,29 +695,29 @@ public class PmsBooking extends DataCommon {
     }
 
     boolean isSynxis() {
-        if(channel != null && channel.equals("wubook_37")) {
+        if (channel != null && channel.equals("wubook_37")) {
             return true;
         }
         return false;
     }
 
     boolean isChannel(String channelToCheck) {
-        if(channelToCheck == null || channelToCheck.isEmpty()) {
+        if (channelToCheck == null || channelToCheck.isEmpty()) {
             return true;
         }
-        if(channelToCheck.equals("web") && (channel == null || channel.isEmpty())) {
-           return true;
+        if (channelToCheck.equals("web") && (channel == null || channel.isEmpty())) {
+            return true;
         }
-        if(this.channel == null) {
+        if (this.channel == null) {
             return false;
         }
-        
+
         return this.channel.equals(channelToCheck);
     }
 
     boolean isStarted() {
-        for(PmsBookingRooms r : rooms) {
-            if(r.isStarted()) {
+        for (PmsBookingRooms r : rooms) {
+            if (r.isStarted()) {
                 return true;
             }
         }
@@ -723,8 +725,8 @@ public class PmsBooking extends DataCommon {
     }
 
     boolean isEndingAtDay(Date time) {
-        for(PmsBookingRooms room : rooms) {
-            if(room.isEndingToday(time)) {
+        for (PmsBookingRooms room : rooms) {
+            if (room.isEndingToday(time)) {
                 return true;
             }
         }
@@ -732,24 +734,24 @@ public class PmsBooking extends DataCommon {
     }
 
     void markAsCompleted() {
-        if(completedDate == null) {
+        if (completedDate == null) {
             completedDate = new Date();
             sessionId = "";
         }
     }
 
     boolean isRecentlyCompleted() {
-        if(completedDate == null) {
+        if (completedDate == null) {
             return true;
         }
-        
+
         long diff = new Date().getTime() - completedDate.getTime();
         return diff < 60000;
     }
 
     public double getUnpaidAmount() {
         double amount = 0;
-        for(PmsBookingRooms r : getActiveRooms()) {
+        for (PmsBookingRooms r : getActiveRooms()) {
             amount += r.unpaidAmount;
         }
         return amount;
@@ -757,14 +759,14 @@ public class PmsBooking extends DataCommon {
 
     public double getUnpaidAmountForAllRooms() {
         double amount = 0;
-        for(PmsBookingRooms r : getAllRoomsIncInactive()) {
+        for (PmsBookingRooms r : getAllRoomsIncInactive()) {
             amount += r.unpaidAmount;
         }
         return amount;
     }
 
     boolean isOta() {
-        if(channel != null && channel.contains("wubook")) {
+        if (channel != null && channel.contains("wubook")) {
             return true;
         }
         return false;
@@ -776,8 +778,8 @@ public class PmsBooking extends DataCommon {
 
     String getPmsConferenceRoomId() {
         String roomId = "";
-        for(PmsBookingRooms room : rooms) {
-            if(room.isPmsConferenceRoom()) {
+        for (PmsBookingRooms room : rooms) {
+            if (room.isPmsConferenceRoom()) {
                 return room.pmsBookingRoomId;
             }
         }
@@ -785,10 +787,9 @@ public class PmsBooking extends DataCommon {
     }
 
     Iterable<PmsBookingRooms> getActiveRoomsIncNonRefundable() {
-
         List<PmsBookingRooms> result = new ArrayList<>();
-        for(PmsBookingRooms room : rooms) {
-            if(room.isDeleted() && !room.nonrefundable && !nonrefundable) {
+        for (PmsBookingRooms room : rooms) {
+            if (room.isDeleted() && !room.nonrefundable && !nonrefundable) {
                 continue;
             }
             result.add(room);
@@ -806,26 +807,26 @@ public class PmsBooking extends DataCommon {
         public static Integer progressive = 7;
         public static Integer interval = 8;
     }
-       
+
     public static class BookingStates {
         public static Integer STARTED = 0;
         public static Integer COMPLETED = 1;
         public static Integer DELETED = 2;
     }
-    
+
     void attachBookingItems(List<Booking> bookingsToAdd) {
-        for(PmsBookingRooms room : rooms) {
-            for(Booking booking : bookingsToAdd) {
-                if(room.pmsBookingRoomId.equals(booking.externalReference)) {
+        for (PmsBookingRooms room : rooms) {
+            for (Booking booking : bookingsToAdd) {
+                if (room.pmsBookingRoomId.equals(booking.externalReference)) {
                     room.bookingId = booking.id;
                 }
             }
         }
     }
-    
+
     public PmsBookingRooms findRoom(String roomId) {
-        for(PmsBookingRooms room : rooms) {
-            if(room.pmsBookingRoomId.equals(roomId)) {
+        for (PmsBookingRooms room : rooms) {
+            if (room.pmsBookingRoomId.equals(roomId)) {
                 return room;
             }
         }
@@ -833,17 +834,17 @@ public class PmsBooking extends DataCommon {
     }
 
     boolean isActiveInPeriode(Date startDate, Date endDate) {
-        for(PmsBookingRooms room : rooms) {
-            if(room.isActiveInPeriode(startDate, endDate)) {
+        for (PmsBookingRooms room : rooms) {
+            if (room.isActiveInPeriode(startDate, endDate)) {
                 return true;
             }
         }
         return false;
-    }    
-    
+    }
+
     boolean isActiveOnDay(Date day) {
-        for(PmsBookingRooms room : rooms) {
-            if(room.isActiveOnDay(day)) {
+        for (PmsBookingRooms room : rooms) {
+            if (room.isActiveOnDay(day)) {
                 return true;
             }
         }
@@ -851,11 +852,11 @@ public class PmsBooking extends DataCommon {
     }
 
     boolean checkingInBetween(Date startDate, Date endDate) {
-        if(startDate == null) {
+        if (startDate == null) {
             return false;
         }
-        for(PmsBookingRooms room : rooms) {
-            if(room.checkingInBetween(startDate, endDate)) {
+        for (PmsBookingRooms room : rooms) {
+            if (room.checkingInBetween(startDate, endDate)) {
                 return true;
             }
         }
@@ -863,35 +864,41 @@ public class PmsBooking extends DataCommon {
     }
 
     boolean checkingOutBetween(Date startDate, Date endDate) {
-        for(PmsBookingRooms room : rooms) {
-            if(room.checkingOutBetween(startDate, endDate)) {
+        for (PmsBookingRooms room : rooms) {
+            if (room.checkingOutBetween(startDate, endDate)) {
                 return true;
             }
         }
         return false;
-    }   
+    }
 
     public boolean hasAddonOfType(String type) {
         return rooms.stream().anyMatch(room -> room.hasAddonOfType(type));
     }
-    
+
     public int getTotalGuestCount() {
         return getActiveRooms().stream().mapToInt(room -> room.guests.size()).sum();
     }
-    
+
     String getHigestReservationCode() {
         long highestCode = -1;
         String curCode = wubookreservationid;
-        if(curCode != null && !curCode.isEmpty()) {
+        if (curCode != null && !curCode.isEmpty()) {
             highestCode = new Long(curCode);
         }
-        for(String code : wubookModifiedResId) {
+        for (String code : wubookModifiedResId) {
             long tmp = new Long(code);
-            if(tmp > highestCode) {
+            if (tmp > highestCode) {
                 highestCode = tmp;
             }
         }
         return highestCode + "";
+    }
+
+    public List<BookingZauiActivityItem> getConfirmedZauiActivities() {
+        return this.bookingZauiActivityItems.stream().filter(
+                activityItem -> activityItem.getOctoBooking().getStatus().equals(ZauiConstants.OCTO_CONFIRMED_STATUS))
+                .collect(Collectors.toList());
     }
 
 }

@@ -16,6 +16,4 @@ public interface IZauiActivityRepository extends IRepository<ZauiActivity> {
     ZauiActivity getBySupplierAndProductId(int supplierId, int productId, SessionInfo sessionInfo);
 
     int markDeleted(List<String> zauiActivityIds, SessionInfo sessionInfo);
-
-    DataCommon update(ZauiActivity zauiActivity, SessionInfo sessionInfo);
 }

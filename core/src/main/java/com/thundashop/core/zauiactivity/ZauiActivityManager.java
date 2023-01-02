@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import com.thundashop.core.pmsbookingprocess.GuestAddonsSummary;
 import com.thundashop.core.pmsbookingprocess.PmsBookingProcess;
-import com.thundashop.repository.pmsbookingrepository.IPmsBookingRepository;
 import com.thundashop.repository.utils.ZauiStatusCodes;
 import com.thundashop.zauiactivity.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +27,7 @@ import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.repository.exceptions.NotUniqueDataException;
 import com.thundashop.repository.exceptions.ZauiException;
+import com.thundashop.services.bookingservice.IPmsBookingService;
 import com.thundashop.services.octoapiservice.IOctoApiService;
 import com.thundashop.services.zauiactivityservice.IZauiActivityService;
 
@@ -56,9 +56,9 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
     PmsBookingProcess pmsBookingProcess;
 
     @Autowired
-    private IPmsBookingRepository pmsBookingRepository;
+    IPmsBookingService pmsBookingService;
 
-    private ZauiActivityConfig config;
+    ZauiActivityConfig config;
 
     @Override
     public void initialize() throws SecurityException {
@@ -164,6 +164,8 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
         Optional<BookingZauiActivityItem> activityItem = zauiActivityService
                 .getBookingZauiActivityItemByAddonId(addonId, pmsManager.getSessionInfo());
         if (!activityItem.isPresent()) {
+            // is this needed to throw exception? what if we log it as error and return
+            // empty cart list
             throw new ErrorException(1011);
         }
         setActivityItemAsPaid(activityItem.get());
@@ -177,6 +179,7 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
                 cartItem.setCount(1);
                 cartItems.add(cartItem);
             } catch (ZauiException | NotUniqueDataException e) {
+                // same here. is this really needed?
                 throw new RuntimeException(e);
             }
 
@@ -218,7 +221,7 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
     }
 
     private void setActivityItemAsPaid(BookingZauiActivityItem activityItem) {
-        PmsBooking booking = pmsBookingRepository.getPmsBookingByZauiActivityItemId(activityItem.getId(), pmsManager.getSessionInfo());
+        PmsBooking booking = pmsBookingService.getPmsBookingByZauiActivityItemId(activityItem.getId(), pmsManager.getSessionInfo());
         booking.bookingZauiActivityItems.stream().filter(item -> item.getId().equals(activityItem.getId()))
                 .findFirst().get()
                 .setUnpaidAmount(0);

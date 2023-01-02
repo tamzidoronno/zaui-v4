@@ -8,8 +8,6 @@ package com.thundashop.core.pmsbookingprocess;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
-import com.thundashop.core.pmsmanager.PmsPricing;
-import com.thundashop.repository.exceptions.ZauiException;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -35,7 +33,7 @@ public interface IPmsBookingProcess {
     public GuestAddonsSummary setGuestInformation(BookerInformation bookerInfo);
     public GuestAddonsSummary changeDateOnRoom(StartBooking arg);
     public GuestAddonsSummary setCampaignCode(String code);
-    public BookingResult completeBooking(CompleteBookingInput input) throws ZauiException;
+    public BookingResult completeBooking(CompleteBookingInput input);
     public BookingResult completeBookingForTerminal(CompleteBookingInput input);
     public BookingConfig getConfiguration();
     public BookingEmbedConfig getBookingEmbedConfiguration();

@@ -147,20 +147,8 @@ public class OctoApiService implements IOctoApiService {
         }
         if (!response.isSuccessful()) {
             log.error("Unsuccessful octo api request {}, response: {}", request, response);
-            OctoErrorResponse errorResponse = handleError(response.getBody());
-            throw new ZauiException(response.statusCode(), errorResponse.getError());
+            throw new ZauiException(response.statusCode(), response.getErrorMessaage());
         }
         return response.getBody();
-    }
-
-    private OctoErrorResponse handleError(String error) {
-        Type errorType = new TypeToken<OctoErrorResponse>() {
-        }.getType();
-
-        try {
-            return new Gson().fromJson(error, errorType);
-        } catch (Exception e) {
-            return new OctoErrorResponse();
-        }
     }
 }

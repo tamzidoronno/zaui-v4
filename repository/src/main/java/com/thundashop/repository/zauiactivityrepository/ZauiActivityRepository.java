@@ -59,14 +59,6 @@ public class ZauiActivityRepository extends Repository<ZauiActivity> implements 
     }
 
     @Override
-    public DataCommon update(ZauiActivity zauiActivity, SessionInfo sessionInfo) {
-        DBObject filter = new BasicDBObject();
-        filter.put("className",getClassName());
-        filter.put("_id",zauiActivity.id);
-        return getDatabase().update(sessionInfo.getManagerName(), getCollectionName(sessionInfo), filter,zauiActivity);
-    }
-
-    @Override
     protected String getClassName() {
         return ZauiActivity.class.getName();
     }

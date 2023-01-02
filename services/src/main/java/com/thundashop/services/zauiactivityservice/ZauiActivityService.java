@@ -19,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Book;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -111,16 +110,17 @@ public class ZauiActivityService implements IZauiActivityService {
                 .getSubtotal();
         activityItem.setUnpaidAmount(activityItem.price);
 
+        // Add octo tax validation with supplier
+
         int itemIndex = IntStream.range(0, booking.bookingZauiActivityItems.size())
                 .filter(i -> booking.bookingZauiActivityItems.get(i).getId().equals(activityItem.getId()))
                 .findFirst()
                 .orElse(-1);
 
-        if(itemIndex == -1) {
+        if (itemIndex == -1) {
             booking.bookingZauiActivityItems.add(activityItem);
             log.info("activity added to booking {}", activityItem);
-        }
-        else {
+        } else {
             booking.bookingZauiActivityItems.set(itemIndex, activityItem);
             log.info("activity confirmed to booking {}", activityItem);
         }
@@ -200,14 +200,14 @@ public class ZauiActivityService implements IZauiActivityService {
         if (isNotBlank(booking.channel) && booking.channel.equals(GotoConstants.GOTO_BOOKING_CHANNEL_NAME)) {
             return;
         }
-        // need filter for confirmation?
-        for (BookingZauiActivityItem activityItem : booking.bookingZauiActivityItems) {
+        // how to handle on hold reservations. simply remove from booking?
+        for (BookingZauiActivityItem activityItem : booking.getConfirmedZauiActivities()) {
             try {
                 cancelActivityFromBooking(activityItem);
             } catch (ZauiException e) {
                 log.error(
-                        "Failed to cancel octoBooking. OctoBookingId: {}. PmsBookingId {}. Reason: {}, Actual Error: {}",
-                        activityItem.getOctoBooking().getId(), booking.id, e.getMessage(), e);
+                        "Failed to cancel octoBooking: {}. PmsBookingId {}. Reason: {}, Actual Error: {}",
+                        activityItem.toString(), booking.id, e.getMessage(), e);
             }
         }
     }
@@ -219,12 +219,10 @@ public class ZauiActivityService implements IZauiActivityService {
                 ZauiActivity zauiActivity = zauiActivityRepository.getBySupplierAndProductId(supplier.getId(),
                         octoProduct.getId(), sessionInfo);
                 if (zauiActivity == null) {
-                    zauiActivityRepository.save(mapOctoToZauiActivity(octoProduct, supplier, currency, null),
-                            sessionInfo);
-                } else {
-                    zauiActivityRepository.update(mapOctoToZauiActivity(octoProduct, supplier, currency, zauiActivity),
-                            sessionInfo);
+                    zauiActivity = new ZauiActivity();
                 }
+                zauiActivityRepository.save(mapOctoToZauiActivity(octoProduct, supplier, currency, zauiActivity),
+                        sessionInfo);
 
             } catch (Exception ex) {
                 log.error(
@@ -236,9 +234,6 @@ public class ZauiActivityService implements IZauiActivityService {
 
     private ZauiActivity mapOctoToZauiActivity(OctoProduct octoProduct, ZauiConnectedSupplier supplier, String currency,
             ZauiActivity zauiActivity) {
-        if (zauiActivity == null) {
-            zauiActivity = new ZauiActivity();
-        }
         zauiActivity.name = octoProduct.getInternalName();
         zauiActivity.setProductId(octoProduct.getId());
         zauiActivity.setSupplierId(supplier.getId());

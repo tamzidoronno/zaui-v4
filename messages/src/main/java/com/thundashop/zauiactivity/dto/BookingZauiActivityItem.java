@@ -27,4 +27,15 @@ public class BookingZauiActivityItem extends PmsBookingAddonItem {
     private Integer supplierId;
     private String supplierName;
     private OctoBooking octoBooking;
+
+    @Override
+    public String toString() {
+        return "BookingZauiActivityItem{" +
+                "zauiActivityId=" + zauiActivityId +
+                ", octoProductId=" + octoProductId +
+                ", optionId=" + optionId +
+                ", supplierId=" + supplierId +
+                ", octoBooking id=" + octoBooking.getId() +
+                '}';
+    }
 }

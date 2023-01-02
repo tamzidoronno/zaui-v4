@@ -2,9 +2,9 @@ package com.thundashop.services.core.httpservice;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.thundashop.core.webmanager.ZauiHttpRequest;
@@ -21,12 +21,11 @@ public class ZauiHttpService implements IZauiHttpService {
     private static final MediaType JSON = MediaType.parse("application/json");
     private static final MediaType TEXT = MediaType.parse("text/plain");
 
-    private final OkHttpClient okHttpClient;
-
-    @Autowired
-    public ZauiHttpService(OkHttpClient okHttpClient) {
-        this.okHttpClient = okHttpClient;
-    }
+    private final OkHttpClient okHttpClient = new OkHttpClient.Builder()
+            .connectTimeout(1, TimeUnit.MINUTES)
+            .readTimeout(1, TimeUnit.MINUTES)
+            .writeTimeout(1, TimeUnit.MINUTES)
+            .build();
 
     @Override
     public ZauiHttpResponse post(ZauiHttpRequest httpRequest) {
@@ -42,7 +41,7 @@ public class ZauiHttpService implements IZauiHttpService {
         }
 
         Map<String, String> headers = httpRequest.getHeaders();
-        if(headers != null)
+        if (headers != null)
             headers.keySet().forEach(key -> requestBuilder.addHeader(key, headers.get(key)));
 
         Request request = requestBuilder
@@ -62,7 +61,7 @@ public class ZauiHttpService implements IZauiHttpService {
         }
 
         Map<String, String> headers = httpRequest.getHeaders();
-        if(headers != null)
+        if (headers != null)
             headers.keySet().forEach(key -> requestBuilder.addHeader(key, headers.get(key)));
 
         Request request = requestBuilder
@@ -82,7 +81,7 @@ public class ZauiHttpService implements IZauiHttpService {
         }
 
         Map<String, String> headers = httpRequest.getHeaders();
-        if(headers != null)
+        if (headers != null)
             headers.keySet().forEach(key -> requestBuilder.addHeader(key, headers.get(key)));
 
         Request request = requestBuilder
@@ -95,9 +94,11 @@ public class ZauiHttpService implements IZauiHttpService {
 
     private ZauiHttpResponse execute(Request request) {
         try (Response response = okHttpClient.newCall(request).execute()) {
-            return new ZauiHttpResponse(response.body().string(), response.code(), response.isSuccessful(), response.headers().toMultimap(), null);
+            return new ZauiHttpResponse(response.body().string(), response.code(), response.isSuccessful(),
+                    response.headers().toMultimap(), null);
         } catch (IOException e) {
-            log.error("ZauiHttpException occured for request url {}. Reason: {}. Actual error: {}", request.url().uri(), e.getMessage(), e);
+            log.error("ZauiHttpException occured for request url {}. Reason: {}. Actual error: {}", request.url().uri(),
+                    e.getMessage(), e);
             return new ZauiHttpResponse(null, 500, false, null, e.getMessage());
         }
     }

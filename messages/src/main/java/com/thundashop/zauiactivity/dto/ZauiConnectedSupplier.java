@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter 
+@Getter
 @Setter
 public class ZauiConnectedSupplier extends OctoSupplier {
     private List<TaxRateMap> taxRateMapping;
@@ -16,11 +16,4 @@ public class ZauiConnectedSupplier extends OctoSupplier {
             return null;
         return taxRateMapping.getAccountNo();
     }
-}
-
-@Getter 
-@Setter
-class TaxRateMap {
-    private double TaxRate;
-    private String AccountNo;
 }

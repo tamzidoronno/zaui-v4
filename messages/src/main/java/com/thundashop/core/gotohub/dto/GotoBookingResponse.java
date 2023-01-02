@@ -28,4 +28,7 @@ public class GotoBookingResponse {
     @SerializedName("roomTypes")
     @Expose
     private List<RoomTypeCode> roomTypes = null;
+    @SerializedName("activities")
+    @Expose
+    private List<GotoActivityReservationDto> activities = null;
 }

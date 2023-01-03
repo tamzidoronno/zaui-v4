@@ -92,8 +92,10 @@ public class ZauiActivityService implements IZauiActivityService {
             throws ZauiException {
         if (activityItem.getUnits() == null || activityItem.getUnits().isEmpty())
             throw new ZauiException(ZauiStatusCodes.MISSING_PARAMS);
-        OctoBooking octoReservedBooking = reserveOctoBooking(activityItem);
-        activityItem.setOctoBooking(octoReservedBooking);
+        if(activityItem.getOctoBooking() == null){
+            OctoBooking octoReservedBooking = reserveOctoBooking(activityItem);
+            activityItem.setOctoBooking(octoReservedBooking);
+        }
         OctoBooking octoConfirmedBooking = confirmOctoBooking(activityItem, booking, booker);
         booking = addActivityToBooking(activityItem, octoConfirmedBooking, booking);
         return booking;
@@ -153,11 +155,9 @@ public class ZauiActivityService implements IZauiActivityService {
     }
 
     @Override
-    public PmsBooking removeActivityFromWebBooking(AddZauiActivityToWebBookingDto activity, PmsBooking booking,
-            SessionInfo sessionInfo) {
-        booking.bookingZauiActivityItems.removeIf(item -> item.getAvailabilityId().equals(activity.getAvailabilityId())
-                && item.getOptionId().equals(activity.getOptionId()));
-        log.info("activity removed from booking {}", activity);
+    public PmsBooking removeActivityFromBooking(String activityItemId, PmsBooking booking) {
+        booking.bookingZauiActivityItems.removeIf(item -> item.getId().equals(activityItemId));
+        log.info("activity {} removed from booking {}", activityItemId,booking);
         return booking;
     }
 

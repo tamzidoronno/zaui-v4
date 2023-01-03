@@ -140,9 +140,9 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
     }
 
     @Override
-    public GuestAddonsSummary removeActivityFromWebBooking(AddZauiActivityToWebBookingDto activity) throws ZauiException {
-        PmsBooking booking = pmsManager.getBooking(activity.getPmsBookingId());
-        booking = zauiActivityService.removeActivityFromWebBooking(activity, booking, getSessionInfo());
+    public GuestAddonsSummary removeActivityFromBooking(String activityItemId, String pmsBookingId) {
+        PmsBooking booking = pmsManager.getBooking(pmsBookingId);
+        booking = zauiActivityService.removeActivityFromBooking(activityItemId, booking);
         pmsManager.saveBooking(booking);
         return pmsBookingProcess.getAddonsSummary(new ArrayList<>());
     }

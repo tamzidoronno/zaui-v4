@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.thundashop.core.common.DataCommon;
+import lombok.Data;
 
 
+@Data
 public class ZauiActivityConfig extends DataCommon {
     public boolean enabled;
     public List<ZauiConnectedSupplier> connectedSuppliers = new ArrayList<>();

@@ -119,11 +119,10 @@ public class ZauiActivityService implements IZauiActivityService {
                 .findFirst()
                 .orElse(-1);
 
-        if(itemIndex == -1) {
+        if (itemIndex == -1) {
             booking.bookingZauiActivityItems.add(activityItem);
             log.info("activity added to booking {}", activityItem);
-        }
-        else {
+        } else {
             booking.bookingZauiActivityItems.set(itemIndex, activityItem);
             log.info("activity confirmed to booking {}", activityItem);
         }
@@ -201,20 +200,20 @@ public class ZauiActivityService implements IZauiActivityService {
         if (isNotBlank(booking.channel) && booking.channel.equals(GotoConstants.GOTO_BOOKING_CHANNEL_NAME)) {
             return;
         }
-        // need filter for confirmation?
-        for (BookingZauiActivityItem activityItem : booking.bookingZauiActivityItems) {
+        // how to handle on hold reservations. simply remove from booking?
+        for (BookingZauiActivityItem activityItem : booking.getConfirmedZauiActivities()) {
             try {
                 cancelActivityFromBooking(activityItem);
             } catch (ZauiException e) {
                 log.error(
-                        "Failed to cancel octoBooking. OctoBookingId: {}. PmsBookingId {}. Reason: {}, Actual Error: {}",
-                        activityItem.getOctoBooking().getId(), booking.id, e.getMessage(), e);
+                        "Failed to cancel octoBooking: {}. PmsBookingId {}. Reason: {}, Actual Error: {}",
+                        activityItem.toString(), booking.id, e.getMessage(), e);
             }
         }
     }
 
     private void syncZauiActivities(List<OctoProduct> octoProducts, ZauiConnectedSupplier supplier, String currency,
-                                    SessionInfo sessionInfo) {
+            SessionInfo sessionInfo) {
         for (OctoProduct octoProduct : octoProducts) {
             try {
                 ZauiActivity zauiActivity = zauiActivityRepository.getBySupplierAndProductId(supplier.getId(),
@@ -222,10 +221,12 @@ public class ZauiActivityService implements IZauiActivityService {
                 if (zauiActivity == null) {
                     zauiActivity = new ZauiActivity();
                 }
-                zauiActivityRepository.save(mapOctoToZauiActivity(octoProduct, supplier, currency, zauiActivity), sessionInfo);
+                zauiActivityRepository.save(mapOctoToZauiActivity(octoProduct, supplier, currency, zauiActivity),
+                        sessionInfo);
 
             } catch (Exception ex) {
-                log.error("Failed to save or update octo product into database. Octo product id: {}, supplier id: {}. Reason: {}, Actual error: {}",
+                log.error(
+                        "Failed to save or update octo product into database. Octo product id: {}, supplier id: {}. Reason: {}, Actual error: {}",
                         octoProduct.getId(), supplier.getId(), ex.getMessage(), ex);
             }
         }

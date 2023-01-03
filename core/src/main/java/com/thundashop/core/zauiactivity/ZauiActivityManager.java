@@ -169,30 +169,33 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
         Optional<ZauiActivity> activity = zauiActivityService.getZauiActivityById(productId, getSessionInfo());
 
         if (!activity.isPresent()) {
-            log.error("Activity not found in db. Activity: {}. AddonId: {}. ProductId: {}", activity.toString(),
+            log.error("Product not found in db. Activity: {}. AddonId: {}. ProductId: {}", activity,
                     addonId, productId);
             return cartItems;
         }
         Optional<BookingZauiActivityItem> activityItem = zauiActivityService
                 .getBookingZauiActivityItemByAddonId(addonId, pmsManager.getSessionInfo());
         if (!activityItem.isPresent()) {
-            log.error("Activity not found in db. ActivityItem: {}. AddonId: {}. ProductId: {}", activityItem.toString(),
+            log.error("Activity not found in db. ActivityItem: {}. AddonId: {}. ProductId: {}", activityItem,
                     addonId, productId);
             return cartItems;
         }
-        setActivityItemAsPaid(activityItem.get());
-        Pricing pricing = activityItem.get().getOctoBooking().getPricing();
-        for (TaxData tax : pricing.getIncludedTaxes()) {
-            try {
+        try{
+            Pricing pricing = activityItem.get().getOctoBooking().getPricing();
+            List<CartItem> cartItemsBasedOnTax = new ArrayList<>();
+            for (TaxData tax : pricing.getIncludedTaxes()) {
                 Product taxProduct = createZauiActivityForTax(activity.get(), tax, pricing.getCurrencyPrecision());
                 CartItem cartItem = new CartItem();
                 cartItem.setProduct(taxProduct);
                 cartItem.setCount(1);
-                cartItems.add(cartItem);
-            } catch (ZauiException | NotUniqueDataException e) {
-                log.error("Failed to add activity to cart. Activity: {}. Reason: {}. Actual error: ",
-                        activityItem.toString(), e.getMessage(), e);
+                cartItemsBasedOnTax.add(cartItem);
             }
+            cartItems.addAll(cartItemsBasedOnTax);
+            setActivityItemAsPaid(activityItem.get());
+        }
+        catch(Exception ex){
+            log.error("Failed to add activity to cart. Activity: {}. Reason: {}. Actual error: {}",
+                    activityItem, ex.getMessage(), ex);
 
         }
         return cartItems;

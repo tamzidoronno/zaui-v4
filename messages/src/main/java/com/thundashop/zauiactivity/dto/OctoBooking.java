@@ -39,7 +39,7 @@ class Contact {
     private String lastName;
     private String emailAddress;
     private String phoneNumber;
-    private List<Object> locales = null;
+    private List<String> locales = null;
     private String country;
     private String notes;
 }

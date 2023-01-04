@@ -6,7 +6,7 @@ import lombok.Data;
 public class UnitItemOnBooking {
     private String uuid;
     private String unitId;
-    private Object resellerReference;
-    private Object supplierReference;
+    private String resellerReference;
+    private String supplierReference;
     private Ticket ticket;
 }

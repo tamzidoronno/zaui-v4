@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 
 import com.thundashop.zauiactivity.constant.ZauiConstants;
 import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
-import org.apache.commons.lang3.StringUtils;
 import org.mongodb.morphia.annotations.Transient;
 
 import com.google.gson.Gson;
@@ -21,6 +20,9 @@ import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.bookingengine.data.RegistrationRules;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.DataCommon;
+
+import static com.thundashop.core.gotohub.constant.GotoConstants.GOTO_BOOKING_CHANNEL_NAME;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public class PmsBooking extends DataCommon {
 
@@ -96,9 +98,10 @@ public class PmsBooking extends DataCommon {
     public long jomresBookingId = 0;
     @Transient
     public boolean ignoreOverrideTotPrice = false;
-    public long jomresChannelId = 0;
-    public String jomresReservationCode = "";
-    public Date jomresLastModified = null;
+    public Date jomresLastModified=null;
+
+    //Goto Related Properties
+    public String paymentMethodNameFromGoto = "";
 
     // Zaui Activity related Properties
     public List<BookingZauiActivityItem> bookingZauiActivityItems = new ArrayList<>();
@@ -550,7 +553,7 @@ public class PmsBooking extends DataCommon {
     }
 
     public void calculateTotalCost() {
-        if (StringUtils.isNotBlank(channel) && channel.contains("jomres") && ignoreOverrideTotPrice) {
+        if(isNotBlank(channel) && channel.contains("jomres") && ignoreOverrideTotPrice){
             totalPrice = rooms.get(0).totalCost;
             return;
         }
@@ -568,12 +571,16 @@ public class PmsBooking extends DataCommon {
         totalPrice = total;
     }
 
-    private double getZauiActivitiesPrice() {
-        if (getConfirmedZauiActivities().isEmpty()) {
-            return 0.0;
+    private double getZauiActivitiesPrice(){
+        double totalActivityPrice;
+        List<BookingZauiActivityItem> activitiesToCalculate;
+        if(isNotBlank(channel) && channel.equals(GOTO_BOOKING_CHANNEL_NAME)) {
+            activitiesToCalculate = getNotCancelledZauiActivities();
         }
-        return getConfirmedZauiActivities().stream().filter(x -> x.price != null)
-                .mapToDouble(activityItem -> activityItem.price).sum();
+        else activitiesToCalculate = getConfirmedZauiActivities();
+
+        totalActivityPrice = activitiesToCalculate.stream().filter(x-> x.price != null).mapToDouble(activityItem -> activityItem.price).sum();
+        return totalActivityPrice;
     }
 
     boolean transferredToLock() {
@@ -895,9 +902,15 @@ public class PmsBooking extends DataCommon {
         return highestCode + "";
     }
 
+    public List<BookingZauiActivityItem> getNotCancelledZauiActivities() {
+        return this.bookingZauiActivityItems.stream()
+                .filter(activityItem -> !activityItem.getOctoBooking().getStatus().equals(ZauiConstants.OCTO_CANCELLED_STATUS))
+                .collect(Collectors.toList());
+    }
+
     public List<BookingZauiActivityItem> getConfirmedZauiActivities() {
-        return this.bookingZauiActivityItems.stream().filter(
-                activityItem -> activityItem.getOctoBooking().getStatus().equals(ZauiConstants.OCTO_CONFIRMED_STATUS))
+        return this.bookingZauiActivityItems.stream()
+                .filter(activityItem -> activityItem.getOctoBooking().getStatus().equals(ZauiConstants.OCTO_CONFIRMED_STATUS))
                 .collect(Collectors.toList());
     }
 

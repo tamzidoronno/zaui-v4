@@ -21,4 +21,14 @@ public class ZauiActivity extends Product {
     private Integer supplierId;
     private String supplierName;
     private String currency;
+
+    @Override
+    public String toString() {
+        return "ZauiActivity {" +
+                "productId=" + productId +
+                ", supplierId=" + supplierId +
+                ", supplierName=" + supplierName +
+                ", currency=" + currency +
+                '}';
+    }
 }

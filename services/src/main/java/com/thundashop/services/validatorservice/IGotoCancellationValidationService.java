@@ -1,4 +1,4 @@
-package com.thundashop.services.gotoservice;
+package com.thundashop.services.validatorservice;
 
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsConfiguration;

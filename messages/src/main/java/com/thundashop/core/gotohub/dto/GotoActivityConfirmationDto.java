@@ -6,11 +6,11 @@ import com.thundashop.zauiactivity.dto.OctoBooking;
 import lombok.Data;
 
 @Data
-public class GotoActivityReservationDto {
-    @SerializedName("octoReservationResponse")
+public class GotoActivityConfirmationDto {
+    @SerializedName("octoConfirmationResponse")
     @Expose
-    private OctoBooking octoReservationResponse;
-    @SerializedName("supplierId")
+    private OctoBooking octoConfirmationResponse;
+    @SerializedName("octoReservationId")
     @Expose
-    private Integer supplierId = null;
+    private String octoReservationId;
 }

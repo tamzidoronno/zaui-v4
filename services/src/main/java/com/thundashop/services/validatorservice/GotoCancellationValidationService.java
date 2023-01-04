@@ -1,4 +1,4 @@
-package com.thundashop.services.gotoservice;
+package com.thundashop.services.validatorservice;
 
 import com.thundashop.core.gotohub.dto.GotoException;
 import com.thundashop.core.pmsmanager.PmsBooking;
@@ -6,6 +6,7 @@ import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.pmsmanager.PmsConfiguration;
 import com.thundashop.repository.utils.SessionInfo;
 import com.thundashop.services.bookingservice.IPmsBookingService;
+import com.thundashop.services.gotoservice.IGotoBookingCancellationService;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,7 @@ import static com.thundashop.core.gotohub.constant.GoToStatusCodes.*;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.CANCELLATION_DEADLINE_PASSED;
 
 @Service
-public class GotoCancellationValidationService implements IGotoCancellationValidationService{
+public class GotoCancellationValidationService implements IGotoCancellationValidationService {
     @Autowired
     IPmsBookingService pmsBookingService;
     @Autowired

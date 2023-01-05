@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +70,7 @@ public class BlackoutDateType {
      */
     public List<DateTimeSpanType> getBlackoutDate() {
         if (blackoutDate == null) {
-            blackoutDate = new ArrayList<DateTimeSpanType>();
+            blackoutDate = new ArrayList<>();
         }
         return this.blackoutDate;
     }

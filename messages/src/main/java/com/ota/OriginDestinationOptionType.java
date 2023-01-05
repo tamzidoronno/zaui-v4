@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +53,7 @@ import javax.xml.bind.annotation.XmlType;
     "flightSegment"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.AirItineraryType.OriginDestinationOptions.OriginDestinationOption.class
+    com.ota.AirItineraryType.OriginDestinationOptions.OriginDestinationOption.class
 })
 public class OriginDestinationOptionType {
 
@@ -84,7 +84,7 @@ public class OriginDestinationOptionType {
      */
     public List<OriginDestinationOptionType.FlightSegment> getFlightSegment() {
         if (flightSegment == null) {
-            flightSegment = new ArrayList<OriginDestinationOptionType.FlightSegment>();
+            flightSegment = new ArrayList<>();
         }
         return this.flightSegment;
     }

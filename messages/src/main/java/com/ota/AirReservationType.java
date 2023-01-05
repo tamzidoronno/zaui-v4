@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -271,7 +271,7 @@ public class AirReservationType {
      */
     public List<TicketingInfoType> getTicketing() {
         if (ticketing == null) {
-            ticketing = new ArrayList<TicketingInfoType>();
+            ticketing = new ArrayList<>();
         }
         return this.ticketing;
     }
@@ -324,7 +324,7 @@ public class AirReservationType {
      */
     public List<AirReservationType.BookingReferenceID> getBookingReferenceID() {
         if (bookingReferenceID == null) {
-            bookingReferenceID = new ArrayList<AirReservationType.BookingReferenceID>();
+            bookingReferenceID = new ArrayList<>();
         }
         return this.bookingReferenceID;
     }
@@ -476,7 +476,7 @@ public class AirReservationType {
          */
         public List<String> getFlightRefNumberRPHList() {
             if (flightRefNumberRPHList == null) {
-                flightRefNumberRPHList = new ArrayList<String>();
+                flightRefNumberRPHList = new ArrayList<>();
             }
             return this.flightRefNumberRPHList;
         }
@@ -578,7 +578,7 @@ public class AirReservationType {
          */
         public List<AirReservationType.PricingOverview.PricingIndicator> getPricingIndicator() {
             if (pricingIndicator == null) {
-                pricingIndicator = new ArrayList<AirReservationType.PricingOverview.PricingIndicator>();
+                pricingIndicator = new ArrayList<>();
             }
             return this.pricingIndicator;
         }
@@ -607,7 +607,7 @@ public class AirReservationType {
          */
         public List<AirReservationType.PricingOverview.Account> getAccount() {
             if (account == null) {
-                account = new ArrayList<AirReservationType.PricingOverview.Account>();
+                account = new ArrayList<>();
             }
             return this.account;
         }
@@ -636,7 +636,7 @@ public class AirReservationType {
          */
         public List<FreeTextType> getComment() {
             if (comment == null) {
-                comment = new ArrayList<FreeTextType>();
+                comment = new ArrayList<>();
             }
             return this.comment;
         }
@@ -1006,7 +1006,7 @@ public class AirReservationType {
          */
         public List<AirReservationType.Queues.Queue> getQueue() {
             if (queue == null) {
-                queue = new ArrayList<AirReservationType.Queues.Queue>();
+                queue = new ArrayList<>();
             }
             return this.queue;
         }

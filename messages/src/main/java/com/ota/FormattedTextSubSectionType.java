@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +80,7 @@ public class FormattedTextSubSectionType {
      */
     public List<ParagraphType> getParagraph() {
         if (paragraph == null) {
-            paragraph = new ArrayList<ParagraphType>();
+            paragraph = new ArrayList<>();
         }
         return this.paragraph;
     }

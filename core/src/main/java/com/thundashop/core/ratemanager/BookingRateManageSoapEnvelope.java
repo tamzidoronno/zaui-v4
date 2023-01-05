@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.soap.SOAPElement;
-import org.opentravel.ota._2003._05.OTAHotelInvCountNotifRQ;
+import com.ota.OTAHotelInvCountNotifRQ;
 
 @XmlRootElement(name="envelope")
 public class BookingRateManageSoapEnvelope {

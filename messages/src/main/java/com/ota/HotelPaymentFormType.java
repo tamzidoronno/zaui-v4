@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -50,7 +50,7 @@ import javax.xml.bind.annotation.XmlType;
     "masterAccountUsage"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.HotelRoomListType.Guests.Guest.GuaranteePayment.class
+    com.ota.HotelRoomListType.Guests.Guest.GuaranteePayment.class
 })
 public class HotelPaymentFormType
     extends PaymentFormType

@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +79,7 @@ public class LoyaltyPointsAccrualsType {
      */
     public List<LoyaltyPointsAccrualsType.SelectedLoyalty> getSelectedLoyalty() {
         if (selectedLoyalty == null) {
-            selectedLoyalty = new ArrayList<LoyaltyPointsAccrualsType.SelectedLoyalty>();
+            selectedLoyalty = new ArrayList<>();
         }
         return this.selectedLoyalty;
     }

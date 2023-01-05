@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -177,7 +177,7 @@ public class GuestRoomType {
      */
     public List<GuestRoomType.Occupancy> getOccupancy() {
         if (occupancy == null) {
-            occupancy = new ArrayList<GuestRoomType.Occupancy>();
+            occupancy = new ArrayList<>();
         }
         return this.occupancy;
     }
@@ -278,7 +278,7 @@ public class GuestRoomType {
      */
     public List<AdditionalGuestAmountType> getAdditionalGuestAmount() {
         if (additionalGuestAmount == null) {
-            additionalGuestAmount = new ArrayList<AdditionalGuestAmountType>();
+            additionalGuestAmount = new ArrayList<>();
         }
         return this.additionalGuestAmount;
     }
@@ -368,7 +368,7 @@ public class GuestRoomType {
          */
         public List<GuestRoomType.Amenities.Amenity> getAmenity() {
             if (amenity == null) {
-                amenity = new ArrayList<GuestRoomType.Amenities.Amenity>();
+                amenity = new ArrayList<>();
             }
             return this.amenity;
         }
@@ -1050,7 +1050,7 @@ public class GuestRoomType {
          */
         public List<String> getBedTypeCode() {
             if (bedTypeCode == null) {
-                bedTypeCode = new ArrayList<String>();
+                bedTypeCode = new ArrayList<>();
             }
             return this.bedTypeCode;
         }
@@ -1319,7 +1319,7 @@ public class GuestRoomType {
          */
         public List<String> getPromotionVendorCode() {
             if (promotionVendorCode == null) {
-                promotionVendorCode = new ArrayList<String>();
+                promotionVendorCode = new ArrayList<>();
             }
             return this.promotionVendorCode;
         }

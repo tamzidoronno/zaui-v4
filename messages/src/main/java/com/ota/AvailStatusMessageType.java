@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -1157,7 +1157,7 @@ public class AvailStatusMessageType {
          */
         public List<String> getRestriction() {
             if (restriction == null) {
-                restriction = new ArrayList<String>();
+                restriction = new ArrayList<>();
             }
             return this.restriction;
         }

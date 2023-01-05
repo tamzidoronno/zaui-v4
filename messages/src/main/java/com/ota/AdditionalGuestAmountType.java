@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -123,7 +123,7 @@ public class AdditionalGuestAmountType {
      */
     public List<ParagraphType> getAddlGuestAmtDescription() {
         if (addlGuestAmtDescription == null) {
-            addlGuestAmtDescription = new ArrayList<ParagraphType>();
+            addlGuestAmtDescription = new ArrayList<>();
         }
         return this.addlGuestAmtDescription;
     }

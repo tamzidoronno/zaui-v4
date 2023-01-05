@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,7 +98,7 @@ public class RatePlanLiteType {
      */
     public List<GuaranteeType> getGuarantee() {
         if (guarantee == null) {
-            guarantee = new ArrayList<GuaranteeType>();
+            guarantee = new ArrayList<>();
         }
         return this.guarantee;
     }

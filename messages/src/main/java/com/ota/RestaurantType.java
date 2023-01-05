@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -670,7 +670,7 @@ public class RestaurantType {
          */
         public List<RestaurantType.CuisineCodes.CuisineCode> getCuisineCode() {
             if (cuisineCode == null) {
-                cuisineCode = new ArrayList<RestaurantType.CuisineCodes.CuisineCode>();
+                cuisineCode = new ArrayList<>();
             }
             return this.cuisineCode;
         }
@@ -908,7 +908,7 @@ public class RestaurantType {
          */
         public List<RestaurantType.InfoCodes.InfoCode> getInfoCode() {
             if (infoCode == null) {
-                infoCode = new ArrayList<RestaurantType.InfoCodes.InfoCode>();
+                infoCode = new ArrayList<>();
             }
             return this.infoCode;
         }

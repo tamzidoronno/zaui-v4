@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -1318,7 +1318,7 @@ public class ViewershipsType {
         public static class Profiles {
 
             @XmlElement(name = "Profile", required = true)
-            protected List<org.opentravel.ota._2003._05.ProfileType> profile;
+            protected List<com.ota.ProfileType> profile;
 
             /**
              * Gets the value of the profile property.
@@ -1338,13 +1338,13 @@ public class ViewershipsType {
              * 
              * <p>
              * Objects of the following type(s) are allowed in the list
-             * {@link org.opentravel.ota._2003._05.ProfileType }
+             * {@link com.ota.ProfileType }
              * 
              * 
              */
-            public List<org.opentravel.ota._2003._05.ProfileType> getProfile() {
+            public List<com.ota.ProfileType> getProfile() {
                 if (profile == null) {
-                    profile = new ArrayList<org.opentravel.ota._2003._05.ProfileType>();
+                    profile = new ArrayList<com.ota.ProfileType>();
                 }
                 return this.profile;
             }

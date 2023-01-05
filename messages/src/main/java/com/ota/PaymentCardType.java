@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -141,7 +141,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "magneticStripe"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.DonationType.CreditCardInfo.class
+    com.ota.DonationType.CreditCardInfo.class
 })
 public class PaymentCardType {
 
@@ -294,7 +294,7 @@ public class PaymentCardType {
      */
     public List<PaymentCardType.Telephone> getTelephone() {
         if (telephone == null) {
-            telephone = new ArrayList<PaymentCardType.Telephone>();
+            telephone = new ArrayList<>();
         }
         return this.telephone;
     }
@@ -323,7 +323,7 @@ public class PaymentCardType {
      */
     public List<EmailType> getEmail() {
         if (email == null) {
-            email = new ArrayList<EmailType>();
+            email = new ArrayList<>();
         }
         return this.email;
     }
@@ -352,7 +352,7 @@ public class PaymentCardType {
      */
     public List<PaymentCardType.CustLoyalty> getCustLoyalty() {
         if (custLoyalty == null) {
-            custLoyalty = new ArrayList<PaymentCardType.CustLoyalty>();
+            custLoyalty = new ArrayList<>();
         }
         return this.custLoyalty;
     }
@@ -1051,7 +1051,7 @@ public class PaymentCardType {
          */
         public List<String> getVendorCode() {
             if (vendorCode == null) {
-                vendorCode = new ArrayList<String>();
+                vendorCode = new ArrayList<>();
             }
             return this.vendorCode;
         }

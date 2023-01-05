@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +81,7 @@ public class ProfilesType {
      */
     public List<ProfilesType.ProfileInfo> getProfileInfo() {
         if (profileInfo == null) {
-            profileInfo = new ArrayList<ProfilesType.ProfileInfo>();
+            profileInfo = new ArrayList<>();
         }
         return this.profileInfo;
     }
@@ -143,7 +143,7 @@ public class ProfilesType {
          */
         public List<UniqueIDType> getUniqueID() {
             if (uniqueID == null) {
-                uniqueID = new ArrayList<UniqueIDType>();
+                uniqueID = new ArrayList<>();
             }
             return this.uniqueID;
         }

@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +68,7 @@ import javax.xml.bind.annotation.XmlType;
     "rateComments"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.VehicleRentalRateType.RateQualifier.class
+    com.ota.VehicleRentalRateType.RateQualifier.class
 })
 public class RateQualifierType {
 
@@ -411,7 +411,7 @@ public class RateQualifierType {
      */
     public List<String> getPromotionVendorCode() {
         if (promotionVendorCode == null) {
-            promotionVendorCode = new ArrayList<String>();
+            promotionVendorCode = new ArrayList<>();
         }
         return this.promotionVendorCode;
     }
@@ -477,7 +477,7 @@ public class RateQualifierType {
          */
         public List<RateQualifierType.RateComments.RateComment> getRateComment() {
             if (rateComment == null) {
-                rateComment = new ArrayList<RateQualifierType.RateComments.RateComment>();
+                rateComment = new ArrayList<>();
             }
             return this.rateComment;
         }

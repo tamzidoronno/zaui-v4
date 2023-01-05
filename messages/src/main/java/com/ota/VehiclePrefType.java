@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigInteger;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -60,7 +60,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "vehMakeModel"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.VehicleAvailRQCoreType.VehPrefs.VehPref.class
+    com.ota.VehicleAvailRQCoreType.VehPrefs.VehPref.class
 })
 public class VehiclePrefType
     extends VehicleCoreType

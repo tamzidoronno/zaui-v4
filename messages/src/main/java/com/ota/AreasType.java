@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,7 +85,7 @@ public class AreasType {
      */
     public List<AreasType.Area> getArea() {
         if (area == null) {
-            area = new ArrayList<AreasType.Area>();
+            area = new ArrayList<>();
         }
         return this.area;
     }

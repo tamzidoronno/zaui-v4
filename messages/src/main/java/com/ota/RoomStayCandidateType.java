@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -163,7 +163,7 @@ public class RoomStayCandidateType {
      */
     public List<RoomAmenityPrefType> getRoomAmenity() {
         if (roomAmenity == null) {
-            roomAmenity = new ArrayList<RoomAmenityPrefType>();
+            roomAmenity = new ArrayList<>();
         }
         return this.roomAmenity;
     }
@@ -456,7 +456,7 @@ public class RoomStayCandidateType {
      */
     public List<String> getBedTypeCode() {
         if (bedTypeCode == null) {
-            bedTypeCode = new ArrayList<String>();
+            bedTypeCode = new ArrayList<>();
         }
         return this.bedTypeCode;
     }
@@ -725,7 +725,7 @@ public class RoomStayCandidateType {
      */
     public List<String> getPromotionVendorCode() {
         if (promotionVendorCode == null) {
-            promotionVendorCode = new ArrayList<String>();
+            promotionVendorCode = new ArrayList<>();
         }
         return this.promotionVendorCode;
     }

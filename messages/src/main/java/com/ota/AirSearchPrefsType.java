@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -178,7 +178,7 @@ public class AirSearchPrefsType {
      */
     public List<AirSearchPrefsType.VendorPref> getVendorPref() {
         if (vendorPref == null) {
-            vendorPref = new ArrayList<AirSearchPrefsType.VendorPref>();
+            vendorPref = new ArrayList<>();
         }
         return this.vendorPref;
     }
@@ -207,7 +207,7 @@ public class AirSearchPrefsType {
      */
     public List<AirSearchPrefsType.FlightTypePref> getFlightTypePref() {
         if (flightTypePref == null) {
-            flightTypePref = new ArrayList<AirSearchPrefsType.FlightTypePref>();
+            flightTypePref = new ArrayList<>();
         }
         return this.flightTypePref;
     }
@@ -236,7 +236,7 @@ public class AirSearchPrefsType {
      */
     public List<AirSearchPrefsType.FareRestrictPref> getFareRestrictPref() {
         if (fareRestrictPref == null) {
-            fareRestrictPref = new ArrayList<AirSearchPrefsType.FareRestrictPref>();
+            fareRestrictPref = new ArrayList<>();
         }
         return this.fareRestrictPref;
     }
@@ -265,7 +265,7 @@ public class AirSearchPrefsType {
      */
     public List<EquipmentTypePref> getEquipPref() {
         if (equipPref == null) {
-            equipPref = new ArrayList<EquipmentTypePref>();
+            equipPref = new ArrayList<>();
         }
         return this.equipPref;
     }
@@ -294,7 +294,7 @@ public class AirSearchPrefsType {
      */
     public List<AirSearchPrefsType.CabinPref> getCabinPref() {
         if (cabinPref == null) {
-            cabinPref = new ArrayList<AirSearchPrefsType.CabinPref>();
+            cabinPref = new ArrayList<>();
         }
         return this.cabinPref;
     }
@@ -323,7 +323,7 @@ public class AirSearchPrefsType {
      */
     public List<AirSearchPrefsType.TicketDistribPref> getTicketDistribPref() {
         if (ticketDistribPref == null) {
-            ticketDistribPref = new ArrayList<AirSearchPrefsType.TicketDistribPref>();
+            ticketDistribPref = new ArrayList<>();
         }
         return this.ticketDistribPref;
     }

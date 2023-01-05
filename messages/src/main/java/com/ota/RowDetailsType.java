@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -284,7 +284,7 @@ public class RowDetailsType {
          */
         public List<String> getCharacteristicList() {
             if (characteristicList == null) {
-                characteristicList = new ArrayList<String>();
+                characteristicList = new ArrayList<>();
             }
             return this.characteristicList;
         }
@@ -353,7 +353,7 @@ public class RowDetailsType {
          */
         public List<RowDetailsType.AirSeats.AirSeat> getAirSeat() {
             if (airSeat == null) {
-                airSeat = new ArrayList<RowDetailsType.AirSeats.AirSeat>();
+                airSeat = new ArrayList<>();
             }
             return this.airSeat;
         }
@@ -492,7 +492,7 @@ public class RowDetailsType {
              */
             public List<String> getSeatCharacteristics() {
                 if (seatCharacteristics == null) {
-                    seatCharacteristics = new ArrayList<String>();
+                    seatCharacteristics = new ArrayList<>();
                 }
                 return this.seatCharacteristics;
             }

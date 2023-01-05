@@ -226,7 +226,7 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
 
     private AccountingDetail getOctoSupplierAccount(Integer supplierId, Double taxRate)
             throws ZauiException, NotUniqueDataException {
-        ZauiConnectedSupplier zauiSupplier = getActivityConfig().connectedSuppliers.stream()
+        ZauiConnectedSupplier zauiSupplier = getActivityConfig().getConnectedSuppliers().stream()
                 .filter(supplier -> supplierId.equals(supplier.getId())).findFirst().orElse(null);
         if (zauiSupplier == null)
             throw new ZauiException(ZauiStatusCodes.SUPPLIER_NOT_FOUND);

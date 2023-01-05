@@ -57,8 +57,9 @@ public class ZauiActivityService implements IZauiActivityService {
         try {
             List<Integer> supplierIds = getZauiActivityConfig(sessionInfo).getConnectedSuppliers().stream().map(ZauiConnectedSupplier::getId).collect(Collectors.toList());
             return zauiActivityRepository.getAll(sessionInfo).stream().filter(activity -> supplierIds.contains(activity.getSupplierId())).collect(Collectors.toList());
-        } catch (NotUniqueDataException e) {
-            throw new ZauiException(ZauiStatusCodes.SUPPLIER_NOT_FOUND);
+        } catch (Exception e) {
+            log.error("Failed to get zaui activities. Reason: {}. Actual error: {}", e.getMessage(), e);
+            throw new ZauiException(ZauiStatusCodes.ACTIVITY_NOT_FOUND);
         }
    }
 
@@ -73,11 +74,11 @@ public class ZauiActivityService implements IZauiActivityService {
     }
 
     public void fetchZauiActivities(SessionInfo sessionInfo, ZauiActivityConfig zauiActivityConfig, String currency) {
-        if (zauiActivityConfig == null || zauiActivityConfig.connectedSuppliers == null
-                || zauiActivityConfig.connectedSuppliers.size() < 1) {
+        if (zauiActivityConfig == null || zauiActivityConfig.getConnectedSuppliers() == null
+                || zauiActivityConfig.getConnectedSuppliers().size() < 1) {
             return;
         }
-        zauiActivityConfig.connectedSuppliers.forEach(supplier -> {
+        zauiActivityConfig.getConnectedSuppliers().forEach(supplier -> {
             try {
                 List<OctoProduct> octoProducts = octoApiService.getOctoProducts(supplier.getId());
                 List<Integer> octoProductIds = octoProducts.stream().map(OctoProduct::getId)

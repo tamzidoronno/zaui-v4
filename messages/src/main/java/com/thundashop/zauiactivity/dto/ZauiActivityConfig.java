@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.thundashop.core.common.DataCommon;
-import lombok.Data;
+import lombok.Getter;
 
 
-@Data
+@Getter
 public class ZauiActivityConfig extends DataCommon {
-    public boolean enabled;
-    public List<ZauiConnectedSupplier> connectedSuppliers = new ArrayList<>();
-    public int resellerId;
+    private boolean enabled;
+    private List<ZauiConnectedSupplier> connectedSuppliers = new ArrayList<>();
+    private int resellerId;
 
     public void setActivityConfig(ZauiActivityConfig activityConfig) {
         enabled = activityConfig.enabled;

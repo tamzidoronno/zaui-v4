@@ -55,7 +55,7 @@ public class ZauiActivityValidationService implements IZauiActivityValidationSer
             throw new GotoException(ACTIVITY_SUPPLIER_ID_INVALID.code, ACTIVITY_SUPPLIER_ID_INVALID.message);
         ZauiConnectedSupplier supplier;
         try {
-            supplier = zauiActivityService.getZauiActivityConfig(zauiActivitySession).connectedSuppliers
+            supplier = zauiActivityService.getZauiActivityConfig(zauiActivitySession).getConnectedSuppliers()
                     .stream()
                     .filter(s -> s.getId() == supplierId)
                     .findFirst().orElse(null);
@@ -116,7 +116,7 @@ public class ZauiActivityValidationService implements IZauiActivityValidationSer
         Map<Double, String> taxRateFromActivityConfig;
         try {
             ZauiConnectedSupplier supplier = zauiActivityService
-                    .getZauiActivityConfig(zauiActivitySessionInfo).connectedSuppliers
+                    .getZauiActivityConfig(zauiActivitySessionInfo).getConnectedSuppliers()
                     .stream()
                     .filter(s -> s.getId() == supplierId)
                     .findFirst().get();

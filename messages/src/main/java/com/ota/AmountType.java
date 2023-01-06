@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -110,7 +110,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "additionalCharges"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.RateType.Rate.class
+    com.ota.RateType.Rate.class
 })
 public class AmountType {
 
@@ -324,7 +324,7 @@ public class AmountType {
      */
     public List<AmountType.Discount> getDiscount() {
         if (discount == null) {
-            discount = new ArrayList<AmountType.Discount>();
+            discount = new ArrayList<>();
         }
         return this.discount;
     }
@@ -946,7 +946,7 @@ public class AmountType {
          */
         public List<AdditionalGuestAmountType> getAdditionalGuestAmount() {
             if (additionalGuestAmount == null) {
-                additionalGuestAmount = new ArrayList<AdditionalGuestAmountType>();
+                additionalGuestAmount = new ArrayList<>();
             }
             return this.additionalGuestAmount;
         }

@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -72,7 +72,7 @@ import javax.xml.bind.annotation.XmlValue;
     "rebookOption"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.TravelerInfoSummaryType.PriceRequestInformation.class
+    com.ota.TravelerInfoSummaryType.PriceRequestInformation.class
 })
 public class PriceRequestInformationType {
 
@@ -127,7 +127,7 @@ public class PriceRequestInformationType {
      */
     public List<PriceRequestInformationType.NegotiatedFareCode> getNegotiatedFareCode() {
         if (negotiatedFareCode == null) {
-            negotiatedFareCode = new ArrayList<PriceRequestInformationType.NegotiatedFareCode>();
+            negotiatedFareCode = new ArrayList<>();
         }
         return this.negotiatedFareCode;
     }
@@ -156,7 +156,7 @@ public class PriceRequestInformationType {
      */
     public List<PriceRequestInformationType.RebookOption> getRebookOption() {
         if (rebookOption == null) {
-            rebookOption = new ArrayList<PriceRequestInformationType.RebookOption>();
+            rebookOption = new ArrayList<>();
         }
         return this.rebookOption;
     }

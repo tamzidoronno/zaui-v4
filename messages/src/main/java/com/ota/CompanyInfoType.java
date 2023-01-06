@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -163,7 +163,7 @@ public class CompanyInfoType {
      */
     public List<CompanyNameType> getCompanyName() {
         if (companyName == null) {
-            companyName = new ArrayList<CompanyNameType>();
+            companyName = new ArrayList<>();
         }
         return this.companyName;
     }
@@ -192,7 +192,7 @@ public class CompanyInfoType {
      */
     public List<CompanyInfoType.AddressInfo> getAddressInfo() {
         if (addressInfo == null) {
-            addressInfo = new ArrayList<CompanyInfoType.AddressInfo>();
+            addressInfo = new ArrayList<>();
         }
         return this.addressInfo;
     }
@@ -221,7 +221,7 @@ public class CompanyInfoType {
      */
     public List<CompanyInfoType.TelephoneInfo> getTelephoneInfo() {
         if (telephoneInfo == null) {
-            telephoneInfo = new ArrayList<CompanyInfoType.TelephoneInfo>();
+            telephoneInfo = new ArrayList<>();
         }
         return this.telephoneInfo;
     }
@@ -250,7 +250,7 @@ public class CompanyInfoType {
      */
     public List<CompanyInfoType.Email> getEmail() {
         if (email == null) {
-            email = new ArrayList<CompanyInfoType.Email>();
+            email = new ArrayList<>();
         }
         return this.email;
     }
@@ -279,7 +279,7 @@ public class CompanyInfoType {
      */
     public List<URLType> getURL() {
         if (url == null) {
-            url = new ArrayList<URLType>();
+            url = new ArrayList<>();
         }
         return this.url;
     }
@@ -308,7 +308,7 @@ public class CompanyInfoType {
      */
     public List<AddressType> getBusinessLocale() {
         if (businessLocale == null) {
-            businessLocale = new ArrayList<AddressType>();
+            businessLocale = new ArrayList<>();
         }
         return this.businessLocale;
     }
@@ -337,7 +337,7 @@ public class CompanyInfoType {
      */
     public List<CompanyInfoType.PaymentForm> getPaymentForm() {
         if (paymentForm == null) {
-            paymentForm = new ArrayList<CompanyInfoType.PaymentForm>();
+            paymentForm = new ArrayList<>();
         }
         return this.paymentForm;
     }
@@ -366,7 +366,7 @@ public class CompanyInfoType {
      */
     public List<ContactPersonType> getContactPerson() {
         if (contactPerson == null) {
-            contactPerson = new ArrayList<ContactPersonType>();
+            contactPerson = new ArrayList<>();
         }
         return this.contactPerson;
     }
@@ -395,7 +395,7 @@ public class CompanyInfoType {
      */
     public List<TravelArrangerType> getTravelArranger() {
         if (travelArranger == null) {
-            travelArranger = new ArrayList<TravelArrangerType>();
+            travelArranger = new ArrayList<>();
         }
         return this.travelArranger;
     }
@@ -424,7 +424,7 @@ public class CompanyInfoType {
      */
     public List<LoyaltyProgramType> getLoyaltyProgram() {
         if (loyaltyProgram == null) {
-            loyaltyProgram = new ArrayList<LoyaltyProgramType>();
+            loyaltyProgram = new ArrayList<>();
         }
         return this.loyaltyProgram;
     }
@@ -453,7 +453,7 @@ public class CompanyInfoType {
      */
     public List<CompanyInfoType.TripPurpose> getTripPurpose() {
         if (tripPurpose == null) {
-            tripPurpose = new ArrayList<CompanyInfoType.TripPurpose>();
+            tripPurpose = new ArrayList<>();
         }
         return this.tripPurpose;
     }

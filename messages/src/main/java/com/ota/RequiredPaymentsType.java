@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -160,7 +160,7 @@ public class RequiredPaymentsType {
      */
     public List<RequiredPaymentsType.GuaranteePayment> getGuaranteePayment() {
         if (guaranteePayment == null) {
-            guaranteePayment = new ArrayList<RequiredPaymentsType.GuaranteePayment>();
+            guaranteePayment = new ArrayList<>();
         }
         return this.guaranteePayment;
     }
@@ -411,7 +411,7 @@ public class RequiredPaymentsType {
          */
         public List<RequiredPaymentsType.GuaranteePayment.Deadline> getDeadline() {
             if (deadline == null) {
-                deadline = new ArrayList<RequiredPaymentsType.GuaranteePayment.Deadline>();
+                deadline = new ArrayList<>();
             }
             return this.deadline;
         }
@@ -440,7 +440,7 @@ public class RequiredPaymentsType {
          */
         public List<ParagraphType> getDescription() {
             if (description == null) {
-                description = new ArrayList<ParagraphType>();
+                description = new ArrayList<>();
             }
             return this.description;
         }
@@ -469,7 +469,7 @@ public class RequiredPaymentsType {
          */
         public List<RequiredPaymentsType.GuaranteePayment.Address> getAddress() {
             if (address == null) {
-                address = new ArrayList<RequiredPaymentsType.GuaranteePayment.Address>();
+                address = new ArrayList<>();
             }
             return this.address;
         }

@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -44,15 +44,15 @@ import javax.xml.bind.annotation.XmlType;
     "companyName"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.AirReservationType.BookingReferenceID.class,
-    org.opentravel.ota._2003._05.VehicleAvailCoreType.Reference.class,
-    org.opentravel.ota._2003._05.ProfileType.UserID.class,
-    org.opentravel.ota._2003._05.RoomStaysType.RoomStay.Reference.class,
-    org.opentravel.ota._2003._05.VehicleReservationRQAdditionalInfoType.Reference.class,
-    org.opentravel.ota._2003._05.AuthorizationType.BookingReferenceID.class,
-    org.opentravel.ota._2003._05.VehicleSegmentCoreType.ConfID.class,
-    org.opentravel.ota._2003._05.VehicleReservationSummaryType.ConfID.class,
-    org.opentravel.ota._2003._05.SourceType.RequestorID.class
+    com.ota.AirReservationType.BookingReferenceID.class,
+    com.ota.VehicleAvailCoreType.Reference.class,
+    com.ota.ProfileType.UserID.class,
+    com.ota.RoomStaysType.RoomStay.Reference.class,
+    com.ota.VehicleReservationRQAdditionalInfoType.Reference.class,
+    com.ota.AuthorizationType.BookingReferenceID.class,
+    com.ota.VehicleSegmentCoreType.ConfID.class,
+    com.ota.VehicleReservationSummaryType.ConfID.class,
+    com.ota.SourceType.RequestorID.class
 })
 public class UniqueIDType {
 

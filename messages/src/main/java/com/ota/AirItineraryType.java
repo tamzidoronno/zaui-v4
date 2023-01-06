@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -177,7 +177,7 @@ public class AirItineraryType {
          */
         public List<AirItineraryType.OriginDestinationOptions.OriginDestinationOption> getOriginDestinationOption() {
             if (originDestinationOption == null) {
-                originDestinationOption = new ArrayList<AirItineraryType.OriginDestinationOptions.OriginDestinationOption>();
+                originDestinationOption = new ArrayList<>();
             }
             return this.originDestinationOption;
         }

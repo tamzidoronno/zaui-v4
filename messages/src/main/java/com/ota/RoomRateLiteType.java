@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -419,7 +419,7 @@ public class RoomRateLiteType {
      */
     public List<String> getPromotionVendorCode() {
         if (promotionVendorCode == null) {
-            promotionVendorCode = new ArrayList<String>();
+            promotionVendorCode = new ArrayList<>();
         }
         return this.promotionVendorCode;
     }

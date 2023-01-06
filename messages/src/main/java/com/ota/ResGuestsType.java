@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +70,7 @@ public class ResGuestsType {
      */
     public List<ResGuestType> getResGuest() {
         if (resGuest == null) {
-            resGuest = new ArrayList<ResGuestType>();
+            resGuest = new ArrayList<>();
         }
         return this.resGuest;
     }

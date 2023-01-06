@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -46,9 +46,9 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
     "value"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.CustomerType.Email.class,
-    org.opentravel.ota._2003._05.AirTravelerType.Email.class,
-    org.opentravel.ota._2003._05.CompanyInfoType.Email.class
+    com.ota.CustomerType.Email.class,
+    com.ota.AirTravelerType.Email.class,
+    com.ota.CompanyInfoType.Email.class
 })
 public class EmailType {
 

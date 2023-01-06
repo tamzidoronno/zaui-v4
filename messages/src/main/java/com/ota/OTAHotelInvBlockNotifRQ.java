@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -708,7 +708,7 @@ public class OTAHotelInvBlockNotifRQ {
          */
         public List<OTAHotelInvBlockNotifRQ.InvBlocks.InvBlock> getInvBlock() {
             if (invBlock == null) {
-                invBlock = new ArrayList<OTAHotelInvBlockNotifRQ.InvBlocks.InvBlock>();
+                invBlock = new ArrayList<>();
             }
             return this.invBlock;
         }
@@ -1001,7 +1001,7 @@ public class OTAHotelInvBlockNotifRQ {
          */
         public List<String> getRestrictedBookingCodeList() {
             if (restrictedBookingCodeList == null) {
-                restrictedBookingCodeList = new ArrayList<String>();
+                restrictedBookingCodeList = new ArrayList<>();
             }
             return this.restrictedBookingCodeList;
         }
@@ -1030,7 +1030,7 @@ public class OTAHotelInvBlockNotifRQ {
          */
         public List<String> getRestrictedViewingCodeList() {
             if (restrictedViewingCodeList == null) {
-                restrictedViewingCodeList = new ArrayList<String>();
+                restrictedViewingCodeList = new ArrayList<>();
             }
             return this.restrictedViewingCodeList;
         }
@@ -1160,7 +1160,7 @@ public class OTAHotelInvBlockNotifRQ {
              */
             public List<ContactPersonType> getContact() {
                 if (contact == null) {
-                    contact = new ArrayList<ContactPersonType>();
+                    contact = new ArrayList<>();
                 }
                 return this.contact;
             }
@@ -1519,7 +1519,7 @@ public class OTAHotelInvBlockNotifRQ {
              */
             public List<OTAHotelInvBlockNotifRQ.InvBlocks.InvBlock.MarketCode> getMarketCode() {
                 if (marketCode == null) {
-                    marketCode = new ArrayList<OTAHotelInvBlockNotifRQ.InvBlocks.InvBlock.MarketCode>();
+                    marketCode = new ArrayList<>();
                 }
                 return this.marketCode;
             }

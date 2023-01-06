@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -275,7 +275,7 @@ public class RateRulesType {
      */
     public List<RateRulesType.PickupReturnRules> getPickupReturnRules() {
         if (pickupReturnRules == null) {
-            pickupReturnRules = new ArrayList<RateRulesType.PickupReturnRules>();
+            pickupReturnRules = new ArrayList<>();
         }
         return this.pickupReturnRules;
     }
@@ -352,7 +352,7 @@ public class RateRulesType {
      */
     public List<RateRulesType.CancelPenaltyInfo> getCancelPenaltyInfo() {
         if (cancelPenaltyInfo == null) {
-            cancelPenaltyInfo = new ArrayList<RateRulesType.CancelPenaltyInfo>();
+            cancelPenaltyInfo = new ArrayList<>();
         }
         return this.cancelPenaltyInfo;
     }
@@ -693,7 +693,7 @@ public class RateRulesType {
          */
         public List<RateRulesType.CancelPenaltyInfo.Deadline> getDeadline() {
             if (deadline == null) {
-                deadline = new ArrayList<RateRulesType.CancelPenaltyInfo.Deadline>();
+                deadline = new ArrayList<>();
             }
             return this.deadline;
         }
@@ -1104,7 +1104,7 @@ public class RateRulesType {
          */
         public List<RateRulesType.PaymentRules.AcceptablePayments> getAcceptablePayments() {
             if (acceptablePayments == null) {
-                acceptablePayments = new ArrayList<RateRulesType.PaymentRules.AcceptablePayments>();
+                acceptablePayments = new ArrayList<>();
             }
             return this.acceptablePayments;
         }
@@ -1173,7 +1173,7 @@ public class RateRulesType {
              */
             public List<RateRulesType.PaymentRules.AcceptablePayments.AcceptablePayment> getAcceptablePayment() {
                 if (acceptablePayment == null) {
-                    acceptablePayment = new ArrayList<RateRulesType.PaymentRules.AcceptablePayments.AcceptablePayment>();
+                    acceptablePayment = new ArrayList<>();
                 }
                 return this.acceptablePayment;
             }

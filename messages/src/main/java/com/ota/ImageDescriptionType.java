@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -73,7 +73,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
     "description"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.ImageItemsType.ImageItem.class
+    com.ota.ImageItemsType.ImageItem.class
 })
 public class ImageDescriptionType {
 
@@ -108,7 +108,7 @@ public class ImageDescriptionType {
      */
     public List<ImageDescriptionType.ImageFormat> getImageFormat() {
         if (imageFormat == null) {
-            imageFormat = new ArrayList<ImageDescriptionType.ImageFormat>();
+            imageFormat = new ArrayList<>();
         }
         return this.imageFormat;
     }
@@ -137,7 +137,7 @@ public class ImageDescriptionType {
      */
     public List<ImageDescriptionType.Description> getDescription() {
         if (description == null) {
-            description = new ArrayList<ImageDescriptionType.Description>();
+            description = new ArrayList<>();
         }
         return this.description;
     }

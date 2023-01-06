@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -667,7 +667,7 @@ public class EMDType {
      */
     public List<UniqueIDType> getAgentID() {
         if (agentID == null) {
-            agentID = new ArrayList<UniqueIDType>();
+            agentID = new ArrayList<>();
         }
         return this.agentID;
     }
@@ -696,7 +696,7 @@ public class EMDType {
      */
     public List<PaymentDetailType> getPaymentDetail() {
         if (paymentDetail == null) {
-            paymentDetail = new ArrayList<PaymentDetailType>();
+            paymentDetail = new ArrayList<>();
         }
         return this.paymentDetail;
     }
@@ -749,7 +749,7 @@ public class EMDType {
      */
     public List<EMDType.CustLoyalty> getCustLoyalty() {
         if (custLoyalty == null) {
-            custLoyalty = new ArrayList<EMDType.CustLoyalty>();
+            custLoyalty = new ArrayList<>();
         }
         return this.custLoyalty;
     }
@@ -802,7 +802,7 @@ public class EMDType {
      */
     public List<UniqueIDType> getAddReferenceID() {
         if (addReferenceID == null) {
-            addReferenceID = new ArrayList<UniqueIDType>();
+            addReferenceID = new ArrayList<>();
         }
         return this.addReferenceID;
     }
@@ -831,7 +831,7 @@ public class EMDType {
      */
     public List<EMDType.BaseFare> getBaseFare() {
         if (baseFare == null) {
-            baseFare = new ArrayList<EMDType.BaseFare>();
+            baseFare = new ArrayList<>();
         }
         return this.baseFare;
     }
@@ -860,7 +860,7 @@ public class EMDType {
      */
     public List<EMDType.EquivFare> getEquivFare() {
         if (equivFare == null) {
-            equivFare = new ArrayList<EMDType.EquivFare>();
+            equivFare = new ArrayList<>();
         }
         return this.equivFare;
     }
@@ -889,7 +889,7 @@ public class EMDType {
      */
     public List<EMDType.TotalFare> getTotalFare() {
         if (totalFare == null) {
-            totalFare = new ArrayList<EMDType.TotalFare>();
+            totalFare = new ArrayList<>();
         }
         return this.totalFare;
     }
@@ -942,7 +942,7 @@ public class EMDType {
      */
     public List<EMDType.UnstructuredFareCalc> getUnstructuredFareCalc() {
         if (unstructuredFareCalc == null) {
-            unstructuredFareCalc = new ArrayList<EMDType.UnstructuredFareCalc>();
+            unstructuredFareCalc = new ArrayList<>();
         }
         return this.unstructuredFareCalc;
     }
@@ -995,7 +995,7 @@ public class EMDType {
      */
     public List<EMDType.TicketDocument> getTicketDocument() {
         if (ticketDocument == null) {
-            ticketDocument = new ArrayList<EMDType.TicketDocument>();
+            ticketDocument = new ArrayList<>();
         }
         return this.ticketDocument;
     }
@@ -1096,7 +1096,7 @@ public class EMDType {
      */
     public List<EMDType.ExchResidualFareComponent> getExchResidualFareComponent() {
         if (exchResidualFareComponent == null) {
-            exchResidualFareComponent = new ArrayList<EMDType.ExchResidualFareComponent>();
+            exchResidualFareComponent = new ArrayList<>();
         }
         return this.exchResidualFareComponent;
     }
@@ -1149,7 +1149,7 @@ public class EMDType {
      */
     public List<EMDType.ReissuedFlown> getReissuedFlown() {
         if (reissuedFlown == null) {
-            reissuedFlown = new ArrayList<EMDType.ReissuedFlown>();
+            reissuedFlown = new ArrayList<>();
         }
         return this.reissuedFlown;
     }
@@ -1764,7 +1764,7 @@ public class EMDType {
          */
         public List<EMDType.CarrierFeeInfo.CarrierFee> getCarrierFee() {
             if (carrierFee == null) {
-                carrierFee = new ArrayList<EMDType.CarrierFeeInfo.CarrierFee>();
+                carrierFee = new ArrayList<>();
             }
             return this.carrierFee;
         }
@@ -1887,7 +1887,7 @@ public class EMDType {
              */
             public List<EMDType.CarrierFeeInfo.CarrierFee.FeeAmount> getFeeAmount() {
                 if (feeAmount == null) {
-                    feeAmount = new ArrayList<EMDType.CarrierFeeInfo.CarrierFee.FeeAmount>();
+                    feeAmount = new ArrayList<>();
                 }
                 return this.feeAmount;
             }
@@ -2268,7 +2268,7 @@ public class EMDType {
                  */
                 public List<String> getApplicationCode() {
                     if (applicationCode == null) {
-                        applicationCode = new ArrayList<String>();
+                        applicationCode = new ArrayList<>();
                     }
                     return this.applicationCode;
                 }
@@ -2426,7 +2426,7 @@ public class EMDType {
              */
             public List<AirTaxType> getTax() {
                 if (tax == null) {
-                    tax = new ArrayList<AirTaxType>();
+                    tax = new ArrayList<>();
                 }
                 return this.tax;
             }
@@ -2780,7 +2780,7 @@ public class EMDType {
          */
         public List<String> getVendorCode() {
             if (vendorCode == null) {
-                vendorCode = new ArrayList<String>();
+                vendorCode = new ArrayList<>();
             }
             return this.vendorCode;
         }
@@ -3514,7 +3514,7 @@ public class EMDType {
              */
             public List<AirTaxType> getTax() {
                 if (tax == null) {
-                    tax = new ArrayList<AirTaxType>();
+                    tax = new ArrayList<>();
                 }
                 return this.tax;
             }
@@ -3742,7 +3742,7 @@ public class EMDType {
          */
         public List<VoluntaryChangesType> getPenaltyAmount() {
             if (penaltyAmount == null) {
-                penaltyAmount = new ArrayList<VoluntaryChangesType>();
+                penaltyAmount = new ArrayList<>();
             }
             return this.penaltyAmount;
         }
@@ -4855,7 +4855,7 @@ public class EMDType {
          */
         public List<EMDType.TaxCouponInformation.TicketDocument> getTicketDocument() {
             if (ticketDocument == null) {
-                ticketDocument = new ArrayList<EMDType.TaxCouponInformation.TicketDocument>();
+                ticketDocument = new ArrayList<>();
             }
             return this.ticketDocument;
         }
@@ -4997,7 +4997,7 @@ public class EMDType {
              */
             public List<EMDType.TaxCouponInformation.TicketDocument.CouponNumber> getCouponNumber() {
                 if (couponNumber == null) {
-                    couponNumber = new ArrayList<EMDType.TaxCouponInformation.TicketDocument.CouponNumber>();
+                    couponNumber = new ArrayList<>();
                 }
                 return this.couponNumber;
             }
@@ -5134,7 +5134,7 @@ public class EMDType {
                  */
                 public List<AirTaxType> getTax() {
                     if (tax == null) {
-                        tax = new ArrayList<AirTaxType>();
+                        tax = new ArrayList<>();
                     }
                     return this.tax;
                 }
@@ -5163,7 +5163,7 @@ public class EMDType {
                  */
                 public List<EMDType.TaxCouponInformation.TicketDocument.CouponNumber.UnticketedPointInfo> getUnticketedPointInfo() {
                     if (unticketedPointInfo == null) {
-                        unticketedPointInfo = new ArrayList<EMDType.TaxCouponInformation.TicketDocument.CouponNumber.UnticketedPointInfo>();
+                        unticketedPointInfo = new ArrayList<>();
                     }
                     return this.unticketedPointInfo;
                 }
@@ -5460,7 +5460,7 @@ public class EMDType {
          */
         public List<EMDType.Taxes.Tax> getTax() {
             if (tax == null) {
-                tax = new ArrayList<EMDType.Taxes.Tax>();
+                tax = new ArrayList<>();
             }
             return this.tax;
         }
@@ -5672,7 +5672,7 @@ public class EMDType {
          */
         public List<EMDType.TicketDocument.CouponInfo> getCouponInfo() {
             if (couponInfo == null) {
-                couponInfo = new ArrayList<EMDType.TicketDocument.CouponInfo>();
+                couponInfo = new ArrayList<>();
             }
             return this.couponInfo;
         }

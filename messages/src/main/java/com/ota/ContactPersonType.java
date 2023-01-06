@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,9 +74,9 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
     "employeeInfo"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.RecipientInfosType.RecipientInfo.class,
-    org.opentravel.ota._2003._05.HotelRoomListType.Guests.Guest.class,
-    org.opentravel.ota._2003._05.HotelRoomListType.MasterContact.class
+    com.ota.RecipientInfosType.RecipientInfo.class,
+    com.ota.HotelRoomListType.Guests.Guest.class,
+    com.ota.HotelRoomListType.MasterContact.class
 })
 public class ContactPersonType {
 
@@ -163,7 +163,7 @@ public class ContactPersonType {
      */
     public List<ContactPersonType.Telephone> getTelephone() {
         if (telephone == null) {
-            telephone = new ArrayList<ContactPersonType.Telephone>();
+            telephone = new ArrayList<>();
         }
         return this.telephone;
     }
@@ -192,7 +192,7 @@ public class ContactPersonType {
      */
     public List<AddressInfoType> getAddress() {
         if (address == null) {
-            address = new ArrayList<AddressInfoType>();
+            address = new ArrayList<>();
         }
         return this.address;
     }
@@ -221,7 +221,7 @@ public class ContactPersonType {
      */
     public List<EmailType> getEmail() {
         if (email == null) {
-            email = new ArrayList<EmailType>();
+            email = new ArrayList<>();
         }
         return this.email;
     }
@@ -250,7 +250,7 @@ public class ContactPersonType {
      */
     public List<URLType> getURL() {
         if (url == null) {
-            url = new ArrayList<URLType>();
+            url = new ArrayList<>();
         }
         return this.url;
     }
@@ -279,7 +279,7 @@ public class ContactPersonType {
      */
     public List<CompanyNameType> getCompanyName() {
         if (companyName == null) {
-            companyName = new ArrayList<CompanyNameType>();
+            companyName = new ArrayList<>();
         }
         return this.companyName;
     }
@@ -308,7 +308,7 @@ public class ContactPersonType {
      */
     public List<EmployeeInfoType> getEmployeeInfo() {
         if (employeeInfo == null) {
-            employeeInfo = new ArrayList<EmployeeInfoType>();
+            employeeInfo = new ArrayList<>();
         }
         return this.employeeInfo;
     }

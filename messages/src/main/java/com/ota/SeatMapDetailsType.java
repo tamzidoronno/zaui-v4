@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +83,7 @@ public class SeatMapDetailsType {
      */
     public List<SeatMapDetailsType.CabinClass> getCabinClass() {
         if (cabinClass == null) {
-            cabinClass = new ArrayList<SeatMapDetailsType.CabinClass>();
+            cabinClass = new ArrayList<>();
         }
         return this.cabinClass;
     }
@@ -112,7 +112,7 @@ public class SeatMapDetailsType {
      */
     public List<String> getTravelerRefNumberRPHs() {
         if (travelerRefNumberRPHs == null) {
-            travelerRefNumberRPHs = new ArrayList<String>();
+            travelerRefNumberRPHs = new ArrayList<>();
         }
         return this.travelerRefNumberRPHs;
     }

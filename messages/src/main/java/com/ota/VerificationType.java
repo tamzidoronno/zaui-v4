@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -127,7 +127,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "tpaExtensions"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.HotelResModifyType.HotelResModify.Verification.class
+    com.ota.HotelResModifyType.HotelResModify.Verification.class
 })
 public class VerificationType {
 

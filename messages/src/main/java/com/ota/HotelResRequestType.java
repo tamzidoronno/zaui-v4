@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -151,7 +151,7 @@ public class HotelResRequestType {
      */
     public List<UniqueIDType> getUniqueID() {
         if (uniqueID == null) {
-            uniqueID = new ArrayList<UniqueIDType>();
+            uniqueID = new ArrayList<>();
         }
         return this.uniqueID;
     }

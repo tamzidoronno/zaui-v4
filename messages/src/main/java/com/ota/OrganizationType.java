@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -165,7 +165,7 @@ public class OrganizationType {
      */
     public List<CompanyNameType> getRelatedOrgName() {
         if (relatedOrgName == null) {
-            relatedOrgName = new ArrayList<CompanyNameType>();
+            relatedOrgName = new ArrayList<>();
         }
         return this.relatedOrgName;
     }
@@ -194,7 +194,7 @@ public class OrganizationType {
      */
     public List<TravelArrangerType> getTravelArranger() {
         if (travelArranger == null) {
-            travelArranger = new ArrayList<TravelArrangerType>();
+            travelArranger = new ArrayList<>();
         }
         return this.travelArranger;
     }

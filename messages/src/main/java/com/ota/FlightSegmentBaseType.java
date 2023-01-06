@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -196,7 +196,7 @@ public class FlightSegmentBaseType {
      */
     public List<EquipmentType> getEquipment() {
         if (equipment == null) {
-            equipment = new ArrayList<EquipmentType>();
+            equipment = new ArrayList<>();
         }
         return this.equipment;
     }

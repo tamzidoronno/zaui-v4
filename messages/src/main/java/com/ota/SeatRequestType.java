@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +52,7 @@ import javax.xml.bind.annotation.XmlType;
     "airline"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.SpecialReqDetailsType.SeatRequests.SeatRequest.class
+    com.ota.SpecialReqDetailsType.SeatRequests.SeatRequest.class
 })
 public class SeatRequestType {
 
@@ -273,7 +273,7 @@ public class SeatRequestType {
      */
     public List<String> getSeatPreference() {
         if (seatPreference == null) {
-            seatPreference = new ArrayList<String>();
+            seatPreference = new ArrayList<>();
         }
         return this.seatPreference;
     }

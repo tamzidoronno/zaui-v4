@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -45,8 +45,8 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @XmlSeeAlso({
     ErrorType.class,
     CommissionInfoType.class,
-    org.opentravel.ota._2003._05.PTCFareBreakdownType.Endorsements.Endorsement.class,
-    org.opentravel.ota._2003._05.TicketingInfoType.TicketAdvisory.class,
+    com.ota.PTCFareBreakdownType.Endorsements.Endorsement.class,
+    com.ota.TicketingInfoType.TicketAdvisory.class,
     WarningType.class,
     CertificationType.class
 })

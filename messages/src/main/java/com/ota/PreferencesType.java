@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,7 +97,7 @@ public class PreferencesType {
      */
     public List<PreferencesType.PrefCollection> getPrefCollection() {
         if (prefCollection == null) {
-            prefCollection = new ArrayList<PreferencesType.PrefCollection>();
+            prefCollection = new ArrayList<>();
         }
         return this.prefCollection;
     }
@@ -233,7 +233,7 @@ public class PreferencesType {
          */
         public List<CommonPrefType> getCommonPref() {
             if (commonPref == null) {
-                commonPref = new ArrayList<CommonPrefType>();
+                commonPref = new ArrayList<>();
             }
             return this.commonPref;
         }
@@ -262,7 +262,7 @@ public class PreferencesType {
          */
         public List<VehicleProfileRentalPrefType> getVehicleRentalPref() {
             if (vehicleRentalPref == null) {
-                vehicleRentalPref = new ArrayList<VehicleProfileRentalPrefType>();
+                vehicleRentalPref = new ArrayList<>();
             }
             return this.vehicleRentalPref;
         }
@@ -291,7 +291,7 @@ public class PreferencesType {
          */
         public List<AirlinePrefType> getAirlinePref() {
             if (airlinePref == null) {
-                airlinePref = new ArrayList<AirlinePrefType>();
+                airlinePref = new ArrayList<>();
             }
             return this.airlinePref;
         }
@@ -320,7 +320,7 @@ public class PreferencesType {
          */
         public List<HotelPrefType> getHotelPref() {
             if (hotelPref == null) {
-                hotelPref = new ArrayList<HotelPrefType>();
+                hotelPref = new ArrayList<>();
             }
             return this.hotelPref;
         }
@@ -349,7 +349,7 @@ public class PreferencesType {
          */
         public List<OtherSrvcPrefType> getOtherSrvcPref() {
             if (otherSrvcPref == null) {
-                otherSrvcPref = new ArrayList<OtherSrvcPrefType>();
+                otherSrvcPref = new ArrayList<>();
             }
             return this.otherSrvcPref;
         }

@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -167,7 +167,7 @@ public class CommonPrefType {
      */
     public List<NamePrefType> getNamePref() {
         if (namePref == null) {
-            namePref = new ArrayList<NamePrefType>();
+            namePref = new ArrayList<>();
         }
         return this.namePref;
     }
@@ -196,7 +196,7 @@ public class CommonPrefType {
      */
     public List<PhonePrefType> getPhonePref() {
         if (phonePref == null) {
-            phonePref = new ArrayList<PhonePrefType>();
+            phonePref = new ArrayList<>();
         }
         return this.phonePref;
     }
@@ -225,7 +225,7 @@ public class CommonPrefType {
      */
     public List<AddressPrefType> getAddressPref() {
         if (addressPref == null) {
-            addressPref = new ArrayList<AddressPrefType>();
+            addressPref = new ArrayList<>();
         }
         return this.addressPref;
     }
@@ -254,7 +254,7 @@ public class CommonPrefType {
      */
     public List<PaymentFormPrefType> getPaymentFormPref() {
         if (paymentFormPref == null) {
-            paymentFormPref = new ArrayList<PaymentFormPrefType>();
+            paymentFormPref = new ArrayList<>();
         }
         return this.paymentFormPref;
     }
@@ -283,7 +283,7 @@ public class CommonPrefType {
      */
     public List<InterestPrefType> getInterestPref() {
         if (interestPref == null) {
-            interestPref = new ArrayList<InterestPrefType>();
+            interestPref = new ArrayList<>();
         }
         return this.interestPref;
     }
@@ -312,7 +312,7 @@ public class CommonPrefType {
      */
     public List<InsurancePrefType> getInsurancePref() {
         if (insurancePref == null) {
-            insurancePref = new ArrayList<InsurancePrefType>();
+            insurancePref = new ArrayList<>();
         }
         return this.insurancePref;
     }
@@ -341,7 +341,7 @@ public class CommonPrefType {
      */
     public List<SeatingPrefType> getSeatingPref() {
         if (seatingPref == null) {
-            seatingPref = new ArrayList<SeatingPrefType>();
+            seatingPref = new ArrayList<>();
         }
         return this.seatingPref;
     }
@@ -370,7 +370,7 @@ public class CommonPrefType {
      */
     public List<TicketDistribPrefType> getTicketDistribPref() {
         if (ticketDistribPref == null) {
-            ticketDistribPref = new ArrayList<TicketDistribPrefType>();
+            ticketDistribPref = new ArrayList<>();
         }
         return this.ticketDistribPref;
     }
@@ -399,7 +399,7 @@ public class CommonPrefType {
      */
     public List<MediaEntertainPrefType> getMediaEntertainPref() {
         if (mediaEntertainPref == null) {
-            mediaEntertainPref = new ArrayList<MediaEntertainPrefType>();
+            mediaEntertainPref = new ArrayList<>();
         }
         return this.mediaEntertainPref;
     }
@@ -428,7 +428,7 @@ public class CommonPrefType {
      */
     public List<PetInfoPrefType> getPetInfoPref() {
         if (petInfoPref == null) {
-            petInfoPref = new ArrayList<PetInfoPrefType>();
+            petInfoPref = new ArrayList<>();
         }
         return this.petInfoPref;
     }
@@ -457,7 +457,7 @@ public class CommonPrefType {
      */
     public List<MealPrefType> getMealPref() {
         if (mealPref == null) {
-            mealPref = new ArrayList<MealPrefType>();
+            mealPref = new ArrayList<>();
         }
         return this.mealPref;
     }
@@ -486,7 +486,7 @@ public class CommonPrefType {
      */
     public List<LoyaltyPrefType> getLoyaltyPref() {
         if (loyaltyPref == null) {
-            loyaltyPref = new ArrayList<LoyaltyPrefType>();
+            loyaltyPref = new ArrayList<>();
         }
         return this.loyaltyPref;
     }
@@ -515,7 +515,7 @@ public class CommonPrefType {
      */
     public List<SpecRequestPrefType> getSpecRequestPref() {
         if (specRequestPref == null) {
-            specRequestPref = new ArrayList<SpecRequestPrefType>();
+            specRequestPref = new ArrayList<>();
         }
         return this.specRequestPref;
     }
@@ -544,7 +544,7 @@ public class CommonPrefType {
      */
     public List<RelatedTravelerPrefType> getRelatedTravelerPref() {
         if (relatedTravelerPref == null) {
-            relatedTravelerPref = new ArrayList<RelatedTravelerPrefType>();
+            relatedTravelerPref = new ArrayList<>();
         }
         return this.relatedTravelerPref;
     }
@@ -573,7 +573,7 @@ public class CommonPrefType {
      */
     public List<CommonPrefType.ContactPref> getContactPref() {
         if (contactPref == null) {
-            contactPref = new ArrayList<CommonPrefType.ContactPref>();
+            contactPref = new ArrayList<>();
         }
         return this.contactPref;
     }

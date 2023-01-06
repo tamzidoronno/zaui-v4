@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -313,8 +313,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "tpaExtensions"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.CustomerPrimaryAdditionalType.Primary.class,
-    org.opentravel.ota._2003._05.CustomerPrimaryAdditionalType.Additional.class
+    com.ota.CustomerPrimaryAdditionalType.Primary.class,
+    com.ota.CustomerPrimaryAdditionalType.Additional.class
 })
 public class CustomerType {
 
@@ -409,7 +409,7 @@ public class CustomerType {
      */
     public List<PersonNameType> getPersonName() {
         if (personName == null) {
-            personName = new ArrayList<PersonNameType>();
+            personName = new ArrayList<>();
         }
         return this.personName;
     }
@@ -438,7 +438,7 @@ public class CustomerType {
      */
     public List<CustomerType.Telephone> getTelephone() {
         if (telephone == null) {
-            telephone = new ArrayList<CustomerType.Telephone>();
+            telephone = new ArrayList<>();
         }
         return this.telephone;
     }
@@ -467,7 +467,7 @@ public class CustomerType {
      */
     public List<CustomerType.Email> getEmail() {
         if (email == null) {
-            email = new ArrayList<CustomerType.Email>();
+            email = new ArrayList<>();
         }
         return this.email;
     }
@@ -496,7 +496,7 @@ public class CustomerType {
      */
     public List<CustomerType.Address> getAddress() {
         if (address == null) {
-            address = new ArrayList<CustomerType.Address>();
+            address = new ArrayList<>();
         }
         return this.address;
     }
@@ -525,7 +525,7 @@ public class CustomerType {
      */
     public List<CustomerType.URL> getURL() {
         if (url == null) {
-            url = new ArrayList<CustomerType.URL>();
+            url = new ArrayList<>();
         }
         return this.url;
     }
@@ -554,7 +554,7 @@ public class CustomerType {
      */
     public List<CustomerType.CitizenCountryName> getCitizenCountryName() {
         if (citizenCountryName == null) {
-            citizenCountryName = new ArrayList<CustomerType.CitizenCountryName>();
+            citizenCountryName = new ArrayList<>();
         }
         return this.citizenCountryName;
     }
@@ -583,7 +583,7 @@ public class CustomerType {
      */
     public List<CustomerType.PhysChallName> getPhysChallName() {
         if (physChallName == null) {
-            physChallName = new ArrayList<CustomerType.PhysChallName>();
+            physChallName = new ArrayList<>();
         }
         return this.physChallName;
     }
@@ -612,7 +612,7 @@ public class CustomerType {
      */
     public List<String> getPetInfo() {
         if (petInfo == null) {
-            petInfo = new ArrayList<String>();
+            petInfo = new ArrayList<>();
         }
         return this.petInfo;
     }
@@ -641,7 +641,7 @@ public class CustomerType {
      */
     public List<CustomerType.PaymentForm> getPaymentForm() {
         if (paymentForm == null) {
-            paymentForm = new ArrayList<CustomerType.PaymentForm>();
+            paymentForm = new ArrayList<>();
         }
         return this.paymentForm;
     }
@@ -670,7 +670,7 @@ public class CustomerType {
      */
     public List<RelatedTravelerType> getRelatedTraveler() {
         if (relatedTraveler == null) {
-            relatedTraveler = new ArrayList<RelatedTravelerType>();
+            relatedTraveler = new ArrayList<>();
         }
         return this.relatedTraveler;
     }
@@ -699,7 +699,7 @@ public class CustomerType {
      */
     public List<ContactPersonType> getContactPerson() {
         if (contactPerson == null) {
-            contactPerson = new ArrayList<ContactPersonType>();
+            contactPerson = new ArrayList<>();
         }
         return this.contactPerson;
     }
@@ -728,7 +728,7 @@ public class CustomerType {
      */
     public List<DocumentType> getDocument() {
         if (document == null) {
-            document = new ArrayList<DocumentType>();
+            document = new ArrayList<>();
         }
         return this.document;
     }
@@ -757,7 +757,7 @@ public class CustomerType {
      */
     public List<CustomerType.CustLoyalty> getCustLoyalty() {
         if (custLoyalty == null) {
-            custLoyalty = new ArrayList<CustomerType.CustLoyalty>();
+            custLoyalty = new ArrayList<>();
         }
         return this.custLoyalty;
     }
@@ -786,7 +786,7 @@ public class CustomerType {
      */
     public List<EmployeeInfoType> getEmployeeInfo() {
         if (employeeInfo == null) {
-            employeeInfo = new ArrayList<EmployeeInfoType>();
+            employeeInfo = new ArrayList<>();
         }
         return this.employeeInfo;
     }
@@ -839,7 +839,7 @@ public class CustomerType {
      */
     public List<CustomerType.AdditionalLanguage> getAdditionalLanguage() {
         if (additionalLanguage == null) {
-            additionalLanguage = new ArrayList<CustomerType.AdditionalLanguage>();
+            additionalLanguage = new ArrayList<>();
         }
         return this.additionalLanguage;
     }
@@ -1818,7 +1818,7 @@ public class CustomerType {
          */
         public List<CustomerType.CustLoyalty.SubAccountBalance> getSubAccountBalance() {
             if (subAccountBalance == null) {
-                subAccountBalance = new ArrayList<CustomerType.CustLoyalty.SubAccountBalance>();
+                subAccountBalance = new ArrayList<>();
             }
             return this.subAccountBalance;
         }
@@ -1967,7 +1967,7 @@ public class CustomerType {
          */
         public List<String> getVendorCode() {
             if (vendorCode == null) {
-                vendorCode = new ArrayList<String>();
+                vendorCode = new ArrayList<>();
             }
             return this.vendorCode;
         }
@@ -2421,7 +2421,7 @@ public class CustomerType {
              */
             public List<CustomerType.CustLoyalty.MemberPreferences.AdditionalReward> getAdditionalReward() {
                 if (additionalReward == null) {
-                    additionalReward = new ArrayList<CustomerType.CustLoyalty.MemberPreferences.AdditionalReward>();
+                    additionalReward = new ArrayList<>();
                 }
                 return this.additionalReward;
             }
@@ -2450,7 +2450,7 @@ public class CustomerType {
              */
             public List<CustomerType.CustLoyalty.MemberPreferences.Offer> getOffer() {
                 if (offer == null) {
-                    offer = new ArrayList<CustomerType.CustLoyalty.MemberPreferences.Offer>();
+                    offer = new ArrayList<>();
                 }
                 return this.offer;
             }
@@ -2551,7 +2551,7 @@ public class CustomerType {
              */
             public List<String> getPromotionVendorCode() {
                 if (promotionVendorCode == null) {
-                    promotionVendorCode = new ArrayList<String>();
+                    promotionVendorCode = new ArrayList<>();
                 }
                 return this.promotionVendorCode;
             }
@@ -2737,7 +2737,7 @@ public class CustomerType {
                  */
                 public List<CustomerType.CustLoyalty.MemberPreferences.Offer.Communication> getCommunication() {
                     if (communication == null) {
-                        communication = new ArrayList<CustomerType.CustLoyalty.MemberPreferences.Offer.Communication>();
+                        communication = new ArrayList<>();
                     }
                     return this.communication;
                 }
@@ -2895,7 +2895,7 @@ public class CustomerType {
              */
             public List<CustomerType.CustLoyalty.SecurityInfo.PasswordHint> getPasswordHint() {
                 if (passwordHint == null) {
-                    passwordHint = new ArrayList<CustomerType.CustLoyalty.SecurityInfo.PasswordHint>();
+                    passwordHint = new ArrayList<>();
                 }
                 return this.passwordHint;
             }

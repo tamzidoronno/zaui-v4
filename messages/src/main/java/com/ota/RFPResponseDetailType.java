@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -348,7 +348,7 @@ public class RFPResponseDetailType {
          */
         public List<ParagraphType> getComment() {
             if (comment == null) {
-                comment = new ArrayList<ParagraphType>();
+                comment = new ArrayList<>();
             }
             return this.comment;
         }

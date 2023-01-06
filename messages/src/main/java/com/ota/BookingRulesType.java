@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -209,7 +209,7 @@ public class BookingRulesType {
      */
     public List<BookingRulesType.BookingRule> getBookingRule() {
         if (bookingRule == null) {
-            bookingRule = new ArrayList<BookingRulesType.BookingRule>();
+            bookingRule = new ArrayList<>();
         }
         return this.bookingRule;
     }
@@ -661,7 +661,7 @@ public class BookingRulesType {
          */
         public List<ParagraphType> getDescription() {
             if (description == null) {
-                description = new ArrayList<ParagraphType>();
+                description = new ArrayList<>();
             }
             return this.description;
         }
@@ -714,7 +714,7 @@ public class BookingRulesType {
          */
         public List<BookingRulesType.BookingRule.CheckoutCharge> getCheckoutCharge() {
             if (checkoutCharge == null) {
-                checkoutCharge = new ArrayList<BookingRulesType.BookingRule.CheckoutCharge>();
+                checkoutCharge = new ArrayList<>();
             }
             return this.checkoutCharge;
         }
@@ -1325,7 +1325,7 @@ public class BookingRulesType {
              */
             public List<BookingRulesType.BookingRule.AcceptableGuarantees.AcceptableGuarantee> getAcceptableGuarantee() {
                 if (acceptableGuarantee == null) {
-                    acceptableGuarantee = new ArrayList<BookingRulesType.BookingRule.AcceptableGuarantees.AcceptableGuarantee>();
+                    acceptableGuarantee = new ArrayList<>();
                 }
                 return this.acceptableGuarantee;
             }
@@ -1584,7 +1584,7 @@ public class BookingRulesType {
              */
             public List<BookingRulesType.BookingRule.AddtionalRules.AdditionalRule> getAdditionalRule() {
                 if (additionalRule == null) {
-                    additionalRule = new ArrayList<BookingRulesType.BookingRule.AddtionalRules.AdditionalRule>();
+                    additionalRule = new ArrayList<>();
                 }
                 return this.additionalRule;
             }
@@ -2012,7 +2012,7 @@ public class BookingRulesType {
              */
             public List<String> getRestriction() {
                 if (restriction == null) {
-                    restriction = new ArrayList<String>();
+                    restriction = new ArrayList<>();
                 }
                 return this.restriction;
             }
@@ -2041,7 +2041,7 @@ public class BookingRulesType {
              */
             public List<String> getStatus() {
                 if (status == null) {
-                    status = new ArrayList<String>();
+                    status = new ArrayList<>();
                 }
                 return this.status;
             }

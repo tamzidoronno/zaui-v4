@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,7 +102,7 @@ public class HotelReservationsType {
      */
     public List<HotelReservationsType.HotelReservation> getHotelReservation() {
         if (hotelReservation == null) {
-            hotelReservation = new ArrayList<HotelReservationsType.HotelReservation>();
+            hotelReservation = new ArrayList<>();
         }
         return this.hotelReservation;
     }
@@ -301,7 +301,7 @@ public class HotelReservationsType {
              */
             public List<RebateType> getRebateProgram() {
                 if (rebateProgram == null) {
-                    rebateProgram = new ArrayList<RebateType>();
+                    rebateProgram = new ArrayList<>();
                 }
                 return this.rebateProgram;
             }

@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +70,7 @@ public class AcceptedPaymentsType {
      */
     public List<PaymentFormType> getAcceptedPayment() {
         if (acceptedPayment == null) {
-            acceptedPayment = new ArrayList<PaymentFormType>();
+            acceptedPayment = new ArrayList<>();
         }
         return this.acceptedPayment;
     }

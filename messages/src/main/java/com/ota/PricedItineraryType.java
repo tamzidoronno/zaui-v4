@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -85,7 +85,7 @@ import javax.xml.bind.annotation.XmlType;
     "ticketingInfo"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.PricedItinerariesType.PricedItinerary.class
+    com.ota.PricedItinerariesType.PricedItinerary.class
 })
 public class PricedItineraryType {
 
@@ -179,7 +179,7 @@ public class PricedItineraryType {
      */
     public List<FreeTextType> getNotes() {
         if (notes == null) {
-            notes = new ArrayList<FreeTextType>();
+            notes = new ArrayList<>();
         }
         return this.notes;
     }
@@ -424,7 +424,7 @@ public class PricedItineraryType {
          */
         public List<PricedItineraryType.TicketingInfo.DeliveryInfo> getDeliveryInfo() {
             if (deliveryInfo == null) {
-                deliveryInfo = new ArrayList<PricedItineraryType.TicketingInfo.DeliveryInfo>();
+                deliveryInfo = new ArrayList<>();
             }
             return this.deliveryInfo;
         }
@@ -453,7 +453,7 @@ public class PricedItineraryType {
          */
         public List<String> getPaymentType() {
             if (paymentType == null) {
-                paymentType = new ArrayList<String>();
+                paymentType = new ArrayList<>();
             }
             return this.paymentType;
         }

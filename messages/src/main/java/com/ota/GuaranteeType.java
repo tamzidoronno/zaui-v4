@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,7 +109,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "guaranteeDescription"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.BookingRulesType.BookingRule.AcceptableGuarantees.AcceptableGuarantee.class
+    com.ota.BookingRulesType.BookingRule.AcceptableGuarantees.AcceptableGuarantee.class
 })
 public class GuaranteeType {
 
@@ -227,7 +227,7 @@ public class GuaranteeType {
      */
     public List<ParagraphType> getGuaranteeDescription() {
         if (guaranteeDescription == null) {
-            guaranteeDescription = new ArrayList<ParagraphType>();
+            guaranteeDescription = new ArrayList<>();
         }
         return this.guaranteeDescription;
     }
@@ -526,7 +526,7 @@ public class GuaranteeType {
          */
         public List<GuaranteeType.GuaranteesAccepted.GuaranteeAccepted> getGuaranteeAccepted() {
             if (guaranteeAccepted == null) {
-                guaranteeAccepted = new ArrayList<GuaranteeType.GuaranteesAccepted.GuaranteeAccepted>();
+                guaranteeAccepted = new ArrayList<>();
             }
             return this.guaranteeAccepted;
         }

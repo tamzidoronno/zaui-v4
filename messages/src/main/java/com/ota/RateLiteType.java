@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +70,7 @@ public class RateLiteType {
      */
     public List<AmountLiteType> getRate() {
         if (rate == null) {
-            rate = new ArrayList<AmountLiteType>();
+            rate = new ArrayList<>();
         }
         return this.rate;
     }

@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,7 +102,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
     "priceRequestInformation"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.PricedItineraryType.AirItineraryPricingInfo.class,
+    com.ota.PricedItineraryType.AirItineraryPricingInfo.class,
     BookingPriceInfoType.class
 })
 public class AirItineraryPricingInfoType {
@@ -146,7 +146,7 @@ public class AirItineraryPricingInfoType {
      */
     public List<AirItineraryPricingInfoType.ItinTotalFare> getItinTotalFare() {
         if (itinTotalFare == null) {
-            itinTotalFare = new ArrayList<AirItineraryPricingInfoType.ItinTotalFare>();
+            itinTotalFare = new ArrayList<>();
         }
         return this.itinTotalFare;
     }
@@ -360,7 +360,7 @@ public class AirItineraryPricingInfoType {
          */
         public List<AirItineraryPricingInfoType.FareInfos.FareInfo> getFareInfo() {
             if (fareInfo == null) {
-                fareInfo = new ArrayList<AirItineraryPricingInfoType.FareInfos.FareInfo>();
+                fareInfo = new ArrayList<>();
             }
             return this.fareInfo;
         }
@@ -594,7 +594,7 @@ public class AirItineraryPricingInfoType {
          */
         public List<PTCFareBreakdownType> getPTCFareBreakdown() {
             if (ptcFareBreakdown == null) {
-                ptcFareBreakdown = new ArrayList<PTCFareBreakdownType>();
+                ptcFareBreakdown = new ArrayList<>();
             }
             return this.ptcFareBreakdown;
         }

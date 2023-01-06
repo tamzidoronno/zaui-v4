@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,12 +49,12 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
     "subSection"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.VehicleAdditionalDriverRequirementsType.AddlDriverInfos.AddlDriverInfo.class,
+    com.ota.VehicleAdditionalDriverRequirementsType.AddlDriverInfos.AddlDriverInfo.class,
     VendorMessageType.class,
-    org.opentravel.ota._2003._05.VehicleLocationVehiclesType.VehicleInfos.VehicleInfo.class,
-    org.opentravel.ota._2003._05.VehicleAgeRequirementsType.Age.AgeInfos.AgeInfo.class,
+    com.ota.VehicleLocationVehiclesType.VehicleInfos.VehicleInfo.class,
+    com.ota.VehicleAgeRequirementsType.Age.AgeInfos.AgeInfo.class,
     VehicleLocationInformationType.class,
-    org.opentravel.ota._2003._05.VehicleLocationAdditionalDetailsType.Shuttle.ShuttleInfos.ShuttleInfo.class
+    com.ota.VehicleLocationAdditionalDetailsType.Shuttle.ShuttleInfos.ShuttleInfo.class
 })
 public class FormattedTextType {
 
@@ -91,7 +91,7 @@ public class FormattedTextType {
      */
     public List<FormattedTextSubSectionType> getSubSection() {
         if (subSection == null) {
-            subSection = new ArrayList<FormattedTextSubSectionType>();
+            subSection = new ArrayList<>();
         }
         return this.subSection;
     }

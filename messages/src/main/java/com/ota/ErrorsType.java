@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +70,7 @@ public class ErrorsType {
      */
     public List<ErrorType> getError() {
         if (error == null) {
-            error = new ArrayList<ErrorType>();
+            error = new ArrayList<>();
         }
         return this.error;
     }

@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -225,7 +225,7 @@ public class ProfileType {
      */
     public List<ProfileType.UserID> getUserID() {
         if (userID == null) {
-            userID = new ArrayList<ProfileType.UserID>();
+            userID = new ArrayList<>();
         }
         return this.userID;
     }
@@ -422,7 +422,7 @@ public class ProfileType {
      */
     public List<String> getStatusCode() {
         if (statusCode == null) {
-            statusCode = new ArrayList<String>();
+            statusCode = new ArrayList<>();
         }
         return this.statusCode;
     }
@@ -720,7 +720,7 @@ public class ProfileType {
          */
         public List<ProfileType.Comments.Comment> getComment() {
             if (comment == null) {
-                comment = new ArrayList<ProfileType.Comments.Comment>();
+                comment = new ArrayList<>();
             }
             return this.comment;
         }
@@ -807,7 +807,7 @@ public class ProfileType {
              */
             public List<ProfileType.Comments.Comment.AuthorizedViewer> getAuthorizedViewer() {
                 if (authorizedViewer == null) {
-                    authorizedViewer = new ArrayList<ProfileType.Comments.Comment.AuthorizedViewer>();
+                    authorizedViewer = new ArrayList<>();
                 }
                 return this.authorizedViewer;
             }

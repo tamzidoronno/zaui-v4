@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -88,8 +88,8 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
     "vehClass"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.VehicleAdditionalDriverRequirementsType.AddlDriverInfos.Vehicles.Vehicle.class,
-    org.opentravel.ota._2003._05.VehicleAgeRequirementsType.Age.Vehicles.Vehicle.class,
+    com.ota.VehicleAdditionalDriverRequirementsType.AddlDriverInfos.Vehicles.Vehicle.class,
+    com.ota.VehicleAgeRequirementsType.Age.Vehicles.Vehicle.class,
     VehicleType.class,
     VehiclePrefType.class
 })

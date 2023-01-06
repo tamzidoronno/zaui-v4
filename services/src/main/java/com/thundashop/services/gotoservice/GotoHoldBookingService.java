@@ -160,7 +160,12 @@ public class GotoHoldBookingService implements IGotoHoldBookingService {
 
     private Contact getGuestInfoForVirtualRoom(List<GotoActivityReservationDto> activities) {
         for(GotoActivityReservationDto activity : activities) {
-            if(activity.getOctoReservationResponse().getContact() != null)
+            if(activity.getOctoReservationResponse().getContact() != null
+                && (isNotBlank(activity.getOctoReservationResponse().getContact().getEmailAddress())
+                    || isNotBlank(activity.getOctoReservationResponse().getContact().getPhoneNumber())
+                )
+                && isNotBlank(activity.getOctoReservationResponse().getContact().getFullName())
+            )
                 return activity.getOctoReservationResponse().getContact();
         }
         return null;

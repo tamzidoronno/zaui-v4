@@ -26,6 +26,7 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.thundashop.services.zauiactivityservice.IZauiActivityService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -134,6 +135,8 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @GetShopSession
 public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
+    @Autowired
+    IZauiActivityService zauiActivityService;
 
     private NullSafeConcurrentHashMap<String, PmsBooking> bookings = new NullSafeConcurrentHashMap<>();
 
@@ -2100,6 +2103,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
                 deletedByChannel = true;
             }
         }
+
+        zauiActivityService.cancelAllActivitiesFromBooking(booking);
 
         if (deletedByChannel) {
             if (!askedToDoUpdate) {

@@ -12,6 +12,7 @@ import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.getshoplocksystem.LockCode;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pmsmanager.PmsBooking.PriceType;
+import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
 import org.mongodb.morphia.annotations.Transient;
 
 import java.io.Serializable;
@@ -47,6 +48,8 @@ public class PmsBookingRooms implements Serializable {
     public double taxes = 8;
     public String bookingId;
     public List<PmsBookingAddonItem> addons = new ArrayList<>();
+    //added for zaui activity
+    public List<BookingZauiActivityItem> zauiActivityItems = new ArrayList<>();
     public String currency = "NOK";
     public String cleaningComment = "";
     

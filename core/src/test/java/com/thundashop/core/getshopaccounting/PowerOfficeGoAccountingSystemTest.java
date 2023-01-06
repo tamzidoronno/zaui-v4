@@ -1,16 +1,25 @@
 package com.thundashop.core.getshopaccounting;
 
 
-import com.thundashop.core.webmanager.OkHttpService;
-import com.thundashop.core.webmanager.WebManager;
-import okhttp3.*;
+import java.io.IOException;
+
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
+import com.thundashop.core.webmanager.WebManager;
+import com.thundashop.services.core.httpservice.IZauiHttpService;
+
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class PowerOfficeGoAccountingSystemTest {
+
+    @Autowired
+    IZauiHttpService httpService;
 
     String data = "{\n" +
             "  \"code\":\"191455\",\n" +
@@ -29,7 +38,7 @@ public class PowerOfficeGoAccountingSystemTest {
             "}";
 
     String endpoint = "https://api.poweroffice.net/customer/";
-    //        String endpoint = "http://localhost:8080";
+    // String endpoint = "http://localhost:8080";
     String token = "IrSsVsUdT5XIYKcoAkegMYu-UcGPVDh47TKlfAUUedfcIi0XyvIIt735kDnWuoTFJSbDTqcSZ7IbgZtla-qrEI4SdFzs3KApZcW9RF3bWjWDzYM-LRHroc5z60yTklugJ_tRDlW54_uIXcGXasAQTCFl0SpFI0LeaQ4UgEuUTkjef5Z59--wcADzT6vPZUDmvjf7uTPu6xrCt0rzo0fzl8qDnu9WiPmCgDooejAVrgzXZqH9jvW6NzgIC0E1wpREaBhWbz8q1qk_RjiQ2ZNrGNme4QndqKfMB7PpM40VYyWzS_iXa2kYuhW1_hmlgs98Wom9mJ5wl0UQtWEm6TRDso8ygtto9rZOo1OYgMPV98BemA4C0Ua1gBWBMpyUZvdt5Wq9olwUEQbETWWLa4Gtk0ojf9q-T3-hYh4ut2El7GbSexSPxeovxXxgZ8UKVUOCH6uS3A";
     String htmlType = "POST";
 
@@ -66,15 +75,9 @@ public class PowerOfficeGoAccountingSystemTest {
 
     @Test
     @Ignore
-    public void okHttpClient() {
-        OkHttpClient client = new OkHttpClient.Builder()
-                .connectTimeout(3, TimeUnit.MINUTES)
-                .build();
-        OkHttpService httpService = new OkHttpService(client);
-        PowerOfficeGoHttpClientManager manager = new PowerOfficeGoHttpClientManager(client, httpService);
-
+    public void okHttpClient() {       
+        PowerOfficeGoHttpClientManager manager = new PowerOfficeGoHttpClientManager(httpService);
         String response = manager.post(data, token, endpoint);
-
         System.out.println(response);
     }
 }

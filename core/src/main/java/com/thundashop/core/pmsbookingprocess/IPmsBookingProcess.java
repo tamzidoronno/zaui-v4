@@ -8,7 +8,7 @@ package com.thundashop.core.pmsbookingprocess;
 import com.thundashop.core.common.Administrator;
 import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
-import com.thundashop.core.pmsmanager.PmsPricing;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;

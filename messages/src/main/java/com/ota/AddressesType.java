@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +80,7 @@ public class AddressesType {
      */
     public List<AddressesType.Address> getAddress() {
         if (address == null) {
-            address = new ArrayList<AddressesType.Address>();
+            address = new ArrayList<>();
         }
         return this.address;
     }

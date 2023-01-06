@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -308,7 +308,7 @@ public class ItemSearchCriterionType {
      */
     public List<ItemSearchCriterionType.RefPoint> getRefPoint() {
         if (refPoint == null) {
-            refPoint = new ArrayList<ItemSearchCriterionType.RefPoint>();
+            refPoint = new ArrayList<>();
         }
         return this.refPoint;
     }
@@ -361,7 +361,7 @@ public class ItemSearchCriterionType {
      */
     public List<ItemSearchCriterionType.HotelRef> getHotelRef() {
         if (hotelRef == null) {
-            hotelRef = new ArrayList<ItemSearchCriterionType.HotelRef>();
+            hotelRef = new ArrayList<>();
         }
         return this.hotelRef;
     }
@@ -572,7 +572,7 @@ public class ItemSearchCriterionType {
          */
         public List<ItemSearchCriterionType.AdditionalContents.AdditionalContent> getAdditionalContent() {
             if (additionalContent == null) {
-                additionalContent = new ArrayList<ItemSearchCriterionType.AdditionalContents.AdditionalContent>();
+                additionalContent = new ArrayList<>();
             }
             return this.additionalContent;
         }

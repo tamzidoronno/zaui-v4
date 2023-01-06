@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -94,7 +94,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "availability"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.RoomStayType.RoomRates.RoomRate.class
+    com.ota.RoomStayType.RoomRates.RoomRate.class
 })
 public class RoomRateType {
 
@@ -191,7 +191,7 @@ public class RoomRateType {
      */
     public List<ParagraphType> getRoomRateDescription() {
         if (roomRateDescription == null) {
-            roomRateDescription = new ArrayList<ParagraphType>();
+            roomRateDescription = new ArrayList<>();
         }
         return this.roomRateDescription;
     }
@@ -268,7 +268,7 @@ public class RoomRateType {
      */
     public List<RoomRateType.Availability> getAvailability() {
         if (availability == null) {
-            availability = new ArrayList<RoomRateType.Availability>();
+            availability = new ArrayList<>();
         }
         return this.availability;
     }
@@ -657,7 +657,7 @@ public class RoomRateType {
      */
     public List<String> getPromotionVendorCode() {
         if (promotionVendorCode == null) {
-            promotionVendorCode = new ArrayList<String>();
+            promotionVendorCode = new ArrayList<>();
         }
         return this.promotionVendorCode;
     }
@@ -779,7 +779,7 @@ public class RoomRateType {
          */
         public List<RoomRateType.Features.Feature> getFeature() {
             if (feature == null) {
-                feature = new ArrayList<RoomRateType.Features.Feature>();
+                feature = new ArrayList<>();
             }
             return this.feature;
         }
@@ -846,7 +846,7 @@ public class RoomRateType {
              */
             public List<ParagraphType> getDescription() {
                 if (description == null) {
-                    description = new ArrayList<ParagraphType>();
+                    description = new ArrayList<>();
                 }
                 return this.description;
             }

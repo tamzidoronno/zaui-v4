@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -176,7 +176,7 @@ public class HotelPrefType {
      */
     public List<LoyaltyPrefType> getLoyaltyPref() {
         if (loyaltyPref == null) {
-            loyaltyPref = new ArrayList<LoyaltyPrefType>();
+            loyaltyPref = new ArrayList<>();
         }
         return this.loyaltyPref;
     }
@@ -205,7 +205,7 @@ public class HotelPrefType {
      */
     public List<PaymentFormPrefType> getPaymentFormPref() {
         if (paymentFormPref == null) {
-            paymentFormPref = new ArrayList<PaymentFormPrefType>();
+            paymentFormPref = new ArrayList<>();
         }
         return this.paymentFormPref;
     }
@@ -234,7 +234,7 @@ public class HotelPrefType {
      */
     public List<CompanyNamePrefType> getHotelChainPref() {
         if (hotelChainPref == null) {
-            hotelChainPref = new ArrayList<CompanyNamePrefType>();
+            hotelChainPref = new ArrayList<>();
         }
         return this.hotelChainPref;
     }
@@ -263,7 +263,7 @@ public class HotelPrefType {
      */
     public List<PropertyNamePrefType> getPropertyNamePref() {
         if (propertyNamePref == null) {
-            propertyNamePref = new ArrayList<PropertyNamePrefType>();
+            propertyNamePref = new ArrayList<>();
         }
         return this.propertyNamePref;
     }
@@ -292,7 +292,7 @@ public class HotelPrefType {
      */
     public List<PropertyLocationPrefType> getPropertyLocationPref() {
         if (propertyLocationPref == null) {
-            propertyLocationPref = new ArrayList<PropertyLocationPrefType>();
+            propertyLocationPref = new ArrayList<>();
         }
         return this.propertyLocationPref;
     }
@@ -321,7 +321,7 @@ public class HotelPrefType {
      */
     public List<PropertyTypePrefType> getPropertyTypePref() {
         if (propertyTypePref == null) {
-            propertyTypePref = new ArrayList<PropertyTypePrefType>();
+            propertyTypePref = new ArrayList<>();
         }
         return this.propertyTypePref;
     }
@@ -350,7 +350,7 @@ public class HotelPrefType {
      */
     public List<PropertyClassPrefType> getPropertyClassPref() {
         if (propertyClassPref == null) {
-            propertyClassPref = new ArrayList<PropertyClassPrefType>();
+            propertyClassPref = new ArrayList<>();
         }
         return this.propertyClassPref;
     }
@@ -379,7 +379,7 @@ public class HotelPrefType {
      */
     public List<PropertyAmenityPrefType> getPropertyAmenityPref() {
         if (propertyAmenityPref == null) {
-            propertyAmenityPref = new ArrayList<PropertyAmenityPrefType>();
+            propertyAmenityPref = new ArrayList<>();
         }
         return this.propertyAmenityPref;
     }
@@ -408,7 +408,7 @@ public class HotelPrefType {
      */
     public List<RoomAmenityPrefType> getRoomAmenityPref() {
         if (roomAmenityPref == null) {
-            roomAmenityPref = new ArrayList<RoomAmenityPrefType>();
+            roomAmenityPref = new ArrayList<>();
         }
         return this.roomAmenityPref;
     }
@@ -437,7 +437,7 @@ public class HotelPrefType {
      */
     public List<RoomLocationPrefType> getRoomLocationPref() {
         if (roomLocationPref == null) {
-            roomLocationPref = new ArrayList<RoomLocationPrefType>();
+            roomLocationPref = new ArrayList<>();
         }
         return this.roomLocationPref;
     }
@@ -466,7 +466,7 @@ public class HotelPrefType {
      */
     public List<BedTypePrefType> getBedTypePref() {
         if (bedTypePref == null) {
-            bedTypePref = new ArrayList<BedTypePrefType>();
+            bedTypePref = new ArrayList<>();
         }
         return this.bedTypePref;
     }
@@ -495,7 +495,7 @@ public class HotelPrefType {
      */
     public List<FoodSrvcPrefType> getFoodSrvcPref() {
         if (foodSrvcPref == null) {
-            foodSrvcPref = new ArrayList<FoodSrvcPrefType>();
+            foodSrvcPref = new ArrayList<>();
         }
         return this.foodSrvcPref;
     }
@@ -524,7 +524,7 @@ public class HotelPrefType {
      */
     public List<MediaEntertainPrefType> getMediaEntertainPref() {
         if (mediaEntertainPref == null) {
-            mediaEntertainPref = new ArrayList<MediaEntertainPrefType>();
+            mediaEntertainPref = new ArrayList<>();
         }
         return this.mediaEntertainPref;
     }
@@ -553,7 +553,7 @@ public class HotelPrefType {
      */
     public List<PetInfoPrefType> getPetInfoPref() {
         if (petInfoPref == null) {
-            petInfoPref = new ArrayList<PetInfoPrefType>();
+            petInfoPref = new ArrayList<>();
         }
         return this.petInfoPref;
     }
@@ -582,7 +582,7 @@ public class HotelPrefType {
      */
     public List<MealPrefType> getMealPref() {
         if (mealPref == null) {
-            mealPref = new ArrayList<MealPrefType>();
+            mealPref = new ArrayList<>();
         }
         return this.mealPref;
     }
@@ -611,7 +611,7 @@ public class HotelPrefType {
      */
     public List<RecreationSrvcPrefType> getRecreationSrvcPref() {
         if (recreationSrvcPref == null) {
-            recreationSrvcPref = new ArrayList<RecreationSrvcPrefType>();
+            recreationSrvcPref = new ArrayList<>();
         }
         return this.recreationSrvcPref;
     }
@@ -640,7 +640,7 @@ public class HotelPrefType {
      */
     public List<BusinessSrvcPrefType> getBusinessSrvcPref() {
         if (businessSrvcPref == null) {
-            businessSrvcPref = new ArrayList<BusinessSrvcPrefType>();
+            businessSrvcPref = new ArrayList<>();
         }
         return this.businessSrvcPref;
     }
@@ -669,7 +669,7 @@ public class HotelPrefType {
      */
     public List<PersonalSrvcPrefType> getPersonalSrvcPref() {
         if (personalSrvcPref == null) {
-            personalSrvcPref = new ArrayList<PersonalSrvcPrefType>();
+            personalSrvcPref = new ArrayList<>();
         }
         return this.personalSrvcPref;
     }
@@ -698,7 +698,7 @@ public class HotelPrefType {
      */
     public List<SecurityFeaturePrefType> getSecurityFeaturePref() {
         if (securityFeaturePref == null) {
-            securityFeaturePref = new ArrayList<SecurityFeaturePrefType>();
+            securityFeaturePref = new ArrayList<>();
         }
         return this.securityFeaturePref;
     }
@@ -727,7 +727,7 @@ public class HotelPrefType {
      */
     public List<PhysChallFeaturePrefType> getPhysChallFeaturePref() {
         if (physChallFeaturePref == null) {
-            physChallFeaturePref = new ArrayList<PhysChallFeaturePrefType>();
+            physChallFeaturePref = new ArrayList<>();
         }
         return this.physChallFeaturePref;
     }
@@ -756,7 +756,7 @@ public class HotelPrefType {
      */
     public List<SpecRequestPrefType> getSpecRequestPref() {
         if (specRequestPref == null) {
-            specRequestPref = new ArrayList<SpecRequestPrefType>();
+            specRequestPref = new ArrayList<>();
         }
         return this.specRequestPref;
     }

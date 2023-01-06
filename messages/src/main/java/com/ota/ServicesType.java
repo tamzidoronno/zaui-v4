@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +70,7 @@ public class ServicesType {
      */
     public List<ServiceType> getService() {
         if (service == null) {
-            service = new ArrayList<ServiceType>();
+            service = new ArrayList<>();
         }
         return this.service;
     }

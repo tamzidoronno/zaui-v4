@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -106,7 +106,7 @@ public class FeaturesType {
      */
     public List<FeaturesType.Feature> getFeature() {
         if (feature == null) {
-            feature = new ArrayList<FeaturesType.Feature>();
+            feature = new ArrayList<>();
         }
         return this.feature;
     }

@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -37,9 +37,9 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "CompanyNamePrefType")
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.AirSearchPrefsType.VendorPref.class,
-    org.opentravel.ota._2003._05.VehicleAvailRQCoreType.VendorPrefs.VendorPref.class,
-    org.opentravel.ota._2003._05.AirlinePrefType.VendorPref.class
+    com.ota.AirSearchPrefsType.VendorPref.class,
+    com.ota.VehicleAvailRQCoreType.VendorPrefs.VendorPref.class,
+    com.ota.AirlinePrefType.VendorPref.class
 })
 public class CompanyNamePrefType
     extends CompanyNameType

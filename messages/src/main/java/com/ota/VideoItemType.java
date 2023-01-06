@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigInteger;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -52,7 +52,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
     "url"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.VideoDescriptionType.VideoFormat.class
+    com.ota.VideoDescriptionType.VideoFormat.class
 })
 public class VideoItemType {
 

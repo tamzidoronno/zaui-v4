@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,10 +83,10 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
     "countryName"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.AirTravelerType.Address.class,
-    org.opentravel.ota._2003._05.OffLocationServiceCoreType.Address.class,
-    org.opentravel.ota._2003._05.ItemSearchCriterionType.Address.class,
-    org.opentravel.ota._2003._05.DonationType.DonorInfo.ContactInfo.class,
+    com.ota.AirTravelerType.Address.class,
+    com.ota.OffLocationServiceCoreType.Address.class,
+    com.ota.ItemSearchCriterionType.Address.class,
+    com.ota.DonationType.DonorInfo.ContactInfo.class,
     AddressInfoType.class
 })
 public class AddressType {
@@ -168,7 +168,7 @@ public class AddressType {
      */
     public List<AddressType.BldgRoom> getBldgRoom() {
         if (bldgRoom == null) {
-            bldgRoom = new ArrayList<AddressType.BldgRoom>();
+            bldgRoom = new ArrayList<>();
         }
         return this.bldgRoom;
     }
@@ -197,7 +197,7 @@ public class AddressType {
      */
     public List<String> getAddressLine() {
         if (addressLine == null) {
-            addressLine = new ArrayList<String>();
+            addressLine = new ArrayList<>();
         }
         return this.addressLine;
     }

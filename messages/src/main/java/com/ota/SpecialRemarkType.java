@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,7 +99,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
     "authorizedViewers"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.SpecialReqDetailsType.SpecialRemarks.SpecialRemark.class
+    com.ota.SpecialReqDetailsType.SpecialRemarks.SpecialRemark.class
 })
 public class SpecialRemarkType {
 
@@ -142,7 +142,7 @@ public class SpecialRemarkType {
      */
     public List<SpecialRemarkType.TravelerRefNumber> getTravelerRefNumber() {
         if (travelerRefNumber == null) {
-            travelerRefNumber = new ArrayList<SpecialRemarkType.TravelerRefNumber>();
+            travelerRefNumber = new ArrayList<>();
         }
         return this.travelerRefNumber;
     }
@@ -171,7 +171,7 @@ public class SpecialRemarkType {
      */
     public List<SpecialRemarkType.FlightRefNumber> getFlightRefNumber() {
         if (flightRefNumber == null) {
-            flightRefNumber = new ArrayList<SpecialRemarkType.FlightRefNumber>();
+            flightRefNumber = new ArrayList<>();
         }
         return this.flightRefNumber;
     }
@@ -224,7 +224,7 @@ public class SpecialRemarkType {
      */
     public List<CompanyNameType> getAirline() {
         if (airline == null) {
-            airline = new ArrayList<CompanyNameType>();
+            airline = new ArrayList<>();
         }
         return this.airline;
     }
@@ -363,7 +363,7 @@ public class SpecialRemarkType {
          */
         public List<SpecialRemarkType.AuthorizedViewers.AuthorizedViewer> getAuthorizedViewer() {
             if (authorizedViewer == null) {
-                authorizedViewer = new ArrayList<SpecialRemarkType.AuthorizedViewers.AuthorizedViewer>();
+                authorizedViewer = new ArrayList<>();
             }
             return this.authorizedViewer;
         }

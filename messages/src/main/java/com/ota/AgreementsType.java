@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -127,7 +127,7 @@ public class AgreementsType {
      */
     public List<CertificationType> getCertification() {
         if (certification == null) {
-            certification = new ArrayList<CertificationType>();
+            certification = new ArrayList<>();
         }
         return this.certification;
     }
@@ -156,7 +156,7 @@ public class AgreementsType {
      */
     public List<AllianceConsortiumType> getAllianceConsortium() {
         if (allianceConsortium == null) {
-            allianceConsortium = new ArrayList<AllianceConsortiumType>();
+            allianceConsortium = new ArrayList<>();
         }
         return this.allianceConsortium;
     }
@@ -185,7 +185,7 @@ public class AgreementsType {
      */
     public List<CommissionInfoType> getCommissionInfo() {
         if (commissionInfo == null) {
-            commissionInfo = new ArrayList<CommissionInfoType>();
+            commissionInfo = new ArrayList<>();
         }
         return this.commissionInfo;
     }
@@ -214,7 +214,7 @@ public class AgreementsType {
      */
     public List<AgreementsType.ProfileSecurity> getProfileSecurity() {
         if (profileSecurity == null) {
-            profileSecurity = new ArrayList<AgreementsType.ProfileSecurity>();
+            profileSecurity = new ArrayList<>();
         }
         return this.profileSecurity;
     }

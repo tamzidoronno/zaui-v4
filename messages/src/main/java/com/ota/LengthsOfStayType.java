@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -117,7 +117,7 @@ public class LengthsOfStayType {
      */
     public List<LengthsOfStayType.LengthOfStay> getLengthOfStay() {
         if (lengthOfStay == null) {
-            lengthOfStay = new ArrayList<LengthsOfStayType.LengthOfStay>();
+            lengthOfStay = new ArrayList<>();
         }
         return this.lengthOfStay;
     }

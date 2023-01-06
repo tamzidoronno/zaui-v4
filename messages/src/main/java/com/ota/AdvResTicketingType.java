@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -70,7 +70,7 @@ import javax.xml.bind.annotation.XmlType;
     "advTicketing"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.RuleInfoType.ResTicketingRules.AdvResTicketing.class
+    com.ota.RuleInfoType.ResTicketingRules.AdvResTicketing.class
 })
 public class AdvResTicketingType {
 

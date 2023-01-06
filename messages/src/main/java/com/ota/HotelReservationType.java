@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,8 +106,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "tpaExtensions"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.HotelReservationsType.HotelReservation.class,
-    org.opentravel.ota._2003._05.HotelResModifyType.HotelResModify.class
+    com.ota.HotelReservationsType.HotelReservation.class,
+    com.ota.HotelResModifyType.HotelResModify.class
 })
 public class HotelReservationType {
 
@@ -211,7 +211,7 @@ public class HotelReservationType {
      */
     public List<UniqueIDType> getUniqueID() {
         if (uniqueID == null) {
-            uniqueID = new ArrayList<UniqueIDType>();
+            uniqueID = new ArrayList<>();
         }
         return this.uniqueID;
     }
@@ -288,7 +288,7 @@ public class HotelReservationType {
      */
     public List<HotelReservationType.BillingInstructionCode> getBillingInstructionCode() {
         if (billingInstructionCode == null) {
-            billingInstructionCode = new ArrayList<HotelReservationType.BillingInstructionCode>();
+            billingInstructionCode = new ArrayList<>();
         }
         return this.billingInstructionCode;
     }
@@ -832,7 +832,7 @@ public class HotelReservationType {
          */
         public List<HotelReservationType.BillingInstructionCode.ResGuestRPH> getResGuestRPH() {
             if (resGuestRPH == null) {
-                resGuestRPH = new ArrayList<HotelReservationType.BillingInstructionCode.ResGuestRPH>();
+                resGuestRPH = new ArrayList<>();
             }
             return this.resGuestRPH;
         }

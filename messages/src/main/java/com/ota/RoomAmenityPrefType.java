@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigInteger;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -59,7 +59,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
     "value"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.PropertyValueMatchType.Amenities.Amenity.class
+    com.ota.PropertyValueMatchType.Amenities.Amenity.class
 })
 public class RoomAmenityPrefType {
 

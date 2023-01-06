@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlElementDecl;
@@ -17,7 +17,7 @@ import javax.xml.namespace.QName;
 /**
  * This object contains factory methods for each 
  * Java content interface and Java element interface 
- * generated in the org.opentravel.ota._2003._05 package. 
+ * generated in the com.ota package.
  * <p>An ObjectFactory allows you to programatically 
  * construct new instances of the Java representation 
  * for XML content. The Java representation of XML 
@@ -39,7 +39,7 @@ public class ObjectFactory {
     private final static QName _TPAExtensions_QNAME = new QName("http://www.opentravel.org/OTA/2003/05", "TPA_Extensions");
 
     /**
-     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: org.opentravel.ota._2003._05
+     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: com.ota
      * 
      */
     public ObjectFactory() {
@@ -2214,27 +2214,27 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link org.opentravel.ota._2003._05.ProfileType }
+     * Create an instance of {@link com.ota.ProfileType }
      * 
      */
-    public org.opentravel.ota._2003._05.ProfileType createProfileType() {
-        return new org.opentravel.ota._2003._05.ProfileType();
+    public com.ota.ProfileType createProfileType() {
+        return new com.ota.ProfileType();
     }
 
     /**
-     * Create an instance of {@link org.opentravel.ota._2003._05.ProfileType.Comments }
+     * Create an instance of {@link com.ota.ProfileType.Comments }
      * 
      */
-    public org.opentravel.ota._2003._05.ProfileType.Comments createProfileTypeComments() {
-        return new org.opentravel.ota._2003._05.ProfileType.Comments();
+    public com.ota.ProfileType.Comments createProfileTypeComments() {
+        return new com.ota.ProfileType.Comments();
     }
 
     /**
-     * Create an instance of {@link org.opentravel.ota._2003._05.ProfileType.Comments.Comment }
+     * Create an instance of {@link com.ota.ProfileType.Comments.Comment }
      * 
      */
-    public org.opentravel.ota._2003._05.ProfileType.Comments.Comment createProfileTypeCommentsComment() {
-        return new org.opentravel.ota._2003._05.ProfileType.Comments.Comment();
+    public com.ota.ProfileType.Comments.Comment createProfileTypeCommentsComment() {
+        return new com.ota.ProfileType.Comments.Comment();
     }
 
     /**
@@ -7238,19 +7238,19 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link org.opentravel.ota._2003._05.ProfileType.UserID }
+     * Create an instance of {@link com.ota.ProfileType.UserID }
      * 
      */
-    public org.opentravel.ota._2003._05.ProfileType.UserID createProfileTypeUserID() {
-        return new org.opentravel.ota._2003._05.ProfileType.UserID();
+    public com.ota.ProfileType.UserID createProfileTypeUserID() {
+        return new com.ota.ProfileType.UserID();
     }
 
     /**
-     * Create an instance of {@link org.opentravel.ota._2003._05.ProfileType.Comments.Comment.AuthorizedViewer }
+     * Create an instance of {@link com.ota.ProfileType.Comments.Comment.AuthorizedViewer }
      * 
      */
-    public org.opentravel.ota._2003._05.ProfileType.Comments.Comment.AuthorizedViewer createProfileTypeCommentsCommentAuthorizedViewer() {
-        return new org.opentravel.ota._2003._05.ProfileType.Comments.Comment.AuthorizedViewer();
+    public com.ota.ProfileType.Comments.Comment.AuthorizedViewer createProfileTypeCommentsCommentAuthorizedViewer() {
+        return new com.ota.ProfileType.Comments.Comment.AuthorizedViewer();
     }
 
     /**

@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -182,7 +182,7 @@ public class InvBlockRoomType {
      */
     public List<InvBlockRoomType.RoomTypeAllocations> getRoomTypeAllocations() {
         if (roomTypeAllocations == null) {
-            roomTypeAllocations = new ArrayList<InvBlockRoomType.RoomTypeAllocations>();
+            roomTypeAllocations = new ArrayList<>();
         }
         return this.roomTypeAllocations;
     }
@@ -384,7 +384,7 @@ public class InvBlockRoomType {
          */
         public List<DOWRulesType> getDaysOfWeek() {
             if (daysOfWeek == null) {
-                daysOfWeek = new ArrayList<DOWRulesType>();
+                daysOfWeek = new ArrayList<>();
             }
             return this.daysOfWeek;
         }
@@ -489,7 +489,7 @@ public class InvBlockRoomType {
          */
         public List<InvBlockRoomType.RatePlans.RatePlan> getRatePlan() {
             if (ratePlan == null) {
-                ratePlan = new ArrayList<InvBlockRoomType.RatePlans.RatePlan>();
+                ratePlan = new ArrayList<>();
             }
             return this.ratePlan;
         }
@@ -603,7 +603,7 @@ public class InvBlockRoomType {
              */
             public List<InvBlockRoomType.RatePlans.RatePlan.MarketCode> getMarketCode() {
                 if (marketCode == null) {
-                    marketCode = new ArrayList<InvBlockRoomType.RatePlans.RatePlan.MarketCode>();
+                    marketCode = new ArrayList<>();
                 }
                 return this.marketCode;
             }
@@ -656,7 +656,7 @@ public class InvBlockRoomType {
              */
             public List<InvBlockRoomType.RatePlans.RatePlan.MethodInfo> getMethodInfo() {
                 if (methodInfo == null) {
-                    methodInfo = new ArrayList<InvBlockRoomType.RatePlans.RatePlan.MethodInfo>();
+                    methodInfo = new ArrayList<>();
                 }
                 return this.methodInfo;
             }
@@ -805,7 +805,7 @@ public class InvBlockRoomType {
              */
             public List<String> getPromotionVendorCode() {
                 if (promotionVendorCode == null) {
-                    promotionVendorCode = new ArrayList<String>();
+                    promotionVendorCode = new ArrayList<>();
                 }
                 return this.promotionVendorCode;
             }
@@ -863,7 +863,7 @@ public class InvBlockRoomType {
                  */
                 public List<DOWRulesType> getDaysOfWeek() {
                     if (daysOfWeek == null) {
-                        daysOfWeek = new ArrayList<DOWRulesType>();
+                        daysOfWeek = new ArrayList<>();
                     }
                     return this.daysOfWeek;
                 }
@@ -1153,7 +1153,7 @@ public class InvBlockRoomType {
          */
         public List<InvBlockRoomType.RoomTypeAllocations.RoomTypeAllocation> getRoomTypeAllocation() {
             if (roomTypeAllocation == null) {
-                roomTypeAllocation = new ArrayList<InvBlockRoomType.RoomTypeAllocations.RoomTypeAllocation>();
+                roomTypeAllocation = new ArrayList<>();
             }
             return this.roomTypeAllocation;
         }

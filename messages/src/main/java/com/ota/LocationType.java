@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -41,17 +41,17 @@ import javax.xml.bind.annotation.XmlValue;
 })
 @XmlSeeAlso({
     AirportPrefType.class,
-    org.opentravel.ota._2003._05.VehicleAvailCoreType.VendorLocation.class,
-    org.opentravel.ota._2003._05.VehicleAvailCoreType.DropOffLocation.class,
-    org.opentravel.ota._2003._05.ConnectionType.ConnectionLocation.class,
-    org.opentravel.ota._2003._05.ItemSearchCriterionType.CodeRef.class,
-    org.opentravel.ota._2003._05.VehicleRentalCoreType.PickUpLocation.class,
-    org.opentravel.ota._2003._05.VehicleRentalCoreType.ReturnLocation.class,
-    org.opentravel.ota._2003._05.VerificationType.StartLocation.class,
-    org.opentravel.ota._2003._05.VerificationType.EndLocation.class,
-    org.opentravel.ota._2003._05.VehicleLocationAdditionalDetailsType.OneWayDropLocations.OneWayDropLocation.class,
-    org.opentravel.ota._2003._05.OriginDestinationInformationType.OriginLocation.class,
-    org.opentravel.ota._2003._05.OriginDestinationInformationType.DestinationLocation.class
+    com.ota.VehicleAvailCoreType.VendorLocation.class,
+    com.ota.VehicleAvailCoreType.DropOffLocation.class,
+    com.ota.ConnectionType.ConnectionLocation.class,
+    com.ota.ItemSearchCriterionType.CodeRef.class,
+    com.ota.VehicleRentalCoreType.PickUpLocation.class,
+    com.ota.VehicleRentalCoreType.ReturnLocation.class,
+    com.ota.VerificationType.StartLocation.class,
+    com.ota.VerificationType.EndLocation.class,
+    com.ota.VehicleLocationAdditionalDetailsType.OneWayDropLocations.OneWayDropLocation.class,
+    com.ota.OriginDestinationInformationType.OriginLocation.class,
+    com.ota.OriginDestinationInformationType.DestinationLocation.class
 })
 public class LocationType {
 

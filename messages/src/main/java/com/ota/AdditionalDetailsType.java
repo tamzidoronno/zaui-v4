@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +70,7 @@ public class AdditionalDetailsType {
      */
     public List<AdditionalDetailType> getAdditionalDetail() {
         if (additionalDetail == null) {
-            additionalDetail = new ArrayList<AdditionalDetailType>();
+            additionalDetail = new ArrayList<>();
         }
         return this.additionalDetail;
     }

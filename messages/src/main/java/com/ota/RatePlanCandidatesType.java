@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -116,7 +116,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
     "ratePlanCandidate"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.HotelSearchCriterionType.RatePlanCandidates.class
+    com.ota.HotelSearchCriterionType.RatePlanCandidates.class
 })
 public class RatePlanCandidatesType {
 
@@ -147,7 +147,7 @@ public class RatePlanCandidatesType {
      */
     public List<RatePlanCandidatesType.RatePlanCandidate> getRatePlanCandidate() {
         if (ratePlanCandidate == null) {
-            ratePlanCandidate = new ArrayList<RatePlanCandidatesType.RatePlanCandidate>();
+            ratePlanCandidate = new ArrayList<>();
         }
         return this.ratePlanCandidate;
     }
@@ -608,7 +608,7 @@ public class RatePlanCandidatesType {
          */
         public List<String> getPromotionVendorCode() {
             if (promotionVendorCode == null) {
-                promotionVendorCode = new ArrayList<String>();
+                promotionVendorCode = new ArrayList<>();
             }
             return this.promotionVendorCode;
         }
@@ -779,7 +779,7 @@ public class RatePlanCandidatesType {
              */
             public List<RatePlanCandidatesType.RatePlanCandidate.HotelRefs.HotelRef> getHotelRef() {
                 if (hotelRef == null) {
-                    hotelRef = new ArrayList<RatePlanCandidatesType.RatePlanCandidate.HotelRefs.HotelRef>();
+                    hotelRef = new ArrayList<>();
                 }
                 return this.hotelRef;
             }
@@ -1198,7 +1198,7 @@ public class RatePlanCandidatesType {
              */
             public List<String> getMealPlanCodes() {
                 if (mealPlanCodes == null) {
-                    mealPlanCodes = new ArrayList<String>();
+                    mealPlanCodes = new ArrayList<>();
                 }
                 return this.mealPlanCodes;
             }

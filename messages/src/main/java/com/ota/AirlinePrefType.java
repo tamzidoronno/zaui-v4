@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -354,7 +354,7 @@ public class AirlinePrefType {
      */
     public List<LoyaltyPrefType> getLoyaltyPref() {
         if (loyaltyPref == null) {
-            loyaltyPref = new ArrayList<LoyaltyPrefType>();
+            loyaltyPref = new ArrayList<>();
         }
         return this.loyaltyPref;
     }
@@ -383,7 +383,7 @@ public class AirlinePrefType {
      */
     public List<AirlinePrefType.VendorPref> getVendorPref() {
         if (vendorPref == null) {
-            vendorPref = new ArrayList<AirlinePrefType.VendorPref>();
+            vendorPref = new ArrayList<>();
         }
         return this.vendorPref;
     }
@@ -412,7 +412,7 @@ public class AirlinePrefType {
      */
     public List<PaymentFormPrefType> getPaymentFormPref() {
         if (paymentFormPref == null) {
-            paymentFormPref = new ArrayList<PaymentFormPrefType>();
+            paymentFormPref = new ArrayList<>();
         }
         return this.paymentFormPref;
     }
@@ -441,7 +441,7 @@ public class AirlinePrefType {
      */
     public List<AirportPrefType> getAirportOriginPref() {
         if (airportOriginPref == null) {
-            airportOriginPref = new ArrayList<AirportPrefType>();
+            airportOriginPref = new ArrayList<>();
         }
         return this.airportOriginPref;
     }
@@ -494,7 +494,7 @@ public class AirlinePrefType {
      */
     public List<AirportPrefType> getAirportRoutePref() {
         if (airportRoutePref == null) {
-            airportRoutePref = new ArrayList<AirportPrefType>();
+            airportRoutePref = new ArrayList<>();
         }
         return this.airportRoutePref;
     }
@@ -523,7 +523,7 @@ public class AirlinePrefType {
      */
     public List<AirlinePrefType.FareRestrictPref> getFareRestrictPref() {
         if (fareRestrictPref == null) {
-            fareRestrictPref = new ArrayList<AirlinePrefType.FareRestrictPref>();
+            fareRestrictPref = new ArrayList<>();
         }
         return this.fareRestrictPref;
     }
@@ -552,7 +552,7 @@ public class AirlinePrefType {
      */
     public List<AirlinePrefType.FarePref> getFarePref() {
         if (farePref == null) {
-            farePref = new ArrayList<AirlinePrefType.FarePref>();
+            farePref = new ArrayList<>();
         }
         return this.farePref;
     }
@@ -581,7 +581,7 @@ public class AirlinePrefType {
      */
     public List<AirlinePrefType.TourCodePref> getTourCodePref() {
         if (tourCodePref == null) {
-            tourCodePref = new ArrayList<AirlinePrefType.TourCodePref>();
+            tourCodePref = new ArrayList<>();
         }
         return this.tourCodePref;
     }
@@ -610,7 +610,7 @@ public class AirlinePrefType {
      */
     public List<AirlinePrefType.FlightTypePref> getFlightTypePref() {
         if (flightTypePref == null) {
-            flightTypePref = new ArrayList<AirlinePrefType.FlightTypePref>();
+            flightTypePref = new ArrayList<>();
         }
         return this.flightTypePref;
     }
@@ -639,7 +639,7 @@ public class AirlinePrefType {
      */
     public List<EquipmentTypePref> getEquipPref() {
         if (equipPref == null) {
-            equipPref = new ArrayList<EquipmentTypePref>();
+            equipPref = new ArrayList<>();
         }
         return this.equipPref;
     }
@@ -668,7 +668,7 @@ public class AirlinePrefType {
      */
     public List<AirlinePrefType.CabinPref> getCabinPref() {
         if (cabinPref == null) {
-            cabinPref = new ArrayList<AirlinePrefType.CabinPref>();
+            cabinPref = new ArrayList<>();
         }
         return this.cabinPref;
     }
@@ -697,7 +697,7 @@ public class AirlinePrefType {
      */
     public List<AirlinePrefType.SeatPref> getSeatPref() {
         if (seatPref == null) {
-            seatPref = new ArrayList<AirlinePrefType.SeatPref>();
+            seatPref = new ArrayList<>();
         }
         return this.seatPref;
     }
@@ -726,7 +726,7 @@ public class AirlinePrefType {
      */
     public List<TicketDistribPrefType> getTicketDistribPref() {
         if (ticketDistribPref == null) {
-            ticketDistribPref = new ArrayList<TicketDistribPrefType>();
+            ticketDistribPref = new ArrayList<>();
         }
         return this.ticketDistribPref;
     }
@@ -755,7 +755,7 @@ public class AirlinePrefType {
      */
     public List<MealPrefType> getMealPref() {
         if (mealPref == null) {
-            mealPref = new ArrayList<MealPrefType>();
+            mealPref = new ArrayList<>();
         }
         return this.mealPref;
     }
@@ -784,7 +784,7 @@ public class AirlinePrefType {
      */
     public List<SpecRequestPrefType> getSpecRequestPref() {
         if (specRequestPref == null) {
-            specRequestPref = new ArrayList<SpecRequestPrefType>();
+            specRequestPref = new ArrayList<>();
         }
         return this.specRequestPref;
     }
@@ -813,7 +813,7 @@ public class AirlinePrefType {
      */
     public List<AirlinePrefType.SSRPref> getSSRPref() {
         if (ssrPref == null) {
-            ssrPref = new ArrayList<AirlinePrefType.SSRPref>();
+            ssrPref = new ArrayList<>();
         }
         return this.ssrPref;
     }
@@ -866,7 +866,7 @@ public class AirlinePrefType {
      */
     public List<MediaEntertainPrefType> getMediaEntertainPref() {
         if (mediaEntertainPref == null) {
-            mediaEntertainPref = new ArrayList<MediaEntertainPrefType>();
+            mediaEntertainPref = new ArrayList<>();
         }
         return this.mediaEntertainPref;
     }
@@ -895,7 +895,7 @@ public class AirlinePrefType {
      */
     public List<PetInfoPrefType> getPetInfoPref() {
         if (petInfoPref == null) {
-            petInfoPref = new ArrayList<PetInfoPrefType>();
+            petInfoPref = new ArrayList<>();
         }
         return this.petInfoPref;
     }
@@ -948,7 +948,7 @@ public class AirlinePrefType {
      */
     public List<OtherServiceInfoType> getOSIPref() {
         if (osiPref == null) {
-            osiPref = new ArrayList<OtherServiceInfoType>();
+            osiPref = new ArrayList<>();
         }
         return this.osiPref;
     }
@@ -977,7 +977,7 @@ public class AirlinePrefType {
      */
     public List<AirlinePrefType.KeywordPref> getKeywordPref() {
         if (keywordPref == null) {
-            keywordPref = new ArrayList<AirlinePrefType.KeywordPref>();
+            keywordPref = new ArrayList<>();
         }
         return this.keywordPref;
     }
@@ -1590,7 +1590,7 @@ public class AirlinePrefType {
          */
         public List<String> getAirlineVendorPrefRPH() {
             if (airlineVendorPrefRPH == null) {
-                airlineVendorPrefRPH = new ArrayList<String>();
+                airlineVendorPrefRPH = new ArrayList<>();
             }
             return this.airlineVendorPrefRPH;
         }
@@ -2250,7 +2250,7 @@ public class AirlinePrefType {
          */
         public List<String> getAirlineVendorRPH() {
             if (airlineVendorRPH == null) {
-                airlineVendorRPH = new ArrayList<String>();
+                airlineVendorRPH = new ArrayList<>();
             }
             return this.airlineVendorRPH;
         }
@@ -2413,7 +2413,7 @@ public class AirlinePrefType {
          */
         public List<String> getAirlineVendorPrefRPH() {
             if (airlineVendorPrefRPH == null) {
-                airlineVendorPrefRPH = new ArrayList<String>();
+                airlineVendorPrefRPH = new ArrayList<>();
             }
             return this.airlineVendorPrefRPH;
         }
@@ -2514,7 +2514,7 @@ public class AirlinePrefType {
          */
         public List<String> getSeatPreference() {
             if (seatPreference == null) {
-                seatPreference = new ArrayList<String>();
+                seatPreference = new ArrayList<>();
             }
             return this.seatPreference;
         }
@@ -2834,7 +2834,7 @@ public class AirlinePrefType {
          */
         public List<String> getAirlineVendorPrefRPH() {
             if (airlineVendorPrefRPH == null) {
-                airlineVendorPrefRPH = new ArrayList<String>();
+                airlineVendorPrefRPH = new ArrayList<>();
             }
             return this.airlineVendorPrefRPH;
         }
@@ -3092,7 +3092,7 @@ public class AirlinePrefType {
          */
         public List<String> getAirlineVendorPrefRPH() {
             if (airlineVendorPrefRPH == null) {
-                airlineVendorPrefRPH = new ArrayList<String>();
+                airlineVendorPrefRPH = new ArrayList<>();
             }
             return this.airlineVendorPrefRPH;
         }
@@ -3429,7 +3429,7 @@ public class AirlinePrefType {
              */
             public List<String> getPromotionVendorCode() {
                 if (promotionVendorCode == null) {
-                    promotionVendorCode = new ArrayList<String>();
+                    promotionVendorCode = new ArrayList<>();
                 }
                 return this.promotionVendorCode;
             }
@@ -3441,9 +3441,9 @@ public class AirlinePrefType {
 
     /**
      * <p>Java class for anonymous complex type.
-     * 
+     *
      * <p>The following schema fragment specifies the expected content contained within this class.
-     * 
+     *
      * <pre>
      * &lt;complexType>
      *   &lt;simpleContent>
@@ -3453,8 +3453,8 @@ public class AirlinePrefType {
      *   &lt;/simpleContent>
      * &lt;/complexType>
      * </pre>
-     * 
-     * 
+     *
+     *
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "")

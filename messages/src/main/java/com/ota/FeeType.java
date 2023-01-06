@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -155,7 +155,7 @@ public class FeeType {
      */
     public List<ParagraphType> getDescription() {
         if (description == null) {
-            description = new ArrayList<ParagraphType>();
+            description = new ArrayList<>();
         }
         return this.description;
     }

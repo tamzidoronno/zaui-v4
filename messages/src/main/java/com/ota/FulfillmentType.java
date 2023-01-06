@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -217,7 +217,7 @@ public class FulfillmentType {
      */
     public List<FulfillmentType.PaymentText> getPaymentText() {
         if (paymentText == null) {
-            paymentText = new ArrayList<FulfillmentType.PaymentText>();
+            paymentText = new ArrayList<>();
         }
         return this.paymentText;
     }
@@ -283,7 +283,7 @@ public class FulfillmentType {
          */
         public List<FulfillmentType.PaymentDetails.PaymentDetail> getPaymentDetail() {
             if (paymentDetail == null) {
-                paymentDetail = new ArrayList<FulfillmentType.PaymentDetails.PaymentDetail>();
+                paymentDetail = new ArrayList<>();
             }
             return this.paymentDetail;
         }

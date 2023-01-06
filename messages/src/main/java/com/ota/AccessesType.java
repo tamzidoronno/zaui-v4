@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,7 +109,7 @@ public class AccessesType {
      */
     public List<AccessesType.Access> getAccess() {
         if (access == null) {
-            access = new ArrayList<AccessesType.Access>();
+            access = new ArrayList<>();
         }
         return this.access;
     }

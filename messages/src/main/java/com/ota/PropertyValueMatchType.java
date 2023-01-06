@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -132,7 +132,7 @@ public class PropertyValueMatchType
      */
     public List<PropertyValueMatchType.SearchValueMatch> getSearchValueMatch() {
         if (searchValueMatch == null) {
-            searchValueMatch = new ArrayList<PropertyValueMatchType.SearchValueMatch>();
+            searchValueMatch = new ArrayList<>();
         }
         return this.searchValueMatch;
     }
@@ -318,7 +318,7 @@ public class PropertyValueMatchType
          */
         public List<PropertyValueMatchType.Amenities.Amenity> getAmenity() {
             if (amenity == null) {
-                amenity = new ArrayList<PropertyValueMatchType.Amenities.Amenity>();
+                amenity = new ArrayList<>();
             }
             return this.amenity;
         }

@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -52,14 +52,14 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
     "value"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.TravelerInfoType.AirTraveler.Comment.class,
-    org.opentravel.ota._2003._05.FulfillmentType.PaymentText.class,
-    org.opentravel.ota._2003._05.ImageDescriptionType.Description.class,
-    org.opentravel.ota._2003._05.TextDescriptionType.Description.class,
-    org.opentravel.ota._2003._05.RateQualifierType.RateComments.RateComment.class,
-    org.opentravel.ota._2003._05.VehicleRentalDetailsType.ConditionReport.class,
+    com.ota.TravelerInfoType.AirTraveler.Comment.class,
+    com.ota.FulfillmentType.PaymentText.class,
+    com.ota.ImageDescriptionType.Description.class,
+    com.ota.TextDescriptionType.Description.class,
+    com.ota.RateQualifierType.RateComments.RateComment.class,
+    com.ota.VehicleRentalDetailsType.ConditionReport.class,
     CoverageDetailsType.class,
-    org.opentravel.ota._2003._05.ParagraphType.ListItem.class
+    com.ota.ParagraphType.ListItem.class
 })
 public class FormattedTextTextType {
 

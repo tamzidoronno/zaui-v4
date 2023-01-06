@@ -24,9 +24,10 @@ public interface IZauiActivityService {
 
     List<ZauiActivity> getZauiActivities(SessionInfo sessionInfo) throws ZauiException;
 
-    PmsBooking addActivityToBooking(BookingZauiActivityItem activityItem, PmsBooking booking, User booker) throws ZauiException;
+    PmsBooking addActivityToBooking(BookingZauiActivityItem activityItem, PmsBooking booking, User booker, SessionInfo sessionInfo) throws ZauiException;
 
-    PmsBooking addActivityToBooking(BookingZauiActivityItem activityItem, OctoBooking octoBooking, PmsBooking booking) throws ZauiException;
+    PmsBooking addActivityToBooking(BookingZauiActivityItem activityItem, OctoBooking octoBooking, PmsBooking booking,
+                                    SessionInfo zauiActivitySession) throws ZauiException;
 
     OctoBooking confirmOctoBooking(BookingZauiActivityItem activityItem, PmsBooking booking, User booker) throws ZauiException;
 

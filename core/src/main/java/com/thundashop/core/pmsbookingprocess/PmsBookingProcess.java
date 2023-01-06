@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import com.thundashop.core.zauiactivity.ZauiActivityManager;
 import com.thundashop.services.zauiactivityservice.IZauiActivityService;
 import com.thundashop.zauiactivity.constant.ZauiConstants;
 import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
@@ -136,6 +137,8 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
 
     @Autowired
     InvoiceManager invoiceManager;
+    @Autowired
+    ZauiActivityManager zauiActivityManager;
 
     @Autowired
     IZauiActivityService zauiActivityService;
@@ -1022,7 +1025,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         for (BookingZauiActivityItem activityItem : booking.bookingZauiActivityItems) {
             try {
                 OctoBooking octoConfirmedBooking = zauiActivityService.confirmOctoBooking(activityItem, booking, user);
-                zauiActivityService.addActivityToBooking(activityItem, octoConfirmedBooking, booking);
+                zauiActivityService.addActivityToBooking(activityItem, octoConfirmedBooking, booking, zauiActivityManager.getSessionInfo());
             } catch (Exception ex) {
                 log.error("Failed to confirm activity {} for booking {}. Reason: {}. Actual error: {}",
                         activityItem.toString(), booking.id, ex.getMessage(), ex);

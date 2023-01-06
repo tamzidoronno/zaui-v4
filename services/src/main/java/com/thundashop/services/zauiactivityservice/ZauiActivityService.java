@@ -1,6 +1,7 @@
 package com.thundashop.services.zauiactivityservice;
 
 import com.thundashop.core.gotohub.constant.GotoConstants;
+import com.thundashop.core.gotohub.dto.GotoException;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsOrderCreateRow;
 import com.thundashop.core.pmsmanager.PmsOrderCreateRowItemLine;
@@ -13,6 +14,7 @@ import com.thundashop.repository.utils.ZauiStatusCodes;
 import com.thundashop.repository.zauiactivityrepository.IZauiActivityConfigRepository;
 import com.thundashop.repository.zauiactivityrepository.IZauiActivityRepository;
 import com.thundashop.services.octoapiservice.IOctoApiService;
+import com.thundashop.services.validatorservice.IZauiActivityValidationService;
 import com.thundashop.zauiactivity.constant.ZauiConstants;
 import com.thundashop.zauiactivity.dto.*;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +34,8 @@ public class ZauiActivityService implements IZauiActivityService {
     private IZauiActivityConfigRepository zauiActivityConfigRepository;
     @Autowired
     private IZauiActivityRepository zauiActivityRepository;
+    @Autowired
+    private IZauiActivityValidationService zauiActivityValidationService;
     @Autowired
     private IPmsBookingRepository pmsBookingRepository;
     @Autowired
@@ -97,7 +101,7 @@ public class ZauiActivityService implements IZauiActivityService {
     }
 
     @Override
-    public PmsBooking addActivityToBooking(BookingZauiActivityItem activityItem, PmsBooking booking, User booker)
+    public PmsBooking addActivityToBooking(BookingZauiActivityItem activityItem, PmsBooking booking, User booker, SessionInfo sessionInfo)
             throws ZauiException {
         if (activityItem.getUnits() == null || activityItem.getUnits().isEmpty())
             throw new ZauiException(ZauiStatusCodes.MISSING_PARAMS);
@@ -106,13 +110,13 @@ public class ZauiActivityService implements IZauiActivityService {
             activityItem.setOctoBooking(octoReservedBooking);
         }
         OctoBooking octoConfirmedBooking = confirmOctoBooking(activityItem, booking, booker);
-        booking = addActivityToBooking(activityItem, octoConfirmedBooking, booking);
+        booking = addActivityToBooking(activityItem, octoConfirmedBooking, booking, sessionInfo);
         return booking;
     }
 
     @Override
     public PmsBooking addActivityToBooking(BookingZauiActivityItem activityItem, OctoBooking octoBooking,
-            PmsBooking booking) throws ZauiException {
+            PmsBooking booking, SessionInfo sessionInfo) throws ZauiException {
         if (activityItem.getUnits() == null || activityItem.getUnits().isEmpty())
             throw new ZauiException(ZauiStatusCodes.MISSING_PARAMS);
         activityItem.setOctoBooking(octoBooking);
@@ -122,6 +126,13 @@ public class ZauiActivityService implements IZauiActivityService {
         activityItem.setUnpaidAmount(activityItem.price);
 
         // Add octo tax validation with supplier
+        try{
+            List<Double> taxRate = octoBooking.getPricing().getIncludedTaxes().stream()
+                    .map(taxData -> new Double(taxData.getRate())).collect(Collectors.toList());
+            zauiActivityValidationService.validateTaxRates(activityItem.getSupplierId(),taxRate, sessionInfo);
+        } catch (GotoException e) {
+            throw new ZauiException(ZauiStatusCodes.ACCOUNTING_ERROR);
+        }
 
         int itemIndex = IntStream.range(0, booking.bookingZauiActivityItems.size())
                 .filter(i -> booking.bookingZauiActivityItems.get(i).getId().equals(activityItem.getId()))
@@ -158,7 +169,7 @@ public class ZauiActivityService implements IZauiActivityService {
                 bookingReserveRequest);
         BookingZauiActivityItem activityItem = mapActivityToBookingZauiActivityItem(octoReserveBooking, sessionInfo);
         activityItem.setUnits(activity.getUnits());
-        booking = addActivityToBooking(activityItem, octoReserveBooking, booking);
+        booking = addActivityToBooking(activityItem, octoReserveBooking, booking, sessionInfo);
         return booking;
     }
 

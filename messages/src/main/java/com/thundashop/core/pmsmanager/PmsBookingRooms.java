@@ -11,7 +11,6 @@ import com.thundashop.core.common.Editor;
 import com.thundashop.core.common.GetShopLogHandler;
 import com.thundashop.core.getshoplocksystem.LockCode;
 import com.thundashop.core.ordermanager.data.Order;
-import com.thundashop.core.pmsmanager.PmsBooking.PriceType;
 import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
 import org.mongodb.morphia.annotations.Transient;
 
@@ -183,12 +182,12 @@ public class PmsBookingRooms implements Serializable {
     
     public static String getOffsetKey(Calendar calStart, Integer priceType) {
         String offset = "";
-        if(priceType == PmsBooking.PriceType.daily || 
-                priceType == PmsBooking.PriceType.interval || 
-                priceType == PmsBooking.PriceType.progressive) {
+        if(priceType == StaticPriceAndBooking.PriceType.daily ||
+                priceType == StaticPriceAndBooking.PriceType.interval ||
+                priceType == StaticPriceAndBooking.PriceType.progressive) {
             SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
             offset = formatter.format(calStart.getTime());
-        } else if(priceType == PmsBooking.PriceType.monthly) {
+        } else if(priceType == StaticPriceAndBooking.PriceType.monthly) {
             offset = calStart.get(Calendar.MONTH) + "-" + calStart.get(Calendar.YEAR);
         }
         return offset;
@@ -288,19 +287,19 @@ public class PmsBookingRooms implements Serializable {
     public Double getDailyPrice(Integer type, Calendar cal) {
         int days = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
         
-        if(type.equals(PriceType.monthly)) {
+        if(type.equals(StaticPriceAndBooking.PriceType.monthly)) {
             return price / days;
         }
         
-        if(type.equals(PriceType.daily)) {
+        if(type.equals(StaticPriceAndBooking.PriceType.daily)) {
             return price;
         }
         
-        if(type.equals(PriceType.interval)) {
+        if(type.equals(StaticPriceAndBooking.PriceType.interval)) {
             return price;
         }
         
-        if(type.equals(PriceType.progressive)) {
+        if(type.equals(StaticPriceAndBooking.PriceType.progressive)) {
             return price;
         }
         
@@ -463,16 +462,16 @@ public class PmsBookingRooms implements Serializable {
     private Date addTimeUnits(Integer increaseUnits, PmsBooking booking, Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-        if(booking.priceType.equals(PmsBooking.PriceType.monthly)) {
+        if(booking.priceType.equals(StaticPriceAndBooking.PriceType.monthly)) {
             cal.add(Calendar.MONTH, increaseUnits);
         }
-        if(booking.priceType.equals(PmsBooking.PriceType.daily)) {
+        if(booking.priceType.equals(StaticPriceAndBooking.PriceType.daily)) {
             cal.add(Calendar.DAY_OF_YEAR, increaseUnits);
         }
-        if(booking.priceType.equals(PmsBooking.PriceType.weekly)) {
+        if(booking.priceType.equals(StaticPriceAndBooking.PriceType.weekly)) {
             cal.add(Calendar.WEEK_OF_YEAR, increaseUnits);
         }
-        if(booking.priceType.equals(PmsBooking.PriceType.hourly)) {
+        if(booking.priceType.equals(StaticPriceAndBooking.PriceType.hourly)) {
             cal.add(Calendar.HOUR_OF_DAY, increaseUnits);
         }
         return cal.getTime();
@@ -761,12 +760,12 @@ public class PmsBookingRooms implements Serializable {
     public void calculateTotalCost(Integer priceType) {
         totalCost = 0.0;
         Integer days = getNumberOfNights();
-        
-        if(priceType.equals(PriceType.monthly)) {
+
+        if(priceType.equals(StaticPriceAndBooking.PriceType.monthly)) {
             days = getNumberOfMonths();
         }
-        
-        if(priceType.equals(PriceType.daily)) {
+
+        if(priceType.equals(StaticPriceAndBooking.PriceType.daily)) {
             if(priceMatrix != null && !priceMatrix.isEmpty()) {
                 for(Double price : priceMatrix.values()) {
                     if(isDeleted() && (!nonrefundable || deletedByChannelManagerForModification)) {
@@ -795,7 +794,7 @@ public class PmsBookingRooms implements Serializable {
         if(isDeleted() && (!nonrefundable || deletedByChannelManagerForModification)) {
             price = 0.0;
         } else {
-            if(priceType.equals(PriceType.daily)) {
+            if(priceType.equals(StaticPriceAndBooking.PriceType.daily)) {
                 double cost = 0.0;
                 for(Double price : priceMatrix.values()) {
                     cost += price;
@@ -872,7 +871,7 @@ public class PmsBookingRooms implements Serializable {
     static String convertOffsetToString(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-        return getOffsetKey(cal, PmsBooking.PriceType.daily);
+        return getOffsetKey(cal, StaticPriceAndBooking.PriceType.daily);
     }
     
     void checkAddons() {

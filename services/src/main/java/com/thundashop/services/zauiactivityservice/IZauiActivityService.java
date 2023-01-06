@@ -7,7 +7,7 @@ import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsOrderCreateRow;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.repository.exceptions.NotUniqueDataException;
-import com.thundashop.repository.exceptions.ZauiException;
+import com.thundashop.core.common.ZauiException;
 import com.thundashop.repository.utils.SessionInfo;
 import com.thundashop.zauiactivity.dto.*;
 

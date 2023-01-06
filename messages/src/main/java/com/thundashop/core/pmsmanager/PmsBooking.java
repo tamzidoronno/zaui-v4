@@ -557,7 +557,7 @@ public class PmsBooking extends DataCommon {
             totalPrice = rooms.get(0).totalCost;
             return;
         }
-        if (!priceType.equals(PmsBooking.PriceType.daily)) {
+        if (!priceType.equals(StaticPriceAndBooking.PriceType.daily)) {
             return;
         }
         double total = 0.0;
@@ -802,23 +802,6 @@ public class PmsBooking extends DataCommon {
             result.add(room);
         }
         return result;
-    }
-
-    public static class PriceType {
-        public static Integer daily = 1;
-        public static Integer monthly = 2;
-        public static Integer weekly = 3;
-        public static Integer minutly = 4;
-        public static Integer hourly = 5;
-        public static Integer secondly = 6;
-        public static Integer progressive = 7;
-        public static Integer interval = 8;
-    }
-
-    public static class BookingStates {
-        public static Integer STARTED = 0;
-        public static Integer COMPLETED = 1;
-        public static Integer DELETED = 2;
     }
 
     void attachBookingItems(List<Booking> bookingsToAdd) {

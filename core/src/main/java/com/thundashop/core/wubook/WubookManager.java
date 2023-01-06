@@ -47,6 +47,7 @@ import java.util.stream.Collectors;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import com.thundashop.core.pmsmanager.*;
 import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpcException;
 import org.slf4j.Logger;
@@ -71,21 +72,6 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
-import com.thundashop.core.pmsmanager.NewOrderFilter;
-import com.thundashop.core.pmsmanager.PmsBooking;
-import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
-import com.thundashop.core.pmsmanager.PmsBookingComment;
-import com.thundashop.core.pmsmanager.PmsBookingDateRange;
-import com.thundashop.core.pmsmanager.PmsBookingFilter;
-import com.thundashop.core.pmsmanager.PmsBookingRooms;
-import com.thundashop.core.pmsmanager.PmsConfiguration;
-import com.thundashop.core.pmsmanager.PmsGuests;
-import com.thundashop.core.pmsmanager.PmsInvoiceManager;
-import com.thundashop.core.pmsmanager.PmsManager;
-import com.thundashop.core.pmsmanager.PmsPricing;
-import com.thundashop.core.pmsmanager.TimeRepeater;
-import com.thundashop.core.pmsmanager.TimeRepeaterData;
-import com.thundashop.core.pmsmanager.TimeRepeaterDateRange;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.TaxGroup;
@@ -1315,7 +1301,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                     int count = 0;
                     for (Date daydate : priceMatrix.keySet()) {
                         calStart.setTime(daydate);
-                        String offset = PmsBookingRooms.getOffsetKey(calStart, PmsBooking.PriceType.daily);
+                        String offset = PmsBookingRooms.getOffsetKey(calStart, StaticPriceAndBooking.PriceType.daily);
                         pmsroom.priceMatrix.put(offset, priceMatrix.get(daydate));
                         total += priceMatrix.get(daydate);
                         count++;

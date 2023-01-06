@@ -472,7 +472,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             room.date.end = end;
 
             PmsBooking booking = new PmsBooking();
-            booking.priceType = PmsBooking.PriceType.daily;
+            booking.priceType = StaticPriceAndBooking.PriceType.daily;
 
             setPriceOnRoom(room, true, booking);
 
@@ -991,7 +991,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         PmsPricing prices = getPriceObjectFromBooking(booking);
-        if (prices != null && prices.defaultPriceType == PmsBooking.PriceType.daily && (configuration.getRequirePayments() || storeManager.isPikStore())) {
+        if (prices != null && prices.defaultPriceType == StaticPriceAndBooking.PriceType.daily && (configuration.getRequirePayments() || storeManager.isPikStore())) {
             booking.calculateTotalCost();
         }
 
@@ -4613,11 +4613,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         Calendar cal = Calendar.getInstance();
         cal.setTime(start);
 
-        if (priceType == PmsBooking.PriceType.daily) {
+        if (priceType == StaticPriceAndBooking.PriceType.daily) {
             cal.add(Calendar.DAY_OF_YEAR, 1);
-        } else if (priceType == PmsBooking.PriceType.weekly) {
+        } else if (priceType == StaticPriceAndBooking.PriceType.weekly) {
             cal.add(Calendar.DAY_OF_YEAR, 7);
-        } else if (priceType == PmsBooking.PriceType.hourly) {
+        } else if (priceType == StaticPriceAndBooking.PriceType.hourly) {
             cal.add(Calendar.HOUR, 1);
         } else {
             cal.add(Calendar.DAY_OF_YEAR, 1);

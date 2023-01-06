@@ -36,7 +36,7 @@ public interface IZauiActivityManager {
 
     GuestAddonsSummary addActivityToWebBooking(AddZauiActivityToWebBookingDto activity) throws ZauiException;
 
-    GuestAddonsSummary removeActivityFromWebBooking(AddZauiActivityToWebBookingDto activity) throws ZauiException;
+    GuestAddonsSummary removeActivityFromBooking(String activity, String pmsBookingId);
 
     void cancelActivity(String pmsBookingId, String octoBookingId) throws ZauiException;
 

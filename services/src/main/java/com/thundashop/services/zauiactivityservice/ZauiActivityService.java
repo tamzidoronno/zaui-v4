@@ -50,9 +50,18 @@ public class ZauiActivityService implements IZauiActivityService {
         return zauiActivityConfigRepository.save(zauiActivityConfig, sessionInfo);
     }
 
-    public List<ZauiActivity> getZauiActivities(SessionInfo sessionInfo) {
+    public List<ZauiActivity> getAllZauiActivities(SessionInfo sessionInfo) {
         return zauiActivityRepository.getAll(sessionInfo);
     }
+    public List<ZauiActivity> getZauiActivities(SessionInfo sessionInfo) throws ZauiException {
+        try {
+            List<Integer> supplierIds = getZauiActivityConfig(sessionInfo).getConnectedSuppliers().stream().map(ZauiConnectedSupplier::getId).collect(Collectors.toList());
+            return zauiActivityRepository.getAll(sessionInfo).stream().filter(activity -> supplierIds.contains(activity.getSupplierId())).collect(Collectors.toList());
+        } catch (Exception e) {
+            log.error("Failed to get zaui activities. Reason: {}. Actual error: {}", e.getMessage(), e);
+            throw new ZauiException(ZauiStatusCodes.ACTIVITY_NOT_FOUND);
+        }
+   }
 
     @Override
     public Optional<ZauiActivity> getZauiActivityById(String Id, SessionInfo sessionInfo) {
@@ -65,16 +74,16 @@ public class ZauiActivityService implements IZauiActivityService {
     }
 
     public void fetchZauiActivities(SessionInfo sessionInfo, ZauiActivityConfig zauiActivityConfig, String currency) {
-        if (zauiActivityConfig == null || zauiActivityConfig.connectedSuppliers == null
-                || zauiActivityConfig.connectedSuppliers.size() < 1) {
+        if (zauiActivityConfig == null || zauiActivityConfig.getConnectedSuppliers() == null
+                || zauiActivityConfig.getConnectedSuppliers().size() < 1) {
             return;
         }
-        zauiActivityConfig.connectedSuppliers.forEach(supplier -> {
+        zauiActivityConfig.getConnectedSuppliers().forEach(supplier -> {
             try {
                 List<OctoProduct> octoProducts = octoApiService.getOctoProducts(supplier.getId());
                 List<Integer> octoProductIds = octoProducts.stream().map(OctoProduct::getId)
                         .collect(Collectors.toList());
-                List<String> removingActivityIds = getZauiActivities(sessionInfo).stream()
+                List<String> removingActivityIds = getAllZauiActivities(sessionInfo).stream()
                         .filter(activity -> activity.getSupplierId() == supplier.getId()
                                 && !octoProductIds.contains(activity.getProductId()))
                         .map(activity -> activity.id).collect(Collectors.toList());
@@ -92,8 +101,10 @@ public class ZauiActivityService implements IZauiActivityService {
             throws ZauiException {
         if (activityItem.getUnits() == null || activityItem.getUnits().isEmpty())
             throw new ZauiException(ZauiStatusCodes.MISSING_PARAMS);
-        OctoBooking octoReservedBooking = reserveOctoBooking(activityItem);
-        activityItem.setOctoBooking(octoReservedBooking);
+        if(activityItem.getOctoBooking() == null){
+            OctoBooking octoReservedBooking = reserveOctoBooking(activityItem);
+            activityItem.setOctoBooking(octoReservedBooking);
+        }
         OctoBooking octoConfirmedBooking = confirmOctoBooking(activityItem, booking, booker);
         booking = addActivityToBooking(activityItem, octoConfirmedBooking, booking);
         return booking;
@@ -152,11 +163,9 @@ public class ZauiActivityService implements IZauiActivityService {
     }
 
     @Override
-    public PmsBooking removeActivityFromWebBooking(AddZauiActivityToWebBookingDto activity, PmsBooking booking,
-            SessionInfo sessionInfo) {
-        booking.bookingZauiActivityItems.removeIf(item -> item.getAvailabilityId().equals(activity.getAvailabilityId())
-                && item.getOptionId().equals(activity.getOptionId()));
-        log.info("activity removed from booking {}", activity);
+    public PmsBooking removeActivityFromBooking(String activityItemId, PmsBooking booking) {
+        booking.bookingZauiActivityItems.removeIf(item -> item.getId().equals(activityItemId));
+        log.info("activity {} removed from booking {}", activityItemId,booking);
         return booking;
     }
 
@@ -190,24 +199,27 @@ public class ZauiActivityService implements IZauiActivityService {
         OctoBooking octoCancelledBooking = octoApiService.cancelBooking(activityItem.getSupplierId(),
                 activityItem.getOctoBooking().getId());
         activityItem.setOctoBooking(octoCancelledBooking);
-        // need clarification why is this needed
+        // unpaid amount gets negative for cancelling paid activities, and zero for unpaid ones
         double unpaidAmount = activityItem.getUnpaidAmount() != 0 ? 0 : -activityItem.price;
         activityItem.setUnpaidAmount(unpaidAmount);
     }
 
     @Override
     public void cancelAllActivitiesFromBooking(PmsBooking booking) {
-        if (isNotBlank(booking.channel) && booking.channel.equals(GotoConstants.GOTO_BOOKING_CHANNEL_NAME)) {
+        if (isNotBlank(booking.channel) && booking.channel.equals(GotoConstants.GOTO_BOOKING_CHANNEL_NAME) || booking.bookingZauiActivityItems.isEmpty()) {
             return;
         }
-        // how to handle on hold reservations. simply remove from booking?
-        for (BookingZauiActivityItem activityItem : booking.getConfirmedZauiActivities()) {
-            try {
-                cancelActivityFromBooking(activityItem);
-            } catch (ZauiException e) {
-                log.error(
-                        "Failed to cancel octoBooking: {}. PmsBookingId {}. Reason: {}, Actual Error: {}",
-                        activityItem.toString(), booking.id, e.getMessage(), e);
+        for (BookingZauiActivityItem activityItem : booking.bookingZauiActivityItems) {
+            if (activityItem.getOctoBooking().getStatus().equals(ZauiConstants.OCTO_CONFIRMED_STATUS)) {
+                try {
+                    cancelActivityFromBooking(activityItem);
+                } catch (ZauiException e) {
+                    log.error(
+                            "Failed to cancel octoBooking: {}. PmsBookingId {}. Reason: {}, Actual Error: {}",
+                            activityItem, booking.id, e.getMessage(), e);
+                }
+            } else {
+                removeActivityFromBooking(activityItem.getZauiActivityId(), booking);
             }
         }
     }

@@ -6,6 +6,9 @@ import com.thundashop.core.pmsmanager.*;
 import com.thundashop.repository.utils.SessionInfo;
 import com.thundashop.services.zauiactivityservice.IZauiActivityService;
 import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
+import com.thundashop.zauiactivity.dto.Contact;
+import com.thundashop.zauiactivity.dto.OctoProductAvailability;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -112,7 +115,16 @@ public class GotoHoldBookingService implements IGotoHoldBookingService {
         pmsBooking.registrationData.resultAdded.put("user_cellPhone", user_cellPhone);
         pmsBooking.registrationData.resultAdded.put("user_emailAddress", booker.getEmail());
 
-        mapRoomsToPmsRooms(booking, pmsBooking, config);
+        for (GotoRoomRequest gotoBookingRoom : booking.getRooms()) {
+            PmsBookingRooms room = mapRoomToPmsRoom(booking, gotoBookingRoom, config);
+            pmsBooking.addRoom(room);
+        }
+        if(booking.getRooms() == null || booking.getRooms().isEmpty()) {
+            OctoProductAvailability availability = getAvailabilityForVirtualRoom(booking.getActivities());
+            Contact contact = getGuestInfoForVirtualRoom(booking.getActivities());
+            pmsBooking.addRoom(getVirtualRoom(availability, contact == null ? booker : contact)
+            );
+        }
 
         for (GotoActivityReservationDto activity : booking.getActivities()) {
             BookingZauiActivityItem activityItem = zauiActivityService.mapActivityToBookingZauiActivityItem(
@@ -123,19 +135,57 @@ public class GotoHoldBookingService implements IGotoHoldBookingService {
         return pmsBooking;
     }
 
-    private void mapRoomsToPmsRooms(GotoBookingRequest booking, PmsBooking pmsBooking, PmsConfiguration config)
-            throws Exception {
-        for (GotoRoomRequest gotoBookingRoom : booking.getRooms()) {
-            PmsBookingRooms room = mapRoomToPmsRoom(booking, gotoBookingRoom, config);
-            pmsBooking.addRoom(room);
+    private OctoProductAvailability getAvailabilityForVirtualRoom(List<GotoActivityReservationDto> activities) {
+        Date start = null, end = null;
+        String startDate = "", endDate = "";
+        OctoProductAvailability finalAvailability;
+        for(GotoActivityReservationDto activity: activities) {
+            OctoProductAvailability availability = activity.getOctoReservationResponse().getAvailability();
+            Date newStart = new DateTime(availability.getLocalDateTimeStart()).toDate();
+            Date newEnd = new DateTime(availability.getLocalDateTimeEnd()).toDate();
+            if(start == null || start.after(newStart)) {
+                start = (Date) newStart.clone();
+                startDate = availability.getLocalDateTimeStart();
+            }
+            if(end == null || end.before(newEnd)) {
+                end = (Date) newEnd.clone();
+                endDate = availability.getLocalDateTimeEnd();
+            }
         }
-        if (booking.getRooms() == null || booking.getRooms().isEmpty()) {
-            PmsBookingRooms room = new PmsBookingRooms();
-            room.bookingItemTypeId = BOOKING_ITEM_TYPE_ID_FOR_VIRTUAL_GOTO_ROOM;
-            room.date.start = new Date();
-            room.date.end = new Date();
-            pmsBooking.addRoom(room);
+        finalAvailability = new OctoProductAvailability();
+        finalAvailability.setLocalDateTimeStart(startDate);
+        finalAvailability.setLocalDateTimeEnd(endDate);
+        return finalAvailability;
+    }
+
+    private Contact getGuestInfoForVirtualRoom(List<GotoActivityReservationDto> activities) {
+        for(GotoActivityReservationDto activity : activities) {
+            if(activity.getOctoReservationResponse().getContact() != null)
+                return activity.getOctoReservationResponse().getContact();
         }
+        return null;
+    }
+
+    private PmsBookingRooms getVirtualRoom(OctoProductAvailability availability, Object contact) {
+        PmsBookingRooms room = new PmsBookingRooms();
+        room.bookingItemTypeId = BOOKING_ITEM_TYPE_ID_FOR_VIRTUAL_GOTO_ROOM;
+        room.date.start = new DateTime(availability.getLocalDateTimeStart()).toDate();
+        room.date.end = new DateTime(availability.getLocalDateTimeEnd()).toDate();
+        PmsGuests guest = new PmsGuests();
+        if(contact instanceof Contact) {
+            guest.email = ((Contact)contact).getEmailAddress();
+            guest.name = ((Contact)contact).getFullName();
+            guest.phone = ((Contact)contact).getPhoneNumber();
+        }
+        else {
+            guest.email = ((GotoBooker)contact).getEmail();
+            guest.name = ((GotoBooker)contact).getFirstName() + " " + ((GotoBooker)contact).getLastName();
+            guest.prefix = ((GotoBooker)contact).getMobile().getAreaCode();
+            guest.phone = ((GotoBooker)contact).getMobile().getPhoneNumber();
+        }
+
+        room.guests.add(guest);
+        return room;
     }
 
     private PmsBookingRooms mapRoomToPmsRoom(GotoBookingRequest booking, GotoRoomRequest gotoBookingRoom,

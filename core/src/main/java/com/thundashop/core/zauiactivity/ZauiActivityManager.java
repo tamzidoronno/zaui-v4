@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import com.thundashop.core.pmsbookingprocess.GuestAddonsSummary;
 import com.thundashop.core.pmsbookingprocess.PmsBookingProcess;
-import com.thundashop.repository.utils.ZauiStatusCodes;
+import com.thundashop.core.common.ZauiStatusCodes;
 import com.thundashop.zauiactivity.dto.*;
 
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +29,7 @@ import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.repository.exceptions.NotUniqueDataException;
-import com.thundashop.repository.exceptions.ZauiException;
+import com.thundashop.core.common.ZauiException;
 import com.thundashop.services.bookingservice.IPmsBookingService;
 import com.thundashop.services.octoapiservice.IOctoApiService;
 import com.thundashop.services.zauiactivityservice.IZauiActivityService;

@@ -1,4 +1,4 @@
-package com.thundashop.repository.utils;
+package com.thundashop.core.common;
 
 public enum ZauiStatusCodes {
 

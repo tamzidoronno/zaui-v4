@@ -1,6 +1,6 @@
 package com.thundashop.core.pmsmanager;
 
-public class StaticPriceAndBooking {
+public class PmsBookingConstant {
     public static class PriceType {
         public static Integer daily = 1;
         public static Integer monthly = 2;

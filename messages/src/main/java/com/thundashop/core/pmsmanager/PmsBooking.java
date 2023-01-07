@@ -557,7 +557,7 @@ public class PmsBooking extends DataCommon {
             totalPrice = rooms.get(0).totalCost;
             return;
         }
-        if (!priceType.equals(StaticPriceAndBooking.PriceType.daily)) {
+        if (!priceType.equals(PmsBookingConstant.PriceType.daily)) {
             return;
         }
         double total = 0.0;

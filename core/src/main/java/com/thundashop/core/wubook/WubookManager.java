@@ -1301,7 +1301,7 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                     int count = 0;
                     for (Date daydate : priceMatrix.keySet()) {
                         calStart.setTime(daydate);
-                        String offset = PmsBookingRooms.getOffsetKey(calStart, StaticPriceAndBooking.PriceType.daily);
+                        String offset = PmsBookingRooms.getOffsetKey(calStart, PmsBookingConstant.PriceType.daily);
                         pmsroom.priceMatrix.put(offset, priceMatrix.get(daydate));
                         total += priceMatrix.get(daydate);
                         count++;

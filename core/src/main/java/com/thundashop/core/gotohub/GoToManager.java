@@ -674,7 +674,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         room.numberOfGuests = numberofguests;
 
         PmsBooking booking = new PmsBooking();
-        booking.priceType = StaticPriceAndBooking.PriceType.daily;
+        booking.priceType = PmsBookingConstant.PriceType.daily;
         booking.couponCode = discountcode;
         booking.userId = bookingProcessRoom.userId;
         pmsManager.setPriceOnRoom(room, true, booking);

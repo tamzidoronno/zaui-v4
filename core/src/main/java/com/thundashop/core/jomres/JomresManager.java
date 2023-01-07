@@ -1035,7 +1035,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             calStart.setTime(current);
             while (!current.after(room.date.end)) {
                 String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(current);
-                String offset = PmsBookingRooms.getOffsetKey(calStart, StaticPriceAndBooking.PriceType.daily);
+                String offset = PmsBookingRooms.getOffsetKey(calStart, PmsBookingConstant.PriceType.daily);
                 room.priceMatrix.put(offset, priceMatrix.get(currentDate));
                 calStart.add(Calendar.DATE, 1);
                 current = calStart.getTime();

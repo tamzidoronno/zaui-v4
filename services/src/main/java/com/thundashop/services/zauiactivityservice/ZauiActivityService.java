@@ -124,13 +124,12 @@ public class ZauiActivityService implements IZauiActivityService {
         activityItem.priceExTaxes = getPricingFromOctoTaxObject(activityItem.getOctoBooking().getPricing())
                 .getSubtotal();
         activityItem.setUnpaidAmount(activityItem.price);
-
-        // Add octo tax validation with supplier
         try{
             List<Double> taxRate = octoBooking.getPricing().getIncludedTaxes().stream()
                     .map(taxData -> new Double(taxData.getRate())).collect(Collectors.toList());
             zauiActivityValidationService.validateTaxRates(activityItem.getSupplierId(),taxRate, sessionInfo);
         } catch (GotoException e) {
+            log.error("Tax Validation Failed, error message: {}, actual error: {}", e.getMessage(), e);
             throw new ZauiException(ZauiStatusCodes.ACCOUNTING_ERROR);
         }
 

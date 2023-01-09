@@ -2174,7 +2174,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         PmsManagerProcessor processor = new PmsManagerProcessor(this);
         processor.doProcessing();
-        getShopLockSystemManager.pingServers();
+//        getShopLockSystemManager.pingServers();
 
         PmsConfiguration config = getConfigurationSecure();
         if(!config.checkedForErrorsInBookingComPrepaidTwo) {

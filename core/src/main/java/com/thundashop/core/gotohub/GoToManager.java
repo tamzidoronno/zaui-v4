@@ -1,23 +1,6 @@
 package com.thundashop.core.gotohub;
 
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_CANCELLATION_FAILED;
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_CANCELLATION_SUCCESS;
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_CONFIRMATION_FAILED;
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_CONFIRMATION_SUCCESS;
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.FETCHING_HOTEL_INFO_FAIL;
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.FETCHING_HOTEL_INFO_SUCCESS;
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.FETCHING_PRICE_ALLOTMENT_FAIL;
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.FETCHING_PRICE_ALLOTMENT_SUCCESS;
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.FETCHING_ROOM_TYPE_INFO_FAIL;
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.FETCHING_ROOM_TYPE_INFO_SUCCESS;
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.INVALID_DATE_RANGE_ALLOTMENT;
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.LARGER_DATE_RANGE;
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.NO_ALLOTMENT;
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.ORDER_SYNCHRONIZATION_FAILED;
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.PAYMENT_FAILED;
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.PAYMENT_METHOD_ACTIVATION_FAILED;
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.SAVE_BOOKING_FAIL;
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.SAVE_BOOKING_SUCCESS;
+import static com.thundashop.core.gotohub.constant.GoToStatusCodes.*;
 import static com.thundashop.core.gotohub.constant.GotoConstants.*;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -268,15 +251,17 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     public GoToApiResponse confirmBookingWithActivities(String reservationId, GotoConfirmBookingRequest confirmBookingReq) {
         try {
             saveSchedulerAsCurrentUser();
+            confirmBookingReq = confirmBookingService.updatePaymentMethod(confirmBookingReq);
             PmsBooking pmsBooking = confirmBookingValService.validateConfirmBookingReq(reservationId,
                     goToConfiguration.getPaymentTypeId(),
                     pmsManager.getSessionInfo(),
                     confirmBookingReq);
-            pmsBooking = confirmBookingService.confirmGotoBooking(pmsBooking, confirmBookingReq, pmsManager.getSessionInfo());
+            pmsBooking = confirmBookingService.confirmGotoBooking(pmsBooking, confirmBookingReq);
             String paymentMethodNameFromGoto = confirmBookingReq == null ? GOTO_PAYMENT : confirmBookingReq.getPaymentMethod();
             String paymentLink = confirmPayment(pmsBooking, paymentMethodNameFromGoto);
             pmsManager.saveBooking(pmsBooking);
-            return new GoToApiResponse(true, BOOKING_CONFIRMATION_SUCCESS.code, BOOKING_CONFIRMATION_SUCCESS.message,
+            return new GoToApiResponse(true, BOOKING_CONFIRMATION_SUCCESS.code,
+                    isBlank(paymentLink) ? BOOKING_CONFIRMATION_SUCCESS.message: BOOKING_CONFIRMATION_SUCCESS_WITH_PAYMENT_LINK.message,
                     isBlank(paymentLink)? null : new GotoConfirmBookingRes(paymentLink));
         } catch (GotoException e) {
             return handleUpdateBookingError(reservationId, e.getMessage(), e.getStatusCode());
@@ -479,11 +464,8 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             filter.prepayment = true;
             filter.endInvoiceAt = endInvoiceAt;
 
-            if (pmsBooking.paymentType != null && !pmsBooking.paymentType.isEmpty()) {
-                pmsInvoiceManager.autoCreateOrderForBookingAndRoom(pmsBooking.id, pmsBooking.paymentType);
-            }
-            String orderId = pmsInvoiceManager.autoCreateOrderForBookingAndRoom(pmsBooking.id,
-                    pmsBooking.paymentType);
+            String orderId = pmsInvoiceManager.autoCreateOrderForBookingAndRoom(pmsBooking.id, pmsBooking.paymentType);
+
             pmsInvoiceManager.markOrderAsPaid(pmsBooking.id, orderId);
         } catch (Exception e) {
             logPrintException(e);

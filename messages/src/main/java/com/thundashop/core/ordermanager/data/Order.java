@@ -1599,6 +1599,7 @@ public class Order extends DataCommon implements Comparable<Order> {
      * been logged in, this will be empty
      */
     public String userId;
+    public String userAccountingId;
 
     public int status = Status.CREATED;
     public Cart cart;

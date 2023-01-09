@@ -285,13 +285,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
 
     public void moveAllOnUserToUser(String tomainuser, String secondaryuser) {
-         for(Order ord : orders.values()) {
-             if(ord != null && ord.userId != null && ord.userId.equals(secondaryuser)) {
+        for(Order ord : orders.values()) {
+            if(ord != null && ord.userId != null && ord.userId.equals(secondaryuser)) {
                 ord.userId = tomainuser;
                 ord.originalUserBeforeMerge = secondaryuser;
                 saveObject(ord);
-             }
-         }
+            }
+        }
     }
 
     @Override
@@ -1217,11 +1217,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public Double getTotalSalesAmount(Integer year, Integer month, Integer week, Integer day, String type) {
         double amount = 0;
 //        for (Order order : orders.values()) {
-//            
+//
 //            if (!order.useForStatistic()) {
 //                continue;
 //            }
-//            
+//
 //            Calendar cal = Calendar.getInstance();
 //            cal.setTime(order.createdDate);
 //            if (year != null && cal.get(Calendar.YEAR) != year) {
@@ -1236,13 +1236,13 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 //            if (day != null && cal.get(Calendar.DAY_OF_YEAR) != day) {
 //                continue;
 //            }
-//            
+//
 //            if(type != null) {
 //                if(order.payment != null && order.payment.paymentType != null && !order.payment.paymentType.equals(type)) {
 //                    continue;
 //                }
 //            }
-//            
+//
 //            amount += cartManager.calculateTotalCost(order.cart);
 //        }
 
@@ -1252,42 +1252,42 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Override
     public Map<String, List<Statistic>> getMostSoldProducts(int numberOfProducts) {
         Map<String, Integer> counts = new HashMap<>();
-//        
+//
 //        for (Order order : orders.values()) {
-//            
+//
 //            if (order.cart == null) {
 //                continue;
 //            }
-//            
+//
 //            for (CartItem item : order.cart.getItems()) {
 //                Integer oldCount = counts.get(item.getProduct().id);
 //                if (oldCount == null) {
 //                    oldCount = 0;
 //                }
-//                
+//
 //                oldCount += item.getCount();
 //                counts.put(item.getProduct().id, oldCount);
 //            }
 //        }
-//        
+//
 //        counts = sortByValue(counts);
-//        
+//
 //        Map<String, List<Statistic>> retMap = new HashMap<>();
 //        int i = 0;
 //        for (String productId : counts.keySet()) {
 //            List<Statistic> statistics = new ArrayList<>();
 //            statistics.addAll(createStatistic(productId));
-//            
+//
 //            retMap.put(productId, statistics);
-//            
+//
 //            i++;
 //            if (i >= numberOfProducts) {
 //                break;
 //            }
-//            
-//            
+//
+//
 //        }
-//        
+//
         return new HashMap<>();
     }
 
@@ -1419,7 +1419,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 continue;
             }
 
-            // We do not transfer order until them are atleast 
+            // We do not transfer order until them are atleast
             if (order.createdDate.after(twentyFourHoursAgo)) {
                 logger.info("Skipping : {} date: {}", order.incrementOrderId, order.createdDate);
                 continue;
@@ -1687,7 +1687,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             return false;
         }
         if(order.notChargeYet()) {
-           return false;
+            return false;
         }
         if(order.triedAutoPay()) {
             return false;
@@ -1800,11 +1800,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     private void sortOrderList(List<Order> returnOrders) {
 
         Collections.sort(returnOrders ,new Comparator<Order>(){
-        public int compare(Order o1, Order o2){
-            if(o1.incrementOrderId == o2.incrementOrderId)
-                return 0;
-            return o1.incrementOrderId > o2.incrementOrderId ? -1 : 1;
-        }
+            public int compare(Order o1, Order o2){
+                if(o1.incrementOrderId == o2.incrementOrderId)
+                    return 0;
+                return o1.incrementOrderId > o2.incrementOrderId ? -1 : 1;
+            }
         });
     }
 
@@ -1843,7 +1843,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
     }
 
-      public Payment getUserPrefferedPaymentMethodOnly(String userId) {
+    public Payment getUserPrefferedPaymentMethodOnly(String userId) {
         User user = userManager.getUserById(userId);
 
         if (user == null)
@@ -2059,7 +2059,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     public void deleteAllOrders() {
-     //Delete all orders.
+        //Delete all orders.
         List<Order> allOrders = getOrders(null, null, null);
         for(Order order : allOrders) {
             forceDeleteOrder(order);
@@ -2309,7 +2309,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         return retlist;
     }
 
-   @Override
+    @Override
     public Order mergeAndCreateNewOrder(String userId, List<String> orderIds, String paymentMethod, String note) {
         User user = userManager.getUserById(userId);
 
@@ -2418,10 +2418,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public List<String> getPaymentMethodsThatHasOrders() {
         HashMap<String, Integer> maps = new HashMap<>();
         for(Order order : orders.values()) {
-           if(order.payment != null && order.payment.paymentType != null) {
-               String paymentId = order.payment.getPaymentTypeId();
-               maps.put(paymentId, 1);
-           }
+            if(order.payment != null && order.payment.paymentType != null) {
+                String paymentId = order.payment.getPaymentTypeId();
+                maps.put(paymentId, 1);
+            }
         }
         return new ArrayList<>(maps.keySet());
     }
@@ -2618,15 +2618,15 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             PosConference conference = posManager.getPosConference(conferenceId);
             if (conference != null) {
                 order.getCartItems()
-                    .stream()
-                    .filter(o -> o.conferenceId.equals(conferenceId))
-                    .forEach(cartItem -> {
-                        try {
-                            posManager.addToTab(conference.tabId, (CartItem) cartItem.clone());
-                        } catch (CloneNotSupportedException ex) {
-                            java.util.logging.Logger.getLogger(OrderManager.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    });
+                        .stream()
+                        .filter(o -> o.conferenceId.equals(conferenceId))
+                        .forEach(cartItem -> {
+                            try {
+                                posManager.addToTab(conference.tabId, (CartItem) cartItem.clone());
+                            } catch (CloneNotSupportedException ex) {
+                                java.util.logging.Logger.getLogger(OrderManager.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        });
             }
         }
     }
@@ -2814,9 +2814,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         ArrayList result = new ArrayList<>(datas);
 
         Collections.sort(result, new Comparator<DataCommon>(){
-             public int compare(DataCommon o1, DataCommon o2){
-                 return o2.rowCreatedDate.compareTo(o1.rowCreatedDate);
-             }
+            public int compare(DataCommon o1, DataCommon o2){
+                return o2.rowCreatedDate.compareTo(o1.rowCreatedDate);
+            }
         });
 
         return result;
@@ -3141,7 +3141,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     @Override
     public void resetLastMonthClose(String password, Date start, Date end) {
-       if (password != null && password.equals("adfs9a9087293451q2oi4h1234khakslhfasidurh23")) {
+        if (password != null && password.equals("adfs9a9087293451q2oi4h1234khakslhfasidurh23")) {
             List<DayIncome> dayIncomes = getDayIncomes(start, end);
 
             for (DayIncome income : dayIncomes) {
@@ -3372,7 +3372,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             throw new ErrorException(1053);
         }
 
-        // If a order has created date that is not the same as the one in the database, what happend? 
+        // If a order has created date that is not the same as the one in the database, what happend?
         if (order.rowCreatedDate != null && oldOrder != null && !order.rowCreatedDate.equals(oldOrder.rowCreatedDate) && order.rowCreatedDate.before(closedDate) && !order.forcedOpen) {
             logger.error("ERROR 1053 for order " + order.incrementOrderId + ", id: " +order.id);
             throw new ErrorException(1053);
@@ -3381,7 +3381,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     private void stopIfOverrideDateConflictingClosedDate(Order order, Date closedDate, Order oldOrder) throws ErrorException {
 
-        // There are noe changes to the override accounting date. 
+        // There are noe changes to the override accounting date.
         if (oldOrder != null && oldOrder.overrideAccountingDate != null && oldOrder.overrideAccountingDate.equals(order.overrideAccountingDate)) {
             return;
         }
@@ -3515,9 +3515,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 if (orderExists) {
                     logger.warn("There are orders for the id: {} but have multiple creditted orders? : orderid: {}", orderId, getOrder(orderId).incrementOrderId);
                     groupedOrders.get(orderId).stream()
-                        .forEach(i -> {
-                            logger.warn("  - Creditnoteid: {}", i.incrementOrderId);
-                        });
+                            .forEach(i -> {
+                                logger.warn("  - Creditnoteid: {}", i.incrementOrderId);
+                            });
                 }
 
                 logger.warn("Found a bit of a problem: {}", groupedOrders.get(orderId).size());
@@ -3837,7 +3837,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 retList.add(orderWithUnsettledAmount);
             }
         }
-//        
+//
         removeCompletedAccrued(retList, groupedEntries);
         removeCreditNotes(retList, groupedEntries);
 
@@ -3864,16 +3864,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             }
 
             Map<String, List<DayEntry>> groupedByDepartmentId = dayIncome.dayEntries.stream()
-                .filter(entry -> !(!entry.isActualIncome || entry.isOffsetRecord))
-                .filter(o -> o.orderId != null)
-                .collect(Collectors.groupingBy(o -> {
-                    CartItem cartItem = getOrder(o.orderId).cart.getCartItem(o.cartItemId);
-                    if (cartItem == null || cartItem.getProduct() == null || cartItem.getProduct().departmentId == null) {
-                        return "";
-                    }
+                    .filter(entry -> !(!entry.isActualIncome || entry.isOffsetRecord))
+                    .filter(o -> o.orderId != null)
+                    .collect(Collectors.groupingBy(o -> {
+                        CartItem cartItem = getOrder(o.orderId).cart.getCartItem(o.cartItemId);
+                        if (cartItem == null || cartItem.getProduct() == null || cartItem.getProduct().departmentId == null) {
+                            return "";
+                        }
 
-                    return cartItem.getProduct().departmentId;
-                }));
+                        return cartItem.getProduct().departmentId;
+                    }));
 
             for (String departmentId : groupedByDepartmentId.keySet()) {
                 Department department = departmentManager.getDepartment(departmentId);
@@ -3932,7 +3932,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                     DayIncomeReport savedIncomeReport = createAndSaveIncomeReport(inc.start, inc.end, incomes);
                     res.add(savedIncomeReport);
                 }
-                    System.out.println("Empty result");
+                System.out.println("Empty result");
             }
 
             for (DayIncomeReport rep : res) {
@@ -4004,16 +4004,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         saveObject(accTransfer);
 
         incomes.stream()
-            .flatMap(o -> o.dayEntries.stream())
-            .forEach((Consumer<? super DayEntry>) o -> {
-                Order order = getOrder(o.orderId);
-                for (OrderTransaction transaction : order.orderTransactions) {
-                    if (transaction.transactionId.equals(o.orderTransactionId)) {
-                        transaction.transferredToAccounting = true;
+                .flatMap(o -> o.dayEntries.stream())
+                .forEach((Consumer<? super DayEntry>) o -> {
+                    Order order = getOrder(o.orderId);
+                    for (OrderTransaction transaction : order.orderTransactions) {
+                        if (transaction.transactionId.equals(o.orderTransactionId)) {
+                            transaction.transferredToAccounting = true;
+                        }
                     }
-                }
-                saveObject(order);
-            });
+                    saveObject(order);
+                });
     }
 
     @Override
@@ -4117,28 +4117,28 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         List<String> multiLevelNames = database.getMultilevelNames("PmsManager", storeId);
 
         createdBasedOnOrderIds.stream()
-            .map(id -> getOrder(id))
-            .forEach(order -> {
-                List<String> roomIdsForOrder = order.getCartItems().stream()
-                    .map(o -> o.getProduct().externalReferenceId)
-                    .filter(o -> o != null)
-                    .distinct()
-                    .collect(Collectors.toList());
+                .map(id -> getOrder(id))
+                .forEach(order -> {
+                    List<String> roomIdsForOrder = order.getCartItems().stream()
+                            .map(o -> o.getProduct().externalReferenceId)
+                            .filter(o -> o != null)
+                            .distinct()
+                            .collect(Collectors.toList());
 
-                for (String multilevelName : multiLevelNames) {
-                    PmsManager pmsManager = getShopSpringScope.getNamedSessionBean(multilevelName, PmsManager.class);
-                    for (String pmsRoomId : roomIdsForOrder) {
-                        PmsBooking booking = pmsManager.getBookingFromRoom(pmsRoomId);
-                        if (booking == null) {
-                            continue;
-                        }
+                    for (String multilevelName : multiLevelNames) {
+                        PmsManager pmsManager = getShopSpringScope.getNamedSessionBean(multilevelName, PmsManager.class);
+                        for (String pmsRoomId : roomIdsForOrder) {
+                            PmsBooking booking = pmsManager.getBookingFromRoom(pmsRoomId);
+                            if (booking == null) {
+                                continue;
+                            }
 
-                        if (!booking.orderIds.contains(order.id)) {
-                            pmsManager.addOrderToBooking(booking, order.id);
+                            if (!booking.orderIds.contains(order.id)) {
+                                pmsManager.addOrderToBooking(booking, order.id);
+                            }
                         }
                     }
-                }
-            });
+                });
     }
 
     private void addCreditNotesToBookings(List<String> createdBasedOnOrderIds) {
@@ -4216,30 +4216,30 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     public void autoMarkAsPaid(List<String> orderIds) {
         orderIds.stream()
-            .map(id -> orders.get(id))
-            .filter(order -> !order.hasTriedToAutoCollect)
-            .filter(order -> order != null && order.payment.paymentType != null && order.status != Order.Status.PAYMENT_COMPLETED)
-            .forEach(order -> {
-                order.hasTriedToAutoCollect = true;
-                try {
-                    Application paymentapp = storeApplicationPool.getApplicationByNameSpace(order.payment.paymentType);
-                    if(paymentapp != null) {
-                        String automarkpaid = paymentapp.getSetting("automarkpaid");
-                        Date date = order.getEndDateByItems();
+                .map(id -> orders.get(id))
+                .filter(order -> !order.hasTriedToAutoCollect)
+                .filter(order -> order != null && order.payment.paymentType != null && order.status != Order.Status.PAYMENT_COMPLETED)
+                .forEach(order -> {
+                    order.hasTriedToAutoCollect = true;
+                    try {
+                        Application paymentapp = storeApplicationPool.getApplicationByNameSpace(order.payment.paymentType);
+                        if(paymentapp != null) {
+                            String automarkpaid = paymentapp.getSetting("automarkpaid");
+                            Date date = order.getEndDateByItems();
 
-                        if (date == null) {
-                            date = new Date();
-                        }
+                            if (date == null) {
+                                date = new Date();
+                            }
 
-                        if(automarkpaid != null && automarkpaid.equals("true")) {
-                            markAsPaid(order.id, date, getTotalAmount(order));
+                            if(automarkpaid != null && automarkpaid.equals("true")) {
+                                markAsPaid(order.id, date, getTotalAmount(order));
+                            }
                         }
-                    }
-                }catch(Exception e) {
+                    }catch(Exception e) {
 //                    messageManager.sendErrorNotification("Failed to automark order as paid", e);
-                }
-                saveObject(order);
-            });
+                    }
+                    saveObject(order);
+                });
     }
 
     @Override
@@ -4296,7 +4296,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     /* Similar to outstanding report - we want to get the all dayEntries (==orders) which make up the Balances In amount. When an order is accrued,
-    * there will probably be correlated parent/credited orders which will alltogetgher make the total amount of accrued zero for a particular booking.  */
+     * there will probably be correlated parent/credited orders which will alltogetgher make the total amount of accrued zero for a particular booking.  */
     @Override
     public String getBalanceInDetails(String accountId, Date date) {
         AccountingBalance balance = new AccountingBalance();
@@ -5044,21 +5044,21 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
 
         List<Order> fixOrders = orders
-            .values()
-            .stream()
-            .filter(order -> {
+                .values()
+                .stream()
+                .filter(order -> {
 
-                if (order.currency != null && !order.currency.isEmpty()) {
-                    for (OrderTransaction trans : order.orderTransactions) {
-                        if (trans.amountInLocalCurrency == null) {
-                            return true;
+                    if (order.currency != null && !order.currency.isEmpty()) {
+                        for (OrderTransaction trans : order.orderTransactions) {
+                            if (trans.amountInLocalCurrency == null) {
+                                return true;
+                            }
                         }
                     }
-                }
 
-                return false;
-            })
-            .collect(Collectors.toList());
+                    return false;
+                })
+                .collect(Collectors.toList());
 
         for (Order order : fixOrders) {
             for (OrderTransaction trans : order.orderTransactions) {
@@ -5261,7 +5261,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         try {
             addOrdersToBookings(credittedOrders);
         }catch(GetShopBeanException ex) {
-            // This will happen if the credit order is invoked within a named bean, 
+            // This will happen if the credit order is invoked within a named bean,
             // normally it then comes from the pms manager itself and then the manager
             // should handle the adding to booking properly itself.
             return credited;
@@ -5365,11 +5365,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     public void markAsTransferredToCentral(List<String> orderIds) {
         orderIds.stream()
-            .map(o -> getOrderSecure(o))
-            .forEach(order -> {
-                order.transferredToCentral = true;
-                super.saveObject(order);
-            });
+                .map(o -> getOrderSecure(o))
+                .forEach(order -> {
+                    order.transferredToCentral = true;
+                    super.saveObject(order);
+                });
     }
 
     private void setUserAccountingIdOnOrder(Order order) {
@@ -5425,7 +5425,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
     @Override
     public void deleteOrderTransaction(String transactionId) {
-        
+
         for(Order order : orders.values()) {
             OrderTransaction toRemove = null;
             for(OrderTransaction transaction : order.orderTransactions) {
@@ -5462,17 +5462,17 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     }
 
     private void detectAndSaveDaysThatAreOpenInBetweenSet(List<DayIncome> newlyBrokenIncome, DayIncomeFilter filter) {
-        
+
         if (getOrderManagerSettings().closedTilPeriode == null) {
             return;
         }
-        
+
         final Date toCheck = getOrderManagerSettings().closedTilPeriode;
-        
+
         List<DayIncome> incomes = newlyBrokenIncome.stream()
                 .filter(o -> !o.isFinal && (o.end.before(toCheck) || o.end.equals(toCheck)))
                 .collect(Collectors.toList());
-        
+
         for (DayIncome inc : incomes) {
             inc.isFinal = true;
         }
@@ -5480,46 +5480,46 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     /**
      * If dryRun = true, the system function will return true/false if the if the order needs to be corrected
-     * 
+     *
      * @param order
-     * @return 
+     * @return
      */
     private boolean correctOrderCartItems(Order order) {
         List<CartItem> useCartItems = new ArrayList<>();
-        
+
         boolean hasNullTaxGroups = order.getCartItems().stream()
                 .map(o -> productManager.getTaxGroup(o.getProduct().taxgroup))
                 .filter(o -> o == null)
                 .count() > 0;
-        
+
         if (hasNullTaxGroups) {
             logger.info("Skipping order: {} as hit has products without taxes", order.incrementOrderId);
             return false;
         }
-                
+
         for (CartItem cartItem : order.getCartItems()) {
             List<CartItem> splittedCartItems = splitCartItemsBasedOnTaxGroups(order, cartItem);
             useCartItems.addAll(splittedCartItems);
         }
-        
+
         order.cart.clear();
         order.cart.addCartItems(useCartItems);
-        
+
         return false;
     }
 
     private List<CartItem> splitCartItemsBasedOnTaxGroups(Order order, CartItem cartItem) {
         try {
             List<Date> datesForCartItem = getDatesForCartItem(order, cartItem);
-            
+
             Map<Integer, List<Date>> groupedByTaxGroupNumber = datesForCartItem.stream().collect(Collectors.groupingBy(o -> {
                 Integer taxGroupNumber = getTaxGroupByDate(cartItem, o);
                 return taxGroupNumber;
             }));
-            
+
             ArrayList<CartItem> retListe = new ArrayList<>();
-            
-            
+
+
             if (groupedByTaxGroupNumber.size() == 1) {
                 Integer groupNumberToUse = groupedByTaxGroupNumber.keySet().iterator().next();
                 cartItem.getProduct().taxgroup = groupNumberToUse;
@@ -5528,9 +5528,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 retListe.add(cartItem);
                 return retListe;
             }
-            
+
             Gson gson = new Gson();
-            
+
             for (Integer groupNumber : groupedByTaxGroupNumber.keySet()) {
                 CartItem item = gson.fromJson(gson.toJson(cartItem), CartItem.class);
                 item.getProduct().taxgroup = groupNumber;
@@ -5541,7 +5541,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 item.getProduct().doFinalize();
                 retListe.add(item);
             }
-            
+
             return retListe;
         } catch (ParseException ex) {
             throw new RuntimeException(ex);
@@ -5550,7 +5550,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     private List<Date> getDatesForCartItem(Order order, CartItem cartItem) throws ParseException {
         OrderDailyBreaker dailyBreak = new OrderDailyBreaker();
-        
+
         List<Date> dates = new ArrayList<>();
         if (cartItem.isPriceMatrixItem()) {
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
@@ -5567,7 +5567,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             Date date = dailyBreak.getNormalCartItemAccountingDate(order, cartItem);
             dates.add(date);
         }
-        
+
         return dates;
     }
 
@@ -5584,43 +5584,43 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .filter(o -> o.createByManager != null && o.createByManager.equals("PmsDailyOrderGeneration"))
                 .filter(o -> o.rowCreatedDate.getTime() > 1543536000000L)
                 .collect(Collectors.toList());
-        
+
         List<OrderTaxCorrectionResult> retList = new ArrayList<>();
         for (Order order : toCheck) {
             Order cloned = order.jsonClone();
             correctOrderCartItems(cloned);
-            
+
             Map<TaxGroup, BigDecimal> clonedTaxes = cloned.getTaxesRoundedWithTwoDecimals(2);
             Map<TaxGroup, BigDecimal> originalTaxes = order.getTaxesRoundedWithTwoDecimals(2);
-            
+
             Set<Integer> keys = clonedTaxes.keySet().stream()
                     .map(o -> o.groupNumber)
                     .collect(Collectors.toSet());
-            
+
             keys.addAll(originalTaxes.keySet().stream().map(o -> o.groupNumber).collect(Collectors.toSet()));
-            
+
             OrderTaxCorrectionResult result = new OrderTaxCorrectionResult();
             result.orderId = order.id;
-            
+
             for (Integer key : keys) {
                 BigDecimal clonedTaxValue = null;
                 BigDecimal oringinalTaxValue = null;
-                
+
                 for (TaxGroup iKey : clonedTaxes.keySet()) {
                     if (iKey.groupNumber == (int)key) {
-                         clonedTaxValue = clonedTaxes.get(iKey);
+                        clonedTaxValue = clonedTaxes.get(iKey);
                     }
                 }
-                
+
                 for (TaxGroup iKey : originalTaxes.keySet()) {
                     if (iKey.groupNumber == (int)key) {
-                         oringinalTaxValue = originalTaxes.get(iKey);
+                        oringinalTaxValue = originalTaxes.get(iKey);
                     }
                 }
-                
+
                 boolean isLeftNull = clonedTaxValue == null && oringinalTaxValue != null;
                 boolean isRightNull = oringinalTaxValue == null && clonedTaxValue != null;
-                
+
                 if (isLeftNull || isRightNull || !clonedTaxValue.equals(oringinalTaxValue)) {
                     OrderTaxCorrectionResultValue value = new OrderTaxCorrectionResultValue();
                     value.taxGroupNumber = key;
@@ -5632,12 +5632,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                     }
                 }
             }
-            
+
             if (result.values.size() > 1) {
                 retList.add(result);
             }
         }
-        
+
         return retList;
     }
 
@@ -5654,15 +5654,15 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             saveObjectDirect(originalOrder);
             return;
         }
-        
+
         Order cloned = originalOrder.jsonClone();
         Order creditNote = creditOrder(orderId);
-        
+
 
         correctOrderCartItems(cloned);
         cloned.incrementOrderId = getNextIncrementalOrderId();
         cloned.id = "";
-        
+
         if (cloned.isInvoice() && !cloned.kid.isEmpty()) {
             cloned.kid = "";
             generateKid(cloned);
@@ -5672,69 +5672,69 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             creditNote.overrideAccountingDate = getOrderManagerSettings().closedTilPeriode;
             cloned.overrideAccountingDate = getOrderManagerSettings().closedTilPeriode;
         }
-        
+
         saveOrder(creditNote);
         saveOrder(cloned);
-        
+
         if (isPaid) {
             markAsPaid(creditNote.id, new Date(), getTotalAmount(creditNote));
             markAsPaid(cloned.id, new Date(), getTotalAmount(cloned));
         }
-        
+
         addOrderToBooking(cloned);
     }
 
     @Override
     public void correctProblemsWithCorrection(String password) {
-        
+
         if (password == null || !password.equals("asd9f92asdfasdfaw4r5154jnhasjdkfnasfd")) {
             return;
         }
-        
+
         Map<String, List<Order>> clonedOrders = orders.values()
                 .stream()
                 .collect(Collectors.groupingBy(o -> o.secretId));
-        
+
         for (String secretId : clonedOrders.keySet()) {
             List<Order> sameOrders = clonedOrders.get(secretId);
             if (sameOrders.size() != 3)
                 continue;
-            
+
             Order originalOrder = sameOrders.stream()
                     .filter(o -> !o.isCreditNote && o.isPaidWhenCreditted())
                     .findAny()
                     .orElse(null);
-            
+
             Order creditNoteMarkedAsPaid = sameOrders.stream()
                     .filter(o -> o.isCreditNote && o.isPaidWhenCreditted())
                     .findAny()
                     .orElse(null);
-            
+
             if (originalOrder == null || creditNoteMarkedAsPaid == null) {
                 continue;
             }
-            
+
             Order adjustedOrder = sameOrders.stream()
                     .filter(o -> !o.equals(originalOrder) && !o.equals(creditNoteMarkedAsPaid))
                     .findAny()
                     .orElse(null);
-            
+
             if (adjustedOrder.isInvoice() && !adjustedOrder.kid.isEmpty()) {
                 adjustedOrder.kid = "";
                 generateKid(adjustedOrder);
                 saveObject(adjustedOrder);
             }
-            
+
             if (adjustedOrder.status == 7 && creditNoteMarkedAsPaid.orderTransactions.size() == 2) {
-                
+
                 creditNoteMarkedAsPaid.orderTransactions
                         .removeIf(o -> !o.comment.equals("Creditted"));
-                
+
                 saveObject(creditNoteMarkedAsPaid);
-                
+
                 BigDecimal amountVatOriginal = originalOrder.getTotalAmountVatRoundedTwoDecimals(2);
                 BigDecimal amountVatAdjust = adjustedOrder.getTotalAmountVatRoundedTwoDecimals(2);
-                
+
                 if (!amountVatAdjust.equals(amountVatOriginal)) {
                     adjustedOrder.status = Order.Status.CREATED;
                     adjustedOrder.orderTransactions.clear();
@@ -5766,16 +5766,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     private String getBatchId(Order order, String refId) {
         if (!order.isInvoice())
             return "";
-        
+
         if (refId == null || refId.isEmpty())
             return UUID.randomUUID().toString();
-        
+
         OcrFileLines line = storeOcrManager.getOcrFileLine(refId);
-        
+
         if (line != null) {
             return line.getBatchId();
         }
-        
+
         return UUID.randomUUID().toString();
     }
 
@@ -5785,12 +5785,12 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if(!ids.contains(paymentTypeId)) {
             return;
         }
-        
+
         Order order = getOrder(orderId);
         if(order.closed) {
             return;
         }
-        
+
         changeOrderType(orderId, paymentTypeId);
     }
 
@@ -5807,26 +5807,26 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         order.rowCreatedDateChangedByUser = getSession().currentUser.id;
         saveOrder(order);
     }
-    
+
     public Order creditOrderIgnoreClosedDate(String orderId, String reason) {
         Order order = getOrder(orderId);
-        
+
         if (order.isCreditNote) {
             throw new RuntimeException("Cant credit a credinote");
         }
-        
+
         if (!order.creditOrderId.isEmpty()) {
             throw new RuntimeException("Cant do this as the order is partially creditted");
         }
-        
+
         Date currentlyClosed = getOrderManagerSettings().closedTilPeriode;
         Date currentlyBankClosed = getOrderManagerSettings().bankAccountClosedToDate;
-        
+
         Order creditNote = null;
         try {
             getOrderManagerSettings().closedTilPeriode = new Date(1);
             getOrderManagerSettings().bankAccountClosedToDate = new Date(1);
-            
+
             creditNote = creditOrder(orderId);
             creditNote.creditReason = reason;
             saveObject(creditNote);
@@ -5836,51 +5836,51 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             getOrderManagerSettings().closedTilPeriode = currentlyClosed;
             getOrderManagerSettings().bankAccountClosedToDate = currentlyBankClosed;
         }
-        
+
         return creditNote;
     }
 
     @Override
     public List<Order> getOverdueOtaPayments() {
         List<Order> retOrders = orders.values()
-            .stream()
-            .filter(o -> o.payment != null && o.payment.paymentType.contains("OtaPayments"))
-            .filter(o -> !o.isNullOrder())
-            .filter(order -> order != null && order.payment.paymentType != null && order.status != Order.Status.PAYMENT_COMPLETED)
-            .filter(o -> o.isOrderFinanciallyRelatedToDatesIgnoreCreationDate(new Date(0), new Date()))
-            .collect(Collectors.toList());
+                .stream()
+                .filter(o -> o.payment != null && o.payment.paymentType.contains("OtaPayments"))
+                .filter(o -> !o.isNullOrder())
+                .filter(order -> order != null && order.payment.paymentType != null && order.status != Order.Status.PAYMENT_COMPLETED)
+                .filter(o -> o.isOrderFinanciallyRelatedToDatesIgnoreCreationDate(new Date(0), new Date()))
+                .collect(Collectors.toList());
 
         return retOrders;
     }
-    
+
     @Override
     public void markOtaPaymentsAsPaid(String goToPaymentId) {
         getOverdueOtaPayments().stream()
-            .filter(o -> o.payment.goToPaymentId.equals(goToPaymentId))
-            .forEach(order -> {
-                Application paymentType = applicationPool.getApplication(goToPaymentId);
-                order.changePaymentType(paymentType);
-                
-                Date date = order.getEndDateByItems();
+                .filter(o -> o.payment.goToPaymentId.equals(goToPaymentId))
+                .forEach(order -> {
+                    Application paymentType = applicationPool.getApplication(goToPaymentId);
+                    order.changePaymentType(paymentType);
 
-                if (date == null) {
-                    date = new Date();
-                }
+                    Date date = order.getEndDateByItems();
 
-                markAsPaid(order.id, date, getTotalAmount(order));
-            });
+                    if (date == null) {
+                        date = new Date();
+                    }
+
+                    markAsPaid(order.id, date, getTotalAmount(order));
+                });
     }
 
     public void startUseCacheForOrderIsCredittedAndPaidFor() {
         useCacheForOrderIsCredittedAndPaidFor = true;
         orderIsCredittedAndPaidFor = new HashMap<>();
-        
+
     }
 
     public void doneUseCacheForOrderIsCredittedAndPaidFor() {
         useCacheForOrderIsCredittedAndPaidFor = false;
     }
-   
+
     @Override
     public List<Order> getOrdersNotConnectedToAnyZReports() {
         List<Order> retList = orders.values()
@@ -5888,7 +5888,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .filter(o -> !o.isNullOrder())
                 .filter(o -> o.isNotOnZreport() || !posManager.hasZreport(o))
                 .collect(Collectors.toList());
-        
+
         return retList;
     }
 
@@ -5899,7 +5899,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .filter(o -> posManager.getPosConference(o.autoCreatedOrderForConferenceId) == null)
                 .filter(o -> !o.isCreditNote && o.creditOrderId.isEmpty())
                 .collect(Collectors.toList());
-        
+
         retList.stream().forEach(o -> creditOrder(o.id));
     }
 
@@ -5907,11 +5907,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         List<OrderUnsettledAmountForAccount> accuredOrders = retList.stream()
                 .filter(o -> o.order != null && o.order.isAccruedPayment())
                 .collect(Collectors.toList());
-        
-        Map<String, List<OrderUnsettledAmountForAccount>> groupedByRoom = 
+
+        Map<String, List<OrderUnsettledAmountForAccount>> groupedByRoom =
                 accuredOrders.stream()
-                .collect((Collectors.groupingBy(o -> o.order.getRoomId())));
-        
+                        .collect((Collectors.groupingBy(o -> o.order.getRoomId())));
+
         for (String roomId : groupedByRoom.keySet()) {
             Double total = groupedByRoom.get(roomId)
                     .stream()
@@ -5929,20 +5929,20 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         List<OrderUnsettledAmountForAccount> creditNotes = retList.stream()
                 .filter(o -> o.order.isCreditNote)
                 .collect(Collectors.toList());
-        
+
         for (OrderUnsettledAmountForAccount creditNote : creditNotes) {
             OrderUnsettledAmountForAccount parent = retList.stream()
                     .filter(o -> o.order.id.equals(creditNote.order.parentOrder))
                     .findAny()
                     .orElse(null);
-            
+
             if (parent == null)
                 continue;
-            
+
             double sumForOrder = sumOfOrder(groupedEntries, creditNote.order.id);
             double sumForParent = sumOfOrder(groupedEntries, parent.order.id);
             Double total = sumForOrder + sumForParent;
-            
+
             if (total < 0.05 && total > -0.05) {
                 System.out.println("REVEMOED CREDITNOTE");
                 retList.remove(creditNote);
@@ -5955,14 +5955,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public void changeClosedDate(String description, Date date) {
         Date to = getOrderManagerSettings().closedTilPeriode;
         Date start = date;
-        
+
         resetLastMonthClose("adfs9a9087293451q2oi4h1234khakslhfasidurh23", start, to);
-        
+
         ChangedCloseDateLog log = new ChangedCloseDateLog();
         log.description = description;
         log.newDate = date;
         log.oldDate = to;
-        
+
         saveObject(log);
     }
 
@@ -5970,7 +5970,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     public List<ChangedCloseDateLog> getChangedCloseDateLog() {
         BasicDBObject query = new BasicDBObject();
         query.put("className", ChangedCloseDateLog.class.getCanonicalName());
-        
+
         return database.query(OrderManager.class.getSimpleName(), storeId, query)
                 .stream()
                 .map(o -> (ChangedCloseDateLog)o)

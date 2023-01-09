@@ -5368,10 +5368,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             .map(o -> getOrderSecure(o))
             .forEach(order -> {
                 order.transferredToCentral = true;
-                setAccountingAccountIdOnUser(order.userId);
-                String accountid = userManager.getUserByIdIncludedDeleted(order.userId).accountingId;
-                order.userAccountingId = accountid;
-                logger.info("Update user {} order: {} as {}", order.userId, order.incrementOrderId, accountid);
                 super.saveObject(order);
             });
     }

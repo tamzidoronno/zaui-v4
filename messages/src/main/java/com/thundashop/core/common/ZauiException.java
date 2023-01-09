@@ -1,6 +1,5 @@
-package com.thundashop.repository.exceptions;
+package com.thundashop.core.common;
 
-import com.thundashop.repository.utils.ZauiStatusCodes;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;

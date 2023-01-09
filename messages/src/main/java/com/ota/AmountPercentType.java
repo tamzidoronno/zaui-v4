@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -73,7 +73,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
     "taxes"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.RequiredPaymentsType.GuaranteePayment.AmountPercent.class
+    com.ota.RequiredPaymentsType.GuaranteePayment.AmountPercent.class
 })
 public class AmountPercentType {
 

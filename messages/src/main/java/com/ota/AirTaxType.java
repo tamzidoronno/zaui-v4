@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -63,7 +63,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
     "value"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.EMDType.Taxes.Tax.class
+    com.ota.EMDType.Taxes.Tax.class
 })
 public class AirTaxType {
 

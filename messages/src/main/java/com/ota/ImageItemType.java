@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigInteger;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -47,7 +47,7 @@ import javax.xml.bind.annotation.XmlType;
     "url"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.ImageDescriptionType.ImageFormat.class
+    com.ota.ImageDescriptionType.ImageFormat.class
 })
 public class ImageItemType {
 

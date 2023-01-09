@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -702,7 +702,7 @@ public class ResGuestType {
          */
         public List<ResGuestType.ProfileRPHs.ProfileRPH> getProfileRPH() {
             if (profileRPH == null) {
-                profileRPH = new ArrayList<ResGuestType.ProfileRPHs.ProfileRPH>();
+                profileRPH = new ArrayList<>();
             }
             return this.profileRPH;
         }

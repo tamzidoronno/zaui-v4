@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -209,8 +209,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "tpaExtensions"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.RoomStaysType.RoomStay.class,
-    org.opentravel.ota._2003._05.HotelRoomListType.RoomStays.RoomStay.class
+    com.ota.RoomStaysType.RoomStay.class,
+    com.ota.HotelRoomListType.RoomStays.RoomStay.class
 })
 public class RoomStayType {
 
@@ -403,7 +403,7 @@ public class RoomStayType {
      */
     public List<GuaranteeType> getGuarantee() {
         if (guarantee == null) {
-            guarantee = new ArrayList<GuaranteeType>();
+            guarantee = new ArrayList<>();
         }
         return this.guarantee;
     }
@@ -696,7 +696,7 @@ public class RoomStayType {
      */
     public List<String> getWarningRPH() {
         if (warningRPH == null) {
-            warningRPH = new ArrayList<String>();
+            warningRPH = new ArrayList<>();
         }
         return this.warningRPH;
     }
@@ -773,7 +773,7 @@ public class RoomStayType {
      */
     public List<String> getPromotionVendorCode() {
         if (promotionVendorCode == null) {
-            promotionVendorCode = new ArrayList<String>();
+            promotionVendorCode = new ArrayList<>();
         }
         return this.promotionVendorCode;
     }
@@ -1091,7 +1091,7 @@ public class RoomStayType {
          */
         public List<RatePlanType> getRatePlan() {
             if (ratePlan == null) {
-                ratePlan = new ArrayList<RatePlanType>();
+                ratePlan = new ArrayList<>();
             }
             return this.ratePlan;
         }
@@ -1221,7 +1221,7 @@ public class RoomStayType {
          */
         public List<RoomStayType.RoomRates.RoomRate> getRoomRate() {
             if (roomRate == null) {
-                roomRate = new ArrayList<RoomStayType.RoomRates.RoomRate>();
+                roomRate = new ArrayList<>();
             }
             return this.roomRate;
         }
@@ -1864,7 +1864,7 @@ public class RoomStayType {
                  */
                 public List<RoomStayType.RoomRates.RoomRate.GuestCounts.GuestCount> getGuestCount() {
                     if (guestCount == null) {
-                        guestCount = new ArrayList<RoomStayType.RoomRates.RoomRate.GuestCounts.GuestCount>();
+                        guestCount = new ArrayList<>();
                     }
                     return this.guestCount;
                 }
@@ -2064,7 +2064,7 @@ public class RoomStayType {
                  */
                 public List<RoomStayType.RoomRates.RoomRate.Restrictions.Restriction> getRestriction() {
                     if (restriction == null) {
-                        restriction = new ArrayList<RoomStayType.RoomRates.RoomRate.Restrictions.Restriction>();
+                        restriction = new ArrayList<>();
                     }
                     return this.restriction;
                 }
@@ -2264,7 +2264,7 @@ public class RoomStayType {
          */
         public List<RoomTypeType> getRoomType() {
             if (roomType == null) {
-                roomType = new ArrayList<RoomTypeType>();
+                roomType = new ArrayList<>();
             }
             return this.roomType;
         }

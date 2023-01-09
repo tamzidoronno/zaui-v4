@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,7 +90,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "additionalPersonNames"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.AirTravelerType.Document.class
+    com.ota.AirTravelerType.Document.class
 })
 public class DocumentType {
 
@@ -222,7 +222,7 @@ public class DocumentType {
      */
     public List<String> getDocLimitations() {
         if (docLimitations == null) {
-            docLimitations = new ArrayList<String>();
+            docLimitations = new ArrayList<>();
         }
         return this.docLimitations;
     }
@@ -784,7 +784,7 @@ public class DocumentType {
          */
         public List<String> getAdditionalPersonName() {
             if (additionalPersonName == null) {
-                additionalPersonName = new ArrayList<String>();
+                additionalPersonName = new ArrayList<>();
             }
             return this.additionalPersonName;
         }

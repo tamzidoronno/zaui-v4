@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +84,7 @@ public class ImageItemsType {
      */
     public List<ImageItemsType.ImageItem> getImageItem() {
         if (imageItem == null) {
-            imageItem = new ArrayList<ImageItemsType.ImageItem>();
+            imageItem = new ArrayList<>();
         }
         return this.imageItem;
     }

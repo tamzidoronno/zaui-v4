@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -53,7 +53,7 @@ import javax.xml.bind.annotation.XmlType;
     "taxes"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.RateUploadType.BaseByGuestAmts.BaseByGuestAmt.class,
+    com.ota.RateUploadType.BaseByGuestAmts.BaseByGuestAmt.class,
     DiscountType.class
 })
 public class TotalType {

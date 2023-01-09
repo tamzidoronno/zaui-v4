@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -144,8 +144,8 @@ import javax.xml.bind.annotation.XmlType;
     "additionalCharges"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.RateAmountMessageType.Rates.Rate.class,
-    org.opentravel.ota._2003._05.InvBlockRoomType.RatePlans.RatePlan.class
+    com.ota.RateAmountMessageType.Rates.Rate.class,
+    com.ota.InvBlockRoomType.RatePlans.RatePlan.class
 })
 public class RateUploadType {
 
@@ -1155,7 +1155,7 @@ public class RateUploadType {
          */
         public List<RateUploadType.AdditionalGuestAmounts.AdditionalGuestAmount> getAdditionalGuestAmount() {
             if (additionalGuestAmount == null) {
-                additionalGuestAmount = new ArrayList<RateUploadType.AdditionalGuestAmounts.AdditionalGuestAmount>();
+                additionalGuestAmount = new ArrayList<>();
             }
             return this.additionalGuestAmount;
         }
@@ -1272,7 +1272,7 @@ public class RateUploadType {
              */
             public List<ParagraphType> getAddlGuestAmtDescription() {
                 if (addlGuestAmtDescription == null) {
-                    addlGuestAmtDescription = new ArrayList<ParagraphType>();
+                    addlGuestAmtDescription = new ArrayList<>();
                 }
                 return this.addlGuestAmtDescription;
             }
@@ -1659,7 +1659,7 @@ public class RateUploadType {
          */
         public List<RateUploadType.BaseByGuestAmts.BaseByGuestAmt> getBaseByGuestAmt() {
             if (baseByGuestAmt == null) {
-                baseByGuestAmt = new ArrayList<RateUploadType.BaseByGuestAmts.BaseByGuestAmt>();
+                baseByGuestAmt = new ArrayList<>();
             }
             return this.baseByGuestAmt;
         }
@@ -1736,7 +1736,7 @@ public class RateUploadType {
              */
             public List<ParagraphType> getNumberOfGuestsDescription() {
                 if (numberOfGuestsDescription == null) {
-                    numberOfGuestsDescription = new ArrayList<ParagraphType>();
+                    numberOfGuestsDescription = new ArrayList<>();
                 }
                 return this.numberOfGuestsDescription;
             }
@@ -1966,7 +1966,7 @@ public class RateUploadType {
          */
         public List<GuaranteeType> getGuaranteePolicy() {
             if (guaranteePolicy == null) {
-                guaranteePolicy = new ArrayList<GuaranteeType>();
+                guaranteePolicy = new ArrayList<>();
             }
             return this.guaranteePolicy;
         }
@@ -2126,7 +2126,7 @@ public class RateUploadType {
          */
         public List<String> getMealPlanCodes() {
             if (mealPlanCodes == null) {
-                mealPlanCodes = new ArrayList<String>();
+                mealPlanCodes = new ArrayList<>();
             }
             return this.mealPlanCodes;
         }

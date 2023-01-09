@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigDecimal;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -47,7 +47,7 @@ import javax.xml.bind.annotation.XmlType;
     "discountReason"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.AmountType.Discount.class
+    com.ota.AmountType.Discount.class
 })
 public class DiscountType
     extends TotalType

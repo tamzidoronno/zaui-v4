@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -37,7 +37,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "TicketingInfoRS_Type")
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.PricedItineraryType.TicketingInfo.class
+    com.ota.PricedItineraryType.TicketingInfo.class
 })
 public class TicketingInfoRSType
     extends TicketingInfoType

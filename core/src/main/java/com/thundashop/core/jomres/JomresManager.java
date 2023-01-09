@@ -21,6 +21,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import com.thundashop.core.pmsmanager.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,14 +56,6 @@ import lombok.extern.slf4j.Slf4j;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
-import com.thundashop.core.pmsmanager.PmsBooking;
-import com.thundashop.core.pmsmanager.PmsBookingComment;
-import com.thundashop.core.pmsmanager.PmsBookingDateRange;
-import com.thundashop.core.pmsmanager.PmsBookingRooms;
-import com.thundashop.core.pmsmanager.PmsGuests;
-import com.thundashop.core.pmsmanager.PmsInvoiceManager;
-import com.thundashop.core.pmsmanager.PmsManager;
-import com.thundashop.core.pmsmanager.TimeRepeaterData;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.repository.utils.SessionInfo;
 
@@ -1042,7 +1035,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
             calStart.setTime(current);
             while (!current.after(room.date.end)) {
                 String currentDate = new SimpleDateFormat("yyyy-MM-dd").format(current);
-                String offset = PmsBookingRooms.getOffsetKey(calStart, PmsBooking.PriceType.daily);
+                String offset = PmsBookingRooms.getOffsetKey(calStart, PmsBookingConstant.PriceType.daily);
                 room.priceMatrix.put(offset, priceMatrix.get(currentDate));
                 calStart.add(Calendar.DATE, 1);
                 current = calStart.getTime();

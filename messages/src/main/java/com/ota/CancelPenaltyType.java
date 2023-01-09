@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -171,7 +171,7 @@ public class CancelPenaltyType {
      */
     public List<ParagraphType> getPenaltyDescription() {
         if (penaltyDescription == null) {
-            penaltyDescription = new ArrayList<ParagraphType>();
+            penaltyDescription = new ArrayList<>();
         }
         return this.penaltyDescription;
     }

@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -257,7 +257,7 @@ public class RoomStayLiteType {
      */
     public List<GuaranteeType> getGuarantee() {
         if (guarantee == null) {
-            guarantee = new ArrayList<GuaranteeType>();
+            guarantee = new ArrayList<>();
         }
         return this.guarantee;
     }
@@ -286,7 +286,7 @@ public class RoomStayLiteType {
      */
     public List<RequiredPaymentLiteType> getDepositPayment() {
         if (depositPayment == null) {
-            depositPayment = new ArrayList<RequiredPaymentLiteType>();
+            depositPayment = new ArrayList<>();
         }
         return this.depositPayment;
     }
@@ -627,7 +627,7 @@ public class RoomStayLiteType {
          */
         public List<RatePlanLiteType> getRatePlan() {
             if (ratePlan == null) {
-                ratePlan = new ArrayList<RatePlanLiteType>();
+                ratePlan = new ArrayList<>();
             }
             return this.ratePlan;
         }
@@ -687,7 +687,7 @@ public class RoomStayLiteType {
          */
         public List<RoomRateLiteType> getRoomRate() {
             if (roomRate == null) {
-                roomRate = new ArrayList<RoomRateLiteType>();
+                roomRate = new ArrayList<>();
             }
             return this.roomRate;
         }
@@ -747,7 +747,7 @@ public class RoomStayLiteType {
          */
         public List<RoomTypeLiteType> getRoomType() {
             if (roomType == null) {
-                roomType = new ArrayList<RoomTypeLiteType>();
+                roomType = new ArrayList<>();
             }
             return this.roomType;
         }

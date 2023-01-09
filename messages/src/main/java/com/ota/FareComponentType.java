@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -138,7 +138,7 @@ import javax.xml.bind.annotation.XmlType;
     "totalConstructionAmount"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.EMDType.ExchResidualFareComponent.class
+    com.ota.EMDType.ExchResidualFareComponent.class
 })
 public class FareComponentType {
 
@@ -182,7 +182,7 @@ public class FareComponentType {
      */
     public List<FareComponentType.PriceableUnit> getPriceableUnit() {
         if (priceableUnit == null) {
-            priceableUnit = new ArrayList<FareComponentType.PriceableUnit>();
+            priceableUnit = new ArrayList<>();
         }
         return this.priceableUnit;
     }
@@ -211,7 +211,7 @@ public class FareComponentType {
      */
     public List<FareComponentType.TotalConstructionAmount> getTotalConstructionAmount() {
         if (totalConstructionAmount == null) {
-            totalConstructionAmount = new ArrayList<FareComponentType.TotalConstructionAmount>();
+            totalConstructionAmount = new ArrayList<>();
         }
         return this.totalConstructionAmount;
     }
@@ -456,7 +456,7 @@ public class FareComponentType {
          */
         public List<FareComponentType.PriceableUnit.FareComponentDetail> getFareComponentDetail() {
             if (fareComponentDetail == null) {
-                fareComponentDetail = new ArrayList<FareComponentType.PriceableUnit.FareComponentDetail>();
+                fareComponentDetail = new ArrayList<>();
             }
             return this.fareComponentDetail;
         }
@@ -625,7 +625,7 @@ public class FareComponentType {
              */
             public List<FareComponentType.PriceableUnit.FareComponentDetail.CouponSequence> getCouponSequence() {
                 if (couponSequence == null) {
-                    couponSequence = new ArrayList<FareComponentType.PriceableUnit.FareComponentDetail.CouponSequence>();
+                    couponSequence = new ArrayList<>();
                 }
                 return this.couponSequence;
             }
@@ -654,7 +654,7 @@ public class FareComponentType {
              */
             public List<FareComponentType.PriceableUnit.FareComponentDetail.ConstructionPrinciple> getConstructionPrinciple() {
                 if (constructionPrinciple == null) {
-                    constructionPrinciple = new ArrayList<FareComponentType.PriceableUnit.FareComponentDetail.ConstructionPrinciple>();
+                    constructionPrinciple = new ArrayList<>();
                 }
                 return this.constructionPrinciple;
             }
@@ -683,7 +683,7 @@ public class FareComponentType {
              */
             public List<FareComponentType.PriceableUnit.FareComponentDetail.BaseAmount> getBaseAmount() {
                 if (baseAmount == null) {
-                    baseAmount = new ArrayList<FareComponentType.PriceableUnit.FareComponentDetail.BaseAmount>();
+                    baseAmount = new ArrayList<>();
                 }
                 return this.baseAmount;
             }
@@ -712,7 +712,7 @@ public class FareComponentType {
              */
             public List<FareComponentType.PriceableUnit.FareComponentDetail.TicketDesignator> getTicketDesignator() {
                 if (ticketDesignator == null) {
-                    ticketDesignator = new ArrayList<FareComponentType.PriceableUnit.FareComponentDetail.TicketDesignator>();
+                    ticketDesignator = new ArrayList<>();
                 }
                 return this.ticketDesignator;
             }

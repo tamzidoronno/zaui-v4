@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -143,7 +143,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "flightSegmentRPHs"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.TravelerInfoType.AirTraveler.class
+    com.ota.TravelerInfoType.AirTraveler.class
 })
 public class AirTravelerType {
 
@@ -258,7 +258,7 @@ public class AirTravelerType {
      */
     public List<AirTravelerType.Telephone> getTelephone() {
         if (telephone == null) {
-            telephone = new ArrayList<AirTravelerType.Telephone>();
+            telephone = new ArrayList<>();
         }
         return this.telephone;
     }
@@ -287,7 +287,7 @@ public class AirTravelerType {
      */
     public List<AirTravelerType.Email> getEmail() {
         if (email == null) {
-            email = new ArrayList<AirTravelerType.Email>();
+            email = new ArrayList<>();
         }
         return this.email;
     }
@@ -316,7 +316,7 @@ public class AirTravelerType {
      */
     public List<AirTravelerType.Address> getAddress() {
         if (address == null) {
-            address = new ArrayList<AirTravelerType.Address>();
+            address = new ArrayList<>();
         }
         return this.address;
     }
@@ -345,7 +345,7 @@ public class AirTravelerType {
      */
     public List<AirTravelerType.CustLoyalty> getCustLoyalty() {
         if (custLoyalty == null) {
-            custLoyalty = new ArrayList<AirTravelerType.CustLoyalty>();
+            custLoyalty = new ArrayList<>();
         }
         return this.custLoyalty;
     }
@@ -374,7 +374,7 @@ public class AirTravelerType {
      */
     public List<AirTravelerType.Document> getDocument() {
         if (document == null) {
-            document = new ArrayList<AirTravelerType.Document>();
+            document = new ArrayList<>();
         }
         return this.document;
     }
@@ -886,7 +886,7 @@ public class AirTravelerType {
          */
         public List<String> getVendorCode() {
             if (vendorCode == null) {
-                vendorCode = new ArrayList<String>();
+                vendorCode = new ArrayList<>();
             }
             return this.vendorCode;
         }
@@ -1388,7 +1388,7 @@ public class AirTravelerType {
          */
         public List<String> getFlightSegmentRPH() {
             if (flightSegmentRPH == null) {
-                flightSegmentRPH = new ArrayList<String>();
+                flightSegmentRPH = new ArrayList<>();
             }
             return this.flightSegmentRPH;
         }

@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,7 +98,7 @@ public class RoomStaysType {
      */
     public List<RoomStaysType.RoomStay> getRoomStay() {
         if (roomStay == null) {
-            roomStay = new ArrayList<RoomStaysType.RoomStay>();
+            roomStay = new ArrayList<>();
         }
         return this.roomStay;
     }

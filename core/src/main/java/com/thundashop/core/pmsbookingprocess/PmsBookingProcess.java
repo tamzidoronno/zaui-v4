@@ -60,6 +60,7 @@ import com.thundashop.core.pmsmanager.PmsBookingDateRange;
 import com.thundashop.core.pmsmanager.PmsBookingFilter;
 import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.pmsmanager.PmsConfiguration;
+import com.thundashop.core.pmsmanager.PmsBookingConstant;
 import com.thundashop.core.pmsmanager.PmsCoverageAndIncomeReportManager;
 import com.thundashop.core.pmsmanager.PmsGuests;
 import com.thundashop.core.pmsmanager.PmsInvoiceManager;
@@ -1300,7 +1301,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         room.numberOfGuests = numberofguests;
 
         PmsBooking booking = new PmsBooking();
-        booking.priceType = PmsBooking.PriceType.daily;
+        booking.priceType = PmsBookingConstant.PriceType.daily;
         booking.couponCode = discountcode;
         booking.userId = bookingProcessRoom.userId;
         pmsManager.setPriceOnRoom(room, true, booking);

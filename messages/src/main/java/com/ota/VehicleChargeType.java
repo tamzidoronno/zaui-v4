@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -112,9 +112,9 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 })
 @XmlSeeAlso({
     VehicleChargePurposeType.class,
-    org.opentravel.ota._2003._05.VehicleLocationAdditionalFeesType.Fees.Fee.class,
-    org.opentravel.ota._2003._05.VehicleLocationAdditionalFeesType.Surcharges.Surcharge.class,
-    org.opentravel.ota._2003._05.VehicleLocationAdditionalFeesType.MiscellaneousCharges.MiscellaneousCharge.class
+    com.ota.VehicleLocationAdditionalFeesType.Fees.Fee.class,
+    com.ota.VehicleLocationAdditionalFeesType.Surcharges.Surcharge.class,
+    com.ota.VehicleLocationAdditionalFeesType.MiscellaneousCharges.MiscellaneousCharge.class
 })
 public class VehicleChargeType {
 

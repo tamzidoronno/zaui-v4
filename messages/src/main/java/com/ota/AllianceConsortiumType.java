@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,7 +93,7 @@ public class AllianceConsortiumType {
      */
     public List<AllianceConsortiumType.AllianceMember> getAllianceMember() {
         if (allianceMember == null) {
-            allianceMember = new ArrayList<AllianceConsortiumType.AllianceMember>();
+            allianceMember = new ArrayList<>();
         }
         return this.allianceMember;
     }

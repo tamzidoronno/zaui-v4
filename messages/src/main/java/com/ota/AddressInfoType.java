@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -39,10 +39,10 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "AddressInfoType")
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.CustomerType.Address.class,
-    org.opentravel.ota._2003._05.CompanyInfoType.AddressInfo.class,
-    org.opentravel.ota._2003._05.AddressesType.Address.class,
-    org.opentravel.ota._2003._05.RequiredPaymentsType.GuaranteePayment.Address.class
+    com.ota.CustomerType.Address.class,
+    com.ota.CompanyInfoType.AddressInfo.class,
+    com.ota.AddressesType.Address.class,
+    com.ota.RequiredPaymentsType.GuaranteePayment.Address.class
 })
 public class AddressInfoType
     extends AddressType

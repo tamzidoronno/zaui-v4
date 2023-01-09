@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +56,7 @@ import javax.xml.bind.annotation.XmlType;
     "airRows"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.SeatMapDetailsType.CabinClass.class
+    com.ota.SeatMapDetailsType.CabinClass.class
 })
 public class CabinClassType {
 

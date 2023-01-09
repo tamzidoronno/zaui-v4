@@ -190,7 +190,7 @@ public class GotoHoldBookingService implements IGotoHoldBookingService {
         while (calendar.getTime().before(pmsBookingRoom.date.end)) {
             String dailyPriceKey = DAILY_PRICE_DATE_FORMATTER.format(calendar.getTime());
             Double price = dailyPricesFromGoto.get(dailyPriceKey);
-            pmsBookingRoom.priceMatrix.put(PmsBookingRooms.getOffsetKey(calendar, PmsBooking.PriceType.daily), price);
+            pmsBookingRoom.priceMatrix.put(PmsBookingRooms.getOffsetKey(calendar, PmsBookingConstant.PriceType.daily), price);
             calendar.add(Calendar.DATE, 1);
         }
         pmsBookingRoom.totalCost = gotoBookingRoom.getPrice().getTotalRoomPrice();

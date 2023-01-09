@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -84,7 +84,7 @@ public class MembershipType {
      */
     public List<MembershipType.Membership> getMembership() {
         if (membership == null) {
-            membership = new ArrayList<MembershipType.Membership>();
+            membership = new ArrayList<>();
         }
         return this.membership;
     }

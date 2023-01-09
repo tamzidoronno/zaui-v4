@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,7 +90,7 @@ public class HotelReservationIDsType {
      */
     public List<HotelReservationIDsType.HotelReservationID> getHotelReservationID() {
         if (hotelReservationID == null) {
-            hotelReservationID = new ArrayList<HotelReservationIDsType.HotelReservationID>();
+            hotelReservationID = new ArrayList<>();
         }
         return this.hotelReservationID;
     }

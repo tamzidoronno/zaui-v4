@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -178,7 +178,7 @@ public class RatePlanType {
      */
     public List<GuaranteeType> getGuarantee() {
         if (guarantee == null) {
-            guarantee = new ArrayList<GuaranteeType>();
+            guarantee = new ArrayList<>();
         }
         return this.guarantee;
     }
@@ -888,7 +888,7 @@ public class RatePlanType {
          */
         public List<String> getMealPlanCodes() {
             if (mealPlanCodes == null) {
-                mealPlanCodes = new ArrayList<String>();
+                mealPlanCodes = new ArrayList<>();
             }
             return this.mealPlanCodes;
         }
@@ -1057,7 +1057,7 @@ public class RatePlanType {
          */
         public List<String> getRestriction() {
             if (restriction == null) {
-                restriction = new ArrayList<String>();
+                restriction = new ArrayList<>();
             }
             return this.restriction;
         }
@@ -1086,7 +1086,7 @@ public class RatePlanType {
          */
         public List<String> getStatus() {
             if (status == null) {
-                status = new ArrayList<String>();
+                status = new ArrayList<>();
             }
             return this.status;
         }

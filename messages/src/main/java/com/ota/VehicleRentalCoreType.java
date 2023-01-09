@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -75,7 +75,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "returnLocation"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.VehicleRentalTransactionType.PickUpReturnDetails.class
+    com.ota.VehicleRentalTransactionType.PickUpReturnDetails.class
 })
 public class VehicleRentalCoreType {
 

@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -136,7 +136,7 @@ public class OrdersType {
      */
     public List<OrdersType.Order> getOrder() {
         if (order == null) {
-            order = new ArrayList<OrdersType.Order>();
+            order = new ArrayList<>();
         }
         return this.order;
     }
@@ -406,7 +406,7 @@ public class OrdersType {
          */
         public List<String> getListOfRecipientRPH() {
             if (listOfRecipientRPH == null) {
-                listOfRecipientRPH = new ArrayList<String>();
+                listOfRecipientRPH = new ArrayList<>();
             }
             return this.listOfRecipientRPH;
         }
@@ -489,7 +489,7 @@ public class OrdersType {
              */
             public List<OrdersType.Order.Products.Product> getProduct() {
                 if (product == null) {
-                    product = new ArrayList<OrdersType.Order.Products.Product>();
+                    product = new ArrayList<>();
                 }
                 return this.product;
             }
@@ -751,7 +751,7 @@ public class OrdersType {
                  */
                 public List<String> getListOfRecipientRPH() {
                     if (listOfRecipientRPH == null) {
-                        listOfRecipientRPH = new ArrayList<String>();
+                        listOfRecipientRPH = new ArrayList<>();
                     }
                     return this.listOfRecipientRPH;
                 }

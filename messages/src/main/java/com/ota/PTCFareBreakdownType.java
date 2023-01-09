@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -347,7 +347,7 @@ public class PTCFareBreakdownType {
      */
     public List<PTCFareBreakdownType.PassengerFare> getPassengerFare() {
         if (passengerFare == null) {
-            passengerFare = new ArrayList<PTCFareBreakdownType.PassengerFare>();
+            passengerFare = new ArrayList<>();
         }
         return this.passengerFare;
     }
@@ -376,7 +376,7 @@ public class PTCFareBreakdownType {
      */
     public List<PTCFareBreakdownType.TravelerRefNumber> getTravelerRefNumber() {
         if (travelerRefNumber == null) {
-            travelerRefNumber = new ArrayList<PTCFareBreakdownType.TravelerRefNumber>();
+            travelerRefNumber = new ArrayList<>();
         }
         return this.travelerRefNumber;
     }
@@ -453,7 +453,7 @@ public class PTCFareBreakdownType {
      */
     public List<PTCFareBreakdownType.FareInfo> getFareInfo() {
         if (fareInfo == null) {
-            fareInfo = new ArrayList<PTCFareBreakdownType.FareInfo>();
+            fareInfo = new ArrayList<>();
         }
         return this.fareInfo;
     }
@@ -482,7 +482,7 @@ public class PTCFareBreakdownType {
      */
     public List<PTCFareBreakdownType.PricingUnit> getPricingUnit() {
         if (pricingUnit == null) {
-            pricingUnit = new ArrayList<PTCFareBreakdownType.PricingUnit>();
+            pricingUnit = new ArrayList<>();
         }
         return this.pricingUnit;
     }
@@ -535,7 +535,7 @@ public class PTCFareBreakdownType {
      */
     public List<String> getFlightRefNumberRPHList() {
         if (flightRefNumberRPHList == null) {
-            flightRefNumberRPHList = new ArrayList<String>();
+            flightRefNumberRPHList = new ArrayList<>();
         }
         return this.flightRefNumberRPHList;
     }
@@ -607,7 +607,7 @@ public class PTCFareBreakdownType {
          */
         public List<PTCFareBreakdownType.Endorsements.Endorsement> getEndorsement() {
             if (endorsement == null) {
-                endorsement = new ArrayList<PTCFareBreakdownType.Endorsements.Endorsement>();
+                endorsement = new ArrayList<>();
             }
             return this.endorsement;
         }
@@ -768,7 +768,7 @@ public class PTCFareBreakdownType {
          */
         public List<FareBasisCodeType> getFareBasisCode() {
             if (fareBasisCode == null) {
-                fareBasisCode = new ArrayList<FareBasisCodeType>();
+                fareBasisCode = new ArrayList<>();
             }
             return this.fareBasisCode;
         }
@@ -1115,7 +1115,7 @@ public class PTCFareBreakdownType {
              */
             public List<PTCFareBreakdownType.PassengerFare.TicketFeeDetail.Fee> getFee() {
                 if (fee == null) {
-                    fee = new ArrayList<PTCFareBreakdownType.PassengerFare.TicketFeeDetail.Fee>();
+                    fee = new ArrayList<>();
                 }
                 return this.fee;
             }
@@ -1144,7 +1144,7 @@ public class PTCFareBreakdownType {
              */
             public List<PTCFareBreakdownType.PassengerFare.TicketFeeDetail.Total> getTotal() {
                 if (total == null) {
-                    total = new ArrayList<PTCFareBreakdownType.PassengerFare.TicketFeeDetail.Total>();
+                    total = new ArrayList<>();
                 }
                 return this.total;
             }
@@ -1494,7 +1494,7 @@ public class PTCFareBreakdownType {
                      */
                     public List<AirTaxType> getTax() {
                         if (tax == null) {
-                            tax = new ArrayList<AirTaxType>();
+                            tax = new ArrayList<>();
                         }
                         return this.tax;
                     }
@@ -1747,7 +1747,7 @@ public class PTCFareBreakdownType {
          */
         public List<PTCFareBreakdownType.PricingUnit.FareComponent> getFareComponent() {
             if (fareComponent == null) {
-                fareComponent = new ArrayList<PTCFareBreakdownType.PricingUnit.FareComponent>();
+                fareComponent = new ArrayList<>();
             }
             return this.fareComponent;
         }
@@ -1842,7 +1842,7 @@ public class PTCFareBreakdownType {
              */
             public List<PTCFareBreakdownType.PricingUnit.FareComponent.FlightLeg> getFlightLeg() {
                 if (flightLeg == null) {
-                    flightLeg = new ArrayList<PTCFareBreakdownType.PricingUnit.FareComponent.FlightLeg>();
+                    flightLeg = new ArrayList<>();
                 }
                 return this.flightLeg;
             }
@@ -2161,7 +2161,7 @@ public class PTCFareBreakdownType {
          */
         public List<PTCFareBreakdownType.TicketDesignators.TicketDesignator> getTicketDesignator() {
             if (ticketDesignator == null) {
-                ticketDesignator = new ArrayList<PTCFareBreakdownType.TicketDesignators.TicketDesignator>();
+                ticketDesignator = new ArrayList<>();
             }
             return this.ticketDesignator;
         }

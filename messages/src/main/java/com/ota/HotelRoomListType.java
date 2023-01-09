@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -906,7 +906,7 @@ public class HotelRoomListType {
          */
         public List<HotelRoomListType.Guests.Guest> getGuest() {
             if (guest == null) {
-                guest = new ArrayList<HotelRoomListType.Guests.Guest>();
+                guest = new ArrayList<>();
             }
             return this.guest;
         }
@@ -1043,7 +1043,7 @@ public class HotelRoomListType {
              */
             public List<HotelRoomListType.Guests.Guest.Loyalty> getLoyalty() {
                 if (loyalty == null) {
-                    loyalty = new ArrayList<HotelRoomListType.Guests.Guest.Loyalty>();
+                    loyalty = new ArrayList<>();
                 }
                 return this.loyalty;
             }
@@ -1072,7 +1072,7 @@ public class HotelRoomListType {
              */
             public List<HotelRoomListType.Guests.Guest.GuaranteePayment> getGuaranteePayment() {
                 if (guaranteePayment == null) {
-                    guaranteePayment = new ArrayList<HotelRoomListType.Guests.Guest.GuaranteePayment>();
+                    guaranteePayment = new ArrayList<>();
                 }
                 return this.guaranteePayment;
             }
@@ -1612,7 +1612,7 @@ public class HotelRoomListType {
          */
         public List<HotelRoomListType.MasterContact.Loyalty> getLoyalty() {
             if (loyalty == null) {
-                loyalty = new ArrayList<HotelRoomListType.MasterContact.Loyalty>();
+                loyalty = new ArrayList<>();
             }
             return this.loyalty;
         }
@@ -1851,7 +1851,7 @@ public class HotelRoomListType {
              */
             public List<UniqueIDType> getUniqueID() {
                 if (uniqueID == null) {
-                    uniqueID = new ArrayList<UniqueIDType>();
+                    uniqueID = new ArrayList<>();
                 }
                 return this.uniqueID;
             }
@@ -1933,7 +1933,7 @@ public class HotelRoomListType {
          */
         public List<HotelRoomListType.RoomStays.RoomStay> getRoomStay() {
             if (roomStay == null) {
-                roomStay = new ArrayList<HotelRoomListType.RoomStays.RoomStay>();
+                roomStay = new ArrayList<>();
             }
             return this.roomStay;
         }

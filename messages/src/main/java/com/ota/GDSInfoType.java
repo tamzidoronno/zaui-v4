@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -258,7 +258,7 @@ public class GDSInfoType {
          */
         public List<GDSInfoType.GDSCodes.GDSCode> getGDSCode() {
             if (gdsCode == null) {
-                gdsCode = new ArrayList<GDSInfoType.GDSCodes.GDSCode>();
+                gdsCode = new ArrayList<>();
             }
             return this.gdsCode;
         }
@@ -617,7 +617,7 @@ public class GDSInfoType {
                  */
                 public List<GDSInfoType.GDSCodes.GDSCode.GDSCodeDetails.GDSCodeDetail> getGDSCodeDetail() {
                     if (gdsCodeDetail == null) {
-                        gdsCodeDetail = new ArrayList<GDSInfoType.GDSCodes.GDSCode.GDSCodeDetails.GDSCodeDetail>();
+                        gdsCodeDetail = new ArrayList<>();
                     }
                     return this.gdsCodeDetail;
                 }

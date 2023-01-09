@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,10 +71,10 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
     "document"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.OrganizationType.OrgMemberName.class,
-    org.opentravel.ota._2003._05.DonationType.DonorInfo.Name.class,
-    org.opentravel.ota._2003._05.TravelClubType.ClubMemberName.class,
-    org.opentravel.ota._2003._05.VerificationType.PersonName.class
+    com.ota.OrganizationType.OrgMemberName.class,
+    com.ota.DonationType.DonorInfo.Name.class,
+    com.ota.TravelClubType.ClubMemberName.class,
+    com.ota.VerificationType.PersonName.class
 })
 public class PersonNameType {
 
@@ -127,7 +127,7 @@ public class PersonNameType {
      */
     public List<String> getNamePrefix() {
         if (namePrefix == null) {
-            namePrefix = new ArrayList<String>();
+            namePrefix = new ArrayList<>();
         }
         return this.namePrefix;
     }
@@ -156,7 +156,7 @@ public class PersonNameType {
      */
     public List<String> getGivenName() {
         if (givenName == null) {
-            givenName = new ArrayList<String>();
+            givenName = new ArrayList<>();
         }
         return this.givenName;
     }
@@ -185,7 +185,7 @@ public class PersonNameType {
      */
     public List<String> getMiddleName() {
         if (middleName == null) {
-            middleName = new ArrayList<String>();
+            middleName = new ArrayList<>();
         }
         return this.middleName;
     }
@@ -262,7 +262,7 @@ public class PersonNameType {
      */
     public List<String> getNameSuffix() {
         if (nameSuffix == null) {
-            nameSuffix = new ArrayList<String>();
+            nameSuffix = new ArrayList<>();
         }
         return this.nameSuffix;
     }
@@ -291,7 +291,7 @@ public class PersonNameType {
      */
     public List<String> getNameTitle() {
         if (nameTitle == null) {
-            nameTitle = new ArrayList<String>();
+            nameTitle = new ArrayList<>();
         }
         return this.nameTitle;
     }

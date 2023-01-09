@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,7 @@ import javax.xml.bind.annotation.XmlType;
     "charge"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.OperationSchedulesPlusChargeType.OperationSchedule.class
+    com.ota.OperationSchedulesPlusChargeType.OperationSchedule.class
 })
 public class OperationSchedulePlusChargeType
     extends OperationScheduleType
@@ -76,7 +76,7 @@ public class OperationSchedulePlusChargeType
      */
     public List<FeeType> getCharge() {
         if (charge == null) {
-            charge = new ArrayList<FeeType>();
+            charge = new ArrayList<>();
         }
         return this.charge;
     }

@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -61,7 +61,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
     "description"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.TextItemsType.TextItem.class
+    com.ota.TextItemsType.TextItem.class
 })
 public class TextDescriptionType {
 

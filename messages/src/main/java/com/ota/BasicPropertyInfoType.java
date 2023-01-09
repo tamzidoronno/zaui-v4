@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -317,7 +317,7 @@ public class BasicPropertyInfoType {
      */
     public List<BasicPropertyInfoType.Award> getAward() {
         if (award == null) {
-            award = new ArrayList<BasicPropertyInfoType.Award>();
+            award = new ArrayList<>();
         }
         return this.award;
     }
@@ -370,7 +370,7 @@ public class BasicPropertyInfoType {
      */
     public List<BasicPropertyInfoType.HotelAmenity> getHotelAmenity() {
         if (hotelAmenity == null) {
-            hotelAmenity = new ArrayList<BasicPropertyInfoType.HotelAmenity>();
+            hotelAmenity = new ArrayList<>();
         }
         return this.hotelAmenity;
     }
@@ -399,7 +399,7 @@ public class BasicPropertyInfoType {
      */
     public List<BasicPropertyInfoType.Recreation> getRecreation() {
         if (recreation == null) {
-            recreation = new ArrayList<BasicPropertyInfoType.Recreation>();
+            recreation = new ArrayList<>();
         }
         return this.recreation;
     }
@@ -428,7 +428,7 @@ public class BasicPropertyInfoType {
      */
     public List<BasicPropertyInfoType.Service> getService() {
         if (service == null) {
-            service = new ArrayList<BasicPropertyInfoType.Service>();
+            service = new ArrayList<>();
         }
         return this.service;
     }
@@ -932,7 +932,7 @@ public class BasicPropertyInfoType {
          */
         public List<BasicPropertyInfoType.ContactNumbers.ContactNumber> getContactNumber() {
             if (contactNumber == null) {
-                contactNumber = new ArrayList<BasicPropertyInfoType.ContactNumbers.ContactNumber>();
+                contactNumber = new ArrayList<>();
             }
             return this.contactNumber;
         }

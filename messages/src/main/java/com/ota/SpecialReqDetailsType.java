@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -351,7 +351,7 @@ public class SpecialReqDetailsType {
          */
         public List<SpecialReqDetailsType.OtherServiceInformations.OtherServiceInformation> getOtherServiceInformation() {
             if (otherServiceInformation == null) {
-                otherServiceInformation = new ArrayList<SpecialReqDetailsType.OtherServiceInformations.OtherServiceInformation>();
+                otherServiceInformation = new ArrayList<>();
             }
             return this.otherServiceInformation;
         }
@@ -500,7 +500,7 @@ public class SpecialReqDetailsType {
          */
         public List<SpecialReqDetailsType.Remarks.Remark> getRemark() {
             if (remark == null) {
-                remark = new ArrayList<SpecialReqDetailsType.Remarks.Remark>();
+                remark = new ArrayList<>();
             }
             return this.remark;
         }
@@ -676,7 +676,7 @@ public class SpecialReqDetailsType {
          */
         public List<SpecialReqDetailsType.SeatRequests.SeatRequest> getSeatRequest() {
             if (seatRequest == null) {
-                seatRequest = new ArrayList<SpecialReqDetailsType.SeatRequests.SeatRequest>();
+                seatRequest = new ArrayList<>();
             }
             return this.seatRequest;
         }
@@ -740,7 +740,7 @@ public class SpecialReqDetailsType {
              */
             public List<String> getTravelerRefNumberRPHList() {
                 if (travelerRefNumberRPHList == null) {
-                    travelerRefNumberRPHList = new ArrayList<String>();
+                    travelerRefNumberRPHList = new ArrayList<>();
                 }
                 return this.travelerRefNumberRPHList;
             }
@@ -769,7 +769,7 @@ public class SpecialReqDetailsType {
              */
             public List<String> getFlightRefNumberRPHList() {
                 if (flightRefNumberRPHList == null) {
-                    flightRefNumberRPHList = new ArrayList<String>();
+                    flightRefNumberRPHList = new ArrayList<>();
                 }
                 return this.flightRefNumberRPHList;
             }
@@ -867,7 +867,7 @@ public class SpecialReqDetailsType {
          */
         public List<SpecialReqDetailsType.SpecialRemarks.SpecialRemark> getSpecialRemark() {
             if (specialRemark == null) {
-                specialRemark = new ArrayList<SpecialReqDetailsType.SpecialRemarks.SpecialRemark>();
+                specialRemark = new ArrayList<>();
             }
             return this.specialRemark;
         }
@@ -1051,7 +1051,7 @@ public class SpecialReqDetailsType {
          */
         public List<SpecialReqDetailsType.SpecialServiceRequests.SpecialServiceRequest> getSpecialServiceRequest() {
             if (specialServiceRequest == null) {
-                specialServiceRequest = new ArrayList<SpecialReqDetailsType.SpecialServiceRequests.SpecialServiceRequest>();
+                specialServiceRequest = new ArrayList<>();
             }
             return this.specialServiceRequest;
         }
@@ -1147,7 +1147,7 @@ public class SpecialReqDetailsType {
              */
             public List<String> getTravelerRefNumberRPHList() {
                 if (travelerRefNumberRPHList == null) {
-                    travelerRefNumberRPHList = new ArrayList<String>();
+                    travelerRefNumberRPHList = new ArrayList<>();
                 }
                 return this.travelerRefNumberRPHList;
             }
@@ -1176,7 +1176,7 @@ public class SpecialReqDetailsType {
              */
             public List<String> getFlightRefNumberRPHList() {
                 if (flightRefNumberRPHList == null) {
-                    flightRefNumberRPHList = new ArrayList<String>();
+                    flightRefNumberRPHList = new ArrayList<>();
                 }
                 return this.flightRefNumberRPHList;
             }

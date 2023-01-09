@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -132,7 +132,7 @@ public class EmployerType {
      */
     public List<CompanyNameType> getRelatedEmployer() {
         if (relatedEmployer == null) {
-            relatedEmployer = new ArrayList<CompanyNameType>();
+            relatedEmployer = new ArrayList<>();
         }
         return this.relatedEmployer;
     }
@@ -161,7 +161,7 @@ public class EmployerType {
      */
     public List<EmployeeInfoType> getEmployeeInfo() {
         if (employeeInfo == null) {
-            employeeInfo = new ArrayList<EmployeeInfoType>();
+            employeeInfo = new ArrayList<>();
         }
         return this.employeeInfo;
     }
@@ -190,7 +190,7 @@ public class EmployerType {
      */
     public List<FreeTextType> getInternalRefNmbr() {
         if (internalRefNmbr == null) {
-            internalRefNmbr = new ArrayList<FreeTextType>();
+            internalRefNmbr = new ArrayList<>();
         }
         return this.internalRefNmbr;
     }
@@ -219,7 +219,7 @@ public class EmployerType {
      */
     public List<TravelArrangerType> getTravelArranger() {
         if (travelArranger == null) {
-            travelArranger = new ArrayList<TravelArrangerType>();
+            travelArranger = new ArrayList<>();
         }
         return this.travelArranger;
     }
@@ -248,7 +248,7 @@ public class EmployerType {
      */
     public List<LoyaltyProgramType> getLoyaltyProgram() {
         if (loyaltyProgram == null) {
-            loyaltyProgram = new ArrayList<LoyaltyProgramType>();
+            loyaltyProgram = new ArrayList<>();
         }
         return this.loyaltyProgram;
     }

@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,7 +82,7 @@ public class ProductDescriptionsType {
      */
     public List<ProductDescriptionsType.ProductDescription> getProductDescription() {
         if (productDescription == null) {
-            productDescription = new ArrayList<ProductDescriptionsType.ProductDescription>();
+            productDescription = new ArrayList<>();
         }
         return this.productDescription;
     }

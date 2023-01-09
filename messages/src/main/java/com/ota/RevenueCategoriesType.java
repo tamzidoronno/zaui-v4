@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +70,7 @@ public class RevenueCategoriesType {
      */
     public List<RevenueCategoryType> getRevenueCategory() {
         if (revenueCategory == null) {
-            revenueCategory = new ArrayList<RevenueCategoryType>();
+            revenueCategory = new ArrayList<>();
         }
         return this.revenueCategory;
     }

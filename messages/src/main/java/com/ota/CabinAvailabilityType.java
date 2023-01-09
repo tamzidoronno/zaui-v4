@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -131,7 +131,7 @@ public class CabinAvailabilityType {
      */
     public List<CabinAvailabilityType.Meal> getMeal() {
         if (meal == null) {
-            meal = new ArrayList<CabinAvailabilityType.Meal>();
+            meal = new ArrayList<>();
         }
         return this.meal;
     }
@@ -184,7 +184,7 @@ public class CabinAvailabilityType {
      */
     public List<CabinAvailabilityType.Entertainment> getEntertainment() {
         if (entertainment == null) {
-            entertainment = new ArrayList<CabinAvailabilityType.Entertainment>();
+            entertainment = new ArrayList<>();
         }
         return this.entertainment;
     }

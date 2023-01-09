@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +80,7 @@ public class CommentType {
      */
     public List<CommentType.Comment> getComment() {
         if (comment == null) {
-            comment = new ArrayList<CommentType.Comment>();
+            comment = new ArrayList<>();
         }
         return this.comment;
     }

@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -105,7 +105,7 @@ import javax.xml.bind.annotation.XmlType;
     "tpaExtensions"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.VehicleReservationType.VehSegmentCore.class
+    com.ota.VehicleReservationType.VehSegmentCore.class
 })
 public class VehicleSegmentCoreType {
 

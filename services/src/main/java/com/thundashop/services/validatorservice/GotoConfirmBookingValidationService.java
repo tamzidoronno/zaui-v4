@@ -38,7 +38,7 @@ public class GotoConfirmBookingValidationService implements IGotoConfirmBookingV
         validateBookingId(booking);
         validateOctoReservationIds(gotoConfirmBookingReq.getActivities(), booking.bookingZauiActivityItems);
         validateIfActivitiesConfirmed(gotoConfirmBookingReq.getActivities());
-        String requestedPaymentMethod = gotoConfirmBookingReq == null ? STAY_PAYMENT : gotoConfirmBookingReq.getPaymentMethod();
+        String requestedPaymentMethod = gotoConfirmBookingReq == null ? GOTO_PAYMENT : gotoConfirmBookingReq.getPaymentMethod();
         validatePaymentMethod(paymentId, requestedPaymentMethod);
         return booking;
     }
@@ -92,7 +92,7 @@ public class GotoConfirmBookingValidationService implements IGotoConfirmBookingV
 
     private void validatePaymentMethod(String paymentMethodId, String requestedPaymentMethod) throws GotoException {
         if(isBlank(requestedPaymentMethod))
-            requestedPaymentMethod = STAY_PAYMENT;
+            requestedPaymentMethod = GOTO_PAYMENT;
 
         if (isBlank(paymentMethodId) && requestedPaymentMethod.equals(GOTO_PAYMENT))
             throw new GotoException(PAYMENT_METHOD_NOT_FOUND.code, PAYMENT_METHOD_NOT_FOUND.message);

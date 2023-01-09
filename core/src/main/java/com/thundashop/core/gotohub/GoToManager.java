@@ -273,7 +273,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                     pmsManager.getSessionInfo(),
                     confirmBookingReq);
             pmsBooking = confirmBookingService.confirmGotoBooking(pmsBooking, confirmBookingReq, pmsManager.getSessionInfo());
-            String paymentMethodNameFromGoto = confirmBookingReq == null ? STAY_PAYMENT : confirmBookingReq.getPaymentMethod();
+            String paymentMethodNameFromGoto = confirmBookingReq == null ? GOTO_PAYMENT : confirmBookingReq.getPaymentMethod();
             String paymentLink = confirmPayment(pmsBooking, paymentMethodNameFromGoto);
             pmsManager.saveBooking(pmsBooking);
             return new GoToApiResponse(true, BOOKING_CONFIRMATION_SUCCESS.code, BOOKING_CONFIRMATION_SUCCESS.message,
@@ -567,17 +567,15 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     private String confirmPayment(PmsBooking pmsBooking, String gotoPaymentMethodName) throws Exception {
-        if(isNotBlank(gotoPaymentMethodName) && gotoPaymentMethodName.equals("GOTO_PAYMENT")) {
-            pmsManager.saveBooking(handleGotoPayment(pmsBooking));
-            return null;
-        }
-        else {
+        if(isNotBlank(gotoPaymentMethodName) && gotoPaymentMethodName.equals(STAY_PAYMENT)) {
             pmsBooking.shortId = isNotBlank(pmsBooking.shortId) ? pmsBooking.shortId : pmsManager.getShortUniqueId(pmsBooking.id);
             pmsManager.saveBooking(pmsBooking);
             String paymentLinkFromConfig = pmsInvoiceManager.getPaymentLinkConfig().webAdress;
             String paymentLinkBase = paymentLinkFromConfig.endsWith("/") ? paymentLinkFromConfig : paymentLinkFromConfig + "/";
             return paymentLinkBase + "pr.php?id=" + pmsBooking.shortId;
         }
+        pmsManager.saveBooking(handleGotoPayment(pmsBooking));
+        return null;
     }
 
     private PmsBooking handleGotoPayment(PmsBooking pmsBooking) throws Exception {

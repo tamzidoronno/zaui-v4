@@ -623,13 +623,12 @@ if (isset($_GET['page'])) {
         </script>';
     }
     // for goto payment status page redirection
-    if($_COOKIE['goto-redirect-url']){
+    if(isset($_SESSION['goto-redirect-url']) && strstr($_GET['page'],"payment_")){
         if($_GET['page']=='payment_success'){
-            header("Location: ".$_COOKIE['goto-redirect-url']."&payment-success=true");
-        }
+            $redirectUrl = $_SESSION['goto-redirect-url'].'&payment-success=true';
         if($_GET['page']=='payment_failed'){
-            header("Location: ".$_COOKIE['goto-redirect-url']."&payment-success=false");
-        }
+            $redirectUrl = $_SESSION['goto-redirect-url'].'&payment-success=false';
+        header("Location: $redirectUrl");
     }
 }
 ?>

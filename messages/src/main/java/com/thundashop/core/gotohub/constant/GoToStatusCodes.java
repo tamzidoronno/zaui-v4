@@ -47,7 +47,7 @@ public enum GoToStatusCodes {
         ACTIVITY_SUPPLIER_ID_INVALID(1325, "Goto Booking Failed.. Reason: Activity has invalid supplier id"),
         ACTIVITY_SUPPLIER_ID_NOT_CONNECTED(1326, "Goto Booking Failed.. Reason: Supplier is not connected with hotel"),
 
-        BOOKING_CONFIRMATION_SUCCESS(1400, "Goto Booking Has been Confirmed"),
+        BOOKING_CONFIRMATION_SUCCESS(1400, "Goto Booking has been confirmed"),
         BOOKING_CONFIRMATION_SUCCESS_WITH_PAYMENT_LINK(1400, "Payment link has been attached"),
         BOOKING_NOT_FOUND(1401, "Goto Booking Confirmation Failed.. Reason: Booking Not Found"),
         PAYMENT_FAILED(1402, "Goto Booking Confirmation Failed.. Reason: Payment failed"),

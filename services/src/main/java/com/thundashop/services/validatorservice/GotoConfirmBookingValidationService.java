@@ -1,14 +1,11 @@
 package com.thundashop.services.validatorservice;
 
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_DELETED;
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_NOT_FOUND;
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.PAYMENT_METHOD_NOT_FOUND;
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.OCTO_RESERVATION_ID_MISMATCHED;
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.OCTO_RESERVATION_NOT_CONFIRMED;
+import static com.thundashop.core.gotohub.constant.GoToStatusCodes.*;
 import static com.thundashop.core.gotohub.constant.GotoConstants.GOTO_PAYMENT;
 import static com.thundashop.core.gotohub.constant.GotoConstants.STAY_PAYMENT;
 import static com.thundashop.zauiactivity.constant.ZauiConstants.OCTO_CONFIRMED_STATUS;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import com.thundashop.core.gotohub.dto.GotoActivityConfirmationDto;
 import com.thundashop.core.gotohub.dto.GotoConfirmBookingRequest;
@@ -38,8 +35,7 @@ public class GotoConfirmBookingValidationService implements IGotoConfirmBookingV
         validateBookingId(booking);
         validateOctoReservationIds(gotoConfirmBookingReq.getActivities(), booking.bookingZauiActivityItems);
         validateIfActivitiesConfirmed(gotoConfirmBookingReq.getActivities());
-        String requestedPaymentMethod = gotoConfirmBookingReq == null ? GOTO_PAYMENT : gotoConfirmBookingReq.getPaymentMethod();
-        validatePaymentMethod(paymentId, requestedPaymentMethod);
+        validatePaymentMethod(paymentId, gotoConfirmBookingReq.getPaymentMethod(), gotoConfirmBookingReq.getActivities());
         return booking;
     }
 
@@ -90,12 +86,11 @@ public class GotoConfirmBookingValidationService implements IGotoConfirmBookingV
             throw new GotoException(OCTO_RESERVATION_NOT_CONFIRMED.code, OCTO_RESERVATION_NOT_CONFIRMED.message);
     }
 
-    private void validatePaymentMethod(String paymentMethodId, String requestedPaymentMethod) throws GotoException {
-        if(isBlank(requestedPaymentMethod))
-            requestedPaymentMethod = GOTO_PAYMENT;
-
-        if (isBlank(paymentMethodId) && requestedPaymentMethod.equals(GOTO_PAYMENT))
-            throw new GotoException(PAYMENT_METHOD_NOT_FOUND.code, PAYMENT_METHOD_NOT_FOUND.message);
+    private void validatePaymentMethod(String paymentMethodId, String requestedPaymentMethod,
+                                       List<GotoActivityConfirmationDto> activities) throws GotoException {
+        if(isNotBlank(requestedPaymentMethod) && requestedPaymentMethod.equals(GOTO_PAYMENT)) {
+            if(activities != null && activities.isEmpty()) throw new GotoException(ACTIVITY_GOTO_PAYMENT);
+            if(isBlank(paymentMethodId)) throw new GotoException(PAYMENT_METHOD_NOT_FOUND);
+        }
     }
-
 }

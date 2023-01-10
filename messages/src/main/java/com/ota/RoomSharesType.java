@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,7 +100,7 @@ public class RoomSharesType {
      */
     public List<RoomSharesType.RoomShare> getRoomShare() {
         if (roomShare == null) {
-            roomShare = new ArrayList<RoomSharesType.RoomShare>();
+            roomShare = new ArrayList<>();
         }
         return this.roomShare;
     }
@@ -237,7 +237,7 @@ public class RoomSharesType {
              */
             public List<RoomSharesType.RoomShare.GuestRPHs.GuestRPH> getGuestRPH() {
                 if (guestRPH == null) {
-                    guestRPH = new ArrayList<RoomSharesType.RoomShare.GuestRPHs.GuestRPH>();
+                    guestRPH = new ArrayList<>();
                 }
                 return this.guestRPH;
             }

@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +57,7 @@ import javax.xml.bind.annotation.XmlType;
     "text"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.SpecialReqDetailsType.OtherServiceInformations.OtherServiceInformation.class
+    com.ota.SpecialReqDetailsType.OtherServiceInformations.OtherServiceInformation.class
 })
 public class OtherServiceInfoType {
 
@@ -94,7 +94,7 @@ public class OtherServiceInfoType {
      */
     public List<OtherServiceInfoType.TravelerRefNumber> getTravelerRefNumber() {
         if (travelerRefNumber == null) {
-            travelerRefNumber = new ArrayList<OtherServiceInfoType.TravelerRefNumber>();
+            travelerRefNumber = new ArrayList<>();
         }
         return this.travelerRefNumber;
     }

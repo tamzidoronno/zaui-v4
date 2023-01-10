@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigInteger;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -46,7 +46,7 @@ import javax.xml.bind.annotation.XmlType;
     "description"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.VehicleRentalTransactionType.PricedEquips.PricedEquip.Equipment.class
+    com.ota.VehicleRentalTransactionType.PricedEquips.PricedEquip.Equipment.class
 })
 public class VehicleEquipmentType {
 

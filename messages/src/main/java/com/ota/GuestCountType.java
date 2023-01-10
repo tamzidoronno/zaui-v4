@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +83,7 @@ public class GuestCountType {
      */
     public List<GuestCountType.GuestCount> getGuestCount() {
         if (guestCount == null) {
-            guestCount = new ArrayList<GuestCountType.GuestCount>();
+            guestCount = new ArrayList<>();
         }
         return this.guestCount;
     }

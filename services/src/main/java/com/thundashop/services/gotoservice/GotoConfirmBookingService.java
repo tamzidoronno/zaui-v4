@@ -17,12 +17,13 @@ public class GotoConfirmBookingService implements IGotoConfirmBookingService {
     @Autowired
     IPmsBookingService pmsBookingService;
     @Override
-    public PmsBooking confirmGotoBooking(String bookingID, GotoConfirmBookingRequest confirmBookingReq, SessionInfo pmsManagerSession) {
-        return updateItemOctoBookings(bookingID, confirmBookingReq, pmsManagerSession);
+    public PmsBooking confirmGotoBooking(PmsBooking pmsBooking, GotoConfirmBookingRequest confirmBookingReq, SessionInfo pmsManagerSession) {
+        pmsBooking = updateItemOctoBookings(pmsBooking, confirmBookingReq, pmsManagerSession);
+        pmsBooking.paymentMethodNameFromGoto = confirmBookingReq.getPaymentMethod();
+        return pmsBooking;
     }
 
-    private PmsBooking updateItemOctoBookings(String bookingID, GotoConfirmBookingRequest confirmBookingReq, SessionInfo pmsManagerSession) {
-        PmsBooking pmsBooking = pmsBookingService.getPmsBookingById(bookingID, pmsManagerSession);
+    private PmsBooking updateItemOctoBookings(PmsBooking pmsBooking, GotoConfirmBookingRequest confirmBookingReq, SessionInfo pmsManagerSession) {
         if(confirmBookingReq == null)
             return pmsBooking;
         Map<String, BookingZauiActivityItem> octoResIdToItemMap = pmsBooking.bookingZauiActivityItems.stream()

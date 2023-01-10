@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +47,7 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "multimediaDescription"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.RestaurantType.MultimediaDescriptions.class
+    com.ota.RestaurantType.MultimediaDescriptions.class
 })
 public class MultimediaDescriptionsType {
 
@@ -81,7 +81,7 @@ public class MultimediaDescriptionsType {
      */
     public List<MultimediaDescriptionType> getMultimediaDescription() {
         if (multimediaDescription == null) {
-            multimediaDescription = new ArrayList<MultimediaDescriptionType>();
+            multimediaDescription = new ArrayList<>();
         }
         return this.multimediaDescription;
     }

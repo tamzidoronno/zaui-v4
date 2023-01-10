@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -101,8 +101,8 @@ import javax.xml.bind.annotation.XmlType;
     "stopLocation"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.PTCFareBreakdownType.PricingUnit.FareComponent.FlightLeg.class,
-    org.opentravel.ota._2003._05.OriginDestinationOptionType.FlightSegment.class
+    com.ota.PTCFareBreakdownType.PricingUnit.FareComponent.FlightLeg.class,
+    com.ota.OriginDestinationOptionType.FlightSegment.class
 })
 public class BookFlightSegmentType
     extends FlightSegmentType
@@ -193,7 +193,7 @@ public class BookFlightSegmentType
      */
     public List<BookFlightSegmentType.BookingClassAvails> getBookingClassAvails() {
         if (bookingClassAvails == null) {
-            bookingClassAvails = new ArrayList<BookFlightSegmentType.BookingClassAvails>();
+            bookingClassAvails = new ArrayList<>();
         }
         return this.bookingClassAvails;
     }
@@ -222,7 +222,7 @@ public class BookFlightSegmentType
      */
     public List<FreeTextType> getComment() {
         if (comment == null) {
-            comment = new ArrayList<FreeTextType>();
+            comment = new ArrayList<>();
         }
         return this.comment;
     }
@@ -251,7 +251,7 @@ public class BookFlightSegmentType
      */
     public List<BookFlightSegmentType.StopLocation> getStopLocation() {
         if (stopLocation == null) {
-            stopLocation = new ArrayList<BookFlightSegmentType.StopLocation>();
+            stopLocation = new ArrayList<>();
         }
         return this.stopLocation;
     }
@@ -633,7 +633,7 @@ public class BookFlightSegmentType
          */
         public List<BookFlightSegmentType.BookingClassAvails.BookingClassAvail> getBookingClassAvail() {
             if (bookingClassAvail == null) {
-                bookingClassAvail = new ArrayList<BookFlightSegmentType.BookingClassAvails.BookingClassAvail>();
+                bookingClassAvail = new ArrayList<>();
             }
             return this.bookingClassAvail;
         }

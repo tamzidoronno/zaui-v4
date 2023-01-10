@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -42,12 +42,12 @@ import javax.xml.bind.annotation.XmlValue;
     "value"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.AllianceConsortiumType.AllianceMember.class,
+    com.ota.AllianceConsortiumType.AllianceMember.class,
     OperatingAirlineType.class,
-    org.opentravel.ota._2003._05.VehicleAvailCoreType.Vendor.class,
+    com.ota.VehicleAvailCoreType.Vendor.class,
     TravelArrangerType.class,
-    org.opentravel.ota._2003._05.DirectBillType.CompanyName.class,
-    org.opentravel.ota._2003._05.FlightSegmentType.MarketingAirline.class,
+    com.ota.DirectBillType.CompanyName.class,
+    com.ota.FlightSegmentType.MarketingAirline.class,
     CompanyNamePrefType.class
 })
 public class CompanyNameType {

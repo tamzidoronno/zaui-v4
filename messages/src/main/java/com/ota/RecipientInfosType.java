@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -106,7 +106,7 @@ public class RecipientInfosType {
      */
     public List<RecipientInfosType.RecipientInfo> getRecipientInfo() {
         if (recipientInfo == null) {
-            recipientInfo = new ArrayList<RecipientInfosType.RecipientInfo>();
+            recipientInfo = new ArrayList<>();
         }
         return this.recipientInfo;
     }
@@ -194,7 +194,7 @@ public class RecipientInfosType {
          */
         public List<UniqueIDType> getReservationID() {
             if (reservationID == null) {
-                reservationID = new ArrayList<UniqueIDType>();
+                reservationID = new ArrayList<>();
             }
             return this.reservationID;
         }
@@ -300,7 +300,7 @@ public class RecipientInfosType {
              */
             public List<ParagraphType> getComment() {
                 if (comment == null) {
-                    comment = new ArrayList<ParagraphType>();
+                    comment = new ArrayList<>();
                 }
                 return this.comment;
             }

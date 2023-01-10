@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,7 +92,7 @@ public class InvCountType {
      */
     public List<BaseInvCountType> getInventory() {
         if (inventory == null) {
-            inventory = new ArrayList<BaseInvCountType>();
+            inventory = new ArrayList<>();
         }
         return this.inventory;
     }

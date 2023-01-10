@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -200,7 +200,7 @@ import javax.xml.bind.annotation.XmlType;
     "tpaExtensions"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.HotelSearchCriteriaType.Criterion.class
+    com.ota.HotelSearchCriteriaType.Criterion.class
 })
 public class HotelSearchCriterionType
     extends ItemSearchCriterionType
@@ -267,7 +267,7 @@ public class HotelSearchCriterionType
      */
     public List<HotelSearchCriterionType.HotelAmenity> getHotelAmenity() {
         if (hotelAmenity == null) {
-            hotelAmenity = new ArrayList<HotelSearchCriterionType.HotelAmenity>();
+            hotelAmenity = new ArrayList<>();
         }
         return this.hotelAmenity;
     }
@@ -296,7 +296,7 @@ public class HotelSearchCriterionType
      */
     public List<RoomAmenityPrefType> getRoomAmenity() {
         if (roomAmenity == null) {
-            roomAmenity = new ArrayList<RoomAmenityPrefType>();
+            roomAmenity = new ArrayList<>();
         }
         return this.roomAmenity;
     }
@@ -325,7 +325,7 @@ public class HotelSearchCriterionType
      */
     public List<HotelSearchCriterionType.HotelFeature> getHotelFeature() {
         if (hotelFeature == null) {
-            hotelFeature = new ArrayList<HotelSearchCriterionType.HotelFeature>();
+            hotelFeature = new ArrayList<>();
         }
         return this.hotelFeature;
     }
@@ -354,7 +354,7 @@ public class HotelSearchCriterionType
      */
     public List<HotelSearchCriterionType.Award> getAward() {
         if (award == null) {
-            award = new ArrayList<HotelSearchCriterionType.Award>();
+            award = new ArrayList<>();
         }
         return this.award;
     }
@@ -383,7 +383,7 @@ public class HotelSearchCriterionType
      */
     public List<HotelSearchCriterionType.Recreation> getRecreation() {
         if (recreation == null) {
-            recreation = new ArrayList<HotelSearchCriterionType.Recreation>();
+            recreation = new ArrayList<>();
         }
         return this.recreation;
     }
@@ -412,7 +412,7 @@ public class HotelSearchCriterionType
      */
     public List<HotelSearchCriterionType.Service> getService() {
         if (service == null) {
-            service = new ArrayList<HotelSearchCriterionType.Service>();
+            service = new ArrayList<>();
         }
         return this.service;
     }
@@ -441,7 +441,7 @@ public class HotelSearchCriterionType
      */
     public List<HotelSearchCriterionType.Transportation> getTransportation() {
         if (transportation == null) {
-            transportation = new ArrayList<HotelSearchCriterionType.Transportation>();
+            transportation = new ArrayList<>();
         }
         return this.transportation;
     }
@@ -494,7 +494,7 @@ public class HotelSearchCriterionType
      */
     public List<HotelSearchCriterionType.RateRange> getRateRange() {
         if (rateRange == null) {
-            rateRange = new ArrayList<HotelSearchCriterionType.RateRange>();
+            rateRange = new ArrayList<>();
         }
         return this.rateRange;
     }
@@ -619,7 +619,7 @@ public class HotelSearchCriterionType
      */
     public List<HotelSearchCriterionType.Media> getMedia() {
         if (media == null) {
-            media = new ArrayList<HotelSearchCriterionType.Media>();
+            media = new ArrayList<>();
         }
         return this.media;
     }
@@ -1165,7 +1165,7 @@ public class HotelSearchCriterionType
          */
         public List<String> getCode() {
             if (code == null) {
-                code = new ArrayList<String>();
+                code = new ArrayList<>();
             }
             return this.code;
         }
@@ -1565,7 +1565,7 @@ public class HotelSearchCriterionType
          */
         public List<RebateType> getRebateProgram() {
             if (rebateProgram == null) {
-                rebateProgram = new ArrayList<RebateType>();
+                rebateProgram = new ArrayList<>();
             }
             return this.rebateProgram;
         }
@@ -1676,7 +1676,7 @@ public class HotelSearchCriterionType
          */
         public List<RoomStayCandidateType> getRoomStayCandidate() {
             if (roomStayCandidate == null) {
-                roomStayCandidate = new ArrayList<RoomStayCandidateType>();
+                roomStayCandidate = new ArrayList<>();
             }
             return this.roomStayCandidate;
         }

@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -161,7 +161,7 @@ public class CancelInfoRSType {
          */
         public List<CancelRuleType> getCancelRule() {
             if (cancelRule == null) {
-                cancelRule = new ArrayList<CancelRuleType>();
+                cancelRule = new ArrayList<>();
             }
             return this.cancelRule;
         }

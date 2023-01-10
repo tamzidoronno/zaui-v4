@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,7 @@ import javax.xml.bind.annotation.XmlType;
     "fee"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.GuestRoomType.RoomLevelFees.class
+    com.ota.GuestRoomType.RoomLevelFees.class
 })
 public class FeesType {
 
@@ -74,7 +74,7 @@ public class FeesType {
      */
     public List<FeeType> getFee() {
         if (fee == null) {
-            fee = new ArrayList<FeeType>();
+            fee = new ArrayList<>();
         }
         return this.fee;
     }

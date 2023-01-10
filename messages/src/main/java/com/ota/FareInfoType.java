@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -199,8 +199,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "airport"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.PTCFareBreakdownType.FareInfo.class,
-    org.opentravel.ota._2003._05.AirItineraryPricingInfoType.FareInfos.FareInfo.class
+    com.ota.PTCFareBreakdownType.FareInfo.class,
+    com.ota.AirItineraryPricingInfoType.FareInfos.FareInfo.class
 })
 public class FareInfoType {
 
@@ -292,7 +292,7 @@ public class FareInfoType {
      */
     public List<FareInfoType.FareReference> getFareReference() {
         if (fareReference == null) {
-            fareReference = new ArrayList<FareInfoType.FareReference>();
+            fareReference = new ArrayList<>();
         }
         return this.fareReference;
     }
@@ -369,7 +369,7 @@ public class FareInfoType {
      */
     public List<CompanyNameType> getMarketingAirline() {
         if (marketingAirline == null) {
-            marketingAirline = new ArrayList<CompanyNameType>();
+            marketingAirline = new ArrayList<>();
         }
         return this.marketingAirline;
     }
@@ -446,7 +446,7 @@ public class FareInfoType {
      */
     public List<FareInfoType.Date> getDate() {
         if (date == null) {
-            date = new ArrayList<FareInfoType.Date>();
+            date = new ArrayList<>();
         }
         return this.date;
     }
@@ -475,7 +475,7 @@ public class FareInfoType {
      */
     public List<FareInfoType.FareInfo> getFareInfo() {
         if (fareInfo == null) {
-            fareInfo = new ArrayList<FareInfoType.FareInfo>();
+            fareInfo = new ArrayList<>();
         }
         return this.fareInfo;
     }
@@ -528,7 +528,7 @@ public class FareInfoType {
      */
     public List<FareInfoType.City> getCity() {
         if (city == null) {
-            city = new ArrayList<FareInfoType.City>();
+            city = new ArrayList<>();
         }
         return this.city;
     }
@@ -557,7 +557,7 @@ public class FareInfoType {
      */
     public List<FareInfoType.Airport> getAirport() {
         if (airport == null) {
-            airport = new ArrayList<FareInfoType.Airport>();
+            airport = new ArrayList<>();
         }
         return this.airport;
     }
@@ -1280,7 +1280,7 @@ public class FareInfoType {
          */
         public List<FareInfoType.FareInfo.Date> getDate() {
             if (date == null) {
-                date = new ArrayList<FareInfoType.FareInfo.Date>();
+                date = new ArrayList<>();
             }
             return this.date;
         }
@@ -1333,7 +1333,7 @@ public class FareInfoType {
          */
         public List<FareInfoType.FareInfo.PTC> getPTC() {
             if (ptc == null) {
-                ptc = new ArrayList<FareInfoType.FareInfo.PTC>();
+                ptc = new ArrayList<>();
             }
             return this.ptc;
         }

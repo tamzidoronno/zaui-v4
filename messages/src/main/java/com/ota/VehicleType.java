@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -74,9 +74,9 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "vehIdentity"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.VehicleRentalTransactionType.Vehicle.class,
-    org.opentravel.ota._2003._05.VehicleLocationVehiclesType.Vehicle.class,
-    org.opentravel.ota._2003._05.VehicleLocationLiabilitiesType.Coverages.Coverage.CoverageFees.CoverageFee.Vehicles.Vehicle.class
+    com.ota.VehicleRentalTransactionType.Vehicle.class,
+    com.ota.VehicleLocationVehiclesType.Vehicle.class,
+    com.ota.VehicleLocationLiabilitiesType.Coverages.Coverage.CoverageFees.CoverageFee.Vehicles.Vehicle.class
 })
 public class VehicleType
     extends VehicleCoreType

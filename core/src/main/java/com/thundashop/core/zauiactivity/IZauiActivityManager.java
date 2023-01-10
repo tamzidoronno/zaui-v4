@@ -8,7 +8,7 @@ import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
 import com.thundashop.core.pmsbookingprocess.GuestAddonsSummary;
 import com.thundashop.repository.exceptions.NotUniqueDataException;
-import com.thundashop.repository.exceptions.ZauiException;
+import com.thundashop.core.common.ZauiException;
 import com.thundashop.zauiactivity.dto.*;
 
 /**
@@ -20,7 +20,7 @@ import com.thundashop.zauiactivity.dto.*;
 public interface IZauiActivityManager {
     ZauiActivityConfig getActivityConfig() throws NotUniqueDataException;
 
-    ZauiActivityConfig updateActivityConfig(ZauiActivityConfig newActivityConfig);
+    ZauiActivityConfig updateActivityConfig(ZauiActivityConfig newActivityConfig) throws NotUniqueDataException;
 
     List<OctoSupplier> getAllSuppliers() throws ZauiException;
 
@@ -36,7 +36,7 @@ public interface IZauiActivityManager {
 
     GuestAddonsSummary addActivityToWebBooking(AddZauiActivityToWebBookingDto activity) throws ZauiException;
 
-    GuestAddonsSummary removeActivityFromWebBooking(AddZauiActivityToWebBookingDto activity) throws ZauiException;
+    GuestAddonsSummary removeActivityFromBooking(String activity, String pmsBookingId);
 
     void cancelActivity(String pmsBookingId, String octoBookingId) throws ZauiException;
 

@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -170,7 +170,7 @@ public class MeetingRoomsType {
      */
     public List<MeetingRoomsType.MeetingRoom> getMeetingRoom() {
         if (meetingRoom == null) {
-            meetingRoom = new ArrayList<MeetingRoomsType.MeetingRoom>();
+            meetingRoom = new ArrayList<>();
         }
         return this.meetingRoom;
     }
@@ -1008,7 +1008,7 @@ public class MeetingRoomsType {
              */
             public List<MeetingRoomCapacityType> getMeetingRoomCapacity() {
                 if (meetingRoomCapacity == null) {
-                    meetingRoomCapacity = new ArrayList<MeetingRoomCapacityType>();
+                    meetingRoomCapacity = new ArrayList<>();
                 }
                 return this.meetingRoomCapacity;
             }
@@ -1068,7 +1068,7 @@ public class MeetingRoomsType {
              */
             public List<MeetingRoomCodeType> getCode() {
                 if (code == null) {
-                    code = new ArrayList<MeetingRoomCodeType>();
+                    code = new ArrayList<>();
                 }
                 return this.code;
             }

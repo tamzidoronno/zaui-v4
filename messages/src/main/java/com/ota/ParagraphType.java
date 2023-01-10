@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -66,10 +66,10 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "textOrImageOrURL"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.ProfileType.Comments.Comment.class,
-    org.opentravel.ota._2003._05.SpecialRequestType.SpecialRequest.class,
-    org.opentravel.ota._2003._05.CommentType.Comment.class,
-    org.opentravel.ota._2003._05.InvBlockType.BlockDescriptions.BlockDescription.class
+    com.ota.ProfileType.Comments.Comment.class,
+    com.ota.SpecialRequestType.SpecialRequest.class,
+    com.ota.CommentType.Comment.class,
+    com.ota.InvBlockType.BlockDescriptions.BlockDescription.class
 })
 public class ParagraphType {
 

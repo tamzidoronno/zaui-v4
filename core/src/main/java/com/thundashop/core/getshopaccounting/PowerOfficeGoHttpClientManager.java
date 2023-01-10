@@ -1,23 +1,22 @@
 package com.thundashop.core.getshopaccounting;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.thundashop.core.webmanager.ZauiHttpRequest;
 import com.thundashop.core.webmanager.ZauiHttpResponse;
-import com.thundashop.services.core.httpservice.ZauiHttpService;
+import com.thundashop.services.core.httpservice.IZauiHttpService;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class PowerOfficeGoHttpClientManager {
 
-    private static final Logger logger = LoggerFactory.getLogger(PowerOfficeGoHttpClientManager.class);
-
-    private final ZauiHttpService okHttpService;
+    private final IZauiHttpService okHttpService;
 
     @Autowired
-    public PowerOfficeGoHttpClientManager(ZauiHttpService okHttpService) {
+    public PowerOfficeGoHttpClientManager(IZauiHttpService okHttpService) {
         this.okHttpService = okHttpService;
     }
 
@@ -32,7 +31,7 @@ public class PowerOfficeGoHttpClientManager {
         ZauiHttpResponse response = okHttpService.post(request);
 
         if (!response.isSuccessful()) {
-            logger.warn("PowerOfficeGo api error response: {}", response);
+            log.warn("PowerOfficeGo api error response: {}", response);
             throw new RuntimeException("PowerOfficeGo api error statusCode: " + response.statusCode());
         }
 

@@ -112,6 +112,7 @@ import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCard;
 import com.thundashop.core.utils.BrRegEngine;
 import com.thundashop.core.utils.Constants;
+import com.thundashop.core.utils.DateUtils;
 import com.thundashop.core.utils.UtilManager;
 import com.thundashop.core.webmanager.WebManager;
 import com.thundashop.core.wubook.WubookManager;
@@ -471,7 +472,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             room.date.end = end;
 
             PmsBooking booking = new PmsBooking();
-            booking.priceType = PmsBooking.PriceType.daily;
+            booking.priceType = PmsBookingConstant.PriceType.daily;
 
             setPriceOnRoom(room, true, booking);
 
@@ -990,7 +991,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         }
 
         PmsPricing prices = getPriceObjectFromBooking(booking);
-        if (prices != null && prices.defaultPriceType == PmsBooking.PriceType.daily && (configuration.getRequirePayments() || storeManager.isPikStore())) {
+        if (prices != null && prices.defaultPriceType == PmsBookingConstant.PriceType.daily && (configuration.getRequirePayments() || storeManager.isPikStore())) {
             booking.calculateTotalCost();
         }
 
@@ -3058,6 +3059,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         room.date = new PmsBookingDateRange();
         room.date.start = start;
         room.date.end = end;
+        // GD-802: auto fix booking creation (checkin time after checkout time on same day) 
+        if (room.date.start.after(room.date.end)) {
+            room.date.end = DateUtils.getCorrectCheckOutDate(room.date.start, room.date.end);
+        }
         PmsGuests guest = new PmsGuests();
         guest.prefix = storeManager.getPrefix();
         guest.name = "";
@@ -3090,7 +3095,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         logEntry(typeToAdd.name + " added to booking " + " time: " + convertToStandardTime(start) + " " + convertToStandardTime(end), bookingId, null);
         processor();
         return room.pmsBookingRoomId;
-    }
+    }    
 
     private Booking createBooking(PmsBookingRooms room) {
         Booking bookingToAdd = new Booking();
@@ -4608,11 +4613,11 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         Calendar cal = Calendar.getInstance();
         cal.setTime(start);
 
-        if (priceType == PmsBooking.PriceType.daily) {
+        if (priceType == PmsBookingConstant.PriceType.daily) {
             cal.add(Calendar.DAY_OF_YEAR, 1);
-        } else if (priceType == PmsBooking.PriceType.weekly) {
+        } else if (priceType == PmsBookingConstant.PriceType.weekly) {
             cal.add(Calendar.DAY_OF_YEAR, 7);
-        } else if (priceType == PmsBooking.PriceType.hourly) {
+        } else if (priceType == PmsBookingConstant.PriceType.hourly) {
             cal.add(Calendar.HOUR, 1);
         } else {
             cal.add(Calendar.DAY_OF_YEAR, 1);

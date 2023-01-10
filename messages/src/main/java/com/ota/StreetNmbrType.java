@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -40,7 +40,7 @@ import javax.xml.bind.annotation.XmlValue;
     "value"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.AddressType.StreetNmbr.class
+    com.ota.AddressType.StreetNmbr.class
 })
 public class StreetNmbrType {
 

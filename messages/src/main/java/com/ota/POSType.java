@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +70,7 @@ public class POSType {
      */
     public List<SourceType> getSource() {
         if (source == null) {
-            source = new ArrayList<SourceType>();
+            source = new ArrayList<>();
         }
         return this.source;
     }

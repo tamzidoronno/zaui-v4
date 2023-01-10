@@ -18,7 +18,8 @@ import javax.annotation.PostConstruct;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 
-import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
+import com.thundashop.core.utils.Constants;
+
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
@@ -27,18 +28,21 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
  */
 @Component
 public class FrameworkConfig {
-
     public boolean productionMode = false;
+    @Getter
     private String storeCreationIP = "";
     @Getter
     private String gotoCancellationEndpoint = "";
     @Getter
     private String gotoCancellationAuthKey = "";
+    @Getter
+    private String easyByNetPaymentUrl = "";
 
     @PostConstruct
     public void readConfig() {
         File f = getConfigFile();
-        if(f == null) return;
+        if (f == null)
+            return;
         Map<String, String> configValues = getConfigValues(f);
         setVariables(configValues);
     }
@@ -50,8 +54,9 @@ public class FrameworkConfig {
             f = new File("../config.txt");
 
             if (!f.exists()) {
-                GetShopLogHandler.logPrintStatic("WARNING: Did not find framework config file (config.txt or ../config.txt)," +
-                        " using default configs", null);
+                GetShopLogHandler
+                        .logPrintStatic("WARNING: Did not find framework config file (config.txt or ../config.txt)," +
+                                " using default configs", null);
                 return null;
             }
         }
@@ -67,7 +72,7 @@ public class FrameworkConfig {
             try {
                 while ((line = br.readLine()) != null) {
                     String[] content = line.split(",");
-                    if(content.length<2 || isBlank(content[0]) || isBlank(content[1]))
+                    if (content.length < 2 || isBlank(content[0]) || isBlank(content[1]))
                         continue;
                     configValues.put(content[0].toLowerCase(), content[1]);
                 }
@@ -78,7 +83,9 @@ public class FrameworkConfig {
             Logger.getLogger(FrameworkConfig.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
-                br.close();
+                if (br != null) {
+                    br.close();
+                }
             } catch (IOException ex) {
                 Logger.getLogger(FrameworkConfig.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -87,25 +94,18 @@ public class FrameworkConfig {
     }
 
     private void setVariables(Map<String, String> configValues) {
-        productionMode = configValues.containsKey("productionmode") ?
-                configValues.get("productionmode").equals("true") : productionMode;
-        storeCreationIP = configValues.containsKey("storeCreationIP") ?
-                configValues.get("storeCreationIP") : storeCreationIP;
-        gotoCancellationEndpoint = configValues.containsKey("gotocancellationendpoint") ?
-                configValues.get("gotocancellationendpoint") : gotoCancellationEndpoint;
-        gotoCancellationAuthKey = configValues.containsKey("gotocancellationauthkey") ?
-                configValues.get("gotocancellationauthkey") : gotoCancellationAuthKey;
-    }
-
-    private void setVariables(String[] content) {
-        if (content[0].toLowerCase().equals("productionmode")) {
-            productionMode = content[1].toLowerCase().equals("true");
-        } else if (equalsIgnoreCase(content[0], "storeCreationIP")) {
-            storeCreationIP = content[1].trim();
-        }
-    }
-
-    public String getStoreCreationIP() {
-        return storeCreationIP;
+        productionMode = configValues.containsKey("productionmode") ? configValues.get("productionmode").equals("true")
+                : productionMode;
+        storeCreationIP = configValues.containsKey("storeCreationIP") ? configValues.get("storeCreationIP")
+                : storeCreationIP;
+        gotoCancellationEndpoint = configValues.containsKey("gotocancellationendpoint")
+                ? configValues.get("gotocancellationendpoint")
+                : gotoCancellationEndpoint;
+        gotoCancellationAuthKey = configValues.containsKey("gotocancellationauthkey")
+                ? configValues.get("gotocancellationauthkey")
+                : gotoCancellationAuthKey;
+        easyByNetPaymentUrl = configValues.containsKey("easybynetpaymenturl")
+        ? configValues.get("easybynetpaymenturl")
+        : productionMode ? Constants.EASYBYNET_PROD_PAYMENT_URL : Constants.EASYBYNET_TEST_PAYMENT_URL;
     }
 }

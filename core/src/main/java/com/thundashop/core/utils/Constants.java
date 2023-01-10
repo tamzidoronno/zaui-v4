@@ -8,4 +8,6 @@ public class Constants {
     public static String GOTO_CLIENT_URL = "https://adlevodev.com/gateway/hotel/v1/channel-manager/inventory-push/zauistay";
     public static Integer MAX_PHONE_PREFIX_DIGIT = 6;
     public static String SYSTEM_SCHEDULER_USER = "gs_system_scheduler_user";
+    public static String EASYBYNET_TEST_PAYMENT_URL = "https://test.api.dibspayment.eu/v1/payments/";
+    public static String EASYBYNET_PROD_PAYMENT_URL = "https://api.dibspayment.eu/v1/payments/";
 }

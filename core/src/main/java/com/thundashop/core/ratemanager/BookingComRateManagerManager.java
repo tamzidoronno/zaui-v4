@@ -37,10 +37,10 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import org.opentravel.ota._2003._05.BaseInvCountType;
-import org.opentravel.ota._2003._05.InvCountType;
-import org.opentravel.ota._2003._05.OTAHotelInvCountNotifRQ;
-import org.opentravel.ota._2003._05.StatusApplicationControlType;
+import com.ota.BaseInvCountType;
+import com.ota.InvCountType;
+import com.ota.OTAHotelInvCountNotifRQ;
+import com.ota.StatusApplicationControlType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

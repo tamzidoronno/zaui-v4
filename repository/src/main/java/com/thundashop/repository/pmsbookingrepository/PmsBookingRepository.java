@@ -48,6 +48,7 @@ public class PmsBookingRepository extends Repository<PmsBooking> implements IPms
         query.put("deleted", null);
         return getFirst(query, sessionInfo).orElse(null);
     }
+    
     @Override
     public PmsBooking getPmsBookingByZauiActivityItemId(String activityItemId, SessionInfo sessionInfo) {
         DBObject query = new BasicDBObject();

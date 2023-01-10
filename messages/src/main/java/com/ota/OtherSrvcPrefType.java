@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -130,7 +130,7 @@ public class OtherSrvcPrefType {
      */
     public List<CompanyNamePrefType> getVendorPref() {
         if (vendorPref == null) {
-            vendorPref = new ArrayList<CompanyNamePrefType>();
+            vendorPref = new ArrayList<>();
         }
         return this.vendorPref;
     }

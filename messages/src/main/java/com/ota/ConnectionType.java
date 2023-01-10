@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -104,7 +104,7 @@ public class ConnectionType {
      */
     public List<ConnectionType.ConnectionLocation> getConnectionLocation() {
         if (connectionLocation == null) {
-            connectionLocation = new ArrayList<ConnectionType.ConnectionLocation>();
+            connectionLocation = new ArrayList<>();
         }
         return this.connectionLocation;
     }

@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,7 @@ import javax.xml.bind.annotation.XmlType;
     "paymentRule"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.RateRulesType.PaymentRules.class
+    com.ota.RateRulesType.PaymentRules.class
 })
 public class PaymentRulesType {
 
@@ -74,7 +74,7 @@ public class PaymentRulesType {
      */
     public List<MonetaryRuleType> getPaymentRule() {
         if (paymentRule == null) {
-            paymentRule = new ArrayList<MonetaryRuleType>();
+            paymentRule = new ArrayList<>();
         }
         return this.paymentRule;
     }

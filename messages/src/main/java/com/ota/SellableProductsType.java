@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -141,7 +141,7 @@ public class SellableProductsType {
      */
     public List<SellableProductsType.SellableProduct> getSellableProduct() {
         if (sellableProduct == null) {
-            sellableProduct = new ArrayList<SellableProductsType.SellableProduct>();
+            sellableProduct = new ArrayList<>();
         }
         return this.sellableProduct;
     }
@@ -792,7 +792,7 @@ public class SellableProductsType {
              */
             public List<SellableProductsType.SellableProduct.DestinationSystemCodes.DestinationSystemCode> getDestinationSystemCode() {
                 if (destinationSystemCode == null) {
-                    destinationSystemCode = new ArrayList<SellableProductsType.SellableProduct.DestinationSystemCodes.DestinationSystemCode>();
+                    destinationSystemCode = new ArrayList<>();
                 }
                 return this.destinationSystemCode;
             }

@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +80,7 @@ public class ServiceRPHsType {
      */
     public List<ServiceRPHsType.ServiceRPH> getServiceRPH() {
         if (serviceRPH == null) {
-            serviceRPH = new ArrayList<ServiceRPHsType.ServiceRPH>();
+            serviceRPH = new ArrayList<>();
         }
         return this.serviceRPH;
     }

@@ -49,10 +49,7 @@ public class EasyByNetService {
             log.error("Payment ID required");
             return null;
         }
-        String url = "https://test.api.dibspayment.eu/v1/payments/";
-        if(frameworkConfig.productionMode) {
-            url = "https://api.dibspayment.eu/v1/payments/";
-        }
+        String url = frameworkConfig.getEasyByNetPaymentUrl();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
                 .addConverterFactory(GsonConverterFactory.create())

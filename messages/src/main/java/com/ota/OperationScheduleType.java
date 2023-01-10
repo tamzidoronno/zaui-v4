@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -241,7 +241,7 @@ public class OperationScheduleType {
          */
         public List<OperationScheduleType.OperationTimes.OperationTime> getOperationTime() {
             if (operationTime == null) {
-                operationTime = new ArrayList<OperationScheduleType.OperationTimes.OperationTime>();
+                operationTime = new ArrayList<>();
             }
             return this.operationTime;
         }

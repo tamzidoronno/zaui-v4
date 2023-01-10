@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -106,7 +106,7 @@ public class HotelSearchCriteriaType {
      */
     public List<HotelSearchCriteriaType.Criterion> getCriterion() {
         if (criterion == null) {
-            criterion = new ArrayList<HotelSearchCriteriaType.Criterion>();
+            criterion = new ArrayList<>();
         }
         return this.criterion;
     }

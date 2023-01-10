@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -133,7 +133,7 @@ public class CustomerPrimaryAdditionalType {
      */
     public List<CustomerPrimaryAdditionalType.Additional> getAdditional() {
         if (additional == null) {
-            additional = new ArrayList<CustomerPrimaryAdditionalType.Additional>();
+            additional = new ArrayList<>();
         }
         return this.additional;
     }

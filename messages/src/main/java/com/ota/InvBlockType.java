@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -122,7 +122,7 @@ import javax.xml.datatype.Duration;
     "destinationSystemCodes"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.OTAHotelInvBlockNotifRQ.InvBlocks.InvBlock.class
+    com.ota.OTAHotelInvBlockNotifRQ.InvBlocks.InvBlock.class
 })
 public class InvBlockType {
 
@@ -604,7 +604,7 @@ public class InvBlockType {
      */
     public List<String> getRestrictedBookingCodeList() {
         if (restrictedBookingCodeList == null) {
-            restrictedBookingCodeList = new ArrayList<String>();
+            restrictedBookingCodeList = new ArrayList<>();
         }
         return this.restrictedBookingCodeList;
     }
@@ -633,7 +633,7 @@ public class InvBlockType {
      */
     public List<String> getRestrictedViewingCodeList() {
         if (restrictedViewingCodeList == null) {
-            restrictedViewingCodeList = new ArrayList<String>();
+            restrictedViewingCodeList = new ArrayList<>();
         }
         return this.restrictedViewingCodeList;
     }
@@ -771,7 +771,7 @@ public class InvBlockType {
          */
         public List<InvBlockType.BlockDescriptions.BlockDescription> getBlockDescription() {
             if (blockDescription == null) {
-                blockDescription = new ArrayList<InvBlockType.BlockDescriptions.BlockDescription>();
+                blockDescription = new ArrayList<>();
             }
             return this.blockDescription;
         }
@@ -936,7 +936,7 @@ public class InvBlockType {
          */
         public List<ContactPersonType> getContact() {
             if (contact == null) {
-                contact = new ArrayList<ContactPersonType>();
+                contact = new ArrayList<>();
             }
             return this.contact;
         }
@@ -1566,7 +1566,7 @@ public class InvBlockType {
          */
         public List<InvBlockRoomType> getRoomType() {
             if (roomType == null) {
-                roomType = new ArrayList<InvBlockRoomType>();
+                roomType = new ArrayList<>();
             }
             return this.roomType;
         }

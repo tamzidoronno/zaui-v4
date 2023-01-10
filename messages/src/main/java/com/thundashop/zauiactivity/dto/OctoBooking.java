@@ -1,9 +1,7 @@
 package com.thundashop.zauiactivity.dto;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gson.annotations.SerializedName;
 import lombok.Data;
 
 @Data
@@ -39,7 +37,7 @@ class Contact {
     private String lastName;
     private String emailAddress;
     private String phoneNumber;
-    private List<Object> locales = null;
+    private List<String> locales = null;
     private String country;
     private String notes;
 }

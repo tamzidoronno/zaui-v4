@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +54,7 @@ import javax.xml.bind.annotation.XmlType;
     "videoFormat"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.VideoItemsType.VideoItem.class
+    com.ota.VideoItemsType.VideoItem.class
 })
 public class VideoDescriptionType {
 

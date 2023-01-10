@@ -13,6 +13,5 @@ public interface IGotoBookingRequestValidationService {
                                 String systemCurrency,
                                 PmsConfiguration configuration,
                                 SessionInfo bookingItemTypeSession,
-                                SessionInfo zauiActivitySessionInfo,
-                                SessionInfo productSessionInfo) throws GotoException, ParseException;
+                                SessionInfo zauiActivitySessionInfo) throws GotoException, ParseException;
 }

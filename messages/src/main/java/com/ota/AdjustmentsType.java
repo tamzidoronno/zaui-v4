@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -99,7 +99,7 @@ public class AdjustmentsType {
      */
     public List<AdjustmentsType.Adjustment> getAdjustment() {
         if (adjustment == null) {
-            adjustment = new ArrayList<AdjustmentsType.Adjustment>();
+            adjustment = new ArrayList<>();
         }
         return this.adjustment;
     }
@@ -407,7 +407,7 @@ public class AdjustmentsType {
          */
         public List<String> getPromotionVendorCode() {
             if (promotionVendorCode == null) {
-                promotionVendorCode = new ArrayList<String>();
+                promotionVendorCode = new ArrayList<>();
             }
             return this.promotionVendorCode;
         }

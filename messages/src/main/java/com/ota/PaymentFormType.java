@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -161,10 +161,10 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "cash"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.CustomerType.PaymentForm.class,
+    com.ota.CustomerType.PaymentForm.class,
     PaymentDetailType.class,
-    org.opentravel.ota._2003._05.CompanyInfoType.PaymentForm.class,
-    org.opentravel.ota._2003._05.GuaranteeType.GuaranteesAccepted.GuaranteeAccepted.class,
+    com.ota.CompanyInfoType.PaymentForm.class,
+    com.ota.GuaranteeType.GuaranteesAccepted.GuaranteeAccepted.class,
     HotelPaymentFormType.class
 })
 public class PaymentFormType {
@@ -743,7 +743,7 @@ public class PaymentFormType {
          */
         public List<PaymentFormType.LoyaltyRedemption.LoyaltyCertificate> getLoyaltyCertificate() {
             if (loyaltyCertificate == null) {
-                loyaltyCertificate = new ArrayList<PaymentFormType.LoyaltyRedemption.LoyaltyCertificate>();
+                loyaltyCertificate = new ArrayList<>();
             }
             return this.loyaltyCertificate;
         }
@@ -892,7 +892,7 @@ public class PaymentFormType {
          */
         public List<String> getPromotionVendorCode() {
             if (promotionVendorCode == null) {
-                promotionVendorCode = new ArrayList<String>();
+                promotionVendorCode = new ArrayList<>();
             }
             return this.promotionVendorCode;
         }
@@ -1475,7 +1475,7 @@ public class PaymentFormType {
          */
         public List<String> getCouponRPHs() {
             if (couponRPHs == null) {
-                couponRPHs = new ArrayList<String>();
+                couponRPHs = new ArrayList<>();
             }
             return this.couponRPHs;
         }
@@ -1577,7 +1577,7 @@ public class PaymentFormType {
          */
         public List<PaymentFormType.Ticket.ConjunctionTicketNbr> getConjunctionTicketNbr() {
             if (conjunctionTicketNbr == null) {
-                conjunctionTicketNbr = new ArrayList<PaymentFormType.Ticket.ConjunctionTicketNbr>();
+                conjunctionTicketNbr = new ArrayList<>();
             }
             return this.conjunctionTicketNbr;
         }
@@ -1822,7 +1822,7 @@ public class PaymentFormType {
          */
         public List<String> getCouponRPHs() {
             if (couponRPHs == null) {
-                couponRPHs = new ArrayList<String>();
+                couponRPHs = new ArrayList<>();
             }
             return this.couponRPHs;
         }
@@ -1904,7 +1904,7 @@ public class PaymentFormType {
              */
             public List<String> getCoupons() {
                 if (coupons == null) {
-                    coupons = new ArrayList<String>();
+                    coupons = new ArrayList<>();
                 }
                 return this.coupons;
             }

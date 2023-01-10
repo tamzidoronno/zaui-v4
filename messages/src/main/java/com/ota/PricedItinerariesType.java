@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +79,7 @@ public class PricedItinerariesType {
      */
     public List<PricedItinerariesType.PricedItinerary> getPricedItinerary() {
         if (pricedItinerary == null) {
-            pricedItinerary = new ArrayList<PricedItinerariesType.PricedItinerary>();
+            pricedItinerary = new ArrayList<>();
         }
         return this.pricedItinerary;
     }

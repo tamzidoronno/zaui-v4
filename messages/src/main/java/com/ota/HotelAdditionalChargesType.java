@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -96,7 +96,7 @@ public class HotelAdditionalChargesType {
      */
     public List<HotelAdditionalChargesType.AdditionalCharge> getAdditionalCharge() {
         if (additionalCharge == null) {
-            additionalCharge = new ArrayList<HotelAdditionalChargesType.AdditionalCharge>();
+            additionalCharge = new ArrayList<>();
         }
         return this.additionalCharge;
     }

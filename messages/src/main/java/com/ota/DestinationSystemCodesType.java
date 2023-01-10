@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +78,7 @@ public class DestinationSystemCodesType {
      */
     public List<DestinationSystemCodesType.DestinationSystemCode> getDestinationSystemCode() {
         if (destinationSystemCode == null) {
-            destinationSystemCode = new ArrayList<DestinationSystemCodesType.DestinationSystemCode>();
+            destinationSystemCode = new ArrayList<>();
         }
         return this.destinationSystemCode;
     }

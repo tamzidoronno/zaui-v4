@@ -2,7 +2,7 @@ package com.thundashop.services.octoapiservice;
 
 import java.util.List;
 
-import com.thundashop.repository.exceptions.ZauiException;
+import com.thundashop.core.common.ZauiException;
 import com.thundashop.zauiactivity.dto.*;
 import com.thundashop.zauiactivity.dto.OctoBookingConfirmRequest;
 import com.thundashop.zauiactivity.dto.OctoBooking;

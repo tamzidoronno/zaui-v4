@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -238,8 +238,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "tpaExtensions"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.PTCFareBreakdownType.PassengerFare.class,
-    org.opentravel.ota._2003._05.AirItineraryPricingInfoType.ItinTotalFare.class
+    com.ota.PTCFareBreakdownType.PassengerFare.class,
+    com.ota.AirItineraryPricingInfoType.ItinTotalFare.class
 })
 public class FareType {
 
@@ -330,7 +330,7 @@ public class FareType {
      */
     public List<FareType.EquivFare> getEquivFare() {
         if (equivFare == null) {
-            equivFare = new ArrayList<FareType.EquivFare>();
+            equivFare = new ArrayList<>();
         }
         return this.equivFare;
     }
@@ -479,7 +479,7 @@ public class FareType {
      */
     public List<FareType.FareBaggageAllowance> getFareBaggageAllowance() {
         if (fareBaggageAllowance == null) {
-            fareBaggageAllowance = new ArrayList<FareType.FareBaggageAllowance>();
+            fareBaggageAllowance = new ArrayList<>();
         }
         return this.fareBaggageAllowance;
     }
@@ -532,7 +532,7 @@ public class FareType {
      */
     public List<FareType.Remark> getRemark() {
         if (remark == null) {
-            remark = new ArrayList<FareType.Remark>();
+            remark = new ArrayList<>();
         }
         return this.remark;
     }
@@ -1051,7 +1051,7 @@ public class FareType {
          */
         public List<FareType.Discounts.Discount> getDiscount() {
             if (discount == null) {
-                discount = new ArrayList<FareType.Discounts.Discount>();
+                discount = new ArrayList<>();
             }
             return this.discount;
         }
@@ -1448,7 +1448,7 @@ public class FareType {
          */
         public List<FareType.ExchangeInfo.CouponInfo> getCouponInfo() {
             if (couponInfo == null) {
-                couponInfo = new ArrayList<FareType.ExchangeInfo.CouponInfo>();
+                couponInfo = new ArrayList<>();
             }
             return this.couponInfo;
         }
@@ -2065,7 +2065,7 @@ public class FareType {
          */
         public List<AirFeeType> getFee() {
             if (fee == null) {
-                fee = new ArrayList<AirFeeType>();
+                fee = new ArrayList<>();
             }
             return this.fee;
         }
@@ -2412,7 +2412,7 @@ public class FareType {
          */
         public List<AirTaxType> getTax() {
             if (tax == null) {
-                tax = new ArrayList<AirTaxType>();
+                tax = new ArrayList<>();
             }
             return this.tax;
         }

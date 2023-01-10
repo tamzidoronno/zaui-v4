@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -72,8 +72,8 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
     "commission"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.FulfillmentType.PaymentDetails.PaymentDetail.class,
-    org.opentravel.ota._2003._05.VehicleReservationRQAdditionalInfoType.RentalPaymentPref.class
+    com.ota.FulfillmentType.PaymentDetails.PaymentDetail.class,
+    com.ota.VehicleReservationRQAdditionalInfoType.RentalPaymentPref.class
 })
 public class PaymentDetailType
     extends PaymentFormType
@@ -116,7 +116,7 @@ public class PaymentDetailType
      */
     public List<PaymentDetailType.PaymentAmount> getPaymentAmount() {
         if (paymentAmount == null) {
-            paymentAmount = new ArrayList<PaymentDetailType.PaymentAmount>();
+            paymentAmount = new ArrayList<>();
         }
         return this.paymentAmount;
     }

@@ -6,7 +6,7 @@
 //
 
 
-package org.opentravel.ota._2003._05;
+package com.ota;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +76,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
     "ruleIndicator"
 })
 @XmlSeeAlso({
-    org.opentravel.ota._2003._05.EMDType.FareInfo.class
+    com.ota.EMDType.FareInfo.class
 })
 public class ETFareInfo {
 
@@ -117,7 +117,7 @@ public class ETFareInfo {
      */
     public List<ETFareInfo.Waiver> getWaiver() {
         if (waiver == null) {
-            waiver = new ArrayList<ETFareInfo.Waiver>();
+            waiver = new ArrayList<>();
         }
         return this.waiver;
     }
@@ -146,7 +146,7 @@ public class ETFareInfo {
      */
     public List<ETFareInfo.RuleIndicator> getRuleIndicator() {
         if (ruleIndicator == null) {
-            ruleIndicator = new ArrayList<ETFareInfo.RuleIndicator>();
+            ruleIndicator = new ArrayList<>();
         }
         return this.ruleIndicator;
     }

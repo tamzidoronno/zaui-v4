@@ -74,7 +74,7 @@ public class BookingValidator {
             groupedBookings.get(typeId).stream().forEach(booking -> ret.add(booking));
             List<BookingTimeLine> lines = ret.getTimelines();
             
-            if (totalSpotsForType == 0) {
+            if (totalSpotsForType == 0 && (lines != null && !lines.isEmpty())) {
                 String bookingId = lines.get(0).bookingIds.get(0);
                 Booking b = allBookings
                         .stream()

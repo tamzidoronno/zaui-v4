@@ -24,7 +24,6 @@ import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.OrderShipmentLogEntry;
 import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.VirtualOrder;
-import com.thundashop.core.pos.PosManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.sendregning.SendRegningManager;
@@ -338,7 +337,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     @Override
     public boolean supportsDailyPmsInvoiceing(String bookingId) {
         PmsBooking booking = pmsManager.getBookingUnsecure(bookingId);
-        if(booking.priceType != PmsBooking.PriceType.daily) {
+        if(booking.priceType != PmsBookingConstant.PriceType.daily) {
             return false;
         }
         String plugin = findPricePluginForBooking(booking);
@@ -401,7 +400,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     private String findPricePluginForBooking(PmsBooking booking) {
         try {
             PmsConfiguration config = pmsManager.getConfigurationSecure();
-            if(booking.priceType.equals(PmsBooking.PriceType.daily)) {
+            if(booking.priceType.equals(PmsBookingConstant.PriceType.daily)) {
                 if(config.priceCalcPlugins.containsKey("dailypriceplugin")) {
                     return config.priceCalcPlugins.get("dailypriceplugin");
                 }
@@ -1899,7 +1898,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     public void correctFaultyPriceMatrix(PmsBookingRooms room, PmsBooking booking) {
         logPrint("############ FAULTY PRICE MATRIX CREATED ######################");
         LinkedHashMap<String, Double> priceMatrix = getPriceMatrix(room.bookingItemTypeId, room.date.start, room.date.end, booking.priceType, booking);
-        if(booking.priceType == PmsBooking.PriceType.daily) {
+        if(booking.priceType == PmsBookingConstant.PriceType.daily) {
             for(String key : priceMatrix.keySet()) {
                 room.priceMatrix.put(key, room.price);
             }
@@ -1908,7 +1907,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     
     @Override
     public HashMap<String, Double> calculatePriceMatrix(PmsBooking booking, PmsBookingRooms room) {
-        updatePriceMatrix(booking, room, PmsBooking.PriceType.daily);
+        updatePriceMatrix(booking, room, PmsBookingConstant.PriceType.daily);
         return room.priceMatrix;
     } 
     
@@ -1921,7 +1920,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         double total = 0.0;
         int count = 0;
-        if(priceType == PmsBooking.PriceType.daily) {
+        if(priceType == PmsBookingConstant.PriceType.daily) {
             for(String key : priceMatrix.keySet()) {
                 if(!room.priceMatrix.containsKey(key) || !booking.isCompletedBooking()) {
                     Double price = priceMatrix.get(key);
@@ -1956,7 +1955,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     private Date adjustDateForCount(Date date, Integer priceType, boolean start) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-        if(priceType == PmsBooking.PriceType.daily || priceType == PmsBooking.PriceType.interval || priceType == PmsBooking.PriceType.progressive) {
+        if(priceType == PmsBookingConstant.PriceType.daily|| priceType == PmsBookingConstant.PriceType.interval|| priceType == PmsBookingConstant.PriceType.progressive) {
             if(start) {
                 cal.set(Calendar.HOUR_OF_DAY, 12);
             } else {
@@ -2438,9 +2437,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             startDate = endDate;
             endDate = tmpStart;
         }
-        
-        startDate = adjustDateForCount(startDate, PmsBooking.PriceType.daily, true);
-        endDate = adjustDateForCount(endDate, PmsBooking.PriceType.daily, false);
+
+        startDate = adjustDateForCount(startDate, PmsBookingConstant.PriceType.daily, true);
+        endDate = adjustDateForCount(endDate, PmsBookingConstant.PriceType.daily, false);
         
         Calendar cal = Calendar.getInstance();
         cal.setTime(startDate);
@@ -2648,7 +2647,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         cal.setTime(start);
         int days = offset;
         while (true) {
-            String dateToUse = PmsBookingRooms.getOffsetKey(cal, PmsBooking.PriceType.interval);
+            String dateToUse = PmsBookingRooms.getOffsetKey(cal, PmsBookingConstant.PriceType.interval);
             
             int daysoffset = 0;
             for (ProgressivePriceAttribute attr : priceRange) {
@@ -2660,15 +2659,15 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 }
             }
             days++;
-            if(priceType.equals(PmsBooking.PriceType.daily)) { cal.add(Calendar.DAY_OF_YEAR, 1); }
-            else if(priceType.equals(PmsBooking.PriceType.weekly)) { cal.add(Calendar.DAY_OF_YEAR, 7); }
-            else if(priceType.equals(PmsBooking.PriceType.monthly)) { cal.add(Calendar.MONTH, 1); }
-            else if(priceType.equals(PmsBooking.PriceType.hourly)) { cal.add(Calendar.HOUR, 1); }
+            if(priceType.equals(PmsBookingConstant.PriceType.daily)) { cal.add(Calendar.DAY_OF_YEAR, 1); }
+            else if(priceType.equals(PmsBookingConstant.PriceType.weekly)) { cal.add(Calendar.DAY_OF_YEAR, 7); }
+            else if(priceType.equals(PmsBookingConstant.PriceType.monthly)) { cal.add(Calendar.MONTH, 1); }
+            else if(priceType.equals(PmsBookingConstant.PriceType.hourly)) { cal.add(Calendar.HOUR, 1); }
             else { cal.add(Calendar.DAY_OF_YEAR, 1); }
             if (end == null || cal.getTime().after(end) || cal.getTime().equals(end)) {
                 break;
             }
-            if(priceType.equals(PmsBooking.PriceType.daily) || priceType.equals(PmsBooking.PriceType.progressive)) { 
+            if(priceType.equals(PmsBookingConstant.PriceType.daily) || priceType.equals(PmsBookingConstant.PriceType.progressive)) {
                 if(isSameDay(cal.getTime(), end)) {
                     break;
                 }
@@ -2790,7 +2789,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         cal.setTime(start);
         Double price = 0.0;
         while (true) {
-            String dateToUse = PmsBookingRooms.getOffsetKey(cal, PmsBooking.PriceType.daily);
+            String dateToUse = PmsBookingRooms.getOffsetKey(cal, PmsBookingConstant.PriceType.daily);
             cal.set(Calendar.HOUR_OF_DAY, 23);
             cal.set(Calendar.MINUTE, 59);
             if (priceRange.get(dateToUse) != null) {
@@ -2823,7 +2822,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         cal.setTime(start);
         while(true) {
             Double price = 0.0;
-            String toUse = PmsBookingRooms.getOffsetKey(cal, PmsBooking.PriceType.monthly);
+            String toUse = PmsBookingRooms.getOffsetKey(cal, PmsBookingConstant.PriceType.monthly);
             cal.add(Calendar.MONTH, 1);
             if(priceRange == null) {
                 price = 0.0;
@@ -2863,7 +2862,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         Calendar cal = Calendar.getInstance();
         cal.setTime(start);
         while (true) {
-            String dateToUse = PmsBookingRooms.getOffsetKey(cal, PmsBooking.PriceType.interval);
+            String dateToUse = PmsBookingRooms.getOffsetKey(cal, PmsBookingConstant.PriceType.interval);
             res.put(dateToUse, price);
             
             cal.add(Calendar.DAY_OF_YEAR, 1);
@@ -2901,12 +2900,12 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         List<CartItem> items = new ArrayList();
         int daysInPeriode = Days.daysBetween(new LocalDate(startDate), new LocalDate(endDate)).getDays();
-        if(booking.priceType.equals(PmsBooking.PriceType.daily)) {
+        if(booking.priceType.equals(PmsBookingConstant.PriceType.daily)) {
             if(room.isSameDay(startDate, endDate)) {
                 daysInPeriode = 1;
             }
         }
-        if(booking.priceType.equals(PmsBooking.PriceType.monthly)) {
+        if(booking.priceType.equals(PmsBookingConstant.PriceType.monthly)) {
             daysInPeriode = getNumberOfMonthsBetweenDates(startDate, endDate);
             if(daysInPeriode > 1000 || pmsManager.getConfigurationSecure().hasNoEndDate) {
                 //Infinate dates, noone wants to pay 100 years in advance.
@@ -3166,10 +3165,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             while(true) {
                 count++;
                 String offset = room.getOffsetKey(calStart, priceType);
-                if(priceType == PmsBooking.PriceType.daily || priceType == PmsBooking.PriceType.progressive || priceType == PmsBooking.PriceType.interval) {
+                if(priceType == PmsBookingConstant.PriceType.daily || priceType == PmsBookingConstant.PriceType.progressive|| priceType == PmsBookingConstant.PriceType.interval) {
                     calStart.add(Calendar.DAY_OF_YEAR,1);
                 }
-                if(priceType == PmsBooking.PriceType.monthly) {
+                if(priceType == PmsBookingConstant.PriceType.monthly) {
                     calStart.add(Calendar.MONTH,1);
                 }
                 if(room.priceMatrix.containsKey(offset)) {
@@ -3846,7 +3845,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         String userId = booking.userId != null && !booking.userId.isEmpty() ? booking.userId : getSession().currentUser.id;
 
         // add zaui activity items to order rows
-        if(!booking.bookingZauiActivityItems.isEmpty()){
+        if(!booking.getConfirmedZauiActivities().isEmpty()){
             createOrder.add(zauiActivityService.createOrderCreateRowForZauiActivities(booking.getConfirmedZauiActivities()));
         }
 

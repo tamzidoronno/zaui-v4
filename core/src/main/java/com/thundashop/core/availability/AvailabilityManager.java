@@ -626,7 +626,7 @@ public class AvailabilityManager extends GetShopSessionBeanNamed implements IAva
         room.numberOfGuests = numberofguests;
 
         PmsBooking booking = new PmsBooking();
-        booking.priceType = PmsBooking.PriceType.daily;
+        booking.priceType = PmsBookingConstant.PriceType.daily;
         booking.couponCode = discountcode;
         booking.userId = bookingProcessRoom.userId;
         pmsManager.setPriceOnRoom(room, true, booking);

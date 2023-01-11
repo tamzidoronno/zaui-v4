@@ -1946,7 +1946,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public void cancelRoom(String roomId) {
         PmsBooking booking = getBookingFromRoom(roomId);
         if(isNotBlank(booking.channel) && booking.channel.equals(GOTO_BOOKING_CHANNEL_NAME)
-                && booking.bookingZauiActivityItems != null && !booking.bookingZauiActivityItems.isEmpty()) {
+                && booking.bookingZauiActivityItems != null && !booking.bookingZauiActivityItems.isEmpty()
+                && booking.isAllowedDeleteGotoBooking
+        ) {
             log.error("Goto Booking which has activities (kabru booking) cannot be deleted");
             return;
         }
@@ -1973,7 +1975,9 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     public String removeFromBooking(String bookingId, String roomId) throws Exception {
         PmsBooking booking = getBookingUnsecure(bookingId);
         if(isNotBlank(booking.channel) && booking.channel.equals(GOTO_BOOKING_CHANNEL_NAME)
-                && booking.bookingZauiActivityItems != null && !booking.bookingZauiActivityItems.isEmpty()) {
+                && booking.bookingZauiActivityItems != null && !booking.bookingZauiActivityItems.isEmpty()
+                && booking.isAllowedDeleteGotoBooking
+        ) {
             return "Room cannot be cancelled from GotoBooking that has activities";
         }
         checkSecurity(booking);
@@ -2100,6 +2104,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         PmsBooking booking = bookings.get(bookingId);
         if(booking.bookingZauiActivityItems != null && !booking.bookingZauiActivityItems.isEmpty()
                 && isNotBlank(booking.channel) && booking.channel.equals(GOTO_BOOKING_CHANNEL_NAME)
+                && booking.isAllowedDeleteGotoBooking
         ) {
             log.error("Goto Booking which has activities (kabru booking) cannot be deleted");
             return;

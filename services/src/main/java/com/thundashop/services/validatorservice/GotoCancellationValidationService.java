@@ -49,7 +49,8 @@ public class GotoCancellationValidationService implements IGotoCancellationValid
     }
 
     private void validateIfHasActivity(PmsBooking booking) throws GotoException {
-        if(booking.bookingZauiActivityItems != null && !booking.bookingZauiActivityItems.isEmpty())
+        if(booking.bookingZauiActivityItems != null && !booking.bookingZauiActivityItems.isEmpty()
+            && booking.orderIds != null && booking.orderIds.isEmpty())
             throw new GotoException(BOOKING_HAS_ACTIVITY.code, BOOKING_HAS_ACTIVITY.message);
     }
 

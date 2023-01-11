@@ -34,6 +34,9 @@ import com.thundashop.services.bookingservice.IPmsBookingService;
 import com.thundashop.services.octoapiservice.IOctoApiService;
 import com.thundashop.services.zauiactivityservice.IZauiActivityService;
 
+import static com.thundashop.core.gotohub.constant.GotoConstants.GOTO_BOOKING_CHANNEL_NAME;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
 @Component
 @GetShopSession
 @Slf4j
@@ -154,6 +157,10 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
     @Override
     public void cancelActivity(String pmsBookingId, String octoBookingId) throws ZauiException {
         PmsBooking booking = pmsManager.getBooking(pmsBookingId);
+        if(isNotBlank(booking.channel) && booking.channel.equals(GOTO_BOOKING_CHANNEL_NAME)) {
+            log.error("Cannot cancel goto booking");
+            return;
+        }
         BookingZauiActivityItem activityItem = booking.getConfirmedZauiActivities().stream()
                 .filter(item -> item.getOctoBooking().getId().equals(octoBookingId))
                 .findFirst()

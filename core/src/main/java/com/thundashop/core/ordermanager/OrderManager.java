@@ -5375,7 +5375,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     private void setUserAccountingIdOnOrder(Order order) {
         if(isNotBlank(order.userAccountingId)) return;
         setAccountingAccountIdOnUser(order.userId);
-        String accountid = userManager.getUserByIdIncludedDeleted(order.userId).accountingId;
+        User user = userManager.getUserByIdIncludedDeleted(order.userId);
+        if(user == null) {
+            logger.info("Update userid {} of order: {} not found", order.userId, order.incrementOrderId);
+            return;
+        }
+        String accountid = user.accountingId;
+        if(isBlank(accountid)) {
+            accountid = String.valueOf(user.customerId);
+            logger.info("Update user {} of order: {} from customerId: {}", order.userId, order.incrementOrderId, accountid);
+        }
         order.userAccountingId = accountid;
         logger.info("Update user {} order: {} as {}", order.userId, order.incrementOrderId, accountid);
         super.saveObject(order);

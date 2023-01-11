@@ -764,14 +764,8 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
 
     private GuestAddonsSummary generateSummary() {
         PmsBooking currentBooking = pmsManager.getCurrentBooking();
-        boolean addDefaultAddons = true;
-        if (currentBooking.couponCode != null && !currentBooking.couponCode.isEmpty()) {
-            Coupon coupon = cartManager.getCoupon(currentBooking.couponCode);
-            if (coupon.excludeDefaultAddons) {
-                addDefaultAddons = false;
-            }
-        }
-        if (addDefaultAddons) {
+
+        if (addDefaultAddons(currentBooking)) {
             pmsManager.addDefaultAddons(pmsManager.getCurrentBooking());
         }
 
@@ -797,6 +791,14 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
             toAddAddon.isAdded = true;
             toAddAddon.addedCount = addedCount;
         }
+    }
+
+    private boolean addDefaultAddons(PmsBooking currentBooking) {
+        if (currentBooking.couponCode != null && !currentBooking.couponCode.isEmpty()) {
+            Coupon coupon = cartManager.getCoupon(currentBooking.couponCode);
+            return coupon == null || !coupon.excludeDefaultAddons;
+        }
+        return true;
     }
 
     @Override

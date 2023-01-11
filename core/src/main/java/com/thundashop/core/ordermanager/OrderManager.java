@@ -27,6 +27,8 @@ import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import com.thundashop.core.paymentmanager.StorePaymentConfig;
+import com.thundashop.zauiactivity.constant.ZauiConstants;
+import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -2569,16 +2571,41 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                         saveObject(o);
                     });
         }
-
+        updateZauiActivityUnpaidAmounts(order);
         order.cart.clear();
         order.virtuallyDeleted = true;
+
         saveObject(order);
+
+
         
         try {
             updateOrderChangedFromBooking(order.id);
         } catch (GetShopBeanException ex) {
             // Nothing to do, this happens when the order are removed by a named bean manager.
             // In that case the manager should handle the order itself.
+        }
+    }
+
+    private void updateZauiActivityUnpaidAmounts(Order order) {
+        List<String> multiLevelNames = database.getMultilevelNames("PmsManager", storeId);
+        for (String multilevelName : multiLevelNames) {
+            PmsManager pmsManager = getShopSpringScope.getNamedSessionBean(multilevelName, PmsManager.class);
+            if (pmsManager != null) {
+                PmsBooking booking = pmsManager.getBookingWithOrderId(order.id);
+                Set<String> uniqueActivityItemIds = order.cart.getItems().stream()
+                        .filter(item -> item.getProduct().tag.equals(ZauiConstants.ZAUI_ACTIVITY_TAG))
+                        .map(item -> item.getProduct().id)
+                        .collect(Collectors.toSet());
+                if (uniqueActivityItemIds.size() > 0) {
+                    for (BookingZauiActivityItem bookingZauiActivityItem : booking.bookingZauiActivityItems) {
+                        if (uniqueActivityItemIds.contains(bookingZauiActivityItem.getZauiActivityId())) {
+                            bookingZauiActivityItem.setUnpaidAmount(bookingZauiActivityItem.price);
+                        }
+                    }
+                    saveObject(booking);
+                }
+            }
         }
     }
     
@@ -5252,6 +5279,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         List<String> credittedOrders = new ArrayList<>();
         credittedOrders.add(credited.id);
+        updateZauiActivityUnpaidAmounts(order);
         try {
             addOrdersToBookings(credittedOrders);
         }catch(GetShopBeanException ex) {

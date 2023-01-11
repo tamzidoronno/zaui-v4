@@ -26,6 +26,7 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.thundashop.services.bookingservice.IPmsBookingService;
 import com.thundashop.services.zauiactivityservice.IZauiActivityService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -137,6 +138,9 @@ import lombok.extern.slf4j.Slf4j;
 public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Autowired
     IZauiActivityService zauiActivityService;
+
+    @Autowired
+    IPmsBookingService pmsBookingService;
 
     private NullSafeConcurrentHashMap<String, PmsBooking> bookings = new NullSafeConcurrentHashMap<>();
 
@@ -10191,12 +10195,19 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         avoidCalculateUnsettledAmount = true;
         HashMap<String, PmsBooking> bookingsToSave = new HashMap<>();
         HashMap<String, Order> ordersToSave = new HashMap<>();
+
         rows.stream()
             .forEach(o -> {
+                PmsBooking booking;
             if ( isEmpty(o.conferenceId) && isEmpty(o.roomId) ) {
                     return;
             }
-            PmsBooking booking = getBookingFromRoomSecure(o.roomId);
+            if(o.roomId.equals("virtual")){
+                booking = pmsBookingService.getPmsBookingByAddonId(o.items.get(0).addonId,getSessionInfo());
+            }
+            else {
+                booking = getBookingFromRoomSecure(o.roomId);
+            }
 
             if (booking == null && o.conferenceId == null) {
                     return;

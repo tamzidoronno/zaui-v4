@@ -11,4 +11,6 @@ public interface IPmsBookingService {
     List<PmsBooking> getGotoBookings(SessionInfo sessionInfo);
 
     PmsBooking getPmsBookingByZauiActivityItemId(String activityItemId, SessionInfo sessionInfo);
+
+    PmsBooking getPmsBookingByAddonId(String addonId, SessionInfo sessionInfo);
 }

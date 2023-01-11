@@ -328,10 +328,6 @@ public class StripeManager extends ManagerBase implements IStripeManager {
     }
 
     private String getCallBackAddr() {
-        if (!isProdMode()) {
-            return "http://20360.3.0.mdev.getshop.com/callback.php?useapp=stripe";
-        }
-
         String address = "";
         String mainaddress = storeManager.getMyStore().getDefaultWebAddress();
         if (mainaddress.contains("getshop.com")) {
@@ -344,7 +340,6 @@ public class StripeManager extends ManagerBase implements IStripeManager {
                 }
             }
         }
-
         return address;
     }
 

@@ -206,9 +206,6 @@ public class ZauiActivityService implements IZauiActivityService {
 
     @Override
     public void cancelAllActivitiesFromBooking(PmsBooking booking) {
-        if (isNotBlank(booking.channel) && booking.channel.equals(GotoConstants.GOTO_BOOKING_CHANNEL_NAME) || booking.bookingZauiActivityItems.isEmpty()) {
-            return;
-        }
         for (BookingZauiActivityItem activityItem : booking.bookingZauiActivityItems) {
             if (activityItem.getOctoBooking().getStatus().equals(ZauiConstants.OCTO_CONFIRMED_STATUS)) {
                 try {
@@ -364,5 +361,13 @@ public class ZauiActivityService implements IZauiActivityService {
             return row;
         }).collect(Collectors.toList());
         return orderCreateRow;
+    }
+    @Override
+    public boolean isAllActivityCancelled(List<BookingZauiActivityItem> activities) {
+        if(activities == null || activities.isEmpty()) return true;
+        return activities.stream()
+                .filter(activity -> !activity.getOctoBooking().getStatus().equals("CANCELLED"))
+                .collect(Collectors.toList())
+                .size() == 0 ;
     }
 }

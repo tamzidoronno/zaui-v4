@@ -624,9 +624,9 @@ if (isset($_GET['page'])) {
     }
     // for goto payment status page redirection
     if(isset($_SESSION['goto-redirect-url']) && strstr($_GET['page'],"payment_")){
-        if($_GET['page']=='payment_success'){
+        if($_GET['page']=='payment_success')
             $redirectUrl = $_SESSION['goto-redirect-url'].'&payment-success=true';
-        if($_GET['page']=='payment_failed'){
+        if($_GET['page']=='payment_failed')
             $redirectUrl = $_SESSION['goto-redirect-url'].'&payment-success=false';
         header("Location: $redirectUrl");
     }

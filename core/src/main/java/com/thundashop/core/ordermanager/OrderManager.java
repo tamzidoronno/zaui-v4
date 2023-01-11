@@ -3701,7 +3701,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Order order = getOrder(orderId);
         if (order != null) {
             String userId = getSession().currentUser.id;
-            order. registerTransaction(paymentDate, amount, userId, type, "", comment, amountInLocalCurrency, agio, accountDetailId, getBatchId(order, ""));
+            order.registerTransaction(paymentDate, amount, userId, type, "", comment, amountInLocalCurrency, agio, accountDetailId, getBatchId(order, ""));
             if (order.isFullyPaid()) {
                 markAsPaidInternal(order, paymentDate, amount);
             }

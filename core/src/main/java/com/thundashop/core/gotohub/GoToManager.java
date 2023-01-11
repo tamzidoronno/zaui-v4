@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.thundashop.core.pmsmanager.*;
 import com.thundashop.core.zauiactivity.ZauiActivityManager;
 import com.thundashop.services.gotoservice.*;
 import com.thundashop.services.validatorservice.IGotoBookingRequestValidationService;
@@ -73,17 +74,6 @@ import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pmsbookingprocess.BookingProcessRooms;
 import com.thundashop.core.pmsbookingprocess.PmsBookingProcess;
 import com.thundashop.core.pmsbookingprocess.StartBooking;
-import com.thundashop.core.pmsmanager.NewOrderFilter;
-import com.thundashop.core.pmsmanager.PmsAdditionalTypeInformation;
-import com.thundashop.core.pmsmanager.PmsBooking;
-import com.thundashop.core.pmsmanager.PmsBookingDateRange;
-import com.thundashop.core.pmsmanager.PmsBookingRooms;
-import com.thundashop.core.pmsmanager.PmsConfiguration;
-import com.thundashop.core.pmsmanager.PmsInvoiceManager;
-import com.thundashop.core.pmsmanager.PmsManager;
-import com.thundashop.core.pmsmanager.TimeRepeater;
-import com.thundashop.core.pmsmanager.TimeRepeaterData;
-import com.thundashop.core.pmsmanager.TimeRepeaterDateRange;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.usermanager.UserManager;
@@ -684,7 +674,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         room.numberOfGuests = numberofguests;
 
         PmsBooking booking = new PmsBooking();
-        booking.priceType = PmsBooking.PriceType.daily;
+        booking.priceType = PmsBookingConstant.PriceType.daily;
         booking.couponCode = discountcode;
         booking.userId = bookingProcessRoom.userId;
         pmsManager.setPriceOnRoom(room, true, booking);

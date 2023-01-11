@@ -8,7 +8,7 @@ import com.thundashop.core.common.GetShopApi;
 import com.thundashop.core.common.GetShopMultiLayerSession;
 import com.thundashop.core.pmsbookingprocess.GuestAddonsSummary;
 import com.thundashop.repository.exceptions.NotUniqueDataException;
-import com.thundashop.repository.exceptions.ZauiException;
+import com.thundashop.core.common.ZauiException;
 import com.thundashop.zauiactivity.dto.*;
 
 /**

@@ -832,6 +832,14 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         }
     }
 
+    private boolean addDefaultAddons(PmsBooking currentBooking) {
+        if (currentBooking.couponCode != null && !currentBooking.couponCode.isEmpty()) {
+            Coupon coupon = cartManager.getCoupon(currentBooking.couponCode);
+            return coupon == null || !coupon.excludeDefaultAddons;
+        }
+        return true;
+    }
+
     @Override
     public GuestAddonsSummary setGuestInformation(BookerInformation bookerInfo) {
         PmsBooking booking = pmsManager.getCurrentBooking();

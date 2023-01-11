@@ -12,6 +12,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import com.thundashop.core.gotohub.dto.GotoActivityConfirmationDto;
 import com.thundashop.core.gotohub.dto.GotoConfirmBookingRequest;
+import com.thundashop.services.zauiactivityservice.IZauiActivityService;
 import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
 import org.apache.commons.collections4.SetUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,8 @@ import java.util.stream.Collectors;
 public class GotoConfirmBookingValidationService implements IGotoConfirmBookingValidationService {
     @Autowired
     IPmsBookingService pmsBookingService;
+    @Autowired
+    IZauiActivityService zauiActivityService;
 
     @Override
     public PmsBooking validateConfirmBookingReq(String reservationId, String paymentId, SessionInfo pmsManagerSession,
@@ -47,7 +50,7 @@ public class GotoConfirmBookingValidationService implements IGotoConfirmBookingV
         if (booking == null) {
             throw new GotoException(BOOKING_NOT_FOUND.code, BOOKING_NOT_FOUND.message);
         }
-        if (booking.getActiveRooms().isEmpty() && isAllActivityCancelled(booking.bookingZauiActivityItems))
+        if (booking.getActiveRooms().isEmpty() && zauiActivityService.isAllActivityCancelled(booking.bookingZauiActivityItems))
             throw new GotoException(BOOKING_DELETED.code, BOOKING_DELETED.message);
     }
 
@@ -57,7 +60,7 @@ public class GotoConfirmBookingValidationService implements IGotoConfirmBookingV
                 .map(activityItem -> activityItem.getOctoBooking().getId())
                 .collect(Collectors.toSet());
         Set<String> octoReservationIdsFromReq = activitiesFromGoto.stream()
-                .map(activity-> activity.getOctoReservationId())
+                .map(GotoActivityConfirmationDto::getOctoReservationId)
                 .collect(Collectors.toSet());
         Set<String> missingIds = SetUtils.difference(existingOctoReservationIds, octoReservationIdsFromReq);
         Set<String> extraIds = SetUtils.difference(octoReservationIdsFromReq, existingOctoReservationIds);
@@ -73,13 +76,6 @@ public class GotoConfirmBookingValidationService implements IGotoConfirmBookingV
             throw new GotoException(OCTO_RESERVATION_ID_MISMATCHED.code, OCTO_RESERVATION_ID_MISMATCHED.message +
                     "..\n " + missingIdsInString + ", " + extraIdsInString
                     );
-    }
-
-    private boolean isAllActivityCancelled(List<BookingZauiActivityItem> activities) {
-        return activities.stream()
-                .filter(activity -> !activity.getOctoBooking().getStatus().equals("CANCELLED"))
-                .collect(Collectors.toList())
-                .size() == 0 ;
     }
 
     private void validateIfActivitiesConfirmed(List<GotoActivityConfirmationDto> activities) throws GotoException {

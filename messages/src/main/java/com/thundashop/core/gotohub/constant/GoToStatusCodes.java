@@ -68,6 +68,7 @@ public enum GoToStatusCodes {
         BOOKING_CANCELLATION_ALREADY_CANCELLED(1504,
                         "Goto Booking Cancellation Failed.. Reason: Booking is Already Cancelled"),
         CANCELLATION_ACK_FAILED(1505, "Goto Booking Cancellation Succeeded but Failed to Acknowledge"),
+        BOOKING_HAS_ACTIVITY(1506, "Goto Booking Cancellation Failed.. Reason: Booking has activities, can't be cancelled"),
         BOOKING_CANCELLATION_FAILED(1509, "Goto Booking Cancellation Failed.. Reason: Unknown");
 
         public final long code;

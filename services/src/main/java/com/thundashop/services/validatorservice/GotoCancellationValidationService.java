@@ -15,8 +15,10 @@ import org.springframework.stereotype.Service;
 import java.util.Calendar;
 import java.util.Date;
 
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.*;
+import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_CANCELLATION_NOT_FOUND;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.CANCELLATION_DEADLINE_PASSED;
+import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_CANCELLATION_ALREADY_CANCELLED;
+import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_HAS_ACTIVITY;
 
 @Service
 public class GotoCancellationValidationService implements IGotoCancellationValidationService {
@@ -31,6 +33,7 @@ public class GotoCancellationValidationService implements IGotoCancellationValid
                                               int cutoffHour, SessionInfo pmsManagerSession) throws Exception {
         PmsBooking booking = pmsBookingService.getPmsBookingById(reservationId, pmsManagerSession);
         validateExistingBooking(booking);
+        validateIfHasActivity(booking);
         validateBookingCancellationDeadline(booking, deletionRequestTime, cutoffHour, config);
         return booking;
     }
@@ -43,6 +46,11 @@ public class GotoCancellationValidationService implements IGotoCancellationValid
         if (booking.getActiveRooms().isEmpty() && zauiActivityService.isAllActivityCancelled(booking.bookingZauiActivityItems))
             throw new GotoException(BOOKING_CANCELLATION_ALREADY_CANCELLED.code,
                     BOOKING_CANCELLATION_ALREADY_CANCELLED.message);
+    }
+
+    private void validateIfHasActivity(PmsBooking booking) throws GotoException {
+        if(booking.bookingZauiActivityItems != null && !booking.bookingZauiActivityItems.isEmpty())
+            throw new GotoException(BOOKING_HAS_ACTIVITY.code, BOOKING_HAS_ACTIVITY.message);
     }
 
     private void validateBookingCancellationDeadline(PmsBooking booking, Date delReqTime, int cutoffHour, PmsConfiguration config)

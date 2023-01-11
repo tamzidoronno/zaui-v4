@@ -1,6 +1,5 @@
 package com.thundashop.services.zauiactivityservice;
 
-import com.thundashop.core.gotohub.constant.GotoConstants;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsOrderCreateRow;
 import com.thundashop.core.pmsmanager.PmsOrderCreateRowItemLine;
@@ -23,7 +22,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Slf4j
 @Service
@@ -365,9 +363,6 @@ public class ZauiActivityService implements IZauiActivityService {
     @Override
     public boolean isAllActivityCancelled(List<BookingZauiActivityItem> activities) {
         if(activities == null || activities.isEmpty()) return true;
-        return activities.stream()
-                .filter(activity -> !activity.getOctoBooking().getStatus().equals("CANCELLED"))
-                .collect(Collectors.toList())
-                .size() == 0 ;
+        return activities.stream().allMatch(activity -> activity.getOctoBooking().getStatus().equals("CANCELLED"));
     }
 }

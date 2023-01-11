@@ -110,13 +110,13 @@ public class ZauiActivityService implements IZauiActivityService {
             activityItem.setOctoBooking(octoReservedBooking);
         }
         OctoBooking octoConfirmedBooking = confirmOctoBooking(activityItem, booking, booker);
-        booking = addActivityToBooking(activityItem, octoConfirmedBooking, booking, sessionInfo);
+        booking = addActivityToPmsBooking(activityItem, octoConfirmedBooking, booking, sessionInfo);
         return booking;
     }
 
     @Override
-    public PmsBooking addActivityToBooking(BookingZauiActivityItem activityItem, OctoBooking octoBooking,
-            PmsBooking booking, SessionInfo sessionInfo) throws ZauiException {
+    public PmsBooking addActivityToPmsBooking(BookingZauiActivityItem activityItem, OctoBooking octoBooking,
+                                              PmsBooking booking, SessionInfo sessionInfo) throws ZauiException {
         if (activityItem.getUnits() == null || activityItem.getUnits().isEmpty())
             throw new ZauiException(ZauiStatusCodes.MISSING_PARAMS);
         activityItem.setOctoBooking(octoBooking);
@@ -149,8 +149,8 @@ public class ZauiActivityService implements IZauiActivityService {
     }
 
     @Override
-    public PmsBooking addActivityToBooking(AddZauiActivityToWebBookingDto activity, PmsBooking booking,
-            SessionInfo sessionInfo) throws ZauiException {
+    public PmsBooking addActivityToWebBooking(AddZauiActivityToWebBookingDto activity, PmsBooking booking,
+                                              SessionInfo sessionInfo) throws ZauiException {
         ZauiActivity zauiActivity = getZauiActivityByOptionId(activity.getOptionId(), sessionInfo);
         ActivityOption bookedOption = zauiActivity.getActivityOptionList().stream()
                 .filter(option -> option.getId().equals(activity.getOptionId()))
@@ -168,7 +168,7 @@ public class ZauiActivityService implements IZauiActivityService {
                 bookingReserveRequest);
         BookingZauiActivityItem activityItem = mapActivityToBookingZauiActivityItem(octoReserveBooking, sessionInfo);
         activityItem.setUnits(activity.getUnits());
-        booking = addActivityToBooking(activityItem, octoReserveBooking, booking, sessionInfo);
+        booking = addActivityToPmsBooking(activityItem, octoReserveBooking, booking, sessionInfo);
         return booking;
     }
 

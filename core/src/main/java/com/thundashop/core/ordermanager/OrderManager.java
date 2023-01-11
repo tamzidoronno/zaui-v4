@@ -3701,7 +3701,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         Order order = getOrder(orderId);
         if (order != null) {
             String userId = getSession().currentUser.id;
-            order.registerTransaction(paymentDate, amount, userId, type, "", comment, amountInLocalCurrency, agio, accountDetailId, getBatchId(order, ""));
+            order. registerTransaction(paymentDate, amount, userId, type, "", comment, amountInLocalCurrency, agio, accountDetailId, getBatchId(order, ""));
             if (order.isFullyPaid()) {
                 markAsPaidInternal(order, paymentDate, amount);
             }
@@ -5375,7 +5375,16 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     private void setUserAccountingIdOnOrder(Order order) {
         if(isNotBlank(order.userAccountingId)) return;
         setAccountingAccountIdOnUser(order.userId);
-        String accountid = userManager.getUserByIdIncludedDeleted(order.userId).accountingId;
+        User user = userManager.getUserByIdIncludedDeleted(order.userId);
+        if(user == null) {
+            logger.info("Update userid {} of order: {} not found", order.userId, order.incrementOrderId);
+            return;
+        }
+        String accountid = user.accountingId;
+        if(isBlank(accountid)) {
+            accountid = String.valueOf(user.customerId);
+            logger.info("Update user {} of order: {} from customerId: {}", order.userId, order.incrementOrderId, accountid);
+        }
         order.userAccountingId = accountid;
         logger.info("Update user {} order: {} as {}", order.userId, order.incrementOrderId, accountid);
         super.saveObject(order);

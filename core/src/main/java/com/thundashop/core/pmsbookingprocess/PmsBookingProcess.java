@@ -21,7 +21,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import com.thundashop.core.pmsmanager.*;
+import com.thundashop.core.zauiactivity.ZauiActivityManager;
 import com.thundashop.services.zauiactivityservice.IZauiActivityService;
 import com.thundashop.zauiactivity.constant.ZauiConstants;
 import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
@@ -53,6 +53,23 @@ import com.thundashop.core.paymentterminalmanager.PaymentTerminalManager;
 import com.thundashop.core.paymentterminalmanager.PaymentTerminalSettings;
 import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.pdf.data.AccountingDetails;
+import com.thundashop.core.pmsmanager.PmsAdditionalTypeInformation;
+import com.thundashop.core.pmsmanager.PmsBooking;
+import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
+import com.thundashop.core.pmsmanager.PmsBookingDateRange;
+import com.thundashop.core.pmsmanager.PmsBookingFilter;
+import com.thundashop.core.pmsmanager.PmsBookingRooms;
+import com.thundashop.core.pmsmanager.PmsConfiguration;
+import com.thundashop.core.pmsmanager.PmsBookingConstant;
+import com.thundashop.core.pmsmanager.PmsCoverageAndIncomeReportManager;
+import com.thundashop.core.pmsmanager.PmsGuests;
+import com.thundashop.core.pmsmanager.PmsInvoiceManager;
+import com.thundashop.core.pmsmanager.PmsManager;
+import com.thundashop.core.pmsmanager.PmsPricing;
+import com.thundashop.core.pmsmanager.PmsUserDiscount;
+import com.thundashop.core.pmsmanager.TimeRepeater;
+import com.thundashop.core.pmsmanager.TimeRepeaterData;
+import com.thundashop.core.pmsmanager.TimeRepeaterDateRange;
 import com.thundashop.core.pos.PosManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
@@ -121,6 +138,8 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
 
     @Autowired
     InvoiceManager invoiceManager;
+    @Autowired
+    ZauiActivityManager zauiActivityManager;
 
     @Autowired
     IZauiActivityService zauiActivityService;
@@ -1007,7 +1026,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         for (BookingZauiActivityItem activityItem : booking.bookingZauiActivityItems) {
             try {
                 OctoBooking octoConfirmedBooking = zauiActivityService.confirmOctoBooking(activityItem, booking, user);
-                zauiActivityService.addActivityToBooking(activityItem, octoConfirmedBooking, booking);
+                zauiActivityService.addActivityToBooking(activityItem, octoConfirmedBooking, booking, zauiActivityManager.getSessionInfo());
             } catch (Exception ex) {
                 log.error("Failed to confirm activity {} for booking {}. Reason: {}. Actual error: {}",
                         activityItem.toString(), booking.id, ex.getMessage(), ex);

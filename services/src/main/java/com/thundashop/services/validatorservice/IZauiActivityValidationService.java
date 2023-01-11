@@ -13,5 +13,5 @@ public interface IZauiActivityValidationService {
             String systemCurrency) throws GotoException;
 
     void validateTaxRates(int supplierId, List<Double> taxRatesFromOctoBooking, SessionInfo zauiActivitySessionInfo)
-            throws GotoException, NotUniqueDataException;
+            throws GotoException;
 }

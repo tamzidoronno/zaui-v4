@@ -39,13 +39,15 @@ public enum GoToStatusCodes {
         ACTIVITY_START_TIME_MISSING(1320, "Goto Booking Failed.. Reason: Activity availability start time is missing"),
         ACTIVITY_END_TIME_MISSING(1321, "Goto Booking Failed.. Reason: Activity availability end time is missing"),
         ACTIVITY_PRICING_MISSING(1322, "Goto Booking Failed.. Reason: Activity pricing is missing"),
-        ACTIVITY_PRICING_INVALID_TAX_RATE(1323,
+        RESERVATION_INCLUDED_TAX_RATE_MISSING(1323, "Goto Booking Failed.. " +
+                "Reason: Pricing information doesn't have taxRate information"),
+        ACTIVITY_PRICING_INVALID_TAX_RATE(1324,
                         "Goto Booking Failed.. Reason: Activity pricing has tax rates which are not in Zauistay"),
-        ZAUI_ACTIVITY_CONFIG_FETCH_FAILED(1324,
+        ZAUI_ACTIVITY_CONFIG_FETCH_FAILED(1325,
                         "Goto Booking Failed..  Reason: Hotel Zaui Activity configuration has problem." +
                                         " Please contact with responsible person"),
-        ACTIVITY_SUPPLIER_ID_INVALID(1325, "Goto Booking Failed.. Reason: Activity has invalid supplier id"),
-        ACTIVITY_SUPPLIER_ID_NOT_CONNECTED(1326, "Goto Booking Failed.. Reason: Supplier is not connected with hotel"),
+        ACTIVITY_SUPPLIER_ID_INVALID(1326, "Goto Booking Failed.. Reason: Activity has invalid supplier id"),
+        ACTIVITY_SUPPLIER_ID_NOT_CONNECTED(1327, "Goto Booking Failed.. Reason: Supplier is not connected with hotel"),
 
         BOOKING_CONFIRMATION_SUCCESS(1400, "Goto Booking has been confirmed"),
         BOOKING_CONFIRMATION_SUCCESS_WITH_PAYMENT_LINK(1400, "Payment link has been attached"),
@@ -59,10 +61,16 @@ public enum GoToStatusCodes {
         OCTO_RESERVATION_ID_MISMATCHED(1406,
                         "Goto Booking Confirmation Failed.. Reason: Activity's Octo reservation ids mismatched"),
         OCTO_RESERVATION_NOT_CONFIRMED(1407, "Goto Booking Confirmation Failed.. " +
-                        "Reason: Activities have Octo reservation in /'ON_HOLD/' status"),
-        ACTIVITY_GOTO_PAYMENT(1408, "Goto Booking Confirmation Failed.. " +
+                        "Reason: Activities have Octo reservation not in /'CONFIRMED/' status"),
+        ACTIVITY_GOTO_PAYMENT_METHOD(1408, "Goto Booking Confirmation Failed.. " +
                 "Reason: GOTO_PAYMENT method is not allowed for booking with activities"),
         BOOKING_CONFIRMATION_FAILED(1409, "Goto Booking Confirmation Failed.. Reason: Unknown"),
+        CONFIRMATION_RESPONSE_MISSING(1410, "Goto Booking Confirmation Failed.. " +
+                "Reason: Activity doesn't contain Octo confirmation response"),
+        CONFIRMATION_PRICING_MISSING(1411, "Goto Booking Confirmation Failed.. " +
+                "Reason: Activity doesn't have pricing information"),
+        CONFIRMATION_INCLUDED_TAX_RATE_MISSING(1412, "Goto Booking Confirmation Failed.. " +
+                "Reason: Pricing information doesn't have taxRate information"),
         BOOKING_CANCELLATION_SUCCESS(1500, "Goto Booking has been Cancelled"),
         BOOKING_CANCELLATION_NOT_FOUND(1501, "Goto Booking Cancellation Failed.. Reason: Booking Not Found"),
         ORDER_SYNCHRONIZATION_FAILED(1502, "Goto Booking Cancellation Failed.. Reason: Order Synchronization Failed"),

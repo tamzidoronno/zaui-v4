@@ -255,7 +255,8 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             PmsBooking pmsBooking = confirmBookingValService.validateConfirmBookingReq(reservationId,
                     goToConfiguration.getPaymentTypeId(),
                     pmsManager.getSessionInfo(),
-                    confirmBookingReq);
+                    confirmBookingReq
+                    );
             pmsBooking = confirmBookingService.confirmGotoBooking(pmsBooking, confirmBookingReq);
             String paymentLink = confirmPayment(pmsBooking, confirmBookingReq.getPaymentMethod());
             pmsManager.saveBooking(pmsBooking);

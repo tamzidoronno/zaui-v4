@@ -2,7 +2,6 @@ package com.thundashop.services.validatorservice;
 
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.*;
 import static com.thundashop.core.gotohub.constant.GotoConstants.GOTO_PAYMENT;
-import static com.thundashop.core.gotohub.constant.GotoConstants.STAY_PAYMENT;
 import static com.thundashop.zauiactivity.constant.ZauiConstants.OCTO_CONFIRMED_STATUS;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -35,6 +34,7 @@ public class GotoConfirmBookingValidationService implements IGotoConfirmBookingV
         validateBookingId(booking);
         validateOctoReservationIds(gotoConfirmBookingReq.getActivities(), booking.bookingZauiActivityItems);
         validateIfActivitiesConfirmed(gotoConfirmBookingReq.getActivities());
+        validateActivities(gotoConfirmBookingReq.getActivities());
         validatePaymentMethod(paymentId, gotoConfirmBookingReq.getPaymentMethod(), gotoConfirmBookingReq.getActivities());
         return booking;
     }
@@ -79,18 +79,40 @@ public class GotoConfirmBookingValidationService implements IGotoConfirmBookingV
     }
 
     private void validateIfActivitiesConfirmed(List<GotoActivityConfirmationDto> activities) throws GotoException {
-        int size = activities.stream()
-                .filter(activity-> !activity.getOctoConfirmationResponse().getStatus().equals(OCTO_CONFIRMED_STATUS))
-                .collect(Collectors.toList()).size();
-        if(size != 0)
+        if(activities.stream().anyMatch(activity -> !activity.getOctoConfirmationResponse().getStatus().equals(OCTO_CONFIRMED_STATUS)))
             throw new GotoException(OCTO_RESERVATION_NOT_CONFIRMED.code, OCTO_RESERVATION_NOT_CONFIRMED.message);
     }
 
     private void validatePaymentMethod(String paymentMethodId, String requestedPaymentMethod,
                                        List<GotoActivityConfirmationDto> activities) throws GotoException {
         if(isNotBlank(requestedPaymentMethod) && requestedPaymentMethod.equals(GOTO_PAYMENT)) {
-            if(activities != null && activities.isEmpty()) throw new GotoException(ACTIVITY_GOTO_PAYMENT);
+            if(activities != null && activities.isEmpty()) throw new GotoException(ACTIVITY_GOTO_PAYMENT_METHOD);
             if(isBlank(paymentMethodId)) throw new GotoException(PAYMENT_METHOD_NOT_FOUND);
+        }
+    }
+
+    private void validateActivities(List<GotoActivityConfirmationDto> activities) throws GotoException {
+        for (GotoActivityConfirmationDto activity : activities) {
+            try {
+                validateActivity(activity);
+            } catch (GotoException e) {
+                if (activity.getOctoConfirmationResponse() != null
+                        && activity.getOctoConfirmationResponse().getOptionId() != null)
+                    e.setMessage(e.getMessage() + ", OptionId: " + activity.getOctoConfirmationResponse().getOptionId());
+                throw e;
+            }
+        }
+    }
+
+    private void validateActivity(GotoActivityConfirmationDto activity) throws GotoException {
+        if(activity.getOctoConfirmationResponse() == null) {
+            throw new GotoException(CONFIRMATION_RESPONSE_MISSING);
+        }
+        if(activity.getOctoConfirmationResponse().getPricing() == null) {
+            throw new GotoException(CONFIRMATION_PRICING_MISSING);
+        }
+        if(activity.getOctoConfirmationResponse().getPricing().getIncludedTaxes() == null) {
+            throw new GotoException(CONFIRMATION_INCLUDED_TAX_RATE_MISSING);
         }
     }
 }

@@ -1945,13 +1945,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void cancelRoom(String roomId) {
         PmsBooking booking = getBookingFromRoom(roomId);
-        if(isNotBlank(booking.channel) && booking.channel.equals(GOTO_BOOKING_CHANNEL_NAME)
-                && booking.bookingZauiActivityItems != null && !booking.bookingZauiActivityItems.isEmpty()
-                && booking.isAllowedDeleteGotoBooking
-        ) {
-            log.error("Goto Booking which has activities (kabru booking) cannot be deleted");
-            return;
-        }
         PmsBookingRooms remove = booking.findRoom(roomId);
         remove.addedToWaitingList = false;
         bookingEngine.deleteBooking(remove.bookingId);
@@ -1974,12 +1967,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public String removeFromBooking(String bookingId, String roomId) throws Exception {
         PmsBooking booking = getBookingUnsecure(bookingId);
-        if(isNotBlank(booking.channel) && booking.channel.equals(GOTO_BOOKING_CHANNEL_NAME)
-                && booking.bookingZauiActivityItems != null && !booking.bookingZauiActivityItems.isEmpty()
-                && booking.isAllowedDeleteGotoBooking
-        ) {
-            return "Room cannot be cancelled from GotoBooking that has activities";
-        }
         checkSecurity(booking);
         List<PmsBookingRooms> toRemove = new ArrayList<>();
         String roomName = "";
@@ -2102,13 +2089,6 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void deleteBooking(String bookingId) {
         PmsBooking booking = bookings.get(bookingId);
-        if(booking.bookingZauiActivityItems != null && !booking.bookingZauiActivityItems.isEmpty()
-                && isNotBlank(booking.channel) && booking.channel.equals(GOTO_BOOKING_CHANNEL_NAME)
-                && booking.isAllowedDeleteGotoBooking
-        ) {
-            log.error("Goto Booking which has activities (kabru booking) cannot be deleted");
-            return;
-        }
         for (PmsBookingRooms room : booking.getActiveRooms()) {
             if (room.bookingId != null && !room.bookingId.isEmpty()) {
                 bookingEngine.deleteBooking(room.bookingId);

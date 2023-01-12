@@ -134,7 +134,7 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
     public void addActivityToBooking(BookingZauiActivityItem activityItem, String pmsBookingId) throws ZauiException {
         PmsBooking booking = pmsManager.getBooking(pmsBookingId);
         User booker = userManager.getUserById(booking.userId);
-        booking = zauiActivityService.addActivityToBooking(activityItem, booking, booker);
+        booking = zauiActivityService.addActivityToBooking(activityItem, booking, booker, getSessionInfo());
         pmsManager.saveBooking(booking);
     }
 

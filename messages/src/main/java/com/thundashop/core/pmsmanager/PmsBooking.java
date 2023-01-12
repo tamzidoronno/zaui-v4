@@ -897,4 +897,11 @@ public class PmsBooking extends DataCommon {
                 .collect(Collectors.toList());
     }
 
+    public double getUnpaidAmountWithActivities() {
+        if(this.getConfirmedZauiActivities() == null || this.getConfirmedZauiActivities().isEmpty())
+            return getUnpaidAmount();
+        return getUnpaidAmount() + this.getConfirmedZauiActivities().stream()
+                .mapToDouble(BookingZauiActivityItem::getUnpaidAmount).sum();
+    }
+
 }

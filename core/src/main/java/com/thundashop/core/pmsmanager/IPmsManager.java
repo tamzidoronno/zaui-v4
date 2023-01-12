@@ -9,14 +9,7 @@ import java.util.Map;
 
 import com.thundashop.core.bookingengine.data.RegistrationRules;
 import com.thundashop.core.cartmanager.data.CartItem;
-import com.thundashop.core.common.Administrator;
-import com.thundashop.core.common.Customer;
-import com.thundashop.core.common.Editor;
-import com.thundashop.core.common.FilterOptions;
-import com.thundashop.core.common.FilteredData;
-import com.thundashop.core.common.ForceAsync;
-import com.thundashop.core.common.GetShopApi;
-import com.thundashop.core.common.GetShopMultiLayerSession;
+import com.thundashop.core.common.*;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.usermanager.data.User;
 
@@ -188,7 +181,7 @@ public interface IPmsManager {
     void markAddonDelivered(String id);
     
     @Administrator
-    void cancelRoom(String roomId);
+    void cancelRoom(String roomId) throws ZauiException;
     
     @Administrator
     void checkOutRoom(String pmsBookingRoomId);

@@ -1,5 +1,6 @@
 package com.thundashop.services.zauiactivityservice;
 
+import com.thundashop.core.gotohub.constant.GotoConstants;
 import com.thundashop.core.gotohub.dto.GotoException;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsOrderCreateRow;
@@ -23,6 +24,8 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 
 @Slf4j
@@ -371,8 +374,16 @@ public class ZauiActivityService implements IZauiActivityService {
         return orderCreateRow;
     }
     @Override
+    public void restrictGoToBookingWithActivities(PmsBooking booking) throws ZauiException {
+        if (isNotBlank(booking.channel) && booking.channel.equals(GotoConstants.GOTO_BOOKING_CHANNEL_NAME)
+                && !booking.bookingZauiActivityItems.isEmpty() && booking.getUnpaidAmountWithActivities() == 0) {
+            throw new ZauiException(ZauiStatusCodes.GOTO_CANCELLATION_DENIED);
+        }
+    }
+    @Override
     public boolean isAllActivityCancelled(List<BookingZauiActivityItem> activities) {
         if(activities == null || activities.isEmpty()) return true;
         return activities.stream().allMatch(activity -> activity.getOctoBooking().getStatus().equals("CANCELLED"));
     }
+
 }

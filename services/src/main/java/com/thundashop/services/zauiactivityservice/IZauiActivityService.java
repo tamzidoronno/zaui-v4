@@ -49,4 +49,5 @@ public interface IZauiActivityService {
 
     PmsBooking removeActivityFromBooking(String activityItemId, PmsBooking booking);
     boolean isAllActivityCancelled(List<BookingZauiActivityItem> activities);
+    void restrictGoToBookingWithActivities(PmsBooking booking) throws ZauiException;
 }

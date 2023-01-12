@@ -26,8 +26,8 @@ public interface IZauiActivityService {
 
     PmsBooking addActivityToBooking(BookingZauiActivityItem activityItem, PmsBooking booking, User booker, SessionInfo sessionInfo) throws ZauiException;
 
-    PmsBooking addActivityToBooking(BookingZauiActivityItem activityItem, OctoBooking octoBooking, PmsBooking booking,
-                                    SessionInfo sessionInfo) throws ZauiException;
+    PmsBooking addActivityToPmsBooking(BookingZauiActivityItem activityItem, OctoBooking octoBooking, PmsBooking booking,
+                                       SessionInfo sessionInfo) throws ZauiException;
 
     OctoBooking confirmOctoBooking(BookingZauiActivityItem activityItem, PmsBooking booking, User booker) throws ZauiException;
 
@@ -41,7 +41,7 @@ public interface IZauiActivityService {
 
     List<UnitItemReserveRequest> mapUnitsForBooking(List<Unit> units);
 
-    PmsBooking addActivityToBooking(AddZauiActivityToWebBookingDto activity, PmsBooking booking, SessionInfo sessionInfo) throws ZauiException;
+    PmsBooking addActivityToWebBooking(AddZauiActivityToWebBookingDto activity, PmsBooking booking, SessionInfo sessionInfo) throws ZauiException;
 
     BookingZauiActivityItem mapActivityToBookingZauiActivityItem(OctoBooking octoBooking, SessionInfo sessionInfo) throws ZauiException;
 

@@ -4493,6 +4493,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         paymentAction.action = GdsPaymentAction.Actions.STARTPAYMENT;
         GetShopDevice device = gdsManager.getDeviceByToken(tokenId);
         gdsManager.sendMessageToDevice(device.id, paymentAction);
+        logger.info("Started integrated payment for order {}, id: {}, amount: {}, device id {}", orderToPay.incrementOrderId, orderToPay.id, paymentAction.amount, device.id);
         printFeedBack("Starting payment process");
     }
     

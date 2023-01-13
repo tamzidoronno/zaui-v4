@@ -2596,6 +2596,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
 
     public void updateZauiActivityUnpaidAmounts(Order order, boolean isPaid) {
         List<String> multiLevelNames = database.getMultilevelNames("PmsManager", storeId);
+        //TODO: need to refactor usage of pmsmanager
         for (String multilevelName : multiLevelNames) {
             PmsManager pmsManager = getShopSpringScope.getNamedSessionBean(multilevelName, PmsManager.class);
             if (pmsManager != null) {

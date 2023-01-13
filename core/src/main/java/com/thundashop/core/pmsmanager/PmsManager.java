@@ -1,6 +1,5 @@
 package com.thundashop.core.pmsmanager;
 
-import static com.thundashop.core.gotohub.constant.GotoConstants.GOTO_BOOKING_CHANNEL_NAME;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -27,6 +26,7 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.thundashop.services.bookingservice.IPmsBookingService;
 import com.thundashop.core.common.*;
 import com.thundashop.services.zauiactivityservice.IZauiActivityService;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -126,6 +126,9 @@ import lombok.extern.slf4j.Slf4j;
 public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Autowired
     IZauiActivityService zauiActivityService;
+
+    @Autowired
+    IPmsBookingService pmsBookingService;
 
     private NullSafeConcurrentHashMap<String, PmsBooking> bookings = new NullSafeConcurrentHashMap<>();
 

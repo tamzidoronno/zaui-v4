@@ -149,6 +149,9 @@ import com.thundashop.core.verifonemanager.VerifoneFeedback;
 import com.thundashop.core.warehousemanager.WareHouseManager;
 import com.thundashop.core.webmanager.WebManager;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
 
 @Component
 @GetShopSession
@@ -341,7 +344,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     @Override
     public List<DataCommon> retreiveData(Credentials credentials) {
         String dateAfterDataToRetrieve = env.getProperty("data.filter."  + storeId);
-        if(StringUtils.isBlank(dateAfterDataToRetrieve)) return super.retreiveData(credentials, null);
+        if(isBlank(dateAfterDataToRetrieve)) return super.retreiveData(credentials, null);
         Date dt = null;
         try {
             dt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateAfterDataToRetrieve);
@@ -764,11 +767,14 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             if (user == null) {
                 if (order.session != null && order.session.equals(getSession().id)) {
                     result.add(order);
+                    setUserAccountingIdOnOrder(order);
                 }
             } else if (user.isAdministrator() || user.isEditor()) {
                 result.add(order);
+                setUserAccountingIdOnOrder(order);
             } else if (order.userId != null && order.userId.equals(user.id)) {
                 result.add(order);
+                setUserAccountingIdOnOrder(order);
             }
         }
         
@@ -5397,10 +5403,26 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             .map(o -> getOrderSecure(o))
             .forEach(order -> {
                 order.transferredToCentral = true;
-                setAccountingAccountIdOnUser(order.userId);
-                logger.info("Update user {} order: {} as {}", order.userId, order.incrementOrderId, userManager.getUserByIdIncludedDeleted(order.userId).accountingId);
                 super.saveObject(order);
             });
+    }
+
+    private void setUserAccountingIdOnOrder(Order order) {
+        if(isNotBlank(order.userAccountingId)) return;
+        setAccountingAccountIdOnUser(order.userId);
+        User user = userManager.getUserByIdIncludedDeleted(order.userId);
+        if(user == null) {
+            logger.info("Update userid {} of order: {} not found", order.userId, order.incrementOrderId);
+            return;
+        }
+        String accountid = user.accountingId;
+        if(isBlank(accountid)) {
+            accountid = String.valueOf(user.customerId);
+            logger.info("Update user {} of order: {} from customerId: {}", order.userId, order.incrementOrderId, accountid);
+        }
+        order.userAccountingId = accountid;
+        logger.info("Update user {} order: {} as {}", order.userId, order.incrementOrderId, accountid);
+        super.saveObject(order);
     }
 
     private void setAccountingAccountIdOnUser(String userId) {

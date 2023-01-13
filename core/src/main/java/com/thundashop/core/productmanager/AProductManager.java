@@ -10,6 +10,9 @@ import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.productmanager.data.*;
 import com.thundashop.core.usermanager.data.User;
+import com.thundashop.core.zauiactivity.ZauiActivityManager;
+import com.thundashop.zauiactivity.dto.ZauiActivity;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
@@ -20,23 +23,25 @@ import java.util.stream.Collectors;
  */
 public abstract class AProductManager extends ManagerBase {
 
-    HashMap<String, ProductList> productList = new HashMap();
-    public HashMap<String, ProductCategory> categories = new HashMap();
-    
+    HashMap<String, ProductList> productList = new HashMap<>();
+    HashMap<String, ProductCategory> categories = new HashMap<>();    
 
     private final Map<String, Product> products = new HashMap<>();
     public ProductConfiguration productConfiguration = new ProductConfiguration();
-    public HashMap<Integer, TaxGroup> taxGroups = new HashMap();
+    HashMap<Integer, TaxGroup> taxGroups = new HashMap<>();
     
-    HashMap<Integer, AccountingDetail> accountingAccountDetails = new HashMap();
+    HashMap<Integer, AccountingDetail> accountingAccountDetails = new HashMap<>();
 
     private Set<Product> sortedProducts;
     
     @Autowired
-    public PageManager pageManager;
+    PageManager pageManager;
 
     @Autowired
-    public ListManager listManager;
+    ListManager listManager;
+
+    @Autowired
+    ZauiActivityManager zauiActivityManager;
     
     protected Product finalize(Product product) throws ErrorException {
         if (product == null) {
@@ -89,7 +94,7 @@ public abstract class AProductManager extends ManagerBase {
         TaxGroup taxGroup = getTaxGroupAbstract(product.taxgroup);
         addOverrideTaxGroup(taxGroup, product);
         
-        List<TaxGroup> additionalTaxGroups = new ArrayList(product.additionalTaxGroupObjects);
+        List<TaxGroup> additionalTaxGroups = new ArrayList<>(product.additionalTaxGroupObjects);
         for (TaxGroup additionalTaxGroup : additionalTaxGroups) {
             addOverrideTaxGroup(additionalTaxGroup, product);
         }
@@ -172,6 +177,11 @@ public abstract class AProductManager extends ManagerBase {
     protected Product getProduct(String productId) throws ErrorException {
         Product product = getProductById(productId);
         if (product == null) {
+            ZauiActivity activity = zauiActivityManager.getZauiActivity(productId);
+            if (activity != null) {
+                // not sure finalize with must or not
+                return activity;
+            }
             return null;
         }
         product = finalize(product);
@@ -200,7 +210,7 @@ public abstract class AProductManager extends ManagerBase {
     }
 
     protected List<Product> getProducts(ProductCriteria searchCriteria) throws ErrorException {
-        ArrayList<Product> retProducts = new ArrayList();
+        ArrayList<Product> retProducts = new ArrayList<>();
         for (Product product : getProducts()) {
             if (product.check(searchCriteria) || searchCriteria.pageIds.contains(product.pageId)) {
                 product = finalize(product);
@@ -226,14 +236,14 @@ public abstract class AProductManager extends ManagerBase {
     }
 
     protected List<Product> latestProducts(int count) throws ErrorException {
-        ArrayList<Product> result = new ArrayList();
+        ArrayList<Product> result = new ArrayList<>();
         for (Product product : getProducts()) {
             product = finalize(product);
             result.add(product);
         }
 
         Collections.sort(result);
-        ArrayList<Product> limitedResult = new ArrayList();
+        ArrayList<Product> limitedResult = new ArrayList<>();
         for (int i = 0; i < result.size(); i++) {
             if (i == count) {
                 break;
@@ -254,7 +264,7 @@ public abstract class AProductManager extends ManagerBase {
 
     public SearchResult search(String searchWord, Integer pageSize, Integer page) {
         List<Product> filteredProducts = getProductIdsThatMatchSearchWord(searchWord);
-        List<Product> retProducts = new ArrayList(filteredProducts);
+        List<Product> retProducts = new ArrayList<>(filteredProducts);
 
         SearchResult result = new SearchResult();
 
@@ -280,16 +290,19 @@ public abstract class AProductManager extends ManagerBase {
             result.pages = (int) Math.ceil(pages);
         }
 
-        List<Product> finalizedProducts = new ArrayList();
+        List<Product> finalizedProducts = new ArrayList<>();
         retProducts.stream().forEach(p -> finalizedProducts.add(finalize(p)));
         result.products = finalizedProducts;
-        result.pageNumber = page;
+
+        if(page != null){
+            result.pageNumber = page;
+        }      
 
         return result;
     }
 
     private List<Product> getProductIdsThatMatchSearchWord(String searchWord) {
-        Set<String> filteredProductIds = new HashSet();
+        Set<String> filteredProductIds = new HashSet<>();
         if (searchWord == null || searchWord.isEmpty()) {
             getProducts().forEach(p -> filteredProductIds.add(p.id));
         }
@@ -303,7 +316,7 @@ public abstract class AProductManager extends ManagerBase {
                     .forEach(p -> filteredProductIds.add(p.id));
         }
 
-        List<Product> retProducts = new ArrayList();
+        List<Product> retProducts = new ArrayList<>();
         for (String productId : filteredProductIds) {
             Product product = getProductById(productId);
             if (product != null) {
@@ -377,7 +390,7 @@ public abstract class AProductManager extends ManagerBase {
     }
     
     public List<AccountingDetail> getAccountingAccounts() {
-        ArrayList result = new ArrayList(accountingAccountDetails.values());
+        ArrayList<AccountingDetail> result = new ArrayList<>(accountingAccountDetails.values());
         Collections.sort(result);
         return result;
     }
@@ -409,13 +422,13 @@ public abstract class AProductManager extends ManagerBase {
 
     void doubleCheckAndCorrectAccounts(List<TaxGroup> taxlist) {
         
-        HashMap<Integer, TaxGroup> taxesByAccounting = new HashMap();
+        HashMap<Integer, TaxGroup> taxesByAccounting = new HashMap<>();
         for(TaxGroup tax : taxlist) {
             taxesByAccounting.put(tax.accountingTaxGroupId, tax);
         }
         
         
-        HashMap<Integer, TaxGroup> taxesByGetShop = new HashMap();
+        HashMap<Integer, TaxGroup> taxesByGetShop = new HashMap<>();
         for(TaxGroup tax : taxlist) {
             taxesByGetShop.put(tax.groupNumber, tax);
         }

@@ -245,4 +245,9 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
                 .setUnpaidAmount(0);
         pmsManager.saveBooking(booking);
     }
+
+    @Override
+    public ZauiActivity getZauiActivity(String productId) {
+        return zauiActivityService.getZauiActivityById(productId, getSessionInfo()).orElse(null);
+    }
 }

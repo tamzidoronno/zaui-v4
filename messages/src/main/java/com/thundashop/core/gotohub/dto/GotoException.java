@@ -1,5 +1,6 @@
 package com.thundashop.core.gotohub.dto;
 
+import com.thundashop.core.gotohub.constant.GoToStatusCodes;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -15,5 +16,9 @@ public class GotoException extends Exception {
         super();
         this.statusCode = statusCode;
         this.message = message;
+    }
+    public GotoException(GoToStatusCodes statusCodes) {
+        this.statusCode = statusCodes.code;
+        this.message = statusCodes.message;
     }
 }

@@ -56,8 +56,7 @@ public class GotoService implements IGotoService {
     public List<PmsBooking> getUnpaidGotoBookings(int autoDeletionTime, SessionInfo sessionInfo) {
         return pmsBookingService.getGotoBookings(sessionInfo).stream()
                 .filter(booking -> booking.getActiveRooms() != null && !booking.getActiveRooms().isEmpty())
-                .filter(booking -> (booking.orderIds == null || booking.orderIds.isEmpty())
-                        && booking.isOlderThan(autoDeletionTime))
+                .filter(booking -> booking.isOlderThan(autoDeletionTime) && booking.getUnpaidAmountWithActivities() !=0)
                 .collect(Collectors.toList());
     }
 }

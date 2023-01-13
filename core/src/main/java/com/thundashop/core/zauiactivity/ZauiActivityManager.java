@@ -138,7 +138,7 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
     @Override
     public GuestAddonsSummary addActivityToWebBooking(AddZauiActivityToWebBookingDto activity) throws ZauiException {
         PmsBooking booking = pmsManager.getBooking(activity.getPmsBookingId());
-        booking = zauiActivityService.addActivityToBooking(activity, booking, getSessionInfo());
+        booking = zauiActivityService.addActivityToWebBooking(activity, booking, getSessionInfo());
         pmsManager.saveBooking(booking);
         return pmsBookingProcess.getAddonsSummary(new ArrayList<>());
     }
@@ -154,6 +154,7 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
     @Override
     public void cancelActivity(String pmsBookingId, String octoBookingId) throws ZauiException {
         PmsBooking booking = pmsManager.getBooking(pmsBookingId);
+        zauiActivityService.restrictGoToBookingWithActivities(booking);
         BookingZauiActivityItem activityItem = booking.getConfirmedZauiActivities().stream()
                 .filter(item -> item.getOctoBooking().getId().equals(octoBookingId))
                 .findFirst()

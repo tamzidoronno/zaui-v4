@@ -474,6 +474,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     public void markAsPaidInternal(Order order, Date date, Double amount) {
         checkPaymentDateValidation(order, date);
+        updateZauiActivityUnpaidAmounts(order,true);
         
         giftCardManager.createNewCards(order);
         
@@ -2571,7 +2572,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                         saveObject(o);
                     });
         }
-        updateZauiActivityUnpaidAmounts(order);
+        updateZauiActivityUnpaidAmounts(order,false);
         order.cart.clear();
         order.virtuallyDeleted = true;
 
@@ -2587,24 +2588,30 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
     }
 
-    private void updateZauiActivityUnpaidAmounts(Order order) {
+    public void updateZauiActivityUnpaidAmounts(Order order, boolean isPaid) {
         List<String> multiLevelNames = database.getMultilevelNames("PmsManager", storeId);
         for (String multilevelName : multiLevelNames) {
             PmsManager pmsManager = getShopSpringScope.getNamedSessionBean(multilevelName, PmsManager.class);
             if (pmsManager != null) {
                 PmsBooking booking = pmsManager.getBookingWithOrderId(order.id);
+                if (booking.bookingZauiActivityItems.isEmpty()) {
+                    return;
+                }
                 Set<String> uniqueActivityItemIds = order.cart.getItems().stream()
                         .filter(item -> item.getProduct().tag.equals(ZauiConstants.ZAUI_ACTIVITY_TAG))
                         .map(item -> item.getProduct().id)
                         .collect(Collectors.toSet());
-                if (uniqueActivityItemIds.size() > 0) {
-                    for (BookingZauiActivityItem bookingZauiActivityItem : booking.bookingZauiActivityItems) {
-                        if (uniqueActivityItemIds.contains(bookingZauiActivityItem.getZauiActivityId())) {
-                            bookingZauiActivityItem.setUnpaidAmount(bookingZauiActivityItem.price);
-                        }
-                    }
-                    saveObject(booking);
+
+                if (uniqueActivityItemIds.isEmpty()) {
+                    return;
                 }
+                for (BookingZauiActivityItem bookingZauiActivityItem : booking.bookingZauiActivityItems) {
+                    if (uniqueActivityItemIds.contains(bookingZauiActivityItem.getZauiActivityId())) {
+                        double newUnpaidAmount = isPaid ? 0 : bookingZauiActivityItem.price;
+                        bookingZauiActivityItem.setUnpaidAmount(newUnpaidAmount);
+                    }
+                }
+                saveObject(booking);
             }
         }
     }
@@ -5279,7 +5286,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         List<String> credittedOrders = new ArrayList<>();
         credittedOrders.add(credited.id);
-        updateZauiActivityUnpaidAmounts(order);
+        updateZauiActivityUnpaidAmounts(order,false);
         try {
             addOrdersToBookings(credittedOrders);
         }catch(GetShopBeanException ex) {

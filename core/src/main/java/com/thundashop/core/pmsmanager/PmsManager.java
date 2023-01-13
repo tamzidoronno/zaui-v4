@@ -1934,8 +1934,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
-    public void cancelRoom(String roomId) {
+    public void cancelRoom(String roomId) throws ZauiException {
         PmsBooking booking = getBookingFromRoom(roomId);
+        //restricting deletion of kabru booking for initial release
+        zauiActivityService.restrictGoToBookingWithActivities(booking);
         PmsBookingRooms remove = booking.findRoom(roomId);
         remove.addedToWaitingList = false;
         bookingEngine.deleteBooking(remove.bookingId);

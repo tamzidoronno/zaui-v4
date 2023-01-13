@@ -27,7 +27,6 @@ import java.util.stream.IntStream;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-
 @Slf4j
 @Service
 public class ZauiActivityService implements IZauiActivityService {
@@ -373,6 +372,7 @@ public class ZauiActivityService implements IZauiActivityService {
         }).collect(Collectors.toList());
         return orderCreateRow;
     }
+
     @Override
     public void restrictGoToBookingWithActivities(PmsBooking booking) throws ZauiException {
         if (isNotBlank(booking.channel) && booking.channel.equals(GotoConstants.GOTO_BOOKING_CHANNEL_NAME)

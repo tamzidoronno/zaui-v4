@@ -1932,6 +1932,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void cancelRoom(String roomId) throws ZauiException {
         PmsBooking booking = getBookingFromRoom(roomId);
+        //restricting deletion of kabru booking for initial release
         zauiActivityService.restrictGoToBookingWithActivities(booking);
         PmsBookingRooms remove = booking.findRoom(roomId);
         remove.addedToWaitingList = false;
@@ -1955,6 +1956,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public String removeFromBooking(String bookingId, String roomId) throws Exception {
         PmsBooking booking = getBookingUnsecure(bookingId);
+        //restricting deletion of kabru booking for initial release
         zauiActivityService.restrictGoToBookingWithActivities(booking);
         checkSecurity(booking);
         List<PmsBookingRooms> toRemove = new ArrayList<>();
@@ -2078,12 +2080,14 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void deleteBooking(String bookingId) {
         PmsBooking booking = bookings.get(bookingId);
-        try {
-            //restricting deletion of kabru booking for initial release
-            zauiActivityService.restrictGoToBookingWithActivities(booking);
-        } catch (ZauiException e){
-            log.error("Delete goto booking with activities exception: {} actual error: {}",e.getMessage(), e);
-           throw new RuntimeException(e.getMessage());
+        if(booking.getUnpaidAmountWithActivities() == 0){
+            try {
+                //restricting deletion of Unpaid kabru booking for initial release
+                zauiActivityService.restrictGoToBookingWithActivities(booking);
+            } catch (ZauiException e){
+                log.error("Delete goto booking with activities exception: {} actual error: {}",e.getMessage(), e);
+                throw new RuntimeException(e.getMessage());
+            }
         }
 
         for (PmsBookingRooms room : booking.getActiveRooms()) {

@@ -1026,7 +1026,7 @@ public class PmsBookingProcess extends GetShopSessionBeanNamed implements IPmsBo
         for (BookingZauiActivityItem activityItem : booking.bookingZauiActivityItems) {
             try {
                 OctoBooking octoConfirmedBooking = zauiActivityService.confirmOctoBooking(activityItem, booking, user);
-                zauiActivityService.addActivityToBooking(activityItem, octoConfirmedBooking, booking, zauiActivityManager.getSessionInfo());
+                zauiActivityService.addActivityToPmsBooking(activityItem, octoConfirmedBooking, booking, zauiActivityManager.getSessionInfo());
             } catch (Exception ex) {
                 log.error("Failed to confirm activity {} for booking {}. Reason: {}. Actual error: {}",
                         activityItem.toString(), booking.id, ex.getMessage(), ex);

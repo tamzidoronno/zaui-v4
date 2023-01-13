@@ -105,6 +105,9 @@ public class ZauiActivityValidationService implements IZauiActivityValidationSer
             log.error("Activity currency: {}", pricing.getCurrency() != null ? pricing.getCurrency() : "");
             throw new GotoException(DIFFERENT_CURRENCY.code, DIFFERENT_CURRENCY.message);
         }
+        if(pricing.getIncludedTaxes() == null) {
+            throw new GotoException(RESERVATION_INCLUDED_TAX_RATE_MISSING);
+        }
         List<Double> taxRate = pricing.getIncludedTaxes().stream()
                 .map(taxData -> new Double(taxData.getRate())).collect(Collectors.toList());
         validateTaxRates(supplierId, taxRate, productSessionInfo);

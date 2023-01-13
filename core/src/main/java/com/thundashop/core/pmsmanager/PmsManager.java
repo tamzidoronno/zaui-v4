@@ -26,6 +26,7 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.thundashop.core.common.*;
 import com.thundashop.services.zauiactivityservice.IZauiActivityService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -61,19 +62,6 @@ import com.thundashop.core.cartmanager.data.AddonsInclude;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.Coupon;
 import com.thundashop.core.checklist.ChecklistManager;
-import com.thundashop.core.common.Administrator;
-import com.thundashop.core.common.BookingEngineException;
-import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.common.ErrorException;
-import com.thundashop.core.common.FilterOptions;
-import com.thundashop.core.common.FilteredData;
-import com.thundashop.core.common.FrameworkConfig;
-import com.thundashop.core.common.GrafanaFeederImpl;
-import com.thundashop.core.common.GrafanaManager;
-import com.thundashop.core.common.NullSafeConcurrentHashMap;
-import com.thundashop.core.common.Session;
-import com.thundashop.core.common.Setting;
-import com.thundashop.core.common.ZReportProcessor;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -1942,8 +1930,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     }
 
     @Override
-    public void cancelRoom(String roomId) {
+    public void cancelRoom(String roomId) throws ZauiException {
         PmsBooking booking = getBookingFromRoom(roomId);
+        //restricting deletion of kabru booking for initial release
+        zauiActivityService.restrictGoToBookingWithActivities(booking);
         PmsBookingRooms remove = booking.findRoom(roomId);
         remove.addedToWaitingList = false;
         bookingEngine.deleteBooking(remove.bookingId);
@@ -1966,6 +1956,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public String removeFromBooking(String bookingId, String roomId) throws Exception {
         PmsBooking booking = getBookingUnsecure(bookingId);
+        //restricting deletion of kabru booking for initial release
+        zauiActivityService.restrictGoToBookingWithActivities(booking);
         checkSecurity(booking);
         List<PmsBookingRooms> toRemove = new ArrayList<>();
         String roomName = "";
@@ -2088,6 +2080,16 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Override
     public void deleteBooking(String bookingId) {
         PmsBooking booking = bookings.get(bookingId);
+        if(booking.getUnpaidAmountWithActivities() == 0){
+            try {
+                //restricting deletion of Unpaid kabru booking for initial release
+                zauiActivityService.restrictGoToBookingWithActivities(booking);
+            } catch (ZauiException e){
+                log.error("Delete goto booking with activities exception: {} actual error: {}",e.getMessage(), e);
+                throw new RuntimeException(e.getMessage());
+            }
+        }
+
         for (PmsBookingRooms room : booking.getActiveRooms()) {
             if (room.bookingId != null && !room.bookingId.isEmpty()) {
                 bookingEngine.deleteBooking(room.bookingId);

@@ -375,4 +375,11 @@ public class ZauiActivityService implements IZauiActivityService {
         }).collect(Collectors.toList());
         return orderCreateRow;
     }
+
+    @Override
+    public void restrictGoToBookingWithActivities(PmsBooking booking) throws ZauiException {
+        if (isNotBlank(booking.channel) && booking.channel.equals(GotoConstants.GOTO_BOOKING_CHANNEL_NAME)) {
+            throw new ZauiException(ZauiStatusCodes.GOTO_CANCELLATION_DENIED);
+        }
+    }
 }

@@ -48,4 +48,6 @@ public interface IZauiActivityService {
     PmsOrderCreateRow createOrderCreateRowForZauiActivities(List<BookingZauiActivityItem> activityItems);
 
     PmsBooking removeActivityFromBooking(String activityItemId, PmsBooking booking);
+
+    void restrictGoToBookingWithActivities(PmsBooking booking) throws ZauiException;
 }

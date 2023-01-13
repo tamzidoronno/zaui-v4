@@ -154,6 +154,7 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
     @Override
     public void cancelActivity(String pmsBookingId, String octoBookingId) throws ZauiException {
         PmsBooking booking = pmsManager.getBooking(pmsBookingId);
+        zauiActivityService.restrictGoToBookingWithActivities(booking);
         BookingZauiActivityItem activityItem = booking.getConfirmedZauiActivities().stream()
                 .filter(item -> item.getOctoBooking().getId().equals(octoBookingId))
                 .findFirst()

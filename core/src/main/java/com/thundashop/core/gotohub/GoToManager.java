@@ -281,7 +281,6 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             PmsBooking booking = cancellationValidationService.validateCancellationReq(reservationId,
                     deletionRequestTime, pmsManager.getConfiguration(),
                     goToConfiguration.cuttOffHours, pmsManager.getSessionInfo());
-            booking.isAllowedDeleteGotoBooking = true;
             pmsManager.deleteBooking(reservationId);
             pmsManager.logEntry("Deleted by channel manager", reservationId, null);
             handleOrderForCancelledBooking(reservationId);
@@ -313,10 +312,6 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         gotoService
                 .getUnpaidGotoBookings(goToConfiguration.getUnpaidBookingExpirationTime(), pmsManager.getSessionInfo())
                 .forEach(booking -> {
-                    pmsManager.removeAllUnclosedOrders(booking.id);
-                    if(!booking.orderIds.isEmpty()) {
-                        return;
-                    }
                     pmsManager.logEntry("Auto deleted Goto Booking because it has expired.", booking.id, null);
                     cancelBooking(booking.id);
                     log.info("Auto deleted unpaid Goto booking as it has been expired. Reservation Id: {}", booking.id);

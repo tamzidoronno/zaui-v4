@@ -102,8 +102,6 @@ public class PmsBooking extends DataCommon {
 
     //Goto Related Properties
     public String paymentMethodNameFromGoto = "";
-    @Transient
-    public boolean isAllowedDeleteGotoBooking = false;
 
     // Zaui Activity related Properties
     public List<BookingZauiActivityItem> bookingZauiActivityItems = new ArrayList<>();

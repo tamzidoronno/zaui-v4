@@ -31,18 +31,6 @@ public class OctoBooking {
 }
 
 @Data
-class Contact {
-    private String fullName;
-    private String firstName;
-    private String lastName;
-    private String emailAddress;
-    private String phoneNumber;
-    private List<String> locales = null;
-    private String country;
-    private String notes;
-}
-
-@Data
 class DeliveryOption {
     private String deliveryFormat;
     private String deliveryValue;

@@ -376,7 +376,7 @@ public class ZauiActivityService implements IZauiActivityService {
     @Override
     public void restrictGoToBookingWithActivities(PmsBooking booking) throws ZauiException {
         if (isNotBlank(booking.channel) && booking.channel.equals(GotoConstants.GOTO_BOOKING_CHANNEL_NAME)
-                && !booking.bookingZauiActivityItems.isEmpty() && booking.getUnpaidAmountWithActivities() == 0) {
+                && booking.bookingZauiActivityItems != null && !booking.bookingZauiActivityItems.isEmpty()) {
             throw new ZauiException(ZauiStatusCodes.GOTO_CANCELLATION_DENIED);
         }
     }

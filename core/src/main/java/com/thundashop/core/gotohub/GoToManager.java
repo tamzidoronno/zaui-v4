@@ -25,6 +25,7 @@ import com.thundashop.services.gotoservice.*;
 import com.thundashop.services.validatorservice.IGotoBookingRequestValidationService;
 import com.thundashop.services.validatorservice.IGotoCancellationValidationService;
 import com.thundashop.services.validatorservice.IGotoConfirmBookingValidationService;
+import com.thundashop.zauiactivity.constant.ZauiConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.stereotype.Component;
@@ -312,9 +313,11 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         gotoService
                 .getUnpaidGotoBookings(goToConfiguration.getUnpaidBookingExpirationTime(), pmsManager.getSessionInfo())
                 .forEach(booking -> {
-                    pmsManager.logEntry("Autodeleted Goto Booking because it has expired.", booking.id, null);
+                    pmsManager.logEntry("Auto deleted Goto Booking because it has expired.", booking.id, null);
+                    booking.bookingZauiActivityItems
+                            .forEach(item-> item.getOctoBooking().setStatus(ZauiConstants.OCTO_CANCELLED_STATUS));
                     cancelBooking(booking.id);
-                    log.info("Autodeleted unpaid Goto booking as it has been expired. Reservation Id: {}", booking.id);
+                    log.info("Auto deleted unpaid Goto booking as it has been expired. Reservation Id: {}", booking.id);
                 });
     }
 

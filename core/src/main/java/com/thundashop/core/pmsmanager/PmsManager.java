@@ -1,5 +1,6 @@
 package com.thundashop.core.pmsmanager;
 
+import static com.thundashop.core.gotohub.constant.GotoConstants.GOTO_BOOKING_CHANNEL_NAME;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.lang3.StringUtils.isBlank;

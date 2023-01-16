@@ -55,9 +55,9 @@ public class GotoConfirmBookingValidationService implements IGotoConfirmBookingV
 
     private void validateIsActivityMisMatchedWithHoldBooking(List<GotoActivityConfirmationDto> activitiesFromGoto,
                                                              List<BookingZauiActivityItem> holdBookingActivityItems) throws GotoException {
-        if(!isHoldBookingHasActivity(holdBookingActivityItems) && isConfirmBookingReqHasActivity(activitiesFromGoto))
+        if(!holdBookingHasActivity(holdBookingActivityItems) && confirmBookingReqHasActivity(activitiesFromGoto))
             throw new GotoException(CONFIRMATION_HOLD_BOOKING_DOESNT_HAVE_ACTIVITY);
-        if(isHoldBookingHasActivity(holdBookingActivityItems) && !isConfirmBookingReqHasActivity(activitiesFromGoto))
+        if(holdBookingHasActivity(holdBookingActivityItems) && !confirmBookingReqHasActivity(activitiesFromGoto))
             throw new GotoException(CONFIRMATION_REQUEST_ACTIVITY_MISSING);
     }
 
@@ -129,10 +129,10 @@ public class GotoConfirmBookingValidationService implements IGotoConfirmBookingV
             throw new GotoException(CONFIRMATION_INCLUDED_TAX_RATE_MISSING);
         }
     }
-    private boolean isHoldBookingHasActivity(List<BookingZauiActivityItem> activityItems) {
+    private boolean holdBookingHasActivity(List<BookingZauiActivityItem> activityItems) {
         return activityItems != null && !activityItems.isEmpty();
     }
-    private boolean isConfirmBookingReqHasActivity (List<GotoActivityConfirmationDto> activitiesFromGoto) {
+    private boolean confirmBookingReqHasActivity(List<GotoActivityConfirmationDto> activitiesFromGoto) {
         return activitiesFromGoto!= null && !activitiesFromGoto.isEmpty();
     }
 }

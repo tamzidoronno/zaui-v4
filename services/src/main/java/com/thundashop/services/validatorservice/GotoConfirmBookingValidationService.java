@@ -2,6 +2,7 @@ package com.thundashop.services.validatorservice;
 
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.*;
 import static com.thundashop.core.gotohub.constant.GotoConstants.GOTO_PAYMENT;
+import static com.thundashop.core.gotohub.constant.GotoConstants.STAY_PAYMENT;
 import static com.thundashop.zauiactivity.constant.ZauiConstants.OCTO_CONFIRMED_STATUS;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -35,9 +36,11 @@ public class GotoConfirmBookingValidationService implements IGotoConfirmBookingV
                                                 GotoConfirmBookingRequest gotoConfirmBookingReq) throws GotoException {
         PmsBooking booking = pmsBookingService.getPmsBookingById(reservationId, pmsManagerSession);
         validateBookingId(booking);
+        if(gotoConfirmBookingReq == null) return booking;
+        validateIsActivityMisMatchedWithHoldBooking(gotoConfirmBookingReq.getActivities(), booking.bookingZauiActivityItems);
+        validateActivities(gotoConfirmBookingReq.getActivities());
         validateOctoReservationIds(gotoConfirmBookingReq.getActivities(), booking.bookingZauiActivityItems);
         validateIfActivitiesConfirmed(gotoConfirmBookingReq.getActivities());
-        validateActivities(gotoConfirmBookingReq.getActivities());
         validatePaymentMethod(paymentId, gotoConfirmBookingReq.getPaymentMethod(), gotoConfirmBookingReq.getActivities());
         return booking;
     }
@@ -50,8 +53,18 @@ public class GotoConfirmBookingValidationService implements IGotoConfirmBookingV
             throw new GotoException(BOOKING_DELETED.code, BOOKING_DELETED.message);
     }
 
+    private void validateIsActivityMisMatchedWithHoldBooking(List<GotoActivityConfirmationDto> activitiesFromGoto,
+                                                             List<BookingZauiActivityItem> holdBookingActivityItems) throws GotoException {
+        if(!holdBookingHasActivity(holdBookingActivityItems) && confirmBookingReqHasActivity(activitiesFromGoto))
+            throw new GotoException(CONFIRMATION_HOLD_BOOKING_DOESNT_HAVE_ACTIVITY);
+        if(holdBookingHasActivity(holdBookingActivityItems) && !confirmBookingReqHasActivity(activitiesFromGoto))
+            throw new GotoException(CONFIRMATION_REQUEST_ACTIVITY_MISSING);
+    }
+
     private void validateOctoReservationIds(List<GotoActivityConfirmationDto> activitiesFromGoto,
                                             List<BookingZauiActivityItem> activityItems) throws GotoException {
+        if((activityItems == null || activityItems.isEmpty()) && (activitiesFromGoto == null || activitiesFromGoto.isEmpty()))
+            return;
         Set<String> existingOctoReservationIds = activityItems.stream()
                 .map(activityItem -> activityItem.getOctoBooking().getId())
                 .collect(Collectors.toSet());
@@ -81,9 +94,14 @@ public class GotoConfirmBookingValidationService implements IGotoConfirmBookingV
 
     private void validatePaymentMethod(String paymentMethodId, String requestedPaymentMethod,
                                        List<GotoActivityConfirmationDto> activities) throws GotoException {
-        if(isNotBlank(requestedPaymentMethod) && requestedPaymentMethod.equals(GOTO_PAYMENT)) {
-            if(activities != null && activities.isEmpty()) throw new GotoException(ACTIVITY_GOTO_PAYMENT_METHOD);
-            if(isBlank(paymentMethodId)) throw new GotoException(PAYMENT_METHOD_NOT_FOUND);
+        if (isNotBlank(requestedPaymentMethod) && requestedPaymentMethod.equals(GOTO_PAYMENT)) {
+            if (activities != null && !activities.isEmpty()) throw new GotoException(ACTIVITY_GOTO_PAYMENT_METHOD);
+            if (isBlank(paymentMethodId)) throw new GotoException(PAYMENT_METHOD_NOT_FOUND);
+        }
+        if (isNotBlank(requestedPaymentMethod) && requestedPaymentMethod.equals(STAY_PAYMENT)){
+            if (activities == null || activities.isEmpty())
+                throw new GotoException(WITHOUT_ACTIVITY_STAY_PAYMENT_METHOD);
+            if (isBlank(paymentMethodId)) throw new GotoException(WITHOUT_ACTIVITY_STAY_PAYMENT_METHOD);
         }
     }
 
@@ -110,5 +128,11 @@ public class GotoConfirmBookingValidationService implements IGotoConfirmBookingV
         if(activity.getOctoConfirmationResponse().getPricing().getIncludedTaxes() == null) {
             throw new GotoException(CONFIRMATION_INCLUDED_TAX_RATE_MISSING);
         }
+    }
+    private boolean holdBookingHasActivity(List<BookingZauiActivityItem> activityItems) {
+        return activityItems != null && !activityItems.isEmpty();
+    }
+    private boolean confirmBookingReqHasActivity(List<GotoActivityConfirmationDto> activitiesFromGoto) {
+        return activitiesFromGoto!= null && !activitiesFromGoto.isEmpty();
     }
 }

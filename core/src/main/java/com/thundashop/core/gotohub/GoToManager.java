@@ -316,6 +316,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                     pmsManager.logEntry("Auto deleted Goto Booking because it has expired.", booking.id, null);
                     booking.bookingZauiActivityItems
                             .forEach(item-> item.getOctoBooking().setStatus(ZauiConstants.OCTO_CANCELLED_STATUS));
+                    pmsManager.saveBooking(booking);
                     cancelBooking(booking.id);
                     log.info("Auto deleted unpaid Goto booking as it has been expired. Reservation Id: {}", booking.id);
                 });

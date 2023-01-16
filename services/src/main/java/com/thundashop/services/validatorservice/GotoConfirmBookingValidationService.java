@@ -36,7 +36,7 @@ public class GotoConfirmBookingValidationService implements IGotoConfirmBookingV
         PmsBooking booking = pmsBookingService.getPmsBookingById(reservationId, pmsManagerSession);
         validateBookingId(booking);
         if(gotoConfirmBookingReq == null) return booking;
-        validateIsActivityMissing(gotoConfirmBookingReq.getActivities(), booking.bookingZauiActivityItems);
+        validateIsActivityMisMatchedWithHoldBooking(gotoConfirmBookingReq.getActivities(), booking.bookingZauiActivityItems);
         validateActivities(gotoConfirmBookingReq.getActivities());
         validateOctoReservationIds(gotoConfirmBookingReq.getActivities(), booking.bookingZauiActivityItems);
         validateIfActivitiesConfirmed(gotoConfirmBookingReq.getActivities());
@@ -52,11 +52,11 @@ public class GotoConfirmBookingValidationService implements IGotoConfirmBookingV
             throw new GotoException(BOOKING_DELETED.code, BOOKING_DELETED.message);
     }
 
-    private void validateIsActivityMissing(List<GotoActivityConfirmationDto> activitiesFromGoto,
-                                            List<BookingZauiActivityItem> activityItems) throws GotoException {
-        if((activityItems == null || activityItems.isEmpty()) && (activitiesFromGoto!= null && !activitiesFromGoto.isEmpty()))
+    private void validateIsActivityMisMatchedWithHoldBooking(List<GotoActivityConfirmationDto> activitiesFromGoto,
+                                                             List<BookingZauiActivityItem> holdBookingActivityItems) throws GotoException {
+        if((holdBookingActivityItems == null || holdBookingActivityItems.isEmpty()) && (activitiesFromGoto!= null && !activitiesFromGoto.isEmpty()))
             throw new GotoException(CONFIRMATION_HOLD_BOOKING_DOESNT_HAVE_ACTIVITY);
-        if((activitiesFromGoto == null || activitiesFromGoto.isEmpty()) && (activityItems!= null && !activityItems.isEmpty()))
+        if((activitiesFromGoto == null || activitiesFromGoto.isEmpty()) && (holdBookingActivityItems!= null && !holdBookingActivityItems.isEmpty()))
             throw new GotoException(CONFIRMATION_REQUEST_ACTIVITY_MISSING);
     }
 

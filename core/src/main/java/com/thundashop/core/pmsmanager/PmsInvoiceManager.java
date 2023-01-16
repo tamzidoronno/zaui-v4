@@ -48,6 +48,8 @@ import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import static com.thundashop.constant.SchedulerTimerConstant.CHECK_INVOICE_DTO_DATE;
+
 @Component
 @GetShopSession
 public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsInvoiceManager {
@@ -1775,7 +1777,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 paymentLinkConfig = res;
             }
         }
-        createScheduler("checkinvoicedtodate", "1 04 * * *", DailyInvoiceChecker.class);
+        createScheduler(CHECK_INVOICE_DTO_DATE.name, CHECK_INVOICE_DTO_DATE.time, DailyInvoiceChecker.class);
     }
     
     @Override

@@ -5,18 +5,9 @@
  */
 package com.thundashop.core.bookingengine;
 
-import com.thundashop.core.bookingengine.data.BookingTimeLineFlatten;
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
-import static com.thundashop.core.bookingengine.BookingEngine.useNewEngine;
-import com.thundashop.core.bookingengine.data.Availability;
-import com.thundashop.core.bookingengine.data.Booking;
-import com.thundashop.core.bookingengine.data.BookingEngineConfiguration;
-import com.thundashop.core.bookingengine.data.BookingGroup;
-import com.thundashop.core.bookingengine.data.BookingItem;
-import com.thundashop.core.bookingengine.data.BookingItemType;
-import com.thundashop.core.bookingengine.data.BookingTimeLine;
-import com.thundashop.core.bookingengine.data.RegistrationRules;
+import com.thundashop.core.bookingengine.data.*;
 import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
@@ -28,19 +19,14 @@ import com.thundashop.core.pagemanager.PageManager;
 import com.thundashop.core.pagemanager.data.Page;
 import com.thundashop.core.pmsmanager.TimeRepeaterData;
 import com.thundashop.core.usermanager.UserManager;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.thundashop.constant.SchedulerTimerConstant.BOOKING_ENGINE_PMS_PROCESSOR;
+import static com.thundashop.core.bookingengine.BookingEngine.useNewEngine;
 
 /**
  *
@@ -159,7 +145,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed implements IB
         }
         
         updateBookingTypesIfTypeChanged();
-        createScheduler("pmsprocessor", "0 6,16 * * *", CheckConsistencyCron.class);
+        createScheduler(BOOKING_ENGINE_PMS_PROCESSOR.name, BOOKING_ENGINE_PMS_PROCESSOR.time, CheckConsistencyCron.class);
         
         bookings.remove("012c73ac-3d77-40e6-bfd3-2a67b3de1c02");
         bookings.remove("8e2d9936-6cc6-418c-9f3c-43e1b67fe6fb");

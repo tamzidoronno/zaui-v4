@@ -2,6 +2,7 @@ package com.thundashop.constant;
 
 public enum SchedulerTimerConstant {
     BOOKING_ENGINE_PMS_PROCESSOR( "pmsprocessor","0 6,16 * * *"),
+    BOOKING_ENGINE_NEW_PMS_PROCESSOR( "pmsprocessor","0 6,16 * * *"),
     GET_SHOP_LOCK_PMS_PROCESSOR("pmsprocessor","* * * * *"),
     PMS_MANAGER_PMS_PROCESSOR("pmsprocessor","* * * * *"),
     ORDER_CAPTURE_CHECK_PROCESSOR ("ordercapturecheckprocessor","2,7,12,17,22,27,32,37,42,47,52,57 * * * *"),
@@ -27,8 +28,8 @@ public enum SchedulerTimerConstant {
     WUBOOK_PROCESSOR_2("wubookprocessor2","1 5,12,22 * * *"),
     EVENT_QUESTBACK_CHECKED("event_questback_checked","0 * * * *");
 
-    private final String name;
-    private final String time;
+    public final String name;
+    public final String time;
 
    SchedulerTimerConstant(String name, String time){
       this.name=name;

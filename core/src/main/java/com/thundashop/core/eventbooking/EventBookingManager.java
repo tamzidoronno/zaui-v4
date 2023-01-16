@@ -16,7 +16,6 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.encryption.EncryptionManager;
-import com.thundashop.core.scormmanager.Scorm;
 import com.thundashop.core.scormmanager.ScormManager;
 import com.thundashop.core.scormmanager.ScormPackage;
 import com.thundashop.core.storemanager.StorePool;
@@ -25,19 +24,12 @@ import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.utils.UtilManager;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -170,7 +162,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         }
         
         cleanBookingItemsThatDoesNotExsist();
-//        createScheduler("event_questback_checked", "0 * * * *", CheckSendQuestBackScheduler.class);
+//       createScheduler( EVENT_QUESTBACK_CHECKED.name,  EVENT_QUESTBACK_CHECKED.time, CheckSendQuestBackScheduler.class);
         stopScheduler("event_booking_scheduler");
         stopScheduler("event_questback_checked");
     }

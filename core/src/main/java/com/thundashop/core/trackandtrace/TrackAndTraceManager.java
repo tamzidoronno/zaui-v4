@@ -6,7 +6,6 @@
 package com.thundashop.core.trackandtrace;
 
 import com.braintreegateway.org.apache.commons.codec.binary.Base64;
-import com.thundashop.core.utils.ImageManager;
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
@@ -17,20 +16,15 @@ import com.thundashop.core.gsd.GdsManager;
 import com.thundashop.core.socket.WebSocketServerImpl;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
+import com.thundashop.core.utils.ImageManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.io.Serializable;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.thundashop.constant.SchedulerTimerConstant.CHECK_REMOVAL_OF_ROUTES;
 
 /**
  *
@@ -142,7 +136,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             }
         }
         
-        createScheduler("checkRemovalOfRoutes", "0 * * * *", CheckRemovalOfFinishedRoutes.class);
+        createScheduler(CHECK_REMOVAL_OF_ROUTES.name, CHECK_REMOVAL_OF_ROUTES.time, CheckRemovalOfFinishedRoutes.class);
     }
     
     private void ensureRemoval(PooledDestionation dest) {

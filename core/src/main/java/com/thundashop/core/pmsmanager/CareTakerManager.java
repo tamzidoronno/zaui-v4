@@ -2,7 +2,6 @@ package com.thundashop.core.pmsmanager;
 
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
-import java.util.Calendar;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.common.DataCommon;
@@ -10,13 +9,12 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.*;
+
+import static com.thundashop.constant.SchedulerTimerConstant.CARE_TAKER_PROCESSOR;
 
 /**
  *
@@ -47,7 +45,7 @@ public class CareTakerManager extends GetShopSessionBeanNamed implements ICareTa
                 repeatingDataList.add((CareTakeRepeatingData)dataCommon);
             }
         }
-        createScheduler("caretakerprocessor", "1 1 08 * *", CareTakerDailyProcessor.class);
+        createScheduler(CARE_TAKER_PROCESSOR.name, CARE_TAKER_PROCESSOR.time, CareTakerDailyProcessor.class);
     }
     
     public void checkForTasksToCreate() {

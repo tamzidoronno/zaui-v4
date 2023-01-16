@@ -1,31 +1,5 @@
 package com.thundashop.core.jomres;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.mongodb.BasicDBObject;
@@ -38,33 +12,33 @@ import com.thundashop.core.bookingengine.data.BookingTimeLineFlatten;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
-import com.thundashop.core.jomres.dto.FetchBookingResponse;
-import com.thundashop.core.jomres.dto.JomresBooking;
-import com.thundashop.core.jomres.dto.JomresGuest;
-import com.thundashop.core.jomres.dto.JomresProperty;
-import com.thundashop.core.jomres.dto.PMSBlankBooking;
-import com.thundashop.core.jomres.dto.UpdateAvailabilityResponse;
-import com.thundashop.services.jomresservice.JomresAvailabilityService;
-import com.thundashop.services.jomresservice.JomresApiService;
-import com.thundashop.services.jomresservice.JomresBookingService;
-import com.thundashop.services.jomresservice.JomresPricingService;
-import com.thundashop.services.jomresservice.JomresPropertyService;
-
-import lombok.extern.slf4j.Slf4j;
-
+import com.thundashop.core.jomres.dto.*;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
-import com.thundashop.core.pmsmanager.PmsBooking;
-import com.thundashop.core.pmsmanager.PmsBookingComment;
-import com.thundashop.core.pmsmanager.PmsBookingDateRange;
-import com.thundashop.core.pmsmanager.PmsBookingRooms;
-import com.thundashop.core.pmsmanager.PmsGuests;
-import com.thundashop.core.pmsmanager.PmsInvoiceManager;
-import com.thundashop.core.pmsmanager.PmsManager;
-import com.thundashop.core.pmsmanager.TimeRepeaterData;
+import com.thundashop.core.pmsmanager.*;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.repository.utils.SessionInfo;
+import com.thundashop.services.jomresservice.*;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+import static com.thundashop.constant.SchedulerTimerConstant.JOMRES_FETCH_BOOKING;
+import static com.thundashop.constant.SchedulerTimerConstant.JOMRES_UPDATE_AVAILABILITY;
 
 @Component
 @GetShopSession
@@ -110,8 +84,8 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         stopScheduler("jomresFetchBooking");
         stopScheduler("jomresUpdateAvailability");
 
-        createScheduler("jomresFetchBooking", "*/6 * * * *", JomresFetchBookingScheduler.class);
-        createScheduler("jomresUpdateAvailability", "*/7 * * * *", JomresUpdateAvailabilityScheduler.class);
+        createScheduler(JOMRES_FETCH_BOOKING.name, JOMRES_FETCH_BOOKING.time , JomresFetchBookingScheduler.class);
+        createScheduler(JOMRES_UPDATE_AVAILABILITY.name, JOMRES_UPDATE_AVAILABILITY.time, JomresUpdateAvailabilityScheduler.class);
     }
 
     // Change this message if Jomres change their error message for delete request

@@ -2,42 +2,16 @@ package com.thundashop.core.getshop;
 
 import com.braintreegateway.org.apache.commons.codec.binary.Base64;
 import com.getshop.javaapi.GetShopApi;
-import com.getshop.scope.GetShopSchedulerBase;
 import com.getshop.scope.GetShopSessionScope;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.Mongo;
-import com.mongodb.MongoClient;
+import com.mongodb.*;
 import com.thundashop.core.applications.StoreApplicationPool;
-import com.thundashop.core.common.AnnotationExclusionStrategy;
-import com.thundashop.core.common.AppContext;
-import com.thundashop.core.common.DataCommon;
-import com.thundashop.core.common.ErrorException;
-import com.thundashop.core.common.FrameworkConfig;
-import com.thundashop.core.common.GetShopScheduler;
-import com.thundashop.core.common.JsonObject2;
-import com.thundashop.core.common.ManagerBase;
-import com.thundashop.core.common.Setting;
-import com.thundashop.core.common.Settings;
+import com.thundashop.core.common.*;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
-import com.thundashop.core.getshop.data.CreatedStoreData;
-import com.thundashop.core.getshop.data.DibsAutoCollectData;
-import com.thundashop.core.getshop.data.EhfComplientCompany;
-import com.thundashop.core.getshop.data.GetshopStore;
-import com.thundashop.core.getshop.data.Lead;
-import com.thundashop.core.getshop.data.LeadHistory;
-import com.thundashop.core.getshop.data.Partner;
-import com.thundashop.core.getshop.data.PartnerData;
-import com.thundashop.core.getshop.data.SmsResponse;
-import com.thundashop.core.getshop.data.StartData;
-import com.thundashop.core.getshop.data.WebPageData;
+import com.thundashop.core.getshop.data.*;
 import com.thundashop.core.getshoplocksystem.LockServer;
 import com.thundashop.core.messagemanager.MailFactory;
 import com.thundashop.core.messagemanager.MessageManager;
@@ -54,12 +28,12 @@ import com.thundashop.core.support.SupportManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.User;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.io.Serializable;
+import org.mongodb.morphia.Morphia;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.io.*;
 import java.net.UnknownHostException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -67,11 +41,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
-import org.apache.commons.lang3.SerializationUtils;
-import org.mongodb.morphia.Morphia;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+
+import static com.thundashop.constant.SchedulerTimerConstant.EHF_DATAHOTEL_DOWNLOADER;
 
 /**
  *
@@ -160,7 +131,7 @@ public class GetShop extends ManagerBase implements IGetShop {
             }
         }
         
-        createScheduler("ehf_datahotel_downloader", "33 3 * * *", FetchEhfProcessor.class);
+        createScheduler(EHF_DATAHOTEL_DOWNLOADER.name, EHF_DATAHOTEL_DOWNLOADER.time, FetchEhfProcessor.class);
     }
 
     private void addUserInformation(GetshopStore getshopstore, Store store) {

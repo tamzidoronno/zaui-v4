@@ -6,7 +6,6 @@
 package com.thundashop.core.ocr;
 
 import com.getshop.scope.GetShopSession;
-import com.thundashop.core.bookingengine.CheckConsistencyCron;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.common.ManagerBase;
@@ -16,15 +15,13 @@ import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.pdf.data.AccountingDetails;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.thundashop.constant.SchedulerTimerConstant.STORE_OCR_PROCESSOR;
 
 /**
  *
@@ -68,7 +65,7 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
         }
         
         moveLinesFromAccountDirectToManager();
-        createScheduler("storeocrprocessor", "20 17,3,5 * * *", OcrProcessor.class);
+        createScheduler(STORE_OCR_PROCESSOR.name, STORE_OCR_PROCESSOR.time, OcrProcessor.class);
     }
 
     /**

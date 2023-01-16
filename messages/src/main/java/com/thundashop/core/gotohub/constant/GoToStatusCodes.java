@@ -71,6 +71,10 @@ public enum GoToStatusCodes {
                 "Reason: Activity doesn't have pricing information"),
         CONFIRMATION_INCLUDED_TAX_RATE_MISSING(1412, "Goto Booking Confirmation Failed.. " +
                 "Reason: Pricing information doesn't have taxRate information"),
+        CONFIRMATION_REQUEST_ACTIVITY_MISSING(1413, "Goto Booking Confirmation Failed.. " +
+                "Reason: Hold booking has activity but there is no activity in confirmation request"),
+        CONFIRMATION_HOLD_BOOKING_DOESNT_HAVE_ACTIVITY(1414, "Goto Booking Confirmation Failed.. " +
+                "Reason: Confirmation request body has activities but hold-booking don't have any activities"),
         BOOKING_CANCELLATION_SUCCESS(1500, "Goto Booking has been Cancelled"),
         BOOKING_CANCELLATION_NOT_FOUND(1501, "Goto Booking Cancellation Failed.. Reason: Booking Not Found"),
         ORDER_SYNCHRONIZATION_FAILED(1502, "Goto Booking Cancellation Failed.. Reason: Order Synchronization Failed"),

@@ -8,6 +8,7 @@ import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -30,6 +31,7 @@ public class GotoConfirmBookingService implements IGotoConfirmBookingService {
         if (confirmBookingRequest == null) {
             confirmBookingRequest = new GotoConfirmBookingRequest();
         }
+        if(confirmBookingRequest.getActivities() == null) confirmBookingRequest.setActivities(new ArrayList<>());
         if((confirmBookingRequest.getActivities() == null || confirmBookingRequest.getActivities().isEmpty())
                 && isBlank(confirmBookingRequest.getPaymentMethod())) {
             confirmBookingRequest.setPaymentMethod(GOTO_PAYMENT);

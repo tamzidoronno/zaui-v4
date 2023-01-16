@@ -35,9 +35,11 @@ public class GotoConfirmBookingValidationService implements IGotoConfirmBookingV
                                                 GotoConfirmBookingRequest gotoConfirmBookingReq) throws GotoException {
         PmsBooking booking = pmsBookingService.getPmsBookingById(reservationId, pmsManagerSession);
         validateBookingId(booking);
+        if(gotoConfirmBookingReq == null) return booking;
+        validateIsActivityMissing(gotoConfirmBookingReq.getActivities(), booking.bookingZauiActivityItems);
+        validateActivities(gotoConfirmBookingReq.getActivities());
         validateOctoReservationIds(gotoConfirmBookingReq.getActivities(), booking.bookingZauiActivityItems);
         validateIfActivitiesConfirmed(gotoConfirmBookingReq.getActivities());
-        validateActivities(gotoConfirmBookingReq.getActivities());
         validatePaymentMethod(paymentId, gotoConfirmBookingReq.getPaymentMethod(), gotoConfirmBookingReq.getActivities());
         return booking;
     }
@@ -50,8 +52,18 @@ public class GotoConfirmBookingValidationService implements IGotoConfirmBookingV
             throw new GotoException(BOOKING_DELETED.code, BOOKING_DELETED.message);
     }
 
+    private void validateIsActivityMissing(List<GotoActivityConfirmationDto> activitiesFromGoto,
+                                            List<BookingZauiActivityItem> activityItems) throws GotoException {
+        if((activityItems == null || activityItems.isEmpty()) && (activitiesFromGoto!= null && !activitiesFromGoto.isEmpty()))
+            throw new GotoException(CONFIRMATION_HOLD_BOOKING_DOESNT_HAVE_ACTIVITY);
+        if((activitiesFromGoto == null || activitiesFromGoto.isEmpty()) && (activityItems!= null && !activityItems.isEmpty()))
+            throw new GotoException(CONFIRMATION_REQUEST_ACTIVITY_MISSING);
+    }
+
     private void validateOctoReservationIds(List<GotoActivityConfirmationDto> activitiesFromGoto,
                                             List<BookingZauiActivityItem> activityItems) throws GotoException {
+        if((activityItems == null || activityItems.isEmpty()) && (activitiesFromGoto == null || activitiesFromGoto.isEmpty()))
+            return;
         Set<String> existingOctoReservationIds = activityItems.stream()
                 .map(activityItem -> activityItem.getOctoBooking().getId())
                 .collect(Collectors.toSet());

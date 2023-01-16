@@ -2600,7 +2600,8 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             PmsManager pmsManager = getShopSpringScope.getNamedSessionBean(multilevelName, PmsManager.class);
             if (pmsManager != null) {
                 PmsBooking booking = pmsManager.getBookingWithOrderId(order.id);
-                if (booking.bookingZauiActivityItems == null
+                if(booking == null) continue;
+                 if (booking.bookingZauiActivityItems == null
                         || booking.bookingZauiActivityItems.isEmpty()) {
                     return;
                 }

@@ -22,6 +22,8 @@ import com.thundashop.core.productmanager.data.AccountingDetail;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.ProductAccountingInformation;
 import com.thundashop.core.productmanager.data.TaxGroup;
+import com.thundashop.zauiactivity.constant.ZauiConstants;
+
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -523,7 +525,10 @@ public class OrderDailyBreaker {
             if (!product.soldOnTaxGroups.contains(inProduct.taxGroupObject.groupNumber)) {
                 product.soldOnTaxGroups.add(inProduct.taxGroupObject.groupNumber);
                 product.createEmptyAccountingInformationObjects();
-                productManager.saveObject(product);
+                if(!product.tag.equals(ZauiConstants.ZAUI_ACTIVITY_TAG)){
+                    productManager.saveObject(product);
+                }
+
             }
         }
         

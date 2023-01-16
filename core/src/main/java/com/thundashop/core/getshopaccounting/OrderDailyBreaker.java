@@ -530,6 +530,11 @@ public class OrderDailyBreaker {
         if (res == null) {
             return "";
         }
+
+        if(res.accountingNumber.isEmpty()){
+            ProductAccountingInformation inProductAccountingInfo = inProduct.getAccountingInformation(inProduct.taxGroupObject.groupNumber);
+            return inProductAccountingInfo.accountingNumber;
+        }
         
         return res.accountingNumber;
     }

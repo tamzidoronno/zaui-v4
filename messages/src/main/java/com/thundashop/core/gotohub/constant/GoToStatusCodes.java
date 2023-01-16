@@ -75,6 +75,8 @@ public enum GoToStatusCodes {
                 "Reason: Hold booking has activity but there is no activity in confirmation request"),
         CONFIRMATION_HOLD_BOOKING_DOESNT_HAVE_ACTIVITY(1414, "Goto Booking Confirmation Failed.. " +
                 "Reason: Confirmation request body has activities but hold-booking don't have any activities"),
+        WITHOUT_ACTIVITY_STAY_PAYMENT_METHOD(1415, "Goto Booking Confirmation Failed.. " +
+                "Reason: STAY_PAYMENT method is not allowed for booking with only rooms"),
         BOOKING_CANCELLATION_SUCCESS(1500, "Goto Booking has been Cancelled"),
         BOOKING_CANCELLATION_NOT_FOUND(1501, "Goto Booking Cancellation Failed.. Reason: Booking Not Found"),
         ORDER_SYNCHRONIZATION_FAILED(1502, "Goto Booking Cancellation Failed.. Reason: Order Synchronization Failed"),

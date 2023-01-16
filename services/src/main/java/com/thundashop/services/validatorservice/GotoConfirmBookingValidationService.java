@@ -2,6 +2,7 @@ package com.thundashop.services.validatorservice;
 
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.*;
 import static com.thundashop.core.gotohub.constant.GotoConstants.GOTO_PAYMENT;
+import static com.thundashop.core.gotohub.constant.GotoConstants.STAY_PAYMENT;
 import static com.thundashop.zauiactivity.constant.ZauiConstants.OCTO_CONFIRMED_STATUS;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -94,9 +95,11 @@ public class GotoConfirmBookingValidationService implements IGotoConfirmBookingV
     private void validatePaymentMethod(String paymentMethodId, String requestedPaymentMethod,
                                        List<GotoActivityConfirmationDto> activities) throws GotoException {
         if(isNotBlank(requestedPaymentMethod) && requestedPaymentMethod.equals(GOTO_PAYMENT)) {
-            if(activities != null && activities.isEmpty()) throw new GotoException(ACTIVITY_GOTO_PAYMENT_METHOD);
+            if(activities != null && !activities.isEmpty()) throw new GotoException(ACTIVITY_GOTO_PAYMENT_METHOD);
             if(isBlank(paymentMethodId)) throw new GotoException(PAYMENT_METHOD_NOT_FOUND);
         }
+        if(isNotBlank(requestedPaymentMethod) && requestedPaymentMethod.equals(STAY_PAYMENT))
+            throw new GotoException(WITHOUT_ACTIVITY_STAY_PAYMENT_METHOD);
     }
 
     private void validateActivities(List<GotoActivityConfirmationDto> activities) throws GotoException {

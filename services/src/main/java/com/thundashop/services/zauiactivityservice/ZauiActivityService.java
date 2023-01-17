@@ -296,12 +296,11 @@ public class ZauiActivityService implements IZauiActivityService {
     public List<UnitItemReserveRequest> mapUnitsForBooking(List<Unit> units) {
         List<UnitItemReserveRequest> unitItems = new ArrayList<>();
         units.stream().filter(unit -> unit.quantity > 0).forEach(unit -> {
-            UnitItemReserveRequest item = null;
             for (int i = 0; i < unit.quantity; i++) {
-                item = new UnitItemReserveRequest();
+                UnitItemReserveRequest item = new UnitItemReserveRequest();
                 item.setUnitId(unit.getId());
+                unitItems.add(item);
             }
-            unitItems.add(item);
         });
         return unitItems;
     }

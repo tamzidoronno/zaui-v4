@@ -62,8 +62,8 @@ public enum GoToStatusCodes {
                         "Goto Booking Confirmation Failed.. Reason: Activity's Octo reservation ids mismatched"),
         OCTO_RESERVATION_NOT_CONFIRMED(1407, "Goto Booking Confirmation Failed.. " +
                         "Reason: Activities have Octo reservation not in /'CONFIRMED/' status"),
-        NON_KABRU_BOOKING_HAS_ACTIVITY(1408, "Goto Booking Confirmation Failed.. " +
-                "Reason: Non kabru booking with activity is not allowed"),
+        NON_KABRU_HOLD_BOOKING_HAS_ACTIVITY(1408, "Goto Booking Confirmation Failed.. " +
+                "Reason: Non kabru booking with activity is not allowed, hold booking has activity"),
         BOOKING_CONFIRMATION_FAILED(1409, "Goto Booking Confirmation Failed.. Reason: Unknown"),
         CONFIRMATION_RESPONSE_MISSING(1410, "Goto Booking Confirmation Failed.. " +
                 "Reason: Activity doesn't contain Octo confirmation response"),
@@ -75,8 +75,8 @@ public enum GoToStatusCodes {
                 "Reason: Hold booking has activity but there is no activity in confirmation request"),
         CONFIRMATION_HOLD_BOOKING_DOESNT_HAVE_ACTIVITY(1414, "Goto Booking Confirmation Failed.. " +
                 "Reason: Confirmation request body has activities but hold-booking don't have any activities"),
-        WITHOUT_ACTIVITY_STAY_PAYMENT_METHOD(1415, "Goto Booking Confirmation Failed.. " +
-                "Reason: STAY_PAYMENT method is not allowed for booking with only rooms"),
+        NON_KABRU_CONFIRM_BOOKING_REQ_HAS_ACTIVITY(1415, "Goto Booking Confirmation Failed.. " +
+                "Reason: Non kabru booking with activity is not allowed, confirmation request body has activity"),
         BOOKING_CANCELLATION_SUCCESS(1500, "Goto Booking has been Cancelled"),
         BOOKING_CANCELLATION_NOT_FOUND(1501, "Goto Booking Cancellation Failed.. Reason: Booking Not Found"),
         ORDER_SYNCHRONIZATION_FAILED(1502, "Goto Booking Cancellation Failed.. Reason: Order Synchronization Failed"),

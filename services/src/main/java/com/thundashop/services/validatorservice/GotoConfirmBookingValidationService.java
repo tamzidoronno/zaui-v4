@@ -34,7 +34,7 @@ public class GotoConfirmBookingValidationService implements IGotoConfirmBookingV
         PmsBooking booking = pmsBookingService.getPmsBookingById(reservationId, pmsManagerSession);
         validateBookingId(booking);
         if(!isKabruBooking(gotoConfirmBookingReq)) {
-            validateIfNonKabruHasActivity(gotoConfirmBookingReq);
+            validateIfNonKabruHasActivity(gotoConfirmBookingReq, booking.bookingZauiActivityItems);
             return booking;
         }
         validateIsActivityMisMatchedWithHoldBooking(gotoConfirmBookingReq.getActivities(), booking.bookingZauiActivityItems);
@@ -51,10 +51,12 @@ public class GotoConfirmBookingValidationService implements IGotoConfirmBookingV
         if (booking.getActiveRooms().isEmpty() && zauiActivityService.isAllActivityCancelled(booking.bookingZauiActivityItems))
             throw new GotoException(BOOKING_DELETED.code, BOOKING_DELETED.message);
     }
-    private void validateIfNonKabruHasActivity(GotoConfirmBookingRequest bookingRequest) throws GotoException {
-        if(bookingRequest.getActivities() != null && !bookingRequest.getActivities().isEmpty() && !isKabruBooking(bookingRequest))
-            throw new GotoException(NON_KABRU_BOOKING_HAS_ACTIVITY);
-
+    private void validateIfNonKabruHasActivity(GotoConfirmBookingRequest bookingRequest,
+                                               List<BookingZauiActivityItem> holdBookingActivityItems) throws GotoException {
+        if(holdBookingHasActivity(holdBookingActivityItems) && !isKabruBooking(bookingRequest))
+            throw new GotoException(NON_KABRU_HOLD_BOOKING_HAS_ACTIVITY);
+        if(confirmBookingReqHasActivity(bookingRequest.getActivities()) && !isKabruBooking(bookingRequest))
+            throw new GotoException(NON_KABRU_CONFIRM_BOOKING_REQ_HAS_ACTIVITY);
     }
     private boolean isKabruBooking(GotoConfirmBookingRequest booking) {
         if(booking == null) return false;

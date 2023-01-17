@@ -2600,7 +2600,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             PmsManager pmsManager = getShopSpringScope.getNamedSessionBean(multilevelName, PmsManager.class);
             if (pmsManager != null) {
                 PmsBooking booking = pmsManager.getBookingWithOrderId(order.id);
-                if (booking.bookingZauiActivityItems.isEmpty()) {
+                if(booking == null) continue;
+                 if (booking.bookingZauiActivityItems == null
+                        || booking.bookingZauiActivityItems.isEmpty()) {
                     return;
                 }
                 Set<String> uniqueActivityItemIds = order.cart.getItems().stream()
@@ -4527,6 +4529,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         paymentAction.action = GdsPaymentAction.Actions.STARTPAYMENT;
         GetShopDevice device = gdsManager.getDeviceByToken(tokenId);
         gdsManager.sendMessageToDevice(device.id, paymentAction);
+        logger.info("Started integrated payment for order {}, id: {}, amount: {}, device id {}", orderToPay.incrementOrderId, orderToPay.id, paymentAction.amount, device.id);
         printFeedBack("Starting payment process");
     }
     

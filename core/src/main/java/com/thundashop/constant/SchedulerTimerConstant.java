@@ -26,7 +26,8 @@ public enum SchedulerTimerConstant {
     CHECK_REMOVAL_OF_ROUTES ("checkRemovalOfRoutes", "0 * * * *"),
     WUBOOK_PROCESSOR("wubookprocessor","* * * * *"),
     WUBOOK_PROCESSOR_2("wubookprocessor2","1 5,12,22 * * *"),
-    EVENT_QUESTBACK_CHECKED("event_questback_checked","0 * * * *");
+    EVENT_QUESTBACK_CHECKED("event_questback_checked","0 * * * *"),
+    EVENT_BOOKING_SCHEDULER("event_booking_scheduler","");
 
     public final String name;
     public final String time;

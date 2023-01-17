@@ -31,6 +31,9 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.thundashop.constant.SchedulerTimerConstant.EVENT_BOOKING_SCHEDULER;
+import static com.thundashop.constant.SchedulerTimerConstant.EVENT_QUESTBACK_CHECKED;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -163,8 +166,8 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         
         cleanBookingItemsThatDoesNotExsist();
 //       createScheduler( EVENT_QUESTBACK_CHECKED.name,  EVENT_QUESTBACK_CHECKED.time, CheckSendQuestBackScheduler.class);
-        stopScheduler("event_booking_scheduler");
-        stopScheduler("event_questback_checked");
+        stopScheduler(EVENT_BOOKING_SCHEDULER.name);
+        stopScheduler(EVENT_QUESTBACK_CHECKED.name);
     }
     
     @Override
@@ -1542,8 +1545,8 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
 
     @Override
     public void startScheduler(String scheduler) {
-        stopScheduler("event_booking_scheduler");
-        createScheduler("event_booking_scheduler", scheduler, EventBookingScheduler.class);
+        stopScheduler(EVENT_BOOKING_SCHEDULER.name);
+        createScheduler(EVENT_BOOKING_SCHEDULER.name, scheduler, EventBookingScheduler.class);
     }
 
     @Override

@@ -365,7 +365,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if (storeId.equals("13442b34-31e5-424c-bb23-a396b7aeb8ca")) {
             createScheduler(ORDER_COLLECTOR.name, ORDER_COLLECTOR.time, CheckOrderCollector.class);
         } else {
-            stopScheduler("ordercollector");
+            stopScheduler(ORDER_COLLECTOR.name);
         }
     }
     

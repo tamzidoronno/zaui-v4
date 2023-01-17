@@ -112,7 +112,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     public void initialize() throws SecurityException {
         super.initialize();
         goToConfiguration = gotoService.getGotoConfiguration(getSessionInfo());
-        stopScheduler("AutoExpireBookings");
+        stopScheduler(AUTO_EXPIRE_BOOKINGS.name);
         createScheduler(AUTO_EXPIRE_BOOKINGS.name, AUTO_EXPIRE_BOOKINGS.time, GotoExpireBookingScheduler.class, true);
     }
 

@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.thundashop.services.bookingservice.IPmsBookingService;
+import com.thundashop.services.zauiactivityservice.IZauiActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,8 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class GotoService implements IGotoService {
+    @Autowired
+    private IZauiActivityService zauiActivityService;
     @Autowired
     private IPmsPricingService pmsPricingService;
 
@@ -55,7 +58,9 @@ public class GotoService implements IGotoService {
     @Override
     public List<PmsBooking> getUnpaidGotoBookings(int autoDeletionTime, SessionInfo sessionInfo) {
         return pmsBookingService.getGotoBookings(sessionInfo).stream()
-                .filter(booking -> booking.getActiveRooms() != null && !booking.getActiveRooms().isEmpty())
+                .filter(booking -> !booking.getActiveRooms().isEmpty()
+                        || !zauiActivityService.isAllActivityCancelled(booking.bookingZauiActivityItems)
+                )
                 .filter(booking -> booking.isOlderThan(autoDeletionTime) && booking.getUnpaidAmountWithActivities() !=0)
                 .collect(Collectors.toList());
     }

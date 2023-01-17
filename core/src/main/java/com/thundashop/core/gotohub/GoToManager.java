@@ -213,7 +213,9 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     @Override
     public GoToApiResponse saveBooking(GotoBookingRequest booking) {
         try {
+            log.info("Goto Hold Booking Req: {}",booking);
             removeCurrentUser();
+            if(booking.getActivities() == null) booking.setActivities(new ArrayList<>());
             bookingRequestValidationService.validateSaveBookingDto(
                     booking,
                     storeManager.getStoreSettingsApplicationKey(CURRENCY_CODE),
@@ -231,14 +233,16 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
             GotoBookingResponse bookingResponse = holdBookingService.getBookingResponse(pmsBooking, booking,
                     pmsManager.getConfiguration(), goToConfiguration.cuttOffHours);
-
+            log.info("Goto Hold Booking Res: {}",bookingResponse);
             return new GoToApiResponse(true, SAVE_BOOKING_SUCCESS.code, SAVE_BOOKING_SUCCESS.message, bookingResponse);
         } catch (GotoException e) {
             handleNewBookingError(booking, e.getMessage(), e.getStatusCode());
+            log.info("Goto Hold Booking Rejected Res code: {}, res message: {}",e.getStatusCode(), e.getMessage());
             return new GoToApiResponse(false, e.getStatusCode(), e.getMessage(), null);
         } catch (Exception e) {
             logPrintException(e);
             handleNewBookingError(booking, SAVE_BOOKING_FAIL.message, SAVE_BOOKING_FAIL.code);
+            log.info("Goto Hold Booking Rejected Res code: {}, res message: {}", SAVE_BOOKING_FAIL.code, SAVE_BOOKING_FAIL.message);
             return new GoToApiResponse(false, SAVE_BOOKING_FAIL.code, SAVE_BOOKING_FAIL.message, null);
         }
     }
@@ -251,8 +255,9 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     @Override
     public GoToApiResponse confirmBookingWithActivities(String reservationId, GotoConfirmBookingRequest confirmBookingReq) {
         try {
+            log.info("Goto Confirm Booking reservationID: {}, Req Body: {}", reservationId, confirmBookingReq);
             saveSchedulerAsCurrentUser();
-            confirmBookingReq = confirmBookingService.updatePaymentMethod(confirmBookingReq);
+            confirmBookingReq = confirmBookingService.updateConfirmRequest(confirmBookingReq);
             PmsBooking pmsBooking = confirmBookingValService.validateConfirmBookingReq(reservationId,
                     goToConfiguration.getPaymentTypeId(),
                     pmsManager.getSessionInfo(),
@@ -261,9 +266,11 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             pmsBooking = confirmBookingService.confirmGotoBooking(pmsBooking, confirmBookingReq);
             String paymentLink = confirmPayment(pmsBooking, confirmBookingReq.getPaymentMethod());
             pmsManager.saveBooking(pmsBooking);
-            return new GoToApiResponse(true, BOOKING_CONFIRMATION_SUCCESS.code,
+            GoToApiResponse response = new GoToApiResponse(true, BOOKING_CONFIRMATION_SUCCESS.code,
                     isBlank(paymentLink) ? BOOKING_CONFIRMATION_SUCCESS.message: BOOKING_CONFIRMATION_SUCCESS_WITH_PAYMENT_LINK.message,
                     isBlank(paymentLink)? null : new GotoConfirmBookingRes(paymentLink));
+            log.info("Goto Confirm Booking res: {}", response);
+            return response;
         } catch (GotoException e) {
             return handleUpdateBookingError(reservationId, e.getMessage(), e.getStatusCode());
         } catch (Exception e) {
@@ -553,15 +560,15 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     private String confirmPayment(PmsBooking pmsBooking, String gotoPaymentMethodName) throws Exception {
-        if(isNotBlank(gotoPaymentMethodName) && gotoPaymentMethodName.equals(GOTO_PAYMENT)) {
-            pmsManager.saveBooking(handleGotoPayment(pmsBooking));
-            return null;
+        if(STAY_PAYMENT.equals(gotoPaymentMethodName)) {
+            pmsBooking.shortId = isNotBlank(pmsBooking.shortId) ? pmsBooking.shortId : pmsManager.getShortUniqueId(pmsBooking.id);
+            pmsManager.saveBooking(pmsBooking);
+            String paymentLinkFromConfig = pmsInvoiceManager.getPaymentLinkConfig().webAdress;
+            String paymentLinkBase = paymentLinkFromConfig.endsWith("/") ? paymentLinkFromConfig : paymentLinkFromConfig + "/";
+            return paymentLinkBase + "pr.php?id=" + pmsBooking.shortId;
         }
-        pmsBooking.shortId = isNotBlank(pmsBooking.shortId) ? pmsBooking.shortId : pmsManager.getShortUniqueId(pmsBooking.id);
-        pmsManager.saveBooking(pmsBooking);
-        String paymentLinkFromConfig = pmsInvoiceManager.getPaymentLinkConfig().webAdress;
-        String paymentLinkBase = paymentLinkFromConfig.endsWith("/") ? paymentLinkFromConfig : paymentLinkFromConfig + "/";
-        return paymentLinkBase + "pr.php?id=" + pmsBooking.shortId;
+        pmsManager.saveBooking(handleGotoPayment(pmsBooking));
+        return null;
     }
 
     private PmsBooking handleGotoPayment(PmsBooking pmsBooking) throws Exception {

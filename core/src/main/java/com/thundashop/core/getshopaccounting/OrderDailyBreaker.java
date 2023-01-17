@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
  *
@@ -525,7 +526,7 @@ public class OrderDailyBreaker {
             if (!product.soldOnTaxGroups.contains(inProduct.taxGroupObject.groupNumber)) {
                 product.soldOnTaxGroups.add(inProduct.taxGroupObject.groupNumber);
                 product.createEmptyAccountingInformationObjects();
-                if(!product.tag.equals(ZauiConstants.ZAUI_ACTIVITY_TAG)){
+                if(!(!isBlank(product.tag) && product.tag.equals(ZauiConstants.ZAUI_ACTIVITY_TAG))){
                     productManager.saveObject(product);
                 }
 
@@ -536,7 +537,7 @@ public class OrderDailyBreaker {
             return "";
         }
 
-        if(res.accountingNumber.isEmpty()){
+        if(isBlank(res.accountingNumber)){
             ProductAccountingInformation inProductAccountingInfo = inProduct.getAccountingInformation(inProduct.taxGroupObject.groupNumber);
             return inProductAccountingInfo.accountingNumber;
         }

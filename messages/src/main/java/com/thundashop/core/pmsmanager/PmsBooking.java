@@ -100,9 +100,6 @@ public class PmsBooking extends DataCommon {
     public boolean ignoreOverrideTotPrice = false;
     public Date jomresLastModified=null;
 
-    //Goto Related Properties
-    public String paymentMethodNameFromGoto = "";
-
     // Zaui Activity related Properties
     public List<BookingZauiActivityItem> bookingZauiActivityItems = new ArrayList<>();
 

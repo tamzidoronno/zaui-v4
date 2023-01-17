@@ -1,6 +1,7 @@
 
 package com.thundashop.core.gotohub.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.annotations.Expose;
@@ -30,5 +31,5 @@ public class GotoBookingRequest {
     private List<GotoRoomRequest> rooms = null;
     @SerializedName("activities")
     @Expose
-    private List<GotoActivityReservationDto> activities = null;
+    private List<GotoActivityReservationDto> activities = new ArrayList<>();
 }

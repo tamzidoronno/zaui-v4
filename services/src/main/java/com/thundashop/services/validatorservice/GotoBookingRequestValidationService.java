@@ -73,7 +73,7 @@ public class GotoBookingRequestValidationService implements IGotoBookingRequestV
 
     private void validateActivities(List<GotoActivityReservationDto> activities, SessionInfo activitySession,
             String systemCurrency) throws GotoException {
-        if(activities == null);
+        if(activities == null) return;
         for (GotoActivityReservationDto activity : activities) {
             try {
                 zauiActivityValidationService.validateGotoBookingActivity(activity, activitySession, systemCurrency);

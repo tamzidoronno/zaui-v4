@@ -16,10 +16,21 @@ import com.thundashop.core.jomres.dto.*;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
-import com.thundashop.core.pmsmanager.*;
+import com.thundashop.core.pmsmanager.PmsBooking;
+import com.thundashop.core.pmsmanager.PmsBookingComment;
+import com.thundashop.core.pmsmanager.PmsBookingDateRange;
+import com.thundashop.core.pmsmanager.PmsBookingRooms;
+import com.thundashop.core.pmsmanager.PmsGuests;
+import com.thundashop.core.pmsmanager.PmsInvoiceManager;
+import com.thundashop.core.pmsmanager.PmsManager;
+import com.thundashop.core.pmsmanager.TimeRepeaterData;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.repository.utils.SessionInfo;
-import com.thundashop.services.jomresservice.*;
+import com.thundashop.services.jomresservice.JomresApiService;
+import com.thundashop.services.jomresservice.JomresAvailabilityService;
+import com.thundashop.services.jomresservice.JomresBookingService;
+import com.thundashop.services.jomresservice.JomresPricingService;
+import com.thundashop.services.jomresservice.JomresPropertyService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -29,7 +40,17 @@ import org.springframework.stereotype.Component;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -78,15 +99,6 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
     private List<UpdateAvailabilityResponse> failedAvailabilityToSendEmail = new ArrayList<>();
     Integer NUMBER_OF_DAYS_TO_BE_PROCESSED = 366;
 
-    @Override
-    public void initialize() throws SecurityException {
-        super.initialize();
-        stopScheduler(JOMRES_FETCH_BOOKING.name);
-        stopScheduler(JOMRES_UPDATE_AVAILABILITY.name);
-
-        createScheduler(JOMRES_FETCH_BOOKING.name, JOMRES_FETCH_BOOKING.time , JomresFetchBookingScheduler.class);
-        createScheduler(JOMRES_UPDATE_AVAILABILITY.name, JOMRES_UPDATE_AVAILABILITY.time, JomresUpdateAvailabilityScheduler.class);
-    }
 
     // Change this message if Jomres change their error message for delete request
     // of non-existing black bookings
@@ -115,6 +127,18 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         }
         if (jomresPropertyToRoomDataMap.isEmpty()) {
             logText("No Jomres room mapping found from database for this hotel, store id: " + this.storeId);
+        }
+    }
+
+    @Override
+    public void initialize() throws SecurityException {
+        super.initialize();
+        stopScheduler(JOMRES_FETCH_BOOKING.name);
+        stopScheduler(JOMRES_UPDATE_AVAILABILITY.name);
+
+        if (jomresConfiguration.isEnable) {
+            createScheduler(JOMRES_FETCH_BOOKING.name, JOMRES_FETCH_BOOKING.time , JomresFetchBookingScheduler.class);
+            createScheduler(JOMRES_UPDATE_AVAILABILITY.name, JOMRES_UPDATE_AVAILABILITY.time, JomresUpdateAvailabilityScheduler.class);
         }
     }
 

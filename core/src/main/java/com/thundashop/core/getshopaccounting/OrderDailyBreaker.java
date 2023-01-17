@@ -526,7 +526,7 @@ public class OrderDailyBreaker {
             if (!product.soldOnTaxGroups.contains(inProduct.taxGroupObject.groupNumber)) {
                 product.soldOnTaxGroups.add(inProduct.taxGroupObject.groupNumber);
                 product.createEmptyAccountingInformationObjects();
-                if(!(!isBlank(product.tag) && product.tag.equals(ZauiConstants.ZAUI_ACTIVITY_TAG))){
+                if(!ZauiConstants.ZAUI_ACTIVITY_TAG.equals(product.tag)){
                     productManager.saveObject(product);
                 }
 

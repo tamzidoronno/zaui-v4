@@ -179,7 +179,6 @@ public abstract class AProductManager extends ManagerBase {
         if (product == null) {
             ZauiActivity activity = zauiActivityManager.getZauiActivity(productId);
             if (activity != null) {
-                // not sure finalize with must or not
                 return activity;
             }
             return null;

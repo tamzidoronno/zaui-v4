@@ -120,7 +120,8 @@ public class GotoConfirmBookingValidationService implements IGotoConfirmBookingV
         if(activity.getOctoConfirmationResponse().getPricing() == null) {
             throw new GotoException(CONFIRMATION_PRICING_MISSING);
         }
-        if(activity.getOctoConfirmationResponse().getPricing().getIncludedTaxes() == null) {
+        if(activity.getOctoConfirmationResponse().getPricing().getIncludedTaxes() == null
+                || activity.getOctoConfirmationResponse().getPricing().getIncludedTaxes().isEmpty()) {
             throw new GotoException(CONFIRMATION_INCLUDED_TAX_RATE_MISSING);
         }
     }

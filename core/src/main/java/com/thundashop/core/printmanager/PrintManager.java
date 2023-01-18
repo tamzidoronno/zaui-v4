@@ -5,14 +5,13 @@
  */
 package com.thundashop.core.printmanager;
 
-import com.getshop.scope.GetShopSession;
 import com.thundashop.core.common.ManagerBase;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import com.thundashop.core.common.FrameworkConfig;
+import com.thundashop.services.config.FrameworkConfig;
 
 /**
  *

@@ -1,16 +1,11 @@
 package com.thundashop.core.ftpmanager;
 
 import com.getshop.scope.GetShopSession;
-import com.thundashop.core.common.FrameworkConfig;
+import com.thundashop.services.config.FrameworkConfig;
 import com.thundashop.core.common.ManagerBase;
-import java.io.File;
-import java.io.FileInputStream;
+
 import java.io.IOException;
-import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPReply;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

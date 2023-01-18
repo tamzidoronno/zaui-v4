@@ -5,9 +5,9 @@
 package com.thundashop.core.sedox;
 
 import com.thundashop.core.common.ErrorException;
-import com.thundashop.core.common.FrameworkConfig;
+import com.thundashop.services.config.FrameworkConfig;
 import com.thundashop.core.common.GetShopLogHandler;
-import com.thundashop.core.common.ManagerSubBase;
+
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;

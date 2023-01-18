@@ -6,11 +6,10 @@ package com.thundashop.core.mobilemanager;
 
 import com.getshop.scope.GetShopSession;
 import com.google.android.gcm.server.Message;
-import com.google.android.gcm.server.Result;
 import com.google.android.gcm.server.Sender;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
-import com.thundashop.core.common.FrameworkConfig;
+import com.thundashop.services.config.FrameworkConfig;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.mobilemanager.data.MobileApp;

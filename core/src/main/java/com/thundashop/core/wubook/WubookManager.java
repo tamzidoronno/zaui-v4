@@ -1,6 +1,6 @@
 package com.thundashop.core.wubook;
 
-import static com.utils.Constants.WUBOOK_CLIENT_URL;
+import static com.zauistay.utils.Constants.WUBOOK_CLIENT_URL;
 import static com.thundashop.core.wubook.WuBookApiCalls.ACQUIRE_TOKEN;
 import static com.thundashop.core.wubook.WuBookApiCalls.BCOM_NOTIFY_INVALID_CC;
 import static com.thundashop.core.wubook.WuBookApiCalls.BCOM_NOTIFY_NOSHOW;

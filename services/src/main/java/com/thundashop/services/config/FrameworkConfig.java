@@ -20,7 +20,7 @@ import com.thundashop.zauiactivity.constant.ZauiConstants;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 
-import com.utils.Constants;
+import com.zauistay.utils.Constants;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 

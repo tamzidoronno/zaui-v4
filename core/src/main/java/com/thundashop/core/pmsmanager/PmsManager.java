@@ -101,7 +101,7 @@ import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCard;
 import com.thundashop.core.utils.BrRegEngine;
-import com.utils.Constants;
+import com.zauistay.utils.Constants;
 import com.thundashop.core.utils.DateUtils;
 import com.thundashop.core.utils.UtilManager;
 import com.thundashop.core.webmanager.WebManager;

@@ -1,4 +1,4 @@
-package com.utils;
+package com.zauistay.utils;
 
 public class Constants {
     public static String Z_REPORT_SCHEDULER = "zreportprocessor";

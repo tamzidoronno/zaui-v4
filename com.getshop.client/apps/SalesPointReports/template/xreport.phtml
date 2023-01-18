@@ -291,7 +291,13 @@ if ($conferencesToShow) {
                 $lineTotalExTaxes = $this->getSumTotalOfItems($items, false);
                 $lineCount = $this->getCount($items);
                 echo '<div class="orderline">';
-                    echo "<div class='col name'>$product->name</div>";
+                   if($product->tag=="zaui-activity"){
+                       $product = $groupByTaxGroup[$taxGroupNumber][0]->product;
+                       echo "<div class='col name'>$product->metaData ($product->name)</div>";
+                   }
+                   else {
+                       echo "<div class='col name'>$product->name</div>";
+                   }
                     echo "<div class='col sum_product_inc_tax'>$taxGroup->taxRate%</div>";
                     echo "<div class='col sum_product_inc_tax'>$lineTotalIncTaxes</div>";
                     echo "<div class='col sum_product_ex_tax'>$lineTotalExTaxes</div>";

@@ -4,10 +4,9 @@
  */
 package com.thundashop.core.mobilemanager;
 
-import com.thundashop.core.common.FrameworkConfig;
+import com.thundashop.services.config.FrameworkConfig;
 import com.thundashop.core.mobilemanager.data.MobileApp;
 import javapns.Push;
-import javapns.notification.PushedNotifications;
 
 /**
  *

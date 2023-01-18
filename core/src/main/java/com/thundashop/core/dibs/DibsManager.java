@@ -6,7 +6,7 @@ import com.getshop.scope.GetShopSession;
 import com.google.gson.Gson;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.cartmanager.CartManager;
-import com.thundashop.core.common.FrameworkConfig;
+import com.thundashop.services.config.FrameworkConfig;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.getshop.GetShopPullService;
 import com.thundashop.core.messagemanager.MessageManager;

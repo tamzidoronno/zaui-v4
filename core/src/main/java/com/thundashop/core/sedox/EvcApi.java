@@ -5,7 +5,7 @@
  */
 package com.thundashop.core.sedox;
 
-import com.thundashop.core.common.FrameworkConfig;
+import com.thundashop.services.config.FrameworkConfig;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

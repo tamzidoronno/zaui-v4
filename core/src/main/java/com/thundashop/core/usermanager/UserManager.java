@@ -61,7 +61,7 @@ import com.thundashop.core.usermanager.data.UserCard;
 import com.thundashop.core.usermanager.data.UserCounter;
 import com.thundashop.core.usermanager.data.UserPrivilege;
 import com.thundashop.core.usermanager.data.UserRole;
-import com.thundashop.core.utils.Constants;
+import com.utils.Constants;
 import com.thundashop.core.utils.UtilManager;
 import com.warrenstrange.googleauth.GoogleAuthenticator;
 import com.warrenstrange.googleauth.GoogleAuthenticatorKey;

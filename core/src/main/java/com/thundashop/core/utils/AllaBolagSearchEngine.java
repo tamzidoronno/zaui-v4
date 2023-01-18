@@ -5,7 +5,7 @@
  */
 package com.thundashop.core.utils;
 
-import com.thundashop.core.common.FrameworkConfig;
+import com.thundashop.services.config.FrameworkConfig;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.Company;
 import java.io.BufferedReader;

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.thundashop.core.common.ZauiException;
+import com.thundashop.services.config.FrameworkConfig;
 import com.thundashop.zauiactivity.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,9 +33,20 @@ public class OctoApiService implements IOctoApiService {
 
     private final Gson gson = new Gson();
 
+    @Autowired
+    private FrameworkConfig frameworkConfig;
+
+    private String getOctoBaseUrl() {
+        return frameworkConfig.getOctoBaseUrl();
+    }
+
+    private String getOctoApiKey() {
+        return frameworkConfig.getOctoApiKey();
+    }
+
     @Override
     public List<OctoSupplier> getAllSuppliers() throws ZauiException {
-        String url = ZauiConstants.OCTO_API_ENDPOINT + "/suppliers";
+        String url = getOctoBaseUrl() + "/suppliers";
         String result = getHttpResponseBody(url, Collections.emptyMap(), "GET", null);
         Type listType = new TypeToken<List<OctoSupplier>>() {
         }.getType();
@@ -43,7 +55,7 @@ public class OctoApiService implements IOctoApiService {
 
     @Override
     public OctoSupplier getSupplierById(Integer supplierId) throws ZauiException {
-        String url = ZauiConstants.OCTO_API_ENDPOINT + "/suppliers/" + supplierId;
+        String url = getOctoBaseUrl() + "/suppliers/" + supplierId;
         String result = getHttpResponseBody(url, Collections.emptyMap(), "GET", null);
         Type listType = new TypeToken<OctoSupplier>() {
         }.getType();
@@ -52,7 +64,7 @@ public class OctoApiService implements IOctoApiService {
 
     @Override
     public List<OctoProduct> getOctoProducts(Integer supplierId) throws ZauiException {
-        String url = ZauiConstants.OCTO_API_ENDPOINT + "/suppliers/" + supplierId + "/products";
+        String url = getOctoBaseUrl() + "/suppliers/" + supplierId + "/products";
         Map<String, String> headers = new HashMap<>();
         headers.put(ZauiConstants.OCTO_CONTENT.getLeft(), ZauiConstants.OCTO_CONTENT.getRight());
         String result = getHttpResponseBody(url, headers, "GET", null);
@@ -63,7 +75,7 @@ public class OctoApiService implements IOctoApiService {
 
     @Override
     public OctoProduct getOctoProductById(Integer supplierId, Integer productId) throws ZauiException {
-        String url = ZauiConstants.OCTO_API_ENDPOINT + "/suppliers/" + supplierId + "/products/" + productId;
+        String url = getOctoBaseUrl() + "/suppliers/" + supplierId + "/products/" + productId;
         Map<String, String> headers = new HashMap<>();
         headers.put(ZauiConstants.OCTO_CONTENT.getLeft(), ZauiConstants.OCTO_CONTENT.getRight());
         String result = getHttpResponseBody(url, headers, "GET", null);
@@ -75,7 +87,7 @@ public class OctoApiService implements IOctoApiService {
     @Override
     public List<OctoProductAvailability> getOctoProductAvailability(Integer supplierId,
             OctoProductAvailabilityRequestDto availabilityRequest) throws ZauiException {
-        String url = ZauiConstants.OCTO_API_ENDPOINT + "/suppliers/" + supplierId + "/availability";
+        String url = getOctoBaseUrl() + "/suppliers/" + supplierId + "/availability";
         Map<String, String> headers = new HashMap<>();
         headers.put(ZauiConstants.OCTO_PRICING.getLeft(),
                 ZauiConstants.OCTO_PRICING.getRight() + "," + ZauiConstants.OCTO_NORWEGIAN_TAX.getRight());
@@ -89,7 +101,7 @@ public class OctoApiService implements IOctoApiService {
     @Override
     public OctoBooking reserveBooking(Integer supplierId, OctoBookingReserveRequest bookingReserveRequest)
             throws ZauiException {
-        String url = ZauiConstants.OCTO_API_ENDPOINT + "/suppliers/" + supplierId + "/bookings";
+        String url = getOctoBaseUrl() + "/suppliers/" + supplierId + "/bookings";
         Map<String, String> headers = new HashMap<>();
         headers.put(ZauiConstants.OCTO_PRICING.getLeft(),
                 ZauiConstants.OCTO_PRICING.getRight() + "," + ZauiConstants.OCTO_NORWEGIAN_TAX.getRight());
@@ -102,7 +114,7 @@ public class OctoApiService implements IOctoApiService {
     @Override
     public OctoBooking confirmBooking(Integer supplierId, String bookingId,
             OctoBookingConfirmRequest octoBookingConfirmRequest) throws ZauiException {
-        String url = ZauiConstants.OCTO_API_ENDPOINT + "/suppliers/" + supplierId + "/bookings/" + bookingId
+        String url = getOctoBaseUrl() + "/suppliers/" + supplierId + "/bookings/" + bookingId
                 + "/confirm";
         Map<String, String> headers = new HashMap<>();
         headers.put(ZauiConstants.OCTO_PRICING.getLeft(),
@@ -115,7 +127,7 @@ public class OctoApiService implements IOctoApiService {
 
     @Override
     public OctoBooking cancelBooking(Integer supplierId, String bookingId) throws ZauiException {
-        String url = ZauiConstants.OCTO_API_ENDPOINT + "/suppliers/" + supplierId + "/bookings/" + bookingId
+        String url = getOctoBaseUrl() + "/suppliers/" + supplierId + "/bookings/" + bookingId
                 + "/cancel";
         String result = getHttpResponseBody(url, null, "DELETE", null);
         Type listType = new TypeToken<OctoBooking>() {
@@ -126,7 +138,7 @@ public class OctoApiService implements IOctoApiService {
     private String getHttpResponseBody(String url, Map<String, String> headers, String method, String payload)
             throws ZauiException {
         ZauiHttpRequest request = ZauiHttpRequest.builder()
-                .setAuth("Bearer " + ZauiConstants.OCTO_API_KEY)
+                .setAuth("Bearer " + getOctoApiKey())
                 .setUrl(url)
                 .setHeaders(headers)
                 .setPayload(payload)

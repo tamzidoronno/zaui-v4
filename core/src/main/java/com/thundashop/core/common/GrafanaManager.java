@@ -7,6 +7,8 @@ package com.thundashop.core.common;
 
 import com.getshop.scope.GetShopSession;
 import java.util.HashMap;
+
+import com.thundashop.services.config.FrameworkConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.task.TaskExecutor;

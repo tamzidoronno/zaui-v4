@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.thundashop.core.common;
+package com.thundashop.services.config;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -15,10 +15,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 
+import com.thundashop.core.common.GetShopLogHandler;
+import com.thundashop.zauiactivity.constant.ZauiConstants;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 
-import com.thundashop.core.utils.Constants;
+import com.utils.Constants;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -37,6 +39,11 @@ public class FrameworkConfig {
     private String gotoCancellationAuthKey = "";
     @Getter
     private String easyByNetPaymentUrl = "";
+
+    @Getter
+    private String octoBaseUrl = ZauiConstants.OCTO_API_ENDPOINT;
+    @Getter
+    private String octoApiKey = ZauiConstants.OCTO_API_KEY;
 
     @PostConstruct
     public void readConfig() {
@@ -107,5 +114,11 @@ public class FrameworkConfig {
         easyByNetPaymentUrl = configValues.containsKey("easybynetpaymenturl")
         ? configValues.get("easybynetpaymenturl")
         : productionMode ? Constants.EASYBYNET_PROD_PAYMENT_URL : Constants.EASYBYNET_TEST_PAYMENT_URL;
+        octoBaseUrl = configValues.containsKey("octobaseurl")
+                ? configValues.get("octobaseurl")
+                : octoBaseUrl;
+        octoApiKey = configValues.containsKey("octoapikey")
+                ? configValues.get("octoapikey")
+                : octoApiKey;
     }
 }

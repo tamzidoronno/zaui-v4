@@ -1,6 +1,6 @@
 package com.thundashop.core.wubook;
 
-import static com.thundashop.core.utils.Constants.WUBOOK_CLIENT_URL;
+import static com.utils.Constants.WUBOOK_CLIENT_URL;
 import static com.thundashop.core.wubook.WuBookApiCalls.ACQUIRE_TOKEN;
 import static com.thundashop.core.wubook.WuBookApiCalls.BCOM_NOTIFY_INVALID_CC;
 import static com.thundashop.core.wubook.WuBookApiCalls.BCOM_NOTIFY_NOSHOW;
@@ -67,7 +67,7 @@ import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
-import com.thundashop.core.common.FrameworkConfig;
+import com.thundashop.services.config.FrameworkConfig;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;

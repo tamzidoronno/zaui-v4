@@ -1,4 +1,4 @@
-package com.thundashop.core.utils;
+package com.utils;
 
 public class Constants {
     public static String Z_REPORT_SCHEDULER = "zreportprocessor";

@@ -5,7 +5,6 @@
  */
 package com.thundashop.core.bambora;
 
-import com.braintreegateway.Environment;
 import com.getshop.pullserver.PullMessage;
 import com.getshop.scope.GetShopSession;
 import com.google.gson.Gson;
@@ -13,10 +12,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.thundashop.core.applications.StoreApplicationPool;
 import com.thundashop.core.appmanager.data.Application;
-import com.thundashop.core.common.FrameworkConfig;
+import com.thundashop.services.config.FrameworkConfig;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.Setting;
-import com.thundashop.core.dibs.IDibsManager;
 import com.thundashop.core.getshop.GetShopPullService;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;

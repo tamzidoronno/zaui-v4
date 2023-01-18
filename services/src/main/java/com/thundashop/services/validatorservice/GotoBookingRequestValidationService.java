@@ -42,7 +42,7 @@ public class GotoBookingRequestValidationService implements IGotoBookingRequestV
     private void validateRooms(List<GotoRoomRequest> bookingRooms, SessionInfo bookingItemTypeSession,
             PmsConfiguration config)
             throws ParseException, GotoException {
-
+        if(bookingRooms == null) return;
         for (GotoRoomRequest room : bookingRooms) {
             roomValidationService.validateGotoRoomRequest(room, bookingItemTypeSession, config);
         }

@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -311,6 +313,19 @@ class PmsBookingMessageFormatter {
             }catch(Exception e) {
                 e.printStackTrace();
             }
+        }
+        if(booking.getConfirmedZauiActivities().size() > 0) {
+            String activityText = "";
+            for(BookingZauiActivityItem activity : booking.getConfirmedZauiActivities()) {
+                activityText += "<tr bgcolor='#ffffff'>";
+                activityText += "<td style='font-size: 10px;'>&nbsp;&nbsp;&nbsp;&nbsp;" + "1 x " + activity.getName() + "</td>";
+                activityText += "<td style='font-size: 10px;'></td>";
+                activityText += "<td style='font-size: 10px;'></td>";
+                activityText += "<td style='font-size: 10px;'></td>";
+                activityText += "<td style='font-size: 10px;'>" + activity.price + "</td>";
+                activityText += "</tr>";
+            }
+            bookingData += activityText;
         }
         
         bookingData += "<tr bgcolor='#ffffff'>";

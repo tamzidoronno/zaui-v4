@@ -191,7 +191,6 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
                 cartItemsBasedOnTax.add(cartItem);
             }
             cartItems.addAll(cartItemsBasedOnTax);
-            setActivityItemAsPaid(activityItem.get());
         }
         catch(Exception ex){
             log.error("Failed to add activity to cart. Activity: {}. Reason: {}. Actual error: {}",
@@ -235,15 +234,6 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
         if (accountNumber == null)
             throw new ZauiException(ZauiStatusCodes.ACCOUNTING_ERROR);
         return productManager.getAccountingDetail(Integer.parseInt(accountNumber));
-    }
-
-    private void setActivityItemAsPaid(BookingZauiActivityItem activityItem) {
-        PmsBooking booking = pmsBookingService.getPmsBookingByZauiActivityItemId(activityItem.getId(),
-                pmsManager.getSessionInfo());
-        booking.bookingZauiActivityItems.stream().filter(item -> item.getId().equals(activityItem.getId()))
-                .findFirst().get()
-                .setUnpaidAmount(0);
-        pmsManager.saveBooking(booking);
     }
 
     @Override

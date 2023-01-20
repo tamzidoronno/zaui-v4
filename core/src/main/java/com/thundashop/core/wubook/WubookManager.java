@@ -204,6 +204,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
         }
 
         if (isWubookActive()) {
+
+            stopScheduler(WUBOOK_PROCESSOR.name);
+            stopScheduler(WUBOOK_PROCESSOR_2.name);
             // Run every minute
             createScheduler(WUBOOK_PROCESSOR.name,WUBOOK_PROCESSOR.time, WuBookManagerProcessor.class);
             // Run three times per day

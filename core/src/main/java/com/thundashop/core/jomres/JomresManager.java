@@ -141,7 +141,7 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         stopScheduler(JOMRES_FETCH_BOOKING.name);
         stopScheduler(JOMRES_UPDATE_AVAILABILITY.name);
 
-        if (jomresConfiguration.isEnable) {
+        if (jomresConfiguration!=null && jomresConfiguration.isEnable) {
             createScheduler(JOMRES_FETCH_BOOKING.name, JOMRES_FETCH_BOOKING.time , JomresFetchBookingScheduler.class);
             createScheduler(JOMRES_UPDATE_AVAILABILITY.name, JOMRES_UPDATE_AVAILABILITY.time, JomresUpdateAvailabilityScheduler.class);
         }

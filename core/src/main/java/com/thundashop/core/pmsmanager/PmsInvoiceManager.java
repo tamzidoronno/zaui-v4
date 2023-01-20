@@ -24,7 +24,6 @@ import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.ordermanager.data.OrderShipmentLogEntry;
 import com.thundashop.core.ordermanager.data.Payment;
 import com.thundashop.core.ordermanager.data.VirtualOrder;
-import com.thundashop.core.pos.PosManager;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.sendregning.SendRegningManager;
@@ -33,6 +32,11 @@ import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.wubook.WubookManager;
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -43,10 +47,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
-import org.joda.time.Days;
-import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import static com.thundashop.constant.SchedulerTimerConstant.CHECK_INVOICE_DTO_DATE;
 

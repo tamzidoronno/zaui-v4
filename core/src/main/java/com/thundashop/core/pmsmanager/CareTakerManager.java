@@ -12,7 +12,11 @@ import com.thundashop.core.usermanager.data.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 import static com.thundashop.constant.SchedulerTimerConstant.CARE_TAKER_PROCESSOR;
 

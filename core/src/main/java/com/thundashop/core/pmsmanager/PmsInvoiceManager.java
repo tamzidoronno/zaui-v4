@@ -44,6 +44,7 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import com.thundashop.services.zauiactivityservice.IZauiActivityService;
+import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -3845,8 +3846,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         String userId = booking.userId != null && !booking.userId.isEmpty() ? booking.userId : getSession().currentUser.id;
 
         // add zaui activity items to order rows
-        if(!booking.getConfirmedZauiActivities().isEmpty()){
-            createOrder.add(zauiActivityService.createOrderCreateRowForZauiActivities(booking.getConfirmedZauiActivities()));
+        List <BookingZauiActivityItem> unpaidConfirmedActivities = booking.getConfirmedZauiActivities().stream().filter(i->i.getUnpaidAmount() > 0).collect(Collectors.toList());
+        if(!unpaidConfirmedActivities.isEmpty()){
+            createOrder.add(zauiActivityService.createOrderCreateRowForZauiActivities(unpaidConfirmedActivities));
         }
 
         return pmsManager.createOrderFromCheckout(createOrder, roomId, userId);

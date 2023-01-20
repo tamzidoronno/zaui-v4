@@ -84,9 +84,9 @@ public class CartManager extends ManagerBase implements ICartManager {
     }
 
     @Override
-    public void addZauiActivityItem(String productId, String addonId) throws ErrorException {
+    public void addZauiActivityItem(String productId, String addonId, double price) throws ErrorException {
         Cart cart = getCart(getSession().id);
-        cart.addCartItems(zauiActivityManager.getZauiActivityCartItems(productId, addonId));
+        cart.addCartItems(zauiActivityManager.getZauiActivityCartItems(productId, addonId, price));
     }
 
     private Cart getCart(String sessionId) {

@@ -173,7 +173,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         }
         
         cleanBookingItemsThatDoesNotExsist();
-//       createScheduler( EVENT_QUESTBACK_CHECKED, CheckSendQuestBackScheduler.class);
+//       createScheduler(EVENT_QUESTBACK_CHECKED);
         stopScheduler(EVENT_BOOKING_SCHEDULER.name);
         stopScheduler(EVENT_QUESTBACK_CHECKED.name);
     }

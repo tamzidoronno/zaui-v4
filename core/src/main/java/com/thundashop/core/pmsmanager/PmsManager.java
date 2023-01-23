@@ -118,8 +118,8 @@ import java.util.stream.Collectors;
 
 import static com.thundashop.constant.GetShopSchedulerBaseType.PMS_MAIL_STATS;
 import static com.thundashop.constant.GetShopSchedulerBaseType.PMS_MANAGER_PMS_PROCESSOR;
-import static com.thundashop.constant.GetShopSchedulerBaseType.PMS_PROCESSOR_2;
-import static com.thundashop.constant.GetShopSchedulerBaseType.PMS_PROCESSOR_3;
+import static com.thundashop.constant.GetShopSchedulerBaseType.PMS_MANAGER_PMS_PROCESSOR_2;
+import static com.thundashop.constant.GetShopSchedulerBaseType.PMS_MANAGER_PMS_PROCESSOR_3;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -408,8 +408,8 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         createScheduler(PMS_MAIL_STATS);
         createScheduler(PMS_MANAGER_PMS_PROCESSOR);
-        createScheduler(PMS_PROCESSOR_2);
-        createScheduler(PMS_PROCESSOR_3);
+        createScheduler(PMS_MANAGER_PMS_PROCESSOR_2);
+        createScheduler(PMS_MANAGER_PMS_PROCESSOR_3);
         createScheduler(Constants.Z_REPORT_SCHEDULER, "* * * * *", ZReportProcessor.class);
     }
 

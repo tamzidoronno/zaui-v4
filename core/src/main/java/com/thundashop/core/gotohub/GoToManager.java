@@ -174,7 +174,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         super.initialize();
         goToConfiguration = gotoService.getGotoConfiguration(getSessionInfo());
         stopScheduler(AUTO_EXPIRE_BOOKINGS.name);
-        if (goToConfiguration!=null&&isNotBlank(goToConfiguration.authToken)) {
+        if (goToConfiguration!=null && isNotBlank(goToConfiguration.authToken)) {
             createScheduler(AUTO_EXPIRE_BOOKINGS.name, AUTO_EXPIRE_BOOKINGS.time, GotoExpireBookingScheduler.class, true);
         }
     }

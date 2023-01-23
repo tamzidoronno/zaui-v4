@@ -108,7 +108,7 @@ public class ManagerSubBase {
         createScheduler(schedulerReference, scheduler, schedulerType, anyDataRetrieved);
     }
 
-    public void createScheduler(GetShopSchedulerBaseType getShopSchedulerBaseType) {
+    protected void createScheduler(GetShopSchedulerBaseType getShopSchedulerBaseType) {
         createScheduler(getShopSchedulerBaseType.name, getShopSchedulerBaseType.time, getShopSchedulerBaseType.className);
     }
 

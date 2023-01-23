@@ -6,6 +6,7 @@ import com.thundashop.core.eventbooking.EventBookingScheduler;
 import com.thundashop.core.getshop.FetchEhfProcessor;
 import com.thundashop.core.getshoplock.CheckAllOkGetShopLocks;
 import com.thundashop.core.getshoplock.GetShopLogFetcherStarter;
+import com.thundashop.core.getshoplock.UpdateLockList;
 import com.thundashop.core.getshoplocksystem.ZwaveTriggerCheckCron;
 import com.thundashop.core.gotohub.schedulers.GotoExpireBookingScheduler;
 import com.thundashop.core.jomres.JomresFetchBookingScheduler;
@@ -52,7 +53,8 @@ public enum GetShopSchedulerBaseType {
     WUBOOK_PROCESSOR("wubookprocessor", "* * * * *", WuBookManagerProcessor.class),
     WUBOOK_PROCESSOR_2("wubookprocessor2", "1 5,12,22 * * *", WuBookHourlyProcessor.class),
     EVENT_QUESTBACK_CHECKED("event_questback_checked", "0 * * * *", CheckSendQuestBackScheduler.class),
-    EVENT_BOOKING_SCHEDULER("event_booking_scheduler", "", EventBookingScheduler.class);
+    EVENT_BOOKING_SCHEDULER("event_booking_scheduler", "", EventBookingScheduler.class),
+    PMS_PROCESSOR_LOCK("pmsprocessor_lock", "30 23,04 * * *", UpdateLockList.class);
 
     public final String name;
     public final String time;

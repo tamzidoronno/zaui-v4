@@ -43,7 +43,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.thundashop.constant.SchedulerTimerConstant.BOOKING_ENGINE_NEW_PMS_PROCESSOR;
+import static com.thundashop.constant.GetShopSchedulerBaseType.BOOKING_ENGINE_NEW_PMS_PROCESSOR;
 import static com.thundashop.core.bookingengine.BookingEngine.useNewEngine;
 
 /**
@@ -159,7 +159,7 @@ public class BookingEngineNew extends GetShopSessionBeanNamed implements IBookin
         }
         
         updateBookingTypesIfTypeChanged();
-        createScheduler(BOOKING_ENGINE_NEW_PMS_PROCESSOR.name, BOOKING_ENGINE_NEW_PMS_PROCESSOR.time, CheckConsistencyCron.class);
+        createScheduler(BOOKING_ENGINE_NEW_PMS_PROCESSOR);
         
     }
     

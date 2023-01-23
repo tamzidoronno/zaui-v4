@@ -26,7 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.thundashop.constant.SchedulerTimerConstant.STORE_OCR_PROCESSOR;
+import static com.thundashop.constant.GetShopSchedulerBaseType.STORE_OCR_PROCESSOR;
 
 /**
  *
@@ -70,7 +70,7 @@ public class StoreOcrManager extends ManagerBase implements IStoreOcrManager {
         }
         
         moveLinesFromAccountDirectToManager();
-        createScheduler(STORE_OCR_PROCESSOR.name, STORE_OCR_PROCESSOR.time, OcrProcessor.class);
+        createScheduler(STORE_OCR_PROCESSOR);
     }
 
     /**

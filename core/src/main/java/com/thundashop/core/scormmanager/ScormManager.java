@@ -30,7 +30,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static com.thundashop.constant.SchedulerTimerConstant.CHECK_SCORM_RESULTS;
+import static com.thundashop.constant.GetShopSchedulerBaseType.CHECK_SCORM_RESULTS;
 
 /**
  *
@@ -67,7 +67,7 @@ public class ScormManager extends ManagerBase implements IScormManager {
         }
         
         if (scorms.size() > 0) {
-            createScheduler(CHECK_SCORM_RESULTS.name, CHECK_SCORM_RESULTS.time, FetchScormResult.class);
+            createScheduler(CHECK_SCORM_RESULTS);
         }
     }
     
@@ -76,7 +76,7 @@ public class ScormManager extends ManagerBase implements IScormManager {
     public void saveSetup(ScormPackage scormPackage) {
         saveObject(scormPackage);
         packages.put(scormPackage.id, scormPackage);
-        createScheduler(CHECK_SCORM_RESULTS.name, CHECK_SCORM_RESULTS.time, FetchScormResult.class);
+        createScheduler(CHECK_SCORM_RESULTS);
     }
     
     @Override

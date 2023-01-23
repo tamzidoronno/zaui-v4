@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.thundashop.constant.SchedulerTimerConstant.CHECK_REMOVAL_OF_ROUTES;
+import static com.thundashop.constant.GetShopSchedulerBaseType.CHECK_REMOVAL_OF_ROUTES;
 
 /**
  *
@@ -143,7 +143,7 @@ public class TrackAndTraceManager extends ManagerBase implements ITrackAndTraceM
             }
         }
         
-        createScheduler(CHECK_REMOVAL_OF_ROUTES.name, CHECK_REMOVAL_OF_ROUTES.time, CheckRemovalOfFinishedRoutes.class);
+        createScheduler(CHECK_REMOVAL_OF_ROUTES);
     }
     
     private void ensureRemoval(PooledDestionation dest) {

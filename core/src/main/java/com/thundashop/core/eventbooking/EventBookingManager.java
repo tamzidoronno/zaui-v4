@@ -39,8 +39,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.thundashop.constant.SchedulerTimerConstant.EVENT_BOOKING_SCHEDULER;
-import static com.thundashop.constant.SchedulerTimerConstant.EVENT_QUESTBACK_CHECKED;
+import static com.thundashop.constant.GetShopSchedulerBaseType.EVENT_BOOKING_SCHEDULER;
+import static com.thundashop.constant.GetShopSchedulerBaseType.EVENT_QUESTBACK_CHECKED;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -173,7 +173,7 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         }
         
         cleanBookingItemsThatDoesNotExsist();
-//       createScheduler( EVENT_QUESTBACK_CHECKED.name,  EVENT_QUESTBACK_CHECKED.time, CheckSendQuestBackScheduler.class);
+//       createScheduler( EVENT_QUESTBACK_CHECKED, CheckSendQuestBackScheduler.class);
         stopScheduler(EVENT_BOOKING_SCHEDULER.name);
         stopScheduler(EVENT_QUESTBACK_CHECKED.name);
     }

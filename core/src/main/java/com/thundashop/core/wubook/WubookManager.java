@@ -69,8 +69,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
-import static com.thundashop.constant.SchedulerTimerConstant.WUBOOK_PROCESSOR;
-import static com.thundashop.constant.SchedulerTimerConstant.WUBOOK_PROCESSOR_2;
+import static com.thundashop.constant.GetShopSchedulerBaseType.WUBOOK_PROCESSOR;
+import static com.thundashop.constant.GetShopSchedulerBaseType.WUBOOK_PROCESSOR_2;
 import static com.thundashop.core.utils.Constants.WUBOOK_CLIENT_URL;
 import static com.thundashop.core.wubook.WuBookApiCalls.ACQUIRE_TOKEN;
 import static com.thundashop.core.wubook.WuBookApiCalls.BCOM_NOTIFY_INVALID_CC;
@@ -208,9 +208,9 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
             stopScheduler(WUBOOK_PROCESSOR.name);
             stopScheduler(WUBOOK_PROCESSOR_2.name);
             // Run every minute
-            createScheduler(WUBOOK_PROCESSOR.name,WUBOOK_PROCESSOR.time, WuBookManagerProcessor.class);
+            createScheduler(WUBOOK_PROCESSOR);
             // Run three times per day
-            createScheduler(WUBOOK_PROCESSOR_2.name, WUBOOK_PROCESSOR_2.time, WuBookHourlyProcessor.class);
+            createScheduler(WUBOOK_PROCESSOR_2);
         }
     }
 

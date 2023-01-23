@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import static com.thundashop.constant.SchedulerTimerConstant.CARE_TAKER_PROCESSOR;
+import static com.thundashop.constant.GetShopSchedulerBaseType.CARE_TAKER_PROCESSOR;
 
 /**
  *
@@ -49,7 +49,7 @@ public class CareTakerManager extends GetShopSessionBeanNamed implements ICareTa
                 repeatingDataList.add((CareTakeRepeatingData)dataCommon);
             }
         }
-        createScheduler(CARE_TAKER_PROCESSOR.name, CARE_TAKER_PROCESSOR.time, CareTakerDailyProcessor.class);
+        createScheduler(CARE_TAKER_PROCESSOR);
     }
     
     public void checkForTasksToCreate() {

@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.thundashop.constant.SchedulerTimerConstant.CHECK_CRON_GETSHOP_LOCK_SYSTEM_MANAGER;
+import static com.thundashop.constant.GetShopSchedulerBaseType.CHECK_CRON_GETSHOP_LOCK_SYSTEM_MANAGER;
 
 /**
  *
@@ -110,7 +110,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
             triggerCheckOfCodes(l.getId());
         });
         
-        createScheduler(CHECK_CRON_GETSHOP_LOCK_SYSTEM_MANAGER.name, CHECK_CRON_GETSHOP_LOCK_SYSTEM_MANAGER.time, ZwaveTriggerCheckCron.class);
+        createScheduler(CHECK_CRON_GETSHOP_LOCK_SYSTEM_MANAGER);
         
     }
     

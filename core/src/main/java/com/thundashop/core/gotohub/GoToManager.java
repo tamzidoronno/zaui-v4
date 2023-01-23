@@ -77,7 +77,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.thundashop.constant.SchedulerTimerConstant.AUTO_EXPIRE_BOOKINGS;
+import static com.thundashop.constant.GetShopSchedulerBaseType.AUTO_EXPIRE_BOOKINGS;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_CANCELLATION_FAILED;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_CANCELLATION_SUCCESS;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_CONFIRMATION_FAILED;

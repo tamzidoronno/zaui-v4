@@ -101,7 +101,6 @@ import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.AccountingDetail;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.TaxGroup;
-import com.thundashop.core.scheduler.PaymentStatusCheckScheduler;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.stripe.StripeManager;
@@ -145,9 +144,9 @@ import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
-import static com.thundashop.constant.SchedulerTimerConstant.CHECK_ORDER_PAYMENT_STATUS;
-import static com.thundashop.constant.SchedulerTimerConstant.ORDER_CAPTURE_CHECK_PROCESSOR;
-import static com.thundashop.constant.SchedulerTimerConstant.ORDER_COLLECTOR;
+import static com.thundashop.constant.GetShopSchedulerBaseType.CHECK_ORDER_PAYMENT_STATUS;
+import static com.thundashop.constant.GetShopSchedulerBaseType.ORDER_CAPTURE_CHECK_PROCESSOR;
+import static com.thundashop.constant.GetShopSchedulerBaseType.ORDER_COLLECTOR;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -414,9 +413,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
 //        printOrdersThatHasWrongCreditNotes();
-       
-        createScheduler(ORDER_CAPTURE_CHECK_PROCESSOR.name, ORDER_CAPTURE_CHECK_PROCESSOR.time, CheckOrdersNotCaptured.class);
-        createScheduler(CHECK_ORDER_PAYMENT_STATUS.name, CHECK_ORDER_PAYMENT_STATUS.time, PaymentStatusCheckScheduler.class);
+
+        createScheduler(ORDER_CAPTURE_CHECK_PROCESSOR);
+        createScheduler(CHECK_ORDER_PAYMENT_STATUS);
         if(storeId.equals("c444ff66-8df2-4cbb-8bbe-dc1587ea00b7")) {
             checkChargeAfterDate();
         }
@@ -427,7 +426,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         super.initialize(); //To change body of generated methods, choose Tools | Templates.
         
         if (storeId.equals("13442b34-31e5-424c-bb23-a396b7aeb8ca")) {
-            createScheduler(ORDER_COLLECTOR.name, ORDER_COLLECTOR.time, CheckOrderCollector.class);
+            createScheduler(ORDER_COLLECTOR);
         } else {
             stopScheduler(ORDER_COLLECTOR.name);
         }

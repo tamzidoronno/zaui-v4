@@ -17,7 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.thundashop.constant.SchedulerTimerConstant.TRIGGER;
+import static com.thundashop.constant.GetShopSchedulerBaseType.TRIGGER;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -45,7 +45,7 @@ public class PullServerManager extends ManagerBase implements IPullServerManager
         }
         
         if (storeId.equals("2a831774-e72e-43e3-ac4c-d8700a402e52")) {
-            createScheduler(TRIGGER.name, TRIGGER.time, CheckForPullMessages.class);
+            createScheduler(TRIGGER);
         }
     }
     

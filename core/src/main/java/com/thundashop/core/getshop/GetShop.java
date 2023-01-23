@@ -77,7 +77,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static com.thundashop.constant.SchedulerTimerConstant.EHF_DATAHOTEL_DOWNLOADER;
+import static com.thundashop.constant.GetShopSchedulerBaseType.EHF_DATAHOTEL_DOWNLOADER;
 
 /**
  *
@@ -166,7 +166,7 @@ public class GetShop extends ManagerBase implements IGetShop {
             }
         }
         
-        createScheduler(EHF_DATAHOTEL_DOWNLOADER.name, EHF_DATAHOTEL_DOWNLOADER.time, FetchEhfProcessor.class);
+        createScheduler(EHF_DATAHOTEL_DOWNLOADER);
     }
 
     private void addUserInformation(GetshopStore getshopstore, Store store) {

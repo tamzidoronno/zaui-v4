@@ -48,7 +48,7 @@ import java.util.List;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
-import static com.thundashop.constant.SchedulerTimerConstant.CHECK_INVOICE_DTO_DATE;
+import static com.thundashop.constant.GetShopSchedulerBaseType.CHECK_INVOICE_DTO_DATE;
 
 @Component
 @GetShopSession
@@ -1777,7 +1777,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 paymentLinkConfig = res;
             }
         }
-        createScheduler(CHECK_INVOICE_DTO_DATE.name, CHECK_INVOICE_DTO_DATE.time, DailyInvoiceChecker.class);
+        createScheduler(CHECK_INVOICE_DTO_DATE);
     }
     
     @Override

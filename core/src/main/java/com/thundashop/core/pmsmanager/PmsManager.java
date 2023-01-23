@@ -116,10 +116,10 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static com.thundashop.constant.SchedulerTimerConstant.PMS_MAIL_STATS;
-import static com.thundashop.constant.SchedulerTimerConstant.PMS_MANAGER_PMS_PROCESSOR;
-import static com.thundashop.constant.SchedulerTimerConstant.PMS_PROCESSOR_2;
-import static com.thundashop.constant.SchedulerTimerConstant.PMS_PROCESSOR_3;
+import static com.thundashop.constant.GetShopSchedulerBaseType.PMS_MAIL_STATS;
+import static com.thundashop.constant.GetShopSchedulerBaseType.PMS_MANAGER_PMS_PROCESSOR;
+import static com.thundashop.constant.GetShopSchedulerBaseType.PMS_PROCESSOR_2;
+import static com.thundashop.constant.GetShopSchedulerBaseType.PMS_PROCESSOR_3;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -406,10 +406,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
 
-        createScheduler(PMS_MAIL_STATS.name, PMS_MAIL_STATS.time, PmsMailStatistics.class);
-        createScheduler(PMS_MANAGER_PMS_PROCESSOR.name, PMS_MANAGER_PMS_PROCESSOR.time, CheckPmsProcessing.class);
-        createScheduler(PMS_PROCESSOR_2.name, PMS_PROCESSOR_2.time, CheckPmsProcessingHourly.class);
-        createScheduler(PMS_PROCESSOR_3.name, PMS_PROCESSOR_3.time, CheckPmsFiveMin.class);
+        createScheduler(PMS_MAIL_STATS);
+        createScheduler(PMS_MANAGER_PMS_PROCESSOR);
+        createScheduler(PMS_PROCESSOR_2);
+        createScheduler(PMS_PROCESSOR_3);
         createScheduler(Constants.Z_REPORT_SCHEDULER, "* * * * *", ZReportProcessor.class);
     }
 

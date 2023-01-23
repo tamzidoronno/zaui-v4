@@ -39,8 +39,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-import static com.thundashop.constant.SchedulerTimerConstant.FETCH_LOCK_LOCK;
-import static com.thundashop.constant.SchedulerTimerConstant.GET_SHOP_LOCK_PMS_PROCESSOR;
+import static com.thundashop.constant.GetShopSchedulerBaseType.FETCH_LOCK_LOCK;
+import static com.thundashop.constant.GetShopSchedulerBaseType.GET_SHOP_LOCK_PMS_PROCESSOR;
 
 
 @Component 
@@ -99,7 +99,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     @Override
     public void initialize() throws SecurityException {
         super.initialize(); //To change body of generated methods, choose Tools | Templates.
-        createScheduler(FETCH_LOCK_LOCK.name, FETCH_LOCK_LOCK.time, GetShopLogFetcherStarter.class);
+        createScheduler(FETCH_LOCK_LOCK);
     }
 
     @Override
@@ -763,8 +763,8 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 masterCodes = (GetShopLockMasterCodes) obj;
             }
         }
-        createScheduler( GET_SHOP_LOCK_PMS_PROCESSOR.name,  GET_SHOP_LOCK_PMS_PROCESSOR.time, CheckAllOkGetShopLocks.class);
-     //  createScheduler( PMS_PROCESSOR_LOCK.name,  PMS_PROCESSOR_LOCK.time, UpdateLockList.class);
+        createScheduler(GET_SHOP_LOCK_PMS_PROCESSOR);
+        //  createScheduler( PMS_PROCESSOR_LOCK, UpdateLockList.class);
     }
     
     public String getUsername(String serverSource) {

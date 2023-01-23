@@ -63,8 +63,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static com.thundashop.constant.SchedulerTimerConstant.JOMRES_FETCH_BOOKING;
-import static com.thundashop.constant.SchedulerTimerConstant.JOMRES_UPDATE_AVAILABILITY;
+import static com.thundashop.constant.GetShopSchedulerBaseType.JOMRES_FETCH_BOOKING;
+import static com.thundashop.constant.GetShopSchedulerBaseType.JOMRES_UPDATE_AVAILABILITY;
 
 @Component
 @GetShopSession
@@ -142,8 +142,8 @@ public class JomresManager extends GetShopSessionBeanNamed implements IJomresMan
         stopScheduler(JOMRES_UPDATE_AVAILABILITY.name);
 
         if (jomresConfiguration!=null && jomresConfiguration.isEnable) {
-            createScheduler(JOMRES_FETCH_BOOKING.name, JOMRES_FETCH_BOOKING.time , JomresFetchBookingScheduler.class);
-            createScheduler(JOMRES_UPDATE_AVAILABILITY.name, JOMRES_UPDATE_AVAILABILITY.time, JomresUpdateAvailabilityScheduler.class);
+            createScheduler(JOMRES_FETCH_BOOKING);
+            createScheduler(JOMRES_UPDATE_AVAILABILITY);
         }
     }
 

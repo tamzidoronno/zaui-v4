@@ -1,5 +1,9 @@
 package com.thundashop.core.pmsmanager;
 
+import static com.thundashop.constant.GetShopSchedulerBaseType.PMS_MAIL_STATS;
+import static com.thundashop.constant.GetShopSchedulerBaseType.PMS_MANAGER_PMS_PROCESSOR;
+import static com.thundashop.constant.GetShopSchedulerBaseType.PMS_MANAGER_PMS_PROCESSOR_2;
+import static com.thundashop.constant.GetShopSchedulerBaseType.PMS_MANAGER_PMS_PROCESSOR_3;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -26,10 +30,6 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.thundashop.services.bookingservice.IPmsBookingService;
-import com.thundashop.core.common.*;
-import com.thundashop.services.config.FrameworkConfig;
-import com.thundashop.services.zauiactivityservice.IZauiActivityService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -64,6 +64,19 @@ import com.thundashop.core.cartmanager.data.AddonsInclude;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.cartmanager.data.Coupon;
 import com.thundashop.core.checklist.ChecklistManager;
+import com.thundashop.core.common.Administrator;
+import com.thundashop.core.common.BookingEngineException;
+import com.thundashop.core.common.DataCommon;
+import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.FilterOptions;
+import com.thundashop.core.common.FilteredData;
+import com.thundashop.core.common.GrafanaFeederImpl;
+import com.thundashop.core.common.GrafanaManager;
+import com.thundashop.core.common.NullSafeConcurrentHashMap;
+import com.thundashop.core.common.Session;
+import com.thundashop.core.common.Setting;
+import com.thundashop.core.common.ZReportProcessor;
+import com.thundashop.core.common.ZauiException;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -101,12 +114,15 @@ import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.usermanager.data.UserCard;
 import com.thundashop.core.utils.BrRegEngine;
-import com.zauistay.utils.Constants;
 import com.thundashop.core.utils.DateUtils;
 import com.thundashop.core.utils.UtilManager;
 import com.thundashop.core.webmanager.WebManager;
 import com.thundashop.core.wubook.WubookManager;
+import com.thundashop.services.bookingservice.IPmsBookingService;
+import com.thundashop.services.config.FrameworkConfig;
 import com.thundashop.services.pmspricing.IPmsPricingService;
+import com.thundashop.services.zauiactivityservice.IZauiActivityService;
+import com.zauistay.utils.Constants;
 
 import biweekly.Biweekly;
 import biweekly.ICalendar;
@@ -400,10 +416,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
 
-        createScheduler("pmsmailstats", "1 23 * * *", PmsMailStatistics.class);
-        createScheduler("pmsprocessor", "* * * * *", CheckPmsProcessing.class);
-        createScheduler("pmsprocessor2", "5 * * * *", CheckPmsProcessingHourly.class);
-        createScheduler("pmsprocessor3", "7,13,33,53 * * * *", CheckPmsFiveMin.class);
+        createScheduler(PMS_MAIL_STATS);
+        createScheduler(PMS_MANAGER_PMS_PROCESSOR);
+        createScheduler(PMS_MANAGER_PMS_PROCESSOR_2);
+        createScheduler(PMS_MANAGER_PMS_PROCESSOR_3);
         createScheduler(Constants.Z_REPORT_SCHEDULER, "* * * * *", ZReportProcessor.class);
     }
 

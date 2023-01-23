@@ -14,8 +14,10 @@ import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -24,12 +26,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
-import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+
+import static com.thundashop.constant.GetShopSchedulerBaseType.CHECK_SCORM_RESULTS;
 
 /**
  *
@@ -66,7 +67,7 @@ public class ScormManager extends ManagerBase implements IScormManager {
         }
         
         if (scorms.size() > 0) {
-            createScheduler("checkScormResults", "* * * * *", FetchScormResult.class);
+            createScheduler(CHECK_SCORM_RESULTS);
         }
     }
     
@@ -75,7 +76,7 @@ public class ScormManager extends ManagerBase implements IScormManager {
     public void saveSetup(ScormPackage scormPackage) {
         saveObject(scormPackage);
         packages.put(scormPackage.id, scormPackage);
-        createScheduler("checkScormResults", "* * * * *", FetchScormResult.class);
+        createScheduler(CHECK_SCORM_RESULTS);
     }
     
     @Override

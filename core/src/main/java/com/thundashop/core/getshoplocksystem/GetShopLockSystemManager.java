@@ -5,20 +5,6 @@
  */
 package com.thundashop.core.getshoplocksystem;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.core.task.TaskExecutor;
-import org.springframework.stereotype.Component;
-
 import com.getshop.scope.GetShopSession;
 import com.mongodb.BasicDBObject;
 import com.mongodb.BasicDBObjectBuilder;
@@ -32,6 +18,21 @@ import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.getshop.GetShop;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.storemanager.StoreManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static com.thundashop.constant.GetShopSchedulerBaseType.CHECK_CRON_GETSHOP_LOCK_SYSTEM_MANAGER;
 
 /**
  *
@@ -109,7 +110,7 @@ public class GetShopLockSystemManager extends ManagerBase implements IGetShopLoc
             triggerCheckOfCodes(l.getId());
         });
         
-        createScheduler("checkCronGetShopLockSystemManager", "*/5 * * * *", ZwaveTriggerCheckCron.class);
+        createScheduler(CHECK_CRON_GETSHOP_LOCK_SYSTEM_MANAGER);
         
     }
     

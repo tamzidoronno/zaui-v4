@@ -27,7 +27,6 @@ import com.thundashop.core.wubook.WuBookHourlyProcessor;
 import com.thundashop.core.wubook.WuBookManagerProcessor;
 
 public enum GetShopSchedulerBaseType {
-    //"0 6,16 * * *"
     BOOKING_ENGINE_PMS_PROCESSOR("pmsprocessor", "0 6,16 * * *", CheckConsistencyCron.class),
     BOOKING_ENGINE_NEW_PMS_PROCESSOR("pmsprocessor", "0 6,16 * * *",CheckConsistencyCron.class),
     GET_SHOP_LOCK_PMS_PROCESSOR("pmsprocessor", "* * * * *", CheckAllOkGetShopLocks.class),

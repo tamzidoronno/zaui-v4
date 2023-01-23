@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.pmsbookingprocess.GuestAddonsSummary;
 import com.thundashop.core.pmsbookingprocess.PmsBookingProcess;
 import com.thundashop.core.common.ZauiStatusCodes;
@@ -15,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.getshop.scope.GetShopSession;
-import com.getshop.scope.GetShopSessionBeanNamed;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.pmsmanager.PmsBooking;
@@ -37,7 +37,7 @@ import com.thundashop.services.zauiactivityservice.IZauiActivityService;
 @Component
 @GetShopSession
 @Slf4j
-public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZauiActivityManager {
+public class ZauiActivityManager extends ManagerBase implements IZauiActivityManager {
     @Autowired
     IOctoApiService octoApiService;
 

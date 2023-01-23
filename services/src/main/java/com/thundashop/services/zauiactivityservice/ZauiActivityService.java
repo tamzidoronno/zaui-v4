@@ -208,6 +208,10 @@ public class ZauiActivityService implements IZauiActivityService {
     public void cancelActivityFromBooking(BookingZauiActivityItem activityItem) throws ZauiException {
         OctoBooking octoCancelledBooking = octoApiService.cancelBooking(activityItem.getSupplierId(),
                 activityItem.getOctoBooking().getId());
+        
+        // prevented pricing to be updated from cancelBooking as they get zeros
+        Pricing pricingBeforeCancellation = activityItem.getOctoBooking().getPricing();
+        octoCancelledBooking.setPricing(pricingBeforeCancellation);
         activityItem.setOctoBooking(octoCancelledBooking);
         // unpaid amount gets negative for cancelling paid activities, and zero for unpaid ones
         double unpaidAmount = activityItem.getUnpaidAmount() != 0 ? 0 : -activityItem.price;

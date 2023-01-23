@@ -1,7 +1,29 @@
 package com.thundashop.core.gotohub;
 
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.*;
-import static com.thundashop.core.gotohub.constant.GotoConstants.*;
+import static com.thundashop.constant.GetShopSchedulerBaseType.AUTO_EXPIRE_BOOKINGS;
+import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_CANCELLATION_FAILED;
+import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_CANCELLATION_SUCCESS;
+import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_CONFIRMATION_FAILED;
+import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_CONFIRMATION_SUCCESS;
+import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_CONFIRMATION_SUCCESS_WITH_PAYMENT_LINK;
+import static com.thundashop.core.gotohub.constant.GoToStatusCodes.FETCHING_HOTEL_INFO_FAIL;
+import static com.thundashop.core.gotohub.constant.GoToStatusCodes.FETCHING_HOTEL_INFO_SUCCESS;
+import static com.thundashop.core.gotohub.constant.GoToStatusCodes.FETCHING_PRICE_ALLOTMENT_FAIL;
+import static com.thundashop.core.gotohub.constant.GoToStatusCodes.FETCHING_PRICE_ALLOTMENT_SUCCESS;
+import static com.thundashop.core.gotohub.constant.GoToStatusCodes.FETCHING_ROOM_TYPE_INFO_FAIL;
+import static com.thundashop.core.gotohub.constant.GoToStatusCodes.FETCHING_ROOM_TYPE_INFO_SUCCESS;
+import static com.thundashop.core.gotohub.constant.GoToStatusCodes.INVALID_DATE_RANGE_ALLOTMENT;
+import static com.thundashop.core.gotohub.constant.GoToStatusCodes.LARGER_DATE_RANGE;
+import static com.thundashop.core.gotohub.constant.GoToStatusCodes.NO_ALLOTMENT;
+import static com.thundashop.core.gotohub.constant.GoToStatusCodes.ORDER_SYNCHRONIZATION_FAILED;
+import static com.thundashop.core.gotohub.constant.GoToStatusCodes.PAYMENT_FAILED;
+import static com.thundashop.core.gotohub.constant.GoToStatusCodes.PAYMENT_METHOD_ACTIVATION_FAILED;
+import static com.thundashop.core.gotohub.constant.GoToStatusCodes.SAVE_BOOKING_FAIL;
+import static com.thundashop.core.gotohub.constant.GoToStatusCodes.SAVE_BOOKING_SUCCESS;
+import static com.thundashop.core.gotohub.constant.GotoConstants.STAY_PAYMENT;
+import static com.thundashop.core.gotohub.constant.GotoConstants.checkinOutDateFormatter;
+import static com.thundashop.core.gotohub.constant.GotoConstants.df;
+import static com.thundashop.core.gotohub.constant.GotoConstants.formatter;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -19,13 +41,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.thundashop.core.pmsmanager.*;
-import com.thundashop.core.zauiactivity.ZauiActivityManager;
-import com.thundashop.services.gotoservice.*;
-import com.thundashop.services.validatorservice.IGotoBookingRequestValidationService;
-import com.thundashop.services.validatorservice.IGotoCancellationValidationService;
-import com.thundashop.services.validatorservice.IGotoConfirmBookingValidationService;
-import com.thundashop.zauiactivity.constant.ZauiConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.stereotype.Component;
@@ -42,13 +57,13 @@ import com.thundashop.core.gotohub.dto.GoToConfiguration;
 import com.thundashop.core.gotohub.dto.GoToRoomData;
 import com.thundashop.core.gotohub.dto.GotoBookingRequest;
 import com.thundashop.core.gotohub.dto.GotoBookingResponse;
+import com.thundashop.core.gotohub.dto.GotoConfirmBookingRequest;
+import com.thundashop.core.gotohub.dto.GotoConfirmBookingRes;
 import com.thundashop.core.gotohub.dto.GotoException;
 import com.thundashop.core.gotohub.dto.GotoRoomRequest;
-import com.thundashop.core.gotohub.dto.GotoConfirmBookingRequest;
 import com.thundashop.core.gotohub.dto.GotoRoomRestriction;
 import com.thundashop.core.gotohub.dto.Hotel;
 import com.thundashop.core.gotohub.dto.PriceAllotment;
-import com.thundashop.core.gotohub.dto.GotoConfirmBookingRes;
 import com.thundashop.core.gotohub.dto.RatePlan;
 import com.thundashop.core.gotohub.dto.RoomType;
 import com.thundashop.core.gotohub.schedulers.GotoExpireBookingScheduler;
@@ -58,12 +73,34 @@ import com.thundashop.core.ordermanager.data.Order;
 import com.thundashop.core.pmsbookingprocess.BookingProcessRooms;
 import com.thundashop.core.pmsbookingprocess.PmsBookingProcess;
 import com.thundashop.core.pmsbookingprocess.StartBooking;
+import com.thundashop.core.pmsmanager.NewOrderFilter;
+import com.thundashop.core.pmsmanager.PmsAdditionalTypeInformation;
+import com.thundashop.core.pmsmanager.PmsBooking;
+import com.thundashop.core.pmsmanager.PmsBookingConstant;
+import com.thundashop.core.pmsmanager.PmsBookingDateRange;
+import com.thundashop.core.pmsmanager.PmsBookingRooms;
+import com.thundashop.core.pmsmanager.PmsConfiguration;
+import com.thundashop.core.pmsmanager.PmsInvoiceManager;
+import com.thundashop.core.pmsmanager.PmsManager;
+import com.thundashop.core.pmsmanager.TimeRepeater;
+import com.thundashop.core.pmsmanager.TimeRepeaterData;
+import com.thundashop.core.pmsmanager.TimeRepeaterDateRange;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.StorePool;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.wubook.WubookManager;
+import com.thundashop.core.zauiactivity.ZauiActivityManager;
 import com.thundashop.services.bookingservice.IPmsBookingService;
+import com.thundashop.services.gotoservice.IGotoBookingCancellationService;
+import com.thundashop.services.gotoservice.IGotoConfirmBookingService;
+import com.thundashop.services.gotoservice.IGotoHoldBookingService;
+import com.thundashop.services.gotoservice.IGotoHotelInformationService;
+import com.thundashop.services.gotoservice.IGotoService;
+import com.thundashop.services.validatorservice.IGotoBookingRequestValidationService;
+import com.thundashop.services.validatorservice.IGotoCancellationValidationService;
+import com.thundashop.services.validatorservice.IGotoConfirmBookingValidationService;
+import com.thundashop.zauiactivity.constant.ZauiConstants;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -125,8 +162,10 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     public void initialize() throws SecurityException {
         super.initialize();
         goToConfiguration = gotoService.getGotoConfiguration(getSessionInfo());
-        stopScheduler("AutoExpireBookings");
-        createScheduler("AutoExpireBookings", "*/5 * * * *", GotoExpireBookingScheduler.class, true);
+        stopScheduler(AUTO_EXPIRE_BOOKINGS.name);
+        if (goToConfiguration!=null && isNotBlank(goToConfiguration.authToken)) {
+            createScheduler(AUTO_EXPIRE_BOOKINGS.name, AUTO_EXPIRE_BOOKINGS.time, GotoExpireBookingScheduler.class, true);
+        }
     }
 
     @Override

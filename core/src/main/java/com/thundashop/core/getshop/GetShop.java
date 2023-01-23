@@ -51,23 +51,33 @@ import com.thundashop.core.support.SupportManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.User;
+import org.mongodb.morphia.Morphia;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.UnknownHostException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
 
-import org.mongodb.morphia.Morphia;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import static com.thundashop.constant.GetShopSchedulerBaseType.EHF_DATAHOTEL_DOWNLOADER;
 
 /**
  *
@@ -156,7 +166,7 @@ public class GetShop extends ManagerBase implements IGetShop {
             }
         }
         
-        createScheduler("ehf_datahotel_downloader", "33 3 * * *", FetchEhfProcessor.class);
+        createScheduler(EHF_DATAHOTEL_DOWNLOADER);
     }
 
     private void addUserInformation(GetshopStore getshopstore, Store store) {

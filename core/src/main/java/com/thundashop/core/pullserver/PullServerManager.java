@@ -2,23 +2,22 @@ package com.thundashop.core.pullserver;
 
 
 import com.getshop.scope.GetShopSession;
-import java.util.Calendar;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.databasemanager.data.DataRetreived;
-import com.thundashop.core.ordermanager.CheckOrderCollector;
 import com.thundashop.core.pullserver.data.PullMessage;
+import org.springframework.stereotype.Component;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
-import org.springframework.stereotype.Component;
+
+import static com.thundashop.constant.GetShopSchedulerBaseType.TRIGGER;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -46,7 +45,7 @@ public class PullServerManager extends ManagerBase implements IPullServerManager
         }
         
         if (storeId.equals("2a831774-e72e-43e3-ac4c-d8700a402e52")) {
-            createScheduler("trigger", "*/5 * * * *", CheckForPullMessages.class);
+            createScheduler(TRIGGER);
         }
     }
     

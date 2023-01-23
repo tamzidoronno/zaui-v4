@@ -1,5 +1,11 @@
 package com.thundashop.core.ordermanager;
 
+import static com.thundashop.constant.GetShopSchedulerBaseType.CHECK_ORDER_PAYMENT_STATUS;
+import static com.thundashop.constant.GetShopSchedulerBaseType.ORDER_CAPTURE_CHECK_PROCESSOR;
+import static com.thundashop.constant.GetShopSchedulerBaseType.ORDER_COLLECTOR;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.ParseException;
@@ -26,9 +32,6 @@ import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
-import com.thundashop.core.paymentmanager.StorePaymentConfig;
-import com.thundashop.zauiactivity.constant.ZauiConstants;
-import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,6 +119,7 @@ import com.thundashop.core.ordermanager.data.Statistic;
 import com.thundashop.core.ordermanager.data.VirtualOrder;
 import com.thundashop.core.paymentmanager.GeneralPaymentConfig;
 import com.thundashop.core.paymentmanager.PaymentManager;
+import com.thundashop.core.paymentmanager.StorePaymentConfig;
 import com.thundashop.core.paymentmanager.EasyByNets.EasyByNetService;
 import com.thundashop.core.pdf.InvoiceManager;
 import com.thundashop.core.pdf.data.AccountingDetails;
@@ -135,7 +139,6 @@ import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.AccountingDetail;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.TaxGroup;
-import com.thundashop.core.scheduler.PaymentStatusCheckScheduler;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.storemanager.data.Store;
 import com.thundashop.core.stripe.StripeManager;
@@ -147,9 +150,8 @@ import com.thundashop.core.usermanager.data.UserCard;
 import com.thundashop.core.verifonemanager.VerifoneFeedback;
 import com.thundashop.core.warehousemanager.WareHouseManager;
 import com.thundashop.core.webmanager.WebManager;
-
-import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import com.thundashop.zauiactivity.constant.ZauiConstants;
+import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
 
 
 @Component
@@ -414,9 +416,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
         
 //        printOrdersThatHasWrongCreditNotes();
-       
-        createScheduler("ordercapturecheckprocessor", "2,7,12,17,22,27,32,37,42,47,52,57 * * * *", CheckOrdersNotCaptured.class);
-        createScheduler("checkorderpaymentstatus", "*/30 * * * *", PaymentStatusCheckScheduler.class);
+
+        createScheduler(ORDER_CAPTURE_CHECK_PROCESSOR);
+        createScheduler(CHECK_ORDER_PAYMENT_STATUS);
         if(storeId.equals("c444ff66-8df2-4cbb-8bbe-dc1587ea00b7")) {
             checkChargeAfterDate();
         }
@@ -427,9 +429,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         super.initialize(); //To change body of generated methods, choose Tools | Templates.
         
         if (storeId.equals("13442b34-31e5-424c-bb23-a396b7aeb8ca")) {
-            createScheduler("ordercollector", "*/10 * * * *", CheckOrderCollector.class);
+            createScheduler(ORDER_COLLECTOR);
         } else {
-            stopScheduler("ordercollector");
+            stopScheduler(ORDER_COLLECTOR.name);
         }
     }
     

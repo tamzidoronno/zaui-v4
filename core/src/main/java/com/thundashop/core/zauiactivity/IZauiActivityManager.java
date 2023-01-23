@@ -43,7 +43,7 @@ public interface IZauiActivityManager {
 
     void fetchZauiActivities() throws NotUniqueDataException;
 
-    List<CartItem> getZauiActivityCartItems(String productId, String addonId) throws ErrorException;
+    List<CartItem> getZauiActivityCartItems(String productId, String addonId, double price) throws ErrorException;
 
     ZauiActivity getZauiActivity(String productId);
 }

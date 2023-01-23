@@ -390,7 +390,7 @@ public class PmsInvoiceManagerNew {
 
         for (PmsOrderCreateRowItemLine itemLine : roomData.items) {
             if (Objects.equals(itemLine.orderItemType, ZauiConstants.ZAUI_ACTIVITY_TAG)) {
-                cartManager.addZauiActivityItem(itemLine.createOrderOnProductId, itemLine.addonId);
+                cartManager.addZauiActivityItem(itemLine.createOrderOnProductId, itemLine.addonId,itemLine.price);
                 continue;
             }
             CartItem item = cartManager.addProductItem(itemLine.createOrderOnProductId, itemLine.count);

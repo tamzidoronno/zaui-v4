@@ -129,7 +129,10 @@ public class OctoApiService implements IOctoApiService {
     public OctoBooking cancelBooking(Integer supplierId, String bookingId) throws ZauiException {
         String url = getOctoBaseUrl() + "/suppliers/" + supplierId + "/bookings/" + bookingId
                 + "/cancel";
-        String result = getHttpResponseBody(url, null, "DELETE", null);
+        Map<String, String> headers = new HashMap<>();
+        headers.put(ZauiConstants.OCTO_PRICING.getLeft(),
+                ZauiConstants.OCTO_PRICING.getRight() + "," + ZauiConstants.OCTO_NORWEGIAN_TAX.getRight());
+        String result = getHttpResponseBody(url, headers, "DELETE", null);
         Type listType = new TypeToken<OctoBooking>() {
         }.getType();
         return new Gson().fromJson(result, listType);

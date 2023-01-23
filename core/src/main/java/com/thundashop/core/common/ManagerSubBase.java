@@ -5,7 +5,25 @@
  */
 package com.thundashop.core.common;
 
-import static com.thundashop.core.common.GetShopLogHandler.logPrintStatic;
+import com.getshop.scope.GetShopSchedulerBase;
+import com.getshop.scope.GetShopSessionBeanNamed;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.thundashop.constant.GetShopSchedulerBaseType;
+import com.thundashop.core.applications.StoreApplicationPool;
+import com.thundashop.core.appmanager.data.Application;
+import com.thundashop.core.databasemanager.Database;
+import com.thundashop.core.databasemanager.DatabaseRemote;
+import com.thundashop.core.databasemanager.data.Credentials;
+import com.thundashop.core.databasemanager.data.DataRetreived;
+import com.thundashop.core.pagemanager.GetShopModules;
+import com.thundashop.core.storemanager.data.Store;
+import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.core.usermanager.data.User;
+import com.thundashop.repository.utils.SessionInfo;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -23,28 +41,9 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.getshop.scope.GetShopSchedulerBase;
-import com.getshop.scope.GetShopSessionBeanNamed;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.thundashop.core.applications.StoreApplicationPool;
-import com.thundashop.core.appmanager.data.Application;
-import com.thundashop.core.databasemanager.Database;
-import com.thundashop.core.databasemanager.DatabaseRemote;
-import com.thundashop.core.databasemanager.data.Credentials;
-import com.thundashop.core.databasemanager.data.DataRetreived;
-import com.thundashop.core.pagemanager.GetShopModules;
-import com.thundashop.core.storemanager.data.Store;
-import com.thundashop.core.usermanager.UserManager;
-import com.thundashop.core.usermanager.data.User;
-import com.thundashop.repository.utils.SessionInfo;
+import static com.thundashop.core.common.GetShopLogHandler.logPrintStatic;
 
 /**
- *
  * @author ktonder
  */
 public class ManagerSubBase {
@@ -109,8 +108,13 @@ public class ManagerSubBase {
         createScheduler(schedulerReference, scheduler, schedulerType, anyDataRetrieved);
     }
 
+    protected void createScheduler(GetShopSchedulerBaseType getShopSchedulerBaseType) {
+        createScheduler(getShopSchedulerBaseType.name, getShopSchedulerBaseType.time, getShopSchedulerBaseType.className);
+    }
+
+
     public void createScheduler(String schedulerReference, String scheduler, Class schedulerType,
-            boolean anyDataRetrieved) {
+                                boolean anyDataRetrieved) {
         // need to set this true for starting any schedular
         this.anyDataRetrieved = anyDataRetrieved;
         GetShopScheduler gsscheduler = new GetShopScheduler();
@@ -272,7 +276,7 @@ public class ManagerSubBase {
     /**
      * This function should only be used when the saveObject is overridden
      * and there is a special reason to bypass it.
-     * 
+     *
      * @param data
      */
     public void saveObjectDirect(DataCommon data) {
@@ -334,10 +338,10 @@ public class ManagerSubBase {
 
     /**
      * This function is called after each interface call.
-     * 
+     * <p>
      * Gives you the possibility to change the data before it leaves the jvm
      * container.
-     * 
+     *
      * @param object
      * @param executeMethod
      * @return

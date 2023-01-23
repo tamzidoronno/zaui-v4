@@ -1,61 +1,5 @@
 package com.thundashop.core.wubook;
 
-import static com.thundashop.core.utils.Constants.WUBOOK_CLIENT_URL;
-import static com.thundashop.core.wubook.WuBookApiCalls.ACQUIRE_TOKEN;
-import static com.thundashop.core.wubook.WuBookApiCalls.BCOM_NOTIFY_INVALID_CC;
-import static com.thundashop.core.wubook.WuBookApiCalls.BCOM_NOTIFY_NOSHOW;
-import static com.thundashop.core.wubook.WuBookApiCalls.BCOM_ROOMS_RATES;
-import static com.thundashop.core.wubook.WuBookApiCalls.EXP_ROOMS_RATES;
-import static com.thundashop.core.wubook.WuBookApiCalls.FETCH_BOOKING;
-import static com.thundashop.core.wubook.WuBookApiCalls.FETCH_BOOKINGS;
-import static com.thundashop.core.wubook.WuBookApiCalls.FETCH_BOOKINGS_CODES;
-import static com.thundashop.core.wubook.WuBookApiCalls.GET_OTAS;
-import static com.thundashop.core.wubook.WuBookApiCalls.MOD_ROOM;
-import static com.thundashop.core.wubook.WuBookApiCalls.MOD_VIRTUAL_ROOM;
-import static com.thundashop.core.wubook.WuBookApiCalls.NEW_ROOM;
-import static com.thundashop.core.wubook.WuBookApiCalls.NEW_VIRTUAL_ROOM;
-import static com.thundashop.core.wubook.WuBookApiCalls.PUSH_ACTIVATION;
-import static com.thundashop.core.wubook.WuBookApiCalls.RPLAN_UPDATE_RPLAN_VALUES;
-import static com.thundashop.core.wubook.WuBookApiCalls.UPDATE_AVAIL;
-import static com.thundashop.core.wubook.WuBookApiCalls.UPDATE_PLAN_PRICES;
-import static com.thundashop.core.wubook.WuBookApiCalls.UPDATE_SPARSE_AVAIL;
-import static org.apache.commons.lang3.StringUtils.containsAny;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Vector;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
-
-import javax.net.ssl.HttpsURLConnection;
-
-import org.apache.xmlrpc.XmlRpcClient;
-import org.apache.xmlrpc.XmlRpcException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.util.StopWatch;
-
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.google.gson.Gson;
@@ -91,6 +35,62 @@ import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.UserManager;
+import org.apache.xmlrpc.XmlRpcClient;
+import org.apache.xmlrpc.XmlRpcException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StopWatch;
+
+import javax.net.ssl.HttpsURLConnection;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Vector;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
+
+import static com.thundashop.constant.GetShopSchedulerBaseType.WUBOOK_PROCESSOR;
+import static com.thundashop.constant.GetShopSchedulerBaseType.WUBOOK_PROCESSOR_2;
+import static com.thundashop.core.utils.Constants.WUBOOK_CLIENT_URL;
+import static com.thundashop.core.wubook.WuBookApiCalls.ACQUIRE_TOKEN;
+import static com.thundashop.core.wubook.WuBookApiCalls.BCOM_NOTIFY_INVALID_CC;
+import static com.thundashop.core.wubook.WuBookApiCalls.BCOM_NOTIFY_NOSHOW;
+import static com.thundashop.core.wubook.WuBookApiCalls.BCOM_ROOMS_RATES;
+import static com.thundashop.core.wubook.WuBookApiCalls.EXP_ROOMS_RATES;
+import static com.thundashop.core.wubook.WuBookApiCalls.FETCH_BOOKING;
+import static com.thundashop.core.wubook.WuBookApiCalls.FETCH_BOOKINGS;
+import static com.thundashop.core.wubook.WuBookApiCalls.FETCH_BOOKINGS_CODES;
+import static com.thundashop.core.wubook.WuBookApiCalls.GET_OTAS;
+import static com.thundashop.core.wubook.WuBookApiCalls.MOD_ROOM;
+import static com.thundashop.core.wubook.WuBookApiCalls.MOD_VIRTUAL_ROOM;
+import static com.thundashop.core.wubook.WuBookApiCalls.NEW_ROOM;
+import static com.thundashop.core.wubook.WuBookApiCalls.NEW_VIRTUAL_ROOM;
+import static com.thundashop.core.wubook.WuBookApiCalls.PUSH_ACTIVATION;
+import static com.thundashop.core.wubook.WuBookApiCalls.RPLAN_UPDATE_RPLAN_VALUES;
+import static com.thundashop.core.wubook.WuBookApiCalls.UPDATE_AVAIL;
+import static com.thundashop.core.wubook.WuBookApiCalls.UPDATE_PLAN_PRICES;
+import static com.thundashop.core.wubook.WuBookApiCalls.UPDATE_SPARSE_AVAIL;
+import static org.apache.commons.lang3.StringUtils.containsAny;
 
 @Component
 @GetShopSession
@@ -202,10 +202,16 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 lastAvailability = (SavedLastAvailibilityUpdate) dataCommon;
             }
         }
-        // Run every minute
-        createScheduler("wubookprocessor", "* * * * *", WuBookManagerProcessor.class);
-        // Run three times per day
-        createScheduler("wubookprocessor2", "1 5,12,22 * * *", WuBookHourlyProcessor.class);
+
+        if (isWubookActive()) {
+
+            stopScheduler(WUBOOK_PROCESSOR.name);
+            stopScheduler(WUBOOK_PROCESSOR_2.name);
+            // Run every minute
+            createScheduler(WUBOOK_PROCESSOR);
+            // Run three times per day
+            createScheduler(WUBOOK_PROCESSOR_2);
+        }
     }
 
     public boolean updateAvailability() throws Exception {

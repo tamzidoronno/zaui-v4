@@ -16,7 +16,6 @@ import com.thundashop.core.common.ErrorException;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.encryption.EncryptionManager;
-import com.thundashop.core.scormmanager.Scorm;
 import com.thundashop.core.scormmanager.ScormManager;
 import com.thundashop.core.scormmanager.ScormPackage;
 import com.thundashop.core.storemanager.StorePool;
@@ -25,6 +24,9 @@ import com.thundashop.core.usermanager.data.Company;
 import com.thundashop.core.usermanager.data.Group;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.utils.UtilManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -36,8 +38,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+
+import static com.thundashop.constant.GetShopSchedulerBaseType.EVENT_BOOKING_SCHEDULER;
+import static com.thundashop.constant.GetShopSchedulerBaseType.EVENT_QUESTBACK_CHECKED;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -170,9 +173,9 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
         }
         
         cleanBookingItemsThatDoesNotExsist();
-//        createScheduler("event_questback_checked", "0 * * * *", CheckSendQuestBackScheduler.class);
-        stopScheduler("event_booking_scheduler");
-        stopScheduler("event_questback_checked");
+//       createScheduler(EVENT_QUESTBACK_CHECKED);
+        stopScheduler(EVENT_BOOKING_SCHEDULER.name);
+        stopScheduler(EVENT_QUESTBACK_CHECKED.name);
     }
     
     @Override
@@ -1550,8 +1553,8 @@ public class EventBookingManager extends GetShopSessionBeanNamed implements IEve
 
     @Override
     public void startScheduler(String scheduler) {
-        stopScheduler("event_booking_scheduler");
-        createScheduler("event_booking_scheduler", scheduler, EventBookingScheduler.class);
+        stopScheduler(EVENT_BOOKING_SCHEDULER.name);
+        createScheduler(EVENT_BOOKING_SCHEDULER.name, scheduler, EventBookingScheduler.class);
     }
 
     @Override

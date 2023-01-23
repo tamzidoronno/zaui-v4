@@ -2,7 +2,6 @@ package com.thundashop.core.getshop;
 
 import com.braintreegateway.org.apache.commons.codec.binary.Base64;
 import com.getshop.javaapi.GetShopApi;
-import com.getshop.scope.GetShopSchedulerBase;
 import com.getshop.scope.GetShopSessionScope;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -14,7 +13,6 @@ import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 import com.thundashop.core.applications.StoreApplicationPool;
-import com.thundashop.core.common.AnnotationExclusionStrategy;
 import com.thundashop.core.common.AppContext;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
@@ -23,7 +21,6 @@ import com.thundashop.core.common.GetShopScheduler;
 import com.thundashop.core.common.JsonObject2;
 import com.thundashop.core.common.ManagerBase;
 import com.thundashop.core.common.Setting;
-import com.thundashop.core.common.Settings;
 import com.thundashop.core.databasemanager.Database;
 import com.thundashop.core.databasemanager.data.Credentials;
 import com.thundashop.core.databasemanager.data.DataRetreived;
@@ -54,24 +51,33 @@ import com.thundashop.core.support.SupportManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.User;
+import org.mongodb.morphia.Morphia;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.io.Serializable;
 import java.net.UnknownHostException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import javax.annotation.PostConstruct;
-import org.apache.commons.lang3.SerializationUtils;
-import org.mongodb.morphia.Morphia;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+
+import static com.thundashop.constant.GetShopSchedulerBaseType.EHF_DATAHOTEL_DOWNLOADER;
 
 /**
  *
@@ -160,7 +166,7 @@ public class GetShop extends ManagerBase implements IGetShop {
             }
         }
         
-        createScheduler("ehf_datahotel_downloader", "33 3 * * *", FetchEhfProcessor.class);
+        createScheduler(EHF_DATAHOTEL_DOWNLOADER);
     }
 
     private void addUserInformation(GetshopStore getshopstore, Store store) {

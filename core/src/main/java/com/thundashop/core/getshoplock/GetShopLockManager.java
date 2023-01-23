@@ -5,7 +5,6 @@ import com.getshop.scope.GetShopSessionBeanNamed;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import java.util.Calendar;
 import com.thundashop.core.bookingengine.BookingEngine;
 import com.thundashop.core.bookingengine.data.BookingItem;
 import com.thundashop.core.common.DataCommon;
@@ -23,10 +22,14 @@ import com.thundashop.core.pmsmanager.PmsBookingRooms;
 import com.thundashop.core.pmsmanager.PmsLockServer;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.pmsmanager.TimeRepeater;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.lang.reflect.Type;
 import java.net.ConnectException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -35,8 +38,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+
+import static com.thundashop.constant.GetShopSchedulerBaseType.FETCH_LOCK_LOCK;
+import static com.thundashop.constant.GetShopSchedulerBaseType.GET_SHOP_LOCK_PMS_PROCESSOR;
 
 
 @Component 
@@ -95,7 +99,7 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
     @Override
     public void initialize() throws SecurityException {
         super.initialize(); //To change body of generated methods, choose Tools | Templates.
-        createScheduler("fetchLockLock", "22 0,2,4,6,8,10,12,14,16,18,20,22 * * *", GetShopLogFetcherStarter.class);
+        createScheduler(FETCH_LOCK_LOCK);
     }
 
     @Override
@@ -759,8 +763,8 @@ public class GetShopLockManager extends GetShopSessionBeanNamed implements IGetS
                 masterCodes = (GetShopLockMasterCodes) obj;
             }
         }
-        createScheduler("pmsprocessor", "* * * * *", CheckAllOkGetShopLocks.class);
-//        createScheduler("pmsprocessor_lock", "30 23,04 * * *", UpdateLockList.class);
+        createScheduler(GET_SHOP_LOCK_PMS_PROCESSOR);
+        //createScheduler(PMS_PROCESSOR_LOCK);
     }
     
     public String getUsername(String serverSource) {

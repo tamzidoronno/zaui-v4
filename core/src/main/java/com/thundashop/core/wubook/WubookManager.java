@@ -1,6 +1,7 @@
 package com.thundashop.core.wubook;
 
-import static com.zauistay.utils.Constants.WUBOOK_CLIENT_URL;
+import static com.thundashop.constant.GetShopSchedulerBaseType.WUBOOK_PROCESSOR;
+import static com.thundashop.constant.GetShopSchedulerBaseType.WUBOOK_PROCESSOR_2;
 import static com.thundashop.core.wubook.WuBookApiCalls.ACQUIRE_TOKEN;
 import static com.thundashop.core.wubook.WuBookApiCalls.BCOM_NOTIFY_INVALID_CC;
 import static com.thundashop.core.wubook.WuBookApiCalls.BCOM_NOTIFY_NOSHOW;
@@ -19,6 +20,7 @@ import static com.thundashop.core.wubook.WuBookApiCalls.RPLAN_UPDATE_RPLAN_VALUE
 import static com.thundashop.core.wubook.WuBookApiCalls.UPDATE_AVAIL;
 import static com.thundashop.core.wubook.WuBookApiCalls.UPDATE_PLAN_PRICES;
 import static com.thundashop.core.wubook.WuBookApiCalls.UPDATE_SPARSE_AVAIL;
+import static com.zauistay.utils.Constants.WUBOOK_CLIENT_URL;
 import static org.apache.commons.lang3.StringUtils.containsAny;
 
 import java.io.IOException;
@@ -47,7 +49,6 @@ import java.util.stream.Collectors;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import com.thundashop.core.pmsmanager.*;
 import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpcException;
 import org.slf4j.Logger;
@@ -67,16 +68,32 @@ import com.thundashop.core.bookingengine.data.BookingItemType;
 import com.thundashop.core.common.BookingEngineException;
 import com.thundashop.core.common.DataCommon;
 import com.thundashop.core.common.ErrorException;
-import com.thundashop.services.config.FrameworkConfig;
 import com.thundashop.core.databasemanager.data.DataRetreived;
 import com.thundashop.core.messagemanager.MessageManager;
 import com.thundashop.core.ordermanager.OrderManager;
 import com.thundashop.core.ordermanager.data.Order;
+import com.thundashop.core.pmsmanager.NewOrderFilter;
+import com.thundashop.core.pmsmanager.PmsBooking;
+import com.thundashop.core.pmsmanager.PmsBookingAddonItem;
+import com.thundashop.core.pmsmanager.PmsBookingComment;
+import com.thundashop.core.pmsmanager.PmsBookingConstant;
+import com.thundashop.core.pmsmanager.PmsBookingDateRange;
+import com.thundashop.core.pmsmanager.PmsBookingFilter;
+import com.thundashop.core.pmsmanager.PmsBookingRooms;
+import com.thundashop.core.pmsmanager.PmsConfiguration;
+import com.thundashop.core.pmsmanager.PmsGuests;
+import com.thundashop.core.pmsmanager.PmsInvoiceManager;
+import com.thundashop.core.pmsmanager.PmsManager;
+import com.thundashop.core.pmsmanager.PmsPricing;
+import com.thundashop.core.pmsmanager.TimeRepeater;
+import com.thundashop.core.pmsmanager.TimeRepeaterData;
+import com.thundashop.core.pmsmanager.TimeRepeaterDateRange;
 import com.thundashop.core.productmanager.ProductManager;
 import com.thundashop.core.productmanager.data.Product;
 import com.thundashop.core.productmanager.data.TaxGroup;
 import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.UserManager;
+import com.thundashop.services.config.FrameworkConfig;
 
 @Component
 @GetShopSession
@@ -188,10 +205,16 @@ public class WubookManager extends GetShopSessionBeanNamed implements IWubookMan
                 lastAvailability = (SavedLastAvailibilityUpdate) dataCommon;
             }
         }
-        // Run every minute
-        createScheduler("wubookprocessor", "* * * * *", WuBookManagerProcessor.class);
-        // Run three times per day
-        createScheduler("wubookprocessor2", "1 5,12,22 * * *", WuBookHourlyProcessor.class);
+
+        if (isWubookActive()) {
+
+            stopScheduler(WUBOOK_PROCESSOR.name);
+            stopScheduler(WUBOOK_PROCESSOR_2.name);
+            // Run every minute
+            createScheduler(WUBOOK_PROCESSOR);
+            // Run three times per day
+            createScheduler(WUBOOK_PROCESSOR_2);
+        }
     }
 
     public boolean updateAvailability() throws Exception {

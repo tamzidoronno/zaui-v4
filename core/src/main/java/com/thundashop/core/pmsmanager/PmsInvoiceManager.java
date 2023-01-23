@@ -1,5 +1,23 @@
 package com.thundashop.core.pmsmanager;
 
+import static com.thundashop.constant.GetShopSchedulerBaseType.CHECK_INVOICE_DTO_DATE;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
+
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.getshop.scope.GetShopSession;
 import com.getshop.scope.GetShopSessionBeanNamed;
 import com.google.gson.Gson;
@@ -32,22 +50,7 @@ import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.wubook.WubookManager;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.TreeMap;
-import java.util.stream.Collectors;
-
 import com.thundashop.services.zauiactivityservice.IZauiActivityService;
-import org.joda.time.Days;
-import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 @Component
 @GetShopSession
@@ -1779,7 +1782,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 paymentLinkConfig = res;
             }
         }
-        createScheduler("checkinvoicedtodate", "1 04 * * *", DailyInvoiceChecker.class);
+        createScheduler(CHECK_INVOICE_DTO_DATE);
     }
     
     @Override

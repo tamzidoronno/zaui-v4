@@ -16,7 +16,6 @@ import com.thundashop.zauiactivity.dto.*;
  * activities.<br>
  */
 @GetShopApi
-@GetShopMultiLayerSession
 public interface IZauiActivityManager {
     ZauiActivityConfig getActivityConfig() throws NotUniqueDataException;
 

@@ -164,7 +164,7 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
     }
 
     @Override
-    public List<CartItem> getZauiActivityCartItems(String productId, String addonId) throws ErrorException {
+    public List<CartItem> getZauiActivityCartItems(String productId, String addonId, double price) throws ErrorException {
         List<CartItem> cartItems = new ArrayList<>();
         Optional<ZauiActivity> activity = zauiActivityService.getZauiActivityById(productId, getSessionInfo());
 
@@ -185,6 +185,11 @@ public class ZauiActivityManager extends GetShopSessionBeanNamed implements IZau
             List<CartItem> cartItemsBasedOnTax = new ArrayList<>();
             for (TaxData tax : pricing.getIncludedTaxes()) {
                 Product taxProduct = createZauiActivityForTax(activity.get(), tax, pricing.getCurrencyPrecision());
+                if(price < 0) {
+                    // in case of return payment order
+                    taxProduct.price *= -1;
+                    taxProduct.priceExTaxes *= -1;
+                }
                 CartItem cartItem = new CartItem();
                 cartItem.setProduct(taxProduct);
                 cartItem.setCount(1);

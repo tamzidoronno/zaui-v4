@@ -51,6 +51,7 @@ import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.core.wubook.WubookManager;
 import com.thundashop.services.zauiactivityservice.IZauiActivityService;
+import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
 
 @Component
 @GetShopSession
@@ -59,9 +60,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     private boolean avoidChangeInvoicedTo;
     private boolean avoidChangingInvoicedFrom;
     private List<String> roomIdsInCart = null;
-    private HashMap<String, PmsAdvancePriceYield> advancePriceYields = new HashMap();
-    private HashMap<String, PmsOrderStatsFilter> savedIncomeFilters = new HashMap();
-    private HashMap<Long, Integer> savedCoverage = new HashMap();
+    private HashMap<String, PmsAdvancePriceYield> advancePriceYields = new HashMap<>();
+    private HashMap<String, PmsOrderStatsFilter> savedIncomeFilters = new HashMap<>();
+    private HashMap<Long, Integer> savedCoverage = new HashMap<>();
     private PmsPaymentLinksConfiguration paymentLinkConfig = new PmsPaymentLinksConfiguration();
     private Date cacheCoverage = null;
     
@@ -100,7 +101,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     private void clearCartExcept(List<String> itemsToCreate) {
-        List<CartItem> added = new ArrayList();
+        List<CartItem> added = new ArrayList<>();
         for(String id : itemsToCreate) {
             CartItem item = cartManager.getCart().getCartItem(id);
             added.add(item);
@@ -111,7 +112,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     @Override
     public List<Order> fetchDibsOrdersToAutoPay() {
-        return new ArrayList();
+        return new ArrayList<>();
     }
     
     private boolean sameMonth(Date startDate, Date endDate) {
@@ -132,12 +133,12 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     private List<CartItem> getLostItems(PmsBooking booking) {
-        List<String> rooms = new ArrayList();
+        List<String> rooms = new ArrayList<>();
         for(PmsBookingRooms room : booking.getAllRoomsIncInactive()) {
             rooms.add(room.pmsBookingRoomId);
         }
         
-        List<CartItem> lostRooms = new ArrayList();
+        List<CartItem> lostRooms = new ArrayList<>();
 
         for(String orderId : booking.orderIds) {
             Order order = orderManager.getOrderSecure(orderId);
@@ -200,7 +201,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         }
         this.avoidOrderCreation = filter.avoidOrderCreation;
         
-        List<PmsBooking> allbookings = new ArrayList();
+        List<PmsBooking> allbookings = new ArrayList<>();
         if(bookingId == null) {
             List<PmsBooking> tocheck = pmsManager.getAllBookings(null);
             for(PmsBooking book : tocheck) {
@@ -428,7 +429,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     @Override
     public List<PmsOrderStatsFilter> getAllStatisticsFilters() {
-        return new ArrayList(savedIncomeFilters.values());
+        return new ArrayList<>(savedIncomeFilters.values());
     }
 
     @Override
@@ -609,13 +610,13 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     private List<Order> filterOrdersOnChannel(String channel, List<Order> orders) {
         List<PmsBooking> bookings = pmsManager.getAllBookings(null);
 
-        List<Order> ordersToReturn = new ArrayList();
+        List<Order> ordersToReturn = new ArrayList<>();
         
-        HashMap<String, Order> ordersMap = new HashMap();
+        HashMap<String, Order> ordersMap = new HashMap<>();
         for(Order ord : orders) {
             ordersMap.put(ord.id, ord);
         }
-        List<String> added = new ArrayList();
+        List<String> added = new ArrayList<>();
         for(PmsBooking booking : bookings) {
             if(channel != null && channel.equals("web") && (booking.channel != null && !booking.channel.trim().isEmpty())) {
                 for(String orderId : booking.orderIds) {
@@ -671,7 +672,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     private List<CartItem> createAddonsCartItemsToInvoiceForGetShop(List<PmsBookingAddonItem> items, PmsBookingRooms room) {
-        List<CartItem> itemsToReturn = new ArrayList();
+        List<CartItem> itemsToReturn = new ArrayList<>();
         
         for(PmsBookingAddonItem item : items) {
             CartItem itemToReturn = createCartItem(item.productId, null, room, item.date, item.date, item.price, item.count, null);
@@ -780,7 +781,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         PmsBooking booking = pmsManager.getBookingFromRoom(pmsRoomId);
         createOrder(booking.id, filter);
         
-        List<CartItem> result = new ArrayList();
+        List<CartItem> result = new ArrayList<>();
         result.addAll(cartManager.getCart().getItems());
         
         for(String orderId : getAllOrderIds(booking)) {
@@ -842,7 +843,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     @Override
     public List<PmsAdvancePriceYield> getAllAdvancePriceYields() {
-        return new ArrayList(advancePriceYields.values());
+        return new ArrayList<>(advancePriceYields.values());
     }
 
     @Override
@@ -889,7 +890,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     public List<Order> getFilterOrders(PmsOrderStatsFilter filter) {
-        List<Order> orders = new ArrayList();
+        List<Order> orders = new ArrayList<>();
         
         if(filter.includeVirtual) {
             pmsManager.createAllVirtualOrdersForPeriode(filter.start, filter.end);
@@ -902,7 +903,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             orders = filterOrdersOnChannel(filter.channel, orders);
         }
        
-        List<Order> ordersToUse = new ArrayList();
+        List<Order> ordersToUse = new ArrayList<>();
         for(Order order : orders) {
             if(order == null || order.cart == null) {
                 continue;
@@ -1116,7 +1117,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     @Override
     public List<Order> getAllUnpaidOrdersForRoom(String pmsBookingRoomId) {
-        List<Order> result = new ArrayList();
+        List<Order> result = new ArrayList<>();
         PmsBooking booking = pmsManager.getBookingFromRoom(pmsBookingRoomId);
         for(String orderId : booking.orderIds) {
             Order ord = orderManager.getOrderDirect(orderId);
@@ -1338,10 +1339,10 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     public List<Long> getOrdersForRoomToPay(String pmsRoomId) {
         PmsBooking booking = pmsManager.getBookingFromRoomSecure(pmsRoomId);
         if(booking == null) {
-            return new ArrayList();
+            return new ArrayList<>();
         }
         
-        List<Long> res = new ArrayList();
+        List<Long> res = new ArrayList<>();
         
         for(String orderId : getAllOrderIds(booking)) {
             Order order = orderManager.getOrderSecure(orderId);
@@ -1391,8 +1392,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         PmsBooking booking = pmsManager.getBooking(id);
         
         cartManager.clear();
-        List<CartItem> allItemsToMove = new ArrayList();
-        List<String> orderIdsToRemove = new ArrayList();
+        List<CartItem> allItemsToMove = new ArrayList<>();
+        List<String> orderIdsToRemove = new ArrayList<>();
         for(String orderId : getAllOrderIds(booking)) {
             Order order = orderManager.getOrderSecure(orderId);
             if(order == null) {
@@ -1402,7 +1403,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 continue;
             }
             for(String roomId : roomIds) {
-                List<CartItem> itemsToRemove = new ArrayList();
+                List<CartItem> itemsToRemove = new ArrayList<>();
                 for(CartItem item : order.cart.getItems()) {
                     String refId = item.getProduct().externalReferenceId;
                     if(refId != null && refId.equals(roomId)) {
@@ -1462,7 +1463,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             totalAmountEx += orderManager.getTotalAmountExTaxes(ord);
         }
         
-        List<String> roomProducts = new ArrayList();
+        List<String> roomProducts = new ArrayList<>();
         for(BookingItemType type : bookingEngine.getBookingItemTypes()) {
             roomProducts.add(type.productId);
             roomProducts.addAll(type.historicalProductIds);
@@ -1476,7 +1477,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     @Override
     public List<String> validateAllInvoiceToDates() {
         List<PmsBooking> all = pmsManager.getAllBookings(null);
-        List<String> result = new ArrayList();
+        List<String> result = new ArrayList<>();
         for(PmsBooking booking : all) {
             validateInvoiceToDateForBooking(booking, result);
         }
@@ -1597,14 +1598,14 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     public void clearOrdersOnBooking(PmsBooking booking) {
-        List<String> nonRefundableRooms = new ArrayList();
+        List<String> nonRefundableRooms = new ArrayList<>();
         for(PmsBookingRooms r : booking.rooms) {
             if(r.nonrefundable) {
                 nonRefundableRooms.add(r.pmsBookingRoomId);
                 r.nonrefundable = false;
             }
         }
-        List<Order> ordersToSave = new ArrayList();
+        List<Order> ordersToSave = new ArrayList<>();
         for(String orderId : booking.orderIds) {
             Order order = orderManager.getOrderSecure(orderId);
             if(order.closed) {
@@ -1681,7 +1682,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     private List<Order> getOrdersFromRoom(String pmsRoomId) {
-        List<Order> result = new ArrayList();
+        List<Order> result = new ArrayList<>();
         PmsBooking booking = pmsManager.getBookingFromRoom(pmsRoomId);
         for(String orderId : booking.orderIds) {
             result.add(orderManager.getOrderSecure(orderId));
@@ -1700,8 +1701,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
     
     private boolean avoidOrderCreation = false;
-    private List<CartItem> itemsToReturn = new ArrayList();
-    private HashMap<String, PmsUserDiscount> discounts = new HashMap();
+    private List<CartItem> itemsToReturn = new ArrayList<>();
+    private HashMap<String, PmsUserDiscount> discounts = new HashMap<>();
     
     @Autowired
     PmsManager pmsManager;
@@ -1738,7 +1739,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         filter.filterType = "active";
         
         List<PmsBooking> bookings = pmsManager.getAllBookings(filter);
-        List<PmsBooking> result = new ArrayList();
+        List<PmsBooking> result = new ArrayList<>();
         for(PmsBooking booking : bookings) {
             for(PmsBookingRooms room : booking.getActiveRooms()) {
                 if(room.bookingItemId.equals(item)) {
@@ -1805,7 +1806,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     private List<BookingOrderSummary> summaries(List<CartItem> roomItems) {
-        HashMap<String, BookingOrderSummary> res = new HashMap();
+        HashMap<String, BookingOrderSummary> res = new HashMap<>();
         for(CartItem item : roomItems) {
             BookingOrderSummary summary = null;
             if(item == null) {
@@ -1840,7 +1841,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
             }
         }
         
-        List<BookingOrderSummary> list = new ArrayList();
+        List<BookingOrderSummary> list = new ArrayList<>();
         for(String productId : roomMap.keySet()) {
             BookingOrderSummary summaryResult = new BookingOrderSummary();
             summaryResult.count = roomMap.get(productId).count;
@@ -1858,7 +1859,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     private HashMap<String, BookingOrderSummary> createSummaryMap(List<BookingOrderSummary> ordersummaries) {
-        HashMap<String, BookingOrderSummary> res = new HashMap();
+        HashMap<String, BookingOrderSummary> res = new HashMap<>();
         for(BookingOrderSummary tmp : ordersummaries) {
             res.put(tmp.productId, tmp);
         }
@@ -1867,7 +1868,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     private List<CartItem> creditAllLinesOnBookingForRoom(String id, String pmsBookingRoomId) {
         List<CartItem> items = getAllOrderItemsForRoomOnBooking(pmsBookingRoomId, id);
-        List<CartItem> credited = new ArrayList();
+        List<CartItem> credited = new ArrayList<>();
         for(CartItem item : items) {
             CartItem newItem = item.copy();
             newItem.setCount(newItem.getCount() * -1);
@@ -1935,7 +1936,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 }
             }
 
-            List<String> toRemoveExisting = new ArrayList();
+            List<String> toRemoveExisting = new ArrayList<>();
             for(String existingKey : room.priceMatrix.keySet()) {
                 if(!priceMatrix.containsKey(existingKey)) {
                     toRemoveExisting.add(existingKey);
@@ -2259,8 +2260,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         if(!pmsManager.getConfigurationSecure().hasAddons()) {
             return;
         }
-        List<PmsBookingAddonItem> toRemove = new ArrayList();
-        HashMap<Integer, Integer> addTypes = new HashMap();
+        List<PmsBookingAddonItem> toRemove = new ArrayList<>();
+        HashMap<Integer, Integer> addTypes = new HashMap<>();
         for(PmsBookingAddonItem addon : room.addons) {
             if(addon.addonType != null && pmsManager.getConfigurationSecure().addonConfiguration.get(addon.addonType).isSingle) {
                 if(addon.addonType == PmsBookingAddonItem.AddonTypes.LATECHECKOUT) {
@@ -2319,7 +2320,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     
     private void addBookingToCart(PmsBooking booking, NewOrderFilter filter) {
-        List<CartItem> items = new ArrayList();
+        List<CartItem> items = new ArrayList<>();
         boolean generateChanges = pmsManager.getConfigurationSecure().autoGenerateChangeOrders;
         if(generateChanges) {
             if(!booking.ignoreCheckChangesInBooking && !filter.ignoreCheckChangesInBooking) {
@@ -2641,7 +2642,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     private LinkedHashMap<String, Double> calculateProgressivePrice(String typeId, Date start, Date end, int offset, Integer priceType, PmsPricing prices) {
         ArrayList<ProgressivePriceAttribute> priceRange = prices.progressivePrices.get(typeId);
-        LinkedHashMap<String, Double> result = new LinkedHashMap();
+        LinkedHashMap<String, Double> result = new LinkedHashMap<>();
         if (priceRange == null) {
             logPrint("No progressive price found for type");
             return result;
@@ -2773,12 +2774,12 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         HashMap<String, Double> priceRange = prices.dailyPrices.get(typeId);
 
         
-        LinkedHashMap<String, Double> result = new LinkedHashMap();
+        LinkedHashMap<String, Double> result = new LinkedHashMap<>();
         if(typeId.equals("gsconference")) {
-            priceRange = new HashMap();
+            priceRange = new HashMap<>();
         }
         if (priceRange == null) {
-            priceRange = new HashMap();
+            priceRange = new HashMap<>();
             priceRange.put("default", 0.0);
         }
 
@@ -2819,7 +2820,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     
     private LinkedHashMap<String, Double> calculateMonthlyPricing(String typeId, Date start, Date end, PmsPricing prices) {
         HashMap<String, Double> priceRange = prices.dailyPrices.get(typeId);
-        LinkedHashMap<String, Double> result = new LinkedHashMap();
+        LinkedHashMap<String, Double> result = new LinkedHashMap<>();
         
         Calendar cal = Calendar.getInstance();
         cal.setTime(start);
@@ -2846,7 +2847,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     private LinkedHashMap<String, Double> calculateIntervalPrice(String typeId, Date start, Date end, PmsPricing prices) {
         int totalDays = Days.daysBetween(new LocalDate(start), new LocalDate(end)).getDays();
-        LinkedHashMap<String, Double> res = new LinkedHashMap();
+        LinkedHashMap<String, Double> res = new LinkedHashMap<>();
         ArrayList<ProgressivePriceAttribute> priceRange = prices.progressivePrices.get(typeId);
         if (priceRange == null) {
             logPrint("No progressive price found for type");
@@ -2901,7 +2902,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         startDate = normalizeDate(startDate, true);
         endDate = normalizeDate(endDate, false);
         
-        List<CartItem> items = new ArrayList();
+        List<CartItem> items = new ArrayList<>();
         int daysInPeriode = Days.daysBetween(new LocalDate(startDate), new LocalDate(endDate)).getDays();
         if(booking.priceType.equals(PmsBookingConstant.PriceType.daily)) {
             if(room.isSameDay(startDate, endDate)) {
@@ -2951,7 +2952,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     private List<CartItem> createCartItemsFromAddon(PmsBookingRooms room, Date startDate, Date endDate) {
-        HashMap<String, Integer> products = new HashMap();
+        HashMap<String, Integer> products = new HashMap<>();
         for(PmsBookingAddonItem addon : room.addons) {
             if(productManager.getProductUnfinalized(addon.productId) != null) {
                 products.put(addon.productId, 0);
@@ -2960,7 +2961,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         
         Calendar start = Calendar.getInstance();
         start.setTime(startDate);
-        List<CartItem> result = new ArrayList();
+        List<CartItem> result = new ArrayList<>();
         for(String productId : products.keySet()) {
             Date endDateToUse = endDate;
             if(isSameDay(endDate, room.date.end)) {
@@ -3018,9 +3019,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     private void clearCart() {
-        roomIdsInCart = new ArrayList();
+        roomIdsInCart = new ArrayList<>();
         if(!avoidOrderCreation) {
-            List<CartItem> toRemove = new ArrayList();
+            List<CartItem> toRemove = new ArrayList<>();
             for(CartItem item : itemsToReturn) {
                 if(item != null && item.addedBy != null && item.addedBy.equals("pmsquickproduct")) {
                     continue;
@@ -3032,7 +3033,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     private void clearRealCart() {
-            List<CartItem> toRemove = new ArrayList();
+            List<CartItem> toRemove = new ArrayList<>();
             for(CartItem item : cartManager.getCart().getItems()) {
                 if(item.addedBy != null && item.addedBy.equals("pmsquickproduct")) {
                     continue;
@@ -3099,7 +3100,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
 
     private HashMap<String, List<CartItem>> getAllRoomsFromExistingOrder(List<String> orderIds) {
-        HashMap<String, List<CartItem>> res = new HashMap();
+        HashMap<String, List<CartItem>> res = new HashMap<>();
         for(String orderId : orderIds) {
             Order order = orderManager.getOrderSecure(orderId);
             for(CartItem item : order.cart.getItems()) {
@@ -3107,7 +3108,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                     if(item.getProduct().externalReferenceId != null) {
                         String id = item.getProduct().externalReferenceId;
                         if(!res.containsKey(id)) {
-                            res.put(id, new ArrayList());
+                            res.put(id, new ArrayList<>());
                         }
                     }
                 }
@@ -3214,7 +3215,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
     private List<CartItem> getChangesForBooking(String bookingId, NewOrderFilter filter) {
         runningDiffRoutine = true;
-        List<CartItem> returnresult = new ArrayList();
+        List<CartItem> returnresult = new ArrayList<>();
         PmsBooking booking = pmsManager.getBookingUnsecure(bookingId);
         for(PmsBookingRooms room : booking.getActiveRooms()) {
             if(room.invoicedFrom == null || room.invoicedTo == null) {
@@ -3278,7 +3279,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
                 List<CartItem> credited = creditAllLinesOnBookingForRoom(booking.id, room.pmsBookingRoomId);
                 returnresult.addAll(credited);
                 if(!avoidOrderCreation) {
-                    List<PmsBookingAddonItem> toRemove = new ArrayList();
+                    List<PmsBookingAddonItem> toRemove = new ArrayList<>();
                     for(PmsBookingAddonItem tmp : room.addons) {
                         PmsBookingAddonItem base = pmsManager.getBaseAddon(tmp.productId);
                         if(base != null && base.noRefundable) {
@@ -3308,7 +3309,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
 
 
     private List<CartItem> getAllOrderItemsForRoomOnBooking(String pmsBookingRoomId, String id) {
-        List<CartItem> items = new ArrayList();
+        List<CartItem> items = new ArrayList<>();
         PmsBooking booking = pmsManager.getBookingUnsecure(id);
         for(String orderId : booking.orderIds) {
             Order order = orderManager.getOrderSecure(orderId);
@@ -3380,7 +3381,7 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         filter.startDate = start;
         filter.endDate = end;
         
-        List<PmsSubscriptionOverview> result = new ArrayList();
+        List<PmsSubscriptionOverview> result = new ArrayList<>();
         
         List<PmsRoomSimple> rooms = pmsManager.getSimpleRooms(filter);
         for(PmsRoomSimple simple : rooms) {
@@ -3441,8 +3442,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         Calendar cal2 = Calendar.getInstance();
         Gson gson = new Gson();
         
-        List<CartItem> newItems = new ArrayList();
-        List<CartItem> toRemove = new ArrayList();
+        List<CartItem> newItems = new ArrayList<>();
+        List<CartItem> toRemove = new ArrayList<>();
         for(CartItem item : items) {
             if(item.startDate == null || item.endDate == null) {
                 continue;
@@ -3565,12 +3566,12 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     @Override
     public List<String> convertCartToOrders(String id, Address address, String paymentId, String orderCreationType, Date overrideDate) {
         
-        List<String> toreturn = new ArrayList();
+        List<String> toreturn = new ArrayList<>();
         
         Cart cart = cartManager.getCart();
         cart.overrideDate = overrideDate;
         
-        HashMap<String, List<CartItem>> groupedItems = new HashMap();
+        HashMap<String, List<CartItem>> groupedItems = new HashMap<>();
         
         if(orderCreationType != null && (orderCreationType.equals("uniqueorder") || orderCreationType.equals("uniqueordersendpaymentlink"))) {
             groupedItems = groupItemsOnOrder(cart);
@@ -3601,11 +3602,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
     
     private HashMap<String, List<CartItem>> groupItemsOnBookingId(Cart cart) {
-        HashMap<String, List<CartItem>> toReturn = new HashMap();
+        HashMap<String, List<CartItem>> toReturn = new HashMap<>();
         for(CartItem item : cart.getItems()) {
             List<CartItem> items = toReturn.get(item.pmsBookingId);
             if(items == null) {
-                items = new ArrayList();
+                items = new ArrayList<>();
             }
             items.add(item);
             toReturn.put(item.pmsBookingId, items);
@@ -3614,11 +3615,11 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
     
     private HashMap<String, List<CartItem>> groupItemsOnOrder(Cart cart) {
-        HashMap<String, List<CartItem>> toReturn = new HashMap();
+        HashMap<String, List<CartItem>> toReturn = new HashMap<>();
         for(CartItem item : cart.getItems()) {
             List<CartItem> items = toReturn.get(item.getProduct().externalReferenceId);
             if(items == null) {
-                items = new ArrayList();
+                items = new ArrayList<>();
             }
             items.add(item);
             toReturn.put(item.getProduct().externalReferenceId, items);
@@ -3770,8 +3771,8 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     public void deleteOrCreditExistingOrders(PmsBooking booking, PmsBookingRooms room) throws ErrorException {
         boolean startedImpersonation = startImpersonationOfSystemScheduler();
                         
-        List<String> orderIdsToRemove = new ArrayList();
-        List<String> checkOrdersIds = new ArrayList(booking.orderIds);
+        List<String> orderIdsToRemove = new ArrayList<>();
+        List<String> checkOrdersIds = new ArrayList<>(booking.orderIds);
         checkOrdersIds.stream()
             .forEach(orderId -> {
                 Order ord = orderManager.getOrderSecure(orderId);
@@ -3820,13 +3821,13 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
     }
     
     public String createOrderWithPaymentMethod(PmsBooking booking, PmsBookingRooms room, String roomId, Date start, Date end) {
-        List<PmsOrderCreateRow> createOrder = new ArrayList();
+        List<PmsOrderCreateRow> createOrder = new ArrayList<>();
         
         if(room == null) {
 
             for(PmsBookingRooms r : booking.rooms) {
                 PmsOrderCreateRow createOrderForRoom = new PmsOrderCreateRow();
-                createOrderForRoom.items = new ArrayList();
+                createOrderForRoom.items = new ArrayList<>();
                 PmsRoomPaymentSummary summary = pmsManager.getSummaryWithoutAccrued(booking.id, r.pmsBookingRoomId);
                 createOrderForRoom.roomId = r.pmsBookingRoomId;
                 createOrderForRoom.items.addAll(summary.getCheckoutRows());
@@ -3848,8 +3849,9 @@ public class PmsInvoiceManager extends GetShopSessionBeanNamed implements IPmsIn
         String userId = booking.userId != null && !booking.userId.isEmpty() ? booking.userId : getSession().currentUser.id;
 
         // add zaui activity items to order rows
-        if(!booking.getConfirmedZauiActivities().isEmpty()){
-            createOrder.add(zauiActivityService.createOrderCreateRowForZauiActivities(booking.getConfirmedZauiActivities()));
+        List <BookingZauiActivityItem> unpaidConfirmedActivities = booking.getConfirmedZauiActivities().stream().filter(i->i.getUnpaidAmount() > 0).collect(Collectors.toList());
+        if(!unpaidConfirmedActivities.isEmpty()){
+            createOrder.add(zauiActivityService.createOrderCreateRowForZauiActivities(unpaidConfirmedActivities));
         }
 
         return pmsManager.createOrderFromCheckout(createOrder, roomId, userId);

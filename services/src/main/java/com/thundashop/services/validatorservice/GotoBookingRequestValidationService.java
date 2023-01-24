@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.util.List;
 
 import com.thundashop.core.gotohub.dto.*;
+import com.thundashop.core.pmsmanager.TimeRepeaterData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +37,7 @@ public class GotoBookingRequestValidationService implements IGotoBookingRequestV
         validateBookerInfo(bookingRequest.getOrderer());
         validateNoOfBookingItems(bookingRequest.getRooms(), bookingRequest.getActivities());
         validateRooms(bookingRequest.getRooms(), bookingItemTypeSession, configuration);
-        validateActivities(bookingRequest.getActivities(), zauiActivitySessionInfo, systemCurrency);
+        validateActivities(bookingRequest.getActivities(), zauiActivitySessionInfo, systemCurrency, configuration.closedOfPeriode);
     }
 
     private void validateRooms(List<GotoRoomRequest> bookingRooms, SessionInfo bookingItemTypeSession,
@@ -72,11 +73,11 @@ public class GotoBookingRequestValidationService implements IGotoBookingRequestV
     }
 
     private void validateActivities(List<GotoActivityReservationDto> activities, SessionInfo activitySession,
-            String systemCurrency) throws GotoException {
+                                    String systemCurrency, List<TimeRepeaterData> hotelClosure) throws GotoException {
         if(activities == null) return;
         for (GotoActivityReservationDto activity : activities) {
             try {
-                zauiActivityValidationService.validateGotoBookingActivity(activity, activitySession, systemCurrency);
+                zauiActivityValidationService.validateGotoBookingActivity(activity, activitySession, systemCurrency, hotelClosure);
             } catch (GotoException e) {
                 if (activity.getOctoReservationResponse() != null
                         && activity.getOctoReservationResponse().getOptionId() != null)

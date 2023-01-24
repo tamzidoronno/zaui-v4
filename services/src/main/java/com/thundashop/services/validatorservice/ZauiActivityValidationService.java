@@ -3,6 +3,7 @@ package com.thundashop.services.validatorservice;
 import com.google.common.base.Throwables;
 import com.thundashop.core.gotohub.dto.GotoActivityReservationDto;
 import com.thundashop.core.gotohub.dto.GotoException;
+import com.thundashop.core.pmsmanager.TimeRepeaterData;
 import com.thundashop.repository.exceptions.NotUniqueDataException;
 import com.thundashop.repository.utils.SessionInfo;
 import com.thundashop.services.zauiactivityservice.IZauiActivityService;
@@ -30,7 +31,8 @@ public class ZauiActivityValidationService implements IZauiActivityValidationSer
 
     @Override
     public void validateGotoBookingActivity(GotoActivityReservationDto activity, SessionInfo zauiActivitySession,
-            String systemCurrency) throws GotoException {
+            String systemCurrency, List<TimeRepeaterData> hotelClosure) throws GotoException {
+        validateActivityHotelClosedRestriction(activity, hotelClosure);
         validateActivityObject(activity.getOctoReservationResponse());
         validateOptionId(activity.getOctoReservationResponse().getOptionId());
         validateSupplier(activity.getSupplierId(), zauiActivitySession);
@@ -41,6 +43,20 @@ public class ZauiActivityValidationService implements IZauiActivityValidationSer
         validatePricing(
                 activity.getSupplierId(), activity.getOctoReservationResponse().getPricing(), zauiActivitySession,
                 systemCurrency);
+    }
+
+    private void validateActivityHotelClosedRestriction(GotoActivityReservationDto activity, List<TimeRepeaterData> hotelClosure)
+            throws GotoException{
+        for(TimeRepeaterData period: hotelClosure) {
+            if(period.firstEvent!= null && period.firstEvent.start != null && period.endingAt != null
+                    && isActivityInBetweenClosedPeriod(activity, period))
+                throw new GotoException(ACTIVITY_CONFLICT_WITH_HOTEL_CLOSURE);
+        }
+    }
+    private boolean isActivityInBetweenClosedPeriod(GotoActivityReservationDto activity, TimeRepeaterData closedPeriod) {
+        Date activityStartDate = new DateTime(activity.getOctoReservationResponse().getAvailability().getLocalDateTimeStart()).toDate();
+        Date activityEndDate = new DateTime(activity.getOctoReservationResponse().getAvailability().getLocalDateTimeEnd()).toDate();
+        return !activityEndDate.before(closedPeriod.firstEvent.start) && !activityStartDate.after(closedPeriod.endingAt);
     }
 
     private void validateActivityObject(OctoBooking octoReservationResponse) throws GotoException {

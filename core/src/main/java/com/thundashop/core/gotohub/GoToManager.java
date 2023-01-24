@@ -893,9 +893,6 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
     private void validateBookingAllotmentRestrictions(GotoBookingRequest booking) throws ParseException, GotoException {
         Map<String, Map<String, Integer>> numberOfNeededRoomsDateWise = new HashMap<>();
-        for( GotoActivityReservationDto activity : booking.getActivities()) {
-            validateActivityHotelClosedRestriction(activity);
-        }
         for (GotoRoomRequest room : booking.getRooms()) {
             validateBookingRoomRestrictions(room);
             Map<String, Integer> numberOfNeededRooms = addRoomIntoDayWiseBookingRoomCount(
@@ -908,20 +905,6 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                 throwNoAllotmentException(roomCode);
             }
         }
-    }
-
-    private void validateActivityHotelClosedRestriction(GotoActivityReservationDto activity) throws GotoException{
-        List<TimeRepeaterData> hotelClosedPeriods = pmsManager.getConfiguration().closedOfPeriode;
-        for(TimeRepeaterData period: hotelClosedPeriods) {
-            if(period.firstEvent!= null && period.firstEvent.start != null && period.endingAt != null
-                    && isActivityInBetweenClosedPeriod(activity, period))
-                throw new GotoException(ACTIVITY_CONFLICT_WITH_HOTEL_CLOSURE);
-        }
-    }
-    private boolean isActivityInBetweenClosedPeriod(GotoActivityReservationDto activity, TimeRepeaterData closedPeriod) {
-        Date activityStartDate = new DateTime(activity.getOctoReservationResponse().getAvailability().getLocalDateTimeStart()).toDate();
-        Date activityEndDate = new DateTime(activity.getOctoReservationResponse().getAvailability().getLocalDateTimeEnd()).toDate();
-        return !activityEndDate.before(closedPeriod.firstEvent.start) && !activityStartDate.after(closedPeriod.endingAt);
     }
 
     private void validateBookingRoomRestrictions(GotoRoomRequest room) throws ParseException, GotoException {

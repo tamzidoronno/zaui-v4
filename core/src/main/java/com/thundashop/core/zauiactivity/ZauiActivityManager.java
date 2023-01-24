@@ -123,6 +123,11 @@ public class ZauiActivityManager extends ManagerBase implements IZauiActivityMan
 
     @Override
     public void fetchZauiActivities() throws NotUniqueDataException {
+        if (config == null || config.getConnectedSuppliers() == null
+                || !config.isEnabled() || config.getConnectedSuppliers().size() < 1) {
+            log.info("<Zaui Activity Sync> Fetch activity is aborted due to disabled/incomplete configuration, config: {}", config);
+            return;
+        }
         String currency = storeManager.getStoreSettingsApplicationKey("currencycode");
         zauiActivityService.fetchZauiActivities(getSessionInfo(), getActivityConfig(), currency);
     }

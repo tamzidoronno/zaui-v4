@@ -78,11 +78,6 @@ public class ZauiActivityService implements IZauiActivityService {
     }
 
     public void fetchZauiActivities(SessionInfo sessionInfo, ZauiActivityConfig zauiActivityConfig, String currency) {
-        if (zauiActivityConfig == null || zauiActivityConfig.getConnectedSuppliers() == null
-                || zauiActivityConfig.getConnectedSuppliers().size() < 1) {
-            log.info("<Zaui Activity Sync> Fetch activity is aborted due to empty activity config/ supplier array");
-            return;
-        }
         log.info("<Zaui Activity Sync> Fetching octo products is started..");
         zauiActivityConfig.getConnectedSuppliers().forEach(supplier -> {
             try {

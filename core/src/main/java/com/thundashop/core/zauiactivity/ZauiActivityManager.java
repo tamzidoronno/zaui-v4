@@ -124,6 +124,7 @@ public class ZauiActivityManager extends ManagerBase implements IZauiActivityMan
 
     @Override
     public void fetchZauiActivities() throws NotUniqueDataException {
+        config = getActivityConfig();
         if (config == null || !config.isEnabled()) {
             log.info("ZauiActivitySyncLog: Zaui activity feature is not enabled.");
             return;

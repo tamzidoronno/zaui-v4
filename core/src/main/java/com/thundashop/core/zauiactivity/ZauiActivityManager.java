@@ -34,6 +34,8 @@ import com.thundashop.services.bookingservice.IPmsBookingService;
 import com.thundashop.services.octoapiservice.IOctoApiService;
 import com.thundashop.services.zauiactivityservice.IZauiActivityService;
 import static com.thundashop.constant.GetShopSchedulerBaseType.ZAUI_ACTIVITY_SYNC;
+import static com.thundashop.core.common.ZauiStatusCodes.ZAUI_ACTIVITY_MULTIPLE_CONFIGURATION;
+import static com.thundashop.core.common.ZauiStatusCodes.ZAUI_ACTIVITY_NOT_ENABLED;
 
 @Component
 @GetShopSession
@@ -108,12 +110,25 @@ public class ZauiActivityManager extends ManagerBase implements IZauiActivityMan
     @Override
     public OctoBooking reserveBooking(Integer supplierId, OctoBookingReserveRequest OctoBookingReserveRequest)
             throws ZauiException {
+        try{
+            if(getActivityConfig() == null || !getActivityConfig().isEnabled())
+                throw new ZauiException(ZAUI_ACTIVITY_NOT_ENABLED);
+        } catch (NotUniqueDataException e) {
+            throw new ZauiException(ZAUI_ACTIVITY_MULTIPLE_CONFIGURATION);
+        }
+
         return octoApiService.reserveBooking(supplierId, OctoBookingReserveRequest);
     }
 
     @Override
     public OctoBooking confirmBooking(Integer supplierId, String bookingId,
             OctoBookingConfirmRequest octoBookingConfirmRequest) throws ZauiException {
+        try{
+            if(getActivityConfig() == null || !getActivityConfig().isEnabled())
+                throw new ZauiException(ZAUI_ACTIVITY_NOT_ENABLED);
+        } catch (NotUniqueDataException e) {
+            throw new ZauiException(ZAUI_ACTIVITY_MULTIPLE_CONFIGURATION);
+        }
         return octoApiService.confirmBooking(supplierId, bookingId, octoBookingConfirmRequest);
     }
 
@@ -159,6 +174,12 @@ public class ZauiActivityManager extends ManagerBase implements IZauiActivityMan
 
     @Override
     public void cancelActivity(String pmsBookingId, String octoBookingId) throws ZauiException {
+        try{
+            if(getActivityConfig() == null || !getActivityConfig().isEnabled())
+                throw new ZauiException(ZAUI_ACTIVITY_NOT_ENABLED);
+        } catch (NotUniqueDataException e) {
+            throw new ZauiException(ZAUI_ACTIVITY_MULTIPLE_CONFIGURATION);
+        }
         PmsBooking booking = pmsManager.getBooking(pmsBookingId);
         zauiActivityService.restrictGoToBookingWithActivities(booking);
         BookingZauiActivityItem activityItem = booking.getConfirmedZauiActivities().stream()

@@ -5,6 +5,8 @@ public enum ZauiStatusCodes {
     OCTO_FAILED(500, "Octo API call failed"),
     MISSING_PARAMS(400, "Missing parameters"),
     ACCOUNTING_ERROR(500, "Accounting group incompatible with Zaui Stay"),
+    ZAUI_ACTIVITY_NOT_ENABLED(403, "Zaui activity is not enabled"),
+    ZAUI_ACTIVITY_MULTIPLE_CONFIGURATION(500, "Zaui activity has multiple configuration in database"),
     ACTIVITY_NOT_FOUND(404, "Activity/option not found in Zaui Stay"),
     SUPPLIER_NOT_FOUND(404, "Supplier not found in Zaui Stay"),
 

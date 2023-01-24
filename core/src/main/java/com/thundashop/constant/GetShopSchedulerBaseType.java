@@ -26,6 +26,7 @@ import com.thundashop.core.scormmanager.FetchScormResult;
 import com.thundashop.core.trackandtrace.CheckRemovalOfFinishedRoutes;
 import com.thundashop.core.wubook.WuBookHourlyProcessor;
 import com.thundashop.core.wubook.WuBookManagerProcessor;
+import com.thundashop.core.zauiactivity.ZauiActivityFetchProductsScheduler;
 
 public enum GetShopSchedulerBaseType {
     BOOKING_ENGINE_PMS_PROCESSOR("pmsprocessor", "0 6,16 * * *", CheckConsistencyCron.class),
@@ -54,7 +55,8 @@ public enum GetShopSchedulerBaseType {
     WUBOOK_PROCESSOR_2("wubookprocessor2", "1 5,12,22 * * *", WuBookHourlyProcessor.class),
     EVENT_QUESTBACK_CHECKED("event_questback_checked", "0 * * * *", CheckSendQuestBackScheduler.class),
     EVENT_BOOKING_SCHEDULER("event_booking_scheduler", "", EventBookingScheduler.class),
-    PMS_PROCESSOR_LOCK("pmsprocessor_lock", "30 23,04 * * *", UpdateLockList.class);
+    PMS_PROCESSOR_LOCK("pmsprocessor_lock", "30 23,04 * * *", UpdateLockList.class),
+    ZAUI_ACTIVITY_SYNC("zauiActivityFetchProducts", "0 * * * *", ZauiActivityFetchProductsScheduler.class);
 
     public final String name;
     public final String time;

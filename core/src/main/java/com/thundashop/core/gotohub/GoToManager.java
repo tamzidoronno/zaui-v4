@@ -161,17 +161,16 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     @Override
     public void initialize() throws SecurityException {
         super.initialize();
-        goToConfiguration = gotoService.getGotoConfiguration(getSessionInfo());
         stopScheduler(AUTO_EXPIRE_BOOKINGS.name);
-        if (goToConfiguration!=null && isNotBlank(goToConfiguration.authToken)) {
-            createScheduler(AUTO_EXPIRE_BOOKINGS.name, AUTO_EXPIRE_BOOKINGS.time, GotoExpireBookingScheduler.class, true);
-        }
+        createScheduler(AUTO_EXPIRE_BOOKINGS.name, AUTO_EXPIRE_BOOKINGS.time, GotoExpireBookingScheduler.class,
+                true);
     }
 
     @Override
     public boolean saveConfiguration(GoToConfiguration configuration) {
         deleteObject(goToConfiguration);
-        // Reset configuration Id to store new Object for updated goto configuration rather updating deleted one.
+        // Reset configuration Id to store new Object for updated goto configuration
+        // rather updating deleted one.
         // The old configuration will be kept as a separated deleted object in db
         configuration.id = "";
         saveObject(configuration);
@@ -252,9 +251,10 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     @Override
     public GoToApiResponse saveBooking(GotoBookingRequest booking) {
         try {
-            log.info("Goto Hold Booking Req: {}",booking);
+            log.info("Goto Hold Booking Req: {}", booking);
             removeCurrentUser();
-            if(booking.getActivities() == null) booking.setActivities(new ArrayList<>());
+            if (booking.getActivities() == null)
+                booking.setActivities(new ArrayList<>());
             bookingRequestValidationService.validateSaveBookingDto(
                     booking,
                     storeManager.getStoreSettingsApplicationKey(CURRENCY_CODE),
@@ -272,16 +272,17 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
             GotoBookingResponse bookingResponse = holdBookingService.getBookingResponse(pmsBooking, booking,
                     pmsManager.getConfiguration(), goToConfiguration.cuttOffHours);
-            log.info("Goto Hold Booking Res: {}",bookingResponse);
+            log.info("Goto Hold Booking Res: {}", bookingResponse);
             return new GoToApiResponse(true, SAVE_BOOKING_SUCCESS.code, SAVE_BOOKING_SUCCESS.message, bookingResponse);
         } catch (GotoException e) {
             handleNewBookingError(booking, e.getMessage(), e.getStatusCode());
-            log.info("Goto Hold Booking Rejected Res code: {}, res message: {}",e.getStatusCode(), e.getMessage());
+            log.info("Goto Hold Booking Rejected Res code: {}, res message: {}", e.getStatusCode(), e.getMessage());
             return new GoToApiResponse(false, e.getStatusCode(), e.getMessage(), null);
         } catch (Exception e) {
             logPrintException(e);
             handleNewBookingError(booking, SAVE_BOOKING_FAIL.message, SAVE_BOOKING_FAIL.code);
-            log.info("Goto Hold Booking Rejected Res code: {}, res message: {}", SAVE_BOOKING_FAIL.code, SAVE_BOOKING_FAIL.message);
+            log.info("Goto Hold Booking Rejected Res code: {}, res message: {}", SAVE_BOOKING_FAIL.code,
+                    SAVE_BOOKING_FAIL.message);
             return new GoToApiResponse(false, SAVE_BOOKING_FAIL.code, SAVE_BOOKING_FAIL.message, null);
         }
     }
@@ -292,7 +293,8 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     @Override
-    public GoToApiResponse confirmBookingWithActivities(String reservationId, GotoConfirmBookingRequest confirmBookingReq) {
+    public GoToApiResponse confirmBookingWithActivities(String reservationId,
+            GotoConfirmBookingRequest confirmBookingReq) {
         try {
             log.info("Goto Confirm Booking reservationID: {}, Req Body: {}", reservationId, confirmBookingReq);
             saveSchedulerAsCurrentUser();
@@ -300,14 +302,14 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             PmsBooking pmsBooking = confirmBookingValService.validateConfirmBookingReq(reservationId,
                     goToConfiguration.getPaymentTypeId(),
                     pmsManager.getSessionInfo(),
-                    confirmBookingReq
-                    );
+                    confirmBookingReq);
             pmsBooking = confirmBookingService.confirmGotoBooking(pmsBooking, confirmBookingReq);
             String paymentLink = confirmPayment(pmsBooking, confirmBookingReq.getPaymentMethod());
             pmsManager.saveBooking(pmsBooking);
             GoToApiResponse response = new GoToApiResponse(true, BOOKING_CONFIRMATION_SUCCESS.code,
-                    isBlank(paymentLink) ? BOOKING_CONFIRMATION_SUCCESS.message: BOOKING_CONFIRMATION_SUCCESS_WITH_PAYMENT_LINK.message,
-                    isBlank(paymentLink)? null : new GotoConfirmBookingRes(paymentLink));
+                    isBlank(paymentLink) ? BOOKING_CONFIRMATION_SUCCESS.message
+                            : BOOKING_CONFIRMATION_SUCCESS_WITH_PAYMENT_LINK.message,
+                    isBlank(paymentLink) ? null : new GotoConfirmBookingRes(paymentLink));
             log.info("Goto Confirm Booking res: {}", response);
             return response;
         } catch (GotoException e) {
@@ -361,7 +363,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                 .forEach(booking -> {
                     pmsManager.logEntry("Auto deleted Goto Booking because it has expired.", booking.id, null);
                     booking.bookingZauiActivityItems
-                            .forEach(item-> item.getOctoBooking().setStatus(ZauiConstants.OCTO_CANCELLED_STATUS));
+                            .forEach(item -> item.getOctoBooking().setStatus(ZauiConstants.OCTO_CANCELLED_STATUS));
                     pmsManager.saveBooking(booking);
                     cancelBooking(booking.id);
                     log.info("Auto deleted unpaid Goto booking as it has been expired. Reservation Id: {}", booking.id);
@@ -599,11 +601,13 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     private String confirmPayment(PmsBooking pmsBooking, String gotoPaymentMethodName) throws Exception {
-        if(STAY_PAYMENT.equals(gotoPaymentMethodName)) {
-            pmsBooking.shortId = isNotBlank(pmsBooking.shortId) ? pmsBooking.shortId : pmsManager.getShortUniqueId(pmsBooking.id);
+        if (STAY_PAYMENT.equals(gotoPaymentMethodName)) {
+            pmsBooking.shortId = isNotBlank(pmsBooking.shortId) ? pmsBooking.shortId
+                    : pmsManager.getShortUniqueId(pmsBooking.id);
             pmsManager.saveBooking(pmsBooking);
             String paymentLinkFromConfig = pmsInvoiceManager.getPaymentLinkConfig().webAdress;
-            String paymentLinkBase = paymentLinkFromConfig.endsWith("/") ? paymentLinkFromConfig : paymentLinkFromConfig + "/";
+            String paymentLinkBase = paymentLinkFromConfig.endsWith("/") ? paymentLinkFromConfig
+                    : paymentLinkFromConfig + "/";
             return paymentLinkBase + "pr.php?id=" + pmsBooking.shortId;
         }
         pmsManager.saveBooking(handleGotoPayment(pmsBooking));

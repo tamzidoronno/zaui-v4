@@ -33,6 +33,7 @@ import com.thundashop.core.common.ZauiException;
 import com.thundashop.services.bookingservice.IPmsBookingService;
 import com.thundashop.services.octoapiservice.IOctoApiService;
 import com.thundashop.services.zauiactivityservice.IZauiActivityService;
+import static com.thundashop.constant.GetShopSchedulerBaseType.ZAUI_ACTIVITY_SYNC;
 
 @Component
 @GetShopSession
@@ -66,9 +67,9 @@ public class ZauiActivityManager extends ManagerBase implements IZauiActivityMan
 
     @Override
     public void initialize() throws SecurityException {
-        super.initialize();
-        stopScheduler("zauiActivityFetchProducts");
-        createScheduler("zauiActivityFetchProducts", "0 * * * *", ZauiActivityFetchProductsScheduler.class, true);
+        super.initialize();       
+        stopScheduler(ZAUI_ACTIVITY_SYNC.name);
+        createScheduler(ZAUI_ACTIVITY_SYNC.name, ZAUI_ACTIVITY_SYNC.time, ZAUI_ACTIVITY_SYNC.className, true);        
     }
 
     @Override
@@ -164,7 +165,8 @@ public class ZauiActivityManager extends ManagerBase implements IZauiActivityMan
     }
 
     @Override
-    public List<CartItem> getZauiActivityCartItems(String productId, String addonId, double price) throws ErrorException {
+    public List<CartItem> getZauiActivityCartItems(String productId, String addonId, double price)
+            throws ErrorException {
         List<CartItem> cartItems = new ArrayList<>();
         Optional<ZauiActivity> activity = zauiActivityService.getZauiActivityById(productId, getSessionInfo());
 
@@ -180,12 +182,12 @@ public class ZauiActivityManager extends ManagerBase implements IZauiActivityMan
                     addonId, productId);
             return cartItems;
         }
-        try{
+        try {
             Pricing pricing = activityItem.get().getOctoBooking().getPricing();
             List<CartItem> cartItemsBasedOnTax = new ArrayList<>();
             for (TaxData tax : pricing.getIncludedTaxes()) {
                 Product taxProduct = createZauiActivityForTax(activity.get(), tax, pricing.getCurrencyPrecision());
-                if(price < 0) {
+                if (price < 0) {
                     // in case of return payment order
                     taxProduct.price *= -1;
                     taxProduct.priceExTaxes *= -1;
@@ -196,8 +198,7 @@ public class ZauiActivityManager extends ManagerBase implements IZauiActivityMan
                 cartItemsBasedOnTax.add(cartItem);
             }
             cartItems.addAll(cartItemsBasedOnTax);
-        }
-        catch(Exception ex){
+        } catch (Exception ex) {
             log.error("Failed to add activity to cart. Activity: {}. Reason: {}. Actual error: {}",
                     activityItem, ex.getMessage(), ex);
 

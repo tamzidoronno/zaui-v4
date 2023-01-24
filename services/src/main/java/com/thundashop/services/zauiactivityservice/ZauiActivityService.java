@@ -78,26 +78,33 @@ public class ZauiActivityService implements IZauiActivityService {
     }
 
     public void fetchZauiActivities(SessionInfo sessionInfo, ZauiActivityConfig zauiActivityConfig, String currency) {
-        if (zauiActivityConfig == null || zauiActivityConfig.getConnectedSuppliers() == null
-                || zauiActivityConfig.getConnectedSuppliers().size() < 1) {
-            return;
-        }
+        log.info("<Zaui Activity Sync> Fetching octo products is started..");
         zauiActivityConfig.getConnectedSuppliers().forEach(supplier -> {
             try {
+                log.info("<Zaui Activity Sync> Fetching octo products for {} supplier is started..", supplier.getId());
                 List<OctoProduct> octoProducts = octoApiService.getOctoProducts(supplier.getId());
+                log.info("<Zaui Activity Sync> Fetching octo products for {} supplier is ended..", supplier.getId());
+
                 List<Integer> octoProductIds = octoProducts.stream().map(OctoProduct::getId)
                         .collect(Collectors.toList());
+
+                log.info("<Zaui Activity Sync> Removing older activities of {} supplier is started..", supplier.getId());
                 List<String> removingActivityIds = getAllZauiActivities(sessionInfo).stream()
                         .filter(activity -> activity.getSupplierId() == supplier.getId()
                                 && !octoProductIds.contains(activity.getProductId()))
                         .map(activity -> activity.id).collect(Collectors.toList());
                 zauiActivityRepository.markDeleted(removingActivityIds, sessionInfo);
+                log.info("<Zaui Activity Sync> Removing older activities of {} supplier is ended..", supplier.getId());
+
+                log.info("<Zaui Activity Sync> Syncing new octo products as Zaui Activities is started..");
                 syncZauiActivities(octoProducts, supplier, currency, sessionInfo);
+                log.info("<Zaui Activity Sync> Syncing new octo products as Zaui Activities is ended..");
             } catch (Exception e) {
-                log.error("Failed to fetch octo products for supplier {}. Reason: {}, Actual error: {}",
+                log.error("<Zaui Activity Sync> Failed to fetch octo products for supplier {}. Reason: {}, Actual error: {}",
                         supplier.getId(), e.getMessage(), e);
             }
         });
+        log.info("<Zaui Activity Sync> Fetching octo products ended..");
     }
 
     @Override

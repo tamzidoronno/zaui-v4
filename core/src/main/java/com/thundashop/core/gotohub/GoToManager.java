@@ -180,6 +180,9 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
     @Override
     public GoToConfiguration getConfiguration() {
+        if (goToConfiguration == null) {
+            goToConfiguration = gotoService.getGotoConfiguration(getSessionInfo());
+        }
         return goToConfiguration;
     }
 

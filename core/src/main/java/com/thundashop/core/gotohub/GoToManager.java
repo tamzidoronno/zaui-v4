@@ -356,18 +356,47 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
     @Override
     public void cancelUnpaidBookings() {
-        if (goToConfiguration.getUnpaidBookingExpirationTime() < 1)
+        if (goToConfiguration == null || isBlank(goToConfiguration.authToken)) {
+            log.info("GotoHubLog: GotoHub integration is not enabled.");
             return;
-        gotoService
-                .getUnpaidGotoBookings(goToConfiguration.getUnpaidBookingExpirationTime(), pmsManager.getSessionInfo())
-                .forEach(booking -> {
-                    pmsManager.logEntry("Auto deleted Goto Booking because it has expired.", booking.id, null);
-                    booking.bookingZauiActivityItems
-                            .forEach(item -> item.getOctoBooking().setStatus(ZauiConstants.OCTO_CANCELLED_STATUS));
-                    pmsManager.saveBooking(booking);
-                    cancelBooking(booking.id);
-                    log.info("Auto deleted unpaid Goto booking as it has been expired. Reservation Id: {}", booking.id);
-                });
+        }
+        if (goToConfiguration.getUnpaidBookingExpirationTime() < 1) {
+            log.info("GotoHubLog: Incorrect booking expiration has been set. Current value: {}",
+                    goToConfiguration.getUnpaidBookingExpirationTime());
+            return;
+        }
+        log.info("GotoHubLog: Unpaid and expired goto booking auto deletion process starting...");
+        try {
+            gotoService
+                    .getUnpaidGotoBookings(goToConfiguration.getUnpaidBookingExpirationTime(),
+                            pmsManager.getSessionInfo())
+                    .forEach(booking -> {
+                        try {
+                            pmsManager.logEntry("Auto deleted Goto Booking because it has expired.", booking.id, null);
+                            log.info(
+                                    "GotoHubLog: Goto booking has been expired. Reservation Id: {}. Going to delete...",
+                                    booking.id);
+                            booking.bookingZauiActivityItems
+                                    .forEach(item -> item.getOctoBooking()
+                                            .setStatus(ZauiConstants.OCTO_CANCELLED_STATUS));
+                            pmsManager.saveBooking(booking);
+                            cancelBooking(booking.id);
+                            log.info(
+                                    "GotoHubLog: Auto deletion process successful. Reservation Id: {}",
+                                    booking.id);
+                        } catch (Exception ex) {
+                            log.error(
+                                    "GotoHubLog: auto deletion process failed for booking {}. Reason: {}. Actual exception: {}",
+                                    booking.id,
+                                    ex.getMessage(), ex);
+
+                        }
+                    });
+        } catch (Exception ex) {
+            log.error("GotoHubLog: auto deletion process interrupted. Reason: {}. Actual exception: {}",
+                    ex.getMessage(), ex);
+        }
+        log.info("GotoHubLog: Unpaid and expired goto booking auto deletion process completed.");
     }
 
     @Override

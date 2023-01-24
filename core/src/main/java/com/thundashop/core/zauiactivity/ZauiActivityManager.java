@@ -67,9 +67,9 @@ public class ZauiActivityManager extends ManagerBase implements IZauiActivityMan
 
     @Override
     public void initialize() throws SecurityException {
-        super.initialize();       
+        super.initialize();
         stopScheduler(ZAUI_ACTIVITY_SYNC.name);
-        createScheduler(ZAUI_ACTIVITY_SYNC.name, ZAUI_ACTIVITY_SYNC.time, ZAUI_ACTIVITY_SYNC.className, true);        
+        createScheduler(ZAUI_ACTIVITY_SYNC.name, ZAUI_ACTIVITY_SYNC.time, ZAUI_ACTIVITY_SYNC.className, true);
     }
 
     @Override
@@ -124,9 +124,8 @@ public class ZauiActivityManager extends ManagerBase implements IZauiActivityMan
 
     @Override
     public void fetchZauiActivities() throws NotUniqueDataException {
-        if (config == null || config.getConnectedSuppliers() == null
-                || !config.isEnabled() || config.getConnectedSuppliers().size() < 1) {
-            log.info("<Zaui Activity Sync> Fetch activity is aborted due to disabled/incomplete configuration, config: {}", config);
+        if (config == null || !config.isEnabled()) {
+            log.info("ZauiActivitySyncLog: Zaui activity feature is not enabled.");
             return;
         }
         String currency = storeManager.getStoreSettingsApplicationKey("currencycode");

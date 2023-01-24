@@ -57,15 +57,18 @@ public class ZauiActivityService implements IZauiActivityService {
     public List<ZauiActivity> getAllZauiActivities(SessionInfo sessionInfo) {
         return zauiActivityRepository.getAll(sessionInfo);
     }
+
     public List<ZauiActivity> getZauiActivities(SessionInfo sessionInfo) throws ZauiException {
         try {
-            List<Integer> supplierIds = getZauiActivityConfig(sessionInfo).getConnectedSuppliers().stream().map(ZauiConnectedSupplier::getId).collect(Collectors.toList());
-            return zauiActivityRepository.getAll(sessionInfo).stream().filter(activity -> supplierIds.contains(activity.getSupplierId())).collect(Collectors.toList());
+            List<Integer> supplierIds = getZauiActivityConfig(sessionInfo).getConnectedSuppliers().stream()
+                    .map(ZauiConnectedSupplier::getId).collect(Collectors.toList());
+            return zauiActivityRepository.getAll(sessionInfo).stream()
+                    .filter(activity -> supplierIds.contains(activity.getSupplierId())).collect(Collectors.toList());
         } catch (Exception e) {
             log.error("Failed to get zaui activities. Reason: {}. Actual error: {}", e.getMessage(), e);
             throw new ZauiException(ZauiStatusCodes.ACTIVITY_NOT_FOUND);
         }
-   }
+    }
 
     @Override
     public Optional<ZauiActivity> getZauiActivityById(String Id, SessionInfo sessionInfo) {
@@ -78,41 +81,42 @@ public class ZauiActivityService implements IZauiActivityService {
     }
 
     public void fetchZauiActivities(SessionInfo sessionInfo, ZauiActivityConfig zauiActivityConfig, String currency) {
-        log.info("<Zaui Activity Sync> Fetching octo products is started..");
+        if (zauiActivityConfig == null || zauiActivityConfig.getConnectedSuppliers() == null
+                || zauiActivityConfig.getConnectedSuppliers().size() < 1) {
+            log.info("ZauiActivitySyncLog: Zaui activity feature enabled but no supplier is connected.");
+            return;
+        }
+        log.info("ZauiActivitySyncLog: Octo products sync process starting...");
         zauiActivityConfig.getConnectedSuppliers().forEach(supplier -> {
             try {
-                log.info("<Zaui Activity Sync> Fetching octo products for {} supplier is started..", supplier.getId());
+                log.info("ZauiActivitySyncLog: Octo products sync process starting for supplier {}", supplier.getId());
                 List<OctoProduct> octoProducts = octoApiService.getOctoProducts(supplier.getId());
-                log.info("<Zaui Activity Sync> Fetching octo products for {} supplier is ended..", supplier.getId());
 
                 List<Integer> octoProductIds = octoProducts.stream().map(OctoProduct::getId)
                         .collect(Collectors.toList());
-
-                log.info("<Zaui Activity Sync> Removing older activities of {} supplier is started..", supplier.getId());
                 List<String> removingActivityIds = getAllZauiActivities(sessionInfo).stream()
                         .filter(activity -> activity.getSupplierId() == supplier.getId()
                                 && !octoProductIds.contains(activity.getProductId()))
                         .map(activity -> activity.id).collect(Collectors.toList());
                 zauiActivityRepository.markDeleted(removingActivityIds, sessionInfo);
-                log.info("<Zaui Activity Sync> Removing older activities of {} supplier is ended..", supplier.getId());
-
-                log.info("<Zaui Activity Sync> Syncing new octo products as Zaui Activities is started..");
                 syncZauiActivities(octoProducts, supplier, currency, sessionInfo);
-                log.info("<Zaui Activity Sync> Syncing new octo products as Zaui Activities is ended..");
+                log.info("ZauiActivitySyncLog: Octo products sync process completed for supplier {}", supplier.getId());
             } catch (Exception e) {
-                log.error("<Zaui Activity Sync> Failed to fetch octo products for supplier {}. Reason: {}, Actual error: {}",
+                log.error(
+                        "ZauiActivitySyncLog: Octo products sync process failed for supplier {}. Reason: {}, Actual error: {}",
                         supplier.getId(), e.getMessage(), e);
             }
         });
-        log.info("<Zaui Activity Sync> Fetching octo products ended..");
+        log.info("ZauiActivitySyncLog: Octo products sync process completed...");
     }
 
     @Override
-    public PmsBooking addActivityToBooking(BookingZauiActivityItem activityItem, PmsBooking booking, User booker, SessionInfo sessionInfo)
+    public PmsBooking addActivityToBooking(BookingZauiActivityItem activityItem, PmsBooking booking, User booker,
+            SessionInfo sessionInfo)
             throws ZauiException {
         if (activityItem.getUnits() == null || activityItem.getUnits().isEmpty())
             throw new ZauiException(ZauiStatusCodes.MISSING_PARAMS);
-        if(activityItem.getOctoBooking() == null){
+        if (activityItem.getOctoBooking() == null) {
             OctoBooking octoReservedBooking = reserveOctoBooking(activityItem);
             activityItem.setOctoBooking(octoReservedBooking);
         }
@@ -123,7 +127,7 @@ public class ZauiActivityService implements IZauiActivityService {
 
     @Override
     public PmsBooking addActivityToPmsBooking(BookingZauiActivityItem activityItem, OctoBooking octoBooking,
-                                              PmsBooking booking, SessionInfo sessionInfo) throws ZauiException {
+            PmsBooking booking, SessionInfo sessionInfo) throws ZauiException {
         if (activityItem.getUnits() == null || activityItem.getUnits().isEmpty())
             throw new ZauiException(ZauiStatusCodes.MISSING_PARAMS);
         activityItem.setOctoBooking(octoBooking);
@@ -131,10 +135,10 @@ public class ZauiActivityService implements IZauiActivityService {
         activityItem.priceExTaxes = getPricingFromOctoTaxObject(activityItem.getOctoBooking().getPricing())
                 .getSubtotal();
         activityItem.setUnpaidAmount(activityItem.price);
-        try{
+        try {
             List<Double> taxRate = octoBooking.getPricing().getIncludedTaxes().stream()
                     .map(taxData -> new Double(taxData.getRate())).collect(Collectors.toList());
-            zauiActivityValidationService.validateTaxRates(activityItem.getSupplierId(),taxRate, sessionInfo);
+            zauiActivityValidationService.validateTaxRates(activityItem.getSupplierId(), taxRate, sessionInfo);
         } catch (GotoException e) {
             log.error("Tax Validation Failed, error message: {}, actual error: {}", e.getMessage(), e);
             throw new ZauiException(ZauiStatusCodes.ACCOUNTING_ERROR);
@@ -157,7 +161,7 @@ public class ZauiActivityService implements IZauiActivityService {
 
     @Override
     public PmsBooking addActivityToWebBooking(AddZauiActivityToWebBookingDto activity, PmsBooking booking,
-                                              SessionInfo sessionInfo) throws ZauiException {
+            SessionInfo sessionInfo) throws ZauiException {
         ZauiActivity zauiActivity = getZauiActivityByOptionId(activity.getOptionId(), sessionInfo);
         ActivityOption bookedOption = zauiActivity.getActivityOptionList().stream()
                 .filter(option -> option.getId().equals(activity.getOptionId()))
@@ -182,7 +186,7 @@ public class ZauiActivityService implements IZauiActivityService {
     @Override
     public PmsBooking removeActivityFromBooking(String activityItemId, PmsBooking booking) {
         booking.bookingZauiActivityItems.removeIf(item -> item.getId().equals(activityItemId));
-        log.info("activity {} removed from booking {}", activityItemId,booking);
+        log.info("activity {} removed from booking {}", activityItemId, booking);
         return booking;
     }
 
@@ -215,12 +219,13 @@ public class ZauiActivityService implements IZauiActivityService {
     public void cancelActivityFromBooking(BookingZauiActivityItem activityItem) throws ZauiException {
         OctoBooking octoCancelledBooking = octoApiService.cancelBooking(activityItem.getSupplierId(),
                 activityItem.getOctoBooking().getId());
-        
+
         // prevented pricing to be updated from cancelBooking as they get zeros
         Pricing pricingBeforeCancellation = activityItem.getOctoBooking().getPricing();
         octoCancelledBooking.setPricing(pricingBeforeCancellation);
         activityItem.setOctoBooking(octoCancelledBooking);
-        // unpaid amount gets negative for cancelling paid activities, and zero for unpaid ones
+        // unpaid amount gets negative for cancelling paid activities, and zero for
+        // unpaid ones
         double unpaidAmount = activityItem.getUnpaidAmount() != 0 ? 0 : -activityItem.price;
         activityItem.setUnpaidAmount(unpaidAmount);
     }
@@ -389,9 +394,11 @@ public class ZauiActivityService implements IZauiActivityService {
             throw new ZauiException(ZauiStatusCodes.GOTO_CANCELLATION_DENIED);
         }
     }
+
     @Override
     public boolean isAllActivityCancelled(List<BookingZauiActivityItem> activities) {
-        if(activities == null || activities.isEmpty()) return true;
+        if (activities == null || activities.isEmpty())
+            return true;
         return activities.stream().allMatch(activity -> activity.getOctoBooking().getStatus().equals("CANCELLED"));
     }
 

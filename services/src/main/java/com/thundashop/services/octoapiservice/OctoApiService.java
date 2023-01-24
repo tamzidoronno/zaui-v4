@@ -65,9 +65,12 @@ public class OctoApiService implements IOctoApiService {
     @Override
     public List<OctoProduct> getOctoProducts(Integer supplierId) throws ZauiException {
         String url = getOctoBaseUrl() + "/suppliers/" + supplierId + "/products";
+        log.info("<Zaui Activity Sync> Fetch Octo Activities Url: {}", url);
         Map<String, String> headers = new HashMap<>();
         headers.put(ZauiConstants.OCTO_CONTENT.getLeft(), ZauiConstants.OCTO_CONTENT.getRight());
+        log.info("<Zaui Activity Sync> Fetch Octo Activities Headers: {}", headers);
         String result = getHttpResponseBody(url, headers, "GET", null);
+        log.info("<Zaui Activity Sync> Fetch Octo Activities Result: {}", result);
         Type listType = new TypeToken<List<OctoProduct>>() {
         }.getType();
         return new Gson().fromJson(result, listType);

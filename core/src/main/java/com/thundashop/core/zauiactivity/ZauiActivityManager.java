@@ -83,8 +83,8 @@ public class ZauiActivityManager extends ManagerBase implements IZauiActivityMan
     @Override
     public ZauiActivityConfig updateActivityConfig(ZauiActivityConfig newActivityConfig) throws NotUniqueDataException {
         saveObject(newActivityConfig);
-        fetchZauiActivities();
         config = newActivityConfig;
+        fetchZauiActivities();
         return newActivityConfig;
     }
 

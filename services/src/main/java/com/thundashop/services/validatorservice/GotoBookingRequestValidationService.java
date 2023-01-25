@@ -3,6 +3,7 @@ package com.thundashop.services.validatorservice;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.DIFFERENT_CURRENCY;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.EMAIL_OR_PHONE_MISSING;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.EMPTY_BOOKING_ITEM;
+import static com.thundashop.core.gotohub.constant.GoToStatusCodes.RESERVATION_ZAUI_STAY_ACTIVITY_DISABLED;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -10,6 +11,7 @@ import java.text.ParseException;
 import java.util.List;
 
 import com.thundashop.core.gotohub.dto.*;
+import com.thundashop.zauiactivity.dto.ZauiActivityConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,15 +30,16 @@ public class GotoBookingRequestValidationService implements IGotoBookingRequestV
 
     @Override
     public void validateSaveBookingDto(GotoBookingRequest bookingRequest,
-            String systemCurrency,
-            PmsConfiguration configuration,
-            SessionInfo bookingItemTypeSession,
-            SessionInfo zauiActivitySessionInfo) throws GotoException, ParseException {
+                                       String systemCurrency,
+                                       PmsConfiguration configuration,
+                                       SessionInfo bookingItemTypeSession,
+                                       SessionInfo zauiActivitySessionInfo,
+                                       ZauiActivityConfig activityConfig) throws GotoException, ParseException {
         validateCurrency(bookingRequest.getCurrency(), systemCurrency);
         validateBookerInfo(bookingRequest.getOrderer());
         validateNoOfBookingItems(bookingRequest.getRooms(), bookingRequest.getActivities());
         validateRooms(bookingRequest.getRooms(), bookingItemTypeSession, configuration);
-        validateActivities(bookingRequest.getActivities(), zauiActivitySessionInfo, systemCurrency);
+        validateActivities(bookingRequest.getActivities(), zauiActivitySessionInfo, activityConfig, systemCurrency);
     }
 
     private void validateRooms(List<GotoRoomRequest> bookingRooms, SessionInfo bookingItemTypeSession,
@@ -72,8 +75,10 @@ public class GotoBookingRequestValidationService implements IGotoBookingRequestV
     }
 
     private void validateActivities(List<GotoActivityReservationDto> activities, SessionInfo activitySession,
-                                    String systemCurrency) throws GotoException {
-        if(activities == null) return;
+                                    ZauiActivityConfig activityConfig, String systemCurrency) throws GotoException {
+        if(activities == null || activities.isEmpty()) return;
+        if(activityConfig == null || !activityConfig.isEnabled())
+            throw new GotoException(RESERVATION_ZAUI_STAY_ACTIVITY_DISABLED);
         for (GotoActivityReservationDto activity : activities) {
             try {
                 zauiActivityValidationService.validateGotoBookingActivity(activity, activitySession, systemCurrency);

@@ -263,7 +263,8 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                     storeManager.getStoreSettingsApplicationKey(CURRENCY_CODE),
                     pmsManager.getConfiguration(),
                     bookingEngineNew.getSessionInfo(),
-                    zauiActivityManager.getSessionInfo());
+                    zauiActivityManager.getSessionInfo(),
+                    zauiActivityManager.getActivityConfig());
             validateBookingAllotmentRestrictions(booking);
             PmsBooking pmsBooking = getBooking(booking);
             if (pmsBooking == null) {
@@ -305,6 +306,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             PmsBooking pmsBooking = confirmBookingValService.validateConfirmBookingReq(reservationId,
                     getConfiguration().getPaymentTypeId(),
                     pmsManager.getSessionInfo(),
+                    zauiActivityManager.getActivityConfig(),
                     confirmBookingReq);
             pmsBooking = confirmBookingService.confirmGotoBooking(pmsBooking, confirmBookingReq);
             String paymentLink = confirmPayment(pmsBooking, confirmBookingReq.getPaymentMethod());

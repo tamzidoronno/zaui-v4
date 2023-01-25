@@ -1,16 +1,11 @@
 package com.thundashop.core.zauiactivity;
 
+import static com.thundashop.constant.GetShopSchedulerBaseType.ZAUI_ACTIVITY_SYNC;
+import static com.thundashop.core.common.ZauiStatusCodes.ZAUI_ACTIVITY_MULTIPLE_CONFIGURATION;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import com.thundashop.core.common.ManagerBase;
-import com.thundashop.core.pmsbookingprocess.GuestAddonsSummary;
-import com.thundashop.core.pmsbookingprocess.PmsBookingProcess;
-import com.thundashop.core.common.ZauiStatusCodes;
-import com.thundashop.zauiactivity.dto.*;
-
-import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,6 +13,11 @@ import org.springframework.stereotype.Component;
 import com.getshop.scope.GetShopSession;
 import com.thundashop.core.cartmanager.data.CartItem;
 import com.thundashop.core.common.ErrorException;
+import com.thundashop.core.common.ManagerBase;
+import com.thundashop.core.common.ZauiException;
+import com.thundashop.core.common.ZauiStatusCodes;
+import com.thundashop.core.pmsbookingprocess.GuestAddonsSummary;
+import com.thundashop.core.pmsbookingprocess.PmsBookingProcess;
 import com.thundashop.core.pmsmanager.PmsBooking;
 import com.thundashop.core.pmsmanager.PmsManager;
 import com.thundashop.core.productmanager.ProductManager;
@@ -29,13 +29,25 @@ import com.thundashop.core.storemanager.StoreManager;
 import com.thundashop.core.usermanager.UserManager;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.repository.exceptions.NotUniqueDataException;
-import com.thundashop.core.common.ZauiException;
 import com.thundashop.services.bookingservice.IPmsBookingService;
 import com.thundashop.services.octoapiservice.IOctoApiService;
 import com.thundashop.services.zauiactivityservice.IZauiActivityService;
-import static com.thundashop.constant.GetShopSchedulerBaseType.ZAUI_ACTIVITY_SYNC;
-import static com.thundashop.core.common.ZauiStatusCodes.ZAUI_ACTIVITY_MULTIPLE_CONFIGURATION;
-import static com.thundashop.core.common.ZauiStatusCodes.ZAUI_ACTIVITY_NOT_ENABLED;
+import com.thundashop.zauiactivity.dto.AddZauiActivityToWebBookingDto;
+import com.thundashop.zauiactivity.dto.BookingZauiActivityItem;
+import com.thundashop.zauiactivity.dto.OctoBooking;
+import com.thundashop.zauiactivity.dto.OctoBookingConfirmRequest;
+import com.thundashop.zauiactivity.dto.OctoBookingReserveRequest;
+import com.thundashop.zauiactivity.dto.OctoProduct;
+import com.thundashop.zauiactivity.dto.OctoProductAvailability;
+import com.thundashop.zauiactivity.dto.OctoProductAvailabilityRequestDto;
+import com.thundashop.zauiactivity.dto.OctoSupplier;
+import com.thundashop.zauiactivity.dto.Pricing;
+import com.thundashop.zauiactivity.dto.TaxData;
+import com.thundashop.zauiactivity.dto.ZauiActivity;
+import com.thundashop.zauiactivity.dto.ZauiActivityConfig;
+import com.thundashop.zauiactivity.dto.ZauiConnectedSupplier;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Component
 @GetShopSession
@@ -75,16 +87,20 @@ public class ZauiActivityManager extends ManagerBase implements IZauiActivityMan
     }
 
     @Override
-    public ZauiActivityConfig getActivityConfig() throws NotUniqueDataException {
-        if (config != null) {
-            return config;
+    public ZauiActivityConfig getActivityConfig() throws ZauiException {
+        if (config == null) {
+            try {
+                config = zauiActivityService.getZauiActivityConfig(getSessionInfo());
+            } catch (NotUniqueDataException ex) {
+                throw new ZauiException(ZAUI_ACTIVITY_MULTIPLE_CONFIGURATION);
+            }
         }
-        config = zauiActivityService.getZauiActivityConfig(getSessionInfo());
+
         return config;
     }
 
     @Override
-    public ZauiActivityConfig updateActivityConfig(ZauiActivityConfig newActivityConfig) throws NotUniqueDataException {
+    public ZauiActivityConfig updateActivityConfig(ZauiActivityConfig newActivityConfig) throws ZauiException {
         saveObject(newActivityConfig);
         config = newActivityConfig;
         fetchZauiActivities();
@@ -110,26 +126,13 @@ public class ZauiActivityManager extends ManagerBase implements IZauiActivityMan
     @Override
     public OctoBooking reserveBooking(Integer supplierId, OctoBookingReserveRequest OctoBookingReserveRequest)
             throws ZauiException {
-        try{
-            if(getActivityConfig() == null || !getActivityConfig().isEnabled())
-                throw new ZauiException(ZAUI_ACTIVITY_NOT_ENABLED);
-        } catch (NotUniqueDataException e) {
-            throw new ZauiException(ZAUI_ACTIVITY_MULTIPLE_CONFIGURATION);
-        }
-
-        return octoApiService.reserveBooking(supplierId, OctoBookingReserveRequest);
+        return octoApiService.reserveBooking(supplierId, OctoBookingReserveRequest, getActivityConfig());
     }
 
     @Override
     public OctoBooking confirmBooking(Integer supplierId, String bookingId,
             OctoBookingConfirmRequest octoBookingConfirmRequest) throws ZauiException {
-        try{
-            if(getActivityConfig() == null || !getActivityConfig().isEnabled())
-                throw new ZauiException(ZAUI_ACTIVITY_NOT_ENABLED);
-        } catch (NotUniqueDataException e) {
-            throw new ZauiException(ZAUI_ACTIVITY_MULTIPLE_CONFIGURATION);
-        }
-        return octoApiService.confirmBooking(supplierId, bookingId, octoBookingConfirmRequest);
+        return octoApiService.confirmBooking(supplierId, bookingId, octoBookingConfirmRequest, getActivityConfig());
     }
 
     @Override
@@ -138,7 +141,7 @@ public class ZauiActivityManager extends ManagerBase implements IZauiActivityMan
     }
 
     @Override
-    public void fetchZauiActivities() throws NotUniqueDataException {
+    public void fetchZauiActivities() throws ZauiException {
         config = getActivityConfig();
         if (config == null || !config.isEnabled()) {
             log.info("ZauiActivitySyncLog: Zaui activity feature is not enabled.");
@@ -152,14 +155,15 @@ public class ZauiActivityManager extends ManagerBase implements IZauiActivityMan
     public void addActivityToBooking(BookingZauiActivityItem activityItem, String pmsBookingId) throws ZauiException {
         PmsBooking booking = pmsManager.getBooking(pmsBookingId);
         User booker = userManager.getUserById(booking.userId);
-        booking = zauiActivityService.addActivityToBooking(activityItem, booking, booker, getSessionInfo());
+        booking = zauiActivityService.addActivityToBooking(activityItem, booking, booker, getActivityConfig(),
+                getSessionInfo());
         pmsManager.saveBooking(booking);
     }
 
     @Override
     public GuestAddonsSummary addActivityToWebBooking(AddZauiActivityToWebBookingDto activity) throws ZauiException {
         PmsBooking booking = pmsManager.getBooking(activity.getPmsBookingId());
-        booking = zauiActivityService.addActivityToWebBooking(activity, booking, getSessionInfo());
+        booking = zauiActivityService.addActivityToWebBooking(activity, booking, getActivityConfig(), getSessionInfo());
         pmsManager.saveBooking(booking);
         return pmsBookingProcess.getAddonsSummary(new ArrayList<>());
     }
@@ -174,19 +178,13 @@ public class ZauiActivityManager extends ManagerBase implements IZauiActivityMan
 
     @Override
     public void cancelActivity(String pmsBookingId, String octoBookingId) throws ZauiException {
-        try{
-            if(getActivityConfig() == null || !getActivityConfig().isEnabled())
-                throw new ZauiException(ZAUI_ACTIVITY_NOT_ENABLED);
-        } catch (NotUniqueDataException e) {
-            throw new ZauiException(ZAUI_ACTIVITY_MULTIPLE_CONFIGURATION);
-        }
         PmsBooking booking = pmsManager.getBooking(pmsBookingId);
         zauiActivityService.restrictGoToBookingWithActivities(booking);
         BookingZauiActivityItem activityItem = booking.getConfirmedZauiActivities().stream()
                 .filter(item -> item.getOctoBooking().getId().equals(octoBookingId))
                 .findFirst()
                 .orElse(null);
-        zauiActivityService.cancelActivityFromBooking(activityItem);
+        zauiActivityService.cancelActivityFromBooking(activityItem, getActivityConfig());
         pmsManager.saveBooking(booking);
     }
 
@@ -271,5 +269,15 @@ public class ZauiActivityManager extends ManagerBase implements IZauiActivityMan
     @Override
     public ZauiActivity getZauiActivity(String productId) {
         return zauiActivityService.getZauiActivityById(productId, getSessionInfo()).orElse(null);
+    }
+
+    @Override
+    public void cancelAllActivitiesFromBooking(PmsBooking booking) {
+        try {
+            zauiActivityService.cancelAllActivitiesFromBooking(booking, getActivityConfig());
+        } catch (Exception ex) {
+            log.error("Failed to cancel all activities for booking {}. Reason: {}, Actual error: {}", booking.id,
+                    ex.getMessage(), ex);
+        }
     }
 }

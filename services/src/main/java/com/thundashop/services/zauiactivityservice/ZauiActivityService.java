@@ -111,16 +111,16 @@ public class ZauiActivityService implements IZauiActivityService {
     }
 
     @Override
-    public PmsBooking addActivityToBooking(BookingZauiActivityItem activityItem, PmsBooking booking, User booker,
+    public PmsBooking addActivityToBooking(BookingZauiActivityItem activityItem, PmsBooking booking, User booker, ZauiActivityConfig config,
             SessionInfo sessionInfo)
             throws ZauiException {
         if (activityItem.getUnits() == null || activityItem.getUnits().isEmpty())
             throw new ZauiException(ZauiStatusCodes.MISSING_PARAMS);
         if (activityItem.getOctoBooking() == null) {
-            OctoBooking octoReservedBooking = reserveOctoBooking(activityItem);
+            OctoBooking octoReservedBooking = reserveOctoBooking(activityItem, config);
             activityItem.setOctoBooking(octoReservedBooking);
         }
-        OctoBooking octoConfirmedBooking = confirmOctoBooking(activityItem, booking, booker);
+        OctoBooking octoConfirmedBooking = confirmOctoBooking(activityItem, booking, booker, config);
         booking = addActivityToPmsBooking(activityItem, octoConfirmedBooking, booking, sessionInfo);
         return booking;
     }
@@ -160,7 +160,7 @@ public class ZauiActivityService implements IZauiActivityService {
     }
 
     @Override
-    public PmsBooking addActivityToWebBooking(AddZauiActivityToWebBookingDto activity, PmsBooking booking,
+    public PmsBooking addActivityToWebBooking(AddZauiActivityToWebBookingDto activity, PmsBooking booking, ZauiActivityConfig config,
             SessionInfo sessionInfo) throws ZauiException {
         ZauiActivity zauiActivity = getZauiActivityByOptionId(activity.getOptionId(), sessionInfo);
         ActivityOption bookedOption = zauiActivity.getActivityOptionList().stream()
@@ -176,7 +176,7 @@ public class ZauiActivityService implements IZauiActivityService {
                 .setNotes(ZauiConstants.ZAUI_STAY_TAG)
                 .setUnitItems(mapUnitsForBooking(activity.getUnits()));
         OctoBooking octoReserveBooking = octoApiService.reserveBooking(zauiActivity.getSupplierId(),
-                bookingReserveRequest);
+                bookingReserveRequest, config);
         BookingZauiActivityItem activityItem = mapActivityToBookingZauiActivityItem(octoReserveBooking, sessionInfo);
         activityItem.setUnits(activity.getUnits());
         booking = addActivityToPmsBooking(activityItem, octoReserveBooking, booking, sessionInfo);
@@ -190,18 +190,18 @@ public class ZauiActivityService implements IZauiActivityService {
         return booking;
     }
 
-    private OctoBooking reserveOctoBooking(BookingZauiActivityItem activityItem) throws ZauiException {
+    private OctoBooking reserveOctoBooking(BookingZauiActivityItem activityItem, ZauiActivityConfig config) throws ZauiException {
         OctoBookingReserveRequest bookingReserveRequest = new OctoBookingReserveRequest()
                 .setProductId(activityItem.getOctoProductId())
                 .setOptionId(activityItem.getOptionId())
                 .setAvailabilityId(activityItem.getAvailabilityId())
                 .setNotes(ZauiConstants.ZAUI_STAY_TAG)
                 .setUnitItems(mapUnitsForBooking(activityItem.getUnits()));
-        return octoApiService.reserveBooking(activityItem.getSupplierId(), bookingReserveRequest);
+        return octoApiService.reserveBooking(activityItem.getSupplierId(), bookingReserveRequest, config);
     }
 
     @Override
-    public OctoBooking confirmOctoBooking(BookingZauiActivityItem activityItem, PmsBooking booking, User booker)
+    public OctoBooking confirmOctoBooking(BookingZauiActivityItem activityItem, PmsBooking booking, User booker, ZauiActivityConfig config)
             throws ZauiException {
         OctoConfirmContact contact = new OctoConfirmContact()
                 .setFullName(booker.fullName)
@@ -212,13 +212,13 @@ public class ZauiActivityService implements IZauiActivityService {
                 .setContact(contact)
                 .setEmailConfirmation(true);
         return octoApiService.confirmBooking(activityItem.getSupplierId(), activityItem.getOctoBooking().getId(),
-                confirmRequest);
+                confirmRequest, config);
     }
 
     @Override
-    public void cancelActivityFromBooking(BookingZauiActivityItem activityItem) throws ZauiException {
+    public void cancelActivityFromBooking(BookingZauiActivityItem activityItem, ZauiActivityConfig config) throws ZauiException {
         OctoBooking octoCancelledBooking = octoApiService.cancelBooking(activityItem.getSupplierId(),
-                activityItem.getOctoBooking().getId());
+                activityItem.getOctoBooking().getId(), config);
 
         // prevented pricing to be updated from cancelBooking as they get zeros
         Pricing pricingBeforeCancellation = activityItem.getOctoBooking().getPricing();
@@ -231,11 +231,11 @@ public class ZauiActivityService implements IZauiActivityService {
     }
 
     @Override
-    public void cancelAllActivitiesFromBooking(PmsBooking booking) {
+    public void cancelAllActivitiesFromBooking(PmsBooking booking, ZauiActivityConfig config) {
         for (BookingZauiActivityItem activityItem : booking.bookingZauiActivityItems) {
             if (activityItem.getOctoBooking().getStatus().equals(ZauiConstants.OCTO_CONFIRMED_STATUS)) {
                 try {
-                    cancelActivityFromBooking(activityItem);
+                    cancelActivityFromBooking(activityItem, config);
                 } catch (ZauiException e) {
                     log.error(
                             "Failed to cancel octoBooking: {}. PmsBookingId {}. Reason: {}, Actual Error: {}",

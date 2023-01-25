@@ -118,6 +118,7 @@ import com.thundashop.core.utils.DateUtils;
 import com.thundashop.core.utils.UtilManager;
 import com.thundashop.core.webmanager.WebManager;
 import com.thundashop.core.wubook.WubookManager;
+import com.thundashop.core.zauiactivity.ZauiActivityManager;
 import com.thundashop.services.bookingservice.IPmsBookingService;
 import com.thundashop.services.config.FrameworkConfig;
 import com.thundashop.services.pmspricing.IPmsPricingService;
@@ -143,6 +144,9 @@ import lombok.extern.slf4j.Slf4j;
 public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
     @Autowired
     IZauiActivityService zauiActivityService;
+
+    @Autowired
+    ZauiActivityManager zauiActivityManager;
 
     @Autowired
     IPmsBookingService pmsBookingService;
@@ -2127,7 +2131,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
         }
 
-        zauiActivityService.cancelAllActivitiesFromBooking(booking);
+        zauiActivityManager.cancelAllActivitiesFromBooking(booking);
 
         if (deletedByChannel) {
             if (!askedToDoUpdate) {

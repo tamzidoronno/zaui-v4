@@ -263,7 +263,8 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                     storeManager.getStoreSettingsApplicationKey(CURRENCY_CODE),
                     pmsManager.getConfiguration(),
                     bookingEngineNew.getSessionInfo(),
-                    zauiActivityManager.getSessionInfo());
+                    zauiActivityManager.getSessionInfo(),
+                    zauiActivityManager.getActivityConfig());
             validateBookingAllotmentRestrictions(booking);
             PmsBooking pmsBooking = getBooking(booking);
             if (pmsBooking == null) {
@@ -297,7 +298,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
     @Override
     public GoToApiResponse confirmBookingWithActivities(String reservationId,
-            GotoConfirmBookingRequest confirmBookingReq) {
+                                                        GotoConfirmBookingRequest confirmBookingReq) {
         try {
             log.info("Goto Confirm Booking reservationID: {}, Req Body: {}", reservationId, confirmBookingReq);
             saveSchedulerAsCurrentUser();
@@ -305,6 +306,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             PmsBooking pmsBooking = confirmBookingValService.validateConfirmBookingReq(reservationId,
                     getConfiguration().getPaymentTypeId(),
                     pmsManager.getSessionInfo(),
+                    zauiActivityManager.getActivityConfig(),
                     confirmBookingReq);
             pmsBooking = confirmBookingService.confirmGotoBooking(pmsBooking, confirmBookingReq);
             String paymentLink = confirmPayment(pmsBooking, confirmBookingReq.getPaymentMethod());
@@ -662,7 +664,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     private GoToRoomData mapBookingItemTypeToGoToRoomData(BookingItemType bookingItemType, BookingProcessRooms room,
-            PmsAdditionalTypeInformation additionalInfo) {
+                                                          PmsAdditionalTypeInformation additionalInfo) {
         GoToRoomData roomData = new GoToRoomData();
 
         roomData.setBookingEngineTypeId(bookingItemType.id);
@@ -731,7 +733,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     private Double getPriceForRoom(BookingProcessRooms bookingProcessRoom, Date start, Date end, int numberofguests,
-            String discountcode) {
+                                   String discountcode) {
         PmsBookingRooms room = new PmsBookingRooms();
         room.bookingItemTypeId = bookingProcessRoom.id;
         room.date = new PmsBookingDateRange();

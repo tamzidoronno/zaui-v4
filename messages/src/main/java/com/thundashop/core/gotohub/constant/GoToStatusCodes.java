@@ -50,6 +50,7 @@ public enum GoToStatusCodes {
         ACTIVITY_SUPPLIER_ID_NOT_CONNECTED(1327, "Goto Booking Failed.. Reason: Supplier is not connected with hotel"),
         ACTIVITY_CONFLICT_WITH_HOTEL_CLOSURE(1328, "Goto Booking Failed.. Reason: Activity can't be booked while hotel is closed"),
         ACTIVITY_BEFORE_CURRENT_DATE(1329, "Goto Booking Failed.. Reason: Activity can't be booked in past date"),
+        RESERVATION_ZAUI_STAY_ACTIVITY_DISABLED(1330, "Goto Booking Failed.. Reason: ZauiStay activity is not enabled"),
 
         BOOKING_CONFIRMATION_SUCCESS(1400, "Goto Booking has been confirmed"),
         BOOKING_CONFIRMATION_SUCCESS_WITH_PAYMENT_LINK(1400, "Payment link has been attached"),
@@ -79,6 +80,7 @@ public enum GoToStatusCodes {
                 "Reason: Confirmation request body has activities but hold-booking don't have any activities"),
         NON_KABRU_CONFIRM_BOOKING_REQ_HAS_ACTIVITY(1415, "Goto Booking Confirmation Failed.. " +
                 "Reason: Non kabru booking with activity is not allowed, confirmation request body has activity"),
+        CONFIRMATION_ZAUI_STAY_ACTIVITY_DISABLED(1416, "Goto Booking Confirmation Failed.. Reason: ZauiStay activity is not enabled"),
         BOOKING_CANCELLATION_SUCCESS(1500, "Goto Booking has been Cancelled"),
         BOOKING_CANCELLATION_NOT_FOUND(1501, "Goto Booking Cancellation Failed.. Reason: Booking Not Found"),
         ORDER_SYNCHRONIZATION_FAILED(1502, "Goto Booking Cancellation Failed.. Reason: Order Synchronization Failed"),

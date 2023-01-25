@@ -298,7 +298,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
     @Override
     public GoToApiResponse confirmBookingWithActivities(String reservationId,
-            GotoConfirmBookingRequest confirmBookingReq) {
+                                                        GotoConfirmBookingRequest confirmBookingReq) {
         try {
             log.info("Goto Confirm Booking reservationID: {}, Req Body: {}", reservationId, confirmBookingReq);
             saveSchedulerAsCurrentUser();
@@ -664,7 +664,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     private GoToRoomData mapBookingItemTypeToGoToRoomData(BookingItemType bookingItemType, BookingProcessRooms room,
-            PmsAdditionalTypeInformation additionalInfo) {
+                                                          PmsAdditionalTypeInformation additionalInfo) {
         GoToRoomData roomData = new GoToRoomData();
 
         roomData.setBookingEngineTypeId(bookingItemType.id);
@@ -733,7 +733,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     private Double getPriceForRoom(BookingProcessRooms bookingProcessRoom, Date start, Date end, int numberofguests,
-            String discountcode) {
+                                   String discountcode) {
         PmsBookingRooms room = new PmsBookingRooms();
         room.bookingItemTypeId = bookingProcessRoom.id;
         room.date = new PmsBookingDateRange();
@@ -955,136 +955,3 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
                         "RoomCode: " + roomCode);
     }
 }
-/*
-{
-  "activities": [
-    {
-      "octoConfirmationResponse": {
-        "id": "1542",
-        "uuid": "1542",
-        "supplierReference": "QDUARR",
-        "status": "CONFIRMED",
-        "resellerReference": "ZAUI-STAY",
-        "utcCreatedAt": "2023-01-15T22:46:38-08:00",
-        "utcUpdatedAt": "2023-01-15T22:46:38-08:00",
-        "utcExpiresAt": null,
-        "utcRedeemedAt": null,
-        "utcConfirmedAt": "2023-01-15T22:46:38-08:00",
-        "productId": "69",
-        "freesale": "0",
-        "availabilityId": "",
-        "notes": "",
-        "optionId": "0e36b15c596d02678ced024cc5c2de43d4497e60",
-        "availability": {
-          "id": "2023-01-19T09:00:00-08:00",
-          "localDateTimeStart": "2023-01-19T09:00:00-08:00",
-          "localDateTimeEnd": "2023-01-19T10:00:00-08:00"
-        },
-        "contact": {
-          "fullName": "Tamzid Rahman",
-          "firstName": "Tamzid",
-          "lastName": "Rahman",
-          "emailAddress": "tamzid@zaui.com",
-          "phoneNumber": "",
-          "locales": [],
-          "country": null,
-          "notes": null
-        },
-        "deliveryMethods": [
-          "TICKET"
-        ],
-        "voucher": [
-          {
-            "redemptionMethod": "DIGITAL",
-            "deliveryOptions": [
-              {
-                "deliveryFormat": "QRCODE",
-                "deliveryValue": "%^1536a67eb4fb325d6ba2f1f105a186054701bacd^1542_A69|2023-01-20|09:00:00|^%"
-              }
-            ],
-            "utcDeliveredAt": null,
-            "utcRedeemedAt": null
-          }
-        ],
-        "unitItems": [
-          {
-            "uuid": "2449-1",
-            "unitId": "adults",
-            "resellerReference": null,
-            "supplierReference": null,
-            "ticket": {
-              "redemptionMethod": "DIGITAL",
-              "utcDeliveredAt": null,
-              "utcRedeemedAt": null,
-              "deliveryOptions": [
-                {
-                  "deliveryFormat": "QRCODE",
-                  "deliveryValue": "%^1536a67eb4fb325d6ba2f1f105a186054701bacd^1542_A69|2023-01-20|09:00:00|^%"
-                }
-              ]
-            }
-          },
-          {
-            "uuid": "2449-2",
-            "unitId": "adults",
-            "resellerReference": null,
-            "supplierReference": null,
-            "ticket": {
-              "redemptionMethod": "DIGITAL",
-              "utcDeliveredAt": null,
-              "utcRedeemedAt": null,
-              "deliveryOptions": [
-                {
-                  "deliveryFormat": "QRCODE",
-                  "deliveryValue": "%^1536a67eb4fb325d6ba2f1f105a186054701bacd^1542_A69|2023-01-20|09:00:00|^%"
-                }
-              ]
-            }
-          }
-        ],
-        "cancellation": {
-          "cancelled": false,
-          "utcCancelledAt": ""
-        },
-        "pricing": {
-          "currency": "NOK",
-          "currencyPrecision": 2,
-          "subtotal": 100000,
-          "tax": 5000,
-          "total": 105000,
-          "includedTaxes": [
-            {
-              "taxType": "VAT",
-              "name": "Guiding",
-              "accountingCode": 3100,
-              "rate": 0,
-              "priceExcludingTax": 0,
-              "taxAmount": 0
-            },
-            {
-              "taxType": "VAT",
-              "name": "Food",
-              "accountingCode": 3200,
-              "rate": 12,
-              "priceExcludingTax": 88000,
-              "taxAmount": 12000
-            },
-            {
-              "taxType": "VAT",
-              "name": "Transportation",
-              "accountingCode": 3300,
-              "rate": 25,
-              "priceExcludingTax": 75000,
-              "taxAmount": 25000
-            }
-          ],
-          "totalExcludingTax": 100000,
-          "totalVAT": 37000
-        }
-      },
-      "octoReservationId": "string"
-    }
-  ],
-  "paymentMethod": "GOTO_PAYMENT"
-}
- */

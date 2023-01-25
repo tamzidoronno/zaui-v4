@@ -1,7 +1,6 @@
 package com.thundashop.core.gotohub;
 
 import static com.thundashop.constant.GetShopSchedulerBaseType.AUTO_EXPIRE_BOOKINGS;
-import static com.thundashop.core.gotohub.constant.GoToStatusCodes.ACTIVITY_CONFLICT_WITH_HOTEL_CLOSURE;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_CANCELLATION_FAILED;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_CANCELLATION_SUCCESS;
 import static com.thundashop.core.gotohub.constant.GoToStatusCodes.BOOKING_CONFIRMATION_FAILED;
@@ -42,8 +41,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.thundashop.core.gotohub.dto.GotoActivityReservationDto;
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.stereotype.Component;

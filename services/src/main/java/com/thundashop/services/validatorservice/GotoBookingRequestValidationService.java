@@ -10,7 +10,6 @@ import java.text.ParseException;
 import java.util.List;
 
 import com.thundashop.core.gotohub.dto.*;
-import com.thundashop.core.pmsmanager.TimeRepeaterData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

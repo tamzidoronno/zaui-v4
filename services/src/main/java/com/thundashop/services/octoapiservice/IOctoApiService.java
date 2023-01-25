@@ -14,13 +14,16 @@ public interface IOctoApiService {
 
     List<OctoProduct> getOctoProducts(Integer supplierId) throws ZauiException;
 
-    public OctoBooking reserveBooking(Integer supplierId, OctoBookingReserveRequest bookingReserveRequest) throws ZauiException;
+    public OctoBooking reserveBooking(Integer supplierId, OctoBookingReserveRequest bookingReserveRequest,
+            ZauiActivityConfig config) throws ZauiException;
 
-    public OctoBooking confirmBooking(Integer supplierId, String bookingId, OctoBookingConfirmRequest octoBookingConfirmRequest) throws ZauiException;
+    public OctoBooking confirmBooking(Integer supplierId, String bookingId,
+            OctoBookingConfirmRequest octoBookingConfirmRequest, ZauiActivityConfig config) throws ZauiException;
 
     OctoProduct getOctoProductById(Integer supplierId, Integer productId) throws ZauiException;
 
-    List<OctoProductAvailability> getOctoProductAvailability(Integer supplierId, OctoProductAvailabilityRequestDto availabilityRequest) throws ZauiException;
+    List<OctoProductAvailability> getOctoProductAvailability(Integer supplierId,
+            OctoProductAvailabilityRequestDto availabilityRequest) throws ZauiException;
 
-    OctoBooking cancelBooking(Integer supplierId, String bookingId) throws ZauiException;
+    OctoBooking cancelBooking(Integer supplierId, String bookingId, ZauiActivityConfig config) throws ZauiException;
 }

@@ -22,6 +22,7 @@ import com.thundashop.zauiactivity.dto.OctoProduct;
 import com.thundashop.zauiactivity.dto.OctoProductAvailability;
 import com.thundashop.zauiactivity.dto.OctoProductAvailabilityRequestDto;
 import com.thundashop.zauiactivity.dto.OctoSupplier;
+import static com.thundashop.core.common.ZauiStatusCodes.ZAUI_ACTIVITY_NOT_ENABLED;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -99,8 +100,11 @@ public class OctoApiService implements IOctoApiService {
     }
 
     @Override
-    public OctoBooking reserveBooking(Integer supplierId, OctoBookingReserveRequest bookingReserveRequest)
-            throws ZauiException {
+    public OctoBooking reserveBooking(Integer supplierId, OctoBookingReserveRequest bookingReserveRequest,
+            ZauiActivityConfig config) throws ZauiException {
+        if (config == null || !config.isEnabled()) {
+            throw new ZauiException(ZAUI_ACTIVITY_NOT_ENABLED);
+        }
         String url = getOctoBaseUrl() + "/suppliers/" + supplierId + "/bookings";
         Map<String, String> headers = new HashMap<>();
         headers.put(ZauiConstants.OCTO_PRICING.getLeft(),
@@ -113,7 +117,10 @@ public class OctoApiService implements IOctoApiService {
 
     @Override
     public OctoBooking confirmBooking(Integer supplierId, String bookingId,
-            OctoBookingConfirmRequest octoBookingConfirmRequest) throws ZauiException {
+            OctoBookingConfirmRequest octoBookingConfirmRequest, ZauiActivityConfig config) throws ZauiException {
+        if (config == null || !config.isEnabled()) {
+            throw new ZauiException(ZAUI_ACTIVITY_NOT_ENABLED);
+        }
         String url = getOctoBaseUrl() + "/suppliers/" + supplierId + "/bookings/" + bookingId
                 + "/confirm";
         Map<String, String> headers = new HashMap<>();
@@ -126,7 +133,11 @@ public class OctoApiService implements IOctoApiService {
     }
 
     @Override
-    public OctoBooking cancelBooking(Integer supplierId, String bookingId) throws ZauiException {
+    public OctoBooking cancelBooking(Integer supplierId, String bookingId, ZauiActivityConfig config)
+            throws ZauiException {
+        if (config == null || !config.isEnabled()) {
+            throw new ZauiException(ZAUI_ACTIVITY_NOT_ENABLED);
+        }
         String url = getOctoBaseUrl() + "/suppliers/" + supplierId + "/bookings/" + bookingId
                 + "/cancel";
         Map<String, String> headers = new HashMap<>();

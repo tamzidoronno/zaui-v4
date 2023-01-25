@@ -8,10 +8,13 @@ import com.thundashop.repository.utils.SessionInfo;
 import com.thundashop.services.zauiactivityservice.IZauiActivityService;
 import com.thundashop.zauiactivity.dto.*;
 import lombok.extern.slf4j.Slf4j;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -82,12 +85,23 @@ public class ZauiActivityValidationService implements IZauiActivityValidationSer
     }
 
     private void validateAvailability(OctoProductAvailability availability) throws GotoException {
+        Date currentDate = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(currentDate);
+        cal.set(Calendar.HOUR, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        currentDate = cal.getTime();
         if (availability == null)
             throw new GotoException(ACTIVITY_AVAILABILITY_MISSING.code, ACTIVITY_AVAILABILITY_MISSING.message);
         if (isBlank(availability.getLocalDateTimeStart()))
             throw new GotoException(ACTIVITY_START_TIME_MISSING.code, ACTIVITY_START_TIME_MISSING.message);
         if (isBlank(availability.getLocalDateTimeEnd()))
             throw new GotoException(ACTIVITY_END_TIME_MISSING.code, ACTIVITY_END_TIME_MISSING.message);
+        if(new DateTime(availability.getLocalDateTimeStart()).toDate().before(currentDate)) {
+            throw new GotoException(ACTIVITY_BEFORE_CURRENT_DATE);
+        }
+
     }
 
     private void validateUnitItems(List<UnitItemOnBooking> unitItems) throws GotoException {
@@ -122,8 +136,8 @@ public class ZauiActivityValidationService implements IZauiActivityValidationSer
                     .getZauiActivityConfig(zauiActivitySessionInfo).getConnectedSuppliers()
                     .stream()
                     .filter(s -> s.getId() == supplierId)
-                    .findFirst().get();
-
+                    .findFirst().orElse(null);
+            if(supplier == null) validateSupplier(supplierId, zauiActivitySessionInfo);
             taxRateFromActivityConfig = supplier.getTaxRateMapping().stream()
                     .collect(Collectors.toMap(TaxRateMap::getTaxRate, TaxRateMap::getAccountNo));
         } catch (NotUniqueDataException e) {

@@ -48,6 +48,8 @@ public enum GoToStatusCodes {
                                         " Please contact with responsible person"),
         ACTIVITY_SUPPLIER_ID_INVALID(1326, "Goto Booking Failed.. Reason: Activity has invalid supplier id"),
         ACTIVITY_SUPPLIER_ID_NOT_CONNECTED(1327, "Goto Booking Failed.. Reason: Supplier is not connected with hotel"),
+        ACTIVITY_CONFLICT_WITH_HOTEL_CLOSURE(1328, "Goto Booking Failed.. Reason: Activity can't be booked while hotel is closed"),
+        ACTIVITY_BEFORE_CURRENT_DATE(1329, "Goto Booking Failed.. Reason: Activity can't be booked in past date"),
 
         BOOKING_CONFIRMATION_SUCCESS(1400, "Goto Booking has been confirmed"),
         BOOKING_CONFIRMATION_SUCCESS_WITH_PAYMENT_LINK(1400, "Payment link has been attached"),

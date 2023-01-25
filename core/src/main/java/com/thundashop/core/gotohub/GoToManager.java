@@ -168,7 +168,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
     @Override
     public boolean saveConfiguration(GoToConfiguration configuration) {
-        deleteObject(goToConfiguration);
+        deleteObject(getConfiguration());
         // Reset configuration Id to store new Object for updated goto configuration
         // rather updating deleted one.
         // The old configuration will be kept as a separated deleted object in db
@@ -274,7 +274,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             handleOverbooking(pmsBooking);
 
             GotoBookingResponse bookingResponse = holdBookingService.getBookingResponse(pmsBooking, booking,
-                    pmsManager.getConfiguration(), goToConfiguration.cuttOffHours);
+                    pmsManager.getConfiguration(), getConfiguration().cuttOffHours);
             log.info("Goto Hold Booking Res: {}", bookingResponse);
             return new GoToApiResponse(true, SAVE_BOOKING_SUCCESS.code, SAVE_BOOKING_SUCCESS.message, bookingResponse);
         } catch (GotoException e) {
@@ -303,7 +303,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             saveSchedulerAsCurrentUser();
             confirmBookingReq = confirmBookingService.updateConfirmRequest(confirmBookingReq);
             PmsBooking pmsBooking = confirmBookingValService.validateConfirmBookingReq(reservationId,
-                    goToConfiguration.getPaymentTypeId(),
+                    getConfiguration().getPaymentTypeId(),
                     pmsManager.getSessionInfo(),
                     confirmBookingReq);
             pmsBooking = confirmBookingService.confirmGotoBooking(pmsBooking, confirmBookingReq);
@@ -332,7 +332,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
             saveSchedulerAsCurrentUser();
             PmsBooking booking = cancellationValidationService.validateCancellationReq(reservationId,
                     deletionRequestTime, pmsManager.getConfiguration(),
-                    goToConfiguration.cuttOffHours, pmsManager.getSessionInfo());
+                    getConfiguration().cuttOffHours, pmsManager.getSessionInfo());
             pmsManager.deleteBooking(reservationId);
             pmsManager.logEntry("Deleted by channel manager", reservationId, null);
             handleOrderForCancelledBooking(reservationId);
@@ -359,19 +359,19 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
 
     @Override
     public void cancelUnpaidBookings() {
-        if (goToConfiguration == null || isBlank(goToConfiguration.authToken)) {
+        if (getConfiguration() == null || isBlank(getConfiguration().authToken)) {
             log.info("GotoHubLog: GotoHub integration is not enabled.");
             return;
         }
-        if (goToConfiguration.getUnpaidBookingExpirationTime() < 1) {
+        if (getConfiguration().getUnpaidBookingExpirationTime() < 1) {
             log.info("GotoHubLog: Incorrect booking expiration has been set. Current value: {}",
-                    goToConfiguration.getUnpaidBookingExpirationTime());
+                    getConfiguration().getUnpaidBookingExpirationTime());
             return;
         }
         log.info("GotoHubLog: Unpaid and expired goto booking auto deletion process starting...");
         try {
             gotoService
-                    .getUnpaidGotoBookings(goToConfiguration.getUnpaidBookingExpirationTime(),
+                    .getUnpaidGotoBookings(getConfiguration().getUnpaidBookingExpirationTime(),
                             pmsManager.getSessionInfo())
                     .forEach(booking -> {
                         try {
@@ -410,7 +410,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
         if (cancelledBookingList.contains(reservationId))
             return;
 
-        String toEmail = goToConfiguration.getEmail();
+        String toEmail = getConfiguration().getEmail();
         if (isBlank(toEmail)) {
             log.info("Couldn't send email because email config is not set.");
             return;
@@ -434,7 +434,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     public void sendEmailForCancelledBooking(PmsBooking booking) {
-        String toEmail = goToConfiguration.getEmail();
+        String toEmail = getConfiguration().getEmail();
         if (isBlank(toEmail)) {
             log.info("Coundn't send email because email config is not set.");
             return;
@@ -653,7 +653,7 @@ public class GoToManager extends GetShopSessionBeanNamed implements IGoToManager
     }
 
     private PmsBooking setDefaultPaymentMethod(PmsBooking pmsBooking) throws Exception {
-        String paymentMethodId = goToConfiguration.getPaymentTypeId();
+        String paymentMethodId = getConfiguration().getPaymentTypeId();
         activatePaymentMethod(paymentMethodId);
         pmsBooking.paymentType = paymentMethodId;
         pmsBooking.isPrePaid = true;

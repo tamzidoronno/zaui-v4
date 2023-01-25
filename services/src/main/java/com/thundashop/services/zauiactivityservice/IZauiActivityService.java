@@ -24,30 +24,38 @@ public interface IZauiActivityService {
 
     List<ZauiActivity> getZauiActivities(SessionInfo sessionInfo) throws ZauiException;
 
-    PmsBooking addActivityToBooking(BookingZauiActivityItem activityItem, PmsBooking booking, User booker, SessionInfo sessionInfo) throws ZauiException;
+    PmsBooking addActivityToBooking(BookingZauiActivityItem activityItem, PmsBooking booking, User booker,
+            ZauiActivityConfig config, SessionInfo sessionInfo) throws ZauiException;
 
-    PmsBooking addActivityToPmsBooking(BookingZauiActivityItem activityItem, OctoBooking octoBooking, PmsBooking booking,
-                                       SessionInfo sessionInfo) throws ZauiException;
+    PmsBooking addActivityToPmsBooking(BookingZauiActivityItem activityItem, OctoBooking octoBooking,
+            PmsBooking booking, SessionInfo sessionInfo) throws ZauiException;
 
-    OctoBooking confirmOctoBooking(BookingZauiActivityItem activityItem, PmsBooking booking, User booker) throws ZauiException;
+    OctoBooking confirmOctoBooking(BookingZauiActivityItem activityItem, PmsBooking booking, User booker,
+            ZauiActivityConfig config)
+            throws ZauiException;
 
-    void cancelActivityFromBooking(BookingZauiActivityItem activityItem) throws ZauiException;
+    void cancelActivityFromBooking(BookingZauiActivityItem activityItem, ZauiActivityConfig config)
+            throws ZauiException;
 
-    void cancelAllActivitiesFromBooking(PmsBooking booking);
+    void cancelAllActivitiesFromBooking(PmsBooking booking, ZauiActivityConfig config);
 
-    Optional<BookingZauiActivityItem>getBookingZauiActivityItemByAddonId(String addonId, SessionInfo sessionInfo);
+    Optional<BookingZauiActivityItem> getBookingZauiActivityItemByAddonId(String addonId, SessionInfo sessionInfo);
 
     double getPrecisedPrice(double price, Integer precision);
 
     List<UnitItemReserveRequest> mapUnitsForBooking(List<Unit> units);
 
-    PmsBooking addActivityToWebBooking(AddZauiActivityToWebBookingDto activity, PmsBooking booking, SessionInfo sessionInfo) throws ZauiException;
+    PmsBooking addActivityToWebBooking(AddZauiActivityToWebBookingDto activity, PmsBooking booking,
+            ZauiActivityConfig config, SessionInfo sessionInfo) throws ZauiException;
 
-    BookingZauiActivityItem mapActivityToBookingZauiActivityItem(OctoBooking octoBooking, SessionInfo sessionInfo) throws ZauiException;
+    BookingZauiActivityItem mapActivityToBookingZauiActivityItem(OctoBooking octoBooking, SessionInfo sessionInfo)
+            throws ZauiException;
 
     PmsOrderCreateRow createOrderCreateRowForZauiActivities(List<BookingZauiActivityItem> activityItems);
 
     PmsBooking removeActivityFromBooking(String activityItemId, PmsBooking booking);
+
     boolean isAllActivityCancelled(List<BookingZauiActivityItem> activities);
+
     void restrictGoToBookingWithActivities(PmsBooking booking) throws ZauiException;
 }

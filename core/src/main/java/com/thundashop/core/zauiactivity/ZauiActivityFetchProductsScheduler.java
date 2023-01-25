@@ -12,7 +12,7 @@ public class ZauiActivityFetchProductsScheduler extends GetShopSchedulerBase {
         String storeId = getApi().getStoreManager().getStoreId();
         String multiLevelName = getMultiLevelName();
         try {
-            getApi().getZauiActivityManager().fetchZauiActivities(multiLevelName);
+            getApi().getZauiActivityManager().fetchZauiActivities();
         }catch(Exception e) {
             GetShopLogHandler.logPrintStatic("Failed to handle zaui activity fetch, " + e.getMessage() + " multiLevelName: " + multiLevelName, storeId);
             GetShopLogHandler.logStack(e, storeId);

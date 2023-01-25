@@ -4,6 +4,7 @@ import static com.thundashop.constant.GetShopSchedulerBaseType.PMS_MAIL_STATS;
 import static com.thundashop.constant.GetShopSchedulerBaseType.PMS_MANAGER_PMS_PROCESSOR;
 import static com.thundashop.constant.GetShopSchedulerBaseType.PMS_MANAGER_PMS_PROCESSOR_2;
 import static com.thundashop.constant.GetShopSchedulerBaseType.PMS_MANAGER_PMS_PROCESSOR_3;
+import static com.thundashop.core.gotohub.constant.GotoConstants.BOOKING_ITEM_TYPE_ID_FOR_VIRTUAL_ROOM;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -8095,7 +8096,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
         if (avoidSameDayDropIn(start, itemType, adminOverride)) {
             return true;
         }
-        if(closedForPeriode(start, end)) {
+        if(!BOOKING_ITEM_TYPE_ID_FOR_VIRTUAL_ROOM.equals(itemType) && closedForPeriode(start, end)) {
             return true;
         }
 

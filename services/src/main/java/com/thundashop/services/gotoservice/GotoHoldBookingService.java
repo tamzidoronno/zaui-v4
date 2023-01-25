@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 import static com.thundashop.core.gotohub.constant.GotoConstants.DAILY_PRICE_DATE_FORMATTER;
 import static com.thundashop.core.gotohub.constant.GotoConstants.checkinOutDateFormatter;
-import static com.thundashop.core.gotohub.constant.GotoConstants.BOOKING_ITEM_TYPE_ID_FOR_VIRTUAL_GOTO_ROOM;
+import static com.thundashop.core.gotohub.constant.GotoConstants.BOOKING_ITEM_TYPE_ID_FOR_VIRTUAL_ROOM;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Service
@@ -173,7 +173,7 @@ public class GotoHoldBookingService implements IGotoHoldBookingService {
 
     private PmsBookingRooms getVirtualRoom(OctoProductAvailability availability, Object contact) {
         PmsBookingRooms room = new PmsBookingRooms();
-        room.bookingItemTypeId = BOOKING_ITEM_TYPE_ID_FOR_VIRTUAL_GOTO_ROOM;
+        room.bookingItemTypeId = BOOKING_ITEM_TYPE_ID_FOR_VIRTUAL_ROOM;
         room.date.start = new DateTime(availability.getLocalDateTimeStart()).toDate();
         room.date.end = new DateTime(availability.getLocalDateTimeEnd()).toDate();
         PmsGuests guest = new PmsGuests();

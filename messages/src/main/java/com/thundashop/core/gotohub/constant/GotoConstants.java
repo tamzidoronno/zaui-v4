@@ -12,5 +12,5 @@ public class GotoConstants {
     public static String GOTO_BOOKING_CHANNEL_NAME = "goto";
     public static int DEFAULT_AUTO_DELETION_TIME_FOR_GOTO_BOOKING_IN_MINUTE = 90;
     public static String STAY_PAYMENT= "STAY_PAYMENT";
-    public static String BOOKING_ITEM_TYPE_ID_FOR_VIRTUAL_GOTO_ROOM = "gspmsconference";
+    public static String BOOKING_ITEM_TYPE_ID_FOR_VIRTUAL_ROOM = "gspmsconference";
 }

@@ -37,7 +37,7 @@ public class GotoBookingRequestValidationService implements IGotoBookingRequestV
         validateBookerInfo(bookingRequest.getOrderer());
         validateNoOfBookingItems(bookingRequest.getRooms(), bookingRequest.getActivities());
         validateRooms(bookingRequest.getRooms(), bookingItemTypeSession, configuration);
-        validateActivities(bookingRequest.getActivities(), zauiActivitySessionInfo, systemCurrency, configuration.closedOfPeriode);
+        validateActivities(bookingRequest.getActivities(), zauiActivitySessionInfo, systemCurrency);
     }
 
     private void validateRooms(List<GotoRoomRequest> bookingRooms, SessionInfo bookingItemTypeSession,
@@ -73,11 +73,11 @@ public class GotoBookingRequestValidationService implements IGotoBookingRequestV
     }
 
     private void validateActivities(List<GotoActivityReservationDto> activities, SessionInfo activitySession,
-                                    String systemCurrency, List<TimeRepeaterData> hotelClosure) throws GotoException {
+                                    String systemCurrency) throws GotoException {
         if(activities == null) return;
         for (GotoActivityReservationDto activity : activities) {
             try {
-                zauiActivityValidationService.validateGotoBookingActivity(activity, activitySession, systemCurrency, hotelClosure);
+                zauiActivityValidationService.validateGotoBookingActivity(activity, activitySession, systemCurrency);
             } catch (GotoException e) {
                 if (activity.getOctoReservationResponse() != null
                         && activity.getOctoReservationResponse().getOptionId() != null)

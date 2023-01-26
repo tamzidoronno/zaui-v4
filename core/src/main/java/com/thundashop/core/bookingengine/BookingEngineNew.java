@@ -33,6 +33,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -45,6 +46,7 @@ import java.util.stream.Collectors;
 
 import static com.thundashop.constant.GetShopSchedulerBaseType.BOOKING_ENGINE_NEW_PMS_PROCESSOR;
 import static com.thundashop.core.bookingengine.BookingEngine.useNewEngine;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  *
@@ -175,14 +177,18 @@ public class BookingEngineNew extends GetShopSessionBeanNamed implements IBookin
     
     @Override
     public void changeBookingItemType(String itemId, String newTypeId) {
+        logPrint("Starting Room Type changed for room: " + itemId + ", to new type: " + newTypeId);
         unassignAllFutureBookings();
         
         BookingItem item = items.get(itemId);
-        if (item == null)
+        if (item == null) {
+            logPrint("Bookingitem not found: " + itemId);
             throw new BookingEngineException("Bookingitem you are trying to change does not exists");
-        
+        }
+        logPrint("Old type was: " + item.bookingItemTypeId);
         BookingItemType type = bookingItemTypeService.getBookingItemTypeById(newTypeId, getSessionInfo());
         if (type == null) {
+            logPrint("BookingitemType not found: " + newTypeId);
             throw new BookingEngineException("BookingitemType you are trying to change does not exists");
         }
         
@@ -207,6 +213,11 @@ public class BookingEngineNew extends GetShopSessionBeanNamed implements IBookin
     
     @Override
     public BookingItem saveBookingItem(BookingItem item) {
+        if(isNotBlank(item.id) && items.get(item.id) != null) {
+            BookingItem prevItem = items.get(item.id);
+            logPrint("Existing BookingItem: " + prevItem.id + ", with type: " + prevItem.bookingItemTypeId + ", toString: " + prevItem);
+        }
+        logPrint("Saving BookingItem: " + item.id + ", with type: " + item.bookingItemTypeId + ", toString: " + item);
         ensureNotOverwritingParameters(item);
         validate(item);
         updateBookingTypesIfTypeChanged();
@@ -553,7 +564,7 @@ public class BookingEngineNew extends GetShopSessionBeanNamed implements IBookin
         if (booking == null) {
             throw new BookingEngineException("Can not change bookingitem, the booking does not exists");
         }
-        
+        logPrint("Room changed for booking: " + booking.id + ", to new room: " + itemId + ", from: " + booking.bookingItemId);
         BookingItem bookingItem = getBookingItem(itemId);
         if (bookingItem == null && !itemId.isEmpty()) {
             throw new BookingEngineException("Can not change to a bookingItem that does not exists");
@@ -578,12 +589,14 @@ public class BookingEngineNew extends GetShopSessionBeanNamed implements IBookin
     }
 
     private void unassignAllFutureBookings() {
+        logPrint("unassignAllFutureBookings: " + LocalDateTime.now());
         bookings.values().stream()
             .filter(b -> b.startsTomorrowOrLater())
             .forEach(b -> {
                 if (b.bookingItemId != null && !b.bookingItemId.isEmpty()) {
                     b.prevAssignedBookingItemId = b.bookingItemId;
                     b.bookingItemId = "";
+                    logPrint("Room changed to floating for booking: " + b.id);
                     saveObject(b);    
                 }
             });        
@@ -591,6 +604,7 @@ public class BookingEngineNew extends GetShopSessionBeanNamed implements IBookin
     
     @Override
     public void forceUnassignBookingInfuture() {
+        logPrint("Calling forceUnassignBookingInfuture: " + LocalDateTime.now());
         unassignAllFutureBookings();
         
         bookings.values().stream()
@@ -615,6 +629,8 @@ public class BookingEngineNew extends GetShopSessionBeanNamed implements IBookin
         if (booking == null) {
             throw new BookingEngineException("Can not change bookingitem, the booking does not exists");
         }
+
+        logPrint("Room changed with date for booking: " + booking.id + ", to new room: " + itemId + ", from: " + booking.bookingItemId);
         
         String oldItemId = booking.bookingItemId;
         String oldBookingItemTypeId = booking.bookingItemTypeId;
@@ -626,7 +642,7 @@ public class BookingEngineNew extends GetShopSessionBeanNamed implements IBookin
         BookingItemType type = getBookingItemType(itemId);
         if(type != null) { itemId = ""; }
         
-        if (bookingItem == null && StringUtils.isNotBlank(itemId)) {
+        if (bookingItem == null && isNotBlank(itemId)) {
             throw new BookingEngineException("Can not change to a bookingItem that does not exists");
         }
         

@@ -107,9 +107,6 @@ public class PmsInvoiceManagerNew {
 
         orderManager.saveOrder(order);
         orderManager.changeOrderType(order.id, paymentMethodId);
-        if(order.isInvoice()){
-            orderManager.updateZauiActivityUnpaidAmounts(order,true);
-        }
 
         finishTabs(tabItemsAdded, order);
 

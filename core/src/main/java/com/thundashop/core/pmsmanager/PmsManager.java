@@ -10224,7 +10224,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             if ( isEmpty(o.conferenceId) && isEmpty(o.roomId) ) {
                     return;
             }
-            PmsBooking booking = getBookingFromRoomSecure(o.roomId);
+            PmsBooking booking;
             //include only activities order to booking
             if(o.roomId.equals("virtual")){
                 booking = pmsBookingService.getPmsBookingByAddonId(o.items.get(0).addonId,getSessionInfo());
@@ -10264,6 +10264,10 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
 
         for(Order ord : ordersToSave.values()) {
             orderManager.saveOrder(ord);
+        }
+
+        if(order.isInvoice()){
+            orderManager.updateZauiActivityUnpaidAmounts(order,true,null);
         }
 
         orderManager.doneUseCacheForOrderIsCredittedAndPaidFor();

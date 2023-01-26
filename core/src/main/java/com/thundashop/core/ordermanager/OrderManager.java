@@ -478,7 +478,9 @@ public class OrderManager extends ManagerBase implements IOrderManager {
     
     public void markAsPaidInternal(Order order, Date date, Double amount) {
         checkPaymentDateValidation(order, date);
-        updateZauiActivityUnpaidAmounts(order,true);
+        if(!order.isInvoice()){
+            updateZauiActivityUnpaidAmounts(order,true,null);
+        }
         
         giftCardManager.createNewCards(order);
         
@@ -2567,6 +2569,10 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         if (order.createdBasedOnOrderIds != null && !order.createdBasedOnOrderIds.isEmpty()) {
             addCreditNotesToBookings(order.createdBasedOnOrderIds);
         }
+        if(order.isInvoice()){
+            boolean isPaid = order.markedPaidDate != null;
+            updateZauiActivityUnpaidAmounts(order,isPaid,null);
+        }
         
         revertOrderLinesToPreviouseState(order);
         
@@ -2579,7 +2585,6 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                         saveObject(o);
                     });
         }
-        updateZauiActivityUnpaidAmounts(order,false);
         order.cart.clear();
         order.virtuallyDeleted = true;
 
@@ -2595,7 +2600,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         }
     }
 
-    public void updateZauiActivityUnpaidAmounts(Order order, boolean isPaid) {
+    public void updateZauiActivityUnpaidAmounts(Order order, boolean isPaid, String creditOrderId) {
         List<String> multiLevelNames = database.getMultilevelNames("PmsManager", storeId);
         //TODO: need to refactor usage of pmsmanager
         for (String multilevelName : multiLevelNames) {
@@ -2619,6 +2624,11 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                     if (uniqueActivityItemIds.contains(bookingZauiActivityItem.getZauiActivityId())) {
                         double newUnpaidAmount = isPaid ? 0 : bookingZauiActivityItem.price;
                         bookingZauiActivityItem.setUnpaidAmount(newUnpaidAmount);
+                    }
+                }
+                if(creditOrderId != null){
+                    if (!booking.orderIds.contains(creditOrderId)) {
+                        pmsManager.addOrderToBooking(booking, creditOrderId);
                     }
                 }
                 saveObject(booking);
@@ -5297,7 +5307,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
         
         List<String> credittedOrders = new ArrayList<>();
         credittedOrders.add(credited.id);
-        updateZauiActivityUnpaidAmounts(order,false);
+        updateZauiActivityUnpaidAmounts(order,false,credited.id);
         try {
             addOrdersToBookings(credittedOrders);
         }catch(GetShopBeanException ex) {
@@ -6045,7 +6055,4 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                 .map(o -> o.id).collect(Collectors.toList());
         return orderids;
     }
-
-
-
 }

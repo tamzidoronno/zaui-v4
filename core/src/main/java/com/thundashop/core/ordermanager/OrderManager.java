@@ -2608,7 +2608,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
             if (pmsManager != null) {
                 PmsBooking booking = pmsManager.getBookingWithOrderId(order.id);
                 if(booking == null) continue;
-                 if (booking.bookingZauiActivityItems == null
+                if (booking.bookingZauiActivityItems == null
                         || booking.bookingZauiActivityItems.isEmpty()) {
                     return;
                 }
@@ -2626,7 +2626,7 @@ public class OrderManager extends ManagerBase implements IOrderManager {
                         bookingZauiActivityItem.setUnpaidAmount(newUnpaidAmount);
                     }
                 }
-                if(creditOrderId != null){
+                if(isNotBlank(creditOrderId)){
                     if (!booking.orderIds.contains(creditOrderId)) {
                         pmsManager.addOrderToBooking(booking, creditOrderId);
                     }

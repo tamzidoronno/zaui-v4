@@ -526,10 +526,12 @@ public class OrderDailyBreaker {
             if (!product.soldOnTaxGroups.contains(inProduct.taxGroupObject.groupNumber)) {
                 product.soldOnTaxGroups.add(inProduct.taxGroupObject.groupNumber);
                 product.createEmptyAccountingInformationObjects();
-                if(!ZauiConstants.ZAUI_ACTIVITY_TAG.equals(product.tag)){
+                if(ZauiConstants.ZAUI_ACTIVITY_TAG.equals(product.tag)){
+                    res = inProduct.getAccountingInformation(inProduct.taxGroupObject.groupNumber);
+                }
+                else {
                     productManager.saveObject(product);
                 }
-
             }
         }
         

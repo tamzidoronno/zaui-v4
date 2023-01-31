@@ -528,10 +528,9 @@ public class OrderDailyBreaker {
                 product.createEmptyAccountingInformationObjects();
                 if(ZauiConstants.ZAUI_ACTIVITY_TAG.equals(product.tag)){
                     res = inProduct.getAccountingInformation(inProduct.taxGroupObject.groupNumber);
+                    return res.accountingNumber;
                 }
-                else {
-                    productManager.saveObject(product);
-                }
+                productManager.saveObject(product);
             }
         }
         

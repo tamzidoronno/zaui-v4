@@ -199,8 +199,7 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed implements IB
     @Override
     public void changeBookingItemType(String itemId, String newTypeId) {
         logPrint("Starting Room Type changed for room: " + itemId + ", to new type: " + newTypeId);
-        unassignAllFutureBookings();
-        
+
         BookingItem item = items.get(itemId);
         if (item == null) {
             logPrint("Bookingitem not found: " + itemId);
@@ -228,8 +227,6 @@ public class BookingEngineAbstract extends GetShopSessionBeanNamed implements IB
         
         item.bookingItemTypeId = newTypeId;
         saveObject(item);
-                
-        unassignAllFutureBookings();
     }
     
     @Override

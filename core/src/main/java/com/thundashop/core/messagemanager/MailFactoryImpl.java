@@ -241,7 +241,7 @@ public class MailFactoryImpl extends StoreComponent implements MailFactory, Runn
     }
 
     private boolean isToDeveloper(String to) {
-        return to.contains("@norwegianexperience.no");
+        return to.contains("@cefalo.com");
     }
 
     private class Authenticator extends javax.mail.Authenticator {

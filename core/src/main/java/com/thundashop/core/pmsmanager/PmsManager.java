@@ -10226,7 +10226,7 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             }
             PmsBooking booking;
             //include only activities order to booking
-            if(o.roomId.equals("virtual")){
+            if(o.roomId != null && o.roomId.equals("virtual")){
                 booking = pmsBookingService.getPmsBookingByAddonId(o.items.get(0).addonId,getSessionInfo());
             }
             else {

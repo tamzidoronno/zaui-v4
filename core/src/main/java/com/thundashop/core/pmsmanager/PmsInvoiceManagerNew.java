@@ -32,6 +32,8 @@ import com.thundashop.core.usermanager.data.Address;
 import com.thundashop.core.usermanager.data.User;
 import com.thundashop.zauiactivity.constant.ZauiConstants;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
 /**
  *
  * @author ktonder
@@ -340,7 +342,10 @@ public class PmsInvoiceManagerNew {
                 .map(row -> {
                     try {
                         CartItem item = (CartItem) tab.getCartItem(row.cartItemId).clone();
-                        item.setProduct(item.getProduct().clone());
+                        Product product = item.getProduct().clone();
+                        // set event name or conference name as metaData
+                        product.metaData = isBlank(row.textOnOrder) ? posConference.conferenceName : row.textOnOrder;
+                        item.setProduct(product);
                         item.setCount(row.count);
                         item.getProduct().price = row.price;
                         item.conferenceId = roomData.conferenceId;

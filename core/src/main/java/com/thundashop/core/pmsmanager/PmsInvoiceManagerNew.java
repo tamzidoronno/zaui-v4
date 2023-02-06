@@ -31,6 +31,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
 /**
  *
  * @author ktonder
@@ -333,7 +335,10 @@ public class PmsInvoiceManagerNew {
                 .map(row -> {
                     try {
                         CartItem item = (CartItem) tab.getCartItem(row.cartItemId).clone();
-                        item.setProduct(item.getProduct().clone());
+                        Product product = item.getProduct().clone();
+                        // set event name or conference name as metaData
+                        product.metaData = isBlank(row.textOnOrder) ? posConference.conferenceName : row.textOnOrder;
+                        item.setProduct(product);
                         item.setCount(row.count);
                         item.getProduct().price = row.price;
                         item.conferenceId = roomData.conferenceId;

@@ -11046,7 +11046,15 @@ public class PmsManager extends GetShopSessionBeanNamed implements IPmsManager {
             return null;
         }
 
-        PmsBooking booking = getBooking(bookingId);
+        PmsBooking booking;
+
+        if(isNotBlank(bookingId)){
+            booking = getBooking(bookingId);
+        }
+        else {
+            booking = getBookingWithOrderId(orderId);
+        }
+        
         if (booking == null) {
             return null;
         }
